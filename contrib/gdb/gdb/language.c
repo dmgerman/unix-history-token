@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Multiple source language support for GDB.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by the Department of Computer Science at the State University    of New York at Buffalo.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Multiple source language support for GDB.     Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000,    2001, 2002, 2003, 2004 Free Software Foundation, Inc.     Contributed by the Department of Computer Science at the State University    of New York at Buffalo.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"jv-lang.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"demangle.h"
 end_include
 
 begin_function_decl
@@ -444,6 +450,17 @@ name|int
 parameter_list|,
 name|enum
 name|val_prettyprint
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|CORE_ADDR
+name|unk_lang_trampoline
+parameter_list|(
+name|CORE_ADDR
+name|pc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -852,7 +869,7 @@ control|)
 block|{
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|languages
 index|[
@@ -863,6 +880,8 @@ name|la_name
 argument_list|,
 name|language
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Found it!  Go into manual mode, and use this language.  */
@@ -1023,12 +1042,14 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|type
 argument_list|,
 literal|"on"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|type_check
@@ -1043,12 +1064,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|type
 argument_list|,
 literal|"warn"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|type_check
@@ -1063,12 +1086,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|type
 argument_list|,
 literal|"off"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|type_check
@@ -1083,12 +1108,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|type
 argument_list|,
 literal|"auto"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|type_mode
@@ -1180,12 +1207,14 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|range
 argument_list|,
 literal|"on"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|range_check
@@ -1200,12 +1229,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|range
 argument_list|,
 literal|"warn"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|range_check
@@ -1220,12 +1251,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|range
 argument_list|,
 literal|"off"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|range_check
@@ -1240,12 +1273,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|range
 argument_list|,
 literal|"auto"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|range_mode
@@ -1337,7 +1372,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|case_sensitive
 argument_list|,
@@ -1357,7 +1392,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|case_sensitive
 argument_list|,
@@ -1377,7 +1412,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|case_sensitive
 argument_list|,
@@ -1791,7 +1826,9 @@ begin_function
 specifier|static
 name|void
 name|set_case_str
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1986,7 +2023,7 @@ comment|/* Currently unused */
 end_comment
 
 begin_comment
-unit|struct type * binop_result_type (struct value *v1, struct value *v2) {   int size, uns;   struct type *t1 = check_typedef (VALUE_TYPE (v1));   struct type *t2 = check_typedef (VALUE_TYPE (v2));    int l1 = TYPE_LENGTH (t1);   int l2 = TYPE_LENGTH (t2);    switch (current_language->la_language)     {     case language_c:     case language_cplus:       if (TYPE_CODE (t1) == TYPE_CODE_FLT) 	return TYPE_CODE (t2) == TYPE_CODE_FLT&& l2> l1 ? 	  VALUE_TYPE (v2) : VALUE_TYPE (v1);       else if (TYPE_CODE (t2) == TYPE_CODE_FLT) 	return TYPE_CODE (t1) == TYPE_CODE_FLT&& l1> l2 ? 	  VALUE_TYPE (v1) : VALUE_TYPE (v2);       else if (TYPE_UNSIGNED (t1)&& l1> l2) 	return VALUE_TYPE (v1);       else if (TYPE_UNSIGNED (t2)&& l2> l1) 	return VALUE_TYPE (v2);       else
+unit|struct type * binop_result_type (struct value *v1, struct value *v2) {   int size, uns;   struct type *t1 = check_typedef (VALUE_TYPE (v1));   struct type *t2 = check_typedef (VALUE_TYPE (v2));    int l1 = TYPE_LENGTH (t1);   int l2 = TYPE_LENGTH (t2);    switch (current_language->la_language)     {     case language_c:     case language_cplus:     case language_objc:       if (TYPE_CODE (t1) == TYPE_CODE_FLT) 	return TYPE_CODE (t2) == TYPE_CODE_FLT&& l2> l1 ? 	  VALUE_TYPE (v2) : VALUE_TYPE (v1);       else if (TYPE_CODE (t2) == TYPE_CODE_FLT) 	return TYPE_CODE (t1) == TYPE_CODE_FLT&& l1> l2 ? 	  VALUE_TYPE (v1) : VALUE_TYPE (v2);       else if (TYPE_UNSIGNED (t1)&& l1> l2) 	return VALUE_TYPE (v1);       else if (TYPE_UNSIGNED (t2)&& l2> l1) 	return VALUE_TYPE (v2);       else
 comment|/* Both are signed.  Result is the longer type */
 end_comment
 
@@ -1996,12 +2033,7 @@ comment|/* If we are doing type-checking, l1 should equal l2, so this is        
 end_comment
 
 begin_comment
-unit|return l1> l2 ? VALUE_TYPE (v1) : VALUE_TYPE (v2);       break;     case language_chill:       error ("Missing Chill support in function binop_result_check.");
-comment|/*FIXME */
-end_comment
-
-begin_comment
-unit|}   internal_error (__FILE__, __LINE__, "failed internal consistency check");   return (struct type *) 0;
+unit|return l1> l2 ? VALUE_TYPE (v1) : VALUE_TYPE (v2);       break;     }   internal_error (__FILE__, __LINE__, "failed internal consistency check");   return (struct type *) 0;
 comment|/* For lint */
 end_comment
 
@@ -2088,7 +2120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Converts a number to hexadecimal and stores it in a static    string.  Returns a pointer to this string. */
+comment|/* Converts a LONGEST to custom hexadecimal and stores it in a static    string.  Returns a pointer to this string. */
 end_comment
 
 begin_function
@@ -2096,97 +2128,17 @@ name|char
 modifier|*
 name|local_hex_string
 parameter_list|(
-name|unsigned
-name|long
-name|num
-parameter_list|)
-block|{
-specifier|static
-name|char
-name|res
-index|[
-literal|50
-index|]
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|res
-argument_list|,
-name|local_hex_format
-argument_list|()
-argument_list|,
-name|num
-argument_list|)
-expr_stmt|;
-return|return
-name|res
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Converts a LONGEST number to hexadecimal and stores it in a static    string.  Returns a pointer to this string. */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|longest_local_hex_string
-parameter_list|(
 name|LONGEST
 name|num
 parameter_list|)
 block|{
 return|return
-name|longest_local_hex_string_custom
+name|local_hex_string_custom
 argument_list|(
 name|num
 argument_list|,
 literal|"l"
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Converts a number to custom hexadecimal and stores it in a static    string.  Returns a pointer to this string. */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|local_hex_string_custom
-parameter_list|(
-name|unsigned
-name|long
-name|num
-parameter_list|,
-name|char
-modifier|*
-name|pre
-parameter_list|)
-block|{
-specifier|static
-name|char
-name|res
-index|[
-literal|50
-index|]
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|res
-argument_list|,
-name|local_hex_format_custom
-argument_list|(
-name|pre
-argument_list|)
-argument_list|,
-name|num
-argument_list|)
-expr_stmt|;
-return|return
-name|res
 return|;
 block|}
 end_function
@@ -2198,7 +2150,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|longest_local_hex_string_custom
+name|local_hex_string_custom
 parameter_list|(
 name|LONGEST
 name|num
@@ -2225,13 +2177,6 @@ index|[
 name|RESULT_BUF_LEN
 index|]
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|PRINTF_HAS_LONG_LONG
-argument_list|)
 name|int
 name|field_width
 decl_stmt|;
@@ -2259,96 +2204,6 @@ index|[
 name|RESULT_BUF_LEN
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|CC_HAS_LONG_LONG
-comment|/* If there is no long long, then LONGEST should be just long and we      can use local_hex_string_custom     */
-return|return
-name|local_hex_string_custom
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|num
-argument_list|,
-name|width
-argument_list|)
-return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|PRINTF_HAS_LONG_LONG
-argument_list|)
-comment|/* Just use printf.  */
-name|strcpy
-argument_list|(
-name|format
-argument_list|,
-name|local_hex_format_prefix
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|/* 0x */
-name|strcat
-argument_list|(
-name|format
-argument_list|,
-literal|"%"
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|format
-argument_list|,
-name|width
-argument_list|)
-expr_stmt|;
-comment|/* e.g. "08l" */
-name|strcat
-argument_list|(
-name|format
-argument_list|,
-literal|"l"
-argument_list|)
-expr_stmt|;
-comment|/* need "ll" for long long */
-name|strcat
-argument_list|(
-name|format
-argument_list|,
-name|local_hex_format_specifier
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|/* "x" */
-name|strcat
-argument_list|(
-name|format
-argument_list|,
-name|local_hex_format_suffix
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|/* "" */
-name|sprintf
-argument_list|(
-name|res2
-argument_list|,
-name|format
-argument_list|,
-name|num
-argument_list|)
-expr_stmt|;
-return|return
-name|res2
-return|;
-else|#
-directive|else
-comment|/* !defined (PRINTF_HAS_LONG_LONG) */
 comment|/* Use phex_nz to print the number into a string, then      build the result string from local_hex_format_prefix, padding and       the hex representation as indicated by "width".  */
 name|strcpy
 argument_list|(
@@ -2460,7 +2315,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"longest_local_hex_string_custom: insufficient space to store result"
+literal|"local_hex_string_custom: insufficient space to store result"
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -2530,13 +2385,11 @@ block|}
 return|return
 name|res2
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/* longest_local_hex_string_custom */
+comment|/* local_hex_string_custom */
 end_comment
 
 begin_comment
@@ -2707,12 +2560,7 @@ comment|/* Returns non-zero if the type is integral */
 end_comment
 
 begin_comment
-unit|int integral_type (struct type *type) {   CHECK_TYPEDEF (type);   switch (current_language->la_language)     {     case language_c:     case language_cplus:       return (TYPE_CODE (type) != TYPE_CODE_INT)&& 	(TYPE_CODE (type) != TYPE_CODE_ENUM) ? 0 : 1;     case language_m2:     case language_pascal:       return TYPE_CODE (type) != TYPE_CODE_INT ? 0 : 1;     case language_chill:       error ("Missing Chill support in function integral_type.");
-comment|/*FIXME */
-end_comment
-
-begin_comment
-unit|default:       error ("Language not supported.");     } }
+unit|int integral_type (struct type *type) {   CHECK_TYPEDEF (type);   switch (current_language->la_language)     {     case language_c:     case language_cplus:     case language_objc:       return (TYPE_CODE (type) != TYPE_CODE_INT)&& 	(TYPE_CODE (type) != TYPE_CODE_ENUM) ? 0 : 1;     case language_m2:     case language_pascal:       return TYPE_CODE (type) != TYPE_CODE_INT ? 0 : 1;     default:       error ("Language not supported.");     } }
 comment|/* Returns non-zero if the value is numeric */
 end_comment
 
@@ -2722,12 +2570,12 @@ comment|/* Returns non-zero if the value is a character type */
 end_comment
 
 begin_comment
-unit|int character_type (struct type *type) {   CHECK_TYPEDEF (type);   switch (current_language->la_language)     {     case language_chill:     case language_m2:     case language_pascal:       return TYPE_CODE (type) != TYPE_CODE_CHAR ? 0 : 1;      case language_c:     case language_cplus:       return (TYPE_CODE (type) == TYPE_CODE_INT)&& 	TYPE_LENGTH (type) == sizeof (char)       ? 1 : 0;     default:       return (0);     } }
+unit|int character_type (struct type *type) {   CHECK_TYPEDEF (type);   switch (current_language->la_language)     {     case language_m2:     case language_pascal:       return TYPE_CODE (type) != TYPE_CODE_CHAR ? 0 : 1;      case language_c:     case language_cplus:     case language_objc:       return (TYPE_CODE (type) == TYPE_CODE_INT)&& 	TYPE_LENGTH (type) == sizeof (char)       ? 1 : 0;     default:       return (0);     } }
 comment|/* Returns non-zero if the value is a string type */
 end_comment
 
 begin_comment
-unit|int string_type (struct type *type) {   CHECK_TYPEDEF (type);   switch (current_language->la_language)     {     case language_chill:     case language_m2:     case language_pascal:       return TYPE_CODE (type) != TYPE_CODE_STRING ? 0 : 1;      case language_c:     case language_cplus:
+unit|int string_type (struct type *type) {   CHECK_TYPEDEF (type);   switch (current_language->la_language)     {     case language_m2:     case language_pascal:       return TYPE_CODE (type) != TYPE_CODE_STRING ? 0 : 1;      case language_c:     case language_cplus:     case language_objc:
 comment|/* C does not have distinct string type. */
 end_comment
 
@@ -2737,8 +2585,8 @@ comment|/* Returns non-zero if the value is a boolean type */
 end_comment
 
 begin_comment
-unit|int boolean_type (struct type *type) {   CHECK_TYPEDEF (type);   if (TYPE_CODE (type) == TYPE_CODE_BOOL)     return 1;   switch (current_language->la_language)     {     case language_c:     case language_cplus:
-comment|/* Might be more cleanly handled by having a TYPE_CODE_INT_NOT_BOOL          for CHILL and such languages, or a TYPE_CODE_INT_OR_BOOL for C.  */
+unit|int boolean_type (struct type *type) {   CHECK_TYPEDEF (type);   if (TYPE_CODE (type) == TYPE_CODE_BOOL)     return 1;   switch (current_language->la_language)     {     case language_c:     case language_cplus:     case language_objc:
+comment|/* Might be more cleanly handled by having a          TYPE_CODE_INT_NOT_BOOL for (the deleted) CHILL and such          languages, or a TYPE_CODE_INT_OR_BOOL for C.  */
 end_comment
 
 begin_comment
@@ -2756,13 +2604,8 @@ unit|int pointer_type (struct type *type) {   return TYPE_CODE (type) == TYPE_CO
 comment|/* Returns non-zero if the value is a structured type */
 end_comment
 
-begin_comment
-unit|int structured_type (struct type *type) {   CHECK_TYPEDEF (type);   switch (current_language->la_language)     {     case language_c:     case language_cplus:       return (TYPE_CODE (type) == TYPE_CODE_STRUCT) || 	(TYPE_CODE (type) == TYPE_CODE_UNION) || 	(TYPE_CODE (type) == TYPE_CODE_ARRAY);    case language_pascal:       return (TYPE_CODE(type) == TYPE_CODE_STRUCT) || 	 (TYPE_CODE(type) == TYPE_CODE_UNION) || 	 (TYPE_CODE(type) == TYPE_CODE_SET) || 	    (TYPE_CODE(type) == TYPE_CODE_ARRAY);     case language_m2:       return (TYPE_CODE (type) == TYPE_CODE_STRUCT) || 	(TYPE_CODE (type) == TYPE_CODE_SET) || 	(TYPE_CODE (type) == TYPE_CODE_ARRAY);     case language_chill:       error ("Missing Chill support in function structured_type.");
-comment|/*FIXME */
-end_comment
-
 begin_endif
-unit|default:       return (0);     } }
+unit|int structured_type (struct type *type) {   CHECK_TYPEDEF (type);   switch (current_language->la_language)     {     case language_c:     case language_cplus:     case language_objc:       return (TYPE_CODE (type) == TYPE_CODE_STRUCT) || 	(TYPE_CODE (type) == TYPE_CODE_UNION) || 	(TYPE_CODE (type) == TYPE_CODE_ARRAY);    case language_pascal:       return (TYPE_CODE(type) == TYPE_CODE_STRUCT) || 	 (TYPE_CODE(type) == TYPE_CODE_UNION) || 	 (TYPE_CODE(type) == TYPE_CODE_SET) || 	    (TYPE_CODE(type) == TYPE_CODE_ARRAY);     case language_m2:       return (TYPE_CODE (type) == TYPE_CODE_STRUCT) || 	(TYPE_CODE (type) == TYPE_CODE_SET) || 	(TYPE_CODE (type) == TYPE_CODE_ARRAY);     default:       return (0);     } }
 endif|#
 directive|endif
 end_endif
@@ -2797,12 +2640,6 @@ name|la_language
 condition|)
 block|{
 case|case
-name|language_chill
-case|:
-return|return
-name|builtin_type_chill_bool
-return|;
-case|case
 name|language_fortran
 case|:
 name|sym
@@ -2813,7 +2650,7 @@ literal|"logical"
 argument_list|,
 name|NULL
 argument_list|,
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 argument_list|,
 name|NULL
 argument_list|,
@@ -2873,7 +2710,7 @@ literal|"bool"
 argument_list|,
 name|NULL
 argument_list|,
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 argument_list|,
 name|NULL
 argument_list|,
@@ -2891,7 +2728,7 @@ literal|"boolean"
 argument_list|,
 name|NULL
 argument_list|,
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 argument_list|,
 name|NULL
 argument_list|,
@@ -2940,7 +2777,7 @@ literal|"boolean"
 argument_list|,
 name|NULL
 argument_list|,
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 argument_list|,
 name|NULL
 argument_list|,
@@ -3021,158 +2858,8 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Returns non-zero if the operator OP is defined on    the values ARG1 and ARG2. */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Currently unused */
-end_comment
-
-begin_comment
-unit|void binop_type_check (struct value *arg1, struct value *arg2, int op) {   struct type *t1, *t2;
-comment|/* If we're not checking types, always return success. */
-end_comment
-
-begin_comment
-unit|if (!STRICT_TYPE)     return;    t1 = VALUE_TYPE (arg1);   if (arg2 != NULL)     t2 = VALUE_TYPE (arg2);   else     t2 = NULL;    switch (op)     {     case BINOP_ADD:     case BINOP_SUB:       if ((numeric_type (t1)&& pointer_type (t2)) || 	  (pointer_type (t1)&& numeric_type (t2))) 	{ 	  warning ("combining pointer and integer.\n"); 	  break; 	}     case BINOP_MUL:     case BINOP_LSH:     case BINOP_RSH:       if (!numeric_type (t1) || !numeric_type (t2)) 	type_op_error ("Arguments to %s must be numbers.", op);       else if (!same_type (t1, t2)) 	type_op_error ("Arguments to %s must be of the same type.", op);       break;      case BINOP_LOGICAL_AND:     case BINOP_LOGICAL_OR:       if (!boolean_type (t1) || !boolean_type (t2)) 	type_op_error ("Arguments to %s must be of boolean type.", op);       break;      case BINOP_EQUAL:       if ((pointer_type (t1)&& !(pointer_type (t2) || integral_type (t2))) || 	  (pointer_type (t2)&& !(pointer_type (t1) || integral_type (t1)))) 	type_op_error ("A pointer can only be compared to an integer or pointer.", op);       else if ((pointer_type (t1)&& integral_type (t2)) || 	       (integral_type (t1)&& pointer_type (t2))) 	{ 	  warning ("combining integer and pointer.\n"); 	  break; 	}       else if (!simple_type (t1) || !simple_type (t2)) 	type_op_error ("Arguments to %s must be of simple type.", op);       else if (!same_type (t1, t2)) 	type_op_error ("Arguments to %s must be of the same type.", op);       break;      case BINOP_REM:     case BINOP_MOD:       if (!integral_type (t1) || !integral_type (t2)) 	type_op_error ("Arguments to %s must be of integral type.", op);       break;      case BINOP_LESS:     case BINOP_GTR:     case BINOP_LEQ:     case BINOP_GEQ:       if (!ordered_type (t1) || !ordered_type (t2)) 	type_op_error ("Arguments to %s must be of ordered type.", op);       else if (!same_type (t1, t2)) 	type_op_error ("Arguments to %s must be of the same type.", op);       break;      case BINOP_ASSIGN:       if (pointer_type (t1)&& !integral_type (t2)) 	type_op_error ("A pointer can only be assigned an integer.", op);       else if (pointer_type (t1)&& integral_type (t2)) 	{ 	  warning ("combining integer and pointer."); 	  break; 	}       else if (!simple_type (t1) || !simple_type (t2)) 	type_op_error ("Arguments to %s must be of simple type.", op);       else if (!same_type (t1, t2)) 	type_op_error ("Arguments to %s must be of the same type.", op);       break;      case BINOP_CONCAT:
-comment|/* FIXME:  Needs to handle bitstrings as well. */
-end_comment
-
-begin_comment
-unit|if (!(string_type (t1) || character_type (t1) || integral_type (t1)) 	|| !(string_type (t2) || character_type (t2) || integral_type (t2))) 	type_op_error ("Arguments to %s must be strings or characters.", op);       break;
-comment|/* Unary checks -- arg2 is null */
-end_comment
-
-begin_comment
-unit|case UNOP_LOGICAL_NOT:       if (!boolean_type (t1)) 	type_op_error ("Argument to %s must be of boolean type.", op);       break;      case UNOP_PLUS:     case UNOP_NEG:       if (!numeric_type (t1)) 	type_op_error ("Argument to %s must be of numeric type.", op);       break;      case UNOP_IND:       if (integral_type (t1)) 	{ 	  warning ("combining pointer and integer.\n"); 	  break; 	}       else if (!pointer_type (t1)) 	type_op_error ("Argument to %s must be a pointer.", op);       break;      case UNOP_PREINCREMENT:     case UNOP_POSTINCREMENT:     case UNOP_PREDECREMENT:     case UNOP_POSTDECREMENT:       if (!ordered_type (t1)) 	type_op_error ("Argument to %s must be of an ordered type.", op);       break;      default:
-comment|/* Ok.  The following operators have different meanings in          different languages. */
-end_comment
-
-begin_ifdef
-unit|switch (current_language->la_language) 	{
-ifdef|#
-directive|ifdef
-name|_LANG_c
-end_ifdef
-
-begin_endif
-unit|case language_c: 	case language_cplus: 	  switch (op) 	    { 	    case BINOP_DIV: 	      if (!numeric_type (t1) || !numeric_type (t2)) 		type_op_error ("Arguments to %s must be numbers.", op); 	      break; 	    } 	  break;
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_LANG_m2
-end_ifdef
-
-begin_endif
-unit|case language_m2: 	  switch (op) 	    { 	    case BINOP_DIV: 	      if (!float_type (t1) || !float_type (t2)) 		type_op_error ("Arguments to %s must be floating point numbers.", op); 	      break; 	    case BINOP_INTDIV: 	      if (!integral_type (t1) || !integral_type (t2)) 		type_op_error ("Arguments to %s must be of integral type.", op); 	      break; 	    }
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_LANG_pascal
-end_ifdef
-
-begin_endif
-unit|case language_pascal: 	 switch(op) 	 { 	 case BINOP_DIV: 	    if (!float_type(t1)&& !float_type(t2)) 	       type_op_error ("Arguments to %s must be floating point numbers.",op); 	    break; 	 case BINOP_INTDIV: 	    if (!integral_type(t1) || !integral_type(t2)) 	       type_op_error ("Arguments to %s must be of integral type.",op); 	    break; 	 }
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_LANG_chill
-end_ifdef
-
-begin_comment
-unit|case language_chill: 	  error ("Missing Chill support in function binop_type_check.");
-comment|/*FIXME */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|}     } }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* This page contains functions for the printing out of    error messages that occur during type- and range-    checking. */
 end_comment
-
-begin_comment
-comment|/* Prints the format string FMT with the operator as a string    corresponding to the opcode OP.  If FATAL is non-zero, then    this is an error and error () is called.  Otherwise, it is    a warning and printf() is called. */
-end_comment
-
-begin_function
-name|void
-name|op_error
-parameter_list|(
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-name|enum
-name|exp_opcode
-name|op
-parameter_list|,
-name|int
-name|fatal
-parameter_list|)
-block|{
-if|if
-condition|(
-name|fatal
-condition|)
-name|error
-argument_list|(
-name|fmt
-argument_list|,
-name|op_string
-argument_list|(
-name|op
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|warning
-argument_list|(
-name|fmt
-argument_list|,
-name|op_string
-argument_list|(
-name|op
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
 
 begin_comment
 comment|/* These are called when a language fails a type- or range-check.  The    first argument should be a printf()-style format string, and the    rest of the arguments should be its arguments.  If    [type|range]_check is [type|range]_check_on, an error is printed;    if [type|range]_check_warn, a warning; otherwise just the    message. */
@@ -3395,7 +3082,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|languages
 index|[
@@ -3726,6 +3413,143 @@ block|}
 end_function
 
 begin_comment
+comment|/* Iterate through all registered languages looking for and calling    any non-NULL struct language_defn.skip_trampoline() functions.    Return the result from the first that returns non-zero, or 0 if all    `fail'.  */
+end_comment
+
+begin_function
+name|CORE_ADDR
+name|skip_language_trampoline
+parameter_list|(
+name|CORE_ADDR
+name|pc
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|languages_size
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|languages
+index|[
+name|i
+index|]
+operator|->
+name|skip_trampoline
+condition|)
+block|{
+name|CORE_ADDR
+name|real_pc
+init|=
+operator|(
+name|languages
+index|[
+name|i
+index|]
+operator|->
+name|skip_trampoline
+operator|)
+operator|(
+name|pc
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|real_pc
+condition|)
+return|return
+name|real_pc
+return|;
+block|}
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Return demangled language symbol, or NULL.      FIXME: Options are only useful for certain languages and ignored    by others, so it would be better to remove them here and have a    more flexible demangler for the languages that need it.      FIXME: Sometimes the demangler is invoked when we don't know the    language, so we can't use this everywhere.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|language_demangle
+parameter_list|(
+specifier|const
+name|struct
+name|language_defn
+modifier|*
+name|current_language
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|mangled
+parameter_list|,
+name|int
+name|options
+parameter_list|)
+block|{
+if|if
+condition|(
+name|current_language
+operator|!=
+name|NULL
+operator|&&
+name|current_language
+operator|->
+name|la_demangle
+condition|)
+return|return
+name|current_language
+operator|->
+name|la_demangle
+argument_list|(
+name|mangled
+argument_list|,
+name|options
+argument_list|)
+return|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Return the default string containing the list of characters    delimiting words.  This is a reasonable default value that    most languages should be able to use.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|default_word_break_characters
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+literal|" \t\n!@#$%^&*()+=|~`}{[]\"';:?/>.<,-"
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Define the language that is no language.  */
 end_comment
 
@@ -3766,7 +3590,6 @@ specifier|static
 name|void
 name|unk_lang_emit_char
 parameter_list|(
-specifier|register
 name|int
 name|c
 parameter_list|,
@@ -3792,7 +3615,6 @@ specifier|static
 name|void
 name|unk_lang_printchar
 parameter_list|(
-specifier|register
 name|int
 name|c
 parameter_list|,
@@ -3979,6 +3801,51 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|CORE_ADDR
+name|unk_lang_trampoline
+parameter_list|(
+name|CORE_ADDR
+name|pc
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Unknown languages just use the cplus demangler.  */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|unk_lang_demangle
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|mangled
+parameter_list|,
+name|int
+name|options
+parameter_list|)
+block|{
+return|return
+name|cplus_demangle
+argument_list|(
+name|mangled
+argument_list|,
+name|options
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_function_decl
 specifier|static
 name|struct
@@ -4044,11 +3911,12 @@ name|type_check_off
 block|,
 name|case_sensitive_on
 block|,
+operator|&
+name|exp_descriptor_standard
+block|,
 name|unk_lang_parser
 block|,
 name|unk_lang_error
-block|,
-name|evaluate_subexp_standard
 block|,
 name|unk_lang_printchar
 block|,
@@ -4068,6 +3936,21 @@ comment|/* Print a value using appropriate syntax */
 name|unk_lang_value_print
 block|,
 comment|/* Print a top-level value */
+name|unk_lang_trampoline
+block|,
+comment|/* Language specific skip_trampoline */
+name|value_of_this
+block|,
+comment|/* value_of_this */
+name|basic_lookup_symbol_nonlocal
+block|,
+comment|/* lookup_symbol_nonlocal */
+name|basic_lookup_transparent_type
+block|,
+comment|/* lookup_transparent_type */
+name|unk_lang_demangle
+block|,
+comment|/* Language specific symbol demangler */
 block|{
 literal|""
 block|,
@@ -4125,6 +4008,8 @@ operator|&
 name|builtin_type_char
 block|,
 comment|/* Type of string elements */
+name|default_word_break_characters
+block|,
 name|LANG_MAGIC
 block|}
 decl_stmt|;
@@ -4157,11 +4042,12 @@ name|type_check_off
 block|,
 name|case_sensitive_on
 block|,
+operator|&
+name|exp_descriptor_standard
+block|,
 name|unk_lang_parser
 block|,
 name|unk_lang_error
-block|,
-name|evaluate_subexp_standard
 block|,
 name|unk_lang_printchar
 block|,
@@ -4181,6 +4067,21 @@ comment|/* Print a value using appropriate syntax */
 name|unk_lang_value_print
 block|,
 comment|/* Print a top-level value */
+name|unk_lang_trampoline
+block|,
+comment|/* Language specific skip_trampoline */
+name|value_of_this
+block|,
+comment|/* value_of_this */
+name|basic_lookup_symbol_nonlocal
+block|,
+comment|/* lookup_symbol_nonlocal */
+name|basic_lookup_transparent_type
+block|,
+comment|/* lookup_transparent_type */
+name|unk_lang_demangle
+block|,
+comment|/* Language specific symbol demangler */
 block|{
 literal|""
 block|,
@@ -4238,6 +4139,8 @@ operator|&
 name|builtin_type_char
 block|,
 comment|/* Type of string elements */
+name|default_word_break_characters
+block|,
 name|LANG_MAGIC
 block|}
 decl_stmt|;
@@ -4266,11 +4169,12 @@ name|type_check_off
 block|,
 name|case_sensitive_on
 block|,
+operator|&
+name|exp_descriptor_standard
+block|,
 name|unk_lang_parser
 block|,
 name|unk_lang_error
-block|,
-name|evaluate_subexp_standard
 block|,
 name|unk_lang_printchar
 block|,
@@ -4290,6 +4194,21 @@ comment|/* Print a value using appropriate syntax */
 name|unk_lang_value_print
 block|,
 comment|/* Print a top-level value */
+name|unk_lang_trampoline
+block|,
+comment|/* Language specific skip_trampoline */
+name|value_of_this
+block|,
+comment|/* value_of_this */
+name|basic_lookup_symbol_nonlocal
+block|,
+comment|/* lookup_symbol_nonlocal */
+name|basic_lookup_transparent_type
+block|,
+comment|/* lookup_transparent_type */
+name|unk_lang_demangle
+block|,
+comment|/* Language specific symbol demangler */
 block|{
 literal|""
 block|,
@@ -4347,6 +4266,8 @@ operator|&
 name|builtin_type_char
 block|,
 comment|/* Type of string elements */
+name|default_word_break_characters
+block|,
 name|LANG_MAGIC
 block|}
 decl_stmt|;
@@ -4430,7 +4351,7 @@ name|no_class
 argument_list|,
 name|set_check
 argument_list|,
-literal|"Set the status of the type/range checker"
+literal|"Set the status of the type/range checker."
 argument_list|,
 operator|&
 name|setchecklist
@@ -4479,7 +4400,7 @@ name|no_class
 argument_list|,
 name|show_check
 argument_list|,
-literal|"Show the status of the type/range checker"
+literal|"Show the status of the type/range checker."
 argument_list|,
 operator|&
 name|showchecklist

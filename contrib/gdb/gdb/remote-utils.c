@@ -177,8 +177,6 @@ argument_list|(
 literal|"Usage: target %s [DEVICE [SPEED [DEBUG]]]\n\ where DEVICE is the name of a device or HOST:PORT"
 argument_list|,
 name|proto
-argument_list|,
-name|proto
 argument_list|)
 expr_stmt|;
 return|return;

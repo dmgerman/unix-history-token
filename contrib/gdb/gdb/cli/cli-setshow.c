@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle set and show GDB commands.     Copyright 2000, 2001, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Handle set and show GDB commands.     Copyright 2000, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"readline/tilde.h"
 end_include
 
 begin_include
@@ -21,22 +27,11 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|"gdb_string.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -77,27 +72,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|enum
-name|cmd_auto_boolean
-name|parse_auto_binary_operation
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_escape
 end_escape
 
 begin_function
 specifier|static
 name|enum
-name|cmd_auto_boolean
+name|auto_boolean
 name|parse_auto_binary_operation
 parameter_list|(
 specifier|const
@@ -192,7 +173,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|CMD_AUTO_BOOLEAN_TRUE
+name|AUTO_BOOLEAN_TRUE
 return|;
 elseif|else
 if|if
@@ -242,7 +223,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|CMD_AUTO_BOOLEAN_FALSE
+name|AUTO_BOOLEAN_FALSE
 return|;
 elseif|else
 if|if
@@ -276,7 +257,7 @@ literal|1
 operator|)
 condition|)
 return|return
-name|CMD_AUTO_BOOLEAN_AUTO
+name|AUTO_BOOLEAN_AUTO
 return|;
 block|}
 name|error
@@ -285,7 +266,7 @@ literal|"\"on\", \"off\" or \"auto\" expected."
 argument_list|)
 expr_stmt|;
 return|return
-name|CMD_AUTO_BOOLEAN_AUTO
+name|AUTO_BOOLEAN_AUTO
 return|;
 comment|/* pacify GCC */
 block|}
@@ -830,7 +811,7 @@ case|:
 operator|*
 operator|(
 expr|enum
-name|cmd_auto_boolean
+name|auto_boolean
 operator|*
 operator|)
 name|c
@@ -1096,6 +1077,8 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -1475,7 +1458,7 @@ condition|(
 operator|*
 operator|(
 expr|enum
-name|cmd_auto_boolean
+name|auto_boolean
 operator|*
 operator|)
 name|c
@@ -1484,7 +1467,7 @@ name|var
 condition|)
 block|{
 case|case
-name|CMD_AUTO_BOOLEAN_TRUE
+name|AUTO_BOOLEAN_TRUE
 case|:
 name|fputs_filtered
 argument_list|(
@@ -1497,7 +1480,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CMD_AUTO_BOOLEAN_FALSE
+name|AUTO_BOOLEAN_FALSE
 case|:
 name|fputs_filtered
 argument_list|(
@@ -1510,7 +1493,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CMD_AUTO_BOOLEAN_AUTO
+name|AUTO_BOOLEAN_AUTO
 case|:
 name|fputs_filtered
 argument_list|(
@@ -1742,7 +1725,14 @@ modifier|*
 name|prefix
 parameter_list|)
 block|{
-name|ui_out_tuple_begin
+name|struct
+name|cleanup
+modifier|*
+name|showlist_chain
+decl_stmt|;
+name|showlist_chain
+operator|=
+name|make_cleanup_ui_out_tuple_begin_end
 argument_list|(
 name|uiout
 argument_list|,
@@ -1776,13 +1766,18 @@ operator|->
 name|abbrev_flag
 condition|)
 block|{
-name|ui_out_tuple_begin
+name|struct
+name|cleanup
+modifier|*
+name|optionlist_chain
+init|=
+name|make_cleanup_ui_out_tuple_begin_end
 argument_list|(
 name|uiout
 argument_list|,
 literal|"optionlist"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|ui_out_field_string
 argument_list|(
 name|uiout
@@ -1812,9 +1807,10 @@ operator|+
 literal|5
 argument_list|)
 expr_stmt|;
-name|ui_out_tuple_end
+comment|/* Close the tuple.  */
+name|do_cleanups
 argument_list|(
-name|uiout
+name|optionlist_chain
 argument_list|)
 expr_stmt|;
 block|}
@@ -1827,13 +1823,18 @@ operator|==
 name|show_cmd
 condition|)
 block|{
-name|ui_out_tuple_begin
+name|struct
+name|cleanup
+modifier|*
+name|option_chain
+init|=
+name|make_cleanup_ui_out_tuple_begin_end
 argument_list|(
 name|uiout
 argument_list|,
 literal|"option"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|ui_out_text
 argument_list|(
 name|uiout
@@ -1872,16 +1873,18 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
-name|ui_out_tuple_end
+comment|/* Close the tuple.  */
+name|do_cleanups
 argument_list|(
-name|uiout
+name|option_chain
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ui_out_tuple_end
+comment|/* Close the tuple.  */
+name|do_cleanups
 argument_list|(
-name|uiout
+name|showlist_chain
 argument_list|)
 expr_stmt|;
 block|}

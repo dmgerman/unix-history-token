@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Language independent support for printing types for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1998, 1999,    2000, 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Language independent support for printing types for GDB, the GNU debugger.     Copyright 1986, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1998,    1999, 2000, 2001, 2003 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"gdb_obstack.h"
 end_include
 
 begin_include
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"cp-abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"typeprint.h"
 end_include
 
 begin_include
@@ -252,8 +258,7 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-operator|!
-name|STREQ
+name|strcmp
 argument_list|(
 name|TYPE_NAME
 argument_list|(
@@ -265,11 +270,13 @@ argument_list|)
 operator|)
 argument_list|)
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|new
 argument_list|)
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|fprintf_filtered
 argument_list|(
@@ -277,7 +284,7 @@ name|stream
 argument_list|,
 literal|" %s"
 argument_list|,
-name|SYMBOL_SOURCE_NAME
+name|SYMBOL_PRINT_NAME
 argument_list|(
 name|new
 argument_list|)
@@ -310,22 +317,25 @@ name|new
 argument_list|)
 argument_list|)
 operator|||
-operator|!
-name|STREQ
+name|strcmp
 argument_list|(
 name|TYPE_NAME
 argument_list|(
+operator|(
 name|SYMBOL_TYPE
 argument_list|(
 name|new
 argument_list|)
+operator|)
 argument_list|)
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|new
 argument_list|)
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|fprintf_filtered
 argument_list|(
@@ -333,7 +343,7 @@ name|stream
 argument_list|,
 literal|"%s = "
 argument_list|,
-name|SYMBOL_SOURCE_NAME
+name|SYMBOL_PRINT_NAME
 argument_list|(
 name|new
 argument_list|)
@@ -380,85 +390,10 @@ name|stream
 argument_list|,
 literal|"%s = "
 argument_list|,
-name|SYMBOL_SOURCE_NAME
+name|SYMBOL_PRINT_NAME
 argument_list|(
 name|new
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|type_print
-argument_list|(
-name|type
-argument_list|,
-literal|""
-argument_list|,
-name|stream
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|_LANG_chill
-case|case
-name|language_chill
-case|:
-name|fprintf_filtered
-argument_list|(
-name|stream
-argument_list|,
-literal|"SYNMODE "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|TYPE_NAME
-argument_list|(
-name|SYMBOL_TYPE
-argument_list|(
-name|new
-argument_list|)
-argument_list|)
-operator|||
-operator|!
-name|STREQ
-argument_list|(
-name|TYPE_NAME
-argument_list|(
-name|SYMBOL_TYPE
-argument_list|(
-name|new
-argument_list|)
-argument_list|)
-argument_list|,
-name|SYMBOL_NAME
-argument_list|(
-name|new
-argument_list|)
-argument_list|)
-condition|)
-name|fprintf_filtered
-argument_list|(
-name|stream
-argument_list|,
-literal|"%s = "
-argument_list|,
-name|SYMBOL_SOURCE_NAME
-argument_list|(
-name|new
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf_filtered
-argument_list|(
-name|stream
-argument_list|,
-literal|"<builtin> = "
 argument_list|)
 expr_stmt|;
 name|type_print
@@ -561,7 +496,6 @@ name|value
 modifier|*
 name|val
 decl_stmt|;
-specifier|register
 name|struct
 name|cleanup
 modifier|*
@@ -827,10 +761,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -915,10 +845,6 @@ begin_comment
 comment|/* TYPENAME is either the name of a type, or an expression.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -932,7 +858,6 @@ name|int
 name|from_tty
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -943,7 +868,6 @@ name|expression
 modifier|*
 name|expr
 decl_stmt|;
-specifier|register
 name|struct
 name|cleanup
 modifier|*
@@ -1272,6 +1196,9 @@ case|:
 case|case
 name|TYPE_CODE_REF
 case|:
+case|case
+name|TYPE_CODE_NAMESPACE
+case|:
 name|error
 argument_list|(
 literal|"internal error: unhandled type in print_type_scalar"
@@ -1314,13 +1241,11 @@ name|value
 modifier|*
 name|val
 decl_stmt|;
-specifier|register
 name|struct
 name|type
 modifier|*
 name|type
 decl_stmt|;
-specifier|register
 name|struct
 name|cleanup
 modifier|*

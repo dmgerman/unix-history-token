@@ -22,35 +22,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"nm-nbsd.h"
+file|"config/nm-nbsd.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|REGISTER_U_ADDR
-parameter_list|(
-name|addr
-parameter_list|,
-name|blockend
-parameter_list|,
-name|regno
-parameter_list|)
-define|\
-value|(addr) = arm_register_u_addr ((blockend),(regno));
-end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|arm_register_u_addr
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent definitions for FreeBSD/i386.    Copyright 1986, 1987, 1989, 1992, 1994, 1996, 1997, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent definitions for FreeBSD/i386.     Copyright 1986, 1987, 1989, 1992, 1994, 1996, 1997, 2000, 2001, 2004    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -186,6 +186,16 @@ name|CHILD_RESUME
 end_define
 
 begin_comment
+comment|/* Override child_pid_to_exec_file in 'inftarg.c'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHILD_PID_TO_EXEC_FILE
+end_define
+
+begin_comment
 comment|/* We can attach and detach.  */
 end_comment
 
@@ -276,43 +286,6 @@ begin_comment
 comment|/* Shared library support.  */
 end_comment
 
-begin_comment
-comment|/* The FreeBSD<link.h> uses the same condition to distinguish ELF    from a.out.  ELF implies SVR4 shared libraries.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|FREEBSD_ELF
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ELF__
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|FREEBSD_AOUT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SVR4_SHARED_LIBS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -320,38 +293,7 @@ file|"solib.h"
 end_include
 
 begin_comment
-comment|/* Support for shared libraries. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SVR4_SHARED_LIBS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"elf/common.h"
-end_include
-
-begin_comment
-comment|/* Additional ELF shared library info. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SVR4_SHARED_LIBS
-end_ifndef
-
-begin_comment
-comment|/* Make structure definitions match up with those expected in `solib.c'.  */
+comment|/* Make structure definitions match up with those expected in    `solib-sunos.c'.  */
 end_comment
 
 begin_define
@@ -682,16 +624,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !SVR4_SHARED_LIBS */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NM_FBSD_H */
+comment|/* nm-fbsd.h */
 end_comment
 
 end_unit

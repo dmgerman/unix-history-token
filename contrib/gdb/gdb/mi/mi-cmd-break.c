@@ -57,26 +57,6 @@ directive|include
 file|"gdb.h"
 end_include
 
-begin_comment
-comment|/* Convenience macro for allocting typesafe memory. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|XMALLOC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|XMALLOC
-parameter_list|(
-name|TYPE
-parameter_list|)
-value|(TYPE*) xmalloc (sizeof (TYPE))
-end_define
-
 begin_enum
 enum|enum
 block|{

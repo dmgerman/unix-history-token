@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Scheme/Guile language support routines for GDB, the GNU debugger.    Copyright 1995, 1996, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Scheme/Guile language support routines for GDB, the GNU debugger.     Copyright 1995, 1996, 1998, 2000, 2001, 2002, 2003, 2004 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"source.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"gdb_string.h"
 end_include
 
@@ -73,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"infcall.h"
 end_include
 
 begin_function_decl
@@ -362,6 +374,7 @@ name|type
 modifier|*
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|valaddr
@@ -527,11 +540,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|symtab_and_line
+name|cursal
+init|=
+name|get_current_source_symtab_and_line
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
-name|current_source_symtab
+name|cursal
+operator|.
+name|symtab
 operator|&&
-name|current_source_symtab
+name|cursal
+operator|.
+name|symtab
 operator|->
 name|filename
 condition|)
@@ -540,7 +564,9 @@ name|char
 modifier|*
 name|filename
 init|=
-name|current_source_symtab
+name|cursal
+operator|.
+name|symtab
 operator|->
 name|filename
 decl_stmt|;
@@ -679,7 +705,7 @@ literal|"env"
 argument_list|,
 name|expression_context_block
 argument_list|,
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 argument_list|,
 operator|(
 name|int
@@ -765,7 +791,7 @@ name|str
 argument_list|,
 name|expression_context_block
 argument_list|,
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 argument_list|,
 operator|(
 name|int
@@ -797,6 +823,8 @@ return|;
 name|error
 argument_list|(
 literal|"No symbol \"%s\" in current context."
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 block|}
@@ -895,13 +923,11 @@ name|type
 modifier|*
 name|expect_type
 parameter_list|,
-specifier|register
 name|struct
 name|expression
 modifier|*
 name|exp
 parameter_list|,
-specifier|register
 name|int
 modifier|*
 name|pos
@@ -1115,6 +1141,26 @@ end_function
 begin_decl_stmt
 specifier|const
 name|struct
+name|exp_descriptor
+name|exp_descriptor_scm
+init|=
+block|{
+name|print_subexp_standard
+block|,
+name|operator_length_standard
+block|,
+name|op_name_standard
+block|,
+name|dump_subexp_body_standard
+block|,
+name|evaluate_subexp_scm
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|struct
 name|language_defn
 name|scm_language_defn
 init|=
@@ -1132,11 +1178,12 @@ name|type_check_off
 block|,
 name|case_sensitive_off
 block|,
+operator|&
+name|exp_descriptor_scm
+block|,
 name|scm_parse
 block|,
 name|c_error
-block|,
-name|evaluate_subexp_scm
 block|,
 name|scm_printchar
 block|,
@@ -1159,6 +1206,21 @@ comment|/* Print a value using appropriate syntax */
 name|scm_value_print
 block|,
 comment|/* Print a top-level value */
+name|NULL
+block|,
+comment|/* Language specific skip_trampoline */
+name|value_of_this
+block|,
+comment|/* value_of_this */
+name|basic_lookup_symbol_nonlocal
+block|,
+comment|/* lookup_symbol_nonlocal */
+name|basic_lookup_transparent_type
+block|,
+comment|/* lookup_transparent_type */
+name|NULL
+block|,
+comment|/* Language specific symbol demangler */
 block|{
 literal|""
 block|,
@@ -1216,6 +1278,8 @@ operator|&
 name|builtin_type_char
 block|,
 comment|/* Type of string elements */
+name|default_word_break_characters
+block|,
 name|LANG_MAGIC
 block|}
 decl_stmt|;

@@ -15,6 +15,12 @@ directive|define
 name|GDB_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ui_out
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Return-code (RC) from a gdb library call.  (The abreviation RC is    taken from the sim/common directory.) */
 end_comment

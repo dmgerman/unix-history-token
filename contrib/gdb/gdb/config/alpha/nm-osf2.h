@@ -30,16 +30,6 @@ name|HAVE_OPTIONAL_PROC_FS
 end_define
 
 begin_comment
-comment|/* OSF/1 doesn't provide the standard fault definitions, so don't use them.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FAULTED_USE_SIGINFO
-end_define
-
-begin_comment
 comment|/* Don't trace faults under OSF/1, rely on the posting of the appropriate    signal if fault tracing is disabled.    Tracing T_IFAULT under Alpha OSF/1 causes a `floating point enable'    fault from which we cannot continue (except by disabling the    tracing).    And as OSF/1 doesn't provide the standard fault definitions, the    mapping of faults to appropriate signals in procfs_wait is difficult.  */
 end_comment
 

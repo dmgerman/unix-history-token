@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for printing Fortran types for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991, 1993, 1994, 1995, 1996, 1998, 2000,    2001, 2002    Free Software Foundation, Inc.    Contributed by Motorola.  Adapted from the C version by Farooq Butt    (fmbutt@engage.sps.mot.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Support for printing Fortran types for GDB, the GNU debugger.     Copyright 1986, 1988, 1989, 1991, 1993, 1994, 1995, 1996, 1998,    2000, 2001, 2002, 2003 Free Software Foundation, Inc.     Contributed by Motorola.  Adapted from the C version by Farooq Butt    (fmbutt@engage.sps.mot.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"gdb_obstack.h"
 end_include
 
 begin_include
@@ -199,7 +199,6 @@ name|int
 name|level
 parameter_list|)
 block|{
-specifier|register
 name|enum
 name|type_code
 name|code
@@ -1162,6 +1161,31 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|TYPE_CODE_REF
+case|:
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|"REF TO -> ( "
+argument_list|)
+expr_stmt|;
+name|f_type_print_base
+argument_list|(
+name|TYPE_TARGET_TYPE
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+name|stream
+argument_list|,
+literal|0
+argument_list|,
+name|level
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|TYPE_CODE_VOID
 case|:
 name|fprintf_filtered
@@ -1224,7 +1248,7 @@ case|:
 comment|/* There may be some character types that attempt to come          through as TYPE_CODE_INT since dbxstclass.h is so          C-oriented, we must change these to "character" from "char".  */
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|TYPE_NAME
 argument_list|(
@@ -1233,6 +1257,8 @@ argument_list|)
 argument_list|,
 literal|"char"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|fprintf_filtered
 argument_list|(

@@ -37,6 +37,18 @@ begin_comment
 comment|/* for DOSish file names */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"language.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cli/cli-decode.h"
+end_include
+
 begin_comment
 comment|/* FIXME: This is needed because of lookup_cmd_1().    We should be calling a hook instead so we eliminate the CLI dependency. */
 end_comment
@@ -48,13 +60,13 @@ file|"gdbcmd.h"
 end_include
 
 begin_comment
-comment|/* Needed for rl_completer_word_break_characters() and for    filename_completion_function.  */
+comment|/* Needed for rl_completer_word_break_characters() and for    rl_filename_completion_function.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline/readline.h"
 end_include
 
 begin_comment
@@ -78,10 +90,12 @@ comment|/* Prototypes for local functions */
 end_comment
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|line_completion_function
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|text
@@ -100,22 +114,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* readline uses the word breaks for two things:    (1) In figuring out where to point the TEXT parameter to the    rl_completion_entry_function.  Since we don't use TEXT for much,    it doesn't matter a lot what the word breaks are for this purpose, but    it does affect how much stuff M-? lists.    (2) If one of the matches contains a word break character, readline    will quote it.  That's why we switch between    gdb_completer_word_break_characters and    gdb_completer_command_word_break_characters.  I'm not sure when    we need this behavior (perhaps for funky characters in C++ symbols?).  */
+comment|/* readline uses the word breaks for two things:    (1) In figuring out where to point the TEXT parameter to the    rl_completion_entry_function.  Since we don't use TEXT for much,    it doesn't matter a lot what the word breaks are for this purpose, but    it does affect how much stuff M-? lists.    (2) If one of the matches contains a word break character, readline    will quote it.  That's why we switch between    current_language->la_word_break_characters() and    gdb_completer_command_word_break_characters.  I'm not sure when    we need this behavior (perhaps for funky characters in C++ symbols?).  */
 end_comment
 
 begin_comment
 comment|/* Variables which are necessary for fancy command line editing.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|gdb_completer_word_break_characters
-init|=
-literal|" \t\n!@#$%^&*()+=|~`}{[]\"';:?/>.<,-"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* When completing on command names, we remove '-' from the list of    word break characters, since we use it in command names.  If the    readline library sees one in any of the current completion strings,    it thinks that the string needs to be quoted and automatically supplies    a leading quote. */
@@ -213,20 +217,6 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|get_gdb_completer_word_break_characters
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|gdb_completer_word_break_characters
-return|;
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
 name|get_gdb_completer_quote_characters
 parameter_list|(
 name|void
@@ -247,6 +237,7 @@ name|char
 modifier|*
 name|readline_line_completion_function
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|text
@@ -370,7 +361,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|filename_completion_function
+name|rl_filename_completion_function
 argument_list|(
 name|text
 argument_list|,
@@ -853,7 +844,10 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-name|gdb_completer_word_break_characters
+name|current_language
+operator|->
+name|la_word_break_characters
+argument_list|()
 argument_list|,
 operator|*
 name|p
@@ -1235,6 +1229,7 @@ modifier|*
 modifier|*
 name|complete_line
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|text
@@ -1277,7 +1272,10 @@ decl_stmt|;
 comment|/* Choose the default set of word break characters to break completions.      If we later find out that we are doing completions on command strings      (as opposed to strings supplied by the individual command completer      functions, which can be any string) then we will switch to the      special word break set for command strings, which leaves out the      '-' character used in some commands.  */
 name|rl_completer_word_break_characters
 operator|=
-name|gdb_completer_word_break_characters
+name|current_language
+operator|->
+name|la_word_break_characters
+argument_list|()
 expr_stmt|;
 comment|/* Decide whether to complete on a list of gdb commands or on symbols. */
 name|tmp_command
@@ -1921,10 +1919,12 @@ comment|/* Generate completions one by one for the completer.  Each time we are 
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|line_completion_function
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|text
@@ -2030,7 +2030,7 @@ literal|0
 comment|/* Can't do this because readline hasn't yet checked the word breaks      for figuring out whether to insert a quote.  */
 block|if (output == NULL)
 comment|/* Make sure the word break characters are set back to normal for the        next time that readline tries to complete something.  */
-block|rl_completer_word_break_characters =       gdb_completer_word_break_characters;
+block|rl_completer_word_break_characters =       current_language->la_word_break_characters();
 endif|#
 directive|endif
 return|return
@@ -2042,17 +2042,25 @@ block|}
 end_function
 
 begin_comment
-comment|/* Skip over a possibly quoted word (as defined by the quote characters    and word break characters the completer uses).  Returns pointer to the    location after the "word". */
+comment|/* Skip over the possibly quoted word STR (as defined by the quote    characters QUOTECHARS and the the word break characters    BREAKCHARS).  Returns pointer to the location after the "word".  If    either QUOTECHARS or BREAKCHARS is NULL, use the same values used    by the completer.  */
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|skip_quoted
+name|skip_quoted_chars
 parameter_list|(
 name|char
 modifier|*
 name|str
+parameter_list|,
+name|char
+modifier|*
+name|quotechars
+parameter_list|,
+name|char
+modifier|*
+name|breakchars
 parameter_list|)
 block|{
 name|char
@@ -2064,6 +2072,29 @@ name|char
 modifier|*
 name|scan
 decl_stmt|;
+if|if
+condition|(
+name|quotechars
+operator|==
+name|NULL
+condition|)
+name|quotechars
+operator|=
+name|gdb_completer_quote_characters
+expr_stmt|;
+if|if
+condition|(
+name|breakchars
+operator|==
+name|NULL
+condition|)
+name|breakchars
+operator|=
+name|current_language
+operator|->
+name|la_word_break_characters
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|scan
@@ -2107,7 +2138,7 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-name|gdb_completer_quote_characters
+name|quotechars
 argument_list|,
 operator|*
 name|scan
@@ -2126,7 +2157,7 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-name|gdb_completer_word_break_characters
+name|breakchars
 argument_list|,
 operator|*
 name|scan
@@ -2140,6 +2171,33 @@ return|return
 operator|(
 name|scan
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Skip over the possibly quoted word STR (as defined by the quote    characters and word break characters used by the completer).    Returns pointer to the location after the "word". */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|skip_quoted
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+return|return
+name|skip_quoted_chars
+argument_list|(
+name|str
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 return|;
 block|}
 end_function

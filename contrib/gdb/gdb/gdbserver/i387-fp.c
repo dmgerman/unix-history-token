@@ -9,6 +9,12 @@ directive|include
 file|"server.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"i387-fp.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|num_xmm_registers
@@ -388,6 +394,7 @@ begin_function
 name|void
 name|i387_fsave_to_cache
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|buf
@@ -1175,6 +1182,7 @@ begin_function
 name|void
 name|i387_fxsave_to_cache
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|buf

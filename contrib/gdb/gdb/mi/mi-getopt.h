@@ -89,6 +89,31 @@ name|mi_opt
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* mi_valid_noargs        Determines if ARGC/ARGV are a valid set of parameters to satisfy     an MI function that is not supposed to recieve any arguments.        An MI function that should not recieve arguments can still be     passed parameters after the special option '--' such as below.     Example: The MI function -exec-run takes no args.    However, the client may pass '-exec-run -- -a ...'    See PR-783     PREFIX is passed to mi_getopt for an error message.         This function Returns 1 if the parameter pair ARGC/ARGV are valid    for an MI function that takes no arguments. Otherwise, it returns 0    and the appropriate error message is displayed by mi_getopt.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|mi_valid_noargs
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|prefix
+parameter_list|,
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

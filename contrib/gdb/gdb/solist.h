@@ -204,6 +204,26 @@ name|CORE_ADDR
 name|pc
 parameter_list|)
 function_decl|;
+comment|/* Extra hook for finding and opening a solib.  Convenience function        for remote debuggers finding host libs */
+name|int
+function_decl|(
+modifier|*
+name|find_and_open_solib
+function_decl|)
+parameter_list|(
+name|char
+modifier|*
+name|soname
+parameter_list|,
+name|unsigned
+name|o_flags
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|temp_pathname
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -313,6 +333,14 @@ directive|define
 name|TARGET_SO_IN_DYNSYM_RESOLVE_CODE
 define|\
 value|(current_target_so_ops->in_dynsym_resolve_code)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_SO_FIND_AND_OPEN_SOLIB
+define|\
+value|(current_target_so_ops->find_and_open_solib)
 end_define
 
 begin_endif

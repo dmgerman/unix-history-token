@@ -31,6 +31,9 @@ specifier|const
 name|char
 modifier|*
 name|prefix
+parameter_list|,
+name|char
+name|quote
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level Unix child interface to ttrace, for GDB when running under HP-UX.    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Low level Unix child interface to ttrace, for GDB when running under HP-UX.    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998,    1999, 2000, 2001, 2003    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdbthread.h"
 end_include
 
 begin_comment
@@ -628,37 +634,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vfork_in_flight
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* To support PREPARE_TO_PROCEED (hppa_prepare_to_proceed).  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|pid_t
-name|old_gdb_pid
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|pid_t
-name|reported_pid
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|reported_bpt
 init|=
 literal|0
 decl_stmt|;
@@ -6194,7 +6169,7 @@ operator|->
 name|tts_lwpid
 argument_list|)
 expr_stmt|;
-comment|/* Save a copy of the ttrace state of this thread, in our local      thread descriptor.       This caches the state.  The implementation of queries like      target_has_execd can then use this cached state, rather than      be forced to make an explicit ttrace call to get it.       (Guard against the condition that this is the first time we've      waited on, i.e., seen this thread, and so haven't yet entered      it into our list of threads.)    */
+comment|/* Save a copy of the ttrace state of this thread, in our local      thread descriptor.       This caches the state.  The implementation of queries like      hpux_has_execd can then use this cached state, rather than      be forced to make an explicit ttrace call to get it.       (Guard against the condition that this is the first time we've      waited on, i.e., seen this thread, and so haven't yet entered      it into our list of threads.)    */
 name|tinfo
 operator|=
 name|find_thread_info
@@ -7831,42 +7806,6 @@ argument_list|(
 name|real_tid
 argument_list|)
 expr_stmt|;
-comment|/* Remember this for later use in "hppa_prepare_to_proceed".    */
-name|old_gdb_pid
-operator|=
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-expr_stmt|;
-name|reported_pid
-operator|=
-name|return_pid
-expr_stmt|;
-name|reported_bpt
-operator|=
-operator|(
-operator|(
-name|tsp
-operator|.
-name|tts_event
-operator|&
-name|TTEVT_SIGNAL
-operator|)
-operator|&&
-operator|(
-literal|5
-operator|==
-name|tsp
-operator|.
-name|tts_u
-operator|.
-name|tts_signal
-operator|.
-name|tts_signo
-operator|)
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|real_tid
@@ -7901,7 +7840,14 @@ begin_function
 name|int
 name|parent_attach_all
 parameter_list|(
-name|void
+name|int
+name|p1
+parameter_list|,
+name|PTRACE_ARG3_TYPE
+name|p2
+parameter_list|,
+name|int
+name|p3
 parameter_list|)
 block|{
 name|int
@@ -9064,22 +9010,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CHILD_HAS_FORKED
-argument_list|)
-end_if
-
 begin_comment
 comment|/* Q: Do we need to map the returned process ID to a thread ID?   * A: I don't think so--here we want a _real_ pid.  Any later  *    operations will call "require_notification_of_events" and  *    start the mapping.  */
 end_comment
 
 begin_function
 name|int
-name|child_has_forked
+name|hpux_has_forked
 parameter_list|(
 name|int
 name|tid
@@ -9206,27 +9143,13 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CHILD_HAS_VFORKED
-argument_list|)
-end_if
-
 begin_comment
-comment|/* See child_has_forked for pid discussion.  */
+comment|/* See hpux_has_forked for pid discussion.  */
 end_comment
 
 begin_function
 name|int
-name|child_has_vforked
+name|hpux_has_vforked
 parameter_list|(
 name|int
 name|tid
@@ -9351,39 +9274,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CHILD_CAN_FOLLOW_VFORK_PRIOR_TO_EXEC
-argument_list|)
-end_if
-
-begin_function
-name|int
-name|child_can_follow_vfork_prior_to_exec
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/* ttrace does allow this.       ??rehrauer: However, I had major-league problems trying to      convince wait_for_inferior to handle that case.  Perhaps when      it is rewritten to grok multiple processes in an explicit way...    */
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -9444,18 +9334,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CHILD_HAS_EXECD
-argument_list|)
-end_if
-
 begin_function
 name|int
-name|child_has_execd
+name|hpux_has_execd
 parameter_list|(
 name|int
 name|tid
@@ -9593,23 +9474,9 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CHILD_HAS_SYSCALL_EVENT
-argument_list|)
-end_if
-
 begin_function
 name|int
-name|child_has_syscall_event
+name|hpux_has_syscall_event
 parameter_list|(
 name|int
 name|pid
@@ -9764,11 +9631,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_escape
 end_escape
@@ -10027,7 +9889,13 @@ name|PT_SETTRC
 case|:
 return|return
 name|parent_attach_all
-argument_list|()
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 return|;
 case|case
 name|PT_RUREGS
@@ -10790,11 +10658,13 @@ name|debug_on
 condition|)
 if|if
 condition|(
+operator|(
 name|state
 operator|.
 name|tts_flags
 operator|&
 name|TTS_STATEMASK
+operator|)
 operator|!=
 name|TTS_WASSUSPENDED
 condition|)
@@ -11164,11 +11034,13 @@ name|debug_on
 condition|)
 if|if
 condition|(
+operator|(
 name|state
 operator|.
 name|tts_flags
 operator|&
 name|TTS_STATEMASK
+operator|)
 operator|!=
 name|TTS_WASSUSPENDED
 condition|)
@@ -12206,19 +12078,34 @@ block|}
 block|}
 else|else
 block|{
-comment|/* TT_LWP_CONTINUE can pass signals to threads,        * TT_PROC_CONTINUE can't.  So if there are any        * signals to pass, we have to use the (slower)        * loop over the stopped threads.        *        * Equally, if we have to not continue some threads,        * due to saved events, we have to use the loop.        */
+comment|/* TT_LWP_CONTINUE can pass signals to threads, TT_PROC_CONTINUE can't. 	 Therefore, we really can't use TT_PROC_CONTINUE here.  	 Consider a process which stopped due to signal which gdb decides 	 to handle and not pass on to the inferior.  In that case we must 	 clear the pending signal by restarting the inferior using 	 TT_LWP_CONTINUE and pass zero as the signal number.  Else the 	 pending signal will be passed to the inferior.  interrupt.exp 	 in the testsuite does this precise thing and fails due to the 	 unwanted signal delivery to the inferior.  */
+comment|/* drow/2002-12-05: However, note that we must use TT_PROC_CONTINUE 	 if we are tracing a vfork.  */
 if|if
 condition|(
-operator|(
-name|signal
-operator|!=
-literal|0
-operator|)
-operator|||
-name|saved_signals_exist
-argument_list|()
+name|vfork_in_flight
 condition|)
 block|{
+name|call_ttrace
+argument_list|(
+name|TT_PROC_CONTINUE
+argument_list|,
+name|tid
+argument_list|,
+name|TT_NIL
+argument_list|,
+name|TT_NIL
+argument_list|,
+name|TT_NIL
+argument_list|)
+expr_stmt|;
+name|clear_all_handled
+argument_list|()
+expr_stmt|;
+name|clear_all_stepping_mode
+argument_list|()
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|resume_all_threads
@@ -12273,7 +12160,7 @@ argument_list|,
 name|signal
 argument_list|)
 expr_stmt|;
-comment|/* Clear the "handled" state of this thread, because 	       * we'll soon get a new event for it.  Other events 	       * can stay as they were. 	       */
+comment|/* Clear the "handled" state of this thread, because we 	     will soon get a new event for it.  Other events can 	     stay as they were.  */
 name|clear_handled
 argument_list|(
 name|tid
@@ -12284,126 +12171,6 @@ argument_list|(
 name|tid
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* No signals to send. 	   */
-if|if
-condition|(
-name|resume_all_threads
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|THREAD_DEBUG
-if|if
-condition|(
-name|debug_on
-condition|)
-name|printf
-argument_list|(
-literal|"Doing a continue by process of process %d\n"
-argument_list|,
-name|tid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|more_events_left
-operator|>
-literal|0
-condition|)
-block|{
-name|warning
-argument_list|(
-literal|"Losing buffered events on continue."
-argument_list|)
-expr_stmt|;
-name|more_events_left
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|call_ttrace
-argument_list|(
-name|TT_PROC_CONTINUE
-argument_list|,
-name|tid
-argument_list|,
-name|TT_NIL
-argument_list|,
-name|TT_NIL
-argument_list|,
-name|TT_NIL
-argument_list|)
-expr_stmt|;
-name|clear_all_handled
-argument_list|()
-expr_stmt|;
-name|clear_all_stepping_mode
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|THREAD_DEBUG
-if|if
-condition|(
-name|debug_on
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Doing a continue of just thread %d\n"
-argument_list|,
-name|tid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|is_terminated
-argument_list|(
-name|tid
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"Why are we continuing a dead thread? (5)\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-name|call_ttrace
-argument_list|(
-name|TT_LWP_CONTINUE
-argument_list|,
-name|tid
-argument_list|,
-name|TT_NIL
-argument_list|,
-name|TT_NIL
-argument_list|,
-name|TT_NIL
-argument_list|)
-expr_stmt|;
-comment|/* Clear the "handled" state of this thread, because 	       * we'll soon get a new event for it.  Other events 	       * can stay as they were. 	       */
-name|clear_handled
-argument_list|(
-name|tid
-argument_list|)
-expr_stmt|;
-name|clear_stepping_mode
-argument_list|(
-name|tid
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 name|process_state
@@ -13062,12 +12829,10 @@ modifier|*
 name|target
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
 comment|/* Round starting address down to longword boundary.  */
-specifier|register
 name|CORE_ADDR
 name|addr
 init|=
@@ -13083,7 +12848,6 @@ name|TTRACE_XFER_TYPE
 argument_list|)
 decl_stmt|;
 comment|/* Round ending address up; get number of longwords that makes.  */
-specifier|register
 name|int
 name|count
 init|=
@@ -13113,7 +12877,6 @@ argument_list|)
 decl_stmt|;
 comment|/* Allocate buffer of that many longwords.  */
 comment|/* FIXME (alloca): This code, cloned from infptrace.c, is unsafe      because it uses alloca to allocate a buffer of arbitrary size.      For very large xfers, this could crash GDB's stack.  */
-specifier|register
 name|TTRACE_XFER_TYPE
 modifier|*
 name|buffer
@@ -13822,7 +13585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Called via #define REQUIRE_ATTACH from inftarg.c,  * ultimately from "follow_inferior_fork" in infrun.c,  * itself called from "resume".  *  * This seems to be intended to attach after a fork or  * vfork, while "attach" is used to attach to a pid  * given by the user.  The check for an existing attach  * seems odd--it always fails in our test system.  */
+comment|/* Called from child_follow_fork in hppah-nat.c.  *  * This seems to be intended to attach after a fork or  * vfork, while "attach" is used to attach to a pid  * given by the user.  The check for an existing attach  * seems odd--it always fails in our test system.  */
 end_comment
 
 begin_function
@@ -14658,8 +14421,7 @@ parameter_list|,
 name|LONGEST
 name|len
 parameter_list|,
-name|enum
-name|bptype
+name|int
 name|type
 parameter_list|)
 block|{
@@ -14824,15 +14586,13 @@ begin_function
 name|int
 name|hppa_can_use_hw_watchpoint
 parameter_list|(
-name|enum
-name|bptype
+name|int
 name|type
 parameter_list|,
 name|int
 name|cnt
 parameter_list|,
-name|enum
-name|bptype
+name|int
 name|ot
 parameter_list|)
 block|{
@@ -15106,81 +14866,6 @@ end_function
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* If the current pid is not the pid this module reported  * from "ptrace_wait" with the most recent event, then the  * user has switched threads.  *  * If the last reported event was a breakpoint, then return  * the old thread id, else return 0.  */
-end_comment
-
-begin_function
-name|pid_t
-name|hppa_switched_threads
-parameter_list|(
-name|pid_t
-name|gdb_pid
-parameter_list|)
-block|{
-if|if
-condition|(
-name|gdb_pid
-operator|==
-name|old_gdb_pid
-condition|)
-block|{
-comment|/*        * Core gdb is working with the same pid that it        * was before we reported the last event.  This        * is ok: e.g. we reported hitting a thread-specific        * breakpoint, but we were reporting the wrong        * thread, so the core just ignored the event.        *        * No thread switch has happened.        */
-return|return
-operator|(
-name|pid_t
-operator|)
-literal|0
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|gdb_pid
-operator|==
-name|reported_pid
-condition|)
-block|{
-comment|/*        * Core gdb is working with the pid we reported, so        * any continue or step will be able to figure out        * that it needs to step over any hit breakpoints        * without our (i.e. PREPARE_TO_PROCEED's) help.        */
-return|return
-operator|(
-name|pid_t
-operator|)
-literal|0
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|reported_bpt
-condition|)
-block|{
-comment|/*        * The core switched, but we didn't just report a        * breakpoint, so there's no just-hit breakpoint        * instruction at "reported_pid"'s PC, and thus there        * is no need to step over it.        */
-return|return
-operator|(
-name|pid_t
-operator|)
-literal|0
-return|;
-block|}
-else|else
-block|{
-comment|/* There's been a real switch, and we reported        * a hit breakpoint.  Let "hppa_prepare_to_proceed"        * know, so it can see whether the breakpoint is        * still active.        */
-return|return
-name|reported_pid
-return|;
-block|}
-comment|/* Keep compiler happy with an obvious return at the end.    */
-return|return
-operator|(
-name|pid_t
-operator|)
-literal|0
-return|;
-block|}
-end_function
 
 begin_function
 name|void

@@ -15,6 +15,24 @@ directive|define
 name|GDBTHREAD_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|breakpoint
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|frame_id
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|symtab
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* For bpstat */
 end_comment
@@ -23,6 +41,16 @@ begin_include
 include|#
 directive|include
 file|"breakpoint.h"
+end_include
+
+begin_comment
+comment|/* For struct frame_id.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"frame.h"
 end_include
 
 begin_struct
@@ -46,13 +74,6 @@ comment|/* State from wait_for_inferior */
 name|CORE_ADDR
 name|prev_pc
 decl_stmt|;
-name|CORE_ADDR
-name|prev_func_start
-decl_stmt|;
-name|char
-modifier|*
-name|prev_func_name
-decl_stmt|;
 name|struct
 name|breakpoint
 modifier|*
@@ -69,8 +90,9 @@ decl_stmt|;
 name|CORE_ADDR
 name|step_range_end
 decl_stmt|;
-name|CORE_ADDR
-name|step_frame_address
+name|struct
+name|frame_id
+name|step_frame_id
 decl_stmt|;
 name|CORE_ADDR
 name|step_sp
@@ -302,13 +324,6 @@ parameter_list|,
 name|CORE_ADDR
 name|prev_pc
 parameter_list|,
-name|CORE_ADDR
-name|prev_func_start
-parameter_list|,
-name|char
-modifier|*
-name|prev_func_name
-parameter_list|,
 name|int
 name|trap_expected
 parameter_list|,
@@ -328,8 +343,11 @@ parameter_list|,
 name|CORE_ADDR
 name|step_range_end
 parameter_list|,
-name|CORE_ADDR
-name|step_frame_address
+specifier|const
+name|struct
+name|frame_id
+modifier|*
+name|step_frame_id
 parameter_list|,
 name|int
 name|handling_longjmp
@@ -376,15 +394,6 @@ name|CORE_ADDR
 modifier|*
 name|prev_pc
 parameter_list|,
-name|CORE_ADDR
-modifier|*
-name|prev_func_start
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|prev_func_name
-parameter_list|,
 name|int
 modifier|*
 name|trap_expected
@@ -409,9 +418,10 @@ name|CORE_ADDR
 modifier|*
 name|step_range_end
 parameter_list|,
-name|CORE_ADDR
+name|struct
+name|frame_id
 modifier|*
-name|step_frame_address
+name|step_frame_id
 parameter_list|,
 name|int
 modifier|*

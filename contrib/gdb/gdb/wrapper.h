@@ -28,6 +28,18 @@ name|value
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|expression
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|block
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Use this struct to pass arguments to wrapper routines. */
 end_comment

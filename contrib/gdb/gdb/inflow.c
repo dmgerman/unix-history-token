@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level interface to ptrace, for GDB when running under Unix.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Low level interface to ptrace, for GDB when running under Unix.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -86,90 +86,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIOS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PROCESS_GROUP_TYPE
-value|pid_t
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PROCESS_GROUP_TYPE
-value|int
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SGTTY
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SHORT_PGRP
-end_ifdef
-
-begin_comment
-comment|/* This is only used for the ultra.  Does it have pid_t?  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PROCESS_GROUP_TYPE
-value|short
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PROCESS_GROUP_TYPE
-value|int
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* sgtty */
-end_comment
+begin_include
+include|#
+directive|include
+file|"inflow.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -565,7 +486,7 @@ parameter_list|(
 name|what
 parameter_list|)
 define|\
-value|if (result == -1)	\     fprintf_unfiltered(gdb_stderr, "[%s failed in terminal_inferior: %s]\n", \ 	    what, strerror (errno))
+value|if (result == -1)	\     fprintf_unfiltered(gdb_stderr, "[%s failed in terminal_inferior: %s]\n", \ 	    what, safe_strerror (errno))
 end_define
 
 begin_function_decl
@@ -631,6 +552,44 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Save the terminal settings again.  This is necessary for the TUI    when it switches to TUI or non-TUI mode;  curses changes the terminal    and gdb must be able to restore it correctly.  */
+end_comment
+
+begin_function
+name|void
+name|terminal_save_ours
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|gdb_has_a_terminal
+argument_list|()
+condition|)
+block|{
+comment|/* We could just as well copy our_ttystate (if we felt like adding          a new function serial_copy_tty_state).  */
+if|if
+condition|(
+name|our_ttystate
+condition|)
+name|xfree
+argument_list|(
+name|our_ttystate
+argument_list|)
+expr_stmt|;
+name|our_ttystate
+operator|=
+name|serial_get_tty_state
+argument_list|(
+name|stdin_serial
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_function
 name|void
 name|terminal_init_inferior
@@ -674,6 +633,10 @@ name|gdb_has_a_terminal
 argument_list|()
 operator|&&
 name|terminal_is_ours
+operator|&&
+name|inferior_ttystate
+operator|!=
+name|NULL
 operator|&&
 name|inferior_thisrun_terminal
 operator|==
@@ -1043,7 +1006,7 @@ if|#
 directive|if
 literal|0
 comment|/* This fails on Ultrix with EINVAL if you run the testsuite 	     in the background with nohup, and then log out.  GDB never 	     used to check for an error here, so perhaps there are other 	     such situations as well.  */
-block|if (result == -1) 	    fprintf_unfiltered (gdb_stderr, "[tcsetpgrp failed in terminal_ours: %s]\n", 				strerror (errno));
+block|if (result == -1) 	    fprintf_unfiltered (gdb_stderr, "[tcsetpgrp failed in terminal_ours: %s]\n", 				safe_strerror (errno));
 endif|#
 directive|endif
 endif|#
@@ -1157,10 +1120,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|void
 name|term_info
@@ -1182,10 +1141,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|void
@@ -1447,7 +1402,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|tty
 decl_stmt|;
@@ -1666,10 +1620,6 @@ begin_comment
 comment|/* Kill the inferior process.  Make us have no inferior.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -1733,7 +1683,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|selected_frame
+name|deprecated_selected_frame
 operator|==
 name|NULL
 condition|)
@@ -1747,9 +1697,12 @@ expr_stmt|;
 else|else
 name|print_stack_frame
 argument_list|(
-name|selected_frame
+name|deprecated_selected_frame
 argument_list|,
-name|selected_frame_level
+name|frame_relative_level
+argument_list|(
+name|deprecated_selected_frame
+argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -1763,10 +1716,6 @@ end_escape
 
 begin_comment
 comment|/* Call set_sigint_trap when you need to pass a signal on to an attached    process when handling SIGINT */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function

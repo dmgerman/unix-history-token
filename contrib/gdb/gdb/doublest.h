@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Floating point definitions for GDB.    Copyright 1986, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Floating point definitions for GDB.     Copyright 1986, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2003 Free Software Foundation,    Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|DOUBLEST_H
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|type
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* Setup definitions for host and target floating point formats.  We need to    consider the format for `float', `double', and `long double' for both target    and host.  We need to do this so that we know what kind of conversions need    to be done when converting target numbers to and from the hosts DOUBLEST    data type.  */
@@ -162,13 +168,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* These two functions are deprecated in favour of    extract_typed_floating and store_typed_floating.  See comments in    'doublest.c' for details.  */
+comment|/* These functions have been replaced by extract_typed_floating and    store_typed_floating.     Most calls are passing in TYPE_LENGTH (TYPE) so can be changed to    just pass the TYPE.  The remainder pass in the length of a    register, those calls should instead pass in the floating point    type that corresponds to that length.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|DOUBLEST
-name|extract_floating
+name|deprecated_extract_floating
 parameter_list|(
 specifier|const
 name|void
@@ -184,7 +190,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|store_floating
+name|deprecated_store_floating
 parameter_list|(
 name|void
 modifier|*

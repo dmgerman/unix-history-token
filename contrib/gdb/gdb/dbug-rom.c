@@ -43,6 +43,12 @@ directive|include
 file|"regcache.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"m68k-tdep.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -161,7 +167,7 @@ index|]
 operator|-
 literal|'0'
 operator|+
-name|D0_REGNUM
+name|M68K_D0_REGNUM
 expr_stmt|;
 break|break;
 case|case
@@ -193,7 +199,7 @@ index|]
 operator|-
 literal|'0'
 operator|+
-name|A0_REGNUM
+name|M68K_A0_REGNUM
 expr_stmt|;
 break|break;
 default|default:
@@ -213,14 +219,22 @@ begin_comment
 comment|/* This array of registers needs to match the indexes used by GDB. The    whole reason this exists is because the various ROM monitors use    different names than GDB does, and don't support all the registers    either. So, typing "info reg sp" becomes an "A7". */
 end_comment
 
-begin_decl_stmt
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|dbug_regname
+parameter_list|(
+name|int
+name|index
+parameter_list|)
+block|{
 specifier|static
 name|char
 modifier|*
-name|dbug_regnames
-index|[
-name|NUM_REGS
-index|]
+name|regnames
+index|[]
 init|=
 block|{
 literal|"D0"
@@ -261,7 +275,51 @@ literal|"PC"
 comment|/* no float registers */
 block|}
 decl_stmt|;
-end_decl_stmt
+if|if
+condition|(
+operator|(
+name|index
+operator|>=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|regnames
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|regnames
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|index
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|index
+operator|>=
+name|NUM_REGS
+operator|)
+condition|)
+return|return
+name|NULL
+return|;
+else|else
+return|return
+name|regnames
+index|[
+name|index
+index|]
+return|;
+block|}
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -648,9 +706,15 @@ name|dbug_cmds
 operator|.
 name|regnames
 operator|=
-name|dbug_regnames
+name|NULL
 expr_stmt|;
 comment|/* registers names */
+name|dbug_cmds
+operator|.
+name|regname
+operator|=
+name|dbug_regname
+expr_stmt|;
 name|dbug_cmds
 operator|.
 name|magic
@@ -690,6 +754,17 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|extern
+name|initialize_file_ftype
+name|_initialize_dbug_rom
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -Wmissing-prototypes */
+end_comment
 
 begin_function
 name|void

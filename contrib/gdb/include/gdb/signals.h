@@ -16,7 +16,7 @@ name|GDB_SIGNALS_H
 end_define
 
 begin_comment
-comment|/* The numbering of these signals is chosen to match traditional unix    signals (insofar as various unices use the same numbers, anyway).    It is also the numbering of the GDB remote protocol.  Other remote    protocols, if they use a different numbering, should make sure to    translate appropriately.     Since these numbers have actually made it out into other software    (stubs, etc.), you mustn't disturb the assigned numbering.  If you    need to add new signals here, add them to the end of the explicitly    numbered signals.     This is based strongly on Unix/POSIX signals for several reasons:    (1) This set of signals represents a widely-accepted attempt to    represent events of this sort in a portable fashion, (2) we want a    signal to make it from wait to child_wait to the user intact, (3) many    remote protocols use a similar encoding.  However, it is    recognized that this set of signals has limitations (such as not    distinguishing between various kinds of SIGSEGV, or not    distinguishing hitting a breakpoint from finishing a single step).    So in the future we may get around this either by adding additional    signals for breakpoint, single-step, etc., or by adding signal    codes; the latter seems more in the spirit of what BSD, System V,    etc. are doing to address these issues.  */
+comment|/* The numbering of these signals is chosen to match traditional unix    signals (insofar as various unices use the same numbers, anyway).    It is also the numbering of the GDB remote protocol.  Other remote    protocols, if they use a different numbering, should make sure to    translate appropriately.     Since these numbers have actually made it out into other software    (stubs, etc.), you mustn't disturb the assigned numbering.  If you    need to add new signals here, add them to the end of the explicitly    numbered signals, at the comment marker.  Add them unconditionally,    not within any #if or #ifdef.     This is based strongly on Unix/POSIX signals for several reasons:    (1) This set of signals represents a widely-accepted attempt to    represent events of this sort in a portable fashion, (2) we want a    signal to make it from wait to child_wait to the user intact, (3) many    remote protocols use a similar encoding.  However, it is    recognized that this set of signals has limitations (such as not    distinguishing between various kinds of SIGSEGV, or not    distinguishing hitting a breakpoint from finishing a single step).    So in the future we may get around this either by adding additional    signals for breakpoint, single-step, etc., or by adding signal    codes; the latter seems more in the spirit of what BSD, System V,    etc. are doing to address these issues.  */
 end_comment
 
 begin_comment
@@ -475,18 +475,15 @@ name|TARGET_SIGNAL_REALTIME_126
 block|,
 name|TARGET_SIGNAL_REALTIME_127
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MACH
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__MACH__
-argument_list|)
-comment|/* Mach exceptions */
+name|TARGET_SIGNAL_INFO
+block|,
+comment|/* Some signal we don't know about.  */
+name|TARGET_SIGNAL_UNKNOWN
+block|,
+comment|/* Use whatever signal we use when one is not specifically specified        (for passing to proceed and so on).  */
+name|TARGET_SIGNAL_DEFAULT
+block|,
+comment|/* Mach exceptions.  In versions of GDB before 5.2, these were just before        TARGET_SIGNAL_INFO if you were compiling on a Mach host (and missing        otherwise).  */
 name|TARGET_EXC_BAD_ACCESS
 block|,
 name|TARGET_EXC_BAD_INSTRUCTION
@@ -499,16 +496,7 @@ name|TARGET_EXC_SOFTWARE
 block|,
 name|TARGET_EXC_BREAKPOINT
 block|,
-endif|#
-directive|endif
-name|TARGET_SIGNAL_INFO
-block|,
-comment|/* Some signal we don't know about.  */
-name|TARGET_SIGNAL_UNKNOWN
-block|,
-comment|/* Use whatever signal we use when one is not specifically specified        (for passing to proceed and so on).  */
-name|TARGET_SIGNAL_DEFAULT
-block|,
+comment|/* If you are adding a new signal, add it just above this comment.  */
 comment|/* Last and unused enum value, for sizing arrays, etc.  */
 name|TARGET_SIGNAL_LAST
 block|}

@@ -1,178 +1,98 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Common target dependent code for GDB on ARM systems.    Copyright 2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Common target dependent code for GDB on ARM systems.    Copyright 2002, 2003 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* Register numbers of various important registers.  Note that some of    these values are "real" register numbers, and correspond to the    general registers of the machine, and some are "phony" register    numbers which are too large to be actual register numbers as far as    the user is concerned but do serve to get the desired values when    passed to read_register.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+name|gdb_regnum
+block|{
 name|ARM_A1_REGNUM
-value|0
-end_define
-
-begin_comment
+init|=
+literal|0
+block|,
 comment|/* first integer-like argument */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_A4_REGNUM
-value|3
-end_define
-
-begin_comment
+init|=
+literal|3
+block|,
 comment|/* last integer-like argument */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_AP_REGNUM
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|11
+block|,
 name|ARM_SP_REGNUM
-value|13
-end_define
-
-begin_comment
+init|=
+literal|13
+block|,
 comment|/* Contains address of top of stack */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_LR_REGNUM
-value|14
-end_define
-
-begin_comment
+init|=
+literal|14
+block|,
 comment|/* address to return to from a function call */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_PC_REGNUM
-value|15
-end_define
-
-begin_comment
+init|=
+literal|15
+block|,
 comment|/* Contains program counter */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_F0_REGNUM
-value|16
-end_define
-
-begin_comment
+init|=
+literal|16
+block|,
 comment|/* first floating point register */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_F3_REGNUM
-value|19
-end_define
-
-begin_comment
+init|=
+literal|19
+block|,
 comment|/* last floating point argument register */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_F7_REGNUM
-value|23
-end_define
-
-begin_comment
+init|=
+literal|23
+block|,
 comment|/* last floating point register */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_FPS_REGNUM
-value|24
-end_define
-
-begin_comment
+init|=
+literal|24
+block|,
 comment|/* floating point status register */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_PS_REGNUM
-value|25
-end_define
-
-begin_comment
+init|=
+literal|25
+block|,
 comment|/* Contains processor status */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_FP_REGNUM
-value|11
-end_define
-
-begin_comment
+init|=
+literal|11
+block|,
 comment|/* Frame register in ARM code, if used.  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|THUMB_FP_REGNUM
-value|7
-end_define
-
-begin_comment
+init|=
+literal|7
+block|,
 comment|/* Frame register in Thumb code, if used.  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARM_NUM_ARG_REGS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|4
+block|,
 name|ARM_LAST_ARG_REGNUM
-value|ARM_A4_REGNUM
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+name|ARM_A4_REGNUM
+block|,
 name|ARM_NUM_FP_ARG_REGS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|4
+block|,
 name|ARM_LAST_FP_ARG_REGNUM
-value|ARM_F3_REGNUM
-end_define
+init|=
+name|ARM_F3_REGNUM
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/* Size of integer registers.  */
@@ -181,14 +101,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INT_REGISTER_RAW_SIZE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|INT_REGISTER_VIRTUAL_SIZE
+name|INT_REGISTER_SIZE
 value|4
 end_define
 
@@ -199,19 +112,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FP_REGISTER_RAW_SIZE
+name|FP_REGISTER_SIZE
 value|12
-end_define
-
-begin_comment
-comment|/* GCC doesn't support long doubles (extended IEEE values).  The FP    register virtual size is therefore 64 bits.  Used for documentation    purposes and code readability in this header.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FP_REGISTER_VIRTUAL_SIZE
-value|8
 end_define
 
 begin_comment
@@ -411,57 +313,49 @@ value|0x10000000
 end_define
 
 begin_comment
-comment|/* ABI variants that we know about.  If you add to this enum, please     update the table of names in tm-arm.c.  */
-end_comment
-
-begin_enum
-enum|enum
-name|arm_abi
-block|{
-name|ARM_ABI_UNKNOWN
-init|=
-literal|0
-block|,
-name|ARM_ABI_EABI_V1
-block|,
-name|ARM_ABI_EABI_V2
-block|,
-name|ARM_ABI_LINUX
-block|,
-name|ARM_ABI_NETBSD_AOUT
-block|,
-name|ARM_ABI_NETBSD_ELF
-block|,
-name|ARM_ABI_APCS
-block|,
-name|ARM_ABI_FREEBSD
-block|,
-name|ARM_ABI_WINCE
-block|,
-name|ARM_ABI_INVALID
-comment|/* Keep this last.  */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* Type of floating-point code in use by inferior.  There are really 3 models    that are traditionally supported (plus the endianness issue), but gcc can    only generate 2 of those.  The third is APCS_FLOAT, where arguments to    functions are passed in floating-point registers.       In addition to the traditional models, VFP adds two more.  */
+comment|/* Type of floating-point code in use by inferior.  There are really 3 models    that are traditionally supported (plus the endianness issue), but gcc can    only generate 2 of those.  The third is APCS_FLOAT, where arguments to    functions are passed in floating-point registers.       In addition to the traditional models, VFP adds two more.      If you update this enum, don't forget to update fp_model_strings in     arm-tdep.c.  */
 end_comment
 
 begin_enum
 enum|enum
 name|arm_float_model
 block|{
-name|ARM_FLOAT_SOFT
+name|ARM_FLOAT_AUTO
 block|,
+comment|/* Automatic detection.  Do not set in tdep.  */
+name|ARM_FLOAT_SOFT_FPA
+block|,
+comment|/* Traditional soft-float (mixed-endian on LE ARM).  */
 name|ARM_FLOAT_FPA
 block|,
+comment|/* FPA co-processor.  GCC calling convention.  */
 name|ARM_FLOAT_SOFT_VFP
 block|,
+comment|/* Soft-float with pure-endian doubles.  */
 name|ARM_FLOAT_VFP
+block|,
+comment|/* Full VFP calling convention.  */
+name|ARM_FLOAT_LAST
+comment|/* Keep at end.  */
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* A method to the setting based on user's choice and ABI setting.  */
+end_comment
+
+begin_function_decl
+name|enum
+name|arm_float_model
+name|arm_get_fp_model
+parameter_list|(
+name|struct
+name|gdbarch
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Target-dependent structure in gdbarch.  */
@@ -471,17 +365,6 @@ begin_struct
 struct|struct
 name|gdbarch_tdep
 block|{
-name|enum
-name|arm_abi
-name|arm_abi
-decl_stmt|;
-comment|/* OS/ABI of inferior.  */
-specifier|const
-name|char
-modifier|*
-name|abi_name
-decl_stmt|;
-comment|/* Name of the above.  */
 name|enum
 name|arm_float_model
 name|fp_model
@@ -577,35 +460,6 @@ name|CORE_ADDR
 name|arm_get_next_pc
 parameter_list|(
 name|CORE_ADDR
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* How a OS variant tells the ARM generic code that it can handle an ABI    type. */
-end_comment
-
-begin_function_decl
-name|void
-name|arm_gdbarch_register_os_abi
-parameter_list|(
-name|enum
-name|arm_abi
-name|abi
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|init_abi
-function_decl|)
-parameter_list|(
-name|struct
-name|gdbarch_info
-parameter_list|,
-name|struct
-name|gdbarch
-modifier|*
-parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl

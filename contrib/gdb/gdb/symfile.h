@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for reading symbol files into GDB.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for reading symbol files into GDB.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -24,28 +24,56 @@ comment|/* This file requires that you first include "bfd.h".  */
 end_comment
 
 begin_comment
-comment|/* Partial symbols are stored in the psymbol_cache and pointers to them    are kept in a dynamically grown array that is obtained from malloc and    grown as necessary via realloc.  Each objfile typically has two of these,    one for global symbols and one for static symbols.  Although this adds    a level of indirection for storing or accessing the partial symbols,    it allows us to throw away duplicate psymbols and set all pointers    to the single saved instance. */
+comment|/* Opaque declarations.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|section_table
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|objfile
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|obstack
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|block
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* Partial symbols are stored in the psymbol_cache and pointers to    them are kept in a dynamically grown array that is obtained from    malloc and grown as necessary via realloc.  Each objfile typically    has two of these, one for global symbols and one for static    symbols.  Although this adds a level of indirection for storing or    accessing the partial symbols, it allows us to throw away duplicate    psymbols and set all pointers to the single saved instance.  */
 end_comment
 
 begin_struct
 struct|struct
 name|psymbol_allocation_list
 block|{
-comment|/* Pointer to beginning of dynamically allocated array of pointers to        partial symbols.  The array is dynamically expanded as necessary to        accommodate more pointers. */
+comment|/* Pointer to beginning of dynamically allocated array of pointers      to partial symbols.  The array is dynamically expanded as      necessary to accommodate more pointers.  */
 name|struct
 name|partial_symbol
 modifier|*
 modifier|*
 name|list
 decl_stmt|;
-comment|/* Pointer to next available slot in which to store a pointer to a partial        symbol. */
+comment|/* Pointer to next available slot in which to store a pointer to a      partial symbol.  */
 name|struct
 name|partial_symbol
 modifier|*
 modifier|*
 name|next
 decl_stmt|;
-comment|/* Number of allocated pointer slots in current dynamic array (not the        number of bytes of storage).  The "next" pointer will always point        somewhere between list[0] and list[size], and when at list[size] the        array will be expanded on the next attempt to store a pointer. */
+comment|/* Number of allocated pointer slots in current dynamic array (not      the number of bytes of storage).  The "next" pointer will always      point somewhere between list[0] and list[size], and when at      list[size] the array will be expanded on the next attempt to      store a pointer.  */
 name|int
 name|size
 decl_stmt|;
@@ -54,20 +82,17 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Define an array of addresses to accommodate non-contiguous dynamic    loading of modules.  This is for use when entering commands, so we    can keep track of the section names until we read the file and    can map them to bfd sections.  This structure is also used by    solib.c to communicate the section addresses in shared objects to    symbol_file_add (). */
+comment|/* Define an array of addresses to accommodate non-contiguous dynamic    loading of modules.  This is for use when entering commands, so we    can keep track of the section names until we read the file and can    map them to bfd sections.  This structure is also used by solib.c    to communicate the section addresses in shared objects to    symbol_file_add ().  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_SECTIONS
-value|64
-end_define
 
 begin_struct
 struct|struct
 name|section_addr_info
 block|{
+comment|/* The number of sections for which address information is      available.  */
+name|size_t
+name|num_sections
+decl_stmt|;
 comment|/* Sections whose names are file format dependent. */
 struct|struct
 name|other_sections
@@ -85,7 +110,7 @@ decl_stmt|;
 block|}
 name|other
 index|[
-name|MAX_SECTIONS
+literal|1
 index|]
 struct|;
 block|}
@@ -100,12 +125,12 @@ begin_struct
 struct|struct
 name|sym_fns
 block|{
-comment|/* BFD flavour that we handle, or (as a special kludge, see xcoffread.c,        (enum bfd_flavour)-1 for xcoff).  */
+comment|/* BFD flavour that we handle, or (as a special kludge, see      xcoffread.c, (enum bfd_flavour)-1 for xcoff).  */
 name|enum
 name|bfd_flavour
 name|sym_flavour
 decl_stmt|;
-comment|/* Initializes anything that is global to the entire symbol table.  It is        called during symbol_file_add, when we begin debugging an entirely new        program. */
+comment|/* Initializes anything that is global to the entire symbol table.      It is called during symbol_file_add, when we begin debugging an      entirely new program.  */
 name|void
 function_decl|(
 modifier|*
@@ -117,7 +142,7 @@ name|objfile
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Reads any initial information from a symbol file, and initializes the        struct sym_fns SF in preparation for sym_read().  It is called every        time we read a symbol file for any reason. */
+comment|/* Reads any initial information from a symbol file, and initializes      the struct sym_fns SF in preparation for sym_read().  It is      called every time we read a symbol file for any reason.  */
 name|void
 function_decl|(
 modifier|*
@@ -129,7 +154,7 @@ name|objfile
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* sym_read (objfile, mainline)        Reads a symbol file into a psymtab (or possibly a symtab).        OBJFILE is the objfile struct for the file we are reading.        MAINLINE is 1 if this is the        main symbol table being read, and 0 if a secondary        symbol file (e.g. shared library or dynamically loaded file)        is being read.  */
+comment|/* sym_read (objfile, mainline) Reads a symbol file into a psymtab      (or possibly a symtab).  OBJFILE is the objfile struct for the      file we are reading.  MAINLINE is 1 if this is the main symbol      table being read, and 0 if a secondary symbol file (e.g. shared      library or dynamically loaded file) is being read.  */
 name|void
 function_decl|(
 modifier|*
@@ -143,7 +168,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-comment|/* Called when we are finished with an objfile.  Should do all cleanup        that is specific to the object file format for the particular objfile. */
+comment|/* Called when we are finished with an objfile.  Should do all      cleanup that is specific to the object file format for the      particular objfile.  */
 name|void
 function_decl|(
 modifier|*
@@ -155,7 +180,7 @@ name|objfile
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* This function produces a file-dependent section_offsets structure,        allocated in the objfile's storage, and based on the parameter.        The parameter is currently a CORE_ADDR (FIXME!) for backward compatibility        with the higher levels of GDB.  It should probably be changed to        a string, where NULL means the default, and others are parsed in a file        dependent way. */
+comment|/* This function produces a file-dependent section_offsets      structure, allocated in the objfile's storage, and based on the      parameter.  The parameter is currently a CORE_ADDR (FIXME!) for      backward compatibility with the higher levels of GDB.  It should      probably be changed to a string, where NULL means the default,      and others are parsed in a file dependent way.  */
 name|void
 function_decl|(
 modifier|*
@@ -171,7 +196,7 @@ name|section_addr_info
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Finds the next struct sym_fns.  They are allocated and initialized        in whatever module implements the functions pointed to; an         initializer calls add_symtab_fns to add them to the global chain.  */
+comment|/* Finds the next struct sym_fns.  They are allocated and      initialized in whatever module implements the functions pointed      to; an initializer calls add_symtab_fns to add them to the global      chain.  */
 name|struct
 name|sym_fns
 modifier|*
@@ -219,7 +244,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Add any kind of symbol to a psymbol_allocation_list. */
+comment|/* Add any kind of symbol to a psymbol_allocation_list.  */
 end_comment
 
 begin_comment
@@ -228,7 +253,10 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+specifier|const
+name|struct
+name|partial_symbol
+modifier|*
 name|add_psymbol_to_list
 parameter_list|(
 name|char
@@ -236,7 +264,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|namespace_enum
+name|domain_enum
 parameter_list|,
 name|enum
 name|address_class
@@ -274,7 +302,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|namespace_enum
+name|domain_enum
 parameter_list|,
 name|enum
 name|address_class
@@ -378,18 +406,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|init_entry_point_info
-parameter_list|(
-name|struct
-name|objfile
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|syms_from_objfile
 parameter_list|(
 name|struct
@@ -399,6 +415,12 @@ parameter_list|,
 name|struct
 name|section_addr_info
 modifier|*
+parameter_list|,
+name|struct
+name|section_offsets
+modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -447,14 +469,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Build (allocate and populate) a section_addr_info struct from    an existing section table. */
+comment|/* Create a new section_addr_info, with room for NUM_SECTIONS.  */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|section_table
-struct_decl|;
-end_struct_decl
+begin_function_decl
+specifier|extern
+name|struct
+name|section_addr_info
+modifier|*
+name|alloc_section_addr_info
+parameter_list|(
+name|size_t
+name|num_sections
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Build (allocate and populate) a section_addr_info struct from an    existing section table.  */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -479,7 +512,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Free all memory allocated by build_section_addr_info_from_section_table. */
+comment|/* Free all memory allocated by    build_section_addr_info_from_section_table.  */
 end_comment
 
 begin_function_decl
@@ -528,35 +561,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Sorting your symbols for fast lookup or alphabetical printing.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|sort_block_syms
-parameter_list|(
-name|struct
-name|block
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|sort_symtab_syms
-parameter_list|(
-name|struct
-name|symtab
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Make a copy of the string at PTR with SIZE characters in the symbol obstack    (and add a null character at the end in the copy).    Returns the address of the copy.  */
+comment|/* Make a copy of the string at PTR with SIZE characters in the symbol    obstack (and add a null character at the end in the copy).  Returns    the address of the copy.  */
 end_comment
 
 begin_function_decl
@@ -565,6 +570,7 @@ name|char
 modifier|*
 name|obsavestring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -578,7 +584,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Concatenate strings S1, S2 and S3; return the new string.    Space is found in the symbol_obstack.  */
+comment|/* Concatenate strings S1, S2 and S3; return the new string.  Space is    found in the OBSTACKP  */
 end_comment
 
 begin_function_decl
@@ -612,7 +618,7 @@ comment|/*   Variables   */
 end_comment
 
 begin_comment
-comment|/* If non-zero, shared library symbols will be added automatically    when the inferior is created, new libraries are loaded, or when    attaching to the inferior.  This is almost always what users will    want to have happen; but for very large programs, the startup time    will be excessive, and so if this is a problem, the user can clear    this flag and then add the shared library symbols as needed.  Note    that there is a potential for confusion, since if the shared    library symbols are not loaded, commands like "info fun" will *not*    report all the functions that are actually present. */
+comment|/* If non-zero, shared library symbols will be added automatically    when the inferior is created, new libraries are loaded, or when    attaching to the inferior.  This is almost always what users will    want to have happen; but for very large programs, the startup time    will be excessive, and so if this is a problem, the user can clear    this flag and then add the shared library symbols as needed.  Note    that there is a potential for confusion, since if the shared    library symbols are not loaded, commands like "info fun" will *not*    report all the functions that are actually present.  */
 end_comment
 
 begin_decl_stmt
@@ -623,7 +629,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* For systems that support it, a threshold size in megabytes.  If    automatically adding a new library's symbol table to those already    known to the debugger would cause the total shared library symbol    size to exceed this threshhold, then the shlib's symbols are not    added.  The threshold is ignored if the user explicitly asks for a    shlib to be added, such as when using the "sharedlibrary"    command. */
+comment|/* For systems that support it, a threshold size in megabytes.  If    automatically adding a new library's symbol table to those already    known to the debugger would cause the total shared library symbol    size to exceed this threshhold, then the shlib's symbols are not    added.  The threshold is ignored if the user explicitly asks for a    shlib to be added, such as when using the "sharedlibrary" command.  */
 end_comment
 
 begin_decl_stmt
@@ -636,16 +642,6 @@ end_decl_stmt
 begin_comment
 comment|/* From symfile.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|CORE_ADDR
-name|entry_point_address
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -687,7 +683,8 @@ parameter_list|,
 name|asection
 modifier|*
 parameter_list|,
-name|PTR
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -746,7 +743,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* return the "mapped" overlay section  containing the PC */
+comment|/* Return the "mapped" overlay section containing the PC.  */
 end_comment
 
 begin_function_decl
@@ -761,7 +758,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* return any overlay section containing the PC (even in its LMA region) */
+comment|/* Return any overlay section containing the PC (even in its LMA    region).  */
 end_comment
 
 begin_function_decl
@@ -776,7 +773,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* return true if the section is an overlay */
+comment|/* Return true if the section is an overlay.  */
 end_comment
 
 begin_function_decl
@@ -791,7 +788,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* return true if the overlay section is currently "mapped" */
+comment|/* Return true if the overlay section is currently "mapped".  */
 end_comment
 
 begin_function_decl
@@ -806,7 +803,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* return true if pc belongs to section's VMA */
+comment|/* Return true if pc belongs to section's VMA.  */
 end_comment
 
 begin_function_decl
@@ -823,7 +820,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* return true if pc belongs to section's LMA */
+comment|/* Return true if pc belongs to section's LMA.  */
 end_comment
 
 begin_function_decl
@@ -840,7 +837,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* map an address from a section's LMA to its VMA */
+comment|/* Map an address from a section's LMA to its VMA.  */
 end_comment
 
 begin_function_decl
@@ -857,7 +854,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* map an address from a section's VMA to its LMA */
+comment|/* Map an address from a section's VMA to its LMA.  */
 end_comment
 
 begin_function_decl
@@ -874,7 +871,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* convert an address in an overlay section (force into VMA range) */
+comment|/* Convert an address in an overlay section (force into VMA range).  */
 end_comment
 
 begin_function_decl
@@ -891,7 +888,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Load symbols from a file. */
+comment|/* Load symbols from a file.  */
 end_comment
 
 begin_function_decl
@@ -910,7 +907,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Clear GDB symbol tables. */
+comment|/* Clear GDB symbol tables.  */
 end_comment
 
 begin_function_decl
@@ -920,6 +917,27 @@ name|symbol_file_clear
 parameter_list|(
 name|int
 name|from_tty
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_byte
+modifier|*
+name|symfile_relocate_debug_section
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+parameter_list|,
+name|asection
+modifier|*
+name|sectp
+parameter_list|,
+name|bfd_byte
+modifier|*
+name|buf
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Abstraction of GNU v2 abi.    Contributed by Daniel Berlin<dberlin@redhat.com>    Copyright 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or    modify    it under the terms of the GNU General Public License as published    by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Abstraction of GNU v2 abi.     Copyright 2001, 2002, 2003 Free Software Foundation, Inc.     Contributed by Daniel Berlin<dberlin@redhat.com>     This file is part of GDB.     This program is free software; you can redistribute it and/or    modify    it under the terms of the GNU General Public License as published    by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"cp-abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cp-support.h"
 end_include
 
 begin_include
@@ -784,6 +790,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|type
 modifier|*
@@ -824,11 +831,6 @@ name|struct
 name|value
 modifier|*
 name|vp
-decl_stmt|;
-name|int
-name|using_enclosing
-init|=
-literal|0
 decl_stmt|;
 name|long
 name|top_offset
@@ -1006,73 +1008,6 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/*     If we are enclosed by something that isn't us, adjust the     address properly and set using_enclosing.   */
-if|if
-condition|(
-name|VALUE_ENCLOSING_TYPE
-argument_list|(
-name|v
-argument_list|)
-operator|!=
-name|VALUE_TYPE
-argument_list|(
-name|v
-argument_list|)
-condition|)
-block|{
-name|struct
-name|value
-modifier|*
-name|tempval
-decl_stmt|;
-name|int
-name|bitpos
-init|=
-name|TYPE_BASECLASS_BITPOS
-argument_list|(
-name|known_type
-argument_list|,
-name|TYPE_VPTR_FIELDNO
-argument_list|(
-name|known_type
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|tempval
-operator|=
-name|value_field
-argument_list|(
-name|v
-argument_list|,
-name|TYPE_VPTR_FIELDNO
-argument_list|(
-name|known_type
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|VALUE_ADDRESS
-argument_list|(
-name|tempval
-argument_list|)
-operator|+=
-name|bitpos
-operator|/
-literal|8
-expr_stmt|;
-name|vtbl
-operator|=
-name|value_as_address
-argument_list|(
-name|tempval
-argument_list|)
-expr_stmt|;
-name|using_enclosing
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
 name|vtbl
 operator|=
 name|value_as_address
@@ -1088,11 +1023,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|using_enclosing
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* Try to find a symbol that is the vtable */
 name|minsym
 operator|=
@@ -1110,7 +1040,7 @@ operator|||
 operator|(
 name|demangled_name
 operator|=
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|minsym
 argument_list|)
@@ -1152,20 +1082,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Lookup the type for the name */
+comment|/* FIXME: chastain/2003-11-26: block=NULL is bogus.  See pr gdb/1465. */
 name|rtti_type
 operator|=
-name|lookup_typename
+name|cp_lookup_rtti_type
 argument_list|(
 name|demangled_name
 argument_list|,
-operator|(
-expr|struct
-name|block
-operator|*
-operator|)
-literal|0
-argument_list|,
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1278,15 +1202,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|using_enc
-condition|)
-operator|*
-name|using_enc
-operator|=
-name|using_enclosing
-expr_stmt|;
 return|return
 name|rtti_type
 return|;
@@ -1485,7 +1400,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|&&
-name|STREQ
+name|strcmp
 argument_list|(
 name|TYPE_NAME
 argument_list|(
@@ -1500,6 +1415,8 @@ name|fieldtype
 argument_list|)
 argument_list|)
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 literal|1
@@ -1557,7 +1474,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* Must hunt for the pointer to this virtual baseclass.  */
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1568,7 +1484,6 @@ argument_list|(
 name|type
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
 name|n_baseclasses
 init|=
@@ -1770,6 +1685,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|initialize_file_ftype
+name|_initialize_gnu_v2_abi
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -Wmissing-prototypes */
+end_comment
+
 begin_function
 name|void
 name|_initialize_gnu_v2_abi
@@ -1782,12 +1708,15 @@ argument_list|()
 expr_stmt|;
 name|register_cp_abi
 argument_list|(
+operator|&
 name|gnu_v2_abi_ops
 argument_list|)
 expr_stmt|;
-name|switch_to_cp_abi
+name|set_cp_abi_as_auto_default
 argument_list|(
-literal|"gnu-v2"
+name|gnu_v2_abi_ops
+operator|.
+name|shortname
 argument_list|)
 expr_stmt|;
 block|}

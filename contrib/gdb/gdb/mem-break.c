@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Simulate breakpoints by patching locations in the target system, for GDB.    Copyright 1990, 1991, 1992, 1993, 1995, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by John Gilmore.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Simulate breakpoints by patching locations in the target system, for GDB.     Copyright 1990, 1991, 1992, 1993, 1995, 1997, 1998, 1999, 2000,    2002 Free Software Foundation, Inc.     Contributed by Cygnus Support.  Written by John Gilmore.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|"defs.h"
 end_include
 
 begin_comment
-comment|/* This file is only useful if BREAKPOINT is set.  If not, we punt.  */
+comment|/* This file is only useful if BREAKPOINT_FROM_PC is set.  If not, we    punt.  */
 end_comment
 
 begin_include
@@ -38,127 +38,6 @@ file|"target.h"
 end_include
 
 begin_comment
-comment|/* Use the program counter to determine the contents and size    of a breakpoint instruction.  If no target-dependent macro    BREAKPOINT_FROM_PC has been defined to implement this function,    assume that the breakpoint doesn't depend on the PC, and    use the values of the BIG_BREAKPOINT and LITTLE_BREAKPOINT macros.    Return a pointer to a string of bytes that encode a breakpoint    instruction, stores the length of the string to *lenptr,    and optionally adjust the pc to point to the correct memory location    for inserting the breakpoint.  */
-end_comment
-
-begin_function
-name|unsigned
-name|char
-modifier|*
-name|memory_breakpoint_from_pc
-parameter_list|(
-name|CORE_ADDR
-modifier|*
-name|pcptr
-parameter_list|,
-name|int
-modifier|*
-name|lenptr
-parameter_list|)
-block|{
-comment|/* {BIG_,LITTLE_}BREAKPOINT is the sequence of bytes we insert for a      breakpoint.  On some machines, breakpoints are handled by the      target environment and we don't have to worry about them here.  */
-ifdef|#
-directive|ifdef
-name|BIG_BREAKPOINT
-if|if
-condition|(
-name|TARGET_BYTE_ORDER
-operator|==
-name|BFD_ENDIAN_BIG
-condition|)
-block|{
-specifier|static
-name|unsigned
-name|char
-name|big_break_insn
-index|[]
-init|=
-name|BIG_BREAKPOINT
-decl_stmt|;
-operator|*
-name|lenptr
-operator|=
-sizeof|sizeof
-argument_list|(
-name|big_break_insn
-argument_list|)
-expr_stmt|;
-return|return
-name|big_break_insn
-return|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|LITTLE_BREAKPOINT
-if|if
-condition|(
-name|TARGET_BYTE_ORDER
-operator|!=
-name|BFD_ENDIAN_BIG
-condition|)
-block|{
-specifier|static
-name|unsigned
-name|char
-name|little_break_insn
-index|[]
-init|=
-name|LITTLE_BREAKPOINT
-decl_stmt|;
-operator|*
-name|lenptr
-operator|=
-sizeof|sizeof
-argument_list|(
-name|little_break_insn
-argument_list|)
-expr_stmt|;
-return|return
-name|little_break_insn
-return|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|BREAKPOINT
-block|{
-specifier|static
-name|unsigned
-name|char
-name|break_insn
-index|[]
-init|=
-name|BREAKPOINT
-decl_stmt|;
-operator|*
-name|lenptr
-operator|=
-sizeof|sizeof
-argument_list|(
-name|break_insn
-argument_list|)
-expr_stmt|;
-return|return
-name|break_insn
-return|;
-block|}
-endif|#
-directive|endif
-operator|*
-name|lenptr
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Insert a breakpoint on targets that don't have any better breakpoint    support.  We read the contents of the target location and stash it,    then overwrite it with a breakpoint instruction.  ADDR is the target    location in the target machine.  CONTENTS_CACHE is a pointer to     memory allocated for saving the target contents.  It is guaranteed    by the caller to be long enough to save BREAKPOINT_LEN bytes (this    is accomplished via BREAKPOINT_MAX).  */
 end_comment
 
@@ -177,6 +56,7 @@ block|{
 name|int
 name|val
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -260,6 +140,7 @@ modifier|*
 name|contents_cache
 parameter_list|)
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*

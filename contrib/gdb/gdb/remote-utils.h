@@ -15,6 +15,12 @@ directive|define
 name|REMOTE_UTILS_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|target_ops
+struct_decl|;
+end_struct_decl
+
 begin_include
 include|#
 directive|include

@@ -18,13 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"i386/tm-i386v.h"
+file|"i386/tm-i386.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tm-vxworks.h"
+file|"config/tm-vxworks.h"
 end_include
 
 begin_endif

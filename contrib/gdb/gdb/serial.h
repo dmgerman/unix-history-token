@@ -15,6 +15,12 @@ directive|define
 name|SERIAL_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ui_file
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* For most routines, if a failure is indicated, then errno should be    examined.  */
 end_comment

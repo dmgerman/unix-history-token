@@ -16,94 +16,11 @@ name|TM_I386SOL2_H
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|HAVE_I387_REGS
-end_define
-
 begin_include
 include|#
 directive|include
-file|"i386/tm-i386v4.h"
+file|"i386/tm-i386.h"
 end_include
-
-begin_comment
-comment|/* We use stabs-in-ELF with the DWARF register numbering scheme.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|STAB_REG_TO_REGNUM
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STAB_REG_TO_REGNUM
-parameter_list|(
-name|reg
-parameter_list|)
-value|i386_dwarf_reg_to_regnum ((reg))
-end_define
-
-begin_comment
-comment|/* If the current gcc for for this target does not produce correct    debugging information for float parameters, both prototyped and    unprototyped, then define this macro.  This forces gdb to always    assume that floats are passed as doubles and then converted in the    callee. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COERCE_FLOAT_TO_DOUBLE
-parameter_list|(
-name|formal
-parameter_list|,
-name|actual
-parameter_list|)
-value|(1)
-end_define
-
-begin_comment
-comment|/* Signal handler frames under Solaris 2 are recognized by a return address    of 0xFFFFFFFF, the third parameter on the signal handler stack is    a pointer to an ucontext.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|sigtramp_saved_pc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|I386V4_SIGTRAMP_SAVED_PC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SIGCONTEXT_PC_OFFSET
-value|(36 + 14 * 4)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|IN_SIGTRAMP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|IN_SIGTRAMP
-parameter_list|(
-name|pc
-parameter_list|,
-name|name
-parameter_list|)
-value|(pc == 0xFFFFFFFF)
-end_define
 
 begin_comment
 comment|/* The SunPRO compiler puts out 0 instead of the address in N_SO symbols,    and for SunPRO 3.0, N_FUN symbols too.  */
@@ -145,12 +62,6 @@ parameter_list|(
 name|name
 parameter_list|)
 value|((name)[0] == '.')
-end_define
-
-begin_define
-define|#
-directive|define
-name|FAULTED_USE_SIGINFO
 end_define
 
 begin_endif

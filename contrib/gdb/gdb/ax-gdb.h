@@ -15,8 +15,11 @@ directive|define
 name|AX_GDB_H
 end_define
 
-begin_escape
-end_escape
+begin_struct_decl
+struct_decl|struct
+name|expression
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* Types and enums */

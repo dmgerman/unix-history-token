@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent definitions for Sparc running NetBSD, for GDB.    Copyright 1986, 1987, 1989, 1992, 1994, 1996, 1999, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent definitions for NetBSD/sparc.     Copyright 1986, 1987, 1989, 1992, 1994, 1996, 1999, 2000, 2002,    2003, 2004 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -15,14 +15,8 @@ directive|define
 name|NM_NBSD_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"regcache.h"
-end_include
-
 begin_comment
-comment|/* Get generic NetBSD native definitions. */
+comment|/* Get generic NetBSD native definitions.  */
 end_comment
 
 begin_include
@@ -31,154 +25,72 @@ directive|include
 file|"config/nm-nbsd.h"
 end_include
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/* Before storing, we need to read all the registers.  */
+comment|/* Support for StackGhost cookies.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"target.h"
+end_include
+
+begin_struct_decl
+struct_decl|struct
+name|target_ops
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* Fool ARI.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CHILD_PREPARE_TO_STORE
-parameter_list|()
-value|read_register_bytes (0, NULL, REGISTER_BYTES)
+name|NATIVE_XFER_WCOOKIE
+value|sparc_xfer_wcookie
 end_define
 
-begin_comment
-comment|/* Make things match up with what is expected in sparc-nat.c.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|regs
-value|trapframe
-end_define
-
-begin_define
-define|#
-directive|define
-name|fp_status
-value|fpstate
-end_define
-
-begin_define
-define|#
-directive|define
-name|r_g1
-value|tf_global[1]
-end_define
-
-begin_define
-define|#
-directive|define
-name|r_ps
-value|tf_psr
-end_define
-
-begin_define
-define|#
-directive|define
-name|r_pc
-value|tf_pc
-end_define
-
-begin_define
-define|#
-directive|define
-name|r_npc
-value|tf_npc
-end_define
-
-begin_define
-define|#
-directive|define
-name|r_y
-value|tf_y
-end_define
-
-begin_define
-define|#
-directive|define
-name|fpu
-value|fpstate
-end_define
-
-begin_define
-define|#
-directive|define
-name|fpu_regs
-value|fs_regs
-end_define
-
-begin_define
-define|#
-directive|define
-name|fpu_fsr
-value|fs_fsr
-end_define
-
-begin_define
-define|#
-directive|define
-name|fpu_fr
-value|fs_regs
-end_define
-
-begin_define
-define|#
-directive|define
-name|Fpu_fsr
-value|fs_fsr
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPU_FSR_TYPE
-value|int
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTRACE_GETREGS
-value|PT_GETREGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTRACE_GETFPREGS
-value|PT_GETFPREGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTRACE_SETREGS
-value|PT_SETREGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTRACE_SETFPREGS
-value|PT_SETFPREGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|GDB_GREGSET_T
-value|struct reg
-end_define
-
-begin_define
-define|#
-directive|define
-name|GDB_FPREGSET_T
-value|struct fpreg
-end_define
+begin_function_decl
+specifier|extern
+name|LONGEST
+name|sparc_xfer_wcookie
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|ops
+parameter_list|,
+name|enum
+name|target_object
+name|object
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|annex
+parameter_list|,
+name|void
+modifier|*
+name|readbuf
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|writebuf
+parameter_list|,
+name|ULONGEST
+name|offset
+parameter_list|,
+name|LONGEST
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -186,7 +98,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NM_NBSD_H */
+comment|/* nm-nbsd.h */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for expressions stored in reversed prefix form, for GDB.    Copyright 1986, 1989, 1992, 1994, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for expressions stored in reversed prefix form, for GDB.     Copyright 1986, 1989, 1992, 1994, 2000, 2003 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -162,11 +162,11 @@ block|,
 comment|/* Concatenate two operands, such as character strings or bitstrings.        If the first operand is a integer expression, then it means concatenate        the second operand with itself that many times. */
 name|BINOP_CONCAT
 block|,
-comment|/* For Chill and Pascal. */
+comment|/* For (the deleted) Chill and Pascal. */
 name|BINOP_IN
 block|,
 comment|/* Returns 1 iff ARG1 IN ARG2. */
-comment|/* This is the "colon operator" used various places in Chill. */
+comment|/* This is the "colon operator" used various places in (the        deleted) Chill. */
 name|BINOP_RANGE
 block|,
 comment|/* This must be the highest BINOP_ value, for expprint.c.  */
@@ -176,10 +176,10 @@ comment|/* Operates on three values computed by following subexpressions.  */
 name|TERNOP_COND
 block|,
 comment|/* ?: */
-comment|/* A sub-string/sub-array.  Chill syntax:  OP1(OP2:OP3).        Return elements OP2 through OP3 of OP1.  */
+comment|/* A sub-string/sub-array.  (the deleted) Chill syntax:        OP1(OP2:OP3).  Return elements OP2 through OP3 of OP1.  */
 name|TERNOP_SLICE
 block|,
-comment|/* A sub-string/sub-array.  Chill syntax:  OP1(OP2 UP OP3).        Return OP3 elements of OP1, starting with element OP2. */
+comment|/* A sub-string/sub-array.  (The deleted) Chill syntax: OP1(OP2 UP        OP3).  Return OP3 elements of OP1, starting with element        OP2. */
 name|TERNOP_SLICE_COUNT
 block|,
 comment|/* Multidimensional subscript operator, such as Modula-2 x[a,b,...].        The dimensionality is encoded in the operator, like the number of        function arguments in OP_FUNCALL, I.E.<OP><dimension><OP>.        The value of the first following subexpression is subscripted        by each of the next following subexpressions, one per dimension. */
@@ -206,6 +206,9 @@ name|OP_INTERNALVAR
 block|,
 comment|/* OP_FUNCALL is followed by an integer in the next exp_element.        The integer is the number of args to the function call.        That many plus one values from following subexpressions        are used, the first one being the function.        The integer is followed by a repeat of OP_FUNCALL,        making three exp_elements.  */
 name|OP_FUNCALL
+block|,
+comment|/* OP_OBJC_MSGCALL is followed by a string in the next exp_element and then an        integer.  The string is the selector string.  The integer is the number        of arguments to the message call.  That many plus one values are used,         the first one being the object pointer.  This is an Objective C message */
+name|OP_OBJC_MSGCALL
 block|,
 comment|/* This is EXACTLY like OP_FUNCALL but is semantically different.          In F77, array subscript expressions, substring expressions        and function calls are  all exactly the same syntactically. They may         only be dismabiguated at runtime.  Thus this operator, which         indicates that we have found something of the form<name> (<stuff> ) */
 name|OP_F77_UNDETERMINED_ARGLIST
@@ -283,7 +286,7 @@ name|UNOP_ODD
 block|,
 name|UNOP_TRUNC
 block|,
-comment|/* Chill builtin functions. */
+comment|/* (The deleted) Chill builtin functions.  */
 name|UNOP_LOWER
 block|,
 name|UNOP_UPPER
@@ -307,14 +310,19 @@ name|STRUCTOP_STRUCT
 block|,
 name|STRUCTOP_PTR
 block|,
-comment|/* C++ */
-comment|/* OP_THIS is just a placeholder for the class instance variable.        It just comes in a tight (OP_THIS, OP_THIS) pair.  */
+comment|/* C++: OP_THIS is just a placeholder for the class instance variable.        It just comes in a tight (OP_THIS, OP_THIS) pair.  */
 name|OP_THIS
+block|,
+comment|/* Objective-C: OP_OBJC_SELF is just a placeholder for the class instance        variable.  It just comes in a tight (OP_OBJC_SELF, OP_OBJC_SELF) pair.  */
+name|OP_OBJC_SELF
+block|,
+comment|/* Objective C: "@selector" pseudo-operator */
+name|OP_OBJC_SELECTOR
 block|,
 comment|/* OP_SCOPE surrounds a type name and a field name.  The type        name is encoded as one element, but the field name stays as        a string, which, of course, is variable length.  */
 name|OP_SCOPE
 block|,
-comment|/* Used to represent named structure field values in brace initializers        (or tuples as they are called in Chill).        The gcc C syntax is NAME:VALUE or .NAME=VALUE, the Chill syntax is        .NAME:VALUE.  Multiple labels (as in the Chill syntax        .NAME1,.NAME2:VALUE) is represented as if it were        .NAME1:(.NAME2:VALUE) (though that is not valid Chill syntax).         The NAME is represented as for STRUCTOP_STRUCT;  VALUE follows. */
+comment|/* Used to represent named structure field values in brace        initializers (or tuples as they are called in (the deleted)        Chill).         The gcc C syntax is NAME:VALUE or .NAME=VALUE, the (the        deleted) Chill syntax is .NAME:VALUE.  Multiple labels (as in        the (the deleted) Chill syntax .NAME1,.NAME2:VALUE) is        represented as if it were .NAME1:(.NAME2:VALUE) (though that is        not valid (the deleted) Chill syntax).         The NAME is represented as for STRUCTOP_STRUCT;  VALUE follows. */
 name|OP_LABELED
 block|,
 comment|/* OP_TYPE is for parsing types, and used with the "ptype" command        so we can look up types that are qualified by scope, either with        the GDB "::" operator, or the Modula-2 '.' operator. */
@@ -325,6 +333,18 @@ name|OP_NAME
 block|,
 comment|/* An unparsed expression.  Used for Scheme (for now at least) */
 name|OP_EXPRSTRING
+block|,
+comment|/* An Objective C Foundation Class NSString constant */
+name|OP_OBJC_NSSTRING
+block|,
+comment|/* First extension operator.  Individual language modules define         extra operators they need as constants with values          OP_LANGUAGE_SPECIFIC0 + k, for k>= 0, using a separate          enumerated type definition:            enum foo_extension_operator {              BINOP_MOGRIFY = OP_EXTENDED0,  	     BINOP_FROB,  	     ...            };      */
+name|OP_EXTENDED0
+block|,
+comment|/* Last possible extension operator.  Defined to provide an        explicit and finite number of extended operators. */
+name|OP_EXTENDED_LAST
+init|=
+literal|0xff
+comment|/* NOTE: Eventually, we expect to convert to an object-oriented         formulation for expression operators that does away with the        need for these extension operators, and indeed for this        entire enumeration type.  Therefore, consider the OP_EXTENDED        definitions to be a temporary measure. */
 block|}
 enum|;
 end_enum
@@ -554,7 +574,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|dump_prefix_expression
+name|dump_raw_expression
 parameter_list|(
 name|struct
 name|expression
@@ -573,7 +593,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|dump_postfix_expression
+name|dump_prefix_expression
 parameter_list|(
 name|struct
 name|expression
@@ -581,9 +601,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|ui_file
-modifier|*
-parameter_list|,
-name|char
 modifier|*
 parameter_list|)
 function_decl|;

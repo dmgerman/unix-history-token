@@ -460,52 +460,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|dink32_load
-parameter_list|(
-name|struct
-name|monitor_ops
-modifier|*
-name|monops
-parameter_list|,
-name|char
-modifier|*
-name|filename
-parameter_list|,
-name|int
-name|from_tty
-parameter_list|)
-block|{
-name|generic_load
-argument_list|(
-name|filename
-argument_list|,
-name|from_tty
-argument_list|)
-expr_stmt|;
-comment|/* Finally, make the PC point at the start address */
-if|if
-condition|(
-name|exec_bfd
-condition|)
-name|write_pc
-argument_list|(
-name|bfd_get_start_address
-argument_list|(
-name|exec_bfd
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|inferior_ptid
-operator|=
-name|null_ptid
-expr_stmt|;
-comment|/* No process now */
-block|}
-end_function
-
 begin_comment
 comment|/* This array of registers needs to match the indexes used by GDB. The    whole reason this exists is because the various ROM monitors use    different names than GDB does, and don't support all the registers    either.  */
 end_comment
@@ -720,6 +674,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|initialize_file_ftype
+name|_initialize_dink32_rom
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -Wmissing-prototypes */
+end_comment
+
 begin_function
 name|void
 name|_initialize_dink32_rom
@@ -901,13 +866,6 @@ name|loadresp
 operator|=
 literal|"Set Input Port : set to Keyboard Port\r"
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* slow load routine not needed if S-records work... */
-block|dink32_cmds.load_routine = dink32_load;
-endif|#
-directive|endif
 name|dink32_cmds
 operator|.
 name|prompt

@@ -89,6 +89,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Return the version number of the current MI.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|mi_version
+parameter_list|(
+name|struct
+name|ui_out
+modifier|*
+name|uiout
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support routines for building symbol tables in GDB's internal format.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Support routines for building symbol tables in GDB's internal format.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"gdb_obstack.h"
 end_include
 
 begin_include
@@ -37,10 +37,6 @@ directive|include
 file|"symfile.h"
 end_include
 
-begin_comment
-comment|/* Needed for "struct complaint" */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -51,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"gdbtypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_assert.h"
 end_include
 
 begin_include
@@ -82,7 +84,7 @@ file|"language.h"
 end_include
 
 begin_comment
-comment|/* For "longest_local_hex_string_custom" */
+comment|/* For "local_hex_string" */
 end_comment
 
 begin_include
@@ -100,6 +102,40 @@ end_include
 begin_comment
 comment|/* For DOSish file names */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"macrotab.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"demangle.h"
+end_include
+
+begin_comment
+comment|/* Needed by SYMBOL_INIT_DEMANGLED_NAME.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"block.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cp-support.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dictionary.h"
+end_include
 
 begin_comment
 comment|/* Ask buildsym.h to define the vars it normally declares `extern'.  */
@@ -211,88 +247,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Complaints about the symbols we have encountered.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|block_end_complaint
-init|=
-block|{
-literal|"block end address less than block start address in %s (patched it)"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|anon_block_end_complaint
-init|=
-block|{
-literal|"block end address 0x%lx less than block start address 0x%lx (patched it)"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|innerblock_complaint
-init|=
-block|{
-literal|"inner block not inside outer block in %s"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|innerblock_anon_complaint
-init|=
-block|{
-literal|"inner block (0x%lx-0x%lx) not inside outer block (0x%lx-0x%lx)"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|blockvector_complaint
-init|=
-block|{
-literal|"block at %s out of order"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* maintain the lists of symbols and blocks */
 end_comment
 
@@ -310,7 +264,6 @@ modifier|*
 name|list
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|pending
 modifier|*
@@ -350,7 +303,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add a symbol to one of the lists of symbols.  */
+comment|/* Add a symbol to one of the lists of symbols.  While we're at it, if    we're in the C++ case and don't have full namespace debugging info,    check to see if it references an anonymous namespace; if so, add an    appropriate using directive.  */
 end_comment
 
 begin_function
@@ -369,7 +322,6 @@ modifier|*
 name|listhead
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|pending
 modifier|*
@@ -486,6 +438,21 @@ index|]
 operator|=
 name|symbol
 expr_stmt|;
+comment|/* Check to see if we might need to look for a mention of anonymous      namespaces.  */
+if|if
+condition|(
+name|SYMBOL_LANGUAGE
+argument_list|(
+name|symbol
+argument_list|)
+operator|==
+name|language_cplus
+condition|)
+name|cp_scan_for_anonymous_namespaces
+argument_list|(
+name|symbol
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -543,7 +510,7 @@ control|)
 block|{
 name|pp
 operator|=
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|list
 operator|->
@@ -611,15 +578,12 @@ begin_comment
 comment|/* At end of reading syms, or in case of quit, really free as many    `struct pending's as we can easily find. */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|void
 name|really_free_pendings
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 block|{
@@ -737,6 +701,15 @@ name|global_symbols
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|pending_macros
+condition|)
+name|free_macro_table
+argument_list|(
+name|pending_macros
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -754,7 +727,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* Now we make the links in the 				   symbol_obstack, so don't free 				   them.  */
+comment|/* Now we make the links in the 				   objfile_obstack, so don't free 				   them.  */
 block|struct pending_block *bnext, *bnext1;    for (bnext = pending_blocks; bnext; bnext = bnext1)     {       bnext1 = bnext->next;       xfree ((void *) bnext);     }
 endif|#
 directive|endif
@@ -801,7 +774,6 @@ modifier|*
 name|objfile
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|pending
 modifier|*
@@ -810,13 +782,11 @@ decl_stmt|,
 modifier|*
 name|next1
 decl_stmt|;
-specifier|register
 name|struct
 name|block
 modifier|*
 name|block
 decl_stmt|;
-specifier|register
 name|struct
 name|pending_block
 modifier|*
@@ -827,140 +797,56 @@ name|pending_block
 modifier|*
 name|opblock
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
-name|int
-name|j
-decl_stmt|;
-comment|/* Count the length of the list of symbols.  */
-for|for
-control|(
-name|next
-operator|=
-operator|*
-name|listhead
-operator|,
-name|i
-operator|=
-literal|0
-init|;
-name|next
-condition|;
-name|i
-operator|+=
-name|next
-operator|->
-name|nsyms
-operator|,
-name|next
-operator|=
-name|next
-operator|->
-name|next
-control|)
-block|{
-comment|/* EMPTY */
-empty_stmt|;
-block|}
 name|block
 operator|=
-operator|(
-expr|struct
-name|block
-operator|*
-operator|)
-name|obstack_alloc
+name|allocate_block
 argument_list|(
 operator|&
 name|objfile
 operator|->
-name|symbol_obstack
-argument_list|,
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|block
+name|objfile_obstack
 argument_list|)
-operator|+
-operator|(
-operator|(
-name|i
-operator|-
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
+expr_stmt|;
+if|if
+condition|(
 name|symbol
-operator|*
-argument_list|)
-operator|)
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Copy the symbols into the block.  */
-name|BLOCK_NSYMS
+condition|)
+block|{
+name|BLOCK_DICT
 argument_list|(
 name|block
 argument_list|)
 operator|=
-name|i
-expr_stmt|;
-for|for
-control|(
-name|next
-operator|=
+name|dict_create_linear
+argument_list|(
+operator|&
+name|objfile
+operator|->
+name|objfile_obstack
+argument_list|,
 operator|*
 name|listhead
-init|;
-name|next
-condition|;
-name|next
-operator|=
-name|next
-operator|->
-name|next
-control|)
-block|{
-for|for
-control|(
-name|j
-operator|=
-name|next
-operator|->
-name|nsyms
-operator|-
-literal|1
-init|;
-name|j
-operator|>=
-literal|0
-condition|;
-name|j
-operator|--
-control|)
-block|{
-name|BLOCK_SYM
-argument_list|(
-name|block
-argument_list|,
-operator|--
-name|i
 argument_list|)
-operator|=
-name|next
-operator|->
-name|symbol
-index|[
-name|j
-index|]
 expr_stmt|;
 block|}
+else|else
+block|{
+name|BLOCK_DICT
+argument_list|(
+name|block
+argument_list|)
+operator|=
+name|dict_create_hashed
+argument_list|(
+operator|&
+name|objfile
+operator|->
+name|objfile_obstack
+argument_list|,
+operator|*
+name|listhead
+argument_list|)
+expr_stmt|;
 block|}
 name|BLOCK_START
 argument_list|(
@@ -978,6 +864,13 @@ name|end
 expr_stmt|;
 comment|/* Superblock filled in when containing block is made */
 name|BLOCK_SUPERBLOCK
+argument_list|(
+name|block
+argument_list|)
+operator|=
+name|NULL
+expr_stmt|;
+name|BLOCK_NAMESPACE
 argument_list|(
 name|block
 argument_list|)
@@ -1006,6 +899,10 @@ name|SYMBOL_TYPE
 argument_list|(
 name|symbol
 argument_list|)
+decl_stmt|;
+name|struct
+name|dict_iterator
+name|iter
 decl_stmt|;
 name|SYMBOL_BLOCK_VALUE
 argument_list|(
@@ -1048,7 +945,7 @@ name|ALL_BLOCK_SYMBOLS
 argument_list|(
 argument|block
 argument_list|,
-argument|i
+argument|iter
 argument_list|,
 argument|sym
 argument_list|)
@@ -1078,6 +975,9 @@ name|LOC_BASEREG_ARG
 case|:
 case|case
 name|LOC_LOCAL_ARG
+case|:
+case|case
+name|LOC_COMPUTED_ARG
 case|:
 name|nparams
 operator|++
@@ -1122,6 +1022,9 @@ case|:
 case|case
 name|LOC_OPTIMIZED_OUT
 case|:
+case|case
+name|LOC_COMPUTED
+case|:
 default|default:
 break|break;
 block|}
@@ -1163,31 +1066,26 @@ name|field
 argument_list|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
 name|iparams
 operator|=
 literal|0
-init|;
-name|iparams
-operator|<
-name|nparams
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|sym
-operator|=
-name|BLOCK_SYM
-argument_list|(
-name|block
-argument_list|,
-name|i
-argument_list|)
 expr_stmt|;
+name|ALL_BLOCK_SYMBOLS
+argument_list|(
+argument|block
+argument_list|,
+argument|iter
+argument_list|,
+argument|sym
+argument_list|)
+block|{
+if|if
+condition|(
+name|iparams
+operator|==
+name|nparams
+condition|)
+break|break;
 switch|switch
 condition|(
 name|SYMBOL_CLASS
@@ -1213,6 +1111,9 @@ name|LOC_BASEREG_ARG
 case|:
 case|case
 name|LOC_LOCAL_ARG
+case|:
+case|case
+name|LOC_COMPUTED_ARG
 case|:
 name|TYPE_FIELD_TYPE
 argument_list|(
@@ -1278,11 +1179,38 @@ case|:
 case|case
 name|LOC_OPTIMIZED_OUT
 case|:
+case|case
+name|LOC_COMPUTED
+case|:
 default|default:
 break|break;
 block|}
 block|}
 block|}
+block|}
+comment|/* If we're in the C++ case, set the block's scope.  */
+if|if
+condition|(
+name|SYMBOL_LANGUAGE
+argument_list|(
+name|symbol
+argument_list|)
+operator|==
+name|language_cplus
+condition|)
+block|{
+name|cp_set_block_scope
+argument_list|(
+name|symbol
+argument_list|,
+name|block
+argument_list|,
+operator|&
+name|objfile
+operator|->
+name|objfile_obstack
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -1354,12 +1282,14 @@ condition|(
 name|symbol
 condition|)
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|block_end_complaint
+name|symfile_complaints
 argument_list|,
-name|SYMBOL_SOURCE_NAME
+literal|"block end address less than block start address in %s (patched it)"
+argument_list|,
+name|SYMBOL_PRINT_NAME
 argument_list|(
 name|symbol
 argument_list|)
@@ -1368,19 +1298,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|anon_block_end_complaint
+name|symfile_complaints
 argument_list|,
+literal|"block end address 0x%s less than block start address 0x%s (patched it)"
+argument_list|,
+name|paddr_nz
+argument_list|(
 name|BLOCK_END
 argument_list|(
 name|block
 argument_list|)
+argument_list|)
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|BLOCK_START
 argument_list|(
 name|block
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1410,6 +1348,8 @@ name|pblock
 operator|=
 name|pending_blocks
 init|;
+name|pblock
+operator|&&
 name|pblock
 operator|!=
 name|old_blocks
@@ -1469,12 +1409,14 @@ condition|(
 name|symbol
 condition|)
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|innerblock_complaint
+name|symfile_complaints
 argument_list|,
-name|SYMBOL_SOURCE_NAME
+literal|"inner block not inside outer block in %s"
+argument_list|,
+name|SYMBOL_PRINT_NAME
 argument_list|(
 name|symbol
 argument_list|)
@@ -1483,33 +1425,47 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|innerblock_anon_complaint
+name|symfile_complaints
 argument_list|,
+literal|"inner block (0x%s-0x%s) not inside outer block (0x%s-0x%s)"
+argument_list|,
+name|paddr_nz
+argument_list|(
 name|BLOCK_START
 argument_list|(
 name|pblock
 operator|->
 name|block
 argument_list|)
+argument_list|)
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|BLOCK_END
 argument_list|(
 name|pblock
 operator|->
 name|block
 argument_list|)
+argument_list|)
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|BLOCK_START
 argument_list|(
 name|block
 argument_list|)
+argument_list|)
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|BLOCK_END
 argument_list|(
 name|block
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1597,7 +1553,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Record BLOCK on the list of all blocks in the file.  Put it after    OPBLOCK, or at the beginning if opblock is NULL.  This puts the    block in the list after all its subblocks.     Allocate the pending block struct in the symbol_obstack to save    time.  This wastes a little space.  FIXME: Is it worth it?  */
+comment|/* Record BLOCK on the list of all blocks in the file.  Put it after    OPBLOCK, or at the beginning if opblock is NULL.  This puts the    block in the list after all its subblocks.     Allocate the pending block struct in the objfile_obstack to save    time.  This wastes a little space.  FIXME: Is it worth it?  */
 end_comment
 
 begin_function
@@ -1620,7 +1576,6 @@ modifier|*
 name|opblock
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|pending_block
 modifier|*
@@ -1638,7 +1593,7 @@ argument_list|(
 operator|&
 name|objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1689,11 +1644,8 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* Note that this is only used in this file and in dstread.c, which    should be fixed to not need direct access to this function.  When    that is done, it can be made static again. */
-end_comment
-
 begin_function
+specifier|static
 name|struct
 name|blockvector
 modifier|*
@@ -1705,19 +1657,16 @@ modifier|*
 name|objfile
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|pending_block
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|struct
 name|blockvector
 modifier|*
 name|blockvector
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1758,7 +1707,7 @@ argument_list|(
 operator|&
 name|objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|,
 operator|(
 sizeof|sizeof
@@ -1900,12 +1849,14 @@ name|i
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|blockvector_complaint
+name|symfile_complaints
 argument_list|,
-name|longest_local_hex_string
+literal|"block at %s out of order"
+argument_list|,
+name|local_hex_string
 argument_list|(
 operator|(
 name|LONGEST
@@ -1947,7 +1898,6 @@ modifier|*
 name|dirname
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|subfile
 modifier|*
@@ -2135,7 +2085,7 @@ name|debugformat
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* cfront output is a C program, so in most ways it looks like a C      program.  But to demangle we need to set the language to C++.  We      can distinguish cfront code by the fact that it has #line      directives which specify a file name ending in .C.       So if the filename of this subfile ends in .C, then change the      language of any pending subfiles from C to C++.  We also accept      any other C++ suffixes accepted by deduce_language_from_filename      (in particular, some people use .cxx with cfront).  */
+comment|/* If the filename of this subfile ends in .C, then change the      language of any pending subfiles from C to C++.  We also accept      any other C++ suffixes accepted by deduce_language_from_filename.  */
 comment|/* Likewise for f2c.  */
 if|if
 condition|(
@@ -2384,7 +2334,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|subfile_stack
 modifier|*
@@ -2456,12 +2405,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|register
 name|struct
 name|subfile_stack
 modifier|*
@@ -2526,7 +2473,6 @@ begin_function
 name|void
 name|record_line
 parameter_list|(
-specifier|register
 name|struct
 name|subfile
 modifier|*
@@ -2872,6 +2818,10 @@ name|context_stack_depth
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Set up support for C++ namespace support, in case we need it.  */
+name|cp_initialize_namespace
+argument_list|()
+expr_stmt|;
 comment|/* Initialize the list of sub source files with one entry for this      file (the top-level source file).  */
 name|subfiles
 operator|=
@@ -2913,7 +2863,6 @@ name|int
 name|section
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|symtab
 modifier|*
@@ -2921,19 +2870,16 @@ name|symtab
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|struct
 name|blockvector
 modifier|*
 name|blockvector
 decl_stmt|;
-specifier|register
 name|struct
 name|subfile
 modifier|*
 name|subfile
 decl_stmt|;
-specifier|register
 name|struct
 name|context_stack
 modifier|*
@@ -2988,23 +2934,12 @@ literal|0
 condition|)
 block|{
 comment|/* This is said to happen with SCO.  The old coffread.c 	     code simply emptied the context stack, so we do the 	     same.  FIXME: Find out why it is happening.  This is not 	     believed to happen in most cases (even for coffread.c); 	     it used to be an abort().  */
-specifier|static
-name|struct
 name|complaint
-name|msg
-init|=
-block|{
-literal|"Context stack not empty in end_symtab"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-name|complain
 argument_list|(
 operator|&
-name|msg
+name|symfile_complaints
+argument_list|,
+literal|"Context stack not empty in end_symtab"
 argument_list|)
 expr_stmt|;
 name|context_stack_depth
@@ -3150,6 +3085,10 @@ operator|&&
 name|have_line_numbers
 operator|==
 literal|0
+operator|&&
+name|pending_macros
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* Ignore symtabs that have no functions with real debugging          info.  */
@@ -3198,6 +3137,21 @@ operator|=
 name|make_blockvector
 argument_list|(
 name|objfile
+argument_list|)
+expr_stmt|;
+name|cp_finalize_namespace
+argument_list|(
+name|BLOCKVECTOR_BLOCK
+argument_list|(
+name|blockvector
+argument_list|,
+name|STATIC_BLOCK
+argument_list|)
+argument_list|,
+operator|&
+name|objfile
+operator|->
+name|objfile_obstack
 argument_list|)
 expr_stmt|;
 block|}
@@ -3331,6 +3285,12 @@ name|blockvector
 operator|=
 name|blockvector
 expr_stmt|;
+name|symtab
+operator|->
+name|macro_table
+operator|=
+name|pending_macros
+expr_stmt|;
 if|if
 condition|(
 name|subfile
@@ -3353,7 +3313,7 @@ argument_list|(
 operator|&
 name|objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|,
 name|linetablesize
 argument_list|)
@@ -3408,7 +3368,7 @@ argument_list|(
 operator|&
 name|objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|,
 name|strlen
 argument_list|(
@@ -3449,7 +3409,7 @@ name|free_linetable
 expr_stmt|;
 name|symtab
 operator|->
-name|free_ptr
+name|free_func
 operator|=
 name|NULL
 expr_stmt|;
@@ -3492,7 +3452,7 @@ argument_list|,
 operator|&
 name|objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|)
 expr_stmt|;
 block|}
@@ -3625,6 +3585,10 @@ name|current_subfile
 operator|=
 name|NULL
 expr_stmt|;
+name|pending_macros
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|symtab
 return|;
@@ -3648,7 +3612,6 @@ name|CORE_ADDR
 name|valu
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|context_stack
 modifier|*
@@ -3751,6 +3714,39 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Pop a context block.  Returns the address of the context block just    popped. */
+end_comment
+
+begin_function
+name|struct
+name|context_stack
+modifier|*
+name|pop_context
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|gdb_assert
+argument_list|(
+name|context_stack_depth
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|context_stack
+index|[
+operator|--
+name|context_stack_depth
+index|]
+operator|)
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -3835,7 +3831,6 @@ modifier|*
 name|targetlist
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3944,6 +3939,10 @@ operator|=
 name|NULL
 expr_stmt|;
 name|pending_blocks
+operator|=
+name|NULL
+expr_stmt|;
+name|pending_macros
 operator|=
 name|NULL
 expr_stmt|;

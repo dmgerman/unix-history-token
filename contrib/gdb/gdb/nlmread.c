@@ -45,6 +45,12 @@ directive|include
 file|"stabsread.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"block.h"
+end_include
+
 begin_function_decl
 specifier|extern
 name|void
@@ -485,6 +491,17 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
+comment|/* Install any minimal symbols that have been collected as the current      minimal symbols for this objfile. */
+name|install_minimal_symbols
+argument_list|(
+name|objfile
+argument_list|)
+expr_stmt|;
+name|do_cleanups
+argument_list|(
+name|back_to
+argument_list|)
+expr_stmt|;
 name|stabsect_build_psymtabs
 argument_list|(
 name|objfile
@@ -507,7 +524,7 @@ argument_list|()
 argument_list|,
 name|NULL
 argument_list|,
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 argument_list|,
 name|NULL
 argument_list|,
@@ -556,17 +573,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* FIXME:  We could locate and read the optional native debugging format      here and add the symbols to the minimal symbol table. */
-comment|/* Install any minimal symbols that have been collected as the current      minimal symbols for this objfile. */
-name|install_minimal_symbols
-argument_list|(
-name|objfile
-argument_list|)
-expr_stmt|;
-name|do_cleanups
-argument_list|(
-name|back_to
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

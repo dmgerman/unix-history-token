@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Fortran language support routines for GDB, the GNU debugger.    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Motorola.  Adapted from the C parser by Farooq Butt    (fmbutt@engage.sps.mot.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Fortran language support routines for GDB, the GNU debugger.    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Motorola.  Adapted from the C parser by Farooq Butt    (fmbutt@engage.sps.mot.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"valprint.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"value.h"
 end_include
 
 begin_comment
@@ -342,7 +348,6 @@ specifier|static
 name|void
 name|f_emit_char
 parameter_list|(
-specifier|register
 name|int
 name|c
 parameter_list|,
@@ -572,7 +577,6 @@ name|int
 name|force_ellipses
 parameter_list|)
 block|{
-specifier|register
 name|unsigned
 name|int
 name|i
@@ -592,10 +596,6 @@ name|int
 name|need_comma
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|int
-name|inspect_it
 decl_stmt|;
 if|if
 condition|(
@@ -877,7 +877,6 @@ name|int
 name|typeid
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -1839,14 +1838,15 @@ name|type_check_on
 block|,
 name|case_sensitive_off
 block|,
+operator|&
+name|exp_descriptor_standard
+block|,
 name|f_parse
 block|,
 comment|/* parser */
 name|f_error
 block|,
 comment|/* parser error function */
-name|evaluate_subexp_standard
-block|,
 name|f_printchar
 block|,
 comment|/* Print character constant */
@@ -1868,6 +1868,21 @@ comment|/* Print a value using appropriate syntax */
 name|c_value_print
 block|,
 comment|/* FIXME */
+name|NULL
+block|,
+comment|/* Language specific skip_trampoline */
+name|value_of_this
+block|,
+comment|/* value_of_this */
+name|basic_lookup_symbol_nonlocal
+block|,
+comment|/* lookup_symbol_nonlocal */
+name|basic_lookup_transparent_type
+block|,
+comment|/* lookup_transparent_type */
+name|NULL
+block|,
+comment|/* Language specific symbol demangler */
 block|{
 literal|""
 block|,
@@ -1925,14 +1940,17 @@ operator|&
 name|builtin_type_f_character
 block|,
 comment|/* Type of string elements */
+name|default_word_break_characters
+block|,
 name|LANG_MAGIC
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
-name|_initialize_f_language
+name|build_fortran_types
 parameter_list|(
 name|void
 parameter_list|)
@@ -2249,6 +2267,98 @@ argument_list|)
 operator|=
 name|builtin_type_f_real_s16
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_initialize_f_language
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|build_fortran_types
+argument_list|()
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_character
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_logical
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_logical_s1
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_logical_s2
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_integer
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_integer_s2
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_real
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_real_s8
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_real_s16
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_complex_s8
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_complex_s16
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_complex_s32
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_f_void
+argument_list|)
+expr_stmt|;
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
+argument_list|(
+name|builtin_type_string
+argument_list|)
+expr_stmt|;
+name|deprecated_register_gdbarch_swap
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|build_fortran_types
+argument_list|)
+expr_stmt|;
 name|builtin_type_string
 operator|=
 name|init_type
@@ -2364,7 +2474,7 @@ comment|/* If the COMMON block we are trying to add has a blank       name (i.e.
 end_comment
 
 begin_comment
-unit|if (STREQ (name, BLANK_COMMON_NAME_ORIGINAL) ||       STREQ (name, BLANK_COMMON_NAME_MF77))     {        xfree (name);       name = alloca (strlen (BLANK_COMMON_NAME_LOCAL) + 1);       strcpy (name, BLANK_COMMON_NAME_LOCAL);     }    tmp = allocate_saved_f77_common_node ();    local_copy_func_stab = xmalloc (strlen (func_stab) + 1);   strcpy (local_copy_func_stab, func_stab);    tmp->name = xmalloc (strlen (name) + 1);
+unit|if (strcmp (name, BLANK_COMMON_NAME_ORIGINAL) == 0       || strcmp (name, BLANK_COMMON_NAME_MF77) == 0)     {        xfree (name);       name = alloca (strlen (BLANK_COMMON_NAME_LOCAL) + 1);       strcpy (name, BLANK_COMMON_NAME_LOCAL);     }    tmp = allocate_saved_f77_common_node ();    local_copy_func_stab = xmalloc (strlen (func_stab) + 1);   strcpy (local_copy_func_stab, func_stab);    tmp->name = xmalloc (strlen (name) + 1);
 comment|/* local_copy_func_stab is a stabstring, let us first extract the       function name from the stab by NULLing out the ':' character. */
 end_comment
 
@@ -2406,7 +2516,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static SAVED_F77_COMMON_PTR find_first_common_named (char *name) {    SAVED_F77_COMMON_PTR tmp;    tmp = head_common_list;    while (tmp != NULL)     {       if (STREQ (tmp->name, name)) 	return (tmp);       else 	tmp = tmp->next;     }   return (NULL); }
+unit|static SAVED_F77_COMMON_PTR find_first_common_named (char *name) {    SAVED_F77_COMMON_PTR tmp;    tmp = head_common_list;    while (tmp != NULL)     {       if (strcmp (tmp->name, name) == 0) 	return (tmp);       else 	tmp = tmp->next;     }   return (NULL); }
 endif|#
 directive|endif
 end_endif
@@ -2444,7 +2554,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|tmp
 operator|->
@@ -2453,7 +2563,7 @@ argument_list|,
 name|name
 argument_list|)
 operator|&&
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|tmp
 operator|->
@@ -2509,7 +2619,7 @@ comment|/* For blank common blocks, change the canonical reprsentation       of 
 end_comment
 
 begin_endif
-unit|if ((STREQ (name, BLANK_COMMON_NAME_ORIGINAL)) ||       (STREQ (name, BLANK_COMMON_NAME_MF77)))     {       xfree (name);       name = alloca (strlen (BLANK_COMMON_NAME_LOCAL) + 1);       strcpy (name, BLANK_COMMON_NAME_LOCAL);     }    tmp = head_common_list;    while (tmp != NULL)     {       if (COMMON_NEEDS_PATCHING (tmp)) 	if (STREQ (tmp->name, name)) 	  patch_common_entries (tmp, offset, secnum);        tmp = tmp->next;     } }
+unit|if (strcmp (name, BLANK_COMMON_NAME_ORIGINAL) == 0       || strcmp (name, BLANK_COMMON_NAME_MF77) == 0)     {       xfree (name);       name = alloca (strlen (BLANK_COMMON_NAME_LOCAL) + 1);       strcpy (name, BLANK_COMMON_NAME_LOCAL);     }    tmp = head_common_list;    while (tmp != NULL)     {       if (COMMON_NEEDS_PATCHING (tmp)) 	if (strcmp (tmp->name, name) == 0) 	  patch_common_entries (tmp, offset, secnum);        tmp = tmp->next;     } }
 endif|#
 directive|endif
 end_endif
@@ -2576,12 +2686,12 @@ comment|/* First use a simple queuing algorithm (i.e. look and see if the       
 end_comment
 
 begin_comment
-unit|if (saved_bf_list == NULL)     internal_error (__FILE__, __LINE__, 		    "cannot get .bf node off empty list");    if (current_head_bf_list != NULL)     if (current_head_bf_list->symnum_fcn == the_function)       { 	if (global_remote_debug) 	  fprintf (stderr, "*");  	tmp = current_head_bf_list; 	current_head_bf_list = current_head_bf_list->next; 	return (tmp->symnum_bf);       }
+unit|if (saved_bf_list == NULL)     internal_error (__FILE__, __LINE__, 		    "cannot get .bf node off empty list");    if (current_head_bf_list != NULL)     if (current_head_bf_list->symnum_fcn == the_function)       { 	if (global_remote_debug) 	  fprintf_unfiltered (gdb_stderr, "*");  	tmp = current_head_bf_list; 	current_head_bf_list = current_head_bf_list->next; 	return (tmp->symnum_bf);       }
 comment|/* If the above did not work (probably because #line directives were       used in the sourcefile and they messed up our internal tables) we now do      the ugly linear scan */
 end_comment
 
 begin_endif
-unit|if (global_remote_debug)     fprintf (stderr, "\ndefaulting to linear scan\n");    nprobes = 0;   tmp = saved_bf_list;   while (tmp != NULL)     {       nprobes++;       if (tmp->symnum_fcn == the_function) 	{ 	  if (global_remote_debug) 	    fprintf (stderr, "Found in %d probes\n", nprobes); 	  current_head_bf_list = tmp->next; 	  return (tmp->symnum_bf); 	}       tmp = tmp->next;     }    return (-1); }  static SAVED_FUNCTION_PTR saved_function_list = NULL; static SAVED_FUNCTION_PTR saved_function_list_end = NULL;  static void clear_function_list (void) {   SAVED_FUNCTION_PTR tmp = saved_function_list;   SAVED_FUNCTION_PTR next = NULL;    while (tmp != NULL)     {       next = tmp->next;       xfree (tmp);       tmp = next;     }    saved_function_list = NULL; }
+unit|if (global_remote_debug)     fprintf_unfiltered (gdb_stderr, "\ndefaulting to linear scan\n");    nprobes = 0;   tmp = saved_bf_list;   while (tmp != NULL)     {       nprobes++;       if (tmp->symnum_fcn == the_function) 	{ 	  if (global_remote_debug) 	    fprintf_unfiltered (gdb_stderr, "Found in %d probes\n", nprobes); 	  current_head_bf_list = tmp->next; 	  return (tmp->symnum_bf); 	}       tmp = tmp->next;     }    return (-1); }  static SAVED_FUNCTION_PTR saved_function_list = NULL; static SAVED_FUNCTION_PTR saved_function_list_end = NULL;  static void clear_function_list (void) {   SAVED_FUNCTION_PTR tmp = saved_function_list;   SAVED_FUNCTION_PTR next = NULL;    while (tmp != NULL)     {       next = tmp->next;       xfree (tmp);       tmp = next;     }    saved_function_list = NULL; }
 endif|#
 directive|endif
 end_endif

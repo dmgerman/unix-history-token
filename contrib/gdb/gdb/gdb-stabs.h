@@ -23,17 +23,6 @@ directive|define
 name|GDBSTABS_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|SECT_OFF_MAX
-value|64
-end_define
-
-begin_comment
-comment|/* Count of possible values */
-end_comment
-
 begin_comment
 comment|/* The stab_section_info chain remembers info from the ELF symbol table,    while psymtabs are being built for the other symbol tables in the     objfile.  It is destroyed at the complation of psymtab-reading.    Any info that was used from it has been copied into psymtabs.  */
 end_comment
@@ -46,12 +35,6 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|CORE_ADDR
-name|sections
-index|[
-name|SECT_OFF_MAX
-index|]
-decl_stmt|;
 name|struct
 name|stab_section_info
 modifier|*
@@ -61,6 +44,15 @@ name|int
 name|found
 decl_stmt|;
 comment|/* Count of times it's found in searching */
+name|size_t
+name|num_sections
+decl_stmt|;
+name|CORE_ADDR
+name|sections
+index|[
+literal|1
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -132,6 +124,11 @@ decl_stmt|;
 name|asection
 modifier|*
 name|bss_section
+decl_stmt|;
+comment|/* Pointer to the separate ".stab" section, if there is one.  */
+name|asection
+modifier|*
+name|stab_section
 decl_stmt|;
 block|}
 struct|;
@@ -245,6 +242,16 @@ parameter_list|(
 name|o
 parameter_list|)
 value|(DBX_SYMFILE_INFO(o)->bss_section)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBX_STAB_SECTION
+parameter_list|(
+name|o
+parameter_list|)
+value|(DBX_SYMFILE_INFO(o)->stab_section)
 end_define
 
 begin_endif

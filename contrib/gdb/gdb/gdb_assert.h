@@ -74,18 +74,6 @@ name|ASSERT_FUNCTION
 value|__func__
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ASSERT_FUNCTION
-value|((const char *) 0)
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -99,6 +87,15 @@ end_endif
 begin_comment
 comment|/* This prints an "Assertion failed" message, aksing the user if they    want to continue, dump core, or just exit.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ASSERT_FUNCTION
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -114,8 +111,35 @@ parameter_list|,
 name|function
 parameter_list|)
 define|\
-value|internal_error (file, line, "%s%sAssertion `%s' failed.",                   \ 		  function ? function : "", function ? ": " : "",             \ 		  assertion)
+value|internal_error (file, line, "%s: Assertion `%s' failed.",                   \ 		  function, assertion)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|gdb_assert_fail
+parameter_list|(
+name|assertion
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|,
+name|function
+parameter_list|)
+define|\
+value|internal_error (file, line, "Assertion `%s' failed.",                       \ 		  assertion)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

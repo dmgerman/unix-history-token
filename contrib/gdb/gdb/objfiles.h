@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for symbol file management in GDB.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for symbol file management in GDB.     Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -22,11 +22,49 @@ end_define
 begin_include
 include|#
 directive|include
-file|"bcache.h"
+file|"gdb_obstack.h"
 end_include
 
 begin_comment
-comment|/* This structure maintains information on a per-objfile basis about the    "entry point" of the objfile, and the scope within which the entry point    exists.  It is possible that gdb will see more than one objfile that is    executable, each with its own entry point.     For example, for dynamically linked executables in SVR4, the dynamic linker    code is contained within the shared C library, which is actually executable    and is run by the kernel first when an exec is done of a user executable    that is dynamically linked.  The dynamic linker within the shared C library    then maps in the various program segments in the user executable and jumps    to the user executable's recorded entry point, as if the call had been made    directly by the kernel.     The traditional gdb method of using this info is to use the recorded entry    point to set the variables entry_file_lowpc and entry_file_highpc from    the debugging information, where these values are the starting address    (inclusive) and ending address (exclusive) of the instruction space in the    executable which correspond to the "startup file", I.E. crt0.o in most    cases.  This file is assumed to be a startup file and frames with pc's    inside it are treated as nonexistent.  Setting these variables is necessary    so that backtraces do not fly off the bottom of the stack.     Gdb also supports an alternate method to avoid running off the bottom    of the stack.     There are two frames that are "special", the frame for the function    containing the process entry point, since it has no predecessor frame,    and the frame for the function containing the user code entry point    (the main() function), since all the predecessor frames are for the    process startup code.  Since we have no guarantee that the linked    in startup modules have any debugging information that gdb can use,    we need to avoid following frame pointers back into frames that might    have been built in the startup code, as we might get hopelessly     confused.  However, we almost always have debugging information    available for main().     These variables are used to save the range of PC values which are valid    within the main() function and within the function containing the process    entry point.  If we always consider the frame for main() as the outermost    frame when debugging user code, and the frame for the process entry    point function as the outermost frame when debugging startup code, then    all we have to do is have FRAME_CHAIN_VALID return false whenever a    frame's current PC is within the range specified by these variables.    In essence, we set "ceilings" in the frame chain beyond which we will    not proceed when following the frame chain back up the stack.     A nice side effect is that we can still debug startup code without    running off the end of the frame chain, assuming that we have usable    debugging information in the startup modules, and if we choose to not    use the block at main, or can't find it for some reason, everything    still works as before.  And if we have no startup code debugging    information but we do have usable information for main(), backtraces    from user code don't go wandering off into the startup code.     To use this method, define your FRAME_CHAIN_VALID macro like:     #define FRAME_CHAIN_VALID(chain, thisframe)     \    (chain != 0                                   \&& !(inside_main_func ((thisframe)->pc))     \&& !(inside_entry_func ((thisframe)->pc)))     and add initializations of the four scope controlling variables inside    the object file / debugging information processing modules.  */
+comment|/* For obstack internals.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"symfile.h"
+end_include
+
+begin_comment
+comment|/* For struct psymbol_allocation_list */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|bcache
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|htab
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|symtab
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|objfile_data
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* This structure maintains information on a per-objfile basis about the    "entry point" of the objfile, and the scope within which the entry point    exists.  It is possible that gdb will see more than one objfile that is    executable, each with its own entry point.     For example, for dynamically linked executables in SVR4, the dynamic linker    code is contained within the shared C library, which is actually executable    and is run by the kernel first when an exec is done of a user executable    that is dynamically linked.  The dynamic linker within the shared C library    then maps in the various program segments in the user executable and jumps    to the user executable's recorded entry point, as if the call had been made    directly by the kernel.     The traditional gdb method of using this info is to use the    recorded entry point to set the variables    deprecated_entry_file_lowpc and deprecated_entry_file_highpc from    the debugging information, where these values are the starting    address (inclusive) and ending address (exclusive) of the    instruction space in the executable which correspond to the    "startup file", I.E. crt0.o in most cases.  This file is assumed to    be a startup file and frames with pc's inside it are treated as    nonexistent.  Setting these variables is necessary so that    backtraces do not fly off the bottom of the stack.     NOTE: cagney/2003-09-09: It turns out that this "traditional"    method doesn't work.  Corinna writes: ``It turns out that the call    to deprecated_inside_entry_file destroys a meaningful backtrace    under some conditions.  E. g. the backtrace tests in the asm-source    testcase are broken for some targets.  In this test the functions    are all implemented as part of one file and the testcase is not    necessarily linked with a start file (depending on the target).    What happens is, that the first frame is printed normaly and    following frames are treated as being inside the enttry file then.    This way, only the #0 frame is printed in the backtrace output.''    Ref "frame.c" "NOTE: vinschen/2003-04-01".     Gdb also supports an alternate method to avoid running off the bottom    of the stack.     There are two frames that are "special", the frame for the function    containing the process entry point, since it has no predecessor frame,    and the frame for the function containing the user code entry point    (the main() function), since all the predecessor frames are for the    process startup code.  Since we have no guarantee that the linked    in startup modules have any debugging information that gdb can use,    we need to avoid following frame pointers back into frames that might    have been built in the startup code, as we might get hopelessly     confused.  However, we almost always have debugging information    available for main().     These variables are used to save the range of PC values which are    valid within the main() function and within the function containing    the process entry point.  If we always consider the frame for    main() as the outermost frame when debugging user code, and the    frame for the process entry point function as the outermost frame    when debugging startup code, then all we have to do is have    DEPRECATED_FRAME_CHAIN_VALID return false whenever a frame's    current PC is within the range specified by these variables.  In    essence, we set "ceilings" in the frame chain beyond which we will    not proceed when following the frame chain back up the stack.     A nice side effect is that we can still debug startup code without    running off the end of the frame chain, assuming that we have usable    debugging information in the startup modules, and if we choose to not    use the block at main, or can't find it for some reason, everything    still works as before.  And if we have no startup code debugging    information but we do have usable information for main(), backtraces    from user code don't go wandering off into the startup code.  */
 end_comment
 
 begin_struct
@@ -51,10 +89,10 @@ name|entry_func_highpc
 decl_stmt|;
 comment|/* Start (inclusive) and end (exclusive) of object file containing the        entry point. */
 name|CORE_ADDR
-name|entry_file_lowpc
+name|deprecated_entry_file_lowpc
 decl_stmt|;
 name|CORE_ADDR
-name|entry_file_highpc
+name|deprecated_entry_file_highpc
 decl_stmt|;
 comment|/* Start (inclusive) and end (exclusive) of the user code main() function. */
 name|CORE_ADDR
@@ -97,7 +135,9 @@ comment|/* This field is being used for nefarious purposes by syms_from_objfile.
 name|CORE_ADDR
 name|offset
 decl_stmt|;
-name|sec_ptr
+name|struct
+name|bfd_section
+modifier|*
 name|the_bfd_section
 decl_stmt|;
 comment|/* BFD section pointer */
@@ -254,7 +294,7 @@ name|objfile
 modifier|*
 name|next
 decl_stmt|;
-comment|/* The object file's name.  Malloc'd; free it if you free this struct.  */
+comment|/* The object file's name, tilde-expanded and absolute.        Malloc'd; free it if you free this struct.  */
 name|char
 modifier|*
 name|name
@@ -291,29 +331,31 @@ comment|/* The modification timestamp of the object file, as of the last time   
 name|long
 name|mtime
 decl_stmt|;
-comment|/* Obstacks to hold objects that should be freed when we load a new symbol        table from this object file. */
+comment|/* Obstack to hold objects that should be freed when we load a new symbol        table from this object file. */
 name|struct
 name|obstack
-name|psymbol_obstack
+name|objfile_obstack
 decl_stmt|;
-comment|/* Partial symbols */
-name|struct
-name|obstack
-name|symbol_obstack
-decl_stmt|;
-comment|/* Full symbols */
-name|struct
-name|obstack
-name|type_obstack
-decl_stmt|;
-comment|/* Types */
 comment|/* A byte cache where we can stash arbitrary "chunks" of bytes that        will not change. */
 name|struct
 name|bcache
+modifier|*
 name|psymbol_cache
 decl_stmt|;
 comment|/* Byte cache for partial syms */
-comment|/* Vectors of all partial symbols read in from file.  The actual data        is stored in the psymbol_obstack. */
+name|struct
+name|bcache
+modifier|*
+name|macro_cache
+decl_stmt|;
+comment|/* Byte cache for macros */
+comment|/* Hash table for mapping symbol names to demangled names.  Each        entry in the hash table is actually two consecutive strings,        both null-terminated; the first one is a mangled or linkage        name, and the second is the demangled name or just a zero byte        if the name doesn't demangle.  */
+name|struct
+name|htab
+modifier|*
+name|demangled_names_hash
+decl_stmt|;
+comment|/* Vectors of all partial symbols read in from file.  The actual data        is stored in the objfile_obstack. */
 name|struct
 name|psymbol_allocation_list
 name|global_psymbols
@@ -322,7 +364,7 @@ name|struct
 name|psymbol_allocation_list
 name|static_psymbols
 decl_stmt|;
-comment|/* Each file contains a pointer to an array of minimal symbols for all        global symbols that are defined within the file.  The array is terminated        by a "null symbol", one that has a NULL pointer for the name and a zero        value for the address.  This makes it easy to walk through the array        when passed a pointer to somewhere in the middle of it.  There is also        a count of the number of symbols, which does not include the terminating        null symbol.  The array itself, as well as all the data that it points        to, should be allocated on the symbol_obstack for this file. */
+comment|/* Each file contains a pointer to an array of minimal symbols for all        global symbols that are defined within the file.  The array is terminated        by a "null symbol", one that has a NULL pointer for the name and a zero        value for the address.  This makes it easy to walk through the array        when passed a pointer to somewhere in the middle of it.  There is also        a count of the number of symbols, which does not include the terminating        null symbol.  The array itself, as well as all the data that it points        to, should be allocated on the objfile_obstack for this file. */
 name|struct
 name|minimal_symbol
 modifier|*
@@ -357,7 +399,8 @@ modifier|*
 name|fundamental_types
 decl_stmt|;
 comment|/* The mmalloc() malloc-descriptor for this objfile if we are using        the memory mapped malloc() package to manage storage for this objfile's        data.  NULL if we are not. */
-name|PTR
+name|void
+modifier|*
 name|md
 decl_stmt|;
 comment|/* The file descriptor that was used to obtain the mmalloc descriptor        for this objfile.  If we call mmalloc_detach with the malloc descriptor        we should then close this file descriptor. */
@@ -382,14 +425,26 @@ modifier|*
 name|sym_stab_info
 decl_stmt|;
 comment|/* Hook for information for use by the symbol reader (currently used        for information shared by sym_init and sym_read).  It is        typically a pointer to malloc'd memory.  The symbol reader's finish        function is responsible for freeing the memory thusly allocated.  */
-name|PTR
+name|void
+modifier|*
 name|sym_private
 decl_stmt|;
 comment|/* Hook for target-architecture-specific information.  This must        point to memory allocated on one of the obstacks in this objfile,        so that it gets freed automatically when reading a new object        file. */
-name|PTR
+name|void
+modifier|*
 name|obj_private
 decl_stmt|;
-comment|/* Set of relocation offsets to apply to each section.        Currently on the psymbol_obstack (which makes no sense, but I'm        not sure it's harming anything).         These offsets indicate that all symbols (including partial and        minimal symbols) which have been read have been relocated by this        much.  Symbols which are yet to be read need to be relocated by        it.  */
+comment|/* Per objfile data-pointers required by other GDB modules.  */
+comment|/* FIXME: kettenis/20030711: This mechanism could replace        sym_stab_info, sym_private and obj_private entirely.  */
+name|void
+modifier|*
+modifier|*
+name|data
+decl_stmt|;
+name|unsigned
+name|num_data
+decl_stmt|;
+comment|/* Set of relocation offsets to apply to each section.        Currently on the objfile_obstack (which makes no sense, but I'm        not sure it's harming anything).         These offsets indicate that all symbols (including partial and        minimal symbols) which have been read have been relocated by this        much.  Symbols which are yet to be read need to be relocated by        it.  */
 name|struct
 name|section_offsets
 modifier|*
@@ -411,7 +466,7 @@ decl_stmt|;
 name|int
 name|sect_index_rodata
 decl_stmt|;
-comment|/* These pointers are used to locate the section table, which        among other things, is used to map pc addresses into sections.        SECTIONS points to the first entry in the table, and        SECTIONS_END points to the first location past the last entry        in the table.  Currently the table is stored on the        psymbol_obstack (which makes no sense, but I'm not sure it's        harming anything).  */
+comment|/* These pointers are used to locate the section table, which        among other things, is used to map pc addresses into sections.        SECTIONS points to the first entry in the table, and        SECTIONS_END points to the first location past the last entry        in the table.  Currently the table is stored on the        objfile_obstack (which makes no sense, but I'm not sure it's        harming anything).  */
 name|struct
 name|obj_section
 modifier|*
@@ -420,15 +475,8 @@ decl_stmt|,
 modifier|*
 name|sections_end
 decl_stmt|;
-comment|/* two auxiliary fields, used to hold the fp of separate symbol files */
-name|FILE
-modifier|*
-name|auxf1
-decl_stmt|,
-modifier|*
-name|auxf2
-decl_stmt|;
 comment|/* Imported symbols */
+comment|/* FIXME: ezannoni 2004-02-10: This is just SOM (HP) specific (see        somread.c). It should not pollute generic objfiles.  */
 name|ImportEntry
 modifier|*
 name|import_list
@@ -437,6 +485,7 @@ name|int
 name|import_list_size
 decl_stmt|;
 comment|/* Exported symbols */
+comment|/* FIXME: ezannoni 2004-02-10: This is just SOM (HP) specific (see        somread.c). It should not pollute generic objfiles.  */
 name|ExportEntry
 modifier|*
 name|export_list
@@ -444,30 +493,34 @@ decl_stmt|;
 name|int
 name|export_list_size
 decl_stmt|;
+comment|/* Link to objfile that contains the debug symbols for this one.        One is loaded if this file has an debug link to an existing        debug file with the right checksum */
+name|struct
+name|objfile
+modifier|*
+name|separate_debug_objfile
+decl_stmt|;
+comment|/* If this is a separate debug object, this is used as a link to the        actual executable objfile. */
+name|struct
+name|objfile
+modifier|*
+name|separate_debug_objfile_backlink
+decl_stmt|;
 comment|/* Place to stash various statistics about this objfile */
 name|OBJSTATS
 expr_stmt|;
+comment|/* A symtab that the C++ code uses to stash special symbols        associated to namespaces.  */
+comment|/* FIXME/carlton-2003-06-27: Delete this in a few years once        "possible namespace symbols" go away.  */
+name|struct
+name|symtab
+modifier|*
+name|cp_namespace_symtab
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
 comment|/* Defines for the objfile flag word. */
-end_comment
-
-begin_comment
-comment|/* Gdb can arrange to allocate storage for all objects related to a    particular objfile in a designated section of its address space,    managed at a low level by mmap() and using a special version of    malloc that handles malloc/free/realloc on top of the mmap() interface.    This allows the "internal gdb state" for a particular objfile to be    dumped to a gdb state file and subsequently reloaded at a later time. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OBJF_MAPPED
-value|(1<< 0)
-end_define
-
-begin_comment
-comment|/* Objfile data is mmap'd */
 end_comment
 
 begin_comment
@@ -572,7 +625,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* When we need to allocate a new type, we need to know which type_obstack    to allocate the type on, since there is one for each objfile.  The places    where types are allocated are deeply buried in function call hierarchies    which know nothing about objfiles, so rather than trying to pass a    particular objfile down to them, we just do an end run around them and    set current_objfile to be whatever objfile we expect to be using at the    time types are being allocated.  For instance, when we start reading    symbols for a particular objfile, we set current_objfile to point to that    objfile, and when we are done, we set it back to NULL, to ensure that we    never put a type someplace other than where we are expecting to put it.    FIXME:  Maybe we should review the entire type handling system and    see if there is a better way to avoid this problem. */
+comment|/* When we need to allocate a new type, we need to know which objfile_obstack    to allocate the type on, since there is one for each objfile.  The places    where types are allocated are deeply buried in function call hierarchies    which know nothing about objfiles, so rather than trying to pass a    particular objfile down to them, we just do an end run around them and    set current_objfile to be whatever objfile we expect to be using at the    time types are being allocated.  For instance, when we start reading    symbols for a particular objfile, we set current_objfile to point to that    objfile, and when we are done, we set it back to NULL, to ensure that we    never put a type someplace other than where we are expecting to put it.    FIXME:  Maybe we should review the entire type handling system and    see if there is a better way to avoid this problem. */
 end_comment
 
 begin_decl_stmt
@@ -618,9 +671,60 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|init_entry_point_info
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|entry_point_address
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|build_objfile_section_table
 parameter_list|(
+name|struct
+name|objfile
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|terminate_minimal_symbol_table
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|put_objfile_before
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
@@ -811,6 +915,82 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Keep a registry of per-objfile data-pointers required by other GDB    modules.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|struct
+name|objfile_data
+modifier|*
+name|register_objfile_data
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|clear_objfile_data
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|set_objfile_data
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|,
+specifier|const
+name|struct
+name|objfile_data
+modifier|*
+name|data
+parameter_list|,
+name|void
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|objfile_data
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|,
+specifier|const
+name|struct
+name|objfile_data
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* Traverse all object files.  ALL_OBJFILES_SAFE works even if you delete    the objfile during the traversal.  */
 end_comment
 
@@ -886,7 +1066,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|for ((m) = (objfile) -> msymbols; SYMBOL_NAME(m) != NULL; (m)++)
+value|for ((m) = (objfile) -> msymbols; DEPRECATED_SYMBOL_NAME(m) != NULL; (m)++)
 end_define
 
 begin_comment
@@ -937,7 +1117,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|ALL_OBJFILES (objfile)	 \     if ((objfile)->msymbols)	 \       ALL_OBJFILE_MSYMBOLS (objfile, m)
+value|ALL_OBJFILES (objfile)	 \     ALL_OBJFILE_MSYMBOLS (objfile, m)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Floating point routines for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Floating point routines for GDB, the GNU debugger.     Copyright 1986, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2003 Free Software Foundation,    Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -618,7 +618,7 @@ name|fmt
 operator|->
 name|exp_nan
 expr_stmt|;
-comment|/* Don't bias NaNs. Use minimum exponent for denorms. For simplicity,    we don't check for zero as the exponent doesn't matter. */
+comment|/* Don't bias NaNs. Use minimum exponent for denorms. For simplicity,      we don't check for zero as the exponent doesn't matter.  Note the cast      to int; exp_bias is unsigned, so it's important to make sure the      operation is done in signed arithmetic.  */
 if|if
 condition|(
 operator|!
@@ -1657,6 +1657,13 @@ name|mant_long
 operator|&=
 literal|0xffffffffL
 expr_stmt|;
+comment|/* If we are processing the top 32 mantissa bits of a doublest              so as to convert to a float value with implied integer bit,              we will only be putting 31 of those 32 bits into the              final value due to the discarding of the top bit.  In the               case of a small float value where the number of mantissa               bits is less than 32, discarding the top bit does not alter              the number of bits we will be adding to the result.  */
+if|if
+condition|(
+name|mant_bits
+operator|==
+literal|32
+condition|)
 name|mant_bits
 operator|-=
 literal|1
@@ -2596,6 +2603,7 @@ comment|/* Return a floating-point format for a floating-point variable of    le
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|struct
 name|floatformat
@@ -2637,6 +2645,29 @@ operator|*
 name|TARGET_CHAR_BIT
 operator|==
 name|TARGET_LONG_DOUBLE_BIT
+condition|)
+return|return
+name|TARGET_LONG_DOUBLE_FORMAT
+return|;
+comment|/* On i386 the 'long double' type takes 96 bits,      while the real number of used bits is only 80,      both in processor and in memory.        The code below accepts the real bit size.  */
+elseif|else
+if|if
+condition|(
+operator|(
+name|TARGET_LONG_DOUBLE_FORMAT
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|len
+operator|*
+name|TARGET_CHAR_BIT
+operator|==
+name|TARGET_LONG_DOUBLE_FORMAT
+operator|->
+name|totalsize
+operator|)
 condition|)
 return|return
 name|TARGET_LONG_DOUBLE_FORMAT
@@ -2726,8 +2757,9 @@ comment|/* Extract a floating-point number of length LEN from a target-order    
 end_comment
 
 begin_function
+specifier|static
 name|DOUBLEST
-name|extract_floating
+name|extract_floating_by_length
 parameter_list|(
 specifier|const
 name|void
@@ -2761,7 +2793,7 @@ condition|)
 block|{
 name|warning
 argument_list|(
-literal|"Can't store a floating-point number of %d bytes."
+literal|"Can't extract a floating-point number of %d bytes."
 argument_list|,
 name|len
 argument_list|)
@@ -2786,13 +2818,38 @@ return|;
 block|}
 end_function
 
+begin_function
+name|DOUBLEST
+name|deprecated_extract_floating
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+return|return
+name|extract_floating_by_length
+argument_list|(
+name|addr
+argument_list|,
+name|len
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Store VAL as a floating-point number of length LEN to a    target-order byte-stream at ADDR.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|store_floating
+name|store_floating_by_length
 parameter_list|(
 name|void
 modifier|*
@@ -2839,6 +2896,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|floatformat_from_doublest
 argument_list|(
@@ -2848,6 +2906,33 @@ operator|&
 name|val
 argument_list|,
 name|addr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|deprecated_store_floating
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|DOUBLEST
+name|val
+parameter_list|)
+block|{
+name|store_floating_by_length
+argument_list|(
+name|addr
+argument_list|,
+name|len
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 block|}
@@ -2895,8 +2980,9 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+comment|/* Not all code remembers to set the FLOATFORMAT (language        specific code? stabs?) so handle that here as a special case.  */
 return|return
-name|extract_floating
+name|extract_floating_by_length
 argument_list|(
 name|addr
 argument_list|,
@@ -2979,7 +3065,8 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|store_floating
+comment|/* Not all code remembers to set the FLOATFORMAT (language        specific code? stabs?) so handle that here as a special case.  */
+name|store_floating_by_length
 argument_list|(
 name|addr
 argument_list|,

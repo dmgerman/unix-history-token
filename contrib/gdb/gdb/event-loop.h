@@ -118,6 +118,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|gdb_do_one_event
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|delete_file_handler
 parameter_list|(

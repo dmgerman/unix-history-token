@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for values of C expressions, for GDB.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994,    1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for values of C expressions, for GDB.     Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994,    1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -26,15 +26,61 @@ directive|include
 file|"doublest.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"frame.h"
+end_include
+
 begin_comment
-comment|/*  * The structure which defines the type of a value.  It should never  * be possible for a program lval value to survive over a call to the inferior  * (ie to be put into the history list or an internal variable).  */
+comment|/* For struct frame_id.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|block
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|expression
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|regcache
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|symbol
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|type
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ui_file
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* The structure which defines the type of a value.  It should never    be possible for a program lval value to survive over a call to the    inferior (i.e. to be put into the history list or an internal    variable).  */
 end_comment
 
 begin_struct
 struct|struct
 name|value
 block|{
-comment|/* Type of value; either not an lval, or one of the various        different possible kinds of lval.  */
+comment|/* Type of value; either not an lval, or one of the various      different possible kinds of lval.  */
 name|enum
 name|lval_type
 name|lval
@@ -46,7 +92,7 @@ decl_stmt|;
 comment|/* Location of value (if lval).  */
 union|union
 block|{
-comment|/* If lval == lval_memory, this is the address in the inferior. 	   If lval == lval_register, this is the byte offset into the 	   registers structure.  */
+comment|/* If lval == lval_memory, this is the address in the inferior.        If lval == lval_register, this is the byte offset into the        registers structure.  */
 name|CORE_ADDR
 name|address
 decl_stmt|;
@@ -56,14 +102,14 @@ name|internalvar
 modifier|*
 name|internalvar
 decl_stmt|;
-comment|/* Number of register.  Only used with 	   lval_reg_frame_relative.  */
+comment|/* Number of register.  Only used with lval_reg_frame_relative.  */
 name|int
 name|regnum
 decl_stmt|;
 block|}
 name|location
 union|;
-comment|/* Describes offset of a value within lval of a structure in bytes.        If lval == lval_memory, this is an offset to the address.        If lval == lval_register, this is a further offset from           location.address within the registers structure.          Note also the member embedded_offset below.  */
+comment|/* Describes offset of a value within lval of a structure in bytes.      If lval == lval_memory, this is an offset to the address.      If lval == lval_register, this is a further offset from      location.address within the registers structure.        Note also the member embedded_offset below.  */
 name|int
 name|offset
 decl_stmt|;
@@ -71,13 +117,14 @@ comment|/* Only used for bitfields; number of bits contained in them.  */
 name|int
 name|bitsize
 decl_stmt|;
-comment|/* Only used for bitfields; position of start of field.        For BITS_BIG_ENDIAN=0 targets, it is the position of the LSB.        For BITS_BIG_ENDIAN=1 targets, it is the position of the MSB. */
+comment|/* Only used for bitfields; position of start of field.      For BITS_BIG_ENDIAN=0 targets, it is the position of the LSB.      For BITS_BIG_ENDIAN=1 targets, it is the position of the MSB. */
 name|int
 name|bitpos
 decl_stmt|;
-comment|/* Frame value is relative to.  In practice, this address is only        used if the value is stored in several registers in other than        the current frame, and these registers have not all been saved        at the same place in memory.  This will be described in the        lval enum above as "lval_reg_frame_relative".  */
-name|CORE_ADDR
-name|frame_addr
+comment|/* Frame value is relative to.  In practice, this ID is only used if      the value is stored in several registers in other than the      current frame, and these registers have not all been saved at the      same place in memory.  This will be described in the lval enum      above as "lval_reg_frame_relative".  */
+name|struct
+name|frame_id
+name|frame_id
 decl_stmt|;
 comment|/* Type of the value.  */
 name|struct
@@ -85,7 +132,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-comment|/* If a value represents a C++ object, then the `type' field gives        the object's compile-time type.  If the object actually belongs        to some class derived from `type', perhaps with other base        classes and additional members, then `type' is just a subobject        of the real thing, and the full object is probably larger than        `type' would suggest.         If `type' is a dynamic class (i.e. one with a vtable), then GDB        can actually determine the object's run-time type by looking at        the run-time type information in the vtable.  When this        information is available, we may elect to read in the entire        object, for several reasons:           - When printing the value, the user would probably rather see            the full object, not just the limited portion apparent from            the compile-time type.           - If `type' has virtual base classes, then even printing            `type' alone may require reaching outside the `type'            portion of the object to wherever the virtual base class            has been stored.         When we store the entire object, `enclosing_type' is the        run-time type --- the complete object --- and `embedded_offset'        is the offset of `type' within that larger type, in bytes.  The        VALUE_CONTENTS macro takes `embedded_offset' into account, so        most GDB code continues to see the `type' portion of the value,        just as the inferior would.         If `type' is a pointer to an object, then `enclosing_type' is a        pointer to the object's run-time type, and `pointed_to_offset'        is the offset in bytes from the full object to the pointed-to        object --- that is, the value `embedded_offset' would have if        we followed the pointer and fetched the complete object.  (I        don't really see the point.  Why not just determine the        run-time type when you indirect, and avoid the special case?        The contents don't matter until you indirect anyway.)         If we're not doing anything fancy, `enclosing_type' is equal to        `type', and `embedded_offset' is zero, so everything works        normally.  */
+comment|/* If a value represents a C++ object, then the `type' field gives      the object's compile-time type.  If the object actually belongs      to some class derived from `type', perhaps with other base      classes and additional members, then `type' is just a subobject      of the real thing, and the full object is probably larger than      `type' would suggest.       If `type' is a dynamic class (i.e. one with a vtable), then GDB      can actually determine the object's run-time type by looking at      the run-time type information in the vtable.  When this      information is available, we may elect to read in the entire      object, for several reasons:       - When printing the value, the user would probably rather see the        full object, not just the limited portion apparent from the        compile-time type.       - If `type' has virtual base classes, then even printing `type'        alone may require reaching outside the `type' portion of the        object to wherever the virtual base class has been stored.       When we store the entire object, `enclosing_type' is the run-time      type -- the complete object -- and `embedded_offset' is the      offset of `type' within that larger type, in bytes.  The      VALUE_CONTENTS macro takes `embedded_offset' into account, so      most GDB code continues to see the `type' portion of the value,      just as the inferior would.       If `type' is a pointer to an object, then `enclosing_type' is a      pointer to the object's run-time type, and `pointed_to_offset' is      the offset in bytes from the full object to the pointed-to object      -- that is, the value `embedded_offset' would have if we      followed the pointer and fetched the complete object.  (I don't      really see the point.  Why not just determine the run-time type      when you indirect, and avoid the special case?  The contents      don't matter until you indirect anyway.)       If we're not doing anything fancy, `enclosing_type' is equal to      `type', and `embedded_offset' is zero, so everything works      normally.  */
 name|struct
 name|type
 modifier|*
@@ -103,24 +150,11 @@ name|value
 modifier|*
 name|next
 decl_stmt|;
-comment|/* ??? When is this used?  */
-union|union
-block|{
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-block|}
-name|substring_addr
-union|;
-comment|/* Register number if the value is from a register.  Is not kept        if you take a field of a structure that is stored in a        register.  Shouldn't it be?  */
+comment|/* Register number if the value is from a register.  */
 name|short
 name|regno
 decl_stmt|;
-comment|/* If zero, contents of this value are in the contents field.        If nonzero, contents are in inferior memory at address        in the location.address field plus the offset field        (and the lval field should be lval_memory).         WARNING: This field is used by the code which handles        watchpoints (see breakpoint.c) to decide whether a particular        value can be watched by hardware watchpoints.  If the lazy flag        is set for some member of a value chain, it is assumed that        this member of the chain doesn't need to be watched as part of        watching the value itself.  This is how GDB avoids watching the        entire struct or array when the user wants to watch a single        struct member or array element.  If you ever change the way        lazy flag is set and reset, be sure to consider this use as        well!  */
+comment|/* If zero, contents of this value are in the contents field.  If        nonzero, contents are in inferior memory at address in the        location.address field plus the offset field (and the lval        field should be lval_memory).         WARNING: This field is used by the code which handles        watchpoints (see breakpoint.c) to decide whether a particular        value can be watched by hardware watchpoints.  If the lazy flag        is set for some member of a value chain, it is assumed that        this member of the chain doesn't need to be watched as part of        watching the value itself.  This is how GDB avoids watching the        entire struct or array when the user wants to watch a single        struct member or array element.  If you ever change the way        lazy flag is set and reset, be sure to consider this use as        well!  */
 name|char
 name|lazy
 decl_stmt|;
@@ -142,20 +176,23 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-name|double
-name|force_double_align
+name|DOUBLEST
+name|force_doublest_align
 decl_stmt|;
 name|LONGEST
-name|force_longlong_align
+name|force_longest_align
 decl_stmt|;
-name|char
+name|CORE_ADDR
+name|force_core_addr_align
+decl_stmt|;
+name|void
 modifier|*
-name|literal_data
+name|force_pointer_align
 decl_stmt|;
 block|}
 name|aligner
 union|;
-comment|/* Do not add any new members here -- contents above will trash them */
+comment|/* Do not add any new members here -- contents above will trash them.  */
 block|}
 struct|;
 end_struct
@@ -191,7 +228,7 @@ value|(val)->lazy
 end_define
 
 begin_comment
-comment|/* VALUE_CONTENTS and VALUE_CONTENTS_RAW both return the address of    the gdb buffer used to hold a copy of the contents of the lval.      VALUE_CONTENTS is used when the contents of the buffer are needed --    it uses value_fetch_lazy() to load the buffer from the process being     debugged if it hasn't already been loaded.  VALUE_CONTENTS_RAW is     used when data is being stored into the buffer, or when it is     certain that the contents of the buffer are valid.    Note: The contents pointer is adjusted by the offset required to    get to the real subobject, if the value happens to represent    something embedded in a larger run-time object. */
+comment|/* VALUE_CONTENTS and VALUE_CONTENTS_RAW both return the address of    the gdb buffer used to hold a copy of the contents of the lval.    VALUE_CONTENTS is used when the contents of the buffer are needed    -- it uses value_fetch_lazy() to load the buffer from the process    being debugged if it hasn't already been loaded.    VALUE_CONTENTS_RAW is used when data is being stored into the    buffer, or when it is certain that the contents of the buffer are    valid.     Note: The contents pointer is adjusted by the offset required to    get to the real subobject, if the value happens to represent    something embedded in a larger run-time object.  */
 end_comment
 
 begin_define
@@ -201,6 +238,7 @@ name|VALUE_CONTENTS_RAW
 parameter_list|(
 name|val
 parameter_list|)
+define|\
 value|((char *) (val)->aligner.contents + (val)->embedded_offset)
 end_define
 
@@ -211,11 +249,12 @@ name|VALUE_CONTENTS
 parameter_list|(
 name|val
 parameter_list|)
-value|((void)(VALUE_LAZY(val)&& value_fetch_lazy(val)),\ 			     VALUE_CONTENTS_RAW(val))
+define|\
+value|((void)(VALUE_LAZY(val)&& value_fetch_lazy(val)), VALUE_CONTENTS_RAW(val))
 end_define
 
 begin_comment
-comment|/* The ALL variants of the above two macros do not adjust the returned    pointer by the embedded_offset value. */
+comment|/* The ALL variants of the above two macros do not adjust the returned    pointer by the embedded_offset value.  */
 end_comment
 
 begin_define
@@ -235,7 +274,8 @@ name|VALUE_CONTENTS_ALL
 parameter_list|(
 name|val
 parameter_list|)
-value|((void) (VALUE_LAZY(val)&& value_fetch_lazy(val)),\                                  VALUE_CONTENTS_ALL_RAW(val))
+define|\
+value|((void) (VALUE_LAZY(val)&& value_fetch_lazy(val)), \    VALUE_CONTENTS_ALL_RAW(val))
 end_define
 
 begin_function_decl
@@ -294,11 +334,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|VALUE_FRAME
+name|VALUE_FRAME_ID
 parameter_list|(
 name|val
 parameter_list|)
-value|((val)->frame_addr)
+value|((val)->frame_id)
 end_define
 
 begin_define
@@ -392,7 +432,7 @@ value|((val)->bfd_section)
 end_define
 
 begin_comment
-comment|/* Convert a REF to the object referenced. */
+comment|/* Convert a REF to the object referenced.  */
 end_comment
 
 begin_define
@@ -403,7 +443,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|do { struct type *value_type_arg_tmp = check_typedef (VALUE_TYPE (arg));\      if (TYPE_CODE (value_type_arg_tmp) == TYPE_CODE_REF)		\ 	 arg = value_at_lazy (TYPE_TARGET_TYPE (value_type_arg_tmp),	\ 			      unpack_pointer (VALUE_TYPE (arg),		\ 					      VALUE_CONTENTS (arg)),    \ 			      VALUE_BFD_SECTION (arg));			\     } while (0)
+value|do {									\     struct type *value_type_arg_tmp = check_typedef (VALUE_TYPE (arg));	\     if (TYPE_CODE (value_type_arg_tmp) == TYPE_CODE_REF)		\       arg = value_at_lazy (TYPE_TARGET_TYPE (value_type_arg_tmp),	\                            unpack_pointer (VALUE_TYPE (arg),		\                                            VALUE_CONTENTS (arg)),	\ 			                   VALUE_BFD_SECTION (arg));	\   } while (0)
 end_define
 
 begin_comment
@@ -418,7 +458,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|do { COERCE_REF(arg);							\   if (current_language->c_style_arrays					\&& TYPE_CODE (VALUE_TYPE (arg)) == TYPE_CODE_ARRAY)		\     arg = value_coerce_array (arg);					\   if (TYPE_CODE (VALUE_TYPE (arg)) == TYPE_CODE_FUNC)                   \     arg = value_coerce_function (arg);                                  \ } while (0)
+value|do {									\     COERCE_REF(arg);							\     if (current_language->c_style_arrays				\&& TYPE_CODE (VALUE_TYPE (arg)) == TYPE_CODE_ARRAY)		\       arg = value_coerce_array (arg);					\     if (TYPE_CODE (VALUE_TYPE (arg)) == TYPE_CODE_FUNC)			\       arg = value_coerce_function (arg);				\   } while (0)
 end_define
 
 begin_define
@@ -429,8 +469,12 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|do { COERCE_ARRAY(arg);  COERCE_ENUM(arg); } while (0)
+value|do { COERCE_ARRAY(arg); COERCE_ENUM(arg); } while (0)
 end_define
+
+begin_comment
+comment|/* NOTE: cagney/2002-12-17: This macro was handling a chill language    problem but that language has gone away.  */
+end_comment
 
 begin_define
 define|#
@@ -441,8 +485,6 @@ name|arg
 parameter_list|,
 name|real_arg_type
 parameter_list|)
-define|\
-value|{ if (chill_varying_type (real_arg_type))  \     arg = varying_to_slice (arg), real_arg_type = VALUE_TYPE (arg); }
 end_define
 
 begin_comment
@@ -456,7 +498,8 @@ name|COERCE_ENUM
 parameter_list|(
 name|arg
 parameter_list|)
-value|{ \   if (TYPE_CODE (check_typedef (VALUE_TYPE (arg))) == TYPE_CODE_ENUM)	\     arg = value_cast (builtin_type_unsigned_int, arg);			\ }
+define|\
+value|do {									\     if (TYPE_CODE (check_typedef (VALUE_TYPE (arg))) == TYPE_CODE_ENUM)	\       arg = value_cast (builtin_type_unsigned_int, arg);		\   } while (0)
 end_define
 
 begin_comment
@@ -486,7 +529,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Pointer to member function.  Depends on compiler implementation. */
+comment|/* Pointer to member function.  Depends on compiler implementation.  */
 end_comment
 
 begin_define
@@ -617,6 +660,7 @@ name|type
 modifier|*
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|valaddr
@@ -634,6 +678,7 @@ name|type
 modifier|*
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|valaddr
@@ -655,6 +700,7 @@ name|type
 modifier|*
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|valaddr
@@ -672,6 +718,7 @@ name|type
 modifier|*
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|valaddr
@@ -846,6 +893,11 @@ name|value_of_register
 parameter_list|(
 name|int
 name|regnum
+parameter_list|,
+name|struct
+name|frame_info
+modifier|*
+name|frame
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1269,16 +1321,8 @@ specifier|extern
 name|struct
 name|value
 modifier|*
-name|value_struct_elt_for_reference
+name|value_aggregate_elt
 parameter_list|(
-name|struct
-name|type
-modifier|*
-name|domain
-parameter_list|,
-name|int
-name|offset
-parameter_list|,
 name|struct
 name|type
 modifier|*
@@ -1288,10 +1332,9 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|struct
-name|type
-modifier|*
-name|intype
+name|enum
+name|noside
+name|noside
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1330,9 +1373,6 @@ name|char
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|int
-modifier|*
 parameter_list|,
 name|int
 modifier|*
@@ -1575,39 +1615,17 @@ specifier|extern
 name|struct
 name|value
 modifier|*
-name|value_from_vtable_info
-parameter_list|(
-name|struct
-name|value
-modifier|*
-name|arg
-parameter_list|,
-name|struct
-name|type
-modifier|*
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|value
-modifier|*
-name|value_being_returned
+name|register_value_being_returned
 parameter_list|(
 name|struct
 name|type
 modifier|*
 name|valtype
 parameter_list|,
-name|char
+name|struct
+name|regcache
 modifier|*
 name|retbuf
-parameter_list|,
-name|int
-name|struct_return
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1658,33 +1676,12 @@ name|int
 name|using_struct_return
 parameter_list|(
 name|struct
-name|value
-modifier|*
-name|function
-parameter_list|,
-name|CORE_ADDR
-name|funcaddr
-parameter_list|,
-name|struct
 name|type
 modifier|*
 name|value_type
 parameter_list|,
 name|int
 name|gcc_p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|set_return_value
-parameter_list|(
-name|struct
-name|value
-modifier|*
-name|val
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2570,59 +2567,6 @@ specifier|extern
 name|struct
 name|value
 modifier|*
-name|call_function_by_hand
-parameter_list|(
-name|struct
-name|value
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|value
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|default_coerce_float_to_double
-parameter_list|(
-name|struct
-name|type
-modifier|*
-parameter_list|,
-name|struct
-name|type
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|standard_coerce_float_to_double
-parameter_list|(
-name|struct
-name|type
-modifier|*
-parameter_list|,
-name|struct
-name|type
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|value
-modifier|*
 name|value_literal_complex
 parameter_list|(
 name|struct
@@ -2674,6 +2618,7 @@ name|value
 modifier|*
 name|find_function_in_inferior
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -2695,7 +2640,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|CORE_ADDR
-name|default_push_arguments
+name|legacy_push_arguments
 parameter_list|(
 name|int
 name|nargs
@@ -2714,6 +2659,24 @@ name|struct_return
 parameter_list|,
 name|CORE_ADDR
 name|struct_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|value
+modifier|*
+name|value_of_local
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|complain
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Build symbol tables in GDB's internal format.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1995, 1996,    1997, 1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Build symbol tables in GDB's internal format.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1995, 1996,    1997, 1998, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -20,9 +20,27 @@ name|BUILDSYM_H
 value|1
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|objfile
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|symbol
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* This module provides definitions used for creating and adding to    the symbol table.  These routines are called from various symbol-    file-reading routines.     They originated in dbxread.c of gdb-4.2, and were split out to    make xcoffread.c more maintainable by sharing code.     Variables declared in this file can be defined by #define-ing the    name EXTERN to null.  It is used to declare variables that are    normally extern, but which get defined in a single module using    this technique.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|block
+struct_decl|;
+end_struct_decl
 
 begin_ifndef
 ifndef|#
@@ -156,18 +174,6 @@ name|EXTERN
 name|unsigned
 name|char
 name|processing_acc_compilation
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* elz: added this flag to know when a block is compiled with HP    compilers (cc, aCC). This is necessary because of the macro    COERCE_FLOAT_TO_DOUBLE defined in tm_hppa.h, which causes a    coercion of float to double to always occur in parameter passing    for a function called by gdb (see the function value_arg_coerce in    valops.c). This is necessary only if the target was compiled with    gcc, not with HP compilers or with g++ */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|unsigned
-name|char
-name|processing_hp_compilation
 decl_stmt|;
 end_decl_stmt
 
@@ -354,15 +360,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Macro "function" for popping contexts from the stack.  Pushing is    done by a real function, push_context.  This returns a pointer to a    struct context_stack.  */
+comment|/* Non-zero if the context stack is empty.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|pop_context
+name|outermost_context_p
 parameter_list|()
-value|(&context_stack[--context_stack_depth]);
+value|(context_stack_depth == 0)
 end_define
 
 begin_comment
@@ -600,7 +606,8 @@ specifier|extern
 name|void
 name|really_free_pendings
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 function_decl|;
@@ -736,6 +743,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|struct
+name|context_stack
+modifier|*
+name|pop_context
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|record_line
 parameter_list|(
@@ -790,25 +809,6 @@ name|void
 name|free_pending_blocks
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* FIXME: Note that this is used only in buildsym.c and dstread.c,    which should be fixed to not need direct access to    make_blockvector. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|struct
-name|blockvector
-modifier|*
-name|make_blockvector
-parameter_list|(
-name|struct
-name|objfile
-modifier|*
-name|objfile
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -871,6 +871,19 @@ name|targetlist
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* The macro table for the compilation unit whose symbols we're    currently reading.  All the symtabs for this CU will point to this.  */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|struct
+name|macro_table
+modifier|*
+name|pending_macros
+decl_stmt|;
+end_decl_stmt
 
 begin_undef
 undef|#

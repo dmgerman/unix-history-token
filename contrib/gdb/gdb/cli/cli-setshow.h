@@ -20,6 +20,12 @@ name|CLI_SETSHOW_H
 value|1
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|cmd_list_element
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Exported to cli/cli-cmds.c and gdb/top.c */
 end_comment

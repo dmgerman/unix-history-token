@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Header file for GDB command decoding library.    Copyright 2000 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Header file for GDB command decoding library.     Copyright 2000, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -23,150 +23,34 @@ end_define
 begin_include
 include|#
 directive|include
-file|"gdb_regex.h"
+file|"command.h"
 end_include
 
-begin_comment
-comment|/* Needed by apropos_cmd.  */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|re_pattern_buffer
+struct_decl|;
+end_struct_decl
 
-begin_comment
-comment|/* Command classes are top-level categories into which commands are broken    down for "help" purposes.      Notes on classes: class_alias is for alias commands which are not    abbreviations of the original command.  class-pseudo is for    commands which are not really commands nor help topics ("stop").  */
-end_comment
-
-begin_enum
-enum|enum
-name|command_class
-block|{
-comment|/* Special args to help_list */
-name|class_deprecated
-block|,
-name|all_classes
-init|=
-operator|-
-literal|2
-block|,
-name|all_commands
-init|=
-operator|-
-literal|1
-block|,
-comment|/* Classes of commands */
-name|no_class
-init|=
-operator|-
-literal|1
-block|,
-name|class_run
-init|=
+begin_if
+if|#
+directive|if
 literal|0
-block|,
-name|class_vars
-block|,
-name|class_stack
-block|,
-name|class_files
-block|,
-name|class_support
-block|,
-name|class_info
-block|,
-name|class_breakpoint
-block|,
-name|class_trace
-block|,
-name|class_alias
-block|,
-name|class_obscure
-block|,
-name|class_user
-block|,
-name|class_maintenance
-block|,
-name|class_pseudo
-block|,
-name|class_tui
-block|,
-name|class_xdb
-block|}
-enum|;
-end_enum
+end_if
+
+begin_comment
+comment|/* FIXME: cagney/2002-03-17: Once cmd_type() has been removed, ``enum    cmd_types'' can be moved from "command.h" to "cli-decode.h".  */
+end_comment
 
 begin_comment
 comment|/* Not a set/show command.  Note that some commands which begin with    "set" or "show" might be in this category, if their syntax does    not fall into one of the following categories.  */
 end_comment
 
-begin_typedef
-typedef|typedef
-enum|enum
-name|cmd_types
-block|{
-name|not_set_cmd
-block|,
-name|set_cmd
-block|,
-name|show_cmd
-block|}
-name|cmd_types
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Reasonable values for an AUTO_BOOLEAN variable. */
-end_comment
-
-begin_enum
-enum|enum
-name|cmd_auto_boolean
-block|{
-name|CMD_AUTO_BOOLEAN_TRUE
-block|,
-name|CMD_AUTO_BOOLEAN_FALSE
-block|,
-name|CMD_AUTO_BOOLEAN_AUTO
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* Types of "set" or "show" command.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-name|var_types
-block|{
-comment|/* "on" or "off".  *VAR is an integer which is nonzero for on,        zero for off.  */
-name|var_boolean
-block|,
-comment|/* "on" / "true" / "enable" or "off" / "false" / "disable" or        "auto.  *VAR is an ``enum cmd_auto_boolean''.  NOTE: In general        a custom show command will need to be implemented - one that        for "auto" prints both the "auto" and the current auto-selected        value. */
-name|var_auto_boolean
-block|,
-comment|/* Unsigned Integer.  *VAR is an unsigned int.  The user can type 0        to mean "unlimited", which is stored in *VAR as UINT_MAX.  */
-name|var_uinteger
-block|,
-comment|/* Like var_uinteger but signed.  *VAR is an int.  The user can type 0        to mean "unlimited", which is stored in *VAR as INT_MAX.  */
-name|var_integer
-block|,
-comment|/* String which the user enters with escapes (e.g. the user types \n and        it is a real newline in the stored string).        *VAR is a malloc'd string, or NULL if the string is empty.  */
-name|var_string
-block|,
-comment|/* String which stores what the user types verbatim.        *VAR is a malloc'd string, or NULL if the string is empty.  */
-name|var_string_noescape
-block|,
-comment|/* String which stores a filename.        *VAR is a malloc'd string, or NULL if the string is empty.  */
-name|var_filename
-block|,
-comment|/* ZeroableInteger.  *VAR is an int.  Like Unsigned Integer except        that zero really means zero.  */
-name|var_zinteger
-block|,
-comment|/* Enumerated type.  Can only have one of the specified values.  *VAR is a        char pointer to the name of the element that we find.  */
-name|var_enum
-block|}
-name|var_types
-typedef|;
-end_typedef
+begin_endif
+unit|typedef enum cmd_types   {     not_set_cmd,     set_cmd,     show_cmd   } cmd_types;
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* This structure records one command'd definition.  */
@@ -240,44 +124,24 @@ function_decl|;
 comment|/* The command's real callback.  At present func() bounces through        to one of the below.  */
 union|union
 block|{
-comment|/* If type is not_set_cmd, call it like this:  */
-name|void
-function_decl|(
+comment|/* If type is not_set_cmd, call it like this: */
+name|cmd_cfunc_ftype
 modifier|*
 name|cfunc
-function_decl|)
-parameter_list|(
-name|char
-modifier|*
-name|args
-parameter_list|,
-name|int
-name|from_tty
-parameter_list|)
-function_decl|;
-comment|/* If type is set_cmd or show_cmd, first set the variables, and 	   then call this.  */
-name|void
-function_decl|(
+decl_stmt|;
+comment|/* If type is set_cmd or show_cmd, first set the variables, 	   and then call this: */
+name|cmd_sfunc_ftype
 modifier|*
 name|sfunc
-function_decl|)
-parameter_list|(
-name|char
-modifier|*
-name|args
-parameter_list|,
-name|int
-name|from_tty
-parameter_list|,
-name|struct
-name|cmd_list_element
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
+decl_stmt|;
 block|}
 name|function
 union|;
+comment|/* Local state (context) for this command.  This can be anything.  */
+name|void
+modifier|*
+name|context
+decl_stmt|;
 comment|/* Documentation of this command (or help topic).        First line is brief documentation; remaining lines form, with it,        the full documentation.  First line should end with a period.        Entire string should also end with a period, not a newline.  */
 name|char
 modifier|*
@@ -629,6 +493,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|set_cmd_completer
+parameter_list|(
+name|struct
+name|cmd_list_element
+modifier|*
+name|cmd
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+function_decl|(
+modifier|*
+name|completer
+function_decl|)
+parameter_list|(
+name|char
+modifier|*
+name|text
+parameter_list|,
+name|char
+modifier|*
+name|word
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* HACK: cagney/2002-02-23: Code, mostly in tracepoints.c, grubs    around in cmd objects to test the value of the commands sfunc().  */
 end_comment
@@ -656,6 +550,41 @@ parameter_list|,
 name|int
 name|from_tty
 parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Access to the command's local context.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|set_cmd_context
+parameter_list|(
+name|struct
+name|cmd_list_element
+modifier|*
+name|cmd
+parameter_list|,
+name|void
+modifier|*
+name|context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|get_cmd_context
+parameter_list|(
+name|struct
+name|cmd_list_element
+modifier|*
+name|cmd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1008,71 +937,6 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-modifier|*
-name|var
-parameter_list|,
-name|char
-modifier|*
-name|doc
-parameter_list|,
-name|struct
-name|cmd_list_element
-modifier|*
-modifier|*
-name|list
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|cmd_list_element
-modifier|*
-name|add_set_auto_boolean_cmd
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|enum
-name|command_class
-name|class
-parameter_list|,
-name|enum
-name|cmd_auto_boolean
-modifier|*
-name|var
-parameter_list|,
-name|char
-modifier|*
-name|doc
-parameter_list|,
-name|struct
-name|cmd_list_element
-modifier|*
-modifier|*
-name|list
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|cmd_list_element
-modifier|*
-name|add_set_boolean_cmd
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|enum
-name|command_class
-name|class
-parameter_list|,
-name|int
 modifier|*
 name|var
 parameter_list|,

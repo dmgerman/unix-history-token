@@ -245,18 +245,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|arm_rdi_start_remote
-parameter_list|(
-name|char
-modifier|*
-name|dummy
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|arm_rdi_open
 parameter_list|(
@@ -315,28 +303,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|arm_rdi_mourn
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|arm_rdi_send
-parameter_list|(
-name|char
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|ptid_t
 name|arm_rdi_wait
 parameter_list|(
@@ -372,38 +338,6 @@ name|args
 parameter_list|,
 name|int
 name|from_tty
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|arm_rdi_interrupt
-parameter_list|(
-name|int
-name|signo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|arm_rdi_interrupt_twice
-parameter_list|(
-name|int
-name|signo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|interrupt_query
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -580,30 +514,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Stub for catch_errors.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|arm_rdi_start_remote
-parameter_list|(
-name|char
-modifier|*
-name|dummy
-parameter_list|)
-block|{
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Helper callbacks for the "host interface" structure.  RDI functions call    these to forward output from the target system and so forth.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|voiddummy
 parameter_list|(
@@ -627,7 +542,8 @@ specifier|static
 name|void
 name|myprint
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|arg
 parameter_list|,
 specifier|const
@@ -656,7 +572,8 @@ specifier|static
 name|void
 name|mywritec
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|arg
 parameter_list|,
 name|int
@@ -685,7 +602,8 @@ specifier|static
 name|int
 name|mywrite
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|arg
 parameter_list|,
 name|char
@@ -765,7 +683,8 @@ specifier|static
 name|void
 name|mypause
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|arg
 parameter_list|)
 block|{ }
@@ -780,7 +699,8 @@ specifier|static
 name|int
 name|myreadc
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|arg
 parameter_list|)
 block|{
@@ -799,7 +719,8 @@ name|char
 modifier|*
 name|mygets
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|arg
 parameter_list|,
 name|char
@@ -1091,6 +1012,8 @@ elseif|else
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1128,6 +1051,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1157,6 +1082,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1186,6 +1113,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1215,6 +1144,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1244,6 +1175,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1273,6 +1206,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1319,6 +1254,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1356,6 +1293,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1393,6 +1332,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1698,6 +1639,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1746,6 +1689,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1824,6 +1769,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -1903,8 +1850,9 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
-block|{
 name|printf_filtered
 argument_list|(
 literal|"RDI_step: %s\n"
@@ -1916,7 +1864,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
 name|char
@@ -1927,6 +1874,8 @@ index|]
 decl_stmt|;
 name|CORE_ADDR
 name|pc
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1968,16 +1917,13 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
-operator|==
+operator|!=
+name|RDIError_NoError
+operator|&&
+name|rslt
+operator|!=
 name|RDIError_BreakpointReached
 condition|)
-empty_stmt|;
-elseif|else
-if|if
-condition|(
-name|rslt
-condition|)
-block|{
 name|printf_filtered
 argument_list|(
 literal|"RDI_execute: %s\n"
@@ -1988,12 +1934,10 @@ name|rslt
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|step
 condition|)
-block|{
 name|arm_rdi_remove_breakpoint
 argument_list|(
 name|pc
@@ -2003,66 +1947,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* Send ^C to target to halt it.  Target will respond, and send us a    packet.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|arm_rdi_interrupt
-parameter_list|(
-name|int
-name|signo
-parameter_list|)
-block|{ }
-end_function
-
-begin_function_decl
-specifier|static
-name|void
-function_decl|(
-modifier|*
-name|ofunc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* The user typed ^C twice.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|arm_rdi_interrupt_twice
-parameter_list|(
-name|int
-name|signo
-parameter_list|)
-block|{ }
-end_function
-
-begin_comment
-comment|/* Ask the user what to do when an interrupt is received.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|interrupt_query
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
 
 begin_comment
 comment|/* Wait until the remote machine stops, then return, storing status in    STATUS just as `wait' would.  Returns "pid" (though it's not clear    what, if anything, that means in the case of this target).  */
@@ -2118,10 +2006,6 @@ begin_comment
 comment|/* Read the remote registers into the block REGS.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -2173,6 +2057,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -2328,6 +2214,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -2437,7 +2325,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|read_register_gen
+name|deprecated_read_register_gen
 argument_list|(
 name|regno
 argument_list|,
@@ -2515,6 +2403,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -2537,10 +2427,6 @@ end_escape
 
 begin_comment
 comment|/* Read or write LEN bytes from inferior memory at MEMADDR,    transferring to or from debugger address MYADDR.  Write to inferior    if SHOULD_WRITE is nonzero.  Returns length of data written or    read; 0 for error.  TARGET is unused.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -2597,6 +2483,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -2628,6 +2516,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -2701,6 +2591,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -2775,6 +2667,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -2819,6 +2713,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -2872,6 +2768,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -2981,6 +2879,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
 block|{
 name|printf_filtered
@@ -3060,54 +2960,62 @@ decl_stmt|;
 name|struct
 name|local_bp_list_entry
 modifier|*
-name|entry
+modifier|*
+name|entryp
 decl_stmt|,
 modifier|*
-name|preventry
+name|dead
 decl_stmt|;
 for|for
 control|(
-name|entry
+name|entryp
 operator|=
+operator|&
 name|local_bp_list
 init|;
-name|entry
+operator|*
+name|entryp
 operator|!=
 name|NULL
 condition|;
-name|entry
+name|entryp
 operator|=
-name|entry
+operator|&
+operator|(
+operator|*
+name|entryp
+operator|)
 operator|->
 name|next
 control|)
-block|{
 if|if
 condition|(
-name|entry
+operator|(
+operator|*
+name|entryp
+operator|)
 operator|->
 name|addr
 operator|==
 name|addr
 condition|)
-block|{
 break|break;
-block|}
-name|preventry
-operator|=
-name|entry
-expr_stmt|;
-block|}
 if|if
 condition|(
-name|entry
+operator|*
+name|entryp
 condition|)
 block|{
+name|dead
+operator|=
+operator|*
+name|entryp
+expr_stmt|;
 name|rslt
 operator|=
 name|angel_RDI_clearbreak
 argument_list|(
-name|entry
+name|dead
 operator|->
 name|point
 argument_list|)
@@ -3115,8 +3023,9 @@ expr_stmt|;
 if|if
 condition|(
 name|rslt
+operator|!=
+name|RDIError_NoError
 condition|)
-block|{
 name|printf_filtered
 argument_list|(
 literal|"RDI_clearbreak: %s\n"
@@ -3127,36 +3036,17 @@ name|rslt
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Delete the breakpoint entry locally.  */
-if|if
-condition|(
-name|entry
-operator|==
-name|local_bp_list
-condition|)
-block|{
-name|local_bp_list
+operator|*
+name|entryp
 operator|=
-name|entry
+name|dead
 operator|->
 name|next
 expr_stmt|;
-block|}
-else|else
-block|{
-name|preventry
-operator|->
-name|next
-operator|=
-name|entry
-operator|->
-name|next
-expr_stmt|;
-block|}
 name|xfree
 argument_list|(
-name|entry
+name|dead
 argument_list|)
 expr_stmt|;
 block|}
@@ -4029,6 +3919,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|initialize_file_ftype
+name|_initialize_remote_rdi
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -Wmissing-prototypes */
+end_comment
+
 begin_function
 name|void
 name|_initialize_remote_rdi
@@ -4077,17 +3978,22 @@ name|class_maintenance
 argument_list|,
 name|rdilogfile_command
 argument_list|,
-literal|"Set filename for ADP packet log.\n\ This file is used to log Angel Debugger Protocol packets.\n\ With a single argument, sets the logfile name to that value.\n\ Without an argument, shows the current logfile name.\n\ See also: rdilogenable\n"
+literal|"Set filename for ADP packet log.\n"
+literal|"This file is used to log Angel Debugger Protocol packets.\n"
+literal|"With a single argument, sets the logfile name to that value.\n"
+literal|"Without an argument, shows the current logfile name.\n"
+literal|"See also: rdilogenable\n"
 argument_list|,
 operator|&
 name|maintenancelist
 argument_list|)
 expr_stmt|;
+name|set_cmd_completer
+argument_list|(
 name|c
-operator|->
-name|completer
-operator|=
+argument_list|,
 name|filename_completer
+argument_list|)
 expr_stmt|;
 name|add_cmd
 argument_list|(
@@ -4097,61 +4003,65 @@ name|class_maintenance
 argument_list|,
 name|rdilogenable_command
 argument_list|,
-literal|"Set enable logging of ADP packets.\n\ This will log ADP packets exchanged between gdb and the\n\ rdi target device.\n\ An argument of 1,t,true,y,yes will enable.\n\ An argument of 0,f,false,n,no will disabled.\n\ Withough an argument, it will display current state.\n"
+literal|"Set enable logging of ADP packets.\n"
+literal|"This will log ADP packets exchanged between gdb and the\n"
+literal|"rdi target device.\n"
+literal|"An argument of 1, t, true, y or yes will enable.\n"
+literal|"An argument of 0, f, false, n or no will disabled.\n"
+literal|"Withough an argument, it will display current state.\n"
 argument_list|,
 operator|&
 name|maintenancelist
 argument_list|)
 expr_stmt|;
-name|add_show_from_set
-argument_list|(
-name|add_set_cmd
+name|add_setshow_boolean_cmd
 argument_list|(
 literal|"rdiromatzero"
 argument_list|,
 name|no_class
 argument_list|,
-name|var_boolean
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|rom_at_zero
 argument_list|,
-literal|"Set target has ROM at addr 0.\n\ A true value disables vector catching, false enables vector catching.\n\ This is evaluated at the time the 'target rdi' command is executed\n"
+literal|"Set target has ROM at addr 0.\n"
+literal|"A true value disables vector catching, false enables vector catching.\n"
+literal|"This is evaluated at the time the 'target rdi' command is executed\n"
+argument_list|,
+literal|"Show if target has ROM at addr 0.\n"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|setlist
-argument_list|)
 argument_list|,
 operator|&
 name|showlist
 argument_list|)
 expr_stmt|;
-name|add_show_from_set
-argument_list|(
-name|add_set_cmd
+name|add_setshow_boolean_cmd
 argument_list|(
 literal|"rdiheartbeat"
 argument_list|,
 name|no_class
 argument_list|,
-name|var_boolean
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|rdi_heartbeat
 argument_list|,
-literal|"Set enable for ADP heartbeat packets.\n\ I don't know why you would want this. If you enable them,\n\ it will confuse ARM and EPI JTAG interface boxes as well\n\ as the Angel Monitor.\n"
+literal|"Set enable for ADP heartbeat packets.\n"
+literal|"I don't know why you would want this. If you enable them,\n"
+literal|"it will confuse ARM and EPI JTAG interface boxes as well\n"
+literal|"as the Angel Monitor.\n"
+argument_list|,
+literal|"Show enable for ADP heartbeat packets.\n"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|setlist
-argument_list|)
 argument_list|,
 operator|&
 name|showlist
@@ -4165,16 +4075,17 @@ comment|/* A little dummy to make linking with the library succeed. */
 end_comment
 
 begin_function
-name|int
+name|void
 name|Fail
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|ignored
+parameter_list|,
+modifier|...
 parameter_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
+block|{    }
 end_function
 
 end_unit

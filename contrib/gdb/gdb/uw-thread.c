@@ -87,6 +87,28 @@ file|"gregset.h"
 end_include
 
 begin_comment
+comment|/* Offset from SP to first arg on stack at first instruction of a    function.  We provide a default here that's right for most, if not    all, targets that use this file.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SP_ARG0
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SP_ARG0
+value|(1 * 4)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Whether to emit debugging output. */
 end_comment
 

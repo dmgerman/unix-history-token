@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate a core file for the inferior process.    Copyright 2001, 2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Generate a core file for the inferior process.     Copyright 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -12,7 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cli/cli-decode.h"
+file|"elf-bfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"infcall.h"
 end_include
 
 begin_include
@@ -30,13 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"elf-bfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/procfs.h>
+file|"objfiles.h"
 end_include
 
 begin_include
@@ -48,7 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"objfiles.h"
+file|"cli/cli-decode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_assert.h"
 end_include
 
 begin_function_decl
@@ -96,7 +102,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Function: gcore_command    Generate a core file from the inferior process.  */
+comment|/* Generate a core file from the inferior process.  */
 end_comment
 
 begin_function
@@ -151,9 +157,7 @@ comment|/* No use generating a corefile without a target process.  */
 if|if
 condition|(
 operator|!
-operator|(
 name|target_has_execution
-operator|)
 condition|)
 name|noprocess
 argument_list|()
@@ -202,11 +206,7 @@ argument_list|,
 name|corefilename
 argument_list|)
 expr_stmt|;
-comment|/* Open the output file. */
-if|if
-condition|(
-operator|!
-operator|(
+comment|/* Open the output file.  */
 name|obfd
 operator|=
 name|bfd_openw
@@ -216,9 +216,12 @@ argument_list|,
 name|default_gcore_target
 argument_list|()
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|obfd
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"Failed to open '%s' for output."
@@ -226,8 +229,7 @@ argument_list|,
 name|corefilename
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Need a cleanup that will close the file (FIXME: delete it?). */
+comment|/* Need a cleanup that will close the file (FIXME: delete it?).  */
 name|old_chain
 operator|=
 name|make_cleanup_bfd_close
@@ -253,13 +255,9 @@ name|default_gcore_mach
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* An external target method must build the notes section. */
+comment|/* An external target method must build the notes section.  */
 name|note_data
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|target_make_corefile_notes
 argument_list|(
 name|obfd
@@ -268,7 +266,7 @@ operator|&
 name|note_size
 argument_list|)
 expr_stmt|;
-comment|/* Create the note section. */
+comment|/* Create the note section.  */
 if|if
 condition|(
 name|note_data
@@ -280,9 +278,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|note_sec
 operator|=
 name|bfd_make_section_anyway
@@ -291,7 +286,10 @@ name|obfd
 argument_list|,
 literal|"note0"
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|note_sec
 operator|==
 name|NULL
 condition|)
@@ -347,7 +345,7 @@ name|note_size
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now create the memory/load sections. */
+comment|/* Now create the memory/load sections.  */
 if|if
 condition|(
 name|gcore_memory_sections
@@ -362,7 +360,7 @@ argument_list|(
 literal|"gcore: failed to get corefile memory sections from target."
 argument_list|)
 expr_stmt|;
-comment|/* Write out the contents of the note section. */
+comment|/* Write out the contents of the note section.  */
 if|if
 condition|(
 name|note_data
@@ -390,7 +388,6 @@ argument_list|,
 name|note_size
 argument_list|)
 condition|)
-block|{
 name|warning
 argument_list|(
 literal|"writing note section (%s)"
@@ -403,8 +400,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* Succeeded. */
+comment|/* Succeeded.  */
 name|fprintf_filtered
 argument_list|(
 name|gdb_stdout
@@ -414,7 +410,7 @@ argument_list|,
 name|corefilename
 argument_list|)
 expr_stmt|;
-comment|/* Clean-ups will close the output file and free malloc memory. */
+comment|/* Clean-ups will close the output file and free malloc memory.  */
 name|do_cleanups
 argument_list|(
 name|old_chain
@@ -436,7 +432,7 @@ block|{
 if|#
 directive|if
 literal|1
-comment|/* See if this even matters... */
+comment|/* See if this even matters...  */
 return|return
 literal|0
 return|;
@@ -552,7 +548,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* FIXME -- this may only work for ELF targets.  */
+comment|/* FIXME: This may only work for ELF targets.  */
 if|if
 condition|(
 name|exec_bfd
@@ -573,60 +569,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Default method for stack segment (preemptable by target).  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-function_decl|(
-modifier|*
-name|override_derive_stack_segment
-function_decl|)
-parameter_list|(
-name|bfd_vma
-modifier|*
-parameter_list|,
-name|bfd_vma
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|extern
-name|void
-name|preempt_derive_stack_segment
-parameter_list|(
-name|int
-function_decl|(
-modifier|*
-name|override_func
-function_decl|)
-parameter_list|(
-name|bfd_vma
-modifier|*
-parameter_list|,
-name|bfd_vma
-modifier|*
-parameter_list|)
-parameter_list|)
-block|{
-name|override_derive_stack_segment
-operator|=
-name|override_func
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Function: default_derive_stack_segment    Derive a reasonable stack segment by unwinding the target stack.         Returns 0 for failure, 1 for success.  */
+comment|/* Derive a reasonable stack segment by unwinding the target stack,    and store its limits in *BOTTOM and *TOP.  Return non-zero if    successful.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|default_derive_stack_segment
+name|derive_stack_segment
 parameter_list|(
 name|bfd_vma
 modifier|*
@@ -637,9 +586,6 @@ modifier|*
 name|top
 parameter_list|)
 block|{
-name|bfd_vma
-name|tmp_vma
-decl_stmt|;
 name|struct
 name|frame_info
 modifier|*
@@ -648,20 +594,17 @@ decl_stmt|,
 modifier|*
 name|tmp_fi
 decl_stmt|;
-if|if
-condition|(
+name|gdb_assert
+argument_list|(
 name|bottom
-operator|==
-name|NULL
-operator|||
+argument_list|)
+expr_stmt|;
+name|gdb_assert
+argument_list|(
 name|top
-operator|==
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Paranoia. */
+argument_list|)
+expr_stmt|;
+comment|/* Can't succeed without stack and registers.  */
 if|if
 condition|(
 operator|!
@@ -673,31 +616,31 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Can't succeed without stack and registers. */
-if|if
-condition|(
-operator|(
+comment|/* Can't succeed without current frame.  */
 name|fi
 operator|=
 name|get_current_frame
 argument_list|()
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fi
 operator|==
 name|NULL
 condition|)
 return|return
 literal|0
 return|;
-comment|/* Can't succeed without current frame. */
-comment|/* Save frame pointer of TOS frame. */
+comment|/* Save frame pointer of TOS frame.  */
 operator|*
 name|top
 operator|=
+name|get_frame_base
+argument_list|(
 name|fi
-operator|->
-name|frame
+argument_list|)
 expr_stmt|;
-comment|/* If current stack pointer is more "inner", use that instead. */
+comment|/* If current stack pointer is more "inner", use that instead.  */
 if|if
 condition|(
 name|INNER_THAN
@@ -715,7 +658,7 @@ operator|=
 name|read_sp
 argument_list|()
 expr_stmt|;
-comment|/* Find prev-most frame. */
+comment|/* Find prev-most frame.  */
 while|while
 condition|(
 operator|(
@@ -733,15 +676,16 @@ name|fi
 operator|=
 name|tmp_fi
 expr_stmt|;
-comment|/* Save frame pointer of prev-most frame. */
+comment|/* Save frame pointer of prev-most frame.  */
 operator|*
 name|bottom
 operator|=
+name|get_frame_base
+argument_list|(
 name|fi
-operator|->
-name|frame
+argument_list|)
 expr_stmt|;
-comment|/* Now canonicalize their order, so that 'bottom' is a lower address    (as opposed to a lower stack frame). */
+comment|/* Now canonicalize their order, so that BOTTOM is a lower address      (as opposed to a lower stack frame).  */
 if|if
 condition|(
 operator|*
@@ -751,6 +695,9 @@ operator|*
 name|top
 condition|)
 block|{
+name|bfd_vma
+name|tmp_vma
+decl_stmt|;
 name|tmp_vma
 operator|=
 operator|*
@@ -771,109 +718,17 @@ block|}
 return|return
 literal|1
 return|;
-comment|/* success */
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|derive_stack_segment
-parameter_list|(
-name|bfd_vma
-modifier|*
-name|bottom
-parameter_list|,
-name|bfd_vma
-modifier|*
-name|top
-parameter_list|)
-block|{
-if|if
-condition|(
-name|override_derive_stack_segment
-condition|)
-return|return
-name|override_derive_stack_segment
-argument_list|(
-name|bottom
-argument_list|,
-name|top
-argument_list|)
-return|;
-else|else
-return|return
-name|default_derive_stack_segment
-argument_list|(
-name|bottom
-argument_list|,
-name|top
-argument_list|)
-return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Default method for heap segment (preemptable by target).  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-function_decl|(
-modifier|*
-name|override_derive_heap_segment
-function_decl|)
-parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|bfd_vma
-modifier|*
-parameter_list|,
-name|bfd_vma
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|extern
-name|void
-name|preempt_derive_heap_segment
-parameter_list|(
-name|int
-function_decl|(
-modifier|*
-name|override_func
-function_decl|)
-parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|bfd_vma
-modifier|*
-parameter_list|,
-name|bfd_vma
-modifier|*
-parameter_list|)
-parameter_list|)
-block|{
-name|override_derive_heap_segment
-operator|=
-name|override_func
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Function: default_derive_heap_segment    Derive a reasonable heap segment by looking at sbrk and    the static data sections.        Returns 0 for failure, 1 for success.  */
+comment|/* Derive a reasonable heap segment for ABFD by looking at sbrk and    the static data sections.  Store its limits in *BOTTOM and *TOP.    Return non-zero if successful.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|default_derive_heap_segment
+name|derive_heap_segment
 parameter_list|(
 name|bfd
 modifier|*
@@ -916,20 +771,17 @@ name|asection
 modifier|*
 name|sec
 decl_stmt|;
-if|if
-condition|(
+name|gdb_assert
+argument_list|(
 name|bottom
-operator|==
-name|NULL
-operator|||
+argument_list|)
+expr_stmt|;
+name|gdb_assert
+argument_list|(
 name|top
-operator|==
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Paranoia. */
+argument_list|)
+expr_stmt|;
+comment|/* This function depends on being able to call a function in the      inferior.  */
 if|if
 condition|(
 operator|!
@@ -938,8 +790,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* This function depends on being able 			   to call a function in the inferior.  */
-comment|/* Assumption: link map is arranged as follows (low to high addresses):      text sections      data sections (including bss)      heap   */
+comment|/* The following code assumes that the link map is arranged as      follows (low to high addresses):       ---------------------------------      | text sections                 |      ---------------------------------      | data sections (including bss) |      ---------------------------------      | heap                          |      --------------------------------- */
 for|for
 control|(
 name|sec
@@ -972,7 +823,7 @@ name|strcmp
 argument_list|(
 literal|".bss"
 argument_list|,
-name|bfd_get_section_name
+name|bfd_section_name
 argument_list|(
 name|abfd
 argument_list|,
@@ -1018,44 +869,85 @@ block|}
 comment|/* Now get the top-of-heap by calling sbrk in the inferior.  */
 if|if
 condition|(
-operator|(
+name|lookup_minimal_symbol
+argument_list|(
+literal|"sbrk"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|sbrk
 operator|=
 name|find_function_in_inferior
 argument_list|(
 literal|"sbrk"
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sbrk
 operator|==
 name|NULL
 condition|)
 return|return
 literal|0
 return|;
+block|}
+elseif|else
 if|if
 condition|(
-operator|(
+name|lookup_minimal_symbol
+argument_list|(
+literal|"_sbrk"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|sbrk
+operator|=
+name|find_function_in_inferior
+argument_list|(
+literal|"_sbrk"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sbrk
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+block|}
+else|else
+return|return
+literal|0
+return|;
 name|zero
 operator|=
 name|value_from_longest
 argument_list|(
 name|builtin_type_int
 argument_list|,
-operator|(
-name|LONGEST
-operator|)
 literal|0
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
-if|if
-condition|(
-operator|(
+expr_stmt|;
+name|gdb_assert
+argument_list|(
+name|zero
+argument_list|)
+expr_stmt|;
 name|sbrk
 operator|=
 name|call_function_by_hand
@@ -1067,7 +959,10 @@ argument_list|,
 operator|&
 name|zero
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sbrk
 operator|==
 name|NULL
 condition|)
@@ -1081,7 +976,7 @@ argument_list|(
 name|sbrk
 argument_list|)
 expr_stmt|;
-comment|/* Return results. */
+comment|/* Return results.  */
 if|if
 condition|(
 name|top_of_heap
@@ -1102,65 +997,13 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-comment|/* success */
 block|}
-else|else
+comment|/* No additional heap space needs to be saved.  */
 return|return
 literal|0
 return|;
-comment|/* No additional heap space needs to be saved. */
 block|}
 end_function
-
-begin_function
-specifier|static
-name|int
-name|derive_heap_segment
-parameter_list|(
-name|bfd
-modifier|*
-name|abfd
-parameter_list|,
-name|bfd_vma
-modifier|*
-name|bottom
-parameter_list|,
-name|bfd_vma
-modifier|*
-name|top
-parameter_list|)
-block|{
-if|if
-condition|(
-name|override_derive_heap_segment
-condition|)
-return|return
-name|override_derive_heap_segment
-argument_list|(
-name|abfd
-argument_list|,
-name|bottom
-argument_list|,
-name|top
-argument_list|)
-return|;
-else|else
-return|return
-name|default_derive_heap_segment
-argument_list|(
-name|abfd
-argument_list|,
-name|bottom
-argument_list|,
-name|top
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -1193,9 +1036,12 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
+name|bfd_section_name
+argument_list|(
+name|obfd
+argument_list|,
 name|osec
-operator|->
-name|name
+argument_list|)
 argument_list|,
 literal|"load"
 argument_list|,
@@ -1282,145 +1128,6 @@ end_function
 
 begin_function
 specifier|static
-name|asection
-modifier|*
-name|make_mem_sec
-parameter_list|(
-name|bfd
-modifier|*
-name|obfd
-parameter_list|,
-name|bfd_vma
-name|addr
-parameter_list|,
-name|bfd_size_type
-name|size
-parameter_list|,
-name|unsigned
-name|int
-name|flags
-parameter_list|,
-name|unsigned
-name|int
-name|alignment
-parameter_list|)
-block|{
-name|asection
-modifier|*
-name|osec
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|osec
-operator|=
-name|bfd_make_section_anyway
-argument_list|(
-name|obfd
-argument_list|,
-literal|"load"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|warning
-argument_list|(
-literal|"Couldn't make gcore segment: %s"
-argument_list|,
-name|bfd_errmsg
-argument_list|(
-name|bfd_get_error
-argument_list|()
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-if|if
-condition|(
-name|info_verbose
-condition|)
-block|{
-name|fprintf_filtered
-argument_list|(
-name|gdb_stdout
-argument_list|,
-literal|"Save segment, %lld bytes at 0x%s\n"
-argument_list|,
-operator|(
-name|long
-name|long
-operator|)
-name|size
-argument_list|,
-name|paddr_nz
-argument_list|(
-name|addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|bfd_set_section_size
-argument_list|(
-name|obfd
-argument_list|,
-name|osec
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-name|bfd_set_section_vma
-argument_list|(
-name|obfd
-argument_list|,
-name|osec
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
-name|osec
-operator|->
-name|lma
-operator|=
-literal|0
-expr_stmt|;
-comment|/* FIXME: there should be a macro for this! */
-name|bfd_set_section_alignment
-argument_list|(
-name|obfd
-argument_list|,
-name|osec
-argument_list|,
-name|alignment
-argument_list|)
-expr_stmt|;
-name|bfd_set_section_flags
-argument_list|(
-name|obfd
-argument_list|,
-name|osec
-argument_list|,
-name|flags
-operator||
-name|SEC_LOAD
-operator||
-name|SEC_ALLOC
-operator||
-name|SEC_HAS_CONTENTS
-argument_list|)
-expr_stmt|;
-return|return
-name|osec
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|gcore_create_callback
 parameter_list|(
@@ -1445,11 +1152,68 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|bfd
+modifier|*
+name|obfd
+init|=
+name|data
+decl_stmt|;
+name|asection
+modifier|*
+name|osec
+decl_stmt|;
 name|flagword
 name|flags
 init|=
-literal|0
+name|SEC_ALLOC
+operator||
+name|SEC_HAS_CONTENTS
+operator||
+name|SEC_LOAD
 decl_stmt|;
+comment|/* If the memory segment has no permissions set, ignore it, otherwise      when we later try to access it for read/write, we'll get an error      or jam the kernel.  */
+if|if
+condition|(
+name|read
+operator|==
+literal|0
+operator|&&
+name|write
+operator|==
+literal|0
+operator|&&
+name|exec
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|info_verbose
+condition|)
+block|{
+name|fprintf_filtered
+argument_list|(
+name|gdb_stdout
+argument_list|,
+literal|"Ignore segment, %s bytes at 0x%s\n"
+argument_list|,
+name|paddr_d
+argument_list|(
+name|size
+argument_list|)
+argument_list|,
+name|paddr_nz
+argument_list|(
+name|vaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|write
@@ -1457,56 +1221,245 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* See if this region of memory lies inside a known file on disk. 	 If so, we can avoid copying its contents by clearing SEC_LOAD.  */
+name|struct
+name|objfile
+modifier|*
+name|objfile
+decl_stmt|;
+name|struct
+name|obj_section
+modifier|*
+name|objsec
+decl_stmt|;
+name|ALL_OBJSECTIONS
+argument_list|(
+argument|objfile
+argument_list|,
+argument|objsec
+argument_list|)
+block|{
+name|bfd
+modifier|*
+name|abfd
+init|=
+name|objfile
+operator|->
+name|obfd
+decl_stmt|;
+name|asection
+modifier|*
+name|asec
+init|=
+name|objsec
+operator|->
+name|the_bfd_section
+decl_stmt|;
+name|bfd_vma
+name|align
+init|=
+operator|(
+name|bfd_vma
+operator|)
+literal|1
+operator|<<
+name|bfd_get_section_alignment
+argument_list|(
+name|abfd
+argument_list|,
+name|asec
+argument_list|)
+decl_stmt|;
+name|bfd_vma
+name|start
+init|=
+name|objsec
+operator|->
+name|addr
+operator|&
+operator|-
+name|align
+decl_stmt|;
+name|bfd_vma
+name|end
+init|=
+operator|(
+name|objsec
+operator|->
+name|endaddr
+operator|+
+name|align
+operator|-
+literal|1
+operator|)
+operator|&
+operator|-
+name|align
+decl_stmt|;
+comment|/* Match if either the entire memory region lies inside the 	     section (i.e. a mapping covering some pages of a large 	     segment) or the entire section lies inside the memory region 	     (i.e. a mapping covering multiple small sections).  	     This BFD was synthesized from reading target memory, 	     we don't want to omit that.  */
+if|if
+condition|(
+operator|(
+operator|(
+name|vaddr
+operator|>=
+name|start
+operator|&&
+name|vaddr
+operator|+
+name|size
+operator|<=
+name|end
+operator|)
+operator|||
+operator|(
+name|start
+operator|>=
+name|vaddr
+operator|&&
+name|end
+operator|<=
+name|vaddr
+operator|+
+name|size
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|bfd_get_file_flags
+argument_list|(
+name|abfd
+argument_list|)
+operator|&
+name|BFD_IN_MEMORY
+operator|)
+condition|)
+block|{
+name|flags
+operator|&=
+operator|~
+name|SEC_LOAD
+expr_stmt|;
+goto|goto
+name|keep
+goto|;
+comment|/* break out of two nested for loops */
+block|}
+block|}
+name|keep
+label|:
 name|flags
 operator||=
 name|SEC_READONLY
-expr_stmt|;
-comment|/* Set size == zero for readonly sections. */
-name|size
-operator|=
-literal|0
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|exec
 condition|)
-block|{
 name|flags
 operator||=
 name|SEC_CODE
 expr_stmt|;
-block|}
 else|else
-block|{
 name|flags
 operator||=
 name|SEC_DATA
 expr_stmt|;
-block|}
-return|return
-operator|(
-operator|(
-name|make_mem_sec
+name|osec
+operator|=
+name|bfd_make_section_anyway
 argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-name|data
+name|obfd
 argument_list|,
-name|vaddr
-argument_list|,
-name|size
-argument_list|,
-name|flags
-argument_list|,
-literal|0
+literal|"load"
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|osec
 operator|==
 name|NULL
-operator|)
+condition|)
+block|{
+name|warning
+argument_list|(
+literal|"Couldn't make gcore segment: %s"
+argument_list|,
+name|bfd_errmsg
+argument_list|(
+name|bfd_get_error
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|info_verbose
+condition|)
+block|{
+name|fprintf_filtered
+argument_list|(
+name|gdb_stdout
+argument_list|,
+literal|"Save segment, %s bytes at 0x%s\n"
+argument_list|,
+name|paddr_d
+argument_list|(
+name|size
+argument_list|)
+argument_list|,
+name|paddr_nz
+argument_list|(
+name|vaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|bfd_set_section_size
+argument_list|(
+name|obfd
+argument_list|,
+name|osec
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|bfd_set_section_vma
+argument_list|(
+name|obfd
+argument_list|,
+name|osec
+argument_list|,
+name|vaddr
+argument_list|)
+expr_stmt|;
+name|bfd_section_lma
+argument_list|(
+name|obfd
+argument_list|,
+name|osec
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ??? bfd_set_section_lma?  */
+name|bfd_set_section_flags
+argument_list|(
+name|obfd
+argument_list|,
+name|osec
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function
@@ -1542,7 +1495,7 @@ modifier|*
 name|obfd
 parameter_list|)
 block|{
-comment|/* Use objfile data to create memory sections. */
+comment|/* Use objfile data to create memory sections.  */
 name|struct
 name|objfile
 modifier|*
@@ -1558,7 +1511,7 @@ name|temp_bottom
 decl_stmt|,
 name|temp_top
 decl_stmt|;
-comment|/* Call callback function for each objfile section. */
+comment|/* Call callback function for each objfile section.  */
 name|ALL_OBJSECTIONS
 argument_list|(
 argument|objfile
@@ -1623,9 +1576,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|ret
 operator|=
 call|(
@@ -1655,7 +1605,7 @@ operator|)
 operator|==
 literal|0
 argument_list|,
-comment|/* writable */
+comment|/* Writable.  */
 operator|(
 name|flags
 operator|&
@@ -1664,10 +1614,13 @@ operator|)
 operator|!=
 literal|0
 argument_list|,
-comment|/* executable */
+comment|/* Executable.  */
 name|obfd
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|!=
 literal|0
 condition|)
@@ -1676,7 +1629,7 @@ name|ret
 return|;
 block|}
 block|}
-comment|/* Make a stack segment. */
+comment|/* Make a stack segment.  */
 if|if
 condition|(
 name|derive_stack_segment
@@ -1701,13 +1654,13 @@ name|temp_bottom
 argument_list|,
 literal|1
 argument_list|,
-comment|/* Stack section will be readable */
+comment|/* Stack section will be readable.  */
 literal|1
 argument_list|,
-comment|/* Stack section will be writable */
+comment|/* Stack section will be writable.  */
 literal|0
 argument_list|,
-comment|/* Stack section will not be executable */
+comment|/* Stack section will not be executable.  */
 name|obfd
 argument_list|)
 expr_stmt|;
@@ -1738,13 +1691,13 @@ name|temp_bottom
 argument_list|,
 literal|1
 argument_list|,
-comment|/* Heap section will be readable */
+comment|/* Heap section will be readable.  */
 literal|1
 argument_list|,
-comment|/* Heap section will be writable */
+comment|/* Heap section will be writable.  */
 literal|0
 argument_list|,
-comment|/* Heap section will not be executable */
+comment|/* Heap section will not be executable.  */
 name|obfd
 argument_list|)
 expr_stmt|;
@@ -1793,21 +1746,31 @@ name|void
 modifier|*
 name|memhunk
 decl_stmt|;
+comment|/* Read-only sections are marked; we don't have to copy their contents.  */
 if|if
 condition|(
-name|size
+operator|(
+name|bfd_get_section_flags
+argument_list|(
+name|obfd
+argument_list|,
+name|osec
+argument_list|)
+operator|&
+name|SEC_LOAD
+operator|)
 operator|==
 literal|0
 condition|)
 return|return;
-comment|/* Read-only sections are marked as zero-size. 		   We don't have to copy their contents. */
+comment|/* Only interested in "load" sections.  */
 if|if
 condition|(
 name|strncmp
 argument_list|(
 literal|"load"
 argument_list|,
-name|bfd_get_section_name
+name|bfd_section_name
 argument_list|(
 name|obfd
 argument_list|,
@@ -1820,17 +1783,17 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/* Only interested in "load" sections. */
-if|if
-condition|(
-operator|(
 name|memhunk
 operator|=
 name|xmalloc
 argument_list|(
 name|size
 argument_list|)
-operator|)
+expr_stmt|;
+comment|/* ??? This is crap since xmalloc should never return NULL.  */
+if|if
+condition|(
+name|memhunk
 operator|==
 name|NULL
 condition|)
@@ -1868,12 +1831,12 @@ literal|0
 condition|)
 name|warning
 argument_list|(
-literal|"Memory read failed for corefile section, %ld bytes at 0x%s\n"
+literal|"Memory read failed for corefile section, %s bytes at 0x%s\n"
 argument_list|,
-operator|(
-name|long
-operator|)
+name|paddr_d
+argument_list|(
 name|size
+argument_list|)
 argument_list|,
 name|paddr
 argument_list|(
@@ -1918,7 +1881,7 @@ argument_list|(
 name|old_chain
 argument_list|)
 expr_stmt|;
-comment|/* frees the xmalloc buffer */
+comment|/* Frees MEMHUNK.  */
 block|}
 end_function
 
@@ -1946,8 +1909,8 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* FIXME error return/msg? */
-comment|/* Record phdrs for section-to-segment mapping. */
+comment|/* FIXME: error return/msg?  */
+comment|/* Record phdrs for section-to-segment mapping.  */
 name|bfd_map_over_sections
 argument_list|(
 name|obfd
@@ -1957,7 +1920,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Copy memory region contents. */
+comment|/* Copy memory region contents.  */
 name|bfd_map_over_sections
 argument_list|(
 name|obfd
@@ -1970,7 +1933,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-comment|/* success */
 block|}
 end_function
 
@@ -1989,7 +1951,7 @@ name|class_files
 argument_list|,
 name|gcore_command
 argument_list|,
-literal|"Save a core file with the current state of the debugged process.\n\ Argument is optional filename.  Default filename is 'core.<process_id>'."
+literal|"\ Save a core file with the current state of the debugged process.\n\ Argument is optional filename.  Default filename is 'core.<process_id>'."
 argument_list|)
 expr_stmt|;
 name|add_com_alias

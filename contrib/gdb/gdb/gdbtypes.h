@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Internal type definitions for GDB.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Cygnus Support, using pieces from other GDB modules.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Internal type definitions for GDB.     Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004 Free Software Foundation, Inc.     Contributed by Cygnus Support, using pieces from other GDB modules.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -23,6 +23,12 @@ end_define
 begin_comment
 comment|/* Forward declarations for prototypes.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|field
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -373,10 +379,10 @@ comment|/* Pascal sets */
 name|TYPE_CODE_RANGE
 block|,
 comment|/* Range (integers within spec'd bounds) */
-comment|/* A string type which is like an array of character but prints        differently (at least for CHILL).  It does not contain a length        field as Pascal strings (for many Pascals, anyway) do; if we want        to deal with such strings, we should use a new type code.  */
+comment|/* A string type which is like an array of character but prints        differently (at least for (the deleted) CHILL).  It does not        contain a length field as Pascal strings (for many Pascals,        anyway) do; if we want to deal with such strings, we should use        a new type code.  */
 name|TYPE_CODE_STRING
 block|,
-comment|/* String of bits; like TYPE_CODE_SET but prints differently (at least        for CHILL).  */
+comment|/* String of bits; like TYPE_CODE_SET but prints differently (at        least for (the deleted) CHILL).  */
 name|TYPE_CODE_BITSTRING
 block|,
 comment|/* Unknown type.  The length field is valid if we were able to        deduce that much about the type, or 0 if we don't even know that.  */
@@ -408,7 +414,10 @@ name|TYPE_CODE_TEMPLATE
 block|,
 comment|/* C++ template */
 name|TYPE_CODE_TEMPLATE_ARG
+block|,
 comment|/* C++ template arg */
+name|TYPE_CODE_NAMESPACE
+comment|/* C++ namespace.  */
 block|}
 enum|;
 end_enum
@@ -446,7 +455,7 @@ name|TYPE_UNSIGNED
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_UNSIGNED)
+value|(TYPE_FLAGS (t)& TYPE_FLAG_UNSIGNED)
 end_define
 
 begin_comment
@@ -467,7 +476,7 @@ name|TYPE_NOSIGN
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_NOSIGN)
+value|(TYPE_FLAGS (t)& TYPE_FLAG_NOSIGN)
 end_define
 
 begin_comment
@@ -488,7 +497,7 @@ name|TYPE_STUB
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_STUB)
+value|(TYPE_FLAGS (t)& TYPE_FLAG_STUB)
 end_define
 
 begin_comment
@@ -509,7 +518,7 @@ name|TYPE_TARGET_STUB
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_TARGET_STUB)
+value|(TYPE_FLAGS (t)& TYPE_FLAG_TARGET_STUB)
 end_define
 
 begin_comment
@@ -530,7 +539,7 @@ name|TYPE_STATIC
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_STATIC)
+value|(TYPE_FLAGS (t)& TYPE_FLAG_STATIC)
 end_define
 
 begin_comment
@@ -551,7 +560,7 @@ name|TYPE_CONST
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_CONST)
+value|(TYPE_INSTANCE_FLAGS (t)& TYPE_FLAG_CONST)
 end_define
 
 begin_comment
@@ -572,7 +581,7 @@ name|TYPE_VOLATILE
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_VOLATILE)
+value|(TYPE_INSTANCE_FLAGS (t)& TYPE_FLAG_VOLATILE)
 end_define
 
 begin_comment
@@ -593,7 +602,7 @@ name|TYPE_PROTOTYPED
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_PROTOTYPED)
+value|(TYPE_FLAGS (t)& TYPE_FLAG_PROTOTYPED)
 end_define
 
 begin_comment
@@ -614,7 +623,7 @@ name|TYPE_INCOMPLETE
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_INCOMPLETE)
+value|(TYPE_FLAGS (t)& TYPE_FLAG_INCOMPLETE)
 end_define
 
 begin_comment
@@ -635,7 +644,7 @@ name|TYPE_CODE_SPACE
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_CODE_SPACE)
+value|(TYPE_INSTANCE_FLAGS (t)& TYPE_FLAG_CODE_SPACE)
 end_define
 
 begin_define
@@ -652,11 +661,11 @@ name|TYPE_DATA_SPACE
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_DATA_SPACE)
+value|(TYPE_INSTANCE_FLAGS (t)& TYPE_FLAG_DATA_SPACE)
 end_define
 
 begin_comment
-comment|/* FIXME: Kludge to mark a varargs function type for C++ member    function argument processing.  Currently only used in dwarf2read.c,    but put it here so we won't accidentally overload the bit with    another flag.  */
+comment|/* FIXME drow/2002-06-03:  Only used for methods, but applies as well    to functions.  */
 end_comment
 
 begin_define
@@ -673,76 +682,275 @@ name|TYPE_VARARGS
 parameter_list|(
 name|t
 parameter_list|)
-value|((t)->flags& TYPE_FLAG_VARARGS)
+value|(TYPE_FLAGS (t)& TYPE_FLAG_VARARGS)
 end_define
+
+begin_comment
+comment|/* Identify a vector type.  Gcc is handling this by adding an extra    attribute to the array type.  We slurp that in as a new flag of a    type.  This is used only in dwarf2read.c.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_FLAG_VECTOR
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_VECTOR
+parameter_list|(
+name|t
+parameter_list|)
+value|(TYPE_FLAGS (t)& TYPE_FLAG_VECTOR)
+end_define
+
+begin_comment
+comment|/* Address class flags.  Some environments provide for pointers whose    size is different from that of a normal pointer or address types    where the bits are interpreted differently than normal addresses.  The    TYPE_FLAG_ADDRESS_CLASS_n flags may be used in target specific    ways to represent these different types of address classes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_FLAG_ADDRESS_CLASS_1
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_ADDRESS_CLASS_1
+parameter_list|(
+name|t
+parameter_list|)
+value|(TYPE_INSTANCE_FLAGS(t) \& TYPE_FLAG_ADDRESS_CLASS_1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_FLAG_ADDRESS_CLASS_2
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_ADDRESS_CLASS_2
+parameter_list|(
+name|t
+parameter_list|)
+value|(TYPE_INSTANCE_FLAGS(t) \& TYPE_FLAG_ADDRESS_CLASS_2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_FLAG_ADDRESS_CLASS_ALL
+value|(TYPE_FLAG_ADDRESS_CLASS_1 \ 				     | TYPE_FLAG_ADDRESS_CLASS_2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_ADDRESS_CLASS_ALL
+parameter_list|(
+name|t
+parameter_list|)
+value|(TYPE_INSTANCE_FLAGS(t) \& TYPE_FLAG_ADDRESS_CLASS_ALL)
+end_define
+
+begin_comment
+comment|/*  Array bound type.  */
+end_comment
+
+begin_enum
+enum|enum
+name|array_bound_type
+block|{
+name|BOUND_SIMPLE
+init|=
+literal|0
+block|,
+name|BOUND_BY_VALUE_IN_REG
+block|,
+name|BOUND_BY_REF_IN_REG
+block|,
+name|BOUND_BY_VALUE_ON_STACK
+block|,
+name|BOUND_BY_REF_ON_STACK
+block|,
+name|BOUND_CANNOT_BE_DETERMINED
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* This structure is space-critical.    Its layout has been tweaked to reduce the space used.  */
+end_comment
 
 begin_struct
 struct|struct
-name|type
+name|main_type
 block|{
 comment|/* Code for kind of type */
-name|enum
-name|type_code
+name|ENUM_BITFIELD
+argument_list|(
+argument|type_code
+argument_list|)
 name|code
-decl_stmt|;
-comment|/* Name of this type, or NULL if none.         This is used for printing only, except by poorly designed C++ code.        For looking up a name, look for a symbol in the VAR_NAMESPACE.  */
+label|:
+literal|8
+expr_stmt|;
+comment|/* Array bounds.  These fields appear at this location because      they pack nicely here.  */
+name|ENUM_BITFIELD
+argument_list|(
+argument|array_bound_type
+argument_list|)
+name|upper_bound_type
+label|:
+literal|4
+expr_stmt|;
+name|ENUM_BITFIELD
+argument_list|(
+argument|array_bound_type
+argument_list|)
+name|lower_bound_type
+label|:
+literal|4
+expr_stmt|;
+comment|/* Name of this type, or NULL if none.       This is used for printing only, except by poorly designed C++ code.      For looking up a name, look for a symbol in the VAR_DOMAIN.  */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* Tag name for this type, or NULL if none.  This means that the        name of the type consists of a keyword followed by the tag name.        Which keyword is determined by the type code ("struct" for        TYPE_CODE_STRUCT, etc.).  As far as I know C/C++ are the only languages        with this feature.         This is used for printing only, except by poorly designed C++ code.        For looking up a name, look for a symbol in the STRUCT_NAMESPACE.        One more legitimate use is that if TYPE_FLAG_STUB is set, this is        the name to use to look for definitions in other files.  */
+comment|/* Tag name for this type, or NULL if none.  This means that the      name of the type consists of a keyword followed by the tag name.      Which keyword is determined by the type code ("struct" for      TYPE_CODE_STRUCT, etc.).  As far as I know C/C++ are the only languages      with this feature.       This is used for printing only, except by poorly designed C++ code.      For looking up a name, look for a symbol in the STRUCT_DOMAIN.      One more legitimate use is that if TYPE_FLAG_STUB is set, this is      the name to use to look for definitions in other files.  */
 name|char
 modifier|*
 name|tag_name
 decl_stmt|;
-comment|/* Length of storage for a value of this type.  This is what        sizeof(type) would return; use it for address arithmetic,        memory reads and writes, etc.  This size includes padding.  For        example, an i386 extended-precision floating point value really        only occupies ten bytes, but most ABI's declare its size to be        12 bytes, to preserve alignment.  A `struct type' representing        such a floating-point type would have a `length' value of 12,        even though the last two bytes are unused.         There's a bit of a host/target mess here, if you're concerned        about machines whose bytes aren't eight bits long, or who don't        have byte-addressed memory.  Various places pass this to memcpy        and such, meaning it must be in units of host bytes.  Various        other places expect they can calculate addresses by adding it        and such, meaning it must be in units of target bytes.  For        some DSP targets, in which HOST_CHAR_BIT will (presumably) be 8        and TARGET_CHAR_BIT will be (say) 32, this is a problem.         One fix would be to make this field in bits (requiring that it        always be a multiple of HOST_CHAR_BIT and TARGET_CHAR_BIT) ---        the other choice would be to make it consistently in units of        HOST_CHAR_BIT.  However, this would still fail to address        machines based on a ternary or decimal representation.  */
-name|unsigned
-name|length
-decl_stmt|;
-comment|/* FIXME, these should probably be restricted to a Fortran-specific        field in some fashion.  */
-define|#
-directive|define
-name|BOUND_CANNOT_BE_DETERMINED
-value|5
-define|#
-directive|define
-name|BOUND_BY_REF_ON_STACK
-value|4
-define|#
-directive|define
-name|BOUND_BY_VALUE_ON_STACK
-value|3
-define|#
-directive|define
-name|BOUND_BY_REF_IN_REG
-value|2
-define|#
-directive|define
-name|BOUND_BY_VALUE_IN_REG
-value|1
-define|#
-directive|define
-name|BOUND_SIMPLE
-value|0
-name|int
-name|upper_bound_type
-decl_stmt|;
-name|int
-name|lower_bound_type
-decl_stmt|;
-comment|/* Every type is now associated with a particular objfile, and the        type is allocated on the type_obstack for that objfile.  One problem        however, is that there are times when gdb allocates new types while        it is not in the process of reading symbols from a particular objfile.        Fortunately, these happen when the type being created is a derived        type of an existing type, such as in lookup_pointer_type().  So        we can just allocate the new type using the same objfile as the        existing type, but to do this we need a backpointer to the objfile        from the existing type.  Yes this is somewhat ugly, but without        major overhaul of the internal type system, it can't be avoided        for now. */
+comment|/* Every type is now associated with a particular objfile, and the      type is allocated on the objfile_obstack for that objfile.  One problem      however, is that there are times when gdb allocates new types while      it is not in the process of reading symbols from a particular objfile.      Fortunately, these happen when the type being created is a derived      type of an existing type, such as in lookup_pointer_type().  So      we can just allocate the new type using the same objfile as the      existing type, but to do this we need a backpointer to the objfile      from the existing type.  Yes this is somewhat ugly, but without      major overhaul of the internal type system, it can't be avoided      for now. */
 name|struct
 name|objfile
 modifier|*
 name|objfile
 decl_stmt|;
-comment|/* For a pointer type, describes the type of object pointed to.        For an array type, describes the type of the elements.        For a function or method type, describes the type of the return value.        For a range type, describes the type of the full range.        For a complex type, describes the type of each coordinate.        Unused otherwise.  */
+comment|/* For a pointer type, describes the type of object pointed to.      For an array type, describes the type of the elements.      For a function or method type, describes the type of the return value.      For a range type, describes the type of the full range.      For a complex type, describes the type of each coordinate.      Unused otherwise.  */
 name|struct
 name|type
 modifier|*
 name|target_type
 decl_stmt|;
-comment|/* Type that is a pointer to this type.        NULL if no such pointer-to type is known yet.        The debugger may add the address of such a type        if it has to construct one later.  */
+comment|/* Flags about this type.  */
+name|int
+name|flags
+decl_stmt|;
+comment|/* Number of fields described for this type */
+name|short
+name|nfields
+decl_stmt|;
+comment|/* Field number of the virtual function table pointer in      VPTR_BASETYPE.  If -1, we were unable to find the virtual      function table pointer in initial symbol reading, and      fill_in_vptr_fieldno should be called to find it if possible.       Unused if this type does not have virtual functions.  */
+name|short
+name|vptr_fieldno
+decl_stmt|;
+comment|/* For structure and union types, a description of each field.      For set and pascal array types, there is one "field",      whose type is the domain type of the set or array.      For range types, there are two "fields",      the minimum and maximum values (both inclusive).      For enum types, each possible value is described by one "field".      For a function or method type, a "field" for each parameter.      For C++ classes, there is one field for each base class (if it is      a derived class) plus one field for each class data member.  Member      functions are recorded elsewhere.       Using a pointer to a separate array of fields      allows all types to have the same size, which is useful      because we can allocate the space for a type before      we know what to put in it.  */
+struct|struct
+name|field
+block|{
+union|union
+name|field_location
+block|{
+comment|/* Position of this field, counting in bits from start of 	 containing structure. 	 For BITS_BIG_ENDIAN=1 targets, it is the bit offset to the MSB. 	 For BITS_BIG_ENDIAN=0 targets, it is the bit offset to the LSB. 	 For a range bound or enum value, this is the value itself. */
+name|int
+name|bitpos
+decl_stmt|;
+comment|/* For a static field, if TYPE_FIELD_STATIC_HAS_ADDR then physaddr 	 is the location (in the target) of the static field. 	 Otherwise, physname is the mangled label of the static field. */
+name|CORE_ADDR
+name|physaddr
+decl_stmt|;
+name|char
+modifier|*
+name|physname
+decl_stmt|;
+block|}
+name|loc
+union|;
+comment|/* For a function or member type, this is 1 if the argument is marked        artificial.  Artificial arguments should not be shown to the        user.  */
+name|unsigned
+name|int
+name|artificial
+range|:
+literal|1
+decl_stmt|;
+comment|/* This flag is zero for non-static fields, 1 for fields whose location        is specified by the label loc.physname, and 2 for fields whose location        is specified by loc.physaddr.  */
+name|unsigned
+name|int
+name|static_kind
+range|:
+literal|2
+decl_stmt|;
+comment|/* Size of this field, in bits, or zero if not packed.        For an unpacked field, the field's type's length        says how many bytes the field occupies.  */
+name|unsigned
+name|int
+name|bitsize
+range|:
+literal|29
+decl_stmt|;
+comment|/* In a struct or union type, type of this field.        In a function or member type, type of this argument.        In an array type, the domain-type of the array.  */
+name|struct
+name|type
+modifier|*
+name|type
+decl_stmt|;
+comment|/* Name of field, value or argument.        NULL for range bounds, array domains, and member function        arguments.  */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+modifier|*
+name|fields
+struct|;
+comment|/* For types with virtual functions (TYPE_CODE_STRUCT), VPTR_BASETYPE      is the base class which defined the virtual function table pointer.         For types that are pointer to member types (TYPE_CODE_MEMBER),      VPTR_BASETYPE is the type that this pointer is a member of.       For method types (TYPE_CODE_METHOD), VPTR_BASETYPE is the aggregate      type that contains the method.       Unused otherwise.  */
+name|struct
+name|type
+modifier|*
+name|vptr_basetype
+decl_stmt|;
+comment|/* Slot to point to additional language-specific fields of this type.  */
+union|union
+name|type_specific
+block|{
+comment|/* CPLUS_STUFF is for TYPE_CODE_STRUCT.  It is initialized to point to        cplus_struct_default, a default static instance of a struct        cplus_struct_type. */
+name|struct
+name|cplus_struct_type
+modifier|*
+name|cplus_stuff
+decl_stmt|;
+comment|/* FLOATFORMAT is for TYPE_CODE_FLT.  It is a pointer to the        floatformat object that describes the floating-point value        that resides within the type.  */
+specifier|const
+name|struct
+name|floatformat
+modifier|*
+name|floatformat
+decl_stmt|;
+block|}
+name|type_specific
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* A ``struct type'' describes a particular instance of a type, with    some particular qualification.  */
+end_comment
+
+begin_struct
+struct|struct
+name|type
+block|{
+comment|/* Type that is a pointer to this type.      NULL if no such pointer-to type is known yet.      The debugger may add the address of such a type      if it has to construct one later.  */
 name|struct
 name|type
 modifier|*
@@ -754,108 +962,26 @@ name|type
 modifier|*
 name|reference_type
 decl_stmt|;
-comment|/* C-v variant chain. This points to a type that        differs from this one only in a const or volatile        attribute (or both). The various c-v variants        are chained together in a ring. */
+comment|/* Variant chain.  This points to a type that differs from this one only      in qualifiers and length.  Currently, the possible qualifiers are      const, volatile, code-space, data-space, and address class.  The      length may differ only when one of the address class flags are set.      The variants are linked in a circular ring and share MAIN_TYPE.  */
 name|struct
 name|type
 modifier|*
-name|cv_type
+name|chain
 decl_stmt|;
-comment|/* Address-space delimited variant chain.  This points to a type        that differs from this one only in an address-space qualifier        attribute.  The otherwise-identical address-space delimited         types are chained together in a ring. */
-name|struct
-name|type
-modifier|*
-name|as_type
-decl_stmt|;
-comment|/* Flags about this type.  */
+comment|/* Flags specific to this instance of the type, indicating where      on the ring we are.  */
 name|int
-name|flags
+name|instance_flags
 decl_stmt|;
-comment|/* Number of fields described for this type */
-name|short
-name|nfields
+comment|/* Length of storage for a value of this type.  This is what      sizeof(type) would return; use it for address arithmetic,      memory reads and writes, etc.  This size includes padding.  For      example, an i386 extended-precision floating point value really      only occupies ten bytes, but most ABI's declare its size to be      12 bytes, to preserve alignment.  A `struct type' representing      such a floating-point type would have a `length' value of 12,      even though the last two bytes are unused.       There's a bit of a host/target mess here, if you're concerned      about machines whose bytes aren't eight bits long, or who don't      have byte-addressed memory.  Various places pass this to memcpy      and such, meaning it must be in units of host bytes.  Various      other places expect they can calculate addresses by adding it      and such, meaning it must be in units of target bytes.  For      some DSP targets, in which HOST_CHAR_BIT will (presumably) be 8      and TARGET_CHAR_BIT will be (say) 32, this is a problem.       One fix would be to make this field in bits (requiring that it      always be a multiple of HOST_CHAR_BIT and TARGET_CHAR_BIT) ---      the other choice would be to make it consistently in units of      HOST_CHAR_BIT.  However, this would still fail to address      machines based on a ternary or decimal representation.  */
+name|unsigned
+name|length
 decl_stmt|;
-comment|/* For structure and union types, a description of each field.        For set and pascal array types, there is one "field",        whose type is the domain type of the set or array.        For range types, there are two "fields",        the minimum and maximum values (both inclusive).        For enum types, each possible value is described by one "field".        For a function type, a "field" for each parameter type.        For C++ classes, there is one field for each base class (if it is        a derived class) plus one field for each class data member.  Member        functions are recorded elsewhere.         Using a pointer to a separate array of fields        allows all types to have the same size, which is useful        because we can allocate the space for a type before        we know what to put in it.  */
-struct|struct
-name|field
-block|{
-union|union
-name|field_location
-block|{
-comment|/* Position of this field, counting in bits from start of 	       containing structure. 	       For BITS_BIG_ENDIAN=1 targets, it is the bit offset to the MSB. 	       For BITS_BIG_ENDIAN=0 targets, it is the bit offset to the LSB. 	       For a range bound or enum value, this is the value itself. */
-name|int
-name|bitpos
-decl_stmt|;
-comment|/* For a static field, if TYPE_FIELD_STATIC_HAS_ADDR then physaddr 	       is the location (in the target) of the static field. 	       Otherwise, physname is the mangled label of the static field. */
-name|CORE_ADDR
-name|physaddr
-decl_stmt|;
-name|char
-modifier|*
-name|physname
-decl_stmt|;
-comment|/* For a function type, this is 1 if the argument is marked 	       artificial.  Artificial arguments should not be shown to the 	       user.  */
-name|int
-name|artificial
-decl_stmt|;
-block|}
-name|loc
-union|;
-comment|/* Size of this field, in bits, or zero if not packed. 	   For an unpacked field, the field's type's length 	   says how many bytes the field occupies. 	   A value of -1 or -2 indicates a static field;  -1 means the location 	   is specified by the label loc.physname;  -2 means that loc.physaddr 	   specifies the actual address. */
-name|int
-name|bitsize
-decl_stmt|;
-comment|/* In a struct or union type, type of this field. 	   In a function type, type of this argument. 	   In an array type, the domain-type of the array.  */
+comment|/* Core type, shared by a group of qualified types.  */
 name|struct
-name|type
+name|main_type
 modifier|*
-name|type
+name|main_type
 decl_stmt|;
-comment|/* Name of field, value or argument. 	   NULL for range bounds and array domains.  */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|}
-modifier|*
-name|fields
-struct|;
-comment|/* For types with virtual functions (TYPE_CODE_STRUCT), VPTR_BASETYPE        is the base class which defined the virtual function table pointer.           For types that are pointer to member types (TYPE_CODE_MEMBER),        VPTR_BASETYPE is the type that this pointer is a member of.         For method types (TYPE_CODE_METHOD), VPTR_BASETYPE is the aggregate        type that contains the method.         Unused otherwise.  */
-name|struct
-name|type
-modifier|*
-name|vptr_basetype
-decl_stmt|;
-comment|/* Field number of the virtual function table pointer in        VPTR_BASETYPE.  If -1, we were unable to find the virtual        function table pointer in initial symbol reading, and        fill_in_vptr_fieldno should be called to find it if possible.         Unused if this type does not have virtual functions.  */
-name|int
-name|vptr_fieldno
-decl_stmt|;
-comment|/* Slot to point to additional language-specific fields of this type.  */
-union|union
-name|type_specific
-block|{
-comment|/* ARG_TYPES is for TYPE_CODE_METHOD. 	   Contains the type of each argument, ending with a void type 	   after the last argument for normal member functions or a NULL 	   pointer after the last argument for functions with variable 	   arguments.  */
-name|struct
-name|type
-modifier|*
-modifier|*
-name|arg_types
-decl_stmt|;
-comment|/* CPLUS_STUFF is for TYPE_CODE_STRUCT.  It is initialized to point to 	   cplus_struct_default, a default static instance of a struct 	   cplus_struct_type. */
-name|struct
-name|cplus_struct_type
-modifier|*
-name|cplus_stuff
-decl_stmt|;
-comment|/* FLOATFORMAT is for TYPE_CODE_FLT.  It is a pointer to the            floatformat object that describes the floating-point value            that resides within the type.  */
-specifier|const
-name|struct
-name|floatformat
-modifier|*
-name|floatformat
-decl_stmt|;
-block|}
-name|type_specific
-union|;
 block|}
 struct|;
 end_struct
@@ -956,13 +1082,6 @@ name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
-comment|/* The argument list.  Only valid if is_stub is clear.  Contains 	       the type of each argument, including `this', and ending with 	       a NULL pointer after the last argument.  Should not contain 	       a `this' pointer for static member functions.  */
-name|struct
-name|type
-modifier|*
-modifier|*
-name|args
 decl_stmt|;
 comment|/* For virtual functions. 	       First baseclass that defines this virtual function.   */
 name|struct
@@ -1251,11 +1370,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|TYPE_INSTANCE_FLAGS
+parameter_list|(
+name|thistype
+parameter_list|)
+value|(thistype)->instance_flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_MAIN_TYPE
+parameter_list|(
+name|thistype
+parameter_list|)
+value|(thistype)->main_type
+end_define
+
+begin_define
+define|#
+directive|define
 name|TYPE_NAME
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->name
+value|TYPE_MAIN_TYPE(thistype)->name
 end_define
 
 begin_define
@@ -1265,7 +1404,7 @@ name|TYPE_TAG_NAME
 parameter_list|(
 name|type
 parameter_list|)
-value|((type)->tag_name)
+value|TYPE_MAIN_TYPE(type)->tag_name
 end_define
 
 begin_define
@@ -1275,7 +1414,7 @@ name|TYPE_TARGET_TYPE
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->target_type
+value|TYPE_MAIN_TYPE(thistype)->target_type
 end_define
 
 begin_define
@@ -1301,21 +1440,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|TYPE_CV_TYPE
+name|TYPE_CHAIN
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->cv_type
-end_define
-
-begin_define
-define|#
-directive|define
-name|TYPE_AS_TYPE
-parameter_list|(
-name|thistype
-parameter_list|)
-value|(thistype)->as_type
+value|(thistype)->chain
 end_define
 
 begin_comment
@@ -1339,7 +1468,7 @@ name|TYPE_OBJFILE
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->objfile
+value|TYPE_MAIN_TYPE(thistype)->objfile
 end_define
 
 begin_define
@@ -1349,7 +1478,7 @@ name|TYPE_FLAGS
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->flags
+value|TYPE_MAIN_TYPE(thistype)->flags
 end_define
 
 begin_comment
@@ -1363,7 +1492,7 @@ name|TYPE_CODE
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->code
+value|TYPE_MAIN_TYPE(thistype)->code
 end_define
 
 begin_define
@@ -1373,7 +1502,7 @@ name|TYPE_NFIELDS
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->nfields
+value|TYPE_MAIN_TYPE(thistype)->nfields
 end_define
 
 begin_define
@@ -1383,7 +1512,7 @@ name|TYPE_FIELDS
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->fields
+value|TYPE_MAIN_TYPE(thistype)->fields
 end_define
 
 begin_define
@@ -1447,7 +1576,8 @@ name|TYPE_ARRAY_UPPER_BOUND_TYPE
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->upper_bound_type
+define|\
+value|TYPE_MAIN_TYPE(thistype)->upper_bound_type
 end_define
 
 begin_define
@@ -1457,7 +1587,8 @@ name|TYPE_ARRAY_LOWER_BOUND_TYPE
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->lower_bound_type
+define|\
+value|TYPE_MAIN_TYPE(thistype)->lower_bound_type
 end_define
 
 begin_define
@@ -1493,7 +1624,7 @@ name|TYPE_VPTR_BASETYPE
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->vptr_basetype
+value|TYPE_MAIN_TYPE(thistype)->vptr_basetype
 end_define
 
 begin_define
@@ -1503,7 +1634,7 @@ name|TYPE_DOMAIN_TYPE
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->vptr_basetype
+value|TYPE_MAIN_TYPE(thistype)->vptr_basetype
 end_define
 
 begin_define
@@ -1513,7 +1644,7 @@ name|TYPE_VPTR_FIELDNO
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->vptr_fieldno
+value|TYPE_MAIN_TYPE(thistype)->vptr_fieldno
 end_define
 
 begin_define
@@ -1583,17 +1714,7 @@ name|TYPE_TYPE_SPECIFIC
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->type_specific
-end_define
-
-begin_define
-define|#
-directive|define
-name|TYPE_ARG_TYPES
-parameter_list|(
-name|thistype
-parameter_list|)
-value|(thistype)->type_specific.arg_types
+value|TYPE_MAIN_TYPE(thistype)->type_specific
 end_define
 
 begin_define
@@ -1603,7 +1724,7 @@ name|TYPE_CPLUS_SPECIFIC
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->type_specific.cplus_stuff
+value|TYPE_MAIN_TYPE(thistype)->type_specific.cplus_stuff
 end_define
 
 begin_define
@@ -1613,7 +1734,7 @@ name|TYPE_FLOATFORMAT
 parameter_list|(
 name|thistype
 parameter_list|)
-value|(thistype)->type_specific.floatformat
+value|TYPE_MAIN_TYPE(thistype)->type_specific.floatformat
 end_define
 
 begin_define
@@ -1625,7 +1746,7 @@ name|thistype
 parameter_list|,
 name|index
 parameter_list|)
-value|(thistype)->fields[index].type
+value|TYPE_MAIN_TYPE(thistype)->fields[index].type
 end_define
 
 begin_define
@@ -1647,7 +1768,7 @@ name|thistype
 parameter_list|,
 name|index
 parameter_list|)
-value|(thistype)->fields[index].name
+value|TYPE_MAIN_TYPE(thistype)->fields[index].name
 end_define
 
 begin_define
@@ -1725,7 +1846,7 @@ name|FIELD_ARTIFICIAL
 parameter_list|(
 name|thisfld
 parameter_list|)
-value|((thisfld).loc.artificial)
+value|((thisfld).artificial)
 end_define
 
 begin_define
@@ -1736,6 +1857,16 @@ parameter_list|(
 name|thisfld
 parameter_list|)
 value|((thisfld).bitsize)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIELD_STATIC_KIND
+parameter_list|(
+name|thisfld
+parameter_list|)
+value|((thisfld).static_kind)
 end_define
 
 begin_define
@@ -1768,7 +1899,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|((thisfld).bitsize = -1, FIELD_PHYSNAME(thisfld) = (name))
+value|((thisfld).static_kind = 1, FIELD_PHYSNAME(thisfld) = (name))
 end_define
 
 begin_define
@@ -1781,7 +1912,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|((thisfld).bitsize = -2, FIELD_PHYSADDR(thisfld) = (name))
+value|((thisfld).static_kind = 2, FIELD_PHYSADDR(thisfld) = (name))
 end_define
 
 begin_define
@@ -1793,7 +1924,7 @@ name|thistype
 parameter_list|,
 name|n
 parameter_list|)
-value|(thistype)->fields[n]
+value|TYPE_MAIN_TYPE(thistype)->fields[n]
 end_define
 
 begin_define
@@ -2049,7 +2180,19 @@ name|thistype
 parameter_list|,
 name|n
 parameter_list|)
-value|((thistype)->fields[n].bitsize< 0)
+value|(TYPE_MAIN_TYPE (thistype)->fields[n].static_kind != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_FIELD_STATIC_KIND
+parameter_list|(
+name|thistype
+parameter_list|,
+name|n
+parameter_list|)
+value|TYPE_MAIN_TYPE (thistype)->fields[n].static_kind
 end_define
 
 begin_define
@@ -2061,7 +2204,7 @@ name|thistype
 parameter_list|,
 name|n
 parameter_list|)
-value|((thistype)->fields[n].bitsize == -2)
+value|(TYPE_MAIN_TYPE (thistype)->fields[n].static_kind == 2)
 end_define
 
 begin_define
@@ -2191,7 +2334,7 @@ name|thisfn
 parameter_list|,
 name|n
 parameter_list|)
-value|TYPE_ARG_TYPES ((thisfn)[n].type)
+value|TYPE_FIELDS ((thisfn)[n].type)
 end_define
 
 begin_define
@@ -2702,8 +2845,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Explicit sizes - see C9X<intypes.h> for naming scheme */
+comment|/* Explicit sizes - see C9X<intypes.h> for naming scheme.  The "int0"    is for when an architecture needs to describe a register that has    no size.  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|type
+modifier|*
+name|builtin_type_int0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -2863,6 +3015,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Type for 64 bit vectors. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|type
+modifier|*
+name|builtin_type_vec64
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|type
+modifier|*
+name|builtin_type_vec64i
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Type for 128 bit vectors. */
 end_comment
 
@@ -2872,6 +3046,15 @@ name|struct
 name|type
 modifier|*
 name|builtin_type_vec128
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|type
+modifier|*
+name|builtin_type_vec128i
 decl_stmt|;
 end_decl_stmt
 
@@ -3117,55 +3300,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chill types */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|type
-modifier|*
-name|builtin_type_chill_bool
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|type
-modifier|*
-name|builtin_type_chill_char
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|type
-modifier|*
-name|builtin_type_chill_long
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|type
-modifier|*
-name|builtin_type_chill_ulong
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|type
-modifier|*
-name|builtin_type_chill_real
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Fortran (F77) types */
 end_comment
 
@@ -3321,7 +3455,7 @@ value|(TYPE_UNSIGNED(t) ? UMIN_OF_SIZE(TYPE_LENGTH(t)) \     : MIN_OF_SIZE(TYPE_
 end_define
 
 begin_comment
-comment|/* Allocate space for storing data associated with a particular type.    We ensure that the space is allocated using the same mechanism that    was used to allocate the space for the type structure itself.  I.E.    if the type is on an objfile's type_obstack, then the space for data    associated with that type will also be allocated on the type_obstack.    If the type is not associated with any particular objfile (such as    builtin types), then the data space will be allocated with xmalloc,    the same as for the type structure. */
+comment|/* Allocate space for storing data associated with a particular type.    We ensure that the space is allocated using the same mechanism that    was used to allocate the space for the type structure itself.  I.E.    if the type is on an objfile's objfile_obstack, then the space for data    associated with that type will also be allocated on the objfile_obstack.    If the type is not associated with any particular objfile (such as    builtin types), then the data space will be allocated with xmalloc,    the same as for the type structure. */
 end_comment
 
 begin_define
@@ -3334,7 +3468,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|(TYPE_OBJFILE (t) != NULL  \     ? obstack_alloc (&TYPE_OBJFILE (t) -> type_obstack, size) \     : xmalloc (size))
+value|(TYPE_OBJFILE (t) != NULL  \     ? obstack_alloc (&TYPE_OBJFILE (t) -> objfile_obstack, size) \     : xmalloc (size))
 end_define
 
 begin_function_decl
@@ -3371,6 +3505,50 @@ parameter_list|,
 name|struct
 name|objfile
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Helper functions to construct a struct or record type.  An    initially empty type is created using init_composite_type().    Fields are then added using append_struct_type_field().  A union    type has its size set to the largest field.  A struct type has each    field packed against the previous.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|type
+modifier|*
+name|init_composite_type
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|enum
+name|type_code
+name|code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|append_composite_type_field
+parameter_list|(
+name|struct
+name|type
+modifier|*
+name|t
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|struct
+name|type
+modifier|*
+name|field
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3434,18 +3612,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|finish_cv_type
-parameter_list|(
-name|struct
-name|type
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|replace_type
 parameter_list|(
 name|struct
@@ -3472,6 +3638,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|address_space_int_to_name
@@ -3525,19 +3692,28 @@ parameter_list|(
 name|struct
 name|type
 modifier|*
+name|type
 parameter_list|,
 name|struct
 name|type
 modifier|*
+name|domain
 parameter_list|,
 name|struct
 name|type
 modifier|*
+name|to_type
 parameter_list|,
 name|struct
-name|type
+name|field
 modifier|*
-modifier|*
+name|args
+parameter_list|,
+name|int
+name|nargs
+parameter_list|,
+name|int
+name|varargs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3757,18 +3933,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|chill_varying_type
-parameter_list|(
-name|struct
-name|type
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|struct
 name|type
 modifier|*
@@ -3820,13 +3984,11 @@ end_define
 begin_function_decl
 specifier|extern
 name|void
-name|check_stub_method
+name|check_stub_method_group
 parameter_list|(
 name|struct
 name|type
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -4214,28 +4376,6 @@ value|100
 end_define
 
 begin_comment
-comment|/* Badness of coercing large integer to smaller size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTEGER_COERCION_BADNESS
-value|100
-end_define
-
-begin_comment
-comment|/* Badness of coercing large floating type to smaller size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLOAT_COERCION_BADNESS
-value|100
-end_define
-
-begin_comment
 comment|/* Badness of integral promotion */
 end_comment
 
@@ -4439,7 +4579,7 @@ specifier|extern
 name|void
 name|print_scalar_formatted
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|struct

@@ -15,6 +15,12 @@ directive|define
 name|TYPEPRINT_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ui_file
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|print_type_scalar

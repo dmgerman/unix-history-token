@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MI Command Set - MI parser.    Copyright 2000, 2001 Free Software Foundation, Inc.    Contributed by Cygnus Solutions (a Red Hat company).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* MI Command Set - MI parser.     Copyright 2000, 2001, 2002 Free Software Foundation, Inc.     Contributed by Cygnus Solutions (a Red Hat company).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -32,22 +32,6 @@ include|#
 directive|include
 file|"gdb_string.h"
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|XMALLOC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|XMALLOC
-parameter_list|(
-name|TYPE
-parameter_list|)
-value|((TYPE*) xmalloc (sizeof (TYPE)))
-end_define
 
 begin_function
 specifier|static
@@ -914,6 +898,8 @@ operator|->
 name|cmd
 operator|->
 name|cli
+operator|.
+name|cmd
 operator|!=
 name|NULL
 condition|)
@@ -939,15 +925,6 @@ return|return
 name|parse
 return|;
 block|}
-end_function
-
-begin_function
-name|void
-name|_initialize_mi_parse
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
 end_function
 
 end_unit

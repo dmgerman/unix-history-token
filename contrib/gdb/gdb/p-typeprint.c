@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"gdb_obstack.h"
 end_include
 
 begin_include
@@ -190,7 +190,6 @@ name|int
 name|level
 parameter_list|)
 block|{
-specifier|register
 name|enum
 name|type_code
 name|code
@@ -506,7 +505,7 @@ block|{
 name|int
 name|is_constructor
 init|=
-name|STREQN
+name|DEPRECATED_STREQN
 argument_list|(
 name|physname
 argument_list|,
@@ -518,7 +517,7 @@ decl_stmt|;
 name|int
 name|is_destructor
 init|=
-name|STREQN
+name|DEPRECATED_STREQN
 argument_list|(
 name|physname
 argument_list|,
@@ -1645,15 +1644,12 @@ name|int
 name|level
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|int
 name|lastval
 decl_stmt|;
@@ -1717,10 +1713,8 @@ name|TYPE_CODE_VOID
 operator|)
 condition|)
 block|{
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|TYPE_NAME
 argument_list|(
 name|type
@@ -1732,6 +1726,8 @@ name|type
 argument_list|)
 else|:
 literal|"pointer"
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2079,7 +2075,7 @@ expr_stmt|;
 comment|/* Don't print out virtual function table.  */
 if|if
 condition|(
-name|STREQN
+name|DEPRECATED_STREQN
 argument_list|(
 name|TYPE_FIELD_NAME
 argument_list|(
@@ -2421,7 +2417,7 @@ decl_stmt|;
 name|int
 name|is_constructor
 init|=
-name|STREQN
+name|DEPRECATED_STREQN
 argument_list|(
 name|physname
 argument_list|,
@@ -2433,7 +2429,7 @@ decl_stmt|;
 name|int
 name|is_destructor
 init|=
-name|STREQN
+name|DEPRECATED_STREQN
 argument_list|(
 name|physname
 argument_list|,
@@ -3094,6 +3090,28 @@ operator|-
 literal|1
 argument_list|,
 name|level
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TYPE_CODE_BITSTRING
+case|:
+name|fputs_filtered
+argument_list|(
+literal|"BitString"
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TYPE_CODE_STRING
+case|:
+name|fputs_filtered
+argument_list|(
+literal|"String"
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 break|break;

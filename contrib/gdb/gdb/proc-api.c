@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Machine independent support for SVR4 /proc (process file system) for GDB.    Copyright 1999, 2000, 2001 Free Software Foundation, Inc.    Written by Michael Snyder at Cygnus Solutions.    Based on work by Fred Fish, Stu Grossman, Geoff Noer, and others.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation,  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Machine independent support for SVR4 /proc (process file system) for GDB.     Copyright 1999, 2000, 2001, 2003 Free Software Foundation, Inc.     Written by Michael Snyder at Cygnus Solutions.    Based on work by Fred Fish, Stu Grossman, Geoff Noer, and others.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation,  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -64,6 +64,12 @@ directive|include
 file|<sys/procfs.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PROC_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -73,6 +79,11 @@ end_include
 begin_comment
 comment|/* for struct proc */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -108,7 +119,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|"gdb_wait.h"
 end_include
 
 begin_include
@@ -2128,6 +2139,10 @@ block|}
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|PCDSTOP
+comment|/* solaris */
 block|{
 name|PCDSTOP
 block|,
@@ -2136,6 +2151,8 @@ block|,
 literal|"post stop request"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|PCKILL
 block|,
@@ -2144,6 +2161,10 @@ block|,
 literal|"post a signal"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PCNICE
+comment|/* solaris */
 block|{
 name|PCNICE
 block|,
@@ -2152,6 +2173,8 @@ block|,
 literal|"set nice priority"
 block|}
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PCREAD
@@ -2264,6 +2287,10 @@ block|,
 literal|"set floating point registers"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PCSHOLD
+comment|/* solaris */
 block|{
 name|PCSHOLD
 block|,
@@ -2272,6 +2299,8 @@ block|,
 literal|"set signal mask"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|PCSREG
 block|,
@@ -2346,6 +2375,10 @@ block|}
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|PCUNKILL
+comment|/* solaris */
 block|{
 name|PCUNKILL
 block|,
@@ -2354,6 +2387,8 @@ block|,
 literal|"delete a pending signal"
 block|}
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PCUNSET
@@ -2432,6 +2467,13 @@ parameter_list|)
 block|{
 name|int
 name|i
+init|=
+name|ARRAY_SIZE
+argument_list|(
+name|rw_table
+argument_list|)
+operator|-
+literal|1
 decl_stmt|;
 name|int
 name|ret
@@ -2800,6 +2842,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|PCSHOLD
 case|case
 name|PCSHOLD
 case|:
@@ -2836,6 +2881,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|PCSSIG
 case|:
@@ -2968,6 +3015,9 @@ argument_list|,
 literal|"step "
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PRSABORT
 if|if
 condition|(
 name|arg
@@ -2988,6 +3038,11 @@ argument_list|,
 literal|"syscallAbort "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PRSTOP
 if|if
 condition|(
 name|arg
@@ -3008,6 +3063,8 @@ argument_list|,
 literal|"stopReq "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|procfs_file
@@ -3064,58 +3121,6 @@ expr_stmt|;
 break|break;
 default|default:
 block|{
-ifdef|#
-directive|ifdef
-name|BREAKPOINT
-specifier|static
-name|unsigned
-name|char
-name|break_insn
-index|[]
-init|=
-name|BREAKPOINT
-decl_stmt|;
-if|if
-condition|(
-name|len
-operator|==
-sizeof|sizeof
-argument_list|(
-name|break_insn
-argument_list|)
-operator|&&
-name|memcmp
-argument_list|(
-name|arg
-argument_list|,
-operator|&
-name|break_insn
-argument_list|,
-name|len
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|procfs_file
-condition|?
-name|procfs_file
-else|:
-name|stdout
-argument_list|,
-literal|"write (<breakpoint at 0x%08lx>) \n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|lseek_offset
-argument_list|)
-expr_stmt|;
-elseif|else
-endif|#
-directive|endif
 if|if
 condition|(
 name|rw_table
@@ -3899,6 +3904,8 @@ name|procfs_file
 else|:
 name|stdout
 argument_list|,
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -4058,11 +4065,12 @@ argument_list|,
 name|set_procfs_trace_cmd
 argument_list|)
 expr_stmt|;
+name|set_cmd_completer
+argument_list|(
 name|c
-operator|->
-name|completer
-operator|=
+argument_list|,
 name|filename_completer
+argument_list|)
 expr_stmt|;
 name|c
 operator|=

@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tm-vxworks.h"
+file|"config/tm-vxworks.h"
 end_include
 
 begin_endif

@@ -54,6 +54,7 @@ begin_define
 define|#
 directive|define
 name|CANNOT_STEP_BREAKPOINT
+value|1
 end_define
 
 begin_escape
@@ -62,12 +63,6 @@ end_escape
 begin_comment
 comment|/* Shared library support.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SVR4_SHARED_LIBS
-end_define
 
 begin_include
 include|#
