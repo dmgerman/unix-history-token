@@ -1422,6 +1422,34 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * BPF 	 */
+block|{
+literal|"bpf global lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"bpf interface lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"bpf cdev lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * spin locks 	 */
 ifdef|#
 directive|ifdef
