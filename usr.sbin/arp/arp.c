@@ -1096,7 +1096,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -1387,7 +1387,6 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_inarp
 modifier|*
@@ -1396,13 +1395,11 @@ init|=
 operator|&
 name|sin_m
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -2194,7 +2191,6 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_inarp
 modifier|*
@@ -2203,7 +2199,6 @@ init|=
 operator|&
 name|sin_m
 decl_stmt|;
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -2698,13 +2693,20 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
 literal|"route-sysctl-estimate"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|needed
+operator|==
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
@@ -2718,7 +2720,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -2745,7 +2747,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -3447,7 +3449,6 @@ decl_stmt|;
 name|int
 name|rlen
 decl_stmt|;
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -3458,7 +3459,6 @@ name|m_rtmsg
 operator|.
 name|m_rtm
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -3467,7 +3467,6 @@ name|m_rtmsg
 operator|.
 name|m_space
 decl_stmt|;
-specifier|register
 name|int
 name|l
 decl_stmt|;
