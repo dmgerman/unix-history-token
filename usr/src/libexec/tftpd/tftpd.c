@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tftpd.c	4.2	82/08/19	*/
+comment|/*	tftpd.c	4.3	82/10/08	*/
 end_comment
 
 begin_comment
@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"tftp.h"
 end_include
 
@@ -87,8 +93,6 @@ name|sin
 init|=
 block|{
 name|AF_INET
-block|,
-name|IPPORT_TFTP
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -145,6 +149,51 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+name|struct
+name|servent
+modifier|*
+name|sp
+decl_stmt|;
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"tftp"
+argument_list|,
+literal|"udp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"tftpd: udp/tftp: unknown service\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|sp
+operator|->
+name|s_port
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DEBUG
@@ -250,24 +299,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-name|sin
-operator|.
-name|sin_port
-operator|=
-name|htons
-argument_list|(
-name|sin
-operator|.
-name|sin_port
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 name|argc
