@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * parse.c --  *	Functions to parse a makefile.  *  *	One function, Parse_Init, must be called before any functions  *	in this module are used. After that, the function Parse_File is the  *	main entry point and controls most of the other functions in this  *	module.  *  *	Most important structures are kept in Lsts. Directories for  *	the #include "..." function are kept in the 'parseIncPath' Lst, while  *	those for the #include<...> are kept in the 'sysIncPath' Lst. The  *	targets currently being defined are kept in the 'targets' Lst.  *  *	The variables 'fname' and 'lineno' are used to track the name  *	of the current file and the line number in that file so that error  *	messages can be more meaningful.  *  * Copyright (c) 1988, 1989 by the Regents of the University of California  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  *  * Permission to use, copy, modify, and distribute this  * software and its documentation for any non-commercial purpose  * and without fee is hereby granted, provided that the above copyright  * notice appears in all copies.  The University of California,  * Berkeley Softworks and Adam de Boor make no representations about  * the suitability of this software for any purpose.  It is provided  * "as is" without express or implied warranty.  *  * Interface:  *	Parse_Init	    	    Initialization function which must be  *	    	  	    	    called before anything else in this module  *	    	  	    	    is used.  *  *	Parse_File	    	    Function used to parse a makefile. It must  *	    	  	    	    be given the name of the file, which should  *	    	  	    	    already have been opened, and a function  *	    	  	    	    to call to read a character from the file.  *  *	Parse_IsVar	    	    Returns TRUE if the given line is a  *	    	  	    	    variable assignment. Used by MainParseArgs  *	    	  	    	    to determine if an argument is a target  *	    	  	    	    or a variable assignment. Used internally  *	    	  	    	    for pretty much the same thing...  *  *	Parse_Error	    	    Function called when an error occurs in  *	    	  	    	    parsing. Used by the variable and  *	    	  	    	    conditional modules.  *	Parse_MainName	    	    Returns a Lst of the main target to create.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -12,18 +12,25 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|rcsid
+name|sccsid
+index|[]
 init|=
-literal|"$Id: parse.c,v 1.75 89/11/14 13:42:56 adam Exp $ SPRITE (Berkeley)"
+literal|"@(#)parse.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*-  * parse.c --  *	Functions to parse a makefile.  *  *	One function, Parse_Init, must be called before any functions  *	in this module are used. After that, the function Parse_File is the  *	main entry point and controls most of the other functions in this  *	module.  *  *	Most important structures are kept in Lsts. Directories for  *	the #include "..." function are kept in the 'parseIncPath' Lst, while  *	those for the #include<...> are kept in the 'sysIncPath' Lst. The  *	targets currently being defined are kept in the 'targets' Lst.  *  *	The variables 'fname' and 'lineno' are used to track the name  *	of the current file and the line number in that file so that error  *	messages can be more meaningful.  *  * Interface:  *	Parse_Init	    	    Initialization function which must be  *	    	  	    	    called before anything else in this module  *	    	  	    	    is used.  *  *	Parse_File	    	    Function used to parse a makefile. It must  *	    	  	    	    be given the name of the file, which should  *	    	  	    	    already have been opened, and a function  *	    	  	    	    to call to read a character from the file.  *  *	Parse_IsVar	    	    Returns TRUE if the given line is a  *	    	  	    	    variable assignment. Used by MainParseArgs  *	    	  	    	    to determine if an argument is a target  *	    	  	    	    or a variable assignment. Used internally  *	    	  	    	    for pretty much the same thing...  *  *	Parse_Error	    	    Function called when an error occurs in  *	    	  	    	    parsing. Used by the variable and  *	    	  	    	    conditional modules.  *	Parse_MainName	    	    Returns a Lst of the main target to create.  */
+end_comment
 
 begin_include
 include|#

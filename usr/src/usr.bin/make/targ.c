@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * targ.c --  *	Functions for maintaining the Lst allTargets. Target nodes are  * kept in two structures: a Lst, maintained by the list library, and a  * hash table, maintained by the hash library.  *  * Copyright (c) 1988, 1989 by the Regents of the University of California  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  *  * Permission to use, copy, modify, and distribute this  * software and its documentation for any non-commercial purpose  * and without fee is hereby granted, provided that the above copyright  * notice appears in all copies.  The University of California,  * Berkeley Softworks and Adam de Boor make no representations about  * the suitability of this software for any purpose.  It is provided  * "as is" without express or implied warranty.  *  * Interface:  *	Targ_Init 	    	Initialization procedure.  *  *	Targ_NewGN	    	Create a new GNode for the passed target  *	    	  	    	(string). The node is *not* placed in the  *	    	  	    	hash table, though all its fields are  *	    	  	    	initialized.  *  *	Targ_FindNode	    	Find the node for a given target, creating  *	    	  	    	and storing it if it doesn't exist and the  *	    	  	    	flags are right (TARG_CREATE)  *  *	Targ_FindList	    	Given a list of names, find nodes for all  *	    	  	    	of them. If a name doesn't exist and the  *	    	  	    	TARG_NOCREATE flag was given, an error message  *	    	  	    	is printed. Else, if a name doesn't exist,  *	    	  	    	its node is created.  *  *	Targ_Ignore	    	Return TRUE if errors should be ignored when  *	    	  	    	creating the given target.  *  *	Targ_Silent	    	Return TRUE if we should be silent when  *	    	  	    	creating the given target.  *  *	Targ_Precious	    	Return TRUE if the target is precious and  *	    	  	    	should not be removed if we are interrupted.  *  * Debugging:  *	Targ_PrintGraph	    	Print out the entire graphm all variables  *	    	  	    	and statistics for the directory cache. Should  *	    	  	    	print something for suffixes, too, but...  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -12,18 +12,25 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|rcsid
+name|sccsid
+index|[]
 init|=
-literal|"$Id: targ.c,v 1.38 89/11/14 13:44:15 adam Exp $ SPRITE (Berkeley)"
+literal|"@(#)targ.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*-  * targ.c --  *	Functions for maintaining the Lst allTargets. Target nodes are  * kept in two structures: a Lst, maintained by the list library, and a  * hash table, maintained by the hash library.  *  * Interface:  *	Targ_Init 	    	Initialization procedure.  *  *	Targ_NewGN	    	Create a new GNode for the passed target  *	    	  	    	(string). The node is *not* placed in the  *	    	  	    	hash table, though all its fields are  *	    	  	    	initialized.  *  *	Targ_FindNode	    	Find the node for a given target, creating  *	    	  	    	and storing it if it doesn't exist and the  *	    	  	    	flags are right (TARG_CREATE)  *  *	Targ_FindList	    	Given a list of names, find nodes for all  *	    	  	    	of them. If a name doesn't exist and the  *	    	  	    	TARG_NOCREATE flag was given, an error message  *	    	  	    	is printed. Else, if a name doesn't exist,  *	    	  	    	its node is created.  *  *	Targ_Ignore	    	Return TRUE if errors should be ignored when  *	    	  	    	creating the given target.  *  *	Targ_Silent	    	Return TRUE if we should be silent when  *	    	  	    	creating the given target.  *  *	Targ_Precious	    	Return TRUE if the target is precious and  *	    	  	    	should not be removed if we are interrupted.  *  * Debugging:  *	Targ_PrintGraph	    	Print out the entire graphm all variables  *	    	  	    	and statistics for the directory cache. Should  *	    	  	    	print something for suffixes, too, but...  */
+end_comment
 
 begin_include
 include|#

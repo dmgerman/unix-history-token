@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * var.c --  *	Variable-handling functions  *  * Copyright (c) 1988, 1989 by the Regents of the University of California  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  *  * Permission to use, copy, modify, and distribute this  * software and its documentation for any non-commercial purpose  * and without fee is hereby granted, provided that the above copyright  * notice appears in all copies.  The University of California,  * Berkeley Softworks and Adam de Boor make no representations about  * the suitability of this software for any purpose.  It is provided  * "as is" without express or implied warranty.  *  * Interface:  *	Var_Set	  	    Set the value of a variable in the given  *	    	  	    context. The variable is created if it doesn't  *	    	  	    yet exist. The value and variable name need not  *	    	  	    be preserved.  *  *	Var_Append	    Append more characters to an existing variable  *	    	  	    in the given context. The variable needn't  *	    	  	    exist already -- it will be created if it doesn't.  *	    	  	    A space is placed between the old value and the  *	    	  	    new one.  *  *	Var_Exists	    See if a variable exists.  *  *	Var_Value 	    Return the value of a variable in a context or  *	    	  	    NULL if the variable is undefined.  *  *	Var_Subst 	    Substitute for all variables in a string using  *	    	  	    the given context as the top-most one. If the  *	    	  	    third argument is non-zero, Parse_Error is  *	    	  	    called if any variables are undefined.  *  *	Var_Parse 	    Parse a variable expansion from a string and  *	    	  	    return the result and the number of characters  *	    	  	    consumed.  *  *	Var_Delete	    Delete a variable in a context.  *  *	Var_Init  	    Initialize this module.  *  * Debugging:  *	Var_Dump  	    Print out all variables defined in the given  *	    	  	    context.  *  * XXX: There's a lot of duplication in these functions.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -12,18 +12,25 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|rcsid
+name|sccsid
+index|[]
 init|=
-literal|"$Id: var.c,v 1.57 89/11/14 13:44:16 adam Exp $ SPRITE (Berkeley)"
+literal|"@(#)var.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*-  * var.c --  *	Variable-handling functions  *  * Interface:  *	Var_Set	  	    Set the value of a variable in the given  *	    	  	    context. The variable is created if it doesn't  *	    	  	    yet exist. The value and variable name need not  *	    	  	    be preserved.  *  *	Var_Append	    Append more characters to an existing variable  *	    	  	    in the given context. The variable needn't  *	    	  	    exist already -- it will be created if it doesn't.  *	    	  	    A space is placed between the old value and the  *	    	  	    new one.  *  *	Var_Exists	    See if a variable exists.  *  *	Var_Value 	    Return the value of a variable in a context or  *	    	  	    NULL if the variable is undefined.  *  *	Var_Subst 	    Substitute for all variables in a string using  *	    	  	    the given context as the top-most one. If the  *	    	  	    third argument is non-zero, Parse_Error is  *	    	  	    called if any variables are undefined.  *  *	Var_Parse 	    Parse a variable expansion from a string and  *	    	  	    return the result and the number of characters  *	    	  	    consumed.  *  *	Var_Delete	    Delete a variable in a context.  *  *	Var_Init  	    Initialize this module.  *  * Debugging:  *	Var_Dump  	    Print out all variables defined in the given  *	    	  	    context.  *  * XXX: There's a lot of duplication in these functions.  */
+end_comment
 
 begin_include
 include|#

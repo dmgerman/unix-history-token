@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * dir.c --  *	Directory searching using wildcards and/or normal names...  *	Used both for source wildcarding in the Makefile and for finding  *	implicit sources.  *  * Copyright (c) 1988, 1989 by the Regents of the University of California  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  *  * Permission to use, copy, modify, and distribute this  * software and its documentation for any non-commercial purpose  * and without fee is hereby granted, provided that the above copyright  * notice appears in all copies.  The University of California,  * Berkeley Softworks and Adam de Boor make no representations about  * the suitability of this software for any purpose.  It is provided  * "as is" without express or implied warranty.  *  * The interface for this module is:  *	Dir_Init  	    Initialize the module.  *  *	Dir_HasWildcards    Returns TRUE if the name given it needs to  *	    	  	    be wildcard-expanded.  *  *	Dir_Expand	    Given a pattern and a path, return a Lst of names  *	    	  	    which match the pattern on the search path.  *  *	Dir_FindFile	    Searches for a file on a given search path.  *	    	  	    If it exists, the entire path is returned.  *	    	  	    Otherwise NULL is returned.  *  *	Dir_MTime 	    Return the modification time of a node. The file  *	    	  	    is searched for along the default search path.  *	    	  	    The path and mtime fields of the node are filled  *	    	  	    in.  *  *	Dir_AddDir	    Add a directory to a search path.  *  *	Dir_MakeFlags	    Given a search path and a command flag, create  *	    	  	    a string with each of the directories in the path  *	    	  	    preceded by the command flag and all of them  *	    	  	    separated by a space.  *  *	Dir_Destroy	    Destroy an element of a search path. Frees up all  *	    	  	    things that can be freed for the element as long  *	    	  	    as the element is no longer referenced by any other  *	    	  	    search path.  *	Dir_ClearPath	    Resets a search path to the empty list.  *  * For debugging:  *	Dir_PrintDirectories	Print stats about the directory cache.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -12,18 +12,25 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|rcsid
+name|sccsid
+index|[]
 init|=
-literal|"$Id: dir.c,v 1.36 89/11/14 13:43:48 adam Exp $ SPRITE (Berkeley)"
+literal|"@(#)dir.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*-  * dir.c --  *	Directory searching using wildcards and/or normal names...  *	Used both for source wildcarding in the Makefile and for finding  *	implicit sources.  *  * The interface for this module is:  *	Dir_Init  	    Initialize the module.  *  *	Dir_HasWildcards    Returns TRUE if the name given it needs to  *	    	  	    be wildcard-expanded.  *  *	Dir_Expand	    Given a pattern and a path, return a Lst of names  *	    	  	    which match the pattern on the search path.  *  *	Dir_FindFile	    Searches for a file on a given search path.  *	    	  	    If it exists, the entire path is returned.  *	    	  	    Otherwise NULL is returned.  *  *	Dir_MTime 	    Return the modification time of a node. The file  *	    	  	    is searched for along the default search path.  *	    	  	    The path and mtime fields of the node are filled  *	    	  	    in.  *  *	Dir_AddDir	    Add a directory to a search path.  *  *	Dir_MakeFlags	    Given a search path and a command flag, create  *	    	  	    a string with each of the directories in the path  *	    	  	    preceded by the command flag and all of them  *	    	  	    separated by a space.  *  *	Dir_Destroy	    Destroy an element of a search path. Frees up all  *	    	  	    things that can be freed for the element as long  *	    	  	    as the element is no longer referenced by any other  *	    	  	    search path.  *	Dir_ClearPath	    Resets a search path to the empty list.  *  * For debugging:  *	Dir_PrintDirectories	Print stats about the directory cache.  */
+end_comment
 
 begin_include
 include|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * job.c --  *	handle the creation etc. of our child processes.  *  * Copyright (c) 1988, 1989 by the Regents of the University of California  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  *  * Permission to use, copy, modify, and distribute this  * software and its documentation for any non-commercial purpose  * and without fee is hereby granted, provided that the above copyright  * notice appears in all copies.  The University of California,  * Berkeley Softworks and Adam de Boor make no representations about  * the suitability of this software for any purpose.  It is provided  * "as is" without express or implied warranty.  *  * Interface:  *	Job_Make  	    	Start the creation of the given target.  *  *	Job_CatchChildren   	Check for and handle the termination of any  *	    	  	    	children. This must be called reasonably  *	    	  	    	frequently to keep the whole make going at  *	    	  	    	a decent clip, since job table entries aren't  *	    	  	    	removed until their process is caught this way.  *	    	  	    	Its single argument is TRUE if the function  *	    	  	    	should block waiting for a child to terminate.  *  *	Job_CatchOutput	    	Print any output our children have produced.  *	    	  	    	Should also be called fairly frequently to  *	    	  	    	keep the user informed of what's going on.  *	    	  	    	If no output is waiting, it will block for  *	    	  	    	a time given by the SEL_* constants, below,  *	    	  	    	or until output is ready.  *  *	Job_Init  	    	Called to intialize this module. in addition,  *	    	  	    	any commands attached to the .BEGIN target  *	    	  	    	are executed before this function returns.  *	    	  	    	Hence, the makefile must have been parsed  *	    	  	    	before this function is called.  *  *	Job_Full  	    	Return TRUE if the job table is filled.  *  *	Job_Empty 	    	Return TRUE if the job table is completely  *	    	  	    	empty.  *  *	Job_ParseShell	    	Given the line following a .SHELL target, parse  *	    	  	    	the line as a shell specification. Returns  *	    	  	    	FAILURE if the spec was incorrect.  *  *	Job_End	  	    	Perform any final processing which needs doing.  *	    	  	    	This includes the execution of any commands  *	    	  	    	which have been/were attached to the .END  *	    	  	    	target. It should only be called when the  *	    	  	    	job table is empty.  *  *	Job_AbortAll	    	Abort all currently running jobs. It doesn't  *	    	  	    	handle output or do anything for the jobs,  *	    	  	    	just kills them. It should only be called in  *	    	  	    	an emergency, as it were.  *  *	Job_CheckCommands   	Verify that the commands for a target are  *	    	  	    	ok. Provide them if necessary and possible.  *  *	Job_Touch 	    	Update a target without really updating it.  *  *	Job_Wait  	    	Wait for all currently-running jobs to finish.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -12,18 +12,25 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|rcsid
+name|sccsid
+index|[]
 init|=
-literal|"$Id: job.c,v 1.97 89/11/14 13:43:51 adam Exp $ SPRITE (Berkeley)"
+literal|"@(#)job.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*-  * job.c --  *	handle the creation etc. of our child processes.  *  * Interface:  *	Job_Make  	    	Start the creation of the given target.  *  *	Job_CatchChildren   	Check for and handle the termination of any  *	    	  	    	children. This must be called reasonably  *	    	  	    	frequently to keep the whole make going at  *	    	  	    	a decent clip, since job table entries aren't  *	    	  	    	removed until their process is caught this way.  *	    	  	    	Its single argument is TRUE if the function  *	    	  	    	should block waiting for a child to terminate.  *  *	Job_CatchOutput	    	Print any output our children have produced.  *	    	  	    	Should also be called fairly frequently to  *	    	  	    	keep the user informed of what's going on.  *	    	  	    	If no output is waiting, it will block for  *	    	  	    	a time given by the SEL_* constants, below,  *	    	  	    	or until output is ready.  *  *	Job_Init  	    	Called to intialize this module. in addition,  *	    	  	    	any commands attached to the .BEGIN target  *	    	  	    	are executed before this function returns.  *	    	  	    	Hence, the makefile must have been parsed  *	    	  	    	before this function is called.  *  *	Job_Full  	    	Return TRUE if the job table is filled.  *  *	Job_Empty 	    	Return TRUE if the job table is completely  *	    	  	    	empty.  *  *	Job_ParseShell	    	Given the line following a .SHELL target, parse  *	    	  	    	the line as a shell specification. Returns  *	    	  	    	FAILURE if the spec was incorrect.  *  *	Job_End	  	    	Perform any final processing which needs doing.  *	    	  	    	This includes the execution of any commands  *	    	  	    	which have been/were attached to the .END  *	    	  	    	target. It should only be called when the  *	    	  	    	job table is empty.  *  *	Job_AbortAll	    	Abort all currently running jobs. It doesn't  *	    	  	    	handle output or do anything for the jobs,  *	    	  	    	just kills them. It should only be called in  *	    	  	    	an emergency, as it were.  *  *	Job_CheckCommands   	Verify that the commands for a target are  *	    	  	    	ok. Provide them if necessary and possible.  *  *	Job_Touch 	    	Update a target without really updating it.  *  *	Job_Wait  	    	Wait for all currently-running jobs to finish.  */
+end_comment
 
 begin_include
 include|#

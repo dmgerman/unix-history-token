@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * str.c --  *	General utilites for handling strings.  *  * Copyright (c) 1988, 1989 by the Regents of the University of California  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  *  * Permission to use, copy, modify, and distribute this  * software and its documentation for any non-commercial purpose  * and without fee is hereby granted, provided that the above copyright  * notice appears in all copies.  The University of California,  * Berkeley Softworks and Adam de Boor make no representations about  * the suitability of this software for any purpose.  It is provided  * "as is" without express or implied warranty.  *  * Interface:  *	Str_Concat	     	Concatenate two strings, placing some sort  *	    	  	    	of separator between them and freeing  *	    	  	    	the two strings, all this under the control  *	    	  	    	of the STR_ flags given as the third arg.  *  *	Str_New	  	    	Duplicate a string and return the copy.  *  *	Str_FindSubstring   	Find a substring within a string (from  *	    	  	    	original Sprite libc).  *  *	Str_Match   	    	Pattern match two strings.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -12,18 +12,25 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|rcsid
+name|sccsid
+index|[]
 init|=
-literal|"$Id: str.c,v 1.22 89/11/14 13:44:07 adam Exp $ SPRITE (Berkeley)"
+literal|"@(#)str.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*-  * str.c --  *	General utilites for handling strings.  *  * Interface:  *	Str_Concat	     	Concatenate two strings, placing some sort  *	    	  	    	of separator between them and freeing  *	    	  	    	the two strings, all this under the control  *	    	  	    	of the STR_ flags given as the third arg.  *  *	Str_New	  	    	Duplicate a string and return the copy.  *  *	Str_FindSubstring   	Find a substring within a string (from  *	    	  	    	original Sprite libc).  *  *	Str_Match   	    	Pattern match two strings.  */
+end_comment
 
 begin_include
 include|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * suff.c --  *	Functions to maintain suffix lists and find implicit dependents  *	using suffix transformation rules  *  * Copyright (c) 1988, 1989 by the Regents of the University of California  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  *  * Permission to use, copy, modify, and distribute this  * software and its documentation for any non-commercial purpose  * and without fee is hereby granted, provided that the above copyright  * notice appears in all copies.  The University of California,  * Berkeley Softworks and Adam de Boor make no representations about  * the suitability of this software for any purpose.  It is provided  * "as is" without express or implied warranty.  *  * Interface:  *	Suff_Init 	    	Initialize all things to do with suffixes.  *  *	Suff_DoPaths	    	This function is used to make life easier  *	    	  	    	when searching for a file according to its  *	    	  	    	suffix. It takes the global search path,  *	    	  	    	as defined using the .PATH: target, and appends  *	    	  	    	its directories to the path of each of the  *	    	  	    	defined suffixes, as specified using  *	    	  	    	.PATH<suffix>: targets. In addition, all  *	    	  	    	directories given for suffixes labeled as  *	    	  	    	include files or libraries, using the .INCLUDES  *	    	  	    	or .LIBS targets, are played with using  *	    	  	    	Dir_MakeFlags to create the .INCLUDES and  *	    	  	    	.LIBS global variables.  *  *	Suff_ClearSuffixes  	Clear out all the suffixes and defined  *	    	  	    	transformations.  *  *	Suff_IsTransform    	Return TRUE if the passed string is the lhs  *	    	  	    	of a transformation rule.  *  *	Suff_AddSuffix	    	Add the passed string as another known suffix.  *  *	Suff_GetPath	    	Return the search path for the given suffix.  *  *	Suff_AddInclude	    	Mark the given suffix as denoting an include  *	    	  	    	file.  *  *	Suff_AddLib	    	Mark the given suffix as denoting a library.  *  *	Suff_AddTransform   	Add another transformation to the suffix  *	    	  	    	graph. Returns  GNode suitable for framing, I  *	    	  	    	mean, tacking commands, attributes, etc. on.  *  *	Suff_SetNull	    	Define the suffix to consider the suffix of  *	    	  	    	any file that doesn't have a known one.  *  *	Suff_FindDeps	    	Find implicit sources for and the location of  *	    	  	    	a target based on its suffix. Returns the  *	    	  	    	bottom-most node added to the graph or NILGNODE  *	    	  	    	if the target had no implicit sources.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -12,18 +12,25 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|rcsid
+name|sccsid
+index|[]
 init|=
-literal|"$Id: suff.c,v 1.68 89/11/14 13:44:09 adam Exp $ SPRITE (Berkeley)"
+literal|"@(#)suff.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*-  * suff.c --  *	Functions to maintain suffix lists and find implicit dependents  *	using suffix transformation rules  *  * Interface:  *	Suff_Init 	    	Initialize all things to do with suffixes.  *  *	Suff_DoPaths	    	This function is used to make life easier  *	    	  	    	when searching for a file according to its  *	    	  	    	suffix. It takes the global search path,  *	    	  	    	as defined using the .PATH: target, and appends  *	    	  	    	its directories to the path of each of the  *	    	  	    	defined suffixes, as specified using  *	    	  	    	.PATH<suffix>: targets. In addition, all  *	    	  	    	directories given for suffixes labeled as  *	    	  	    	include files or libraries, using the .INCLUDES  *	    	  	    	or .LIBS targets, are played with using  *	    	  	    	Dir_MakeFlags to create the .INCLUDES and  *	    	  	    	.LIBS global variables.  *  *	Suff_ClearSuffixes  	Clear out all the suffixes and defined  *	    	  	    	transformations.  *  *	Suff_IsTransform    	Return TRUE if the passed string is the lhs  *	    	  	    	of a transformation rule.  *  *	Suff_AddSuffix	    	Add the passed string as another known suffix.  *  *	Suff_GetPath	    	Return the search path for the given suffix.  *  *	Suff_AddInclude	    	Mark the given suffix as denoting an include  *	    	  	    	file.  *  *	Suff_AddLib	    	Mark the given suffix as denoting a library.  *  *	Suff_AddTransform   	Add another transformation to the suffix  *	    	  	    	graph. Returns  GNode suitable for framing, I  *	    	  	    	mean, tacking commands, attributes, etc. on.  *  *	Suff_SetNull	    	Define the suffix to consider the suffix of  *	    	  	    	any file that doesn't have a known one.  *  *	Suff_FindDeps	    	Find implicit sources for and the location of  *	    	  	    	a target based on its suffix. Returns the  *	    	  	    	bottom-most node added to the graph or NILGNODE  *	    	  	    	if the target had no implicit sources.  */
+end_comment
 
 begin_include
 include|#
