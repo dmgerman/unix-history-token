@@ -584,6 +584,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note that each NIC's softc must start with an ifnet structure. 	 */
 name|mii
 operator|->
 name|mii_ifp
@@ -865,6 +866,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note that each NIC's softc must start with an ifnet structure. 	 */
 name|ifp
 operator|=
 name|device_get_softc
@@ -1054,6 +1056,19 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|v
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|v
 index|[
 literal|0
