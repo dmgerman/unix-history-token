@@ -530,6 +530,17 @@ begin_comment
 comment|/* user-requested promisc mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_MONITOR
+value|0x40000
+end_define
+
+begin_comment
+comment|/* user-requested monitor mode */
+end_comment
+
 begin_comment
 comment|/* flags set internally only: */
 end_comment
