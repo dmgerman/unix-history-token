@@ -21,7 +21,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_ifndef
@@ -36,14 +35,13 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.8 (Berkeley) 6/8/85"
+literal|"@(#)main.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_include

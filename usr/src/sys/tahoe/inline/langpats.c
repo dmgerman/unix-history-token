@@ -15,14 +15,13 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	2.9 (Berkeley) 6/8/85"
+literal|"@(#)langpats.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_include
@@ -42,9 +41,12 @@ name|language_ptab
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
 block|{
 literal|"0,_spl0\n"
 block|,
@@ -323,14 +325,214 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|vax
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+block|{
+literal|"4,_spl0\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_spl1\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x11,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_spl3\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x13,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_spl7\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x17,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_spl8\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x18,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_splimp\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x18,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_splsoftclock\n"
+block|,
+literal|"	mfpr	$18,r0\n\ 	mtpr	$0x8,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_splnet\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0xc,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_splbio\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x18,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_spltty\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x18,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_splclock\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x18,$8\n"
+block|}
+block|,
+block|{
+literal|"4,_splhigh\n"
+block|,
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x18,$8\n"
+block|}
+block|,
+block|{
+literal|"8,_splx\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	mfpr	$8,r0\n\ 	mtpr	r1,$8\n"
+block|}
+block|,
+block|{
+literal|"8,_mfpr\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	mfpr	r1,r0\n"
+block|}
+block|,
+block|{
+literal|"12,_mtpr\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	movl	(sp)+,r0\n\ 	mtpr	r0,r1\n"
+block|}
+block|,
 ifdef|#
 directive|ifdef
+name|notdef
+block|{
+literal|"8,_uncache\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	mtpr	r1,$0x1c\n"
+block|}
+block|,
+endif|#
+directive|endif
+block|{
+literal|"4,_setsoftclock\n"
+block|,
+literal|"	mtpr	$0x8,$0x10\n"
+block|}
+block|,
+block|{
+literal|"8,_fuibyte\n"
+block|,
+literal|"	callf	$8,_fubyte\n"
+block|}
+block|,
+block|{
+literal|"8,_fuiword\n"
+block|,
+literal|"	callf	$8,_fuword\n"
+block|}
+block|,
+block|{
+literal|"12,_suibyte\n"
+block|,
+literal|"	callf	$12,_subyte\n"
+block|}
+block|,
+block|{
+literal|"12,_suiword\n"
+block|,
+literal|"	callf	$12,_suword\n"
+block|}
+block|,
+block|{
+literal|"8,_setjmp\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	clrl	r0\n\ 	movab	(fp),(r1)\n\ 	addl2	$4,r1\n\ 	movab	1(pc),(r1)\n"
+block|}
+block|,
+block|{
+literal|"8,_ffs\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	ffs	r1,r0\n\ 	bgeq	1f\n\ 	mnegl	$1,r0\n\ 1:\n\ 	incl	r0\n"
+block|}
+block|,
+block|{
+literal|"12,__insque\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	insque	(r0),(r1)\n"
+block|}
+block|,
+block|{
+literal|"8,__remque\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	remque	(r1)\n"
+block|}
+block|,
+block|{
+literal|"12,_imin\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	cmpl	r0,r1\n\ 	bleq	1f\n\ 	movl	r1,r0\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|"12,_imax\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	cmpl	r0,r1\n\ 	bgeq	1f\n\ 	movl	r1,r0\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|"12,_min\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	cmpl	r0,r1\n\ 	blequ	1f\n\ 	movl	r1,r0\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|"12,_max\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	cmpl	r0,r1\n\ 	bgequ	1f\n\ 	movl	r1,r0\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|"12,__movow\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	movl	(sp)+,r0\n\ 	movow	r0,(r1)\n"
+block|}
+block|,
+block|{
+literal|"12,__movob\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	movl	(sp)+,r0\n\ 	movob	r0,(r1)\n"
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
 name|mc68000
+argument_list|)
 comment|/* someday... */
 endif|#
 directive|endif
-endif|mc68000
 block|{
 literal|""
 block|,

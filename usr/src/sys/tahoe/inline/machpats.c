@@ -15,14 +15,13 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machpats.c	1.4 (Berkeley) 6/8/85"
+literal|"@(#)machpats.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_include
@@ -32,7 +31,7 @@ file|"inline.h"
 end_include
 
 begin_comment
-comment|/*  * Pattern table for special VAX instructions.  */
+comment|/*  * Pattern table for special instructions.  */
 end_comment
 
 begin_decl_stmt
@@ -42,9 +41,12 @@ name|machine_ptab
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
 block|{
 literal|"3,_blkcpy\n"
 block|,
@@ -125,14 +127,47 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|vax
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+block|{
+literal|"16,_blkcpy\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r2\n\ 	movblk\n"
+block|}
+block|,
+block|{
+literal|"16,_bcopy\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r2\n\ 	movblk\n"
+block|}
+block|,
+block|{
+literal|"12,_bzero\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	movl	(sp)+,r2\n\ 	movab	1f,r0\n\ 	movs3\n\ 	.data\n\ 1:	.byte	0\n\ 	.text\n"
+block|}
+block|,
+block|{
+literal|"12,_blkclr\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	movl	(sp)+,r2\n\ 	movab	1f,r0\n\ 	movs3\n\ 	.data\n\ 1:	.byte	0\n\ 	.text\n"
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
 name|mc68000
+argument_list|)
 comment|/* someday... */
 endif|#
 directive|endif
-endif|mc68000
 block|{
 literal|""
 block|,

@@ -15,14 +15,13 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)libcpats.c	1.3 (Berkeley) 6/8/85"
+literal|"@(#)libcpats.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_include
@@ -42,9 +41,12 @@ name|libc_ptab
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
 block|{
 literal|"1,_fgetc\n"
 block|,
@@ -65,14 +67,15 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|vax
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|mc68000
+argument_list|)
 comment|/* someday... */
 endif|#
 directive|endif
-endif|mc68000
 block|{
 literal|""
 block|,
