@@ -4254,11 +4254,11 @@ argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 else|else
 block|{
