@@ -936,24 +936,6 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Apacer HandyDrive 		 * PR: kern/43627 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"Apacer"
-block|,
-literal|"HandyDrive"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_SYNC_CACHE
-block|}
-block|,
-block|{
 comment|/* 		 * Daisy Technology PhotoClip on Zoran chip 		 * PR: kern/43580 		 */
 block|{
 name|T_DIRECT
