@@ -553,6 +553,10 @@ define|#
 directive|define
 name|VTB_VALID
 value|(1<< 0)
+define|#
+directive|define
+name|VTB_ALLOCED
+value|(1<< 1)
 name|int
 name|vtb_type
 decl_stmt|;
