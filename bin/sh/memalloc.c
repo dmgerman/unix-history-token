@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: memalloc.c,v 1.10 1998/09/06 21:13:09 tegge Exp $"
+literal|"$Id: memalloc.c,v 1.11 1998/09/10 14:51:06 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -766,13 +766,7 @@ argument_list|,
 name|stackblock
 argument_list|()
 argument_list|,
-name|rmquotes
-argument_list|(
-name|stackblock
-argument_list|()
-argument_list|,
 name|len
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|sstrnleft
