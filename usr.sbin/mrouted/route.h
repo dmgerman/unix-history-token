@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id$  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: route.h,v 1.7 1997/02/22 16:07:07 peter Exp $  * route.h,v 3.8.4.6 1997/07/01 23:02:35 fenner Exp  */
 end_comment
 
 begin_comment
@@ -49,25 +49,19 @@ name|vifbitmap_t
 name|rt_children
 decl_stmt|;
 comment|/* outgoing children vifs           */
-name|vifbitmap_t
-name|rt_leaves
-decl_stmt|;
-comment|/* subset of outgoing children vifs */
 name|u_int32
 modifier|*
 name|rt_dominants
 decl_stmt|;
 comment|/* per vif dominant gateways        */
-name|u_int32
-modifier|*
+name|nbrbitmap_t
 name|rt_subordinates
 decl_stmt|;
-comment|/* per vif subordinate gateways     */
-name|u_int
-modifier|*
-name|rt_leaf_timers
+comment|/* bitmap of subordinate gateways   */
+name|nbrbitmap_t
+name|rt_subordadv
 decl_stmt|;
-comment|/* per vif leaf confirmation timers */
+comment|/* recently advertised subordinates */
 name|u_int
 name|rt_timer
 decl_stmt|;
@@ -102,12 +96,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTF_LEAF_TIMING
-value|0x02
+name|RTF_HOLDDOWN
+value|0x04
 end_define
 
 begin_comment
-comment|/* some leaf timers are running     */
+comment|/* this route is in holddown	    */
 end_comment
 
 begin_define
@@ -131,6 +125,18 @@ end_define
 begin_comment
 comment|/*  and report_to_all_neighbors()   */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_FMT
+parameter_list|(
+name|r
+parameter_list|,
+name|s
+parameter_list|)
+value|inet_fmts((r)->rt_origin, (r)->rt_originmask, s)
+end_define
 
 end_unit
 

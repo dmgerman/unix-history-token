@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * kern.c,v 3.8.4.10 1998/01/06 02:00:51 fenner Exp  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kern.c,v 1.10 1998/01/16 07:17:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,16 +35,42 @@ directive|include
 file|"defs.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|curttl
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|k_set_rcvbuf
 parameter_list|(
 name|bufsize
+parameter_list|,
+name|minsize
 parameter_list|)
 name|int
 name|bufsize
 decl_stmt|;
+name|int
+name|minsize
+decl_stmt|;
 block|{
+name|int
+name|delta
+init|=
+name|bufsize
+operator|/
+literal|2
+decl_stmt|;
+name|int
+name|iter
+init|=
+literal|0
+decl_stmt|;
+comment|/*      * Set the socket buffer.  If we can't set it as large as we      * want, search around to try to find the highest acceptable      * value.  The highest acceptable value being smaller than      * minsize is a fatal error.      */
 if|if
 condition|(
 name|setsockopt
@@ -70,15 +96,113 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|bufsize
+operator|-=
+name|delta
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|iter
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|delta
+operator|>
+literal|1
+condition|)
+name|delta
+operator|/=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|igmp_socket
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_RCVBUF
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|bufsize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bufsize
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|bufsize
+operator|-=
+name|delta
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|delta
+operator|<
+literal|1024
+condition|)
+break|break;
+name|bufsize
+operator|+=
+name|delta
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|bufsize
+operator|<
+name|minsize
+condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|errno
+literal|0
 argument_list|,
-literal|"setsockopt SO_RCVBUF %u"
+literal|"OS-allowed buffer size %u< app min %u"
 argument_list|,
 name|bufsize
+argument_list|,
+name|minsize
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+block|}
+name|IF_DEBUG
+argument_list|(
+argument|DEBUG_KERN
+argument_list|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|"Got %d byte buffer size in %d iterations"
+argument_list|,
+name|bufsize
+argument_list|,
+name|iter
 argument_list|)
 expr_stmt|;
 block|}
@@ -148,6 +272,9 @@ name|int
 name|t
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|RAW_OUTPUT_IS_RAW
 name|u_char
 name|ttl
 decl_stmt|;
@@ -190,6 +317,12 @@ literal|"setsockopt IP_MULTICAST_TTL %u"
 argument_list|,
 name|ttl
 argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|curttl
+operator|=
+name|t
 expr_stmt|;
 block|}
 end_function
@@ -703,7 +836,9 @@ name|LOG_ERR
 argument_list|,
 name|errno
 argument_list|,
-literal|"setsockopt MRT_ADD_VIF"
+literal|"setsockopt MRT_ADD_VIF on vif %d"
+argument_list|,
+name|vifi
 argument_list|)
 expr_stmt|;
 block|}
@@ -927,6 +1062,22 @@ argument_list|,
 name|errno
 argument_list|,
 literal|"setsockopt MRT_ADD_MFC"
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|origin
+argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|g
+operator|->
+name|gt_mcastgrp
+argument_list|,
+name|s2
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1062,7 +1213,23 @@ name|LOG_WARNING
 argument_list|,
 name|errno
 argument_list|,
-literal|"setsockopt MRT_DEL_MFC"
+literal|"setsockopt MRT_DEL_MFC of (%s %s)"
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|origin
+argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|g
+operator|->
+name|gt_mcastgrp
+argument_list|,
+name|s2
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1140,6 +1307,27 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*  * Get packet counters  */
+end_comment
+
+begin_comment
+unit|int k_get_vif_count(vifi, icount, ocount, ibytes, obytes)     vifi_t vifi;     int *icount, *ocount, *ibytes, *obytes; {     struct sioc_vif_req vreq;     int retval = 0;      vreq.vifi = vifi;     if (ioctl(udp_socket, SIOCGETVIFCNT, (char *)&vreq)< 0) { 	log(LOG_WARNING, errno, "SIOCGETVIFCNT on vif %d", vifi); 	vreq.icount = vreq.ocount = vreq.ibytes = 		vreq.obytes = 0xffffffff; 	retval = 1;     }     if (icount) 	*icount = vreq.icount;     if (ocount) 	*ocount = vreq.ocount;     if (ibytes) 	*ibytes = vreq.ibytes;     if (obytes) 	*obytes = vreq.obytes;     return retval; }
+comment|/*  * Get counters for a desired source and group.  */
+end_comment
+
+begin_endif
+unit|int k_get_sg_count(src, grp, pktcnt, bytecnt, wrong_if)     u_int32 src;     u_int32 grp;     struct sg_count *retval; {     struct sioc_sg_req sgreq;     int retval = 0;      sgreq.src.s_addr = src;     sgreq.grp.s_addr = grp;     if (ioctl(udp_socket, SIOCGETSGCNT, (char *)&sgreq)< 0) { 	log(LOG_WARNING, errno, "SIOCGETSGCNT on (%s %s)", 	    inet_fmt(src, s1), inet_fmt(grp, s2)); 	sgreq.pktcnt = sgreq.bytecnt = sgreq.wrong_if = 0xffffffff; 	return 1;     }     if (pktcnt)     	*pktcnt = sgreq.pktcnt;     if (bytecnt)     	*bytecnt = sgreq.bytecnt;     if (wrong_if)     	*wrong_if = sgreq.wrong_if;     return retval; }
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
