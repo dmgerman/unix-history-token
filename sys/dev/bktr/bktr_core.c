@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -217,6 +223,24 @@ end_include
 begin_comment
 comment|/* for DELAY */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PROC_LOCK
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_UNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+end_define
 
 begin_endif
 endif|#
@@ -450,6 +474,24 @@ directive|ifdef
 name|__bsdi__
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|PROC_LOCK
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_UNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -644,6 +686,24 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|PROC_LOCK
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_UNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+end_define
 
 begin_endif
 endif|#
@@ -3839,6 +3899,14 @@ operator|&
 name|METEOR_SIG_MODE_MASK
 operator|)
 condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|bktr
+operator|->
+name|proc
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|bktr
@@ -3855,6 +3923,14 @@ name|METEOR_SIG_MODE_MASK
 operator|)
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|bktr
+operator|->
+name|proc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Reset the want flags if in continuous or 		 * synchronous capture mode. 		 */
 comment|/* * XXX NOTE (Luigi): * currently we only support 3 capture modes: odd only, even only, * odd+even interlaced (odd field first). A fourth mode (non interlaced, * either even OR odd) could provide 60 (50 for PAL) pictures per * second, but it would require this routine to toggle the desired frame * each time, and one more different DMA program for the Bt848. * As a consequence, this fourth mode is currently unsupported. */
 if|if
@@ -4390,12 +4466,7 @@ name|bktr
 operator|->
 name|proc
 operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 name|set_fps
 argument_list|(
