@@ -1,10 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: process.c 1.5 83/03/28 20:16:07 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)process.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* process.c handles the requests, which can be of three types:  		ANNOUNCE - announce to a user that a talk is wanted  		LEAVE_INVITE - insert the request into the table 		 		LOOK_UP - look up to see if a request is waiting in 			  in the table for the local user  		DELETE - delete invitation       */
+comment|/*  * process.c handles the requests, which can be of three types:  *	ANNOUNCE - announce to a user that a talk is wanted  *	LEAVE_INVITE - insert the request into the table  *	LOOK_UP - look up to see if a request is waiting in  *		  in the table for the local user  *	DELETE - delete invitation  */
 end_comment
 
 begin_include
@@ -135,7 +152,6 @@ name|SUCCESS
 expr_stmt|;
 block|}
 else|else
-block|{
 name|insert_table
 argument_list|(
 name|request
@@ -143,7 +159,6 @@ argument_list|,
 name|response
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|LOOK_UP
@@ -190,14 +205,12 @@ name|SUCCESS
 expr_stmt|;
 block|}
 else|else
-block|{
 name|response
 operator|->
 name|answer
 operator|=
 name|NOT_HERE
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|DELETE
@@ -379,8 +392,8 @@ operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-elseif|else
 if|if
 condition|(
 name|request
@@ -392,7 +405,7 @@ operator|->
 name|id_num
 condition|)
 block|{
-comment|/* 	     * this is an explicit re-announce, so update the id_num 	     * field to avoid duplicates and re-announce the talk  	     */
+comment|/* 		 * this is an explicit re-announce, so update the id_num 		 * field to avoid duplicates and re-announce the talk  		 */
 name|ptr
 operator|->
 name|id_num
@@ -417,9 +430,8 @@ operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
 comment|/* a duplicated request, so ignore it */
 name|response
 operator|->
@@ -435,8 +447,6 @@ name|answer
 operator|=
 name|SUCCESS
 expr_stmt|;
-block|}
-return|return;
 block|}
 end_block
 
@@ -481,6 +491,8 @@ name|ubuf
 decl_stmt|;
 name|int
 name|fd
+decl_stmt|,
+name|status
 decl_stmt|;
 if|if
 condition|(
@@ -499,7 +511,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|print_error
+name|perror
 argument_list|(
 literal|"Can't open /etc/utmp"
 argument_list|)
@@ -510,6 +522,19 @@ name|FAILED
 operator|)
 return|;
 block|}
+define|#
+directive|define
+name|SCMPN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strncmp(a, b, sizeof (a))
+name|status
+operator|=
+name|NOT_HERE
+expr_stmt|;
 while|while
 condition|(
 name|read
@@ -532,21 +557,15 @@ argument_list|(
 name|ubuf
 argument_list|)
 condition|)
-block|{
 if|if
 condition|(
-name|strncmp
+name|SCMPN
 argument_list|(
 name|ubuf
 operator|.
 name|ut_name
 argument_list|,
 name|name
-argument_list|,
-sizeof|sizeof
-name|ubuf
-operator|.
-name|ut_name
 argument_list|)
 operator|==
 literal|0
@@ -573,18 +592,12 @@ operator|.
 name|ut_line
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|status
+operator|=
 name|SUCCESS
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
-elseif|else
 if|if
 condition|(
 name|strcmp
@@ -599,17 +612,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|status
+operator|=
 name|SUCCESS
-operator|)
-return|;
-block|}
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|close
@@ -619,7 +626,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NOT_HERE
+name|status
 operator|)
 return|;
 block|}

@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: get_names.c 1.2 83/03/26 14:35:54 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)get_names.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -38,10 +55,6 @@ name|msg
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Determine the local and remote user, tty, and machines  */
-end_comment
-
 begin_function_decl
 name|struct
 name|hostent
@@ -50,6 +63,10 @@ name|gethostbyname
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Determine the local and remote user, tty, and machines  */
+end_comment
 
 begin_macro
 name|get_names
@@ -110,9 +127,6 @@ name|char
 modifier|*
 name|ptr
 decl_stmt|;
-name|int
-name|name_length
-decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -122,7 +136,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage:  talk user [ttyname]\n"
+literal|"Usage:	talk user [ttyname]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -177,16 +191,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|name_length
-operator|=
-name|HOST_NAME_LENGTH
-expr_stmt|;
 name|gethostname
 argument_list|(
 name|hostname
 argument_list|,
-operator|&
-name|name_length
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|my_machine_name
@@ -207,7 +219,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* check for, and strip out, the machine name  	    of the target */
+comment|/* check for, and strip out, the machine name of the target */
 for|for
 control|(
 name|ptr
@@ -245,7 +257,7 @@ condition|;
 name|ptr
 operator|++
 control|)
-block|{     }
+empty_stmt|;
 if|if
 condition|(
 operator|*
@@ -321,7 +333,6 @@ name|argc
 operator|>
 literal|2
 condition|)
-block|{
 name|his_tty
 operator|=
 name|argv
@@ -330,18 +341,11 @@ literal|2
 index|]
 expr_stmt|;
 comment|/* tty name is arg 2 */
-block|}
 else|else
-block|{
 name|his_tty
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+literal|""
 expr_stmt|;
-block|}
 name|get_addrs
 argument_list|(
 name|my_machine_name

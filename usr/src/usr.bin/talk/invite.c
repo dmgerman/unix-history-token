@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: /a/guest/moore/talk/RCS/invite.c,v 1.7 83/07/06 00:17:32 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)invite.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -28,7 +45,11 @@ file|<setjmp.h>
 end_include
 
 begin_comment
-comment|/*      * there wasn't an invitation waiting, so send a request containing      * our sockt address to the remote talk daemon so it can invite      * him       */
+comment|/*  * There wasn't an invitation waiting, so send a request containing  * our sockt address to the remote talk daemon so it can invite  * him   */
+end_comment
+
+begin_comment
+comment|/*  * The msg.id's for the invitations  * on the local and remote machines.  * These are used to delete the   * invitations.  */
 end_comment
 
 begin_decl_stmt
@@ -38,10 +59,6 @@ decl_stmt|,
 name|remote_id
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* the msg.id's for the invitations 				   on the local and remote machines. 				   These are used to delete the  				   invitations. */
-end_comment
 
 begin_function_decl
 name|void
@@ -114,13 +131,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|p_error
 argument_list|(
 literal|"Error on attempt to listen for caller"
 argument_list|)
 expr_stmt|;
-block|}
 name|msg
 operator|.
 name|addr
@@ -142,7 +157,7 @@ expr_stmt|;
 name|announce_invite
 argument_list|()
 expr_stmt|;
-comment|/* 	 * shut off the automatic messages for a while, 	 * so we can use the interupt timer to resend the invitation 	 */
+comment|/* 	 * Shut off the automatic messages for a while, 	 * so we can use the interupt timer to resend the invitation 	 */
 name|end_msgs
 argument_list|()
 expr_stmt|;
@@ -202,21 +217,15 @@ block|{
 if|if
 condition|(
 name|errno
-operator|!=
+operator|==
 name|EINTR
 condition|)
-block|{
+continue|continue;
 name|p_error
 argument_list|(
 literal|"Unable to connect with your party"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* we just returned from a interupt, keep trying */
-continue|continue;
-block|}
 block|}
 name|close
 argument_list|(
@@ -227,7 +236,7 @@ name|sockt
 operator|=
 name|new_sockt
 expr_stmt|;
-comment|/* have the daemons delete the invitations now that we 	   have connected. 	 */
+comment|/* 	 * Have the daemons delete the invitations now that we 	 * have connected. 	 */
 name|current_state
 operator|=
 literal|"Waiting for your party to respond"
@@ -279,7 +288,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* routine called on interupt to re-invite the callee */
+comment|/*  * Routine called on interupt to re-invite the callee  */
 end_comment
 
 begin_function
@@ -318,7 +327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* transmit the invitation and process the response */
+comment|/*  * Transmit the invitation and process the response  */
 end_comment
 
 begin_macro
@@ -441,6 +450,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Tell the daemon to remove your invitation  */
+end_comment
+
 begin_macro
 name|send_delete
 argument_list|()
@@ -448,14 +461,13 @@ end_macro
 
 begin_block
 block|{
-comment|/* tell the daemon to remove your invitation */
 name|msg
 operator|.
 name|type
 operator|=
 name|DELETE
 expr_stmt|;
-comment|/* this is just a extra clean up, so just send it 	   and don't wait for an answer */
+comment|/* 	 * This is just a extra clean up, so just send it 	 * and don't wait for an answer 	 */
 name|msg
 operator|.
 name|id_num
@@ -498,13 +510,11 @@ argument_list|(
 name|CTL_MSG
 argument_list|)
 condition|)
-block|{
 name|perror
 argument_list|(
 literal|"send_delete remote"
 argument_list|)
 expr_stmt|;
-block|}
 name|msg
 operator|.
 name|id_num
@@ -547,13 +557,11 @@ argument_list|(
 name|CTL_MSG
 argument_list|)
 condition|)
-block|{
 name|perror
 argument_list|(
 literal|"send_delete local"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 

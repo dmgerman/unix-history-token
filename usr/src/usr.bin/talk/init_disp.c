@@ -1,10 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: init_disp.c 1.2 83/06/23 02:01:11 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)init_disp.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*  * init_disp contains the initialization code for the display package,  * as well as the signal handling routines  */
+comment|/*  * Initialization code for the display package,  * as well as the signal handling routines.  */
 end_comment
 
 begin_include
@@ -20,7 +37,7 @@ file|<signal.h>
 end_include
 
 begin_comment
-comment|/*   * set up curses, catch the appropriate signals, and build the  * various windows  */
+comment|/*   * Set up curses, catch the appropriate signals,  * and build the various windows.  */
 end_comment
 
 begin_macro
@@ -210,7 +227,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* trade edit characters with the other talk. By agreement      * the first three characters each talk transmits after      * connection are the three edit characters      */
+comment|/*  * Trade edit characters with the other talk. By agreement  * the first three characters each talk transmits after  * connection are the three edit characters.  */
 end_comment
 
 begin_macro
@@ -237,9 +254,11 @@ name|struct
 name|ltchars
 name|ltc
 decl_stmt|;
-name|gtty
+name|ioctl
 argument_list|(
 literal|0
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|tty
@@ -288,7 +307,6 @@ operator|)
 operator|-
 literal|1
 condition|)
-block|{
 name|my_win
 operator|.
 name|werase
@@ -296,9 +314,7 @@ operator|=
 literal|'\027'
 expr_stmt|;
 comment|/* control W */
-block|}
 else|else
-block|{
 name|my_win
 operator|.
 name|werase
@@ -307,7 +323,6 @@ name|ltc
 operator|.
 name|t_werasc
 expr_stmt|;
-block|}
 name|buf
 index|[
 literal|0
@@ -358,13 +373,11 @@ argument_list|(
 name|buf
 argument_list|)
 condition|)
-block|{
 name|p_error
 argument_list|(
 literal|"Lost the connection"
 argument_list|)
 expr_stmt|;
-block|}
 name|cc
 operator|=
 name|read
@@ -388,13 +401,11 @@ argument_list|(
 name|buf
 argument_list|)
 condition|)
-block|{
 name|p_error
 argument_list|(
 literal|"Lost the connection"
 argument_list|)
 expr_stmt|;
-block|}
 name|his_win
 operator|.
 name|cerase
@@ -494,11 +505,9 @@ if|if
 condition|(
 name|invitation_waiting
 condition|)
-block|{
 name|send_delete
 argument_list|()
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0

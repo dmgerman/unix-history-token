@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: talk.h 1.2 83/04/23 02:15:12 moore Exp $ */
+comment|/*	@(#)talk.h	1.2 %G%	*/
 end_comment
 
 begin_include
@@ -37,15 +37,19 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|quit
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sleeper
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern

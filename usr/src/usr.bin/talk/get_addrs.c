@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: get_addrs.c 1.5 83/04/01 17:55:41 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)get_addrs.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -101,27 +118,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|hp
-operator|->
-name|h_addrtype
-operator|!=
-name|AF_INET
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Protocal mix up with local machine address\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 name|hp
@@ -167,7 +163,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|bcopy
 argument_list|(
 operator|(
@@ -190,7 +185,6 @@ name|his_machine_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* look up the address of the recipient's machine */
@@ -227,27 +221,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|hp
-operator|->
-name|h_addrtype
-operator|!=
-name|AF_INET
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Protocol mix up with remote machine address\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 name|hp
@@ -268,20 +241,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* find the daemon portal */
-ifdef|#
-directive|ifdef
-name|NTALK
-name|sp
-operator|=
-name|getservbyname
-argument_list|(
-literal|"ntalk"
-argument_list|,
-literal|"udp"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|sp
 operator|=
 name|getservbyname
@@ -291,34 +250,6 @@ argument_list|,
 literal|"udp"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|sp
-operator|->
-name|s_proto
-argument_list|,
-literal|"udp"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Protocol mix up with talk daemon\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|sp
@@ -328,7 +259,7 @@ condition|)
 block|{
 name|p_error
 argument_list|(
-literal|"This machine doesn't support a tcp talk daemon"
+literal|"This machine doesn't support talk"
 argument_list|)
 expr_stmt|;
 name|exit

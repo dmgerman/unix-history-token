@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: look_up.c 1.2 83/03/28 00:34:22 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)look_up.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -10,7 +27,7 @@ file|"talk_ctl.h"
 end_include
 
 begin_comment
-comment|/* see if the local daemon has a invitation for us */
+comment|/*  * See if the local daemon has a invitation for us  */
 end_comment
 
 begin_macro
@@ -39,20 +56,20 @@ operator|&
 name|response
 argument_list|)
 condition|)
-block|{
-comment|/* we must be initiating a talk */
+comment|/* must be initiating a talk */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-comment|/* 	 * there was an invitation waiting for us,  	 * so connect with the other (hopefully waiting) party  	 */
+comment|/* 	 * There was an invitation waiting for us,  	 * so connect with the other (hopefully waiting) party  	 */
 name|current_state
 operator|=
 literal|"Waiting to connect with caller"
 expr_stmt|;
-while|while
+name|again
+label|:
+if|if
 condition|(
 name|connect
 argument_list|(
@@ -71,9 +88,23 @@ name|addr
 argument_list|)
 argument_list|)
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
-block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+goto|goto
+name|again
+goto|;
 if|if
 condition|(
 name|errno
@@ -81,7 +112,7 @@ operator|==
 name|ECONNREFUSED
 condition|)
 block|{
-comment|/* the caller gave up, but his invitation somehow 		 * was not cleared. Clear it and initiate an  		 * invitation. (We know there are no newer invitations, 		 * the talkd works LIFO.) 		 */
+comment|/* 		 * The caller gave up, but his invitation somehow 		 * was not cleared. Clear it and initiate an  		 * invitation. (We know there are no newer invitations, 		 * the talkd works LIFO.) 		 */
 name|ctl_transact
 argument_list|(
 name|his_machine_addr
@@ -108,36 +139,17 @@ literal|0
 operator|)
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-block|{
-comment|/* we have returned from an interupt handler */
-continue|continue;
-block|}
-else|else
-block|{
 name|p_error
 argument_list|(
 literal|"Unable to connect with initiator"
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+comment|/*NOTREACHED*/
 block|}
 end_block
 
 begin_comment
-comment|/* look for an invitation on 'machine' */
+comment|/*  * Look for an invitation on 'machine'  */
 end_comment
 
 begin_macro
@@ -175,7 +187,7 @@ argument_list|,
 name|response
 argument_list|)
 expr_stmt|;
-comment|/* the switch is for later options, such as multiple  	   invitations */
+comment|/* the switch is for later options, such as multiple invitations */
 switch|switch
 condition|(
 name|response

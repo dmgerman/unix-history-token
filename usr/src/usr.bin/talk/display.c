@@ -1,10 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: display.c 1.2 83/04/23 02:09:33 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)display.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* The window 'manager', initializes curses and handles the actual  * displaying of text  */
+comment|/*  * The window 'manager', initializes curses and handles the actual  * displaying of text  */
 end_comment
 
 begin_include
@@ -41,7 +58,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* max HAS to be a function, it is called with      * a argument of the form --foo at least once.      */
+comment|/*  * max HAS to be a function, it is called with  * a argument of the form --foo at least once.  */
 end_comment
 
 begin_macro
@@ -63,27 +80,17 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|a
 operator|>
 name|b
-condition|)
-block|{
-return|return
-operator|(
+condition|?
 name|a
-operator|)
-return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
+else|:
 name|b
 operator|)
 return|;
-block|}
 block|}
 end_block
 
@@ -255,7 +262,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 	 * On word erase search backwards until we find 	 * the beginning of a word or the beginning of 	 * the line. 	 */
+comment|/* 		 * On word erase search backwards until we find 		 * the beginning of a word or the beginning of 		 * the line. 		 */
 if|if
 condition|(
 operator|*
@@ -567,7 +574,6 @@ name|COLS
 operator|-
 literal|1
 condition|)
-block|{
 comment|/* check for wraparound */
 name|xscroll
 argument_list|(
@@ -576,7 +582,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|cch
 operator|=
 operator|(
@@ -599,7 +604,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|waddch
 argument_list|(
 name|win
@@ -610,7 +614,6 @@ operator|*
 name|text
 argument_list|)
 expr_stmt|;
-block|}
 name|getyx
 argument_list|(
 name|win
@@ -641,7 +644,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* * Read the character at the indicated position in win */
+comment|/*  * Read the character at the indicated position in win  */
 end_comment
 
 begin_macro
@@ -716,7 +719,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* * Scroll a window, blanking out the line following the current line * so that the current position is obvious */
+comment|/*  * Scroll a window, blanking out the line following the current line  * so that the current position is obvious  */
 end_comment
 
 begin_expr_stmt

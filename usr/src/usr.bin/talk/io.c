@@ -1,10 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: /a/guest/moore/talk/RCS/io.c,v 1.3 83/07/06 00:17:15 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)io.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* this file contains the I/O handling and the exchange of     edit characters. This connection itself is established in    ctl.c  */
+comment|/*  * This file contains the I/O handling and the exchange of   * edit characters. This connection itself is established in  * ctl.c  */
 end_comment
 
 begin_include
@@ -105,7 +122,7 @@ operator|<<
 name|sockt
 operator|)
 expr_stmt|;
-comment|/* 	 * wait on both the other process (sockt_mask) and  	 * standard input ( STDIN_MASK ) 	 */
+comment|/* 	 * Wait on both the other process (sockt_mask) and  	 * standard input ( STDIN_MASK ) 	 */
 name|read_template
 operator|=
 name|sockt_mask
@@ -154,7 +171,6 @@ operator|<=
 literal|0
 condition|)
 block|{
-comment|/* We may be returning from an interupt handler */
 if|if
 condition|(
 name|errno
@@ -168,8 +184,6 @@ name|read_template
 expr_stmt|;
 continue|continue;
 block|}
-else|else
-block|{
 comment|/* panic, we don't know what happened */
 name|p_error
 argument_list|(
@@ -179,7 +193,6 @@ expr_stmt|;
 name|quit
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -217,8 +230,6 @@ name|quit
 argument_list|()
 expr_stmt|;
 block|}
-else|else
-block|{
 name|display
 argument_list|(
 operator|&
@@ -230,7 +241,6 @@ name|nb
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|read_set
@@ -238,7 +248,7 @@ operator|&
 name|STDIN_MASK
 condition|)
 block|{
-comment|/* we can't make the tty non_blocking, because 		   curses's output routines would screw up */
+comment|/* 			 * We can't make the tty non_blocking, because 			 * curses's output routines would screw up 			 */
 name|ioctl
 argument_list|(
 literal|0
@@ -275,6 +285,7 @@ argument_list|,
 name|nb
 argument_list|)
 expr_stmt|;
+comment|/* might lose data here because sockt is non-blocking */
 name|write
 argument_list|(
 name|sockt
@@ -284,7 +295,6 @@ argument_list|,
 name|nb
 argument_list|)
 expr_stmt|;
-comment|/* We might lose data here 					   because sockt is non-blocking 					 */
 block|}
 block|}
 block|}
@@ -314,7 +324,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* p_error prints the system error message on the standard location        on the screen and then exits. (i.e. a curses version of perror)      */
+comment|/*  * p_error prints the system error message on the standard location  * on the screen and then exits. (i.e. a curses version of perror)  */
 end_comment
 
 begin_macro
@@ -347,7 +357,6 @@ name|errno
 operator|<
 name|sys_nerr
 condition|)
-block|{
 name|sys
 operator|=
 name|sys_errlist
@@ -355,7 +364,6 @@ index|[
 name|errno
 index|]
 expr_stmt|;
-block|}
 name|wmove
 argument_list|(
 name|my_win
@@ -412,7 +420,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* display string in the standard location */
+comment|/*  * Display string in the standard location  */
 end_comment
 
 begin_macro

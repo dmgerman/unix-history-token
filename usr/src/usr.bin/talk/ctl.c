@@ -1,10 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: ctl.c 1.4 83/06/09 23:37:01 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ctl.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* This file handles haggling with the various talk daemons to    get a socket to talk to. sockt is opened and connected in    the progress  */
+comment|/*  * This file handles haggling with the various talk daemons to  * get a socket to talk to. sockt is opened and connected in  * the progress  */
 end_comment
 
 begin_include
@@ -131,8 +148,6 @@ argument_list|,
 name|SOCK_STREAM
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -141,13 +156,11 @@ name|sockt
 operator|<=
 literal|0
 condition|)
-block|{
 name|p_error
 argument_list|(
 literal|"Bad socket"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|bind
@@ -165,13 +178,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|p_error
 argument_list|(
 literal|"Binding local socket"
 argument_list|)
 expr_stmt|;
-block|}
 name|length
 operator|=
 sizeof|sizeof
@@ -195,13 +206,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|p_error
 argument_list|(
 literal|"Bad address for socket"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -240,8 +249,6 @@ argument_list|,
 name|SOCK_DGRAM
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -250,13 +257,11 @@ name|ctl_sockt
 operator|<=
 literal|0
 condition|)
-block|{
 name|p_error
 argument_list|(
 literal|"Bad socket"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|bind
@@ -276,13 +281,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|p_error
 argument_list|(
 literal|"Couldn't bind to control socket"
 argument_list|)
 expr_stmt|;
-block|}
 name|length
 operator|=
 sizeof|sizeof
@@ -306,13 +309,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|p_error
 argument_list|(
 literal|"Bad address for ctl socket"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -369,7 +370,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|printf
 argument_list|(
 literal|"%o "
@@ -385,7 +385,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|putchar
 argument_list|(
 literal|'\n'

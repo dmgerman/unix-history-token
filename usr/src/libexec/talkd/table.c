@@ -1,22 +1,45 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: /a/guest/moore/talk/RCS/table.c,v 1.9 83/07/06 00:11:38 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)table.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* routines to handle insertion, deletion, etc on the table    of requests kept by the daemon. Nothing fancy here, linear    search on a double-linked list. A time is kept with each     entry so that overly old invitations can be eliminated.     Consider this a mis-guided attempt at modularity  */
+comment|/*  * Routines to handle insertion, deletion, etc on the table  * of requests kept by the daemon. Nothing fancy here, linear  * search on a double-linked list. A time is kept with each   * entry so that overly old invitations can be eliminated.  *  * Consider this a mis-guided attempt at modularity  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"ctl.h"
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ctl.h"
 end_include
 
 begin_define
@@ -34,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|NIL
-value|( (TABLE_ENTRY *) 0)
+value|((TABLE_ENTRY *)0)
 end_define
 
 begin_decl_stmt
@@ -123,7 +146,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*      * Look in the table for an invitation that matches the current      * request looking for an invitation      */
+comment|/*  * Look in the table for an invitation that matches the current  * request looking for an invitation  */
 end_comment
 
 begin_function
@@ -160,10 +183,6 @@ name|tp
 operator|.
 name|tv_sec
 expr_stmt|;
-name|ptr
-operator|=
-name|table
-expr_stmt|;
 if|if
 condition|(
 name|debug
@@ -180,12 +199,22 @@ name|request
 argument_list|)
 expr_stmt|;
 block|}
-while|while
-condition|(
+for|for
+control|(
+name|ptr
+operator|=
+name|table
+init|;
 name|ptr
 operator|!=
 name|NIL
-condition|)
+condition|;
+name|ptr
+operator|=
+name|ptr
+operator|->
+name|next
+control|)
 block|{
 if|if
 condition|(
@@ -226,12 +255,6 @@ name|delete
 argument_list|(
 name|ptr
 argument_list|)
-expr_stmt|;
-name|ptr
-operator|=
-name|ptr
-operator|->
-name|next
 expr_stmt|;
 continue|continue;
 block|}
@@ -287,7 +310,6 @@ name|type
 operator|==
 name|LEAVE_INVITE
 condition|)
-block|{
 return|return
 operator|(
 operator|&
@@ -296,13 +318,6 @@ operator|->
 name|request
 operator|)
 return|;
-block|}
-name|ptr
-operator|=
-name|ptr
-operator|->
-name|next
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -317,7 +332,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*      * look for an identical request, as opposed to a complimentary      * one as find_match does       */
+comment|/*  * Look for an identical request, as opposed to a complimentary  * one as find_match does   */
 end_comment
 
 begin_function
@@ -354,11 +369,7 @@ name|tp
 operator|.
 name|tv_sec
 expr_stmt|;
-comment|/* See if this is a repeated message, and check for 	   out of date entries in the table while we are it. 	 */
-name|ptr
-operator|=
-name|table
-expr_stmt|;
+comment|/* 	 * See if this is a repeated message, and check for 	 * out of date entries in the table while we are it. 	 */
 if|if
 condition|(
 name|debug
@@ -375,12 +386,22 @@ name|request
 argument_list|)
 expr_stmt|;
 block|}
-while|while
-condition|(
+for|for
+control|(
+name|ptr
+operator|=
+name|table
+init|;
 name|ptr
 operator|!=
 name|NIL
-condition|)
+condition|;
+name|ptr
+operator|=
+name|ptr
+operator|->
+name|next
+control|)
 block|{
 if|if
 condition|(
@@ -400,15 +421,12 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Deleting expired entry : \n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
 name|print_request
 argument_list|(
 operator|&
@@ -417,16 +435,11 @@ operator|->
 name|request
 argument_list|)
 expr_stmt|;
+block|}
 name|delete
 argument_list|(
 name|ptr
 argument_list|)
-expr_stmt|;
-name|ptr
-operator|=
-name|ptr
-operator|->
-name|next
 expr_stmt|;
 continue|continue;
 block|}
@@ -511,12 +524,6 @@ name|request
 operator|)
 return|;
 block|}
-name|ptr
-operator|=
-name|ptr
-operator|->
-name|next
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -610,9 +617,16 @@ operator|==
 name|NIL
 condition|)
 block|{
-name|print_error
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"malloc in insert_table"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -643,7 +657,6 @@ name|next
 operator|!=
 name|NIL
 condition|)
-block|{
 name|ptr
 operator|->
 name|next
@@ -652,7 +665,6 @@ name|last
 operator|=
 name|ptr
 expr_stmt|;
-block|}
 name|ptr
 operator|->
 name|last
@@ -667,7 +679,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* generate a unique non-zero sequence number */
+comment|/*  * Generate a unique non-zero sequence number  */
 end_comment
 
 begin_macro
@@ -713,7 +725,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* delete the invitation with id 'id_num' */
+comment|/*  * Delete the invitation with id 'id_num'  */
 end_comment
 
 begin_macro
@@ -750,21 +762,34 @@ argument_list|,
 name|id_num
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|ptr
+operator|=
+name|table
+init|;
 name|ptr
 operator|!=
 name|NIL
-operator|&&
+condition|;
+name|ptr
+operator|=
+name|ptr
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
 name|ptr
 operator|->
 name|request
 operator|.
 name|id_num
-operator|!=
+operator|==
 name|id_num
 condition|)
-block|{
+break|break;
 if|if
 condition|(
 name|debug
@@ -776,12 +801,6 @@ name|ptr
 operator|->
 name|request
 argument_list|)
-expr_stmt|;
-name|ptr
-operator|=
-name|ptr
-operator|->
-name|next
 expr_stmt|;
 block|}
 if|if
@@ -811,7 +830,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* classic delete from a double-linked list */
+comment|/*  * Classic delete from a double-linked list  */
 end_comment
 
 begin_macro
@@ -834,15 +853,12 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Deleting : "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
 name|print_request
 argument_list|(
 operator|&
@@ -851,20 +867,19 @@ operator|->
 name|request
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|table
 operator|==
 name|ptr
 condition|)
-block|{
 name|table
 operator|=
 name|ptr
 operator|->
 name|next
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -874,7 +889,6 @@ name|last
 operator|!=
 name|NIL
 condition|)
-block|{
 name|ptr
 operator|->
 name|last
@@ -885,7 +899,6 @@ name|ptr
 operator|->
 name|next
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ptr
@@ -894,7 +907,6 @@ name|next
 operator|!=
 name|NIL
 condition|)
-block|{
 name|ptr
 operator|->
 name|next
@@ -905,7 +917,6 @@ name|ptr
 operator|->
 name|last
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 operator|(

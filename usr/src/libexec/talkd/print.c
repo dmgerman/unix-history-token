@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: print.c 1.4 83/03/28 00:34:25 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)print.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* debug print routines */
@@ -58,7 +75,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"        id = %d\n"
+literal|"		id = %d\n"
 argument_list|,
 name|request
 operator|->

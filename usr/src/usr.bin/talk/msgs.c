@@ -1,10 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: /a/guest/moore/talk/RCS/msgs.c,v 1.4 83/07/06 00:17:22 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)msgs.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*   * a package to display what is happening every MSG_INTERVAL seconds  * if we are slow connecting.  */
+comment|/*   * A package to display what is happening every MSG_INTERVAL seconds  * if we are slow connecting.  */
 end_comment
 
 begin_include

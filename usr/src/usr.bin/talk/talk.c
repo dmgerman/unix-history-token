@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: talk.c 1.3 83/04/23 02:08:25 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)talk.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -54,11 +71,9 @@ operator|!
 name|check_local
 argument_list|()
 condition|)
-block|{
 name|invite_remote
 argument_list|()
 expr_stmt|;
-block|}
 name|end_msgs
 argument_list|()
 expr_stmt|;

@@ -1,4 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ctl_transact.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -19,11 +40,11 @@ value|2
 end_define
 
 begin_comment
-comment|/* the amount of time to wait for a  			   response, in seconds */
+comment|/* time to wait for a response, in seconds */
 end_comment
 
 begin_comment
-comment|/*      * SOCKDGRAM is unreliable, so we must repeat messages if we have      * not recieved an acknowledgement within a reasonable amount      * of time      */
+comment|/*  * SOCKDGRAM is unreliable, so we must repeat messages if we have  * not recieved an acknowledgement within a reasonable amount  * of time  */
 end_comment
 
 begin_macro
@@ -177,26 +198,17 @@ name|errno
 operator|==
 name|EINTR
 condition|)
-block|{
-comment|/* we are returning from an interupt */
 continue|continue;
-block|}
-else|else
-block|{
 name|p_error
 argument_list|(
 literal|"Error on write to talk daemon"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|read_mask
 operator|=
 name|ctl_mask
 expr_stmt|;
-while|while
-condition|(
-operator|(
 name|nready
 operator|=
 name|select
@@ -213,7 +225,10 @@ argument_list|,
 operator|&
 name|wait
 argument_list|)
-operator|)
+expr_stmt|;
+while|while
+condition|(
+name|nready
 operator|<
 literal|0
 condition|)
@@ -224,18 +239,12 @@ name|errno
 operator|==
 name|EINTR
 condition|)
-block|{
-comment|/* we are returning from an interupt */
 continue|continue;
-block|}
-else|else
-block|{
 name|p_error
 argument_list|(
-literal|"Error on waiting for response from daemon"
+literal|"Error waiting for daemon response"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 do|while
@@ -245,7 +254,7 @@ operator|==
 literal|0
 condition|)
 do|;
-comment|/* keep reading while there are queued messages  	       (this is not necessary, it just saves extra 	       request/acknowledgements being sent) 	     */
+comment|/* keep reading while there are queued messages  		   (this is not necessary, it just saves extra 		   request/acknowledgements being sent) 		 */
 do|do
 block|{
 name|junk_size
@@ -294,9 +303,7 @@ name|errno
 operator|==
 name|EINTR
 condition|)
-block|{
 continue|continue;
-block|}
 name|p_error
 argument_list|(
 literal|"Error on read from talk daemon"

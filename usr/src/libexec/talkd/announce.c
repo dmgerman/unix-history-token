@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $Header: /a/guest/moore/talk/RCS/announce.c,v 1.8 83/07/06 00:16:57 moore Exp $ */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)announce.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -126,7 +143,6 @@ if|if
 condition|(
 name|nofork
 condition|)
-block|{
 return|return
 operator|(
 name|announce_proc
@@ -137,7 +153,6 @@ name|remote_machine
 argument_list|)
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|pid
@@ -154,14 +169,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 comment|/* the fork failed */
 return|return
 operator|(
 name|FAILED
 operator|)
 return|;
-block|}
 do|do
 block|{
 name|val
@@ -186,13 +199,9 @@ name|errno
 operator|==
 name|EINTR
 condition|)
-block|{
 continue|continue;
-block|}
-else|else
-block|{
 comment|/* shouldn't happen */
-name|print_error
+name|perror
 argument_list|(
 literal|"wait"
 argument_list|)
@@ -202,7 +211,6 @@ operator|(
 name|FAILED
 operator|)
 return|;
-block|}
 block|}
 block|}
 do|while
@@ -220,14 +228,12 @@ literal|0377
 operator|>
 literal|0
 condition|)
-block|{
 comment|/* we were killed by some signal */
 return|return
 operator|(
 name|FAILED
 operator|)
 return|;
-block|}
 comment|/* Get the second byte, this is the exit/return code */
 return|return
 operator|(
@@ -241,8 +247,6 @@ literal|0377
 operator|)
 return|;
 block|}
-else|else
-block|{
 comment|/* we are the child, go and do it */
 name|_exit
 argument_list|(
@@ -255,11 +259,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_block
 
 begin_comment
-comment|/* See if the user is accepting messages. If so, announce that         a talk is requested.      */
+comment|/*  * See if the user is accepting messages. If so, announce that   * a talk is requested.  */
 end_comment
 
 begin_macro
@@ -331,13 +334,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|FAILED
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -353,14 +354,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|PERMISSION_DENIED
 operator|)
 return|;
-block|}
-comment|/* open gratuitously attaches the talkd to 	   any tty it opens, so disconnect us from the 	   tty before we catch a signal */
+comment|/* 	 * Open gratuitously attaches the talkd to 	 * any tty it opens, so disconnect us from the 	 * tty before we catch a signal 	 */
 name|ioctl
 argument_list|(
 name|fileno
@@ -393,13 +392,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|PERMISSION_DENIED
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -412,13 +409,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|PERMISSION_DENIED
 operator|)
 return|;
-block|}
 name|print_mesg
 argument_list|(
 name|tf
@@ -468,7 +463,7 @@ value|120
 end_define
 
 begin_comment
-comment|/*      * build a block of characters containing the message.       * It is sent blank filled and in a single block to      * try to keep the message in one piece if the recipient      * in in vi at the time      */
+comment|/*  * Build a block of characters containing the message.   * It is sent blank filled and in a single block to  * try to keep the message in one piece if the recipient  * in in vi at the time  */
 end_comment
 
 begin_macro
@@ -860,7 +855,6 @@ name|lptr
 operator|!=
 literal|'\0'
 condition|)
-block|{
 operator|*
 operator|(
 name|bptr
@@ -873,7 +867,6 @@ name|lptr
 operator|++
 operator|)
 expr_stmt|;
-block|}
 comment|/* pad out the rest of the lines with blanks */
 for|for
 control|(
@@ -893,7 +886,6 @@ condition|;
 name|j
 operator|++
 control|)
-block|{
 operator|*
 operator|(
 name|bptr
@@ -902,7 +894,6 @@ operator|)
 operator|=
 literal|' '
 expr_stmt|;
-block|}
 operator|*
 operator|(
 name|bptr

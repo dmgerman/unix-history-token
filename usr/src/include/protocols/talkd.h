@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: ctl.h 1.4 83/03/28 20:46:27 moore Exp $ */
+comment|/*	@(#)talkd.h	1.2 %G%	*/
 end_comment
 
 begin_comment
-comment|/* ctl.h describes the structure that talk and talkd pass back    and forth  */
+comment|/*  * ctl.h describes the structure that  * talk and talkd pass back and forth.  */
 end_comment
 
 begin_include
@@ -60,7 +60,11 @@ value|60
 end_define
 
 begin_comment
-comment|/* maximum time an invitation is saved by the 			 talk daemons */
+comment|/* max time daemon saves invitations */
+end_comment
+
+begin_comment
+comment|/* RING_WAIT should be 10's of seconds less than MAX_LIFE */
 end_comment
 
 begin_define
@@ -71,11 +75,11 @@ value|30
 end_define
 
 begin_comment
-comment|/* time to wait before refreshing invitation  			 should be 10's of seconds less than MAX_LIFE */
+comment|/* time to wait before refreshing invitation */
 end_comment
 
 begin_comment
-comment|/* the values for type */
+comment|/* type values */
 end_comment
 
 begin_define
@@ -107,7 +111,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* the values for answer */
+comment|/* answer values */
 end_comment
 
 begin_define
@@ -154,13 +158,6 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|struct
-name|ctl_response
-name|CTL_RESPONSE
-typedef|;
-end_typedef
-
-begin_struct
 struct|struct
 name|ctl_response
 block|{
@@ -178,18 +175,12 @@ name|sockaddr_in
 name|addr
 decl_stmt|;
 block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|ctl_msg
-name|CTL_MSG
+name|CTL_RESPONSE
 typedef|;
 end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|ctl_msg
 block|{
@@ -229,8 +220,9 @@ name|sockaddr_in
 name|ctl_addr
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|CTL_MSG
+typedef|;
+end_typedef
 
 end_unit
 
