@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.89 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.90 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1680,8 +1680,8 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|USERDB
 comment|/* if not aliased, look it up in the user database */
 if|if
@@ -4336,6 +4336,15 @@ literal|1
 index|]
 argument_list|)
 operator|&&
+operator|(
+name|p
+index|[
+literal|3
+index|]
+operator|==
+literal|'\0'
+operator|||
+operator|(
 name|isascii
 argument_list|(
 name|p
@@ -4351,6 +4360,8 @@ index|[
 literal|3
 index|]
 argument_list|)
+operator|)
+operator|)
 condition|)
 block|{
 name|p
