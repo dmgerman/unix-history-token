@@ -253,12 +253,35 @@ directive|ifndef
 name|KVA_PAGES
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KVA_PAGES
+value|512
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|KVA_PAGES
 value|256
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -287,6 +310,28 @@ directive|ifndef
 name|NKPT
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NKPT
+value|120
+end_define
+
+begin_comment
+comment|/* actual number of kernel page tables */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -297,6 +342,11 @@ end_define
 begin_comment
 comment|/* actual number of kernel page tables */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -461,16 +511,62 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint64_t
+name|pdpt_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint64_t
 name|pd_entry_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint64_t
+name|pt_entry_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|PTESHIFT
+value|(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDESHIFT
+value|(3)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|pd_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
 name|pt_entry_t
 typedef|;
 end_typedef
@@ -488,6 +584,11 @@ directive|define
 name|PDESHIFT
 value|(2)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Address of current and alternate address space page table maps  * and directories.  */
@@ -531,6 +632,25 @@ name|APTDpde
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|pdpt_entry_t
+modifier|*
+name|IdlePDPT
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -680,6 +800,89 @@ parameter_list|)
 value|pmap_kextract(((vm_offset_t) (va)))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline
+name|pt_entry_t
+name|pte_load_clear
+parameter_list|(
+name|pt_entry_t
+modifier|*
+name|pte
+parameter_list|)
+block|{
+name|pt_entry_t
+name|r
+decl_stmt|;
+name|r
+operator|=
+operator|*
+name|pte
+expr_stmt|;
+asm|__asm __volatile(
+literal|"1:\n"
+literal|"\tcmpxchg8b %1\n"
+literal|"\tjnz 1b"
+operator|:
+literal|"+A"
+operator|(
+name|r
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|pte
+operator|)
+operator|,
+literal|"b"
+operator|(
+literal|0
+operator|)
+operator|,
+literal|"c"
+operator|(
+literal|0
+operator|)
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|r
+operator|)
+return|;
+end_return
+
+begin_else
+unit|}
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|pte_load_clear
+parameter_list|(
+name|pte
+parameter_list|)
+value|atomic_readandclear_int(pte)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -689,11 +892,11 @@ begin_comment
 comment|/*  * Pmap stuff  */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
+begin_expr_stmt
+unit|struct
 name|pv_entry
-struct_decl|;
-end_struct_decl
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -750,6 +953,16 @@ argument_list|)
 name|pm_list
 expr_stmt|;
 comment|/* List of all pmaps */
+ifdef|#
+directive|ifdef
+name|PAE
+name|pdpt_entry_t
+modifier|*
+name|pm_pdpt
+decl_stmt|;
+comment|/* KVA of page director pointer 						   table */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

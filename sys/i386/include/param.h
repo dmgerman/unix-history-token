@@ -234,6 +234,35 @@ name|NPTEPG
 value|(PAGE_SIZE/(sizeof (pt_entry_t)))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NPGPTD
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDRSHIFT
+value|21
+end_define
+
+begin_comment
+comment|/* LOG2(NBPDR) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -251,6 +280,11 @@ end_define
 begin_comment
 comment|/* LOG2(NBPDR) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

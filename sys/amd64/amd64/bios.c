@@ -1616,17 +1616,27 @@ operator|)
 name|rcr3
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PAE
 if|if
 condition|(
 name|ptd
 operator|==
-operator|(
-name|u_int
-operator|*
-operator|)
+name|IdlePDPT
+condition|)
+block|{
+else|#
+directive|else
+if|if
+condition|(
+name|ptd
+operator|==
 name|IdlePTD
 condition|)
 block|{
+endif|#
+directive|endif
 comment|/* 	 * no page table, so create one and install it. 	 */
 name|pte
 operator|=
@@ -1653,7 +1663,7 @@ operator|(
 operator|(
 name|u_int
 operator|)
-name|ptd
+name|IdlePTD
 operator|+
 name|KERNBASE
 operator|)
@@ -1989,19 +1999,10 @@ name|i
 operator|)
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEV_ISA
-end_ifdef
-
-begin_comment
 comment|/*  * PnP BIOS interface; enumerate devices only known to the system  * BIOS and save information about them for later use.  */
-end_comment
-
-begin_struct
 struct|struct
 name|pnp_sysdev
 block|{
@@ -2087,13 +2088,7 @@ decl_stmt|;
 block|}
 name|__packed
 struct|;
-end_struct
-
-begin_comment
 comment|/* We have to cluster arguments within a 64k range for the bios16 call */
-end_comment
-
-begin_struct
 struct|struct
 name|pnp_sysdevargs
 block|{
@@ -2106,13 +2101,7 @@ name|node
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/*  * This function is called after the bus has assigned resource  * locations for a logical device.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|pnpbios_set_config
@@ -2130,13 +2119,7 @@ name|int
 name|enable
 parameter_list|)
 block|{ }
-end_function
-
-begin_comment
 comment|/*  * Quiz the PnP BIOS, build a list of PNP IDs and resource data.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|pnpbios_identify
@@ -2896,9 +2879,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|device_method_t
 name|pnpbios_methods
@@ -2920,9 +2900,6 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|driver_t
 name|pnpbios_driver
@@ -2937,16 +2914,10 @@ block|,
 comment|/* no softc */
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|devclass_t
 name|pnpbios_devclass
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|pnpbios
@@ -2962,7 +2933,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_function
 
 begin_endif
 endif|#
