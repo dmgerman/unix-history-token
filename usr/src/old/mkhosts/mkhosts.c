@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkhosts.c	4.1 (Berkeley) 83/12/05"
+literal|"@(#)mkhosts.c	4.2 (Berkeley) 84/02/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,6 +438,8 @@ argument_list|,
 name|key
 argument_list|,
 name|content
+argument_list|,
+name|DB_INSERT
 argument_list|)
 expr_stmt|;
 for|for
@@ -479,6 +481,8 @@ argument_list|,
 name|key
 argument_list|,
 name|content
+argument_list|,
+name|DB_INSERT
 argument_list|)
 expr_stmt|;
 block|}
@@ -505,6 +509,8 @@ argument_list|,
 name|key
 argument_list|,
 name|content
+argument_list|,
+name|DB_INSERT
 argument_list|)
 expr_stmt|;
 name|entries
