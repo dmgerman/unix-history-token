@@ -1506,6 +1506,9 @@ return|return
 literal|0
 return|;
 comment|/* not a titty */
+ifdef|#
+directive|ifdef
+name|NO_GEOM
 case|case
 name|DIOCWLABEL
 case|:
@@ -1554,6 +1557,8 @@ name|VF_WLABEL
 expr_stmt|;
 comment|/* no, reset */
 break|break;
+endif|#
+directive|endif
 default|default:
 return|return
 name|ENOTTY
