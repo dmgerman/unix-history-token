@@ -5000,6 +5000,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|error
+operator|=
 name|ether_ioctl
 argument_list|(
 name|ifp
