@@ -1663,7 +1663,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*       * If we found one, deliver th epacket to the socket      */
+comment|/*       * If we found one, deliver the packet to the socket      */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
