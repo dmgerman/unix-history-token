@@ -10,7 +10,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.3 1995/06/11 19:33:05 rgrimes Exp $"
+literal|"$Id: main.c,v 1.4 1995/10/06 02:46:23 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -180,18 +186,13 @@ argument_list|()
 expr_stmt|;
 name|dialog_notify
 argument_list|(
-literal|"Reboot the machine for changes to take effect.\n"
+literal|"Daemons will only notice\n"
+literal|"a timezone change.\n"
+literal|"after rebooting.\n"
 argument_list|)
 expr_stmt|;
 name|end_dialog
 argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Now reboot your computer for the changes to take effect.\n"
-argument_list|)
 expr_stmt|;
 return|return
 name|tz
@@ -470,9 +471,11 @@ operator|*
 literal|60
 operator|)
 operator|/
+operator|(
 literal|30
 operator|*
 literal|60
+operator|)
 operator|*
 literal|30
 operator|*
@@ -493,9 +496,11 @@ operator|*
 literal|60
 operator|)
 operator|/
+operator|(
 literal|30
 operator|*
 literal|60
+operator|)
 operator|*
 literal|30
 operator|*
@@ -655,9 +660,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|FILE
-modifier|*
-name|fp
+name|int
+name|fd
 decl_stmt|;
 switch|switch
 condition|(
@@ -667,34 +671,67 @@ block|{
 case|case
 name|CMOS_LEAVE
 case|:
+break|break;
 case|case
 name|CMOS_UTC
 case|:
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|PATH_WALL_CMOS_CLOCK
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+name|dialog_notify
+argument_list|(
+literal|"Error removing "
+name|PATH_WALL_CMOS_CLOCK
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|CMOS_LOCAL
 case|:
-name|fp
+if|if
+condition|(
+operator|(
+name|fd
 operator|=
-name|fopen
+name|open
 argument_list|(
 name|PATH_WALL_CMOS_CLOCK
 argument_list|,
-literal|"w"
+name|O_RDONLY
+operator||
+name|O_CREAT
+argument_list|,
+literal|0644
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fp
+operator|)
+operator|==
+operator|-
+literal|1
 condition|)
-block|{
-name|fclose
+name|dialog_notify
 argument_list|(
-name|fp
+literal|"Error creating "
+name|PATH_WALL_CMOS_CLOCK
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* xxx should have error message */
+else|else
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -771,13 +808,70 @@ operator|&
 name|systime
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* This never prints the right value! :( */
-block|snprintf(msg, sizeof msg, 		 "Does %02d:%02d:%02d %d.%d.%04d %s look reasonable?", 		 tm->tm_hour, tm->tm_min, tm->tm_sec, tm->tm_mday, tm->tm_mon, 		 tm->tm_year + 1900, tm->tm_zone);  	rv = dialog_yesno("Verifying timezone selection", 			  msg, -1, -1); 	if (rv) 		return 1;
-endif|#
-directive|endif
+name|snprintf
+argument_list|(
+name|msg
+argument_list|,
+sizeof|sizeof
+name|msg
+argument_list|,
+literal|"Does %02d:%02d:%02d %d.%d.%04d %s look reasonable?"
+argument_list|,
+name|tm
+operator|->
+name|tm_hour
+argument_list|,
+name|tm
+operator|->
+name|tm_min
+argument_list|,
+name|tm
+operator|->
+name|tm_sec
+argument_list|,
+name|tm
+operator|->
+name|tm_mday
+argument_list|,
+name|tm
+operator|->
+name|tm_mon
+operator|+
+literal|1
+argument_list|,
+name|tm
+operator|->
+name|tm_year
+operator|+
+literal|1900
+argument_list|,
+name|tm
+operator|->
+name|tm_zone
+argument_list|)
+expr_stmt|;
+name|rv
+operator|=
+name|dialog_yesno
+argument_list|(
+literal|"Verifying timezone selection"
+argument_list|,
+name|msg
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+condition|)
+return|return
+literal|1
+return|;
 name|snprintf
 argument_list|(
 name|msg
