@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_output.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_output.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -679,12 +679,6 @@ name|struct
 name|ifnet
 name|loif
 decl_stmt|;
-specifier|extern
-name|struct
-name|socket
-modifier|*
-name|ip_mrouter
-decl_stmt|;
 name|m
 operator|->
 name|m_flags
@@ -866,7 +860,15 @@ block|}
 ifdef|#
 directive|ifdef
 name|MROUTING
-elseif|else
+else|else
+block|{
+comment|/* 			 * If we are acting as a multicast router, perform 			 * multicast forwarding as if the packet had just 			 * arrived on the interface to which we are about 			 * to send.  The multicast forwarding function 			 * recursively calls this function, using the 			 * IP_FORWARDING flag to prevent infinite recursion. 			 * 			 * Multicasts that are looped back by ip_mloopback(), 			 * above, will be forwarded by the ip_input() routine, 			 * if necessary. 			 */
+specifier|extern
+name|struct
+name|socket
+modifier|*
+name|ip_mrouter
+decl_stmt|;
 if|if
 condition|(
 name|ip_mrouter
@@ -880,7 +882,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * If we are acting as a multicast router, perform 			 * multicast forwarding as if the packet had just 			 * arrived on the interface to which we are about 			 * to send.  The multicast forwarding function 			 * recursively calls this function, using the 			 * IP_FORWARDING flag to prevent infinite recursion. 			 * 			 * Multicasts that are looped back by ip_mloopback(), 			 * above, will be forwarded by the ip_input() routine, 			 * if necessary. 			 */
 if|if
 condition|(
 name|ip_mforward
@@ -901,6 +902,7 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 block|}
 endif|#
