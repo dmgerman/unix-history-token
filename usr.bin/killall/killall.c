@@ -1579,6 +1579,12 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|ac
+operator|>
+literal|0
+condition|)
 name|matched
 operator|=
 literal|0
