@@ -481,6 +481,12 @@ operator|~
 literal|0x3fUL
 operator|)
 expr_stmt|;
+name|pcb
+operator|->
+name|pcb_nsaved
+operator|=
+literal|0
+expr_stmt|;
 name|td
 operator|->
 name|td_frame
