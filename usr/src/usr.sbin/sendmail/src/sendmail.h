@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)sendmail.h	5.3 (Berkeley) %G% */
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)sendmail.h	5.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.3		%G%"
+literal|"@(#)sendmail.h	5.4		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1223,7 +1223,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT.  Recipients are **	worth WKRECIPFACT. ** **	WKTIMEFACT is negative since jobs that fail once have a high **	probability of failing again.  Making it negative tends to force **	them to the back rather than the front of the queue, where they **	only clog things.  Thanks go to Jay Lepreau at Utah for pointing **	out the error in my thinking. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
+comment|/* **  Message priority classes. ** **	The message class is read directly from the Priority: header **	field in the message. ** **	CurEnv->e_msgpriority is the number of bytes in the message plus **	the creation time (so that jobs ``tend'' to be ordered correctly), **	adjusted by the message class, the number of recipients, and the **	amount of time the message has been sitting around.  This number **	is used to order the queue.  Higher values mean LOWER priority. ** **	Each priority class point is worth WkClassFact priority points; **	each recipient is worth WkRecipFact priority points.  Each time **	we reprocess a message the priority is adjusted by WkTimeFact. **	WkTimeFact should normally decrease the priority so that jobs **	that have historically failed will be run later; thanks go to **	Jay Lepreau at Utah for pointing out the error in my thinking. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
 end_comment
 
 begin_struct
@@ -1263,39 +1263,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* pointer into Priorities */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WKPRIFACT
-value|1800
-end_define
-
-begin_comment
-comment|/* bytes each pri point is worth */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WKTIMEFACT
-value|(-600)
-end_define
-
-begin_comment
-comment|/* bytes each reprocessing is worth */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WKRECIPFACT
-value|1000
-end_define
-
-begin_comment
-comment|/* bytes each recipient is worth */
 end_comment
 
 begin_escape
@@ -2769,6 +2736,39 @@ end_decl_stmt
 
 begin_comment
 comment|/* substitution for<lwsp> */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|WkClassFact
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* multiplier for message class -> priority */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|WkRecipFact
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* multiplier for # of recipients -> priority */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|WkTimeFact
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* priority offset each time this job is run */
 end_comment
 
 begin_decl_stmt
