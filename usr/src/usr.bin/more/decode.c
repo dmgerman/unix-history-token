@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)decode.c	5.1 (Berkeley) %G%"
+literal|"@(#)decode.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -646,9 +646,6 @@ name|kp
 operator|=
 literal|'\0'
 expr_stmt|;
-if|#
-directive|if
-name|USERFILE
 comment|/* 	 * Look first for any user-defined commands. 	 */
 name|action
 operator|=
@@ -659,8 +656,6 @@ argument_list|,
 name|userendtable
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * If didn't find user-defined command, 	 * try the normal default commands. 	 */
 if|if
 condition|(
@@ -846,9 +841,6 @@ name|void
 name|init_cmd
 parameter_list|()
 block|{
-if|#
-directive|if
-name|USERFILE
 name|char
 modifier|*
 name|filename
@@ -994,8 +986,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
