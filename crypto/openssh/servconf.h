@@ -224,13 +224,27 @@ name|int
 name|dsa_authentication
 decl_stmt|;
 comment|/* If true, permit DSA authentication. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+name|int
+name|kerberos_authentication
+decl_stmt|;
+comment|/* If true, permit Kerberos auth. */
+endif|#
+directive|endif
+comment|/* KRB4 || KRB5 */
 ifdef|#
 directive|ifdef
 name|KRB4
-name|int
-name|krb4_authentication
-decl_stmt|;
-comment|/* If true, permit Kerberos v4 						 * authentication. */
 name|int
 name|krb4_or_local_passwd
 decl_stmt|;
@@ -244,9 +258,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KRB5
-name|int
-name|krb5_authentication
-decl_stmt|;
 name|int
 name|krb5_tgt_passing
 decl_stmt|;

@@ -165,7 +165,7 @@ if|if
 condition|(
 name|options
 operator|.
-name|krb5_authentication
+name|kerberos_authentication
 operator|==
 literal|1
 condition|)
@@ -194,7 +194,7 @@ if|if
 condition|(
 name|options
 operator|.
-name|krb4_authentication
+name|kerberos_authentication
 operator|==
 literal|1
 condition|)

@@ -1182,7 +1182,7 @@ argument_list|)
 expr_stmt|;
 name|packet_start
 argument_list|(
-name|SSH_SMSG_AUTH_KRB4_RESPONSE
+name|SSH_SMSG_AUTH_KERBEROS_RESPONSE
 argument_list|)
 expr_stmt|;
 name|packet_put_string

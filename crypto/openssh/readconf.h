@@ -98,21 +98,26 @@ name|int
 name|skey_authentication
 decl_stmt|;
 comment|/* Try S/Key or TIS authentication. */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 name|int
-name|krb4_authentication
+name|kerberos_authentication
 decl_stmt|;
-comment|/* Try Kerberos v4 						 * authentication. */
+comment|/* Try Kerberos authentication. */
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|KRB5
-name|int
-name|krb5_authentication
-decl_stmt|;
 name|int
 name|krb5_tgt_passing
 decl_stmt|;

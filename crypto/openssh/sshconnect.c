@@ -3150,7 +3150,7 @@ goto|;
 block|}
 name|packet_start
 argument_list|(
-name|SSH_CMSG_AUTH_KRB5
+name|SSH_CMSG_AUTH_KERBEROS
 argument_list|)
 expr_stmt|;
 name|packet_put_string
@@ -3203,7 +3203,7 @@ block|{
 case|case
 name|SSH_SMSG_FAILURE
 case|:
-comment|/* Should really be SSH_SMSG_AUTH_KRB5_FAILURE */
+comment|/* Should really be SSH_SMSG_AUTH_KERBEROS_FAILURE */
 name|debug
 argument_list|(
 literal|"Kerberos V5 authentication failed."
@@ -3215,9 +3215,9 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-name|SSH_SMSG_AUTH_KRB5_RESPONSE
+name|SSH_SMSG_AUTH_KERBEROS_RESPONSE
 case|:
-comment|/* SSH_SMSG_AUTH_KRB5_SUCCESS */
+comment|/* SSH_SMSG_AUTH_KERBEROS_SUCCESS */
 name|debug
 argument_list|(
 literal|"Kerberos V5 authentication accepted."
@@ -3666,7 +3666,7 @@ goto|;
 block|}
 name|packet_start
 argument_list|(
-name|SSH_CMSG_HAVE_KRB5_TGT
+name|SSH_CMSG_HAVE_KERBEROS_TGT
 argument_list|)
 expr_stmt|;
 name|packet_put_string

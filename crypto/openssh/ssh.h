@@ -435,14 +435,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSH_AUTH_KRB4
+name|SSH_AUTH_KERBEROS
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSH_PASS_KRB4_TGT
+name|SSH_PASS_KERBEROS_TGT
 value|7
 end_define
 
@@ -455,20 +455,6 @@ define|#
 directive|define
 name|SSH_PASS_AFS_TOKEN
 value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH_AUTH_KRB5
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH_PASS_KRB5_TGT
-value|30
 end_define
 
 begin_comment
@@ -971,7 +957,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_CMSG_AUTH_KRB4
+name|SSH_CMSG_AUTH_KERBEROS
 value|42
 end_define
 
@@ -982,7 +968,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_SMSG_AUTH_KRB4_RESPONSE
+name|SSH_SMSG_AUTH_KERBEROS_RESPONSE
 value|43
 end_define
 
@@ -993,13 +979,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_CMSG_HAVE_KRB4_TGT
+name|SSH_CMSG_HAVE_KERBEROS_TGT
 value|44
 end_define
-
-begin_comment
-comment|/* credentials (s) */
-end_comment
 
 begin_define
 define|#
@@ -1012,26 +994,20 @@ begin_comment
 comment|/* token (s) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SSH_CMSG_AUTH_KRB5
-value|110
-end_define
+begin_comment
+comment|/* Kerberos IV tickets can't be forwarded. This is an AFS hack! */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SSH_SMSG_AUTH_KRB5_RESPONSE
-value|111
+name|SSH_CMSG_HAVE_KRB4_TGT
+value|SSH_CMSG_HAVE_KERBEROS_TGT
 end_define
 
-begin_define
-define|#
-directive|define
-name|SSH_CMSG_HAVE_KRB5_TGT
-value|112
-end_define
+begin_comment
+comment|/* credentials (s) */
+end_comment
 
 begin_comment
 comment|/*------------ definitions for login.c -------------*/
