@@ -250,6 +250,15 @@ define|#
 directive|define
 name|KB_DELAY2
 value|100
+name|int
+name|kb_prev_key
+decl_stmt|;
+comment|/* keycode previously seen */
+name|unsigned
+name|long
+name|kb_count
+decl_stmt|;
+comment|/* # of processed key strokes */
 block|}
 struct|;
 end_struct
