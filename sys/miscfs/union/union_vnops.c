@@ -6304,11 +6304,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"union_getwritemount: missing upper layer"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|EACCES
+operator|)
+return|;
 block|}
 return|return
 operator|(
