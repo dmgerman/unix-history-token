@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.136 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.137 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -957,6 +957,10 @@ directive|define
 name|SOLARIS
 end_define
 
+begin_comment
+comment|/* for back compat only -- use -DSOLARIS=203 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -998,28 +1002,6 @@ include|#
 directive|include
 file|<sys/time.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|gethostbyname
-value|solaris_gethostbyname
-end_define
-
-begin_comment
-comment|/* get working version */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|gethostbyaddr
-value|solaris_gethostbyaddr
-end_define
-
-begin_comment
-comment|/* get working version */
-end_comment
 
 begin_define
 define|#
@@ -1097,6 +1079,41 @@ end_define
 
 begin_comment
 comment|/* allow full size syslog buffer */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|<
+literal|204
+end_if
+
+begin_define
+define|#
+directive|define
+name|gethostbyname
+value|solaris_gethostbyname
+end_define
+
+begin_comment
+comment|/* get good version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|gethostbyaddr
+value|solaris_gethostbyaddr
+end_define
+
+begin_comment
+comment|/* get good version */
 end_comment
 
 begin_endif

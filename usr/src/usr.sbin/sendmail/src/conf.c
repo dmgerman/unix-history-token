@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.137 (Berkeley) %G%"
+literal|"@(#)conf.c	8.138 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9861,11 +9861,18 @@ begin_comment
 comment|/* **  SOLARIS_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX ** **	Solaris versions at least through 2.3 don't properly deliver a **	canonical h_name field.  This tries to work around it. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SOLARIS
-end_ifdef
+argument_list|)
+operator|&&
+name|SOLARIS
+operator|<
+literal|204
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -9888,9 +9895,11 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|SOLARIS_2_3
+if|#
+directive|if
+name|SOLARIS
+operator|==
+literal|203
 specifier|static
 name|struct
 name|hostent
@@ -9973,9 +9982,11 @@ name|int
 name|type
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|SOLARIS_2_3
+if|#
+directive|if
+name|SOLARIS
+operator|==
+literal|203
 specifier|static
 name|struct
 name|hostent
