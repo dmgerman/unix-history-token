@@ -71,6 +71,16 @@ begin_comment
 comment|/*  * Notes:  * We want to be able to use NIS netgroups properly while retaining  * the ability to use a local /etc/netgroup file. Unfortunately, you  * can't really do both at the same time - at least, not efficiently.  * NetBSD deals with this problem by creating a netgroup database  * using Berkeley DB (just like the password database) that allows  * for lookups using netgroup, netgroup.byuser or netgroup.byhost  * searches. This is a neat idea, but I don't have time to implement  * something like that now. (I think ultimately it would be nice  * if we DB-fied the group and netgroup stuff all in one shot, but  * for now I'm satisfied just to have something that works well  * without requiring massive code changes.)  *   * Therefore, to still permit the use of the local file and maintain  * optimum NIS performance, we allow for the following conditions:  *  * - If /etc/netgroup does not exist and NIS is turned on, we use  *   NIS netgroups only.  *  * - If /etc/netgroup exists but is empty, we use NIS netgroups  *   only.  *  * - If /etc/netgroup exists and contains _only_ a '+', we use  *   NIS netgroups only.  *  * - If /etc/netgroup exists, contains locally defined netgroups  *   and a '+', we use a mixture of NIS and the local entries.  *   This method should return the same NIS data as just using  *   NIS alone, but it will be slower if the NIS netgroup database  *   is large (innetgr() in particular will suffer since extra  *   processing has to be done in order to determine memberships  *   using just the raw netgroup data).  *  * - If /etc/netgroup exists and contains only locally defined  *   netgroup entries, we use just those local entries and ignore  *   NIS (this is the original, pre-NIS behavior).  */
 end_comment
 
+begin_comment
+comment|/*  * NIS+ servers in YP emulation mode suport only the netgroup map  * (they have no netgroup.byhost and netgroup.byuser 'reverse' maps)  * so we need this for compatibility.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHARITABLE
+end_define
+
 begin_include
 include|#
 directive|include
