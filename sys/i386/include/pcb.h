@@ -68,12 +68,6 @@ decl_stmt|;
 name|int
 name|pcb_dr7
 decl_stmt|;
-name|struct
-name|pcb_ldt
-modifier|*
-name|pcb_ldt
-decl_stmt|;
-comment|/* per process (user) LDT */
 name|union
 name|savefpu
 name|pcb_save

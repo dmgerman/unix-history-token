@@ -362,6 +362,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/globals.h>
 end_include
 
@@ -4272,13 +4278,17 @@ name|td_pcb
 decl_stmt|;
 if|if
 condition|(
-name|pcb
+name|td
 operator|->
-name|pcb_ldt
+name|td_proc
+operator|->
+name|p_md
+operator|.
+name|md_ldt
 condition|)
 name|user_ldt_free
 argument_list|(
-name|pcb
+name|td
 argument_list|)
 expr_stmt|;
 name|bzero
