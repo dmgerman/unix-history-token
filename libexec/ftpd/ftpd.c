@@ -1787,8 +1787,7 @@ case|case
 literal|'v'
 case|:
 name|ftpdebug
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 break|break;
 default|default:
