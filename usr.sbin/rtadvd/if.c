@@ -837,6 +837,11 @@ name|IFF_UP
 operator|)
 return|;
 block|}
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ifr

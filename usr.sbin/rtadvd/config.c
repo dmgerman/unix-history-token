@@ -2411,6 +2411,11 @@ operator|->
 name|ipr_origin
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
