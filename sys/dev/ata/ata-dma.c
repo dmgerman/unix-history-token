@@ -5939,6 +5939,10 @@ name|apiomode
 expr_stmt|;
 return|return;
 case|case
+literal|0x02131166
+case|:
+comment|/* ServerWorks CSB6 ATA 100 controller (chan 0+1) */
+case|case
 literal|0x02121166
 case|:
 comment|/* ServerWorks CSB5 ATA66/100 controller */
@@ -5948,9 +5952,24 @@ name|udmamode
 operator|>=
 literal|5
 operator|&&
-name|chiprev
+operator|(
+name|chiptype
+operator|==
+literal|0x02131166
+operator|||
+operator|(
+name|chiptype
+operator|==
+literal|0x02121166
+operator|&&
+name|pci_get_revid
+argument_list|(
+name|parent
+argument_list|)
 operator|>=
 literal|0x92
+operator|)
+operator|)
 condition|)
 block|{
 name|error
@@ -6081,6 +6100,11 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+comment|/* FALLTHROUGH */
+case|case
+literal|0x02171166
+case|:
+comment|/* ServerWorks CSB6 ATA 66 controller (chan 2) */
 if|if
 condition|(
 name|udmamode
