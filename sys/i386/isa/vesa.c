@@ -917,6 +917,13 @@ name|STATE_ALL
 value|(STATE_HW | STATE_DATA | STATE_DAC | STATE_REG)
 end_define
 
+begin_define
+define|#
+directive|define
+name|STATE_MAXSIZE
+value|(2 * PAGE_SIZE)
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -2546,7 +2553,7 @@ name|vmf
 operator|.
 name|vmf_ecx
 operator|=
-name|STATE_MOST
+name|STATE_ALL
 expr_stmt|;
 name|vmf
 operator|.
@@ -2620,6 +2627,17 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+name|STATE_MAXSIZE
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|bzero
 argument_list|(
 operator|&
@@ -2641,7 +2659,7 @@ name|vmf
 operator|.
 name|vmf_ecx
 operator|=
-name|STATE_MOST
+name|STATE_ALL
 expr_stmt|;
 name|vmf
 operator|.
@@ -2705,6 +2723,15 @@ name|vmf
 argument_list|,
 operator|&
 name|vesa_vmcontext
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 return|return
@@ -4718,13 +4745,33 @@ operator|>
 literal|0
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|has_vesa_bios
+condition|)
 return|return
 operator|(
-name|has_vesa_bios
-condition|?
-literal|0
-else|:
 literal|1
+operator|)
+return|;
+comment|/* Get a second page to support STATE_MAXSIZE. */
+operator|(
+name|void
+operator|)
+name|vm86_addpage
+argument_list|(
+operator|&
+name|vesa_vmcontext
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
