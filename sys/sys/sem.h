@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.4 1995/07/08 16:36:28 joerg Exp $ */
+comment|/* $Id: sem.h,v 1.3.4.1 1995/12/23 17:09:48 joerg Exp $ */
 end_comment
 
 begin_comment
@@ -685,6 +685,25 @@ name|ix
 parameter_list|)
 value|((struct sem_undo *)(((long)semu)+ix * SEMUSZ))
 end_define
+
+begin_comment
+comment|/*  * Process sem_undo vectors at proc exit.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|semexit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Parameters to the semconfig system call  */
