@@ -249,16 +249,6 @@ name|int
 name|pid
 decl_stmt|;
 comment|/* The child's process ID */
-comment|/* Temporary file to use for job */
-name|char
-name|tfile
-index|[
-sizeof|sizeof
-argument_list|(
-name|TMPPAT
-argument_list|)
-index|]
-decl_stmt|;
 name|struct
 name|GNode
 modifier|*
