@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.14	82/10/21	*/
+comment|/*	raw_imp.c	4.15	83/02/10	*/
 end_comment
 
 begin_include
@@ -36,6 +36,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/errno.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/raw_cb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../netinet/in.h"
 end_include
 
@@ -48,25 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../netimp/if_imp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/raw_cb.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_comment

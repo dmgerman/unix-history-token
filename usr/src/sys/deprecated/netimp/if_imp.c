@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.47	83/02/10	*/
+comment|/*	if_imp.c	4.48	83/02/10	*/
 end_comment
 
 begin_include
@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/errno.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../vax/cpu.h"
 end_include
 
@@ -161,12 +167,6 @@ begin_include
 include|#
 directive|include
 file|"../netimp/if_imphost.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_comment

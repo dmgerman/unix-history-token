@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.39	83/01/17	*/
+comment|/*	tcp_subr.c	4.40	83/02/10	*/
 end_comment
 
 begin_include
@@ -42,13 +42,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|"../h/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/in.h"
 end_include
 
 begin_include
@@ -61,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/in_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/if.h"
 end_include
 
 begin_include
@@ -121,12 +127,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/tcpip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.15	82/12/14	*/
+comment|/*	raw_cb.c	4.16	83/02/10	*/
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"../h/errno.h"
 end_include
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|"../vax/mtpr.h"
 end_include
 
 begin_comment

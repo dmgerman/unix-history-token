@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_ip.c	4.16	82/12/14	*/
+comment|/*	raw_ip.c	4.17	83/02/10	*/
 end_comment
 
 begin_include
@@ -36,7 +36,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/errno.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/raw_cb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_include
@@ -61,24 +79,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/ip_var.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/raw_cb.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/route.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_comment

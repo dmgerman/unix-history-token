@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_debug.c	4.8	82/10/30	*/
+comment|/*	tcp_debug.c	4.9	83/02/10	*/
 end_comment
 
 begin_include
@@ -48,13 +48,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|"../h/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/in.h"
 end_include
 
 begin_include
@@ -67,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/in_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/if.h"
 end_include
 
 begin_include
@@ -145,12 +151,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/tcp_debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_decl_stmt

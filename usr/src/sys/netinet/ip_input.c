@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.63	83/02/05	*/
+comment|/*	ip_input.c	1.64	83/02/10	*/
 end_comment
 
 begin_include
@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|"../h/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|"../h/time.h"
 end_include
 
 begin_include

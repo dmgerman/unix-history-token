@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.45	83/01/17	*/
+comment|/*	ip_output.c	1.46	83/02/10	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"../h/errno.h"
 end_include
 
 begin_include
@@ -36,6 +36,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../netinet/in.h"
 end_include
 
@@ -43,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/in_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/if.h"
 end_include
 
 begin_include
@@ -66,13 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|"../machine/mtpr.h"
 end_include
 
 begin_decl_stmt

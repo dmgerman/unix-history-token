@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	4.30	83/01/17	*/
+comment|/*	tcp_timer.c	4.31	83/02/10	*/
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|"../h/errno.h"
 end_include
 
 begin_include

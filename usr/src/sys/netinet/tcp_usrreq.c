@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.73	83/01/17	*/
+comment|/*	tcp_usrreq.c	1.74	83/02/10	*/
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"../h/protosw.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/errno.h"
 end_include
 
 begin_include
@@ -121,12 +127,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/tcp_debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_comment
