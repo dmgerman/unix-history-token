@@ -1217,7 +1217,7 @@ comment|/* Get a response from the user, somehow or other. */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ask
 parameter_list|(
 name|pat
@@ -1446,10 +1446,22 @@ index|]
 operator|=
 literal|'\n'
 expr_stmt|;
-name|r
-operator|=
+name|buf
+index|[
 literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
+name|say1
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* signal possible error */
 block|}
 if|if
 condition|(
@@ -1482,6 +1494,20 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+comment|/* if there was an error, return it */
+else|else
+return|return
+literal|1
+return|;
 block|}
 end_function
 
