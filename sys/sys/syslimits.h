@@ -37,11 +37,22 @@ name|_SYS_PARAM_H_
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|__GNUC__
+end_if
+
 begin_warning
 warning|#
 directive|warning
 literal|"No user-serviceable parts inside."
 end_warning
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
