@@ -1,28 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* terminal.c -- How to handle the physical terminal for Info. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     This file has appeared in prior works by the Free Software Foundation;    thus it carries copyright dates from 1988 through 1993.     Copyright (C) 1988, 89, 90, 91, 92, 93, 96 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* terminal.c -- How to handle the physical terminal for Info.    $Id: terminal.c,v 1.9 1998/02/22 00:05:15 karl Exp $     Copyright (C) 1988, 89, 90, 91, 92, 93, 96, 97, 98    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|"info.h"
 end_include
 
 begin_include
@@ -37,21 +21,98 @@ directive|include
 file|"termdep.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_comment
+comment|/* The Unix termcap interface code. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NCURSES_TERMCAP_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ncurses/termcap.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_TERMCAP_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<termcap.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* On Solaris2, sys/types.h #includes sys/reg.h, which #defines PC.    Unfortunately, PC is a global variable used by the termcap library. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PC
+end_undef
+
+begin_comment
+comment|/* Termcap requires these variables, whether we access them or not. */
+end_comment
+
 begin_decl_stmt
-specifier|extern
-name|void
+name|char
 modifier|*
-name|xmalloc
-argument_list|()
+name|BC
 decl_stmt|,
 modifier|*
-name|xrealloc
-argument_list|()
+name|UP
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|PC
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The Unix termcap interface code. */
+comment|/* Pad character */
+end_comment
+
+begin_decl_stmt
+name|short
+name|ospeed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Terminal output baud rate */
 end_comment
 
 begin_decl_stmt
@@ -83,20 +144,29 @@ end_decl_stmt
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|tputs
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_TERMCAP_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_NCURSES_TERMCAP_H */
+end_comment
 
 begin_comment
 comment|/* Function "hooks".  If you make one of these point to a function, that    function is called when appropriate instead of its namesake.  Your    function is called with exactly the same arguments that were passed    to the namesake function. */
@@ -315,56 +385,20 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*			Terminal and Termcap			    */
+comment|/*                      Terminal and Termcap                        */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
 comment|/* **************************************************************** */
 end_comment
-
-begin_comment
-comment|/* On Solaris2, sys/types.h #includes sys/reg.h, which #defines PC.    Unfortunately, PC is a global variable used by the termcap library. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PC
-end_undef
-
-begin_comment
-comment|/* TERMCAP requires these variables, whether we access them or not. */
-end_comment
-
-begin_decl_stmt
-name|char
-name|PC
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|BC
-decl_stmt|,
-modifier|*
-name|UP
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|short
-name|ospeed
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* A buffer which holds onto the current terminal description, and a pointer    used to float within it. */
@@ -444,6 +478,17 @@ name|term_al
 decl_stmt|,
 modifier|*
 name|term_dl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|term_keypad_on
+decl_stmt|,
+modifier|*
+name|term_keypad_off
 decl_stmt|;
 end_decl_stmt
 
@@ -567,9 +612,13 @@ name|term_ke
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Although I can't find any documentation that says this is supposed to    return its argument, all the code I've looked at (termutils, less)    does so, so fine.  */
+end_comment
+
 begin_function
 specifier|static
-name|void
+name|int
 name|output_character_function
 parameter_list|(
 name|c
@@ -585,6 +634,9 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+return|return
+name|c
+return|;
 block|}
 end_function
 
@@ -604,7 +656,7 @@ value|do { \     if (string) \       tputs (string, 1, output_character_function
 end_define
 
 begin_comment
-comment|/* Tell the terminal that we will be doing cursor addressable motion. */
+comment|/* Tell the terminal that we will be doing cursor addressable motion.  */
 end_comment
 
 begin_function
@@ -613,25 +665,79 @@ name|void
 name|terminal_begin_using_terminal
 parameter_list|()
 block|{
+name|RETSIGTYPE
+function_decl|(
+modifier|*
+name|sigsave
+function_decl|)
+parameter_list|()
+function_decl|;
+if|if
+condition|(
+name|term_keypad_on
+condition|)
+name|send_to_terminal
+argument_list|(
+name|term_keypad_on
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|term_begin_use
+operator|||
+operator|!
+operator|*
+name|term_begin_use
+condition|)
+return|return;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
+name|sigsave
+operator|=
+name|signal
+argument_list|(
+name|SIGWINCH
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|send_to_terminal
 argument_list|(
 name|term_begin_use
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|term_ks
-condition|)
-name|send_to_terminal
+comment|/* Without this fflush and sleep, running info in a shelltool or      cmdtool (TERM=sun-cmd) with scrollbars loses -- the scrollbars are      not restored properly.      From: strube@physik3.gwdg.de (Hans Werner Strube).  */
+name|fflush
 argument_list|(
-name|term_ks
+name|stdout
 argument_list|)
 expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
+name|signal
+argument_list|(
+name|SIGWINCH
+argument_list|,
+name|sigsave
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/* Tell the terminal that we will not be doing any more cursor addressable    motion. */
+comment|/* Tell the terminal that we will not be doing any more cursor    addressable motion. */
 end_comment
 
 begin_function
@@ -640,20 +746,73 @@ name|void
 name|terminal_end_using_terminal
 parameter_list|()
 block|{
+name|RETSIGTYPE
+function_decl|(
+modifier|*
+name|sigsave
+function_decl|)
+parameter_list|()
+function_decl|;
 if|if
 condition|(
-name|term_ke
+name|term_keypad_off
 condition|)
 name|send_to_terminal
 argument_list|(
-name|term_ke
+name|term_keypad_off
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|term_end_use
+operator|||
+operator|!
+operator|*
+name|term_end_use
+condition|)
+return|return;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
+name|sigsave
+operator|=
+name|signal
+argument_list|(
+name|SIGWINCH
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|send_to_terminal
 argument_list|(
 name|term_end_use
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
+name|signal
+argument_list|(
+name|SIGWINCH
+argument_list|,
+name|sigsave
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -665,15 +824,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		     Necessary Terminal Functions		    */
+comment|/*                   Necessary Terminal Functions                   */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -825,6 +984,10 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* page-up */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -838,31 +1001,9 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-modifier|*
-name|term_kh
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|term_kH
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* page-down */
+end_comment
 
 begin_comment
 comment|/* Move the cursor to the terminal location of X and Y. */
@@ -1475,7 +1616,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* If we are scrolling down, delete AMOUNT lines at END.  Then insert 	 AMOUNT lines at START. */
+comment|/* If we are scrolling down, delete AMOUNT lines at END.  Then insert          AMOUNT lines at START. */
 if|if
 condition|(
 name|amount
@@ -1498,7 +1639,7 @@ name|amount
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we are scrolling up, delete AMOUNT lines before START.  This 	 actually does the upwards scroll.  Then, insert AMOUNT lines 	 after the already scrolled region (i.e., END - AMOUNT). */
+comment|/* If we are scrolling up, delete AMOUNT lines before START.  This          actually does the upwards scroll.  Then, insert AMOUNT lines          after the already scrolled region (i.e., END - AMOUNT). */
 if|if
 condition|(
 name|amount
@@ -1762,7 +1903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialize the terminal which is known as TERMINAL_NAME.  If this terminal    doesn't have cursor addressability, TERMINAL_IS_DUMB_P becomes non-zero.    The variables SCREENHEIGHT and SCREENWIDTH are set to the dimensions that    this terminal actually has.  The variable TERMINAL_HAS_META_P becomes non-    zero if this terminal supports a Meta key.  Finally, the terminal screen is    cleared. */
+comment|/* Initialize the terminal which is known as TERMINAL_NAME.  If this    terminal doesn't have cursor addressability, `terminal_is_dumb_p'    becomes nonzero.  The variables SCREENHEIGHT and SCREENWIDTH are set    to the dimensions that this terminal actually has.  The variable    TERMINAL_HAS_META_P becomes nonzero if this terminal supports a Meta    key.  Finally, the terminal screen is cleared. */
 end_comment
 
 begin_function
@@ -1929,10 +2070,6 @@ expr_stmt|;
 name|term_kP
 operator|=
 name|term_kN
-operator|=
-name|term_kh
-operator|=
-name|term_kH
 operator|=
 operator|(
 name|char
@@ -2234,6 +2371,26 @@ operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
+name|term_keypad_on
+operator|=
+name|tgetstr
+argument_list|(
+literal|"ks"
+argument_list|,
+operator|&
+name|buffer
+argument_list|)
+expr_stmt|;
+name|term_keypad_off
+operator|=
+name|tgetstr
+argument_list|(
+literal|"ke"
+argument_list|,
+operator|&
+name|buffer
+argument_list|)
+expr_stmt|;
 comment|/* Check to see if this terminal has a meta key. */
 name|terminal_has_meta_p
 operator|=
@@ -2355,47 +2512,6 @@ operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
-name|term_kh
-operator|=
-name|tgetstr
-argument_list|(
-literal|"kh"
-argument_list|,
-operator|&
-name|buffer
-argument_list|)
-expr_stmt|;
-name|term_kH
-operator|=
-name|tgetstr
-argument_list|(
-literal|"kH"
-argument_list|,
-operator|&
-name|buffer
-argument_list|)
-expr_stmt|;
-comment|/* Enable keypad and cursor keys if ks defined */
-name|term_ks
-operator|=
-name|tgetstr
-argument_list|(
-literal|"ks"
-argument_list|,
-operator|&
-name|buffer
-argument_list|)
-expr_stmt|;
-name|term_ke
-operator|=
-name|tgetstr
-argument_list|(
-literal|"ke"
-argument_list|,
-operator|&
-name|buffer
-argument_list|)
-expr_stmt|;
 comment|/* If this terminal is not cursor addressable, then it is really dumb. */
 if|if
 condition|(
@@ -2405,9 +2521,6 @@ condition|)
 name|terminal_is_dumb_p
 operator|=
 literal|1
-expr_stmt|;
-name|terminal_begin_using_terminal
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2420,15 +2533,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		 How to Read Characters From the Terminal	    */
+comment|/*               How to Read Characters From the Terminal           */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -2607,6 +2720,9 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+name|terminal_begin_using_terminal
+argument_list|()
+expr_stmt|;
 name|tty
 operator|=
 name|fileno
@@ -2700,15 +2816,31 @@ operator|~
 name|IXON
 operator|)
 expr_stmt|;
+comment|/* These output flags are not part of POSIX, so only use them if they    are defined.  */
+ifdef|#
+directive|ifdef
+name|ONLCR
 name|ttybuff
 operator|.
 name|c_oflag
 operator|&=
-operator|(
 operator|~
 name|ONLCR
-operator|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OCRNL
+name|ttybuff
+operator|.
+name|c_oflag
+operator|&=
+operator|~
+name|OCRNL
+expr_stmt|;
+endif|#
+directive|endif
 name|ttybuff
 operator|.
 name|c_lflag
@@ -2781,8 +2913,36 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VLNEXT
+if|if
+condition|(
+name|ttybuff
+operator|.
+name|c_cc
+index|[
+name|VLNEXT
+index|]
+operator|==
+literal|'\026'
+condition|)
+name|ttybuff
+operator|.
+name|c_cc
+index|[
+name|VLNEXT
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* VLNEXT */
+endif|#
+directive|endif
+comment|/* TERMIOS or TERMIO */
 if|#
 directive|if
 name|defined

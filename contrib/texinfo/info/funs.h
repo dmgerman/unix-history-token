@@ -234,14 +234,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|info_history_node
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|info_last_menu_item
 parameter_list|()
 function_decl|;
@@ -315,6 +307,14 @@ begin_function_decl
 specifier|extern
 name|void
 name|info_dir_node
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|info_history_node
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -456,7 +456,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Functions declared in "./echo_area.c". */
+comment|/* Functions declared in "./echo-area.c". */
 end_comment
 
 begin_function_decl

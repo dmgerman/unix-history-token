@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nodemenu.c -- Produce a menu of all visited nodes. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* nodemenu.c -- Produce a menu of all visited nodes.    $Id: nodemenu.c,v 1.7 1997/07/24 21:30:30 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -26,14 +22,17 @@ parameter_list|()
 block|{
 return|return
 operator|(
+name|_
+argument_list|(
 literal|"\n\ * Menu:\n\   (File)Node                        Lines   Size   Containing File\n\   ----------                        -----   ----   ---------------"
+argument_list|)
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Produce a formatted line of information about NODE.  Here is what we want    the output listing to look like:  * Menu:   (File)Node                        Lines   Size   Containing File   ----------                        -----   ----   --------------- * (emacs)Buffers::                  48      2230   /usr/gnu/info/emacs/emacs-1 * (autoconf)Writing configure.in::  123     58789  /usr/gnu/info/autoconf/autoconf-1 * (dir)Top::			    40      589    /usr/gnu/info/dir */
+comment|/* Produce a formatted line of information about NODE.  Here is what we want    the output listing to look like:  * Menu:   (File)Node                        Lines   Size   Containing File   ----------                        -----   ----   --------------- * (emacs)Buffers::                  48      2230   /usr/gnu/info/emacs/emacs-1 * (autoconf)Writing configure.in::  123     58789  /usr/gnu/info/autoconf/autoconf-1 * (dir)Top::                        40      589    /usr/gnu/info/dir */
 end_comment
 
 begin_function
@@ -327,12 +326,10 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|strdup
+name|xstrdup
 argument_list|(
 name|line_buffer
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -463,12 +460,14 @@ name|iw_index
 operator|=
 literal|0
 init|;
+operator|(
 name|info_win
 operator|=
 name|info_windows
 index|[
 name|iw_index
 index|]
+operator|)
 condition|;
 name|iw_index
 operator|++
@@ -667,7 +666,7 @@ name|newlen
 operator|++
 expr_stmt|;
 block|}
-comment|/* We have free ()'d and marked all of the duplicate slots. 	 Copy the live slots rather than pruning the dead slots. */
+comment|/* We have free ()'d and marked all of the duplicate slots.          Copy the live slots rather than pruning the dead slots. */
 name|temp
 operator|=
 operator|(
@@ -759,7 +758,10 @@ literal|"%s"
 argument_list|,
 name|replace_in_documentation
 argument_list|(
+name|_
+argument_list|(
 literal|"Here is the menu of nodes you have recently visited.\n\ Select one from this menu, or use `\\[history-node]' in another window.\n"
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -851,7 +853,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|list_visited_nodes
 argument_list|,
+argument|_(
 literal|"Make a window containing a menu of all of the currently visited nodes"
+argument|)
 argument_list|)
 end_macro
 
@@ -919,7 +923,10 @@ if|if
 condition|(
 operator|!
 name|new
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|window
 operator|->
 name|next
@@ -930,6 +937,19 @@ name|window
 operator|->
 name|next
 expr_stmt|;
+comment|/* If there is more than one window, wrap around. */
+elseif|else
+if|if
+condition|(
+name|window
+operator|!=
+name|windows
+condition|)
+name|new
+operator|=
+name|windows
+expr_stmt|;
+block|}
 comment|/* If we still don't have a window, make a new one to contain the list. */
 if|if
 condition|(
@@ -1000,14 +1020,14 @@ argument_list|,
 name|nodemenu_nodename
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* Even if this is an internal node, we don't want the window      system to treat it specially.  So we turn off the internalness      of it here. */
-name|node
-operator|->
-name|flags
-operator|&=
-operator|~
-name|N_IsInternal
-expr_stmt|;
+comment|/* Why?  We depend on internal_info_node_p returning true, so we must      not remove the flag.  Otherwise, the *Node Menu* nodes themselves      appear in the node menu.  --Andreas Schwab<schwab@issan.informatik.uni-dortmund.de>.  */
+block|node->flags&= ~N_IsInternal;
+endif|#
+directive|endif
 comment|/* If this window is already showing a node menu, reuse the existing node      slot. */
 block|{
 name|int
@@ -1083,7 +1103,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|select_visited_node
 argument_list|,
+argument|_(
 literal|"Select a node which has been previously visited in a visible window"
+argument|)
 argument_list|)
 end_macro
 
@@ -1131,7 +1153,10 @@ name|info_read_completing_in_echo_area
 argument_list|(
 name|window
 argument_list|,
+name|_
+argument_list|(
 literal|"Select visited node: "
+argument_list|)
 argument_list|,
 name|menu
 argument_list|)
@@ -1190,7 +1215,10 @@ name|entry
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"The reference disappeared! (%s)."
+argument_list|)
 argument_list|,
 name|line
 argument_list|)

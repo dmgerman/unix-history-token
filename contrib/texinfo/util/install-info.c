@@ -1,25 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* install-info -- create Info directory entry(ies) for an Info file.    Copyright (C) 1996 Free Software Foundation, Inc.  $Id: install-info.c,v 1.12 1996/10/03 23:13:36 karl Exp $  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* install-info -- create Info directory entry(ies) for an Info file.    $Id: install-info.c,v 1.21 1998/03/01 15:38:45 karl Exp $     Copyright (C) 1996, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INSTALL_INFO_VERSION_STRING
-value|"GNU install-info (Texinfo 3.9) 1.2"
-end_define
-
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|"system.h"
 end_include
 
 begin_include
@@ -28,58 +15,16 @@ directive|include
 file|<getopt.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_comment
-comment|/* Get O_RDONLY.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_SYS_FCNTL_H
+name|HAVE_LIBZ
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_SYS_FCNTL_H */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_FILE_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
+file|<zlib.h>
 end_include
 
 begin_endif
@@ -150,7 +95,7 @@ comment|/* Data structures.  */
 end_comment
 
 begin_comment
-comment|/* Record info about a single line from a file    as read into core.  */
+comment|/* Record info about a single line from a file as read into core.  */
 end_comment
 
 begin_struct
@@ -230,9 +175,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* This is used for a list of nodes found by parsing the dir file.  */
@@ -356,7 +298,10 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"virtual memory exhausted"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -368,7 +313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Like malloc but get fatal error if memory is exhausted.  */
+comment|/* Like realloc but get fatal error if memory is exhausted.  */
 end_comment
 
 begin_function
@@ -414,7 +359,10 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"virtual memory exhausted"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -426,7 +374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a newly-allocated string whose contents concatenate those of s1, s2, s3.  */
+comment|/* Return a newly-allocated string    whose contents concatenate those of S1, S2, S3.  */
 end_comment
 
 begin_function
@@ -624,7 +572,7 @@ comment|/* Error message functions.  */
 end_comment
 
 begin_comment
-comment|/* Print error message.  `s1' is printf control string, `s2' is arg for it. */
+comment|/* Print error message.  S1 is printf control string, S2 and S3 args for it. */
 end_comment
 
 begin_comment
@@ -675,11 +623,11 @@ argument_list|,
 name|s3
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|putc
 argument_list|(
-name|stderr
+literal|'\n'
 argument_list|,
-literal|"\n"
+name|stderr
 argument_list|)
 expr_stmt|;
 block|}
@@ -717,7 +665,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Warning: "
+name|_
+argument_list|(
+literal|"%s: warning: "
+argument_list|)
 argument_list|,
 name|progname
 argument_list|)
@@ -733,11 +684,11 @@ argument_list|,
 name|s3
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|putc
 argument_list|(
-name|stderr
+literal|'\n'
 argument_list|,
-literal|"\n"
+name|stderr
 argument_list|)
 expr_stmt|;
 block|}
@@ -816,7 +767,10 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|,
+name|_
+argument_list|(
 literal|" for %s"
+argument_list|)
 argument_list|)
 decl_stmt|;
 name|fatal
@@ -1070,7 +1024,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"\tTry `%s --help' for a complete list of options.\n"
+argument_list|)
 argument_list|,
 name|progname
 argument_list|)
@@ -1090,11 +1047,150 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"%s [OPTION]... [INFO-FILE [DIR-FILE]]\n\   Install INFO-FILE in the Info directory file DIR-FILE.\n\ \n\ Options:\n\ --delete          Delete existing entries in INFO-FILE;\n\                     don't insert any new entries.\n\ --defentry=TEXT   Like --entry, but only use TEXT if an entry\n\                     is not present in INFO-FILE.\n\ --defsection=TEXT Like --section, but only use TEXT if a section\n\                     is not present in INFO-FILE.\n\ --dir-file=NAME   Specify file name of Info directory file.\n\                     This is equivalent to using the DIR-FILE argument.\n\ --entry=TEXT      Insert TEXT as an Info directory entry.\n\                     TEXT should have the form of an Info menu item line\n\                     plus zero or more extra lines starting with whitespace.\n\                     If you specify more than one entry, they are all added.\n\                     If you don't specify any entries, they are determined\n\                     from information in the Info file itself.\n\ --forceentry=TEXT Like --entry, but ignore any entry in INFO-FILE.\n\ --help            Display this help and exit.\n\ --info-file=FILE  Specify Info file to install in the directory.\n\                     This is equivalent to using the INFO-FILE argument.\n\ --info-dir=DIR    Same as --dir-file=DIR/dir.\n\ --item=TEXT       Same as --entry TEXT.\n\                     An Info directory entry is actually a menu item.\n\ --quiet           Suppress warnings.\n\ --remove          Same as --delete.\n\ --section=SEC     Put this file's entries in section SEC of the directory.\n\                     If you specify more than one section, all the entries\n\                     are added in each of the sections.\n\                     If you don't specify any sections, they are determined\n\                     from information in the Info file itself.\n\ --version         Display version information and exit.\n\ \n\ Email bug reports to bug-texinfo@prep.ai.mit.edu.\n\ "
+name|_
+argument_list|(
+literal|"Usage: %s [OPTION]... [INFO-FILE [DIR-FILE]]\n\ \n\ Install INFO-FILE in the Info directory file DIR-FILE.\n\ \n\ Options:\n\ --delete          Delete existing entries in INFO-FILE;\n\                     don't insert any new entries.\n\ --defentry=TEXT   Like --entry, but only use TEXT if an entry\n\                     is not present in INFO-FILE.\n\ --defsection=TEXT Like --section, but only use TEXT if a section\n\                     is not present in INFO-FILE.\n\ --dir-file=NAME   Specify file name of Info directory file.\n\                     This is equivalent to using the DIR-FILE argument.\n\ --entry=TEXT      Insert TEXT as an Info directory entry.\n\                     TEXT should have the form of an Info menu item line\n\                     plus zero or more extra lines starting with whitespace.\n\                     If you specify more than one entry, they are all added.\n\                     If you don't specify any entries, they are determined\n\                     from information in the Info file itself.\n\ --forceentry=TEXT Like --entry, but ignore any entry in INFO-FILE.\n\ --help            Display this help and exit.\n\ --info-file=FILE  Specify Info file to install in the directory.\n\                     This is equivalent to using the INFO-FILE argument.\n\ --info-dir=DIR    Same as --dir-file=DIR/dir.\n\ --item=TEXT       Same as --entry TEXT.\n\                     An Info directory entry is actually a menu item.\n\ --quiet           Suppress warnings.\n\ --remove          Same as --delete.\n\ --section=SEC     Put this file's entries in section SEC of the directory.\n\                     If you specify more than one section, all the entries\n\                     are added in each of the sections.\n\                     If you don't specify any sections, they are determined\n\                     from information in the Info file itself.\n\ --version         Display version information and exit.\n\ \n\ Email bug reports to bug-texinfo@gnu.org.\n\ "
+argument_list|)
 argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* If DIRFILE does not exist, create a minimal one (or abort).  If it    already exists, do nothing.  */
+end_comment
+
+begin_function
+name|void
+name|ensure_dirfile_exists
+parameter_list|(
+name|dirfile
+parameter_list|)
+name|char
+modifier|*
+name|dirfile
+decl_stmt|;
+block|{
+name|int
+name|desc
+init|=
+name|open
+argument_list|(
+name|dirfile
+argument_list|,
+name|O_RDONLY
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|desc
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|ENOENT
+condition|)
+block|{
+name|FILE
+modifier|*
+name|f
+decl_stmt|;
+name|char
+modifier|*
+name|readerr
+init|=
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+decl_stmt|;
+name|close
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+name|f
+operator|=
+name|fopen
+argument_list|(
+name|dirfile
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f
+condition|)
+block|{
+name|fputs
+argument_list|(
+name|_
+argument_list|(
+literal|"This is the file .../info/dir, which contains the\n\ topmost node of the Info hierarchy, called (dir)Top.\n\ The first time you invoke Info you start off looking at this node.\n\
+literal|\n\ File: dir,\tNode: Top,\tThis is the top of the INFO tree\n\ \n\   This (the Directory node) gives a menu of major topics.\n\   Typing \"q\" exits, \"?\" lists all Info commands, \"d\" returns here,\n\   \"h\" gives a primer for first-timers,\n\   \"mEmacs<Return>\" visits the Emacs manual, etc.\n\ \n\   In Emacs, you can click mouse button 2 on a menu item or cross reference\n\   to select it.\n\ \n\ * Menu:\n\ "
+argument_list|)
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|pfatal_with_name
+argument_list|(
+name|dirfile
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Didn't exist, but couldn't open for writing.  */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"%s: could not read (%s) and could not create (%s)\n"
+argument_list|)
+argument_list|,
+name|dirfile
+argument_list|,
+name|readerr
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+name|close
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+comment|/* It already existed, so fine.  */
 block|}
 end_function
 
@@ -1123,26 +1219,6 @@ literal|'r'
 block|}
 block|,
 block|{
-literal|"defentry"
-block|,
-name|required_argument
-block|,
-name|NULL
-block|,
-literal|'E'
-block|}
-block|,
-block|{
-literal|"defsection"
-block|,
-name|required_argument
-block|,
-name|NULL
-block|,
-literal|'S'
-block|}
-block|,
-block|{
 literal|"dir-file"
 block|,
 name|required_argument
@@ -1160,16 +1236,6 @@ block|,
 name|NULL
 block|,
 literal|'e'
-block|}
-block|,
-block|{
-literal|"forceentry"
-block|,
-name|required_argument
-block|,
-name|NULL
-block|,
-literal|'f'
 block|}
 block|,
 block|{
@@ -1263,6 +1329,7 @@ begin_escape
 end_escape
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -1406,6 +1473,32 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SETLOCALE
+comment|/* Set locale via LC_ALL.  */
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Set the text message domain.  */
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -1462,7 +1555,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: Specify the Info directory only once.\n"
+argument_list|)
 argument_list|,
 name|progname
 argument_list|)
@@ -1488,7 +1584,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: Specify the Info directory only once.\n"
+argument_list|)
 argument_list|,
 name|progname
 argument_list|)
@@ -1657,7 +1756,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: Specify the Info file only once.\n"
+argument_list|)
 argument_list|,
 name|progname
 argument_list|)
@@ -1753,14 +1855,23 @@ break|break;
 case|case
 literal|'V'
 case|:
-name|puts
+name|printf
 argument_list|(
-name|INSTALL_INFO_VERSION_STRING
+literal|"install-info (GNU %s) %s\n"
+argument_list|,
+name|PACKAGE
+argument_list|,
+name|VERSION
 argument_list|)
 expr_stmt|;
-name|puts
+name|printf
 argument_list|(
-literal|"Copyright (C) 1996 Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING."
+name|_
+argument_list|(
+literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
+argument_list|)
+argument_list|,
+literal|"1998"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1824,7 +1935,10 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
+name|_
+argument_list|(
 literal|"excess command line argument `%s'"
+argument_list|)
 argument_list|,
 name|argv
 index|[
@@ -1840,7 +1954,10 @@ name|infile
 condition|)
 name|fatal
 argument_list|(
-literal|"No input file specified"
+name|_
+argument_list|(
+literal|"No input file specified; try --help for more information."
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1850,7 +1967,10 @@ name|dirfile
 condition|)
 name|fatal
 argument_list|(
-literal|"No dir file specified"
+name|_
+argument_list|(
+literal|"No dir file specified; try --help for more information."
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Read the Info file and parse it into lines.  */
@@ -2126,7 +2246,10 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"START-INFO-DIR-ENTRY without matching END-INFO-DIR-ENTRY"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|start_of_this_entry
@@ -2257,7 +2380,10 @@ block|}
 else|else
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"END-INFO-DIR-ENTRY without matching START-INFO-DIR-ENTRY"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2270,7 +2396,10 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"START-INFO-DIR-ENTRY without matching END-INFO-DIR-ENTRY"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2285,14 +2414,30 @@ name|entries_to_add
 operator|==
 literal|0
 condition|)
-name|fatal
+block|{
+comment|/* No need to abort here, the original info file may not have            the requisite Texinfo commands.  This is not something an            installer should have to correct (it's a problem for the            maintainer), and there's no need to cause subsequent parts of            `make install' to fail.  */
+name|warning
+argument_list|(
+name|_
 argument_list|(
 literal|"no info dir entry in `%s'"
+argument_list|)
 argument_list|,
 name|infile
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Now read in the Info dir file.  */
+name|ensure_dirfile_exists
+argument_list|(
+name|dirfile
+argument_list|)
+expr_stmt|;
 name|dir_data
 operator|=
 name|readfile
@@ -2320,12 +2465,6 @@ block|{
 name|unsigned
 name|basename_len
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|strrchr
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|infile_basename
@@ -2978,6 +3117,7 @@ index|]
 operator|==
 literal|')'
 operator|||
+operator|!
 name|strncmp
 argument_list|(
 name|p
@@ -2988,10 +3128,9 @@ literal|".info)"
 argument_list|,
 literal|6
 argument_list|)
-operator|==
-literal|0
 operator|)
 condition|)
+block|{
 name|dir_lines
 index|[
 name|i
@@ -3001,6 +3140,11 @@ name|delete
 operator|=
 literal|1
 expr_stmt|;
+name|something_deleted
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Treat lines that start with whitespace          as continuations; if we are deleting an entry,          delete all its continuations as well.  */
@@ -3327,7 +3471,10 @@ name|delete
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"menu item `%s' already exists, for file `%s'"
+argument_list|)
 argument_list|,
 name|extract_menu_item_name
 argument_list|(
@@ -3459,7 +3606,10 @@ name|quiet_flag
 condition|)
 name|warning
 argument_list|(
+name|_
+argument_list|(
 literal|"no entries found for `%s'; nothing deleted"
+argument_list|)
 argument_list|,
 name|infile
 argument_list|)
@@ -3847,6 +3997,9 @@ name|sizep
 decl_stmt|;
 block|{
 name|int
+name|desc
+decl_stmt|;
+name|int
 name|data_size
 init|=
 literal|1024
@@ -3874,16 +4027,28 @@ name|nread
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_LIBZ
 name|int
-name|desc
+name|isGZ
 init|=
+literal|0
+decl_stmt|;
+name|gzFile
+name|zdesc
+decl_stmt|;
+endif|#
+directive|endif
+name|desc
+operator|=
 name|open
 argument_list|(
 name|filename
 argument_list|,
 name|O_RDONLY
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|desc
@@ -3895,11 +4060,121 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_LIBZ
+comment|/* The file should always be two bytes long.  */
+if|if
+condition|(
+name|read
+argument_list|(
+name|desc
+argument_list|,
+name|data
+argument_list|,
+literal|2
+argument_list|)
+operator|!=
+literal|2
+condition|)
+name|pfatal_with_name
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+comment|/* Undo that read.  */
+name|lseek
+argument_list|(
+name|desc
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+comment|/* If we see gzip magic, use gzdopen. */
+if|if
+condition|(
+name|data
+index|[
+literal|0
+index|]
+operator|==
+literal|'\x1f'
+operator|&&
+name|data
+index|[
+literal|1
+index|]
+operator|==
+literal|'\x8b'
+condition|)
+block|{
+name|isGZ
+operator|=
+literal|1
+expr_stmt|;
+name|zdesc
+operator|=
+name|gzdopen
+argument_list|(
+name|desc
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zdesc
+operator|==
+name|NULL
+condition|)
+block|{
+name|close
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+name|pfatal_with_name
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_LIBZ */
 while|while
 condition|(
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_LIBZ
+if|if
+condition|(
+name|isGZ
+condition|)
+name|nread
+operator|=
+name|gzread
+argument_list|(
+name|zdesc
+argument_list|,
+name|data
+operator|+
+name|filled
+argument_list|,
+name|data_size
+operator|-
+name|filled
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|nread
 operator|=
 name|read
@@ -3967,6 +4242,26 @@ operator|*
 name|sizep
 operator|=
 name|filled
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_LIBZ
+if|if
+condition|(
+name|isGZ
+condition|)
+name|gzclose
+argument_list|(
+name|zdesc
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|close
+argument_list|(
+name|desc
+argument_list|)
 expr_stmt|;
 return|return
 name|data
