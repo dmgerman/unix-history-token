@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: exec.c,v 1.5 1994/10/29 10:01:32 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: exec.c,v 1.6 1994/11/08 14:04:16 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/reboot.h>
 end_include
 
 begin_include
@@ -342,7 +348,11 @@ condition|)
 empty_stmt|;
 if|if
 condition|(
-name|w
+operator|(
+name|status
+operator|>>
+literal|8
+operator|)
 operator|==
 literal|20
 operator|&&
@@ -351,13 +361,9 @@ operator|==
 literal|3
 condition|)
 comment|/* special case for bininst */
-name|execl
+name|reboot
 argument_list|(
-literal|"/sbin/init"
-argument_list|,
-literal|"/sbin/init"
-argument_list|,
-literal|0
+name|RB_AUTOBOOT
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.11 1994/11/06 04:05:45 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.12 1994/11/06 04:34:46 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -104,9 +104,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 comment|/* Are we running as init? */
 if|if
 condition|(
@@ -116,6 +113,9 @@ operator|==
 literal|1
 condition|)
 block|{
+name|setsid
+argument_list|()
+expr_stmt|;
 name|close
 argument_list|(
 literal|0
@@ -153,18 +153,17 @@ argument_list|(
 literal|"sysinstall running as init\n\r"
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
-literal|1
-expr_stmt|;
 name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TIOCSPGRP
+name|TIOCSCTTY
 argument_list|,
-operator|&
-name|i
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|setlogin
