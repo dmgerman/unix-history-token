@@ -2293,6 +2293,7 @@ parameter_list|(
 name|pthread_t
 name|thread
 parameter_list|,
+specifier|const
 name|struct
 name|timespec
 modifier|*
