@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1264,7 +1264,6 @@ name|sockaddr
 operator|*
 operator|,
 name|int
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
