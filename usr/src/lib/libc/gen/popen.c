@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.12 (Berkeley) %G%"
+literal|"@(#)popen.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,13 +87,6 @@ name|pids
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|fds
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|FILE
 modifier|*
@@ -123,6 +116,8 @@ name|pdes
 index|[
 literal|2
 index|]
+decl_stmt|,
+name|fds
 decl_stmt|,
 name|pid
 decl_stmt|;
