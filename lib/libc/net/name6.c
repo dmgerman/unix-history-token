@@ -684,6 +684,51 @@ comment|/* ICMPNL */
 end_comment
 
 begin_comment
+comment|/* Make getipnodeby*() thread-safe in libc for use with kernel threads. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"spinlock.h"
+end_include
+
+begin_comment
+comment|/*  * XXX: Our res_*() is not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call res_*().  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|spinlock_t
+name|__getaddrinfo_thread_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCK
+parameter_list|()
+define|\
+value|if (__isthreaded) _SPINLOCK(&__getaddrinfo_thread_lock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_UNLOCK
+parameter_list|()
+define|\
+value|if (__isthreaded) _SPINUNLOCK(&__getaddrinfo_thread_lock);
+end_define
+
+begin_comment
 comment|/* Host lookup order if nsswitch.conf is broken or nonexistant */
 end_comment
 
@@ -1034,6 +1079,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|rval
 operator|=
 name|nsdispatch
@@ -1055,6 +1103,9 @@ name|af
 argument_list|,
 name|errp
 argument_list|)
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1780,6 +1831,9 @@ return|return
 name|NULL
 return|;
 block|}
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|rval
 operator|=
 name|nsdispatch
@@ -1803,6 +1857,9 @@ name|af
 argument_list|,
 name|errp
 argument_list|)
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
