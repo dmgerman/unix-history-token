@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sa.c	4.11 (Berkeley) %G%"
+literal|"@(#)sa.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -910,7 +910,7 @@ begin_expr_stmt
 name|ncmp
 argument_list|()
 operator|,
-name|bcmp
+name|bflgcmp
 argument_list|()
 operator|,
 name|dcmp
@@ -1091,7 +1091,7 @@ operator|++
 expr_stmt|;
 name|cmp
 operator|=
-name|bcmp
+name|bflgcmp
 expr_stmt|;
 break|break;
 case|case
@@ -3294,7 +3294,7 @@ block|}
 end_block
 
 begin_macro
-name|bcmp
+name|bflgcmp
 argument_list|(
 argument|p1
 argument_list|,
