@@ -427,7 +427,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|softdep_setup_directory_add
 parameter_list|(
 name|bp
@@ -439,6 +439,8 @@ parameter_list|,
 name|newinum
 parameter_list|,
 name|newdirbp
+parameter_list|,
+name|isnewblk
 parameter_list|)
 name|struct
 name|buf
@@ -460,6 +462,9 @@ name|struct
 name|buf
 modifier|*
 name|newdirbp
+decl_stmt|;
+name|int
+name|isnewblk
 decl_stmt|;
 block|{
 name|panic
