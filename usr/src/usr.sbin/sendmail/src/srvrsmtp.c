@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.10 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.11 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.10 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -540,6 +540,38 @@ block|}
 name|settime
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|RealHostName
+operator|!=
+name|NULL
+condition|)
+block|{
+specifier|static
+name|char
+name|status
+index|[
+literal|100
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|status
+argument_list|,
+literal|"talking to %s"
+argument_list|,
+name|RealHostName
+argument_list|)
+expr_stmt|;
+name|setproctitle
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+block|}
 name|expand
 argument_list|(
 literal|"\001e"
