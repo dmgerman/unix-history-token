@@ -98,8 +98,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVFILT_FS
+value|(-9)
+end_define
+
+begin_comment
+comment|/* filesystem events */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVFILT_SYSCOUNT
-value|8
+value|9
 end_define
 
 begin_define

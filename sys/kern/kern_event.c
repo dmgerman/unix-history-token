@@ -750,6 +750,14 @@ name|sig_filtops
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|filterops
+name|fs_filtops
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Table for for all system-defined filters.  */
 end_comment
@@ -795,6 +803,10 @@ operator|&
 name|file_filtops
 block|,
 comment|/* EVFILT_NETDEV */
+operator|&
+name|fs_filtops
+block|,
+comment|/* EVFILT_FS */
 block|}
 decl_stmt|;
 end_decl_stmt

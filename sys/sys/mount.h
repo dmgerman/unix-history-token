@@ -1531,6 +1531,344 @@ begin_comment
 comment|/* stores file names as Unicode*/
 end_comment
 
+begin_struct
+struct|struct
+name|vfsidctl
+block|{
+name|int
+name|vc_vers
+decl_stmt|;
+comment|/* should be VFSIDCTL_VERS1 (below) */
+name|fsid_t
+name|vc_fsid
+decl_stmt|;
+comment|/* fsid to operate on. */
+name|void
+modifier|*
+name|vc_ptr
+decl_stmt|;
+comment|/* pointer to data structure. */
+name|size_t
+name|vc_len
+decl_stmt|;
+comment|/* sizeof said structure. */
+name|u_int32_t
+name|vc_spare
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* spare (must be zero). */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* vfsidctl API version. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_CTL_VERS1
+value|0x01
+end_define
+
+begin_comment
+comment|/*  * New style VFS sysctls, do not reuse/conflict with the namespace for  * private sysctls.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_CTL_STATFS
+value|0x00010001
+end_define
+
+begin_comment
+comment|/* statfs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_CTL_UMOUNT
+value|0x00010002
+end_define
+
+begin_comment
+comment|/* unmount */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_CTL_QUERY
+value|0x00010003
+end_define
+
+begin_comment
+comment|/* anything wrong? (vfsquery) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_CTL_NEWADDR
+value|0x00010004
+end_define
+
+begin_comment
+comment|/* reconnect to new address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_CTL_TIMEO
+value|0x00010005
+end_define
+
+begin_comment
+comment|/* set timeout for vfs notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_CTL_NOLOCKS
+value|0x00010006
+end_define
+
+begin_comment
+comment|/* disable file locking */
+end_comment
+
+begin_struct
+struct|struct
+name|vfsquery
+block|{
+name|u_int32_t
+name|vq_flags
+decl_stmt|;
+name|u_int32_t
+name|vq_spare
+index|[
+literal|31
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* vfsquery flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_NOTRESP
+value|0x0001
+end_define
+
+begin_comment
+comment|/* server down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_NEEDAUTH
+value|0x0002
+end_define
+
+begin_comment
+comment|/* server bad auth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_LOWDISK
+value|0x0004
+end_define
+
+begin_comment
+comment|/* we're low on space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_MOUNT
+value|0x0008
+end_define
+
+begin_comment
+comment|/* new filesystem arrived */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_UNMOUNT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* filesystem has left */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_DEAD
+value|0x0020
+end_define
+
+begin_comment
+comment|/* filesystem is dead, needs force unmount */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_ASSIST
+value|0x0040
+end_define
+
+begin_comment
+comment|/* filesystem needs assistance from external 				   program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_NOTRESPLOCK
+value|0x0080
+end_define
+
+begin_comment
+comment|/* server lockd down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_FLAG0100
+value|0x0100
+end_define
+
+begin_comment
+comment|/* placeholder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_FLAG0200
+value|0x0200
+end_define
+
+begin_comment
+comment|/* placeholder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_FLAG0400
+value|0x0400
+end_define
+
+begin_comment
+comment|/* placeholder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_FLAG0800
+value|0x0800
+end_define
+
+begin_comment
+comment|/* placeholder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_FLAG1000
+value|0x1000
+end_define
+
+begin_comment
+comment|/* placeholder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_FLAG2000
+value|0x2000
+end_define
+
+begin_comment
+comment|/* placeholder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_FLAG4000
+value|0x4000
+end_define
+
+begin_comment
+comment|/* placeholder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VQ_FLAG8000
+value|0x8000
+end_define
+
+begin_comment
+comment|/* placeholder */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* Point a sysctl request at a vfsidctl's data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCTLTOREQ
+parameter_list|(
+name|vc
+parameter_list|,
+name|req
+parameter_list|)
+define|\
+value|do {								\ 		(req)->newptr = (vc)->vc_ptr;				\ 		(req)->newlen = (vc)->vc_len;				\ 		(req)->newidx = 0;					\ 	} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct_decl
 struct_decl|struct
 name|iovec
@@ -1616,6 +1954,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|nameidata
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sysctl_req
 struct_decl|;
 end_struct_decl
 
@@ -1962,6 +2306,24 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|vfs_sysctl_t
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
+name|sysctl_req
+modifier|*
+name|req
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vfsops
@@ -2026,6 +2388,10 @@ comment|/* Additions below are not binary compatible with 5.0 and below. */
 name|vfs_nmount_t
 modifier|*
 name|vfs_nmount
+decl_stmt|;
+name|vfs_sysctl_t
+modifier|*
+name|vfs_sysctl
 decl_stmt|;
 block|}
 struct|;
@@ -2234,6 +2600,19 @@ define|\
 value|(*(MP)->mnt_op->vfs_extattrctl)(MP, C, FN, NS, N, P)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VFS_SYSCTL
+parameter_list|(
+name|MP
+parameter_list|,
+name|REQ
+parameter_list|)
+define|\
+value|((MP) == NULL ? ENOTSUP : \ 	 (*(MP)->mnt_op->vfs_sysctl)(MP, REQ))
+end_define
+
 begin_include
 include|#
 directive|include
@@ -2307,6 +2686,21 @@ name|int
 name|flags
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_event_signal
+parameter_list|(
+name|fsid_t
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
