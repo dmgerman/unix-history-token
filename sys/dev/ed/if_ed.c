@@ -6350,17 +6350,11 @@ expr_stmt|;
 block|}
 comment|/* device attach does transition from UNCONFIGURED to IDLE state */
 comment|/* 	 * Print additional info when attached 	 */
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: address %6D, "
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"address %6D, "
 argument_list|,
 name|sc
 operator|->
@@ -8939,13 +8933,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ED_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"ed%d: receive error %x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"receive error %x\n"
 argument_list|,
 name|ed_nic_inb
 argument_list|(
