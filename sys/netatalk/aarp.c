@@ -249,6 +249,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|atmulticastaddr
 index|[
@@ -271,6 +272,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Not used?  */
+end_comment
+
 begin_decl_stmt
 name|u_char
 name|at_org_code
@@ -289,6 +294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u_char
 name|aarp_org_code
 index|[
@@ -812,14 +818,8 @@ condition|)
 block|{
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|atmulticastaddr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|eh
 operator|->
 name|ether_dhost
@@ -1219,9 +1219,6 @@ condition|)
 block|{
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|atmulticastaddr
 argument_list|,
 operator|(
@@ -3214,14 +3211,8 @@ condition|)
 block|{
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|atmulticastaddr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|eh
 operator|->
 name|ether_dhost
