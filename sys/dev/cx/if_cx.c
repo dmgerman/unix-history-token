@@ -10648,7 +10648,7 @@ condition|)
 return|return
 name|EBUSY
 return|;
-comment|/* Network interface is up? 	         * Cannot change to async mode. */
+comment|/* Network interface is up? 		 * Cannot change to async mode. */
 if|if
 condition|(
 name|c
