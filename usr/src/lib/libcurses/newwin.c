@@ -28,39 +28,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * allocate space for and set up defaults for a new window  *  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<curses.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<stdlib.h>
 end_include
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|SMALLOC
-value|(short *) malloc
-end_define
-
-begin_function_decl
-specifier|static
-name|WINDOW
-modifier|*
-name|makenew
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_undef
 undef|#
@@ -69,7 +47,31 @@ name|nl
 end_undef
 
 begin_comment
-comment|/* don't need it here, and it interferes	*/
+comment|/* Don't need it here, and it interferes. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
+modifier|*
+name|makenew
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * newwin --  *	Allocate space for and set up defaults for a new window.  */
 end_comment
 
 begin_function
@@ -95,31 +97,29 @@ decl_stmt|,
 name|begx
 decl_stmt|;
 block|{
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-name|reg
-name|char
-modifier|*
-name|sp
-decl_stmt|;
-name|reg
+specifier|register
 name|int
-name|i
-decl_stmt|,
 name|by
 decl_stmt|,
 name|bx
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
 decl_stmt|,
 name|nl
 decl_stmt|,
 name|nc
 decl_stmt|;
-name|reg
-name|int
-name|j
+specifier|register
+name|char
+modifier|*
+name|sp
 decl_stmt|;
 name|by
 operator|=
@@ -181,7 +181,9 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|ERR
+operator|(
+name|NULL
+operator|)
 return|;
 if|if
 condition|(
@@ -190,17 +192,19 @@ name|win
 operator|->
 name|_firstch
 operator|=
-name|SMALLOC
+name|malloc
 argument_list|(
 name|nl
 operator|*
 sizeof|sizeof
+argument_list|(
 name|win
 operator|->
 name|_firstch
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -220,7 +224,9 @@ name|win
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -230,17 +236,19 @@ name|win
 operator|->
 name|_lastch
 operator|=
-name|SMALLOC
+name|malloc
 argument_list|(
 name|nl
 operator|*
 sizeof|sizeof
+argument_list|(
 name|win
 operator|->
 name|_lastch
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -267,7 +275,9 @@ name|win
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|win
@@ -337,12 +347,14 @@ argument_list|(
 name|nc
 operator|*
 sizeof|sizeof
+argument_list|(
 name|win
 operator|->
 name|_y
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -399,7 +411,9 @@ name|win
 argument_list|)
 expr_stmt|;
 return|return
-name|ERR
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 else|else
@@ -441,11 +455,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"NEWWIN: win->_ch_off = %d\n"
+literal|"newwin: win->_ch_off = %d\n"
 argument_list|,
 name|win
 operator|->
@@ -455,7 +467,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|win
+operator|)
 return|;
 block|}
 end_function
@@ -475,7 +489,7 @@ name|begy
 parameter_list|,
 name|begx
 parameter_list|)
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|orig
@@ -490,20 +504,18 @@ decl_stmt|,
 name|begx
 decl_stmt|;
 block|{
-name|reg
-name|int
-name|i
-decl_stmt|;
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-name|reg
+specifier|register
 name|int
 name|by
 decl_stmt|,
 name|bx
+decl_stmt|,
+name|i
 decl_stmt|,
 name|nl
 decl_stmt|,
@@ -525,15 +537,13 @@ name|nc
 operator|=
 name|num_cols
 expr_stmt|;
-comment|/* 	 * make sure window fits inside the original one 	 */
+comment|/* Make sure window fits inside the original one. */
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"SUBWIN(%0.2o, %d, %d, %d, %d)\n"
+literal|"subwin: (%0.2o, %d, %d, %d, %d)\n"
 argument_list|,
 name|orig
 argument_list|,
@@ -587,7 +597,9 @@ operator|->
 name|_begx
 condition|)
 return|return
-name|ERR
+operator|(
+name|NULL
+operator|)
 return|;
 if|if
 condition|(
@@ -645,7 +657,9 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|ERR
+operator|(
+name|NULL
+operator|)
 return|;
 name|win
 operator|->
@@ -667,7 +681,7 @@ name|_orig
 operator|=
 name|orig
 expr_stmt|;
-name|_set_subwin_
+name|__set_subwin
 argument_list|(
 name|orig
 argument_list|,
@@ -675,17 +689,19 @@ name|win
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|win
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * this code is shared with mvwin()  */
+comment|/*  * This code is shared with mvwin().  */
 end_comment
 
 begin_expr_stmt
-name|_set_subwin_
+name|__set_subwin_
 argument_list|(
 name|orig
 argument_list|,
@@ -740,11 +756,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"_SET_SUBWIN_: win->_ch_off = %d\n"
+literal|"__set_subwin: win->_ch_off = %d\n"
 argument_list|,
 name|win
 operator|->
@@ -817,7 +831,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	This routine sets up a window buffer and returns a pointer to it.  */
+comment|/*  * makenew --  *	Set up a window buffer and returns a pointer to it.  */
 end_comment
 
 begin_function
@@ -844,20 +858,18 @@ decl_stmt|,
 name|begx
 decl_stmt|;
 block|{
-name|reg
-name|int
-name|i
-decl_stmt|;
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-name|reg
+specifier|register
 name|int
 name|by
 decl_stmt|,
 name|bx
+decl_stmt|,
+name|i
 decl_stmt|,
 name|nl
 decl_stmt|,
@@ -882,11 +894,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW(%d, %d, %d, %d)\n"
+literal|"makenew: (%d, %d, %d, %d)\n"
 argument_list|,
 name|nl
 argument_list|,
@@ -904,31 +914,29 @@ condition|(
 operator|(
 name|win
 operator|=
-operator|(
-name|WINDOW
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|win
+argument_list|)
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: nl = %d\n"
+literal|"makenew: nl = %d\n"
 argument_list|,
 name|nl
 argument_list|)
@@ -942,22 +950,19 @@ name|win
 operator|->
 name|_y
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|nl
 operator|*
 sizeof|sizeof
+argument_list|(
 name|win
 operator|->
 name|_y
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -970,17 +975,17 @@ name|win
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: nc = %d\n"
+literal|"makenew: nc = %d\n"
 argument_list|,
 name|nc
 argument_list|)
@@ -1001,7 +1006,7 @@ name|win
 operator|->
 name|_clear
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 name|win
 operator|->
@@ -1041,9 +1046,9 @@ name|win
 operator|->
 name|_leave
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
-name|_swflags_
+name|__swflags
 argument_list|(
 name|win
 argument_list|)
@@ -1051,88 +1056,72 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: win->_clear = %d\n"
+literal|"makenew: win->_clear = %d\n"
 argument_list|,
 name|win
 operator|->
 name|_clear
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: win->_leave = %d\n"
+literal|"makenew: win->_leave = %d\n"
 argument_list|,
 name|win
 operator|->
 name|_leave
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: win->_scroll = %d\n"
+literal|"makenew: win->_scroll = %d\n"
 argument_list|,
 name|win
 operator|->
 name|_scroll
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: win->_flags = %0.2o\n"
+literal|"makenew: win->_flags = %0.2o\n"
 argument_list|,
 name|win
 operator|->
 name|_flags
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: win->_maxy = %d\n"
+literal|"makenew: win->_maxy = %d\n"
 argument_list|,
 name|win
 operator|->
 name|_maxy
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: win->_maxx = %d\n"
+literal|"makenew: win->_maxx = %d\n"
 argument_list|,
 name|win
 operator|->
 name|_maxx
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: win->_begy = %d\n"
+literal|"makenew: win->_begy = %d\n"
 argument_list|,
 name|win
 operator|->
 name|_begy
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKENEW: win->_begx = %d\n"
+literal|"makenew: win->_begx = %d\n"
 argument_list|,
 name|win
 operator|->
@@ -1142,24 +1131,24 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|win
+operator|)
 return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|_swflags_
-argument_list|(
+begin_function
+name|void
+name|__swflags
+parameter_list|(
 name|win
-argument_list|)
+parameter_list|)
 specifier|register
 name|WINDOW
-operator|*
+modifier|*
 name|win
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|win
 operator|->
@@ -1257,7 +1246,7 @@ name|_SCROLLWIN
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
