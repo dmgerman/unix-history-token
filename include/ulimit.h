@@ -24,16 +24,45 @@ end_include
 begin_define
 define|#
 directive|define
-name|UL_GETSIZE
+name|UL_GETFSIZE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|UL_SETSIZE
+name|UL_SETFSIZE
 value|2
 end_define
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_comment
+comment|/*  * The "F" was mistakenly omitted from the macro names in FreeBSD 5.0.  * Do not use these names; they will be removed before 6.0.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UL_GETSIZE
+value|UL_GETFSIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|UL_SETSIZE
+value|UL_SETFSIZE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|__BEGIN_DECLS

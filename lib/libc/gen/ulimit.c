@@ -69,7 +69,7 @@ if|if
 condition|(
 name|cmd
 operator|==
-name|UL_GETSIZE
+name|UL_GETFSIZE
 condition|)
 block|{
 if|if
@@ -126,7 +126,7 @@ if|if
 condition|(
 name|cmd
 operator|==
-name|UL_SETSIZE
+name|UL_SETFSIZE
 condition|)
 block|{
 name|va_start
