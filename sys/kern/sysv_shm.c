@@ -3464,7 +3464,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|shm_handle
 operator|->
@@ -3489,7 +3489,7 @@ argument_list|,
 name|OBJ_NOSPLIT
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|shm_handle
 operator|->

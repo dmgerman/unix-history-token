@@ -401,7 +401,7 @@ argument_list|,
 argument|object_list
 argument_list|)
 block|{
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
@@ -413,7 +413,7 @@ argument_list|,
 name|OBJ_ACTIVE
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -649,7 +649,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
@@ -667,7 +667,7 @@ name|object
 operator|->
 name|paging_in_progress
 expr_stmt|;
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -710,7 +710,7 @@ argument_list|,
 argument|object_list
 argument_list|)
 block|{
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
@@ -725,7 +725,7 @@ operator|==
 name|OBJT_DEVICE
 condition|)
 block|{
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -827,7 +827,7 @@ name|resident_page_count
 expr_stmt|;
 block|}
 block|}
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
