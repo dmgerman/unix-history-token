@@ -68,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first characters of the line.  If this is  * not present, a default priority is used.  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * MAXLINE -- the maximimum line length that can be handled.  * DEFUPRI -- the default priority for user messages  * DEFSPRI -- the default priority for kernel messages  *  * Author: Eric Allman  * extensive changes by Ralph Campbell  * more extensive changes by Eric Allman (again)  * Extension to log by program name as well as facility and priority  *   by Peter da Silva.  * -u and -v by Harlan Stenn.  * Priority comparison code by Harlan Stenn.  */
+comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first characters of the line.  If this is  * not present, a default priority is used.  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * MAXLINE -- the maximum line length that can be handled.  * DEFUPRI -- the default priority for user messages  * DEFSPRI -- the default priority for kernel messages  *  * Author: Eric Allman  * extensive changes by Ralph Campbell  * more extensive changes by Eric Allman (again)  * Extension to log by program name as well as facility and priority  *   by Peter da Silva.  * -u and -v by Harlan Stenn.  * Priority comparison code by Harlan Stenn.  */
 end_comment
 
 begin_define
@@ -126,7 +126,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* timed out passed to ttymsg */
+comment|/* timeout passed to ttymsg */
 end_comment
 
 begin_include
@@ -508,7 +508,7 @@ comment|/* kernel generated message */
 end_comment
 
 begin_comment
-comment|/*  * This structure represents the files that will have log  * copies printed.  */
+comment|/*  * This structure represents the files that will have log  * copies printed.  * We require f_file to be valid if f_type is F_FILE, F_CONSOLE, F_TTY  * or if f_type if F_PIPE and f_pid> 0.  */
 end_comment
 
 begin_struct
@@ -663,6 +663,14 @@ name|u_int
 name|f_repeatcount
 decl_stmt|;
 comment|/* number of "repeated" msgs */
+name|int
+name|f_flags
+decl_stmt|;
+comment|/* file-specific flags */
+define|#
+directive|define
+name|FFLAG_SYNC
+value|0x01
 block|}
 struct|;
 end_struct
@@ -1021,6 +1029,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|LocalDomain
@@ -1831,6 +1840,29 @@ literal|'l'
 case|:
 if|if
 condition|(
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|sunx
+operator|.
+name|sun_path
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s path too long, exiting"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|nfunix
 operator|<
 name|MAXFUNIX
@@ -1878,6 +1910,29 @@ case|case
 literal|'p'
 case|:
 comment|/* path */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|sunx
+operator|.
+name|sun_path
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s path too long, exiting"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
 name|funixn
 index|[
 literal|0
@@ -1919,9 +1974,6 @@ name|LogFacPri
 operator|++
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 name|usage
 argument_list|()
@@ -3534,13 +3586,14 @@ name|pri
 operator|=
 name|DEFUPRI
 expr_stmt|;
-comment|/* don't allow users to log kernel messages */
+comment|/* 	 * Don't allow users to log kernel messages. 	 * NOTE: since LOG_KERN == 0 this will also match 	 *       messages with no facility specified. 	 */
 if|if
 condition|(
-name|LOG_FAC
-argument_list|(
+operator|(
 name|pri
-argument_list|)
+operator|&
+name|LOG_FACMASK
+operator|)
 operator|==
 name|LOG_KERN
 operator|&&
@@ -4507,6 +4560,13 @@ name|i
 index|]
 operator|==
 literal|'['
+operator|||
+name|msg
+index|[
+name|i
+index|]
+operator|==
+literal|'/'
 condition|)
 break|break;
 name|prog
@@ -5175,6 +5235,27 @@ name|wmsg
 init|=
 name|NULL
 decl_stmt|;
+name|char
+name|nul
+index|[]
+init|=
+literal|""
+decl_stmt|,
+name|space
+index|[]
+init|=
+literal|" "
+decl_stmt|,
+name|lf
+index|[]
+init|=
+literal|"\n"
+decl_stmt|,
+name|crlf
+index|[]
+init|=
+literal|"\r\n"
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -5238,7 +5319,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|""
+name|nul
 expr_stmt|;
 name|v
 operator|->
@@ -5273,7 +5354,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|" "
+name|space
 expr_stmt|;
 name|v
 operator|->
@@ -5506,7 +5587,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|""
+name|nul
 expr_stmt|;
 name|v
 operator|->
@@ -5544,7 +5625,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|" "
+name|space
 expr_stmt|;
 name|v
 operator|->
@@ -5738,6 +5819,10 @@ name|f
 operator|->
 name|f_prevpri
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|0
@@ -5749,6 +5834,10 @@ name|f
 operator|->
 name|f_prevhost
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|5
@@ -5775,6 +5864,10 @@ name|f
 operator|->
 name|f_prevpri
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|0
@@ -5782,6 +5875,10 @@ index|]
 operator|.
 name|iov_base
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|5
@@ -5960,16 +6057,6 @@ argument_list|(
 literal|"removing entry\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|f
-operator|->
-name|f_file
-argument_list|)
-expr_stmt|;
 name|f
 operator|->
 name|f_type
@@ -5999,7 +6086,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|"\n"
+name|lf
 expr_stmt|;
 name|v
 operator|->
@@ -6061,9 +6148,19 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
 name|SYNC_FILE
+operator|)
+operator|&&
+operator|(
+name|f
+operator|->
+name|f_flags
+operator|&
+name|FFLAG_SYNC
+operator|)
 condition|)
 operator|(
 name|void
@@ -6096,7 +6193,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|"\n"
+name|lf
 expr_stmt|;
 name|v
 operator|->
@@ -6295,7 +6392,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|"\r\n"
+name|crlf
 expr_stmt|;
 name|v
 operator|->
@@ -6358,7 +6455,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|"\r\n"
+name|crlf
 expr_stmt|;
 name|v
 operator|->
@@ -6517,10 +6614,8 @@ operator|==
 literal|'\0'
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
-name|strlcpy
+comment|/* We must use strncpy since ut_* may not be NUL terminated. */
+name|strncpy
 argument_list|(
 name|line
 argument_list|,
@@ -6532,7 +6627,21 @@ sizeof|sizeof
 argument_list|(
 name|line
 argument_list|)
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|line
+index|[
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -7285,7 +7394,18 @@ operator|->
 name|f_type
 operator|==
 name|F_PIPE
+operator|&&
+name|f
+operator|->
+name|f_un
+operator|.
+name|f_pipe
+operator|.
+name|f_pid
+operator|>
+literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -7296,6 +7416,17 @@ operator|->
 name|f_file
 argument_list|)
 expr_stmt|;
+name|f
+operator|->
+name|f_un
+operator|.
+name|f_pipe
+operator|.
+name|f_pid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 name|Initialized
 operator|=
@@ -7612,16 +7743,6 @@ break|break;
 case|case
 name|F_PIPE
 case|:
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|f
-operator|->
-name|f_file
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|f
@@ -7634,6 +7755,17 @@ name|f_pid
 operator|>
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|f
+operator|->
+name|f_file
+argument_list|)
+expr_stmt|;
 name|deadq_enter
 argument_list|(
 name|f
@@ -7653,6 +7785,7 @@ operator|.
 name|f_pname
 argument_list|)
 expr_stmt|;
+block|}
 name|f
 operator|->
 name|f_un
@@ -8205,27 +8338,34 @@ continue|continue;
 block|}
 for|for
 control|(
-name|p
+name|i
 operator|=
-name|strchr
+name|strlen
 argument_list|(
 name|cline
-argument_list|,
-literal|'\0'
 argument_list|)
+operator|-
+literal|1
 init|;
+name|i
+operator|>=
+literal|0
+operator|&&
 name|isspace
 argument_list|(
-operator|*
-operator|--
-name|p
+name|cline
+index|[
+name|i
+index|]
 argument_list|)
 condition|;
+name|i
+operator|--
 control|)
-continue|continue;
-operator|*
-operator|++
-name|p
+name|cline
+index|[
+name|i
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -8637,6 +8777,8 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|pri
+decl_stmt|,
+name|syncfile
 decl_stmt|;
 specifier|const
 name|char
@@ -9072,6 +9214,39 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Ignore trailing spaces. */
+for|for
+control|(
+name|i
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
+operator|&&
+name|buf
+index|[
+name|i
+index|]
+operator|==
+literal|' '
+condition|;
+name|i
+operator|--
+control|)
+name|buf
+index|[
+name|i
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|pri
 operator|=
 name|decode
@@ -9334,6 +9509,27 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'-'
+condition|)
+block|{
+name|syncfile
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|++
+expr_stmt|;
+block|}
+else|else
+name|syncfile
+operator|=
+literal|1
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -9487,6 +9683,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|syncfile
+condition|)
+name|f
+operator|->
+name|f_flags
+operator||=
+name|FFLAG_SYNC
+expr_stmt|;
 if|if
 condition|(
 name|isatty
@@ -12274,7 +12480,7 @@ name|prog
 parameter_list|,
 name|pid_t
 modifier|*
-name|pid
+name|rpid
 parameter_list|)
 block|{
 name|int
@@ -12286,6 +12492,9 @@ decl_stmt|,
 name|nulldesc
 decl_stmt|,
 name|i
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 name|sigset_t
 name|omask
@@ -12381,7 +12590,6 @@ expr_stmt|;
 switch|switch
 condition|(
 operator|(
-operator|*
 name|pid
 operator|=
 name|fork
@@ -12675,7 +12883,6 @@ argument_list|,
 operator|(
 name|int
 operator|)
-operator|*
 name|pid
 argument_list|)
 expr_stmt|;
@@ -12685,6 +12892,11 @@ name|errmsg
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|rpid
+operator|=
+name|pid
+expr_stmt|;
 return|return
 operator|(
 name|pfd
