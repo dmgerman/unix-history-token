@@ -6215,13 +6215,9 @@ name|error
 decl_stmt|,
 name|none_count
 decl_stmt|,
-name|nl
+name|quit
 decl_stmt|;
 name|none_count
-operator|=
-literal|0
-expr_stmt|;
-name|nl
 operator|=
 literal|0
 expr_stmt|;
@@ -6232,6 +6228,16 @@ operator|&
 name|pci_devq
 expr_stmt|;
 comment|/* 	 * Go through the list of devices and print out devices 	 */
+name|db_setup_paging
+argument_list|(
+name|db_simple_pager
+argument_list|,
+operator|&
+name|quit
+argument_list|,
+name|DB_LINES_PER_PAGE
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|error
@@ -6239,6 +6245,10 @@ operator|=
 literal|0
 operator|,
 name|i
+operator|=
+literal|0
+operator|,
+name|quit
 operator|=
 literal|0
 operator|,
@@ -6266,6 +6276,9 @@ name|i
 operator|<
 name|pci_numdevs
 operator|)
+operator|&&
+operator|!
+name|quit
 condition|;
 name|dinfo
 operator|=
@@ -6311,67 +6324,6 @@ name|dinfo
 operator|->
 name|conf
 expr_stmt|;
-comment|/* 		 * XXX just take 20 for now... 		 */
-if|if
-condition|(
-name|nl
-operator|++
-operator|==
-literal|20
-condition|)
-block|{
-name|int
-name|c
-decl_stmt|;
-name|db_printf
-argument_list|(
-literal|"--More--"
-argument_list|)
-expr_stmt|;
-name|c
-operator|=
-name|cngetc
-argument_list|()
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"\r"
-argument_list|)
-expr_stmt|;
-comment|/* 			 * A whole screenfull or just one line? 			 */
-switch|switch
-condition|(
-name|c
-condition|)
-block|{
-case|case
-literal|'\n'
-case|:
-comment|/* just one line */
-name|nl
-operator|=
-literal|20
-expr_stmt|;
-break|break;
-case|case
-literal|' '
-case|:
-name|nl
-operator|=
-literal|0
-expr_stmt|;
-comment|/* another screenfull */
-break|break;
-default|default:
-comment|/* exit */
-name|db_printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
 name|db_printf
 argument_list|(
 literal|"%s%d@pci%d:%d:%d:\tclass=0x%06x card=0x%08x "
