@@ -4323,28 +4323,6 @@ argument_list|,
 name|fun
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BKTR_USE_FREEBSD_SMBUS
-argument_list|)
-if|if
-condition|(
-name|bt848_i2c_attach
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"bktr%d: i2c_attach: can't attach\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/*  * PCI latency timer.  32 is a good value for 4 bus mastering slots, if  * you have more than four, then 16 would probably be a better value.  */
 ifndef|#
 directive|ifndef

@@ -934,17 +934,20 @@ name|pcf
 operator|->
 name|iicbus
 operator|=
-name|iicbus_alloc_bus
+name|device_add_child
 argument_list|(
 name|pcfdev
+argument_list|,
+literal|"iicbus"
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* probe and attach the iicbus */
-name|device_probe_and_attach
+name|bus_generic_attach
 argument_list|(
-name|pcf
-operator|->
-name|iicbus
+name|pcfdev
 argument_list|)
 expr_stmt|;
 return|return

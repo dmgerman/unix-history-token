@@ -2022,9 +2022,6 @@ name|device_t
 name|iicbb
 decl_stmt|;
 name|device_t
-name|iicbus
-decl_stmt|;
-name|device_t
 name|smbus
 decl_stmt|;
 block|}

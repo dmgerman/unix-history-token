@@ -212,6 +212,19 @@ name|I2C_DELAY
 value|40
 end_define
 
+begin_comment
+comment|/* Compilation is void if BKTR_USE_FREEBSD_SMBUS is not  * defined. This allows bktr owners to have smbus active for there  * motherboard and still use their bktr without smbus.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BKTR_USE_FREEBSD_SMBUS
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -268,13 +281,6 @@ name|bktr_sc
 operator|->
 name|i2c_sc
 decl_stmt|;
-name|device_t
-modifier|*
-name|list
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
 name|sc
 operator|->
 name|smbus
@@ -323,42 +329,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* the iicbus is the first child of device iicbb */
-name|device_get_children
-argument_list|(
-name|sc
-operator|->
-name|iicbb
-argument_list|,
-operator|&
-name|list
-argument_list|,
-operator|&
-name|count
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|count
-condition|)
-block|{
-name|sc
-operator|->
-name|iicbus
-operator|=
-name|list
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|free
-argument_list|(
-name|list
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -1526,6 +1496,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(BKTR_USE_FREEBSD_SMBUS) */
+end_comment
 
 end_unit
 
