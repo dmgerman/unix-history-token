@@ -6345,7 +6345,9 @@ name|mn_timeout
 argument_list|,
 name|xsc
 argument_list|,
-literal|1000
+literal|10
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 name|round
