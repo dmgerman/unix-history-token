@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstab.c	5.16 (Berkeley) %G%"
+literal|"@(#)fstab.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -992,6 +992,18 @@ argument_list|(
 name|_PATH_FSTAB
 argument_list|)
 operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+literal|": "
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
