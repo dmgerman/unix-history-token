@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mv.c	5.10 (Berkeley) %G%"
+literal|"@(#)mv.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1105,7 +1105,7 @@ argument_list|()
 operator|)
 condition|)
 block|{
-name|execlp
+name|execl
 argument_list|(
 name|_PATH_CP
 argument_list|,
@@ -1116,6 +1116,8 @@ argument_list|,
 name|from
 argument_list|,
 name|to
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|error
@@ -1171,7 +1173,7 @@ argument_list|()
 operator|)
 condition|)
 block|{
-name|execlp
+name|execl
 argument_list|(
 name|_PATH_RM
 argument_list|,
@@ -1180,6 +1182,8 @@ argument_list|,
 literal|"-rf"
 argument_list|,
 name|from
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|error
