@@ -1080,6 +1080,11 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
+name|BPFD_LOCK_ASSERT
+argument_list|(
+name|bpf_d
+argument_list|)
+expr_stmt|;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -1330,6 +1335,11 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|BPFD_LOCK_ASSERT
+argument_list|(
+name|bpf_d
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -232,6 +232,16 @@ parameter_list|)
 value|mtx_unlock(&(bd)->bd_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BPFD_LOCK_ASSERT
+parameter_list|(
+name|bd
+parameter_list|)
+value|mtx_assert(&(bd)->bd_mtx, MA_OWNED)
+end_define
+
 begin_comment
 comment|/* Test whether a BPF is ready for read(). */
 end_comment
