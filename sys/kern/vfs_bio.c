@@ -11280,8 +11280,6 @@ name|i
 decl_stmt|,
 name|bogus
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -11329,6 +11327,9 @@ argument_list|)
 expr_stmt|;
 name|retry
 label|:
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -11357,7 +11358,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|m
 argument_list|,
@@ -11504,6 +11505,9 @@ operator|)
 name|PAGE_MASK
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|bogus
