@@ -19,6 +19,16 @@ literal|"@(#)wwenviron.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -66,6 +76,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_include
 include|#
@@ -122,7 +138,7 @@ name|i
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|0
 argument_list|)

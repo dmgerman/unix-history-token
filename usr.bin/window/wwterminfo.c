@@ -19,6 +19,16 @@ literal|"@(#)wwterminfo.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -214,7 +224,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"cd %s; %s cap>info 2>/dev/null; %s info>/dev/null 2>&1"
+literal|"cd %s; %s cap>info 2>"
+name|_PATH_DEVNULL
+literal|"; %s info>"
+name|_PATH_DEVNULL
+literal|" 2>&1"
 argument_list|,
 name|wwterminfopath
 argument_list|,
