@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -558,6 +558,12 @@ name|defined
 argument_list|(
 name|hp300
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
 end_if
 
 begin_define
@@ -753,11 +759,28 @@ endif|#
 directive|endif
 comment|/* not lint */
 comment|/* 	 * Insure that we cannot be recursively invoked. 	 * this requires that splhigh() and splx() below 	 * do NOT call mcount! 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+asm|asm("movw	sr,%0" : "=g" (s));
+asm|asm("movw	#0x2700,sr");
+else|#
+directive|else
 name|s
 operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Check that frompcindex is a reasonable pc value. 	 * For example:	signal catchers get called from the stack, 	 *	not from text space.  too bad. 	 */
 name|frompcindex
 operator|=
@@ -1042,11 +1065,27 @@ block|}
 block|}
 name|done
 label|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+asm|asm("movw	%0,sr" : : "g" (s));
+else|#
+directive|else
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* and fall through */
 name|out
 label|:
