@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,34 +17,67 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFS_TIMEO
+name|NFS_HZ
 value|10
 end_define
 
 begin_comment
-comment|/* Timeout in .1 sec intervals */
+comment|/* Ticks per second for NFS timeouts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_TIMEO
+value|(1*NFS_HZ)
+end_define
+
+begin_comment
+comment|/* Default timeout = 1 second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MINTIMEO
+value|(NFS_HZ/2)
+end_define
+
+begin_comment
+comment|/* Min timeout to use */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NFS_MAXTIMEO
-value|600
+value|(60*NFS_HZ)
 end_define
 
 begin_comment
-comment|/* Max timeout to backoff too in .1 sec */
+comment|/* Max timeout to backoff to */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NFS_ATTRTIMEO
-value|5
+name|NFS_MAXREXMIT
+value|100
 end_define
 
 begin_comment
-comment|/* Attribute cache timeout in sec */
+comment|/* Stop counting after this many */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MAXWINDOW
+value|1024
+end_define
+
+begin_comment
+comment|/* Max number of outstanding requests */
 end_comment
 
 begin_define
@@ -56,6 +89,28 @@ end_define
 
 begin_comment
 comment|/* Num of retrans for soft mounts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_FISHY
+value|6
+end_define
+
+begin_comment
+comment|/* Host not responding at this count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_ATTRTIMEO
+value|5
+end_define
+
+begin_comment
+comment|/* Attribute cache timeout in sec */
 end_comment
 
 begin_define
@@ -99,7 +154,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* Max. number of async_daemons runnable */
+comment|/* Max. number async_daemons runnable */
 end_comment
 
 begin_define
@@ -156,21 +211,61 @@ decl_stmt|;
 name|u_long
 name|r_xid
 decl_stmt|;
-name|u_long
-name|r_inaddr
+name|short
+name|r_flags
 decl_stmt|;
-name|u_long
+comment|/* flags on request, see below */
+name|short
 name|r_retry
 decl_stmt|;
-name|u_long
-name|r_timeout
+comment|/* max retransmission count */
+name|short
+name|r_rexmit
 decl_stmt|;
-name|u_long
+comment|/* current retrans count */
+name|short
 name|r_timer
 decl_stmt|;
+comment|/* tick counter on reply */
+name|short
+name|r_timerinit
+decl_stmt|;
+comment|/* reinit tick counter on reply */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Flag values for r_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_TIMING
+value|0x01
+end_define
+
+begin_comment
+comment|/* timing request (in mntp) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_SENT
+value|0x02
+end_define
+
+begin_comment
+comment|/* request has been sent */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * Silly rename structure that hangs off the nfsnode until the name  * can be removed by nfs_inactive()  */
@@ -211,6 +306,15 @@ directive|define
 name|RMDIR
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Stats structure  */
@@ -272,6 +376,18 @@ name|int
 name|srv_errs
 decl_stmt|;
 name|int
+name|rpcrequests
+decl_stmt|;
+name|int
+name|rpctimeouts
+decl_stmt|;
+name|int
+name|rpcunexpected
+decl_stmt|;
+name|int
+name|rpcinvalid
+decl_stmt|;
+name|int
 name|srvcache_inproghits
 decl_stmt|;
 name|int
@@ -304,6 +420,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 end_unit
 
