@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.25 (Berkeley) %G%"
+literal|"@(#)cp.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -980,8 +980,6 @@ name|to_stat
 operator|.
 name|st_mode
 argument_list|)
-operator|!=
-name|S_IFDIR
 condition|)
 block|{
 operator|(
