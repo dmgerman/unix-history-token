@@ -180,20 +180,6 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|kse
 argument_list|)
-name|ke_kglist
-expr_stmt|;
-comment|/* (*) Queue of KSEs in ke_ksegrp. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|kse
-argument_list|)
-name|ke_kgrlist
-expr_stmt|;
-comment|/* (*) Queue of KSEs in this state. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|kse
-argument_list|)
 name|ke_procq
 expr_stmt|;
 comment|/* (j/z) Run queue. */
@@ -207,10 +193,6 @@ name|fixpt_t
 name|ke_pctcpu
 decl_stmt|;
 comment|/* (j) %cpu during p_swtime. */
-name|u_char
-name|ke_oncpu
-decl_stmt|;
-comment|/* (j) Which cpu we are on. */
 name|char
 name|ke_rqindex
 decl_stmt|;
@@ -365,10 +347,6 @@ name|int
 name|skg_concurrency
 decl_stmt|;
 comment|/* (j) Num KSEs requested in group. */
-name|int
-name|skg_runq_kses
-decl_stmt|;
-comment|/* (j) Num KSEs on runq. */
 block|}
 struct|;
 end_struct
@@ -392,13 +370,6 @@ define|#
 directive|define
 name|kg_concurrency
 value|kg_sched->skg_concurrency
-end_define
-
-begin_define
-define|#
-directive|define
-name|kg_runq_kses
-value|kg_sched->skg_runq_kses
 end_define
 
 begin_define
@@ -2167,13 +2138,6 @@ name|thread0
 expr_stmt|;
 name|kse0
 operator|.
-name|ke_oncpu
-operator|=
-name|NOCPU
-expr_stmt|;
-comment|/* wrong.. can we use PCPU(cpuid) yet? */
-name|kse0
-operator|.
 name|ke_state
 operator|=
 name|KES_THREAD
@@ -3936,13 +3900,6 @@ argument_list|)
 expr_stmt|;
 name|ke
 operator|->
-name|ke_ksegrp
-operator|->
-name|kg_runq_kses
-operator|++
-expr_stmt|;
-name|ke
-operator|->
 name|ke_state
 operator|=
 name|KES_ONRUNQ
@@ -4052,13 +4009,6 @@ operator|->
 name|ke_state
 operator|=
 name|KES_THREAD
-expr_stmt|;
-name|td
-operator|->
-name|td_ksegrp
-operator|->
-name|kg_runq_kses
-operator|--
 expr_stmt|;
 block|}
 end_function
@@ -4224,13 +4174,6 @@ operator|->
 name|ke_state
 operator|=
 name|KES_THREAD
-expr_stmt|;
-name|ke
-operator|->
-name|ke_ksegrp
-operator|->
-name|kg_runq_kses
-operator|--
 expr_stmt|;
 name|KASSERT
 argument_list|(

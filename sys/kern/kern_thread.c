@@ -1311,15 +1311,6 @@ argument_list|(
 operator|&
 name|kg
 operator|->
-name|kg_slpq
-argument_list|)
-expr_stmt|;
-comment|/* links with td_runq */
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|kg
-operator|->
 name|kg_upcalls
 argument_list|)
 expr_stmt|;
@@ -1334,12 +1325,6 @@ comment|/* 	 * the following counters are in the -zero- section 	 * and may not 
 name|kg
 operator|->
 name|kg_numthreads
-operator|=
-literal|0
-expr_stmt|;
-name|kg
-operator|->
-name|kg_runnable
 operator|=
 literal|0
 expr_stmt|;

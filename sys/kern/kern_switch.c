@@ -405,11 +405,6 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
-name|kg
-operator|->
-name|kg_runnable
-operator|--
-expr_stmt|;
 block|}
 name|CTR2
 argument_list|(
@@ -760,11 +755,6 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
-name|kg
-operator|->
-name|kg_runnable
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|ke
@@ -999,11 +989,6 @@ name|td
 argument_list|,
 name|td_runq
 argument_list|)
-expr_stmt|;
-name|kg
-operator|->
-name|kg_runnable
-operator|--
 expr_stmt|;
 name|TD_SET_CAN_RUN
 argument_list|(
@@ -1763,11 +1748,6 @@ operator|->
 name|td_priority
 condition|)
 block|{
-name|kg
-operator|->
-name|kg_runnable
-operator|++
-expr_stmt|;
 name|TAILQ_INSERT_BEFORE
 argument_list|(
 name|td2
@@ -1788,11 +1768,6 @@ name|NULL
 condition|)
 block|{
 comment|/* We ran off the end of the TAILQ or it was empty. */
-name|kg
-operator|->
-name|kg_runnable
-operator|++
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -3526,12 +3501,6 @@ operator|->
 name|ke_thread
 operator|=
 name|td
-expr_stmt|;
-name|ke
-operator|->
-name|ke_oncpu
-operator|=
-name|NOCPU
 expr_stmt|;
 name|ke
 operator|->

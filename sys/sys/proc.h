@@ -1728,14 +1728,6 @@ comment|/* (td_runq) waiting RUNNABLE threads */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|thread
-argument_list|)
-name|kg_slpq
-expr_stmt|;
-comment|/* (td_runq) NONRUNNABLE threads. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
 argument|kse_upcall
 argument_list|)
 name|kg_upcalls
@@ -1753,10 +1745,6 @@ name|u_int
 name|kg_slptime
 decl_stmt|;
 comment|/* (j) How long completely blocked. */
-name|int
-name|kg_runnable
-decl_stmt|;
-comment|/* (j) Num runnable threads on queue. */
 name|int
 name|kg_numupcalls
 decl_stmt|;
