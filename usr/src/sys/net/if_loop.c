@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.8	82/03/28	*/
+comment|/*	if_loop.c	4.9	82/03/30	*/
 end_comment
 
 begin_comment
@@ -67,6 +67,12 @@ directive|include
 file|"../h/mtpr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -117,6 +123,11 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|LOATTACH
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_name
@@ -183,6 +194,15 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|if_rtinit
+argument_list|(
+name|ifp
+argument_list|,
+name|RTF_DIRECT
+operator||
+name|RTF_UP
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -235,6 +255,11 @@ name|ifqueue
 modifier|*
 name|ifq
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|LOOUTPUT
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_opackets

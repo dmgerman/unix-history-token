@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.44	82/03/28	*/
+comment|/*	if_en.c	4.45	82/03/30	*/
 end_comment
 
 begin_include
@@ -137,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|"../net/pup.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_define
@@ -912,6 +918,18 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|if_rtinit
+argument_list|(
+operator|&
+name|es
+operator|->
+name|es_if
+argument_list|,
+name|RTF_DIRECT
+operator||
+name|RTF_UP
 argument_list|)
 expr_stmt|;
 block|}

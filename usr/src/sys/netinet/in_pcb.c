@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.23	82/03/29	*/
+comment|/*	in_pcb.c	4.24	82/03/30	*/
 end_comment
 
 begin_include
@@ -961,7 +961,7 @@ name|inp_route
 operator|.
 name|ro_rt
 condition|)
-name|freeroute
+name|rtfree
 argument_list|(
 name|inp
 operator|->

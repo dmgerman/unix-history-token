@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.36	82/03/29	*/
+comment|/*	ip_input.c	1.37	82/03/30	*/
 end_comment
 
 begin_include
@@ -84,23 +84,6 @@ include|#
 directive|include
 file|"../net/tcp.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/route.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|IPTTLDEC
-value|5
-end_define
-
-begin_comment
-comment|/* doesn't belong here */
-end_comment
 
 begin_decl_stmt
 name|u_char
@@ -755,15 +738,13 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|register
-name|struct
-name|rtentry
-modifier|*
-name|rt
-decl_stmt|;
 name|printf
 argument_list|(
-literal|"forward: dst %x ttl %x\n"
+literal|"forward: src %x dst %x ttl %x\n"
+argument_list|,
+name|ip
+operator|->
+name|ip_src
 argument_list|,
 name|ip
 operator|->

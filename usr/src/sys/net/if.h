@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.11	82/03/28	*/
+comment|/*	if.h	4.12	82/03/30	*/
 end_comment
 
 begin_comment
@@ -166,6 +166,17 @@ end_define
 
 begin_comment
 comment|/* turn on debugging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_ROUTE
+value|0x8
+end_define
+
+begin_comment
+comment|/* routine entry installed */
 end_comment
 
 begin_comment

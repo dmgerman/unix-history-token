@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.7	82/03/28	*/
+comment|/*	if_dmc.c	4.8	82/03/30	*/
 end_comment
 
 begin_include
@@ -154,6 +154,12 @@ begin_include
 include|#
 directive|include
 file|"../net/ip_var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_comment
@@ -388,6 +394,11 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|DMCPROBE
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -555,6 +566,11 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|DMCATTACH
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_if
@@ -723,6 +739,11 @@ name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|DMCRESET
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -819,6 +840,11 @@ decl_stmt|;
 name|int
 name|base
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|DMCINIT
+argument_list|)
+expr_stmt|;
 name|printd
 argument_list|(
 literal|"dmcinit\n"
@@ -1025,6 +1051,52 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
+comment|/* set up routing table entry */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_ROUTE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|rtinit
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_addr
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_addr
+argument_list|,
+name|RTF_DIRECT
+operator||
+name|RTF_UP
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator||=
+name|IFF_ROUTE
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1087,6 +1159,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|DMCSTART
+argument_list|)
+expr_stmt|;
 name|printd
 argument_list|(
 literal|"dmcstart\n"
@@ -1272,6 +1349,11 @@ name|sps
 decl_stmt|,
 name|n
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|DMCLOAD
+argument_list|)
+expr_stmt|;
 name|printd
 argument_list|(
 literal|"dmcload: 0x%x 0x%x 0x%x\n"
@@ -1432,6 +1514,11 @@ decl_stmt|,
 name|w1
 decl_stmt|;
 comment|/* DEBUG */
+name|COUNT
+argument_list|(
+name|DMCRINT
+argument_list|)
+expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -1648,6 +1735,11 @@ name|cmd
 decl_stmt|,
 name|len
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|DMCXINT
+argument_list|)
+expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -2082,6 +2174,11 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|DMCOUTPUT
+argument_list|)
+expr_stmt|;
 name|printd
 argument_list|(
 literal|"dmcoutput\n"

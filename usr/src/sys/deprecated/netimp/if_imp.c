@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.20	82/03/28	*/
+comment|/*	if_imp.c	4.21	82/03/30	*/
 end_comment
 
 begin_include
@@ -133,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|"../net/ip_var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_comment
@@ -390,6 +396,11 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 if|if
 condition|(
 call|(
@@ -439,6 +450,18 @@ expr_stmt|;
 name|impnoops
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|if_rtinit
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|imp_if
+argument_list|,
+name|RTF_DIRECT
+operator||
+name|RTF_UP
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.h	4.4	82/03/29	*/
+comment|/*	route.h	4.5	82/03/30	*/
 end_comment
 
 begin_comment
@@ -12,9 +12,12 @@ struct|struct
 name|rtentry
 block|{
 name|u_long
-name|rt_key
+name|rt_hash
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* lookup key */
+comment|/* [0] for net, [1] for host */
 name|struct
 name|sockaddr
 name|rt_dst
@@ -121,15 +124,6 @@ name|RTHASHSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|struct
-name|rtentry
-modifier|*
-name|reroute
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

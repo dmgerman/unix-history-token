@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip.h 1.9 81/11/18 */
+comment|/* ip.h 1.10 82/03/30 */
 end_comment
 
 begin_comment
@@ -406,6 +406,17 @@ end_define
 
 begin_comment
 comment|/* time to live for frag chains */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTTLDEC
+value|5
+end_define
+
+begin_comment
+comment|/* subtracted when forwarding */
 end_comment
 
 end_unit
