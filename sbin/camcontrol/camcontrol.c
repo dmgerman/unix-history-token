@@ -10586,6 +10586,19 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
+literal|"%s initiator ID: %d\n"
+argument_list|,
+name|adapter_str
+argument_list|,
+name|cpi
+operator|->
+name|initiator_id
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
 literal|"%s SIM vendor: %s\n"
 argument_list|,
 name|adapter_str
