@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.50
+literal|3.51
 operator|%
 name|G
 operator|%
@@ -59,7 +59,7 @@ name|buf
 index|[
 name|MAXFIELD
 operator|+
-literal|1
+literal|2
 index|]
 decl_stmt|;
 specifier|register
@@ -251,8 +251,7 @@ name|fgets
 argument_list|(
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|MAXFIELD
 argument_list|,
 name|InChannel
 argument_list|)
@@ -302,7 +301,7 @@ name|fixcrlf
 argument_list|(
 name|buf
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* see if the header is over */
@@ -349,6 +348,12 @@ operator|*
 name|p
 operator|++
 operator|=
+literal|'\n'
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
 name|c
 expr_stmt|;
 if|if
@@ -357,8 +362,7 @@ name|fgets
 argument_list|(
 name|p
 argument_list|,
-sizeof|sizeof
-name|buf
+name|MAXFIELD
 operator|-
 operator|(
 name|p
@@ -376,7 +380,7 @@ name|fixcrlf
 argument_list|(
 name|p
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -452,7 +456,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'\n'
+literal|'\0'
 condition|)
 block|{
 operator|(
@@ -462,8 +466,7 @@ name|fgets
 argument_list|(
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|MAXFIELD
 argument_list|,
 name|InChannel
 argument_list|)
@@ -472,7 +475,7 @@ name|fixcrlf
 argument_list|(
 name|buf
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -520,7 +523,7 @@ name|fixcrlf
 argument_list|(
 name|buf
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* check for end-of-message */
@@ -613,6 +616,8 @@ operator|->
 name|e_msgsize
 operator|+=
 name|i
+operator|+
+literal|1
 expr_stmt|;
 name|fputs
 argument_list|(
@@ -621,17 +626,6 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|!=
-literal|'\n'
-condition|)
 name|fputs
 argument_list|(
 literal|"\n"

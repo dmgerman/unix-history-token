@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -72,11 +72,6 @@ modifier|*
 modifier|*
 name|hp
 decl_stmt|;
-specifier|extern
-name|bool
-name|isheader
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|fname
@@ -132,27 +127,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
-comment|/* strip off trailing newline */
-name|p
-operator|=
-name|rindex
-argument_list|(
-name|line
-argument_list|,
-literal|'\n'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|p
-operator|=
-literal|'\0'
-expr_stmt|;
 comment|/* strip off options */
 name|mopts
 operator|=
@@ -995,7 +969,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	A line is a header if it has a single word followed by **	optional white space followed by a colon. ** **	Parameters: **		s -- string to check for possible headerness. ** **	Returns: **		TRUE if s is a header. **		FALSE otherwise. ** **	Side Effects: **		none. ** **	Bugs: **		According to RFC733, there should be a newline **		permitted after the word but before the colon. **		We don't seem to support that..... */
+comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	A line is a header if it has a single word followed by **	optional white space followed by a colon. ** **	Parameters: **		s -- string to check for possible headerness. ** **	Returns: **		TRUE if s is a header. **		FALSE otherwise. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -1037,6 +1011,11 @@ operator|*
 name|s
 operator|!=
 literal|':'
+operator|&&
+operator|*
+name|s
+operator|!=
+literal|'\0'
 condition|)
 name|s
 operator|++
