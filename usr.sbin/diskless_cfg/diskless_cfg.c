@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*************************************************************************  Diskless Configuration Program  Based loosely on the 4.4BSD diskless setup code  *************************************************************************/
+comment|/*************************************************************************  Diskless Configuration Program  Based loosely on the 4.4BSD diskless setup code  Solaris 2.3: compile with -lbsm -lnsl -lsocket.  *************************************************************************/
 end_comment
 
 begin_include
@@ -68,6 +68,38 @@ include|#
 directive|include
 file|<nfs/nfs.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SVR4
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|getfh
+value|nfs_getfh
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcopy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|memcpy(b,a,c)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -452,7 +484,7 @@ name|netmask
 operator|=
 literal|0
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|nfs_diskless
