@@ -262,6 +262,11 @@ directive|define
 name|TF_MORETOCOME
 value|0x10000
 comment|/* More data to be appended to sock */
+define|#
+directive|define
+name|TF_LQ_OVERFLOW
+value|0x20000
+comment|/* listen queue overflow */
 name|int
 name|t_force
 decl_stmt|;
