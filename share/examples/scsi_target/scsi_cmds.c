@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -1634,7 +1628,7 @@ name|inq
 operator|->
 name|version
 operator|=
-name|SCSI_REV_SPC
+name|SCSI_REV_3
 expr_stmt|;
 comment|/* was 2 */
 comment|/* 	 * XXX cpi.hba_inquiry doesn't support Addr16 so we give the 	 * user what they want if they ask for it. 	 */
