@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ioctl.h"
 end_include
 
@@ -61,12 +55,6 @@ directive|include
 file|"file.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"uio.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -87,6 +75,10 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|mode
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -99,18 +91,21 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flag
+decl_stmt|,
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -212,6 +207,8 @@ argument_list|,
 argument|uio
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -229,6 +226,14 @@ name|uio
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -239,7 +244,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|curproc
+name|p
 argument_list|)
 decl_stmt|;
 name|int
@@ -253,7 +258,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|EIO
 operator|)
 return|;
 name|VOP_LOCK
@@ -299,6 +304,8 @@ argument_list|,
 argument|uio
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -316,6 +323,14 @@ name|uio
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -326,7 +341,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|curproc
+name|p
 argument_list|)
 decl_stmt|;
 name|int
@@ -340,7 +355,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|EIO
 operator|)
 return|;
 name|VOP_LOCK
@@ -388,6 +403,8 @@ argument_list|,
 argument|addr
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -415,6 +432,14 @@ name|flag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -424,7 +449,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|curproc
+name|p
 argument_list|)
 decl_stmt|;
 if|if
@@ -435,7 +460,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|EIO
 operator|)
 return|;
 if|if
@@ -450,11 +475,11 @@ condition|(
 operator|!
 name|SESS_LEADER
 argument_list|(
-name|curproc
+name|p
 argument_list|)
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_flag
 operator|&=
@@ -503,6 +528,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -518,6 +545,14 @@ name|flag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -527,7 +562,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|curproc
+name|p
 argument_list|)
 decl_stmt|;
 if|if
