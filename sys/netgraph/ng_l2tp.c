@@ -1110,7 +1110,7 @@ name|s
 parameter_list|,
 name|l
 parameter_list|)
-value|ovbcopy(s, d, l)
+value|bcopy(s, d, l)
 end_define
 
 begin_comment

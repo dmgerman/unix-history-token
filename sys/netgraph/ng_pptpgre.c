@@ -3113,7 +3113,7 @@ operator|=
 name|PPTP_MIN_TIMEOUT
 expr_stmt|;
 comment|/* Shift packet transmit times in our transmit window */
-name|ovbcopy
+name|bcopy
 argument_list|(
 name|a
 operator|->
