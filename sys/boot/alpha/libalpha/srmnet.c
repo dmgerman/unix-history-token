@@ -609,38 +609,12 @@ name|netbbinfo
 operator|.
 name|set
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"netbbinfo "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|netbbinfovalid
-condition|)
-name|printf
-argument_list|(
-literal|"invalid\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"valid: force = %d, ea = %s\n"
-argument_list|,
-name|netbbinfo
-operator|.
-name|force
-argument_list|,
-name|ether_sprintf
-argument_list|(
-name|netbbinfo
-operator|.
-name|ether_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("netbbinfo ");     if (!netbbinfovalid) 	printf("invalid\n");     else 	printf("valid: force = %d, ea = %s\n", netbbinfo.force, 	       ether_sprintf(netbbinfo.ether_addr));
+endif|#
+directive|endif
 name|ret
 operator|.
 name|bits
