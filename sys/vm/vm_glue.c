@@ -1849,7 +1849,6 @@ name|td_state
 operator|==
 name|TDS_SWAPPED
 condition|)
-comment|/* XXXKSE */
 name|setrunqueue
 argument_list|(
 name|td
