@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	5.3 (Berkeley) %G%"
+literal|"@(#)log.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,6 +357,14 @@ name|logstr
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|,
+modifier|*
+name|index
+argument_list|()
+decl_stmt|,
+modifier|*
+name|rindex
+argument_list|()
 decl_stmt|;
 name|SCORE
 name|score
