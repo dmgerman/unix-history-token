@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	1.1	%G%	*/
+comment|/*	mba.c	1.2	%G%	*/
 end_comment
 
 begin_include
@@ -146,7 +146,9 @@ name|mbanum
 index|[
 name|io
 operator|->
-name|i_unit
+name|i_ino
+operator|.
+name|i_dev
 index|]
 index|]
 expr_stmt|;
