@@ -27,6 +27,14 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Define if the closedir function returns void instead of int.  */
+end_comment
+
+begin_comment
+comment|/* #undef CLOSEDIR_VOID */
+end_comment
+
+begin_comment
 comment|/* Define to empty if the keyword does not work.  */
 end_comment
 
@@ -54,6 +62,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if your struct stat has st_blksize.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ST_BLKSIZE
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have<sys/wait.h> that is POSIX.1 compatible.  */
 end_comment
 
@@ -74,6 +93,14 @@ directive|define
 name|HAVE_UTIME_NULL
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have<vfork.h>.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_VFORK_H */
+end_comment
 
 begin_comment
 comment|/* Define if on MINIX.  */
@@ -173,11 +200,27 @@ comment|/* #undef uid_t */
 end_comment
 
 begin_comment
+comment|/* Define vfork as fork if vfork does not work.  */
+end_comment
+
+begin_comment
+comment|/* #undef vfork */
+end_comment
+
+begin_comment
 comment|/* Define if you have MIT Kerberos version 4 available.  */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_KERBEROS */
+end_comment
+
+begin_comment
+comment|/* Define if you have GSSAPI with MIT Kerberos version 5 available.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI */
 end_comment
 
 begin_comment
@@ -227,6 +270,52 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_CONNECT */
+end_comment
+
+begin_comment
+comment|/* Define if you have memchr (always for CVS).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MEMCHR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have strchr (always for CVS).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCHR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if utime requires write access to the file (true on Windows,    but not Unix).  */
+end_comment
+
+begin_comment
+comment|/* #undef UTIME_EXPECTS_WRITABLE */
+end_comment
+
+begin_comment
+comment|/* Define if setmode is required when writing binary data to stdout.  */
+end_comment
+
+begin_comment
+comment|/* #undef USE_SETMODE_STDOUT */
+end_comment
+
+begin_comment
+comment|/* Define if the diff library should use setmode for binary files.    FIXME: Why two different macros for setmode?  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SETMODE */
 end_comment
 
 begin_comment
@@ -329,17 +418,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_KRB_GET_ERR_TEXT */
 end_comment
-
-begin_comment
-comment|/* Define if you have the mkfifo function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MKFIFO
-value|1
-end_define
 
 begin_comment
 comment|/* Define if you have the mktemp function.  */
@@ -463,17 +541,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the vfork function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_VFORK
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the vprintf function.  */
 end_comment
 
@@ -545,6 +612,17 @@ comment|/* #undef HAVE_IO_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the<limits.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMITS_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<memory.h> header file.  */
 end_comment
 
@@ -600,6 +678,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SYS_DIR_H */
 end_comment
+
+begin_comment
+comment|/* Define if you have the<sys/file.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_FILE_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<sys/ndir.h> header file.  */
@@ -696,6 +785,14 @@ directive|define
 name|HAVE_LIBCRYPT
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the gen library (-lgen).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBGEN */
+end_comment
 
 begin_comment
 comment|/* Define if you have the inet library (-linet).  */
