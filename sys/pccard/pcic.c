@@ -380,7 +380,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|unsigned
 name|char
 name|getb1
@@ -420,7 +420,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|unsigned
 name|char
 name|getb2
@@ -453,7 +453,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|putb1
 parameter_list|(
@@ -497,7 +497,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|putb2
 parameter_list|(
@@ -532,7 +532,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|clrb
 parameter_list|(
@@ -579,7 +579,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|setb
 parameter_list|(
@@ -625,7 +625,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|putw
 parameter_list|(
@@ -960,6 +960,19 @@ end_endif
 
 begin_function
 specifier|static
+name|void
+name|nullfunc
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+block|{
+comment|/* empty */
+block|}
+end_function
+
+begin_function
+specifier|static
 name|u_int
 name|build_freelist
 parameter_list|(
@@ -967,10 +980,6 @@ name|u_int
 name|pcic_mask
 parameter_list|)
 block|{
-name|inthand2_t
-modifier|*
-name|nullfunc
-decl_stmt|;
 name|int
 name|irq
 decl_stmt|;
@@ -2750,37 +2759,6 @@ literal|"Unknown!"
 expr_stmt|;
 break|break;
 block|}
-ifndef|#
-directive|ifndef
-name|PCIC_NOCLRREGS
-comment|/* 		 *	clear out the registers. 		 */
-for|for
-control|(
-name|i
-operator|=
-literal|2
-init|;
-name|i
-operator|<
-literal|0x40
-condition|;
-name|i
-operator|++
-control|)
-name|sp
-operator|->
-name|putb
-argument_list|(
-name|sp
-argument_list|,
-name|i
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCIC_NOCLRREGS */
 comment|/* 		 *	OK it seems we have a PCIC or lookalike. 		 *	Allocate a slot and initialise the data structures. 		 */
 name|validslots
 operator|++
@@ -4348,6 +4326,11 @@ modifier|*
 name|chan
 parameter_list|)
 block|{
+name|pcicintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|timeout
 argument_list|(
 name|pcictimeout
@@ -4357,11 +4340,6 @@ argument_list|,
 name|hz
 operator|/
 literal|2
-argument_list|)
-expr_stmt|;
-name|pcicintr
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
