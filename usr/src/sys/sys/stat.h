@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -543,12 +543,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IMMUTABLE
+name|USR_IMMUTABLE
 value|0x00000002
 end_define
 
 begin_comment
 comment|/* file may not be changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USR_APPEND
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* writes to file may only append */
 end_comment
 
 begin_comment
@@ -565,6 +576,46 @@ end_define
 begin_comment
 comment|/* file is archived */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_IMMUTABLE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* file may not be changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_APPEND
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* writes to file may only append */
+end_comment
+
+begin_comment
+comment|/*  * Shorthand abbreviations of above.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMMUTABLE
+value|(USR_IMMUTABLE | SYS_IMMUTABLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APPEND
+value|(USR_APPEND | SYS_APPEND)
+end_define
 
 begin_endif
 endif|#
