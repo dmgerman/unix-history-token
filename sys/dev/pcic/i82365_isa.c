@@ -350,12 +350,7 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-name|device_get_softc
+name|PCIC_SOFTC
 argument_list|(
 name|dev
 argument_list|)
@@ -1166,11 +1161,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|pcic_deactivate
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|pcic_detach
 argument_list|(
 name|dev

@@ -809,12 +809,7 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-name|device_get_softc
+name|PCIC_SOFTC
 argument_list|(
 name|dev
 argument_list|)
@@ -1107,7 +1102,7 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-name|device_get_softc
+name|PCIC_SOFTC
 argument_list|(
 name|dev
 argument_list|)
@@ -1235,12 +1230,7 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-name|device_get_softc
+name|PCIC_SOFTC
 argument_list|(
 name|dev
 argument_list|)
@@ -3636,30 +3626,13 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"pcic_attach_card h %p h->dev %p %s %s\n"
+literal|"pcic_attach_card h %p h->dev %p\n"
 operator|,
 name|h
 operator|,
 name|h
 operator|->
 name|dev
-operator|,
-name|device_get_name
-argument_list|(
-name|h
-operator|->
-name|dev
-argument_list|)
-operator|,
-name|device_get_name
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|h
-operator|->
-name|dev
-argument_list|)
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3675,6 +3648,13 @@ name|PCIC_FLAG_CARDP
 operator|)
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"Calling MI attach function\n"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* call the MI attach function */
 name|CARD_ATTACH_CARD
 argument_list|(
@@ -3695,7 +3675,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"pcic_attach_card: already attached"
+literal|"pcic_attach_card: already attached\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3717,6 +3697,19 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"pcic_detach_card h %p h->dev %p\n"
+operator|,
+name|h
+operator|,
+name|h
+operator|->
+name|dev
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|h
@@ -3749,7 +3742,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"pcic_detach_card: already detached"
+literal|"pcic_detach_card: already detached\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7403,9 +7396,6 @@ name|dev
 parameter_list|)
 block|{
 name|device_t
-name|pccarddev
-decl_stmt|;
-name|device_t
 modifier|*
 name|kids
 decl_stmt|;
@@ -7418,6 +7408,11 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|pcic_deactivate
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|bus_generic_detach
@@ -7468,7 +7463,7 @@ name|ret
 operator|=
 name|device_delete_child
 argument_list|(
-name|pccarddev
+name|dev
 argument_list|,
 name|kids
 index|[

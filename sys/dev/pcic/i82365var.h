@@ -692,5 +692,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|PCIC_SOFTC
+parameter_list|(
+name|d
+parameter_list|)
+value|(struct pcic_softc *) device_get_softc(d)
+end_define
+
 end_unit
 
