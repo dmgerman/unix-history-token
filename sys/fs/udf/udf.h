@@ -409,7 +409,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Produce a suitable file number from an ICB.  * XXX If the fileno resolves to 0, we might be in big trouble.  * XXX Assumes the ICB is a long_ad.  This struct is compatible with short_ad,  *     but not ext_ad.  */
+comment|/*  * Produce a suitable file number from an ICB.  The passed in ICB is expected  * to be in little endian (meaning that it hasn't been swapped for big  * endian machines yet).  * XXX If the fileno resolves to 0, we might be in big trouble.  * XXX Assumes the ICB is a long_ad.  This struct is compatible with short_ad,  *     but not ext_ad.  */
 end_comment
 
 begin_function
@@ -426,11 +426,14 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|le32toh
+argument_list|(
 name|icb
 operator|->
 name|loc
 operator|.
 name|lb_num
+argument_list|)
 operator|)
 return|;
 block|}
