@@ -186,7 +186,7 @@ value|ed_novell_reset[unit]
 end_define
 
 begin_comment
-comment|/*  * Card type  *  * Type  Card  *   0   Allied Telesis CenterCom LA-98-T  *   1   MELCO LPC-TJ, LPC-TS / IO-DATA PCLA/T  *   2   PLANET SMART COM 98 EN-2298 / ELECOM LANEED LD-BDN[123]A  *   3   MELCO EGY-98  *   4   MELCO LGY-98, IND-SP, IND-SS / MACNICA NE2098(XXX)  *   5   ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF-2771ET /  *       D-Link DE-298P{T,CAT}, DE-298{T,TP,CAT}  *   6   Allied Telesis SIC-98  *   8   NEC PC-9801-108  *   9   IO-DATA LA-98  */
+comment|/*  * Card type  *  * Type  Card  * 0x00  Allied Telesis CenterCom LA-98-T  * 0x10  MELCO LPC-TJ, LPC-TS / IO-DATA PCLA/T  * 0x20  PLANET SMART COM 98 EN-2298 / ELECOM LANEED LD-BDN[123]A  * 0x30  MELCO EGY-98 / Contec C-NET(98)E-A/L-A  * 0x40  MELCO LGY-98, IND-SP, IND-SS / MACNICA NE2098(XXX)  * 0x50  ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF-2771ET /  *       D-Link DE-298P{T,CAT}, DE-298{T,TP,CAT}  * 0x60  Allied Telesis SIC-98  * 0x80  NEC PC-9801-108  * 0x90  IO-DATA LA-98  * 0xa0  Contec C-NET(98)  * 0xb0  Contec C-NET(98)E/L  */
 end_comment
 
 begin_define
@@ -262,11 +262,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|ED_TYPE98_CNET98
+value|0x1a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE98_CNET98EL
+value|0x1b
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE98_UE2212
+value|0x1c
+end_define
+
+begin_define
+define|#
+directive|define
 name|ED_TYPE98
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x->id_flags& 0xffff0000)>> 16) | ED_TYPE98_BASE)
+value|(((x& 0xffff0000)>> 20) | ED_TYPE98_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE98SUB
+parameter_list|(
+name|x
+parameter_list|)
+value|((x& 0xf0000)>> 16)
 end_define
 
 begin_comment
@@ -1097,6 +1128,347 @@ value|{ \ 	outb(0x2a8e, 0xa4); \ 	outw(0x4a8e, 0xd0); \ 	outw(0x5a8e, 0x0300); \
 end_define
 
 begin_comment
+comment|/*  * C-NET(98)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INIT_ADDR
+value|0xaaed
+end_define
+
+begin_comment
+comment|/* 0xaaed reset register  */
+end_comment
+
+begin_comment
+comment|/* 0xaaef i/o address set */
+end_comment
+
+begin_comment
+comment|/* offset NIC address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_MAP_REG0L
+value|1
+end_define
+
+begin_comment
+comment|/* MAPPING register0 Low  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_MAP_REG1L
+value|3
+end_define
+
+begin_comment
+comment|/* MAPPING register1 Low  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_MAP_REG2L
+value|5
+end_define
+
+begin_comment
+comment|/* MAPPING register2 Low  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_MAP_REG3L
+value|7
+end_define
+
+begin_comment
+comment|/* MAPPING register3 Low  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_MAP_REG0H
+value|9
+end_define
+
+begin_comment
+comment|/* MAPPING register0 Hi   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_MAP_REG1H
+value|11
+end_define
+
+begin_comment
+comment|/* MAPPING register1 Hi   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_MAP_REG2H
+value|13
+end_define
+
+begin_comment
+comment|/* MAPPING register2 Hi   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_MAP_REG3H
+value|15
+end_define
+
+begin_comment
+comment|/* MAPPING register3 Hi   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_WIN_REG
+value|(0x400 +  1)
+end_define
+
+begin_comment
+comment|/* window register        */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_LEV
+value|(0x400 +  3)
+end_define
+
+begin_comment
+comment|/* init level register    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_REQ
+value|(0x400 +  5)
+end_define
+
+begin_comment
+comment|/* init request register  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_MASK
+value|(0x400 +  7)
+end_define
+
+begin_comment
+comment|/* init mask register     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_STAT
+value|(0x400 +  9)
+end_define
+
+begin_comment
+comment|/* init status register   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_CLR
+value|(0x400 +  9)
+end_define
+
+begin_comment
+comment|/* init clear register    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_RESERVE1
+value|(0x400 + 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_RESERVE2
+value|(0x400 + 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_RESERVE3
+value|(0x400 + 15)
+end_define
+
+begin_comment
+comment|/*  * C-NET(98)E/L  */
+end_comment
+
+begin_comment
+comment|/*  * NIC Initial Register(on board JP1)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_INIT
+value|0xaaed
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_INIT2
+value|0x55ed
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_NIC_OFFSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_ASIC_OFFSET
+value|0x400
+end_define
+
+begin_comment
+comment|/* offset to nic i/o regs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_PAGE_OFFSET
+value|0x0000
+end_define
+
+begin_comment
+comment|/* page offset for NIC access to mem */
+end_comment
+
+begin_comment
+comment|/*  * XXX - The I/O address range is fragmented in the CNET98E/L; this is the  *    number of regs at iobase.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_IO_PORTS
+value|16
+end_define
+
+begin_comment
+comment|/* # of i/o addresses used */
+end_comment
+
+begin_comment
+comment|/*  *    Interrupt Configuration Register (offset from ASIC base)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_ICR
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_ICR_IRQ3
+value|0x01
+end_define
+
+begin_comment
+comment|/* Interrupt request 3 select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_ICR_IRQ5
+value|0x02
+end_define
+
+begin_comment
+comment|/* Interrupt request 5 select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_ICR_IRQ6
+value|0x04
+end_define
+
+begin_comment
+comment|/* Interrupt request 6 select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_ICR_IRQ12
+value|0x20
+end_define
+
+begin_comment
+comment|/* Interrupt request 12 select */
+end_comment
+
+begin_comment
+comment|/*  *    Interrupt Mask Register (offset from ASIC base)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_IMR
+value|0x04
+end_define
+
+begin_comment
+comment|/*  *    Interrupt Status Register (offset from ASIC base)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98EL_ISR
+value|0x05
+end_define
+
+begin_comment
 comment|/* register offsets */
 end_comment
 
@@ -1184,7 +1556,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* NE2000, LGY-98, ICM, LPC-T */
+comment|/* NE2000, LGY-98, ICM, LPC-T, C-NET(98)E/L */
 end_comment
 
 begin_decl_stmt
@@ -1473,6 +1845,55 @@ block|,
 literal|0x100c
 block|,
 literal|0x100e
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Contec C-NET(98) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|edp_cnet98
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|0x0000
+block|,
+literal|0x0002
+block|,
+literal|0x0004
+block|,
+literal|0x0006
+block|,
+literal|0x0008
+block|,
+literal|0x000a
+block|,
+literal|0x000c
+block|,
+literal|0x000e
+block|,
+literal|0x0400
+block|,
+literal|0x0402
+block|,
+literal|0x0404
+block|,
+literal|0x0406
+block|,
+literal|0x0408
+block|,
+literal|0x040a
+block|,
+literal|0x040c
+block|,
+literal|0x040e
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1898,6 +2319,84 @@ name|ED_PC_MISC
 operator|=
 literal|0x18
 expr_stmt|;
+name|ED_PC_RESET
+operator|=
+literal|0x1f
+expr_stmt|;
+break|break;
+case|case
+name|ED_TYPE98_CNET98EL
+case|:
+name|edp
+index|[
+name|unit
+index|]
+operator|=
+name|edp_generic
+expr_stmt|;
+name|pc98_io_skip
+index|[
+name|unit
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|ED_NOVELL_NIC_OFFSET
+operator|=
+literal|0
+expr_stmt|;
+name|ED_NOVELL_ASIC_OFFSET
+operator|=
+literal|0x0400
+expr_stmt|;
+name|ED_NOVELL_DATA
+operator|=
+literal|0x000e
+expr_stmt|;
+name|ED_NOVELL_RESET
+operator|=
+literal|0x0000
+expr_stmt|;
+comment|/* dummy */
+name|ED_PC_RESET
+operator|=
+literal|0x1f
+expr_stmt|;
+break|break;
+case|case
+name|ED_TYPE98_CNET98
+case|:
+name|edp
+index|[
+name|unit
+index|]
+operator|=
+name|edp_cnet98
+expr_stmt|;
+name|pc98_io_skip
+index|[
+name|unit
+index|]
+operator|=
+literal|2
+expr_stmt|;
+name|ED_NOVELL_NIC_OFFSET
+operator|=
+literal|0
+expr_stmt|;
+name|ED_NOVELL_ASIC_OFFSET
+operator|=
+literal|0x0400
+expr_stmt|;
+name|ED_NOVELL_DATA
+operator|=
+literal|0x000e
+expr_stmt|;
+name|ED_NOVELL_RESET
+operator|=
+literal|0x0000
+expr_stmt|;
+comment|/* dummy */
 name|ED_PC_RESET
 operator|=
 literal|0x1f

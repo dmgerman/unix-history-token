@@ -2182,8 +2182,17 @@ block|{
 block|{
 literal|"Generic AD1848 codec"
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+name|NEEDS_RESTART
+block|,
+else|#
+directive|else
 name|DMA_AUTOMODE
 block|,
+endif|#
+directive|endif
 name|AFMT_U8
 block|,
 comment|/* Will be set later */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.7 1996/09/10 09:37:35 asami Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.8 1996/09/12 11:09:26 asami Exp $  */
 end_comment
 
 begin_include
@@ -1844,6 +1844,23 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USERCONFIG_BOOT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|USERCONFIG
+argument_list|)
+name|boothowto
+operator||=
+name|RB_CONFIG
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|boothowto
@@ -4558,7 +4575,7 @@ ifdef|#
 directive|ifdef
 name|PC98
 comment|/* 	 * Initialize DMAC 	 */
-name|init_pc98_dmac
+name|pc98_init_dmac
 argument_list|()
 expr_stmt|;
 endif|#
@@ -5302,14 +5319,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|PC98
-ifdef|#
-directive|ifdef
-name|EPSON_MEMWIN
-name|init_epson_memwin
+name|pc98_getmemsize
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|biosbasemem
 operator|=
 literal|640
@@ -5497,19 +5509,7 @@ argument|physmem = pagesinbase -
 literal|1
 argument|; 	} else {
 comment|/* point at first chunk end */
-argument|pa_indx++; 	}
-ifdef|#
-directive|ifdef
-name|PC98
-ifdef|#
-directive|ifdef
-name|notyet
-argument|init_cpu_accel_mem();
-endif|#
-directive|endif
-endif|#
-directive|endif
-argument|for (target_page = avail_start; target_page< ptoa(Maxmem); target_page += PAGE_SIZE) { 		int tmp
+argument|pa_indx++; 	}  	for (target_page = avail_start; target_page< ptoa(Maxmem); target_page += PAGE_SIZE) { 		int tmp
 argument_list|,
 argument|page_bad = FALSE;
 ifdef|#
@@ -5522,7 +5522,7 @@ argument|)) 			page_bad = TRUE;
 endif|#
 directive|endif
 comment|/* 		 * map page into kernel: valid, read/write, non-cacheable 		 */
-argument|*(int *)CMAP1 = PG_V | PG_RW | PG_N | target_page; 		pmap_update();  		tmp = *(int *)CADDR1;
+argument|*(int *)CMAP1 = PG_V | PG_RW | PG_N | target_page; 		invltlb();  		tmp = *(int *)CADDR1;
 comment|/* 		 * Test for alternating 1's and 0's 		 */
 argument|*(volatile int *)CADDR1 =
 literal|0xaaaaaaaa
@@ -5562,7 +5562,7 @@ argument|phys_avail[pa_indx] = target_page + PAGE_SIZE;
 comment|/* end */
 argument|} 			physmem++; 		} else { 			badpages++; 			page_bad = FALSE; 		} 	}  	*(int *)CMAP1 =
 literal|0
-argument|; 	pmap_update();
+argument|; 	invltlb();
 comment|/* 	 * XXX 	 * The last chunk must contain at least one page plus the message 	 * buffer to avoid complicating other code (message buffer address 	 * calculation, etc.). 	 */
 argument|while (phys_avail[pa_indx -
 literal|1
@@ -5588,6 +5588,8 @@ literal|1
 argument|; 	gdp->gd_hioffset = ((int)&IDTVEC(syscall))>>
 literal|16
 argument|;
+comment|/* XXX does this work? */
+argument|ldt[LBSDICALLS_SEL] = ldt[LSYS5CALLS_SEL];
 comment|/* transfer to user mode */
 argument|_ucodesel = LSEL(LUCODE_SEL, SEL_UPL); 	_udatasel = LSEL(LUDATA_SEL, SEL_UPL);
 comment|/* setup proc 0's pcb */

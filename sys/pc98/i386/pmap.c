@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.3 1996/09/12 11:09:34 asami Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.4 1996/10/09 19:47:39 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1201,7 +1201,7 @@ name|PTD
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
@@ -1570,15 +1570,11 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * The below are finer grained pmap_update routines.  These eliminate  * the gratuitious tlb flushes on non-i386 architectures.  */
-end_comment
-
 begin_function
 specifier|static
 name|PMAP_INLINE
 name|void
-name|pmap_update_1pg
+name|invltlb_1pg
 parameter_list|(
 name|vm_offset_t
 name|va
@@ -1590,29 +1586,27 @@ name|defined
 argument_list|(
 name|I386_CPU
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-comment|/* CYRIX Bug? */
 if|if
 condition|(
 name|cpu_class
 operator|==
 name|CPUCLASS_386
-operator|||
-name|cpu
-operator|==
-name|CPU_486DLC
 condition|)
-name|pmap_update
+block|{
+name|invltlb
 argument_list|()
 expr_stmt|;
+block|}
 else|else
 endif|#
 directive|endif
-asm|__asm __volatile(".byte 0xf,0x1,0x38": :"a" (va));
+block|{
+name|invlpg
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1620,7 +1614,7 @@ begin_function
 specifier|static
 name|PMAP_INLINE
 name|void
-name|pmap_update_2pg
+name|invltlb_2pg
 parameter_list|(
 name|vm_offset_t
 name|va1
@@ -1635,24 +1629,14 @@ name|defined
 argument_list|(
 name|I386_CPU
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-comment|/* CYRIX Bug? */
 if|if
 condition|(
 name|cpu_class
 operator|==
 name|CPUCLASS_386
-operator|||
-name|cpu
-operator|==
-name|CPU_486DLC
 condition|)
 block|{
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
@@ -1660,8 +1644,16 @@ else|else
 endif|#
 directive|endif
 block|{
-asm|__asm __volatile(".byte 0xf,0x1,0x38": :"a" (va1));
-asm|__asm __volatile(".byte 0xf,0x1,0x38": :"a" (va2));
+name|invlpg
+argument_list|(
+name|va1
+argument_list|)
+expr_stmt|;
+name|invlpg
+argument_list|(
+name|va2
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1991,7 +1983,7 @@ operator||
 name|PG_V
 argument_list|)
 expr_stmt|;
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
@@ -2061,7 +2053,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Super fast pmap_pte routine best used when scanning  * the pv lists.  This eliminates many coarse-grained  * pmap_update calls.  Note that many of the pv list  * scans are across different pmaps.  It is very wasteful  * to do an entire pmap_update for checking a single mapping.  */
+comment|/*  * Super fast pmap_pte routine best used when scanning  * the pv lists.  This eliminates many coarse-grained  * invltlb calls.  Note that many of the pv list  * scans are across different pmaps.  It is very wasteful  * to do an entire invltlb for checking a single mapping.  */
 end_comment
 
 begin_function
@@ -2198,7 +2190,7 @@ name|PG_RW
 operator||
 name|PG_V
 expr_stmt|;
-name|pmap_update_1pg
+name|invltlb_1pg
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -2502,7 +2494,7 @@ if|if
 condition|(
 name|opte
 condition|)
-name|pmap_update_1pg
+name|invltlb_1pg
 argument_list|(
 name|tva
 argument_list|)
@@ -2568,7 +2560,7 @@ name|pte
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_update_1pg
+name|invltlb_1pg
 argument_list|(
 name|va
 argument_list|)
@@ -2582,7 +2574,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * add a wired page to the kva  * note that in order for the mapping to take effect -- you  * should do a pmap_update after doing the pmap_kenter...  */
+comment|/*  * add a wired page to the kva  * note that in order for the mapping to take effect -- you  * should do a invltlb after doing the pmap_kenter...  */
 end_comment
 
 begin_function
@@ -2645,7 +2637,7 @@ if|if
 condition|(
 name|opte
 condition|)
-name|pmap_update_1pg
+name|invltlb_1pg
 argument_list|(
 name|va
 argument_list|)
@@ -2689,7 +2681,7 @@ name|pte
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_update_1pg
+name|invltlb_1pg
 argument_list|(
 name|va
 argument_list|)
@@ -2940,7 +2932,7 @@ name|PG_FRAME
 operator|)
 condition|)
 block|{
-comment|/* 			 * Do a pmap_update to make the invalidated mapping 			 * take effect immediately. 			 */
+comment|/* 			 * Do a invltlb to make the invalidated mapping 			 * take effect immediately. 			 */
 name|pteva
 operator|=
 name|UPT_MIN_ADDRESS
@@ -2952,7 +2944,7 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
-name|pmap_update_1pg
+name|invltlb_1pg
 argument_list|(
 name|pteva
 argument_list|)
@@ -4266,9 +4258,6 @@ name|pm_pdir
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_update
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -5547,7 +5536,7 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-name|pmap_update_1pg
+name|invltlb_1pg
 argument_list|(
 name|va
 argument_list|)
@@ -5792,7 +5781,7 @@ condition|(
 name|anyvalid
 condition|)
 block|{
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
@@ -5926,14 +5915,6 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tpte
-operator|=
-operator|*
-name|pte
-condition|)
-block|{
 name|pv
 operator|->
 name|pv_pmap
@@ -5942,6 +5923,11 @@ name|pm_stats
 operator|.
 name|resident_count
 operator|--
+expr_stmt|;
+name|tpte
+operator|=
+operator|*
+name|pte
 expr_stmt|;
 operator|*
 name|pte
@@ -5963,7 +5949,7 @@ operator|.
 name|wired_count
 operator|--
 expr_stmt|;
-comment|/* 			 * Update the vm_page_t clean and reference bits. 			 */
+comment|/* 		 * Update the vm_page_t clean and reference bits. 		 */
 if|if
 condition|(
 name|tpte
@@ -6059,7 +6045,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -6123,7 +6108,7 @@ if|if
 condition|(
 name|update_needed
 condition|)
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 name|splx
@@ -6411,7 +6396,7 @@ if|if
 condition|(
 name|anychanged
 condition|)
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
@@ -6875,7 +6860,7 @@ if|if
 condition|(
 name|origpte
 condition|)
-name|pmap_update_1pg
+name|invltlb_1pg
 argument_list|(
 name|va
 argument_list|)
@@ -8304,7 +8289,7 @@ operator||
 name|PG_V
 argument_list|)
 expr_stmt|;
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
@@ -8675,7 +8660,7 @@ name|CMAP2
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_update_1pg
+name|invltlb_1pg
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -8787,7 +8772,7 @@ name|CMAP2
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_update_2pg
+name|invltlb_2pg
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -8943,12 +8928,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOT_USED_YET
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -8956,7 +8935,7 @@ name|PMAP_REMOVE_PAGES_CURPROC_ONLY
 end_define
 
 begin_comment
-comment|/*  * Remove all pages from specified address space  * this aids process exit speeds.  Also, this code  * is special cased for current process only.  */
+comment|/*  * Remove all pages from specified address space  * this aids process exit speeds.  Also, this code  * is special cased for current process only, but  * can have the more generic (and slightly slower)  * mode enabled.  This is much faster than pmap_remove  * in the case of running down an entire address space.  */
 end_comment
 
 begin_function
@@ -9243,7 +9222,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 name|pmap_unlock
@@ -9253,11 +9232,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * pmap_testbit tests bits in pte's  * note that the testbit/changebit routines are inline,  * and a lot of things compile-time evaluate.  */
@@ -9527,9 +9501,6 @@ name|unsigned
 modifier|*
 name|pte
 decl_stmt|;
-name|vm_offset_t
-name|va
-decl_stmt|;
 name|int
 name|changed
 decl_stmt|;
@@ -9586,12 +9557,6 @@ name|pv_list
 argument_list|)
 control|)
 block|{
-name|va
-operator|=
-name|pv
-operator|->
-name|pv_va
-expr_stmt|;
 comment|/* 		 * don't write protect pager mappings 		 */
 if|if
 condition|(
@@ -9635,7 +9600,9 @@ name|printf
 argument_list|(
 literal|"Null pmap (cb) at va: 0x%lx\n"
 argument_list|,
-name|va
+name|pv
+operator|->
+name|pv_va
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -9657,7 +9624,9 @@ name|pv
 operator|->
 name|pv_pmap
 argument_list|,
-name|va
+name|pv
+operator|->
+name|pv_va
 argument_list|)
 expr_stmt|;
 if|if
@@ -9792,7 +9761,7 @@ if|if
 condition|(
 name|changed
 condition|)
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
@@ -10239,7 +10208,7 @@ condition|(
 name|rtval
 condition|)
 block|{
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
@@ -10327,18 +10296,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void pmap_update_map(pmap_t pmap) { 	unsigned frame = (unsigned) pmap->pm_pdir[PTDPTDI]& PG_FRAME; 	if ((pmap == kernel_pmap) || 		(frame == (((unsigned) PTDpde)& PG_FRAME))) { 		pmap_update(); 	} }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Miscellaneous support routines follow  */
@@ -10566,7 +10523,7 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-name|pmap_update
+name|invltlb
 argument_list|()
 expr_stmt|;
 return|return
@@ -11238,6 +11195,10 @@ name|vm_offset_t
 name|pa
 decl_stmt|;
 block|{
+name|pv_table_t
+modifier|*
+name|ppv
+decl_stmt|;
 specifier|register
 name|pv_entry_t
 name|pv
@@ -11249,16 +11210,23 @@ argument_list|,
 name|pa
 argument_list|)
 expr_stmt|;
+name|ppv
+operator|=
+name|pa_to_pvh
+argument_list|(
+name|pa
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|pv
 operator|=
 name|TAILQ_FIRST
 argument_list|(
-name|pa_to_pvh
-argument_list|(
-name|pa
-argument_list|)
+operator|&
+name|ppv
+operator|->
+name|pv_list
 argument_list|)
 init|;
 name|pv

@@ -15,32 +15,9 @@ directive|define
 name|__PC98_PC98_PC98_MACHDEP_H__
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EPSON_MEMWIN
-end_ifdef
-
 begin_decl_stmt
 name|void
-name|init_epson_memwin
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|void
-name|init_cpu_accel_mem
+name|pc98_init_dmac
 name|__P
 argument_list|(
 operator|(
@@ -52,7 +29,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|init_pc98_dmac
+name|pc98_getmemsize
 name|__P
 argument_list|(
 operator|(

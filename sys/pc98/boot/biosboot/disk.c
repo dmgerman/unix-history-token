@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.2 1996/07/23 07:45:36 asami Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.3 1996/09/12 11:08:53 asami Exp $  */
 end_comment
 
 begin_comment
@@ -155,8 +155,6 @@ decl_stmt|,
 name|maj
 decl_stmt|,
 name|boff
-decl_stmt|,
-name|poff
 decl_stmt|;
 end_decl_stmt
 
@@ -237,12 +235,18 @@ init|=
 literal|0
 decl_stmt|,
 name|di
+decl_stmt|,
+name|dosdev_copy
 decl_stmt|;
+name|dosdev_copy
+operator|=
+name|dosdev
+expr_stmt|;
 name|di
 operator|=
 name|get_diskinfo
 argument_list|(
-name|dosdev
+name|dosdev_copy
 argument_list|)
 expr_stmt|;
 name|spc
@@ -267,7 +271,7 @@ name|RAWBOOT
 if|if
 condition|(
 operator|(
-name|dosdev
+name|dosdev_copy
 operator|&
 literal|0xf0
 operator|)
@@ -312,7 +316,7 @@ name|p
 operator|=
 name|Bread
 argument_list|(
-name|dosdev
+name|dosdev_copy
 argument_list|,
 literal|1
 argument_list|)
@@ -324,7 +328,7 @@ expr|struct
 name|dos_partition
 operator|*
 operator|)
-literal|0
+name|p
 expr_stmt|;
 name|slice
 operator|=
@@ -371,6 +375,8 @@ name|spc
 expr_stmt|;
 break|break;
 block|}
+name|p
+operator|=
 name|Bread
 argument_list|(
 name|dosdev
@@ -388,7 +394,7 @@ expr|struct
 name|disklabel
 operator|*
 operator|)
-literal|0
+name|p
 operator|)
 expr_stmt|;
 name|disklabel
@@ -403,7 +409,7 @@ name|p
 operator|=
 name|Bread
 argument_list|(
-name|dosdev
+name|dosdev_copy
 argument_list|,
 literal|0
 argument_list|)
@@ -468,7 +474,7 @@ name|p
 operator|=
 name|Bread
 argument_list|(
-name|dosdev
+name|dosdev_copy
 argument_list|,
 name|sector
 operator|+
@@ -729,7 +735,7 @@ name|p
 operator|=
 name|Bread
 argument_list|(
-name|dosdev
+name|dosdev_copy
 argument_list|,
 name|dkbbnum
 operator|+
@@ -855,6 +861,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|dosdev_copy
+decl_stmt|;
 for|for
 control|(
 name|offset
@@ -870,15 +879,19 @@ operator|+=
 name|BPS
 control|)
 block|{
+name|dosdev_copy
+operator|=
+name|dosdev
+expr_stmt|;
 name|p
 operator|=
 name|Bread
 argument_list|(
-name|dosdev
+name|dosdev_copy
 argument_list|,
 name|badsect
 argument_list|(
-name|dosdev
+name|dosdev_copy
 argument_list|,
 name|sector
 operator|++

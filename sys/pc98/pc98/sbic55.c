@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/ic/i8237.h>
+file|<i386/isa/ic/i8237.h>
 end_include
 
 begin_include

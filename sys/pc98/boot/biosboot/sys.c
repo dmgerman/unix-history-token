@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.3 1996/09/12 11:09:00 asami Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.4 1996/09/12 11:36:09 asami Exp $  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<sys/dirent.h>
 end_include
 
 begin_include
@@ -118,6 +118,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|mapblock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|poff
 decl_stmt|;
 end_decl_stmt
 
@@ -570,7 +576,7 @@ init|=
 name|ROOTINO
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -819,7 +825,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 operator|(
@@ -838,7 +844,7 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 operator|&&
 name|list_only
 condition|)
@@ -857,7 +863,7 @@ condition|(
 operator|!
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 operator|||
 name|strcmp
 argument_list|(
@@ -873,7 +879,7 @@ name|ino
 operator|=
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 expr_stmt|;
 operator|*
 operator|(
@@ -995,12 +1001,19 @@ modifier|*
 name|devp
 decl_stmt|,
 modifier|*
-name|cp
+name|name0
 init|=
 name|name
+decl_stmt|,
+modifier|*
+name|cp
+init|=
+name|name0
 decl_stmt|;
 name|int
 name|biosdrive
+decl_stmt|,
+name|dosdev_copy
 decl_stmt|,
 name|ret
 decl_stmt|;
@@ -1044,7 +1057,7 @@ condition|)
 block|{
 name|cp
 operator|=
-name|name
+name|name0
 expr_stmt|;
 block|}
 else|else
@@ -1058,7 +1071,7 @@ if|if
 condition|(
 operator|*
 operator|(
-name|name
+name|name0
 operator|+
 literal|1
 operator|)
@@ -1066,12 +1079,12 @@ operator|==
 literal|':'
 operator|&&
 operator|*
-name|name
+name|name0
 operator|>=
 literal|'0'
 operator|&&
 operator|*
-name|name
+name|name0
 operator|<=
 literal|'9'
 condition|)
@@ -1079,9 +1092,9 @@ block|{
 name|biosdrivedigit
 operator|=
 operator|*
-name|name
+name|name0
 expr_stmt|;
-name|name
+name|name0
 operator|+=
 literal|2
 expr_stmt|;
@@ -1091,7 +1104,7 @@ condition|(
 name|cp
 operator|++
 operator|!=
-name|name
+name|name0
 condition|)
 block|{
 for|for
@@ -1108,7 +1121,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|name
+name|name0
 index|[
 literal|0
 index|]
@@ -1121,7 +1134,7 @@ index|[
 literal|0
 index|]
 operator|&&
-name|name
+name|name0
 index|[
 literal|1
 index|]
@@ -1291,7 +1304,7 @@ comment|/* sd */
 ifdef|#
 directive|ifdef
 name|PC98
-name|dosdev
+name|dosdev_copy
 operator|=
 name|unit
 operator||
@@ -1339,7 +1352,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* IBM-PC */
-name|dosdev
+name|dosdev_copy
 operator|=
 name|biosdrive
 operator||
@@ -1357,7 +1370,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|PC98
-name|dosdev
+name|dosdev_copy
 operator|=
 operator|(
 name|maj
@@ -1371,7 +1384,7 @@ literal|0x80
 expr_stmt|;
 else|#
 directive|else
-name|dosdev
+name|dosdev_copy
 operator|=
 name|biosdrive
 expr_stmt|;
@@ -1390,11 +1403,15 @@ return|return
 literal|1
 return|;
 block|}
+name|dosdev
+operator|=
+name|dosdev_copy
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"dosdev = %x, biosdrive = %d, unit = %d, maj = %d\n"
+literal|"dosdev= %x, biosdrive = %d, unit = %d, maj = %d\n"
 argument_list|,
-name|dosdev
+name|dosdev_copy
 argument_list|,
 name|biosdrive
 argument_list|,
