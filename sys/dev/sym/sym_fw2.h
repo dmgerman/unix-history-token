@@ -50,6 +50,12 @@ literal|2
 index|]
 decl_stmt|;
 name|u32
+name|sel_done
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u32
 name|send_ident
 index|[
 literal|2
@@ -131,7 +137,7 @@ decl_stmt|;
 name|u32
 name|datao_phase
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 name|u32
@@ -921,6 +927,27 @@ argument_list|)
 block|,
 name|SIR_SEL_ATN_NO_MSG_OUT
 block|, }
+comment|/*-------------------------< SEL_DONE>-------------------------*/
+block|,
+block|{
+comment|/* 	 *  C1010-33 errata work-around. 	 *  Due to a race, the SCSI core may not have  	 *  loaded SCNTL3 on SEL_TBL instruction. 	 *  We reload it once phase is stable. 	 *  Patched with a NOOP for other chips. 	 */
+name|SCR_LOAD_REL
+argument_list|(
+name|scntl3
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|offsetof
+argument_list|(
+expr|struct
+name|sym_dsb
+argument_list|,
+name|select
+operator|.
+name|sel_scntl3
+argument_list|)
+block|, }
 comment|/*-------------------------< SEND_IDENT>-----------------------*/
 block|,
 block|{
@@ -1571,6 +1598,24 @@ block|, }
 comment|/*-------------------------< DATAO_PHASE>----------------------*/
 block|,
 block|{
+comment|/* 	 *  C1010-66 errata work-around. 	 *  SCNTL4 to be written prior to any DATA_OUT  	 *  phase if 33 MHz PCI BUS. 	 *  Patched with a NOOP for other chips. 	 */
+name|SCR_LOAD_REL
+argument_list|(
+name|scntl4
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|offsetof
+argument_list|(
+expr|struct
+name|sym_dsb
+argument_list|,
+name|select
+operator|.
+name|sel_scntl4
+argument_list|)
+block|,
 name|SCR_RETURN
 block|,
 literal|0
@@ -2603,7 +2648,7 @@ block|}
 comment|/*-------------------------< RESEL_TAG>------------------------*/
 block|,
 block|{
-comment|/* 	 *  ACK the IDENTIFY or TAG previously received. 	 */
+comment|/* 	 *  ACK the IDENTIFY previously received. 	 */
 name|SCR_CLR
 argument_list|(
 name|SCR_ACK

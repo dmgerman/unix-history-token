@@ -2878,7 +2878,7 @@ block|}
 comment|/*-------------------------< RESEL_TAG>------------------------*/
 block|,
 block|{
-comment|/* 	 *  ACK the IDENTIFY or TAG previously received. 	 */
+comment|/* 	 *  ACK the IDENTIFY previously received. 	 */
 name|SCR_CLR
 argument_list|(
 name|SCR_ACK
