@@ -1194,12 +1194,10 @@ name|ATA_PRIMARY
 operator|)
 operator|+
 name|ATA_ALTOFFSET
-operator|-
-literal|2
 expr_stmt|;
 name|count
 operator|=
-literal|4
+name|ATA_ALTIOSIZE
 expr_stmt|;
 name|end
 operator|=
@@ -1957,7 +1955,7 @@ index|]
 operator|.
 name|offset
 operator|=
-literal|2
+literal|0
 expr_stmt|;
 name|ch
 operator|->
