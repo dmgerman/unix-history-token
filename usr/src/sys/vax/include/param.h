@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)param.h	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)param.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -711,7 +711,6 @@ end_endif
 begin_else
 else|#
 directive|else
-else|KERNEL
 end_else
 
 begin_define
@@ -727,7 +726,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
 
 end_unit
