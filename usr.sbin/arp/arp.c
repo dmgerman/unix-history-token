@@ -750,7 +750,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Set an individual arp entry   */
+comment|/*  * Set an individual arp entry  */
 end_comment
 
 begin_macro
@@ -1474,7 +1474,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Delete an arp entry   */
+comment|/*  * Delete an arp entry  */
 end_comment
 
 begin_macro

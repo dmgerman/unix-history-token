@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Define string ops: strchr strrchr memcmp memmove memset   */
+comment|/*  * Define string ops: strchr strrchr memcmp memmove memset  */
 end_comment
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **	dynamically loadable clk driver ** **	$Header: /usr/src/etc/xntp3.3ww/kernel/RCS/clkinit.c,v 1.1 1994/06/15 22:14:38 rob Exp $ ** **	william robertson<rob@agate.berkeley.edu>   */
+comment|/* **	dynamically loadable clk driver ** **	$Header: /home/ncvs/src/usr.sbin/xntpd/kernel/clkinit.c,v 1.1.1.1 1994/09/29 23:02:47 wollman Exp $ ** **	william robertson<rob@agate.berkeley.edu> */
 end_comment
 
 begin_include

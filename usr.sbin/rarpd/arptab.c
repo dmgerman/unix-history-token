@@ -316,7 +316,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Set an individual arp entry   */
+comment|/*  * Set an individual arp entry  */
 end_comment
 
 begin_macro

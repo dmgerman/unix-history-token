@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.4 1995/02/16 00:28:42 wollman Exp $"
+literal|"$Id: sysctl.c,v 1.5 1995/05/12 19:10:56 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 

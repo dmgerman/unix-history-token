@@ -2375,7 +2375,7 @@ name|oldSuprErrs
 init|=
 name|SuprErrs
 decl_stmt|;
-comment|/* 	**	Suppress errors here -- we may be processing a different 	**	job when we do the quit connection, and we don't want the  	**	new job to be penalized for something that isn't it's 	**	problem. 	*/
+comment|/* 	**	Suppress errors here -- we may be processing a different 	**	job when we do the quit connection, and we don't want the 	**	new job to be penalized for something that isn't it's 	**	problem. 	*/
 name|SuprErrs
 operator|=
 name|TRUE

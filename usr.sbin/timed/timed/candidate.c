@@ -35,7 +35,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision: 1.9 $"
+empty|#ident "$Revision: 1.1.1.1 $"
 end_empty
 
 begin_endif
@@ -436,7 +436,7 @@ case|:
 case|case
 name|TSP_REFUSE
 case|:
-comment|/* 			 * Collision: change value of election timer 			 * using exponential backoff.  			 * 			 *  Fooey. 			 * An exponential backoff on a delay starting at 			 * 6 to 15 minutes for a process that takes 			 * milliseconds is silly.  It is particularly 			 * strange that the original code would increase 			 * the backoff without bound. 			 */
+comment|/* 			 * Collision: change value of election timer 			 * using exponential backoff. 			 * 			 *  Fooey. 			 * An exponential backoff on a delay starting at 			 * 6 to 15 minutes for a process that takes 			 * milliseconds is silly.  It is particularly 			 * strange that the original code would increase 			 * the backoff without bound. 			 */
 name|rmnetmachs
 argument_list|(
 name|net

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 1.3 1995/03/16 16:25:55 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 1.4 1995/05/16 00:28:48 jkh Exp $  */
 end_comment
 
 begin_include
@@ -105,7 +105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Determine if mcastgrp has a listener on vifi  */
+comment|/*  * Determine if mcastgrp has a listener on vifi  */
 end_comment
 
 begin_function
@@ -179,7 +179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Updates the ttl values for each vif.  */
+comment|/*  * Updates the ttl values for each vif.  */
 end_comment
 
 begin_function
@@ -336,7 +336,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Add a new table entry for (origin, mcastgrp)  */
+comment|/*  * Add a new table entry for (origin, mcastgrp)  */
 end_comment
 
 begin_function
@@ -827,7 +827,7 @@ operator|->
 name|kt_grpmems
 argument_list|)
 expr_stmt|;
-comment|/* If there are no leaf vifs      * which have this group, then      * mark this src-grp as a prune candidate.       * One thing to do is to check if parent vif is the source      * and not send a prune to that.      */
+comment|/* If there are no leaf vifs      * which have this group, then      * mark this src-grp as a prune candidate.      * One thing to do is to check if parent vif is the source      * and not send a prune to that.      */
 if|if
 condition|(
 operator|!
@@ -2245,7 +2245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a prune message to the upstream router  * given by the kt->kt_gateway argument. The origin and   * multicast group can be determined from the kt   * structure.  *  * Also, record an entry that a prune was sent for this group  */
+comment|/*  * Send a prune message to the upstream router  * given by the kt->kt_gateway argument. The origin and  * multicast group can be determined from the kt  * structure.  *  * Also, record an entry that a prune was sent for this group  */
 end_comment
 
 begin_function
@@ -2305,7 +2305,7 @@ name|kt_gateway
 argument_list|)
 condition|)
 return|return;
-comment|/*       * sends a prune message to the router upstream.      */
+comment|/*      * sends a prune message to the router upstream.      */
 name|src
 operator|=
 name|uvifs
@@ -2981,7 +2981,7 @@ name|rl_timer
 operator|=
 name|prun_tmr
 expr_stmt|;
-comment|/*       * add this prune message to the list of prunes received       * for this src group pair       */
+comment|/*      * add this prune message to the list of prunes received      * for this src group pair      */
 name|pr_recv
 operator|->
 name|rl_next
@@ -3024,7 +3024,7 @@ name|kt_timer
 operator|=
 name|prun_tmr
 expr_stmt|;
-comment|/*      * check if any more packets need to be sent on the       * vif which sent this message      */
+comment|/*      * check if any more packets need to be sent on the      * vif which sent this message      */
 for|for
 control|(
 name|vr
@@ -3099,7 +3099,7 @@ name|kt
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * check if all the child routers have expressed no interest      * in this group and if this group does not exist in the       * interface      * Send a prune message then upstream      */
+comment|/*      * check if all the child routers have expressed no interest      * in this group and if this group does not exist in the      * interface      * Send a prune message then upstream      */
 if|if
 condition|(
 name|kt
@@ -3273,7 +3273,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * scans through the neighbor list of this router and then  * determines the total no. of child routers present  */
+comment|/*  * scans through the neighbor list of this router and then  * determines the total no. of child routers present  */
 end_comment
 
 begin_function
@@ -3484,7 +3484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* determine the multicast group and src  *   * if it does, then determine if a prune was sent   * upstream.  * if prune sent upstream, send graft upstream and send  * ack downstream.  *   * if no prune sent upstream, change the forwarding bit  * for this interface and send ack downstream.  *  * if no entry exists for this group just ignore the message  * [this may not be the right thing to do. but lets see what   * happens for the time being and then we might decide to do  * a modification to the code depending on the type of behaviour   * that we see in this]  */
+comment|/* determine the multicast group and src  *  * if it does, then determine if a prune was sent  * upstream.  * if prune sent upstream, send graft upstream and send  * ack downstream.  *  * if no prune sent upstream, change the forwarding bit  * for this interface and send ack downstream.  *  * if no entry exists for this group just ignore the message  * [this may not be the right thing to do. but lets see what  * happens for the time being and then we might decide to do  * a modification to the code depending on the type of behaviour  * that we see in this]  */
 end_comment
 
 begin_function
@@ -3755,7 +3755,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* remove prune entry from the list       * allow forwarding on that vif, make change in the kernel      */
+comment|/* remove prune entry from the list      * allow forwarding on that vif, make change in the kernel      */
 for|for
 control|(
 name|prev_krl
@@ -4083,7 +4083,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * a prune was sent upstream  * so, a graft has to be sent to annul the prune  * set up a graft timer so that if an ack is not   * heard within that time, another graft request  * is sent out.  */
+comment|/*  * a prune was sent upstream  * so, a graft has to be sent to annul the prune  * set up a graft timer so that if an ack is not  * heard within that time, another graft request  * is sent out.  */
 end_comment
 
 begin_function
@@ -4281,7 +4281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find out which group is involved first of all   * then determine if a graft was sent.  * if no graft sent, ignore the message  * if graft was sent and the ack is from the right   * source, remove the graft timer so that we don't   * have send a graft again  */
+comment|/*  * find out which group is involved first of all  * then determine if a graft was sent.  * if no graft sent, ignore the message  * if graft was sent and the ack is from the right  * source, remove the graft timer so that we don't  * have send a graft again  */
 end_comment
 
 begin_function
@@ -4722,7 +4722,7 @@ name|kt
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* delete the entry only if there are no subordinate  	   routers 	    	   Now, if there are subordinate routers, then, what we  	   have to do is to decrement each and every router's prune 	   time entry too and decide if we want to forward on 	   that link basically 	   */
+comment|/* delete the entry only if there are no subordinate 	   routers  	   Now, if there are subordinate routers, then, what we 	   have to do is to decrement each and every router's prune 	   time entry too and decide if we want to forward on 	   that link basically 	   */
 for|for
 control|(
 name|prev_krl
@@ -4801,7 +4801,7 @@ operator|->
 name|rl_vifi
 argument_list|)
 expr_stmt|;
-comment|/*  		 * forwarding now, so entry is not pruned anymore 		 * reset the cache timer to a largish value also 		 */
+comment|/* 		 * forwarding now, so entry is not pruned anymore 		 * reset the cache timer to a largish value also 		 */
 name|kt
 operator|->
 name|kt_prsent_timer
@@ -4891,7 +4891,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-comment|/* 	     * If there are prune entries still outstanding,  	     * update the cache timer otherwise expire entry. 	     */
+comment|/* 	     * If there are prune entries still outstanding, 	     * update the cache timer otherwise expire entry. 	     */
 if|if
 condition|(
 name|kt
@@ -5639,7 +5639,7 @@ operator|->
 name|tr_src
 argument_list|)
 expr_stmt|;
-comment|/*      * Query type packet - check if rte exists       * Check if the query destination is a vif connected to me.      * and if so, whether I should start response back      */
+comment|/*      * Query type packet - check if rte exists      * Check if the query destination is a vif connected to me.      * and if so, whether I should start response back      */
 if|if
 condition|(
 name|type

@@ -1108,7 +1108,7 @@ condition|)
 goto|goto
 name|errdone
 goto|;
-comment|/* 	 * Estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry.  	 */
+comment|/* 	 * Estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry. 	 */
 name|arraysz
 operator|=
 operator|(

@@ -5790,7 +5790,7 @@ operator|/
 name|div
 argument_list|)
 expr_stmt|;
-comment|/* The first dmmax is never allocated to avoid trashing of  		 * disklabels 		 */
+comment|/* The first dmmax is never allocated to avoid trashing of 		 * disklabels 		 */
 name|xsize
 operator|=
 name|sw
@@ -5871,7 +5871,7 @@ literal|"Interleaved"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * If only one partition has been set up via swapon(8), we don't 	 * need to bother with totals. 	 */
+comment|/* 	 * If only one partition has been set up via swapon(8), we don't 	 * need to bother with totals. 	 */
 name|used
 operator|=
 name|avail

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.12 1995/05/12 16:52:58 wpaul Exp $"
+literal|"$Id: ypbind.c,v 1.14 1995/05/29 16:39:52 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 

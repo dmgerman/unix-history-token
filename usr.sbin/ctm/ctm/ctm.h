@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.5 1994/10/24 20:09:21 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.6 1995/03/04 20:36:45 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -319,7 +319,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Paranoid -- Just in case they should be after us...  *  0 not at all.  *  1 normal.  *  2 somewhat.  *  3 you bet!.  *  * Verbose -- What to tell mom...  *  0 Nothing which wouldn't surprise.  *  1 Normal.   *  2 Show progress '.'.  *  3 Show progress names, and actions.  *  4 even more...  *  and so on  *  * ExitCode -- our Epitaph  *  0 Perfect, all input digested, no problems  *  1 Bad input, no point in retrying.  *  2 Pilot error, commandline problem&c  *  4 Out of resources.  *  8 Destination-tree not correct.  * 16 Destination-tree not correct, can force.  * 32 Internal problems.  *   */
+comment|/*  * Paranoid -- Just in case they should be after us...  *  0 not at all.  *  1 normal.  *  2 somewhat.  *  3 you bet!.  *  * Verbose -- What to tell mom...  *  0 Nothing which wouldn't surprise.  *  1 Normal.  *  2 Show progress '.'.  *  3 Show progress names, and actions.  *  4 even more...  *  and so on  *  * ExitCode -- our Epitaph  *  0 Perfect, all input digested, no problems  *  1 Bad input, no point in retrying.  *  2 Pilot error, commandline problem&c  *  4 Out of resources.  *  8 Destination-tree not correct.  * 16 Destination-tree not correct, can force.  * 32 Internal problems.  *  */
 end_comment
 
 begin_decl_stmt

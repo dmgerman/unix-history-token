@@ -395,7 +395,7 @@ operator|->
 name|rip_metric
 argument_list|)
 expr_stmt|;
-comment|/*  			 * A single entry with sa_family == AF_UNSPEC and 			 * metric ``infinity'' means ``all routes''. 			 * We respond to routers only if we are acting 			 * as a supplier, or to anyone other than a router 			 * (eg, query). 			 */
+comment|/* 			 * A single entry with sa_family == AF_UNSPEC and 			 * metric ``infinity'' means ``all routes''. 			 * We respond to routers only if we are acting 			 * as a supplier, or to anyone other than a router 			 * (eg, query). 			 */
 if|if
 condition|(
 name|n

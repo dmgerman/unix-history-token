@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* db_proc.h - prototypes for functions in db_*.c  *  * $Id: db_func.h,v 1.8 1994/07/23 23:23:56 vixie Exp $  */
+comment|/* db_proc.h - prototypes for functions in db_*.c  *  * $Id: db_func.h,v 1.1.1.1 1994/09/22 19:46:13 pst Exp $  */
 end_comment
 
 begin_comment

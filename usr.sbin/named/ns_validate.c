@@ -186,7 +186,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*****************************************************************  * validate() is called from dovalidate(). it takes as parameters,   * the domain name sought, the class, type etc. of record, the server  * that gave us the answer and the data it gave us  *  * it returns VALID if it is able to validate the record, INVALID if it cannot.  * furtehr VALID is split into VALID_CACHE if we need to cache this record  * since the domainname is not something we are authoritative for and  * VALID_NO_CACHE if the name is something we are authoritative for.  *  * pseudocode for function validate is as follows:  * validate(domain, server, type, class, data, dlen, rcode) {  *  *       if(dname or a higher level name not found in cache)  *          return INVALID;  *       if (NS records for "domain" found in cache){  *  *           if(we are authoritative)  /findns() returned NXDOMAIN;/  *              if(we did not have an exact match on names)  *                 =>the name does not exist in our database  *                 => data is bad: return INVALID  *              if(data agrees with what we have)  *                return VALID_NO_CACHE;  *              else return INVALID;  *      *          if(we are not authoritative) /findns() returned OK;/         *          if (address records for NS's found in cache){  *                       if("server" = one of the addresses){  *                               return VALID_CACHE;  *                       }else{  *                          stick in queue of "to_validate" data;  *                          return (INVALID);  *                       }  *          else return INVALID;  *  * This performs the validation procedure described above. Checks  * for the longest component of the dname that has a NS record  * associated with it. At any stage, if no data is found, it implies  * that the name is bad (has an unknown domain identifier) thus, we  * return INVALID.  * If address of one of these servers matches the address of the server  * that returned us this data, we are happy!  *  * since findns will set needs_prime_cache if np = NULL is passed, we always  * reset it. will let ns_req do it when we are searching for ns records to  * query someone. hence in all the three cases of switch(findns())  *                                 we have needs_prime_cache = 0;  *****************************************************************************/
+comment|/*****************************************************************  * validate() is called from dovalidate(). it takes as parameters,  * the domain name sought, the class, type etc. of record, the server  * that gave us the answer and the data it gave us  *  * it returns VALID if it is able to validate the record, INVALID if it cannot.  * furtehr VALID is split into VALID_CACHE if we need to cache this record  * since the domainname is not something we are authoritative for and  * VALID_NO_CACHE if the name is something we are authoritative for.  *  * pseudocode for function validate is as follows:  * validate(domain, server, type, class, data, dlen, rcode) {  *  *       if(dname or a higher level name not found in cache)  *          return INVALID;  *       if (NS records for "domain" found in cache){  *  *           if(we are authoritative)  /findns() returned NXDOMAIN;/  *              if(we did not have an exact match on names)  *                 =>the name does not exist in our database  *                 => data is bad: return INVALID  *              if(data agrees with what we have)  *                return VALID_NO_CACHE;  *              else return INVALID;  *  *          if(we are not authoritative) /findns() returned OK;/  *          if (address records for NS's found in cache){  *                       if("server" = one of the addresses){  *                               return VALID_CACHE;  *                       }else{  *                          stick in queue of "to_validate" data;  *                          return (INVALID);  *                       }  *          else return INVALID;  *  * This performs the validation procedure described above. Checks  * for the longest component of the dname that has a NS record  * associated with it. At any stage, if no data is found, it implies  * that the name is bad (has an unknown domain identifier) thus, we  * return INVALID.  * If address of one of these servers matches the address of the server  * that returned us this data, we are happy!  *  * since findns will set needs_prime_cache if np = NULL is passed, we always  * reset it. will let ns_req do it when we are searching for ns records to  * query someone. hence in all the three cases of switch(findns())  *                                 we have needs_prime_cache = 0;  *****************************************************************************/
 end_comment
 
 begin_function
@@ -501,7 +501,7 @@ block|{
 case|case
 name|NXDOMAIN
 case|:
-comment|/** we are authoritative for this domain, lookup name  		 * in our zone data, if it matches, return valid. 		 * in either case, do not cache 		 **/
+comment|/** we are authoritative for this domain, lookup name 		 * in our zone data, if it matches, return valid. 		 * in either case, do not cache 		 **/
 name|dprintf
 argument_list|(
 literal|5
@@ -541,7 +541,7 @@ operator|==
 name|NXDOMAIN
 condition|)
 block|{
-comment|/* If we had an exactmatch on the name, we found the 			 * name in our authority database, so this couldn't  			 * have been a bad name. INVALID data, say so 			 */
+comment|/* If we had an exactmatch on the name, we found the 			 * name in our authority database, so this couldn't 			 * have been a bad name. INVALID data, say so 			 */
 if|if
 condition|(
 name|exactmatch
@@ -743,7 +743,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************  * validate rr returned by somebody against your own database, if you are   * authoritative for the information. if you have a record that matches,  * return 1, else return 0. validate() above will use this and determine  * if the record should be returned/discarded.  ***********************************************************************/
+comment|/***********************************************************************  * validate rr returned by somebody against your own database, if you are  * authoritative for the information. if you have a record that matches,  * return 1, else return 0. validate() above will use this and determine  * if the record should be returned/discarded.  ***********************************************************************/
 end_comment
 
 begin_function
@@ -844,7 +844,7 @@ comment|/* we come here only for zone info, 				 * so -ve $ed info can't be 				
 block|}
 continue|continue;
 block|}
-comment|/* type and class match, if i get here  		 * let's now compare the data section, per RR type 		 */
+comment|/* type and class match, if i get here 		 * let's now compare the data section, per RR type 		 */
 comment|/* unless, of course, the data was negative, in which case 		 * we should return FAILURE since we should not have found 		 * data here. 		 */
 if|if
 condition|(
@@ -1331,7 +1331,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/******************************************************************   * get a list of databufs that have ns addresses for the closest domain   * you know about, get their addresses and confirm that server indeed   * is one of them. if yes return 1 else 0.    * first checks the cache that we build in nslookup() earlier    * when we ns_forw(). if unableto find it there, it checks the entire   * hash table to do address translations.   *******************************************************************/
+comment|/******************************************************************   * get a list of databufs that have ns addresses for the closest domain   * you know about, get their addresses and confirm that server indeed   * is one of them. if yes return 1 else 0.   * first checks the cache that we build in nslookup() earlier   * when we ns_forw(). if unableto find it there, it checks the entire   * hash table to do address translations.   *******************************************************************/
 end_comment
 
 begin_function
@@ -1600,7 +1600,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*************************************************************************  * checks in hash tables for the address of servers whose name is in the   * data section of nsp records. borrows code from nslookup()/ns_forw.c  * largely.  *************************************************************************/
+comment|/*************************************************************************  * checks in hash tables for the address of servers whose name is in the  * data section of nsp records. borrows code from nslookup()/ns_forw.c  * largely.  *************************************************************************/
 end_comment
 
 begin_function
@@ -2338,7 +2338,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Decode the resource record 'rrp' and validate the RR.  * Borrows code almost entirely from doupdate(). is a rather  * non-invasive routine since it just goes thru the same motions  * as doupdate but just marks the array validatelist entry as   * the return code from validate(). This is later used in doupdate  * to cache/not cache the entry. also used in update_msg() to   * delete/keep the record from the outgoing message.  */
+comment|/*  * Decode the resource record 'rrp' and validate the RR.  * Borrows code almost entirely from doupdate(). is a rather  * non-invasive routine since it just goes thru the same motions  * as doupdate but just marks the array validatelist entry as  * the return code from validate(). This is later used in doupdate  * to cache/not cache the entry. also used in update_msg() to  * delete/keep the record from the outgoing message.  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: vif.c,v 1.2 1994/09/08 02:51:27 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: vif.c,v 1.3 1995/05/16 00:28:50 jkh Exp $  */
 end_comment
 
 begin_include
@@ -1791,7 +1791,7 @@ name|group
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Check if a graft is necessary for this group      */
+comment|/*      * Check if a graft is necessary for this group      */
 name|chkgrp_graft
 argument_list|(
 name|vifi
@@ -3700,7 +3700,7 @@ name|datalen
 operator|-=
 literal|4
 expr_stmt|;
-comment|/*  	     * loop through router list and check for one-way ifs. 	     */
+comment|/* 	     * loop through router list and check for one-way ifs. 	     */
 name|he_hears_me
 operator|=
 name|FALSE
@@ -3970,7 +3970,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	     * update the neighbors version and protocol number 	     * if changed => router went down and came up,  	     * so take action immediately. 	     */
+comment|/* 	     * update the neighbors version and protocol number 	     * if changed => router went down and came up, 	     * so take action immediately. 	     */
 if|if
 condition|(
 operator|(

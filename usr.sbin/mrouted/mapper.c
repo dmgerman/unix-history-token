@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 1.8 1994/08/24 23:53:54 thyagara Exp $  */
+comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 1.2 1994/09/08 02:51:19 wollman Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) Xerox Corporation 1992. All rights reserved.  *    * License is granted to copy, to use, and to make and to use derivative  * works for research and evaluation purposes, provided that Xerox is  * acknowledged in all documentation pertaining to any such copy or derivative  * work. Xerox grants no other licenses expressed or implied. The Xerox trade  * name should not be used in any advertising without its written permission.  *    * XEROX CORPORATION MAKES NO REPRESENTATIONS CONCERNING EITHER THE  * MERCHANTABILITY OF THIS SOFTWARE OR THE SUITABILITY OF THIS SOFTWARE  * FOR ANY PARTICULAR PURPOSE.  The software is provided "as is" without  * express or implied warranty of any kind.  *    * These notices must be retained in any copies of any part of this software.  */
+comment|/*  * Copyright (c) Xerox Corporation 1992. All rights reserved.  *  * License is granted to copy, to use, and to make and to use derivative  * works for research and evaluation purposes, provided that Xerox is  * acknowledged in all documentation pertaining to any such copy or derivative  * work. Xerox grants no other licenses expressed or implied. The Xerox trade  * name should not be used in any advertising without its written permission.  *  * XEROX CORPORATION MAKES NO REPRESENTATIONS CONCERNING EITHER THE  * MERCHANTABILITY OF THIS SOFTWARE OR THE SUITABILITY OF THIS SOFTWARE  * FOR ANY PARTICULAR PURPOSE.  The software is provided "as is" without  * express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this software.  */
 end_comment
 
 begin_include

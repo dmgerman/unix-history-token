@@ -563,7 +563,7 @@ name|ip_dst
 operator|.
 name|s_addr
 expr_stmt|;
-comment|/*       * this is most likely a message from the kernel indicating that      * a new src grp pair message has arrived and so, it would be       * necessary to install a route into the kernel for this.      */
+comment|/*      * this is most likely a message from the kernel indicating that      * a new src grp pair message has arrived and so, it would be      * necessary to install a route into the kernel for this.      */
 if|if
 condition|(
 name|ip

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.h,v 1.3 1994/08/24 23:54:40 thyagara Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.h,v 1.2 1994/09/08 02:51:24 wollman Exp $  */
 end_comment
 
 begin_comment
-comment|/*   * Macro for copying the user-level cache table to the kernel  * level table variable passed on by the setsock option   */
+comment|/*  * Macro for copying the user-level cache table to the kernel  * level table variable passed on by the setsock option  */
 end_comment
 
 begin_define

@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_schmid.c,v 3.16 1994/05/30 10:20:03 kardel Exp  *    * clk_schmid.c,v 3.16 1994/05/30 10:20:03 kardel Exp  *  * Schmid clock support  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_schmid.c,v 3.16 1994/05/30 10:20:03 kardel Exp  *  * clk_schmid.c,v 3.16 1994/05/30 10:20:03 kardel Exp  *  * Schmid clock support  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_include
@@ -72,7 +72,7 @@ file|"parse.h"
 end_include
 
 begin_comment
-comment|/*  * Description courtesy of Adam W. Feigin et. al (Swisstime iis.ethz.ch)  *  * The command to Schmid's DCF77 clock is a single byte; each bit  * allows the user to select some part of the time string, as follows (the  * output for the lsb is sent first).  *   * Bit 0:	time in MEZ, 4 bytes *binary, not BCD*; hh.mm.ss.tenths  * Bit 1:	date 3 bytes *binary, not BCD: dd.mm.yy  * Bit 2:	week day, 1 byte (unused here)  * Bit 3:	time zone, 1 byte, 0=MET, 1=MEST. (unused here)  * Bit 4:	clock status, 1 byte,	0=time invalid,  *					1=time from crystal backup,  *					3=time from DCF77  * Bit 5:	transmitter status, 1 byte,  *					bit 0: backup antenna  *					bit 1: time zone change within 1h  *					bit 3,2: TZ 01=MEST, 10=MET  *					bit 4: leap second will be  *						added within one hour  *					bits 5-7: Zero  * Bit 6:	time in backup mode, units of 5 minutes (unused here)  *  */
+comment|/*  * Description courtesy of Adam W. Feigin et. al (Swisstime iis.ethz.ch)  *  * The command to Schmid's DCF77 clock is a single byte; each bit  * allows the user to select some part of the time string, as follows (the  * output for the lsb is sent first).  *  * Bit 0:	time in MEZ, 4 bytes *binary, not BCD*; hh.mm.ss.tenths  * Bit 1:	date 3 bytes *binary, not BCD: dd.mm.yy  * Bit 2:	week day, 1 byte (unused here)  * Bit 3:	time zone, 1 byte, 0=MET, 1=MEST. (unused here)  * Bit 4:	clock status, 1 byte,	0=time invalid,  *					1=time from crystal backup,  *					3=time from DCF77  * Bit 5:	transmitter status, 1 byte,  *					bit 0: backup antenna  *					bit 1: time zone change within 1h  *					bit 3,2: TZ 01=MEST, 10=MET  *					bit 4: leap second will be  *						added within one hour  *					bits 5-7: Zero  * Bit 6:	time in backup mode, units of 5 minutes (unused here)  *  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * fontedit  *	Fonteditor for VT220  *  *  BUGS:  *	o Cursor motion is less than optimal (but who cares at 9600),  *  *  COMPILE:  *	cc -O fontedit.c -o fontedit  *      (use Makefile)  *  *	Copyright (c) 1987 by Greg Franks.  *  *	Permission is granted to do anything you want with this program  *	except claim that you wrote it.  *  *  *      REVISION HISTORY:  *  *      Nov 21, 1987 - Fixed man page to say "Fontedit" instead of "Top"   *      Nov 22, 1987 - Added BSD Compatible ioctl, turned cursor on/off  *                     - eap@bucsf.bu.edu  */
+comment|/*  * fontedit  *	Fonteditor for VT220  *  *  BUGS:  *	o Cursor motion is less than optimal (but who cares at 9600),  *  *  COMPILE:  *	cc -O fontedit.c -o fontedit  *      (use Makefile)  *  *	Copyright (c) 1987 by Greg Franks.  *  *	Permission is granted to do anything you want with this program  *	except claim that you wrote it.  *  *  *      REVISION HISTORY:  *  *      Nov 21, 1987 - Fixed man page to say "Fontedit" instead of "Top"  *      Nov 22, 1987 - Added BSD Compatible ioctl, turned cursor on/off  *                     - eap@bucsf.bu.edu  */
 end_comment
 
 begin_function_decl
@@ -339,7 +339,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*   * Position of the DRCS table.  */
+comment|/*  * Position of the DRCS table.  */
 end_comment
 
 begin_define
@@ -1132,7 +1132,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Command  *	Process a function key.   *  *	The user cannot fill in slots 0 or 95 (space and del respecitively).  */
+comment|/*  * Command  *	Process a function key.  *  *	The user cannot fill in slots 0 or 95 (space and del respecitively).  */
 end_comment
 
 begin_function

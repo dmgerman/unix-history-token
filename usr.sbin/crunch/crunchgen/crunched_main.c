@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 University of Maryland  * All Rights Reserved. 
 end_comment
 
 begin_comment
-comment|/*  * crunched_main.c - main program for crunched binaries, it branches to a   * 	particular subprogram based on the value of argv[0].  Also included  *	is a little program invoked when the crunched binary is called via  *	its EXECNAME.  This one prints out the list of compiled-in binaries,  *	or calls one of them based on argv[1].   This allows the testing of  *	the crunched binary without creating all the links.  */
+comment|/*  * crunched_main.c - main program for crunched binaries, it branches to a  * 	particular subprogram based on the value of argv[0].  Also included  *	is a little program invoked when the crunched binary is called via  *	its EXECNAME.  This one prints out the list of compiled-in binaries,  *	or calls one of them based on argv[1].   This allows the testing of  *	the crunched binary without creating all the links.  */
 end_comment
 
 begin_include

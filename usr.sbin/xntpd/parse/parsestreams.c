@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsestreams.c,v 3.22 1994/06/01 10:41:16 kardel Exp  *    * parsestreams.c,v 3.22 1994/06/01 10:41:16 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsestreams.c,v 3.22 1994/06/01 10:41:16 kardel Exp  *  * parsestreams.c,v 3.22 1994/06/01 10:41:16 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef

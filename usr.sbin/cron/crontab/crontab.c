@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: crontab.c,v 1.4 1994/04/13 21:57:55 wollman Exp $"
+literal|"$Id: crontab.c,v 1.2 1994/12/21 11:06:08 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

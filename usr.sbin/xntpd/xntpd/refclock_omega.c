@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * refclock_omega - clock driver for the Kinemetrics Truetime OM-DC OMEGA  *		    receiver.  *  * Version 1.0	11-Dec-92	Steve Clift (clift@ml.csiro.au)  *	Initial version, mostly lifted from refclock_goes.c.  *  *	1.1  03-May-93  Steve Clift  *	Tarted up the sample filtering mechanism to give improved  *	one-off measurements.  Improved measurement dispersion code  *	to account for accumulated drift when the clock loses lock.  *		  */
+comment|/*  * refclock_omega - clock driver for the Kinemetrics Truetime OM-DC OMEGA  *		    receiver.  *  * Version 1.0	11-Dec-92	Steve Clift (clift@ml.csiro.au)  *	Initial version, mostly lifted from refclock_goes.c.  *  *	1.1  03-May-93  Steve Clift  *	Tarted up the sample filtering mechanism to give improved  *	one-off measurements.  Improved measurement dispersion code  *	to account for accumulated drift when the clock loses lock.  *  */
 end_comment
 
 begin_if
@@ -1347,7 +1347,7 @@ name|defined
 argument_list|(
 name|HAVE_TERMIOS
 argument_list|)
-comment|/* 	 * POSIX serial line parameters (termios interface) 	 * 	 * The OMEGACLK option provides timestamping at the driver level.  	 * It requires the tty_clk streams module. 	 * 	 * The OMEGAPPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
+comment|/* 	 * POSIX serial line parameters (termios interface) 	 * 	 * The OMEGACLK option provides timestamping at the driver level. 	 * It requires the tty_clk streams module. 	 * 	 * The OMEGAPPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
 block|{
 name|struct
 name|termios
@@ -1593,7 +1593,7 @@ name|defined
 argument_list|(
 name|HAVE_BSD_TTYS
 argument_list|)
-comment|/* 	 * 4.3bsd serial line parameters (sgttyb interface) 	 * 	 * The OMEGACLK option provides timestamping at the driver level.  	 * It requires the tty_clk line discipline and 4.3bsd or later. 	 */
+comment|/* 	 * 4.3bsd serial line parameters (sgttyb interface) 	 * 	 * The OMEGACLK option provides timestamping at the driver level. 	 * It requires the tty_clk line discipline and 4.3bsd or later. 	 */
 block|{
 name|struct
 name|sgttyb

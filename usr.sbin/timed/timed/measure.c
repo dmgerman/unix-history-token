@@ -35,7 +35,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision: 1.1.1.1 $"
+empty|#ident "$Revision: 1.2 $"
 end_empty
 
 begin_endif
@@ -802,7 +802,7 @@ condition|)
 goto|goto
 name|quit
 goto|;
-comment|/*  			 * got something.  See if it is ours 			 */
+comment|/* 			 * got something.  See if it is ours 			 */
 name|icp
 operator|=
 operator|(

@@ -805,7 +805,7 @@ operator|-
 name|totsize
 expr_stmt|;
 block|}
-comment|/*  	 * Figure out if disk is large enough for 	 * expanded swap area and 'd', 'e', and 'f' 	 * partitions.  Otherwise, use smaller defaults 	 * based on RK07. 	 */
+comment|/* 	 * Figure out if disk is large enough for 	 * expanded swap area and 'd', 'e', and 'f' 	 * partitions.  Otherwise, use smaller defaults 	 * based on RK07. 	 */
 for|for
 control|(
 name|def

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **	dynamically loadable chu driver ** **	$Header: /usr/src/etc/xntp3.3ww/kernel/RCS/chuinit.c,v 1.1 1994/06/15 22:14:38 rob Exp $ ** **	william robertson<rob@agate.berkeley.edu>   */
+comment|/* **	dynamically loadable chu driver ** **	$Header: /home/ncvs/src/usr.sbin/xntpd/kernel/chuinit.c,v 1.1.1.1 1994/09/29 23:02:42 wollman Exp $ ** **	william robertson<rob@agate.berkeley.edu> */
 end_comment
 
 begin_include

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1992-1994 by Joerg Wunsch, Dresden  * All rights res
 end_comment
 
 begin_comment
-comment|/*  * FreeBSD:  * format a floppy disk  *   * Added FD_GTYPE ioctl, verifying, proportional indicators.  * Serge Vakulenko, vak@zebub.msk.su  * Sat Dec 18 17:45:47 MSK 1993  *  * Final adaptation, change format/verify logic, add separate  * format gap/interleave values  * Andrew A. Chernov, ache@astral.msk.su  * Thu Jan 27 00:47:24 MSK 1994  */
+comment|/*  * FreeBSD:  * format a floppy disk  *  * Added FD_GTYPE ioctl, verifying, proportional indicators.  * Serge Vakulenko, vak@zebub.msk.su  * Sat Dec 18 17:45:47 MSK 1993  *  * Final adaptation, change format/verify logic, add separate  * format gap/interleave values  * Andrew A. Chernov, ache@astral.msk.su  * Thu Jan 27 00:47:24 MSK 1994  */
 end_comment
 
 begin_include

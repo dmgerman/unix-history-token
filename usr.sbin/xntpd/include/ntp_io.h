@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * POSIX says use<fnct.h> to get O_* symbols and   * SEEK_SET symbol form<untisd.h>.  */
+comment|/*  * POSIX says use<fnct.h> to get O_* symbols and  * SEEK_SET symbol form<untisd.h>.  */
 end_comment
 
 begin_if

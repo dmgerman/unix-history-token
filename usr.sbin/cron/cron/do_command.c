@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: do_command.c,v 1.3 1995/04/13 20:58:13 ache Exp $"
+literal|"$Id: do_command.c,v 1.4 1995/04/14 21:54:18 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

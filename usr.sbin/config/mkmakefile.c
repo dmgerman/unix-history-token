@@ -1153,7 +1153,7 @@ expr_stmt|;
 block|}
 name|next
 label|:
-comment|/* 	 * filename	[ standard | optional ] [ config-dependent ] 	 *	[ dev* | profiling-routine ] [ device-driver] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ]  	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] 	 */
+comment|/* 	 * filename	[ standard | optional ] [ config-dependent ] 	 *	[ dev* | profiling-routine ] [ device-driver] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] 	 */
 name|wd
 operator|=
 name|get_word

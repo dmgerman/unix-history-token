@@ -3218,7 +3218,7 @@ name|STREAM
 ifdef|#
 directive|ifdef
 name|CLK
-comment|/* 	 * The CLK option provides timestamping at the driver level.  	 * It requires the tty_clk streams module and System V STREAMS 	 * support.  	 */
+comment|/* 	 * The CLK option provides timestamping at the driver level. 	 * It requires the tty_clk streams module and System V STREAMS 	 * support. 	 */
 if|if
 condition|(
 name|flags

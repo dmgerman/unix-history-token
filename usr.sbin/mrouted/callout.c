@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 1.2 1994/09/08 02:51:11 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 1.3 1995/05/16 00:28:42 jkh Exp $  */
 end_comment
 
 begin_include
@@ -226,7 +226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * sets the timer  */
+comment|/*  * sets the timer  */
 end_comment
 
 begin_function

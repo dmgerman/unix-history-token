@@ -605,7 +605,7 @@ argument_list|(
 name|sns
 argument_list|)
 decl_stmt|;
-comment|/* 	 * We want this route if there is no more than one  	 * point to point interface with this network. 	 */
+comment|/* 	 * We want this route if there is no more than one 	 * point to point interface with this network. 	 */
 if|if
 condition|(
 name|ifp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *      Copyright (c) 1994 Christopher G. Demetriou.  *      @(#)Copyright (c) 1994, Simon J. Gerraty.  *        *      This is free software.  It comes with NO WARRANTY.  *      Permission to use, modify and distribute this source code   *      is granted subject to the following conditions.  *      1/ that the above copyright notice and this notice   *      are preserved in all copies and that due credit be given   *      to the author.    *      2/ that any changes to this code are clearly commented   *      as such so that the author does not get blamed for bugs   *      other than his own.  */
+comment|/*  *      Copyright (c) 1994 Christopher G. Demetriou.  *      @(#)Copyright (c) 1994, Simon J. Gerraty.  *  *      This is free software.  It comes with NO WARRANTY.  *      Permission to use, modify and distribute this source code  *      is granted subject to the following conditions.  *      1/ that the above copyright notice and this notice  *      are preserved in all copies and that due credit be given  *      to the author.  *      2/ that any changes to this code are clearly commented  *      as such so that the author does not get blamed for bugs  *      other than his own.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ac.c,v 1.1 1994/09/26 22:12:27 davidg Exp $"
+literal|"$Id: ac.c,v 1.2 1994/11/14 20:26:52 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1939,7 +1939,7 @@ operator|==
 literal|':'
 condition|)
 block|{
-comment|/* 		 * SunOS 4.0.2 does not treat ":0.0" as special but we 		 * do.  		 */
+comment|/* 		 * SunOS 4.0.2 does not treat ":0.0" as special but we 		 * do. 		 */
 if|if
 condition|(
 name|on_console
@@ -1950,7 +1950,7 @@ condition|)
 return|return
 name|head
 return|;
-comment|/* 		 * ok, no recorded login, so they were here when wtmp 		 * started!  Adjust ut_time!  		 */
+comment|/* 		 * ok, no recorded login, so they were here when wtmp 		 * started!  Adjust ut_time! 		 */
 name|up
 operator|->
 name|ut_time

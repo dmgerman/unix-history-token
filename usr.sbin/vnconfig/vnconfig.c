@@ -1093,7 +1093,7 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * Set an option 	 */
+comment|/* 	 * Set an option 	 */
 if|if
 condition|(
 name|flags
@@ -1166,7 +1166,7 @@ name|l
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * Reset an option 	 */
+comment|/* 	 * Reset an option 	 */
 if|if
 condition|(
 name|flags

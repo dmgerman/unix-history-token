@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chap.c,v 1.3 1994/04/18 04:01:07 paulus Exp $"
+literal|"$Id: chap.c,v 1.2 1994/09/25 02:31:54 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,7 +434,7 @@ name|CHAPCS_PENDING
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * We get here as a result of LCP coming up.      * So even if CHAP was open before, we will       * have to re-authenticate ourselves.      */
+comment|/*      * We get here as a result of LCP coming up.      * So even if CHAP was open before, we will      * have to re-authenticate ourselves.      */
 name|cstate
 operator|->
 name|clientstate
@@ -2729,7 +2729,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-comment|/* pick a random challenge length between MIN_CHALLENGE_LENGTH and         MAX_CHALLENGE_LENGTH */
+comment|/* pick a random challenge length between MIN_CHALLENGE_LENGTH and        MAX_CHALLENGE_LENGTH */
 name|chal_len
 operator|=
 call|(

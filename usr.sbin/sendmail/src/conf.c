@@ -3174,7 +3174,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: conf.c,v 1.5 1995/02/23 00:46:30 pst Exp $"
+literal|"@(#)$Id: conf.c,v 1.6 1995/03/10 05:08:13 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 

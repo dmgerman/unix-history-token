@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 University of Maryland  * All Rights Reserved. 
 end_comment
 
 begin_comment
-comment|/*  * ========================================================================  * crunchgen.c  *  * Generates a Makefile and main C file for a crunched executable,  * from specs given in a .conf file.    */
+comment|/*  * ========================================================================  * crunchgen.c  *  * Generates a Makefile and main C file for a crunched executable,  * from specs given in a .conf file.  */
 end_comment
 
 begin_include
@@ -556,7 +556,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*       * generate filenames      */
+comment|/*      * generate filenames      */
 name|strcpy
 argument_list|(
 name|infilename

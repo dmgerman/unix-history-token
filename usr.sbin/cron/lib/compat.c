@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: compat.c,v 1.6 1994/01/15 20:43:43 vixie Exp $"
+literal|"$Id: compat.c,v 1.1.1.1 1994/08/27 13:43:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 

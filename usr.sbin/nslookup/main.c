@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ++Copyright++ 1985, 1989  * -  * Copyright (c) 1985, 1989  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
+comment|/*  * ++Copyright++ 1985, 1989  * -  * Copyright (c) 1985, 1989  *    The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
 end_comment
 
 begin_ifndef
@@ -49,7 +49,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.1.1.1 1994/09/22 21:36:01 pst Exp $"
+literal|"$Id: main.c,v 1.2 1994/09/22 21:50:36 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  ******************************************************************************  *    *   main.c --  *    *	Main routine and some action routines for the name server  *	lookup program.  *  *	Andrew Cherenson  *	U.C. Berkeley Computer Science Div.  *	CS298-26, Fall 1985  *    ******************************************************************************  */
+comment|/*  ******************************************************************************  *  *   main.c --  *  *	Main routine and some action routines for the name server  *	lookup program.  *  *	Andrew Cherenson  *	U.C. Berkeley Computer Science Div.  *	CS298-26, Fall 1985  *  ******************************************************************************  */
 end_comment
 
 begin_include
@@ -169,7 +169,7 @@ file|"pathnames.h"
 end_include
 
 begin_comment
-comment|/*  * Name of a top-level name server. Can be changed with   * the "set root" command.  */
+comment|/*  * Name of a top-level name server. Can be changed with  * the "set root" command.  */
 end_comment
 
 begin_ifndef
@@ -398,7 +398,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      *  Allocate space for the default server's host info and      *  find the server's address and name. If the resolver library      *  already has some addresses for a potential name server,      *  then use them. Otherwise, see if the current host has a server.      *  Command line arguments may override the choice of initial server.       */
+comment|/*      *  Allocate space for the default server's host info and      *  find the server's address and name. If the resolver library      *  already has some addresses for a potential name server,      *  then use them. Otherwise, see if the current host has a server.      *  Command line arguments may override the choice of initial server.      */
 name|defaultPtr
 operator|=
 operator|(
@@ -415,7 +415,7 @@ name|HostInfo
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Parse the arguments:      *  no args =  go into interactive mode, use default host as server      *	1 arg	=  use as host name to be looked up, default host will be server      *		   non-interactive mode      *  2 args	=  1st arg:       *		     if it is '-', then       *		        ignore but go into interactive mode      *		     else       *		         use as host name to be looked up,       *			 go into non-interactive mode      *		2nd arg: name or inet address of server      *      *	"Set" options are specified with a leading - and must come before      *	any arguments. For example, to find the well-known services for      *  a host, type "nslookup -query=wks host"      */
+comment|/*      * Parse the arguments:      *  no args =  go into interactive mode, use default host as server      *	1 arg	=  use as host name to be looked up, default host will be server      *		   non-interactive mode      *  2 args	=  1st arg:      *		     if it is '-', then      *		        ignore but go into interactive mode      *		     else      *		         use as host name to be looked up,      *			 go into non-interactive mode      *		2nd arg: name or inet address of server      *      *	"Set" options are specified with a leading - and must come before      *	any arguments. For example, to find the well-known services for      *  a host, type "nslookup -query=wks host"      */
 name|ReadRC
 argument_list|()
 expr_stmt|;
@@ -915,7 +915,7 @@ argument_list|(
 name|env
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Return here after a longjmp. 	 */
+comment|/* 	 * Return here after a longjmp. 	 */
 name|signal
 argument_list|(
 name|SIGINT
@@ -930,7 +930,7 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read and evaluate commands. The commands are described in commands.l 	 * Yylex returns 0 when ^D or 'exit' is typed.  	 */
+comment|/* 	 * Read and evaluate commands. The commands are described in commands.l 	 * Yylex returns 0 when ^D or 'exit' is typed. 	 */
 name|printf
 argument_list|(
 literal|"> "
@@ -1229,7 +1229,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  ******************************************************************************  *  *  SetDefaultServer --  *  *	Changes the default name server to the one specified by  *	the first argument. The command "server name" uses the current   *	default server to lookup the info for "name". The command  *	"lserver name" uses the original server to lookup "name".  *  *  Side effects:  *	This routine will cause a core dump if the allocation requests fail.  *  *  Results:  *	SUCCESS		The default server was changed successfully.  *	NONAUTH		The server was changed but addresses of  *			other servers who know about the requested server  *			were returned.  *	Errors		No info about the new server was found or  *			requests to the current server timed-out.  *  ******************************************************************************  */
+comment|/*  ******************************************************************************  *  *  SetDefaultServer --  *  *	Changes the default name server to the one specified by  *	the first argument. The command "server name" uses the current  *	default server to lookup the info for "name". The command  *	"lserver name" uses the original server to lookup "name".  *  *  Side effects:  *	This routine will cause a core dump if the allocation requests fail.  *  *  Results:  *	SUCCESS		The default server was changed successfully.  *	NONAUTH		The server was changed but addresses of  *			other servers who know about the requested server  *			were returned.  *	Errors		No info about the new server was found or  *			requests to the current server timed-out.  *  ******************************************************************************  */
 end_comment
 
 begin_function
@@ -1625,7 +1625,7 @@ condition|)
 name|host
 operator|++
 expr_stmt|;
-comment|/*      *  If the user gives us an address for an address query,       *  silently treat it as a PTR query. If the query type is already      *  PTR, then convert the address into the in-addr.arpa format.      *      *  Use the address of the server if it exists, otherwise use the      *	address of a server who knows about this domain.      *  XXX For now, just use the first address in the list.      */
+comment|/*      *  If the user gives us an address for an address query,      *  silently treat it as a PTR query. If the query type is already      *  PTR, then convert the address into the in-addr.arpa format.      *      *  Use the address of the server if it exists, otherwise use the      *	address of a server who knows about this domain.      *  XXX For now, just use the first address in the list.      */
 if|if
 condition|(
 name|servPtr
@@ -1672,7 +1672,7 @@ literal|0
 index|]
 expr_stmt|;
 block|}
-comment|/*       * RFC1123 says we "SHOULD check the string syntactically for a       * dotted-decimal number before looking it up [...]" (p. 13).      */
+comment|/*      * RFC1123 says we "SHOULD check the string syntactically for a      * dotted-decimal number before looking it up [...]" (p. 13).      */
 if|if
 condition|(
 name|queryType
@@ -1881,7 +1881,7 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-comment|/*      *  Invalidate the current host information to prevent Finger       *  from using bogus info.      */
+comment|/*      *  Invalidate the current host information to prevent Finger      *  from using bogus info.      */
 name|curHostValid
 operator|=
 name|FALSE
@@ -1998,7 +1998,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  ******************************************************************************  *  *  LookupHostWithServer --  *  *	Asks the name server specified in the second argument for   *	information about the host or domain specified in the first  *	argument. The information is printed if the lookup was successful.  *  *	Address info about the requested name server is obtained  *	from the default name server. This routine will return an  *	error if the default server doesn't have info about the   *	requested server. Thus an error return status might not  *	mean the requested name server doesn't have info about the  *	requested host.  *  *	Comments from LookupHost apply here, too.  *  *  Results:  *	ERROR		- the output file could not be opened.  *	+ results of DoLookup  *  ******************************************************************************  */
+comment|/*  ******************************************************************************  *  *  LookupHostWithServer --  *  *	Asks the name server specified in the second argument for  *	information about the host or domain specified in the first  *	argument. The information is printed if the lookup was successful.  *  *	Address info about the requested name server is obtained  *	from the default name server. This routine will return an  *	error if the default server doesn't have info about the  *	requested server. Thus an error return status might not  *	mean the requested name server doesn't have info about the  *	requested host.  *  *	Comments from LookupHost apply here, too.  *  *  Results:  *	ERROR		- the output file could not be opened.  *	+ results of DoLookup  *  ******************************************************************************  */
 end_comment
 
 begin_function
@@ -2234,7 +2234,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  ******************************************************************************  *  *  SetOption --   *  *	This routine is used to change the state information  *	that affect the lookups. The command format is  *	   set keyword[=value]  *	Most keywords can be abbreviated. Parsing is very simplistic--  *	A value must not be separated from its keyword by white space.  *  *	Valid keywords:		Meaning:  *	all			lists current values of options.  *	ALL			lists current values of options, including  *				  hidden options.  *	[no]d2			turn on/off extra debugging mode.  *	[no]debug		turn on/off debugging mode.  *	[no]defname		use/don't use default domain name.  *	[no]search		use/don't use domain search list.  *	domain=NAME		set default domain name to NAME.  *	[no]ignore		ignore/don't ignore trunc. errors.  *	query=value		set default query type to value,  *				value is one of the query types in RFC883  *				without the leading T_.	(e.g., A, HINFO)  *	[no]recurse		use/don't use recursive lookup.  *	retry=#			set number of retries to #.  *	root=NAME		change root server to NAME.  *	time=#			set timeout length to #.  *	[no]vc			use/don't use virtual circuit.  *	port			TCP/UDP port to server.  *  * 	Deprecated:  *	[no]primary		use/don't use primary server.  *  *  Results:  *	SUCCESS		the command was parsed correctly.  *	ERROR		the command was not parsed correctly.  *  ******************************************************************************  */
+comment|/*  ******************************************************************************  *  *  SetOption --  *  *	This routine is used to change the state information  *	that affect the lookups. The command format is  *	   set keyword[=value]  *	Most keywords can be abbreviated. Parsing is very simplistic--  *	A value must not be separated from its keyword by white space.  *  *	Valid keywords:		Meaning:  *	all			lists current values of options.  *	ALL			lists current values of options, including  *				  hidden options.  *	[no]d2			turn on/off extra debugging mode.  *	[no]debug		turn on/off debugging mode.  *	[no]defname		use/don't use default domain name.  *	[no]search		use/don't use domain search list.  *	domain=NAME		set default domain name to NAME.  *	[no]ignore		ignore/don't ignore trunc. errors.  *	query=value		set default query type to value,  *				value is one of the query types in RFC883  *				without the leading T_.	(e.g., A, HINFO)  *	[no]recurse		use/don't use recursive lookup.  *	retry=#			set number of retries to #.  *	root=NAME		change root server to NAME.  *	time=#			set timeout length to #.  *	[no]vc			use/don't use virtual circuit.  *	port			TCP/UDP port to server.  *  * 	Deprecated:  *	[no]primary		use/don't use primary server.  *  *  Results:  *	SUCCESS		the command was parsed correctly.  *	ERROR		the command was not parsed correctly.  *  ******************************************************************************  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  This code is not copyright, and is placed in the public domain. Feel free to  use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  	$Id$  */
+comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  	$Id: bootparamd.c,v 1.1.1.1 1995/02/26 23:40:52 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -1052,7 +1052,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    getthefile return 1 and fills the buffer with the information       of the file, e g "host:/export/root/client" if it can be found.       If the host is in the database, but the file is not, the buffer        will be empty. (This makes it possible to give the special       empty answer for the file "dump")   */
+comment|/*    getthefile return 1 and fills the buffer with the information       of the file, e g "host:/export/root/client" if it can be found.       If the host is in the database, but the file is not, the buffer       will be empty. (This makes it possible to give the special       empty answer for the file "dump")   */
 end_comment
 
 begin_macro

@@ -863,7 +863,7 @@ operator|*
 name|brdaddr
 expr_stmt|;
 block|}
-comment|/*  		 * already known to us?  		 * what makes a POINTOPOINT if unique is its dst addr, 		 * NOT its source address  		 */
+comment|/* 		 * already known to us? 		 * what makes a POINTOPOINT if unique is its dst addr, 		 * NOT its source address 		 */
 if|if
 condition|(
 operator|(

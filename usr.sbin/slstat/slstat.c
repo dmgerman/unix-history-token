@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slstat.c,v 1.2 1994/10/17 06:05:32 davidg Exp $"
+literal|"$Id: slstat.c,v 1.3 1994/11/19 13:57:21 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1325,7 +1325,7 @@ comment|/* kopen() must be called first */
 end_comment
 
 begin_endif
-unit|abort(); 		 	if (kvm_nlist(nl)< 0 || nl[0].n_type == 0) { 		fprintf(stderr, "%s: %s: no namelist\n", errstr, system); 		return -1; 	} 	return 0; }  int kread(addr, buf, size) 	off_t addr; 	char *buf; 	int size; { 	if (kvm_read((char *)addr, buf, size) != size) 		return -1; 	return 0; }
+unit|abort();  	if (kvm_nlist(nl)< 0 || nl[0].n_type == 0) { 		fprintf(stderr, "%s: %s: no namelist\n", errstr, system); 		return -1; 	} 	return 0; }  int kread(addr, buf, size) 	off_t addr; 	char *buf; 	int size; { 	if (kvm_read((char *)addr, buf, size) != size) 		return -1; 	return 0; }
 endif|#
 directive|endif
 end_endif

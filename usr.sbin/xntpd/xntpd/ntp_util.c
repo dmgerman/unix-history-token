@@ -217,7 +217,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This controls whether stats are written to the fileset. Provided  * so that xntpdc can turn off stats when the file system fills up.   */
+comment|/*  * This controls whether stats are written to the fileset. Provided  * so that xntpdc can turn off stats when the file system fills up.  */
 end_comment
 
 begin_decl_stmt

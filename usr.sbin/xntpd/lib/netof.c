@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * netof - return the net address part of an ip address  *         (zero out host part)  */
+comment|/*  * netof - return the net address part of an ip address  *         (zero out host part)  */
 end_comment
 
 begin_include

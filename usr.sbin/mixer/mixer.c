@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	This is an example of a mixer program for Linux  *  *	updated 1/1/93 to add stereo, level query, broken  *      	devmask kludge - cmetz@thor.tjhsst.edu   *  * (C) Craig Metz and Hannu Savolainen 1993.  *  * You may do anything you wish with this program.  */
+comment|/*  *	This is an example of a mixer program for Linux  *  *	updated 1/1/93 to add stereo, level query, broken  *      	devmask kludge - cmetz@thor.tjhsst.edu  *  * (C) Craig Metz and Hannu Savolainen 1993.  *  * You may do anything you wish with this program.  */
 end_comment
 
 begin_include

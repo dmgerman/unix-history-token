@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *      Trivial program to load VT220 Function keys with strings,  *      note that the values only get sent when the key is shifted  *      (shoulda been an option to flip the shift set like the Z19!)  *  *      Typing no args gives help, basically pairs of keyname/value  *      strings.  *  *      Author, Author: Barry Shein, Boston University  *   * HISTORY   {1}   30-Oct-85  Kenneth J. Lester (ken) at ektools          Added the necessary code to read an initialization file.  This         should make it easier to used this program.  Also added code         that will set-up the terminal in vt200 (this saves the user the         trouble of checking if the set-up is in vt200).                   Restructed  the  main  function  to  use   getopt,  for  argument         processing.                    Alterated usage function  to include  new "i"  option (init file)     	-hm	minor modifications for pcvt 2.0 release  	 */
+comment|/*  *      Trivial program to load VT220 Function keys with strings,  *      note that the values only get sent when the key is shifted  *      (shoulda been an option to flip the shift set like the Z19!)  *  *      Typing no args gives help, basically pairs of keyname/value  *      strings.  *  *      Author, Author: Barry Shein, Boston University  *  * HISTORY   {1}   30-Oct-85  Kenneth J. Lester (ken) at ektools          Added the necessary code to read an initialization file.  This         should make it easier to used this program.  Also added code         that will set-up the terminal in vt200 (this saves the user the         trouble of checking if the set-up is in vt200).          Restructed  the  main  function  to  use   getopt,  for  argument         processing.          Alterated usage function  to include  new "i"  option (init file)    	-hm	minor modifications for pcvt 2.0 release  */
 end_comment
 
 begin_include
@@ -708,7 +708,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* This routine process the INITFILE.  This file expects lines in the format<ws> keyname ws string     Where ws is white space (spaces or tabs) and<ws> is optional white space.    The string may include spaces or tabs and need not be quoted.  If the     string has the sequence of "\n" then a newline character is included in     the string.     examples:          F6      ls -lg\n         F7      uulog -s  */
+comment|/* This routine process the INITFILE.  This file expects lines in the format<ws> keyname ws string     Where ws is white space (spaces or tabs) and<ws> is optional white space.    The string may include spaces or tabs and need not be quoted.  If the    string has the sequence of "\n" then a newline character is included in    the string.     examples:          F6      ls -lg\n         F7      uulog -s  */
 end_comment
 
 begin_include

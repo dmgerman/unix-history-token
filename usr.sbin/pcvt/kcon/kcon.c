@@ -14,7 +14,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	kcon.c		Keyboard control and remapping  *	----------------------------------------------  *  *	based on "keymap" which was written by  *	Holger Veit (veit@du9ds3.uni-duisburg.de)  *  *	-hm	a first rewrite  *	-hm	rewrite for pcvt 2.0 distribution  *	-hm	adding show current typematic values  *	-hm	hex/octal/esc output choices  *	-hm	remapping debugging  *	-hm	garbage output for remapped keys bugfix  *	-hm	patch from Lon Willet, adding -R  *	  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	kcon.c		Keyboard control and remapping  *	----------------------------------------------  *  *	based on "keymap" which was written by  *	Holger Veit (veit@du9ds3.uni-duisburg.de)  *  *	-hm	a first rewrite  *	-hm	rewrite for pcvt 2.0 distribution  *	-hm	adding show current typematic values  *	-hm	hex/octal/esc output choices  *	-hm	remapping debugging  *	-hm	garbage output for remapped keys bugfix  *	-hm	patch from Lon Willet, adding -R  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include

@@ -35,7 +35,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision: 1.3 $"
+empty|#ident "$Revision: 1.1.1.1 $"
 end_empty
 
 begin_endif

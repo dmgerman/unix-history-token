@@ -236,7 +236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the interface on the network   * of the specified address.  */
+comment|/*  * Find the interface on the network  * of the specified address.  */
 end_comment
 
 begin_function

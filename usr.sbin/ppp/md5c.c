@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm  *   * $Id:$  *   */
+comment|/* MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm  *  * $Id: md5c.c,v 1.2 1995/02/26 12:17:44 amurai Exp $  *  */
 end_comment
 
 begin_comment

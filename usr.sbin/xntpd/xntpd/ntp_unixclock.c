@@ -1330,7 +1330,7 @@ define|#
 directive|define
 name|K_TICK
 value|1
-comment|/*  	 * Check to see what to use for the object file for names and get 	 * the locations of the necessary kernel variables. 	 */
+comment|/* 	 * Check to see what to use for the object file for names and get 	 * the locations of the necessary kernel variables. 	 */
 ifdef|#
 directive|ifdef
 name|HAVE_GETBOOTFILE
@@ -1691,7 +1691,7 @@ name|defined
 argument_list|(
 name|ADJTIME_IS_ACCURATE
 argument_list|)
-comment|/*  * clock_parms for Solaris 2.2 and later, with high-res timer kernel code.  * The clock code changed in Solaris 2.2, and tickadj went away.  * The good news is that ADJTIME_IS_ACCURATE and tick is available through   * sysconf().  */
+comment|/*  * clock_parms for Solaris 2.2 and later, with high-res timer kernel code.  * The clock code changed in Solaris 2.2, and tickadj went away.  * The good news is that ADJTIME_IS_ACCURATE and tick is available through  * sysconf().  */
 specifier|static
 name|void
 name|clock_parms
@@ -1739,7 +1739,7 @@ operator|/
 literal|16
 operator|)
 expr_stmt|;
-comment|/* There is no tickadj, and it is only set here  				for tvu_maxslew calculation above. Really, 				clock_parms should return adj_precision 				and tvu_maxslew, instead of the very  				BSD-centric tickadj */
+comment|/* There is no tickadj, and it is only set here 				for tvu_maxslew calculation above. Really, 				clock_parms should return adj_precision 				and tvu_maxslew, instead of the very 				BSD-centric tickadj */
 ifdef|#
 directive|ifdef
 name|DEBUG

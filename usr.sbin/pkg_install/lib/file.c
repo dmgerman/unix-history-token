@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.8 1995/04/26 15:08:20 jkh Exp $"
+literal|"$Id: file.c,v 1.9 1995/05/10 23:00:16 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1725,7 +1725,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Using fmt, replace all instances of:  *   * %F	With the parameter "name"  * %D	With the parameter "dir"  * %B	Return the directory part ("base") of %D/%F  * %f	Return the filename part of %D/%F  *  * Does not check for overflow - caution!  *  */
+comment|/* Using fmt, replace all instances of:  *  * %F	With the parameter "name"  * %D	With the parameter "dir"  * %B	Return the directory part ("base") of %D/%F  * %f	Return the filename part of %D/%F  *  * Does not check for overflow - caution!  *  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  This code is not copyright, and is placed in the public domain. Feel free to  use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>   	$Id$  */
+comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>   	$Id: main.c,v 1.1.1.1 1995/02/26 23:40:52 wpaul Exp $  */
 end_comment
 
 begin_include

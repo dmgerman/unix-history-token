@@ -517,7 +517,7 @@ else|else
 name|res_found
 operator|++
 expr_stmt|;
-comment|/* 	 * The following implements limiting the number of clients 	 * accepted from a given network. The notion of "same network" 	 * is determined by the mask and addr fields of the restrict 	 * list entry. The monitor mechanism has to be enabled for 	 * collecting info on current clients. 	 * 	 * The policy is as follows: 	 *	- take the list of clients recorded 	 *        from the given "network" seen within the last 	 *        client_limit_period seconds 	 *      - if there are at most client_limit entries:  	 *        --> access allowed 	 *      - otherwise sort by time first seen 	 *      - current client among the first client_limit seen 	 *        hosts? 	 *        if yes: access allowed 	 *        else:   eccess denied 	 */
+comment|/* 	 * The following implements limiting the number of clients 	 * accepted from a given network. The notion of "same network" 	 * is determined by the mask and addr fields of the restrict 	 * list entry. The monitor mechanism has to be enabled for 	 * collecting info on current clients. 	 * 	 * The policy is as follows: 	 *	- take the list of clients recorded 	 *        from the given "network" seen within the last 	 *        client_limit_period seconds 	 *      - if there are at most client_limit entries: 	 *        --> access allowed 	 *      - otherwise sort by time first seen 	 *      - current client among the first client_limit seen 	 *        hosts? 	 *        if yes: access allowed 	 *        else:   eccess denied 	 */
 if|if
 condition|(
 name|match
@@ -612,7 +612,7 @@ name|RES_LIMITED
 argument_list|)
 return|;
 block|}
-comment|/* 		 * How nice, MRU list provides our current client as the 		 * first entry in the list. 		 * Monitoring was verified to be active above, thus we 		 * know an entry for our client must exist, or some  		 * brain dead set the memory limit for mon entries to ZERO!!! 		 */
+comment|/* 		 * How nice, MRU list provides our current client as the 		 * first entry in the list. 		 * Monitoring was verified to be active above, thus we 		 * know an entry for our client must exist, or some 		 * brain dead set the memory limit for mon entries to ZERO!!! 		 */
 name|this_client
 operator|=
 name|mon_mru_list

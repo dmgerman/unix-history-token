@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.6 1994/05/25 06:25:05 paulus Exp $"
+literal|"$Id: auth.c,v 1.2 1994/09/25 02:31:52 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2873,7 +2873,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * scan_authfile - Scan an authorization file for a secret suitable  * for authenticating `client' on `server'.  The return value is -1  * if no secret is found, otherwise>= 0.  The return value has  * NONWILD_CLIENT set if the secret didn't have "*" for the client, and  * NONWILD_SERVER set if the secret didn't have "*" for the server.  * Any following words on the line (i.e. address authorization  * info) are placed in a wordlist and returned in *addrs.    */
+comment|/*  * scan_authfile - Scan an authorization file for a secret suitable  * for authenticating `client' on `server'.  The return value is -1  * if no secret is found, otherwise>= 0.  The return value has  * NONWILD_CLIENT set if the secret didn't have "*" for the client, and  * NONWILD_SERVER set if the secret didn't have "*" for the server.  * Any following words on the line (i.e. address authorization  * info) are placed in a wordlist and returned in *addrs.  */
 end_comment
 
 begin_function

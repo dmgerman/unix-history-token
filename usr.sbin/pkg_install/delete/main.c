@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.2 1993/09/03 23:01:00 jkh Exp $"
+literal|"$Id: main.c,v 1.3 1994/12/06 00:51:40 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 

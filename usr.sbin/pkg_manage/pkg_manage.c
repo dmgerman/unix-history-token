@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***************************************************************  *   * Program:	pkg_manage.c  * Author:	Marc van Kempen  * Desc:	Add, delete packages with the pkg_* binaries  *		Get info about installed packages  *		Review about to be installed packages  *  * 1. View installed packages  * 2. Delete installed packages  * 3. Preview package install  * 4. Install packages  *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *   ***************************************************************/
+comment|/***************************************************************  *  * Program:	pkg_manage.c  * Author:	Marc van Kempen  * Desc:	Add, delete packages with the pkg_* binaries  *		Get info about installed packages  *		Review about to be installed packages  *  * 1. View installed packages  * 2. Delete installed packages  * 3. Preview package install  * 4. Install packages  *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *  ***************************************************************/
 end_comment
 
 begin_include
@@ -192,7 +192,7 @@ name|char
 modifier|*
 name|fname
 parameter_list|)
-comment|/*   * Desc: check if the file<fname> exists (and is readable)  */
+comment|/*  * Desc: check if the file<fname> exists (and is readable)  */
 block|{
 name|FILE
 modifier|*
@@ -270,7 +270,7 @@ name|char
 modifier|*
 name|fout
 parameter_list|)
-comment|/*  * Desc: run the program<prog> with arguments<arg> and catch its output  * 	 in<fout> and display it in case of an error. specify NULL,   *	 if you don't want output.  */
+comment|/*  * Desc: run the program<prog> with arguments<arg> and catch its output  * 	 in<fout> and display it in case of an error. specify NULL,  *	 if you don't want output.  */
 block|{
 name|char
 modifier|*
@@ -1526,7 +1526,7 @@ name|char
 modifier|*
 name|fname
 parameter_list|)
-comment|/*   * Desc: install the package<fname>  */
+comment|/*  * Desc: install the package<fname>  */
 block|{
 name|char
 modifier|*
@@ -1619,7 +1619,7 @@ name|char
 modifier|*
 name|tmp_dir
 parameter_list|)
-comment|/*  * Desc: get the description and comment from the files  *	 DESC, CONTENT and COMMENT from fname  * Pre:  the current working directory is a temporary,   *	 empty directory.  * Post: name = the name of the package  * 	 comment = the comment for the package  *	 desc = the description for the package  */
+comment|/*  * Desc: get the description and comment from the files  *	 DESC, CONTENT and COMMENT from fname  * Pre:  the current working directory is a temporary,  *	 empty directory.  * Post: name = the name of the package  * 	 comment = the comment for the package  *	 desc = the description for the package  */
 block|{
 name|char
 name|msg
@@ -2478,7 +2478,7 @@ name|char
 modifier|*
 name|name
 parameter_list|)
-comment|/*   * Desc: check if<name> is already installed as a package  */
+comment|/*  * Desc: check if<name> is already installed as a package  */
 block|{
 name|int
 name|i

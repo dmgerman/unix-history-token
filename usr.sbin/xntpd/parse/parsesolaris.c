@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsesolaris.c,v 3.16 1994/05/30 09:57:40 kardel Exp  *    * parsesolaris.c,v 3.16 1994/05/30 09:57:40 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS5.x - not fully tested - buyer beware ! - OS KILLERS may still be  *  lurking in the code!)  *  * Copyright (c) 1993,1994  * derived work from parsestreams.c ((c) 1991-1993, Frank Kardel) and  * dcf77sync.c((c) Frank Kardel)  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsesolaris.c,v 3.16 1994/05/30 09:57:40 kardel Exp  *  * parsesolaris.c,v 3.16 1994/05/30 09:57:40 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS5.x - not fully tested - buyer beware ! - OS KILLERS may still be  *  lurking in the code!)  *  * Copyright (c) 1993,1994  * derived work from parsestreams.c ((c) 1991-1993, Frank Kardel) and  * dcf77sync.c((c) Frank Kardel)  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -4013,7 +4013,7 @@ operator|->
 name|zsops
 expr_stmt|;
 comment|/* hook it up */
-comment|/* 	   * XXX: this is usually done via zsopinit()  	   * - have yet to find a way to call that routine 	   */
+comment|/* 	   * XXX: this is usually done via zsopinit() 	   * - have yet to find a way to call that routine 	   */
 name|zs
 operator|->
 name|zs_xsint

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/testdcf.c,v 3.13 1994/05/12 12:49:31 kardel Exp  *    * testdcf.c,v 3.13 1994/05/12 12:49:31 kardel Exp  *  * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1993,1994  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/testdcf.c,v 3.13 1994/05/12 12:49:31 kardel Exp  *  * testdcf.c,v 3.13 1994/05/12 12:49:31 kardel Exp  *  * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1993,1994  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
 end_comment
 
 begin_include

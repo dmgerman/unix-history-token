@@ -816,7 +816,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  			 * Multicast hacks to determine peer when a  			 * packet arrives and there exists an assoc. 			 * with src in client/server mode 			 */
+comment|/* 			 * Multicast hacks to determine peer when a 			 * packet arrives and there exists an assoc. 			 * with src in client/server mode 			 */
 if|if
 condition|(
 operator|(

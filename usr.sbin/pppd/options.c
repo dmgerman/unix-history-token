@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.2 1994/09/25 02:32:08 wollman Exp $"
+literal|"$Id: options.c,v 1.3 1995/05/24 01:56:52 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4687,7 +4687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setdomain - Set domain name to append to hostname   */
+comment|/*  * setdomain - Set domain name to append to hostname  */
 end_comment
 
 begin_function
@@ -5749,7 +5749,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return user specified netmask. A value of zero means no netmask has  * been set.   */
+comment|/*  * Return user specified netmask. A value of zero means no netmask has  * been set.  */
 end_comment
 
 begin_comment

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: user.c,v 2.8 1994/01/15 20:43:43 vixie Exp $"
+literal|"$Id: user.c,v 1.1.1.1 1994/08/27 13:43:03 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,7 +219,7 @@ name|crontab
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*  	 * init environment.  this will be copied/augmented for each entry. 	 */
+comment|/* 	 * init environment.  this will be copied/augmented for each entry. 	 */
 name|envp
 operator|=
 name|env_init

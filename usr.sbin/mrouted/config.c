@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: config.c,v 1.2 1994/09/08 02:51:12 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: config.c,v 1.3 1995/04/10 18:42:10 wollman Exp $  */
 end_comment
 
 begin_include
@@ -2909,7 +2909,7 @@ name|uv_acl
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	     * set variable to define which interface  	     */
+comment|/* 	     * set variable to define which interface 	     */
 name|prev_vif
 operator|=
 name|numvifs
@@ -3628,7 +3628,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a pointer to the next "word" in the string to which '*s' points,  * lower-cased and null terminated, and advance '*s' to point beyond the word.  * Words are separated by blanks and/or tabs, and the input string is  * considered to terminate at a newline, '#' (comment), or null character.  * If no words remain, a pointer to a null string ("") is returned.    * Warning: This function clobbers the input string.  */
+comment|/*  * Return a pointer to the next "word" in the string to which '*s' points,  * lower-cased and null terminated, and advance '*s' to point beyond the word.  * Words are separated by blanks and/or tabs, and the input string is  * considered to terminate at a newline, '#' (comment), or null character.  * If no words remain, a pointer to a null string ("") is returned.  * Warning: This function clobbers the input string.  */
 end_comment
 
 begin_function

@@ -502,7 +502,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|KERNTEXTOFF
-comment|/*  * XXX  * The FreeBSD bootloader loads the kernel at the a_entry address, meaning  * that this is where the kernel starts.  (not at KERNBASE)  *   * This may be introducing an i386 dependency.  */
+comment|/*  * XXX  * The FreeBSD bootloader loads the kernel at the a_entry address, meaning  * that this is where the kernel starts.  (not at KERNBASE)  *  * This may be introducing an i386 dependency.  */
 if|#
 directive|if
 name|defined

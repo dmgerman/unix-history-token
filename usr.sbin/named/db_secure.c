@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_secure.c,v 1.6 1994/07/23 23:23:56 vixie Exp $"
+literal|"$Id: db_secure.c,v 1.1.1.1 1994/09/22 19:46:14 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1243,7 +1243,7 @@ argument_list|,
 name|MC
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get the identity of the person doing the lpr using the same 	 * algorithm as lprm.  	 */
+comment|/* 	 * Get the identity of the person doing the lpr using the same 	 * algorithm as lprm. 	 */
 name|userid
 operator|=
 name|getuid

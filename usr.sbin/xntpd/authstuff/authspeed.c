@@ -833,7 +833,7 @@ specifier|register
 name|int
 name|loopcount
 decl_stmt|;
-comment|/* 	 *  If we're attempting to compute the cost of an auth2crypt() 	 *  for first compute the total cost, then compute the 	 *  cost of only doing the first step, auth1crypt().  What  	 *  remains is the cost of auth2crypt. 	 */
+comment|/* 	 *  If we're attempting to compute the cost of an auth2crypt() 	 *  for first compute the total cost, then compute the 	 *  cost of only doing the first step, auth1crypt().  What 	 *  remains is the cost of auth2crypt. 	 */
 name|loopcount
 operator|=
 name|loops

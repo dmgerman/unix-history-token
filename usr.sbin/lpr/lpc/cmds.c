@@ -5163,7 +5163,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-comment|/* 	 * Look for a job item consisting of system name, colon, number  	 * (example: ucbarpa:114)   	 */
+comment|/* 	 * Look for a job item consisting of system name, colon, number 	 * (example: ucbarpa:114) 	 */
 if|if
 condition|(
 operator|(

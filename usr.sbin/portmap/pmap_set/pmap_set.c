@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * pmap_set - set portmapper table from data produced by pmap_dump   *    * Author: Wietse Venema (wietse@wzv.win.tue.nl), dept. of Mathematics and   * Computing Science, Eindhoven University of Technology, The Netherlands.   */
+comment|/*   * pmap_set - set portmapper table from data produced by pmap_dump   *   * Author: Wietse Venema (wietse@wzv.win.tue.nl), dept. of Mathematics and   * Computing Science, Eindhoven University of Technology, The Netherlands.   */
 end_comment
 
 begin_ifndef

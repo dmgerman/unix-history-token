@@ -21,7 +21,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parse_conf.c,v 3.15 1994/02/02 17:45:32 kardel Exp  *    * parse_conf.c,v 3.15 1994/02/02 17:45:32 kardel Exp  *  * Parser configuration module for reference clocks  *  * STREAM define switches between two personalities of the module  * if STREAM is defined this module can be used with dcf77sync.c as  * a STREAMS kernel module. In this case the time stamps will be  * a struct timeval.  * when STREAM is not defined NTP time stamps will be used.  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parse_conf.c,v 3.15 1994/02/02 17:45:32 kardel Exp  *  * parse_conf.c,v 3.15 1994/02/02 17:45:32 kardel Exp  *  * Parser configuration module for reference clocks  *  * STREAM define switches between two personalities of the module  * if STREAM is defined this module can be used with dcf77sync.c as  * a STREAMS kernel module. In this case the time stamps will be  * a struct timeval.  * when STREAM is not defined NTP time stamps will be used.  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_include

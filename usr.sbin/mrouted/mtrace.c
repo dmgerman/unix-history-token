@@ -1247,7 +1247,7 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
-comment|/*      * If the response is to be a multicast address, make sure we       * are listening on that multicast address.      */
+comment|/*      * If the response is to be a multicast address, make sure we      * are listening on that multicast address.      */
 if|if
 condition|(
 name|IN_MULTICAST

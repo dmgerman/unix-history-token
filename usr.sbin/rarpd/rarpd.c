@@ -39,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /a/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.2 1995/03/03 22:20:13 wpaul Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.3 1995/04/02 01:35:54 wpaul Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -f ] [ hostname ]  *		rarpd [ -f ] interface [ hostname ]  *   * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
+comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -f ] [ hostname ]  *		rarpd [ -f ] interface [ hostname ]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
 end_comment
 
 begin_include
@@ -311,7 +311,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The structure for each interface.    */
+comment|/*  * The structure for each interface.  */
 end_comment
 
 begin_struct
@@ -507,7 +507,7 @@ condition|)
 operator|++
 name|name
 expr_stmt|;
-comment|/*  	 * All error reporting is done through syslogs. 	 */
+comment|/* 	 * All error reporting is done through syslogs. 	 */
 name|openlog
 argument_list|(
 name|name
@@ -1092,7 +1092,7 @@ index|[
 sizeof|sizeof
 expr|"/dev/bpf000"]
 expr_stmt|;
-comment|/* 	 * Go through all the minors and find one that isn't in use.  	 */
+comment|/* 	 * Go through all the minors and find one that isn't in use. 	 */
 do|do
 block|{
 operator|(
@@ -1304,7 +1304,7 @@ operator|=
 name|bpf_open
 argument_list|()
 expr_stmt|;
-comment|/*  	 * Set immediate mode so packets are processed as they arrive. 	 */
+comment|/* 	 * Set immediate mode so packets are processed as they arrive. 	 */
 name|immediate
 operator|=
 literal|1
@@ -1748,7 +1748,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Loop indefinitely listening for RARP requests on the   * interfaces in 'iflist'.  */
+comment|/*  * Loop indefinitely listening for RARP requests on the  * interfaces in 'iflist'.  */
 end_comment
 
 begin_function
@@ -2009,7 +2009,7 @@ argument_list|,
 name|bufsize
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Due to a SunOS bug, after 2^31 bytes, the  				 * file offset overflows and read fails with  				 * EINVAL.  The lseek() to 0 will fix things. 				 */
+comment|/* 				 * Due to a SunOS bug, after 2^31 bytes, the 				 * file offset overflows and read fails with 				 * EINVAL.  The lseek() to 0 will fix things. 				 */
 if|if
 condition|(
 name|cc
@@ -2442,7 +2442,7 @@ operator|*
 operator|)
 name|pkt
 expr_stmt|;
-comment|/* 	 * If the address in the one element cache, don't bother  	 * looking up names. 	 */
+comment|/* 	 * If the address in the one element cache, don't bother 	 * looking up names. 	 */
 if|if
 condition|(
 name|bcmp
@@ -3092,7 +3092,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Build a reverse ARP packet and sent it out on the interface.  * 'ep' points to a valid ARPOP_REVREQUEST.  The ARPOP_REVREPLY is built   * on top of the request, then written to the network.  *  * RFC 903 defines the ether_arp fields as follows.  The following comments  * are taken (more or less) straight from this document.  *  * ARPOP_REVREQUEST  *  * arp_sha is the hardware address of the sender of the packet.  * arp_spa is undefined.  * arp_tha is the 'target' hardware address.  *   In the case where the sender wishes to determine his own  *   protocol address, this, like arp_sha, will be the hardware  *   address of the sender.  * arp_tpa is undefined.  *  * ARPOP_REVREPLY  *  * arp_sha is the hardware address of the responder (the sender of the  *   reply packet).  * arp_spa is the protocol address of the responder (see the note below).  * arp_tha is the hardware address of the target, and should be the same as  *   that which was given in the request.  * arp_tpa is the protocol address of the target, that is, the desired address.  *   * Note that the requirement that arp_spa be filled in with the responder's  * protocol is purely for convenience.  For instance, if a system were to use   * both ARP and RARP, then the inclusion of the valid protocol-hardware   * address pair (arp_spa, arp_sha) may eliminate the need for a subsequent   * ARP request.  */
+comment|/*  * Build a reverse ARP packet and sent it out on the interface.  * 'ep' points to a valid ARPOP_REVREQUEST.  The ARPOP_REVREPLY is built  * on top of the request, then written to the network.  *  * RFC 903 defines the ether_arp fields as follows.  The following comments  * are taken (more or less) straight from this document.  *  * ARPOP_REVREQUEST  *  * arp_sha is the hardware address of the sender of the packet.  * arp_spa is undefined.  * arp_tha is the 'target' hardware address.  *   In the case where the sender wishes to determine his own  *   protocol address, this, like arp_sha, will be the hardware  *   address of the sender.  * arp_tpa is undefined.  *  * ARPOP_REVREPLY  *  * arp_sha is the hardware address of the responder (the sender of the  *   reply packet).  * arp_spa is the protocol address of the responder (see the note below).  * arp_tha is the hardware address of the target, and should be the same as  *   that which was given in the request.  * arp_tpa is the protocol address of the target, that is, the desired address.  *  * Note that the requirement that arp_spa be filled in with the responder's  * protocol is purely for convenience.  For instance, if a system were to use  * both ARP and RARP, then the inclusion of the valid protocol-hardware  * address pair (arp_spa, arp_sha) may eliminate the need for a subsequent  * ARP request.  */
 end_comment
 
 begin_macro

@@ -267,7 +267,7 @@ expr|struct
 name|netinfo
 argument_list|)
 expr_stmt|;
-comment|/*  			 * A single entry with rip_dst == DSTNETS_ALL and 			 * metric ``infinity'' means ``all routes''. 			 */
+comment|/* 			 * A single entry with rip_dst == DSTNETS_ALL and 			 * metric ``infinity'' means ``all routes''. 			 */
 if|if
 condition|(
 name|ns_neteqnn

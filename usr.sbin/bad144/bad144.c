@@ -56,7 +56,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * bad144  *  * This program prints and/or initializes a bad block record for a pack,  * in the format used by the DEC standard 144.  * It can also add bad sector(s) to the record, moving the sector  * replacements as necessary.  *  * It is preferable to write the bad information with a standard formatter,  * but this program will do.  *   * RP06 sectors are marked as bad by inverting the format bit in the  * header; on other drives the valid-sector bit is cleared.  */
+comment|/*  * bad144  *  * This program prints and/or initializes a bad block record for a pack,  * in the format used by the DEC standard 144.  * It can also add bad sector(s) to the record, moving the sector  * replacements as necessary.  *  * It is preferable to write the bad information with a standard formatter,  * but this program will do.  *  * RP06 sectors are marked as bad by inverting the format bit in the  * header; on other drives the valid-sector bit is cleared.  */
 end_comment
 
 begin_include
@@ -601,7 +601,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* scan the entire disk a sector at a time.  Because of all the 	 * clustering in the kernel, we cannot scan a track at a time,  	 * If we do, we may have to read twice over the block to find 	 * exactly which one failed, and it may not fail second time. 	 */
+comment|/* scan the entire disk a sector at a time.  Because of all the 	 * clustering in the kernel, we cannot scan a track at a time, 	 * If we do, we may have to read twice over the block to find 	 * exactly which one failed, and it may not fail second time. 	 */
 for|for
 control|(
 name|curr_sec

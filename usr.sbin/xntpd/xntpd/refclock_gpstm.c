@@ -1306,7 +1306,7 @@ name|defined
 argument_list|(
 name|HAVE_TERMIOS
 argument_list|)
-comment|/* 	 * POSIX serial line parameters (termios interface) 	 * 	 * The GPSTMCLK option provides timestamping at the driver level.  	 * It requires the tty_clk streams module. 	 * 	 * The GPSTMPPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
+comment|/* 	 * POSIX serial line parameters (termios interface) 	 * 	 * The GPSTMCLK option provides timestamping at the driver level. 	 * It requires the tty_clk streams module. 	 * 	 * The GPSTMPPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
 block|{
 name|struct
 name|termios
@@ -1555,7 +1555,7 @@ name|defined
 argument_list|(
 name|HAVE_BSD_TTYS
 argument_list|)
-comment|/* 	 * 4.3bsd serial line parameters (sgttyb interface) 	 * 	 * The GPSTMCLK option provides timestamping at the driver level.  	 * It requires the tty_clk line discipline and 4.3bsd or later. 	 */
+comment|/* 	 * 4.3bsd serial line parameters (sgttyb interface) 	 * 	 * The GPSTMCLK option provides timestamping at the driver level. 	 * It requires the tty_clk line discipline and 4.3bsd or later. 	 */
 block|{
 name|struct
 name|sgttyb
@@ -2912,7 +2912,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * Convert format 0 and check values  		 */
+comment|/* 		 * Convert format 0 and check values 		 */
 name|gpstm
 operator|->
 name|year

@@ -21,7 +21,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parse.c,v 3.27 1994/06/01 08:18:33 kardel Exp  *    * parse.c,v 3.27 1994/06/01 08:18:33 kardel Exp  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used with dcf77sync.c as  * a PARSEKERNEL kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parse.c,v 3.27 1994/06/01 08:18:33 kardel Exp  *  * parse.c,v 3.27 1994/06/01 08:18:33 kardel Exp  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used with dcf77sync.c as  * a PARSEKERNEL kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_if
