@@ -5004,6 +5004,20 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|p
+operator|->
+name|p_tracee
+operator|==
+name|td
+condition|)
+name|p
+operator|->
+name|p_tracee
+operator|=
+literal|0
+expr_stmt|;
 name|cpu_thread_exit
 argument_list|(
 name|td
@@ -8070,14 +8084,6 @@ name|thr_exit1
 argument_list|()
 expr_stmt|;
 block|}
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
 comment|/* 		 * When a thread suspends, it just 		 * moves to the processes's suspend queue 		 * and stays there. 		 */
 name|thread_suspend_one
 argument_list|(
@@ -8114,6 +8120,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -8136,6 +8145,9 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
+expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
