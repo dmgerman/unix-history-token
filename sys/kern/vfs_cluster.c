@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  * Modifications/enhancements:  * 	Copyright (c) 1995 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cluster.c	8.7 (Berkeley) 2/13/94  * $Id: vfs_cluster.c,v 1.7 1994/12/18 03:05:49 davidg Exp $  */
+comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  * Modifications/enhancements:  * 	Copyright (c) 1995 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cluster.c	8.7 (Berkeley) 2/13/94  * $Id: vfs_cluster.c,v 1.8 1995/01/09 16:04:53 davidg Exp $  */
 end_comment
 
 begin_include
@@ -270,7 +270,9 @@ parameter_list|,
 name|blk
 parameter_list|)
 define|\
-value|((blk) != 0&& ((blk) == (vp)->v_lastr + 1 || (blk) == (vp)->v_lastr))
+value|(
+comment|/* (blk) != 0&& */
+value|((blk) == (vp)->v_lastr + 1 || (blk) == (vp)->v_lastr))
 end_define
 
 begin_endif
@@ -406,6 +408,57 @@ name|v_ralen
 operator|>>=
 literal|1
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|vp
+operator|->
+name|v_maxra
+operator|>
+name|origlblkno
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|vp
+operator|->
+name|v_ralen
+operator|+
+literal|1
+operator|)
+operator|<
+operator|(
+name|MAXPHYS
+operator|/
+name|size
+operator|)
+condition|)
+name|vp
+operator|->
+name|v_ralen
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_maxra
+operator|>
+operator|(
+name|origlblkno
+operator|+
+literal|2
+operator|*
+name|vp
+operator|->
+name|v_ralen
+operator|)
+condition|)
 return|return
 literal|0
 return|;
@@ -628,6 +681,25 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|vp
+operator|->
+name|v_ralen
+operator|+
+literal|1
+operator|)
+operator|<
+name|MAXPHYS
+operator|/
+name|size
+condition|)
+name|vp
+operator|->
+name|v_ralen
+operator|++
+expr_stmt|;
+if|if
+condition|(
 name|num_ra
 operator|>
 name|vp
@@ -657,7 +729,7 @@ operator|)
 operator|>
 name|cnt
 operator|.
-name|v_free_reserved
+name|v_free_min
 operator|)
 condition|)
 block|{
@@ -718,8 +790,6 @@ name|blkno
 expr_stmt|;
 block|}
 block|}
-name|skip_readahead
-label|:
 comment|/* 	 * if the synchronous read is a cluster, handle it, otherwise do a 	 * simple, non-clustered read. 	 */
 if|if
 condition|(
@@ -773,6 +843,7 @@ name|b_bcount
 operator|/
 name|size
 expr_stmt|;
+comment|/* printf("r:(%d, %d)", bp->b_lblkno, bp->b_bcount / size);  */
 name|totreads
 operator|++
 expr_stmt|;
@@ -862,6 +933,7 @@ name|b_bcount
 operator|/
 name|size
 expr_stmt|;
+comment|/* printf("ra:(%d, %d)", rbp->b_lblkno, rbp->b_bcount / size); */
 name|totreads
 operator|++
 expr_stmt|;
@@ -887,6 +959,18 @@ block|}
 if|if
 condition|(
 name|bp
+operator|&&
+operator|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_ASYNC
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 return|return
 operator|(
@@ -1297,20 +1381,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|inmem
-argument_list|(
-name|vp
-argument_list|,
-name|lbn
-operator|+
-name|i
-argument_list|)
-condition|)
-block|{
-break|break;
-block|}
+comment|/* 			if (inmem(vp, lbn + i)) { 				break; 			} */
 name|tbp
 operator|=
 name|getblk
@@ -1744,6 +1815,8 @@ operator|=
 name|MAXPHYS
 operator|/
 name|lblocksize
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2036,6 +2109,9 @@ name|bp
 decl_stmt|,
 modifier|*
 name|tbp
+decl_stmt|,
+modifier|*
+name|pb
 decl_stmt|;
 name|caddr_t
 name|cp
@@ -2107,14 +2183,33 @@ operator|--
 name|len
 expr_stmt|;
 block|}
+name|pb
+operator|=
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+name|trypbuf
+argument_list|()
+expr_stmt|;
 comment|/* Get more memory for current buffer */
 if|if
 condition|(
 name|len
 operator|<=
 literal|1
+operator|||
+name|pb
+operator|==
+literal|0
 condition|)
 block|{
+name|relpbuf
+argument_list|(
+name|pb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|last_bp
@@ -2182,6 +2277,11 @@ name|B_DELWRI
 operator|)
 condition|)
 block|{
+name|relpbuf
+argument_list|(
+name|pb
+argument_list|)
+expr_stmt|;
 operator|++
 name|start_lbn
 expr_stmt|;
@@ -2209,6 +2309,11 @@ operator|->
 name|b_bufsize
 condition|)
 block|{
+name|relpbuf
+argument_list|(
+name|pb
+argument_list|)
+expr_stmt|;
 operator|++
 name|start_lbn
 expr_stmt|;
@@ -2226,8 +2331,7 @@ goto|;
 block|}
 name|bp
 operator|=
-name|getpbuf
-argument_list|()
+name|pb
 expr_stmt|;
 name|b_save
 operator|=
@@ -2416,8 +2520,6 @@ operator|&
 operator|(
 name|B_INVAL
 operator||
-name|B_BUSY
-operator||
 name|B_CLUSTEROK
 operator|)
 operator|)
@@ -2437,6 +2539,15 @@ operator|!=
 name|lbn
 condition|)
 block|{
+if|if
+condition|(
+name|tbp
+operator|->
+name|b_flags
+operator|&
+name|B_BUSY
+condition|)
+break|break;
 name|tbp
 operator|=
 name|getblk
