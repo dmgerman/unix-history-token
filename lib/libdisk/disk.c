@@ -2485,6 +2485,8 @@ init|=
 block|{
 literal|"wd"
 block|,
+literal|"aacd"
+block|,
 literal|"ad"
 block|,
 literal|"da"
@@ -2521,6 +2523,8 @@ name|device_list
 index|[]
 init|=
 block|{
+literal|"aacd"
+block|,
 literal|"ad"
 block|,
 literal|"da"
