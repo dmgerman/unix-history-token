@@ -513,7 +513,7 @@ literal|2
 argument_list|,
 name|SCORE_X
 argument_list|,
-literal|"|  .....:.....:.....:.....:.....:.....  |"
+literal|"| *.....:.....:.....:.....:.....:.....  |"
 argument_list|)
 expr_stmt|;
 name|mvaddstr
@@ -524,7 +524,7 @@ literal|3
 argument_list|,
 name|SCORE_X
 argument_list|,
-literal|"|  .....:.....:.....:.....:.....:.....  |"
+literal|"| *.....:.....:.....:.....:.....:.....  |"
 argument_list|)
 expr_stmt|;
 name|mvaddstr
@@ -546,7 +546,7 @@ literal|5
 argument_list|,
 name|SCORE_X
 argument_list|,
-literal|"|  .....:.....:.....:.....:.....:.....  |"
+literal|"| *.....:.....:.....:.....:.....:.....  |"
 argument_list|)
 expr_stmt|;
 name|mvaddstr
@@ -557,7 +557,7 @@ literal|6
 argument_list|,
 name|SCORE_X
 argument_list|,
-literal|"|  .....:.....:.....:.....:.....:.....  |"
+literal|"| *.....:.....:.....:.....:.....:.....  |"
 argument_list|)
 expr_stmt|;
 name|mvaddstr
@@ -587,14 +587,16 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|Lastscore
 index|[
 literal|1
 index|]
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 end_block
