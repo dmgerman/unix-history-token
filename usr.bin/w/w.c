@@ -1484,6 +1484,15 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+name|ep
+operator|->
+name|proc
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ep
 operator|->
 name|args
@@ -1524,6 +1533,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* sort by idle time */
@@ -1760,6 +1770,12 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|->
+name|args
+condition|)
 name|printf
 argument_list|(
 literal|"%.*s\n"
@@ -1769,6 +1785,12 @@ argument_list|,
 name|ep
 operator|->
 name|args
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"-\n"
 argument_list|)
 expr_stmt|;
 block|}
