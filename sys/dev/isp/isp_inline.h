@@ -547,11 +547,9 @@ name|isp
 operator|->
 name|isp_reqodx
 operator|=
-name|ISP_READ
+name|READ_REQUEST_QUEUE_OUT_POINTER
 argument_list|(
 name|isp
-argument_list|,
-name|OUTMAILBOX4
 argument_list|)
 expr_stmt|;
 name|iptr
