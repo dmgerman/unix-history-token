@@ -6667,6 +6667,7 @@ begin_struct
 struct|struct
 name|modfind_args
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6676,6 +6677,7 @@ name|name_
 index|[
 name|PAD_
 argument_list|(
+specifier|const
 name|char
 operator|*
 argument_list|)
