@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -1319,6 +1325,9 @@ name|void
 modifier|*
 name|data
 parameter_list|,
+name|int
+name|fflag
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -1415,6 +1424,20 @@ decl_stmt|;
 name|uint64_t
 name|sum
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|fflag
+operator|&
+name|FWRITE
+operator|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 comment|/* The disklabel to set is the ioctl argument. */
 name|buf
 operator|=
@@ -1584,6 +1607,20 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|fflag
+operator|&
+name|FWRITE
+operator|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 comment|/* The disklabel to set is the ioctl argument. */
 name|bsd_disklabel_le_enc
 argument_list|(
