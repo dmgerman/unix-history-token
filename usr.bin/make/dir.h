@@ -157,6 +157,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|Lst
 modifier|*
@@ -203,6 +204,7 @@ begin_function_decl
 name|void
 name|Dir_PrintPath
 parameter_list|(
+specifier|const
 name|struct
 name|Lst
 modifier|*
