@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	8.3 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2472,6 +2472,12 @@ name|exit
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|nfhret
+operator|.
+name|stat
 expr_stmt|;
 name|warn
 argument_list|(
