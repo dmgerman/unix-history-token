@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bad144.c,v 1.12.2.1 1997/09/15 06:23:56 charnier Exp $"
+literal|"$Id: bad144.c,v 1.12.2.2 1997/12/11 07:32:25 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,7 +634,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\r%7d of %7lu blocks (%3lu%%)"
+literal|"\r%7d of %7u blocks (%3u%%)"
 argument_list|,
 name|curr_sec
 argument_list|,
@@ -1223,7 +1223,7 @@ name|errx
 argument_list|(
 literal|7
 argument_list|,
-literal|"disk sector size too large/small (%lu)"
+literal|"disk sector size too large/small (%u)"
 argument_list|,
 name|dp
 operator|->
@@ -1260,8 +1260,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cyl: %ld, tracks: %ld, secs: %ld, "
-literal|"sec/cyl: %ld, start: %ld, end: %ld\n"
+literal|"cyl: %u, tracks: %u, secs: %u, "
+literal|"sec/cyl: %u, start: %d, end: %d\n"
 argument_list|,
 name|dp
 operator|->
@@ -1331,7 +1331,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bad block information at sector %ld in %s:\n"
+literal|"bad block information at sector %d in %s:\n"
 argument_list|,
 name|sn
 argument_list|,
@@ -1340,7 +1340,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cartridge serial number: %ld(10)\n"
+literal|"cartridge serial number: %d(10)\n"
 argument_list|,
 name|oldbad
 operator|.
@@ -1426,7 +1426,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"sn=%ld, cn=%d, tn=%d, sn=%d\n"
+literal|"sn=%d, cn=%d, tn=%d, sn=%d\n"
 argument_list|,
 name|badsn
 argument_list|(
@@ -1639,7 +1639,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%ld: out of range [0,%ld) for disk %s\n"
+literal|"%d: out of range [0,%d) for disk %s\n"
 argument_list|,
 name|sn
 argument_list|,
@@ -1897,7 +1897,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"write badsect file at %lu\n"
+literal|"write badsect file at %u\n"
 argument_list|,
 name|size
 operator|-
@@ -2289,7 +2289,7 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"read bad sector file at sn %ld"
+literal|"read bad sector file at sn %d"
 argument_list|,
 name|sn
 argument_list|)
@@ -2482,7 +2482,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"cyl/trk/sect out of range in existing entry: sn=%ld, cn=%d, tn=%d, sn=%d"
+literal|"cyl/trk/sect out of range in existing entry: sn=%d, cn=%d, tn=%d, sn=%d"
 argument_list|,
 name|badsn
 argument_list|(
@@ -2581,7 +2581,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"bad sector file contains duplicates (sn %ld)"
+literal|"bad sector file contains duplicates (sn %d)"
 argument_list|,
 name|sn
 argument_list|)
@@ -2751,7 +2751,7 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"can't copy replacement sector %ld to %ld"
+literal|"can't copy replacement sector %d to %d"
 argument_list|,
 name|repl
 operator|-
@@ -2915,7 +2915,7 @@ literal|0
 condition|)
 name|warn
 argument_list|(
-literal|"can't read sector, %ld"
+literal|"can't read sector, %d"
 argument_list|,
 name|s1
 argument_list|)
@@ -2923,7 +2923,7 @@ expr_stmt|;
 else|else
 name|warnx
 argument_list|(
-literal|"can't read sector, %ld"
+literal|"can't read sector, %d"
 argument_list|,
 name|s1
 argument_list|)
@@ -2967,7 +2967,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"copying %ld to %ld\n"
+literal|"copying %d to %d\n"
 argument_list|,
 name|s1
 argument_list|,
@@ -2998,7 +2998,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"can't write replacement sector, %ld"
+literal|"can't write replacement sector, %d"
 argument_list|,
 name|s2
 argument_list|)
@@ -3109,7 +3109,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"zeroing %ld\n"
+literal|"zeroing %d\n"
 argument_list|,
 name|sn
 argument_list|)
@@ -3137,7 +3137,7 @@ name|d_secsize
 condition|)
 name|warn
 argument_list|(
-literal|"can't write replacement sector, %ld"
+literal|"can't write replacement sector, %d"
 argument_list|,
 name|sn
 argument_list|)
@@ -3738,7 +3738,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"can't read header on blk %ld, can't reformat"
+literal|"can't read header on blk %d, can't reformat"
 argument_list|,
 name|blk
 argument_list|)
@@ -3916,7 +3916,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"format blk %ld\n"
+literal|"format blk %d\n"
 argument_list|,
 name|blk
 argument_list|)
@@ -4127,7 +4127,7 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"write format %ld"
+literal|"write format %d"
 argument_list|,
 name|blk
 argument_list|)
