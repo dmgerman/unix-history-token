@@ -356,7 +356,7 @@ name|char
 modifier|*
 name|device
 init|=
-literal|"/dev/rfd0"
+literal|"/dev/fd0"
 decl_stmt|,
 modifier|*
 name|trackbuf
