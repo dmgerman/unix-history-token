@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"csa.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pci.h"
 end_include
 
@@ -127,14 +121,6 @@ end_endif
 begin_comment
 comment|/* NPCI> 0 */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|NCSA
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -2953,15 +2939,6 @@ end_endif
 
 begin_comment
 comment|/* NPCI> 0 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NCSA> 0 */
 end_comment
 
 end_unit

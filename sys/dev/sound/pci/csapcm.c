@@ -6,30 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"csa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pcm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/soundcard.h>
 end_include
 
@@ -74,14 +50,6 @@ include|#
 directive|include
 file|<pci/pcivar.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|NCSA
-operator|>
-literal|0
-end_if
 
 begin_comment
 comment|/* device private data */
@@ -3734,15 +3702,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NCSA> 0 */
-end_comment
 
 end_unit
 

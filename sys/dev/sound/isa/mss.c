@@ -9,14 +9,6 @@ directive|include
 file|<dev/sound/pcm/sound.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NPCM
-operator|>
-literal|0
-end_if
-
 begin_comment
 comment|/* board-specific include files */
 end_comment
@@ -412,14 +404,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
-end_if
-
 begin_function_decl
 specifier|static
 name|int
@@ -448,11 +432,6 @@ name|driver_intr_t
 name|opti931_intr
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1288,18 +1267,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
-operator|||
-name|NGUSC
-operator|>
-literal|0
-end_if
-
 begin_function
 specifier|static
 name|void
@@ -1379,15 +1346,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPNP> 0 || NGUSC> 0 */
-end_comment
 
 begin_function
 specifier|static
@@ -2300,11 +2258,6 @@ operator|->
 name|bd_id
 condition|)
 block|{
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
 case|case
 name|MD_OPTI931
 case|:
@@ -2387,18 +2340,6 @@ argument_list|)
 expr_stmt|;
 comment|/* MCIR5: codec in exp. mode,fifo */
 break|break;
-endif|#
-directive|endif
-comment|/* NPNP> 0 */
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
-operator|||
-name|NGUSC
-operator|>
-literal|0
 case|case
 name|MD_GUSPNP
 case|:
@@ -2629,9 +2570,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* NPNP> 0 || NGUSC> 0 */
 case|case
 name|MD_YM0020
 case|:
@@ -4633,11 +4571,6 @@ operator|->
 name|bd_id
 condition|)
 block|{
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
 case|case
 name|MD_OPTI931
 case|:
@@ -4660,8 +4593,6 @@ name|ih
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|bus_setup_intr
 argument_list|(
@@ -6999,14 +6930,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -7852,15 +7775,6 @@ argument|);
 argument_list|)
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPNP> 0 */
-end_comment
 
 begin_if
 if|#
@@ -9128,15 +9042,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPCM> 0 */
-end_comment
 
 end_unit
 

@@ -15,14 +15,6 @@ directive|include
 file|<dev/sound/isa/sb.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NPCM
-operator|>
-literal|0
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -593,15 +585,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPCM> 0 */
-end_comment
 
 end_unit
 

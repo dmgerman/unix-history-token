@@ -45,14 +45,6 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|!=
-literal|0
-end_if
-
 begin_comment
 comment|/* PCI IDs of supported chips */
 end_comment
@@ -4141,15 +4133,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPCI != 0 */
-end_comment
 
 end_unit
 

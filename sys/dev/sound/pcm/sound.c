@@ -6,55 +6,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/sound/pcm/sound.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEVFS */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|NPCM
-operator|>
-literal|0
-end_if
-
-begin_comment
-comment|/* from "pcm.h" via disgusting #include in snd/sound.h */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|pcmdriver
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2114,15 +2067,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPCM> 0 */
-end_comment
 
 end_unit
 

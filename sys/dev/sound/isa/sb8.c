@@ -9,14 +9,6 @@ directive|include
 file|<dev/sound/pcm/sound.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NPCM
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -6842,14 +6834,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -7118,15 +7102,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPNP> 0 */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -7380,15 +7355,6 @@ end_endif
 
 begin_comment
 comment|/* NSBC> 0 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPCM> 0 */
 end_comment
 
 end_unit

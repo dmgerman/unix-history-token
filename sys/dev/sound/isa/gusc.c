@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pnp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -154,14 +148,6 @@ end_endif
 begin_comment
 comment|/* NISA> 0 */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|NGUSC
-operator|>
-literal|0
-end_if
 
 begin_define
 define|#
@@ -540,11 +526,6 @@ argument_list|(
 name|dev
 argument_list|)
 return|;
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
 name|logical_id
 operator|=
 name|isa_get_logicalid
@@ -807,9 +788,6 @@ literal|0
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* NPNP> 0 */
 return|return
 operator|(
 name|ENXIO
@@ -3745,15 +3723,6 @@ end_endif
 
 begin_comment
 comment|/* NISA> 0 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NGUSC> 0 */
 end_comment
 
 end_unit

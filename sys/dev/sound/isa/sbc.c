@@ -6,19 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sbc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"isa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pnp.h"
 end_include
 
 begin_include
@@ -137,14 +125,6 @@ begin_comment
 comment|/* NISA> 0 */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|NSBC
-operator|>
-literal|0
-end_if
-
 begin_comment
 comment|/* Here is the parameter structure per a device. */
 end_comment
@@ -236,10 +216,6 @@ directive|if
 name|NISA
 operator|>
 literal|0
-operator|&&
-name|NPNP
-operator|>
-literal|0
 end_if
 
 begin_function_decl
@@ -270,7 +246,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NISA> 0&& NPNP> 0 */
+comment|/* NISA> 0 */
 end_comment
 
 begin_function_decl
@@ -366,10 +342,6 @@ begin_if
 if|#
 directive|if
 name|NISA
-operator|>
-literal|0
-operator|&&
-name|NPNP
 operator|>
 literal|0
 end_if
@@ -810,7 +782,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NISA> 0&& NPNP> 0 */
+comment|/* NISA> 0 */
 end_comment
 
 begin_function
@@ -1648,10 +1620,6 @@ directive|if
 name|NISA
 operator|>
 literal|0
-operator|&&
-name|NPNP
-operator|>
-literal|0
 end_if
 
 begin_decl_stmt
@@ -1810,16 +1778,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NISA> 0&& NPNP> 0 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSBC> 0 */
+comment|/* NISA> 0 */
 end_comment
 
 end_unit
