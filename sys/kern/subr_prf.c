@@ -1138,7 +1138,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return;
+break|break;
 for|for
 control|(
 name|i
