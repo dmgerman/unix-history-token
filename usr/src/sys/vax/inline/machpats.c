@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machpats.c	7.1 (Berkeley) %G%"
+literal|"@(#)machpats.c	7.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,7 +214,7 @@ literal|3
 block|,
 literal|"_bcmp\n"
 block|,
-literal|"	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 	movl	(sp)+,r5\n\ 	movl	r5,r0\n\ 2:\n\ 	cmpb	(r1)+,(r3)+\n\ 	jneq	1f\n\ 	sobgtr	r0,2b\n\ 1:\n"
+literal|"	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 	movl	(sp)+,r0\n\ 	jeql	1f\n\ 2:\n\ 	cmpb	(r1)+,(r3)+\n\ 	jneq	1f\n\ 	sobgtr	r0,2b\n\ 1:\n"
 block|}
 block|,
 block|{
@@ -222,7 +222,7 @@ literal|3
 block|,
 literal|"_llocc\n"
 block|,
-literal|"	movl	(sp)+,r4\n\ 	movl	(sp)+,r5\n\ 	movl	(sp)+,r1\n\ 	movl	r5,r0\n\ 2:\n\ 	cmpb	r4,(r1)+\n\ 	jeql	1f\n\ 	sobgtr	r0,2b\n\ 1:\n"
+literal|"	movl	(sp)+,r4\n\ 	movl	(sp)+,r0\n\ 	jeql	1f\n\ 	movl	(sp)+,r1\n\ 2:\n\ 	cmpb	r4,(r1)+\n\ 	jeql	1f\n\ 	sobgtr	r0,2b\n\ 1:\n"
 block|}
 block|,
 block|{
@@ -230,7 +230,7 @@ literal|3
 block|,
 literal|"_locc\n"
 block|,
-literal|"	movl	(sp)+,r3\n\ 	movl	(sp)+,r4\n\ 	movl	(sp)+,r5\n\ 	movl	r4,r0\n\ 2:\n\ 	cmpb	r3,(r5)+\n\ 	jeql	1f\n\ 	sobgtr	r0,2b\n\ 1:\n"
+literal|"	movl	(sp)+,r3\n\ 	movl	(sp)+,r0\n\ 	jeql	1f\n\ 	movl	(sp)+,r5\n\ 2:\n\ 	cmpb	r3,(r5)+\n\ 	jeql	1f\n\ 	sobgtr	r0,2b\n\ 1:\n"
 block|}
 block|,
 block|{
@@ -238,7 +238,7 @@ literal|3
 block|,
 literal|"_skpc\n"
 block|,
-literal|"	movl	(sp)+,r3\n\ 	movl	(sp)+,r4\n\ 	movl	(sp)+,r5\n\ 	movl	r4,r0\n\ 2:\n\ 	cmpb	r3,(r5)+\n\ 	jneq	1f\n\ 	sobgtr	r0,2b\n\ 1:\n"
+literal|"	movl	(sp)+,r3\n\ 	movl	(sp)+,r0\n\ 	jeql	1f\n\ 	movl	(sp)+,r5\n\ 2:\n\ 	cmpb	r3,(r5)+\n\ 	jneq	1f\n\ 	sobgtr	r0,2b\n\ 1:\n"
 block|}
 block|,
 block|{
