@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Grand digital clock for curses compatible terminals  * Usage: gdc [-s] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  */
+comment|/*  * Grand digital clock for curses compatible terminals  * Usage: grdc [-s] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  */
 end_comment
 
 begin_include
@@ -915,7 +915,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"gdc terminated by signal %d\n"
+literal|"grdc terminated by signal %d\n"
 argument_list|,
 name|sigtermed
 argument_list|)
