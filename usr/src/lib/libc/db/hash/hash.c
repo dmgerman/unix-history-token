@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.28 (Berkeley) %G%"
+literal|"@(#)hash.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,7 +241,6 @@ specifier|const
 name|DB
 operator|*
 operator|,
-specifier|const
 name|DBT
 operator|*
 operator|,
@@ -603,21 +602,7 @@ name|flags
 operator|=
 name|flags
 operator|&
-operator|(
-name|O_CREAT
-operator||
-name|O_EXCL
-operator||
-name|O_EXLOCK
-operator||
-name|O_RDONLY
-operator||
-name|O_RDWR
-operator||
-name|O_SHLOCK
-operator||
-name|O_TRUNC
-operator|)
+name|__USE_OPEN_FLAGS
 expr_stmt|;
 name|new_table
 operator|=
@@ -2525,23 +2510,18 @@ name|DB
 modifier|*
 name|dbp
 decl_stmt|;
-specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|DBT
+modifier|*
 name|data
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|u_int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2630,7 +2610,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
