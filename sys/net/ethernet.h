@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Fundamental constants relating to ethernet.  *  * $Id: ethernet.h,v 1.3 1996/12/18 21:42:38 wpaul Exp $  *  */
+comment|/*  * Fundamental constants relating to ethernet.  *  * $Id: ethernet.h,v 1.4 1996/12/19 15:42:52 wollman Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -158,6 +158,7 @@ comment|/*  * Ethernet address conversion/parsing routines.  */
 end_comment
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 name|struct
 name|ether_addr
 modifier|*
@@ -173,12 +174,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|ether_ntoa
+name|int
+name|ether_hostton
 name|__P
 argument_list|(
 operator|(
+name|char
+operator|*
+operator|,
 expr|struct
 name|ether_addr
 operator|*
@@ -208,6 +211,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|ether_ntoa
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ether_addr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ether_ntohost
 name|__P
@@ -224,22 +242,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|ether_hostton
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-expr|struct
-name|ether_addr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
@@ -247,7 +252,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* !KERNEL */
 end_comment
 
 begin_endif
@@ -256,7 +261,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NET_ETHERNET_H */
+comment|/* !_NET_ETHERNET_H_ */
 end_comment
 
 end_unit
