@@ -155,6 +155,8 @@ name|count
 decl_stmt|;
 name|int
 name|block_size
+init|=
+literal|0
 decl_stmt|,
 name|cdopen
 init|=
@@ -616,6 +618,18 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|!
+name|block_size
+condition|)
+name|err
+argument_list|(
+name|EX_NOINPUT
+argument_list|,
+literal|"no data format selected"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|file
 operator|=
@@ -634,7 +648,6 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 name|EX_NOINPUT
@@ -647,7 +660,6 @@ name|arg
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -766,7 +778,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"writing from file %s size %d KB\n"
+literal|"writing from file %s size %qd KB\n"
 argument_list|,
 name|argv
 index|[
@@ -816,6 +828,9 @@ operator|>
 literal|0
 condition|)
 block|{
+name|int
+name|res
+decl_stmt|;
 if|if
 condition|(
 name|count
@@ -856,6 +871,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|res
+operator|=
 name|write
 argument_list|(
 name|fd
@@ -864,13 +882,11 @@ name|buf
 argument_list|,
 name|count
 argument_list|)
+operator|)
 operator|!=
 name|count
 condition|)
 block|{
-name|int
-name|res
-decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
