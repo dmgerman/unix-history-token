@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.16 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -29,10 +29,14 @@ begin_comment
 comment|/* implementation supports job control */
 end_comment
 
+begin_comment
+comment|/*  * Although we have saved user/group IDs, we do not use them in setuid  * as described in POSIX 1003.1, because the feature does not work for  * root.  We use the saved IDs in seteuid/setegid, which are not currently  * part of the POSIX 1003.1 specification.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_NOTYET
+name|_NOT_AVAILABLE
 end_ifdef
 
 begin_define
