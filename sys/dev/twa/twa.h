@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|TWA_DRIVER_VERSION_STRING
-value|"2.50.02.011"
+value|"2.50.02.012"
 end_define
 
 begin_define
