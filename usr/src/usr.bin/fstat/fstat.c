@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	8.2 (Berkeley) %G%"
+literal|"@(#)fstat.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +176,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/nfsv2.h>
+file|<nfs/nfsproto.h>
 end_include
 
 begin_include
