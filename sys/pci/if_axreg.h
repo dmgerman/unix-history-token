@@ -1754,6 +1754,20 @@ name|bus_space_tag_t
 name|ax_btag
 decl_stmt|;
 comment|/* bus space tag */
+name|void
+modifier|*
+name|ax_intrhand
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|ax_irq
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|ax_res
+decl_stmt|;
 name|struct
 name|ax_type
 modifier|*
@@ -1896,6 +1910,13 @@ define|#
 directive|define
 name|AX_TIMEOUT
 value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHER_ALIGN
+value|2
 end_define
 
 begin_comment
@@ -2744,7 +2765,7 @@ name|vtophys
 parameter_list|(
 name|va
 parameter_list|)
-value|alpha_XXX_dmamap((vm_offset_t)va)
+value|(pmap_kextract(((vm_offset_t) (va))) \ 					+ 1*1024*1024*1024)
 end_define
 
 begin_endif
