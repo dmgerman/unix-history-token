@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.126 (Berkeley) %G%"
+literal|"@(#)conf.c	8.127 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1012,7 +1012,7 @@ name|null_map_open
 argument_list|,
 name|null_map_close
 argument_list|,
-name|hesiod_map_lookup
+name|hes_map_lookup
 argument_list|,
 name|null_map_store
 argument_list|)
@@ -1047,6 +1047,31 @@ if|#
 directive|if
 literal|0
 block|MAPDEF("dns", NULL, 0, 		dns_map_init, null_map_open, null_map_close, 		dns_map_lookup, null_map_store);
+endif|#
+directive|endif
+if|#
+directive|if
+name|NAMED_BIND
+comment|/* best MX DNS lookup */
+name|MAPDEF
+argument_list|(
+literal|"bestmx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MCF_OPTFILE
+argument_list|,
+name|map_parseargs
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|bestmx_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|MAPDEF
@@ -1270,6 +1295,32 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+comment|/* 	**  Set up default hosts maps. 	*/
+if|#
+directive|if
+literal|0
+block|nmaps = switch_map_find("hosts", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("hosts.files", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.files text -k 0 -v 1 /etc/hosts"); 			makemapentry(buf); 		}
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+block|else if (strcmp(maptype[i], "dns") == 0&& 		    stab("hosts.dns", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.dns dns A"); 			makemapentry(buf); 		}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NISPLUS
+block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("hosts.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.nisplus nisplus -k name -v address -d hosts.org_dir"); 			makemapentry(buf); 		}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NIS
+block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("hosts.nis", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.nis nis -d -k 0 -v 1 hosts.byname"); 			makemapentry(buf); 		}
+endif|#
+directive|endif
+block|}
+endif|#
+directive|endif
 comment|/* 	**  Make sure we have a host map. 	*/
 if|if
 condition|(
@@ -1528,6 +1579,12 @@ ifdef|#
 directive|ifdef
 name|NIS
 block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("users.nis", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "users.nis nis -m -d passwd.byname"); 			makemapentry(buf); 		}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HESIOD
+block|else if (strcmp(maptype[i], "hesiod") == 0)&& 		    stab("users.hesiod", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "users.hesiod hesiod"); 			makemapentry(buf); 		}
 endif|#
 directive|endif
 block|} 	if (stab("users", ST_MAP, ST_FIND) == NULL) 	{ 		strcpy(buf, "users switch -m passwd"); 		makemapentry(buf); 	}
