@@ -794,13 +794,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|STRNCAT
-value|strncat
-end_define
-
-begin_define
-define|#
-directive|define
 name|USEC_DELAY
 value|DELAY
 end_define

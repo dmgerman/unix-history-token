@@ -20585,21 +20585,18 @@ index|[
 literal|172
 index|]
 decl_stmt|;
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|"states=>"
-argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"states=>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -20611,13 +20608,19 @@ operator|&
 name|RQSF_GOT_BUS
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" GOT_BUS"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s GOT_BUS"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20631,13 +20634,19 @@ operator|&
 name|RQSF_GOT_TARGET
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" GOT_TGT"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s GOT_TGT"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20651,13 +20660,19 @@ operator|&
 name|RQSF_SENT_CDB
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" SENT_CDB"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s SENT_CDB"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20671,13 +20686,19 @@ operator|&
 name|RQSF_XFRD_DATA
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" XFRD_DATA"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s XFRD_DATA"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20691,13 +20712,19 @@ operator|&
 name|RQSF_GOT_STATUS
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" GOT_STS"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s GOT_STS"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20711,13 +20738,19 @@ operator|&
 name|RQSF_GOT_SENSE
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" GOT_SNS"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s GOT_SNS"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20731,24 +20764,36 @@ operator|&
 name|RQSF_XFER_COMPLETE
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" XFR_CMPLT"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s XFR_CMPLT"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
 block|}
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|"\nstatus=>"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s\nstatus=>"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20761,13 +20806,19 @@ operator|&
 name|RQSTF_DISCONNECT
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" Disconnect"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s Disconnect"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20781,13 +20832,19 @@ operator|&
 name|RQSTF_SYNCHRONOUS
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" Sync_xfr"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s Sync_xfr"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20801,13 +20858,19 @@ operator|&
 name|RQSTF_PARITY_ERROR
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" Parity"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s Parity"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20821,13 +20884,19 @@ operator|&
 name|RQSTF_BUS_RESET
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" Bus_Reset"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s Bus_Reset"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20841,13 +20910,19 @@ operator|&
 name|RQSTF_DEVICE_RESET
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" Device_Reset"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s Device_Reset"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20861,13 +20936,19 @@ operator|&
 name|RQSTF_ABORTED
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" Aborted"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s Aborted"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20881,13 +20962,19 @@ operator|&
 name|RQSTF_TIMEOUT
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" Timeout"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s Timeout"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -20901,13 +20988,19 @@ operator|&
 name|RQSTF_NEGOTIATION
 condition|)
 block|{
-name|STRNCAT
+name|SNPRINTF
 argument_list|(
 name|buf
 argument_list|,
-literal|" Negotiation"
-argument_list|,
 sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"%s Negotiation"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
