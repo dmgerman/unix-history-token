@@ -2745,7 +2745,13 @@ block|{
 case|case
 literal|1
 case|:
-comment|/* ignore this error */
+comment|/* ignore these errors */
+case|case
+literal|2
+case|:
+case|case
+literal|3
+case|:
 case|case
 name|PSM_ACK
 case|:
@@ -4294,7 +4300,7 @@ argument_list|,
 name|KBDC_ENABLE_AUX_PORT
 argument_list|)
 expr_stmt|;
-comment|/*      * NOTE: `test_aux_port()' is designed to return with zero if the aux      * port exists and is functioning. However, some controllers appears      * to respond with zero even when the aux port doesn't exist. (It may      * be that this is only the case when the controller DOES have the aux      * port but the port is not wired on the motherboard.) The keyboard      * controllers without the port, such as the original AT, are      * supporsed to return with an error code or simply time out. In any      * case, we have to continue probing the port even when the controller      * passes this test.      *      * XXX: some controllers erroneously return the error code 1 when      * it has the perfectly functional aux port. We have to ignore this      * error code. Even if the controller HAS error with the aux port,      * it will be detected later...      * XXX: another incompatible controller returns PSM_ACK (0xfa)...      */
+comment|/*      * NOTE: `test_aux_port()' is designed to return with zero if the aux      * port exists and is functioning. However, some controllers appears      * to respond with zero even when the aux port doesn't exist. (It may      * be that this is only the case when the controller DOES have the aux      * port but the port is not wired on the motherboard.) The keyboard      * controllers without the port, such as the original AT, are      * supporsed to return with an error code or simply time out. In any      * case, we have to continue probing the port even when the controller      * passes this test.      *      * XXX: some controllers erroneously return the error code 1, 2 or 3      * when it has the perfectly functional aux port. We have to ignore      * this error code. Even if the controller HAS error with the aux      * port, it will be detected later...      * XXX: another incompatible controller returns PSM_ACK (0xfa)...      */
 switch|switch
 condition|(
 operator|(
@@ -4312,7 +4318,13 @@ block|{
 case|case
 literal|1
 case|:
-comment|/* ignore this error */
+comment|/* ignore these errors */
+case|case
+literal|2
+case|:
+case|case
+literal|3
+case|:
 case|case
 name|PSM_ACK
 case|:
