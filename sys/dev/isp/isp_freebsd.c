@@ -248,13 +248,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: could not establish interrupt enable hook\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"could not establish interrupt enable hook"
 argument_list|)
 expr_stmt|;
 name|cam_sim_free
@@ -7649,13 +7649,13 @@ operator|==
 name|CAM_PATH_INVALID
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: invalid tgt/lun (%d.%d) in XPT_SCSI_IO\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"invalid tgt/lun (%d.%d) in XPT_SCSI_IO"
 argument_list|,
 name|ccb
 operator|->
@@ -7949,9 +7949,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: What's this? 0x%x at %d in file %s\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"What's this? 0x%x at %d in file %s"
 argument_list|,
 name|isp
 operator|->
@@ -8735,20 +8739,13 @@ name|dptr
 operator||=
 name|DPARM_SAFE_DFLT
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-operator|||
-name|isp
-operator|->
-name|isp_dblev
-operator|>=
-literal|3
-condition|)
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: %d.%d set %s period 0x%x offset "
-literal|"0x%x flags 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"%d.%d set %s period 0x%x offset 0x%x flags 0x%x"
 argument_list|,
 name|isp
 operator|->
@@ -9164,20 +9161,13 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-operator|||
-name|isp
-operator|->
-name|isp_dblev
-operator|>=
-literal|3
-condition|)
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: %d.%d get %s period 0x%x offset "
-literal|"0x%x flags 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"%d.%d get %s period 0x%x offset 0x%x flags 0x%x"
 argument_list|,
 name|isp
 operator|->
@@ -9252,13 +9242,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: %d.%d XPT_CALC_GEOMETRY block size 0?\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"%d.%d XPT_CALC_GEOMETRY block size 0?"
 argument_list|,
 name|ccg
 operator|->
@@ -10298,17 +10288,13 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|xpt_print_path
+name|isp_prt
 argument_list|(
 name|isp
-operator|->
-name|isp_path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"isp_async cannot make temp path for "
-literal|"target %d bus %d\n"
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"isp_async cannot make temp path for %d.%d"
 argument_list|,
 name|tgt
 argument_list|,
@@ -11448,13 +11434,13 @@ operator|==
 name|MAX_FC_TARG
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: no more space for fabric devices\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"no more space for fabric devices"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11595,13 +11581,13 @@ name|rqs_entry_type
 condition|)
 block|{
 default|default:
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: event 0x%x for unhandled target action\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"event 0x%x for unhandled target action"
 argument_list|,
 operator|(
 operator|(
