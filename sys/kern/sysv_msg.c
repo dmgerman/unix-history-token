@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: sysv_msg.c,v 1.1 1994/09/13 14:46:57 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -125,7 +125,7 @@ comment|/* list of free msg headers */
 end_comment
 
 begin_function
-name|int
+name|void
 name|msginit
 parameter_list|()
 block|{
@@ -1358,6 +1358,8 @@ name|struct
 name|msqid_ds
 modifier|*
 name|msqptr
+init|=
+name|NULL
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2112,10 +2114,6 @@ decl_stmt|;
 comment|/* 		 * check msgsz 		 * (inside this loop in case msg_qbytes changes while we sleep) 		 */
 if|if
 condition|(
-name|msgsz
-operator|<
-literal|0
-operator|||
 name|msgsz
 operator|>
 name|msqptr
@@ -3387,29 +3385,6 @@ directive|endif
 return|return
 operator|(
 name|eval
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|msgsz
-operator|<
-literal|0
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|MSG_DEBUG_OK
-name|printf
-argument_list|(
-literal|"msgsz< 0\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-operator|(
-name|EINVAL
 operator|)
 return|;
 block|}

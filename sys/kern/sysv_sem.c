@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: sysv_sem.c,v 1.1 1994/09/13 14:47:00 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|seminit
 parameter_list|()
 block|{
@@ -641,6 +641,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -4102,22 +4107,17 @@ begin_comment
 comment|/*  * Go through the undo structures for this process and apply the adjustments to  * semaphores.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|semexit
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -4538,7 +4538,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

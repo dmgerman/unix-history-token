@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: msg.h,v 1.1 1994/09/13 14:47:34 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -198,18 +198,19 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-name|struct
-name|msginfo
-name|msginfo
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|msginfo
+name|msginfo
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -366,20 +367,9 @@ parameter_list|)
 value|(((id)>> 16)& 0xffff)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * The rest of this file is specific to this particular implementation.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * Stuff allocated in machdep.h  */
@@ -461,6 +451,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_ifndef
 ifndef|#
