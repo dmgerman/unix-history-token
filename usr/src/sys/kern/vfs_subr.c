@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.43 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.44 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2239,6 +2239,8 @@ argument_list|(
 literal|"vflush: not busy"
 argument_list|)
 expr_stmt|;
+name|loop
+label|:
 for|for
 control|(
 name|vp
@@ -2254,6 +2256,17 @@ operator|=
 name|nvp
 control|)
 block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_mount
+operator|!=
+name|mp
+condition|)
+goto|goto
+name|loop
+goto|;
 name|nvp
 operator|=
 name|vp
@@ -3716,12 +3729,6 @@ name|mp
 init|=
 name|rootfs
 decl_stmt|;
-specifier|register
-name|struct
-name|vnode
-modifier|*
-name|nextvp
-decl_stmt|;
 block|struct
 name|mount
 operator|*
@@ -3795,10 +3802,6 @@ literal|0
 operator|)
 return|;
 block|}
-define|#
-directive|define
-name|RETRY
-value|bp = savebp ; goto again
 do|do
 block|{
 if|if
@@ -3817,26 +3820,56 @@ name|mnt_next
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * A vget can fail if the vnode is being 		 * recycled.  In this (rare) case, we have to start 		 * over with this filesystem.  Also, have to 		 * check that nextvp is still associated 		 * with this filesystem.  RACE: could have been 		 * recycled onto same filesystem. 		 */
+comment|/* 		 * A vget can fail if the vnode is being 		 * recycled.  In this (rare) case, we have to start 		 * over with this filesystem.  Also, have to 		 * check that the next vp is still associated 		 * with this filesystem.  RACE: could have been 		 * recycled onto the same filesystem. 		 */
 name|savebp
 operator|=
 name|bp
 expr_stmt|;
 name|again
 label|:
-name|nextvp
+for|for
+control|(
+name|vp
 operator|=
 name|mp
 operator|->
 name|mnt_mounth
-expr_stmt|;
-while|while
-condition|(
+init|;
+name|vp
+condition|;
 name|vp
 operator|=
-name|nextvp
+name|vp
+operator|->
+name|v_mountf
+control|)
+block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_mount
+operator|!=
+name|mp
 condition|)
 block|{
+if|if
+condition|(
+name|kinfo_vdebug
+condition|)
+name|printf
+argument_list|(
+literal|"kinfo: vp changed\n"
+argument_list|)
+expr_stmt|;
+name|bp
+operator|=
+name|savebp
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 if|if
 condition|(
 name|vget
@@ -3857,34 +3890,13 @@ expr_stmt|;
 name|kinfo_vgetfailed
 operator|++
 expr_stmt|;
-name|RETRY
+name|bp
+operator|=
+name|savebp
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|vp
-operator|->
-name|v_mount
-operator|!=
-name|mp
-condition|)
-block|{
-if|if
-condition|(
-name|kinfo_vdebug
-condition|)
-name|printf
-argument_list|(
-literal|"kinfo: vp changed\n"
-argument_list|)
-expr_stmt|;
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|RETRY
-expr_stmt|;
+goto|goto
+name|again
+goto|;
 block|}
 if|if
 condition|(
@@ -3952,12 +3964,6 @@ operator|+=
 name|VPTRSZ
 operator|+
 name|VNODESZ
-expr_stmt|;
-name|nextvp
-operator|=
-name|vp
-operator|->
-name|v_mountf
 expr_stmt|;
 name|vput
 argument_list|(
