@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.48	82/04/30	*/
+comment|/*	up.c	4.49	82/05/19	*/
 end_comment
 
 begin_include
@@ -813,6 +813,14 @@ operator|=
 name|ui
 operator|->
 name|ui_slave
+expr_stmt|;
+name|upaddr
+operator|->
+name|upcs1
+operator|=
+name|UP_NOP
+operator||
+name|UP_GO
 expr_stmt|;
 if|if
 condition|(
