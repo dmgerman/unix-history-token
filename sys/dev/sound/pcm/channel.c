@@ -3115,11 +3115,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|CHN_LOCK
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 name|b
 operator|=
 name|NULL
@@ -3437,11 +3432,6 @@ return|return
 name|ret
 return|;
 block|}
-name|CHN_UNLOCK
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3476,11 +3466,6 @@ name|c
 operator|->
 name|bufsoft
 decl_stmt|;
-name|CHN_LOCK
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -4654,10 +4639,6 @@ name|blksz
 expr_stmt|;
 name|ret
 operator|=
-name|ENOMEM
-expr_stmt|;
-if|if
-condition|(
 name|sndbuf_remalloc
 argument_list|(
 name|bs
@@ -4666,14 +4647,14 @@ name|blkcnt
 argument_list|,
 name|blksz
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 condition|)
 goto|goto
 name|out
 goto|;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
 comment|/* adjust for different hw format/speed */
 name|irqhz
 operator|=
@@ -5697,6 +5678,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|#
+directive|if
+literal|0
+block|u_int32_t *x = chn_getcaps(c)->fmtlist; 			printf("acceptable formats for %s:\n", c->name); 			while (*x) { 				printf("[%8x] ", *x); 				x++; 			}
+endif|#
+directive|endif
 name|hwfmt
 operator|=
 name|chn_fmtchain

@@ -1301,27 +1301,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|snd_mtxlock
-parameter_list|(
-name|void
-modifier|*
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|snd_mtxunlock
-parameter_list|(
-name|void
-modifier|*
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* void snd_mtxlock(void *m); void snd_mtxunlock(void *m); */
+end_comment
 
 begin_function_decl
 name|int
@@ -1500,6 +1482,26 @@ end_define
 begin_comment
 comment|/* force device type/class */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|snd_mtxlock
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_lock(m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|snd_mtxunlock
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_unlock(m)
+end_define
 
 begin_endif
 endif|#

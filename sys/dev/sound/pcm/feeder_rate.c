@@ -273,7 +273,7 @@ argument_list|)
 argument_list|,
 name|M_RATEFEEDER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -297,7 +297,7 @@ name|FEEDBUFSZ
 argument_list|,
 name|M_RATEFEEDER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
