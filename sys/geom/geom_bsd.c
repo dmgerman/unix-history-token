@@ -2334,8 +2334,6 @@ literal|0
 condition|)
 do|;
 comment|/* Success or failure, we can close our provider now. */
-name|error
-operator|=
 name|g_access
 argument_list|(
 name|cp

@@ -1036,9 +1036,6 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|g_bde_softc
 modifier|*
@@ -1158,8 +1155,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|g_access
 argument_list|(
 name|cp
@@ -1172,17 +1167,6 @@ literal|1
 argument_list|,
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|error
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"error on close"
-operator|)
 argument_list|)
 expr_stmt|;
 name|g_detach
