@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.34 1996/03/19 04:49:13 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.35 1996/03/19 16:48:38 nate Exp $  */
 end_comment
 
 begin_include
@@ -230,8 +230,16 @@ name|int
 name|initialized
 decl_stmt|,
 name|active
+decl_stmt|;
+name|int
+name|always_halt_cpu
 decl_stmt|,
-name|halt_cpu
+name|slow_idle_cpu
+decl_stmt|;
+name|int
+name|disabled
+decl_stmt|,
+name|disengaged
 decl_stmt|;
 name|u_int
 name|minorversion
@@ -255,13 +263,6 @@ name|cs_entry
 decl_stmt|;
 name|u_int
 name|intversion
-decl_stmt|;
-name|int
-name|idle_cpu
-decl_stmt|,
-name|disabled
-decl_stmt|,
-name|disengaged
 decl_stmt|;
 name|struct
 name|apmhook
@@ -2198,13 +2199,6 @@ if|if
 condition|(
 name|sc
 operator|->
-name|idle_cpu
-condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
 name|active
 condition|)
 block|{
@@ -2244,7 +2238,6 @@ name|ecx
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 comment|/* 	 * Some APM implementation halts CPU in BIOS, whenever 	 * "CPU-idle" function are invoked, but swtch() of 	 * FreeBSD halts CPU, therefore, CPU is halted twice 	 * in the sched loop. It makes the interrupt latency 	 * terribly long and be able to cause a serious problem 	 * in interrupt processing. We prevent it by removing 	 * "hlt" operation from swtch() and managed it under 	 * APM driver. 	 */
 if|if
 condition|(
@@ -2255,7 +2248,7 @@ name|active
 operator|||
 name|sc
 operator|->
-name|halt_cpu
+name|always_halt_cpu
 condition|)
 block|{
 asm|__asm("hlt");
@@ -2283,11 +2276,12 @@ init|=
 operator|&
 name|apm_softc
 decl_stmt|;
+comment|/* 	 * The APM specification says this is only necessary if your BIOS 	 * slows down the processor in the idle task, otherwise it's not 	 * necessary. 	 */
 if|if
 condition|(
 name|sc
 operator|->
-name|idle_cpu
+name|slow_idle_cpu
 operator|&&
 name|sc
 operator|->
@@ -2309,7 +2303,7 @@ operator|<<
 literal|8
 operator|)
 operator||
-name|APM_CPUIDLE
+name|APM_CPUBUSY
 expr_stmt|;
 name|ecx
 operator|=
@@ -2508,7 +2502,7 @@ condition|)
 block|{
 name|sc
 operator|->
-name|halt_cpu
+name|always_halt_cpu
 operator|=
 literal|1
 expr_stmt|;
@@ -2540,7 +2534,7 @@ condition|)
 block|{
 name|sc
 operator|->
-name|halt_cpu
+name|always_halt_cpu
 operator|=
 literal|0
 expr_stmt|;
@@ -2938,15 +2932,16 @@ name|cs_entry
 operator|=
 name|apm_cs_entry
 expr_stmt|;
+comment|/* Always call HLT in idle loop */
 name|sc
 operator|->
-name|halt_cpu
+name|always_halt_cpu
 operator|=
 literal|1
 expr_stmt|;
 name|sc
 operator|->
-name|idle_cpu
+name|slow_idle_cpu
 operator|=
 operator|(
 operator|(
@@ -3026,7 +3021,7 @@ name|is_enabled
 argument_list|(
 name|sc
 operator|->
-name|idle_cpu
+name|slow_idle_cpu
 argument_list|)
 argument_list|,
 name|is_enabled
@@ -3225,13 +3220,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"apm: Idling CPU %s\n"
+literal|"apm: Slow Idling CPU %s\n"
 argument_list|,
 name|is_enabled
 argument_list|(
 name|sc
 operator|->
-name|idle_cpu
+name|slow_idle_cpu
 argument_list|)
 argument_list|)
 expr_stmt|;
