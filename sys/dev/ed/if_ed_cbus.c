@@ -3568,13 +3568,13 @@ name|sc
 operator|->
 name|asic_offset
 operator|=
-name|ED_NOVELL_ASIC_OFFSET
+name|ED_SIC_ASIC_OFFSET
 expr_stmt|;
 name|sc
 operator|->
 name|nic_offset
 operator|=
-name|ED_NOVELL_NIC_OFFSET
+name|ED_SIC_NIC_OFFSET
 expr_stmt|;
 name|error
 operator|=
@@ -3818,7 +3818,7 @@ name|sc
 operator|->
 name|vendor
 operator|=
-name|ED_VENDOR_MISC
+name|ED_VENDOR_SIC
 expr_stmt|;
 name|sc
 operator|->
