@@ -2339,6 +2339,14 @@ literal|0
 condition|)
 name|error
 argument_list|(
+operator|(
+name|errno
+operator|==
+name|EINVAL
+operator|)
+condition|?
+literal|"%s: bad number"
+else|:
 literal|"%s: out of range"
 argument_list|,
 name|s
@@ -2428,6 +2436,14 @@ literal|0
 condition|)
 name|error
 argument_list|(
+operator|(
+name|errno
+operator|==
+name|EINVAL
+operator|)
+condition|?
+literal|"%s: bad number"
+else|:
 literal|"%s: out of range"
 argument_list|,
 name|s
