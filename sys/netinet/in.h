@@ -2274,6 +2274,33 @@ name|IPCTL_NAMES
 value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "ttl", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "rtexpire", CTLTYPE_INT }, \ 	{ "rtminexpire", CTLTYPE_INT }, \ 	{ "rtmaxcache", CTLTYPE_INT }, \ 	{ "sourceroute", CTLTYPE_INT }, \  	{ "directed-broadcast", CTLTYPE_INT }, \ 	{ "intr-queue-maxlen", CTLTYPE_INT }, \ 	{ "intr-queue-drops", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "accept_sourceroute", CTLTYPE_INT }, \ 	{ "fastforwarding", CTLTYPE_INT }, \ }
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* forward declarations for Standard C */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* INET6 stuff */
 end_comment
@@ -2301,28 +2328,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|ifnet
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* forward declarations for Standard C */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
 
 begin_decl_stmt
 name|int
