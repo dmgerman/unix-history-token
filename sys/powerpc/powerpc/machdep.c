@@ -641,10 +641,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|bootverbose
-init|=
-literal|0
-decl_stmt|,
 name|Maxmem
 init|=
 literal|0

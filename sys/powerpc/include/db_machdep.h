@@ -90,6 +90,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|extern
 name|db_regs_t
 name|ddb_regs
 decl_stmt|;

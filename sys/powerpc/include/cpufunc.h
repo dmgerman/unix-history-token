@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|CRITICAL_FORK
-value|(mfmsr() |= PSL_EE)
+value|(mfmsr() | PSL_EE)
 end_define
 
 begin_ifdef
