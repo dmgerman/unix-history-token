@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)routed.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1983, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)routed.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -193,7 +193,7 @@ comment|/* max broadcast size */
 end_comment
 
 begin_comment
-comment|/*  * Timer values used in managing the routing table.  * Every update forces an entry's timer to be reset.  After  * EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  */
+comment|/*  * Timer values used in managing the routing table.  * Complete tables are broadcast every SUPPLY_INTERVAL seconds.  * If changes occur between updates, dynamic updates containing only changes  * may be sent.  When these are sent, a timer is set for a random value  * between MIN_WAITTIME and MAX_WAITTIME, and no additional dynamic updates  * are sent until the timer expires.  *  * Every update of a routing entry forces an entry's timer to be reset.  * After EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  */
 end_comment
 
 begin_define
@@ -216,6 +216,28 @@ end_define
 
 begin_comment
 comment|/* time to supply tables */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_WAITTIME
+value|2
+end_define
+
+begin_comment
+comment|/* min. interval to broadcast changes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_WAITTIME
+value|5
+end_define
+
+begin_comment
+comment|/* max. time to delay changes */
 end_comment
 
 begin_define
