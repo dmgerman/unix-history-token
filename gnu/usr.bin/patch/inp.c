@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: inp.c,v 2.0.1.1 88/06/03 15:06:13 lwall Locked $  *  * $Log:	inp.c,v $  * Revision 2.0.1.1  88/06/03  15:06:13  lwall  * patch10: made a little smarter about sccs files  *   * Revision 2.0  86/09/17  15:37:02  lwall  * Baseline for netwide release.  *   */
+comment|/* $Header: /home/ncvs/src/gnu/usr.bin/patch/inp.c,v 1.1.1.1 1993/06/19 14:21:52 paul Exp $  *  * $Log: inp.c,v $  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0.1.1  88/06/03  15:06:13  lwall  * patch10: made a little smarter about sccs files  *   * Revision 2.0  86/09/17  15:37:02  lwall  * Baseline for netwide release.  *   */
 end_comment
 
 begin_include
@@ -383,6 +383,10 @@ argument_list|,
 name|outname
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|int
+name|check_patch
+decl_stmt|;
 name|statfailed
 operator|=
 name|stat
@@ -411,6 +415,13 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|check_patch
+condition|)
+return|return
+name|TRUE
+return|;
 name|makedirs
 argument_list|(
 name|filename
@@ -436,6 +447,21 @@ name|filename
 argument_list|,
 operator|&
 name|filestat
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|statfailed
+operator|&&
+name|check_patch
+condition|)
+block|{
+name|fatal2
+argument_list|(
+literal|"%s not found and in check_patch mode."
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 block|}
