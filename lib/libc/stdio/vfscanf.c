@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfscanf.c,v 1.3.2.3 1997/08/17 15:07:56 joerg Exp $"
+literal|"$Id: vfscanf.c,v 1.3.2.4 1997/11/23 06:03:31 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2892,6 +2892,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* default => reject */
+comment|/* XXX: Will not work if sizeof(tab*)> sizeof(char) */
 operator|(
 name|void
 operator|)
@@ -2979,6 +2980,13 @@ name|n
 operator|==
 literal|']'
 operator|||
+operator|(
+name|__collate_load_error
+condition|?
+name|n
+operator|<
+name|c
+else|:
 name|__collate_range_cmp
 argument_list|(
 name|n
@@ -2987,6 +2995,7 @@ name|c
 argument_list|)
 operator|<
 literal|0
+operator|)
 condition|)
 block|{
 name|c
@@ -3000,6 +3009,32 @@ name|fmt
 operator|++
 expr_stmt|;
 comment|/* fill in the range */
+if|if
+condition|(
+name|__collate_load_error
+condition|)
+block|{
+do|do
+block|{
+name|tab
+index|[
+operator|++
+name|c
+index|]
+operator|=
+name|v
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|c
+operator|<
+name|n
+condition|)
+do|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|i
@@ -3040,6 +3075,7 @@ index|]
 operator|=
 name|v
 expr_stmt|;
+block|}
 if|#
 directive|if
 literal|1
