@@ -181,6 +181,22 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|uint32_t
+name|sa11x0_irq_mask
+init|=
+literal|0xfffffff
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|saipic_base
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|arm_mask_irqs
@@ -189,31 +205,69 @@ name|int
 name|irq
 parameter_list|)
 block|{
-comment|/* XXX */
-block|}
-end_function
-
-begin_function
-name|void
-name|arm_unmask_irqs
-parameter_list|(
-name|int
+name|sa11x0_irq_mask
+operator|&=
+operator|~
 name|irq
-parameter_list|)
-block|{
-comment|/* XXX */
-block|}
+expr_stmt|;
+asm|__asm __volatile("str	%0, [%1, #0x04]"
+comment|/* SAIPIC_MR */
+block|: :
+literal|"r"
+operator|(
+name|sa11x0_irq_mask
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|saipic_base
+operator|)
+block|)
+function|;
 end_function
 
-begin_function_decl
-name|void
+begin_macro
+unit|}  void
+name|arm_unmask_irqs
+argument_list|(
+argument|int irq
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|sa11x0_irq_mask
+operator||=
+name|irq
+expr_stmt|;
+asm|__asm __volatile("str	%0, [%1, #0x04]"
+comment|/* SAIPIC_MR */
+block|: :
+literal|"r"
+operator|(
+name|sa11x0_irq_mask
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|saipic_base
+operator|)
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+unit|}  void
 name|stray_irqhandler
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void

@@ -517,11 +517,12 @@ directive|ifndef
 name|MD_ROOT_SIZE
 end_ifndef
 
-begin_error
-error|#
-directive|error
-error|SIMICS needs MD_ROOT and MD_ROOT_SIZE
-end_error
+begin_define
+define|#
+directive|define
+name|MD_ROOT_SIZE
+value|65535
+end_define
 
 begin_endif
 endif|#
@@ -1935,7 +1936,7 @@ literal|0x400000
 expr_stmt|;
 name|pmap_bootstrap
 argument_list|(
-name|KERNEL_VM_BASE
+name|freemempos
 argument_list|,
 literal|0xd0000000
 argument_list|,
@@ -1953,7 +1954,7 @@ index|]
 operator|=
 name|round_page
 argument_list|(
-name|freemempos
+name|virtual_avail
 argument_list|)
 expr_stmt|;
 name|phys_avail
