@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.27 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -832,7 +832,8 @@ block|}
 endif|#
 directive|endif
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|local_domain
@@ -843,7 +844,7 @@ name|h_name
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * If name returned by gethostbyaddr is in our domain, 		 * attempt to verify that we haven't been fooled by someone 		 * in a remote net; look up the name and check that this 		 * address corresponds to the name. 		 */
+comment|/* 		     * If name returned by gethostbyaddr is in our domain, 		     * attempt to verify that we haven't been fooled by someone 		     * in a remote net; look up the name and check that this 		     * address corresponds to the name. 		     */
 name|strncpy
 argument_list|(
 name|remotehost
@@ -934,6 +935,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+block|}
+else|else
+name|hostok
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
