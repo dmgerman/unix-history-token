@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.76 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.77 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5053,11 +5053,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|ewhere
-init|=
-name|where
-operator|+
-operator|*
-name|acopysize
 decl_stmt|;
 name|int
 name|error
@@ -5098,6 +5093,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|ewhere
+operator|=
+name|where
+operator|+
+operator|*
+name|acopysize
+expr_stmt|;
 do|do
 block|{
 if|if
