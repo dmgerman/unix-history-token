@@ -3303,7 +3303,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pmap_l2ptp_ctor
 parameter_list|(
 name|void
@@ -3316,6 +3316,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 ifndef|#
@@ -3433,6 +3436,11 @@ name|pt_entry_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
