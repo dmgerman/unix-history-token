@@ -1290,6 +1290,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|room
 name|dayfile
@@ -1298,6 +1299,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|room
 name|nightfile
@@ -1707,6 +1709,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|wlist
 name|wlist
@@ -1729,6 +1732,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|objs
 name|dayobjs
@@ -1737,6 +1741,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|objs
 name|nightobjs
