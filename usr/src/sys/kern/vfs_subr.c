@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.88 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.89 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3807,12 +3807,16 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * If it is on the freelist, move it to the head of the list. 	 */
+comment|/* 	 * If it is on the freelist and not already at the head, 	 * move it to the head of the list. 	 */
 if|if
 condition|(
 name|vp
 operator|->
 name|v_freeb
+operator|&&
+name|vfreeh
+operator|!=
+name|vp
 condition|)
 block|{
 if|if
