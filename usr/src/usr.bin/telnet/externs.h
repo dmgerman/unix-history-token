@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	1.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	1.23 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1130,7 +1130,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VFLUSHO
+name|VDISCARD
 end_ifndef
 
 begin_decl_stmt
@@ -1149,7 +1149,7 @@ begin_define
 define|#
 directive|define
 name|termFlushChar
-value|new_tc.c_cc[VFLUSHO]
+value|new_tc.c_cc[VDISCARD]
 end_define
 
 begin_endif

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	1.25 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	1.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,7 +1078,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|VFLUSHO
+name|VDISCARD
 name|termFlushChar
 operator|=
 literal|'O'

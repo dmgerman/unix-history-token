@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.6 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1609,10 +1609,10 @@ name|SLC_AO
 case|:
 ifdef|#
 directive|ifdef
-name|VFLUSHO
+name|VDISCARD
 name|setval
 argument_list|(
-name|VFLUSHO
+name|VDISCARD
 argument_list|,
 name|SLC_VARIABLE
 operator||

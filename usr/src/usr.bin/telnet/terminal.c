@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	1.19 (Berkeley) %G%"
+literal|"@(#)terminal.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,7 +101,7 @@ end_ifdef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VFLUSHO
+name|VDISCARD
 end_ifndef
 
 begin_decl_stmt
