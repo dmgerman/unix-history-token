@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vget.c	6.5 %G%"
+literal|"@(#)ex_vget.c	6.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2521,6 +2521,13 @@ name|int
 name|trapalarm
 parameter_list|()
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|Oint
+function_decl|)
+parameter_list|()
+function_decl|;
 specifier|register
 name|int
 name|c
@@ -2544,6 +2551,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|Oint
+operator|=
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|trapalarm
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|value
@@ -2663,6 +2679,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|Oint
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|c
@@ -2683,6 +2706,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vcatch
+condition|)
 name|longjmp
 argument_list|(
 name|vreslab
