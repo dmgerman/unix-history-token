@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.6 %G%"
+literal|"@(#)newfs.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* show mkfs line before exec */
+end_comment
+
+begin_decl_stmt
+name|int
+name|noboot
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do not fill boot blocks */
 end_comment
 
 begin_decl_stmt
@@ -154,6 +164,9 @@ end_comment
 begin_decl_stmt
 name|int
 name|minfree
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -394,6 +407,13 @@ case|case
 literal|'v'
 case|:
 name|verbose
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|noboot
 operator|++
 expr_stmt|;
 break|break;
@@ -1271,7 +1291,7 @@ block|}
 if|if
 condition|(
 name|minfree
-operator|==
+operator|<
 literal|0
 condition|)
 name|minfree
@@ -1497,6 +1517,9 @@ operator|*
 name|cp
 operator|==
 literal|'a'
+operator|&&
+operator|!
+name|noboot
 condition|)
 block|{
 name|char
