@@ -352,7 +352,7 @@ name|g_ctl_config_geom_t
 modifier|*
 name|config_geom
 decl_stmt|;
-comment|/* 	 * The remaning elements are private and classes should use 	 * the G_CLASS_INITIALIZER macro to initialize them.          */
+comment|/* 	 * The remaining elements are private 	 */
 name|LIST_ENTRY
 argument_list|(
 argument|g_class
@@ -372,14 +372,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|G_CLASS_INITIALIZER
-define|\
-value|.class = { 0, 0 },	\ 	.geom = { 0 },		\ 	.protect = 0
-end_define
 
 begin_comment
 comment|/*  * The g_geom is an instance of a g_class.  */

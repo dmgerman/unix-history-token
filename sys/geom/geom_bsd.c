@@ -3168,9 +3168,7 @@ operator|.
 name|config_geom
 operator|=
 name|g_bsd_config
-block|,
-name|G_CLASS_INITIALIZER
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

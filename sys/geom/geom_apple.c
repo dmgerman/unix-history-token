@@ -1170,9 +1170,7 @@ operator|.
 name|taste
 operator|=
 name|g_apple_taste
-block|,
-name|G_CLASS_INITIALIZER
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

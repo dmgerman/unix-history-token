@@ -1411,9 +1411,7 @@ operator|.
 name|destroy_geom
 operator|=
 name|g_bde_destroy_geom
-block|,
-name|G_CLASS_INITIALIZER
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -1619,9 +1619,7 @@ operator|.
 name|taste
 operator|=
 name|g_mbr_taste
-block|,
-name|G_CLASS_INITIALIZER
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2482,9 +2480,7 @@ operator|.
 name|taste
 operator|=
 name|g_mbrext_taste
-block|,
-name|G_CLASS_INITIALIZER
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

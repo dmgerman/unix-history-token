@@ -944,9 +944,7 @@ operator|.
 name|taste
 operator|=
 name|g_gpt_taste
-block|,
-name|G_CLASS_INITIALIZER
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

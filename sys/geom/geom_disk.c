@@ -130,9 +130,7 @@ operator|.
 name|name
 operator|=
 literal|"DISK"
-block|,
-name|G_CLASS_INITIALIZER
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
