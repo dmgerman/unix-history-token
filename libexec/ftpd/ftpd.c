@@ -6845,31 +6845,11 @@ argument_list|(
 name|proctitle
 argument_list|)
 argument_list|,
-literal|"%s: anonymous(%s)/%.*s"
+literal|"%s: anonymous(%s)/%s"
 argument_list|,
 name|remotehost
 argument_list|,
 name|hostname
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|proctitle
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-name|remotehost
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-literal|": anonymous/"
-argument_list|)
-argument_list|)
 argument_list|,
 name|passwd
 argument_list|)
@@ -6886,29 +6866,9 @@ argument_list|(
 name|proctitle
 argument_list|)
 argument_list|,
-literal|"%s: anonymous/%.*s"
+literal|"%s: anonymous/%s"
 argument_list|,
 name|remotehost
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|proctitle
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-name|remotehost
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-literal|": anonymous/"
-argument_list|)
-argument_list|)
 argument_list|,
 name|passwd
 argument_list|)
