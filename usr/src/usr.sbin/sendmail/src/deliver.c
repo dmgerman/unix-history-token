@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.48 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5690,6 +5690,11 @@ decl_stmt|;
 name|int
 name|otherowners
 decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|ee
+decl_stmt|;
 name|ENVELOPE
 modifier|*
 name|splitenv
@@ -6131,11 +6136,6 @@ operator|>
 literal|0
 condition|)
 block|{
-specifier|register
-name|ENVELOPE
-modifier|*
-name|ee
-decl_stmt|;
 specifier|extern
 name|HDR
 modifier|*
@@ -6647,6 +6647,8 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
+block|{
+comment|/* be sure everything is instantiated in the queue */
 name|queueup
 argument_list|(
 name|e
@@ -6658,6 +6660,34 @@ operator|==
 name|SM_QUEUE
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|ee
+operator|=
+name|splitenv
+init|;
+name|ee
+operator|!=
+name|NULL
+condition|;
+name|ee
+operator|=
+name|ee
+operator|->
+name|e_sibling
+control|)
+name|queueup
+argument_list|(
+name|ee
+argument_list|,
+name|TRUE
+argument_list|,
+name|mode
+operator|==
+name|SM_QUEUE
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* QUEUE */
@@ -6668,11 +6698,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
-name|ENVELOPE
-modifier|*
-name|ee
-decl_stmt|;
 if|if
 condition|(
 name|tTd
