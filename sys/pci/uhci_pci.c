@@ -251,15 +251,6 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-name|uhci_softc_t
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|self
-argument_list|)
-decl_stmt|;
 name|bus_generic_suspend
 argument_list|(
 name|self
@@ -280,19 +271,10 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-name|uhci_softc_t
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|self
-argument_list|)
-decl_stmt|;
 if|#
 directive|if
 literal|0
-block|uhci_reset(sc);
+block|uhci_softc_t *sc = device_get_softc(self);  	uhci_reset(sc);
 endif|#
 directive|endif
 name|bus_generic_resume
