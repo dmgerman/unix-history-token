@@ -10238,8 +10238,10 @@ name|mlx_enq2
 operator|->
 name|me_firmware_id
 operator|>>
-literal|16
+literal|24
 operator|)
+operator|&
+literal|0xff
 argument_list|,
 operator|(
 name|sc
@@ -10248,10 +10250,8 @@ name|mlx_enq2
 operator|->
 name|me_firmware_id
 operator|>>
-literal|24
+literal|16
 operator|)
-operator|&
-literal|0xff
 argument_list|,
 name|sc
 operator|->
