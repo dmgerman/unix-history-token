@@ -955,7 +955,7 @@ name|tick_stop
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the interrupt tables. 	 */
-name|intr_init
+name|intr_init1
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize proc0 stuff (p_contested needs to be done early). 	 */
@@ -1190,6 +1190,9 @@ literal|"process lock"
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|intr_init2
+argument_list|()
 expr_stmt|;
 name|mtx_lock
 argument_list|(

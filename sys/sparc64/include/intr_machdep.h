@@ -285,7 +285,16 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|intr_init
+name|intr_init1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|intr_init2
 parameter_list|(
 name|void
 parameter_list|)

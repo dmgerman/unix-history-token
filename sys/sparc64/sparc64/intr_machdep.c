@@ -542,22 +542,12 @@ end_function
 
 begin_function
 name|void
-name|intr_init
+name|intr_init1
 parameter_list|()
 block|{
 name|int
 name|i
 decl_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|intr_table_lock
-argument_list|,
-literal|"ithread table lock"
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
 comment|/* Mark all interrupts as being stray. */
 for|for
 control|(
@@ -640,6 +630,24 @@ name|PIL_LOW
 index|]
 operator|=
 name|intr_dequeue
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|intr_init2
+parameter_list|()
+block|{
+name|mtx_init
+argument_list|(
+operator|&
+name|intr_table_lock
+argument_list|,
+literal|"ithread table lock"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
 expr_stmt|;
 block|}
 end_function
