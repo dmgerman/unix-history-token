@@ -50,7 +50,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Condition variable.  */
+comment|/*  * Condition variable.  The waiters count is protected by the mutex that  * protects the condition; that is, the mutex that is passed to cv_wait*()  * and is held across calls to cv_signal() and cv_broadcast().  It is an  * optimization to avoid looking up the sleep queue if there are no waiters.  */
 end_comment
 
 begin_struct
@@ -61,6 +61,9 @@ specifier|const
 name|char
 modifier|*
 name|cv_description
+decl_stmt|;
+name|int
+name|cv_waiters
 decl_stmt|;
 block|}
 struct|;

@@ -161,6 +161,12 @@ name|cv_description
 operator|=
 name|desc
 expr_stmt|;
+name|cvp
+operator|->
+name|cv_waiters
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -328,6 +334,11 @@ name|sleepq_lookup
 argument_list|(
 name|cvp
 argument_list|)
+expr_stmt|;
+name|cvp
+operator|->
+name|cv_waiters
+operator|++
 expr_stmt|;
 name|DROP_GIANT
 argument_list|()
@@ -535,6 +546,11 @@ name|cvp
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Missing the threading checks from msleep! */
+name|cvp
+operator|->
+name|cv_waiters
+operator|++
+expr_stmt|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
@@ -781,6 +797,11 @@ argument_list|(
 name|cvp
 argument_list|)
 expr_stmt|;
+name|cvp
+operator|->
+name|cv_waiters
+operator|++
+expr_stmt|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
@@ -1006,6 +1027,11 @@ argument_list|(
 name|cvp
 argument_list|)
 expr_stmt|;
+name|cvp
+operator|->
+name|cv_waiters
+operator|++
+expr_stmt|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
@@ -1152,6 +1178,20 @@ modifier|*
 name|cvp
 parameter_list|)
 block|{
+if|if
+condition|(
+name|cvp
+operator|->
+name|cv_waiters
+operator|>
+literal|0
+condition|)
+block|{
+name|cvp
+operator|->
+name|cv_waiters
+operator|--
+expr_stmt|;
 name|sleepq_signal
 argument_list|(
 name|cvp
@@ -1162,6 +1202,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1182,6 +1223,21 @@ name|int
 name|pri
 parameter_list|)
 block|{
+if|if
+condition|(
+name|cvp
+operator|->
+name|cv_waiters
+operator|>
+literal|0
+condition|)
+block|{
+name|cvp
+operator|->
+name|cv_waiters
+operator|=
+literal|0
+expr_stmt|;
 name|sleepq_broadcast
 argument_list|(
 name|cvp
@@ -1191,6 +1247,7 @@ argument_list|,
 name|pri
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
