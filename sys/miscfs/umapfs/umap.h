@@ -277,7 +277,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|DIAGNOSTIC
 end_ifdef
 
 begin_decl_stmt

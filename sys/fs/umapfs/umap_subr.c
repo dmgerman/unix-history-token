@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -950,7 +944,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|DIAGNOSTIC
 end_ifdef
 
 begin_decl_stmt
@@ -1190,7 +1184,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DDB */
+comment|/* DIAGNOSTIC */
 end_comment
 
 begin_comment
