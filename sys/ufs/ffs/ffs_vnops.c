@@ -1925,12 +1925,6 @@ operator|(
 name|EOVERFLOW
 operator|)
 return|;
-name|object
-operator|=
-name|vp
-operator|->
-name|v_object
-expr_stmt|;
 name|bytesinfile
 operator|=
 name|ip
@@ -1969,9 +1963,17 @@ operator||=
 name|IN_ACCESS
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
+name|object
+operator|=
+name|vp
+operator|->
+name|v_object
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -2607,7 +2609,7 @@ else|#
 directive|else
 name|panic
 argument_list|(
-literal|"ffs_read+IO_EXT"
+literal|"ffs_write+IO_EXT"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2663,7 +2665,7 @@ name|UIO_WRITE
 condition|)
 name|panic
 argument_list|(
-literal|"ffswrite: mode"
+literal|"ffs_write: mode"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2743,14 +2745,14 @@ name|VDIR
 case|:
 name|panic
 argument_list|(
-literal|"ffswrite: dir write"
+literal|"ffs_write: dir write"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ffswrite: type %p %d (%d,%d)"
+literal|"ffs_write: type %p %d (%d,%d)"
 argument_list|,
 name|vp
 argument_list|,
@@ -4953,7 +4955,7 @@ name|FS_UFS2_MAGIC
 condition|)
 name|panic
 argument_list|(
-literal|"ext_write: mode"
+literal|"ffs_extwrite: mode"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4972,16 +4974,11 @@ name|dp
 operator|->
 name|di_extsize
 expr_stmt|;
+comment|/* 	 * The caller is supposed to check if 	 * uio->uio_offset>= 0 and uio->uio_resid>= 0. 	 */
 if|if
 condition|(
-name|uio
-operator|->
-name|uio_offset
-operator|<
-literal|0
-operator|||
 operator|(
-name|u_int64_t
+name|uoff_t
 operator|)
 name|uio
 operator|->
