@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_inode.c	4.33	83/02/10	*/
+comment|/*	lfs_inode.c	4.34	83/03/15	*/
 end_comment
 
 begin_include
@@ -2438,6 +2438,9 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+return|return;
 endif|#
 directive|endif
 block|}
