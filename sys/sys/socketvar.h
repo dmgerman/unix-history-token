@@ -74,6 +74,10 @@ name|short
 name|so_state
 decl_stmt|;
 comment|/* internal state flags SS_*, below */
+name|int
+name|so_qstate
+decl_stmt|;
+comment|/* internal state flags SQ_* */
 name|void
 modifier|*
 name|so_pcb
@@ -474,7 +478,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SS_INCOMP
+name|SS_ISDISCONNECTED
+value|0x2000
+end_define
+
+begin_comment
+comment|/* socket disconnected from peer */
+end_comment
+
+begin_comment
+comment|/*  * Socket state bits stored in so_qstate.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQ_INCOMP
 value|0x0800
 end_define
 
@@ -485,23 +504,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SS_COMP
+name|SQ_COMP
 value|0x1000
 end_define
 
 begin_comment
 comment|/* unaccepted, complete connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SS_ISDISCONNECTED
-value|0x2000
-end_define
-
-begin_comment
-comment|/* socket disconnected from peer */
 end_comment
 
 begin_comment

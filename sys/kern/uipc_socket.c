@@ -1366,9 +1366,9 @@ if|if
 condition|(
 name|so
 operator|->
-name|so_state
+name|so_qstate
 operator|&
-name|SS_INCOMP
+name|SQ_INCOMP
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -1394,9 +1394,9 @@ if|if
 condition|(
 name|so
 operator|->
-name|so_state
+name|so_qstate
 operator|&
-name|SS_COMP
+name|SQ_COMP
 condition|)
 block|{
 comment|/* 			 * We must not decommission a socket that's 			 * on the accept(2) queue.  If we do, then 			 * accept(2) may hang after select(2) indicated 			 * that the listening socket was ready. 			 */
@@ -1412,10 +1412,10 @@ expr_stmt|;
 block|}
 name|so
 operator|->
-name|so_state
+name|so_qstate
 operator|&=
 operator|~
-name|SS_INCOMP
+name|SQ_INCOMP
 expr_stmt|;
 name|so
 operator|->
@@ -1634,10 +1634,10 @@ operator|--
 expr_stmt|;
 name|sp
 operator|->
-name|so_state
+name|so_qstate
 operator|&=
 operator|~
-name|SS_COMP
+name|SQ_COMP
 expr_stmt|;
 name|sp
 operator|->

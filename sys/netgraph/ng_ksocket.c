@@ -5341,10 +5341,10 @@ argument_list|)
 expr_stmt|;
 name|so
 operator|->
-name|so_state
+name|so_qstate
 operator|&=
 operator|~
-name|SS_COMP
+name|SQ_COMP
 expr_stmt|;
 name|so
 operator|->
