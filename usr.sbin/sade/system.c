@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.38 1995/05/26 21:00:43 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.39 1995/05/28 09:36:06 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -380,30 +380,13 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* Put the console back */
-name|fd
-operator|=
-name|open
-argument_list|(
-literal|"/dev/ttyv0"
-argument_list|,
-name|O_RDONLY
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|!=
-operator|-
-literal|1
-condition|)
 name|ioctl
 argument_list|(
-name|fd
+literal|0
 argument_list|,
-name|TIOCCONS
+name|VT_RELDISP
 argument_list|,
-operator|&
-name|on
+literal|1
 argument_list|)
 expr_stmt|;
 name|reboot
