@@ -291,15 +291,18 @@ decl_stmt|;
 comment|/* buffer / cache memory ??? */
 name|unsigned
 name|long
+name|long
 name|swaptotal
 decl_stmt|;
 comment|/* total swap space in bytes */
 name|unsigned
 name|long
+name|long
 name|swapused
 decl_stmt|;
 comment|/* used swap space in bytes */
 name|unsigned
+name|long
 name|long
 name|swapfree
 decl_stmt|;
@@ -361,15 +364,25 @@ else|else
 block|{
 name|swaptotal
 operator|=
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|swapblist
 operator|->
 name|bl_blocks
 operator|*
-literal|1024
+literal|1024ULL
 expr_stmt|;
 comment|/* XXX why 1024? */
 name|swapfree
 operator|=
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|swapblist
 operator|->
 name|bl_root
@@ -457,14 +470,14 @@ name|ps
 argument_list|,
 literal|"        total:    used:    free:  shared: buffers:  cached:\n"
 literal|"Mem:  %lu %lu %lu %lu %lu %lu\n"
-literal|"Swap: %lu %lu %lu\n"
+literal|"Swap: %llu %llu %llu\n"
 literal|"MemTotal: %9lu kB\n"
 literal|"MemFree:  %9lu kB\n"
 literal|"MemShared:%9lu kB\n"
 literal|"Buffers:  %9lu kB\n"
 literal|"Cached:   %9lu kB\n"
-literal|"SwapTotal:%9lu kB\n"
-literal|"SwapFree: %9lu kB\n"
+literal|"SwapTotal:%9llu kB\n"
+literal|"SwapFree: %9llu kB\n"
 argument_list|,
 name|memtotal
 argument_list|,
