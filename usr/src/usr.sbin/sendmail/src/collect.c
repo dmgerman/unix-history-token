@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%
@@ -174,7 +174,7 @@ name|e_df
 operator|=
 name|tempfname
 expr_stmt|;
-comment|/* 	**  Create the Mail-From line if we want to. 	*/
+comment|/* 	**  Create the Received: line if we want to. 	*/
 if|if
 condition|(
 name|Smtp
@@ -193,6 +193,7 @@ index|[
 literal|50
 index|]
 decl_stmt|;
+comment|/* this should be in the config file */
 operator|(
 name|void
 operator|)
@@ -200,18 +201,7 @@ name|sprintf
 argument_list|(
 name|xbuf
 argument_list|,
-literal|"Mail-From: %s$s received by $i at $b"
-argument_list|,
-name|macvalue
-argument_list|(
-literal|'r'
-argument_list|)
-operator|==
-name|NULL
-condition|?
-literal|""
-else|:
-literal|"$r host "
+literal|"Received: from $s by $i with SMTP; $b"
 argument_list|)
 expr_stmt|;
 name|expand

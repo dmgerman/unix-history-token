@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -385,14 +385,14 @@ operator|->
 name|hi_flags
 operator|)
 return|;
-comment|/* count Mail-From: lines to avoid loops (simulate hop counts) */
+comment|/* count Received: lines to avoid loops (simulate hop counts) */
 if|if
 condition|(
 name|strcmp
 argument_list|(
 name|fname
 argument_list|,
-literal|"mail-from"
+literal|"received"
 argument_list|)
 operator|==
 literal|0
