@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.41 1995/01/14 04:58:53 davidg Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.42 1995/01/15 09:06:23 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Derived from hp300 version by Mike Hibler, this version by William
 end_comment
 
 begin_comment
-comment|/*  * Major modifications by John S. Dyson primarily to support  * pageable page tables, eliminating pmap_attributes,   * discontiguous memory pages, and using more efficient string  * instructions. Jan 13, 1994.  Further modifications on Mar 2, 1994,  * general clean-up and efficiency mods.   */
+comment|/*  * Major modifications by John S. Dyson primarily to support  * pageable page tables, eliminating pmap_attributes,  * discontiguous memory pages, and using more efficient string  * instructions. Jan 13, 1994.  Further modifications on Mar 2, 1994,  * general clean-up and efficiency mods.  */
 end_comment
 
 begin_comment
@@ -286,7 +286,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* VA of first avail page (after kernel bss)*/
+comment|/* VA of first avail page (after kernel bss) */
 end_comment
 
 begin_decl_stmt
@@ -383,7 +383,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 specifier|inline
 name|void
 name|pmap_use_pt
@@ -392,7 +391,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 specifier|inline
 name|void
 name|pmap_unuse_pt
@@ -873,6 +871,9 @@ name|vm_offset_t
 name|pt
 decl_stmt|;
 block|{
+name|vm_page_t
+name|m
+decl_stmt|;
 name|pt
 operator|=
 name|i386_trunc_page
@@ -906,11 +907,15 @@ operator|)
 operator|&
 name|PG_FRAME
 expr_stmt|;
-return|return
+name|m
+operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|pt
 argument_list|)
+expr_stmt|;
+return|return
+name|m
 return|;
 block|}
 end_function
@@ -940,9 +945,11 @@ name|pt
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|va
 operator|>=
-name|VM_MAX_ADDRESS
+name|UPT_MIN_ADDRESS
+operator|)
 operator|||
 operator|!
 name|pmap_initialized
@@ -994,11 +1001,16 @@ block|{
 name|vm_offset_t
 name|pt
 decl_stmt|;
+name|vm_page_t
+name|m
+decl_stmt|;
 if|if
 condition|(
+operator|(
 name|va
 operator|>=
-name|VM_MAX_ADDRESS
+name|UPT_MIN_ADDRESS
+operator|)
 operator|||
 operator|!
 name|pmap_initialized
@@ -1014,16 +1026,55 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-name|vm_page_unhold
-argument_list|(
+name|m
+operator|=
 name|pmap_pte_vm_page
 argument_list|(
 name|pmap
 argument_list|,
 name|pt
 argument_list|)
+expr_stmt|;
+name|vm_page_unhold
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pmap
+operator|!=
+name|kernel_pmap
+operator|&&
+operator|(
+name|m
+operator|->
+name|hold_count
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|m
+operator|->
+name|wire_count
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|va
+operator|<
+name|KPT_MIN_ADDRESS
+operator|)
+condition|)
+block|{
+name|vm_page_deactivate
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1128,7 +1179,7 @@ comment|/* 	 * Initialize protection array. 	 */
 name|i386_protection_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * The kernel's pmap is statically allocated so we don't 	 * have to use pmap_create, which is unlikely to work 	 * correctly at this part of the boot sequence. 	 */
+comment|/* 	 * The kernel's pmap is statically allocated so we don't have to use 	 * pmap_create, which is unlikely to work correctly at this part of 	 * the boot sequence. 	 */
 name|kernel_pmap
 operator|=
 operator|&
@@ -1329,7 +1380,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Now that kernel map has been allocated, we can mark as 	 * unavailable regions which we have mapped in locore. 	 */
+comment|/* 	 * Now that kernel map has been allocated, we can mark as unavailable 	 * regions which we have mapped in locore. 	 */
 name|addr
 operator|=
 name|atdevbase
@@ -1742,7 +1793,7 @@ modifier|*
 name|pmap
 decl_stmt|;
 block|{
-comment|/* 	 * No need to allocate page table space yet but we do need a 	 * valid page directory table. 	 */
+comment|/* 	 * No need to allocate page table space yet but we do need a valid 	 * page directory table. 	 */
 name|pmap
 operator|->
 name|pm_pdir
@@ -1987,7 +2038,22 @@ name|kernel_object
 argument_list|,
 literal|0
 argument_list|,
-name|TRUE
+name|VM_ALLOC_SYSTEM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|nkpg
+condition|)
+name|panic
+argument_list|(
+literal|"pmap_growkernel: no memory to grow kernel"
+argument_list|)
+expr_stmt|;
+name|vm_page_wire
+argument_list|(
+name|nkpg
 argument_list|)
 expr_stmt|;
 name|vm_page_remove
@@ -2001,16 +2067,6 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|nkpg
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|nkpg
-condition|)
-name|panic
-argument_list|(
-literal|"pmap_growkernel: no memory to grow kernel"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2114,12 +2170,6 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if( !nkpg) { 		nkpg = vm_page_alloc(kernel_object, 0, TRUE); 		vm_page_remove(nkpg); 		pmap_zero_page(VM_PAGE_TO_PHYS(nkpg)); 	}
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|s
@@ -2368,7 +2418,7 @@ name|pv_entry_t
 name|tmp
 decl_stmt|;
 comment|/* 	 * get more pv_entry pages if needed 	 */
-while|while
+if|if
 condition|(
 name|pv_freelistcnt
 operator|<
@@ -2396,24 +2446,6 @@ operator|=
 name|tmp
 operator|->
 name|pv_next
-expr_stmt|;
-name|tmp
-operator|->
-name|pv_pmap
-operator|=
-literal|0
-expr_stmt|;
-name|tmp
-operator|->
-name|pv_va
-operator|=
-literal|0
-expr_stmt|;
-name|tmp
-operator|->
-name|pv_next
-operator|=
-literal|0
 expr_stmt|;
 return|return
 name|tmp
@@ -2459,7 +2491,7 @@ argument_list|(
 name|kernel_map
 argument_list|)
 argument_list|,
-name|TRUE
+name|VM_ALLOC_INTERRUPT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2591,7 +2623,7 @@ name|int
 name|npg
 decl_stmt|;
 block|{
-comment|/* 	 * allocate enough kvm space for PVSPERPAGE entries per page (lots) 	 * kvm space is fairly cheap, be generous!!!  (the system can panic 	 * if this is too small.) 	 */
+comment|/* 	 * allocate enough kvm space for PVSPERPAGE entries per page (lots) 	 * kvm space is fairly cheap, be generous!!!  (the system can panic if 	 * this is too small.) 	 */
 name|npvvapg
 operator|=
 operator|(
@@ -2939,7 +2971,7 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-comment|/*  * special handling of removing one page.  a very  * common operation and easy to short circuit some  * code.  */
+comment|/* 	 * special handling of removing one page.  a very 	 * common operation and easy to short circuit some 	 * code. 	 */
 if|if
 condition|(
 operator|(
@@ -3139,7 +3171,7 @@ operator|<
 name|eva
 condition|)
 block|{
-comment|/* 		 * Weed out invalid mappings. 		 * Note: we assume that the page directory table is 	 	 * always allocated, and in kernel virtual. 		 */
+comment|/* 		 * Weed out invalid mappings. Note: we assume that the page 		 * directory table is always allocated, and in kernel virtual. 		 */
 if|if
 condition|(
 operator|*
@@ -3182,7 +3214,7 @@ name|ptp
 operator|+
 name|sva
 expr_stmt|;
-comment|/* 		 * search for page table entries, use string operations 		 * that are much faster than 		 * explicitly scanning when page tables are not fully 		 * populated. 		 */
+comment|/* 		 * search for page table entries, use string operations that 		 * are much faster than explicitly scanning when page tables 		 * are not fully populated. 		 */
 if|if
 condition|(
 operator|*
@@ -3237,7 +3269,7 @@ name|eva
 operator|-
 name|sva
 expr_stmt|;
-asm|asm("xorl %%eax,%%eax;cld;repe;scasl;jz 1f;incl %%eax;1:;" 				:"=D"(ptq),"=a"(found) 				:"c"(nscan),"0"(ptq) 				:"cx");
+asm|asm("xorl %%eax,%%eax;cld;repe;scasl;jz 1f;incl %%eax;1:;" : 			    "=D"(ptq), "=a"(found) : "c"(nscan), "0"(ptq) : "cx");
 if|if
 condition|(
 operator|!
@@ -3292,7 +3324,7 @@ operator|.
 name|resident_count
 operator|--
 expr_stmt|;
-comment|/* 		 * Invalidate the PTEs. 		 * XXX: should cluster them up and invalidate as many 		 * as possible at once. 		 */
+comment|/* 		 * Invalidate the PTEs. XXX: should cluster them up and 		 * invalidate as many as possible at once. 		 */
 operator|*
 name|ptq
 operator|=
@@ -3305,7 +3337,7 @@ argument_list|(
 name|sva
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Remove from the PV table (raise IPL since we 		 * may be called at interrupt time). 		 */
+comment|/* 		 * Remove from the PV table (raise IPL since we may be called 		 * at interrupt time). 		 */
 name|pa
 operator|=
 operator|(
@@ -3481,7 +3513,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Not one of ours 	 */
-comment|/* XXX this makes pmap_page_protect(NONE) illegal for non-managed pages! */
+comment|/* 	 * XXX this makes pmap_page_protect(NONE) illegal for non-managed 	 * pages! 	 */
 if|if
 condition|(
 operator|!
@@ -3834,7 +3866,7 @@ decl_stmt|;
 name|vm_offset_t
 name|nscan
 decl_stmt|;
-comment|/* 		 * Page table page is not allocated. 		 * Skip it, we don't want to force allocation 		 * of unnecessary PTE pages just to set the protection. 		 */
+comment|/* 		 * Page table page is not allocated. Skip it, we don't want to 		 * force allocation of unnecessary PTE pages just to set the 		 * protection. 		 */
 if|if
 condition|(
 operator|!
@@ -3892,7 +3924,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * scan for a non-empty pte 		 */
+comment|/* 			 * scan for a non-empty pte 			 */
 name|svap
 operator|=
 name|pte
@@ -3940,7 +3972,7 @@ if|if
 condition|(
 name|nscan
 condition|)
-asm|asm("xorl %%eax,%%eax;cld;repe;scasl;jz 1f;incl %%eax;1:;" 					:"=D"(pte),"=a"(found) 					:"c"(nscan),"0"(pte):"cx");
+asm|asm("xorl %%eax,%%eax;cld;repe;scasl;jz 1f;incl %%eax;1:;" : 				    "=D"(pte), "=a"(found) : "c"(nscan), "0"(pte) : "cx");
 if|if
 condition|(
 operator|!
@@ -4171,7 +4203,7 @@ operator|==
 name|pa
 condition|)
 block|{
-comment|/* 		 * Wiring change, just update stats. 		 * We don't worry about wiring PT pages as they remain 		 * resident as long as there are valid mappings in them. 		 * Hence, if a user page is wired, the PT page will be also. 		 */
+comment|/* 		 * Wiring change, just update stats. We don't worry about 		 * wiring PT pages as they remain resident as long as there 		 * are valid mappings in them. Hence, if a user page is wired, 		 * the PT page will be also. 		 */
 if|if
 condition|(
 name|wired
@@ -4229,7 +4261,7 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Enter on the PV list if part of our managed memory 	 * Note that we raise IPL while manipulating pv_table 	 * since pmap_enter can be called at interrupt time. 	 */
+comment|/* 	 * Enter on the PV list if part of our managed memory Note that we 	 * raise IPL while manipulating pv_table since pmap_enter can be 	 * called at interrupt time. 	 */
 if|if
 condition|(
 name|pmap_is_managed
@@ -4288,7 +4320,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 		 * There is at least one other VA mapping this page. 		 * Place this entry after the header. 		 */
+comment|/* 		 * There is at least one other VA mapping this page. Place 		 * this entry after the header. 		 */
 else|else
 block|{
 name|npv
@@ -4340,13 +4372,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|pmap_use_pt
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Increment counters 	 */
 name|pmap
 operator|->
@@ -4405,7 +4430,7 @@ name|npte
 operator||=
 name|PG_N
 expr_stmt|;
-comment|/* 	 * When forking (copy-on-write, etc): 	 * A process will turn off write permissions for any of its writable 	 * pages.  If the data (object) is only referred to by one process, the 	 * processes map is modified directly as opposed to using the 	 * object manipulation routine.  When using pmap_protect, the 	 * modified bits are not kept in the vm_page_t data structure.   	 * Therefore, when using pmap_enter in vm_fault to bring back 	 * writability of a page, there has been no memory of the 	 * modified or referenced bits except at the pte level.   	 * this clause supports the carryover of the modified and 	 * used (referenced) bits. 	 */
+comment|/* 	 * When forking (copy-on-write, etc): A process will turn off write 	 * permissions for any of its writable pages.  If the data (object) is 	 * only referred to by one process, the processes map is modified 	 * directly as opposed to using the object manipulation routine.  When 	 * using pmap_protect, the modified bits are not kept in the vm_page_t 	 * data structure.  Therefore, when using pmap_enter in vm_fault to 	 * bring back writability of a page, there has been no memory of the 	 * modified or referenced bits except at the pte level.  this clause 	 * supports the carryover of the modified and used (referenced) bits. 	 */
 if|if
 condition|(
 name|pa
@@ -4495,9 +4520,21 @@ if|if
 condition|(
 name|ptevalid
 condition|)
+block|{
 name|pmap_update
 argument_list|()
 expr_stmt|;
+block|}
+else|else
+block|{
+name|pmap_use_pt
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4832,7 +4869,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* 	 * Enter on the PV list if part of our managed memory 	 * Note that we raise IPL while manipulating pv_table 	 * since pmap_enter can be called at interrupt time. 	 */
+comment|/* 	 * Enter on the PV list if part of our managed memory Note that we 	 * raise IPL while manipulating pv_table since pmap_enter can be 	 * called at interrupt time. 	 */
 name|pte
 operator|=
 name|vtopte
@@ -4900,7 +4937,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * There is at least one other VA mapping this page. 	 * Place this entry after the header. 	 */
+comment|/* 	 * There is at least one other VA mapping this page. Place this entry 	 * after the header. 	 */
 else|else
 block|{
 name|npv
@@ -4940,13 +4977,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|pmap_use_pt
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Increment counters 	 */
 name|pmap
 operator|->
@@ -4975,9 +5005,23 @@ name|PG_u
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pmap_use_pt
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|MAX_INIT_PT
+value|(1024*2048)
+end_define
 
 begin_comment
 comment|/*  * pmap_object_init_pt preloads the ptes for a given object  * into the specified pmap.  This eliminates the blast of soft  * faults on process startup and immediately after an mmap.  */
@@ -5019,18 +5063,40 @@ decl_stmt|;
 name|vm_page_t
 name|p
 decl_stmt|;
-name|vm_offset_t
-name|objbytes
-decl_stmt|;
 name|int
 name|bits
+decl_stmt|;
+name|int
+name|objbytes
 decl_stmt|;
 if|if
 condition|(
 operator|!
 name|pmap
+operator|||
+operator|(
+operator|(
+name|size
+operator|>
+name|MAX_INIT_PT
+operator|)
+operator|&&
+operator|(
+name|object
+operator|->
+name|resident_page_count
+operator|>
+operator|(
+name|MAX_INIT_PT
+operator|/
+name|NBPG
+operator|)
+operator|)
+operator|)
 condition|)
+block|{
 return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -5040,7 +5106,7 @@ name|object
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * if we are processing a major portion of the object, then 	 * scan the entire thing. 	 */
+comment|/* 	 * if we are processing a major portion of the object, then scan the 	 * entire thing. 	 */
 if|if
 condition|(
 name|size
@@ -5050,7 +5116,7 @@ name|object
 operator|->
 name|size
 operator|>>
-literal|1
+literal|2
 operator|)
 condition|)
 block|{
@@ -5058,6 +5124,8 @@ name|objbytes
 operator|=
 name|size
 expr_stmt|;
+for|for
+control|(
 name|p
 operator|=
 name|object
@@ -5065,21 +5133,29 @@ operator|->
 name|memq
 operator|.
 name|tqh_first
-expr_stmt|;
-while|while
-condition|(
+init|;
+operator|(
+operator|(
+name|objbytes
+operator|>
+literal|0
+operator|)
+operator|&&
 operator|(
 name|p
 operator|!=
 name|NULL
 operator|)
-operator|&&
-operator|(
-name|objbytes
-operator|!=
-literal|0
 operator|)
-condition|)
+condition|;
+name|p
+operator|=
+name|p
+operator|->
+name|listq
+operator|.
+name|tqe_next
+control|)
 block|{
 name|tmpoff
 operator|=
@@ -5094,14 +5170,6 @@ operator|<
 name|offset
 condition|)
 block|{
-name|p
-operator|=
-name|p
-operator|->
-name|listq
-operator|.
-name|tqe_next
-expr_stmt|;
 continue|continue;
 block|}
 name|tmpoff
@@ -5115,14 +5183,6 @@ operator|>=
 name|size
 condition|)
 block|{
-name|p
-operator|=
-name|p
-operator|->
-name|listq
-operator|.
-name|tqe_next
-expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -5197,14 +5257,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|p
-operator|=
-name|p
-operator|->
-name|listq
-operator|.
-name|tqe_next
-expr_stmt|;
 name|objbytes
 operator|-=
 name|NBPG
@@ -5213,7 +5265,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	 * else lookup the pages one-by-one. 	 */
+comment|/* 		 * else lookup the pages one-by-one. 		 */
 for|for
 control|(
 name|tmpoff
@@ -5243,10 +5295,7 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
 name|p
 operator|->
@@ -5319,12 +5368,401 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
 name|vm_object_unlock
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * pmap_prefault provides a quick way of clustering  * pagefaults into a processes address space.  It is a "cousin"  * of pmap_object_init_pt, except it runs at page fault time instead  * of mmap time.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFBAK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFFOR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGEORDER_SIZE
+value|(PFBAK+PFFOR)
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pmap_prefault_pageorder
+index|[]
+init|=
+block|{
+operator|-
+name|NBPG
+block|,
+name|NBPG
+block|,
+operator|-
+literal|2
+operator|*
+name|NBPG
+block|,
+literal|2
+operator|*
+name|NBPG
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|pmap_prefault
+parameter_list|(
+name|pmap
+parameter_list|,
+name|addra
+parameter_list|,
+name|entry
+parameter_list|,
+name|object
+parameter_list|)
+name|pmap_t
+name|pmap
+decl_stmt|;
+name|vm_offset_t
+name|addra
+decl_stmt|;
+name|vm_map_entry_t
+name|entry
+decl_stmt|;
+name|vm_object_t
+name|object
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+name|vm_offset_t
+name|starta
+decl_stmt|,
+name|enda
+decl_stmt|;
+name|vm_offset_t
+name|offset
+decl_stmt|,
+name|addr
+decl_stmt|;
+name|vm_page_t
+name|m
+decl_stmt|;
+name|int
+name|pageorder_index
+decl_stmt|;
+if|if
+condition|(
+name|entry
+operator|->
+name|object
+operator|.
+name|vm_object
+operator|!=
+name|object
+condition|)
+return|return;
+if|if
+condition|(
+name|pmap
+operator|!=
+operator|&
+name|curproc
+operator|->
+name|p_vmspace
+operator|->
+name|vm_pmap
+condition|)
+return|return;
+name|starta
+operator|=
+name|addra
+operator|-
+name|PFBAK
+operator|*
+name|NBPG
+expr_stmt|;
+if|if
+condition|(
+name|starta
+operator|<
+name|entry
+operator|->
+name|start
+condition|)
+block|{
+name|starta
+operator|=
+name|entry
+operator|->
+name|start
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|starta
+operator|>
+name|addra
+condition|)
+name|starta
+operator|=
+literal|0
+expr_stmt|;
+name|enda
+operator|=
+name|addra
+operator|+
+name|PFFOR
+operator|*
+name|NBPG
+expr_stmt|;
+if|if
+condition|(
+name|enda
+operator|>
+name|entry
+operator|->
+name|end
+condition|)
+name|enda
+operator|=
+name|entry
+operator|->
+name|end
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|PAGEORDER_SIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|vm_object_t
+name|lobject
+decl_stmt|;
+name|pt_entry_t
+modifier|*
+name|pte
+decl_stmt|;
+name|addr
+operator|=
+name|addra
+operator|+
+name|pmap_prefault_pageorder
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|<
+name|starta
+operator|||
+name|addr
+operator|>=
+name|enda
+condition|)
+continue|continue;
+name|pte
+operator|=
+name|vtopte
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pte
+condition|)
+continue|continue;
+name|offset
+operator|=
+operator|(
+name|addr
+operator|-
+name|entry
+operator|->
+name|start
+operator|)
+operator|+
+name|entry
+operator|->
+name|offset
+expr_stmt|;
+name|lobject
+operator|=
+name|object
+expr_stmt|;
+for|for
+control|(
+name|m
+operator|=
+name|vm_page_lookup
+argument_list|(
+name|lobject
+argument_list|,
+name|offset
+argument_list|)
+init|;
+operator|(
+operator|!
+name|m
+operator|&&
+name|lobject
+operator|->
+name|shadow
+operator|)
+condition|;
+name|lobject
+operator|=
+name|lobject
+operator|->
+name|shadow
+control|)
+block|{
+name|offset
+operator|+=
+name|lobject
+operator|->
+name|shadow_offset
+expr_stmt|;
+name|m
+operator|=
+name|vm_page_lookup
+argument_list|(
+name|lobject
+operator|->
+name|shadow
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * give-up when a page is not in memory 		 */
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+break|break;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|bmapped
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|m
+operator|->
+name|busy
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|m
+operator|->
+name|valid
+operator|&
+name|VM_PAGE_BITS_ALL
+operator|)
+operator|==
+name|VM_PAGE_BITS_ALL
+operator|)
+operator|&&
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_CACHE
+operator||
+name|PG_BUSY
+operator||
+name|PG_FICTITIOUS
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * test results show that the system is faster when 			 * pages are activated. 			 */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_ACTIVE
+operator|)
+operator|==
+literal|0
+condition|)
+name|vm_page_activate
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|vm_page_hold
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|pmap_enter_quick
+argument_list|(
+name|pmap
+argument_list|,
+name|addr
+argument_list|,
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vm_page_unhold
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -5409,7 +5847,7 @@ operator|.
 name|wired_count
 operator|--
 expr_stmt|;
-comment|/* 	 * Wiring is not a hardware characteristic so there is no need 	 * to invalidate TLB. 	 */
+comment|/* 	 * Wiring is not a hardware characteristic so there is no need to 	 * invalidate TLB. 	 */
 name|pmap_pte_set_w
 argument_list|(
 name|pte
@@ -5417,7 +5855,7 @@ argument_list|,
 name|wired
 argument_list|)
 expr_stmt|;
-comment|/*  	 * When unwiring, set the modified bit in the pte -- could have 	 * been changed by the kernel  	 */
+comment|/* 	 * When unwiring, set the modified bit in the pte -- could have been 	 * changed by the kernel 	 */
 if|if
 condition|(
 operator|!
@@ -5754,7 +6192,7 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Not found, check current mappings returning 	 * immediately if found. 	 */
+comment|/* 	 * Not found, check current mappings returning immediately if found. 	 */
 if|if
 condition|(
 name|pv
@@ -5814,6 +6252,7 @@ comment|/*  * pmap_testbit tests bits in pte's  * note that the testbit/changebi
 end_comment
 
 begin_function
+name|__inline
 name|boolean_t
 name|pmap_testbit
 parameter_list|(
@@ -5863,7 +6302,7 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Not found, check current mappings returning 	 * immediately if found. 	 */
+comment|/* 	 * Not found, check current mappings returning immediately if found. 	 */
 if|if
 condition|(
 name|pv
@@ -5885,7 +6324,7 @@ operator|->
 name|pv_next
 control|)
 block|{
-comment|/* 			 * if the bit being tested is the modified bit, 			 * then mark UPAGES as always modified, and 			 * ptes as never modified. 			 */
+comment|/* 			 * if the bit being tested is the modified bit, then 			 * mark UPAGES as always modified, and ptes as never 			 * modified. 			 */
 if|if
 condition|(
 name|bit
@@ -6065,6 +6504,7 @@ comment|/*  * this routine is used to modify bits in ptes  */
 end_comment
 
 begin_function
+name|__inline
 name|void
 name|pmap_changebit
 parameter_list|(
@@ -6122,7 +6562,7 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Loop over all current mappings setting/clearing as appropos 	 * If setting RO do we need to clear the VAC? 	 */
+comment|/* 	 * Loop over all current mappings setting/clearing as appropos If 	 * setting RO do we need to clear the VAC? 	 */
 if|if
 condition|(
 name|pv
@@ -6334,6 +6774,134 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	pmap_is_referenced:  *  *	Return whether or not the specified physical page was referenced  *	by any physical maps.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|pmap_is_referenced
+parameter_list|(
+name|vm_offset_t
+name|pa
+parameter_list|)
+block|{
+return|return
+name|pmap_testbit
+argument_list|(
+operator|(
+name|pa
+operator|)
+argument_list|,
+name|PG_U
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	pmap_is_modified:  *  *	Return whether or not the specified physical page was modified  *	in any physical maps.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|pmap_is_modified
+parameter_list|(
+name|vm_offset_t
+name|pa
+parameter_list|)
+block|{
+return|return
+name|pmap_testbit
+argument_list|(
+operator|(
+name|pa
+operator|)
+argument_list|,
+name|PG_M
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	Clear the modify bits on the specified physical page.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_clear_modify
+parameter_list|(
+name|vm_offset_t
+name|pa
+parameter_list|)
+block|{
+name|pmap_changebit
+argument_list|(
+operator|(
+name|pa
+operator|)
+argument_list|,
+name|PG_M
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	pmap_clear_reference:  *  *	Clear the reference bit on the specified physical page.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_clear_reference
+parameter_list|(
+name|vm_offset_t
+name|pa
+parameter_list|)
+block|{
+name|pmap_changebit
+argument_list|(
+operator|(
+name|pa
+operator|)
+argument_list|,
+name|PG_U
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	Routine:	pmap_copy_on_write  *	Function:  *		Remove write privileges from all  *		physical maps for this physical page.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_copy_on_write
+parameter_list|(
+name|vm_offset_t
+name|pa
+parameter_list|)
+block|{
+name|pmap_changebit
+argument_list|(
+operator|(
+name|pa
+operator|)
+argument_list|,
+name|PG_RW
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Miscellaneous support routines follow  */
 end_comment
 
@@ -6379,7 +6947,7 @@ name|VM_PROT_NONE
 operator||
 name|VM_PROT_NONE
 case|:
-comment|/* 		 * Read access is also 0. There isn't any execute 		 * bit, so just make it readable. 		 */
+comment|/* 			 * Read access is also 0. There isn't any execute bit, 			 * so just make it readable. 			 */
 case|case
 name|VM_PROT_READ
 operator||
