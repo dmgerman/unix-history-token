@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* if_en.c 4.4 81/11/04 */
+comment|/* if_en.c 4.5 81/11/07 */
 end_comment
 
 begin_include
@@ -383,9 +383,9 @@ name|addr
 operator|->
 name|en_ostat
 operator|=
-name|IEN
+name|EN_IEN
 operator||
-name|GO
+name|EN_GO
 expr_stmt|;
 name|DELAY
 argument_list|(
@@ -1605,9 +1605,9 @@ name|addr
 operator|->
 name|en_ostat
 operator|=
-name|IEN
+name|EN_IEN
 operator||
-name|GO
+name|EN_GO
 expr_stmt|;
 block|}
 end_block
@@ -1722,9 +1722,9 @@ name|addr
 operator|->
 name|en_istat
 operator|=
-name|IEN
+name|EN_IEN
 operator||
-name|GO
+name|EN_GO
 expr_stmt|;
 block|}
 end_block
@@ -1843,7 +1843,7 @@ name|addr
 operator|->
 name|en_ostat
 operator|&
-name|ERROR
+name|EN_OERROR
 condition|)
 name|printf
 argument_list|(
@@ -2159,7 +2159,7 @@ name|addr
 operator|->
 name|en_istat
 operator|&
-name|ERROR
+name|EN_IERROR
 condition|)
 block|{
 ifdef|#
@@ -2806,9 +2806,9 @@ name|addr
 operator|->
 name|en_istat
 operator|=
-name|IEN
+name|EN_IEN
 operator||
-name|GO
+name|EN_GO
 expr_stmt|;
 block|}
 end_block
