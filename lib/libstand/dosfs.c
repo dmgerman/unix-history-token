@@ -42,6 +42,7 @@ specifier|static
 name|int
 name|dos_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
@@ -1108,6 +1109,7 @@ specifier|static
 name|int
 name|dos_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
