@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.6 83/08/16"
+literal|"@(#)cmd2.c	3.7 83/08/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,7 +115,17 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%%{1-9}  Select window {1-9}.\n"
+literal|"%%{1-9}  Select window {1-9} but stay in command mode.\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"escape  Return to conversation mode and don't change the current window.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -175,7 +185,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[^U^D]  Scroll [up, down] half a window.\n"
+literal|"{^Y^E}  Scroll {up, down} one line\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -185,7 +195,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[^B^F]  Scroll [up, down] a full window.\n"
+literal|"{^U^D}  Scroll {up, down} half a window.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -195,7 +205,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[hjkl]  Move cursor [left, down, up, right].\n"
+literal|"{^B^F}  Scroll {up, down} a full window.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -205,7 +215,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"escape  Exit command mode.\n"
+literal|"{hjkl}  Move cursor {left, down, up, right}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -235,7 +245,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|".       Quit.\n"
+literal|"q       Quit.\n"
 argument_list|)
 expr_stmt|;
 name|waitnl
@@ -270,27 +280,17 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":refresh {1-9} [off]    Turn on (or off) refresh after every newline\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"                        for window {1-9}.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
 literal|":label {1-9} string     Label window {1-9}.\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":write {1-9} string     Write ``strings'' to window {1-9}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -330,7 +330,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"                        with nr rows and nc colomns\n"
+literal|"                        with nr rows and nc colomns.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -340,7 +340,17 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":source filename        Execute the commands in `filename'.\n"
+literal|":close {1-9}            Close window.\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":source filename        Execute commands in ``filename''.\n"
 argument_list|)
 expr_stmt|;
 name|waitnl
@@ -1014,7 +1024,18 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%c   %s\n"
+literal|"%c %c   %s\n"
+argument_list|,
+name|window
+index|[
+name|i
+index|]
+operator|==
+name|selwin
+condition|?
+literal|'*'
+else|:
+literal|' '
 argument_list|,
 name|i
 operator|+
