@@ -2836,6 +2836,9 @@ name|clear
 argument_list|()
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|__ia64__
 case|case
 literal|'|'
 case|:
@@ -2884,6 +2887,8 @@ name|clear
 argument_list|()
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'\033'
 case|:
@@ -3850,11 +3855,6 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__amd64__
 argument_list|)
 if|if
@@ -3894,8 +3894,13 @@ argument_list|,
 name|boot2
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 if|if
 condition|(
 operator|!
