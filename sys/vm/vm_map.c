@@ -945,9 +945,6 @@ expr_stmt|;
 name|pmap_init2
 argument_list|()
 expr_stmt|;
-name|vm_object_init2
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 

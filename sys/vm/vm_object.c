@@ -502,6 +502,21 @@ name|vm_object_t
 operator|)
 name|mem
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|object
+operator|->
+name|mtx
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|object
+operator|->
+name|mtx
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* These are true for any object that has been freed */
 name|object
 operator|->
@@ -541,21 +556,6 @@ block|{
 name|int
 name|incr
 decl_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|object
-operator|->
-name|mtx
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|object
-operator|->
-name|mtx
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -862,15 +862,6 @@ name|VM_OBJECTS_INIT
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
-name|void
-name|vm_object_init2
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
 end_function
 
 begin_function
@@ -5424,6 +5415,14 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_object_list_mtx
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|backing_object
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 name|uma_zfree
