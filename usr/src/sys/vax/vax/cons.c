@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.13	82/03/13	*/
+comment|/*	cons.c	4.14	82/08/13	*/
 end_comment
 
 begin_comment
@@ -300,12 +300,22 @@ begin_macro
 name|cnread
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -335,6 +345,8 @@ name|l_read
 operator|)
 operator|(
 name|tp
+operator|,
+name|uio
 operator|)
 expr_stmt|;
 block|}
