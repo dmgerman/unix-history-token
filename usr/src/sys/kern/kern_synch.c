@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	6.5	84/12/20	*/
+comment|/*	kern_synch.c	6.6	85/03/18	*/
 end_comment
 
 begin_include
@@ -704,7 +704,25 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|panicstr
+condition|)
+block|{
+comment|/* 		 * After a panic, just give interrupts a chance, 		 * then just return; don't run any other procs  		 * or panic below, in case this is the idle process 		 * and already asleep. 		 * The splnet should be spl0 if the network was being used 		 * by the filesystem, but for now avoid network interrupts 		 * that might cause another panic. 		 */
 operator|(
+name|void
+operator|)
+name|splnet
+argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|chan
 operator|==
 literal|0
@@ -718,15 +736,6 @@ operator|||
 name|rp
 operator|->
 name|p_rlink
-operator|)
-operator|&&
-name|panicstr
-operator|==
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
 condition|)
 name|panic
 argument_list|(
