@@ -1758,11 +1758,89 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set frame list */
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+comment|/* PR1 */
+if|if
+condition|(
+name|UREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_FLBASEADDR
+argument_list|)
+operator|!=
+name|DMAADDR
+argument_list|(
+operator|&
+name|dma
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"PR1:before busreset: FLBASEADDR = 0x%08x != DMADDR(&dma) = 0x%08x\n"
+argument_list|,
+name|UREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_FLBASEADDR
+argument_list|)
+argument_list|,
+name|DMAADDR
+argument_list|(
+operator|&
+name|dma
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|uhci_busreset
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+comment|/* PR1 */
+if|if
+condition|(
+name|UREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_FLBASEADDR
+argument_list|)
+operator|!=
+name|DMAADDR
+argument_list|(
+operator|&
+name|dma
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"PR1:after busreset: FLBASEADDR = 0x%08x != DMADDR(&dma) = 0x%08x\n"
+argument_list|,
+name|UREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_FLBASEADDR
+argument_list|)
+argument_list|,
+name|DMAADDR
+argument_list|(
+operator|&
+name|dma
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Allocate the dummy QH where bulk traffic will be queued. */
 name|bsqh
 operator|=
@@ -2155,7 +2233,7 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"%s; regs: cmd=%04x, sts=%04x, intr=%04x, frnum=%04x, "
+literal|"%s: regs: cmd=%04x, sts=%04x, intr=%04x, frnum=%04x, "
 literal|"flbase=%08x, sof=%02x, portsc1=%04x, portsc2=%04x, "
 literal|"legsup=%04x\n"
 argument_list|,
@@ -4677,6 +4755,21 @@ name|n
 decl_stmt|,
 name|running
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+name|printf
+argument_list|(
+literal|"PR1:uhci_run:start: "
+argument_list|)
+expr_stmt|;
+name|uhci_dumpregs
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|s
 operator|=
 name|splusb
@@ -4711,6 +4804,21 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+name|printf
+argument_list|(
+literal|"PR1:uhci_run:do_nothing: "
+argument_list|)
+expr_stmt|;
+name|uhci_dumpregs
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION
@@ -4774,6 +4882,23 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+name|printf
+argument_list|(
+literal|"PR1:uhci_run:succeed(%d): "
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|uhci_dumpregs
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION
@@ -4819,6 +4944,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
+name|printf
+argument_list|(
+literal|"PR1:uhci_run:fail: "
+argument_list|)
+expr_stmt|;
 name|uhci_dumpregs
 argument_list|(
 name|sc
