@@ -548,6 +548,13 @@ operator|->
 name|PstateCnt
 expr_stmt|;
 comment|/* validate the offset/width */
+if|if
+condition|(
+name|cpu_duty_width
+operator|>
+literal|0
+condition|)
+block|{
 name|duty_end
 operator|=
 name|cpu_duty_offset
@@ -599,6 +606,7 @@ name|cpu_duty_width
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 comment|/*  	 * Start the throttling process once the probe phase completes, if we think that 	 * it's going to be useful.  If the duty width value is zero, there are no significant 	 * bits in the register and thus no throttled states. 	 */
 if|if
