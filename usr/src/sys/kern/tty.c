@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.6	81/03/22	*/
+comment|/*	tty.c	4.7	81/07/05	*/
 end_comment
 
 begin_comment
@@ -1782,6 +1782,28 @@ name|iocb
 operator|.
 name|sg_flags
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|RAW
+condition|)
+block|{
+name|tp
+operator|->
+name|t_state
+operator|&=
+operator|~
+name|TTSTOP
+expr_stmt|;
+name|ttstart
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
