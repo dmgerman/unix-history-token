@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.2 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2010,8 +2010,7 @@ index|]
 operator|.
 name|n_type
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 goto|goto
 name|dh
@@ -2119,8 +2118,7 @@ index|]
 operator|.
 name|n_type
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 return|return;
 name|lseek
