@@ -3553,10 +3553,16 @@ name|netclear
 argument_list|()
 expr_stmt|;
 comment|/* clear the path to the network */
-name|NET2ADD
+name|NETADD
 argument_list|(
 name|IAC
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|setneturg
+argument_list|()
+expr_stmt|;
+name|NETADD
+argument_list|(
 name|DM
 argument_list|)
 expr_stmt|;

@@ -22,8 +22,12 @@ decl_stmt|,
 comment|/* lowest address in buffer */
 modifier|*
 name|top
-decl_stmt|;
+decl_stmt|,
 comment|/* highest address+1 in buffer */
+modifier|*
+name|mark
+decl_stmt|;
+comment|/* marker (user defined) */
 name|int
 name|size
 decl_stmt|;
