@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.3 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,6 +338,35 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TCSETA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TCSETA
+value|TIOCSETA
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCGETA
+value|TIOCGETA
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 4.4BSD */
+end_comment
 
 begin_decl_stmt
 name|struct
