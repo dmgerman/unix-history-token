@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fgets.c	8.1 (Berkeley) %G%"
+literal|"@(#)fgets.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,8 +99,8 @@ decl_stmt|;
 if|if
 condition|(
 name|n
-operator|<
-literal|2
+operator|==
+literal|0
 condition|)
 comment|/* sanity check */
 return|return
@@ -116,7 +116,12 @@ name|n
 operator|--
 expr_stmt|;
 comment|/* leave space for NUL */
-do|do
+while|while
+condition|(
+name|n
+operator|!=
+literal|0
+condition|)
 block|{
 comment|/* 		 * If the buffer is empty, refill it. 		 */
 if|if
@@ -288,18 +293,11 @@ name|s
 operator|+=
 name|len
 expr_stmt|;
-block|}
-do|while
-condition|(
-operator|(
 name|n
 operator|-=
 name|len
-operator|)
-operator|!=
-literal|0
-condition|)
-do|;
+expr_stmt|;
+block|}
 operator|*
 name|s
 operator|=
