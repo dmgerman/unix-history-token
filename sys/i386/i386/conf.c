@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.19 1993/11/27 06:50:45 rich Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.20 1994/01/04 20:08:56 nate Exp $  */
 end_comment
 
 begin_include
@@ -2136,95 +2136,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"dcfclk.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NDCFCLK
-operator|>
-literal|0
-end_if
-
-begin_decl_stmt
-name|d_open_t
-name|dcfclkopen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_close_t
-name|dcfclkclose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_rdwr_t
-name|dcfclkread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_ioctl_t
-name|dcfclkioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_select_t
-name|dcfclkselect
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|dcfclkopen
-value|(d_open_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|dcfclkclose
-value|(d_close_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|dcfclkread
-value|(d_rdwr_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|dcfclkioctl
-value|(d_ioctl_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|dcfclkselect
-value|(d_select_t *)enxio
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|"lpa.h"
 end_include
 
@@ -3451,16 +3362,16 @@ name|NULL
 block|}
 block|,
 block|{
-name|dcfclkopen
+name|noopen
 block|,
-name|dcfclkclose
+name|noclose
 block|,
-name|dcfclkread
+name|noread
 block|,
 name|nowrite
 block|,
 comment|/*24*/
-name|dcfclkioctl
+name|noioc
 block|,
 name|nostop
 block|,
@@ -3468,8 +3379,8 @@ name|nullreset
 block|,
 name|NULL
 block|,
-comment|/* dcfclk */
-name|dcfclkselect
+comment|/* FREE */
+name|noselect
 block|,
 name|nommap
 block|,
