@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1779,10 +1779,10 @@ name|char
 name|proc0paddr
 index|[]
 decl_stmt|,
-name|u
+name|kstack
 index|[]
 decl_stmt|;
-comment|/* XXX! */
+comment|/* XXX */
 specifier|extern
 name|char
 modifier|*
@@ -1817,13 +1817,13 @@ name|UPAGES
 operator|*
 name|NBPG
 operator|||
-name|u
+name|kstack
 operator|<=
 name|addr
 operator|&&
 name|addr
 operator|<
-name|u
+name|kstack
 operator|+
 name|UPAGES
 operator|*
