@@ -680,6 +680,18 @@ name|initializing
 operator|=
 literal|0
 expr_stmt|;
+comment|/*      * Also install a system notify handler even though this is not      * required by the specification.  The Casio FIVA needs this.      */
+name|AcpiInstallNotifyHandler
+argument_list|(
+name|handle
+argument_list|,
+name|ACPI_SYSTEM_NOTIFY
+argument_list|,
+name|acpi_acad_notify_handler
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 name|AcpiInstallNotifyHandler
 argument_list|(
 name|handle
