@@ -1222,9 +1222,13 @@ comment|/* want to go down */
 if|if
 condition|(
 operator|(
+operator|(
 name|vol
 operator|->
-name|opencount
+name|flags
+operator|&
+name|VF_OPEN
+operator|)
 operator|==
 literal|0
 operator|)
@@ -1610,7 +1614,7 @@ name|VF_CONFIG_SETUPSTATE
 operator|)
 condition|)
 block|{
-comment|/* 		 * Conceptually, an empty plex does not contain valid data, 		 * but normally we'll see this state when we have just 		 * created a plex, and it's either consistent from earlier, 		 * or we don't care about the previous contents (we're going 		 * to create a file system or use it for swap). 		 * 		 * We need to do this in one swell foop: on the next call 		 * we will no longer be just empty. 		 * 		 * This code assumes that all the other plexes are also 		 * capable of coming up (i.e. all the sds are up), but 		 * that's OK: we'll come back to this function for the remaining 		 * plexes in the volume.  		 */
+comment|/* 		 * Conceptually, an empty plex does not contain valid data, 		 * but normally we'll see this state when we have just 		 * created a plex, and it's either consistent from earlier, 		 * or we don't care about the previous contents (we're going 		 * to create a file system or use it for swap). 		 * 		 * We need to do this in one swell foop: on the next call 		 * we will no longer be just empty. 		 * 		 * This code assumes that all the other plexes are also 		 * capable of coming up (i.e. all the sds are up), but 		 * that's OK: we'll come back to this function for the 		 * remaining plexes in the volume.  		 */
 name|struct
 name|volume
 modifier|*
