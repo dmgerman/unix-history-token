@@ -2318,6 +2318,13 @@ name|if_hwassist
 operator|=
 name|GX_CSUM_FEATURES
 expr_stmt|;
+else|else
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+literal|0
+expr_stmt|;
 name|ctrl
 operator||=
 name|GX_RXC_STRIP_ETHERCRC
@@ -6812,7 +6819,9 @@ name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_hwassist
+name|if_capenable
+operator|&
+name|IFCAP_TXCSUM
 condition|)
 block|{
 name|tx
