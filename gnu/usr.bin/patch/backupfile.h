@@ -4,6 +4,10 @@ comment|/* backupfile.h -- declarations for making Emacs style backup file names
 end_comment
 
 begin_comment
+comment|/*  * $FreeBSD$  */
+end_comment
+
+begin_comment
 comment|/* When to make backup files. */
 end_comment
 

@@ -4,8 +4,22 @@ comment|/* backupfile.c -- make Emacs style backup file names    Copyright (C) 1
 end_comment
 
 begin_comment
-comment|/* Written by David MacKenzie<djm@gnu.ai.mit.edu>.    Some algorithms adapted from GNU Emacs. */
+comment|/* Written by David MacKenzie<djm@gnu.ai.mit.edu>.    Some algorithms adapted from GNU Emacs.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
