@@ -439,7 +439,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static long name; \ 	SYSCTL_LONG(_debug_pmap_stats, OID_AUTO, name, CTLFLAG_RD, \&name, 0, "")
+value|static long name; \ 	SYSCTL_LONG(_debug_pmap_stats, OID_AUTO, name, CTLFLAG_RW, \&name, 0, "")
 end_define
 
 begin_define
