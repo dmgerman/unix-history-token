@@ -1008,21 +1008,21 @@ name|EPERM
 operator|)
 return|;
 comment|/* We should only ever be in here for contested locks */
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 operator|(
 name|owner
 operator|&
 name|UMTX_CONTESTED
 operator|)
-operator|!=
+operator|==
 literal|0
-argument_list|,
+condition|)
+return|return
 operator|(
-literal|"contested umtx is not."
+name|EINVAL
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 name|blocked
 operator|=
 name|NULL
