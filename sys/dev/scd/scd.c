@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.4 1995/05/09 12:25:58 rgrimes Exp $ */
+comment|/* $Id: scd.c,v 1.5 1995/05/30 08:03:02 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -522,6 +522,17 @@ name|scdopen
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -532,6 +543,17 @@ name|scdclose
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -563,6 +585,11 @@ name|addr
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1246,6 +1273,17 @@ name|scdopen
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -1485,6 +1523,17 @@ name|scdclose
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -2104,6 +2153,11 @@ name|addr
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|struct

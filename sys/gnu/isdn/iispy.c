@@ -5,12 +5,12 @@ name|char
 name|_ispyid
 index|[]
 init|=
-literal|"@(#)$Id: iispy.c,v 1.2 1995/02/15 06:28:27 jkh Exp $"
+literal|"@(#)$Id: iispy.c,v 1.3 1995/03/28 07:54:40 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.2 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iispy.c,v $  * Revision 1.2  1995/02/15  06:28:27  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:29  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.3 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iispy.c,v $  * Revision 1.3  1995/03/28  07:54:40  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.2  1995/02/15  06:28:27  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:29  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_include
@@ -409,7 +409,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -480,7 +488,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|struct
@@ -534,25 +550,23 @@ begin_function
 name|int
 name|ispyioctl
 parameter_list|(
-name|dev
-parameter_list|,
-name|cmd
-parameter_list|,
-name|data
-parameter_list|,
-name|flag
-parameter_list|)
 name|dev_t
 name|dev
-decl_stmt|;
-name|caddr_t
-name|data
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|,
-name|flag
-decl_stmt|;
+parameter_list|,
+name|caddr_t
+name|data
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|int
 name|unit
@@ -593,6 +607,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+parameter_list|,
+name|int
+name|ioflag
 parameter_list|)
 block|{
 name|int

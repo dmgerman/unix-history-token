@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.5 1995/04/12 20:47:40 wollman Exp $  */
+comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.6 1995/05/30 08:01:27 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -486,7 +486,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|struct
@@ -764,7 +772,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -838,6 +854,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+parameter_list|,
+name|int
+name|ioflag
 parameter_list|)
 block|{
 name|int
@@ -1079,6 +1098,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+parameter_list|,
+name|int
+name|ioflag
 parameter_list|)
 block|{
 name|int
@@ -1323,7 +1345,12 @@ name|caddr_t
 name|data
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int

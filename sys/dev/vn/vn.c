@@ -399,7 +399,7 @@ operator|(
 name|dev_t
 name|dev
 operator|,
-name|u_long
+name|int
 name|cmd
 operator|,
 name|caddr_t
@@ -480,7 +480,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|size_t
+name|int
 name|vnsize
 name|__P
 argument_list|(
@@ -1796,7 +1796,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|u_long
+name|int
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -2749,7 +2749,7 @@ block|}
 end_function
 
 begin_function
-name|size_t
+name|int
 name|vnsize
 parameter_list|(
 name|dev_t

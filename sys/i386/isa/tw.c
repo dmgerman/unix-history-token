@@ -1189,6 +1189,8 @@ parameter_list|(
 name|dev
 parameter_list|,
 name|uio
+parameter_list|,
+name|ioflag
 parameter_list|)
 name|dev_t
 name|dev
@@ -1197,6 +1199,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+name|int
+name|ioflag
 decl_stmt|;
 block|{
 name|u_char
@@ -1292,6 +1297,8 @@ parameter_list|(
 name|dev
 parameter_list|,
 name|uio
+parameter_list|,
+name|ioflag
 parameter_list|)
 name|dev_t
 name|dev
@@ -1300,6 +1307,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+name|int
+name|ioflag
 decl_stmt|;
 block|{
 name|struct
