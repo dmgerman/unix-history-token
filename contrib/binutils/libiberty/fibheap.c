@@ -330,6 +330,9 @@ name|node
 decl_stmt|;
 name|node
 operator|=
+operator|(
+name|fibnode_t
+operator|)
 name|xcalloc
 argument_list|(
 literal|1
@@ -883,7 +886,7 @@ name|void
 modifier|*
 name|odata
 decl_stmt|;
-name|int
+name|fibheapkey_t
 name|okey
 decl_stmt|;
 name|fibnode_t

@@ -104,11 +104,11 @@ name|bfd_arch_rs6000
 case|:
 if|if
 condition|(
-name|a
+name|b
 operator|->
 name|mach
 operator|==
-literal|0
+name|bfd_mach_rs6k
 condition|)
 return|return
 name|a
@@ -154,7 +154,7 @@ literal|"powerpc:common64"
 block|,
 literal|3
 block|,
-name|true
+name|TRUE
 block|,
 comment|/* default for 64 bit target */
 name|powerpc_compatible
@@ -190,7 +190,7 @@ literal|"powerpc:common"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|powerpc_compatible
 block|,
@@ -227,7 +227,7 @@ literal|"powerpc:common"
 block|,
 literal|3
 block|,
-name|true
+name|TRUE
 block|,
 comment|/* default for 32 bit target */
 name|powerpc_compatible
@@ -262,7 +262,7 @@ literal|"powerpc:common64"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|powerpc_compatible
 block|,
@@ -297,7 +297,7 @@ literal|"powerpc:603"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -331,7 +331,7 @@ literal|"powerpc:EC603e"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -365,7 +365,7 @@ literal|"powerpc:604"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -399,7 +399,7 @@ literal|"powerpc:403"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -433,7 +433,7 @@ literal|"powerpc:601"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -467,7 +467,7 @@ literal|"powerpc:620"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -501,7 +501,7 @@ literal|"powerpc:630"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -535,7 +535,7 @@ literal|"powerpc:a35"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -569,7 +569,7 @@ literal|"powerpc:rs64ii"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -603,7 +603,7 @@ literal|"powerpc:rs64iii"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -637,7 +637,7 @@ literal|"powerpc:7400"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible
@@ -663,6 +663,39 @@ block|,
 comment|/* 8 bits in a byte */
 name|bfd_arch_powerpc
 block|,
+name|bfd_mach_ppc_e500
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:e500"
+block|,
+literal|3
+block|,
+name|FALSE
+block|,
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|bfd_powerpc_archs
+index|[
+literal|14
+index|]
+block|}
+block|,
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
 name|bfd_mach_ppc_860
 block|,
 literal|"powerpc"
@@ -671,7 +704,7 @@ literal|"powerpc:MPC8XX"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|powerpc_compatible

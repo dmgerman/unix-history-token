@@ -95,12 +95,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|USE_RELA
-end_define
-
-begin_define
-define|#
-directive|define
 name|TARGET_LITTLE_SYM
 value|bfd_elf32_littlearm_oabi_vec
 end_define
@@ -182,7 +176,7 @@ operator|,
 name|arelent
 operator|*
 operator|,
-name|Elf32_Internal_Rela
+name|Elf_Internal_Rela
 operator|*
 operator|)
 argument_list|)
@@ -228,7 +222,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -243,7 +237,7 @@ comment|/* special_function */
 literal|"R_ARM_NONE"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -252,7 +246,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -270,7 +264,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|24
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -285,7 +279,7 @@ comment|/* special_function */
 literal|"R_ARM_PC24"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x00ffffff
@@ -294,7 +288,7 @@ comment|/* src_mask */
 literal|0x00ffffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -313,7 +307,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -328,7 +322,7 @@ comment|/* special_function */
 literal|"R_ARM_ABS32"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -337,7 +331,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -356,7 +350,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -371,7 +365,7 @@ comment|/* special_function */
 literal|"R_ARM_REL32"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -380,7 +374,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -399,7 +393,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|8
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -414,7 +408,7 @@ comment|/* special_function */
 literal|"R_ARM_ABS8"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x000000ff
@@ -423,7 +417,7 @@ comment|/* src_mask */
 literal|0x000000ff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -442,7 +436,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -457,7 +451,7 @@ comment|/* special_function */
 literal|"R_ARM_ABS16"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -466,7 +460,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -485,7 +479,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|12
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -500,7 +494,7 @@ comment|/* special_function */
 literal|"R_ARM_ABS12"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x000008ff
@@ -509,7 +503,7 @@ comment|/* src_mask */
 literal|0x000008ff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -527,7 +521,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|5
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -542,7 +536,7 @@ comment|/* special_function */
 literal|"R_ARM_THM_ABS5"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x000007e0
@@ -551,7 +545,7 @@ comment|/* src_mask */
 literal|0x000007e0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -569,7 +563,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|23
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -584,7 +578,7 @@ comment|/* special_function */
 literal|"R_ARM_THM_PC22"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x07ff07ff
@@ -593,7 +587,7 @@ comment|/* src_mask */
 literal|0x07ff07ff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -611,7 +605,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -626,7 +620,7 @@ comment|/* special_function */
 literal|"R_ARM_SBREL32"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -635,7 +629,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -653,7 +647,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|8
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -668,7 +662,7 @@ comment|/* special_function */
 literal|"R_ARM_AMP_VCALL9"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x000000ff
@@ -677,7 +671,7 @@ comment|/* src_mask */
 literal|0x000000ff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -696,7 +690,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|11
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -711,7 +705,7 @@ comment|/* special_function */
 literal|"R_ARM_THM_PC11"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x000007ff
@@ -720,7 +714,7 @@ comment|/* src_mask */
 literal|0x000007ff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -739,7 +733,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|8
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -754,7 +748,7 @@ comment|/* special_function */
 literal|"R_ARM_THM_PC9"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x000000ff
@@ -763,7 +757,7 @@ comment|/* src_mask */
 literal|0x000000ff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -782,7 +776,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -797,7 +791,7 @@ comment|/* special_function */
 literal|"R_ARM_GNU_VTINHERIT"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -806,7 +800,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -825,7 +819,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -840,7 +834,7 @@ comment|/* special_function */
 literal|"R_ARM_GNU_VTENTRY"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -849,7 +843,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -868,7 +862,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|26
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -883,7 +877,7 @@ comment|/* special_function */
 literal|"R_ARM_PLT32"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x00ffffff
@@ -892,7 +886,7 @@ comment|/* src_mask */
 literal|0x00ffffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -911,7 +905,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -926,7 +920,7 @@ comment|/* special_function */
 literal|"R_ARM_RREL32"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -935,7 +929,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -953,7 +947,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -968,7 +962,7 @@ comment|/* special_function */
 literal|"R_ARM_RABS32"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -977,7 +971,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -995,7 +989,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1010,7 +1004,7 @@ comment|/* special_function */
 literal|"R_ARM_RPC24"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -1019,7 +1013,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1037,7 +1031,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-argument|false
+argument|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1052,7 +1046,7 @@ comment|/* special_function */
 literal|"R_ARM_RBASE"
 argument_list|,
 comment|/* name */
-argument|false
+argument|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -1061,7 +1055,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-argument|false
+argument|FALSE
 argument_list|)
 comment|/* pcrel_offset */
 block|}
@@ -1143,7 +1137,7 @@ name|arelent
 modifier|*
 name|bfd_reloc
 decl_stmt|;
-name|Elf32_Internal_Rela
+name|Elf_Internal_Rela
 modifier|*
 name|elf_reloc
 decl_stmt|;

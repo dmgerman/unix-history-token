@@ -71,153 +71,146 @@ begin_comment
 comment|/* Implements the .file FILENO "FILENAME" directive.  FILENO can be 0    to indicate that no file number has been assigned.  All real file    number must be>0.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|dwarf2_directive_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|dummy
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Implements the .loc FILENO LINENO [COLUMN] directive.  FILENO is    the file number, LINENO the line number and the (optional) COLUMN    the column of the source code that the following instruction    corresponds to.  FILENO can be 0 to indicate that the filename    specified by the textually most recent .file directive should be    used.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dwarf2_directive_loc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|dummy
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Returns the current source information.  If .file directives have    been encountered, the info for the corresponding source file is    returned.  Otherwise, the info for the assembly source file is    returned.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dwarf2_where
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dwarf2_line_info
-operator|*
+modifier|*
 name|l
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* This function generates .debug_line info based on the address and    source information passed in the arguments.  ADDR should be the    frag-relative offset of the instruction the information is for and    L is the source information that should be associated with that    address.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dwarf2_gen_line_info
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|addressT
 name|addr
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|dwarf2_line_info
-operator|*
+modifier|*
 name|l
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Must be called for each generated instruction.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dwarf2_emit_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dwarf2_finish
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|dwarf2dbg_estimate_size_before_relax
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|fragS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|dwarf2dbg_relax_frag
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|fragS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dwarf2dbg_convert_frag
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|fragS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* An enumeration which describes the sizes of offsets (to DWARF sections)    and the mechanism by which the size is indicated.  */
+end_comment
+
+begin_enum
+enum|enum
+name|dwarf2_format
+block|{
+comment|/* 32-bit format: the initial length field is 4 bytes long.  */
+name|dwarf2_format_32bit
+block|,
+comment|/* DWARF3 64-bit format: the representation of the initial length      (of a DWARF section) is 0xffffffff (4 bytes) followed by eight      bytes indicating the actual length.  */
+name|dwarf2_format_64bit
+block|,
+comment|/* SGI extension to DWARF2: The initial length is eight bytes.  */
+name|dwarf2_format_64bit_irix
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#

@@ -20,7 +20,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__STDC__
+name|ANSI_PROTOTYPES
 end_ifdef
 
 begin_include
@@ -45,6 +45,25 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|void
+name|bcopy
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|PTR

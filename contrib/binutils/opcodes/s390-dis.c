@@ -230,7 +230,7 @@ name|current_arch_mask
 operator|=
 literal|1
 operator|<<
-name|S390_OPCODE_ESAME
+name|S390_OPCODE_ZARCH
 expr_stmt|;
 break|break;
 default|default:
@@ -358,6 +358,39 @@ literal|1
 operator|)
 operator|-
 literal|1
+expr_stmt|;
+comment|/* Check for special long displacement case.  */
+if|if
+condition|(
+name|operand
+operator|->
+name|bits
+operator|==
+literal|20
+operator|&&
+name|operand
+operator|->
+name|shift
+operator|==
+literal|20
+condition|)
+name|val
+operator|=
+operator|(
+name|val
+operator|&
+literal|0xff
+operator|)
+operator|<<
+literal|12
+operator||
+operator|(
+name|val
+operator|&
+literal|0xfff00
+operator|)
+operator|>>
+literal|8
 expr_stmt|;
 comment|/* Sign extend value if the operand is signed or pc relative.  */
 if|if
@@ -745,7 +778,7 @@ operator|!
 operator|(
 name|opcode
 operator|->
-name|architecture
+name|modes
 operator|&
 name|current_arch_mask
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for ieee-695 objects.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.     Written by Steve Chamberlain of Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for ieee-695 objects.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.     Written by Steve Chamberlain of Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -68,7 +68,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_byte
 name|PARAMS
 argument_list|(
@@ -84,7 +84,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_2bytes
 name|PARAMS
 argument_list|(
@@ -100,7 +100,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_int
 name|PARAMS
 argument_list|(
@@ -116,7 +116,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_id
 name|PARAMS
 argument_list|(
@@ -183,7 +183,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_expression
 name|PARAMS
 argument_list|(
@@ -196,7 +196,7 @@ operator|,
 name|asymbol
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 name|unsigned
 name|int
@@ -223,7 +223,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_int5_out
 name|PARAMS
 argument_list|(
@@ -239,7 +239,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|parse_int
 name|PARAMS
 argument_list|(
@@ -264,7 +264,7 @@ operator|(
 name|common_header_type
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|)
 argument_list|)
@@ -301,7 +301,7 @@ operator|,
 name|ieee_symbol_index_type
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|,
 name|unsigned
@@ -370,7 +370,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_slurp_external_symbols
 name|PARAMS
 argument_list|(
@@ -384,7 +384,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_slurp_symbol_table
 name|PARAMS
 argument_list|(
@@ -413,7 +413,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|long
-name|ieee_get_symtab
+name|ieee_canonicalize_symtab
 name|PARAMS
 argument_list|(
 operator|(
@@ -466,7 +466,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_slurp_debug
 name|PARAMS
 argument_list|(
@@ -551,7 +551,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|do_one
 name|PARAMS
 argument_list|(
@@ -577,7 +577,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_slurp_section_data
 name|PARAMS
 argument_list|(
@@ -591,7 +591,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_new_section_hook
 name|PARAMS
 argument_list|(
@@ -624,7 +624,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_get_section_contents
 name|PARAMS
 argument_list|(
@@ -687,7 +687,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_section_part
 name|PARAMS
 argument_list|(
@@ -701,7 +701,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|do_with_relocs
 name|PARAMS
 argument_list|(
@@ -718,7 +718,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|do_as_repeat
 name|PARAMS
 argument_list|(
@@ -735,7 +735,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|do_without_relocs
 name|PARAMS
 argument_list|(
@@ -752,7 +752,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_mkobject
 name|PARAMS
 argument_list|(
@@ -982,7 +982,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_debug_part
 name|PARAMS
 argument_list|(
@@ -996,7 +996,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_data_part
 name|PARAMS
 argument_list|(
@@ -1010,7 +1010,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|init_for_output
 name|PARAMS
 argument_list|(
@@ -1024,7 +1024,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_set_section_contents
 name|PARAMS
 argument_list|(
@@ -1034,6 +1034,7 @@ operator|*
 operator|,
 name|sec_ptr
 operator|,
+specifier|const
 name|PTR
 operator|,
 name|file_ptr
@@ -1046,7 +1047,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_external_part
 name|PARAMS
 argument_list|(
@@ -1060,7 +1061,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_me_part
 name|PARAMS
 argument_list|(
@@ -1074,7 +1075,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_processor
 name|PARAMS
 argument_list|(
@@ -1088,7 +1089,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_object_contents
 name|PARAMS
 argument_list|(
@@ -1135,7 +1136,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_find_nearest_line
 name|PARAMS
 argument_list|(
@@ -1198,7 +1199,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1210,7 +1211,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_byte
 parameter_list|(
 name|abfd
@@ -1253,17 +1254,17 @@ operator|!=
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_2bytes
 parameter_list|(
 name|abfd
@@ -1322,17 +1323,17 @@ operator|!=
 literal|2
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_int
 parameter_list|(
 name|abfd
@@ -1368,7 +1369,7 @@ name|value
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -1377,8 +1378,8 @@ name|unsigned
 name|int
 name|length
 decl_stmt|;
-comment|/* How many significant bytes ? */
-comment|/* FIXME FOR LONGER INTS */
+comment|/* How many significant bytes ?  */
+comment|/* FIXME FOR LONGER INTS.  */
 if|if
 condition|(
 name|value
@@ -1437,7 +1438,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 switch|switch
 condition|(
@@ -1465,7 +1466,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Fall through.  */
 case|case
@@ -1489,7 +1490,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Fall through.  */
 case|case
@@ -1513,7 +1514,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Fall through.  */
 case|case
@@ -1535,19 +1536,19 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_id
 parameter_list|(
 name|abfd
@@ -1593,7 +1594,7 @@ name|length
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 elseif|else
@@ -1626,7 +1627,7 @@ name|length
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 elseif|else
@@ -1659,7 +1660,7 @@ name|length
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -1688,7 +1689,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -1711,10 +1712,10 @@ operator|!=
 name|length
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1723,7 +1724,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*************************************************************************** Functions for reading from ieee files in the strange way that the standard requires: */
+comment|/* Functions for reading from ieee files in the strange way that the    standard requires.  */
 end_comment
 
 begin_define
@@ -1838,7 +1839,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|string
 index|[
 name|i
@@ -1849,7 +1849,6 @@ argument_list|(
 name|ieee
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1887,7 +1886,7 @@ operator|<=
 literal|0x7f
 condition|)
 block|{
-comment|/* Simple string of length 0 to 127 */
+comment|/* Simple string of length 0 to 127.  */
 block|}
 elseif|else
 if|if
@@ -1897,7 +1896,7 @@ operator|==
 literal|0xde
 condition|)
 block|{
-comment|/* Length is next byte, allowing 0..255 */
+comment|/* Length is next byte, allowing 0..255.  */
 name|length
 operator|=
 name|this_byte_and_next
@@ -1914,7 +1913,7 @@ operator|==
 literal|0xdf
 condition|)
 block|{
-comment|/* Length is next two bytes, allowing 0..65535 */
+comment|/* Length is next two bytes, allowing 0..65535.  */
 name|length
 operator|=
 name|this_byte_and_next
@@ -1936,7 +1935,7 @@ name|ieee
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Buy memory and read string */
+comment|/* Buy memory and read string.  */
 name|string
 operator|=
 name|bfd_alloc
@@ -1985,7 +1984,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_expression
 parameter_list|(
 name|abfd
@@ -2009,7 +2008,7 @@ name|asymbol
 modifier|*
 name|symbol
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|pcrel
 decl_stmt|;
 name|unsigned
@@ -2041,12 +2040,20 @@ name|value
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|term_count
 operator|++
 expr_stmt|;
 block|}
+comment|/* Badly formatted binaries can have a missing symbol,      so test here to prevent a seg fault.  */
+if|if
+condition|(
+name|symbol
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|bfd_is_com_section
@@ -2064,7 +2071,7 @@ name|section
 argument_list|)
 condition|)
 block|{
-comment|/* Def of a common symbol */
+comment|/* Def of a common symbol.  */
 if|if
 condition|(
 operator|!
@@ -2086,7 +2093,7 @@ name|value
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|term_count
 operator|++
@@ -2104,7 +2111,7 @@ name|section
 argument_list|)
 condition|)
 block|{
-comment|/* Ref to defined symbol - */
+comment|/* Ref to defined symbol -  */
 if|if
 condition|(
 name|symbol
@@ -2135,7 +2142,7 @@ name|value
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|term_count
 operator|++
@@ -2155,7 +2162,7 @@ name|BSF_SECTION_SYM
 operator|)
 condition|)
 block|{
-comment|/* This is a reference to a defined local symbol.  We can 	     easily do a local as a section+offset.  */
+comment|/* This is a reference to a defined local symbol.  We can 		 easily do a local as a section+offset.  */
 if|if
 condition|(
 operator|!
@@ -2186,7 +2193,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|term_count
 operator|++
@@ -2213,7 +2220,7 @@ name|value
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|term_count
 operator|++
@@ -2253,8 +2260,9 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
+block|}
 block|}
 block|}
 if|if
@@ -2262,7 +2270,7 @@ condition|(
 name|pcrel
 condition|)
 block|{
-comment|/* subtract the pc from here by asking for PC of this section*/
+comment|/* Subtract the pc from here by asking for PC of this section.  */
 if|if
 condition|(
 operator|!
@@ -2297,7 +2305,7 @@ name|ieee_function_minus_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Handle the degenerate case of a 0 address.  */
@@ -2307,7 +2315,6 @@ name|term_count
 operator|==
 literal|0
 condition|)
-block|{
 if|if
 condition|(
 operator|!
@@ -2322,9 +2329,8 @@ literal|0
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-block|}
 while|while
 condition|(
 name|term_count
@@ -2343,14 +2349,14 @@ name|ieee_function_plus_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|term_count
 operator|--
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2359,11 +2365,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*****************************************************************************/
-end_comment
-
-begin_comment
-comment|/* writes any integer into the buffer supplied and always takes 5 bytes */
+comment|/* Writes any integer into the buffer supplied and always takes 5 bytes.  */
 end_comment
 
 begin_function
@@ -2450,7 +2452,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_int5_out
 parameter_list|(
 name|abfd
@@ -2498,17 +2500,17 @@ operator|!=
 literal|5
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|parse_int
 parameter_list|(
 name|ieee
@@ -2557,7 +2559,7 @@ name|ieee
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 elseif|else
@@ -2617,11 +2619,11 @@ operator|=
 name|result
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -2639,7 +2641,7 @@ name|common_header_type
 modifier|*
 name|ieee
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|ok
 decl_stmt|;
@@ -2735,7 +2737,7 @@ begin_define
 define|#
 directive|define
 name|PCREL_OFFSET
-value|false
+value|FALSE
 end_define
 
 begin_else
@@ -2757,7 +2759,7 @@ begin_define
 define|#
 directive|define
 name|PCREL_OFFSET
-value|true
+value|TRUE
 end_define
 
 begin_endif
@@ -2780,7 +2782,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -2790,13 +2792,13 @@ literal|0
 argument_list|,
 literal|"abs32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2816,7 +2818,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -2826,13 +2828,13 @@ literal|0
 argument_list|,
 literal|"abs16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2852,7 +2854,7 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -2862,13 +2864,13 @@ literal|0
 argument_list|,
 literal|"abs8"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x000000ff
 argument_list|,
 literal|0x000000ff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2888,7 +2890,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -2898,7 +2900,7 @@ literal|0
 argument_list|,
 literal|"rel32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|SRC_MASK
 argument_list|(
@@ -2927,7 +2929,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -2937,7 +2939,7 @@ literal|0
 argument_list|,
 literal|"rel16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|SRC_MASK
 argument_list|(
@@ -2966,7 +2968,7 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -2976,7 +2978,7 @@ literal|0
 argument_list|,
 literal|"rel8"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|SRC_MASK
 argument_list|(
@@ -3032,7 +3034,7 @@ name|ieee_symbol_index_type
 modifier|*
 name|symbol
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|pcrel
 decl_stmt|;
@@ -3067,10 +3069,10 @@ define|#
 directive|define
 name|DEC
 value|sp--;
-name|boolean
+name|bfd_boolean
 name|loop
 init|=
-name|true
+name|TRUE
 decl_stmt|;
 name|ieee_value_type
 name|stack
@@ -3078,7 +3080,7 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-comment|/* The stack pointer always points to the next unused location */
+comment|/* The stack pointer always points to the next unused location.  */
 define|#
 directive|define
 name|PUSH
@@ -3144,7 +3146,7 @@ block|{
 case|case
 name|ieee_variable_P_enum
 case|:
-comment|/* P variable, current program counter for section n */
+comment|/* P variable, current program counter for section n.  */
 block|{
 name|int
 name|section_n
@@ -3162,7 +3164,7 @@ expr_stmt|;
 operator|*
 name|pcrel
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|section_n
 operator|=
@@ -3190,7 +3192,7 @@ block|}
 case|case
 name|ieee_variable_L_enum
 case|:
-comment|/* L variable  address of section N */
+comment|/* L variable  address of section N.  */
 name|next_byte
 argument_list|(
 operator|&
@@ -3227,8 +3229,8 @@ break|break;
 case|case
 name|ieee_variable_R_enum
 case|:
-comment|/* R variable, logical address of section module */
-comment|/* FIXME, this should be different to L */
+comment|/* R variable, logical address of section module.  */
+comment|/* FIXME, this should be different to L.  */
 name|next_byte
 argument_list|(
 operator|&
@@ -3265,7 +3267,7 @@ break|break;
 case|case
 name|ieee_variable_S_enum
 case|:
-comment|/* S variable, size in MAUS of section module */
+comment|/* S variable, size in MAUS of section module.  */
 name|next_byte
 argument_list|(
 operator|&
@@ -3304,7 +3306,7 @@ break|break;
 case|case
 name|ieee_variable_I_enum
 case|:
-comment|/* Push the address of variable n */
+comment|/* Push the address of variable n.  */
 block|{
 name|ieee_symbol_index_type
 name|sy
@@ -3356,7 +3358,7 @@ break|break;
 case|case
 name|ieee_variable_X_enum
 case|:
-comment|/* Push the address of external variable n */
+comment|/* Push the address of external variable n.  */
 block|{
 name|ieee_symbol_index_type
 name|sy
@@ -3617,7 +3619,7 @@ block|{
 comment|/* Thats all that we can understand.  */
 name|loop
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 block|}
@@ -3804,7 +3806,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* is the index for an X or a D */
+comment|/* Is the index for an X or a D.  */
 end_comment
 
 begin_function
@@ -3860,7 +3862,7 @@ name|int
 name|this_type
 decl_stmt|;
 block|{
-comment|/* Need a new symbol */
+comment|/* Need a new symbol.  */
 name|unsigned
 name|int
 name|new_index
@@ -3960,13 +3962,11 @@ operator|>
 operator|*
 name|max_index
 condition|)
-block|{
 operator|*
 name|max_index
 operator|=
 name|new_index
 expr_stmt|;
-block|}
 name|last_type
 operator|=
 name|this_type
@@ -3991,7 +3991,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_slurp_external_symbols
 parameter_list|(
 name|abfd
@@ -4057,10 +4057,10 @@ name|symbol_count
 init|=
 literal|0
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|loop
 init|=
-name|true
+name|TRUE
 decl_stmt|;
 name|last_index
 operator|=
@@ -4070,7 +4070,7 @@ name|ieee
 operator|->
 name|symbol_table_full
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|ieee_seek
 argument_list|(
@@ -4141,7 +4141,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|symbol
 operator|->
@@ -4233,7 +4233,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|BFD_ASSERT
 argument_list|(
@@ -4413,7 +4413,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 block|}
@@ -4421,7 +4421,7 @@ break|break;
 case|case
 name|ieee_external_reference_info_record_enum
 case|:
-comment|/* Skip over ATX record. */
+comment|/* Skip over ATX record.  */
 name|parse_int
 argument_list|(
 operator|&
@@ -4478,7 +4478,7 @@ break|break;
 case|case
 name|ieee_atn_record_enum
 case|:
-comment|/* We may get call optimization information here, 		   which we just ignore.  The format is 		   {$F1}${CE}{index}{$00}{$3F}{$3F}{#_of_ASNs} */
+comment|/* We may get call optimization information here, 		   which we just ignore.  The format is 		   {$F1}${CE}{index}{$00}{$3F}{$3F}{#_of_ASNs}.  */
 name|parse_int
 argument_list|(
 operator|&
@@ -4546,7 +4546,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|parse_int
@@ -4644,7 +4644,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -4664,7 +4664,7 @@ decl_stmt|;
 name|ieee_symbol_index_type
 name|symbol_ignore
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|pcrel_ignore
 decl_stmt|;
 name|unsigned
@@ -4861,7 +4861,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Throw away the external reference index */
+comment|/* Throw away the external reference index.  */
 operator|(
 name|void
 operator|)
@@ -4875,7 +4875,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Fetch the default size if not resolved */
+comment|/* Fetch the default size if not resolved.  */
 name|size
 operator|=
 name|must_parse_int
@@ -4888,7 +4888,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Fetch the defautlt value if available */
+comment|/* Fetch the default value if available.  */
 if|if
 condition|(
 operator|!
@@ -4911,7 +4911,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* This turns into a common */
+comment|/* This turns into a common.  */
 name|symbol
 operator|->
 name|symbol
@@ -4974,7 +4974,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|symbol
 operator|->
@@ -5055,7 +5055,7 @@ break|break;
 default|default:
 name|loop
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 block|}
@@ -5151,7 +5151,7 @@ name|ieee
 operator|->
 name|symbol_table_full
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 operator|*
@@ -5173,14 +5173,14 @@ operator|)
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_slurp_symbol_table
 parameter_list|(
 name|abfd
@@ -5210,7 +5210,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|IEEE_DATA
 argument_list|(
@@ -5219,11 +5219,11 @@ argument_list|)
 operator|->
 name|read_symbols
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -5283,7 +5283,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Move from our internal lists to the canon table, and insert in symbol index order */
+comment|/* Move from our internal lists to the canon table, and insert in    symbol index order.  */
 end_comment
 
 begin_decl_stmt
@@ -5297,7 +5297,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|long
-name|ieee_get_symtab
+name|ieee_canonicalize_symtab
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -5394,8 +5394,7 @@ operator|->
 name|symbol_table_full
 condition|)
 block|{
-comment|/* Arrgh - there are gaps in the table, run through and fill them */
-comment|/* up with pointers to a null place */
+comment|/* Arrgh - there are gaps in the table, run through and fill them 	     up with pointers to a null place.  */
 name|unsigned
 name|int
 name|i
@@ -5415,7 +5414,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|location
 index|[
 name|i
@@ -5424,7 +5422,6 @@ operator|=
 operator|&
 name|empty_symbol
 expr_stmt|;
-block|}
 block|}
 name|ieee
 operator|->
@@ -5460,8 +5457,7 @@ name|symp
 operator|->
 name|next
 control|)
-block|{
-comment|/* Place into table at correct index locations */
+comment|/* Place into table at correct index locations.  */
 name|location
 index|[
 name|symp
@@ -5478,8 +5474,7 @@ name|symp
 operator|->
 name|symbol
 expr_stmt|;
-block|}
-comment|/* The external refs are indexed in a bit */
+comment|/* The external refs are indexed in a bit.  */
 name|ieee
 operator|->
 name|external_reference_base_offset
@@ -5518,7 +5513,6 @@ name|symp
 operator|->
 name|next
 control|)
-block|{
 name|location
 index|[
 name|symp
@@ -5536,14 +5530,12 @@ operator|->
 name|symbol
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|abfd
 operator|->
 name|symcount
 condition|)
-block|{
 name|location
 index|[
 name|abfd
@@ -5557,7 +5549,6 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-block|}
 return|return
 name|abfd
 operator|->
@@ -5872,7 +5863,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|true
+name|TRUE
 condition|)
 block|{
 switch|switch
@@ -5948,7 +5939,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Set minimal section attributes. Attributes are 		   extended later, based on section contents. */
+comment|/* Set minimal section attributes. Attributes are 		   extended later, based on section contents.  */
 switch|switch
 condition|(
 name|section_type
@@ -5960,7 +5951,7 @@ block|{
 case|case
 literal|0xC1
 case|:
-comment|/* Normal attributes for absolute sections	*/
+comment|/* Normal attributes for absolute sections.  */
 name|section_type
 index|[
 literal|1
@@ -5993,7 +5984,7 @@ block|{
 case|case
 literal|0xD3
 case|:
-comment|/* AS Absolute section attributes */
+comment|/* AS Absolute section attributes.  */
 name|next_byte
 argument_list|(
 operator|&
@@ -6030,7 +6021,7 @@ block|{
 case|case
 literal|0xD0
 case|:
-comment|/* Normal code */
+comment|/* Normal code.  */
 name|next_byte
 argument_list|(
 operator|&
@@ -6051,7 +6042,7 @@ break|break;
 case|case
 literal|0xC4
 case|:
-comment|/* Normal data */
+comment|/* Normal data.  */
 name|next_byte
 argument_list|(
 operator|&
@@ -6082,7 +6073,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Normal rom data */
+comment|/* Normal rom data.  */
 name|section
 operator|->
 name|flags
@@ -6100,7 +6091,7 @@ break|break;
 case|case
 literal|0xC3
 case|:
-comment|/* Named relocatable sections (type C) */
+comment|/* Named relocatable sections (type C).  */
 name|section_type
 index|[
 literal|1
@@ -6133,7 +6124,7 @@ block|{
 case|case
 literal|0xD0
 case|:
-comment|/* Normal code (CP) */
+comment|/* Normal code (CP).  */
 name|next_byte
 argument_list|(
 operator|&
@@ -6154,7 +6145,7 @@ break|break;
 case|case
 literal|0xC4
 case|:
-comment|/* Normal data (CD) */
+comment|/* Normal data (CD).  */
 name|next_byte
 argument_list|(
 operator|&
@@ -6175,7 +6166,7 @@ break|break;
 case|case
 literal|0xD2
 case|:
-comment|/* Normal rom data (CR) */
+comment|/* Normal rom data (CR).  */
 name|next_byte
 argument_list|(
 operator|&
@@ -6199,7 +6190,7 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* Read section name, use it if non empty. */
+comment|/* Read section name, use it if non empty.  */
 name|name
 operator|=
 name|read_id
@@ -6223,7 +6214,7 @@ name|name
 operator|=
 name|name
 expr_stmt|;
-comment|/* Skip these fields, which we don't care about */
+comment|/* Skip these fields, which we don't care about.  */
 block|{
 name|bfd_vma
 name|parent
@@ -6655,7 +6646,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_slurp_debug
 parameter_list|(
 name|abfd
@@ -6694,7 +6685,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|sec
 operator|=
@@ -6712,7 +6703,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|sec
 operator|->
@@ -6764,7 +6755,7 @@ operator|.
 name|debug_information_part
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -6773,7 +6764,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*********************************************************************** *  archive stuff */
+comment|/* Archive stuff.  */
 end_comment
 
 begin_function
@@ -7673,13 +7664,13 @@ name|ieee
 operator|->
 name|read_symbols
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|ieee
 operator|->
 name|read_data
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|ieee
 operator|->
@@ -7792,7 +7783,6 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
 name|abfd
 operator|->
 name|filename
@@ -7803,8 +7793,7 @@ name|mb
 operator|.
 name|module_name
 expr_stmt|;
-block|}
-comment|/* Determine the architecture and machine type of the object file.      */
+comment|/* Determine the architecture and machine type of the object file.  */
 block|{
 specifier|const
 name|bfd_arch_info_type
@@ -7817,7 +7806,7 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-comment|/* IEEE does not specify the format of the processor identificaton        string, so the compiler is free to put in it whatever it wants.        We try here to recognize different processors belonging to the        m68k family.  Code for other processors can be added here.  */
+comment|/* IEEE does not specify the format of the processor identification        string, so the compiler is free to put in it whatever it wants.        We try here to recognize different processors belonging to the        m68k family.  Code for other processors can be added here.  */
 if|if
 condition|(
 operator|(
@@ -7980,7 +7969,7 @@ argument_list|)
 operator|==
 literal|'C'
 operator|)
-comment|/* Embedded controllers */
+comment|/* Embedded controllers.  */
 operator|&&
 operator|(
 operator|(
@@ -8048,7 +8037,7 @@ literal|'\0'
 expr_stmt|;
 block|}
 else|else
-comment|/* "Regular" processors */
+comment|/* "Regular" processors.  */
 block|{
 name|strncpy
 argument_list|(
@@ -8164,11 +8153,9 @@ name|int
 operator|)
 name|ieee_address_descriptor_enum
 condition|)
-block|{
 goto|goto
 name|fail
 goto|;
-block|}
 name|next_byte
 argument_list|(
 operator|&
@@ -8199,11 +8186,9 @@ operator|.
 name|number_of_bits_mau
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|fail
 goto|;
-block|}
 if|if
 condition|(
 operator|!
@@ -8224,12 +8209,10 @@ operator|.
 name|number_of_maus_in_address
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|fail
 goto|;
-block|}
-comment|/* If there is a byte order info, take it */
+comment|/* If there is a byte order info, take it.  */
 if|if
 condition|(
 name|this_byte
@@ -8286,7 +8269,7 @@ name|part
 operator|++
 control|)
 block|{
-name|boolean
+name|bfd_boolean
 name|ok
 decl_stmt|;
 if|if
@@ -8306,11 +8289,9 @@ name|int
 operator|)
 name|ieee_assign_value_to_variable_enum
 condition|)
-block|{
 goto|goto
 name|fail
 goto|;
-block|}
 if|if
 condition|(
 name|this_byte_and_next
@@ -8325,11 +8306,9 @@ argument_list|)
 operator|!=
 name|part
 condition|)
-block|{
 goto|goto
 name|fail
 goto|;
-block|}
 name|ieee
 operator|->
 name|w
@@ -8357,11 +8336,9 @@ condition|(
 operator|!
 name|ok
 condition|)
-block|{
 goto|goto
 name|fail
 goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -8381,7 +8358,7 @@ name|flags
 operator|=
 name|HAS_SYMS
 expr_stmt|;
-comment|/* By now we know that this is a real IEEE file, we're going to read      the whole thing into memory so that we can run up and down it      quickly.  We can work out how big the file is from the trailer      record */
+comment|/* By now we know that this is a real IEEE file, we're going to read      the whole thing into memory so that we can run up and down it      quickly.  We can work out how big the file is from the trailer      record.  */
 name|amt
 operator|=
 name|ieee
@@ -8800,7 +8777,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|do_one
 parameter_list|(
 name|ieee
@@ -8930,10 +8907,10 @@ case|case
 name|ieee_load_with_relocation_enum
 case|:
 block|{
-name|boolean
+name|bfd_boolean
 name|loop
 init|=
-name|true
+name|TRUE
 decl_stmt|;
 name|next_byte
 argument_list|(
@@ -8982,10 +8959,10 @@ name|extra
 init|=
 literal|4
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|pcrel
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 name|asection
 modifier|*
@@ -9026,7 +9003,7 @@ operator|!
 name|r
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 operator|(
@@ -9182,7 +9159,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Fetch number of bytes to pad */
+comment|/* Fetch number of bytes to pad.  */
 name|extra
 operator|=
 name|must_parse_int
@@ -9255,7 +9232,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* Build a relocation entry for this type */
+comment|/* Build a relocation entry for this type.  */
 comment|/* If pc rel then stick -ve pc into instruction 		     and take out of reloc ..  		     I've changed this. It's all too complicated. I 		     keep 0 in the instruction now.  */
 switch|switch
 condition|(
@@ -9641,7 +9618,7 @@ name|BFD_FAIL
 argument_list|()
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -9719,7 +9696,7 @@ else|else
 block|{
 name|loop
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 block|}
@@ -9733,24 +9710,24 @@ literal|1
 condition|)
 name|loop
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Read in all the section data and relocation stuff too */
+comment|/* Read in all the section data and relocation stuff too.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_slurp_section_data
 parameter_list|(
 name|abfd
@@ -9797,7 +9774,7 @@ name|asection
 modifier|*
 name|s
 decl_stmt|;
-comment|/* Seek to the start of the data area */
+comment|/* Seek to the start of the data area.  */
 if|if
 condition|(
 name|ieee
@@ -9805,13 +9782,13 @@ operator|->
 name|read_data
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|ieee
 operator|->
 name|read_data
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|ieee_seek
 argument_list|(
@@ -9826,7 +9803,7 @@ operator|.
 name|data_part
 argument_list|)
 expr_stmt|;
-comment|/* Allocate enough space for all the section contents */
+comment|/* Allocate enough space for all the section contents.  */
 for|for
 control|(
 name|s
@@ -9854,13 +9831,10 @@ name|ieee_per_section_type
 modifier|*
 name|per
 init|=
-operator|(
-name|ieee_per_section_type
-operator|*
-operator|)
+name|ieee_per_section
+argument_list|(
 name|s
-operator|->
-name|used_by_bfd
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -9904,9 +9878,8 @@ operator|->
 name|data
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/*SUPPRESS 68*/
 name|per
 operator|->
 name|reloc_tail_ptr
@@ -9926,7 +9899,7 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-name|true
+name|TRUE
 condition|)
 block|{
 switch|switch
@@ -9942,10 +9915,10 @@ operator|)
 argument_list|)
 condition|)
 block|{
-comment|/* IF we see anything strange then quit */
+comment|/* IF we see anything strange then quit.  */
 default|default:
 return|return
-name|true
+name|TRUE
 return|;
 case|case
 name|ieee_set_current_section_enum
@@ -9991,13 +9964,10 @@ name|SEC_HAS_CONTENTS
 expr_stmt|;
 name|current_map
 operator|=
-operator|(
-name|ieee_per_section_type
-operator|*
-operator|)
+name|ieee_per_section
+argument_list|(
 name|s
-operator|->
-name|used_by_bfd
+argument_list|)
 expr_stmt|;
 name|location_ptr
 operator|=
@@ -10009,9 +9979,7 @@ name|s
 operator|->
 name|vma
 expr_stmt|;
-comment|/* The document I have says that Microtec's compilers reset */
-comment|/* this after a sec section, even though the standard says not */
-comment|/* to. SO .. */
+comment|/* The document I have says that Microtec's compilers reset 	     this after a sec section, even though the standard says not 	     to, SO...  */
 name|current_map
 operator|->
 name|pc
@@ -10063,7 +10031,7 @@ name|unsigned
 name|int
 name|extra
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|pcrel
 decl_stmt|;
 name|next_byte
@@ -10086,7 +10054,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Throw away section #*/
+comment|/* Throw away section #.  */
 name|parse_expression
 argument_list|(
 name|ieee
@@ -10185,16 +10153,16 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* We've got to the end of the data now - */
+comment|/* We've got to the end of the data now -  */
 return|return
-name|true
+name|TRUE
 return|;
 default|default:
 name|BFD_FAIL
 argument_list|()
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 break|break;
@@ -10202,7 +10170,7 @@ case|case
 name|ieee_repeat_data_enum
 case|:
 block|{
-comment|/* Repeat the following LD or LR n times - we do this by 		 remembering the stream pointer before running it and 		 resetting it and running it n times. We special case 		 the repetition of a repeat_data/load_constant 		 */
+comment|/* Repeat the following LD or LR n times - we do this by 	       remembering the stream pointer before running it and 	       resetting it and running it n times. We special case 	       the repetition of a repeat_data/load_constant.  */
 name|unsigned
 name|int
 name|iterations
@@ -10354,7 +10322,7 @@ name|iterations
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|iterations
 operator|--
@@ -10369,7 +10337,6 @@ case|:
 case|case
 name|ieee_load_with_relocation_enum
 case|:
-block|{
 if|if
 condition|(
 operator|!
@@ -10387,9 +10354,8 @@ literal|1
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-block|}
 block|}
 block|}
 block|}
@@ -10397,7 +10363,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_new_section_hook
 parameter_list|(
 name|abfd
@@ -10441,7 +10407,7 @@ operator|->
 name|used_by_bfd
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|ieee_per_section
 argument_list|(
@@ -10466,7 +10432,7 @@ operator|=
 name|newsect
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10535,7 +10501,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_get_section_contents
 parameter_list|(
 name|abfd
@@ -10569,13 +10535,10 @@ name|ieee_per_section_type
 modifier|*
 name|p
 init|=
-operator|(
-name|ieee_per_section_type
-operator|*
-operator|)
+name|ieee_per_section
+argument_list|(
 name|section
-operator|->
-name|used_by_bfd
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -10636,7 +10599,7 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10672,7 +10635,6 @@ modifier|*
 name|symbols
 decl_stmt|;
 block|{
-comment|/*  ieee_per_section_type *p = (ieee_per_section_type *) section->used_by_bfd;*/
 name|ieee_reloc_type
 modifier|*
 name|src
@@ -10722,7 +10684,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* Work out which symbol to attach it this reloc to */
+comment|/* Work out which symbol to attach it this reloc to.  */
 switch|switch
 condition|(
 name|src
@@ -10911,7 +10873,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_section_part
 parameter_list|(
 name|abfd
@@ -11017,7 +10979,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -11028,7 +10990,7 @@ operator|&
 name|EXEC_P
 condition|)
 block|{
-comment|/* This image is executable, so output absolute sections */
+comment|/* This image is executable, so output absolute sections.  */
 if|if
 condition|(
 operator|!
@@ -11048,7 +11010,7 @@ name|ieee_variable_S_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -11064,7 +11026,7 @@ name|ieee_variable_C_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 switch|switch
@@ -11101,7 +11063,7 @@ name|ieee_variable_P_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 case|case
@@ -11119,7 +11081,7 @@ name|ieee_variable_D_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 case|case
@@ -11153,7 +11115,7 @@ name|ieee_variable_R_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -11169,7 +11131,7 @@ name|name
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|#
 directive|if
@@ -11182,7 +11144,7 @@ block|ieee_write_int (abfd, 0);
 comment|/* Context */
 endif|#
 directive|endif
-comment|/* Alignment */
+comment|/* Alignment.  */
 if|if
 condition|(
 operator|!
@@ -11226,9 +11188,9 @@ name|alignment_power
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* Size */
+comment|/* Size.  */
 if|if
 condition|(
 operator|!
@@ -11267,7 +11229,7 @@ name|_raw_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -11278,8 +11240,8 @@ operator|&
 name|EXEC_P
 condition|)
 block|{
-comment|/* Relocateable sections don't have asl records */
-comment|/* Vma */
+comment|/* Relocateable sections don't have asl records.  */
+comment|/* Vma.  */
 if|if
 condition|(
 operator|!
@@ -11320,20 +11282,20 @@ name|lma
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|do_with_relocs
 parameter_list|(
 name|abfd
@@ -11414,7 +11376,7 @@ argument_list|,
 name|comp
 argument_list|)
 expr_stmt|;
-comment|/* Output the section preheader */
+comment|/* Output the section preheader.  */
 if|if
 condition|(
 operator|!
@@ -11468,7 +11430,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -11500,7 +11462,7 @@ name|lma
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -11527,7 +11489,7 @@ literal|0
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -11537,7 +11499,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If there aren't any relocations then output the load constant 	 byte opcode rather than the load with relocation opcode */
+comment|/* If there aren't any relocations then output the load constant 	 byte opcode rather than the load with relocation opcode.  */
 while|while
 condition|(
 name|current_byte_index
@@ -11570,7 +11532,6 @@ name|_raw_size
 operator|-
 name|current_byte_index
 condition|)
-block|{
 name|run
 operator|=
 name|s
@@ -11579,7 +11540,6 @@ name|_raw_size
 operator|-
 name|current_byte_index
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|run
@@ -11598,9 +11558,9 @@ name|ieee_load_constant_bytes_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* Output a stream of bytes */
+comment|/* Output a stream of bytes.  */
 if|if
 condition|(
 operator|!
@@ -11612,7 +11572,7 @@ name|run
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -11635,7 +11595,7 @@ operator|!=
 name|run
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|current_byte_index
 operator|+=
@@ -11657,7 +11617,7 @@ name|ieee_load_with_relocation_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Output the data stream as the longest sequence of bytes 	 possible, allowing for the a reasonable packet size and 	 relocation stuffs.  */
 if|if
@@ -11673,7 +11633,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* Outputting a section without data, fill it up */
+comment|/* Outputting a section without data, fill it up.  */
 name|stream
 operator|=
 operator|(
@@ -11696,7 +11656,7 @@ operator|!
 name|stream
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 while|while
@@ -11745,12 +11705,10 @@ name|MAXRUN
 expr_stmt|;
 block|}
 else|else
-block|{
 name|run
 operator|=
 name|MAXRUN
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|run
@@ -11761,7 +11719,6 @@ name|_raw_size
 operator|-
 name|current_byte_index
 condition|)
-block|{
 name|run
 operator|=
 name|s
@@ -11770,7 +11727,6 @@ name|_raw_size
 operator|-
 name|current_byte_index
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|run
@@ -11778,7 +11734,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Output a stream of bytes */
+comment|/* Output a stream of bytes.  */
 if|if
 condition|(
 operator|!
@@ -11790,7 +11746,7 @@ name|run
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -11813,14 +11769,14 @@ operator|!=
 name|run
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|current_byte_index
 operator|+=
 name|run
 expr_stmt|;
 block|}
-comment|/* Output any relocations here */
+comment|/* Output any relocations here.  */
 if|if
 condition|(
 name|relocs_to_go
@@ -11872,7 +11828,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if (r->howto->pc_relative) 		    { 		      r->addend += current_byte_index; 		    }
+block|if (r->howto->pc_relative) 		    r->addend += current_byte_index;
 endif|#
 directive|endif
 switch|switch
@@ -11949,7 +11905,7 @@ name|BFD_FAIL
 argument_list|()
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ov
@@ -11992,7 +11948,7 @@ name|ieee_function_either_open_b_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/*		  abort();*/
 if|if
@@ -12044,7 +12000,7 @@ name|index
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -12083,7 +12039,7 @@ name|index
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -12119,7 +12075,7 @@ name|rsize
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -12133,7 +12089,7 @@ name|ieee_function_either_close_b_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|relocs_to_go
 operator|--
@@ -12146,7 +12102,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -12157,7 +12113,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|do_as_repeat
 parameter_list|(
 name|abfd
@@ -12245,7 +12201,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -12273,7 +12229,7 @@ name|lma
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -12300,7 +12256,7 @@ literal|0
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -12348,18 +12304,18 @@ literal|0
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|do_without_relocs
 parameter_list|(
 name|abfd
@@ -12416,7 +12372,7 @@ name|s
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -12462,10 +12418,10 @@ name|s
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}
@@ -12480,11 +12436,11 @@ name|s
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -12568,7 +12524,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_mkobject
 parameter_list|(
 name|abfd
@@ -12790,20 +12746,18 @@ name|unsigned
 name|int
 name|length
 decl_stmt|;
-comment|/* How many significant bytes ? */
-comment|/* FIXME FOR LONGER INTS */
+comment|/* How many significant bytes ?  */
+comment|/* FIXME FOR LONGER INTS.  */
 if|if
 condition|(
 name|value
 operator|&
 literal|0xff000000
 condition|)
-block|{
 name|length
 operator|=
 literal|4
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -12811,12 +12765,10 @@ name|value
 operator|&
 literal|0x00ff0000
 condition|)
-block|{
 name|length
 operator|=
 literal|3
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -12824,12 +12776,10 @@ name|value
 operator|&
 literal|0x0000ff00
 condition|)
-block|{
 name|length
 operator|=
 literal|2
 expr_stmt|;
-block|}
 else|else
 name|length
 operator|=
@@ -13171,7 +13121,7 @@ operator|>
 literal|0x84
 condition|)
 block|{
-comment|/* Not a number, just bug out with the answer */
+comment|/* Not a number, just bug out with the answer.  */
 name|write_int
 argument_list|(
 operator|*
@@ -13197,7 +13147,7 @@ break|break;
 case|case
 literal|0xa5
 case|:
-comment|/* PLUS anything */
+comment|/* PLUS anything.  */
 name|value
 operator|=
 operator|*
@@ -13355,7 +13305,7 @@ operator|==
 name|output_buffer
 condition|)
 block|{
-comment|/* Still a chance to output the size */
+comment|/* Still a chance to output the size.  */
 name|int
 name|value
 init|=
@@ -13700,7 +13650,7 @@ block|{
 name|int
 name|ch
 decl_stmt|;
-comment|/* ATN record */
+comment|/* ATN record.  */
 name|NEXT
 argument_list|()
 expr_stmt|;
@@ -13804,7 +13754,7 @@ break|break;
 case|case
 literal|0xd8
 case|:
-comment|/* EXternal ref */
+comment|/* EXternal ref.  */
 name|NEXT
 argument_list|()
 expr_stmt|;
@@ -13950,7 +13900,7 @@ name|void
 name|f0_record
 parameter_list|()
 block|{
-comment|/* Attribute record */
+comment|/* Attribute record.  */
 name|NEXT
 argument_list|()
 expr_stmt|;
@@ -14145,9 +14095,9 @@ case|:
 case|case
 literal|0x03
 case|:
-comment|/* Unique typedefs for module */
-comment|/* GLobal typedefs  */
-comment|/* High level module scope beginning */
+comment|/* Unique typedefs for module.  */
+comment|/* GLobal typedefs.   */
+comment|/* High level module scope beginning.  */
 block|{
 name|struct
 name|output_buffer_struct
@@ -14196,7 +14146,7 @@ break|break;
 case|case
 literal|0x04
 case|:
-comment|/* Global function */
+comment|/* Global function.  */
 block|{
 name|struct
 name|output_buffer_struct
@@ -14265,7 +14215,7 @@ break|break;
 case|case
 literal|0x05
 case|:
-comment|/* File name for source line numbers */
+comment|/* File name for source line numbers.  */
 block|{
 name|struct
 name|output_buffer_struct
@@ -14344,7 +14294,7 @@ break|break;
 case|case
 literal|0x06
 case|:
-comment|/* Local function */
+comment|/* Local function.  */
 block|{
 name|struct
 name|output_buffer_struct
@@ -14413,7 +14363,7 @@ break|break;
 case|case
 literal|0x0a
 case|:
-comment|/* Assembler module scope beginning -*/
+comment|/* Assembler module scope beginning -  */
 block|{
 name|struct
 name|output_buffer_struct
@@ -14656,7 +14606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* relocate_debug,    moves all the debug information from the source bfd to the output    bfd, and relocates any expressions it finds */
+comment|/* Moves all the debug information from the source bfd to the output    bfd, and relocates any expressions it finds.  */
 end_comment
 
 begin_function
@@ -14737,7 +14687,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_debug_part
 parameter_list|(
 name|abfd
@@ -14771,10 +14721,10 @@ index|[
 name|OBS
 index|]
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|some_debug
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 name|file_ptr
 name|here
@@ -14868,7 +14818,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|ieee
@@ -14901,7 +14851,7 @@ operator|->
 name|_raw_size
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -14965,7 +14915,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|relocate_debug
 argument_list|(
@@ -14986,7 +14936,6 @@ if|if
 condition|(
 name|some_debug
 condition|)
-block|{
 name|ieee
 operator|->
 name|w
@@ -14997,9 +14946,7 @@ name|debug_information_part
 operator|=
 name|here
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ieee
 operator|->
 name|w
@@ -15010,13 +14957,12 @@ name|debug_information_part
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|flush
 argument_list|()
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -15027,7 +14973,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_data_part
 parameter_list|(
 name|abfd
@@ -15121,7 +15067,7 @@ name|s
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -15137,19 +15083,19 @@ name|s
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|init_for_output
 parameter_list|(
 name|abfd
@@ -15246,12 +15192,12 @@ operator|->
 name|data
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -15260,16 +15206,16 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/** exec and core file sections */
+comment|/* Exec and core file sections.  */
 end_comment
 
 begin_comment
-comment|/* set section contents is complicated with IEEE since the format is * not a byte image, but a record stream. */
+comment|/* Set section contents is complicated with IEEE since the format is    not a byte image, but a record stream.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_set_section_contents
 parameter_list|(
 name|abfd
@@ -15289,6 +15235,7 @@ decl_stmt|;
 name|sec_ptr
 name|section
 decl_stmt|;
+specifier|const
 name|PTR
 name|location
 decl_stmt|;
@@ -15353,7 +15300,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* bfd_set_section_contents has already checked that everything          is within range.  */
@@ -15374,7 +15321,7 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -15402,7 +15349,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|memcpy
@@ -15434,7 +15381,7 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -15445,7 +15392,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_external_part
 parameter_list|(
 name|abfd
@@ -15491,10 +15438,10 @@ argument_list|(
 name|abfd
 argument_list|)
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|hadone
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 if|if
 condition|(
@@ -15548,7 +15495,7 @@ name|section
 argument_list|)
 condition|)
 block|{
-comment|/* This must be a symbol reference .. */
+comment|/* This must be a symbol reference.  */
 if|if
 condition|(
 operator|!
@@ -15581,7 +15528,7 @@ name|name
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|p
 operator|->
@@ -15594,7 +15541,7 @@ operator|++
 expr_stmt|;
 name|hadone
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 elseif|else
@@ -15608,7 +15555,7 @@ name|section
 argument_list|)
 condition|)
 block|{
-comment|/* This is a weak reference */
+comment|/* This is a weak reference.  */
 if|if
 condition|(
 operator|!
@@ -15670,7 +15617,7 @@ name|value
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|p
 operator|->
@@ -15683,7 +15630,7 @@ operator|++
 expr_stmt|;
 name|hadone
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 elseif|else
@@ -15696,7 +15643,7 @@ operator|&
 name|BSF_GLOBAL
 condition|)
 block|{
-comment|/* This must be a symbol definition */
+comment|/* This must be a symbol definition.  */
 if|if
 condition|(
 operator|!
@@ -15775,9 +15722,9 @@ argument_list|)
 condition|)
 comment|/* one of them */
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* Write out the value */
+comment|/* Write out the value.  */
 if|if
 condition|(
 operator|!
@@ -15800,7 +15747,7 @@ name|public_index
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -15822,7 +15769,7 @@ operator|&
 name|EXEC_P
 condition|)
 block|{
-comment|/* If fully linked, then output all symbols 			 relocated */
+comment|/* If fully linked, then output all symbols 			 relocated.  */
 if|if
 condition|(
 operator|!
@@ -15854,7 +15801,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -15885,14 +15832,14 @@ name|output_section
 operator|->
 name|symbol
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -15913,13 +15860,13 @@ name|bfd_abs_section_ptr
 operator|->
 name|symbol
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|p
@@ -15933,13 +15880,12 @@ operator|++
 expr_stmt|;
 name|hadone
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This can happen - when there are gaps in the symbols read */
-comment|/* from an input ieee file */
+comment|/* This can happen - when there are gaps in the symbols read 	         from an input ieee file.  */
 block|}
 block|}
 block|}
@@ -15958,7 +15904,7 @@ operator|=
 name|here
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -15992,7 +15938,7 @@ literal|3
 block|,
 literal|3
 block|,
-comment|/* Set version 3 rev 3   	*/
+comment|/* Set version 3 rev 3.  */
 literal|0xf1
 block|,
 literal|0xce
@@ -16005,7 +15951,7 @@ literal|39
 block|,
 literal|2
 block|,
-comment|/* keep symbol in  original case */
+comment|/* Keep symbol in  original case.  */
 literal|0xf1
 block|,
 literal|0xce
@@ -16015,7 +15961,7 @@ block|,
 literal|0x00
 block|,
 literal|38
-comment|/* set object type relocateable to x */
+comment|/* Set object type relocatable to x.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -16069,7 +16015,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_me_part
 parameter_list|(
 name|abfd
@@ -16145,7 +16091,7 @@ name|ieee_function_either_close_b_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ieee
@@ -16172,10 +16118,10 @@ name|ieee_module_end_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -16186,7 +16132,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_processor
 parameter_list|(
 name|abfd
@@ -16230,7 +16176,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 case|case
@@ -16247,7 +16193,7 @@ literal|"29000"
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 case|case
@@ -16264,7 +16210,7 @@ literal|"H8/300"
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 case|case
@@ -16281,7 +16227,7 @@ literal|"H8/500"
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 case|case
@@ -16312,7 +16258,7 @@ literal|"80960KA"
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 case|case
@@ -16329,7 +16275,7 @@ literal|"80960KB"
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 case|case
@@ -16346,7 +16292,7 @@ literal|"80960CA"
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 case|case
@@ -16366,7 +16312,7 @@ literal|"80960MC"
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 block|}
@@ -16489,6 +16435,14 @@ operator|=
 literal|"5407"
 expr_stmt|;
 break|break;
+case|case
+name|bfd_mach_mcf528x
+case|:
+name|id
+operator|=
+literal|"5282"
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -16501,20 +16455,20 @@ name|id
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 break|break;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_write_object_contents
 parameter_list|(
 name|abfd
@@ -16540,7 +16494,7 @@ decl_stmt|;
 name|file_ptr
 name|old
 decl_stmt|;
-comment|/* Fast forward over the header area */
+comment|/* Fast forward over the header area.  */
 if|if
 condition|(
 name|bfd_seek
@@ -16558,7 +16512,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -16587,9 +16541,9 @@ name|filename
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* Fast forward over the variable bits */
+comment|/* Fast forward over the variable bits.  */
 if|if
 condition|(
 operator|!
@@ -16601,9 +16555,9 @@ name|ieee_address_descriptor_enum
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* Bits per MAU */
+comment|/* Bits per MAU.  */
 if|if
 condition|(
 operator|!
@@ -16623,9 +16577,9 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* MAU's per address */
+comment|/* MAU's per address.  */
 if|if
 condition|(
 operator|!
@@ -16650,7 +16604,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|old
 operator|=
@@ -16680,7 +16634,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|ieee
 operator|->
@@ -16722,7 +16676,7 @@ name|exten
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -16745,7 +16699,7 @@ argument_list|)
 condition|)
 comment|/* Absolute */
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -16762,7 +16716,7 @@ argument_list|)
 condition|)
 comment|/* Relocateable */
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ieee
@@ -16805,7 +16759,7 @@ name|envi
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The HP emulator database requires a timestamp in the file.  */
 block|{
@@ -16961,7 +16915,7 @@ name|tm_sec
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|output_bfd
@@ -16980,7 +16934,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* First write the symbols.  This changes their values into table     indeces so we cant use it after this point.  */
 if|if
@@ -16992,10 +16946,8 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/*  ieee_write_byte(abfd, ieee_record_seperator_enum);*/
-comment|/*  ieee_write_byte(abfd, ieee_record_seperator_enum);*/
 comment|/* Write any debugs we have been told about.  */
 if|if
 condition|(
@@ -17006,7 +16958,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Can only write the data once the symbols have been written, since      the data contains relocation information which points to the      symbols.  */
 if|if
@@ -17018,7 +16970,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* At the end we put the end!  */
 if|if
@@ -17030,9 +16982,9 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* Generate the header */
+comment|/* Generate the header.  */
 if|if
 condition|(
 name|bfd_seek
@@ -17047,7 +16999,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -17103,11 +17055,11 @@ index|]
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -17120,7 +17072,7 @@ comment|/* Native-level interface to symbols. */
 end_comment
 
 begin_comment
-comment|/* We read the symbols into a buffer, which is discarded when this    function exits.  We read the strings into a buffer large enough to    hold them all plus all the cached symbol entries. */
+comment|/* We read the symbols into a buffer, which is discarded when this    function exits.  We read the strings into a buffer large enough to    hold them all plus all the cached symbol entries.  */
 end_comment
 
 begin_function
@@ -17212,7 +17164,7 @@ argument_list|(
 name|arch
 argument_list|)
 decl_stmt|;
-comment|/* take the next one from the arch state, or reset */
+comment|/* Take the next one from the arch state, or reset.  */
 if|if
 condition|(
 name|prev
@@ -17223,18 +17175,16 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
-comment|/* Reset the index - the first two entries are bogus*/
+comment|/* Reset the index - the first two entries are bogus.  */
 name|ar
 operator|->
 name|element_index
 operator|=
 literal|2
 expr_stmt|;
-block|}
 while|while
 condition|(
-name|true
+name|TRUE
 condition|)
 block|{
 name|ieee_ar_obstack_type
@@ -17338,7 +17288,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ieee_find_nearest_line
 parameter_list|(
 name|abfd
@@ -17397,7 +17347,7 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -17552,7 +17502,7 @@ modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|x
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
@@ -17575,36 +17525,36 @@ end_if
 
 begin_comment
 unit|static void ieee_bfd_debug_info_start (abfd)      bfd *abfd; {  }  static void ieee_bfd_debug_info_end (abfd)      bfd *abfd; {  }
-comment|/* Add this section to the list of sections we have debug info for, to    be ready to output it at close time    */
+comment|/* Add this section to the list of sections we have debug info for, to    be ready to output it at close time.  */
 end_comment
 
 begin_comment
 unit|static void ieee_bfd_debug_info_accumulate (abfd, section)      bfd *abfd;      asection *section; {   ieee_data_type *ieee = IEEE_DATA (section->owner);   ieee_data_type *output_ieee = IEEE_DATA (abfd);
-comment|/* can only accumulate data from other ieee bfds */
+comment|/* Can only accumulate data from other ieee bfds.  */
 end_comment
 
 begin_comment
 unit|if (section->owner->xvec != abfd->xvec)     return;
-comment|/* Only bother once per bfd */
+comment|/* Only bother once per bfd.  */
 end_comment
 
 begin_comment
-unit|if (ieee->done_debug)     return;   ieee->done_debug = true;
-comment|/* Don't bother if there is no debug info */
+unit|if (ieee->done_debug)     return;   ieee->done_debug = TRUE;
+comment|/* Don't bother if there is no debug info.  */
 end_comment
 
 begin_comment
 unit|if (ieee->w.r.debug_information_part == 0)     return;
-comment|/* Add to chain */
+comment|/* Add to chain.  */
 end_comment
 
 begin_comment
-unit|{     bfd_size_type amt = sizeof (bfd_chain_type);     bfd_chain_type *n = (bfd_chain_type *) bfd_alloc (abfd, amt);     if (!n)       abort ();
+unit|{     bfd_size_type amt = sizeof (bfd_chain_type);     bfd_chain_type *n = (bfd_chain_type *) bfd_alloc (abfd, amt);      if (!n)       abort ();
 comment|/* FIXME */
 end_comment
 
 begin_endif
-unit|n->this = section->owner;     n->next = (bfd_chain_type *) NULL;      if (output_ieee->chain_head)       { 	output_ieee->chain_head->next = n;       }     else       { 	output_ieee->chain_root = n;        }     output_ieee->chain_head = n;   } }
+unit|n->this = section->owner;     n->next = (bfd_chain_type *) NULL;      if (output_ieee->chain_head)       output_ieee->chain_head->next = n;     else       output_ieee->chain_root = n;      output_ieee->chain_head = n;   } }
 endif|#
 directive|endif
 end_endif
@@ -17642,7 +17592,7 @@ define|#
 directive|define
 name|ieee_construct_extended_name_table
 define|\
-value|((boolean (*) PARAMS ((bfd *, char **, bfd_size_type *, const char **))) \    bfd_true)
+value|((bfd_boolean (*) \     PARAMS ((bfd *, char **, bfd_size_type *, const char **))) \    bfd_true)
 end_define
 
 begin_define
@@ -17657,7 +17607,7 @@ define|#
 directive|define
 name|ieee_write_armap
 define|\
-value|((boolean (*) \     PARAMS ((bfd *, unsigned int, struct orl *, unsigned int, int))) \    bfd_true)
+value|((bfd_boolean (*) \     PARAMS ((bfd *, unsigned int, struct orl *, unsigned int, int))) \    bfd_true)
 end_define
 
 begin_define
@@ -17816,10 +17766,6 @@ name|ieee_bfd_link_split_section
 value|_bfd_generic_link_split_section
 end_define
 
-begin_comment
-comment|/*SUPPRESS 460 */
-end_comment
-
 begin_decl_stmt
 specifier|const
 name|bfd_target
@@ -17973,7 +17919,7 @@ argument_list|(
 name|ieee
 argument_list|)
 block|,
-comment|/* ieee_get_symtab_upper_bound, ieee_get_symtab, ieee_make_empty_symbol,      ieee_print_symbol, ieee_get_symbol_info, ieee_bfd_is_local_label_name,      ieee_get_lineno, ieee_find_nearest_line, ieee_bfd_make_debug_symbol,      ieee_read_minisymbols, ieee_minisymbol_to_symbol  */
+comment|/* ieee_get_symtab_upper_bound, ieee_canonicalize_symtab,      ieee_make_empty_symbol, ieee_print_symbol, ieee_get_symbol_info,      ieee_bfd_is_local_label_name, ieee_get_lineno,      ieee_find_nearest_line, ieee_bfd_make_debug_symbol,      ieee_read_minisymbols, ieee_minisymbol_to_symbol */
 name|BFD_JUMP_TABLE_SYMBOLS
 argument_list|(
 name|ieee

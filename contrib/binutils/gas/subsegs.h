@@ -239,33 +239,27 @@ directive|ifdef
 name|BFD_ASSEMBLER
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|segment_info_type
 modifier|*
 name|seg_info
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|segT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|symbolS
 modifier|*
 name|section_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|segT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -376,19 +370,16 @@ begin_comment
 comment|/* ! BFD_ASSEMBLER */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|subsegs_print_statistics
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

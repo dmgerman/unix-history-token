@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for SH opcodes.    Copyright 1993, 1994, 1995, 1997, 1999, 2000    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for SH opcodes.    Copyright 1993, 1994, 1995, 1997, 1999, 2000, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_typedef
@@ -39,8 +39,18 @@ name|HEX_E
 block|,
 name|HEX_F
 block|,
+name|HEX_XX00
+block|,
+name|HEX_00YY
+block|,
 name|REG_N
 block|,
+name|REG_N_D
+block|,
+comment|/* nnn0 */
+name|REG_N_B01
+block|,
+comment|/* nn01 */
 name|REG_M
 block|,
 name|SDT_REG_N
@@ -91,11 +101,17 @@ name|MOVX
 block|,
 name|MOVY
 block|,
+name|MOVX_NOPY
+block|,
+name|MOVY_NOPX
+block|,
 name|PSH
 block|,
 name|PMUL
 block|,
 name|PPI3
+block|,
+name|PPI3NC
 block|,
 name|PDC
 block|,
@@ -145,10 +161,6 @@ name|A_IND_M
 block|,
 name|A_IND_N
 block|,
-name|A_PMOD_N
-block|,
-name|A_PMODY_N
-block|,
 name|A_IND_R0_REG_M
 block|,
 name|A_IND_R0_REG_N
@@ -195,6 +207,48 @@ name|DSP_REG_F
 block|,
 name|DSP_REG_G
 block|,
+name|DSP_REG_A_M
+block|,
+name|DSP_REG_AX
+block|,
+name|DSP_REG_XY
+block|,
+name|DSP_REG_AY
+block|,
+name|DSP_REG_YX
+block|,
+name|AX_INC_N
+block|,
+name|AY_INC_N
+block|,
+name|AXY_INC_N
+block|,
+name|AYX_INC_N
+block|,
+name|AX_IND_N
+block|,
+name|AY_IND_N
+block|,
+name|AXY_IND_N
+block|,
+name|AYX_IND_N
+block|,
+name|AX_PMOD_N
+block|,
+name|AXY_PMOD_N
+block|,
+name|AY_PMOD_N
+block|,
+name|AYX_PMOD_N
+block|,
+name|AS_DEC_N
+block|,
+name|AS_INC_N
+block|,
+name|AS_IND_N
+block|,
+name|AS_PMOD_N
+block|,
 name|A_A0
 block|,
 name|A_X0
@@ -223,10 +277,10 @@ name|D_REG_M
 block|,
 name|X_REG_N
 block|,
-comment|/* Only used for argument parsing */
+comment|/* Only used for argument parsing.  */
 name|X_REG_M
 block|,
-comment|/* Only used for argument parsing */
+comment|/* Only used for argument parsing.  */
 name|DX_REG_N
 block|,
 name|DX_REG_M
@@ -321,6 +375,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|arch_sh2e
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4a
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|arch_sh_dsp
 value|0x0100
 end_define
@@ -335,6 +403,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|arch_sh4al_dsp
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4_nofpu
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4a_nofpu
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
 name|arch_sh1_up
 value|(arch_sh1 | arch_sh2_up)
 end_define
@@ -343,14 +432,21 @@ begin_define
 define|#
 directive|define
 name|arch_sh2_up
-value|(arch_sh2 | arch_sh3_up | arch_sh_dsp)
+value|(arch_sh2 | arch_sh2e_up | arch_sh3_up | arch_sh_dsp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2e_up
+value|(arch_sh2e | arch_sh3e_up)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh3_up
-value|(arch_sh3 | arch_sh3e_up | arch_sh3_dsp)
+value|(arch_sh3 | arch_sh3e_up | arch_sh3_dsp_up \ 		      | arch_sh4_nofp_up)
 end_define
 
 begin_define
@@ -364,7 +460,14 @@ begin_define
 define|#
 directive|define
 name|arch_sh4_up
-value|arch_sh4
+value|(arch_sh4 | arch_sh4a_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4a_up
+value|(arch_sh4a)
 end_define
 
 begin_define
@@ -378,7 +481,28 @@ begin_define
 define|#
 directive|define
 name|arch_sh3_dsp_up
-value|arch_sh3_dsp
+value|(arch_sh3_dsp | arch_sh4al_dsp_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4al_dsp_up
+value|(arch_sh4al_dsp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4_nofp_up
+value|(arch_sh4_nofpu | arch_sh4_up | arch_sh4a_nofp_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4a_nofp_up
+value|(arch_sh4a_nofpu | arch_sh4a_up | arch_sh4al_dsp_up)
 end_define
 
 begin_typedef
@@ -398,7 +522,7 @@ decl_stmt|;
 name|sh_nibble_type
 name|nibbles
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
 name|int
@@ -416,6 +540,7 @@ name|DEFINE_TABLE
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|sh_opcode_info
 name|sh_table
 index|[]
@@ -722,6 +847,27 @@ name|BRANCH_8
 block|}
 block|,
 name|arch_sh2_up
+block|}
+block|,
+comment|/* 0000000010001000 clrdmxy             */
+block|{
+literal|"clrdmxy"
+block|,
+block|{
+literal|0
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|HEX_0
+block|,
+name|HEX_8
+block|,
+name|HEX_8
+block|}
+block|,
+name|arch_sh4al_dsp_up
 block|}
 block|,
 comment|/* 0000000000101000 clrmac              */
@@ -1147,6 +1293,27 @@ block|,
 name|arch_sh1_up
 block|}
 block|,
+comment|/* 0000nnnn11100011 icbi @<REG_N>       */
+block|{
+literal|"icbi"
+block|,
+block|{
+name|A_IND_N
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|REG_N
+block|,
+name|HEX_E
+block|,
+name|HEX_3
+block|}
+block|,
+name|arch_sh4a_nofp_up
+block|}
+block|,
 comment|/* 0100nnnn00101011 jmp @<REG_N>        */
 block|{
 literal|"jmp"
@@ -1393,7 +1560,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
 block|}
 block|,
 comment|/* 0100nnnn1xxx1110 ldc<REG_N>,Rn_BANK */
@@ -1623,7 +1790,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
 block|}
 block|,
 comment|/* 0100nnnn1xxx0111 ldc.l<REG_N>,Rn_BANK */
@@ -1647,6 +1814,46 @@ name|HEX_7
 block|}
 block|,
 name|arch_sh3_up
+block|}
+block|,
+comment|/* 0100mmmm00110100 ldrc<REG_M>        */
+block|{
+literal|"ldrc"
+block|,
+block|{
+name|A_REG_M
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_3
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* 10001010i8*1.... ldrc #<imm>         */
+block|{
+literal|"ldrc"
+block|,
+block|{
+name|A_IMM
+block|}
+block|,
+block|{
+name|HEX_8
+block|,
+name|HEX_A
+block|,
+name|IMM0_8
+block|}
+block|,
+name|arch_sh4al_dsp_up
 block|}
 block|,
 comment|/* 10001110i8p2.... ldre @(<disp>,PC)	*/
@@ -1914,7 +2121,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 0100nnnn01101010 lds<REG_M>,FPSCR   */
@@ -1937,7 +2144,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 0100nnnn00000110 lds.l @<REG_N>+,MACH*/
@@ -2167,7 +2374,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 0100nnnn01100110 lds.l @<REG_M>+,FPSCR*/
@@ -2190,7 +2397,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 0000000000111000 ldtlb               */
@@ -3042,7 +3249,53 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
+block|}
+block|,
+comment|/* 0000nnnn01110011 movco.l r0,@<REG_N> */
+block|{
+literal|"movco.l"
+block|,
+block|{
+name|A_R0
+block|,
+name|A_IND_N
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|REG_N
+block|,
+name|HEX_7
+block|,
+name|HEX_3
+block|}
+block|,
+name|arch_sh4a_nofp_up
+block|}
+block|,
+comment|/* 0000mmmm01100011 movli.l @<REG_M>,r0 */
+block|{
+literal|"movli.l"
+block|,
+block|{
+name|A_IND_M
+block|,
+name|A_R0
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|REG_M
+block|,
+name|HEX_6
+block|,
+name|HEX_3
+block|}
+block|,
+name|arch_sh4a_nofp_up
 block|}
 block|,
 comment|/* 0000nnnn00101001 movt<REG_N>        */
@@ -3064,6 +3317,52 @@ name|HEX_9
 block|}
 block|,
 name|arch_sh1_up
+block|}
+block|,
+comment|/* 0100mmmm10101001 movua.l @<REG_M>,r0 */
+block|{
+literal|"movua.l"
+block|,
+block|{
+name|A_IND_M
+block|,
+name|A_R0
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_A
+block|,
+name|HEX_9
+block|}
+block|,
+name|arch_sh4a_nofp_up
+block|}
+block|,
+comment|/* 0100mmmm11101001 movua.l @<REG_M>+,r0 */
+block|{
+literal|"movua.l"
+block|,
+block|{
+name|A_INC_M
+block|,
+name|A_R0
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_E
+block|,
+name|HEX_9
+block|}
+block|,
+name|arch_sh4a_nofp_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1111 muls.w<REG_M>,<REG_N>*/
@@ -3289,7 +3588,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
 block|}
 block|,
 comment|/* 0000nnnn10100011 ocbp @<REG_N>       */
@@ -3310,7 +3609,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
 block|}
 block|,
 comment|/* 0000nnnn10110011 ocbwb @<REG_N>      */
@@ -3331,7 +3630,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
 block|}
 block|,
 comment|/* 11001011i8*1.... or #<imm>,R0        */
@@ -3417,7 +3716,28 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
+block|}
+block|,
+comment|/* 0000nnnn11010011 prefi @<REG_N>      */
+block|{
+literal|"prefi"
+block|,
+block|{
+name|A_IND_N
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|REG_N
+block|,
+name|HEX_D
+block|,
+name|HEX_3
+block|}
+block|,
+name|arch_sh4a_nofp_up
 block|}
 block|,
 comment|/* 0100nnnn00100100 rotcl<REG_N>       */
@@ -3544,6 +3864,48 @@ name|HEX_B
 block|}
 block|,
 name|arch_sh1_up
+block|}
+block|,
+comment|/* 0000000010011000 setdmx              */
+block|{
+literal|"setdmx"
+block|,
+block|{
+literal|0
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|HEX_0
+block|,
+name|HEX_9
+block|,
+name|HEX_8
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* 0000000011001000 setdmy              */
+block|{
+literal|"setdmy"
+block|,
+block|{
+literal|0
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|HEX_0
+block|,
+name|HEX_C
+block|,
+name|HEX_8
+block|}
+block|,
+name|arch_sh4al_dsp_up
 block|}
 block|,
 comment|/* 0000000001011000 sets                */
@@ -4159,7 +4521,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
 block|}
 block|,
 comment|/* 0000nnnn11111010 stc DBR,<REG_N>     */
@@ -4182,7 +4544,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
 block|}
 block|,
 comment|/* 0000nnnn1xxx0010 stc Rn_BANK,<REG_N> */
@@ -4412,7 +4774,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
 block|}
 block|,
 comment|/* 0100nnnn11110010 stc.l DBR,@-<REG_N> */
@@ -4435,7 +4797,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh4_nofp_up
 block|}
 block|,
 comment|/* 0100nnnn1xxx0011 stc.l Rn_BANK,@-<REG_N> */
@@ -4688,7 +5050,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 0000nnnn01101010 sts FPSCR,<REG_N>   */
@@ -4711,7 +5073,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 0100nnnn00000010 sts.l MACH,@-<REG_N>*/
@@ -4941,7 +5303,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 0100nnnn01100010 sts.l FPSCR,@-<REG_N>*/
@@ -4964,7 +5326,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm1000 sub<REG_M>,<REG_N> */
@@ -5080,6 +5442,27 @@ name|HEX_9
 block|}
 block|,
 name|arch_sh1_up
+block|}
+block|,
+comment|/* 0000000010101011 synco               */
+block|{
+literal|"synco"
+block|,
+block|{
+literal|0
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|HEX_0
+block|,
+name|HEX_A
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh4a_nofp_up
 block|}
 block|,
 comment|/* 0100nnnn00011011 tas.b @<REG_N>      */
@@ -5504,7 +5887,7 @@ block|{
 literal|"movs.w"
 block|,
 block|{
-name|A_PMOD_N
+name|AS_PMOD_N
 block|,
 name|DSP_REG_M
 block|}
@@ -5598,7 +5981,7 @@ block|,
 block|{
 name|DSP_REG_M
 block|,
-name|A_PMOD_N
+name|AS_PMOD_N
 block|}
 block|,
 block|{
@@ -5688,7 +6071,7 @@ block|{
 literal|"movs.l"
 block|,
 block|{
-name|A_PMOD_N
+name|AS_PMOD_N
 block|,
 name|DSP_REG_M
 block|}
@@ -5782,7 +6165,7 @@ block|,
 block|{
 name|DSP_REG_M
 block|,
-name|A_PMOD_N
+name|AS_PMOD_N
 block|}
 block|,
 block|{
@@ -5837,7 +6220,7 @@ block|{
 literal|"movx.w"
 block|,
 block|{
-name|A_IND_N
+name|AX_IND_N
 block|,
 name|DSP_REG_X
 block|}
@@ -5858,7 +6241,7 @@ block|{
 literal|"movx.w"
 block|,
 block|{
-name|A_INC_N
+name|AX_INC_N
 block|,
 name|DSP_REG_X
 block|}
@@ -5879,7 +6262,7 @@ block|{
 literal|"movx.w"
 block|,
 block|{
-name|A_PMOD_N
+name|AX_PMOD_N
 block|,
 name|DSP_REG_X
 block|}
@@ -5900,9 +6283,9 @@ block|{
 literal|"movx.w"
 block|,
 block|{
-name|DSP_REG_M
+name|DSP_REG_A_M
 block|,
-name|A_IND_N
+name|AX_IND_N
 block|}
 block|,
 block|{
@@ -5921,9 +6304,9 @@ block|{
 literal|"movx.w"
 block|,
 block|{
-name|DSP_REG_M
+name|DSP_REG_A_M
 block|,
-name|A_INC_N
+name|AX_INC_N
 block|}
 block|,
 block|{
@@ -5942,9 +6325,9 @@ block|{
 literal|"movx.w"
 block|,
 block|{
-name|DSP_REG_M
+name|DSP_REG_A_M
 block|,
-name|A_PMOD_N
+name|AX_PMOD_N
 block|}
 block|,
 block|{
@@ -5958,12 +6341,288 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
+comment|/* nnmm000100 movx.w @<REG_Axy>,<DSP_REG_XY> */
+block|{
+literal|"movx.w"
+block|,
+block|{
+name|AXY_IND_N
+block|,
+name|DSP_REG_XY
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_0
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm001000 movx.w @<REG_Axy>+,<DSP_REG_XY> */
+block|{
+literal|"movx.w"
+block|,
+block|{
+name|AXY_INC_N
+block|,
+name|DSP_REG_XY
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_0
+block|,
+name|HEX_8
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm001100 movx.w @<REG_Axy>+r8,<DSP_REG_XY> */
+block|{
+literal|"movx.w"
+block|,
+block|{
+name|AXY_PMOD_N
+block|,
+name|DSP_REG_XY
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_0
+block|,
+name|HEX_C
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm100100 movx.w<DSP_REG_AX>,@<REG_Axy> */
+block|{
+literal|"movx.w"
+block|,
+block|{
+name|DSP_REG_AX
+block|,
+name|AXY_IND_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_2
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm101000 movx.w<DSP_REG_AX>,@<REG_Axy>+ */
+block|{
+literal|"movx.w"
+block|,
+block|{
+name|DSP_REG_AX
+block|,
+name|AXY_INC_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_2
+block|,
+name|HEX_8
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm101100 movx.w<DSP_REG_AX>,@<REG_Axy>+r8 */
+block|{
+literal|"movx.w"
+block|,
+block|{
+name|DSP_REG_AX
+block|,
+name|AXY_PMOD_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_2
+block|,
+name|HEX_C
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm010100 movx.l @<REG_Axy>,<DSP_REG_XY> */
+block|{
+literal|"movx.l"
+block|,
+block|{
+name|AXY_IND_N
+block|,
+name|DSP_REG_XY
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_1
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm011000 movx.l @<REG_Axy>+,<DSP_REG_XY> */
+block|{
+literal|"movx.l"
+block|,
+block|{
+name|AXY_INC_N
+block|,
+name|DSP_REG_XY
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_1
+block|,
+name|HEX_8
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm011100 movx.l @<REG_Axy>+r8,<DSP_REG_XY> */
+block|{
+literal|"movx.l"
+block|,
+block|{
+name|AXY_PMOD_N
+block|,
+name|DSP_REG_XY
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_1
+block|,
+name|HEX_C
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm110100 movx.l<DSP_REG_AX>,@<REG_Axy> */
+block|{
+literal|"movx.l"
+block|,
+block|{
+name|DSP_REG_AX
+block|,
+name|AXY_IND_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_3
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm111000 movx.l<DSP_REG_AX>,@<REG_Axy>+ */
+block|{
+literal|"movx.l"
+block|,
+block|{
+name|DSP_REG_AX
+block|,
+name|AXY_INC_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_3
+block|,
+name|HEX_8
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm111100 movx.l<DSP_REG_AX>,@<REG_Axy>+r8 */
+block|{
+literal|"movx.l"
+block|,
+block|{
+name|DSP_REG_AX
+block|,
+name|AXY_PMOD_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVX_NOPY
+block|,
+name|HEX_3
+block|,
+name|HEX_C
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
 comment|/* *n*m*0**01 movy.w @<REG_N>,<DSP_REG_Y> */
 block|{
 literal|"movy.w"
 block|,
 block|{
-name|A_IND_N
+name|AY_IND_N
 block|,
 name|DSP_REG_Y
 block|}
@@ -5984,7 +6643,7 @@ block|{
 literal|"movy.w"
 block|,
 block|{
-name|A_INC_N
+name|AY_INC_N
 block|,
 name|DSP_REG_Y
 block|}
@@ -6005,7 +6664,7 @@ block|{
 literal|"movy.w"
 block|,
 block|{
-name|A_PMODY_N
+name|AY_PMOD_N
 block|,
 name|DSP_REG_Y
 block|}
@@ -6026,9 +6685,9 @@ block|{
 literal|"movy.w"
 block|,
 block|{
-name|DSP_REG_M
+name|DSP_REG_A_M
 block|,
-name|A_IND_N
+name|AY_IND_N
 block|}
 block|,
 block|{
@@ -6047,9 +6706,9 @@ block|{
 literal|"movy.w"
 block|,
 block|{
-name|DSP_REG_M
+name|DSP_REG_A_M
 block|,
-name|A_INC_N
+name|AY_INC_N
 block|}
 block|,
 block|{
@@ -6068,9 +6727,9 @@ block|{
 literal|"movy.w"
 block|,
 block|{
-name|DSP_REG_M
+name|DSP_REG_A_M
 block|,
-name|A_PMODY_N
+name|AY_PMOD_N
 block|}
 block|,
 block|{
@@ -6082,6 +6741,282 @@ name|HEX_B
 block|}
 block|,
 name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* nnmm000001 movy.w @<REG_Ayx>,<DSP_REG_YX> */
+block|{
+literal|"movy.w"
+block|,
+block|{
+name|AYX_IND_N
+block|,
+name|DSP_REG_YX
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_0
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm000010 movy.w @<REG_Ayx>+,<DSP_REG_YX> */
+block|{
+literal|"movy.w"
+block|,
+block|{
+name|AYX_INC_N
+block|,
+name|DSP_REG_YX
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_0
+block|,
+name|HEX_2
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm000011 movy.w @<REG_Ayx>+r8,<DSP_REG_YX> */
+block|{
+literal|"movy.w"
+block|,
+block|{
+name|AYX_PMOD_N
+block|,
+name|DSP_REG_YX
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_0
+block|,
+name|HEX_3
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm010001 movy.w<DSP_REG_AY>,@<REG_Ayx> */
+block|{
+literal|"movy.w"
+block|,
+block|{
+name|DSP_REG_AY
+block|,
+name|AYX_IND_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_1
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm010010 movy.w<DSP_REG_AY>,@<REG_Ayx>+ */
+block|{
+literal|"movy.w"
+block|,
+block|{
+name|DSP_REG_AY
+block|,
+name|AYX_INC_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_1
+block|,
+name|HEX_2
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm010011 movy.w<DSP_REG_AY>,@<REG_Ayx>+r8 */
+block|{
+literal|"movy.w"
+block|,
+block|{
+name|DSP_REG_AY
+block|,
+name|AYX_PMOD_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_1
+block|,
+name|HEX_3
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm100001 movy.l @<REG_Ayx>,<DSP_REG_YX> */
+block|{
+literal|"movy.l"
+block|,
+block|{
+name|AYX_IND_N
+block|,
+name|DSP_REG_YX
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_2
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm100010 movy.l @<REG_Ayx>+,<DSP_REG_YX> */
+block|{
+literal|"movy.l"
+block|,
+block|{
+name|AYX_INC_N
+block|,
+name|DSP_REG_YX
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_2
+block|,
+name|HEX_2
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm100011 movy.l @<REG_Ayx>+r8,<DSP_REG_YX> */
+block|{
+literal|"movy.l"
+block|,
+block|{
+name|AYX_PMOD_N
+block|,
+name|DSP_REG_YX
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_2
+block|,
+name|HEX_3
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm110001 movy.l<DSP_REG_AY>,@<REG_Ayx> */
+block|{
+literal|"movy.l"
+block|,
+block|{
+name|DSP_REG_AY
+block|,
+name|AYX_IND_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_3
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm110010 movy.l<DSP_REG_AY>,@<REG_Ayx>+ */
+block|{
+literal|"movy.l"
+block|,
+block|{
+name|DSP_REG_AY
+block|,
+name|AYX_INC_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_3
+block|,
+name|HEX_2
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* nnmm110011 movy.l<DSP_REG_AY>,@<REG_Ayx>+r8 */
+block|{
+literal|"movy.l"
+block|,
+block|{
+name|DSP_REG_AY
+block|,
+name|AYX_PMOD_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|MOVY_NOPX
+block|,
+name|HEX_3
+block|,
+name|HEX_3
+block|}
+block|,
+name|arch_sh4al_dsp_up
 block|}
 block|,
 comment|/* 01aaeeffxxyyggnn pmuls Se,Sf,Dg */
@@ -6241,7 +7176,7 @@ block|,
 block|{
 name|PPI
 block|,
-name|PPI3
+name|PPI3NC
 block|,
 name|HEX_8
 block|,
@@ -6249,6 +7184,31 @@ name|HEX_8
 block|}
 block|,
 name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* 1000100!xx01nnnn pabs<DSP_REG_X>,<DSP_REG_N> */
+block|{
+literal|"pabs"
+block|,
+block|{
+name|DSP_REG_X
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPIC
+block|,
+name|HEX_8
+block|,
+name|HEX_9
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh4al_dsp_up
 block|}
 block|,
 comment|/* 10101000xxyynnnn pabs<DSP_REG_Y>,<DSP_REG_N> */
@@ -6264,7 +7224,7 @@ block|,
 block|{
 name|PPI
 block|,
-name|PPI3
+name|PPI3NC
 block|,
 name|HEX_A
 block|,
@@ -6272,6 +7232,31 @@ name|HEX_8
 block|}
 block|,
 name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* 1010100!01yynnnn pabs<DSP_REG_Y>,<DSP_REG_N> */
+block|{
+literal|"pabs"
+block|,
+block|{
+name|DSP_REG_Y
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPIC
+block|,
+name|HEX_A
+block|,
+name|HEX_9
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh4al_dsp_up
 block|}
 block|,
 comment|/* 10011000xxyynnnn prnd<DSP_REG_X>,<DSP_REG_N> */
@@ -6287,7 +7272,7 @@ block|,
 block|{
 name|PPI
 block|,
-name|PPI3
+name|PPI3NC
 block|,
 name|HEX_9
 block|,
@@ -6295,6 +7280,31 @@ name|HEX_8
 block|}
 block|,
 name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* 1001100!xx01nnnn prnd<DSP_REG_X>,<DSP_REG_N> */
+block|{
+literal|"prnd"
+block|,
+block|{
+name|DSP_REG_X
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPIC
+block|,
+name|HEX_9
+block|,
+name|HEX_9
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh4al_dsp_up
 block|}
 block|,
 comment|/* 10111000xxyynnnn prnd<DSP_REG_Y>,<DSP_REG_N> */
@@ -6310,7 +7320,7 @@ block|,
 block|{
 name|PPI
 block|,
-name|PPI3
+name|PPI3NC
 block|,
 name|HEX_B
 block|,
@@ -6318,6 +7328,31 @@ name|HEX_8
 block|}
 block|,
 name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* 1011100!01yynnnn prnd<DSP_REG_Y>,<DSP_REG_N> */
+block|{
+literal|"prnd"
+block|,
+block|{
+name|DSP_REG_Y
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPIC
+block|,
+name|HEX_B
+block|,
+name|HEX_9
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh4al_dsp_up
 block|}
 block|,
 block|{
@@ -6473,6 +7508,31 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
+comment|/* 10000101xxyynnnn psub<DSP_REG_Y>,<DSP_REG_X>,<DSP_REG_N> */
+block|{
+literal|"psub"
+block|,
+block|{
+name|DSP_REG_Y
+block|,
+name|DSP_REG_X
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPIC
+block|,
+name|HEX_8
+block|,
+name|HEX_5
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
 comment|/* 10110001xxyynnnn padd<DSP_REG_X>,<DSP_REG_Y>,<DSP_REG_N> */
 block|{
 literal|"padd"
@@ -6619,7 +7679,7 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
-comment|/* 10011001xxyynnnn pinc<DSP_REG_X>,<DSP_REG_N> */
+comment|/* 10011001xx00nnnn pinc<DSP_REG_X>,<DSP_REG_N> */
 block|{
 literal|"pinc"
 block|,
@@ -6637,12 +7697,14 @@ block|,
 name|HEX_9
 block|,
 name|HEX_9
+block|,
+name|HEX_XX00
 block|}
 block|,
 name|arch_sh_dsp_up
 block|}
 block|,
-comment|/* 10111001xxyynnnn pinc<DSP_REG_Y>,<DSP_REG_N> */
+comment|/* 1011100100yynnnn pinc<DSP_REG_Y>,<DSP_REG_N> */
 block|{
 literal|"pinc"
 block|,
@@ -6660,6 +7722,8 @@ block|,
 name|HEX_B
 block|,
 name|HEX_9
+block|,
+name|HEX_00YY
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -6686,7 +7750,7 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
-comment|/* 10011101xxyynnnn pdmsb<DSP_REG_X>,<DSP_REG_N> */
+comment|/* 10011101xx00nnnn pdmsb<DSP_REG_X>,<DSP_REG_N> */
 block|{
 literal|"pdmsb"
 block|,
@@ -6704,12 +7768,14 @@ block|,
 name|HEX_9
 block|,
 name|HEX_D
+block|,
+name|HEX_XX00
 block|}
 block|,
 name|arch_sh_dsp_up
 block|}
 block|,
-comment|/* 10111101xxyynnnn pdmsb<DSP_REG_Y>,<DSP_REG_N> */
+comment|/* 1011110100yynnnn pdmsb<DSP_REG_Y>,<DSP_REG_N> */
 block|{
 literal|"pdmsb"
 block|,
@@ -6727,6 +7793,8 @@ block|,
 name|HEX_B
 block|,
 name|HEX_D
+block|,
+name|HEX_00YY
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -6916,6 +7984,56 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
+comment|/* 10011101xx01zzzz pswap<DSP_REG_X>,<DSP_REG_N> */
+block|{
+literal|"pswap"
+block|,
+block|{
+name|DSP_REG_X
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPIC
+block|,
+name|HEX_9
+block|,
+name|HEX_D
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
+comment|/* 1011110101yyzzzz pswap<DSP_REG_Y>,<DSP_REG_N> */
+block|{
+literal|"pswap"
+block|,
+block|{
+name|DSP_REG_Y
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPIC
+block|,
+name|HEX_B
+block|,
+name|HEX_D
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh4al_dsp_up
+block|}
+block|,
 comment|/* 1111nnnn01011101 fabs<F_REG_N>     */
 block|{
 literal|"fabs"
@@ -6934,10 +8052,10 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnn01011101 fabs<D_REG_N>     */
+comment|/* 1111nnn001011101 fabs<D_REG_N>     */
 block|{
 literal|"fabs"
 block|,
@@ -6978,7 +8096,7 @@ block|,
 name|HEX_0
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnn0mmm00000 fadd<D_REG_M>,<D_REG_N>*/
@@ -7024,7 +8142,7 @@ block|,
 name|HEX_4
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnn0mmm00100 fcmp/eq<D_REG_M>,<D_REG_N>*/
@@ -7070,7 +8188,7 @@ block|,
 name|HEX_5
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnn0mmm00101 fcmp/gt<D_REG_M>,<D_REG_N>*/
@@ -7109,7 +8227,7 @@ block|,
 block|{
 name|HEX_F
 block|,
-name|REG_N
+name|REG_N_D
 block|,
 name|HEX_B
 block|,
@@ -7132,7 +8250,7 @@ block|,
 block|{
 name|HEX_F
 block|,
-name|REG_N
+name|REG_N_D
 block|,
 name|HEX_A
 block|,
@@ -7162,7 +8280,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnn0mmm00011 fdiv<D_REG_M>,<D_REG_N>*/
@@ -7229,7 +8347,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnn10011101 fldi1<F_REG_N>    */
@@ -7250,7 +8368,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnn00011101 flds<F_REG_N>,FPUL*/
@@ -7273,7 +8391,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnn00101101 float FPUL,<F_REG_N>*/
@@ -7296,10 +8414,10 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnn00101101 float FPUL,<D_REG_N>*/
+comment|/* 1111nnn000101101 float FPUL,<D_REG_N>*/
 block|{
 literal|"float"
 block|,
@@ -7344,7 +8462,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm1100 fmov<F_REG_M>,<F_REG_N>*/
@@ -7367,10 +8485,10 @@ block|,
 name|HEX_C
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm1100 fmov<DX_REG_M>,<DX_REG_N>*/
+comment|/* 1111nnn1mmmm1100 fmov<DX_REG_M>,<DX_REG_N>*/
 block|{
 literal|"fmov"
 block|,
@@ -7413,10 +8531,10 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm1000 fmov @<REG_M>,<DX_REG_N>*/
+comment|/* 1111nnn1mmmm1000 fmov @<REG_M>,<DX_REG_N>*/
 block|{
 literal|"fmov"
 block|,
@@ -7459,10 +8577,10 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm1010 fmov<DX_REG_M>,@<REG_N>*/
+comment|/* 1111nnnnmmm11010 fmov<DX_REG_M>,@<REG_N>*/
 block|{
 literal|"fmov"
 block|,
@@ -7505,10 +8623,10 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm1001 fmov @<REG_M>+,<DX_REG_N>*/
+comment|/* 1111nnn1mmmm1001 fmov @<REG_M>+,<DX_REG_N>*/
 block|{
 literal|"fmov"
 block|,
@@ -7551,10 +8669,10 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm1011 fmov<DX_REG_M>,@-<REG_N>*/
+comment|/* 1111nnnnmmm11011 fmov<DX_REG_M>,@-<REG_N>*/
 block|{
 literal|"fmov"
 block|,
@@ -7597,10 +8715,10 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm0110 fmov @(R0,<REG_M>),<DX_REG_N>*/
+comment|/* 1111nnn1mmmm0110 fmov @(R0,<REG_M>),<DX_REG_N>*/
 block|{
 literal|"fmov"
 block|,
@@ -7643,10 +8761,10 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm0111 fmov<DX_REG_M>,@(R0,<REG_N>)*/
+comment|/* 1111nnnnmmm10111 fmov<DX_REG_M>,@(R0,<REG_N>)*/
 block|{
 literal|"fmov"
 block|,
@@ -7669,7 +8787,7 @@ block|,
 name|arch_sh4_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm1000 fmov.d @<REG_M>,<DX_REG_N>*/
+comment|/* 1111nnn1mmmm1000 fmov.d @<REG_M>,<DX_REG_N>*/
 block|{
 literal|"fmov.d"
 block|,
@@ -7692,7 +8810,7 @@ block|,
 name|arch_sh4_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm1010 fmov.d<DX_REG_M>,@<REG_N>*/
+comment|/* 1111nnnnmmm11010 fmov.d<DX_REG_M>,@<REG_N>*/
 block|{
 literal|"fmov.d"
 block|,
@@ -7715,7 +8833,7 @@ block|,
 name|arch_sh4_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm1001 fmov.d @<REG_M>+,<DX_REG_N>*/
+comment|/* 1111nnn1mmmm1001 fmov.d @<REG_M>+,<DX_REG_N>*/
 block|{
 literal|"fmov.d"
 block|,
@@ -7738,7 +8856,7 @@ block|,
 name|arch_sh4_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm1011 fmov.d<DX_REG_M>,@-<REG_N>*/
+comment|/* 1111nnnnmmm11011 fmov.d<DX_REG_M>,@-<REG_N>*/
 block|{
 literal|"fmov.d"
 block|,
@@ -7761,7 +8879,7 @@ block|,
 name|arch_sh4_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm0110 fmov.d @(R0,<REG_M>),<DX_REG_N>*/
+comment|/* 1111nnn1mmmm0110 fmov.d @(R0,<REG_M>),<DX_REG_N>*/
 block|{
 literal|"fmov.d"
 block|,
@@ -7784,7 +8902,7 @@ block|,
 name|arch_sh4_up
 block|}
 block|,
-comment|/* 1111nnnnmmmm0111 fmov.d<DX_REG_M>,@(R0,<REG_N>)*/
+comment|/* 1111nnnnmmm10111 fmov.d<DX_REG_M>,@(R0,<REG_N>)*/
 block|{
 literal|"fmov.d"
 block|,
@@ -7827,7 +8945,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm1010 fmov.s<F_REG_M>,@<REG_N>*/
@@ -7850,7 +8968,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm1001 fmov.s @<REG_M>+,<F_REG_N>*/
@@ -7873,7 +8991,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm1011 fmov.s<F_REG_M>,@-<REG_N>*/
@@ -7896,7 +9014,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0110 fmov.s @(R0,<REG_M>),<F_REG_N>*/
@@ -7919,7 +9037,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0111 fmov.s<F_REG_M>,@(R0,<REG_N>)*/
@@ -7942,7 +9060,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0010 fmul<F_REG_M>,<F_REG_N>*/
@@ -7965,7 +9083,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnn0mmm00010 fmul<D_REG_M>,<D_REG_N>*/
@@ -8009,10 +9127,10 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
-comment|/* 1111nnnn01001101 fneg<D_REG_N>     */
+comment|/* 1111nnn001001101 fneg<D_REG_N>     */
 block|{
 literal|"fneg"
 block|,
@@ -8033,6 +9151,27 @@ block|,
 name|arch_sh4_up
 block|}
 block|,
+comment|/* 1111011111111101 fpchg               */
+block|{
+literal|"fpchg"
+block|,
+block|{
+literal|0
+block|}
+block|,
+block|{
+name|HEX_F
+block|,
+name|HEX_7
+block|,
+name|HEX_F
+block|,
+name|HEX_D
+block|}
+block|,
+name|arch_sh4a_up
+block|}
+block|,
 comment|/* 1111101111111101 frchg               */
 block|{
 literal|"frchg"
@@ -8045,6 +9184,29 @@ block|{
 name|HEX_F
 block|,
 name|HEX_B
+block|,
+name|HEX_F
+block|,
+name|HEX_D
+block|}
+block|,
+name|arch_sh4_up
+block|}
+block|,
+comment|/* 1111nnn011111101 fsca FPUL,<D_REG_N> */
+block|{
+literal|"fsca"
+block|,
+block|{
+name|FPUL_M
+block|,
+name|D_REG_N
+block|}
+block|,
+block|{
+name|HEX_F
+block|,
+name|REG_N_D
 block|,
 name|HEX_F
 block|,
@@ -8096,7 +9258,7 @@ block|,
 name|arch_sh3e_up
 block|}
 block|,
-comment|/* 1111nnnn01101101 fsqrt<D_REG_N>    */
+comment|/* 1111nnn001101101 fsqrt<D_REG_N>    */
 block|{
 literal|"fsqrt"
 block|,
@@ -8110,6 +9272,27 @@ block|,
 name|REG_N
 block|,
 name|HEX_6
+block|,
+name|HEX_D
+block|}
+block|,
+name|arch_sh4_up
+block|}
+block|,
+comment|/* 1111nnnn01111101 fsrra<F_REG_N>    */
+block|{
+literal|"fsrra"
+block|,
+block|{
+name|F_REG_N
+block|}
+block|,
+block|{
+name|HEX_F
+block|,
+name|REG_N
+block|,
+name|HEX_7
 block|,
 name|HEX_D
 block|}
@@ -8137,7 +9320,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0001 fsub<F_REG_M>,<F_REG_N>*/
@@ -8160,7 +9343,7 @@ block|,
 name|HEX_1
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnn0mmm00001 fsub<D_REG_M>,<D_REG_N>*/
@@ -8206,7 +9389,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2e_up
 block|}
 block|,
 comment|/* 1111nnnn00111101 ftrc<D_REG_N>,FPUL*/
@@ -8245,7 +9428,7 @@ block|,
 block|{
 name|HEX_F
 block|,
-name|REG_NM
+name|REG_N_B01
 block|,
 name|HEX_F
 block|,

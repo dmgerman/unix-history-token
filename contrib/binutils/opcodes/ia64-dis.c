@@ -866,7 +866,7 @@ operator|==
 name|IA64_OPND_TGT64
 condition|)
 block|{
-comment|/* 60-bit immedate for long branches.  */
+comment|/* 60-bit immediate for long branches. */
 name|value
 operator|=
 operator|(
@@ -895,10 +895,18 @@ literal|59
 operator|)
 operator||
 operator|(
+operator|(
+operator|(
 name|slot
 index|[
 literal|1
 index|]
+operator|>>
+literal|2
+operator|)
+operator|&
+literal|0x7fffffffffLL
+operator|)
 operator|<<
 literal|20
 operator|)

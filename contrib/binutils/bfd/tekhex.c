@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* SUBSECTION 	Tektronix Hex Format handling  DESCRIPTION  	Tek Hex records can hold symbols and data, but not 	relocations. Their main application is communication with 	devices like PROM programmers and ICE equipment.  	It seems that the sections are descibed as being really big,         the example I have says that the text section is 0..ffffffff. 	BFD would barf with this, many apps would try to alloc 4GB to 	read in the file.  	Tex Hex may contain many sections, but the data which comes in 	has no tag saying which section it belongs to, so we create 	one section for each block of data, called "blknnnn" which we 	stick all the data into.  	TekHex may come out of 	order and there is no header, so an 	initial scan is required  to discover the minimum and maximum 	addresses used to create the vma and size of the sections we 	create. 	We read in the data into pages of CHUNK_MASK+1 size and read 	them out from that whenever we need to.  	Any number of sections may be created for output, we save them 	up and output them when it's time to close the bfd.  	A TekHex record looks like: EXAMPLE 	%<block length><type><checksum><stuff><cr>  DESCRIPTION 	Where 	o length 	is the number of bytes in the record not including the % sign. 	o type 	is one of: 	3) symbol record 	6) data record 	8) termination record  The data can come out of order, and may be discontigous. This is a serial protocol, so big files are unlikely, so we keep a list of 8k chunks */
+comment|/* SUBSECTION 	Tektronix Hex Format handling  DESCRIPTION  	Tek Hex records can hold symbols and data, but not 	relocations. Their main application is communication with 	devices like PROM programmers and ICE equipment.  	It seems that the sections are described as being really big,         the example I have says that the text section is 0..ffffffff. 	BFD would barf with this, many apps would try to alloc 4GB to 	read in the file.  	Tex Hex may contain many sections, but the data which comes in 	has no tag saying which section it belongs to, so we create 	one section for each block of data, called "blknnnn" which we 	stick all the data into.  	TekHex may come out of 	order and there is no header, so an 	initial scan is required  to discover the minimum and maximum 	addresses used to create the vma and size of the sections we 	create. 	We read in the data into pages of CHUNK_MASK+1 size and read 	them out from that whenever we need to.  	Any number of sections may be created for output, we save them 	up and output them when it's time to close the bfd.  	A TekHex record looks like: EXAMPLE 	%<block length><type><checksum><stuff><cr>  DESCRIPTION 	Where 	o length 	is the number of bytes in the record not including the % sign. 	o type 	is one of: 	3) symbol record 	6) data record 	8) termination record  The data can come out of order, and may be discontigous. This is a serial protocol, so big files are unlikely, so we keep a list of 8k chunks */
 end_comment
 
 begin_include
@@ -229,7 +229,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -237,7 +237,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_write_object_contents
 name|PARAMS
 argument_list|(
@@ -309,7 +309,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_set_section_contents
 name|PARAMS
 argument_list|(
@@ -319,6 +319,7 @@ operator|*
 operator|,
 name|sec_ptr
 operator|,
+specifier|const
 name|PTR
 operator|,
 name|file_ptr
@@ -331,7 +332,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_set_arch_mach
 name|PARAMS
 argument_list|(
@@ -351,7 +352,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_get_section_contents
 name|PARAMS
 argument_list|(
@@ -385,13 +386,14 @@ operator|,
 name|asection
 operator|*
 operator|,
+specifier|const
 name|PTR
 operator|,
 name|file_ptr
 operator|,
 name|bfd_size_type
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -415,7 +417,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_mkobject
 name|PARAMS
 argument_list|(
@@ -444,7 +446,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|long
-name|tekhex_get_symtab
+name|tekhex_canonicalize_symtab
 name|PARAMS
 argument_list|(
 operator|(
@@ -576,10 +578,10 @@ name|int
 name|i
 decl_stmt|;
 specifier|static
-name|boolean
+name|bfd_boolean
 name|inited
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 name|int
 name|val
@@ -592,7 +594,7 @@ condition|)
 block|{
 name|inited
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|hex_init
 argument_list|()
@@ -1658,7 +1660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Pass over an tekhex, calling one of the above functions on each    record.  */
+comment|/* Pass over a tekhex, calling one of the above functions on each    record.  */
 end_comment
 
 begin_function_decl
@@ -1702,10 +1704,10 @@ name|unsigned
 name|int
 name|chars_on_line
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|eof
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 comment|/* To the front of the file */
 if|if
@@ -1752,7 +1754,7 @@ comment|/* Find first '%' */
 name|eof
 operator|=
 call|(
-name|boolean
+name|bfd_boolean
 call|)
 argument_list|(
 name|bfd_bread
@@ -1784,7 +1786,7 @@ block|{
 name|eof
 operator|=
 call|(
-name|boolean
+name|bfd_boolean
 call|)
 argument_list|(
 name|bfd_bread
@@ -1914,7 +1916,7 @@ end_block
 begin_function
 specifier|static
 name|long
-name|tekhex_get_symtab
+name|tekhex_canonicalize_symtab
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -2027,7 +2029,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_mkobject
 parameter_list|(
 name|abfd
@@ -2066,7 +2068,7 @@ operator|!
 name|tdata
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|abfd
 operator|->
@@ -2115,13 +2117,13 @@ operator|)
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*   Return true if the file looks like it's in TekHex format. Just look   for a percent sign and some hex digits */
+comment|/*   Return TRUE if the file looks like it's in TekHex format. Just look   for a percent sign and some hex digits */
 end_comment
 
 begin_function
@@ -2269,6 +2271,7 @@ name|asection
 modifier|*
 name|section
 decl_stmt|;
+specifier|const
 name|PTR
 name|locationp
 decl_stmt|;
@@ -2278,7 +2281,7 @@ decl_stmt|;
 name|bfd_size_type
 name|count
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|get
 decl_stmt|;
 block|{
@@ -2447,7 +2450,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_get_section_contents
 parameter_list|(
 name|abfd
@@ -2503,23 +2506,23 @@ name|offset
 argument_list|,
 name|count
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 else|else
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_set_arch_mach
 parameter_list|(
 name|abfd
@@ -2560,7 +2563,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_set_section_contents
 parameter_list|(
 name|abfd
@@ -2580,6 +2583,7 @@ decl_stmt|;
 name|sec_ptr
 name|section
 decl_stmt|;
+specifier|const
 name|PTR
 name|locationp
 decl_stmt|;
@@ -2699,16 +2703,16 @@ name|offset
 argument_list|,
 name|bytes_to_do
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 else|else
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -3167,7 +3171,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|tekhex_write_object_contents
 parameter_list|(
 name|abfd
@@ -3611,7 +3615,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|writesym
@@ -3675,7 +3679,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3694,7 +3698,7 @@ modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|exec
 name|ATTRIBUTE_UNUSED
 decl_stmt|;

@@ -4,7 +4,7 @@ comment|/*<ctype.h> replacement macros.     Copyright (C) 2000 Free Software Fou
 end_comment
 
 begin_comment
-comment|/* This is a compatible replacement of the standard C library's<ctype.h>    with the following properties:     - Implements all isxxx() macros required by C99.    - Also implements some character classes useful when      parsing C-like languages.    - Does not change behavior depending on the current locale.    - Behaves properly for all values in the range of a signed or      unsigned char.  */
+comment|/*  @defvr Extension HOST_CHARSET This macro indicates the basic character set and encoding used by the host: more precisely, the encoding used for character constants in preprocessor @samp{#if} statements (the C "execution character set"). It is defined by @file{safe-ctype.h}, and will be an integer constant with one of the following values:  @ftable @code @item HOST_CHARSET_UNKNOWN The host character set is unknown - that is, not one of the next two possibilities.  @item HOST_CHARSET_ASCII The host character set is ASCII.  @item HOST_CHARSET_EBCDIC The host character set is some variant of EBCDIC.  (Only one of the nineteen EBCDIC varying characters is tested; exercise caution.) @end ftable @end defvr  @deffn  Extension ISALPHA  (@var{c}) @deffnx Extension ISALNUM  (@var{c}) @deffnx Extension ISBLANK  (@var{c}) @deffnx Extension ISCNTRL  (@var{c}) @deffnx Extension ISDIGIT  (@var{c}) @deffnx Extension ISGRAPH  (@var{c}) @deffnx Extension ISLOWER  (@var{c}) @deffnx Extension ISPRINT  (@var{c}) @deffnx Extension ISPUNCT  (@var{c}) @deffnx Extension ISSPACE  (@var{c}) @deffnx Extension ISUPPER  (@var{c}) @deffnx Extension ISXDIGIT (@var{c})  These twelve macros are defined by @file{safe-ctype.h}.  Each has the same meaning as the corresponding macro (with name in lowercase) defined by the standard header @file{ctype.h}.  For example, @code{ISALPHA} returns true for alphabetic characters and false for others.  However, there are two differences between these macros and those provided by @file{ctype.h}:  @itemize @bullet @item These macros are guaranteed to have well-defined behavior for all  values representable by @code{signed char} and @code{unsigned char}, and for @code{EOF}.  @item These macros ignore the current locale; they are true for these fixed sets of characters: @multitable {@code{XDIGIT}} {yada yada yada yada yada yada yada yada} @item @code{ALPHA}  @tab @kbd{A-Za-z} @item @code{ALNUM}  @tab @kbd{A-Za-z0-9} @item @code{BLANK}  @tab @kbd{space tab} @item @code{CNTRL}  @tab @code{!PRINT} @item @code{DIGIT}  @tab @kbd{0-9} @item @code{GRAPH}  @tab @code{ALNUM || PUNCT} @item @code{LOWER}  @tab @kbd{a-z} @item @code{PRINT}  @tab @code{GRAPH ||} @kbd{space} @item @code{PUNCT}  @tab @kbd{`~!@@#$%^&*()_-=+[@{]@}\|;:'",<.>/?} @item @code{SPACE}  @tab @kbd{space tab \n \r \f \v} @item @code{UPPER}  @tab @kbd{A-Z} @item @code{XDIGIT} @tab @kbd{0-9A-Fa-f} @end multitable  Note that, if the host character set is ASCII or a superset thereof, all these macros will return false for all values of @code{char} outside the range of 7-bit ASCII.  In particular, both ISPRINT and ISCNTRL return false for characters with numeric values from 128 to 255. @end itemize @end deffn  @deffn  Extension ISIDNUM         (@var{c}) @deffnx Extension ISIDST          (@var{c}) @deffnx Extension IS_VSPACE       (@var{c}) @deffnx Extension IS_NVSPACE      (@var{c}) @deffnx Extension IS_SPACE_OR_NUL (@var{c}) @deffnx Extension IS_ISOBASIC     (@var{c}) These six macros are defined by @file{safe-ctype.h} and provide additional character classes which are useful when doing lexical analysis of C or similar languages.  They are true for the following sets of characters:  @multitable {@code{SPACE_OR_NUL}} {yada yada yada yada yada yada yada yada} @item @code{IDNUM}        @tab @kbd{A-Za-z0-9_} @item @code{IDST}         @tab @kbd{A-Za-z_} @item @code{VSPACE}       @tab @kbd{\r \n} @item @code{NVSPACE}      @tab @kbd{space tab \f \v \0} @item @code{SPACE_OR_NUL} @tab @code{VSPACE || NVSPACE} @item @code{ISOBASIC}     @tab @code{VSPACE || NVSPACE || PRINT} @end multitable @end deffn  */
 end_comment
 
 begin_include
@@ -28,6 +28,26 @@ end_include
 begin_comment
 comment|/* for EOF */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|EOF
+operator|!=
+operator|-
+literal|1
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"<safe-ctype.h> requires EOF == -1"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Shorthand */
@@ -125,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|L
-value|lo|is   |pr
+value|(const unsigned short) (lo|is   |pr)
 end_define
 
 begin_comment
@@ -136,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|XL
-value|lo|is|xd|pr
+value|(const unsigned short) (lo|is|xd|pr)
 end_define
 
 begin_comment
@@ -147,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|U
-value|up|is   |pr
+value|(const unsigned short) (up|is   |pr)
 end_define
 
 begin_comment
@@ -158,7 +178,7 @@ begin_define
 define|#
 directive|define
 name|XU
-value|up|is|xd|pr
+value|(const unsigned short) (up|is|xd|pr)
 end_define
 
 begin_comment
@@ -169,7 +189,7 @@ begin_define
 define|#
 directive|define
 name|D
-value|di   |xd|pr
+value|(const unsigned short) (di   |xd|pr)
 end_define
 
 begin_comment
@@ -180,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|P
-value|pn      |pr
+value|(const unsigned short) (pn      |pr)
 end_define
 
 begin_comment
@@ -191,7 +211,7 @@ begin_define
 define|#
 directive|define
 name|_
-value|pn|is   |pr
+value|(const unsigned short) (pn|is   |pr)
 end_define
 
 begin_comment
@@ -202,7 +222,7 @@ begin_define
 define|#
 directive|define
 name|C
-value|cn
+value|(const unsigned short) (         cn)
 end_define
 
 begin_comment
@@ -213,7 +233,7 @@ begin_define
 define|#
 directive|define
 name|Z
-value|nv      |cn
+value|(const unsigned short) (nv      |cn)
 end_define
 
 begin_comment
@@ -224,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|M
-value|nv|sp   |cn
+value|(const unsigned short) (nv|sp   |cn)
 end_define
 
 begin_comment
@@ -235,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|V
-value|vs|sp   |cn
+value|(const unsigned short) (vs|sp   |cn)
 end_define
 
 begin_comment
@@ -246,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|T
-value|nv|sp|bl|cn
+value|(const unsigned short) (nv|sp|bl|cn)
 end_define
 
 begin_comment
@@ -257,7 +277,7 @@ begin_define
 define|#
 directive|define
 name|S
-value|nv|sp|bl|pr
+value|(const unsigned short) (nv|sp|bl|pr)
 end_define
 
 begin_comment
@@ -271,36 +291,9 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|'\n'
+name|HOST_CHARSET
 operator|==
-literal|0x0A
-operator|&&
-literal|' '
-operator|==
-literal|0x20
-operator|&&
-literal|'0'
-operator|==
-literal|0x30
-expr|\
-operator|&&
-literal|'A'
-operator|==
-literal|0x41
-operator|&&
-literal|'a'
-operator|==
-literal|0x61
-operator|&&
-literal|'!'
-operator|==
-literal|0x21
-expr|\
-operator|&&
-name|EOF
-operator|==
-operator|-
-literal|1
+name|HOST_CHARSET_ASCII
 end_if
 
 begin_decl_stmt
@@ -1900,10 +1893,29 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|HOST_CHARSET
+operator|==
+name|HOST_CHARSET_EBCDIC
+end_if
+
 begin_error
 error|#
 directive|error
-literal|"Unsupported host character set"
+literal|"FIXME: write tables for EBCDIC"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"Unrecognized host character set"
 end_error
 
 begin_endif
@@ -1911,9 +1923,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not ASCII */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -47,7 +47,7 @@ block|,
 literal|3
 block|,
 comment|/* section alignment power */
-name|true
+name|TRUE
 block|,
 comment|/* the default */
 name|bfd_default_compatible
@@ -85,7 +85,7 @@ block|,
 literal|3
 block|,
 comment|/* section alignment power */
-name|true
+name|TRUE
 block|,
 comment|/* the default */
 name|bfd_default_compatible

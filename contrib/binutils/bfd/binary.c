@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for binary objects.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for binary objects.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|binary_mkobject
 name|PARAMS
 argument_list|(
@@ -74,7 +74,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|binary_get_section_contents
 name|PARAMS
 argument_list|(
@@ -130,7 +130,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|long
-name|binary_get_symtab
+name|binary_canonicalize_symtab
 name|PARAMS
 argument_list|(
 operator|(
@@ -167,7 +167,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|binary_set_section_contents
 name|PARAMS
 argument_list|(
@@ -178,6 +178,7 @@ operator|,
 name|asection
 operator|*
 operator|,
+specifier|const
 name|PTR
 operator|,
 name|file_ptr
@@ -198,14 +199,14 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set by external programs - specifies the BFD architecture    to use when creating binary BFDs.  */
+comment|/* Set by external programs - specifies the BFD architecture and    machine number to be uses when creating binary BFDs.  */
 end_comment
 
 begin_decl_stmt
@@ -217,13 +218,22 @@ name|bfd_arch_unknown
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|unsigned
+name|long
+name|bfd_external_machine
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Create a binary object.  Invoked via bfd_set_format.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|binary_mkobject
 parameter_list|(
 name|abfd
@@ -235,7 +245,7 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -410,7 +420,7 @@ name|bfd_lookup_arch
 argument_list|(
 name|bfd_external_binary_architecture
 argument_list|,
-literal|0
+name|bfd_external_machine
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -450,7 +460,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|binary_get_section_contents
 parameter_list|(
 name|abfd
@@ -507,10 +517,10 @@ operator|!=
 name|count
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -678,7 +688,7 @@ end_comment
 begin_function
 specifier|static
 name|long
-name|binary_get_symtab
+name|binary_canonicalize_symtab
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -746,10 +756,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
-name|long
-operator|)
-name|false
+literal|0
 return|;
 comment|/* Start symbol.  */
 name|syms
@@ -1107,7 +1114,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|binary_set_section_contents
 parameter_list|(
 name|abfd
@@ -1128,6 +1135,7 @@ name|asection
 modifier|*
 name|sec
 decl_stmt|;
+specifier|const
 name|PTR
 name|data
 decl_stmt|;
@@ -1145,7 +1153,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -1155,7 +1163,7 @@ operator|->
 name|output_has_begun
 condition|)
 block|{
-name|boolean
+name|bfd_boolean
 name|found_low
 decl_stmt|;
 name|bfd_vma
@@ -1168,7 +1176,7 @@ decl_stmt|;
 comment|/* The lowest section LMA sets the virtual address of the start          of the file.  We use this to set the file position of all the          sections.  */
 name|found_low
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|low
 operator|=
@@ -1248,7 +1256,7 @@ name|lma
 expr_stmt|;
 name|found_low
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 for|for
@@ -1352,7 +1360,7 @@ name|abfd
 operator|->
 name|output_has_begun
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 comment|/* We don't want to output anything for a section that is neither      loaded nor allocated.  The contents of such a section are not      meaningful in the binary format.  */
@@ -1373,7 +1381,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -1388,7 +1396,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 return|return
 name|_bfd_generic_set_section_contents
@@ -1425,7 +1433,7 @@ modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|exec
 name|ATTRIBUTE_UNUSED
 decl_stmt|;

@@ -146,6 +146,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_CSD
+value|IA64_OPND_AR_CSD
+end_define
+
+begin_define
+define|#
+directive|define
 name|C1
 value|IA64_OPND_C1
 end_define

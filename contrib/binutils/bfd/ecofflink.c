@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Routines to link ECOFF debugging information.    Copyright 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Routines to link ECOFF debugging information.    Copyright 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ end_escape
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_add_bytes
 name|PARAMS
 argument_list|(
@@ -155,7 +155,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_write_symhdr
 name|PARAMS
 argument_list|(
@@ -198,7 +198,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|mk_fdrtab
 name|PARAMS
 argument_list|(
@@ -244,7 +244,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|lookup_line
 name|PARAMS
 argument_list|(
@@ -1524,7 +1524,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_add_bytes
 parameter_list|(
 name|buf
@@ -1620,7 +1620,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 name|buf
@@ -1638,7 +1638,7 @@ operator|+
 name|want
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1868,7 +1868,7 @@ name|long
 name|size
 decl_stmt|;
 comment|/* Whether this information comes from a file or not.  */
-name|boolean
+name|bfd_boolean
 name|filep
 decl_stmt|;
 union|union
@@ -2028,7 +2028,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|add_file_shuffle
 name|PARAMS
 argument_list|(
@@ -2061,7 +2061,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|add_file_shuffle
 parameter_list|(
 name|ainfo
@@ -2202,7 +2202,7 @@ operator|->
 name|size
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|n
@@ -2237,7 +2237,7 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|n
@@ -2256,7 +2256,7 @@ name|n
 operator|->
 name|filep
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|n
 operator|->
@@ -2336,7 +2336,7 @@ operator|=
 name|size
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2347,7 +2347,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|add_memory_shuffle
 name|PARAMS
 argument_list|(
@@ -2382,7 +2382,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|add_memory_shuffle
 parameter_list|(
 name|ainfo
@@ -2458,7 +2458,7 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|n
@@ -2477,7 +2477,7 @@ name|n
 operator|->
 name|filep
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|n
 operator|->
@@ -2534,7 +2534,7 @@ operator|=
 name|n
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2751,7 +2751,7 @@ condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 if|if
@@ -2888,7 +2888,7 @@ condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 name|bfd_hash_table_free
 argument_list|(
@@ -2920,7 +2920,7 @@ comment|/* Accumulate the debugging information from INPUT_BFD into    OUTPUT_BF
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_ecoff_debug_accumulate
 parameter_list|(
 name|handle
@@ -3451,7 +3451,7 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -3477,7 +3477,7 @@ name|sz
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|copied
 operator|=
@@ -3629,7 +3629,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|sprintf
 argument_list|(
@@ -3659,9 +3659,9 @@ name|fdr_hash
 argument_list|,
 name|lookup
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|free
@@ -3681,7 +3681,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -3934,7 +3934,7 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -3960,7 +3960,7 @@ name|sz
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -4002,7 +4002,7 @@ name|bfd_byte
 modifier|*
 name|lraw_end
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|fgotfilename
 decl_stmt|;
 if|if
@@ -4147,7 +4147,7 @@ expr_stmt|;
 comment|/* Swap in the local symbols, adjust their values, and swap them 	 out again.  */
 name|fgotfilename
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|sz
 operator|=
@@ -4184,7 +4184,7 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -4210,7 +4210,7 @@ name|sz
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|lraw_src
 operator|=
@@ -4417,16 +4417,16 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* If we are doing a final link, we hash all the strings in 	     the local symbol table together.  This reduces the amount 	     of space required by debugging information.  We don't do 	     this when performing a relocateable link because it would 	     prevent us from easily merging different FDR's.  */
+comment|/* If we are doing a final link, we hash all the strings in 	     the local symbol table together.  This reduces the amount 	     of space required by debugging information.  We don't do 	     this when performing a relocatable link because it would 	     prevent us from easily merging different FDR's.  */
 if|if
 condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
-name|boolean
+name|bfd_boolean
 name|ffilename
 decl_stmt|;
 specifier|const
@@ -4449,12 +4449,12 @@ name|rss
 condition|)
 name|ffilename
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 else|else
 name|ffilename
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 comment|/* Hash the name into the string table.  */
 name|name
@@ -4502,9 +4502,9 @@ name|str_hash
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4519,7 +4519,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -4621,7 +4621,7 @@ name|iss
 expr_stmt|;
 name|fgotfilename
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 block|}
@@ -4712,7 +4712,7 @@ name|cbLine
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|fdr
 operator|.
@@ -4808,7 +4808,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|fdr
 operator|.
@@ -4832,7 +4832,7 @@ condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 comment|/* When are are hashing strings, we lie about the number of 	     strings attached to each FDR.  We need to set cbSs 	     because some versions of dbx apparently use it to decide 	     how much of the string table to read in.  */
@@ -4903,7 +4903,7 @@ name|cbSs
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|fdr
 operator|.
@@ -5019,7 +5019,7 @@ name|size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|BFD_ASSERT
@@ -5090,7 +5090,7 @@ name|size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -5187,7 +5187,7 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -5213,7 +5213,7 @@ name|sz
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -5422,7 +5422,7 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -5448,7 +5448,7 @@ name|sz
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -5598,7 +5598,7 @@ name|ifdMax
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -5707,7 +5707,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 if|if
@@ -5782,9 +5782,9 @@ name|str_hash
 argument_list|,
 name|string
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5893,7 +5893,7 @@ comment|/* Add debugging information from a non-ECOFF file.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_ecoff_debug_accumulate_other
 parameter_list|(
 name|handle
@@ -6108,7 +6108,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|fdr
 operator|.
@@ -6133,7 +6133,7 @@ operator|<
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|symbols
 operator|=
@@ -6164,7 +6164,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|symcount
 operator|=
@@ -6182,7 +6182,7 @@ operator|<
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|sym_end
 operator|=
@@ -6280,7 +6280,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -6395,7 +6395,7 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 call|(
@@ -6486,7 +6486,7 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 call|(
@@ -6535,7 +6535,7 @@ operator|->
 name|ifdMax
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -6545,7 +6545,7 @@ comment|/* Set up ECOFF debugging information for the external symbols.    FIXME
 end_comment
 
 begin_function_decl
-name|boolean
+name|bfd_boolean
 name|bfd_ecoff_debug_externals
 parameter_list|(
 name|abfd
@@ -6554,7 +6554,7 @@ name|debug
 parameter_list|,
 name|swap
 parameter_list|,
-name|relocateable
+name|relocatable
 parameter_list|,
 name|get_extr
 parameter_list|,
@@ -6575,10 +6575,10 @@ name|ecoff_debug_swap
 modifier|*
 name|swap
 decl_stmt|;
-name|boolean
-name|relocateable
+name|bfd_boolean
+name|relocatable
 decl_stmt|;
-function_decl|boolean
+function_decl|bfd_boolean
 parameter_list|(
 function_decl|*get_extr
 end_function_decl
@@ -6652,7 +6652,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 for|for
 control|(
@@ -6706,7 +6706,7 @@ comment|/* If we're producing an executable, move common symbols into 	 bss.  */
 if|if
 condition|(
 operator|!
-name|relocateable
+name|relocatable
 condition|)
 block|{
 if|if
@@ -6878,11 +6878,11 @@ name|esym
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -6892,7 +6892,7 @@ comment|/* Add a single external symbol to the debugging information.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_ecoff_debug_one_external
 parameter_list|(
 name|abfd
@@ -7039,7 +7039,7 @@ literal|1
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -7116,7 +7116,7 @@ name|external_ext_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|esym
@@ -7184,7 +7184,7 @@ operator|+
 literal|1
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7781,7 +7781,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_write_symhdr
 parameter_list|(
 name|abfd
@@ -7851,7 +7851,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|where
 operator|+=
@@ -8083,7 +8083,7 @@ name|buff
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -8099,7 +8099,7 @@ name|buff
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -8109,7 +8109,7 @@ comment|/* Write out the ECOFF debugging information.  This function assumes    
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_ecoff_write_debug
 parameter_list|(
 name|abfd
@@ -8164,7 +8164,7 @@ name|where
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 define|#
 directive|define
@@ -8179,7 +8179,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|BFD_ASSERT (symhdr->offset == 0 \ 	      || (bfd_vma) bfd_tell (abfd) == symhdr->offset); \   if (bfd_bwrite ((PTR) debug->ptr, (bfd_size_type) size * symhdr->count, abfd)\       != size * symhdr->count) \     return false;
+value|BFD_ASSERT (symhdr->offset == 0 \ 	      || (bfd_vma) bfd_tell (abfd) == symhdr->offset); \   if (bfd_bwrite ((PTR) debug->ptr, (bfd_size_type) size * symhdr->count, abfd)\       != size * symhdr->count) \     return FALSE;
 name|WRITE
 argument_list|(
 name|line
@@ -8336,7 +8336,7 @@ undef|#
 directive|undef
 name|WRITE
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -8347,7 +8347,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_write_shuffle
 name|PARAMS
 argument_list|(
@@ -8373,7 +8373,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_write_shuffle
 parameter_list|(
 name|abfd
@@ -8472,7 +8472,7 @@ operator|->
 name|size
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -8545,7 +8545,7 @@ operator|->
 name|size
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|total
@@ -8623,7 +8623,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -8651,7 +8651,7 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|free
@@ -8661,7 +8661,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -8671,7 +8671,7 @@ comment|/* Write out debugging information using accumulated linker    informati
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_ecoff_write_accumulated_debug
 parameter_list|(
 name|handle
@@ -8861,7 +8861,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|BFD_ASSERT
@@ -9398,7 +9398,7 @@ name|space
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -9414,7 +9414,7 @@ name|space
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -9515,7 +9515,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|mk_fdrtab
 parameter_list|(
 name|abfd
@@ -9566,7 +9566,7 @@ name|FDR
 modifier|*
 name|fdr_end
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|stabs
 decl_stmt|;
 name|long
@@ -9591,7 +9591,7 @@ name|symbolic_header
 operator|.
 name|ifdMax
 expr_stmt|;
-comment|/* First, let's see how long the table needs to be: */
+comment|/* First, let's see how long the table needs to be.  */
 for|for
 control|(
 name|len
@@ -9618,13 +9618,13 @@ name|cpd
 operator|==
 literal|0
 condition|)
-comment|/* skip FDRs that have no PDRs */
+comment|/* Skip FDRs that have no PDRs.  */
 continue|continue;
 operator|++
 name|len
 expr_stmt|;
 block|}
-comment|/* Now, create and fill in the table: */
+comment|/* Now, create and fill in the table.  */
 name|amt
 operator|=
 operator|(
@@ -9663,7 +9663,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|line_info
 operator|->
@@ -9703,7 +9703,7 @@ continue|continue;
 comment|/* Check whether this file has stabs debugging information.  In 	 a file with stabs debugging information, the second local 	 symbol is named @stabs.  */
 name|stabs
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -9783,7 +9783,7 @@ literal|0
 condition|)
 name|stabs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -9792,58 +9792,15 @@ operator|!
 name|stabs
 condition|)
 block|{
-name|bfd_size_type
-name|external_pdr_size
-decl_stmt|;
-name|char
-modifier|*
-name|pdr_ptr
-decl_stmt|;
-name|PDR
-name|pdr
-decl_stmt|;
-name|external_pdr_size
-operator|=
-name|debug_swap
-operator|->
-name|external_pdr_size
-expr_stmt|;
-name|pdr_ptr
-operator|=
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|debug_info
-operator|->
-name|external_pdr
-operator|+
-name|fdr_ptr
-operator|->
-name|ipdFirst
-operator|*
-name|external_pdr_size
-operator|)
-expr_stmt|;
-call|(
-modifier|*
-name|debug_swap
-operator|->
-name|swap_pdr_in
-call|)
-argument_list|(
-name|abfd
-argument_list|,
-operator|(
-name|PTR
-operator|)
-name|pdr_ptr
-argument_list|,
-operator|&
-name|pdr
-argument_list|)
-expr_stmt|;
+comment|/* eraxxon: There are at least two problems with this computation: 	     1) PDRs do *not* contain offsets but full vma's; and typically the 	     address of the first PDR is the address of the FDR, which will 	     make (most) of the results of the original computation 0! 	     2) Once in a wacky while, the Compaq compiler generated PDR 	     addresses do not equal the FDR vma, but they (the PDR address) 	     are still vma's and not offsets.  Cf. comments in 	     'lookup_line'.  */
+if|#
+directive|if
+literal|0
+block|bfd_size_type external_pdr_size; 	    char *pdr_ptr; 	    PDR pdr; 	     	    external_pdr_size = debug_swap->external_pdr_size; 	     	    pdr_ptr = ((char *) debug_info->external_pdr 	              + fdr_ptr->ipdFirst * external_pdr_size); 	    (*debug_swap->swap_pdr_in) (abfd, (PTR) pdr_ptr,&pdr);
+comment|/* The address of the first PDR is the offset of that 	     procedure relative to the beginning of file FDR.  */
+block|tab->base_addr = fdr_ptr->adr - pdr.adr;
+else|#
+directive|else
 comment|/* The address of the first PDR is the offset of that 	     procedure relative to the beginning of file FDR.  */
 name|tab
 operator|->
@@ -9852,15 +9809,13 @@ operator|=
 name|fdr_ptr
 operator|->
 name|adr
-operator|-
-name|pdr
-operator|.
-name|adr
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
-comment|/* XXX I don't know about stabs, so this is a guess 	     (davidm@cs.arizona.edu): */
+comment|/* XXX I don't know about stabs, so this is a guess 	     (davidm@cs.arizona.edu).  */
 name|tab
 operator|->
 name|base_addr
@@ -9905,7 +9860,7 @@ name|cmp_fdrtab_entry
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10048,10 +10003,11 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+comment|/* eraxxon: at this point 'offset' is either lower than the lowest entry or      higher than the highest entry. In the former case high = low = mid = 0;      we want to return -1.  In the latter case, low = high and mid = low - 1;      we want to return the index of the highest entry.  Only in former case      will the following 'catch-all' test be true.  */
 operator|++
 name|mid
 expr_stmt|;
-comment|/* last entry is catch-all for all higher addresses: */
+comment|/* Last entry is catch-all for all higher addresses.  */
 if|if
 condition|(
 name|offset
@@ -10069,6 +10025,7 @@ literal|1
 return|;
 name|find_min
 label|:
+comment|/* eraxxon: There may be multiple FDRs in the table with the      same base_addr; make sure that we are at the first one.  */
 while|while
 condition|(
 name|mid
@@ -10106,7 +10063,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|lookup_line
 parameter_list|(
 name|abfd
@@ -10148,7 +10105,7 @@ decl_stmt|;
 name|bfd_vma
 name|offset
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|stabs
 decl_stmt|;
 name|FDR
@@ -10158,6 +10115,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* eraxxon: note that 'offset' is the full vma, not a section offset.  */
 name|offset
 operator|=
 name|line_info
@@ -10188,7 +10146,7 @@ name|line_info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|tab
 operator|=
@@ -10196,7 +10154,7 @@ name|line_info
 operator|->
 name|fdrtab
 expr_stmt|;
-comment|/* find first FDR for address OFFSET */
+comment|/* Find first FDR for address OFFSET.  */
 name|i
 operator|=
 name|fdrtab_lookup
@@ -10213,9 +10171,10 @@ operator|<
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* no FDR, no fun...  */
+comment|/* eraxxon: 'fdrtab_lookup' doesn't give what we want, at least for Compaq's      C++ compiler 6.2.  Consider three FDRs with starting addresses of x, y,      and z, respectively, such that x< y< z.  Assume further that      y< 'offset'< z.  It is possible at times that the PDR for 'offset' is      associated with FDR x and *not* with FDR y.  Erg!!       From a binary dump of my C++ test case 'moo' using Compaq's coffobjanl      (output format has been edited for our purposes):       FDR [2]: (main.C): First instruction: 0x12000207c<x>        PDR [5] for File [2]: LoopTest__Xv<0x1200020a0> (a)        PDR [7] for File [2]: foo__Xv<0x120002168>      FDR [1]: (-1):     First instruction: 0x1200020e8<y>        PDR [3] for File [1]:<0x120001ad0> (b)      FDR [6]: (-1):     First instruction: 0x1200026f0<z>       (a) In the case of PDR5, the vma is such that the first few instructions      of the procedure can be found.  But since the size of this procedure is      160b, the vma will soon cross into the 'address space' of FDR1 and no      debugging info will be found.  How repugnant!       (b) It is also possible for a PDR to have a *lower* vma than its associated      FDR; see FDR1 and PDR3.  Gross!       Since the FDRs that are causing so much havok (in this case) 1) do not      describe actual files (fdr.rss == -1), and 2) contain only compiler      generated routines, I thought a simple fix would be to exclude them from      the FDR table in 'mk_fdrtab'.  But, besides not knowing for certain      whether this would be correct, it creates an additional problem.  If we      happen to ask for source file info on a compiler generated (procedure)      symbol -- which is still in the symbol table -- the result can be      information from a real procedure!  This is because compiler generated      procedures with vma's higher than the last FDR in the fdr table will be      associated with a PDR from this FDR, specifically the PDR with the      highest vma.  This wasn't a problem before, because each procedure had a      PDR.  (Yes, this problem could be eliminated if we kept the size of the      last PDR around, but things are already getting ugly).       Probably, a better solution would be to have a sorted PDR table.  Each      PDR would have a pointer to its FDR so file information could still be      obtained.  A FDR table could still be constructed if necessary -- since      it only contains pointers, not much extra memory would be used -- but      the PDR table would be searched to locate debugging info.       There is still at least one remaining issue.  Sometimes a FDR can have a      bogus name, but contain PDRs that should belong to another FDR with a      real name.  E.g:       FDR [3]: 0000000120001b50 (/home/.../Array.H~alt~deccxx_5E5A62AD)        PDR [a] for File [3]: 0000000120001b50        PDR [b] for File [3]: 0000000120001cf0        PDR [c] for File [3]: 0000000120001dc8        PDR [d] for File [3]: 0000000120001e40        PDR [e] for File [3]: 0000000120001eb8        PDR [f] for File [3]: 0000000120001f4c      FDR [4]: 0000000120001b50 (/home/.../Array.H)       Here, FDR4 has the correct name, but should (seemingly) contain PDRa-f.      The symbol table for PDR4 does contain symbols for PDRa-f, but so does      the symbol table for FDR3.  However the former is different; perhaps this      can be detected easily. (I'm not sure at this point.)  This problem only      seems to be associated with files with templates.  I am assuming the idea      is that there is a 'fake' FDR (with PDRs) for each differently typed set      of templates that must be generated.  Currently, FDR4 is completely      excluded from the FDR table in 'mk_fdrtab' because it contains no PDRs.       Since I don't have time to prepare a real fix for this right now, be      prepared for 'A Horrible Hack' to force the inspection of all non-stabs      FDRs.  It's coming...  */
 name|fdr_ptr
 operator|=
 name|tab
@@ -10228,7 +10187,7 @@ expr_stmt|;
 comment|/* Check whether this file has stabs debugging information.  In a      file with stabs debugging information, the second local symbol is      named @stabs.  */
 name|stabs
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -10308,7 +10267,7 @@ literal|0
 condition|)
 name|stabs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -10334,14 +10293,11 @@ name|FDR
 modifier|*
 name|best_fdr
 decl_stmt|;
-name|bfd_vma
+name|bfd_signed_vma
 name|best_dist
 init|=
-operator|~
-operator|(
-name|bfd_vma
-operator|)
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 name|PDR
 name|pdr
@@ -10366,15 +10322,18 @@ name|debug_swap
 operator|->
 name|external_pdr_size
 expr_stmt|;
-comment|/* Make offset relative to object file's start-address: */
-name|offset
-operator|-=
-name|tab
-index|[
+if|#
+directive|if
+literal|0
+comment|/* eraxxon: PDR addresses (pdr.adr) are not relative to FDRs! 	 Leave 'offset' alone.  */
+comment|/* Make offset relative to object file's start-address.  */
+block|offset -= tab[i].base_addr;
+endif|#
+directive|endif
+comment|/* eraxxon: The Horrible Hack: Because of the problems above, set 'i' 	 to 0 so we look through all FDRs.  	 Because FDR's without any symbols are assumed to be non-stabs, 	 searching through all FDRs may cause the following code to try to 	 read stabs FDRs as ECOFF ones.  However, I don't think this will 	 harm anything.  */
 name|i
-index|]
-operator|.
-name|base_addr
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Search FDR list starting at tab[i] for the PDR that best matches          OFFSET.  Normally, the FDR list is only one entry long.  */
 name|best_fdr
@@ -10383,12 +10342,17 @@ name|NULL
 expr_stmt|;
 do|do
 block|{
-name|bfd_vma
+comment|/* eraxxon: 'dist' and 'min_dist' can be negative now              because we iterate over every FDR rather than just ones              with a base address less than or equal to 'offset'.  */
+name|bfd_signed_vma
 name|dist
+init|=
+operator|-
+literal|1
 decl_stmt|,
 name|min_dist
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 name|char
 modifier|*
@@ -10522,14 +10486,21 @@ operator|.
 name|prof
 operator|)
 expr_stmt|;
+comment|/* eraxxon: 'dist' can be negative now.  Note that                      'min_dist' can be negative if 'pdr_hold' below is NULL.  */
 if|if
 condition|(
 operator|!
 name|pdr_hold
 operator|||
+operator|(
+name|dist
+operator|>=
+literal|0
+operator|&&
 name|dist
 operator|<
 name|min_dist
+operator|)
 condition|)
 block|{
 name|min_dist
@@ -10548,13 +10519,22 @@ condition|(
 operator|!
 name|best_pdr
 operator|||
+operator|(
+name|min_dist
+operator|>=
+literal|0
+operator|&&
 name|min_dist
 operator|<
 name|best_dist
+operator|)
 condition|)
 block|{
 name|best_dist
 operator|=
+operator|(
+name|bfd_vma
+operator|)
 name|min_dist
 expr_stmt|;
 name|best_fdr
@@ -10566,8 +10546,9 @@ operator|=
 name|pdr_hold
 expr_stmt|;
 block|}
-comment|/* continue looping until base_addr of next entry is different: */
+comment|/* Continue looping until base_addr of next entry is different.  */
 block|}
+comment|/* eraxxon: We want to iterate over all FDRs. 	 See previous comment about 'fdrtab_lookup'.  */
 do|while
 condition|(
 operator|++
@@ -10576,22 +10557,6 @@ operator|<
 name|line_info
 operator|->
 name|fdrtab_len
-operator|&&
-name|tab
-index|[
-name|i
-index|]
-operator|.
-name|base_addr
-operator|==
-name|tab
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|.
-name|base_addr
 condition|)
 do|;
 if|if
@@ -10603,10 +10568,10 @@ operator|!
 name|best_pdr
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* shouldn't happen...  */
-comment|/* phew, finally we got something that we can hold onto: */
+comment|/* Shouldn't happen...  */
+comment|/* Phew, finally we got something that we can hold onto.  */
 name|fdr_ptr
 operator|=
 name|best_fdr
@@ -10648,7 +10613,7 @@ name|fdr_ptr
 operator|->
 name|cbLine
 expr_stmt|;
-comment|/* Make offset relative to procedure entry: */
+comment|/* Make offset relative to procedure entry.  */
 name|offset
 operator|-=
 name|pdr
@@ -11043,10 +11008,10 @@ decl_stmt|;
 name|bfd_vma
 name|low_line_vma
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|past_line
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|past_fn
 decl_stmt|;
 name|char
@@ -11122,11 +11087,11 @@ literal|0
 expr_stmt|;
 name|past_line
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|past_fn
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|external_sym_size
 operator|=
@@ -11352,7 +11317,7 @@ name|offset
 condition|)
 name|past_fn
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 elseif|else
 if|if
@@ -11414,7 +11379,7 @@ name|offset
 condition|)
 name|past_line
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 elseif|else
 if|if
@@ -11562,7 +11527,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|line_info
 operator|->
@@ -11675,7 +11640,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -11685,7 +11650,7 @@ comment|/* Do the work of find_nearest_line.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_locate_line
 parameter_list|(
 name|abfd
@@ -11842,7 +11807,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -11874,7 +11839,7 @@ operator|.
 name|line_num
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -11892,7 +11857,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_collect_shuffle
 name|PARAMS
 argument_list|(
@@ -11910,7 +11875,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_collect_shuffle
 parameter_list|(
 name|l
@@ -12030,7 +11995,7 @@ name|size
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|total
@@ -12047,7 +12012,7 @@ name|size
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -12057,7 +12022,7 @@ comment|/* Copy PDR information into a memory buffer.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_get_accumulated_pdr
 parameter_list|(
 name|handle
@@ -12102,7 +12067,7 @@ comment|/* Copy symbol information into a memory buffer.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_get_accumulated_sym
 parameter_list|(
 name|handle
@@ -12147,7 +12112,7 @@ comment|/* Copy the string table into a memory buffer.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_get_accumulated_ss
 parameter_list|(
 name|handle
@@ -12295,7 +12260,7 @@ literal|1
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Apple M68K COFF A/UX 3.x files.    Copyright 1996, 1997, 2000 Free Software Foundation, Inc.    Written by Richard Henderson<rth@tamu.edu>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Apple M68K COFF A/UX 3.x files.    Copyright 1996, 1997, 2000, 2002 Free Software Foundation, Inc.    Written by Richard Henderson<rth@tamu.edu>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -87,7 +87,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_m68k_aux_link_add_one_symbol
 name|PARAMS
 argument_list|(
@@ -114,9 +114,9 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 expr|struct
 name|bfd_link_hash_entry
@@ -156,7 +156,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_m68k_aux_link_add_one_symbol
 parameter_list|(
 name|info
@@ -208,10 +208,10 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|copy
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|collect
 decl_stmt|;
 name|struct
@@ -303,11 +303,11 @@ name|hash
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|copy
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -329,7 +329,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -355,9 +355,9 @@ name|notice_hash
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|!=
 operator|(
@@ -393,7 +393,7 @@ name|value
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -491,7 +491,7 @@ operator|=
 name|value
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 elseif|else
@@ -509,7 +509,7 @@ name|msec
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}

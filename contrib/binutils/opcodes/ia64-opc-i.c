@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ia64-opc-i.c -- IA-64 `I' opcode table.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ia64-opc-i.c -- IA-64 `I' opcode table.    Copyright 1998, 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -518,6 +518,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|OpX3X6Yb
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|(bOp (a) | bX3 (b) | bX6(c) | bYb(d)), \ 				(mOp | mX3 | mX6 | mYb)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OpX3XbIhWh
 parameter_list|(
 name|a
@@ -555,6 +571,17 @@ define|\
 value|(bOp (a) | bX3 (b) | bXb (c) | bIh (d) | bWh (e) | bTag13 (f)), \      (mOp | mX3 | mXb | mIh | mWh | mTag13)
 end_define
 
+begin_comment
+comment|/* Used to initialise unused fields in ia64_opcode struct,    in order to stop gcc from complaining.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EMPTY
+value|0,0,NULL
+end_define
+
 begin_decl_stmt
 name|struct
 name|ia64_opcode
@@ -562,7 +589,7 @@ name|ia64_opcodes_i
 index|[]
 init|=
 block|{
-comment|/* I-type instruction encodings (sorted according to major opcode) */
+comment|/* I-type instruction encodings (sorted according to major opcode).  */
 block|{
 literal|"break.i"
 block|,
@@ -582,6 +609,10 @@ name|IMMU21
 block|}
 block|,
 name|X_IN_MLX
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -589,13 +620,15 @@ literal|"nop.i"
 block|,
 name|I0
 block|,
-name|OpX3X6
+name|OpX3X6Yb
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|,
 literal|0x01
+argument_list|,
+literal|0
 argument_list|)
 block|,
 block|{
@@ -603,6 +636,37 @@ name|IMMU21
 block|}
 block|,
 name|X_IN_MLX
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"hint.i"
+block|,
+name|I0
+block|,
+name|OpX3X6Yb
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0x01
+argument_list|,
+literal|1
+argument_list|)
+block|,
+block|{
+name|IMMU21
+block|}
+block|,
+name|X_IN_MLX
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -622,6 +686,8 @@ name|R2
 block|,
 name|TGT25b
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -651,6 +717,10 @@ name|R2
 block|}
 block|,
 name|PSEUDO
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 define|#
@@ -666,7 +736,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|I, OpX3XbIhWh (0, a, b, c, d), {B1, R2, TAG13b}
+value|I, OpX3XbIhWh (0, a, b, c, d), {B1, R2, TAG13b}, EMPTY
 block|{
 literal|"mov.sptk"
 block|,
@@ -869,6 +939,8 @@ name|R1
 block|,
 name|B2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -890,6 +962,8 @@ name|R2
 block|,
 name|IMM17
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -909,6 +983,8 @@ name|PR_ROT
 block|,
 name|IMM44
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -930,6 +1006,8 @@ name|R1
 block|,
 name|IP
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -951,6 +1029,8 @@ name|R1
 block|,
 name|PR
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -972,6 +1052,8 @@ name|AR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -993,6 +1075,8 @@ name|AR3
 block|,
 name|IMM8
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1014,6 +1098,8 @@ name|R1
 block|,
 name|AR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1035,6 +1121,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1056,6 +1144,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1077,6 +1167,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1098,6 +1190,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1119,6 +1213,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1140,6 +1236,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1161,6 +1259,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1182,6 +1282,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1203,6 +1305,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1224,6 +1328,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1247,6 +1353,8 @@ name|CPOS6c
 block|,
 name|LEN4
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1272,6 +1380,8 @@ name|R3
 block|,
 name|CNT6
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1301,6 +1411,10 @@ block|,
 name|PSEUDO
 operator||
 name|LEN_EQ_64MCNT
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1328,6 +1442,8 @@ name|POS6
 block|,
 name|LEN6
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1357,6 +1473,10 @@ block|,
 name|PSEUDO
 operator||
 name|LEN_EQ_64MCNT
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1384,6 +1504,8 @@ name|POS6
 block|,
 name|LEN6
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1413,6 +1535,10 @@ block|,
 name|PSEUDO
 operator||
 name|LEN_EQ_64MCNT
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1440,6 +1566,8 @@ name|CPOS6a
 block|,
 name|LEN6
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1467,6 +1595,8 @@ name|CPOS6a
 block|,
 name|LEN6
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1494,6 +1624,8 @@ name|CPOS6b
 block|,
 name|LEN6
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 define|#
@@ -1509,7 +1641,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|I2, OpX2TaTbYaC (5, 0, a, b, c, d), {P1, P2, R3, POS6}
+value|I2, OpX2TaTbYaC (5, 0, a, b, c, d), {P1, P2, R3, POS6}, EMPTY
 define|#
 directive|define
 name|TBITCM
@@ -1523,7 +1655,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|I2, OpX2TaTbYaC (5, 0, a, b, c, d), {P2, P1, R3, POS6}, PSEUDO
+value|I2, OpX2TaTbYaC (5, 0, a, b, c, d), {P2, P1, R3, POS6}, PSEUDO, 0, NULL
 block|{
 literal|"tbit.z"
 block|,
@@ -1780,7 +1912,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|I2, OpX2TaTbYaC (5, 0, a, b, c, d), {P1, P2, R3}
+value|I2, OpX2TaTbYaC (5, 0, a, b, c, d), {P1, P2, R3}, EMPTY
 define|#
 directive|define
 name|TNATCM
@@ -1794,7 +1926,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|I2, OpX2TaTbYaC (5, 0, a, b, c, d), {P2, P1, R3}, PSEUDO
+value|I2, OpX2TaTbYaC (5, 0, a, b, c, d), {P2, P1, R3}, PSEUDO, 0, NULL
 block|{
 literal|"tnat.z"
 block|,
@@ -2067,6 +2199,8 @@ name|R3
 block|,
 name|CNT2c
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2098,6 +2232,8 @@ name|R3
 block|,
 name|CNT2c
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2129,6 +2265,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2160,6 +2298,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2191,6 +2331,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2222,6 +2364,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2253,6 +2397,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2284,6 +2430,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2315,6 +2463,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2346,6 +2496,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2377,6 +2529,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2408,6 +2562,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2439,6 +2595,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2470,6 +2628,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2501,6 +2661,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2532,6 +2694,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2563,6 +2727,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2594,6 +2760,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2625,6 +2793,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2656,6 +2826,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2687,6 +2859,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2718,6 +2892,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2749,6 +2925,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2780,6 +2958,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2811,6 +2991,8 @@ name|R2
 block|,
 name|MBTYPE4
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2842,6 +3024,8 @@ name|R2
 block|,
 name|MHTYPE8
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2873,6 +3057,8 @@ name|R3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2904,6 +3090,8 @@ name|R3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2935,6 +3123,8 @@ name|R3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2966,6 +3156,8 @@ name|R3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2997,6 +3189,8 @@ name|R3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3028,6 +3222,8 @@ name|R3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3059,6 +3255,8 @@ name|R3
 block|,
 name|CNT5
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3090,6 +3288,8 @@ name|R3
 block|,
 name|CNT5
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3121,6 +3321,8 @@ name|R3
 block|,
 name|CNT5
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3152,6 +3354,8 @@ name|R3
 block|,
 name|CNT5
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3183,6 +3387,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3214,6 +3420,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3245,6 +3453,8 @@ name|R2
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3276,6 +3486,8 @@ name|R2
 block|,
 name|CCNT5
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3307,6 +3519,8 @@ name|R2
 block|,
 name|CCNT5
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3336,10 +3550,30 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
+name|NULL
+block|,
 literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -3655,6 +3889,12 @@ begin_undef
 undef|#
 directive|undef
 name|OpX3XbIhWhTag13
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|EMPTY
 end_undef
 
 end_unit

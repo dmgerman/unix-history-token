@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* IEEE floating point support declarations, for GDB, the GNU Debugger.    Copyright 1991, 1994, 1995, 1997, 2000 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* IEEE floating point support declarations, for GDB, the GNU Debugger.    Copyright 1991, 1994, 1995, 1997, 2000, 2003 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -87,8 +87,7 @@ name|unsigned
 name|int
 name|exp_len
 decl_stmt|;
-comment|/* Amount added to "true" exponent.  0x3fff for many IEEE extendeds.  */
-name|unsigned
+comment|/* Bias added to a "true" exponent to form the biased exponent.  It      is intentionally signed as, otherwize, -exp_bias can turn into a      very large number (e.g., given the exp_bias of 0x3fff and a 64      bit long, the equation (long)(1 - exp_bias) evaluates to      4294950914) instead of -16382).  */
 name|int
 name|exp_bias
 decl_stmt|;
@@ -116,6 +115,27 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+comment|/* Validator method.  */
+name|int
+argument_list|(
+argument|*is_valid
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|floatformat
+operator|*
+name|fmt
+operator|,
+specifier|const
+name|char
+operator|*
+name|from
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -296,6 +316,7 @@ expr|struct
 name|floatformat
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -322,11 +343,38 @@ expr|struct
 name|floatformat
 operator|*
 operator|,
+specifier|const
 name|double
 operator|*
 operator|,
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Return non-zero iff the data at FROM is a valid number in format FMT.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|floatformat_is_valid
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|floatformat
+operator|*
+name|fmt
+operator|,
+specifier|const
+name|char
+operator|*
+name|from
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -329,9 +329,9 @@ define|#
 directive|define
 name|tc_fix_adjustable
 parameter_list|(
-name|fixp
+name|FIX
 parameter_list|)
-value|ppc_pe_fix_adjustable (fixp)
+value|ppc_pe_fix_adjustable (FIX)
 end_define
 
 begin_decl_stmt
@@ -535,44 +535,15 @@ define|#
 directive|define
 name|tc_fix_adjustable
 parameter_list|(
-name|fixp
+name|FIX
 parameter_list|)
-value|ppc_fix_adjustable (fixp)
+value|ppc_fix_adjustable (FIX)
 end_define
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|ppc_fix_adjustable
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* A relocation from one csect to another must be kept.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_FORCE_RELOCATION
-parameter_list|(
-name|FIXP
-parameter_list|)
-value|ppc_force_relocation (FIXP)
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ppc_force_relocation
 name|PARAMS
 argument_list|(
 operator|(
@@ -693,39 +664,27 @@ begin_comment
 comment|/* OBJ_XCOFF */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|ppc_symbol_chars
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tc_symbol_chars
+value|ppc_symbol_chars
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
 end_ifdef
-
-begin_comment
-comment|/* Branch prediction relocations must force relocation, as must    the vtable description relocs.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_FORCE_RELOCATION
-parameter_list|(
-name|FIXP
-parameter_list|)
-define|\
-value|((FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRTAKEN				\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRNTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRNTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC64_TOC				\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_INHERIT			\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_ENTRY)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_FORCE_RELOCATION_SECTION
-parameter_list|(
-name|FIXP
-parameter_list|,
-name|SEC
-parameter_list|)
-define|\
-value|(TC_FORCE_RELOCATION (FIXP)						\  || ((FIXP)->fx_addsy&& !(FIXP)->fx_subsy				\&& S_GET_SEGMENT ((FIXP)->fx_addsy) != SEC))
-end_define
 
 begin_comment
 comment|/* Support for SHF_EXCLUDE and SHT_ORDERED */
@@ -847,20 +806,6 @@ parameter_list|)
 value|ppc_section_flags (FLAGS, ATTR, TYPE)
 end_define
 
-begin_comment
-comment|/* Add extra PPC sections -- Note, for now, make .sbss2 and .PPC.EMB.sbss0 a    normal section, and not a bss section so that the linker doesn't crater    when trying to make more than 2 sections.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELF_TC_SPECIAL_SECTIONS
-define|\
-value|{ ".tags",		SHT_ORDERED,	SHF_ALLOC },			\   { ".sdata",		SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE },	\   { ".sbss",		SHT_NOBITS,	SHF_ALLOC + SHF_WRITE },	\   { ".sdata2",		SHT_PROGBITS,	SHF_ALLOC },			\   { ".sbss2",		SHT_PROGBITS,	SHF_ALLOC },			\   { ".PPC.EMB.sdata0",	SHT_PROGBITS,	SHF_ALLOC },			\   { ".PPC.EMB.sbss0",	SHT_PROGBITS,	SHF_ALLOC },			\
-comment|/* Extra sections for 64-bit ELF PPC.  */
-value|\   { ".toc",		SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE},		\   { ".tocbss",		SHT_NOBITS,	SHF_ALLOC + SHF_WRITE},
-end_define
-
 begin_define
 define|#
 directive|define
@@ -886,9 +831,9 @@ define|#
 directive|define
 name|tc_fix_adjustable
 parameter_list|(
-name|fixp
+name|FIX
 parameter_list|)
-value|ppc_fix_adjustable (fixp)
+value|ppc_fix_adjustable (FIX)
 end_define
 
 begin_decl_stmt
@@ -907,18 +852,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* We must never ever try to resolve references to externally visible    symbols in the assembler, because the .o file might go into a shared    library, and some other shared library might override that symbol.  */
+comment|/* Values passed to md_apply_fix3 don't include symbol values.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TC_RELOC_RTSYM_LOC_FIXUP
+name|MD_APPLY_SYM_VALUE
 parameter_list|(
 name|FIX
 parameter_list|)
-define|\
-value|((FIX)->fx_addsy == NULL \    || (! S_IS_EXTERNAL ((FIX)->fx_addsy) \&& ! S_IS_WEAK ((FIX)->fx_addsy) \&& S_IS_DEFINED ((FIX)->fx_addsy) \&& ! S_IS_COMMON ((FIX)->fx_addsy)))
+value|0
 end_define
 
 begin_define
@@ -941,13 +885,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|DWARF2_LINE_MIN_INSN_LENGTH
-value|4
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -956,6 +893,50 @@ end_endif
 begin_comment
 comment|/* OBJ_ELF */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OBJ_ELF
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OBJ_XCOFF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TC_FORCE_RELOCATION
+parameter_list|(
+name|FIX
+parameter_list|)
+value|ppc_force_relocation (FIX)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ppc_force_relocation
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* call md_pcrel_from_section, not md_pcrel_from */
@@ -966,11 +947,11 @@ define|#
 directive|define
 name|MD_PCREL_FROM_SECTION
 parameter_list|(
-name|FIXP
+name|FIX
 parameter_list|,
 name|SEC
 parameter_list|)
-value|md_pcrel_from_section(FIXP, SEC)
+value|md_pcrel_from_section(FIX, SEC)
 end_define
 
 begin_decl_stmt
@@ -1030,6 +1011,105 @@ name|md_operand
 parameter_list|(
 name|x
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|md_cleanup
+parameter_list|()
+value|ppc_cleanup ()
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ppc_cleanup
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_CFIPOP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|tc_cfi_frame_initial_instructions
+value|ppc_cfi_frame_initial_instructions
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ppc_cfi_frame_initial_instructions
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tc_regname_to_dw2regnum
+value|tc_ppc_regname_to_dw2regnum
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tc_ppc_regname_to_dw2regnum
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|regname
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ppc_cie_data_alignment
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_DEFAULT_RETURN_COLUMN
+value|0x41
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_CIE_DATA_ALIGNMENT
+value|ppc_cie_data_alignment
 end_define
 
 end_unit

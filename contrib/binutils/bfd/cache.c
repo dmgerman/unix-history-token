@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD library -- caching of file descriptors.    Copyright 1990, 1991, 1992, 1993, 1994, 1996, 2000, 2001, 2002    Free Software Foundation, Inc.    Hacked by Steve Chamberlain of Cygnus Support (steve@cygnus.com).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD library -- caching of file descriptors.     Copyright 1990, 1991, 1992, 1993, 1994, 1996, 2000, 2001, 2002,    2003, 2004 Free Software Foundation, Inc.     Hacked by Steve Chamberlain of Cygnus Support (steve@cygnus.com).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -25,60 +25,16 @@ directive|include
 file|"libbfd.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|void
-name|insert
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|snip
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|boolean
-name|close_one
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|boolean
+name|bfd_boolean
 name|bfd_cache_delete
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* INTERNAL_FUNCTION 	BFD_CACHE_MAX_OPEN macro  DESCRIPTION 	The maximum number of files which the cache will keep open at 	one time.  .#define BFD_CACHE_MAX_OPEN 10  */
@@ -116,16 +72,13 @@ end_comment
 
 begin_function
 specifier|static
-name|INLINE
 name|void
 name|insert
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -193,16 +146,13 @@ end_comment
 
 begin_function
 specifier|static
-name|INLINE
 name|void
 name|snip
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|abfd
 operator|->
@@ -257,9 +207,11 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|close_one
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|bfd
@@ -322,14 +274,14 @@ condition|)
 block|{
 comment|/* There are no open cacheable BFD's.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|kill
 operator|->
 name|where
 operator|=
-name|ftell
+name|real_ftell
 argument_list|(
 operator|(
 name|FILE
@@ -355,17 +307,15 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|bfd_cache_delete
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
-name|boolean
+name|bfd_boolean
 name|ret
 decl_stmt|;
 if|if
@@ -385,13 +335,13 @@ literal|0
 condition|)
 name|ret
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 else|else
 block|{
 name|ret
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|bfd_set_error
 argument_list|(
@@ -420,19 +370,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_cache_init  SYNOPSIS 	boolean bfd_cache_init (bfd *abfd);  DESCRIPTION 	Add a newly opened BFD to the cache. */
+comment|/* INTERNAL_FUNCTION 	bfd_cache_init  SYNOPSIS 	bfd_boolean bfd_cache_init (bfd *abfd);  DESCRIPTION 	Add a newly opened BFD to the cache. */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_cache_init
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|BFD_ASSERT
 argument_list|(
@@ -457,7 +405,7 @@ name|close_one
 argument_list|()
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|insert
@@ -469,25 +417,23 @@ operator|++
 name|open_files
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_cache_close  SYNOPSIS 	boolean bfd_cache_close (bfd *abfd);  DESCRIPTION 	Remove the BFD @var{abfd} from the cache. If the attached file is open, 	then close it too.  RETURNS<<false>> is returned if closing the file fails,<<true>> is 	returned if all is well. */
+comment|/* INTERNAL_FUNCTION 	bfd_cache_close  SYNOPSIS 	bfd_boolean bfd_cache_close (bfd *abfd);  DESCRIPTION 	Remove the BFD @var{abfd} from the cache. If the attached file is open, 	then close it too.  RETURNS<<FALSE>> is returned if closing the file fails,<<TRUE>> is 	returned if all is well. */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_cache_close
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -508,7 +454,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 return|return
 name|bfd_cache_delete
@@ -520,7 +466,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_open_file  SYNOPSIS 	FILE* bfd_open_file(bfd *abfd);  DESCRIPTION 	Call the OS to open a file for @var{abfd}.  Return the<<FILE *>> 	(possibly<<NULL>>) that results from this operation.  Set up the 	BFD so that future accesses know the file is open. If the<<FILE *>> 	returned is<<NULL>>, then it won't have been put in the 	cache, so it won't have to be removed from it. */
+comment|/* INTERNAL_FUNCTION 	bfd_open_file  SYNOPSIS 	FILE* bfd_open_file (bfd *abfd);  DESCRIPTION 	Call the OS to open a file for @var{abfd}.  Return the<<FILE *>> 	(possibly<<NULL>>) that results from this operation.  Set up the 	BFD so that future accesses know the file is open. If the<<FILE *>> 	returned is<<NULL>>, then it won't have been put in the 	cache, so it won't have to be removed from it. */
 end_comment
 
 begin_function
@@ -528,18 +474,16 @@ name|FILE
 modifier|*
 name|bfd_open_file
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|abfd
 operator|->
 name|cacheable
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* Allow it to be closed later.  */
 if|if
@@ -703,7 +647,7 @@ name|abfd
 operator|->
 name|opened_once
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 break|break;
@@ -742,7 +686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_cache_lookup_worker  SYNOPSIS 	FILE *bfd_cache_lookup_worker(bfd *abfd);  DESCRIPTION 	Called when the macro<<bfd_cache_lookup>> fails to find a 	quick answer.  Find a file descriptor for @var{abfd}.  If 	necessary, it open it.  If there are already more than<<BFD_CACHE_MAX_OPEN>> files open, it tries to close one first, to 	avoid running out of file descriptors. */
+comment|/* INTERNAL_FUNCTION 	bfd_cache_lookup_worker  SYNOPSIS 	FILE *bfd_cache_lookup_worker (bfd *abfd);  DESCRIPTION 	Called when the macro<<bfd_cache_lookup>> fails to find a 	quick answer.  Find a file descriptor for @var{abfd}.  If 	necessary, it open it.  If there are already more than<<BFD_CACHE_MAX_OPEN>> files open, it tries to close one first, to 	avoid running out of file descriptors. */
 end_comment
 
 begin_function
@@ -750,12 +694,10 @@ name|FILE
 modifier|*
 name|bfd_cache_lookup_worker
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -846,7 +788,7 @@ name|NULL
 return|;
 if|if
 condition|(
-name|fseek
+name|real_fseek
 argument_list|(
 operator|(
 name|FILE
@@ -856,9 +798,6 @@ name|abfd
 operator|->
 name|iostream
 argument_list|,
-operator|(
-name|long
-operator|)
 name|abfd
 operator|->
 name|where

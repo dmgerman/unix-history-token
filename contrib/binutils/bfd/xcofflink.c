@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* POWER/PowerPC XCOFF linker support.    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* POWER/PowerPC XCOFF linker support.    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -277,7 +277,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_get_section_contents
 name|PARAMS
 argument_list|(
@@ -307,12 +307,12 @@ operator|,
 name|asection
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 name|bfd_byte
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 expr|struct
 name|internal_reloc
@@ -324,7 +324,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_add_object_symbols
 name|PARAMS
 argument_list|(
@@ -342,7 +342,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_check_archive_element
 name|PARAMS
 argument_list|(
@@ -354,7 +354,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|)
 argument_list|)
@@ -363,7 +363,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_check_ar_symbols
 name|PARAMS
 argument_list|(
@@ -375,7 +375,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|)
 argument_list|)
@@ -384,7 +384,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_check_dynamic_ar_symbols
 name|PARAMS
 argument_list|(
@@ -396,7 +396,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|)
 argument_list|)
@@ -424,7 +424,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_add_symbols
 name|PARAMS
 argument_list|(
@@ -442,7 +442,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_add_dynamic_symbols
 name|PARAMS
 argument_list|(
@@ -460,7 +460,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_mark_symbol
 name|PARAMS
 argument_list|(
@@ -479,7 +479,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_mark
 name|PARAMS
 argument_list|(
@@ -512,7 +512,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_build_ldsyms
 name|PARAMS
 argument_list|(
@@ -529,7 +529,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_input_bfd
 name|PARAMS
 argument_list|(
@@ -547,7 +547,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_write_global_symbol
 name|PARAMS
 argument_list|(
@@ -564,7 +564,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_reloc_link_order
 name|PARAMS
 argument_list|(
@@ -617,7 +617,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_get_section_contents
 parameter_list|(
 name|abfd
@@ -674,7 +674,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -727,7 +727,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -758,11 +758,11 @@ name|_raw_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1032,7 +1032,7 @@ argument_list|)
 operator|->
 name|keep_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|bfd_xcoff_swap_ldhdr_in
 argument_list|(
@@ -1321,7 +1321,7 @@ name|flags
 operator||=
 name|BSF_GLOBAL
 expr_stmt|;
-comment|/* FIXME: We have no way to record the other information stored          with the loader symbol.  */
+comment|/* FIXME: We have no way to record the other information stored 	 with the loader symbol.  */
 operator|*
 name|psyms
 operator|=
@@ -1824,7 +1824,7 @@ name|addend
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Most dynamic relocs have the same type.  FIXME: This is only          correct if ldrel.l_rtype == 0.  In other cases, we should use          a different howto.  */
+comment|/* Most dynamic relocs have the same type.  FIXME: This is only 	 correct if ldrel.l_rtype == 0.  In other cases, we should use 	 a different howto.  */
 name|relbuf
 operator|->
 name|howto
@@ -2217,13 +2217,13 @@ name|ret
 operator|->
 name|textro
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|ret
 operator|->
 name|gc
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|memset
 argument_list|(
@@ -2247,7 +2247,7 @@ argument_list|)
 operator|->
 name|full_aouthdr
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
 operator|&
@@ -2345,14 +2345,14 @@ name|asection
 modifier|*
 name|sec
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|cache
 decl_stmt|;
 name|bfd_byte
 modifier|*
 name|external_relocs
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|require_internal
 decl_stmt|;
 name|struct
@@ -2453,11 +2453,11 @@ name|abfd
 argument_list|,
 name|enclosing
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|external_relocs
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 operator|(
 expr|struct
@@ -2597,7 +2597,7 @@ comment|/* Given an XCOFF BFD, add symbols to the global hash table as    approp
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_bfd_link_add_symbols
 parameter_list|(
 name|abfd
@@ -2636,7 +2636,7 @@ return|;
 case|case
 name|bfd_archive
 case|:
-comment|/* If the archive has a map, do the usual search.  We then need          to check the archive for dynamic objects, because they may not  	 appear in the archive map even though they should, perhaps, be  	 included.  If the archive has no map, we just consider each object  	 file in turn, since that apparently is what the AIX native linker  	 does.  */
+comment|/* If the archive has a map, do the usual search.  We then need 	 to check the archive for dynamic objects, because they may not 	 appear in the archive map even though they should, perhaps, be 	 included.  If the archive has no map, we just consider each object 	 file in turn, since that apparently is what the AIX native linker 	 does.  */
 if|if
 condition|(
 name|bfd_has_map
@@ -2660,7 +2660,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|{
@@ -2728,7 +2728,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|boolean
+name|bfd_boolean
 name|needed
 decl_stmt|;
 if|if
@@ -2745,7 +2745,7 @@ name|needed
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2771,7 +2771,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 default|default:
 name|bfd_set_error
@@ -2780,7 +2780,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -2792,7 +2792,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_add_object_symbols
 parameter_list|(
 name|abfd
@@ -2818,7 +2818,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2831,7 +2831,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2850,11 +2850,11 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2865,7 +2865,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_check_archive_element
 parameter_list|(
 name|abfd
@@ -2883,7 +2883,7 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|pneeded
 decl_stmt|;
@@ -2897,7 +2897,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2912,7 +2912,7 @@ name|pneeded
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2931,7 +2931,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -2955,11 +2955,11 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2970,7 +2970,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_check_ar_symbols
 parameter_list|(
 name|abfd
@@ -2988,7 +2988,7 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|pneeded
 decl_stmt|;
@@ -3007,7 +3007,7 @@ decl_stmt|;
 operator|*
 name|pneeded
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -3135,7 +3135,7 @@ name|bfd_link_hash_entry
 modifier|*
 name|h
 decl_stmt|;
-comment|/* This symbol is externally visible, and is defined by this              object file.  */
+comment|/* This symbol is externally visible, and is defined by this 	     object file.  */
 name|name
 operator|=
 name|_bfd_coff_internal_syment_name
@@ -3155,7 +3155,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|h
 operator|=
@@ -3167,11 +3167,11 @@ name|hash
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* We are only interested in symbols that are currently 	     undefined.  If a symbol is currently known to be common, 	     XCOFF linkers do not bring in an object file which 	     defines it.  We also don't bring in symbols to satisfy 	     undefined references in shared objects.  */
@@ -3242,15 +3242,15 @@ name|name
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 name|pneeded
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}
@@ -3269,7 +3269,7 @@ expr_stmt|;
 block|}
 comment|/* We do not need this object file.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3280,7 +3280,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_check_dynamic_ar_symbols
 parameter_list|(
 name|abfd
@@ -3298,7 +3298,7 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|pneeded
 decl_stmt|;
@@ -3330,7 +3330,7 @@ decl_stmt|;
 operator|*
 name|pneeded
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|lsec
 operator|=
@@ -3350,7 +3350,7 @@ condition|)
 block|{
 comment|/* There are no symbols, so don't try to include it.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -3364,7 +3364,7 @@ name|lsec
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|contents
 operator|=
@@ -3546,14 +3546,14 @@ name|hash
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/* We are only interested in symbols that are currently          undefined.  At this point we know that we are using an XCOFF          hash table.  */
+comment|/* We are only interested in symbols that are currently 	 undefined.  At this point we know that we are using an XCOFF 	 hash table.  */
 if|if
 condition|(
 name|h
@@ -3604,15 +3604,15 @@ name|name
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 name|pneeded
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}
@@ -3659,7 +3659,7 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3846,7 +3846,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_create_extra_sections
 parameter_list|(
 name|bfd
@@ -3859,10 +3859,10 @@ modifier|*
 name|info
 parameter_list|)
 block|{
-name|boolean
+name|bfd_boolean
 name|return_value
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 if|if
 condition|(
@@ -4197,7 +4197,7 @@ block|}
 block|}
 name|return_value
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|end_return
 label|:
@@ -4213,7 +4213,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_add_symbols
 parameter_list|(
 name|abfd
@@ -4238,7 +4238,7 @@ name|unsigned
 name|int
 name|n_btshft
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|default_copy
 decl_stmt|;
 name|bfd_size_type
@@ -4266,7 +4266,7 @@ name|asection
 modifier|*
 name|last_real
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|keep_syms
 decl_stmt|;
 name|asection
@@ -4354,14 +4354,13 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* create the loader, toc, gl, ds and debug sections, if needed */
 if|if
 condition|(
-name|false
-operator|==
+operator|!
 name|xcoff_link_create_extra_sections
 argument_list|(
 name|abfd
@@ -4390,7 +4389,7 @@ operator|->
 name|static_link
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|n_tmask
 operator|=
@@ -4427,12 +4426,12 @@ name|keep_memory
 condition|)
 name|default_copy
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 else|else
 name|default_copy
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|symcount
 operator|=
@@ -4644,7 +4643,7 @@ name|abfd
 argument_list|,
 name|o
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 operator|(
 name|bfd_byte
@@ -4652,7 +4651,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 operator|(
 expr|struct
@@ -4815,7 +4814,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|csect
 operator|=
@@ -5081,7 +5080,7 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-comment|/* If this symbol has line number information attached to it,          and we're not stripping it, count the number of entries and          add them to the count for this csect.  In the final link pass          we are going to attach line number information by symbol,          rather than by section, in order to more easily handle          garbage collection.  */
+comment|/* If this symbol has line number information attached to it, 	 and we're not stripping it, count the number of entries and 	 add them to the count for this csect.  In the final link pass 	 we are going to attach line number information by symbol, 	 rather than by section, in order to more easily handle 	 garbage collection.  */
 if|if
 condition|(
 operator|(
@@ -5239,7 +5238,7 @@ operator|->
 name|line_filepos
 operator|)
 expr_stmt|;
-comment|/* explict cast to bfd_signed_vma for compiler */
+comment|/* explicit cast to bfd_signed_vma for compiler */
 if|if
 condition|(
 name|linoff
@@ -5656,7 +5655,7 @@ goto|goto
 name|error_return
 goto|;
 block|}
-comment|/* An XMC_XO external reference is actually a reference to              an absolute location.  */
+comment|/* An XMC_XO external reference is actually a reference to 	     an absolute location.  */
 if|if
 condition|(
 name|aux
@@ -6074,7 +6073,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|copy
 decl_stmt|;
 name|struct
@@ -6157,11 +6156,11 @@ argument_list|)
 argument_list|,
 name|relname
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|copy
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -6739,12 +6738,12 @@ name|XTY_LD
 case|:
 comment|/* This is a label definition.  The x_scnlen field is the 	     symbol index of the csect.  Usually the XTY_LD symbol will 	     follow its appropriate XTY_SD symbol.  The .set pseudo op can 	     cause the XTY_LD to not follow the XTY_SD symbol. */
 block|{
-name|boolean
+name|bfd_boolean
 name|bad
 decl_stmt|;
 name|bad
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -6781,7 +6780,7 @@ operator|)
 condition|)
 name|bad
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -6825,7 +6824,7 @@ literal|0
 condition|)
 name|bad
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -6879,7 +6878,7 @@ break|break;
 case|case
 name|XTY_CM
 case|:
-comment|/* This is an unitialized csect.  We could base the name on              the storage mapping class, but we don't bother except for              an XMC_TD symbol.  If this csect is externally visible,              it is a common symbol.  We put XMC_TD symbols in sections              named .tocbss, and rely on the linker script to put that              in the TOC area.  */
+comment|/* This is an unitialized csect.  We could base the name on 	     the storage mapping class, but we don't bother except for 	     an XMC_TD symbol.  If this csect is externally visible, 	     it is a common symbol.  We put XMC_TD symbols in sections 	     named .tocbss, and rely on the linker script to put that 	     in the TOC area.  */
 if|if
 condition|(
 name|csect
@@ -7321,7 +7320,7 @@ name|csect
 expr_stmt|;
 block|}
 block|}
-comment|/* Now we have enough information to add the symbol to the          linker hash table.  */
+comment|/* Now we have enough information to add the symbol to the 	 linker hash table.  */
 if|if
 condition|(
 name|sym
@@ -7331,7 +7330,7 @@ operator|==
 name|C_EXT
 condition|)
 block|{
-name|boolean
+name|bfd_boolean
 name|copy
 decl_stmt|;
 name|BFD_ASSERT
@@ -7341,7 +7340,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* We must copy the name into memory if we got it from the              syment itself, rather than the string table.  */
+comment|/* We must copy the name into memory if we got it from the 	     syment itself, rather than the string table.  */
 name|copy
 operator|=
 name|default_copy
@@ -7370,7 +7369,7 @@ literal|0
 condition|)
 name|copy
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* The AIX linker appears to only detect multiple symbol 	     definitions when there is a reference to the symbol.  If 	     a symbol is defined multiple times, and the only 	     references are from the same object file, the AIX linker 	     appears to permit it.  It does not merge the different 	     definitions, but handles them independently.  On the 	     other hand, if there is a reference, the linker reports 	     an error.  	     This matters because the AIX<net/net_globals.h> header 	     file actually defines an initialized array, so we have to 	     actually permit that to work.  	     Just to make matters even more confusing, the AIX linker 	     appears to permit multiple symbol definitions whenever 	     the second definition is in an archive rather than an 	     object file.  This may be a consequence of the manner in 	     which it handles archives: I think it may load the entire 	     archive in as separate csects, and then let garbage 	     collection discard symbols.  	     We also have to handle the case of statically linking a 	     shared object, which will cause symbol redefinitions, 	     although this is an easier case to detect.  */
 if|if
@@ -7407,11 +7406,11 @@ argument_list|)
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|copy
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -7435,11 +7434,11 @@ name|info
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|)
 expr_stmt|;
@@ -7549,7 +7548,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* The new symbol is from a shared library, and                          either the existing symbol is not global                          linkage code or this symbol is global linkage                          code.  If the existing symbol is global                          linkage code and the new symbol is not, then                          we want to use the new symbol.  */
+comment|/* The new symbol is from a shared library, and 			 either the existing symbol is not global 			 linkage code or this symbol is global linkage 			 code.  If the existing symbol is global 			 linkage code and the new symbol is not, then 			 we want to use the new symbol.  */
 name|section
 operator|=
 name|bfd_und_section_ptr
@@ -7586,7 +7585,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* The existing symbol is from a shared library.                          Replace it.  */
+comment|/* The existing symbol is from a shared library. 			 Replace it.  */
 operator|(
 operator|*
 name|sym_hash
@@ -7637,7 +7636,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* This is a redefinition in an object contained                          in an archive.  Just ignore it.  See the                          comment above.  */
+comment|/* This is a redefinition in an object contained 			 in an archive.  Just ignore it.  See the 			 comment above.  */
 name|section
 operator|=
 name|bfd_und_section_ptr
@@ -7657,7 +7656,7 @@ operator|)
 operator|->
 name|root
 operator|.
-name|next
+name|und_next
 operator|!=
 name|NULL
 operator|||
@@ -7676,7 +7675,7 @@ operator|->
 name|root
 condition|)
 block|{
-comment|/* This symbol has been referenced.  In this                          case, we just continue and permit the                          multiple definition error.  See the comment                          above about the behaviour of the AIX linker.  */
+comment|/* This symbol has been referenced.  In this 			 case, we just continue and permit the 			 multiple definition error.  See the comment 			 above about the behaviour of the AIX linker.  */
 block|}
 elseif|else
 if|if
@@ -7695,7 +7694,7 @@ operator|.
 name|x_smclas
 condition|)
 block|{
-comment|/* The symbols are both csects of the same                          class.  There is at least a chance that this                          is a semi-legitimate redefinition.  */
+comment|/* The symbols are both csects of the same 			 class.  There is at least a chance that this 			 is a semi-legitimate redefinition.  */
 name|section
 operator|=
 name|bfd_und_section_ptr
@@ -7914,7 +7913,7 @@ name|NULL
 argument_list|,
 name|copy
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 operator|(
 expr|struct
@@ -8351,7 +8350,7 @@ name|flags
 operator||=
 name|XCOFF_CALLED
 expr_stmt|;
-comment|/* If the symbol name starts with a period, it is                      the code of a function.  If the symbol is                      currently undefined, then add an undefined symbol                      for the function descriptor.  This should do no                      harm, because any regular object that defines the                      function should also define the function                      descriptor.  It helps, because it means that we                      will identify the function descriptor with a                      dynamic object if a dynamic object defines it.  */
+comment|/* If the symbol name starts with a period, it is 		     the code of a function.  If the symbol is 		     currently undefined, then add an undefined symbol 		     for the function descriptor.  This should do no 		     harm, because any regular object that defines the 		     function should also define the function 		     descriptor.  It helps, because it means that we 		     will identify the function descriptor with a 		     dynamic object if a dynamic object defines it.  */
 if|if
 condition|(
 name|h
@@ -8403,11 +8402,11 @@ name|string
 operator|+
 literal|1
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -8474,9 +8473,9 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 operator|&
 name|bh
@@ -8641,7 +8640,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/* Free up the line numbers.  FIXME: We could cache these          somewhere for the final link, to avoid reading them again.  */
+comment|/* Free up the line numbers.  FIXME: We could cache these 	 somewhere for the final link, to avoid reading them again.  */
 if|if
 condition|(
 name|reloc_info
@@ -8694,7 +8693,7 @@ operator|=
 name|keep_syms
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -8789,7 +8788,7 @@ operator|=
 name|keep_syms
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -8812,7 +8811,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_add_dynamic_symbols
 parameter_list|(
 name|abfd
@@ -8919,7 +8918,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* The symbols we use from a dynamic object are not the symbols in      the normal symbol table, but, rather, the symbols in the export      table.  If there is a global symbol in a dynamic object which is      not in the export table, the loader will not be able to find it,      so we don't want to find it either.  Also, on AIX 4.1.3, shr.o in      libc.a has symbols in the export table which are not in the      symbol table.  */
@@ -8962,7 +8961,7 @@ name|bfd_error_no_symbols
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -8976,7 +8975,7 @@ name|lsec
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|contents
 operator|=
@@ -9166,11 +9165,11 @@ argument_list|)
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -9180,7 +9179,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|h
 operator|->
@@ -9318,7 +9317,7 @@ name|ldsym
 operator|.
 name|l_smclas
 expr_stmt|;
-comment|/* Unless this is an XMC_XO symbol, we don't bother to actually          define it, since we don't have a section to put it in anyhow.          Instead, the relocation routines handle the DEF_DYNAMIC flag          correctly.  */
+comment|/* Unless this is an XMC_XO symbol, we don't bother to actually 	 define it, since we don't have a section to put it in anyhow. 	 Instead, the relocation routines handle the DEF_DYNAMIC flag 	 correctly.  */
 if|if
 condition|(
 name|h
@@ -9469,7 +9468,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|dsnm
 index|[
@@ -9498,11 +9497,11 @@ argument_list|)
 argument_list|,
 name|dsnm
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|free
@@ -9517,7 +9516,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -9550,7 +9549,7 @@ name|abfd
 operator|=
 name|abfd
 expr_stmt|;
-comment|/* We do not want to add this to the undefined                      symbol list.  */
+comment|/* We do not want to add this to the undefined 		     symbol list.  */
 block|}
 name|hds
 operator|->
@@ -9728,7 +9727,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|n
 operator|->
@@ -9867,7 +9866,7 @@ operator|=
 name|c
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -9886,7 +9885,7 @@ end_comment
 begin_function
 specifier|static
 name|INLINE
-name|boolean
+name|bfd_boolean
 name|xcoff_mark_symbol
 parameter_list|(
 name|info
@@ -9917,7 +9916,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|h
 operator|->
@@ -9990,7 +9989,7 @@ name|hsec
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -10028,11 +10027,11 @@ name|toc_section
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10043,7 +10042,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_mark
 parameter_list|(
 name|info
@@ -10078,7 +10077,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|sec
 operator|->
@@ -10237,7 +10236,7 @@ name|h
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -10271,7 +10270,7 @@ name|owner
 argument_list|,
 name|sec
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 operator|(
 name|bfd_byte
@@ -10279,7 +10278,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 operator|(
 expr|struct
@@ -10296,7 +10295,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|relend
 operator|=
@@ -10386,7 +10385,7 @@ name|h
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|rsec
@@ -10433,10 +10432,10 @@ name|rsec
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
-comment|/* See if this reloc needs to be copied into the .loader                  section.  */
+comment|/* See if this reloc needs to be copied into the .loader 		 section.  */
 switch|switch
 condition|(
 name|rel
@@ -10693,7 +10692,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10774,7 +10773,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Keep all sections from non-XCOFF input files.  Keep                  special sections.  Keep .debug sections for the                  moment.  */
+comment|/* Keep all sections from non-XCOFF input files.  Keep 		 special sections.  Keep .debug sections for the 		 moment.  */
 if|if
 condition|(
 name|sub
@@ -10881,7 +10880,7 @@ comment|/* Record the number of elements in a set.  This is used to output the  
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_xcoff_link_record_set
 parameter_list|(
 name|output_bfd
@@ -10940,7 +10939,7 @@ operator|!=
 name|bfd_target_xcoff_flavour
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* This will hardly ever be called.  I don't want to burn four bytes      per global symbol, so instead the size is kept on a linked list      attached to the hash table.  */
 name|amt
@@ -10972,7 +10971,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|n
 operator|->
@@ -11013,7 +11012,7 @@ operator||=
 name|XCOFF_HAS_SIZE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -11023,7 +11022,7 @@ comment|/* Import a symbol.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_xcoff_import_symbol
 parameter_list|(
 name|output_bfd
@@ -11101,7 +11100,7 @@ operator|!=
 name|bfd_target_xcoff_flavour
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* A symbol name which starts with a period is the code for a      function.  If the symbol is undefined, then add an undefined      symbol for the function descriptor, and import that instead.  */
 if|if
@@ -11173,11 +11172,11 @@ name|string
 operator|+
 literal|1
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11187,7 +11186,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -11271,7 +11270,7 @@ operator|=
 name|hds
 expr_stmt|;
 block|}
-comment|/* Now, if the descriptor is undefined, import the descriptor          rather than the symbol we were told to import.  FIXME: Is          this correct in all cases?  */
+comment|/* Now, if the descriptor is undefined, import the descriptor 	 rather than the symbol we were told to import.  FIXME: Is 	 this correct in all cases?  */
 if|if
 condition|(
 name|hds
@@ -11411,7 +11410,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|h
@@ -11495,7 +11494,7 @@ modifier|*
 modifier|*
 name|pp
 decl_stmt|;
-comment|/* We start c at 1 because the first entry in the import list is          reserved for the library search path.  */
+comment|/* We start c at 1 because the first entry in the import list is 	 reserved for the library search path.  */
 for|for
 control|(
 name|pp
@@ -11620,7 +11619,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|n
 operator|->
@@ -11660,7 +11659,7 @@ name|c
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -11670,7 +11669,7 @@ comment|/* Export a symbol.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_xcoff_export_symbol
 parameter_list|(
 name|output_bfd
@@ -11716,7 +11715,7 @@ operator|!=
 name|bfd_target_xcoff_flavour
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|h
 operator|->
@@ -11795,7 +11794,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|fnname
 index|[
@@ -11830,11 +11829,11 @@ argument_list|)
 argument_list|,
 name|fnname
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|free
@@ -11905,7 +11904,7 @@ name|h
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* If this is a function descriptor, make sure we don't garbage      collect the associated function code.  We normally don't have to      worry about this, because the descriptor will be attached to a      section with relocs, but if we are creating the descriptor      ourselves those relocs will not be visible to the mark code.  */
 if|if
@@ -11934,11 +11933,11 @@ name|descriptor
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -11948,7 +11947,7 @@ comment|/* Count a reloc against a symbol.  This is called for relocs    generat
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_xcoff_link_count_reloc
 parameter_list|(
 name|output_bfd
@@ -11987,7 +11986,7 @@ operator|!=
 name|bfd_target_xcoff_flavour
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|h
 operator|=
@@ -12005,11 +12004,11 @@ name|info
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|)
 expr_stmt|;
@@ -12039,7 +12038,7 @@ name|bfd_error_no_symbols
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|h
@@ -12070,10 +12069,10 @@ name|h
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -12083,7 +12082,7 @@ comment|/* This function is called for each symbol to which the linker script   
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_xcoff_record_link_assignment
 parameter_list|(
 name|output_bfd
@@ -12122,7 +12121,7 @@ operator|!=
 name|bfd_target_xcoff_flavour
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|h
 operator|=
@@ -12135,11 +12134,11 @@ argument_list|)
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -12149,7 +12148,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|h
 operator|->
@@ -12158,7 +12157,7 @@ operator||=
 name|XCOFF_DEF_REGULAR
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -12168,7 +12167,7 @@ comment|/* Build the .loader section.  This is called by the XCOFF linker    emu
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_xcoff_size_dynamic_sections
 parameter_list|(
 name|output_bfd
@@ -12228,16 +12227,16 @@ name|unsigned
 name|long
 name|maxdata
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|gc
 decl_stmt|;
 name|int
 name|modtype
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|textro
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|export_defineds
 decl_stmt|;
 name|asection
@@ -12245,7 +12244,7 @@ modifier|*
 modifier|*
 name|special_sections
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|rtld
 decl_stmt|;
 block|{
@@ -12341,14 +12340,14 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|ldinfo
 operator|.
 name|failed
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|ldinfo
 operator|.
@@ -12459,11 +12458,11 @@ argument_list|)
 argument_list|,
 name|entry
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -12514,11 +12513,11 @@ argument_list|)
 argument_list|,
 literal|"__rtinit"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -12540,7 +12539,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|xcoff_mark_symbol
@@ -12560,7 +12559,7 @@ operator||
 name|XCOFF_RTINIT
 operator|)
 expr_stmt|;
-comment|/* __rtinit initalized */
+comment|/* __rtinit initialized */
 name|amt
 operator|=
 sizeof|sizeof
@@ -12623,7 +12622,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* NA */
-comment|/* Force __rtinit to be the first symbol in the loader symbol table 	 See xcoff_build_ldsyms 	  	 The first 3 symbol table indices are reserved to indicate the data, 	 text and bss sections.  */
+comment|/* Force __rtinit to be the first symbol in the loader symbol table 	 See xcoff_build_ldsyms  	 The first 3 symbol table indices are reserved to indicate the data, 	 text and bss sections.  */
 name|BFD_ASSERT
 argument_list|(
 literal|0
@@ -12653,8 +12652,7 @@ name|ldsym
 expr_stmt|;
 if|if
 condition|(
-name|false
-operator|==
+operator|!
 name|bfd_xcoff_put_ldsymbol_name
 argument_list|(
 name|ldinfo
@@ -12678,7 +12676,7 @@ name|string
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* This symbol is written out by xcoff_write_global_symbol 	 Set stuff up so xcoff_write_global_symbol logic works.  */
 name|hsym
@@ -12715,7 +12713,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|||
 operator|!
 name|gc
@@ -12745,7 +12743,7 @@ condition|)
 block|{
 name|gc
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|xcoff_hash_table
 argument_list|(
@@ -12754,9 +12752,9 @@ argument_list|)
 operator|->
 name|gc
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
-comment|/* We still need to call xcoff_mark, in order to set ldrel_count          correctly.  */
+comment|/* We still need to call xcoff_mark, in order to set ldrel_count 	 correctly.  */
 for|for
 control|(
 name|sub
@@ -12864,7 +12862,7 @@ argument_list|)
 operator|->
 name|gc
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 comment|/* Return special sections to the caller.  */
@@ -12937,7 +12935,7 @@ condition|)
 block|{
 comment|/* I'm not sure what to do in this bizarre case.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|xcoff_link_hash_traverse
@@ -13962,9 +13960,9 @@ name|debug_strtab
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -14076,7 +14074,7 @@ name|debug_strtab
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -14107,13 +14105,13 @@ name|debug_contents
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_xcoff_link_generate_rtinit
 parameter_list|(
 name|abfd
@@ -14138,7 +14136,7 @@ name|char
 modifier|*
 name|fini
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|rtld
 decl_stmt|;
 block|{
@@ -14175,7 +14173,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|bim
 operator|->
@@ -14230,8 +14228,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|false
-operator|==
+operator|!
 name|bfd_xcoff_generate_rtinit
 argument_list|(
 name|abfd
@@ -14244,7 +14241,7 @@ name|rtld
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* need to reset to unknown or it will not be read back in correctly */
 name|abfd
@@ -14266,7 +14263,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -14277,7 +14274,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_build_ldsyms
 parameter_list|(
 name|h
@@ -14345,7 +14342,7 @@ operator|&
 name|XCOFF_RTINIT
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* If this is a final link, and the symbol was defined as a common      symbol in a regular object file, and there was no definition in      any dynamic object, then the linker will have allocated space for      the symbol in a common section but the XCOFF_DEF_REGULAR flag      will not have been set.  */
 if|if
@@ -14460,13 +14457,13 @@ operator|!=
 literal|'.'
 condition|)
 block|{
-name|boolean
+name|bfd_boolean
 name|export
 decl_stmt|;
 comment|/* We don't export a symbol which is being defined by an object 	 included from an archive which contains a shared object.  The 	 rationale is that if an archive contains both an unshared and 	 a shared object, then there must be some reason that the 	 unshared object is unshared, and we don't want to start 	 providing a shared version of it.  In particular, this solves 	 a bug involving the _savefNN set of functions.  gcc will call 	 those functions without providing a slot to restore the TOC, 	 so it is essential that these functions be linked in directly 	 and not from a shared object, which means that a shared 	 object which also happens to link them in must not export 	 them.  This is confusing, but I haven't been able to think of 	 a different approach.  Note that the symbols can, of course, 	 be exported explicitly.  */
 name|export
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -14577,7 +14574,7 @@ condition|)
 block|{
 name|export
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 block|}
@@ -14879,7 +14876,7 @@ operator|->
 name|output_bfd
 argument_list|)
 expr_stmt|;
-comment|/* The global linkage code requires a TOC entry for the          descriptor.  */
+comment|/* The global linkage code requires a TOC entry for the 	 descriptor.  */
 name|hds
 operator|=
 name|h
@@ -14965,7 +14962,7 @@ literal|4
 expr_stmt|;
 else|else
 return|return
-name|false
+name|FALSE
 return|;
 name|hds
 operator|->
@@ -15143,7 +15140,7 @@ name|asection
 modifier|*
 name|sec
 decl_stmt|;
-comment|/* This is an undefined function descriptor associated with              a defined entry point.  We can build up a function              descriptor ourselves.  Believe it or not, the AIX linker              actually does this, and there are cases where we need to              do it as well.  */
+comment|/* This is an undefined function descriptor associated with 	     a defined entry point.  We can build up a function 	     descriptor ourselves.  Believe it or not, the AIX linker 	     actually does this, and there are cases where we need to 	     do it as well.  */
 name|sec
 operator|=
 name|xcoff_hash_table
@@ -15261,7 +15258,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}
@@ -15425,7 +15422,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* We don't need to add this symbol if we did garbage collection and      we did not mark this symbol.  */
@@ -15458,7 +15455,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* We may have already processed this symbol due to the recursive      call above.  */
@@ -15475,7 +15472,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* We need to add this symbol to the .loader symbols.  */
 name|BFD_ASSERT
@@ -15526,10 +15523,10 @@ name|ldinfo
 operator|->
 name|failed
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -15572,8 +15569,7 @@ name|ldsym_count
 expr_stmt|;
 if|if
 condition|(
-name|false
-operator|==
+operator|!
 name|bfd_xcoff_put_ldsymbol_name
 argument_list|(
 name|ldinfo
@@ -15597,7 +15593,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|h
@@ -15607,7 +15603,7 @@ operator||=
 name|XCOFF_BUILT_LDSYM
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -15620,7 +15616,7 @@ comment|/* Do the final link step.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_bfd_final_link
 parameter_list|(
 name|abfd
@@ -15973,7 +15969,7 @@ name|sec
 operator|->
 name|linker_mark
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -16166,7 +16162,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|boolean
+name|bfd_boolean
 name|saw_contents
 decl_stmt|;
 name|int
@@ -16180,10 +16176,10 @@ decl_stmt|;
 name|file_ptr
 name|sofar
 decl_stmt|;
-comment|/* Insert .pad sections before every section which has              contents and is loaded, if it is preceded by some other              section which has contents and is loaded.  */
+comment|/* Insert .pad sections before every section which has 	     contents and is loaded, if it is preceded by some other 	     section which has contents and is loaded.  */
 name|saw_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 for|for
 control|(
@@ -16228,7 +16224,7 @@ literal|0
 condition|)
 name|saw_contents
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 elseif|else
 if|if
@@ -16267,7 +16263,7 @@ name|saw_contents
 condition|)
 name|saw_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 else|else
 block|{
@@ -16279,7 +16275,7 @@ modifier|*
 modifier|*
 name|st
 decl_stmt|;
-comment|/* Create a pad section and place it before the section 			 that needs padding.  This requires unlinking and  			 relinking the bfd's section list.  */
+comment|/* Create a pad section and place it before the section 			 that needs padding.  This requires unlinking and 			 relinking the bfd's section list.  */
 name|st
 operator|=
 name|abfd
@@ -16340,12 +16336,12 @@ name|next
 expr_stmt|;
 name|saw_contents
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Reset the section indices after inserting the new              sections.  */
+comment|/* Reset the section indices after inserting the new 	     sections.  */
 name|indx
 operator|=
 literal|0
@@ -16392,7 +16388,7 @@ operator|->
 name|section_count
 argument_list|)
 expr_stmt|;
-comment|/* Work out appropriate sizes for the .pad sections to force              each section to land on a page boundary.  This bit of              code knows what compute_section_file_positions is going              to do.  */
+comment|/* Work out appropriate sizes for the .pad sections to force 	     each section to land on a page boundary.  This bit of 	     code knows what compute_section_file_positions is going 	     to do.  */
 name|sofar
 operator|=
 name|bfd_coff_filhsz
@@ -16755,7 +16751,7 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-comment|/* A stripped file has no relocs.  However, we still              allocate the buffers, so that later code doesn't have to              worry about whether we are stripping or not.  */
+comment|/* A stripped file has no relocs.  However, we still 	     allocate the buffers, so that later code doesn't have to 	     worry about whether we are stripping or not.  */
 if|if
 condition|(
 name|info
@@ -16793,7 +16789,7 @@ operator|*
 name|relsz
 expr_stmt|;
 block|}
-comment|/* We don't know the indices of global symbols until we have              written out all the local symbols.  For each section in              the output file, we keep an array of pointers to hash              table entries.  Each entry in the array corresponds to a              reloc.  When we find a reloc against a global symbol, we              set the corresponding entry in this array so that we can              fix up the symbol index after we have written out all the              local symbols.  	     Because of this problem, we also keep the relocs in 	     memory until the end of the link.  This wastes memory. 	     We could backpatch the file later, I suppose, although it 	     would be slow.  */
+comment|/* We don't know the indices of global symbols until we have 	     written out all the local symbols.  For each section in 	     the output file, we keep an array of pointers to hash 	     table entries.  Each entry in the array corresponds to a 	     reloc.  When we find a reloc against a global symbol, we 	     set the corresponding entry in this array so that we can 	     fix up the symbol index after we have written out all the 	     local symbols.  	     Because of this problem, we also keep the relocs in 	     memory until the end of the link.  This wastes memory. 	     We could backpatch the file later, I suppose, although it 	     would be slow.  */
 name|amt
 operator|=
 name|o
@@ -17033,7 +17029,7 @@ name|sub
 operator|->
 name|output_has_begun
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|sz
 operator|=
@@ -17374,7 +17370,7 @@ name|sub
 operator|->
 name|output_has_begun
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 block|}
@@ -18665,7 +18661,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -18874,7 +18870,7 @@ name|external_relocs
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -18885,7 +18881,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_link_input_bfd
 parameter_list|(
 name|finfo
@@ -18922,7 +18918,7 @@ name|unsigned
 name|int
 name|n_btshft
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|copy
 decl_stmt|,
 name|hash
@@ -18985,7 +18981,7 @@ name|asection
 modifier|*
 name|oline
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|keep_syms
 decl_stmt|;
 name|asection
@@ -19013,7 +19009,7 @@ operator|->
 name|static_link
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Move all the symbols to the output file.  */
 name|output_bfd
@@ -19093,7 +19089,7 @@ name|N_BTSHFT
 value|n_btshft
 name|copy
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -19106,11 +19102,11 @@ name|keep_memory
 condition|)
 name|copy
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|hash
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -19126,7 +19122,7 @@ literal|0
 condition|)
 name|hash
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -19137,7 +19133,7 @@ name|input_bfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|esym
 operator|=
@@ -19236,10 +19232,10 @@ name|smtyp
 init|=
 literal|0
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|skip
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|require
 decl_stmt|;
 name|int
@@ -19260,7 +19256,7 @@ operator|)
 name|isymp
 argument_list|)
 expr_stmt|;
-comment|/* If this is a C_EXT or C_HIDEXT symbol, we need the csect          information.  */
+comment|/* If this is a C_EXT or C_HIDEXT symbol, we need the csect 	 information.  */
 if|if
 condition|(
 name|isymp
@@ -19345,7 +19341,7 @@ operator|=
 operator|*
 name|isymp
 expr_stmt|;
-comment|/* If this symbol is in the .loader section, swap out the          .loader symbol information.  If this is an external symbol          reference to a defined symbol, though, then wait until we get          to the definition.  */
+comment|/* If this symbol is in the .loader section, swap out the 	 .loader symbol information.  If this is an external symbol 	 reference to a defined symbol, though, then wait until we get 	 to the definition.  */
 if|if
 condition|(
 name|isym
@@ -19873,11 +19869,11 @@ literal|1
 expr_stmt|;
 name|skip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|require
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|add
 operator|=
@@ -19897,9 +19893,9 @@ name|NULL
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
-comment|/* If we garbage collected this csect, we want to skip this          symbol.  */
+comment|/* If we garbage collected this csect, we want to skip this 	 symbol.  */
 if|if
 condition|(
 operator|!
@@ -19934,7 +19930,7 @@ name|bfd_abs_section_ptr
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* An XCOFF linker always skips C_STAT symbols.  */
 if|if
@@ -19950,7 +19946,7 @@ name|C_STAT
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* We skip all but the first TOC anchor.  */
 if|if
@@ -19984,7 +19980,7 @@ literal|1
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 else|else
 block|{
@@ -20028,7 +20024,7 @@ operator|->
 name|vma
 operator|)
 expr_stmt|;
-comment|/* We want to find out if tocval is a good value to use                  as the TOC anchor--that is, whether we can access all                  of the TOC using a 16 bit offset from tocval.  This                  test assumes that the TOC comes at the end of the                  output section, as it does in the default linker                  script.  */
+comment|/* We want to find out if tocval is a good value to use 		 as the TOC anchor--that is, whether we can access all 		 of the TOC using a 16 bit offset from tocval.  This 		 test assumes that the TOC comes at the end of the 		 output section, as it does in the default linker 		 script.  */
 name|tocend
 operator|=
 operator|(
@@ -20173,7 +20169,7 @@ name|bfd_error_file_too_big
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -20246,7 +20242,7 @@ name|target_index
 expr_stmt|;
 name|require
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 block|}
@@ -20266,7 +20262,7 @@ name|strip_all
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* We can skip resolved external references.  */
 if|if
@@ -20297,9 +20293,9 @@ name|bfd_link_hash_undefined
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
-comment|/* We can skip common symbols if they got defined somewhere          else.  */
+comment|/* We can skip common symbols if they got defined somewhere 	 else.  */
 if|if
 condition|(
 operator|!
@@ -20377,7 +20373,7 @@ operator|)
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* Skip local symbols if we are discarding them.  */
 if|if
@@ -20413,9 +20409,9 @@ operator|)
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
-comment|/* If we stripping debugging symbols, and this is a debugging          symbol, then skip it.  */
+comment|/* If we stripping debugging symbols, and this is a debugging 	 symbol, then skip it.  */
 if|if
 condition|(
 operator|!
@@ -20437,7 +20433,7 @@ name|N_DEBUG
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* If some symbols are stripped based on the name, work out the 	 name and decide whether to skip this symbol.  We don't handle 	 this correctly for symbols whose names are in the .debug 	 section; to get it right we would need a new bfd_strtab_hash 	 function to return the string given the index.  */
 if|if
@@ -20512,7 +20508,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -20536,9 +20532,9 @@ name|keep_hash
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|==
 name|NULL
@@ -20584,7 +20580,7 @@ operator|)
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 comment|/* We can not skip the first TOC anchor.  */
@@ -20604,7 +20600,7 @@ name|strip_all
 condition|)
 name|skip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 comment|/* We now know whether we are to skip this symbol or not.  */
 if|if
@@ -20698,7 +20694,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|indx
 operator|=
@@ -20726,7 +20722,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|isym
 operator|.
@@ -20966,7 +20962,7 @@ name|osymesz
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -20983,7 +20979,7 @@ operator|=
 name|isym
 expr_stmt|;
 block|}
-comment|/* The value of a C_BINCL or C_EINCL symbol is a file offset              into the line numbers.  We update the symbol values when              we handle the line numbers.  */
+comment|/* The value of a C_BINCL or C_EINCL symbol is a file offset 	     into the line numbers.  We update the symbol values when 	     we handle the line numbers.  */
 if|if
 condition|(
 name|isym
@@ -21093,7 +21089,7 @@ operator|=
 name|output_index
 expr_stmt|;
 block|}
-comment|/* If this is a symbol in the TOC which we may have merged              (class XMC_TC), remember the symbol index of the TOC              symbol.  */
+comment|/* If this is a symbol in the TOC which we may have merged 	     (class XMC_TC), remember the symbol index of the TOC 	     symbol.  */
 if|if
 condition|(
 name|isym
@@ -21320,7 +21316,7 @@ decl_stmt|;
 name|bfd_vma
 name|indx
 decl_stmt|;
-comment|/* The value of a C_BSTAT symbol is the symbol table                  index of the containing csect.  */
+comment|/* The value of a C_BSTAT symbol is the symbol table 		 index of the containing csect.  */
 name|bfd_coff_swap_sym_in
 argument_list|(
 name|output_bfd
@@ -21539,7 +21535,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|filename
@@ -21580,7 +21576,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|aux
 operator|.
@@ -21622,7 +21618,7 @@ operator|->
 name|n_numaux
 condition|)
 block|{
-comment|/* We don't support type checking.  I don't know if                      anybody does.  */
+comment|/* We don't support type checking.  I don't know if 		     anybody does.  */
 name|aux
 operator|.
 name|x_csect
@@ -21631,7 +21627,7 @@ name|x_parmhash
 operator|=
 literal|0
 expr_stmt|;
-comment|/* I don't think anybody uses these fields, but we'd                      better clobber them just in case.  */
+comment|/* I don't think anybody uses these fields, but we'd 		     better clobber them just in case.  */
 name|aux
 operator|.
 name|x_csect
@@ -21809,7 +21805,7 @@ name|input_bfd
 argument_list|)
 condition|)
 block|{
-comment|/* We look forward through the symbol for                              the index of the next symbol we are going                              to include.  I don't know if this is                              entirely right.  */
+comment|/* We look forward through the symbol for 			     the index of the next symbol we are going 			     to include.  I don't know if this is 			     entirely right.  */
 while|while
 condition|(
 name|finfo
@@ -22106,7 +22102,7 @@ name|amt
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|oline
 operator|=
@@ -22437,7 +22433,7 @@ name|count
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|o
 operator|->
@@ -22473,7 +22469,7 @@ decl_stmt|;
 name|int
 name|iiadd
 decl_stmt|;
-comment|/* Update any C_BINCL or C_EINCL symbols                                  that refer to a line number in the                                  range we just output.  */
+comment|/* Update any C_BINCL or C_EINCL symbols 				 that refer to a line number in the 				 range we just output.  */
 name|iisp
 operator|=
 name|finfo
@@ -22845,7 +22841,7 @@ operator|!=
 name|amt
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|BFD_ASSERT
 argument_list|(
@@ -22890,7 +22886,7 @@ argument_list|(
 name|input_bfd
 argument_list|)
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* Relocate the contents of each section.  */
 for|for
@@ -23016,7 +23012,7 @@ name|_raw_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|contents
 operator|=
@@ -23086,13 +23082,13 @@ name|input_bfd
 argument_list|,
 name|o
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 name|finfo
 operator|->
 name|external_relocs
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 operator|(
 name|finfo
@@ -23120,7 +23116,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Call processor specific code to relocate the section 	     contents.  */
 if|if
@@ -23155,7 +23151,7 @@ name|csects
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|offset
 operator|=
@@ -23229,7 +23225,7 @@ name|struct
 name|internal_ldrel
 name|ldrel
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|quiet
 decl_stmt|;
 operator|*
@@ -23425,7 +23421,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|si
 operator|=
@@ -23717,7 +23713,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -23751,14 +23747,14 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
 block|}
 name|quiet
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 switch|switch
 condition|(
@@ -24025,7 +24021,7 @@ name|bfd_error_nonrepresentable_section
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -24038,7 +24034,7 @@ name|finfo
 operator|->
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 operator|(
 name|h
@@ -24064,7 +24060,7 @@ block|{
 comment|/* We already called the undefined_symbol 			     callback for this relocation, in 			     _bfd_ppc_xcoff_relocate_section.  Don't 			     issue any more warnings.  */
 name|quiet
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -24109,7 +24105,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ldrel
@@ -24208,7 +24204,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|bfd_xcoff_swap_ldrel_out
@@ -24302,7 +24298,7 @@ operator|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|obj_coff_keep_syms
@@ -24331,11 +24327,11 @@ name|input_bfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -24358,7 +24354,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_write_global_symbol
 parameter_list|(
 name|h
@@ -24402,7 +24398,7 @@ name|union
 name|internal_auxent
 name|aux
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|result
 decl_stmt|;
 name|file_ptr
@@ -24462,7 +24458,7 @@ operator|==
 name|bfd_link_hash_new
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* If this symbol was garbage collected, just skip it.  */
@@ -24488,7 +24484,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* If we need a .loader section entry, write it out.  */
 if|if
@@ -25458,7 +25454,7 @@ block|}
 else|else
 block|{
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|irel
@@ -25581,15 +25577,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|false
-operator|==
+operator|!
 name|result
 condition|)
-block|{
 return|return
-name|false
+name|FALSE
 return|;
-block|}
 name|irsym
 operator|.
 name|n_value
@@ -25745,7 +25738,7 @@ operator|!=
 name|amt
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|obj_raw_syment_count
 argument_list|(
@@ -25898,7 +25891,7 @@ block|}
 else|else
 block|{
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|sec
@@ -26169,7 +26162,7 @@ name|bfd_error_nonrepresentable_section
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ldrel
@@ -26532,7 +26525,7 @@ name|bfd_error_nonrepresentable_section
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ldrel
@@ -26602,7 +26595,7 @@ name|outsyms
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -26648,9 +26641,9 @@ name|root
 operator|.
 name|string
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|==
 name|NULL
@@ -26668,7 +26661,7 @@ name|outsyms
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -26705,7 +26698,7 @@ name|outsyms
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|memset
@@ -26752,15 +26745,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|false
-operator|==
+operator|!
 name|result
 condition|)
-block|{
 return|return
-name|false
+name|FALSE
 return|;
-block|}
 if|if
 condition|(
 name|h
@@ -27425,7 +27415,7 @@ operator|!=
 name|amt
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|obj_raw_syment_count
 argument_list|(
@@ -27446,7 +27436,7 @@ name|output_bfd
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -27457,7 +27447,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|xcoff_reloc_link_order
 parameter_list|(
 name|output_bfd
@@ -27530,7 +27520,7 @@ operator|==
 name|bfd_section_reloc_link_order
 condition|)
 block|{
-comment|/* We need to somehow locate a symbol in the right section.  The          symbol must either have a value of zero, or we must adjust          the addend by the value of the symbol.  FIXME: Write this          when we need it.  The old linker couldn't handle this anyhow.  */
+comment|/* We need to somehow locate a symbol in the right section.  The 	 symbol must either have a value of zero, or we must adjust 	 the addend by the value of the symbol.  FIXME: Write this 	 when we need it.  The old linker couldn't handle this anyhow.  */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -27565,7 +27555,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|h
@@ -27596,11 +27586,11 @@ name|u
 operator|.
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 expr_stmt|;
@@ -27662,10 +27652,10 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -27805,7 +27795,7 @@ decl_stmt|;
 name|bfd_reloc_status_type
 name|rstat
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|ok
 decl_stmt|;
 name|size
@@ -27833,7 +27823,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|rstat
 operator|=
@@ -27930,7 +27920,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 break|break;
@@ -27969,7 +27959,7 @@ operator|!
 name|ok
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Store the reloc information in the right place.  It will get      swapped and written out at the end of the final_link routine.  */
@@ -28224,7 +28214,7 @@ name|bfd_error_nonrepresentable_section
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -28269,7 +28259,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ldrel
@@ -28327,7 +28317,7 @@ name|output_bfd
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

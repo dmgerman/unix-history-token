@@ -16,7 +16,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__STDC__
+name|ANSI_PROTOTYPES
 end_ifdef
 
 begin_include
@@ -43,29 +43,44 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|PTR
-name|DEFUN
+name|void
+name|bcopy
+name|PARAMS
 argument_list|(
-name|memcpy
-argument_list|,
 operator|(
-name|out
+specifier|const
+name|void
+operator|*
 operator|,
-name|in
+name|void
+operator|*
 operator|,
-name|length
+name|size_t
 operator|)
-argument_list|,
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|PTR
+name|memcpy
+parameter_list|(
+name|out
+parameter_list|,
+name|in
+parameter_list|,
+name|length
+parameter_list|)
 name|PTR
 name|out
-name|AND
+decl_stmt|;
 specifier|const
 name|PTR
 name|in
-name|AND
+decl_stmt|;
 name|size_t
 name|length
-argument_list|)
+decl_stmt|;
 block|{
 name|bcopy
 argument_list|(
@@ -80,7 +95,7 @@ return|return
 name|out
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

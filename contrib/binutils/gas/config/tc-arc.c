@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-arc.c -- Assembler for the ARC    Copyright 1994, 1995, 1997, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-arc.c -- Assembler for the ARC    Copyright 1994, 1995, 1997, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"as.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"struc-symbol.h"
 end_include
 
 begin_include
@@ -534,22 +540,6 @@ block|{
 literal|"block"
 block|,
 name|s_space
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"file"
-block|,
-name|dwarf2_directive_file
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"loc"
-block|,
-name|dwarf2_directive_loc
 block|,
 literal|0
 block|}
@@ -3687,18 +3677,6 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|name
-condition|)
-block|{
-name|ignore_rest_of_line
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
 name|p
 operator|=
 name|name
@@ -4605,18 +4583,6 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|name
-condition|)
-block|{
-name|ignore_rest_of_line
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
 name|strcpy
 argument_list|(
 name|syntax
@@ -5125,18 +5091,6 @@ name|arc_opcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|ext_op
-condition|)
-block|{
-name|ignore_rest_of_line
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
 name|ext_op
 operator|->
 name|syntax
@@ -5146,20 +5100,6 @@ argument_list|(
 name|syntax
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|ext_op
-operator|->
-name|syntax
-condition|)
-block|{
-name|ignore_rest_of_line
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
 name|ext_op
 operator|->
 name|mask
@@ -5832,7 +5772,6 @@ expr_stmt|;
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6045,22 +5984,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|t
-decl_stmt|;
-name|char
-modifier|*
-name|atof_ieee
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|LITTLENUM_TYPE
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 switch|switch
 condition|(
@@ -7048,32 +6971,6 @@ modifier|*
 name|fixP
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|fixP
-operator|->
-name|fx_addsy
-operator|!=
-operator|(
-name|symbolS
-operator|*
-operator|)
-name|NULL
-operator|&&
-operator|!
-name|S_IS_DEFINED
-argument_list|(
-name|fixP
-operator|->
-name|fx_addsy
-argument_list|)
-condition|)
-block|{
-comment|/* The symbol is undefined.  Let the linker figure it out.  */
-return|return
-literal|0
-return|;
-block|}
 comment|/* Return the address of the delay slot.  */
 return|return
 name|fixP
@@ -7125,7 +7022,7 @@ modifier|*
 name|expnew
 decl_stmt|;
 block|{
-comment|/* If the expression is "symbol>> 2" we must change it to just "symbol",      as fix_new_exp can't handle it.  Similarily for (symbol - symbol)>> 2.      That's ok though.  What's really going on here is that we're using      ">> 2" as a special syntax for specifying BFD_RELOC_ARC_B26.  */
+comment|/* If the expression is "symbol>> 2" we must change it to just "symbol",      as fix_new_exp can't handle it.  Similarly for (symbol - symbol)>> 2.      That's ok though.  What's really going on here is that we're using      ">> 2" as a special syntax for specifying BFD_RELOC_ARC_B26.  */
 if|if
 condition|(
 name|exp
@@ -7318,7 +7215,6 @@ init|=
 operator|*
 name|valP
 decl_stmt|;
-comment|/* FIXME FIXME FIXME: The value we are passed in *valueP includes      the symbol values.  Since we are using BFD_ASSEMBLER, if we are      doing this relocation the code in write.c is going to call      bfd_perform_relocation, which is also going to use the symbol      value.  That means that if the reloc is fully resolved we want to      use *valueP since bfd_perform_relocation is not being used.      However, if the reloc is not fully resolved we do not want to use      *valueP, and must use fx_offset instead.  However, if the reloc      is PC relative, we do want to use *valueP since it includes the      result of md_pcrel_from.  This is confusing.  */
 if|if
 condition|(
 name|fixP
@@ -7345,16 +7241,9 @@ operator|->
 name|fx_pcrel
 condition|)
 block|{
-comment|/* ELF relocations are against symbols. 	 If this symbol is in a different section then we need to leave it for 	 the linker to deal with.  Unfortunately, md_pcrel_from can't tell, 	 so we have to undo it's effects here.  */
+comment|/* Hack around bfd_install_relocation brain damage.  */
 if|if
 condition|(
-name|S_IS_DEFINED
-argument_list|(
-name|fixP
-operator|->
-name|fx_addsy
-argument_list|)
-operator|&&
 name|S_GET_SEGMENT
 argument_list|(
 name|fixP
@@ -7372,50 +7261,15 @@ name|fixP
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|value
-operator|=
-name|fixP
-operator|->
-name|fx_offset
-expr_stmt|;
+comment|/* We can't actually support subtracting a symbol.  */
 if|if
 condition|(
 name|fixP
 operator|->
 name|fx_subsy
 operator|!=
-operator|(
-name|symbolS
-operator|*
-operator|)
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|S_GET_SEGMENT
-argument_list|(
-name|fixP
-operator|->
-name|fx_subsy
-argument_list|)
-operator|==
-name|absolute_section
-condition|)
-name|value
-operator|-=
-name|S_GET_VALUE
-argument_list|(
-name|fixP
-operator|->
-name|fx_subsy
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-comment|/* We can't actually support subtracting a symbol.  */
 name|as_bad_where
 argument_list|(
 name|fixP
@@ -7426,12 +7280,12 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"expression too complex"
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
-block|}
-block|}
 if|if
 condition|(
 operator|(
@@ -7859,12 +7713,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|fixP
-operator|->
-name|fx_addnumber
-operator|=
-name|value
-expr_stmt|;
 block|}
 end_function
 
@@ -8003,7 +7851,7 @@ operator|->
 name|pc_relative
 argument_list|)
 expr_stmt|;
-comment|/* Set addend to account for PC being advanced one insn before the      target address is computed, drop fx_addnumber as it is handled      elsewhere mlm  */
+comment|/* Set addend to account for PC being advanced one insn before the      target address is computed.  */
 name|reloc
 operator|->
 name|addend

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file is part of ELF support for BFD, and contains the portions    that are common to both the internal and external representations.    For example, ELFMAG0 is the byte 0x7F in both the internal (in-memory)    and external (in-file) representations. */
+comment|/* This file is part of ELF support for BFD, and contains the portions    that are common to both the internal and external representations.    For example, ELFMAG0 is the byte 0x7F in both the internal (in-memory)    and external (in-file) representations.  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|_ELF_COMMON_H
 end_define
 
 begin_comment
-comment|/* Fields in e_ident[] */
+comment|/* Fields in e_ident[].  */
 end_comment
 
 begin_define
@@ -356,12 +356,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ELFOSABI_STANDALONE
-value|255
+name|ELFOSABI_OPENVMS
+value|13
 end_define
 
 begin_comment
-comment|/* Standalone (embedded) application */
+comment|/* OpenVMS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_NSK
+value|14
+end_define
+
+begin_comment
+comment|/* Hewlett-Packard Non-Stop Kernel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_AROS
+value|15
+end_define
+
+begin_comment
+comment|/* Amiga Research OS */
 end_comment
 
 begin_define
@@ -373,6 +395,17 @@ end_define
 
 begin_comment
 comment|/* ARM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_STANDALONE
+value|255
+end_define
+
+begin_comment
+comment|/* Standalone (embedded) application */
 end_comment
 
 begin_define
@@ -626,11 +659,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* MIPS R3000 little-endian (Oct 4 1999 Draft)*/
-end_comment
-
-begin_comment
-comment|/* Depreciated */
+comment|/* MIPS R3000 little-endian (Oct 4 1999 Draft) Deprecated */
 end_comment
 
 begin_define
@@ -799,7 +828,7 @@ value|42
 end_define
 
 begin_comment
-comment|/* Hitachi SH */
+comment|/* Renesas (formerly Hitachi) / SuperH SH */
 end_comment
 
 begin_define
@@ -843,7 +872,7 @@ value|46
 end_define
 
 begin_comment
-comment|/* Hitachi H8/300 */
+comment|/* Renesas (formerly Hitachi) H8/300 */
 end_comment
 
 begin_define
@@ -854,7 +883,7 @@ value|47
 end_define
 
 begin_comment
-comment|/* Hitachi H8/300H */
+comment|/* Renesas (formerly Hitachi) H8/300H */
 end_comment
 
 begin_define
@@ -865,7 +894,7 @@ value|48
 end_define
 
 begin_comment
-comment|/* Hitachi H8S */
+comment|/* Renesas (formerly Hitachi) H8S */
 end_comment
 
 begin_define
@@ -876,7 +905,7 @@ value|49
 end_define
 
 begin_comment
-comment|/* Hitachi H8/500 */
+comment|/* Renesas (formerly Hitachi) H8/500 */
 end_comment
 
 begin_define
@@ -1294,7 +1323,7 @@ value|88
 end_define
 
 begin_comment
-comment|/* Mitsubishi M32R */
+comment|/* Renesas M32R (formerly Mitsubishi M32R) */
 end_comment
 
 begin_define
@@ -1363,8 +1392,30 @@ begin_comment
 comment|/* Tensilica Xtensa Architecture */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EM_IP2K
+value|101
+end_define
+
 begin_comment
-comment|/* If it is necessary to assign new unofficial EM_* values, please pick large    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision    with official or non-GNU unofficial values.     NOTE: Do not just increment the most recent number by one.    Somebody else somewhere will do exactly the same thing, and you    will have a collision.  Instead, pick a random number.     Normally, each entity or maintainer responsible for a machine with an    unofficial e_machine number should eventually ask registry@caldera.com for    an officially blessed number to be added to the list above.  */
+comment|/* Ubicom IP2022 micro controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MSP430
+value|105
+end_define
+
+begin_comment
+comment|/* TI msp430 micro controller */
+end_comment
+
+begin_comment
+comment|/* If it is necessary to assign new unofficial EM_* values, please pick large    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision    with official or non-GNU unofficial values.     NOTE: Do not just increment the most recent number by one.    Somebody else somewhere will do exactly the same thing, and you    will have a collision.  Instead, pick a random number.     Normally, each entity or maintainer responsible for a machine with an    unofficial e_machine number should eventually ask registry@caldera.com for    an officially blessed number to be added to the list above.	*/
 end_comment
 
 begin_define
@@ -1412,7 +1463,7 @@ value|17
 end_define
 
 begin_comment
-comment|/* (Depreciated) Temporary number for the OpenRISC processor.  */
+comment|/* (Deprecated) Temporary number for the OpenRISC processor.  */
 end_comment
 
 begin_define
@@ -1566,6 +1617,50 @@ define|#
 directive|define
 name|EM_CYGNUS_FRV
 value|0x5441
+end_define
+
+begin_comment
+comment|/* Ubicom IP2xxx; no ABI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_IP2K_OLD
+value|0x8217
+end_define
+
+begin_comment
+comment|/* MSP430 magic number       Written in the absense everything.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MSP430_OLD
+value|0x1059
+end_define
+
+begin_comment
+comment|/* Vitesse IQ2000.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_IQ2000
+value|0xFEBA
+end_define
+
+begin_comment
+comment|/* Old, unofficial value for Xtensa.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_XTENSA_OLD
+value|0xabc7
 end_define
 
 begin_comment
@@ -1739,6 +1834,13 @@ define|#
 directive|define
 name|PT_GNU_EH_FRAME
 value|(PT_LOOS + 0x474e550)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_GNU_STACK
+value|(PT_LOOS + 0x474e551)
 end_define
 
 begin_comment
@@ -2337,6 +2439,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NT_AUXV
+value|6
+end_define
+
+begin_comment
+comment|/* Contains copy of Elfxx_auxv_t */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NT_PRXFPREG
 value|0x46e62b7f
 end_define
@@ -2503,6 +2616,20 @@ name|GNU_ABI_TAG_SOLARIS
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|GNU_ABI_TAG_FREEBSD
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNU_ABI_TAG_NETBSD
+value|4
+end_define
+
 begin_comment
 comment|/* Values for NetBSD .note.netbsd.ident notes.  Note name is "NetBSD".  */
 end_comment
@@ -2511,6 +2638,17 @@ begin_define
 define|#
 directive|define
 name|NT_NETBSD_IDENT
+value|1
+end_define
+
+begin_comment
+comment|/* Values for OpenBSD .note.openbsd.ident notes.  Note name is "OpenBSD".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_OPENBSD_IDENT
 value|1
 end_define
 
@@ -3314,7 +3452,7 @@ begin_define
 define|#
 directive|define
 name|DT_ENCODING
-value|32
+value|31
 end_define
 
 begin_define
@@ -3332,7 +3470,7 @@ value|33
 end_define
 
 begin_comment
-comment|/* Note, the Oct 4, 1999 draft of the ELF ABI changed the values    for DT_LOOS and DT_HIOS.  Some implementations however, use    values outside of the new range (see below).  */
+comment|/* Note, the Oct 4, 1999 draft of the ELF ABI changed the values    for DT_LOOS and DT_HIOS.  Some implementations however, use    values outside of the new range (see below).	 */
 end_comment
 
 begin_define
@@ -3353,7 +3491,7 @@ begin_define
 define|#
 directive|define
 name|DT_HIOS
-value|0x6fff0000
+value|0x6ffff000
 end_define
 
 begin_define
@@ -3378,7 +3516,7 @@ value|0x7fffffff
 end_define
 
 begin_comment
-comment|/* The next four dynamic tags are used on Solaris.  We support them    everywhere.  Note these values lie outside of the (new) range for    OS specific values.  This is a deliberate special case and we    maintain it for backwards compatability.  */
+comment|/* The next four dynamic tags are used on Solaris.  We support them    everywhere.	Note these values lie outside of the (new) range for    OS specific values.	This is a deliberate special case and we    maintain it for backwards compatability.  */
 end_comment
 
 begin_define
@@ -3664,7 +3802,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Flag values used in the DT_POSFLAG_1 .dynamic entry.  */
+comment|/* Flag values used in the DT_POSFLAG_1 .dynamic entry.	 */
 end_comment
 
 begin_define
@@ -3784,7 +3922,7 @@ value|0x00002000
 end_define
 
 begin_comment
-comment|/* Flag values for the DT_FLAGS entry.  */
+comment|/* Flag values for the DT_FLAGS entry.	*/
 end_comment
 
 begin_define
@@ -4038,7 +4176,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Section Group Flags.  */
+comment|/* Section Group Flags.	 */
 end_comment
 
 begin_define
@@ -4050,6 +4188,483 @@ end_define
 
 begin_comment
 comment|/* A COMDAT group */
+end_comment
+
+begin_comment
+comment|/* Auxv a_type values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_NULL
+value|0
+end_define
+
+begin_comment
+comment|/* End of vector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_IGNORE
+value|1
+end_define
+
+begin_comment
+comment|/* Entry should be ignored */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_EXECFD
+value|2
+end_define
+
+begin_comment
+comment|/* File descriptor of program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PHDR
+value|3
+end_define
+
+begin_comment
+comment|/* Program headers for program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PHENT
+value|4
+end_define
+
+begin_comment
+comment|/* Size of program header entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PHNUM
+value|5
+end_define
+
+begin_comment
+comment|/* Number of program headers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PAGESZ
+value|6
+end_define
+
+begin_comment
+comment|/* System page size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_BASE
+value|7
+end_define
+
+begin_comment
+comment|/* Base address of interpreter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_FLAGS
+value|8
+end_define
+
+begin_comment
+comment|/* Flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_ENTRY
+value|9
+end_define
+
+begin_comment
+comment|/* Entry point of program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_NOTELF
+value|10
+end_define
+
+begin_comment
+comment|/* Program is not ELF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_UID
+value|11
+end_define
+
+begin_comment
+comment|/* Real uid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_EUID
+value|12
+end_define
+
+begin_comment
+comment|/* Effective uid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_GID
+value|13
+end_define
+
+begin_comment
+comment|/* Real gid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_EGID
+value|14
+end_define
+
+begin_comment
+comment|/* Effective gid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_CLKTCK
+value|17
+end_define
+
+begin_comment
+comment|/* Frequency of times() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PLATFORM
+value|15
+end_define
+
+begin_comment
+comment|/* String identifying platform.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_HWCAP
+value|16
+end_define
+
+begin_comment
+comment|/* Machine dependent hints about 					   processor capabilities.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_FPUCW
+value|18
+end_define
+
+begin_comment
+comment|/* Used FPU control word.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_DCACHEBSIZE
+value|19
+end_define
+
+begin_comment
+comment|/* Data cache block size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_ICACHEBSIZE
+value|20
+end_define
+
+begin_comment
+comment|/* Instruction cache block size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_UCACHEBSIZE
+value|21
+end_define
+
+begin_comment
+comment|/* Unified cache block size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_IGNOREPPC
+value|22
+end_define
+
+begin_comment
+comment|/* Entry should be ignored */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SECURE
+value|23
+end_define
+
+begin_comment
+comment|/* Boolean, was exec setuid-like?  */
+end_comment
+
+begin_comment
+comment|/* Pointer to the global system page used for system calls and other    nice things.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SYSINFO
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_SYSINFO_EHDR
+value|33
+end_define
+
+begin_comment
+comment|/* Pointer to ELF header of system-supplied DSO.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_UID
+value|2000
+end_define
+
+begin_comment
+comment|/* Effective user ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_RUID
+value|2001
+end_define
+
+begin_comment
+comment|/* Real user ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_GID
+value|2002
+end_define
+
+begin_comment
+comment|/* Effective group ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_RGID
+value|2003
+end_define
+
+begin_comment
+comment|/* Real group ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_LDELF
+value|2004
+end_define
+
+begin_comment
+comment|/* Dynamic linker's ELF header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_LDSHDR
+value|2005
+end_define
+
+begin_comment
+comment|/* Dynamic linker's section headers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_LDNAME
+value|2006
+end_define
+
+begin_comment
+comment|/* String giving name of dynamic linker.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_LPAGESZ
+value|2007
+end_define
+
+begin_comment
+comment|/* Large pagesize.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_PLATFORM
+value|2008
+end_define
+
+begin_comment
+comment|/* Platform name string.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_HWCAP
+value|2009
+end_define
+
+begin_comment
+comment|/* Machine dependent hints about 				   processor capabilities.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_IFLUSH
+value|2010
+end_define
+
+begin_comment
+comment|/* Should flush icache? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_CPU
+value|2011
+end_define
+
+begin_comment
+comment|/* CPU name string.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_EMUL_ENTRY
+value|2012
+end_define
+
+begin_comment
+comment|/* COFF entry point address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_EMUL_EXECFD
+value|2013
+end_define
+
+begin_comment
+comment|/* COFF executable file descriptor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_EXECNAME
+value|2014
+end_define
+
+begin_comment
+comment|/* Canonicalized file name given to execve.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_MMU
+value|2015
+end_define
+
+begin_comment
+comment|/* String for name of MMU module.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SUN_LDDATA
+value|2016
+end_define
+
+begin_comment
+comment|/* Dynamic linker's data segment address.  */
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD COFF object file private structure.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD COFF object file private structure.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -249,8 +249,8 @@ comment|/* The unswapped external symbols.  May be NULL.  Read by      _bfd_coff
 name|PTR
 name|external_syms
 decl_stmt|;
-comment|/* If this is true, the external_syms may not be freed.  */
-name|boolean
+comment|/* If this is TRUE, the external_syms may not be freed.  */
+name|bfd_boolean
 name|keep_syms
 decl_stmt|;
 comment|/* The string table.  May be NULL.  Read by      _bfd_coff_read_string_table.  */
@@ -258,12 +258,12 @@ name|char
 modifier|*
 name|strings
 decl_stmt|;
-comment|/* If this is true, the strings may not be freed.  */
-name|boolean
+comment|/* If this is TRUE, the strings may not be freed.  */
+name|bfd_boolean
 name|keep_strings
 decl_stmt|;
-comment|/* If this is true, the strings have been written out already.  */
-name|boolean
+comment|/* If this is TRUE, the strings have been written out already.  */
+name|bfd_boolean
 name|strings_written
 decl_stmt|;
 comment|/* is this a PE format coff file */
@@ -330,7 +330,7 @@ decl_stmt|;
 name|int
 name|has_reloc_section
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*in_reloc_p
 argument_list|)
@@ -351,7 +351,7 @@ decl_stmt|;
 name|int
 name|target_subsystem
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|force_minimum_alignment
 decl_stmt|;
 block|}
@@ -381,12 +381,12 @@ comment|/* Basic COFF information.  */
 name|coff_data_type
 name|coff
 decl_stmt|;
-comment|/* True if this is an XCOFF64 file. */
-name|boolean
+comment|/* TRUE if this is an XCOFF64 file. */
+name|bfd_boolean
 name|xcoff64
 decl_stmt|;
-comment|/* True if a large a.out header should be generated.  */
-name|boolean
+comment|/* TRUE if a large a.out header should be generated.  */
+name|bfd_boolean
 name|full_aouthdr
 decl_stmt|;
 comment|/* TOC value.  */
@@ -482,8 +482,8 @@ name|internal_reloc
 modifier|*
 name|relocs
 decl_stmt|;
-comment|/* If this is true, the relocs entry may not be freed.  */
-name|boolean
+comment|/* If this is TRUE, the relocs entry may not be freed.  */
+name|bfd_boolean
 name|keep_relocs
 decl_stmt|;
 comment|/* The section contents.  This may be NULL.  */
@@ -491,8 +491,8 @@ name|bfd_byte
 modifier|*
 name|contents
 decl_stmt|;
-comment|/* If this is true, the contents entry may not be freed.  */
-name|boolean
+comment|/* If this is TRUE, the contents entry may not be freed.  */
+name|bfd_boolean
 name|keep_contents
 decl_stmt|;
 comment|/* Information cached by coff_find_nearest_line.  */
@@ -739,7 +739,7 @@ parameter_list|,
 name|info
 parameter_list|)
 define|\
-value|(bfd_link_hash_traverse						\    (&(table)->root,							\     (boolean (*) PARAMS ((struct bfd_link_hash_entry *, PTR))) (func),	\     (info)))
+value|(bfd_link_hash_traverse						\    (&(table)->root,							\     (bfd_boolean (*) PARAMS ((struct bfd_link_hash_entry *, PTR))) (func), \     (info)))
 end_define
 
 begin_comment
@@ -779,7 +779,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|sec
+name|bfd_section
 modifier|*
 name|coff_section_from_bfd_index
 name|PARAMS
@@ -811,7 +811,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|long
-name|coff_get_symtab
+name|coff_canonicalize_symtab
 name|PARAMS
 argument_list|(
 operator|(
@@ -861,7 +861,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|coff_renumber_symbols
 name|PARAMS
 argument_list|(
@@ -892,7 +892,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|coff_write_symbols
 name|PARAMS
 argument_list|(
@@ -906,7 +906,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|coff_write_linenumbers
 name|PARAMS
 argument_list|(
@@ -956,7 +956,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_get_external_symbols
 name|PARAMS
 argument_list|(
@@ -986,7 +986,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_free_symbols
 name|PARAMS
 argument_list|(
@@ -1090,7 +1090,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_is_local_label_name
 name|PARAMS
 argument_list|(
@@ -1128,7 +1128,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|coff_find_nearest_line
 name|PARAMS
 argument_list|(
@@ -1173,7 +1173,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1181,7 +1181,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|bfd_coff_reloc16_relax_section
 name|PARAMS
 argument_list|(
@@ -1196,7 +1196,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|)
 argument_list|)
@@ -1225,7 +1225,7 @@ operator|,
 name|bfd_byte
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 name|asymbol
 operator|*
@@ -1448,7 +1448,7 @@ value|((struct coff_debug_merge_hash_entry *) \    bfd_hash_lookup (&(table)->ro
 end_define
 
 begin_comment
-comment|/* Information we keep for each section in the output file when doing    a relocateable link.  */
+comment|/* Information we keep for each section in the output file when doing    a relocatable link.  */
 end_comment
 
 begin_struct
@@ -1492,11 +1492,11 @@ modifier|*
 name|output_bfd
 decl_stmt|;
 comment|/* Used to indicate failure in traversal routine.  */
-name|boolean
+name|bfd_boolean
 name|failed
 decl_stmt|;
 comment|/* If doing "task linking" set only during the time when we want the      global symbol writer to convert the storage class of defined global      symbols from global to static. */
-name|boolean
+name|bfd_boolean
 name|global_to_static
 decl_stmt|;
 comment|/* Hash table for long symbol names.  */
@@ -1505,7 +1505,7 @@ name|bfd_strtab_hash
 modifier|*
 name|strtab
 decl_stmt|;
-comment|/* When doing a relocateable link, an array of information kept for      each output section, indexed by the target_index field.  */
+comment|/* When doing a relocatable link, an array of information kept for      each output section, indexed by the target_index field.  */
 name|struct
 name|coff_link_section_info
 modifier|*
@@ -1665,7 +1665,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_link_hash_table_init
 name|PARAMS
 argument_list|(
@@ -1743,7 +1743,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_link_add_symbols
 name|PARAMS
 argument_list|(
@@ -1761,7 +1761,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_final_link
 name|PARAMS
 argument_list|(
@@ -1792,12 +1792,12 @@ operator|,
 name|asection
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 name|bfd_byte
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 expr|struct
 name|internal_reloc
@@ -1809,7 +1809,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_generic_relocate_section
 name|PARAMS
 argument_list|(
@@ -1873,7 +1873,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_write_global_sym
 name|PARAMS
 argument_list|(
@@ -1890,7 +1890,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_write_task_globals
 name|PARAMS
 argument_list|(
@@ -1907,7 +1907,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_link_input_bfd
 name|PARAMS
 argument_list|(
@@ -1925,7 +1925,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_reloc_link_order
 name|PARAMS
 argument_list|(
@@ -2061,7 +2061,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_bfd_link_add_symbols
 name|PARAMS
 argument_list|(
@@ -2079,7 +2079,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_bfd_final_link
 name|PARAMS
 argument_list|(
@@ -2097,7 +2097,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ppc_xcoff_relocate_section
 name|PARAMS
 argument_list|(
@@ -2140,7 +2140,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|ppc_allocate_toc_section
 name|PARAMS
 argument_list|(
@@ -2155,7 +2155,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|ppc_process_before_allocation
 name|PARAMS
 argument_list|(

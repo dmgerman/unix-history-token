@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for NN-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for NN-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -43,8 +43,15 @@ begin_define
 define|#
 directive|define
 name|bfd_elfNN_canonicalize_dynamic_symtab
+define|\
 value|_bfd_elf_canonicalize_dynamic_symtab
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|bfd_elfNN_canonicalize_reloc
+end_ifndef
 
 begin_define
 define|#
@@ -52,6 +59,11 @@ directive|define
 name|bfd_elfNN_canonicalize_reloc
 value|_bfd_elf_canonicalize_reloc
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -89,6 +101,7 @@ begin_define
 define|#
 directive|define
 name|bfd_elfNN_get_dynamic_symtab_upper_bound
+define|\
 value|_bfd_elf_get_dynamic_symtab_upper_bound
 end_define
 
@@ -138,8 +151,8 @@ end_endif
 begin_define
 define|#
 directive|define
-name|bfd_elfNN_get_symtab
-value|_bfd_elf_get_symtab
+name|bfd_elfNN_canonicalize_symtab
+value|_bfd_elf_canonicalize_symtab
 end_define
 
 begin_define
@@ -149,28 +162,6 @@ name|bfd_elfNN_get_symtab_upper_bound
 value|_bfd_elf_get_symtab_upper_bound
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* done in elf-bfd.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bfd_elfNN_link_record_dynamic_symbol
-value|_bfd_elf_link_record_dynamic_symbol
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -178,12 +169,23 @@ name|bfd_elfNN_make_empty_symbol
 value|_bfd_elf_make_empty_symbol
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|bfd_elfNN_new_section_hook
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|bfd_elfNN_new_section_hook
 value|_bfd_elf_new_section_hook
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -420,7 +422,7 @@ define|#
 directive|define
 name|bfd_elfNN_bfd_debug_info_accumulate
 define|\
-value|(void (*) PARAMS ((bfd*, struct sec *))) bfd_void
+value|((void (*) (bfd*, struct bfd_section *)) bfd_void)
 end_define
 
 begin_ifndef
@@ -560,7 +562,7 @@ begin_define
 define|#
 directive|define
 name|bfd_elfNN_bfd_gc_sections
-value|_bfd_elfNN_gc_sections
+value|bfd_elf_gc_sections
 end_define
 
 begin_endif
@@ -616,7 +618,7 @@ define|#
 directive|define
 name|bfd_elfNN_bfd_make_debug_symbol
 define|\
-value|((asymbol *(*) PARAMS ((bfd *, void *, unsigned long))) bfd_nullvoidptr)
+value|((asymbol * (*) (bfd *, void *, unsigned long)) bfd_nullvoidptr)
 end_define
 
 begin_endif
@@ -711,7 +713,7 @@ define|#
 directive|define
 name|bfd_elfNN_bfd_merge_private_bfd_data
 define|\
-value|((boolean (*) PARAMS ((bfd *, bfd *))) bfd_true)
+value|((bfd_boolean (*) (bfd *, bfd *)) bfd_true)
 end_define
 
 begin_endif
@@ -730,7 +732,7 @@ define|#
 directive|define
 name|bfd_elfNN_bfd_set_private_flags
 define|\
-value|((boolean (*) PARAMS ((bfd *, flagword))) bfd_true)
+value|((bfd_boolean (*) (bfd *, flagword)) bfd_true)
 end_define
 
 begin_endif
@@ -829,6 +831,42 @@ define|#
 directive|define
 name|bfd_elfNN_bfd_link_hash_table_create
 value|_bfd_elf_link_hash_table_create
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|bfd_elfNN_bfd_link_add_symbols
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|bfd_elfNN_bfd_link_add_symbols
+value|bfd_elf_link_add_symbols
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|bfd_elfNN_bfd_final_link
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|bfd_elfNN_bfd_final_link
+value|bfd_elf_final_link
 end_define
 
 begin_endif
@@ -1042,6 +1080,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|bfd_elfNN_print_symbol
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|bfd_elfNN_print_symbol
+value|bfd_elf_print_symbol
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|elf_symbol_leading_char
 end_ifndef
 
@@ -1127,7 +1183,7 @@ begin_define
 define|#
 directive|define
 name|elf_backend_collect
-value|false
+value|FALSE
 end_define
 
 begin_endif
@@ -1145,7 +1201,7 @@ begin_define
 define|#
 directive|define
 name|elf_backend_type_change_ok
-value|false
+value|FALSE
 end_define
 
 begin_endif
@@ -1235,6 +1291,24 @@ begin_define
 define|#
 directive|define
 name|elf_backend_get_symbol_type
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_name_local_section_symbols
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_name_local_section_symbols
 value|0
 end_define
 
@@ -1624,14 +1698,14 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|elf_backend_got_header_size
+name|elf_backend_bfd_from_remote_memory
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|elf_backend_got_header_size
-value|0
+name|elf_backend_bfd_from_remote_memory
+value|_bfd_elfNN_bfd_from_remote_memory
 end_define
 
 begin_endif
@@ -1642,13 +1716,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|elf_backend_plt_header_size
+name|elf_backend_got_header_size
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|elf_backend_plt_header_size
+name|elf_backend_got_header_size
 value|0
 end_define
 
@@ -1740,6 +1814,24 @@ define|#
 directive|define
 name|elf_backend_hide_symbol
 value|_bfd_elf_link_hash_hide_symbol
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_merge_symbol_attribute
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_merge_symbol_attribute
+value|NULL
 end_define
 
 begin_endif
@@ -1912,6 +2004,60 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|elf_backend_can_make_relative_eh_frame
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_can_make_relative_eh_frame
+value|_bfd_elf_can_make_relative
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_can_make_lsda_relative_eh_frame
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_can_make_lsda_relative_eh_frame
+value|_bfd_elf_can_make_relative
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_encode_eh_address
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_encode_eh_address
+value|_bfd_elf_encode_eh_address
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|elf_backend_write_section
 end_ifndef
 
@@ -1978,24 +2124,6 @@ define|#
 directive|define
 name|USE_REL
 value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_undef
-undef|#
-directive|undef
-name|USE_REL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|USE_REL
-value|1
 end_define
 
 begin_endif
@@ -2136,6 +2264,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|elf_backend_special_sections
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_special_sections
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|elf_backend_sign_extend_vma
 end_ifndef
 
@@ -2197,6 +2343,8 @@ name|elf_backend_symbol_table_processing
 block|,
 name|elf_backend_get_symbol_type
 block|,
+name|elf_backend_name_local_section_symbols
+block|,
 name|elf_backend_section_processing
 block|,
 name|elf_backend_section_from_shdr
@@ -2251,6 +2399,8 @@ name|elf_backend_copy_indirect_symbol
 block|,
 name|elf_backend_hide_symbol
 block|,
+name|elf_backend_merge_symbol_attribute
+block|,
 name|elf_backend_emit_relocs
 block|,
 name|elf_backend_count_relocs
@@ -2269,6 +2419,12 @@ name|elf_backend_discard_info
 block|,
 name|elf_backend_ignore_discarded_relocs
 block|,
+name|elf_backend_can_make_relative_eh_frame
+block|,
+name|elf_backend_can_make_lsda_relative_eh_frame
+block|,
+name|elf_backend_encode_eh_address
+block|,
 name|elf_backend_write_section
 block|,
 name|elf_backend_mips_irix_compat
@@ -2277,6 +2433,8 @@ name|elf_backend_mips_rtype_to_howto
 block|,
 name|elf_backend_ecoff_debug_swap
 block|,
+name|elf_backend_bfd_from_remote_memory
+block|,
 name|ELF_MACHINE_ALT1
 block|,
 name|ELF_MACHINE_ALT2
@@ -2284,11 +2442,11 @@ block|,
 operator|&
 name|elf_backend_size_info
 block|,
+name|elf_backend_special_sections
+block|,
 name|elf_backend_got_symbol_offset
 block|,
 name|elf_backend_got_header_size
-block|,
-name|elf_backend_plt_header_size
 block|,
 name|elf_backend_collect
 block|,
@@ -2588,9 +2746,6 @@ block|,
 endif|#
 directive|endif
 comment|/* backend_data: */
-operator|(
-name|PTR
-operator|)
 operator|&
 name|elfNN_bed
 block|}
@@ -2835,9 +2990,6 @@ block|,
 endif|#
 directive|endif
 comment|/* backend_data: */
-operator|(
-name|PTR
-operator|)
 operator|&
 name|elfNN_bed
 block|}

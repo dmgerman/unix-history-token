@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back end for SCO5 core files (U-area and raw sections)    Copyright 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Jouke Numan<jnuman@hiscom.nl>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back end for SCO5 core files (U-area and raw sections)    Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Written by Jouke Numan<jnuman@hiscom.nl>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -190,7 +190,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|sco5_core_file_matches_executable_p
 name|PARAMS
 argument_list|(
@@ -482,10 +482,6 @@ name|u
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|const
@@ -1202,7 +1198,7 @@ name|secname
 operator|=
 literal|".data"
 expr_stmt|;
-comment|/* Data region.          */
+comment|/* Data region.		 */
 break|break;
 case|case
 name|PT_STACK
@@ -1211,7 +1207,7 @@ name|secname
 operator|=
 literal|".stack"
 expr_stmt|;
-comment|/* Stack region.         */
+comment|/* Stack region.	 */
 break|break;
 case|case
 name|PT_SHMEM
@@ -1220,7 +1216,7 @@ name|secname
 operator|=
 literal|".shmem"
 expr_stmt|;
-comment|/* Shared memory         */
+comment|/* Shared memory	 */
 break|break;
 case|case
 name|PT_LIBDAT
@@ -1229,7 +1225,7 @@ name|secname
 operator|=
 literal|".libdat"
 expr_stmt|;
-comment|/* Shared library data   */
+comment|/* Shared library data	 */
 break|break;
 case|case
 name|PT_V86
@@ -1238,7 +1234,7 @@ name|secname
 operator|=
 literal|".virt86"
 expr_stmt|;
-comment|/* Virtual 8086 mode     */
+comment|/* Virtual 8086 mode	 */
 break|break;
 case|case
 name|PT_SHFIL
@@ -1247,7 +1243,7 @@ name|secname
 operator|=
 literal|".mmfile"
 expr_stmt|;
-comment|/* Memory mapped file    */
+comment|/* Memory mapped file	 */
 break|break;
 case|case
 name|PT_XDATA0
@@ -1433,10 +1429,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|sco5_core_file_failing_signal
@@ -1481,12 +1473,8 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
-name|boolean
+name|bfd_boolean
 name|sco5_core_file_matches_executable_p
 parameter_list|(
 name|core_bfd
@@ -1505,7 +1493,7 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* FIXME, We have no way of telling at this point */
 block|}
@@ -1532,22 +1520,42 @@ begin_define
 define|#
 directive|define
 name|NO_GET
-value|((bfd_vma (*) PARAMS ((   const bfd_byte *))) swap_abort )
+value|((bfd_vma (*) (const void *)) swap_abort)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NO_PUT
-value|((void    (*) PARAMS ((bfd_vma, bfd_byte *))) swap_abort )
+value|((void (*) (bfd_vma, void *)) swap_abort)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NO_SIGNED_GET
-define|\
-value|((bfd_signed_vma (*) PARAMS ((const bfd_byte *))) swap_abort )
+name|NO_GETS
+value|((bfd_signed_vma (*) (const void *)) swap_abort)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_GET64
+value|((bfd_uint64_t (*) (const void *)) swap_abort)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_PUT64
+value|((void (*) (bfd_uint64_t, void *)) swap_abort)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_GETS64
+value|((bfd_int64_t (*) (const void *)) swap_abort)
 end_define
 
 begin_decl_stmt
@@ -1605,44 +1613,44 @@ comment|/* ar_pad_char */
 literal|16
 block|,
 comment|/* ar_max_namelen */
-name|NO_GET
+name|NO_GET64
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS64
 block|,
-name|NO_PUT
+name|NO_PUT64
 block|,
 comment|/* 64 bit data */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
 comment|/* 32 bit data */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
 comment|/* 16 bit data */
-name|NO_GET
+name|NO_GET64
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS64
 block|,
-name|NO_PUT
+name|NO_PUT64
 block|,
 comment|/* 64 bit hdrs */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
 comment|/* 32 bit hdrs */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,

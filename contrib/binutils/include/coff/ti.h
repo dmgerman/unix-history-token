@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* COFF information for TI COFF support.  Definitions in this file should be    customized in a target-specific file, and then this file included (see    tic54x.h for an example).        Copyright 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* COFF information for TI COFF support.  Definitions in this file should be    customized in a target-specific file, and then this file included (see    tic54x.h for an example).        Copyright 2001, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -174,6 +174,49 @@ error|#
 directive|error
 literal|"TICOFF_TARGET_ARCH needs to be defined for your CPU"
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TICOFF_TARGET_MACHINE_GET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TICOFF_TARGET_MACHINE_GET
+parameter_list|(
+name|FLAGS
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TICOFF_TARGET_MACHINE_SET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TICOFF_TARGET_MACHINE_SET
+parameter_list|(
+name|FLAGSP
+parameter_list|,
+name|MACHINE
+parameter_list|)
+end_define
 
 begin_endif
 endif|#
@@ -460,6 +503,17 @@ directive|define
 name|F_LNNO
 value|(0x0004)
 end_define
+
+begin_define
+define|#
+directive|define
+name|F_VERS
+value|(0x0010)
+end_define
+
+begin_comment
+comment|/* TMS320C4x code */
+end_comment
 
 begin_comment
 comment|/* F_LSYMS needs to be redefined in your source file */
@@ -886,10 +940,10 @@ name|GET_SCNHDR_NRELOC
 parameter_list|(
 name|ABFD
 parameter_list|,
-name|PTR
+name|LOC
 parameter_list|)
 define|\
-value|(COFF2_P (ABFD) ? H_GET_32 (ABFD, PTR) : H_GET_16 (ABFD, PTR))
+value|(COFF2_P (ABFD) ? H_GET_32 (ABFD, LOC) : H_GET_16 (ABFD, LOC))
 end_define
 
 begin_define
@@ -901,10 +955,10 @@ name|ABFD
 parameter_list|,
 name|VAL
 parameter_list|,
-name|PTR
+name|LOC
 parameter_list|)
 define|\
-value|(COFF2_P (ABFD) ? H_PUT_32 (ABFD, VAL, PTR) : H_PUT_16 (ABFD, VAL, PTR))
+value|(COFF2_P (ABFD) ? H_PUT_32 (ABFD, VAL, LOC) : H_PUT_16 (ABFD, VAL, LOC))
 end_define
 
 begin_define
@@ -914,10 +968,10 @@ name|GET_SCNHDR_NLNNO
 parameter_list|(
 name|ABFD
 parameter_list|,
-name|PTR
+name|LOC
 parameter_list|)
 define|\
-value|(COFF2_P (ABFD) ? H_GET_32 (ABFD, PTR) : H_GET_16 (ABFD, (PTR) -2))
+value|(COFF2_P (ABFD) ? H_GET_32 (ABFD, LOC) : H_GET_16 (ABFD, (LOC) - 2))
 end_define
 
 begin_define
@@ -929,10 +983,10 @@ name|ABFD
 parameter_list|,
 name|VAL
 parameter_list|,
-name|PTR
+name|LOC
 parameter_list|)
 define|\
-value|(COFF2_P (ABFD) ? H_PUT_32 (ABFD, VAL, PTR) : H_PUT_16 (ABFD, VAL, (PTR) -2))
+value|(COFF2_P (ABFD) ? H_PUT_32 (ABFD, VAL, LOC) : H_PUT_16 (ABFD, VAL, (LOC) - 2))
 end_define
 
 begin_define
@@ -942,10 +996,10 @@ name|GET_SCNHDR_FLAGS
 parameter_list|(
 name|ABFD
 parameter_list|,
-name|PTR
+name|LOC
 parameter_list|)
 define|\
-value|(COFF2_P (ABFD) ? H_GET_32 (ABFD, PTR) : H_GET_16 (ABFD, (PTR) -4))
+value|(COFF2_P (ABFD) ? H_GET_32 (ABFD, LOC) : H_GET_16 (ABFD, (LOC) - 4))
 end_define
 
 begin_define
@@ -957,10 +1011,10 @@ name|ABFD
 parameter_list|,
 name|VAL
 parameter_list|,
-name|PTR
+name|LOC
 parameter_list|)
 define|\
-value|(COFF2_P (ABFD) ? H_PUT_32 (ABFD, VAL, PTR) : H_PUT_16 (ABFD, VAL, (PTR) -4))
+value|(COFF2_P (ABFD) ? H_PUT_32 (ABFD, VAL, LOC) : H_PUT_16 (ABFD, VAL, (LOC) - 4))
 end_define
 
 begin_define
@@ -970,10 +1024,10 @@ name|GET_SCNHDR_PAGE
 parameter_list|(
 name|ABFD
 parameter_list|,
-name|PTR
+name|LOC
 parameter_list|)
 define|\
-value|(COFF2_P (ABFD) ? H_GET_16 (ABFD, PTR) : (unsigned) H_GET_8 (ABFD, (PTR) -7))
+value|(COFF2_P (ABFD) ? H_GET_16 (ABFD, LOC) : (unsigned) H_GET_8 (ABFD, (LOC) - 7))
 end_define
 
 begin_comment
@@ -989,10 +1043,10 @@ name|ABFD
 parameter_list|,
 name|VAL
 parameter_list|,
-name|PTR
+name|LOC
 parameter_list|)
 define|\
-value|(COFF2_P (ABFD) \    ? H_PUT_16 (ABFD, VAL, PTR) \    : H_PUT_8 (ABFD, VAL, (PTR) -7), H_PUT_8 (ABFD, 0, (PTR) -8))
+value|(COFF2_P (ABFD) \    ? H_PUT_16 (ABFD, VAL, LOC) \    : H_PUT_8 (ABFD, VAL, (LOC) - 7), H_PUT_8 (ABFD, 0, (LOC) - 8))
 end_define
 
 begin_comment

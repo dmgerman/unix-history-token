@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for the generic parts of COFF, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for the generic parts of COFF, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -73,7 +73,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_write_symbol
 name|PARAMS
 argument_list|(
@@ -106,7 +106,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_write_alien_symbol
 name|PARAMS
 argument_list|(
@@ -136,7 +136,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_write_native_symbol
 name|PARAMS
 argument_list|(
@@ -192,7 +192,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|make_a_section_from_file
 name|PARAMS
 argument_list|(
@@ -306,7 +306,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|make_a_section_from_file
 parameter_list|(
 name|abfd
@@ -337,10 +337,10 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|result
 init|=
-name|true
+name|TRUE
 decl_stmt|;
 name|flagword
 name|flags
@@ -447,7 +447,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* FIXME: For extra safety, we should make sure that              strindex does not run us past the end, but right now we              don't know the length of the string table.  */
 name|strings
@@ -478,7 +478,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|strcpy
 argument_list|(
@@ -523,7 +523,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|strncpy
 argument_list|(
@@ -578,7 +578,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|return_section
 operator|->
@@ -694,7 +694,7 @@ argument_list|)
 condition|)
 name|result
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|return_section
 operator|->
@@ -1069,7 +1069,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* Now copy data as required; construct all asections etc */
+comment|/* Now copy data as required; construct all asections etc.  */
 if|if
 condition|(
 name|nscns
@@ -1141,7 +1141,6 @@ name|fail
 goto|;
 block|}
 block|}
-comment|/*  make_abs_section (abfd); */
 return|return
 name|abfd
 operator|->
@@ -1484,7 +1483,7 @@ name|index
 decl_stmt|;
 block|{
 name|struct
-name|sec
+name|bfd_section
 modifier|*
 name|answer
 init|=
@@ -1603,7 +1602,7 @@ end_comment
 
 begin_function
 name|long
-name|coff_get_symtab
+name|coff_canonicalize_symtab
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -1839,7 +1838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read in and swap the relocs.  This returns a buffer holding the    relocs for section SEC in file ABFD.  If CACHE is true and    INTERNAL_RELOCS is NULL, the relocs read in will be saved in case    the function is called again.  If EXTERNAL_RELOCS is not NULL, it    is a buffer large enough to hold the unswapped relocs.  If    INTERNAL_RELOCS is not NULL, it is a buffer large enough to hold    the swapped relocs.  If REQUIRE_INTERNAL is true, then the return    value must be INTERNAL_RELOCS.  The function returns NULL on error.  */
+comment|/* Read in and swap the relocs.  This returns a buffer holding the    relocs for section SEC in file ABFD.  If CACHE is TRUE and    INTERNAL_RELOCS is NULL, the relocs read in will be saved in case    the function is called again.  If EXTERNAL_RELOCS is not NULL, it    is a buffer large enough to hold the unswapped relocs.  If    INTERNAL_RELOCS is not NULL, it is a buffer large enough to hold    the swapped relocs.  If REQUIRE_INTERNAL is TRUE, then the return    value must be INTERNAL_RELOCS.  The function returns NULL on error.  */
 end_comment
 
 begin_function
@@ -1868,14 +1867,14 @@ name|asection
 modifier|*
 name|sec
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|cache
 decl_stmt|;
 name|bfd_byte
 modifier|*
 name|external_relocs
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|require_internal
 decl_stmt|;
 name|struct
@@ -2849,7 +2848,7 @@ comment|/* Run through all the symbols in the symbol table and work out what    
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|coff_renumber_symbols
 parameter_list|(
 name|bfd_ptr
@@ -2957,7 +2956,7 @@ operator|!
 name|newsyms
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|bfd_ptr
 operator|->
@@ -3394,7 +3393,7 @@ operator|=
 name|native_index
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -4397,7 +4396,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_write_symbol
 parameter_list|(
 name|abfd
@@ -4629,7 +4628,7 @@ operator|!
 name|buf
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|bfd_coff_swap_sym_out
 argument_list|(
@@ -4659,7 +4658,7 @@ operator|!=
 name|symesz
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|bfd_release
 argument_list|(
@@ -4710,7 +4709,7 @@ operator|!
 name|buf
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -4785,7 +4784,7 @@ operator|!=
 name|auxesz
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|bfd_release
@@ -4813,7 +4812,7 @@ operator|+
 literal|1
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -4824,7 +4823,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_write_alien_symbol
 parameter_list|(
 name|abfd
@@ -4982,7 +4981,7 @@ operator|=
 literal|""
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 else|else
@@ -5192,7 +5191,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_write_native_symbol
 parameter_list|(
 name|abfd
@@ -5400,7 +5399,7 @@ name|symbol
 operator|->
 name|done_lineno
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -5465,7 +5464,7 @@ comment|/* Write out the COFF symbols.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|coff_write_symbols
 parameter_list|(
 name|abfd
@@ -5596,7 +5595,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Output all the symbols we have */
 name|written
@@ -5688,7 +5687,7 @@ name|debug_string_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -5716,7 +5715,7 @@ name|debug_string_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -5796,7 +5795,7 @@ name|buffer
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Handle long section names.  This code must handle section 	 names just as they are handled in coff_write_object_contents.  */
 if|if
@@ -5874,7 +5873,7 @@ operator|+
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -6037,7 +6036,7 @@ operator|!=
 literal|6
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|maxlen
@@ -6095,7 +6094,7 @@ operator|+
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -6156,7 +6155,7 @@ operator|!=
 name|STRING_SIZE_SIZE
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Make sure the .debug section was created to be the correct size.      We should create it ourselves on the fly, but we don't because      BFD won't let us write to any section until we know how large all      the sections are.  We could still do it by making another pass      over the symbols.  FIXME.  */
@@ -6198,13 +6197,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|coff_write_linenumbers
 parameter_list|(
 name|abfd
@@ -6246,7 +6245,7 @@ operator|!
 name|buff
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -6303,7 +6302,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Find all the linenumbers in this section */
 while|while
@@ -6424,7 +6423,7 @@ operator|!=
 name|linesz
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|l
 operator|++
@@ -6483,7 +6482,7 @@ operator|!=
 name|linesz
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|l
 operator|++
@@ -6505,7 +6504,7 @@ name|buff
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7090,7 +7089,7 @@ comment|/* Read in the external symbols.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_get_external_symbols
 parameter_list|(
 name|abfd
@@ -7119,7 +7118,7 @@ operator|!=
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|symesz
 operator|=
@@ -7158,7 +7157,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -7200,7 +7199,7 @@ name|syms
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|obj_coff_external_syms
@@ -7211,7 +7210,7 @@ operator|=
 name|syms
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7482,7 +7481,7 @@ comment|/* Free up the external symbols and strings read from a COFF file.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_free_symbols
 parameter_list|(
 name|abfd
@@ -7557,7 +7556,7 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7872,7 +7871,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -8603,7 +8602,7 @@ name|new
 operator|->
 name|done_lineno
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|new
 operator|->
@@ -8752,7 +8751,7 @@ name|new
 operator|->
 name|done_lineno
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|new
 operator|->
@@ -8857,7 +8856,7 @@ comment|/* Return the COFF syment for a symbol.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_coff_get_syment
 parameter_list|(
 name|abfd
@@ -8912,7 +8911,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 operator|*
@@ -8953,7 +8952,7 @@ argument_list|)
 expr_stmt|;
 comment|/* FIXME: We should handle fix_line here.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -8963,7 +8962,7 @@ comment|/* Return the COFF auxent for a symbol.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_coff_get_auxent
 parameter_list|(
 name|abfd
@@ -9039,7 +9038,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ent
@@ -9169,7 +9168,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10065,7 +10064,7 @@ comment|/* Return whether a symbol name implies a local symbol.  In COFF,    loc
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_is_local_label_name
 parameter_list|(
 name|abfd
@@ -10084,10 +10083,6 @@ name|name
 decl_stmt|;
 block|{
 return|return
-call|(
-name|boolean
-call|)
-argument_list|(
 name|name
 index|[
 literal|0
@@ -10101,7 +10096,6 @@ literal|1
 index|]
 operator|==
 literal|'L'
-argument_list|)
 return|;
 block|}
 end_function
@@ -10111,7 +10105,7 @@ comment|/* Provided a BFD, a section and an offset (in bytes, not octets) into t
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|coff_find_nearest_line
 parameter_list|(
 name|abfd
@@ -10162,7 +10156,7 @@ modifier|*
 name|line_ptr
 decl_stmt|;
 block|{
-name|boolean
+name|bfd_boolean
 name|found
 decl_stmt|;
 name|unsigned
@@ -10236,14 +10230,14 @@ name|line_info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
 name|found
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Also try examining DWARF2 debugging information.  */
 if|if
@@ -10276,7 +10270,7 @@ name|dwarf2_find_line_info
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 operator|*
 name|filename_ptr
@@ -10303,7 +10297,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -10312,7 +10306,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Find the first C_FILE symbol.  */
 name|p
@@ -10327,7 +10321,7 @@ operator|!
 name|p
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|pend
 operator|=
@@ -11043,7 +11037,7 @@ name|line_base
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -11060,7 +11054,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|reloc
 decl_stmt|;
 block|{
@@ -11118,7 +11112,7 @@ comment|/* Change the class of a coff symbol held by BFD.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_coff_set_symbol_class
 parameter_list|(
 name|abfd
@@ -11166,7 +11160,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 elseif|else
@@ -11213,7 +11207,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|native
 operator|->
@@ -11407,7 +11401,7 @@ name|class
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

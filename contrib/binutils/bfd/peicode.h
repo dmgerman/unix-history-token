@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for the generic parts of PE/PEI, for BFD.    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Solutions.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for the generic parts of PE/PEI, for BFD.    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Solutions.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Most of this hacked by  Steve Chamberlain, 			sac@cygnus.com  PE/PEI rearrangement (and code added): Donn Terry                                        Softway Systems, Inc. */
+comment|/* Most of this hacked by  Steve Chamberlain, 			sac@cygnus.com     PE/PEI rearrangement (and code added): Donn Terry                                        Softway Systems, Inc.  */
 end_comment
 
 begin_comment
-comment|/* Hey look, some documentation [and in a place you expect to find it]!     The main reference for the pei format is "Microsoft Portable Executable    and Common Object File Format Specification 4.1".  Get it if you need to    do some serious hacking on this code.     Another reference:    "Peering Inside the PE: A Tour of the Win32 Portable Executable    File Format", MSJ 1994, Volume 9.     The *sole* difference between the pe format and the pei format is that the    latter has an MSDOS 2.0 .exe header on the front that prints the message    "This app must be run under Windows." (or some such).    (FIXME: Whether that statement is *really* true or not is unknown.    Are there more subtle differences between pe and pei formats?    For now assume there aren't.  If you find one, then for God sakes    document it here!)     The Microsoft docs use the word "image" instead of "executable" because    the former can also refer to a DLL (shared library).  Confusion can arise    because the `i' in `pei' also refers to "image".  The `pe' format can    also create images (i.e. executables), it's just that to run on a win32    system you need to use the pei format.     FIXME: Please add more docs here so the next poor fool that has to hack    on this code has a chance of getting something accomplished without    wasting too much time. */
+comment|/* Hey look, some documentation [and in a place you expect to find it]!     The main reference for the pei format is "Microsoft Portable Executable    and Common Object File Format Specification 4.1".  Get it if you need to    do some serious hacking on this code.     Another reference:    "Peering Inside the PE: A Tour of the Win32 Portable Executable    File Format", MSJ 1994, Volume 9.     The *sole* difference between the pe format and the pei format is that the    latter has an MSDOS 2.0 .exe header on the front that prints the message    "This app must be run under Windows." (or some such).    (FIXME: Whether that statement is *really* true or not is unknown.    Are there more subtle differences between pe and pei formats?    For now assume there aren't.  If you find one, then for God sakes    document it here!)     The Microsoft docs use the word "image" instead of "executable" because    the former can also refer to a DLL (shared library).  Confusion can arise    because the `i' in `pei' also refers to "image".  The `pe' format can    also create images (i.e. executables), it's just that to run on a win32    system you need to use the pei format.     FIXME: Please add more docs here so the next poor fool that has to hack    on this code has a chance of getting something accomplished without    wasting too much time.  */
 end_comment
 
 begin_include
@@ -19,7 +19,7 @@ end_include
 
 begin_expr_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*pe_saved_coff_bfd_print_private_bfd_data
 argument_list|)
@@ -63,7 +63,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|pe_print_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -86,7 +86,7 @@ end_define
 
 begin_expr_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*pe_saved_coff_bfd_copy_private_bfd_data
 argument_list|)
@@ -131,7 +131,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|pe_bfd_copy_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -253,7 +253,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|pe_mkobject
 name|PARAMS
 argument_list|(
@@ -504,7 +504,7 @@ operator|,
 name|bfd_reloc_code_real_type
 operator|,
 expr|struct
-name|symbol_cache_entry
+name|bfd_symbol
 operator|*
 operator|*
 operator|,
@@ -517,7 +517,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|pe_ILF_build_a_bfd
 name|PARAMS
 argument_list|(
@@ -1282,9 +1282,17 @@ block|}
 ifndef|#
 directive|ifndef
 name|COFF_NO_HACK_SCNHDR_SIZE
-comment|/* If this section holds uninitialized data, use the virtual size      (stored in s_paddr) instead of the physical size.  */
+comment|/* If this section holds uninitialized data and is from an object file      or from an executable image that has not initialized the field,      or if the image is an executable file and the physical size is padded,      use the virtual size (stored in s_paddr) instead.  */
 if|if
 condition|(
+name|scnhdr_int
+operator|->
+name|s_paddr
+operator|>
+literal|0
+operator|&&
+operator|(
+operator|(
 operator|(
 name|scnhdr_int
 operator|->
@@ -1296,11 +1304,34 @@ operator|!=
 literal|0
 operator|&&
 operator|(
+operator|!
+name|bfd_pe_executable_p
+argument_list|(
+name|abfd
+argument_list|)
+operator|||
+name|scnhdr_int
+operator|->
+name|s_size
+operator|==
+literal|0
+operator|)
+operator|)
+operator|||
+operator|(
+name|bfd_pe_executable_p
+argument_list|(
+name|abfd
+argument_list|)
+operator|&&
+name|scnhdr_int
+operator|->
+name|s_size
+operator|>
 name|scnhdr_int
 operator|->
 name|s_paddr
-operator|>
-literal|0
+operator|)
 operator|)
 condition|)
 block|{
@@ -1321,7 +1352,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|pe_mkobject
 parameter_list|(
 name|abfd
@@ -1372,7 +1403,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|pe
 operator|=
@@ -1419,7 +1450,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1681,7 +1712,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|pe_print_private_bfd_data
 parameter_list|(
 name|abfd
@@ -1717,7 +1748,7 @@ name|vfile
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -1743,7 +1774,7 @@ argument_list|)
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1754,7 +1785,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|pe_bfd_copy_private_bfd_data
 parameter_list|(
 name|ibfd
@@ -1783,7 +1814,7 @@ name|obfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -1798,7 +1829,7 @@ name|obfd
 argument_list|)
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -1982,7 +2013,7 @@ name|bfd_reloc_code_real_type
 name|reloc
 parameter_list|,
 name|struct
-name|symbol_cache_entry
+name|bfd_symbol
 modifier|*
 modifier|*
 name|sym
@@ -2209,7 +2240,7 @@ argument_list|)
 operator|->
 name|keep_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|sec
 operator|->
@@ -2586,7 +2617,7 @@ if|#
 directive|if
 literal|0
 comment|/* See comment above.  */
-block|sym->symbol.value   = 0;   sym->symbol.udata.i = 0;   sym->done_lineno    = false;   sym->lineno         = NULL;
+block|sym->symbol.value   = 0;   sym->symbol.udata.i = 0;   sym->done_lineno    = FALSE;   sym->lineno         = NULL;
 endif|#
 directive|endif
 operator|*
@@ -3216,7 +3247,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|pe_ILF_build_a_bfd
 parameter_list|(
 name|bfd
@@ -3334,7 +3365,7 @@ name|import_type
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 default|default:
 name|_bfd_error_handler
@@ -3353,7 +3384,7 @@ name|import_type
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 switch|switch
@@ -3391,7 +3422,7 @@ name|import_name_type
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Initialise local variables.       Note these are kept in a structure rather than being      declared as statics since bfd frowns on global variables.       We are going to construct the contents of the BFD in memory,      so allocate all the space that we will need right now.  */
@@ -3414,7 +3445,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Create a bfd_in_memory structure.  */
 name|vars
@@ -3709,7 +3740,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Fill in the contents of these sections.  */
 if|if
@@ -3786,7 +3817,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* If necessary, trim the import symbol name.  */
 name|symbol
@@ -3799,27 +3830,99 @@ name|import_name_type
 operator|!=
 name|IMPORT_NAME
 condition|)
+block|{
+name|bfd_boolean
+name|skipped_leading_underscore
+init|=
+name|FALSE
+decl_stmt|;
+name|bfd_boolean
+name|skipped_leading_at
+init|=
+name|FALSE
+decl_stmt|;
+name|bfd_boolean
+name|skipped_leading_question_mark
+init|=
+name|FALSE
+decl_stmt|;
+name|bfd_boolean
+name|check_again
+decl_stmt|;
 comment|/* Skip any prefix in symbol_name.  */
-while|while
-condition|(
-operator|*
+operator|--
 name|symbol
-operator|==
-literal|'@'
-operator|||
-operator|*
-name|symbol
-operator|==
-literal|'?'
-operator|||
-operator|*
-name|symbol
-operator|==
-literal|'_'
-condition|)
+expr_stmt|;
+do|do
+block|{
+name|check_again
+operator|=
+name|FALSE
+expr_stmt|;
 operator|++
 name|symbol
 expr_stmt|;
+switch|switch
+condition|(
+operator|*
+name|symbol
+condition|)
+block|{
+case|case
+literal|'@'
+case|:
+if|if
+condition|(
+operator|!
+name|skipped_leading_at
+condition|)
+name|check_again
+operator|=
+name|skipped_leading_at
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+if|if
+condition|(
+operator|!
+name|skipped_leading_question_mark
+condition|)
+name|check_again
+operator|=
+name|skipped_leading_question_mark
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'_'
+case|:
+if|if
+condition|(
+operator|!
+name|skipped_leading_underscore
+condition|)
+name|check_again
+operator|=
+name|skipped_leading_underscore
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+do|while
+condition|(
+name|check_again
+condition|)
+do|;
+block|}
 if|if
 condition|(
 name|import_name_type
@@ -4026,7 +4129,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Copy in the jump code.  */
 name|memcpy
@@ -4106,7 +4209,7 @@ name|BFD_RELOC_HI16_S
 argument_list|,
 operator|(
 expr|struct
-name|symbol_cache_entry
+name|bfd_symbol
 operator|*
 operator|*
 operator|)
@@ -4144,7 +4247,7 @@ name|BFD_RELOC_LO16
 argument_list|,
 operator|(
 expr|struct
-name|symbol_cache_entry
+name|bfd_symbol
 operator|*
 operator|*
 operator|)
@@ -4267,7 +4370,7 @@ name|internal_f
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -4287,7 +4390,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|coff_data
 argument_list|(
@@ -4493,7 +4596,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|obj_convert
 argument_list|(
@@ -4527,7 +4630,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|abfd
 operator|->
@@ -4536,7 +4639,7 @@ operator||=
 name|HAS_SYMS
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

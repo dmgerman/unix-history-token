@@ -864,6 +864,72 @@ begin_comment
 comment|/* ATTRIBUTE_NORETURN */
 end_comment
 
+begin_comment
+comment|/* Attribute `nonnull' was valid as of gcc 3.3.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_NONNULL
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3003
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NONNULL
+parameter_list|(
+name|m
+parameter_list|)
+value|__attribute__ ((__nonnull__ (m)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NONNULL
+parameter_list|(
+name|m
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 3.3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_NONNULL */
+end_comment
+
+begin_comment
+comment|/* Use ATTRIBUTE_PRINTF when the format specifier must not be NULL.    This was the case for the `printf' format attribute by itself    before GCC 3.3, but as of 3.3 we need to add the `nonnull'    attribute to retain this behavior.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -879,7 +945,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|__attribute__ ((__format__ (__printf__, m, n)))
+value|__attribute__ ((__format__ (__printf__, m, n))) ATTRIBUTE_NONNULL(m)
 end_define
 
 begin_define
@@ -927,6 +993,107 @@ comment|/* ATTRIBUTE_PRINTF */
 end_comment
 
 begin_comment
+comment|/* Use ATTRIBUTE_NULL_PRINTF when the format specifier may be NULL.  A    NULL format specifier was allowed as of gcc 3.3.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_NULL_PRINTF
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3003
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+value|__attribute__ ((__format__ (__printf__, m, n)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 3.3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_1
+value|ATTRIBUTE_NULL_PRINTF(1, 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_2
+value|ATTRIBUTE_NULL_PRINTF(2, 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_3
+value|ATTRIBUTE_NULL_PRINTF(3, 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_4
+value|ATTRIBUTE_NULL_PRINTF(4, 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_5
+value|ATTRIBUTE_NULL_PRINTF(5, 6)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_NULL_PRINTF */
+end_comment
+
+begin_comment
 comment|/* We use __extension__ in some places to suppress -pedantic warnings    about GCC extensions.  This feature didn't work properly before    gcc 2.8.  */
 end_comment
 
@@ -948,47 +1115,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Bootstrap support:  Adjust certain macros defined by Autoconf,    which are only valid for the stage1 compiler.  If we detect    a modern version of GCC, we are probably in stage2 or beyond,    so unconditionally reset the values.  Note that const, inline,    etc. have been dealt with above.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|GCC_VERSION
-operator|>=
-literal|2007
-operator|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_LONG_DOUBLE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HAVE_LONG_DOUBLE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GCC>= 2.7 */
-end_comment
 
 begin_endif
 endif|#

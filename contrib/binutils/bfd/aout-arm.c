@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for raw ARM a.out binaries.    Copyright 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for raw ARM a.out binaries.    Copyright 1994, 1995, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ file|"sysdep.h"
 end_include
 
 begin_comment
-comment|/* Avoid multiple defininitions from aoutx if supporting standarad a.out    as well as our own.  */
+comment|/* Avoid multiple definitions from aoutx if supporting standard a.out    as well as our own.  */
 end_comment
 
 begin_comment
@@ -125,7 +125,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|boolean
+name|bfd_boolean
 name|MY
 parameter_list|(
 name|write_object_contents
@@ -360,7 +360,7 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -370,13 +370,13 @@ literal|0
 argument_list|,
 literal|"8"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x000000ff
 argument_list|,
 literal|0x000000ff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -389,7 +389,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -399,13 +399,13 @@ literal|0
 argument_list|,
 literal|"16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -418,7 +418,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -428,13 +428,13 @@ literal|0
 argument_list|,
 literal|"32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -447,7 +447,7 @@ literal|2
 argument_list|,
 literal|26
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -460,13 +460,13 @@ argument_list|)
 argument_list|,
 literal|"ARM26"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x00ffffff
 argument_list|,
 literal|0x00ffffff
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -479,7 +479,7 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -489,13 +489,13 @@ literal|0
 argument_list|,
 literal|"DISP8"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x000000ff
 argument_list|,
 literal|0x000000ff
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -508,7 +508,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -518,13 +518,13 @@ literal|0
 argument_list|,
 literal|"DISP16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -537,7 +537,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -547,13 +547,13 @@ literal|0
 argument_list|,
 literal|"DISP32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -566,7 +566,7 @@ literal|2
 argument_list|,
 literal|26
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -579,13 +579,13 @@ argument_list|)
 argument_list|,
 literal|"ARM26D"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0
 argument_list|,
 literal|0x0
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|EMPTY_HOWTO
@@ -605,7 +605,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -615,13 +615,13 @@ literal|0
 argument_list|,
 literal|"NEG16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -635,7 +635,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-argument|false
+argument|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -645,13 +645,13 @@ literal|0
 argument_list|,
 literal|"NEG32"
 argument_list|,
-argument|true
+argument|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-argument|false
+argument|FALSE
 argument_list|)
 block|}
 decl_stmt|;

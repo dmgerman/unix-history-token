@@ -944,12 +944,19 @@ name|buffer
 operator|=
 operator|(
 specifier|const
+name|void
+operator|*
+operator|)
+operator|(
+operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 name|buffer
 operator|+
 name|add
+operator|)
 expr_stmt|;
 name|len
 operator|-=
@@ -980,6 +987,12 @@ name|buffer
 operator|=
 operator|(
 specifier|const
+name|void
+operator|*
+operator|)
+operator|(
+operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -990,6 +1003,7 @@ name|len
 operator|&
 operator|~
 literal|63
+operator|)
 operator|)
 expr_stmt|;
 name|len
@@ -1129,6 +1143,11 @@ name|md5_uint32
 modifier|*
 name|words
 init|=
+operator|(
+specifier|const
+name|md5_uint32
+operator|*
+operator|)
 name|buffer
 decl_stmt|;
 name|size_t
@@ -1568,8 +1587,6 @@ define|#
 directive|define
 name|OP
 parameter_list|(
-name|f
-parameter_list|,
 name|a
 parameter_list|,
 name|b
@@ -1585,12 +1602,21 @@ parameter_list|,
 name|T
 parameter_list|)
 define|\
-value|do 								\ 	{								\ 	  a += f (b, c, d) + correct_words[k] + T;			\ 	  CYCLIC (a, s);						\ 	  a += b;							\ 	}								\       while (0)
+value|do 								\ 	{								\ 	  a += FX (b, c, d) + correct_words[k] + T;			\ 	  CYCLIC (a, s);						\ 	  a += b;							\ 	}								\       while (0)
+define|#
+directive|define
+name|FX
+parameter_list|(
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|FG (b, c, d)
 comment|/* Round 2.  */
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -1611,8 +1637,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -1633,8 +1657,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -1655,8 +1677,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -1677,8 +1697,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -1699,8 +1717,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -1721,8 +1737,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -1743,8 +1757,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -1765,8 +1777,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -1787,8 +1797,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -1809,8 +1817,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -1831,8 +1837,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -1853,8 +1857,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -1875,8 +1877,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -1897,8 +1897,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -1919,8 +1917,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FG
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -1939,11 +1935,23 @@ operator|)
 literal|0x8d2a4c8a
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|FX
+define|#
+directive|define
+name|FX
+parameter_list|(
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|FH (b, c, d)
 comment|/* Round 3.  */
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -1964,8 +1972,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -1986,8 +1992,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -2008,8 +2012,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -2030,8 +2032,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -2052,8 +2052,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -2074,8 +2072,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -2096,8 +2092,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -2118,8 +2112,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -2140,8 +2132,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -2162,8 +2152,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -2184,8 +2172,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -2206,8 +2192,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -2228,8 +2212,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -2250,8 +2232,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -2272,8 +2252,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FH
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -2292,11 +2270,23 @@ operator|)
 literal|0xc4ac5665
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|FX
+define|#
+directive|define
+name|FX
+parameter_list|(
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|FI (b, c, d)
 comment|/* Round 4.  */
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -2317,8 +2307,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -2339,8 +2327,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -2361,8 +2347,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -2383,8 +2367,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -2405,8 +2387,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -2427,8 +2407,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -2449,8 +2427,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -2471,8 +2447,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -2493,8 +2467,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -2515,8 +2487,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -2537,8 +2507,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|B
 argument_list|,
 name|C
@@ -2559,8 +2527,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|A
 argument_list|,
 name|B
@@ -2581,8 +2547,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|D
 argument_list|,
 name|A
@@ -2603,8 +2567,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|C
 argument_list|,
 name|D
@@ -2625,8 +2587,6 @@ argument_list|)
 expr_stmt|;
 name|OP
 argument_list|(
-name|FI
-argument_list|,
 name|B
 argument_list|,
 name|C

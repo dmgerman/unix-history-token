@@ -731,7 +731,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Maintain a list of the tagnames of the structres.  */
+comment|/*  * Maintain a list of the tagnames of the structures.  */
 end_comment
 
 begin_decl_stmt
@@ -4084,6 +4084,12 @@ name|coff_last_function
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OBJ_XCOFF
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|symbolS
@@ -4091,6 +4097,11 @@ modifier|*
 name|coff_last_bf
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -5447,6 +5458,14 @@ name|SEC_NEVER_LOAD
 expr_stmt|;
 break|break;
 case|case
+literal|'s'
+case|:
+name|flags
+operator||=
+name|SEC_SHARED
+expr_stmt|;
+comment|/* fall through */
+case|case
 literal|'d'
 case|:
 name|flags
@@ -5469,7 +5488,7 @@ case|case
 literal|'a'
 case|:
 break|break;
-comment|/* For compatability with ELF.  */
+comment|/* For compatibility with ELF.  */
 case|case
 literal|'x'
 case|:
@@ -5485,15 +5504,11 @@ literal|'r'
 case|:
 name|flags
 operator||=
+name|SEC_DATA
+operator||
+name|SEC_LOAD
+operator||
 name|SEC_READONLY
-expr_stmt|;
-break|break;
-case|case
-literal|'s'
-case|:
-name|flags
-operator||=
-name|SEC_SHARED
 expr_stmt|;
 break|break;
 case|case
@@ -8172,7 +8187,7 @@ name|defined
 argument_list|(
 name|TC_A29K
 argument_list|)
-comment|/* The 29k has a special kludge for the high 16 bit 			 reloc.  Two relocations are emited, R_IHIHALF, 			 and R_IHCONST. The second one doesn't contain a 			 symbol, but uses the value for offset.  */
+comment|/* The 29k has a special kludge for the high 16 bit 			 reloc.  Two relocations are emitted, R_IHIHALF, 			 and R_IHCONST. The second one doesn't contain a 			 symbol, but uses the value for offset.  */
 if|if
 condition|(
 name|intr
@@ -8222,7 +8237,7 @@ name|defined
 argument_list|(
 name|TC_OR32
 argument_list|)
-comment|/* The or32 has a special kludge for the high 16 bit 			 reloc.  Two relocations are emited, R_IHIHALF, 			 and R_IHCONST. The second one doesn't contain a 			 symbol, but uses the value for offset.  */
+comment|/* The or32 has a special kludge for the high 16 bit 			 reloc.  Two relocations are emitted, R_IHIHALF, 			 and R_IHCONST. The second one doesn't contain a 			 symbol, but uses the value for offset.  */
 if|if
 condition|(
 name|intr
@@ -8383,7 +8398,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Run through a frag chain and write out the data to go with it, fill    in the scnhdrs with the info on the file postions.  */
+comment|/* Run through a frag chain and write out the data to go with it, fill    in the scnhdrs with the info on the file positions.  */
 end_comment
 
 begin_function
@@ -11582,7 +11597,7 @@ name|symbolP
 condition|)
 block|{
 comment|/* FIXME-SOON: where do dups come from? 		 Maybe tag references before definitions? xoxorich.  */
-comment|/* Move the debug data from the debug symbol to the 		 real symbol. Do NOT do the oposite (i.e. move from 		 real symbol to debug symbol and remove real symbol from the 		 list.) Because some pointers refer to the real symbol 		 whereas no pointers refer to the debug symbol.  */
+comment|/* Move the debug data from the debug symbol to the 		 real symbol. Do NOT do the opposite (i.e. move from 		 real symbol to debug symbol and remove real symbol from the 		 list.) Because some pointers refer to the real symbol 		 whereas no pointers refer to the debug symbol.  */
 name|c_symbol_merge
 argument_list|(
 name|symbolP
@@ -13444,7 +13459,7 @@ name|HANDLE_ALIGN
 end_ifdef
 
 begin_comment
-comment|/* The last subsegment gets an aligment corresponding to the alignment    of the section.  This allows proper nop-filling at the end of    code-bearing sections.  */
+comment|/* The last subsegment gets an alignment corresponding to the alignment    of the section.  This allows proper nop-filling at the end of    code-bearing sections.  */
 end_comment
 
 begin_define
@@ -14362,7 +14377,7 @@ if|#
 directive|if
 literal|0
 comment|/* Recent changes to write need this, but where it should      go is up to Ken..  */
-block|if (bfd_close_all_done (abfd) == false)     as_fatal (_("Can't close %s: %s"), out_file_name, 	      bfd_errmsg (bfd_get_error ()));
+block|if (!bfd_close_all_done (abfd))     as_fatal (_("Can't close %s: %s"), out_file_name, 	      bfd_errmsg (bfd_get_error ()));
 else|#
 directive|else
 block|{
@@ -15961,6 +15976,7 @@ decl_stmt|;
 name|object_headers
 modifier|*
 name|h
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|segT
 name|this_segment
@@ -18111,10 +18127,18 @@ block|,
 literal|0
 block|}
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|TC_M88K
-comment|/* The m88k uses sdef instead of def.  */
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TC_TIC4X
+argument_list|)
+comment|/* The m88k and tic4x uses sdef instead of def.  */
 block|{
 literal|"sdef"
 block|,
@@ -18234,6 +18258,9 @@ comment|/* frob_file */
 literal|0
 block|,
 comment|/* frob_file_before_adjust */
+literal|0
+block|,
+comment|/* frob_file_before_fix */
 name|coff_frob_file_after_relocs
 block|,
 literal|0

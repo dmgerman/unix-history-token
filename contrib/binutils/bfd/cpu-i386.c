@@ -46,7 +46,7 @@ literal|"i386:intel"
 block|,
 literal|3
 block|,
-name|true
+name|TRUE
 block|,
 name|bfd_default_compatible
 block|,
@@ -82,7 +82,7 @@ literal|"i386:x86-64:intel"
 block|,
 literal|3
 block|,
-name|true
+name|TRUE
 block|,
 name|bfd_default_compatible
 block|,
@@ -120,7 +120,7 @@ literal|"i8086"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -157,7 +157,7 @@ literal|"i386:x86-64"
 block|,
 literal|3
 block|,
-name|true
+name|TRUE
 block|,
 name|bfd_default_compatible
 block|,
@@ -194,7 +194,7 @@ literal|"i386"
 block|,
 literal|3
 block|,
-name|true
+name|TRUE
 block|,
 name|bfd_default_compatible
 block|,

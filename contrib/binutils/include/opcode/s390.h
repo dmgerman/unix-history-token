@@ -21,13 +21,30 @@ end_comment
 
 begin_enum
 enum|enum
-name|s390_opcode_arch_val
+name|s390_opcode_mode_val
 block|{
 name|S390_OPCODE_ESA
 init|=
 literal|0
 block|,
-name|S390_OPCODE_ESAME
+name|S390_OPCODE_ZARCH
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|s390_opcode_cpu_val
+block|{
+name|S390_OPCODE_G5
+init|=
+literal|0
+block|,
+name|S390_OPCODE_G6
+block|,
+name|S390_OPCODE_Z900
+block|,
+name|S390_OPCODE_Z990
 block|}
 enum|;
 end_enum
@@ -74,10 +91,15 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* Bitmask of architectures this opcode is available for.  */
+comment|/* Bitmask of execution modes this opcode is available for.  */
 name|unsigned
 name|int
-name|architecture
+name|modes
+decl_stmt|;
+comment|/* First cpu this opcode is available for.  */
+name|enum
+name|s390_opcode_cpu_val
+name|min_cpu
 decl_stmt|;
 block|}
 struct|;

@@ -470,5 +470,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ARM_NOTE_SECTION
+value|".note"
+end_define
+
 end_unit
 

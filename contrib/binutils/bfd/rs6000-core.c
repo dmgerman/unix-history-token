@@ -910,7 +910,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|read_hdr
 parameter_list|(
 name|bfd
@@ -942,7 +942,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Read the leading portion that old and new core dump structures have in      common.  */
 name|size
@@ -963,7 +963,7 @@ operator|!=
 name|size
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Read the trailing portion of the structure.  */
 if|if
@@ -2463,11 +2463,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return `true' if given core is from the given executable.  */
+comment|/* Return `TRUE' if given core is from the given executable.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|rs6000coff_core_file_matches_executable_p
 parameter_list|(
 name|core_bfd
@@ -2507,7 +2507,7 @@ decl_stmt|,
 modifier|*
 name|str2
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|ret
 decl_stmt|;
 name|file_ptr
@@ -2525,7 +2525,7 @@ name|core
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2621,7 +2621,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|alloc
 operator|=
@@ -2644,7 +2644,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|s
 operator|=
@@ -2678,7 +2678,7 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -2734,7 +2734,7 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|s
@@ -2813,12 +2813,12 @@ literal|0
 condition|)
 name|ret
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 else|else
 name|ret
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|free
 argument_list|(

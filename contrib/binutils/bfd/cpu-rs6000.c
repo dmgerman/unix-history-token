@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for rs6000 support    Copyright 1990, 1991, 1993, 1995, 2000 Free Software Foundation, Inc.    FIXME: Can someone provide a transliteration of this name into ASCII?    Using the following chars caused a compiler warning on HIUX (so I replaced    them with octal escapes), and isn't useful without an understanding of what    character set it is.    Written by Mimi Ph\373\364ng-Th\345o V\365 of IBM    and John Gilmore of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for rs6000 support    Copyright 1990, 1991, 1993, 1995, 2000, 2002, 2003    Free Software Foundation, Inc.    FIXME: Can someone provide a transliteration of this name into ASCII?    Using the following chars caused a compiler warning on HIUX (so I replaced    them with octal escapes), and isn't useful without an understanding of what    character set it is.    Written by Mimi Ph\373\364ng-Th\345o V\365 of IBM    and John Gilmore of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -104,11 +104,11 @@ name|bfd_arch_powerpc
 case|:
 if|if
 condition|(
-name|b
+name|a
 operator|->
 name|mach
 operator|==
-literal|0
+name|bfd_mach_rs6k
 condition|)
 return|return
 name|b
@@ -149,7 +149,7 @@ literal|"rs6000:rs1"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|rs6000_compatible
@@ -183,7 +183,7 @@ literal|"rs6000:rsc"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|rs6000_compatible
@@ -217,7 +217,7 @@ literal|"rs6000:rs2"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 comment|/* not the default */
 name|rs6000_compatible
@@ -256,7 +256,7 @@ literal|"rs6000:6000"
 block|,
 literal|3
 block|,
-name|true
+name|TRUE
 block|,
 comment|/* the default */
 name|rs6000_compatible

@@ -238,7 +238,7 @@ modifier|*
 name|relocs
 decl_stmt|;
 name|struct
-name|sec
+name|bfd_section
 modifier|*
 name|bfd_section
 decl_stmt|;

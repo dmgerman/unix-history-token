@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print SPARC instructions.    Copyright 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2002 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Print SPARC instructions.    Copyright 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2002, 2003, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -884,19 +884,16 @@ init|=
 literal|0
 decl_stmt|;
 name|bfd_vma
-argument_list|(
-argument|*getword
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|getword
+function_decl|)
+parameter_list|(
 specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 if|if
 condition|(
 operator|!
@@ -1063,7 +1060,7 @@ literal|1
 return|;
 block|}
 block|}
-comment|/* On SPARClite variants such as DANlite (sparc86x), instructions      are always big-endian even when the machine is in little-endian mode. */
+comment|/* On SPARClite variants such as DANlite (sparc86x), instructions      are always big-endian even when the machine is in little-endian mode.  */
 if|if
 condition|(
 name|info
@@ -1100,28 +1097,28 @@ name|insn_info_valid
 operator|=
 literal|1
 expr_stmt|;
-comment|/* We do return this info */
+comment|/* We do return this info.  */
 name|info
 operator|->
 name|insn_type
 operator|=
 name|dis_nonbranch
 expr_stmt|;
-comment|/* Assume non branch insn */
+comment|/* Assume non branch insn.  */
 name|info
 operator|->
 name|branch_delay_insns
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Assume no delay */
+comment|/* Assume no delay.  */
 name|info
 operator|->
 name|target
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Assume no target known */
+comment|/* Assume no target known.  */
 for|for
 control|(
 name|op
@@ -1445,9 +1442,7 @@ continue|continue;
 default|default:
 break|break;
 block|}
-comment|/* switch on arg */
 block|}
-comment|/* while there are comma started args */
 call|(
 modifier|*
 name|info
@@ -2985,6 +2980,12 @@ decl_stmt|;
 name|int
 name|errcode
 decl_stmt|;
+if|if
+condition|(
+name|memaddr
+operator|>=
+literal|4
+condition|)
 name|errcode
 operator|=
 call|(
@@ -3008,6 +3009,11 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
+else|else
+name|errcode
+operator|=
+literal|1
+expr_stmt|;
 name|prev_insn
 operator|=
 name|getword
@@ -3022,7 +3028,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If it is a delayed branch, we need to look at the 		     instruction before the delayed branch.  This handles 		     sequences such as  		     sethi %o1, %hi(_foo), %o1 		     call _printf 		     or %o1, %lo(_foo), %o1 		     */
+comment|/* If it is a delayed branch, we need to look at the 		     instruction before the delayed branch.  This handles 		     sequences such as:  		     sethi %o1, %hi(_foo), %o1 		     call _printf 		     or %o1, %lo(_foo), %o1  */
 if|if
 condition|(
 name|is_delayed_branch
@@ -3031,6 +3037,12 @@ name|prev_insn
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|memaddr
+operator|>=
+literal|8
+condition|)
 name|errcode
 operator|=
 call|(
@@ -3053,6 +3065,11 @@ argument_list|)
 argument_list|,
 name|info
 argument_list|)
+expr_stmt|;
+else|else
+name|errcode
+operator|=
+literal|1
 expr_stmt|;
 name|prev_insn
 operator|=
@@ -3272,7 +3289,7 @@ name|insn_type
 operator|=
 name|dis_noninsn
 expr_stmt|;
-comment|/* Mark as non-valid instruction */
+comment|/* Mark as non-valid instruction.  */
 call|(
 modifier|*
 name|info

@@ -13,12 +13,6 @@ directive|include
 file|"ansidecl.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"libiberty.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -58,6 +52,20 @@ name|malloc
 name|PARAMS
 argument_list|(
 operator|(
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|bzero
+name|PARAMS
+argument_list|(
+operator|(
+name|PTR
+operator|,
 name|size_t
 operator|)
 argument_list|)

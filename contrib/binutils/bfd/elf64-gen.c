@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic support for 64-bit ELF    Copyright 1993, 1995, 1998, 1999, 2001 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic support for 64-bit ELF    Copyright 1993, 1995, 1998, 1999, 2001, 2002, 2004    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -65,7 +65,7 @@ comment|/* special_function */
 literal|"UNKNOWN"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -74,7 +74,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -96,7 +96,7 @@ operator|,
 name|arelent
 operator|*
 operator|,
-name|Elf64_Internal_Rela
+name|Elf_Internal_Rela
 operator|*
 operator|)
 argument_list|)
@@ -116,7 +116,7 @@ operator|,
 name|arelent
 operator|*
 operator|,
-name|Elf64_Internal_Rel
+name|Elf_Internal_Rela
 operator|*
 operator|)
 argument_list|)
@@ -125,7 +125,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_generic_link_add_symbols
 name|PARAMS
 argument_list|(
@@ -161,7 +161,7 @@ name|arelent
 modifier|*
 name|bfd_reloc
 decl_stmt|;
-name|Elf64_Internal_Rela
+name|Elf_Internal_Rela
 modifier|*
 name|elf_reloc
 name|ATTRIBUTE_UNUSED
@@ -197,7 +197,7 @@ name|arelent
 modifier|*
 name|bfd_reloc
 decl_stmt|;
-name|Elf64_Internal_Rel
+name|Elf_Internal_Rela
 modifier|*
 name|elf_reloc
 name|ATTRIBUTE_UNUSED
@@ -215,7 +215,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_generic_link_add_symbols
 parameter_list|(
 name|abfd
@@ -305,11 +305,11 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|bfd_elf64_bfd_link_add_symbols
+name|bfd_elf_link_add_symbols
 argument_list|(
 name|abfd
 argument_list|,

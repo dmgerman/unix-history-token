@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_mkobject
 name|PARAMS
 argument_list|(
@@ -75,7 +75,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|)
 argument_list|)
@@ -97,7 +97,7 @@ name|int
 operator|,
 name|int
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -105,7 +105,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_scan
 name|PARAMS
 argument_list|(
@@ -135,7 +135,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_read_section
 name|PARAMS
 argument_list|(
@@ -155,7 +155,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_get_section_contents
 name|PARAMS
 argument_list|(
@@ -178,7 +178,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_set_section_contents
 name|PARAMS
 argument_list|(
@@ -189,6 +189,7 @@ operator|,
 name|asection
 operator|*
 operator|,
+specifier|const
 name|PTR
 operator|,
 name|file_ptr
@@ -201,7 +202,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_write_record
 name|PARAMS
 argument_list|(
@@ -226,7 +227,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_write_object_contents
 name|PARAMS
 argument_list|(
@@ -240,7 +241,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_set_arch_mach
 name|PARAMS
 argument_list|(
@@ -268,7 +269,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -389,7 +390,7 @@ name|ihex_init
 parameter_list|()
 block|{
 specifier|static
-name|boolean
+name|bfd_boolean
 name|inited
 decl_stmt|;
 if|if
@@ -400,7 +401,7 @@ condition|)
 block|{
 name|inited
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|hex_init
 argument_list|()
@@ -415,7 +416,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_mkobject
 parameter_list|(
 name|abfd
@@ -460,7 +461,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|abfd
 operator|->
@@ -483,7 +484,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -506,7 +507,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|errorptr
 decl_stmt|;
@@ -542,7 +543,7 @@ condition|)
 operator|*
 name|errorptr
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
 name|EOF
@@ -589,7 +590,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|error
 decl_stmt|;
 block|{
@@ -692,7 +693,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_scan
 parameter_list|(
 name|abfd
@@ -716,7 +717,7 @@ name|unsigned
 name|int
 name|lineno
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|error
 decl_stmt|;
 name|bfd_byte
@@ -774,7 +775,7 @@ literal|1
 expr_stmt|;
 name|error
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|bufsize
 operator|=
@@ -1398,7 +1399,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 case|case
 literal|2
@@ -1703,7 +1704,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -1719,7 +1720,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -1973,7 +1974,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_read_section
 parameter_list|(
 name|abfd
@@ -2011,7 +2012,7 @@ decl_stmt|;
 name|size_t
 name|bufsize
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|error
 decl_stmt|;
 if|if
@@ -2042,7 +2043,7 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 while|while
 condition|(
@@ -2299,7 +2300,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* Skip the checksum.  */
@@ -2376,7 +2377,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -2392,7 +2393,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -2403,7 +2404,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_get_section_contents
 parameter_list|(
 name|abfd
@@ -2465,7 +2466,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2482,7 +2483,7 @@ name|used_by_bfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|memcpy
@@ -2506,7 +2507,7 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2517,7 +2518,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_set_section_contents
 parameter_list|(
 name|abfd
@@ -2538,6 +2539,7 @@ name|asection
 modifier|*
 name|section
 decl_stmt|;
+specifier|const
 name|PTR
 name|location
 decl_stmt|;
@@ -2592,7 +2594,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|amt
 operator|=
@@ -2623,7 +2625,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|data
 operator|=
@@ -2645,7 +2647,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|memcpy
 argument_list|(
@@ -2803,7 +2805,7 @@ name|n
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2814,7 +2816,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_write_record
 parameter_list|(
 name|abfd
@@ -3051,10 +3053,10 @@ operator|!=
 name|total
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3065,7 +3067,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_write_object_contents
 parameter_list|(
 name|abfd
@@ -3261,7 +3263,7 @@ name|addr
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -3305,7 +3307,7 @@ name|addr
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|segbase
 operator|=
@@ -3364,7 +3366,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|addr
@@ -3416,7 +3418,7 @@ name|addr
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -3462,7 +3464,7 @@ name|p
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|where
 operator|+=
@@ -3581,7 +3583,7 @@ name|startbuf
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -3663,7 +3665,7 @@ name|startbuf
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -3684,10 +3686,10 @@ name|NULL
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3698,7 +3700,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ihex_set_arch_mach
 parameter_list|(
 name|abfd
@@ -3740,21 +3742,17 @@ operator|!=
 name|bfd_arch_unknown
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
 comment|/* Get the size of the headers, for the linker.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -3771,7 +3769,7 @@ modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|exec
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
@@ -3825,7 +3823,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ihex_get_symtab
+name|ihex_canonicalize_symtab
 define|\
 value|((long (*) PARAMS ((bfd *, asymbol **))) bfd_0l)
 end_define

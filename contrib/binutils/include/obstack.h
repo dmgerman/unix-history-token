@@ -979,7 +979,7 @@ name|h
 parameter_list|,
 name|achar
 parameter_list|)
-value|(*((h)->next_free)++ = achar)
+value|(*((h)->next_free)++ = (achar))
 define|#
 directive|define
 name|obstack_blank_fast
@@ -1091,7 +1091,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    if (__o->next_free + 1> __o->chunk_limit)				\      _obstack_newchunk (__o, 1);					\    *(__o->next_free)++ = (datum);					\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    if (__o->next_free + 1> __o->chunk_limit)				\      _obstack_newchunk (__o, 1);					\    obstack_1grow_fast (__o, datum);					\    (void) 0; })
 comment|/* These assume that the obstack alignment is good enough for pointers or ints,    and that the data added so far to the current object    shares that much alignment.  */
 define|#
 directive|define
@@ -1102,7 +1102,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    if (__o->next_free + sizeof (void *)> __o->chunk_limit)		\      _obstack_newchunk (__o, sizeof (void *));				\    *((void **)__o->next_free)++ = ((void *)datum);			\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    if (__o->next_free + sizeof (void *)> __o->chunk_limit)		\      _obstack_newchunk (__o, sizeof (void *));				\    obstack_ptr_grow_fast (__o, datum); })
 define|#
 directive|define
 name|obstack_int_grow
@@ -1112,25 +1112,27 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    if (__o->next_free + sizeof (int)> __o->chunk_limit)		\      _obstack_newchunk (__o, sizeof (int));				\    *((int *)__o->next_free)++ = ((int)datum);				\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    if (__o->next_free + sizeof (int)> __o->chunk_limit)		\      _obstack_newchunk (__o, sizeof (int));				\    obstack_int_grow_fast (__o, datum); })
 define|#
 directive|define
 name|obstack_ptr_grow_fast
 parameter_list|(
-name|h
+name|OBSTACK
 parameter_list|,
 name|aptr
 parameter_list|)
-value|(*((void **) (h)->next_free)++ = (void *)aptr)
+define|\
+value|__extension__								\ ({ struct obstack *__o1 = (OBSTACK);					\    *(const void **) __o1->next_free = (aptr);				\    __o1->next_free += sizeof (const void *);				\    (void) 0; })
 define|#
 directive|define
 name|obstack_int_grow_fast
 parameter_list|(
-name|h
+name|OBSTACK
 parameter_list|,
 name|aint
 parameter_list|)
-value|(*((int *) (h)->next_free)++ = (int) aint)
+define|\
+value|__extension__								\ ({ struct obstack *__o1 = (OBSTACK);					\    *(int *) __o1->next_free = (aint);					\    __o1->next_free += sizeof (int);					\    (void) 0; })
 define|#
 directive|define
 name|obstack_blank
@@ -1140,7 +1142,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->chunk_limit - __o->next_free< __len)			\      _obstack_newchunk (__o, __len);					\    __o->next_free += __len;						\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->chunk_limit - __o->next_free< __len)			\      _obstack_newchunk (__o, __len);					\    obstack_blank_fast (__o, __len);					\    (void) 0; })
 define|#
 directive|define
 name|obstack_alloc
@@ -1265,7 +1267,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|( (((h)->next_free + 1> (h)->chunk_limit)				\    ? (_obstack_newchunk ((h), 1), 0) : 0),				\   (*((h)->next_free)++ = (datum)))
+value|( (((h)->next_free + 1> (h)->chunk_limit)				\    ? (_obstack_newchunk ((h), 1), 0) : 0),				\   obstack_1grow_fast (h, datum))
 define|#
 directive|define
 name|obstack_ptr_grow
@@ -1275,7 +1277,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|( (((h)->next_free + sizeof (char *)> (h)->chunk_limit)		\    ? (_obstack_newchunk ((h), sizeof (char *)), 0) : 0),		\   (*((char **) (((h)->next_free+=sizeof(char *))-sizeof(char *))) = ((char *) datum)))
+value|( (((h)->next_free + sizeof (char *)> (h)->chunk_limit)		\    ? (_obstack_newchunk ((h), sizeof (char *)), 0) : 0),		\   obstack_ptr_grow_fast (h, datum))
 define|#
 directive|define
 name|obstack_int_grow
@@ -1285,7 +1287,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|( (((h)->next_free + sizeof (int)> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), sizeof (int)), 0) : 0),			\   (*((int *) (((h)->next_free+=sizeof(int))-sizeof(int))) = ((int) datum)))
+value|( (((h)->next_free + sizeof (int)> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), sizeof (int)), 0) : 0),			\   obstack_int_grow_fast (h, datum))
 define|#
 directive|define
 name|obstack_ptr_grow_fast
@@ -1294,7 +1296,8 @@ name|h
 parameter_list|,
 name|aptr
 parameter_list|)
-value|(*((char **) (h)->next_free)++ = (char *) aptr)
+define|\
+value|(((const void **) ((h)->next_free += sizeof (void *)))[-1] = (aptr))
 define|#
 directive|define
 name|obstack_int_grow_fast
@@ -1303,7 +1306,8 @@ name|h
 parameter_list|,
 name|aint
 parameter_list|)
-value|(*((int *) (h)->next_free)++ = (int) aint)
+define|\
+value|(((int *) ((h)->next_free += sizeof (int)))[-1] = (aptr))
 define|#
 directive|define
 name|obstack_blank
@@ -1313,7 +1317,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|( (h)->temp = (length),							\   (((h)->chunk_limit - (h)->next_free< (h)->temp)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   ((h)->next_free += (h)->temp))
+value|( (h)->temp = (length),							\   (((h)->chunk_limit - (h)->next_free< (h)->temp)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   obstack_blank_fast (h, (h)->temp))
 define|#
 directive|define
 name|obstack_alloc

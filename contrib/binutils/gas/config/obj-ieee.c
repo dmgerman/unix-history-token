@@ -984,7 +984,7 @@ operator|->
 name|fx_next
 expr_stmt|;
 block|}
-comment|/* Attatch to the section.  */
+comment|/* Attach to the section.  */
 name|section
 operator|->
 name|orelocation
@@ -1879,27 +1879,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-name|void
-name|cons
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|s_ignore
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|s_globl
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|const
 name|pseudo_typeS
@@ -2027,7 +2006,7 @@ name|HANDLE_ALIGN
 end_ifdef
 
 begin_comment
-comment|/* The last subsegment gets an aligment corresponding to the alignment    of the section.  This allows proper nop-filling at the end of    code-bearing sections.  */
+comment|/* The last subsegment gets an alignment corresponding to the alignment    of the section.  This allows proper nop-filling at the end of    code-bearing sections.  */
 end_comment
 
 begin_define

@@ -45,7 +45,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__STDC__
+name|ANSI_PROTOTYPES
 end_ifdef
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -39,13 +39,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|BYTES_IN_WORD
-value|4
 end_define
 
 begin_define
@@ -172,7 +165,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sparclinux_bfd_final_link
 name|PARAMS
 argument_list|(
@@ -192,7 +185,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sparclinux_bfd_final_link
 parameter_list|(
 name|abfd
@@ -247,7 +240,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sparclinux_write_object_contents
 name|PARAMS
 argument_list|(
@@ -262,7 +255,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sparclinux_write_object_contents
 parameter_list|(
 name|abfd
@@ -309,7 +302,7 @@ name|execp
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -414,7 +407,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This special symbol is a set vector that contains a list of    pointers to fixup tables.  It will be present in any dynamicly    linked file.  The linker generated fixup table should also be added    to the list, and it should always appear in the second slot (the    first one is a dummy with a magic number that is defined in    crt0.o).  */
+comment|/* This special symbol is a set vector that contains a list of    pointers to fixup tables.  It will be present in any dynamically    linked file.  The linker generated fixup table should also be added    to the list, and it should always appear in the second slot (the    first one is a dummy with a magic number that is defined in    crt0.o).  */
 end_comment
 
 begin_ifndef
@@ -582,7 +575,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|linux_link_create_dynamic_sections
 name|PARAMS
 argument_list|(
@@ -600,7 +593,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|linux_add_one_symbol
 name|PARAMS
 argument_list|(
@@ -627,9 +620,9 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 expr|struct
 name|bfd_link_hash_entry
@@ -642,7 +635,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|linux_tally_symbols
 name|PARAMS
 argument_list|(
@@ -659,7 +652,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|linux_finish_dynamic_link
 name|PARAMS
 argument_list|(
@@ -968,7 +961,7 @@ parameter_list|,
 name|follow
 parameter_list|)
 define|\
-value|((struct linux_link_hash_entry *) \    aout_link_hash_lookup (&(table)->root, (string), (create), (copy),\                          (follow)))
+value|((struct linux_link_hash_entry *) \    aout_link_hash_lookup (&(table)->root, (string), (create), (copy),\ 			  (follow)))
 end_define
 
 begin_comment
@@ -987,7 +980,7 @@ parameter_list|,
 name|info
 parameter_list|)
 define|\
-value|(aout_link_hash_traverse                                             \    (&(table)->root,                                                    \     (boolean (*) PARAMS ((struct aout_link_hash_entry *, PTR))) (func), \     (info)))
+value|(aout_link_hash_traverse					       \    (&(table)->root,						       \     (bfd_boolean (*) PARAMS ((struct aout_link_hash_entry *, PTR))) (func), \     (info)))
 end_define
 
 begin_comment
@@ -1141,7 +1134,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|linux_link_create_dynamic_sections
 parameter_list|(
 name|abfd
@@ -1178,7 +1171,7 @@ name|SEC_HAS_CONTENTS
 operator||
 name|SEC_IN_MEMORY
 expr_stmt|;
-comment|/* We choose to use the name ".linux-dynamic" for the fixup table.      Why not? */
+comment|/* We choose to use the name ".linux-dynamic" for the fixup table.      Why not?  */
 name|s
 operator|=
 name|bfd_make_section
@@ -1215,7 +1208,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|s
 operator|->
@@ -1230,7 +1223,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1241,7 +1234,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|linux_add_one_symbol
 parameter_list|(
 name|info
@@ -1293,10 +1286,10 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|copy
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|collect
 decl_stmt|;
 name|struct
@@ -1311,20 +1304,20 @@ name|linux_link_hash_entry
 modifier|*
 name|h
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|insert
 decl_stmt|;
 comment|/* Look up and see if we already have this symbol in the hash table.      If we do, and the defining entry is from a shared library, we      need to create the dynamic sections.       FIXME: What if abfd->xvec != info->hash->creator?  We may want to      be able to link Linux a.out and ELF objects together, but serious      confusion is possible.  */
 name|insert
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 name|linux_hash_table
 argument_list|(
@@ -1374,7 +1367,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|linux_hash_table
 argument_list|(
@@ -1387,7 +1380,7 @@ name|abfd
 expr_stmt|;
 name|insert
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -1419,11 +1412,11 @@ argument_list|)
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1500,7 +1493,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|f
 operator|->
@@ -1512,7 +1505,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}
@@ -1544,9 +1537,9 @@ name|hashp
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* Insert a pointer to our table in the set vector.  The dynamic      linker requires this information */
+comment|/* Insert a pointer to our table in the set vector.  The dynamic      linker requires this information.  */
 if|if
 condition|(
 name|insert
@@ -1556,7 +1549,7 @@ name|asection
 modifier|*
 name|s
 decl_stmt|;
-comment|/* Here we do our special thing to add the pointer to the         dynamic section in the SHARABLE_CONFLICTS set vector.  */
+comment|/* Here we do our special thing to add the pointer to the 	 dynamic section in the SHARABLE_CONFLICTS set vector.  */
 name|s
 operator|=
 name|bfd_get_section_by_name
@@ -1608,20 +1601,20 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 name|NULL
 argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1632,7 +1625,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|linux_tally_symbols
 parameter_list|(
 name|h
@@ -1679,7 +1672,7 @@ decl_stmt|,
 modifier|*
 name|h2
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|exists
 decl_stmt|;
 if|if
@@ -1920,7 +1913,7 @@ name|string
 argument_list|)
 condition|)
 block|{
-comment|/* Look up this symbol twice.  Once just as a regular lookup,         and then again following all of the indirect links until we         reach a real symbol.  */
+comment|/* Look up this symbol twice.  Once just as a regular lookup, 	 and then again following all of the indirect links until we 	 reach a real symbol.  */
 name|h1
 operator|=
 name|linux_link_hash_lookup
@@ -1947,11 +1940,11 @@ operator|-
 literal|1
 operator|)
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* h2 does not follow indirect symbols.  */
@@ -1981,14 +1974,14 @@ operator|-
 literal|1
 operator|)
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* The real symbol must exist but if it is also an ABS symbol,         there is no need to have a fixup.  This is because they both         came from the same library.  If on the other hand, we had to         use an indirect symbol to get to the real symbol, we add the         fixup anyway, since there are cases where these symbols come         from different shared libraries */
+comment|/* The real symbol must exist but if it is also an ABS symbol, 	 there is no need to have a fixup.  This is because they both 	 came from the same library.  If on the other hand, we had to 	 use an indirect symbol to get to the real symbol, we add the 	 fixup anyway, since there are cases where these symbols come 	 from different shared libraries */
 if|if
 condition|(
 name|h1
@@ -2048,10 +2041,10 @@ name|bfd_link_hash_indirect
 operator|)
 condition|)
 block|{
-comment|/* See if there is a "builtin" fixup already present             involving this symbol.  If so, convert it to a regular             fixup.  In the end, this relaxes some of the requirements             about the order of performing fixups.  */
+comment|/* See if there is a "builtin" fixup already present 	     involving this symbol.  If so, convert it to a regular 	     fixup.  In the end, this relaxes some of the requirements 	     about the order of performing fixups.  */
 name|exists
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -2114,7 +2107,7 @@ name|h1
 condition|)
 name|exists
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -2189,7 +2182,7 @@ literal|0
 expr_stmt|;
 name|exists
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -2256,7 +2249,7 @@ name|is_plt
 expr_stmt|;
 block|}
 block|}
-comment|/* Quick and dirty way of stripping these symbols from the         symtab.  */
+comment|/* Quick and dirty way of stripping these symbols from the 	 symtab.  */
 if|if
 condition|(
 name|bfd_is_abs_section
@@ -2280,11 +2273,11 @@ name|root
 operator|.
 name|written
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2294,7 +2287,7 @@ comment|/* This is called to set the size of the .linux-dynamic section is.    I
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_sparclinux_size_dynamic_sections
 parameter_list|(
 name|output_bfd
@@ -2333,7 +2326,7 @@ name|vec
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* First find the fixups...  */
 name|linux_link_hash_traverse
@@ -2427,7 +2420,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* Allocate memory for our fixup table.  We will fill it in later.  */
@@ -2497,11 +2490,11 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2512,7 +2505,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|linux_finish_dynamic_link
 parameter_list|(
 name|output_bfd
@@ -2576,7 +2569,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|s
 operator|=
@@ -3233,11 +3226,11 @@ argument_list|)
 argument_list|,
 literal|"__BUILTIN_FIXUPS__"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3374,7 +3367,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -3399,10 +3392,10 @@ operator|->
 name|_raw_size
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

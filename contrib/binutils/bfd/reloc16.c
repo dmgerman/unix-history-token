@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 8 and 16 bit COFF relocation functions, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* 8 and 16 bit COFF relocation functions, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/* Most of this hacked by Steve Chamberlain<sac@cygnus.com>.  */
 end_comment
 
 begin_comment
-comment|/* These routines are used by coff-h8300 and coff-z8k to do    relocation.     FIXME: This code should be rewritten to support the new COFF    linker.  Basically, they need to deal with COFF relocs rather than    BFD generic relocs.  They should store the relocs in some location    where coff_link_input_bfd can find them (and coff_link_input_bfd    should be changed to use this location rather than rereading the    file) (unless info->keep_memory is false, in which case they should    free up the relocs after dealing with them).  */
+comment|/* These routines are used by coff-h8300 and coff-z8k to do    relocation.     FIXME: This code should be rewritten to support the new COFF    linker.  Basically, they need to deal with COFF relocs rather than    BFD generic relocs.  They should store the relocs in some location    where coff_link_input_bfd can find them (and coff_link_input_bfd    should be changed to use this location rather than rereading the    file) (unless info->keep_memory is FALSE, in which case they should    free up the relocs after dealing with them).  */
 end_comment
 
 begin_include
@@ -130,11 +130,11 @@ argument_list|(
 name|symbol
 argument_list|)
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -256,7 +256,7 @@ name|reloc
 operator|->
 name|address
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 condition|)
@@ -484,7 +484,7 @@ block|}
 end_function
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_coff_reloc16_relax_section
 parameter_list|(
 name|abfd
@@ -508,7 +508,7 @@ name|bfd_link_info
 modifier|*
 name|link_info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|again
 decl_stmt|;
@@ -555,7 +555,7 @@ comment|/* We only do global relaxation once.  It is not safe to do it multiple 
 operator|*
 name|again
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -564,7 +564,7 @@ operator|<
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|reloc_vector
 operator|=
@@ -591,7 +591,7 @@ operator|>
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Get the relocs and think about them.  */
 name|reloc_count
@@ -623,7 +623,7 @@ name|reloc_vector
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* The reloc16.c and related relaxing code is very simple, the price      for that simplicity is we can only call this function once for      each section.       So, to get the best results within that limitation, we do multiple      relaxing passes over each section here.  That involves keeping track      of the "shrink" at each reloc in the section.  This allows us to      accurately determine the relative location of two relocs within      this section.       In theory, if we kept the "shrinks" array for each section for the      entire link, we could use the generic relaxing code in the linker      and get better results, particularly for jsr->bsr and 24->16 bit      memory reference relaxations.  */
@@ -642,7 +642,7 @@ decl_stmt|;
 name|bfd_size_type
 name|amt
 decl_stmt|;
-comment|/* Allocate and initialize the shrinks array for this section.          The last element is used as an accumlator of shrinks.  */
+comment|/* Allocate and initialize the shrinks array for this section. 	 The last element is used as an accumulator of shrinks.  */
 name|amt
 operator|=
 name|reloc_count
@@ -706,7 +706,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Let the target/machine dependent code examine each reloc 	       in this section and attempt to shrink it.  */
+comment|/* Let the target/machine dependent code examine each reloc 		 in this section and attempt to shrink it.  */
 name|shrink
 operator|=
 name|bfd_coff_reloc16_estimate
@@ -726,7 +726,7 @@ argument_list|,
 name|link_info
 argument_list|)
 expr_stmt|;
-comment|/* If it shrunk, note it in the shrinks array and set up for 	       another pass.  */
+comment|/* If it shrunk, note it in the shrinks array and set up for 		 another pass.  */
 if|if
 condition|(
 name|shrink
@@ -809,7 +809,7 @@ name|reloc_vector
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -827,7 +827,7 @@ name|link_order
 parameter_list|,
 name|data
 parameter_list|,
-name|relocateable
+name|relocatable
 parameter_list|,
 name|symbols
 parameter_list|)
@@ -849,8 +849,8 @@ name|bfd_byte
 modifier|*
 name|data
 decl_stmt|;
-name|boolean
-name|relocateable
+name|bfd_boolean
+name|relocatable
 decl_stmt|;
 name|asymbol
 modifier|*
@@ -912,10 +912,10 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* If producing relocateable output, don't bother to relax.  */
+comment|/* If producing relocatable output, don't bother to relax.  */
 if|if
 condition|(
-name|relocateable
+name|relocatable
 condition|)
 return|return
 name|bfd_generic_get_relocated_section_contents
@@ -928,7 +928,7 @@ name|link_order
 argument_list|,
 name|data
 argument_list|,
-name|relocateable
+name|relocatable
 argument_list|,
 name|symbols
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for HP/Intel IA-64 COFF files.    Copyright 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by David Mosberger<davidm@hpl.hp.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for HP/Intel IA-64 COFF files.    Copyright 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by David Mosberger<davidm@hpl.hp.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -150,12 +150,12 @@ name|COFF_WITH_PE
 end_ifdef
 
 begin_comment
-comment|/* Return true if this relocation should    appear in the output .reloc section.  */
+comment|/* Return TRUE if this relocation should    appear in the output .reloc section.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|in_reloc_p
 name|PARAMS
 argument_list|(
@@ -172,7 +172,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|in_reloc_p
 parameter_list|(
 name|abfd
@@ -191,7 +191,7 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
-literal|0
+name|FALSE
 return|;
 comment|/* We don't do relocs for now...  */
 block|}

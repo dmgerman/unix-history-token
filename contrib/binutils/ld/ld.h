@@ -271,7 +271,7 @@ name|name_list
 modifier|*
 name|exclude_name_list
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|sorted
 decl_stmt|;
 block|}
@@ -358,14 +358,14 @@ typedef|typedef
 struct|struct
 block|{
 comment|/* 1 => assign space to common symbols even if `relocatable_output'.  */
-name|boolean
+name|bfd_boolean
 name|force_common_definition
 decl_stmt|;
 comment|/* 1 => do not assign addresses to common symbols.  */
-name|boolean
+name|bfd_boolean
 name|inhibit_common_definition
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|relax
 decl_stmt|;
 comment|/* Name of runtime interpreter to invoke.  */
@@ -401,24 +401,24 @@ name|ENDIAN_LITTLE
 block|}
 name|endian
 enum|;
-comment|/* If true, build MIPS embedded PIC relocation tables in the output      file.  */
-name|boolean
+comment|/* If TRUE, build MIPS embedded PIC relocation tables in the output      file.  */
+name|bfd_boolean
 name|embedded_relocs
 decl_stmt|;
-comment|/* If true, force generation of a file with a .exe file.  */
-name|boolean
+comment|/* If TRUE, force generation of a file with a .exe file.  */
+name|bfd_boolean
 name|force_exe_suffix
 decl_stmt|;
-comment|/* If true, generate a cross reference report.  */
-name|boolean
+comment|/* If TRUE, generate a cross reference report.  */
+name|bfd_boolean
 name|cref
 decl_stmt|;
-comment|/* If true (which is the default), warn about mismatched input      files.  */
-name|boolean
+comment|/* If TRUE (which is the default), warn about mismatched input      files.  */
+name|bfd_boolean
 name|warn_mismatch
 decl_stmt|;
 comment|/* Remove unreferenced sections?  */
-name|boolean
+name|bfd_boolean
 name|gc_sections
 decl_stmt|;
 comment|/* Name of shared object whose symbol table should be filtered with      this shared object.  From the --filter option.  */
@@ -437,9 +437,13 @@ name|char
 modifier|*
 name|version_exports_section
 decl_stmt|;
-comment|/* If true (the default) check section addresses, once compute,      fpor overlaps.  */
-name|boolean
+comment|/* If TRUE (the default) check section addresses, once compute,      fpor overlaps.  */
+name|bfd_boolean
 name|check_section_addresses
+decl_stmt|;
+comment|/* If TRUE allow the linking of input files in an unknown architecture      assuming that the user knows what they are doing.  This was the old      behaviour of the linker.  The new default behaviour is to reject such      input files.  */
+name|bfd_boolean
+name|accept_unknown_input_arch
 decl_stmt|;
 block|}
 name|args_type
@@ -467,53 +471,53 @@ block|{
 name|bfd_size_type
 name|specified_data_size
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|magic_demand_paged
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|make_executable
 decl_stmt|;
-comment|/* If true, doing a dynamic link.  */
-name|boolean
+comment|/* If TRUE, doing a dynamic link.  */
+name|bfd_boolean
 name|dynamic_link
 decl_stmt|;
-comment|/* If true, -shared is supported.  */
+comment|/* If TRUE, -shared is supported.  */
 comment|/* ??? A better way to do this is perhaps to define this in the      ld_emulation_xfer_struct since this is really a target dependent      parameter.  */
-name|boolean
+name|bfd_boolean
 name|has_shared
 decl_stmt|;
-comment|/* If true, build constructors.  */
-name|boolean
+comment|/* If TRUE, build constructors.  */
+name|bfd_boolean
 name|build_constructors
 decl_stmt|;
-comment|/* If true, warn about any constructors.  */
-name|boolean
+comment|/* If TRUE, warn about any constructors.  */
+name|bfd_boolean
 name|warn_constructors
 decl_stmt|;
-comment|/* If true, warn about merging common symbols with others.  */
-name|boolean
+comment|/* If TRUE, warn about merging common symbols with others.  */
+name|bfd_boolean
 name|warn_common
 decl_stmt|;
-comment|/* If true, only warn once about a particular undefined symbol.  */
-name|boolean
+comment|/* If TRUE, only warn once about a particular undefined symbol.  */
+name|bfd_boolean
 name|warn_once
 decl_stmt|;
-comment|/* If true, warn if multiple global-pointers are needed (Alpha      only).  */
-name|boolean
+comment|/* If TRUE, warn if multiple global-pointers are needed (Alpha      only).  */
+name|bfd_boolean
 name|warn_multiple_gp
 decl_stmt|;
-comment|/* If true, warn if the starting address of an output section      changes due to the alignment of an input section.  */
-name|boolean
+comment|/* If TRUE, warn if the starting address of an output section      changes due to the alignment of an input section.  */
+name|bfd_boolean
 name|warn_section_align
 decl_stmt|;
-comment|/* If true, warning messages are fatal */
-name|boolean
+comment|/* If TRUE, warning messages are fatal */
+name|bfd_boolean
 name|fatal_warnings
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|sort_common
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|text_read_only
 decl_stmt|;
 name|char
@@ -524,11 +528,11 @@ name|FILE
 modifier|*
 name|map_file
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|stats
 decl_stmt|;
 comment|/* If set, orphan input sections will be mapped to separate output      sections.  */
-name|boolean
+name|bfd_boolean
 name|unique_orphan_sections
 decl_stmt|;
 name|unsigned
@@ -539,7 +543,7 @@ name|bfd_size_type
 name|split_by_file
 decl_stmt|;
 comment|/* If set, only search library directories explicitly selected      on the command line.  */
-name|boolean
+name|bfd_boolean
 name|only_cmd_line_lib_dirs
 decl_stmt|;
 block|}
@@ -578,7 +582,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|force_make_executable
 decl_stmt|;
 end_decl_stmt
@@ -594,86 +598,71 @@ name|parsing_defsym
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|yyparse
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|add_cref
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd_vma
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|output_cref
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|check_nocrossrefs
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
 name|void
 name|ld_abort
-name|PARAMS
 argument_list|(
-operator|(
 specifier|const
 name|char
 operator|*
-operator|,
+argument_list|,
 name|int
-operator|,
+argument_list|,
 specifier|const
 name|char
 operator|*
-operator|)
 argument_list|)
 name|ATTRIBUTE_NORETURN
 decl_stmt|;
@@ -705,7 +694,7 @@ begin_define
 define|#
 directive|define
 name|__PRETTY_FUNCTION__
-value|((char*) NULL)
+value|NULL
 end_define
 
 begin_endif

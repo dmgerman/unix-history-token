@@ -969,6 +969,32 @@ begin_comment
 comment|/* ext symbol in dmert public lib */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+name|_AIX52
+operator|||
+name|defined
+name|AIX_WEAK_SUPPORT
+end_if
+
+begin_define
+define|#
+directive|define
+name|C_WEAKEXT
+value|111
+end_define
+
+begin_comment
+comment|/* weak symbol -- AIX standard.  */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -977,8 +1003,13 @@ value|127
 end_define
 
 begin_comment
-comment|/* weak symbol -- GNU extension */
+comment|/* weak symbol -- GNU extension.  */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* New storage classes for TI COFF */
@@ -2628,6 +2659,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R_REL24
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|R_DIR32
 value|6
 end_define
@@ -2684,6 +2722,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R_PCR24
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
 name|R_IPRSHORT
 value|24
 end_define
@@ -2726,6 +2771,20 @@ end_define
 begin_comment
 comment|/* strange 29k 00xx00xx reloc */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R_PARTLS16
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PARTMS8
+value|33
+end_define
 
 begin_define
 define|#

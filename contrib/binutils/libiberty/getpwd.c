@@ -122,6 +122,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|HAVE_LIMITS_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Prototype these in case the system headers don't provide them. */
 end_comment

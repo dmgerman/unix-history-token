@@ -3,10 +3,16 @@ begin_comment
 comment|/* Provide a version vfprintf in terms of _doprnt.    By Kaveh Ghazi  (ghazi@caip.rutgers.edu)  3/29/98    Copyright (C) 1998 Free Software Foundation, Inc.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"ansidecl.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__STDC__
+name|ANSI_PROTOTYPES
 end_ifdef
 
 begin_include

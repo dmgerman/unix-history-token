@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|PCRELOFFSET
-value|true
+value|TRUE
 end_define
 
 begin_define

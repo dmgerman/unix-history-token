@@ -124,13 +124,7 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_extern
-
-begin_comment
 comment|/* Returns the canonical element corresponding to the class containing    ELEMENT__ in PARTITION__.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|partition_find
@@ -141,7 +135,20 @@ name|element__
 parameter_list|)
 define|\
 value|((partition__)->elements[(element__)].class_element)
-end_define
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __cplusplus */
+end_comment
 
 begin_endif
 endif|#
