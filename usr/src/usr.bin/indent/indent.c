@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980 The Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1985 Sun Microsystems, Inc.\n\  @(#) Copyright (c) 1980 The Regents of the University of California.\n\  @(#) Copyright (c) 1976 Board of Trustees of the University of Illinois.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1985 Sun Microsystems, Inc.\n\ @(#) Copyright (c) 1976 Board of Trustees of the University of Illinois.\n\ @(#) Copyright (c) 1980, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)indent.c	8.1 (Berkeley) %G%"
+literal|"@(#)indent.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
