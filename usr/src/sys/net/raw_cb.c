@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.9	82/06/20	*/
+comment|/*	raw_cb.c	4.10	82/06/26	*/
 end_comment
 
 begin_include
@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../errno.h"
+file|<errno.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_debug.c	4.3	82/03/29	*/
+comment|/*	tcp_debug.c	4.4	82/06/26	*/
 end_comment
 
 begin_include
@@ -150,7 +150,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../errno.h"
+file|<errno.h>
 end_include
 
 begin_decl_stmt
