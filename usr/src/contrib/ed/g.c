@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)g.c	5.8 (Berkeley) %G%"
+literal|"@(#)g.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -504,6 +504,13 @@ name|l_cnt
 operator|++
 expr_stmt|;
 block|}
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ss
@@ -547,6 +554,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|l_patt
+decl_stmt|,
+name|l_ohm
+index|[
+literal|130
+index|]
 decl_stmt|;
 specifier|static
 name|int
@@ -1026,6 +1038,13 @@ name|current
 operator|=
 name|Start
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|l_ohm
+argument_list|,
+name|help_msg
+argument_list|)
+expr_stmt|;
 name|sigspecial
 operator|++
 expr_stmt|;
@@ -1057,6 +1076,8 @@ argument_list|(
 name|l_gut
 argument_list|)
 expr_stmt|;
+name|gut
+operator|=
 name|l_gut
 operator|=
 name|malloc
@@ -1103,6 +1124,13 @@ name|l_posix_cur
 expr_stmt|;
 endif|#
 directive|endif
+name|ungetc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|inputt
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -1435,6 +1463,13 @@ block|}
 block|}
 name|point
 label|:
+name|strcpy
+argument_list|(
+name|help_msg
+argument_list|,
+name|l_ohm
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|GV_flag

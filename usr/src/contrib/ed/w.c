@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.6 (Berkeley) %G%"
+literal|"@(#)w.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,6 +570,20 @@ argument_list|(
 name|filename_read
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Start
+operator|==
+name|top
+operator|)
+operator|&&
+operator|(
+name|End
+operator|==
+name|bottom
+operator|)
+condition|)
 name|change_flag
 operator|=
 literal|0L

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)line_number.c	5.3 (Berkeley) %G%"
+literal|"@(#)line_number.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * Converts a LINE to a line number (int) that can be printed to  * the device the user is at. Used by n.  */
+comment|/*  * Converts a LINE to a line number (int) that can be printed to  * the device the user is at. Used by n and =.  */
 end_comment
 
 begin_function

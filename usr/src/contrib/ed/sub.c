@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub.c	5.6 (Berkeley) %G%"
+literal|"@(#)sub.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,8 @@ decl_stmt|,
 name|l_u_reuse_flag
 init|=
 literal|0
+decl_stmt|,
+name|l_local_len
 decl_stmt|;
 name|char
 modifier|*
@@ -976,6 +978,14 @@ name|l_offset
 operator|=
 literal|0
 expr_stmt|;
+else|#
+directive|else
+name|l_local_len
+operator|=
+name|current
+operator|->
+name|len
+expr_stmt|;
 endif|#
 directive|endif
 do|do
@@ -1020,9 +1030,7 @@ argument_list|,
 operator|(
 name|size_t
 operator|)
-name|current
-operator|->
-name|len
+name|l_local_len
 argument_list|,
 literal|0
 argument_list|)
@@ -1119,11 +1127,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-operator|(
-name|current
-operator|->
-name|len
-operator|)
+name|l_local_len
 operator|=
 name|strlen
 argument_list|(

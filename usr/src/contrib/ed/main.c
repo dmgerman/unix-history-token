@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +182,9 @@ init|=
 literal|0
 decl_stmt|,
 name|gut_num
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -714,6 +717,13 @@ operator|=
 literal|22
 expr_stmt|;
 comment|/* for the 'z' command */
+name|help_msg
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|u_stk
 operator|=
 name|NULL
@@ -864,6 +874,9 @@ case|:
 ifdef|#
 directive|ifdef
 name|BSD
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"ed: in BSD mode:\n"
@@ -874,6 +887,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|POSIX
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"ed: in POSIX mode:\n"
@@ -1063,6 +1079,9 @@ name|g_flag
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n?\n"
@@ -1311,6 +1330,13 @@ name|errnum
 argument_list|)
 condition|)
 break|break;
+if|if
+condition|(
+name|help_msg
+index|[
+literal|0
+index|]
+condition|)
 operator|(
 name|void
 operator|)
@@ -1351,9 +1377,19 @@ name|help_flag
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|help_msg
+index|[
+literal|0
+index|]
+condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"?: %s\n"
+literal|"%s\n"
 argument_list|,
 name|help_msg
 argument_list|)
@@ -2097,23 +2133,34 @@ literal|4
 expr_stmt|;
 if|if
 condition|(
-name|help_flag
+name|g_flag
 operator|==
-literal|1
+literal|0
 condition|)
-name|printf
-argument_list|(
-literal|"?: %s\n"
-argument_list|,
-name|help_msg
-argument_list|)
-expr_stmt|;
-else|else
+block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"?\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|help_flag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|help_msg
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* for people wanting scripts to carry on after a cmd error, then  * define NOENDONSCRIPT on the compile line.  */
 ifndef|#
 directive|ifndef
@@ -2148,13 +2195,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|g_flag
-operator|>
-literal|0
-condition|)
-return|return;
 break|break;
 block|}
 name|l_last
