@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	4.5 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,9 @@ decl_stmt|,
 name|disable
 argument_list|()
 decl_stmt|,
+name|down
+argument_list|()
+decl_stmt|,
 name|help
 argument_list|()
 decl_stmt|;
@@ -65,15 +68,11 @@ argument_list|()
 decl_stmt|,
 name|stop
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|topq
 argument_list|()
 decl_stmt|,
-name|down
+name|up
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -116,6 +115,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|downhelp
+index|[]
+init|=
+literal|"do a 'stop' followed by 'disable' and put a message in status"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|helphelp
 index|[]
 init|=
@@ -137,7 +145,7 @@ name|char
 name|restarthelp
 index|[]
 init|=
-literal|"restart a spooling daemon that has died"
+literal|"kill (if possible) and restart a spooling daemon"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +163,7 @@ name|char
 name|statushelp
 index|[]
 init|=
-literal|"show status of daemon"
+literal|"show status of daemon and queue"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,19 +178,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|downhelp
+name|topqhelp
 index|[]
 init|=
-literal|"do a 'stop' followed by 'disable' and put a message in status"
+literal|"put job at top of printer queue"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|topqhelp
+name|uphelp
 index|[]
 init|=
-literal|"put job at top of printer queue"
+literal|"enable everything and restart spooling daemon"
 decl_stmt|;
 end_decl_stmt
 
@@ -319,6 +327,16 @@ block|,
 name|topqhelp
 block|,
 name|topq
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"up"
+block|,
+name|uphelp
+block|,
+name|up
 block|,
 literal|1
 block|}
