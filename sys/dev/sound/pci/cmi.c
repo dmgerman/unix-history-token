@@ -4056,6 +4056,8 @@ name|device_get_nameunit
 argument_list|(
 name|dev
 argument_list|)
+argument_list|,
+literal|"sound softc"
 argument_list|)
 expr_stmt|;
 name|data

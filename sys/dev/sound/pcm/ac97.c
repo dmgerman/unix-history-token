@@ -2836,6 +2836,8 @@ argument_list|(
 name|codec
 operator|->
 name|name
+argument_list|,
+literal|"ac97 codec"
 argument_list|)
 expr_stmt|;
 name|codec

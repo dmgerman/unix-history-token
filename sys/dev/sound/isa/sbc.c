@@ -631,6 +631,8 @@ name|scp
 operator|->
 name|dev
 argument_list|)
+argument_list|,
+literal|"sound softc"
 argument_list|)
 expr_stmt|;
 block|}

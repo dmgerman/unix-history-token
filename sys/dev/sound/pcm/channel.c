@@ -245,6 +245,8 @@ argument_list|(
 name|c
 operator|->
 name|name
+argument_list|,
+literal|"pcm channel"
 argument_list|)
 expr_stmt|;
 block|}

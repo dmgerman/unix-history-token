@@ -820,6 +820,8 @@ argument_list|(
 name|m
 operator|->
 name|name
+argument_list|,
+literal|"pcm mixer"
 argument_list|)
 expr_stmt|;
 name|m
