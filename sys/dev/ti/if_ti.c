@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ti.c,v 1.11 1999/07/23 16:21:43 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ti.c,v 1.12 1999/07/23 18:46:24 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -285,7 +285,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_ti.c,v 1.11 1999/07/23 16:21:43 wpaul Exp $"
+literal|"$Id: if_ti.c,v 1.12 1999/07/23 18:46:24 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1767,9 +1767,6 @@ name|cnt
 operator|=
 name|len
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__i386__
 name|ti_winbase
 operator|=
 call|(
@@ -1783,26 +1780,6 @@ operator|+
 name|TI_WINDOW
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|ti_winbase
-operator|=
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|sc
-operator|->
-name|ti_vhandle
-operator|+
-name|TI_WINDOW
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ptr
 operator|=
 name|buf
@@ -6351,9 +6328,6 @@ name|ti_info
 operator|.
 name|ti_cmd_rcb
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__i386__
 name|sc
 operator|->
 name|ti_rdata
@@ -6373,32 +6347,6 @@ operator|+
 name|TI_GCR_CMDRING
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|sc
-operator|->
-name|ti_rdata
-operator|->
-name|ti_cmd_ring
-operator|=
-operator|(
-expr|struct
-name|ti_cmd_desc
-operator|*
-operator|)
-operator|(
-name|sc
-operator|->
-name|ti_vhandle
-operator|+
-name|TI_GCR_CMDRING
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 name|TI_HOSTADDR
 argument_list|(
 name|rcb
@@ -6796,9 +6744,6 @@ operator|==
 name|TI_HWREV_TIGON
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__i386__
 name|sc
 operator|->
 name|ti_rdata
@@ -6818,32 +6763,6 @@ operator|+
 name|TI_WINDOW
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|sc
-operator|->
-name|ti_rdata
-operator|->
-name|ti_tx_ring_nic
-operator|=
-operator|(
-expr|struct
-name|ti_tx_desc
-operator|*
-operator|)
-operator|(
-name|sc
-operator|->
-name|ti_vhandle
-operator|+
-name|TI_WINDOW
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|bzero
 argument_list|(
