@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.c	4.6	81/07/13	*/
+comment|/*	tip.c	4.7	81/08/16	*/
 end_comment
 
 begin_comment
@@ -1282,6 +1282,13 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* ESCAPE ESCAPE forces ESCAPE */
+if|if
+condition|(
+name|c
+operator|!=
+name|gch
+condition|)
 name|write
 argument_list|(
 name|FD
