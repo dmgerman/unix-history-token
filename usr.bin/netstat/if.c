@@ -641,7 +641,9 @@ name|u_long
 operator|)
 name|ifnet
 operator|.
-name|if_addrlist
+name|if_addrhead
+operator|.
+name|tqh_first
 expr_stmt|;
 block|}
 name|printf
@@ -1215,7 +1217,9 @@ name|ifaddr
 operator|.
 name|ifa
 operator|.
-name|ifa_next
+name|ifa_link
+operator|.
+name|tqe_next
 expr_stmt|;
 block|}
 name|printf
