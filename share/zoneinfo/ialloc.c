@@ -17,7 +17,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)ialloc.c	8.20"
+literal|"@(#)ialloc.c	8.21"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,14 +65,20 @@ parameter_list|)
 value|((x) == NULL || (x) == MAL)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* !defined MAL */
+comment|/* defined MAL */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAL
+end_ifndef
 
 begin_define
 define|#
@@ -245,9 +251,12 @@ name|NULL
 else|:
 name|result
 return|;
-else|#
-directive|else
-comment|/* !defined MAL */
+endif|#
+directive|endif
+comment|/* defined MAL */
+ifndef|#
+directive|ifndef
+name|MAL
 return|return
 name|malloc
 argument_list|(
