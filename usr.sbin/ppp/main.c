@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.145 1998/10/31 17:38:46 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.50 1998/11/26 07:14:43 jkh Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -2475,14 +2475,34 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogPHASE
 argument_list|,
 literal|"Exception detected on descriptor %d\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* We deal gracefully with link descriptor exceptions */
+if|if
+condition|(
+operator|!
+name|bundle_Exception
+argument_list|(
+name|bundle
+argument_list|,
+name|i
+argument_list|)
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Exception cannot be handled !\n"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
