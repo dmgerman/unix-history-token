@@ -14261,6 +14261,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+case|case
+name|ISPASYNC_UNHANDLED_RESPONSE
+case|:
+break|break;
 default|default:
 name|isp_prt
 argument_list|(
@@ -14272,11 +14276,6 @@ literal|"unknown isp_async event %d"
 argument_list|,
 name|cmd
 argument_list|)
-expr_stmt|;
-name|rv
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 break|break;
 block|}
