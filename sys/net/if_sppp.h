@@ -298,6 +298,10 @@ name|int
 name|enable_vj
 decl_stmt|;
 comment|/* VJ header compression enabled */
+name|int
+name|enable_ipv6
+decl_stmt|;
+comment|/* 					 * Enable IPv6 negotiations -- only 					 * needed since each IPv4 i/f auto- 					 * matically gets an IPv6 address 					 * assigned, so we can't use this as 					 * a decision. 					 */
 name|struct
 name|slcp
 name|lcp
@@ -456,9 +460,19 @@ index|]
 decl_stmt|;
 comment|/* negotiation failure counter */
 name|int
-name|enable_vj
+name|confflags
 decl_stmt|;
+comment|/* administrative configuration flags */
+define|#
+directive|define
+name|CONF_ENABLE_VJ
+value|0x01
 comment|/* VJ header compression enabled */
+define|#
+directive|define
+name|CONF_ENABLE_IPV6
+value|0x02
+comment|/* IPv6 administratively enabled */
 name|time_t
 name|pp_last_recv
 decl_stmt|;
