@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002 Tim J. Robbins  * All rights reserved.  *  * R
 end_comment
 
 begin_comment
-comment|/*  * Test program for btowc() and wctob() as specified by IEEE Std. 1003.1-2001  * and ISO/IEC 9899:1999.  *  * The function is tested in only the "C" locale.  */
+comment|/*  * Test program for btowc() and wctob() as specified by IEEE Std. 1003.1-2001  * and ISO/IEC 9899:1999.  *  * The function is tested in the "C" and "ja_JP.eucJP" locales.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -67,6 +73,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * C/POSIX locale. 	 */
 name|assert
 argument_list|(
 name|btowc
@@ -121,6 +128,67 @@ name|wctob
 argument_list|(
 name|i
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Japanese (EUC) locale. 	 */
+name|assert
+argument_list|(
+name|strcmp
+argument_list|(
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|"ja_JP.eucJP"
+argument_list|)
+argument_list|,
+literal|"ja_JP.eucJP"
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|MB_CUR_MAX
+operator|>
+literal|1
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|btowc
+argument_list|(
+literal|'A'
+argument_list|)
+operator|==
+literal|L'
+expr|A'
+operator|&&
+name|wctob
+argument_list|(
+literal|L'
+expr|A'
+argument_list|)
+operator|==
+literal|'A'
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|btowc
+argument_list|(
+literal|0xa3
+argument_list|)
+operator|==
+name|WEOF
+operator|&&
+name|wctob
+argument_list|(
+literal|0xa3c1
+argument_list|)
+operator|==
+name|EOF
 argument_list|)
 expr_stmt|;
 name|printf
