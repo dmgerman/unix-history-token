@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -211,12 +211,6 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|canonname
-parameter_list|()
-function_decl|;
 comment|/* 	**  Open the connection to the mailer. 	*/
 name|SmtpIn
 operator|=
@@ -490,12 +484,7 @@ literal|"MAIL From:<%s>"
 argument_list|,
 name|m
 argument_list|,
-name|canonname
-argument_list|(
 name|buf
-argument_list|,
-literal|1
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -520,12 +509,7 @@ literal|','
 else|:
 literal|':'
 argument_list|,
-name|canonname
-argument_list|(
 name|buf
-argument_list|,
-literal|1
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -626,7 +610,7 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|canonname
+name|remotename
 parameter_list|()
 function_decl|;
 name|smtpmessage
@@ -635,13 +619,17 @@ literal|"RCPT To:<%s>"
 argument_list|,
 name|m
 argument_list|,
-name|canonname
+name|remotename
 argument_list|(
 name|to
 operator|->
 name|q_user
 argument_list|,
-literal|2
+name|m
+argument_list|,
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;

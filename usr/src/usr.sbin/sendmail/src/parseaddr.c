@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.73
+literal|3.74
 operator|%
 name|G
 operator|%
@@ -3371,8 +3371,8 @@ argument|); }
 endif|#
 directive|endif
 endif|DEBUG
-comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
-argument|char * remotename(name, m, senderaddress) 	char *name; 	struct mailer *m; 	bool senderaddress; { 	register char **pvp; 	char *fancy; 	extern char *macvalue(); 	char *oldg = macvalue(
+comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		canonical -- if set, strip out any comment information, **			etc. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
+argument|char * remotename(name, m, senderaddress, canonical) 	char *name; 	struct mailer *m; 	bool senderaddress; 	bool canonical; { 	register char **pvp; 	char *fancy; 	extern char *macvalue(); 	char *oldg = macvalue(
 literal|'g'
 argument|, CurEnv); 	static char buf[MAXNAME]; 	char lbuf[MAXNAME]; 	extern char **prescan(); 	extern char *crackaddr();
 ifdef|#
@@ -3393,7 +3393,9 @@ argument|if ((senderaddress ? m->m_s_rwset : m->m_r_rwset)<
 literal|0
 argument|) 		return (name);
 comment|/* 	**  Do a heuristic crack of this name to extract any comment info. 	**	This will leave the name as a comment and a $g macro. 	*/
-argument|fancy = crackaddr(name);
+argument|if (canonical) 		fancy =
+literal|"$g"
+argument|; 	else 		fancy = crackaddr(name);
 comment|/* 	**  Turn the name into canonical form. 	**	Normally this will be RFC 822 style, i.e., "user@domain". 	**	If this only resolves to "user", and the "C" flag is 	**	specified in the sending mailer, then the sender's 	**	domain will be appended. 	*/
 argument|pvp = prescan(name,
 literal|'\0'
@@ -3446,14 +3448,6 @@ endif|#
 directive|endif
 endif|DEBUG
 argument|return (buf); }
-comment|/* **  CANONNAME -- make name canonical ** **	This is used for SMTP and misc. printing.  Given a print **	address, it strips out comments, etc. ** **	Parameters: **		name -- the name to make canonical. **		ruleset -- the canonicalizing ruleset. ** **	Returns: **		pointer to canonical name. ** **	Side Effects: **		none. ** **	Warning: **		result is saved in static buf; future calls will trash it. */
-argument|char * canonname(name, ruleset) 	char *name; 	int ruleset; { 	static char nbuf[MAXNAME]; 	register char **pvp;  	pvp = prescan(name,
-literal|'\0'
-argument|); 	rewrite(pvp,
-literal|3
-argument|); 	rewrite(pvp, ruleset); 	rewrite(pvp,
-literal|4
-argument|); 	cataddr(pvp, nbuf, sizeof nbuf); 	return (nbuf); }
 end_block
 
 end_unit
