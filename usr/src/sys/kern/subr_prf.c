@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.25	82/12/17	*/
+comment|/*	subr_prf.c	4.26	83/05/18	*/
 end_comment
 
 begin_include
@@ -727,6 +727,29 @@ argument_list|,
 name|a5
 argument_list|)
 expr_stmt|;
+comment|/* make sure u area has been initialized before doing resume */
+if|if
+condition|(
+name|u
+operator|.
+name|u_procp
+operator|>=
+name|proc
+operator|&&
+name|u
+operator|.
+name|u_procp
+operator|<
+name|procNPROC
+operator|&&
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_addr
+operator|!=
+literal|0
+condition|)
 name|resume
 argument_list|(
 name|pcbb
@@ -989,6 +1012,10 @@ operator|!=
 name|MSG_MAGIC
 condition|)
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|msgbuf
 operator|.
 name|msg_bufx
@@ -1000,6 +1027,28 @@ operator|.
 name|msg_magic
 operator|=
 name|MSG_MAGIC
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MSG_BSIZE
+condition|;
+name|i
+operator|++
+control|)
+name|msgbuf
+operator|.
+name|msg_bufc
+index|[
+name|i
+index|]
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
