@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lsvfs - lsit loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $Id$  */
+comment|/*  * lsvfs - lsit loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $Id: lsvfs.c,v 1.7 1997/02/22 19:55:59 peter Exp $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -24,13 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<string.h>
 end_include
 
 begin_define
@@ -253,7 +253,7 @@ name|char
 name|buf
 index|[
 sizeof|sizeof
-expr|"static, network, read-only, synthetic, loopback"]
+expr|"static, network, read-only, synthetic, loopback, unicode"]
 expr_stmt|;
 name|int
 name|comma
@@ -399,6 +399,33 @@ argument_list|(
 name|buf
 argument_list|,
 literal|"loopback"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|VFCF_UNICODE
+condition|)
+block|{
+if|if
+condition|(
+name|comma
+operator|++
+condition|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|", "
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"unicode"
 argument_list|)
 expr_stmt|;
 block|}
