@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 2.2 %G%"
+literal|"@(#)call.c 2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -902,6 +902,10 @@ name|type
 expr_stmt|;
 if|if
 condition|(
+name|p2
+operator|==
+name|NLNIL
+operator|||
 name|p2
 operator|->
 name|chain
