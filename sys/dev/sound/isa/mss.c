@@ -9044,6 +9044,7 @@ expr_stmt|;
 comment|/* ack it */
 if|if
 condition|(
+operator|(
 name|inb
 argument_list|(
 name|ad1816_int
@@ -9053,6 +9054,7 @@ argument_list|)
 argument_list|)
 operator|&
 name|AD1816_INTRPI
+operator|)
 operator|!=
 literal|0
 condition|)
