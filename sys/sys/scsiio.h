@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: scsiio.h,v 1.2 1994/08/02 07:53:30 davidg Exp $  */
+comment|/*  * $Id: scsiio.h,v 1.3 1995/01/08 13:39:46 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -324,6 +324,50 @@ end_define
 
 begin_comment
 comment|/* Change address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCIOCFREEZE
+value|_IO('Q', 9)
+end_define
+
+begin_comment
+comment|/* Freeze SCSI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCIOCTHAW
+value|_IO('Q', 10)
+end_define
+
+begin_comment
+comment|/* Thaw SCSI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCIOCFREEZETHAW
+value|_IOW('Q', 11, int)
+end_define
+
+begin_comment
+comment|/* Freeze SCSI for some seconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCIOCWAITTHAW
+value|_IO('Q', 12)
+end_define
+
+begin_comment
+comment|/* Wait for SCSI to thaw */
 end_comment
 
 begin_endif
