@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: pam_misc.h,v 1.3 2001/01/20 22:29:47 agmorgan Exp $ */
+comment|/*  * $Id: pam_misc.h,v 1.3 2001/01/20 22:29:47 agmorgan Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -47,24 +47,24 @@ name|int
 name|misc_conv
 parameter_list|(
 name|int
-name|num_msg
+name|_num_msg
 parameter_list|,
 specifier|const
 name|struct
 name|pam_message
 modifier|*
 modifier|*
-name|msgm
+name|_msgm
 parameter_list|,
 name|struct
 name|pam_response
 modifier|*
 modifier|*
-name|response
+name|_response
 parameter_list|,
 name|void
 modifier|*
-name|appdata_ptr
+name|_appdata_ptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -144,11 +144,11 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
-name|appdata
+name|_appdata
 parameter_list|,
 name|pamc_bp_t
 modifier|*
-name|prompt_p
+name|_prompt_p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -163,11 +163,11 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
-name|appdata
+name|_appdata
 parameter_list|,
 name|pamc_bp_t
 modifier|*
-name|prompt_p
+name|_prompt_p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -187,14 +187,14 @@ name|pam_misc_paste_env
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|user_env
+name|_user_env
 parameter_list|)
 function_decl|;
 end_function_decl

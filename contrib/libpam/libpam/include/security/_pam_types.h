@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *<security/_pam_types.h>  *  * $Id: _pam_types.h,v 1.4 2001/01/22 06:07:29 agmorgan Exp $  *  * This file defines all of the types common to the Linux-PAM library  * applications and modules.  *  * Note, the copyright+license information is at end of file.  *  * Created: 1996/3/5 by AGM  */
+comment|/*  *<security/_pam_types.h>  *  * $Id: _pam_types.h,v 1.4 2001/01/22 06:07:29 agmorgan Exp $  *  * This file defines all of the types common to the Linux-PAM library  * applications and modules.  *  * Note, the copyright+license information is at end of file.  *  * Created: 1996/3/5 by AGM  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -714,15 +714,15 @@ name|pam_set_item
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|item_type
+name|_item_type
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|item
+name|_item
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -735,16 +735,16 @@ parameter_list|(
 specifier|const
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|item_type
+name|_item_type
 parameter_list|,
 specifier|const
 name|void
 modifier|*
 modifier|*
-name|item
+name|_item
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -758,10 +758,10 @@ name|pam_strerror
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|errnum
+name|_errnum
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -773,12 +773,12 @@ name|pam_putenv
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name_value
+name|_name_value
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -792,12 +792,12 @@ name|pam_getenv
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
+name|_name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -811,7 +811,7 @@ name|pam_getenvlist
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -852,11 +852,11 @@ name|pam_fail_delay
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|unsigned
 name|int
-name|musec_delay
+name|_musec_delay
 parameter_list|)
 function_decl|;
 end_function_decl

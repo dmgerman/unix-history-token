@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pam_malloc.h,v 1.2 2000/12/04 19:02:34 baggins Exp $  */
+comment|/*  * $Id: pam_malloc.h,v 1.2 2000/12/04 19:02:34 baggins Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -106,7 +106,6 @@ modifier|*
 name|pam_malloc
 parameter_list|(
 name|size_t
-name|s
 parameter_list|,
 specifier|const
 name|char
@@ -129,10 +128,8 @@ modifier|*
 name|pam_calloc
 parameter_list|(
 name|size_t
-name|n
 parameter_list|,
 name|size_t
-name|s
 parameter_list|,
 specifier|const
 name|char
@@ -155,7 +152,6 @@ name|pam_free
 parameter_list|(
 name|void
 modifier|*
-name|x
 parameter_list|,
 specifier|const
 name|char
@@ -178,10 +174,8 @@ modifier|*
 name|pam_memalign
 parameter_list|(
 name|size_t
-name|a
 parameter_list|,
 name|size_t
-name|s
 parameter_list|,
 specifier|const
 name|char
@@ -205,10 +199,8 @@ name|pam_realloc
 parameter_list|(
 name|void
 modifier|*
-name|x
 parameter_list|,
 name|size_t
-name|s
 parameter_list|,
 specifier|const
 name|char
@@ -231,7 +223,6 @@ modifier|*
 name|pam_valloc
 parameter_list|(
 name|size_t
-name|s
 parameter_list|,
 specifier|const
 name|char
@@ -254,7 +245,6 @@ modifier|*
 name|pam_alloca
 parameter_list|(
 name|size_t
-name|s
 parameter_list|,
 specifier|const
 name|char
@@ -276,7 +266,6 @@ name|void
 name|pam_exit
 parameter_list|(
 name|int
-name|i
 parameter_list|,
 specifier|const
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *<security/pam_appl.h>  *   * This header file collects definitions for the PAM API --- that is,  * public interface between the PAM library and an application program  * that wishes to use it.  *  * Note, the copyright information is at end of file.  *  * Created: 15-Jan-96 by TYT  * Last modified: 1996/3/5 by AGM  *  * $Id: pam_appl.h,v 1.3 2000/11/19 23:54:02 agmorgan Exp $  */
+comment|/*  *<security/pam_appl.h>  *   * This header file collects definitions for the PAM API --- that is,  * public interface between the PAM library and an application program  * that wishes to use it.  *  * Note, the copyright information is at end of file.  *  * Created: 15-Jan-96 by TYT  * Last modified: 1996/3/5 by AGM  *  * $Id: pam_appl.h,v 1.3 2000/11/19 23:54:02 agmorgan Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -39,23 +39,23 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|service_name
+name|_service_name
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|user
+name|_user
 parameter_list|,
 specifier|const
 name|struct
 name|pam_conv
 modifier|*
-name|pam_conversation
+name|_pam_conversation
 parameter_list|,
 name|pam_handle_t
 modifier|*
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -64,10 +64,10 @@ name|pam_end
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|pam_status
+name|_pam_status
 parameter_list|)
 function_decl|;
 comment|/* Authentication API's */
@@ -77,10 +77,10 @@ name|pam_authenticate
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|flags
+name|_flags
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -89,10 +89,10 @@ name|pam_setcred
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|flags
+name|_flags
 parameter_list|)
 function_decl|;
 comment|/* Account Management API's */
@@ -102,10 +102,10 @@ name|pam_acct_mgmt
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|flags
+name|_flags
 parameter_list|)
 function_decl|;
 comment|/* Session Management API's */
@@ -115,10 +115,10 @@ name|pam_open_session
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|flags
+name|_flags
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -127,10 +127,10 @@ name|pam_close_session
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|flags
+name|_flags
 parameter_list|)
 function_decl|;
 comment|/* Password Management API's */
@@ -140,10 +140,10 @@ name|pam_chauthtok
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 name|int
-name|flags
+name|_flags
 parameter_list|)
 function_decl|;
 ifdef|#
