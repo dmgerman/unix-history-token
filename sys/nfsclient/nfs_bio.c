@@ -2524,15 +2524,6 @@ operator|==
 name|NFSERR_BAD_COOKIE
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"got bad cookie vp %p bp %p\n"
-argument_list|,
-name|vp
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
 call|(
 name|nmp
 operator|->
