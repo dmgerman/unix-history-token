@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -937,8 +943,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|swihand_t
+name|void
 name|rcpoll
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -3212,7 +3225,11 @@ end_comment
 begin_function
 name|void
 name|rcpoll
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -8261,7 +8278,9 @@ name|splsofttty
 argument_list|()
 expr_stmt|;
 name|rcpoll
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
