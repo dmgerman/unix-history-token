@@ -3159,6 +3159,19 @@ return|return
 literal|0
 return|;
 case|case
+literal|0x00da10de
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Nvidia nForce3"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
 literal|0x74451022
 case|:
 name|device_set_desc
