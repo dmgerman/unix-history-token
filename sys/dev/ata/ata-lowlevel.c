@@ -1506,6 +1506,17 @@ argument_list|,
 name|ATA_STATUS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_TIMEOUT
+operator|)
+condition|)
 name|request
 operator|->
 name|flags
