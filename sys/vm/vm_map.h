@@ -1384,6 +1384,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|vmspace_swap_count
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vmspace
+operator|*
+name|vmspace
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

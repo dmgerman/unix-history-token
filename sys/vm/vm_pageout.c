@@ -4226,21 +4226,34 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* 	 * make sure that we have swap space -- if we are low on memory and 	 * swap -- then kill the biggest process. 	 * 	 * We keep the process bigproc locked once we find it to keep anyone 	 * from messing with it; however, there is a possibility of 	 * deadlock if process B is bigproc and one of it's child processes 	 * attempts to propagate a signal to B while we are waiting for A's 	 * lock while walking this list.  To avoid this, we don't block on 	 * the process lock but just skip a process if it is already locked. 	 */
+comment|/* 	 * If we are out of swap and were not able to reach our paging 	 * target, kill the largest process. 	 * 	 * We keep the process bigproc locked once we find it to keep anyone 	 * from messing with it; however, there is a possibility of 	 * deadlock if process B is bigproc and one of it's child processes 	 * attempts to propagate a signal to B while we are waiting for A's 	 * lock while walking this list.  To avoid this, we don't block on 	 * the process lock but just skip a process if it is already locked. 	 */
 if|if
 condition|(
 operator|(
 name|vm_swap_size
 operator|<
 literal|64
-operator|||
-name|swap_pager_full
-operator|)
 operator|&&
 name|vm_page_count_min
 argument_list|()
+operator|)
+operator|||
+operator|(
+name|swap_pager_full
+operator|&&
+name|vm_paging_target
+argument_list|()
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|if ((vm_swap_size< 64 || swap_pager_full)&& vm_page_count_min()) {
+endif|#
+directive|endif
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -4383,6 +4396,13 @@ comment|/* 			 * get the process size 			 */
 name|size
 operator|=
 name|vmspace_resident_count
+argument_list|(
+name|p
+operator|->
+name|p_vmspace
+argument_list|)
+operator|+
+name|vmspace_swap_count
 argument_list|(
 name|p
 operator|->
