@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.18 (Berkeley) %G%"
+literal|"@(#)headers.c	8.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1604,19 +1604,29 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%s: %s\n"
+literal|"%s: "
 argument_list|,
 name|h
 operator|->
 name|h_field
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
 name|h
 operator|->
 name|h_value
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* count the number of times it has been processed */
 if|if
 condition|(
@@ -3534,20 +3544,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|34
-argument_list|,
-literal|11
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
+comment|/* macro expand value if generated internally */
 name|p
 operator|=
 name|h
@@ -3566,7 +3563,6 @@ name|h_flags
 argument_list|)
 condition|)
 block|{
-comment|/* macro expand value if generated internally */
 name|expand
 argument_list|(
 name|p
@@ -3598,8 +3594,38 @@ name|p
 operator|==
 literal|'\0'
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|34
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" (skipped -- null value)\n"
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
+block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|34
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bitset
