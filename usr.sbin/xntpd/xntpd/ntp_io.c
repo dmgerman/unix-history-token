@@ -51,6 +51,12 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -824,36 +830,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STREAMS_TLI
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|inet_ntoa
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|in_addr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STREAMS_TLI */
-end_comment
 
 begin_comment
 comment|/*  * init_io - initialize I/O data structures and call socket creation routine  */
