@@ -16,7 +16,7 @@ specifier|extern
 name|char
 name|name
 index|[
-literal|32
+name|IFNAMSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
