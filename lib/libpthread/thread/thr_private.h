@@ -119,7 +119,7 @@ name|stdout_debug
 parameter_list|(
 name|_x
 parameter_list|)
-value|_write(1,_x,strlen(_x));
+value|_thread_sys_write(1,_x,strlen(_x));
 end_define
 
 begin_define
@@ -129,7 +129,7 @@ name|stderr_debug
 parameter_list|(
 name|_x
 parameter_list|)
-value|_write(2,_x,strlen(_x));
+value|_thread_sys_write(2,_x,strlen(_x));
 end_define
 
 begin_comment
@@ -631,6 +631,8 @@ name|PS_SLEEP_WAIT
 block|,
 name|PS_WAIT_WAIT
 block|,
+name|PS_SIGSUSPEND
+block|,
 name|PS_SIGWAIT
 block|,
 name|PS_JOIN
@@ -831,6 +833,12 @@ name|struct
 name|pthread
 modifier|*
 name|nxt
+decl_stmt|;
+comment|/* 	 * Pointer to the next thread in the dead thread linked list. 	 */
+name|struct
+name|pthread
+modifier|*
+name|nxt_dead
 decl_stmt|;
 comment|/* 	 * Thread start routine, argument, stack pointer and thread 	 * attributes. 	 */
 name|void
@@ -1551,6 +1559,38 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Garbage collector mutex and condition variable. */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|pthread_mutex_t
+name|_gc_mutex
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+name|NULL
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|pthread_cond_t
+name|_gc_cond
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+name|NULL
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Array of signal actions for this process.  */
 end_comment
 
@@ -1794,15 +1834,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_lock_dead_thread_list
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|_lock_thread
 parameter_list|(
 name|void
@@ -1813,15 +1844,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|_lock_thread_list
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_unlock_dead_thread_list
 parameter_list|(
 name|void
 parameter_list|)
@@ -2081,6 +2103,15 @@ parameter_list|(
 name|struct
 name|pthread_queue
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|pthread_addr_t
+name|_thread_gc
+parameter_list|(
+name|pthread_addr_t
 parameter_list|)
 function_decl|;
 end_function_decl
