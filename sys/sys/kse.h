@@ -281,28 +281,35 @@ begin_define
 define|#
 directive|define
 name|KSE_INTR_INTERRUPT
-value|0x01
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|KSE_INTR_RESTART
-value|0x02
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|KSE_INTR_SENDSIG
-value|0x03
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|KSE_INTR_SIGEXIT
-value|0x04
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_INTR_DBSUSPEND
+value|5
 end_define
 
 begin_ifndef
