@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.48 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.47		%G%"
+literal|"@(#)sendmail.h	6.48		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2892,6 +2892,13 @@ begin_comment
 comment|/* don't print messages (stat only) */
 end_comment
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  Additional definitions */
+end_comment
+
 begin_comment
 comment|/* Offset used to ensure that name server error * codes are unique */
 end_comment
@@ -2904,7 +2911,7 @@ value|100
 end_define
 
 begin_comment
-comment|/* privacy flags */
+comment|/* **  Privacy flags **	These are bit values for the PrivacyFlags word. */
 end_comment
 
 begin_define
@@ -3026,6 +3033,54 @@ comment|/* numeric level */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* **  Flags passed to remotename */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_SENDERADDR
+value|0001
+end_define
+
+begin_comment
+comment|/* this is a sender address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_HEADERADDR
+value|0002
+end_define
+
+begin_comment
+comment|/* this is a header address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_CANONICAL
+value|0004
+end_define
+
+begin_comment
+comment|/* strip comment information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_ADDDOMAIN
+value|0010
+end_define
+
+begin_comment
+comment|/* OK to do domain extension */
+end_comment
 
 begin_comment
 comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */
