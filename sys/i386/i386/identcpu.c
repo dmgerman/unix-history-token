@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * Copyright (c) 1997 KATO Takenori.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: Id: machdep.c,v 1.193 1996/06/18 01:22:04 bde Exp  *	$Id: identcpu.c,v 1.37 1998/01/03 05:36:40 obrien Exp $  */
+comment|/*  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * Copyright (c) 1997 KATO Takenori.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: Id: machdep.c,v 1.193 1996/06/18 01:22:04 bde Exp  *	$Id: identcpu.c,v 1.38 1998/01/03 05:43:37 obrien Exp $  */
 end_comment
 
 begin_include
@@ -74,6 +74,27 @@ include|#
 directive|include
 file|<i386/isa/intr_machdep.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|IDENTBLUE_CYRIX486
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDENTBLUE_IBMCPU
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDENTBLUE_CYRIXM2
+value|2
+end_define
 
 begin_comment
 comment|/* XXX - should be in header file */
@@ -2027,17 +2048,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Special exception 16 handler.  * The wrmsr instruction generates invalid opcodes fault on 486-class  * Cyrix CPU.  Stacked eip register points the wrmsr instruction in the  * function identblue() when this handler is called.  Stacked eip should  * be advanced.  */
+comment|/*  * Special exception 6 handler.  * The wrmsr instruction generates invalid opcodes fault on 486-class  * Cyrix CPU.  Stacked eip register points the wrmsr instruction in the  * function identblue() when this handler is called.  Stacked eip should  * be advanced.  */
 end_comment
 
 begin_decl_stmt
 name|inthand_t
-name|bluetrap
+name|bluetrap6
 decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|asm (" 	.text 	.p2align 2,0x90 " __XSTRING(CNAME(bluetrap)) ": 	ss 	movl	$0xa8c1d," __XSTRING(CNAME(trap_by_wrmsr)) " # Don't ask meaning of the number :-). 	addl	$2, (%esp)				  # I know wrmsr is a 2-bytes instruction. 	iret ");
+asm|asm (" 	.text 	.p2align 2,0x90 " __XSTRING(CNAME(bluetrap6)) ": 	ss 	movl	$0xa8c1d," __XSTRING(CNAME(trap_by_wrmsr)) " 	addl	$2, (%esp)		  # I know wrmsr is a 2-bytes instruction. 	iret ");
+end_asm
+
+begin_comment
+comment|/*  * Special exception 13 handler.  * Accessing non-existent MSR generates general protection fault.  */
+end_comment
+
+begin_decl_stmt
+name|inthand_t
+name|bluetrap13
+decl_stmt|;
+end_decl_stmt
+
+begin_asm
+asm|asm (" 	.text 	.p2align 2,0x90 " __XSTRING(CNAME(bluetrap13)) ": 	ss 	movl	$0xa89c4," __XSTRING(CNAME(trap_by_wrmsr)) " 	popl	%eax				# discard errorcode. 	addl	$2, (%esp)			# I know wrmsr is a 2-bytes instruction. 	iret ");
 end_asm
 
 begin_comment
@@ -2056,12 +2091,31 @@ name|trap_by_wrmsr
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * Cyrix 486-class CPU does not support wrmsr instruction. 	 * The wrmsr instruction causes invalid opcode fault, and exception 	 * will be trapped by bluetrap() on Cyrix 486-class CPU.  The bluetrap() 	 * set the magic number to trap_by_wrmsr. 	 */
+comment|/*  	 * Cyrix 486-class CPU does not support wrmsr instruction. 	 * The wrmsr instruction generates invalid opcode fault, and exception 	 * will be trapped by bluetrap6() on Cyrix 486-class CPU.  The 	 * bluetrap6() set the magic number to trap_by_wrmsr. 	 */
 name|setidt
 argument_list|(
 literal|6
 argument_list|,
-name|bluetrap
+name|bluetrap6
+argument_list|,
+name|SDT_SYS386TGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Certain BIOS disables cpuid instructnion of Cyrix 6x86MX CPU. 	 * In this case, wrmsr generates general protection fault, and 	 * exception will be trapped by bluetrap13(). 	 */
+name|setidt
+argument_list|(
+literal|13
+argument_list|,
+name|bluetrap13
 argument_list|,
 name|SDT_SYS386TGT
 argument_list|,
@@ -2082,7 +2136,7 @@ argument_list|,
 literal|0x03000000LL
 argument_list|)
 expr_stmt|;
-comment|/* Fault on Cyrix 486-class CPU. */
+comment|/* Cyrix CPU generates fault. */
 if|if
 condition|(
 name|trap_by_wrmsr
@@ -2090,13 +2144,21 @@ operator|==
 literal|0xa8c1d
 condition|)
 return|return
-literal|0
+name|IDENTBLUE_CYRIX486
 return|;
-comment|/* Cyrix CPU sets the magic number. */
+elseif|else
+if|if
+condition|(
+name|trap_by_wrmsr
+operator|==
+literal|0xa89c4
+condition|)
 return|return
-literal|1
+name|IDENTBLUE_CYRIXM2
 return|;
-comment|/* IBM Blue Lightnig CPU */
+return|return
+name|IDENTBLUE_IBMCPU
+return|;
 block|}
 end_function
 
@@ -2278,6 +2340,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|isblue
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -2298,10 +2365,16 @@ name|CPU_486
 condition|)
 block|{
 comment|/* 			 * These conditions are equivalent to: 			 *     - CPU does not support cpuid instruction. 			 *     - Cyrix/IBM CPU is detected. 			 */
-if|if
-condition|(
+name|isblue
+operator|=
 name|identblue
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|isblue
+operator|==
+name|IDENTBLUE_IBMCPU
 condition|)
 block|{
 name|strcpy
@@ -2414,6 +2487,7 @@ name|cpu
 operator|=
 name|CPU_M2
 expr_stmt|;
+comment|/* 				 * XXX 				 * Execute cpuid instrunction here and fix cpu_id and 				 * cpu_feature variables. 				 */
 break|break;
 block|}
 block|}
