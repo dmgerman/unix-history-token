@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)paths.h	5.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)paths.h	5.13 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/* Default search path. */
 end_comment
 
 begin_define
@@ -29,13 +33,6 @@ define|#
 directive|define
 name|_PATH_CSHELL
 value|"/bin/csh"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PATH_DEV
-value|"/dev/"
 end_define
 
 begin_define
@@ -104,13 +101,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_PATH_TMP
-value|"/tmp/"
-end_define
-
-begin_define
-define|#
-directive|define
 name|_PATH_TTY
 value|"/dev/tty"
 end_define
@@ -125,22 +115,40 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_VI
+value|"/usr/bin/vi"
+end_define
+
+begin_comment
+comment|/* Provide trailing slash, since mostly used for building pathnames. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_DEV
+value|"/dev/"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_TMP
+value|"/tmp/"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_VARRUN
-value|"/var/run"
+value|"/var/run/"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_VARTMP
-value|"/var/tmp"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PATH_VI
-value|"/usr/bin/vi"
+value|"/var/tmp/"
 end_define
 
 end_unit
