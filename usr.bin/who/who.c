@@ -332,6 +332,7 @@ literal|1
 condition|)
 if|if
 condition|(
+operator|*
 name|usr
 operator|.
 name|ut_name
@@ -535,6 +536,18 @@ operator|->
 name|ut_time
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|buf
+index|[
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 operator|(
 name|void
