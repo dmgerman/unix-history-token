@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)col.c	5.2 (Berkeley) %G%"
+literal|"@(#)col.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|RLF
-value|'\07'
+value|'\007'
 end_define
 
 begin_comment
@@ -190,22 +190,22 @@ begin_define
 define|#
 directive|define
 name|RHLF
-value|'\08'
+value|'\010'
 end_define
 
 begin_comment
-comment|/* ESC-08 reverse half-line feed */
+comment|/* ESC-010 reverse half-line feed */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FHLF
-value|'\09'
+value|'\011'
 end_define
 
 begin_comment
-comment|/* ESC-09 forward half-line feed */
+comment|/* ESC-011 forward half-line feed */
 end_comment
 
 begin_comment
