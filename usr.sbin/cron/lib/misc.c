@@ -1470,6 +1470,10 @@ name|isallowed
 operator|=
 name|FALSE
 expr_stmt|;
+name|deny
+operator|=
+name|NULL
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -1536,10 +1540,6 @@ argument_list|)
 else|#
 directive|else
 name|allow
-operator|=
-name|NULL
-expr_stmt|;
-name|deny
 operator|=
 name|NULL
 expr_stmt|;
