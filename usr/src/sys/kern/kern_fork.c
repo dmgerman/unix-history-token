@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -707,54 +707,34 @@ name|p_startcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|p2
-operator|->
-name|p_wmesg
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* XXX - should be in zero range */
-name|p2
-operator|->
-name|p_spare
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX - should be in zero range */
-name|p2
-operator|->
-name|p_spare
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX - should be in zero range */
-name|p2
-operator|->
-name|p_spare
-index|[
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX - should be in zero range */
-name|p2
-operator|->
-name|p_spare
-index|[
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX - should be in zero range */
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats and p_sigacts substructs are set in vm_fork. 	 */
+name|p2
+operator|->
+name|p_flag
+operator|=
+name|SLOAD
+operator||
+operator|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+name|SHPUX
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+name|SPROFIL
+condition|)
+name|startprofclock
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|p2
@@ -859,20 +839,6 @@ name|p_refcnt
 operator|++
 expr_stmt|;
 block|}
-name|p2
-operator|->
-name|p_flag
-operator|=
-name|SLOAD
-operator||
-operator|(
-name|p1
-operator|->
-name|p_flag
-operator|&
-name|SHPUX
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|p1
@@ -996,27 +962,6 @@ name|p_tracep
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-name|p2
-operator|->
-name|p_vmspace
-operator|->
-name|p_ckey
-operator|=
-name|p1
-operator|->
-name|p_vmspace
-operator|->
-name|p_ckey
-expr_stmt|;
-comment|/* XXX move this */
 endif|#
 directive|endif
 comment|/* 	 * This begins the section where we must prevent the parent 	 * from being swapped. 	 */
