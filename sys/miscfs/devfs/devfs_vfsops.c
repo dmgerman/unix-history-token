@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /pub/FreeBSD/FreeBSD-CVS/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.3 1995/05/30 08:06:52 rgrimes Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.3 1995/05/30 08:06:52 rgrimes Exp $  *  *  */
 end_comment
 
 begin_include
