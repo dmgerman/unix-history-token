@@ -355,6 +355,13 @@ name|F_QUIET2
 value|0x200
 end_define
 
+begin_define
+define|#
+directive|define
+name|F_AUDIBLE
+value|0x400
+end_define
+
 begin_comment
 comment|/*  * MAX_DUP_CHK is the number of bits in received table, i.e. the maximum  * number of received sequence numbers we can keep track of.  Change 128  * to 8192 for complete accuracy...  */
 end_comment
@@ -764,7 +771,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"QRc:dfh:i:l:np:qrs:v"
+literal|"QRc:adfh:i:l:np:qrs:v"
 argument_list|)
 operator|)
 operator|!=
@@ -775,6 +782,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+name|options
+operator||=
+name|F_AUDIBLE
+expr_stmt|;
+break|break;
 case|case
 literal|'c'
 case|:
@@ -2646,6 +2661,20 @@ operator|)
 name|printf
 argument_list|(
 literal|" (DUP!)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|&
+name|F_AUDIBLE
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\a"
 argument_list|)
 expr_stmt|;
 comment|/* check the data */
@@ -5385,7 +5414,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ping [-Rdfnqrv] [-c count] [-i wait] [-l preload]\n\t[-p pattern] [-s packetsize] host\n"
+literal|"usage: ping [-aRdfnqrv] [-c count] [-i wait] [-l preload]\n\t[-p pattern] [-s packetsize] host\n"
 argument_list|)
 expr_stmt|;
 name|exit
