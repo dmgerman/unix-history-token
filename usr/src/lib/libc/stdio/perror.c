@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)perror.c	5.6 (Berkeley) %G%"
+literal|"@(#)perror.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,16 @@ name|char
 modifier|*
 name|sys_errlist
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|ebuf
+index|[
+literal|20
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -144,24 +154,45 @@ name|v
 operator|++
 expr_stmt|;
 block|}
-name|v
-operator|->
-name|iov_base
-operator|=
+if|if
+condition|(
 operator|(
 name|u_int
 operator|)
 name|errno
 operator|<
 name|sys_nerr
-condition|?
+condition|)
+name|v
+operator|->
+name|iov_base
+operator|=
 name|sys_errlist
 index|[
 name|errno
 index|]
-else|:
-literal|"Unknown error"
 expr_stmt|;
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|ebuf
+argument_list|,
+literal|"Unknown error: %d"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|v
+operator|->
+name|iov_base
+operator|=
+name|ebuf
+expr_stmt|;
+block|}
 name|v
 operator|->
 name|iov_len
@@ -220,21 +251,38 @@ name|int
 name|errnum
 decl_stmt|;
 block|{
-return|return
-operator|(
+if|if
+condition|(
 operator|(
 name|u_int
 operator|)
 name|errnum
 operator|<
 name|sys_nerr
-condition|?
+condition|)
+return|return
+operator|(
 name|sys_errlist
 index|[
 name|errnum
 index|]
-else|:
-literal|"Unknown error"
+operator|)
+return|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|ebuf
+argument_list|,
+literal|"Unknown error: %d"
+argument_list|,
+name|errnum
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ebuf
 operator|)
 return|;
 block|}
