@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<time.h>
 end_include
 
@@ -65,7 +59,7 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|skeylookup
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 expr|struct
