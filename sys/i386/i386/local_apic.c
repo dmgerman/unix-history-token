@@ -2875,18 +2875,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DETECT_DEADLOCK
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|BEFORE_SPIN
 value|1000000
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DETECT_DEADLOCK
+end_ifdef
 
 begin_define
 define|#
@@ -3011,10 +3011,7 @@ operator|=
 name|dest
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DETECT_DEADLOCK
-comment|/* Check for an earlier stuck IPI. */
+comment|/* Wait for an earlier IPI to finish. */
 if|if
 condition|(
 operator|!
@@ -3028,8 +3025,6 @@ argument_list|(
 literal|"APIC: Previous IPI is stuck"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|lapic_ipi_raw
 argument_list|(
 name|icrlo
