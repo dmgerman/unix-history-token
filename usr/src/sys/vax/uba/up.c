@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.69	83/02/16	*/
+comment|/*	up.c	4.69	83/02/17	*/
 end_comment
 
 begin_include
@@ -549,12 +549,11 @@ literal|32
 operator|*
 literal|19
 block|,
-literal|823
+literal|815
 block|,
 name|up_sizes
 block|,
-comment|/* 9300/cdc */
-comment|/* 9300 actually has 815 cylinders... */
+comment|/* 9300 */
 literal|32
 block|,
 literal|10
@@ -581,6 +580,20 @@ block|,
 name|upam_sizes
 block|,
 comment|/* ampex capricorn */
+comment|/* should make a new partition table for cdc drives */
+literal|32
+block|,
+literal|19
+block|,
+literal|32
+operator|*
+literal|19
+block|,
+literal|823
+block|,
+name|up_sizes
+block|,
+comment|/* cdc */
 block|}
 struct|;
 end_struct
@@ -1073,6 +1086,30 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* ampex hack */
+else|else
+block|{
+name|upaddr
+operator|->
+name|uphr
+operator|=
+name|UPHR_MAXCYL
+expr_stmt|;
+if|if
+condition|(
+name|upaddr
+operator|->
+name|uphr
+operator|==
+literal|822
+condition|)
+name|ui
+operator|->
+name|ui_type
+operator|=
+literal|3
+expr_stmt|;
+comment|/* cdc hack */
+block|}
 name|upaddr
 operator|->
 name|upcs2
