@@ -7484,6 +7484,18 @@ condition|)
 return|return
 name|WRONG
 return|;
+comment|/* Don't go below 1900 for POLA */
+if|if
+condition|(
+name|yourtm
+operator|.
+name|tm_year
+operator|<
+literal|0
+condition|)
+return|return
+name|WRONG
+return|;
 if|if
 condition|(
 name|yourtm
