@@ -422,7 +422,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|sprintf((fn), "%s/%s+%d-%d", piece_dir, (d), (p), (n))
+value|sprintf((fn), "%s/%s+%03d-%03d", piece_dir, (d), (p), (n))
 end_define
 
 begin_comment
