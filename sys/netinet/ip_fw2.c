@@ -288,6 +288,28 @@ comment|/* XXX for in_cksum */
 end_comment
 
 begin_comment
+comment|/*  * XXX This one should go in sys/mbuf.h. It is used to avoid that  * a firewall-generated packet loops forever through the firewall.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|M_SKIP_FIREWALL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|M_SKIP_FIREWALL
+value|0x4000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * set_disable contains one bit per set value (0..31).  * If the bit is set, all rules with the corresponding set  * are disabled. Set 31 is reserved for the default rule  * and CANNOT be disabled.  */
 end_comment
 
@@ -631,6 +653,28 @@ literal|5
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Keepalives are sent if dyn_keepalive is set. They are sent every  * dyn_keepalive_period seconds, in the last dyn_keepalive_interval  * seconds of lifetime of a rule.  * dyn_rst_lifetime and dyn_fin_lifetime should be strictly lower  * than dyn_keepalive_period.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|dyn_keepalive_interval
+init|=
+literal|20
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|dyn_keepalive_period
+init|=
+literal|5
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|u_int32_t
@@ -682,7 +726,7 @@ specifier|static
 name|u_int32_t
 name|dyn_max
 init|=
-literal|1000
+literal|4096
 decl_stmt|;
 end_decl_stmt
 
@@ -3640,6 +3684,18 @@ operator||
 name|BOTH_FIN
 case|:
 comment|/* both sides closed */
+if|if
+condition|(
+name|dyn_fin_lifetime
+operator|>=
+name|dyn_keepalive_period
+condition|)
+name|dyn_fin_lifetime
+operator|=
+name|dyn_keepalive_period
+operator|-
+literal|1
+expr_stmt|;
 name|q
 operator|->
 name|expire
@@ -3657,6 +3713,18 @@ comment|/* 			 * reset or some invalid combination, but can also 			 * occur if 
 block|if ( (q->state& ((TH_RST<< 8)|TH_RST)) == 0) 				printf("invalid state: 0x%x\n", q->state);
 endif|#
 directive|endif
+if|if
+condition|(
+name|dyn_rst_lifetime
+operator|>=
+name|dyn_keepalive_period
+condition|)
+name|dyn_rst_lifetime
+operator|=
+name|dyn_keepalive_period
+operator|-
+literal|1
+expr_stmt|;
 name|q
 operator|->
 name|expire
@@ -3724,7 +3792,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* try reallocation, make sure we have a power of 2 */
+comment|/* 	 * Try reallocation, make sure we have a power of 2 and do 	 * not allow more than 64k entries. In case of overflow, 	 * default to 1024. 	 */
+if|if
+condition|(
+name|dyn_buckets
+operator|>
+literal|65536
+condition|)
+name|dyn_buckets
+operator|=
+literal|1024
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3765,6 +3843,12 @@ argument_list|,
 name|M_IPFW
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|ipfw_dyn_v
 operator|=
 name|malloc
@@ -3784,6 +3868,22 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ipfw_dyn_v
+operator|!=
+name|NULL
+operator|||
+name|curr_dyn_buckets
+operator|<=
+literal|2
+condition|)
+break|break;
+name|curr_dyn_buckets
+operator|/=
+literal|2
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5007,6 +5107,12 @@ operator|&
 name|sro
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_SKIP_FIREWALL
+expr_stmt|;
 name|ip_output
 argument_list|(
 name|m
@@ -5300,8 +5406,7 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-comment|/* 	 * Local variables hold state during the processing of a packet. 	 * 	 * IMPORTANT NOTE: to speed up the processing of rules, there 	 * are some assumption on the values of the variables, which 	 * are documented here. Should you change them, please check 	 * the implementation of the various instructions to make sure 	 * that they still work. 	 */
-comment|/* 	 * args->eh	The MAC header. It is non-null for a layer2 	 *	packet, it is NULL for a layer-3 packet. 	 * 	 * m | args->m	Pointer to the mbuf, as received from the caller. 	 *	It may change if ipfw_chk() does an m_pullup, or if it 	 *	consumes the packet because it calls send_reject(). 	 *	XXX This has to change, so that ipfw_chk() never modifies 	 *	or consumes the buffer. 	 * ip	is simply an alias of the value of m, and it is kept 	 *	in sync with it (the packet is	supposed to start with 	 *	the ip header). 	 */
+comment|/* 	 * Local variables hold state during the processing of a packet. 	 * 	 * IMPORTANT NOTE: to speed up the processing of rules, there 	 * are some assumption on the values of the variables, which 	 * are documented here. Should you change them, please check 	 * the implementation of the various instructions to make sure 	 * that they still work. 	 * 	 * args->eh	The MAC header. It is non-null for a layer2 	 *	packet, it is NULL for a layer-3 packet. 	 * 	 * m | args->m	Pointer to the mbuf, as received from the caller. 	 *	It may change if ipfw_chk() does an m_pullup, or if it 	 *	consumes the packet because it calls send_reject(). 	 *	XXX This has to change, so that ipfw_chk() never modifies 	 *	or consumes the buffer. 	 * ip	is simply an alias of the value of m, and it is kept 	 *	in sync with it (the packet is	supposed to start with 	 *	the ip header). 	 */
 name|struct
 name|mbuf
 modifier|*
@@ -5398,6 +5503,18 @@ name|q
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_SKIP_FIREWALL
+condition|)
+return|return
+literal|0
+return|;
+comment|/* accept */
 comment|/* 	 * dyn_dir = MATCH_UNKNOWN when rules unchecked, 	 * 	MATCH_NONE when checked and not matched (q = NULL), 	 *	MATCH_FORWARD or MATCH_REVERSE otherwise (q != NULL) 	 */
 if|if
 condition|(
@@ -8518,7 +8635,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Remove all rules with given number, and also do set manipulation.  *  * The argument is an int. The low 16 bit are the  * rule or set number, the upper 16 bits are the  * function, namely:  *   *      0       DEL_SINGLE_RULE  *      1       DELETE_RULESET  *      2       DISABLE_SET  *      3       ENABLE_SET  */
+comment|/**  * Remove all rules with given number, and also do set manipulation.  *  * The argument is an u_int32_t. The low 16 bit are the rule or set number,  * the next 8 bits are the new set, the top 8 bits are the command:  *   *	0	delete rules with given number  *	1	delete rules with given set number  *	2	move rules with given number to new set  *	3	move rules with given set number to new set  *	4	swap sets with given numbers  */
 end_comment
 
 begin_function
@@ -8549,8 +8666,11 @@ name|s
 decl_stmt|;
 name|u_int16_t
 name|rulenum
-decl_stmt|,
+decl_stmt|;
+name|u_int8_t
 name|cmd
+decl_stmt|,
+name|new_set
 decl_stmt|;
 name|rulenum
 operator|=
@@ -8563,16 +8683,35 @@ operator|=
 operator|(
 name|arg
 operator|>>
+literal|24
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|new_set
+operator|=
+operator|(
+name|arg
+operator|>>
 literal|16
 operator|)
 operator|&
-literal|0xffff
+literal|0xff
 expr_stmt|;
 if|if
 condition|(
 name|cmd
 operator|>
-literal|3
+literal|4
+condition|)
+return|return
+name|EINVAL
+return|;
+if|if
+condition|(
+name|new_set
+operator|>
+literal|30
 condition|)
 return|return
 name|EINVAL
@@ -8582,7 +8721,14 @@ condition|(
 name|cmd
 operator|==
 literal|0
-operator|&&
+operator|||
+name|cmd
+operator|==
+literal|2
+condition|)
+block|{
+if|if
+condition|(
 name|rulenum
 operator|==
 name|IPFW_DEFAULT_RULE
@@ -8590,24 +8736,15 @@ condition|)
 return|return
 name|EINVAL
 return|;
+block|}
+else|else
+block|{
 if|if
 condition|(
-name|cmd
-operator|!=
-literal|0
-operator|&&
 name|rulenum
 operator|>
 literal|30
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ipfw: del_entry: invalid set number %d\n"
-argument_list|,
-name|rulenum
-argument_list|)
-expr_stmt|;
 return|return
 name|EINVAL
 return|;
@@ -8620,7 +8757,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* DEL_SINGLE_RULE */
+comment|/* delete rules with given number */
 comment|/* 		 * locate first rule to delete 		 */
 for|for
 control|(
@@ -8669,11 +8806,10 @@ name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* no access to rules while removing */
+comment|/* 		 * flush pointers outside the loop, then delete all matching 		 * rules. prev remains the same throughout the cycle. 		 */
 name|flush_rule_ptrs
 argument_list|()
 expr_stmt|;
-comment|/* more efficient to do outside the loop */
-comment|/* 		 * prev remains the same throughout the cycle 		 */
 while|while
 condition|(
 name|rule
@@ -8704,17 +8840,15 @@ break|break;
 case|case
 literal|1
 case|:
-comment|/* DELETE_RULESET */
+comment|/* delete all rules with given set number */
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* no access to rules while removing */
 name|flush_rule_ptrs
 argument_list|()
 expr_stmt|;
-comment|/* more efficient to do outside the loop */
 for|for
 control|(
 name|prev
@@ -8770,17 +8904,40 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* DISABLE SET */
+comment|/* move rules with given number to new set */
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|set_disable
-operator||=
-literal|1
-operator|<<
+for|for
+control|(
+name|rule
+operator|=
+operator|*
+name|chain
+init|;
+name|rule
+condition|;
+name|rule
+operator|=
+name|rule
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|rule
+operator|->
 name|rulenum
+operator|==
+name|rulenum
+condition|)
+name|rule
+operator|->
+name|set
+operator|=
+name|new_set
 expr_stmt|;
 name|splx
 argument_list|(
@@ -8791,20 +8948,99 @@ break|break;
 case|case
 literal|3
 case|:
-comment|/* ENABLE SET */
+comment|/* move rules with given set number to new set */
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|set_disable
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
+for|for
+control|(
+name|rule
+operator|=
+operator|*
+name|chain
+init|;
+name|rule
+condition|;
+name|rule
+operator|=
+name|rule
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|rule
+operator|->
+name|set
+operator|==
 name|rulenum
-operator|)
+condition|)
+name|rule
+operator|->
+name|set
+operator|=
+name|new_set
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+comment|/* swap two sets */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|rule
+operator|=
+operator|*
+name|chain
+init|;
+name|rule
+condition|;
+name|rule
+operator|=
+name|rule
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|rule
+operator|->
+name|set
+operator|==
+name|rulenum
+condition|)
+name|rule
+operator|->
+name|set
+operator|=
+name|new_set
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rule
+operator|->
+name|set
+operator|==
+name|new_set
+condition|)
+name|rule
+operator|->
+name|set
+operator|=
+name|rulenum
 expr_stmt|;
 name|splx
 argument_list|(
@@ -10289,25 +10525,25 @@ break|break;
 case|case
 name|IP_FW_DEL
 case|:
-comment|/* argument is an int, the rule number */
-comment|/* 		 * IP_FW_DEL is used for deleting single rules, 		 * set of rules, and manipulating set_disable. 		 * 		 * Everything is managed in del_entry(); 		 */
+comment|/* 		 * IP_FW_DEL is used for deleting single rules or sets, 		 * and (ab)used to atomically manipulate sets. Argument size 		 * is used to distinguish between the two: 		 *    sizeof(u_int32_t) 		 *	delete single rule or set of rules, 		 *	or reassign rules (or sets) to a different set. 		 *    2*sizeof(u_int32_t) 		 *	atomic disable/enable sets. 		 *	first u_int32_t contains sets to be disabled, 		 *	second u_int32_t contains sets to be enabled. 		 */
 name|error
 operator|=
 name|sooptcopyin
 argument_list|(
 name|sopt
 argument_list|,
-operator|&
-name|rulenum
+name|rule_buf
 argument_list|,
+literal|2
+operator|*
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_int32_t
 argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10316,33 +10552,22 @@ condition|(
 name|error
 condition|)
 break|break;
-if|if
-condition|(
-name|rulenum
-operator|==
-name|IPFW_DEFAULT_RULE
-condition|)
-block|{
-if|if
-condition|(
-name|fw_debug
-condition|)
-name|printf
-argument_list|(
-literal|"ipfw: can't delete rule %u\n"
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|IPFW_DEFAULT_RULE
-argument_list|)
-expr_stmt|;
-name|error
+name|size
 operator|=
-name|EINVAL
+name|sopt
+operator|->
+name|sopt_valsize
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+name|size
+operator|==
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+condition|)
+comment|/* delete or reassign */
 name|error
 operator|=
 name|del_entry
@@ -10350,8 +10575,54 @@ argument_list|(
 operator|&
 name|layer3_chain
 argument_list|,
-name|rulenum
+name|rule_buf
+index|[
+literal|0
+index|]
 argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|size
+operator|==
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+condition|)
+comment|/* set enable/disable */
+name|set_disable
+operator|=
+operator|(
+name|set_disable
+operator||
+name|rule_buf
+index|[
+literal|0
+index|]
+operator|)
+operator|&
+operator|~
+name|rule_buf
+index|[
+literal|1
+index|]
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+literal|31
+operator|)
+expr_stmt|;
+comment|/* set 31 always enabled */
+else|else
+name|error
+operator|=
+name|EINVAL
 expr_stmt|;
 break|break;
 case|case
@@ -10448,6 +10719,10 @@ modifier|*
 name|ip_fw_default_rule
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * This procedure is only used to handle keepalives. It is invoked  * every dyn_keepalive_period  */
+end_comment
 
 begin_function
 specifier|static
@@ -10563,7 +10838,7 @@ name|TIME_LEQ
 argument_list|(
 name|time_second
 operator|+
-literal|20
+name|dyn_keepalive_interval
 argument_list|,
 name|q
 operator|->
@@ -10646,7 +10921,7 @@ name|ipfw_tick
 argument_list|,
 name|NULL
 argument_list|,
-literal|5
+name|dyn_keepalive_period
 operator|*
 name|hz
 argument_list|)
