@@ -1359,8 +1359,6 @@ name|NULL
 operator|)
 return|;
 block|}
-else|else
-block|{
 name|g_slice_conf_hot
 argument_list|(
 name|gp
@@ -1384,7 +1382,6 @@ name|hot
 operator|=
 name|g_sunlabel_hotwrite
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|gp
