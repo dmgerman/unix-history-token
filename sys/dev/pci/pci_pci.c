@@ -1505,12 +1505,16 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device %s%d requested unsupported memory range 0x%lx-0x%lx"
-literal|" (decoding 0x%x-0x%x, 0x%x-0x%x)\n"
+literal|"device %s%d requested unsupported memory range "
+literal|"0x%lx-0x%lx (decoding 0x%x-0x%x, 0x%x-0x%x)\n"
 argument_list|,
 name|device_get_name
 argument_list|(
