@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	format.c	4.3	83/03/02	*/
+comment|/*	format.c	4.4	83/05/03	*/
 end_comment
 
 begin_comment
@@ -620,9 +620,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"sector %d\n"
+literal|"cylinder %d\n"
 argument_list|,
-name|sector
+name|cyl
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Try and write the headers and data patterns into 		 * each sector in the track.  Continue until such 		 * we're done, or until there's less than a sector's 		 * worth of data to transfer. 		 * 		 * The lseek call is necessary because of 		 * the odd sector size (516 bytes) 		 */
