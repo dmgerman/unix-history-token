@@ -4453,7 +4453,7 @@ block|}
 else|else
 name|error
 argument_list|(
-literal|"fbsd_core_open: td_open: %s"
+literal|"fbsd_core_open: td_ta_new: %s"
 argument_list|,
 name|thread_db_err_str
 argument_list|(
@@ -4576,7 +4576,7 @@ name|fbsd_core_ops
 operator|.
 name|to_doc
 operator|=
-literal|"FreeBSD thread support for core files."
+literal|"FreeBSD threads support for core files."
 expr_stmt|;
 name|fbsd_core_ops
 operator|.
