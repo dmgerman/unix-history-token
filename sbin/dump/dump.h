@@ -307,6 +307,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|cachesize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of block cache */
+end_comment
+
+begin_decl_stmt
+name|int
 name|notify
 decl_stmt|;
 end_decl_stmt

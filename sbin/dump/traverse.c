@@ -2771,12 +2771,9 @@ name|i
 decl_stmt|;
 name|loop
 label|:
-if|if
-condition|(
-operator|(
 name|cnt
 operator|=
-name|pread
+name|cread
 argument_list|(
 name|diskfd
 argument_list|,
@@ -2793,7 +2790,10 @@ operator|<<
 name|dev_bshift
 operator|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cnt
 operator|==
 name|size
 condition|)
@@ -2913,7 +2913,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Zero buffer, then try to read each sector of buffer separately. 	 */
+comment|/* 	 * Zero buffer, then try to read each sector of buffer separately, 	 * and bypass the cache. 	 */
 name|memset
 argument_list|(
 name|buf

@@ -306,6 +306,18 @@ comment|/* Use Kerberos authentication */
 end_comment
 
 begin_decl_stmt
+name|int
+name|cachesize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* block cache size (in bytes) */
+end_comment
+
+begin_decl_stmt
 name|long
 name|dev_bsize
 init|=
@@ -563,13 +575,13 @@ name|KERBEROS
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:kns:ST:uWwD:"
+value|"0123456789aB:b:cd:f:h:kns:ST:uWwD:C:"
 else|#
 directive|else
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:ns:ST:uWwD:"
+value|"0123456789aB:b:cd:f:h:ns:ST:uWwD:C:"
 endif|#
 directive|endif
 while|while
@@ -730,6 +742,25 @@ case|:
 name|dumpdates
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|cachesize
+operator|=
+name|numarg
+argument_list|(
+literal|"cachesize"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|*
+literal|1024
+operator|*
+literal|1024
 expr_stmt|;
 break|break;
 case|case
@@ -2523,8 +2554,8 @@ literal|"k"
 endif|#
 directive|endif
 literal|"nSu] [-B records] [-b blocksize] [-D dumpdates]\n"
-literal|"            [-d density] [-f file ] [-h level] [-s feet] "
-literal|"[-T date] filesystem\n"
+literal|"            [-d density] [-f file ] [-h level] [-s feet]\n"
+literal|"            [-T date] [-C cachesizeMB] filesystem\n"
 literal|"       dump [-W | -w]\n"
 argument_list|)
 expr_stmt|;
@@ -3070,6 +3101,9 @@ literal|'f'
 case|:
 case|case
 literal|'D'
+case|:
+case|case
+literal|'C'
 case|:
 case|case
 literal|'h'
