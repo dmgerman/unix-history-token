@@ -309,14 +309,14 @@ begin_define
 define|#
 directive|define
 name|DFL_FRAGSIZE
-value|1024
+value|2048
 end_define
 
 begin_define
 define|#
 directive|define
 name|DFL_BLKSIZE
-value|8192
+value|16384
 end_define
 
 begin_comment
