@@ -949,6 +949,135 @@ parameter_list|)
 value|do {		\ 	(X)->type[0] = ((V)>> 8)& 0xff;	\ 	(X)->type[1] = ((V)& 0xff);		\     } while (0)
 end_define
 
+begin_comment
+comment|/*  * Events that are emitted by the driver. Currently the only consumer  * of this is the netgraph node.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMEV_FLOW_CONTROL
+value|0x0001
+end_define
+
+begin_comment
+comment|/* channel busy state changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMEV_IFSTATE_CHANGED
+value|0x0002
+end_define
+
+begin_comment
+comment|/* up/down or carrier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMEV_VCC_CHANGED
+value|0x0003
+end_define
+
+begin_comment
+comment|/* PVC deleted/create */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMEV_ACR_CHANGED
+value|0x0004
+end_define
+
+begin_comment
+comment|/* ABR ACR has changed */
+end_comment
+
+begin_struct
+struct|struct
+name|atmev_flow_control
+block|{
+name|uint16_t
+name|vpi
+decl_stmt|;
+comment|/* channel that is changed */
+name|uint16_t
+name|vci
+decl_stmt|;
+name|u_int
+name|busy
+range|:
+literal|1
+decl_stmt|;
+comment|/* != 0 -> ATM layer busy */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|atmev_ifstate_changed
+block|{
+name|u_int
+name|running
+range|:
+literal|1
+decl_stmt|;
+comment|/* interface is running now */
+name|u_int
+name|carrier
+range|:
+literal|1
+decl_stmt|;
+comment|/* carrier detected (or not) */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|atmev_vcc_changed
+block|{
+name|uint16_t
+name|vpi
+decl_stmt|;
+comment|/* channel that is changed */
+name|uint16_t
+name|vci
+decl_stmt|;
+name|u_int
+name|up
+range|:
+literal|1
+decl_stmt|;
+comment|/* 1 - created, 0 - deleted */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|atmev_acr_changed
+block|{
+name|uint16_t
+name|vpi
+decl_stmt|;
+comment|/* channel that is changed */
+name|uint16_t
+name|vci
+decl_stmt|;
+name|uint32_t
+name|acr
+decl_stmt|;
+comment|/* new ACR */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1045,6 +1174,86 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|atm_event
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ATMEV_SEND_FLOW_CONTROL
+parameter_list|(
+name|ATMIF
+parameter_list|,
+name|VPI
+parameter_list|,
+name|VCI
+parameter_list|,
+name|BUSY
+parameter_list|)
+define|\
+value|do {								\ 		struct atmev_flow_control _arg;				\ 		_arg.vpi = (VPI);					\ 		_arg.vci = (VCI);					\ 		_arg.busy = (BUSY);					\ 		atm_event(&(ATMIF)->ifnet, ATMEV_FLOW_CONTROL,&_arg);	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEV_SEND_VCC_CHANGED
+parameter_list|(
+name|ATMIF
+parameter_list|,
+name|VPI
+parameter_list|,
+name|VCI
+parameter_list|,
+name|UP
+parameter_list|)
+define|\
+value|do {								\ 		struct atmev_vcc_changed _arg;				\ 		_arg.vpi = (VPI);					\ 		_arg.vci = (VCI);					\ 		_arg.up = (UP);						\ 		atm_event(&(ATMIF)->ifnet, ATMEV_VCC_CHANGED,&_arg);	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEV_SEND_IFSTATE_CHANGED
+parameter_list|(
+name|ATMIF
+parameter_list|,
+name|CARRIER
+parameter_list|)
+define|\
+value|do {								\ 		struct atmev_ifstate_changed _arg;			\ 		_arg.running = (((ATMIF)->ifnet.if_flags&		\ 		    IFF_RUNNING) != 0);					\ 		_arg.carrier = ((CARRIER) != 0);			\ 		atm_event(&(ATMIF)->ifnet, ATMEV_IFSTATE_CHANGED,&_arg); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEV_SEND_ACR_CHANGED
+parameter_list|(
+name|ATMIF
+parameter_list|,
+name|VPI
+parameter_list|,
+name|VCI
+parameter_list|,
+name|ACR
+parameter_list|)
+define|\
+value|do {								\ 		struct atmev_acr_changed _arg;				\ 		_arg.vpi = (VPI);					\ 		_arg.vci = (VCI);					\ 		_arg.acr= (ACR);					\ 		atm_event(&(ATMIF)->ifnet, ATMEV_ACR_CHANGED,&_arg);	\ 	} while (0)
+end_define
 
 begin_endif
 endif|#
