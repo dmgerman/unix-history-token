@@ -4154,7 +4154,7 @@ operator|=
 name|ENOBUFS
 expr_stmt|;
 goto|goto
-name|disconnect
+name|release
 goto|;
 block|}
 comment|/* 	 * Fill in mbuf with extended UDP header 	 * and addresses and length put into network format. 	 */
@@ -4425,25 +4425,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|disconnect
-label|:
-if|if
-condition|(
-name|addr
-condition|)
-block|{
-name|in_pcbdisconnect
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-name|inp
-operator|->
-name|inp_laddr
-operator|=
-name|laddr
-expr_stmt|;
-block|}
 name|release
 label|:
 name|m_freem
