@@ -498,6 +498,17 @@ name|error
 operator|)
 return|;
 block|}
+name|vnode_create_vobject
+argument_list|(
+name|vp
+argument_list|,
+name|pp
+operator|->
+name|mediasize
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 operator|*
 name|cpp
 operator|=
