@@ -43,7 +43,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|long
 name|db_expr_t
 typedef|;
 end_typedef
