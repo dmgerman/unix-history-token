@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: subr.c,v 1.13 1997/11/21 07:43:52 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3382,6 +3382,12 @@ name|B115200
 block|}
 block|,
 block|{
+literal|230400
+block|,
+name|B230400
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}
@@ -3408,7 +3414,7 @@ if|if
 condition|(
 name|val
 operator|<=
-name|B115200
+name|B230400
 condition|)
 return|return
 operator|(
