@@ -34,7 +34,7 @@ name|__inline
 name|caddr_t
 name|jumbo_phys_to_kva
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 function_decl|;
@@ -46,7 +46,7 @@ name|__inline
 name|caddr_t
 name|jumbo_phys_to_kva
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{

@@ -146,7 +146,7 @@ decl_stmt|;
 name|vm_offset_t
 name|acpi_wakeaddr
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|acpi_wakephys
 decl_stmt|;
 name|struct
