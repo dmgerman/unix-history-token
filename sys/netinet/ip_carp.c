@@ -3183,17 +3183,9 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-literal|"carp6_input: packet size %u too small on %s\n"
+literal|"carp6_input: packet size %u too small\n"
 argument_list|,
 name|len
-argument_list|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|->
-name|if_xname
 argument_list|)
 expr_stmt|;
 return|return
