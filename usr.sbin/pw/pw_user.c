@@ -7030,7 +7030,7 @@ argument_list|,
 sizeof|sizeof
 name|acexpire
 argument_list|,
-literal|"%a %Ef %Y %X"
+literal|"%c"
 argument_list|,
 name|tptr
 argument_list|)
@@ -7067,7 +7067,7 @@ argument_list|,
 sizeof|sizeof
 name|pwexpire
 argument_list|,
-literal|"%a %Ef %Y %X"
+literal|"%c"
 argument_list|,
 name|tptr
 argument_list|)
