@@ -334,7 +334,7 @@ name|ERROR
 argument_list|(
 name|disk
 argument_list|,
-literal|"read write to block device"
+literal|"write error to block device"
 argument_list|)
 expr_stmt|;
 return|return
