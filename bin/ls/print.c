@@ -1259,6 +1259,9 @@ comment|/* 			 * We can't put tabs and color sequences together: 			 * column nu
 if|if
 condition|(
 name|f_color
+operator|&&
+operator|!
+name|f_notabs
 condition|)
 while|while
 condition|(
