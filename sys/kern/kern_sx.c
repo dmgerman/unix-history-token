@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2001 Jason Evans<jasone@freebsd.org>.  All rights re
 end_comment
 
 begin_comment
-comment|/*  * Shared/exclusive locks.  This implementation assures deterministic lock  * granting behavior, so that slocks and xlocks are interleaved.  *  * Priority propagation will not generally raise the priority of lock holders,  * so should not be relied upon in combination with sx locks.  *  * The witness code can not detect lock cycles (yet).  *  * XXX: When witness is made to function with sx locks, it will need to  * XXX: be taught to deal with these situations, as they are more involved:  *   slock --> xlock (deadlock)  *   slock --> slock (slock recursion, not fatal)  */
+comment|/*  * Shared/exclusive locks.  This implementation assures deterministic lock  * granting behavior, so that slocks and xlocks are interleaved.  *  * Priority propagation will not generally raise the priority of lock holders,  * so should not be relied upon in combination with sx locks.  */
 end_comment
 
 begin_include
@@ -48,10 +48,6 @@ include|#
 directive|include
 file|<sys/sx.h>
 end_include
-
-begin_comment
-comment|/*  * XXX: We don't implement the LO_RECURSED flag for this lock yet.  * We could do this by walking p_sleeplocks if we really wanted to.  */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -126,6 +122,8 @@ operator|->
 name|lo_flags
 operator|=
 name|LO_WITNESS
+operator||
+name|LO_RECURSABLE
 operator||
 name|LO_SLEEPABLE
 expr_stmt|;
@@ -381,19 +379,6 @@ operator|->
 name|sx_cnt
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITNESS
-name|sx
-operator|->
-name|sx_object
-operator|.
-name|lo_flags
-operator||=
-name|LO_LOCKED
-expr_stmt|;
-endif|#
-directive|endif
 name|LOCK_LOG_LOCK
 argument_list|(
 literal|"SLOCK"
@@ -544,19 +529,6 @@ name|sx_xholder
 operator|=
 name|curproc
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITNESS
-name|sx
-operator|->
-name|sx_object
-operator|.
-name|lo_flags
-operator||=
-name|LO_LOCKED
-expr_stmt|;
-endif|#
-directive|endif
 name|LOCK_LOG_LOCK
 argument_list|(
 literal|"XLOCK"
@@ -582,7 +554,7 @@ name|sx
 operator|->
 name|sx_object
 argument_list|,
-literal|0
+name|LOP_EXCLUSIVE
 argument_list|,
 name|file
 argument_list|,
@@ -631,28 +603,6 @@ argument_list|(
 name|sx
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITNESS
-if|if
-condition|(
-name|sx
-operator|->
-name|sx_cnt
-operator|==
-literal|0
-condition|)
-name|sx
-operator|->
-name|sx_object
-operator|.
-name|lo_flags
-operator|&=
-operator|~
-name|LO_LOCKED
-expr_stmt|;
-endif|#
-directive|endif
 name|WITNESS_UNLOCK
 argument_list|(
 operator|&
@@ -787,20 +737,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITNESS
-name|sx
-operator|->
-name|sx_object
-operator|.
-name|lo_flags
-operator|&=
-operator|~
-name|LO_LOCKED
-expr_stmt|;
-endif|#
-directive|endif
 name|WITNESS_UNLOCK
 argument_list|(
 operator|&
@@ -808,7 +744,7 @@ name|sx
 operator|->
 name|sx_object
 argument_list|,
-literal|0
+name|LOP_EXCLUSIVE
 argument_list|,
 name|file
 argument_list|,

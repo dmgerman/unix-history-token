@@ -542,32 +542,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITNESS
-end_ifdef
-
-begin_function_decl
-name|void
-name|_mtx_update_flags
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|locking
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * We define our machine-independent (unoptimized) mutex micro-operations  * here, if they are not already defined in the machine-dependent mutex.h   */
 end_comment
@@ -779,49 +753,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Update the lock object flags based on the current mutex state.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITNESS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|mtx_update_flags
-parameter_list|(
-name|m
-parameter_list|,
-name|locking
-parameter_list|)
-value|_mtx_update_flags((m), (locking))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|mtx_update_flags
-parameter_list|(
-name|m
-parameter_list|,
-name|locking
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Exported lock manipulation interface.  *  * mtx_lock(m) locks MTX_DEF mutex `m'  *  * mtx_lock_spin(m) locks MTX_SPIN mutex `m'  *  * mtx_unlock(m) unlocks MTX_DEF mutex `m'  *  * mtx_unlock_spin(m) unlocks MTX_SPIN mutex `m'  *  * mtx_lock_spin_flags(m, opts) and mtx_lock_flags(m, opts) locks mutex `m'  *     and passes option flags `opts' to the "hard" function, if required.  *     With these routines, it is possible to pass flags such as MTX_QUIET  *     and/or MTX_NOSWITCH to the appropriate lock manipulation routines.  *  * mtx_trylock(m) attempts to acquire MTX_DEF mutex `m' but doesn't sleep if  *     it cannot. Rather, it returns 0 on failure and non-zero on success.  *     It does NOT handle recursion as we assume that if a caller is properly  *     using this part of the interface, he will know that the lock in question  *     is _not_ recursed.  *  * mtx_trylock_flags(m, opts) is used the same way as mtx_trylock() but accepts  *     relevant option flags `opts.'  *  * mtx_initialized(m) returns non-zero if the lock `m' has been initialized.  *  * mtx_owned(m) returns non-zero if the current thread owns the lock `m'  *  * mtx_recursed(m) returns non-zero if the lock `m' is presently recursed.  */
 end_comment
 
@@ -1008,7 +939,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	MPASS(curproc != NULL);						\ 	KASSERT(((opts)& MTX_NOSWITCH) == 0,				\ 	    ("MTX_NOSWITCH used at %s:%d", (file), (line)));		\ 	_get_sleep_lock((m), curproc, (opts), (file), (line));		\ 	LOCK_LOG_LOCK("LOCK",&(m)->mtx_object, opts, m->mtx_recurse,	\ 	    (file), (line));						\ 	mtx_update_flags((m), 1);					\ 	WITNESS_LOCK(&(m)->mtx_object, (opts), (file), (line));		\ } while (0)
+value|do {			\ 	MPASS(curproc != NULL);						\ 	KASSERT(((opts)& MTX_NOSWITCH) == 0,				\ 	    ("MTX_NOSWITCH used at %s:%d", (file), (line)));		\ 	_get_sleep_lock((m), curproc, (opts), (file), (line));		\ 	LOCK_LOG_LOCK("LOCK",&(m)->mtx_object, opts, m->mtx_recurse,	\ 	    (file), (line));						\ 	WITNESS_LOCK(&(m)->mtx_object, (opts) | LOP_EXCLUSIVE, (file),	\ 	    (line));							\ } while (0)
 end_define
 
 begin_define
@@ -1024,7 +955,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	MPASS(curproc != NULL);						\ 	_get_spin_lock((m), curproc, (opts), (file), (line));		\ 	LOCK_LOG_LOCK("LOCK",&(m)->mtx_object, opts, m->mtx_recurse,	\ 	    (file), (line));						\ 	mtx_update_flags((m), 1);					\ 	WITNESS_LOCK(&(m)->mtx_object, (opts), (file), (line));		\ } while (0)
+value|do {			\ 	MPASS(curproc != NULL);						\ 	_get_spin_lock((m), curproc, (opts), (file), (line));		\ 	LOCK_LOG_LOCK("LOCK",&(m)->mtx_object, opts, m->mtx_recurse,	\ 	    (file), (line));						\ 	WITNESS_LOCK(&(m)->mtx_object, (opts) | LOP_EXCLUSIVE, (file),	\ 	    (line));							\ } while (0)
 end_define
 
 begin_define
@@ -1040,7 +971,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	mtx_update_flags((m), 0);					\ 	WITNESS_UNLOCK(&(m)->mtx_object, (opts), (file), (line));	\ 	_rel_sleep_lock((m), curproc, (opts), (file), (line));		\ 	LOCK_LOG_LOCK("UNLOCK",&(m)->mtx_object, (opts),		\ 	    (m)->mtx_recurse, (file), (line));				\ } while (0)
+value|do {			\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_UNLOCK(&(m)->mtx_object, (opts) | LOP_EXCLUSIVE,	\ 	    (file), (line));						\ 	LOCK_LOG_LOCK("UNLOCK",&(m)->mtx_object, (opts),		\ 	    (m)->mtx_recurse, (file), (line));				\ 	_rel_sleep_lock((m), curproc, (opts), (file), (line));		\ } while (0)
 end_define
 
 begin_define
@@ -1056,7 +987,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {		\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	mtx_update_flags((m), 0);					\ 	WITNESS_UNLOCK(&(m)->mtx_object, (opts), (file), (line));	\ 	_rel_spin_lock((m));						\ 	LOCK_LOG_LOCK("UNLOCK",&(m)->mtx_object, (opts),		\ 	    (m)->mtx_recurse, (file), (line));				\ } while (0)
+value|do {		\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_UNLOCK(&(m)->mtx_object, (opts) | LOP_EXCLUSIVE,	\ 	    (file), (line));						\ 	LOCK_LOG_LOCK("UNLOCK",&(m)->mtx_object, (opts),		\ 	    (m)->mtx_recurse, (file), (line));				\ 	_rel_spin_lock((m));						\ } while (0)
 end_define
 
 begin_define

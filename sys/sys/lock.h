@@ -170,23 +170,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LO_LOCKED
-value|0x01000000
+name|LI_RECURSEMASK
+value|0x0000ffff
 end_define
 
 begin_comment
-comment|/* Someone holds this lock. */
+comment|/* Recursion depth of lock instance. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LO_RECURSED
-value|0x02000000
+name|LI_SLEPT
+value|0x00010000
 end_define
 
 begin_comment
-comment|/* Someone has recursed on this lock. */
+comment|/* Lock instance has been slept with. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LI_EXCLUSIVE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Exclusive lock instance. */
 end_comment
 
 begin_comment
@@ -226,11 +237,52 @@ begin_comment
 comment|/* Don't check lock order. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOP_EXCLUSIVE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Exclusive lock. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * Lock instances.  A lock instance is the data associated with a lock while  * it is held by witness.  For example, a lock instance will hold the  * recursion count of a lock.  Lock instances are held in lists.  Spin locks  * are held in a per-cpu list while sleep locks are held in per-process list.  */
+end_comment
+
+begin_struct
+struct|struct
+name|lock_instance
+block|{
+name|struct
+name|lock_object
+modifier|*
+name|li_lock
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|li_file
+decl_stmt|;
+comment|/* File and line of last acquire. */
+name|int
+name|li_line
+decl_stmt|;
+name|u_int
+name|li_flags
+decl_stmt|;
+comment|/* Recursion count and LI_* flags. */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * A simple list type used to build the list of locks held by a process  * or CPU.  We can't simply embed the list in struct lock_object since a  * lock may be held by more than one process if it is a shared lock.  Locks  * are added to the head of the list, so we fill up each list entry from  * "the back" logically.  To ease some of the arithmetic, we actually fill  * in each list entry the normal way (childer[0] then children[1], etc.) but  * when we traverse the list we read children[count-1] as the first entry  * down to children[0] as the final entry.  */
@@ -240,7 +292,7 @@ begin_define
 define|#
 directive|define
 name|LOCK_NCHILDREN
-value|6
+value|3
 end_define
 
 begin_struct
@@ -253,8 +305,7 @@ modifier|*
 name|ll_next
 decl_stmt|;
 name|struct
-name|lock_object
-modifier|*
+name|lock_instance
 name|ll_children
 index|[
 name|LOCK_NCHILDREN

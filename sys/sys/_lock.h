@@ -29,15 +29,6 @@ name|char
 modifier|*
 name|lo_name
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|lo_file
-decl_stmt|;
-comment|/* File and line of last acquire. */
-name|int
-name|lo_line
-decl_stmt|;
 name|u_int
 name|lo_flags
 decl_stmt|;
