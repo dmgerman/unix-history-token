@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_timer.c,v 5.2 88/11/18 17:29:07 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_timer.c,v $  *  * Contains all the timer code.    * There are two sources of calls to these routines:  * the clock, and tp.trans. (ok, and tp_pcb.c calls it at init time)  *  * Timers come in two flavors - those that generally get  * cancelled (tp_ctimeout, tp_cuntimeout)  * and those that either usually expire (tp_etimeout,   * tp_euntimeout, tp_slowtimo) or may require more than one instance  * of the timer active at a time.  *  * The C timers are stored in the tp_ref structure. Their "going off"  * is manifested by a driver event of the TM_xxx form.  *  * The E timers are handled like the generic kernel callouts.  * Their "going off" is manifested by a function call w/ 3 arguments.  */
+comment|/*   * ARGO TP  *  * $Header: tp_timer.c,v 5.2 88/11/18 17:29:07 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_timer.c,v $  *  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|"systm.h"
 end_include
 
 begin_include
@@ -42,7 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"protosw.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"socket.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"kernel.h"
 end_include
 
 begin_include
@@ -103,6 +115,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|tp_rttdiv
+decl_stmt|,
+name|tp_rttadd
+decl_stmt|,
 name|N_TPREF
 init|=
 literal|127
@@ -145,18 +161,14 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
-define|#
-directive|define
-name|GETME
-parameter_list|(
-name|x
-parameter_list|,
-name|t
-parameter_list|,
-name|n
-parameter_list|)
-value|{s = (n)*sizeof(*x); x = (t) malloc(s, M_PCB, M_NOWAIT);\ if (x == 0) panic("tp_timerinit"); bzero((caddr_t)x, s);}
 comment|/* 	 * Initialize storage 	 */
+if|if
+condition|(
+name|tp_refinfo
+operator|.
+name|tpr_base
+condition|)
+return|return;
 name|tp_refinfo
 operator|.
 name|tpr_size
@@ -166,17 +178,43 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* Need to start somewhere */
-name|GETME
+name|s
+operator|=
+sizeof|sizeof
 argument_list|(
-name|tp_ref
-argument_list|,
-expr|struct
-name|tp_ref
 operator|*
-argument_list|,
+name|tp_ref
+argument_list|)
+operator|*
 name|tp_refinfo
 operator|.
 name|tpr_size
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tp_ref
+operator|=
+operator|(
+expr|struct
+name|tp_ref
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|s
+argument_list|,
+name|M_PCB
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"tp_timerinit"
 argument_list|)
 expr_stmt|;
 name|tp_refinfo
@@ -185,11 +223,30 @@ name|tpr_base
 operator|=
 name|tp_ref
 expr_stmt|;
-undef|#
-directive|undef
-name|GETME
+name|tp_rttdiv
+operator|=
+name|hz
+operator|/
+name|PR_SLOWHZ
+expr_stmt|;
+name|tp_rttadd
+operator|=
+operator|(
+literal|2
+operator|*
+name|tp_rttdiv
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TP_DEBUG_TIMERS
+end_ifdef
 
 begin_comment
 comment|/**********************  e timers *************************/
@@ -384,6 +441,11 @@ begin_comment
 comment|/****************  c timers **********************  *  * These are not chained together; they sit  * in the tp_ref structure. they are the kind that  * are typically cancelled so it's faster not to  * mess with the chains  */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * CALLED FROM:  *  the clock, every 500 ms  * FUNCTION and ARGUMENTS:  *  Look for open references with active timers.  *  If they exist, call the appropriate timer routines to update  *  the timers and possibly generate events.  *  (The E timers are done in other procedures; the C timers are  *  updated here, and events for them are generated here.)  */
 end_comment
@@ -461,9 +523,9 @@ operator|)
 operator|==
 literal|0
 operator|||
-name|rp
+name|tpcb
 operator|->
-name|tpr_state
+name|tp_refstate
 operator|<
 name|REF_OPEN
 condition|)
@@ -780,17 +842,21 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|TP_RANGESET
+argument_list|(
+name|tpcb
+operator|->
+name|tp_rxtcur
+argument_list|,
 name|rexmt
-operator|>
+argument_list|,
+name|tpcb
+operator|->
+name|tp_peer_acktime
+argument_list|,
 literal|128
-condition|)
-name|rexmt
-operator|=
-literal|128
+argument_list|)
 expr_stmt|;
-comment|/* XXXX value from tcp_timer.h */
 name|tpcb
 operator|->
 name|tp_timer
@@ -801,8 +867,6 @@ operator|=
 name|tpcb
 operator|->
 name|tp_rxtcur
-operator|=
-name|rexmt
 expr_stmt|;
 name|tp_send
 argument_list|(
@@ -949,6 +1013,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TP_DEBUG_TIMERS
+end_ifdef
 
 begin_comment
 comment|/*  * CALLED FROM:  *  tp.trans, tp_emit()  * FUNCTION and ARGUMENTS:  * 	Set a C type timer of type (which) to go off after (ticks) time.  */
@@ -1251,6 +1321,11 @@ literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
