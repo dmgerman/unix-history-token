@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yymain.c 1.3 %G%"
+literal|"@(#)yymain.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"config.h"
 end_include
 
 begin_comment
@@ -442,7 +448,7 @@ name|hf
 operator|=
 name|open
 argument_list|(
-name|PX_HEADER
+name|px_header
 argument_list|,
 literal|0
 argument_list|)
