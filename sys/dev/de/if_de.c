@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.56 1997/10/20 14:32:46 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.74 1997/11/08 14:46:53 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.75 1997/11/22 06:45:57 bde Exp $ */
 end_comment
 
 begin_comment
@@ -20,6 +20,12 @@ define|#
 directive|define
 name|TULIP_HDR_DATA
 end_define
+
+begin_include
+include|#
+directive|include
+file|"opt_ipx.h"
+end_include
 
 begin_include
 include|#

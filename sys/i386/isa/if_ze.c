@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.45 1997/07/20 23:07:39 fsmp Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.46 1997/10/26 04:36:14 nate Exp $  */
 end_comment
 
 begin_comment
@@ -94,6 +94,12 @@ begin_include
 include|#
 directive|include
 file|"bpfilter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_ipx.h"
 end_include
 
 begin_include
