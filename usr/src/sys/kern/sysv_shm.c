@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1971,6 +1971,10 @@ begin_comment
 comment|/*  * Increment attach count on fork  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_expr_stmt
 name|shmfork
 argument_list|(
@@ -2012,31 +2016,33 @@ begin_comment
 comment|/*  * Detach from shared memory segment on exit (or exec)  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|shmexit
 argument_list|(
-name|mp
+argument|p
+argument_list|,
+argument|mp
 argument_list|)
-specifier|register
-expr|struct
-name|mapmem
-operator|*
-name|mp
-expr_stmt|;
-end_expr_stmt
+end_macro
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|u
-operator|.
-name|u_procp
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mapmem
+modifier|*
+name|mp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 return|return
 operator|(
 name|shmufree
