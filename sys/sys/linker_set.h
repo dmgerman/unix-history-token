@@ -36,6 +36,12 @@ begin_comment
 comment|/* this bit of h0h0magic brought to you by cpp */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -68,6 +74,57 @@ parameter_list|)
 define|\
 value|__GLOBL(__CONCAT(__start_set_,set));				\ 	__GLOBL(__CONCAT(__stop_set_,set));				\ 	static void const * const __set_##set##_sym_##sym 		\ 	__attribute__((__section__("set_" #set),__unused__)) =&sym
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"This file needs to be compiled by GCC or lint"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__MAKE_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|extern void const * const (__set_##set##_sym_##sym)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_comment
 comment|/*  * Public macros.  */
