@@ -281,6 +281,9 @@ argument_list|,
 operator|(
 name|DRMFILE
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|DRM_CURRENTPID
 argument_list|)
 expr_stmt|;

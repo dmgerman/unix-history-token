@@ -4557,9 +4557,12 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|(
+call|(
+name|intptr_t
+call|)
+argument_list|(
 name|DRM_CURRENTPID
-operator|)
+argument_list|)
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
@@ -4947,6 +4950,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|priv
 operator|->
 name|pid
@@ -5161,6 +5167,9 @@ name|priv
 argument_list|,
 operator|(
 name|DRMFILE
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|DRM_CURRENTPID
 argument_list|)
@@ -5457,6 +5466,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|DRM_CURRENTPID
 argument_list|)
 expr_stmt|;
@@ -5614,6 +5626,9 @@ operator|=
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|DRM_CURRENTPID
 expr_stmt|;
