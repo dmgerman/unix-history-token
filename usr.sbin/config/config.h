@@ -73,10 +73,6 @@ name|char
 modifier|*
 name|f_needs
 decl_stmt|;
-name|char
-modifier|*
-name|f_rootdev
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -116,36 +112,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYSTEMSPEC
+name|NODEPEND
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|SWAPSPEC
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPDEVICE
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|NODEPEND
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOCAL
-value|9
+value|6
 end_define
 
 begin_define
@@ -622,18 +597,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|swapconf
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|seen_scbus
@@ -672,13 +635,6 @@ name|struct
 name|file_list
 modifier|*
 name|ftab
-decl_stmt|,
-modifier|*
-name|conf_list
-decl_stmt|,
-modifier|*
-modifier|*
-name|confp
 decl_stmt|;
 end_decl_stmt
 
