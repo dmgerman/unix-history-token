@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sel_subs.c	1.2 (Berkeley) %G%"
+literal|"@(#)sel_subs.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1390,7 +1390,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * locate optional flags suffix /{cm}. We only allow a flag suffix(s) 	 * in write and copy (as none of the formats stores inode change time; 	 * currently inode change time cannot be set to a specific value by 	 * any system call). 	 */
+comment|/* 	 * locate optional flags suffix /{cm}. 	 */
 if|if
 condition|(
 operator|(
@@ -1406,43 +1406,12 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
 operator|*
 name|flgpt
 operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|act
-operator|==
-name|LIST
-operator|)
-operator|||
-operator|(
-name|act
-operator|==
-name|EXTRACT
-operator|)
-condition|)
-block|{
-name|warn
-argument_list|(
-literal|1
-argument_list|,
-literal|"Time suffix only valid in write or copy modes"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-block|}
 for|for
 control|(
 name|stpt
