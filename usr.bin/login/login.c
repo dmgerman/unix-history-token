@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.12.2.9 1998/02/18 12:07:42 markm Exp $"
+literal|"$Id: login.c,v 1.12.2.10 1998/04/30 16:52:31 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1941,26 +1941,6 @@ block|}
 else|#
 directive|else
 comment|/* !LOGIN_CAP_AUTH */
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SKEY
