@@ -488,22 +488,22 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ip_nfragpackets
+name|nipq
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* total # of reass queues */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
-name|ip_maxfragpackets
+name|maxnipq
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* initialized in ip_init() */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -517,7 +517,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|ip_maxfragpackets
+name|maxnipq
 argument_list|,
 literal|0
 argument_list|,
@@ -804,26 +804,6 @@ name|IPREASS_NHASH
 index|]
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nipq
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total # of reass queues */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|maxnipq
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1251,12 +1231,6 @@ index|]
 argument_list|)
 expr_stmt|;
 name|maxnipq
-operator|=
-name|nmbclusters
-operator|/
-literal|4
-expr_stmt|;
-name|ip_maxfragpackets
 operator|=
 name|nmbclusters
 operator|/
@@ -4052,26 +4026,6 @@ comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for whi
 if|if
 condition|(
 operator|(
-name|ip_maxfragpackets
-operator|>=
-literal|0
-operator|)
-operator|&&
-operator|(
-name|ip_nfragpackets
-operator|>=
-name|ip_maxfragpackets
-operator|)
-condition|)
-goto|goto
-name|dropfrag
-goto|;
-name|ip_nfragpackets
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|(
 name|t
 operator|=
 name|m_get
@@ -4812,9 +4766,6 @@ name|fp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ip_nfragpackets
-operator|--
-expr_stmt|;
 name|m
 operator|->
 name|m_len
@@ -4974,9 +4925,6 @@ name|fp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ip_nfragpackets
-operator|--
-expr_stmt|;
 name|nipq
 operator|--
 expr_stmt|;
@@ -5102,16 +5050,16 @@ control|)
 block|{
 if|if
 condition|(
-name|ip_maxfragpackets
+name|maxnipq
 operator|>=
 literal|0
 condition|)
 block|{
 while|while
 condition|(
-name|ip_nfragpackets
+name|nipq
 operator|>
-name|ip_maxfragpackets
+name|maxnipq
 operator|&&
 operator|!
 name|TAILQ_EMPTY
