@@ -3856,7 +3856,7 @@ argument_list|)
 argument_list|,
 name|M_IPFW
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -3959,7 +3959,7 @@ name|r
 argument_list|,
 name|M_IPFW
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -8194,7 +8194,7 @@ name|l
 argument_list|,
 name|M_IPFW
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
