@@ -269,6 +269,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|pthread_cond_broadcast
+value|_pthread_cond_broadcast
+end_define
+
+begin_define
+define|#
+directive|define
 name|pthread_cond_wait
 value|_pthread_cond_wait
 end_define

@@ -136,6 +136,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|cond_broadcast
+parameter_list|(
+name|m
+parameter_list|)
+value|if (__isthreaded) \ 				_pthread_cond_broadcast(m)
+end_define
+
+begin_define
+define|#
+directive|define
 name|cond_wait
 parameter_list|(
 name|c
