@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.9 (Berkeley) %G%"
+literal|"@(#)job.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4373,7 +4373,7 @@ operator|(
 name|Job
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -6748,7 +6748,7 @@ name|name
 expr_stmt|;
 name|shellPath
 operator|=
-name|Str_Concat
+name|str_concat
 argument_list|(
 name|_PATH_DEFSHELLDIR
 argument_list|,
@@ -7374,13 +7374,9 @@ expr_stmt|;
 block|}
 name|words
 operator|=
-name|Str_BreakString
+name|brk_string
 argument_list|(
 name|line
-argument_list|,
-literal|" \t"
-argument_list|,
-literal|"\n"
 argument_list|,
 operator|&
 name|wordCount
@@ -7784,13 +7780,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|Str_FreeVec
-argument_list|(
-name|wordCount
-argument_list|,
-name|words
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FAILURE
@@ -7833,13 +7822,6 @@ argument_list|(
 name|PARSE_FATAL
 argument_list|,
 literal|"Neither path nor name specified"
-argument_list|)
-expr_stmt|;
-name|Str_FreeVec
-argument_list|(
-name|wordCount
-argument_list|,
-name|words
 argument_list|)
 expr_stmt|;
 return|return
@@ -7955,7 +7937,7 @@ operator|(
 name|Shell
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
