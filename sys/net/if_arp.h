@@ -47,6 +47,11 @@ directive|define
 name|ARPHRD_FRELAY
 value|15
 comment|/* frame relay hardware format */
+define|#
+directive|define
+name|ARPHRD_IEEE1394
+value|24
+comment|/* firewire hardware format */
 name|u_short
 name|ar_pro
 decl_stmt|;

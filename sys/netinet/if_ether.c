@@ -2369,6 +2369,15 @@ name|ar_hrd
 argument_list|)
 operator|!=
 name|ARPHRD_ARCNET
+operator|&&
+name|ntohs
+argument_list|(
+name|ar
+operator|->
+name|ar_hrd
+argument_list|)
+operator|!=
+name|ARPHRD_IEEE1394
 condition|)
 block|{
 name|log
