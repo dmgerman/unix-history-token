@@ -5416,23 +5416,30 @@ name|dpt_controllers_present
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
-name|struct
-name|dpt_softc
+name|dpt_softc_t
 modifier|*
 name|dpt_alloc
 parameter_list|(
-name|u_int
-name|unit
+name|device_t
 parameter_list|,
 name|bus_space_tag_t
-name|tag
 parameter_list|,
 name|bus_space_handle_t
-name|bsh
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

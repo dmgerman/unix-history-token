@@ -72,6 +72,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus_memio.h>
 end_include
 
@@ -1995,7 +2001,7 @@ argument_list|,
 name|EATA_CMD_RESET
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for the controller to become ready. 	 */
+comment|/* 	 * Wait for the controller to become ready. 	 * For some reason there can be -no- delays after calling reset 	 * before we wait on ready status. 	 */
 if|if
 condition|(
 name|dpt_pio_wait
@@ -2113,8 +2119,10 @@ name|NULL
 operator|)
 return|;
 block|}
+operator|(
 operator|*
 name|p
+operator|)
 operator|=
 name|inw
 argument_list|(
@@ -2629,6 +2637,21 @@ name|residue_len
 operator|==
 literal|0
 operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|dpt
+operator|->
+name|sp
+operator|->
+name|scsi_stat
+operator|==
+name|SCSI_STATUS_CHECK_COND
 condition|)
 return|return
 operator|(
@@ -5342,13 +5365,12 @@ comment|/* ==================== Exported Function definitions ==================
 end_comment
 
 begin_function
-name|struct
-name|dpt_softc
+name|dpt_softc_t
 modifier|*
 name|dpt_alloc
 parameter_list|(
-name|u_int
-name|unit
+name|device_t
+name|dev
 parameter_list|,
 name|bus_space_tag_t
 name|tag
@@ -5357,56 +5379,18 @@ name|bus_space_handle_t
 name|bsh
 parameter_list|)
 block|{
-name|struct
-name|dpt_softc
+name|dpt_softc_t
 modifier|*
 name|dpt
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|dpt
-operator|=
-operator|(
-expr|struct
-name|dpt_softc
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|dpt
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dpt
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dpt%d: Unable to allocate softc\n"
-argument_list|,
-name|dpt
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|bzero
 argument_list|(
 name|dpt
@@ -5433,7 +5417,10 @@ name|dpt
 operator|->
 name|unit
 operator|=
-name|unit
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|SLIST_INIT
 argument_list|(
@@ -5674,13 +5661,6 @@ argument_list|,
 name|dpt
 argument_list|,
 name|links
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|dpt
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
@@ -6601,6 +6581,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"dpt: bus_dma_tag_create(...,dpt->buffer_dmat) failed\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -6672,6 +6657,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"dpt: bus_dma_tag_create(...,dpt->dccb_dmat) failed\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -6711,6 +6701,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"dpt: bus_dmamem_alloc(dpt->dccb_dmat,...) failed\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -6848,11 +6843,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dpt: dptallocccbs(dpt) == 0\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|2
 operator|)
 return|;
+block|}
 comment|/* Prepare for Target Mode */
 name|dpt
 operator|->
