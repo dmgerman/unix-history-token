@@ -3696,6 +3696,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|link_fully_specified
+operator|->
+name|timestamp
+operator|=
+name|timeStamp
+expr_stmt|;
 return|return
 name|link_fully_specified
 return|;
