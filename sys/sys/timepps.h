@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: timepps.h,v 1.4 1998/06/22 21:09:10 phk Exp $  *  * The is a FreeBSD protype version of the "draft-mogul-pps-api-02.txt"   * specification for Pulse Per Second timing interfaces.    *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: timepps.h,v 1.5 1999/03/11 15:09:41 phk Exp $  *  * The is a FreeBSD protype version of the "draft-mogul-pps-api-02.txt"   * specification for Pulse Per Second timing interfaces.    *  */
 end_comment
 
 begin_ifndef
@@ -451,6 +451,7 @@ comment|/* !KERNEL */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|time_pps_create
 parameter_list|(
@@ -465,6 +466,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|time_pps_destroy
 parameter_list|(
@@ -475,6 +477,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|time_pps_setparams
 parameter_list|(
@@ -490,6 +493,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|time_pps_getparams
 parameter_list|(
@@ -504,6 +508,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|time_pps_getcap
 parameter_list|(
@@ -518,6 +523,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|time_pps_fetch
 parameter_list|(
@@ -532,6 +538,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|time_pps_wait
 parameter_list|(
