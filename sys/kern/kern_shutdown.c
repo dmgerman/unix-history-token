@@ -2181,7 +2181,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* Only 1 CPU can panic at a time */
+comment|/* 	 * We don't want multiple CPU's to panic at the same time, so we 	 * use panic_cpu as a simple spinlock.  We have to keep checking 	 * panic_cpu if we are spinning in case the panic on the first 	 * CPU is canceled. 	 */
 if|if
 condition|(
 name|panic_cpu
@@ -2190,7 +2190,9 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
-operator|&&
+condition|)
+while|while
+condition|(
 name|atomic_cmpset_int
 argument_list|(
 operator|&
@@ -2206,15 +2208,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+name|panic_cpu
+operator|!=
+name|NOCPU
+condition|)
 empty_stmt|;
 comment|/* nothing */
-block|}
 endif|#
 directive|endif
 name|bootopt
@@ -2327,6 +2328,29 @@ argument_list|(
 literal|"panic"
 argument_list|)
 expr_stmt|;
+comment|/* See if the user aborted the panic, in which case we continue. */
+if|if
+condition|(
+name|panicstr
+operator|==
+name|NULL
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|SMP
+name|atomic_store_rel_int
+argument_list|(
+operator|&
+name|panic_cpu
+argument_list|,
+name|NOCPU
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return;
+block|}
 endif|#
 directive|endif
 name|boot
