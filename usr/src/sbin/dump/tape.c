@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.23.1.1 (Berkeley) %G%"
+literal|"@(#)tape.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -724,10 +724,15 @@ name|void
 name|writerec
 parameter_list|(
 name|dp
+parameter_list|,
+name|isspcl
 parameter_list|)
 name|char
 modifier|*
 name|dp
+decl_stmt|;
+name|int
+name|isspcl
 decl_stmt|;
 block|{
 name|slp
@@ -777,6 +782,10 @@ operator|*
 operator|)
 name|dp
 expr_stmt|;
+if|if
+condition|(
+name|isspcl
+condition|)
 name|lastspclrec
 operator|=
 name|spcl
