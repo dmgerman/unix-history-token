@@ -304,11 +304,21 @@ name|PS_JOIN
 argument_list|)
 expr_stmt|;
 comment|/* Wait for our signal to wake up. */
+name|GIANT_UNLOCK
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|_thread_suspend
 argument_list|(
 name|curthread
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|GIANT_LOCK
+argument_list|(
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}

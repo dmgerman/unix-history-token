@@ -81,22 +81,6 @@ name|restore
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|pthread_t
-name|_giant_owner
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_giant_count
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|GIANT_LOCK
@@ -114,20 +98,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|_giant_owner
-operator|==
-name|pthread
-condition|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-name|_giant_count
-operator|++
-expr_stmt|;
-block|}
 comment|/* 	 * Block all signals. 	 */
 name|SIGFILLSET
 argument_list|(
@@ -171,14 +141,6 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-name|_giant_owner
-operator|=
-name|pthread
-expr_stmt|;
-name|_giant_count
-operator|=
-literal|1
-expr_stmt|;
 name|restore
 operator|=
 name|sav
@@ -200,27 +162,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|_giant_owner
-operator|!=
-name|pthread
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|--
-name|_giant_count
-operator|>
-literal|0
-condition|)
-return|return;
-name|_giant_owner
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* 	 * restore is protected by giant.  We could restore our signal state 	 * incorrectly if someone else set restore between unlocking giant 	 * and restoring the signal mask.  To avoid this we cache a copy prior 	 * to the unlock. 	 */
 name|set
 operator|=
@@ -271,7 +212,7 @@ name|int
 name|_thread_suspend
 parameter_list|(
 name|pthread_t
-name|thread
+name|pthread
 parameter_list|,
 name|struct
 name|timespec
@@ -295,10 +236,6 @@ name|sigset_t
 name|set
 decl_stmt|;
 name|int
-name|giant_count
-decl_stmt|;
-comment|/* Saved recursion */
-name|int
 name|error
 decl_stmt|;
 comment|/* 	 * Catch SIGTHR. 	 */
@@ -314,6 +251,7 @@ argument_list|,
 name|SIGTHR
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Compute the remainder of the run time. 	 */
 if|if
 condition|(
 name|abstime
@@ -366,20 +304,6 @@ name|ts
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Save and unroll the recursion count. 	 */
-name|giant_count
-operator|=
-name|_giant_count
-expr_stmt|;
-name|_giant_count
-operator|=
-literal|1
-expr_stmt|;
-name|GIANT_UNLOCK
-argument_list|(
-name|thread
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|sigtimedwait
@@ -403,27 +327,6 @@ condition|)
 name|error
 operator|=
 name|errno
-expr_stmt|;
-comment|/* XXX Kernel bug. */
-if|if
-condition|(
-name|error
-operator|==
-name|EINTR
-condition|)
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * Restore the recursion count. 	 */
-name|GIANT_LOCK
-argument_list|(
-name|thread
-argument_list|)
-expr_stmt|;
-name|_giant_count
-operator|=
-name|giant_count
 expr_stmt|;
 return|return
 operator|(

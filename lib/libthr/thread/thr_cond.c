@@ -897,6 +897,11 @@ argument_list|,
 name|PS_COND_WAIT
 argument_list|)
 expr_stmt|;
+name|GIANT_UNLOCK
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 name|_thread_suspend
@@ -928,6 +933,11 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+name|GIANT_LOCK
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|done
 operator|=
 operator|(
