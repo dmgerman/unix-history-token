@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -217,7 +217,7 @@ parameter_list|,
 name|MODIFIER
 parameter_list|)
 define|\
-value|int							\ is_##NAME(void)						\ {							\ 	return ((cpl& (MODIFIER)) == (MODIFIER));	\ }
+value|void							\ NAME##assert(const char *msg)				\ {							\ 	if ((cpl& (MODIFIER)) != (MODIFIER))		\ 		panic("%s: not %s, cpl == %#x",		\ 		    msg, __XSTRING(NAME) + 3, cpl);	\ }
 end_define
 
 begin_else
@@ -261,7 +261,7 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|unsigned NAME(void)					\ {							\ 	unsigned x;					\ 							\ 	x = cpl;					\ 	cpl OP MODIFIER;				\ 	return (x);					\ }							\ GENSPLASSERT(NAME, MODIFIER)
+value|GENSPLASSERT(NAME, MODIFIER)			\ unsigned NAME(void)				\ {						\ 	unsigned x;				\ 						\ 	x = cpl;				\ 	cpl OP MODIFIER;			\ 	return (x);				\ }
 end_define
 
 begin_function
@@ -554,7 +554,7 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|unsigned NAME(void)							\ {									\ 	unsigned x, y;							\ 	SPIN_VAR;							\ 									\ 	if (!bsp_apic_ready) {						\ 		x = cpl;						\ 		cpl OP MODIFIER;					\ 		return (x);						\ 	}								\ 									\ 	for (;;) {							\ 		IFCPL_LOCK();
+value|GENSPLASSERT(NAME, MODIFIER)						\ unsigned NAME(void)							\ {									\ 	unsigned x, y;							\ 	SPIN_VAR;							\ 									\ 	if (!bsp_apic_ready) {						\ 		x = cpl;						\ 		cpl OP MODIFIER;					\ 		return (x);						\ 	}								\ 									\ 	for (;;) {							\ 		IFCPL_LOCK();
 comment|/* MP-safe */
 value|\ 		x = y = cpl;
 comment|/* current value */
@@ -570,7 +570,7 @@ value|\ 			SPIN_RESET;					\ 			while (cil& y)					\ 				SPIN_SPL				\ 			contin
 comment|/* try again */
 value|\ 		}							\ 		break;							\ 	}								\ 	cpl OP MODIFIER;
 comment|/* make the change */
-value|\ 	IFCPL_UNLOCK();							\ 									\ 	return (x);							\ }									\ GENSPLASSERT(NAME, MODIFIER)
+value|\ 	IFCPL_UNLOCK();							\ 									\ 	return (x);							\ }
 end_define
 
 begin_else
@@ -596,7 +596,7 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|unsigned NAME(void)					\ {							\ 	unsigned x;					\ 							\ 	IFCPL_LOCK();					\ 	x = cpl;					\ 	cpl OP MODIFIER;				\ 	IFCPL_UNLOCK();					\ 							\ 	return (x);					\ }							\ GENSPLASSERT(NAME, MODIFIER)
+value|GENSPLASSERT(NAME, MODIFIER)			\ unsigned NAME(void)				\ {						\ 	unsigned x;				\ 						\ 	IFCPL_LOCK();				\ 	x = cpl;				\ 	cpl OP MODIFIER;			\ 	IFCPL_UNLOCK();				\ 						\ 	return (x);				\ }
 end_define
 
 begin_endif
