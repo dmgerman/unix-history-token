@@ -599,14 +599,14 @@ begin_define
 define|#
 directive|define
 name|SCHED_PRI_NRESV
-value|PRIO_TOTAL
+value|((PRIO_MAX - PRIO_MIN) + 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCHED_PRI_NHALF
-value|(PRIO_TOTAL / 2)
+value|(SCHED_PRI_NRESV / 2)
 end_define
 
 begin_define
@@ -825,9 +825,7 @@ comment|/* Aggregate load. */
 name|short
 name|ksq_nice
 index|[
-name|PRIO_TOTAL
-operator|+
-literal|1
+name|SCHED_PRI_NRESV
 index|]
 decl_stmt|;
 comment|/* KSEs in each nice bin. */
@@ -1379,9 +1377,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|PRIO_TOTAL
-operator|+
-literal|1
+name|SCHED_PRI_NRESV
 condition|;
 name|i
 operator|++
@@ -1774,8 +1770,6 @@ init|;
 name|n
 operator|<
 name|SCHED_PRI_NRESV
-operator|+
-literal|1
 condition|;
 name|n
 operator|++
