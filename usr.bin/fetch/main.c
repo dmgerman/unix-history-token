@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.43 1997/08/19 01:57:53 asami Exp $ */
+comment|/* $Id: main.c,v 1.44 1998/02/20 05:11:42 jb Exp $ */
 end_comment
 
 begin_include
@@ -606,7 +606,7 @@ argument_list|(
 name|change_to_dir
 argument_list|)
 operator|+
-literal|2
+literal|5
 operator|+
 name|strlen
 argument_list|(
@@ -628,21 +628,27 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-comment|/* 	     * XXX - we should %-map a leading `/' into `%2f', but for 	     * anonymous FTP it is unlikely to matter.  Still, it would 	     * be better to follow the spec. 	     */
+name|strcat
+argument_list|(
+name|uri
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|change_to_dir
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 literal|'/'
 condition|)
 name|strcat
 argument_list|(
 name|uri
 argument_list|,
-literal|"/"
+literal|"%2f"
 argument_list|)
 expr_stmt|;
 name|strcat
