@@ -1575,12 +1575,27 @@ operator||
 name|IFF_RUNNING
 operator|)
 expr_stmt|;
+block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|if_up
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* send up RTM_IFINFO */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|SIOCGIFPSRCADDR
