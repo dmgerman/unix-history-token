@@ -12484,12 +12484,7 @@ if|if
 condition|(
 name|readdisklabel
 argument_list|(
-name|dkmodpart
-argument_list|(
 name|dev
-argument_list|,
-name|RAW_PART
-argument_list|)
 argument_list|,
 name|lp
 argument_list|)
