@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	8.1 (Berkeley) %G%"
+literal|"@(#)hash.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4549,6 +4549,10 @@ argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 operator|+
 name|oldsize
