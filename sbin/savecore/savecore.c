@@ -968,6 +968,9 @@ decl_stmt|,
 modifier|*
 name|fp
 decl_stmt|;
+name|mode_t
+name|oumask
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|,
@@ -995,9 +998,6 @@ name|status
 decl_stmt|;
 name|u_int
 name|sectorsize
-decl_stmt|;
-name|mode_t
-name|oumask
 decl_stmt|;
 name|bounds
 operator|=
@@ -2006,7 +2006,7 @@ name|he
 operator|&=
 name|BLOCKMASK
 expr_stmt|;
-comment|/* 			     * 1) Don't go beyond the end of the buffer. 			     * 2) If the end of the buffer is less than 			     *    BLOCKSIZE bytes away, we're at the end 			     *    of the file, so just grab what's left. 			     */
+comment|/* 				 * 1) Don't go beyond the end of the buffer. 				 * 2) If the end of the buffer is less than 				 *    BLOCKSIZE bytes away, we're at the end 				 *    of the file, so just grab what's left. 				 */
 if|if
 condition|(
 name|hs
@@ -2021,7 +2021,7 @@ name|he
 operator|=
 name|nr
 expr_stmt|;
-comment|/* 			     * At this point, we have a partial ordering: 			     *     nw<= hs<= he<= nr 			     * If hs> nw, buf[nw..hs] contains non-zero data. 			     * If he> hs, buf[hs..he] is all zeroes. 			     */
+comment|/* 				 * At this point, we have a partial ordering: 				 *     nw<= hs<= he<= nr 				 * If hs> nw, buf[nw..hs] contains non-zero data. 				 * If he> hs, buf[hs..he] is all zeroes. 				 */
 if|if
 condition|(
 name|hs
@@ -2317,21 +2317,21 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|ch
-decl_stmt|,
-name|error
+name|char
+modifier|*
+name|savedir
 decl_stmt|;
 name|struct
 name|fstab
 modifier|*
 name|fsp
 decl_stmt|;
-name|char
-modifier|*
-name|savedir
+name|int
+name|i
+decl_stmt|,
+name|ch
+decl_stmt|,
+name|error
 decl_stmt|;
 name|checkfor
 operator|=
