@@ -646,8 +646,11 @@ literal|0
 condition|)
 name|msgFatal
 argument_list|(
-literal|"Invalid malloc size of %d!"
+literal|"Invalid malloc size of %ld!"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -710,8 +713,11 @@ literal|0
 condition|)
 name|msgFatal
 argument_list|(
-literal|"Invalid realloc size of %d!"
+literal|"Invalid realloc size of %ld!"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|size
 argument_list|)
 expr_stmt|;

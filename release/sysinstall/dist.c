@@ -2610,12 +2610,17 @@ name|msgFatal
 argument_list|(
 literal|"Couldn't alloca() %d bytes!\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|tmp
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -2752,12 +2757,17 @@ name|msgFatal
 argument_list|(
 literal|"Couldn't alloca() %d bytes!\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|tmp
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|strcpy

@@ -364,7 +364,7 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"WARNING:  A geometry of %d/%d/%d for %s is incorrect.  Using\n"
+literal|"WARNING:  A geometry of %ld/%ld/%ld for %s is incorrect.  Using\n"
 literal|"a more likely geometry.  If this geometry is incorrect or you\n"
 literal|"are unsure as to whether or not it's correct, please consult\n"
 literal|"the Hardware Guide in the Documentation submenu or use the\n"
@@ -3065,8 +3065,11 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"bootalloc: couldn't read %d bytes from %s\n"
+literal|"bootalloc: couldn't read %ld bytes from %s\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sb
 operator|.
 name|st_size
