@@ -876,8 +876,6 @@ return|;
 block|}
 block|}
 break|break;
-default|default:
-comment|/* empty */
 block|}
 if|if
 condition|(
