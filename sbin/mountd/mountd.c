@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mountd.c,v 1.3 1994/09/22 22:16:50 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -8266,7 +8266,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Not root dir"
+literal|"Could not remount %s: %m"
+argument_list|,
+name|dirp
 argument_list|)
 expr_stmt|;
 return|return
