@@ -226,6 +226,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* The system calls return ENOSYS if an entry is called that is  * not run-time supported.  I am also logging since some programs  * start to use this when they shouldn't.  That will be removed if annoying.  */
+end_comment
+
 begin_function
 name|int
 name|syscall_not_present
@@ -263,13 +267,9 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* a " return nosys(p, uap); " here causes a core dump. 	 */
 return|return
-name|nosys
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|)
+name|ENOSYS
 return|;
 block|}
 end_function

@@ -463,7 +463,9 @@ name|prio
 operator|=
 name|p4prio_to_rtpprio
 argument_list|(
-name|RTP_PRIO_MAX
+name|param
+operator|->
+name|sched_priority
 argument_list|)
 expr_stmt|;
 name|p
@@ -503,7 +505,9 @@ name|prio
 operator|=
 name|p4prio_to_rtpprio
 argument_list|(
-name|RTP_PRIO_MIN
+name|param
+operator|->
+name|sched_priority
 argument_list|)
 expr_stmt|;
 name|p
