@@ -3590,6 +3590,9 @@ expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
+name|g_waitidle
+argument_list|()
+expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
