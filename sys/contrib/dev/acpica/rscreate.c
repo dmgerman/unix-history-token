@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 64 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 65 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -843,6 +843,9 @@ name|UserPrt
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_ROUND_UP_TO_64BITS
 argument_list|(
 name|UserPrt

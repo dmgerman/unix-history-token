@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 185 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 191 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -768,7 +768,6 @@ block|,
 operator|(
 name|void
 operator|*
-operator|*
 operator|)
 operator|&
 name|AcpiGbl_DSDT
@@ -796,7 +795,6 @@ block|,
 operator|(
 name|void
 operator|*
-operator|*
 operator|)
 operator|&
 name|AcpiGbl_FADT
@@ -821,7 +819,6 @@ name|FACS_SIG
 block|,
 operator|(
 name|void
-operator|*
 operator|*
 operator|)
 operator|&
@@ -1160,9 +1157,9 @@ name|ACPI_BITREG_RT_CLOCK_STATUS
 block|,
 name|ACPI_BITREG_RT_CLOCK_ENABLE
 block|,
-literal|0
+name|ACPI_BITMASK_RT_CLOCK_STATUS
 block|,
-literal|0
+name|ACPI_BITMASK_RT_CLOCK_ENABLE
 block|}
 block|, }
 decl_stmt|;
@@ -1532,6 +1529,220 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetNodeName  *  * PARAMETERS:  Object               - A namespace node  *  * RETURN:      Pointer to a string  *  * DESCRIPTION: Validate the node and return the node's ACPI name.  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|AcpiUtGetNodeName
+parameter_list|(
+name|void
+modifier|*
+name|Object
+parameter_list|)
+block|{
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Object
+condition|)
+block|{
+return|return
+operator|(
+literal|"NULL NODE"
+operator|)
+return|;
+block|}
+name|Node
+operator|=
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|Object
+expr_stmt|;
+if|if
+condition|(
+name|Node
+operator|->
+name|Descriptor
+operator|!=
+name|ACPI_DESC_TYPE_NAMED
+condition|)
+block|{
+return|return
+operator|(
+literal|"****"
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|AcpiUtValidAcpiName
+argument_list|(
+operator|*
+operator|(
+name|UINT32
+operator|*
+operator|)
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+literal|"----"
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetDescriptorName  *  * PARAMETERS:  Object               - An ACPI object  *  * RETURN:      Pointer to a string  *  * DESCRIPTION: Validate object and return the descriptor type  *  ****************************************************************************/
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_DescTypeNames
+index|[]
+init|=
+comment|/* printable names of descriptor types */
+block|{
+comment|/* 00 */
+literal|"Invalid"
+block|,
+comment|/* 01 */
+literal|"Cached"
+block|,
+comment|/* 02 */
+literal|"State-Generic"
+block|,
+comment|/* 03 */
+literal|"State-Update"
+block|,
+comment|/* 04 */
+literal|"State-Package"
+block|,
+comment|/* 05 */
+literal|"State-Control"
+block|,
+comment|/* 06 */
+literal|"State-RootParseScope"
+block|,
+comment|/* 07 */
+literal|"State-ParseScope"
+block|,
+comment|/* 08 */
+literal|"State-WalkScope"
+block|,
+comment|/* 09 */
+literal|"State-Result"
+block|,
+comment|/* 10 */
+literal|"State-Notify"
+block|,
+comment|/* 11 */
+literal|"State-Thread"
+block|,
+comment|/* 12 */
+literal|"Walk"
+block|,
+comment|/* 13 */
+literal|"Parser"
+block|,
+comment|/* 14 */
+literal|"Operand"
+block|,
+comment|/* 15 */
+literal|"Node"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|char
+modifier|*
+name|AcpiUtGetDescriptorName
+parameter_list|(
+name|void
+modifier|*
+name|Object
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Object
+condition|)
+block|{
+return|return
+operator|(
+literal|"NULL OBJECT"
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|Object
+argument_list|)
+operator|>
+name|ACPI_DESC_TYPE_MAX
+condition|)
+block|{
+return|return
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|AcpiGbl_BadType
+operator|)
+return|;
+block|}
+return|return
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|AcpiGbl_DescTypeNames
+index|[
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|Object
+argument_list|)
+index|]
 operator|)
 return|;
 block|}
