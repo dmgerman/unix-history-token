@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.3 (Berkeley) 82/10/24"
+literal|"@(#)quot.c	4.4 (Berkeley) 83/07/01"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * quot  */
@@ -469,12 +480,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|check
 argument_list|(
 operator|*
 name|argv
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|report
 argument_list|()
 expr_stmt|;
@@ -539,7 +554,12 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|printf
 argument_list|(
@@ -1239,6 +1259,26 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|p1
+operator|->
+name|name
+operator|==
+literal|0
+operator|||
+name|p2
+operator|->
+name|name
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* doesn't matter */
 return|return
 operator|(
 name|strcmp
