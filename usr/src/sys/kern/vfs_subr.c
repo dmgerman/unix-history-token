@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.81 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.82 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1490,10 +1490,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|USES_VOP_BWRITE
-expr_stmt|;
-name|USES_VOP_FSYNC
-expr_stmt|;
 specifier|register
 name|struct
 name|buf
@@ -2279,8 +2275,6 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2552,8 +2546,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2737,8 +2729,6 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|USES_VOP_UNLOCK
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -2769,8 +2759,6 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|USES_VOP_INACTIVE
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -3252,16 +3240,22 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
-name|USES_VOP_CLOSE
-expr_stmt|;
-name|USES_VOP_INACTIVE
-expr_stmt|;
-name|USES_VOP_RECLAIM
-expr_stmt|;
+name|struct
+name|vop_inactive_args
+name|vop_inactive_a
+decl_stmt|;
+name|struct
+name|vop_reclaim_args
+name|vop_reclaim_a
+decl_stmt|;
+name|struct
+name|vop_unlock_args
+name|vop_unlock_a
+decl_stmt|;
+name|struct
+name|vop_close_args
+name|vop_close_a
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -4353,8 +4347,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_PRINT
-expr_stmt|;
 name|char
 name|buf
 index|[
@@ -4560,8 +4552,6 @@ end_macro
 
 begin_block
 block|{
-name|USES_VOP_ISLOCKED
-expr_stmt|;
 specifier|register
 name|struct
 name|mount
