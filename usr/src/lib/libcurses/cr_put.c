@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.19 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,51 @@ end_define
 begin_comment
 comment|/*  * Terminal driving and line formatting routines.  Basic motion optimizations  * are done here as well as formatting lines (printing of control characters,  * line numbering and the like).  */
 end_comment
+
+begin_comment
+comment|/* Stub function for the users. */
+end_comment
+
+begin_function
+name|int
+name|mvcur
+parameter_list|(
+name|ly
+parameter_list|,
+name|lx
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|)
+name|int
+name|ly
+decl_stmt|,
+name|lx
+decl_stmt|,
+name|y
+decl_stmt|,
+name|x
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|__mvcur
+argument_list|(
+name|ly
+argument_list|,
+name|lx
+argument_list|,
+name|y
+argument_list|,
+name|x
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_decl_stmt
 specifier|static
