@@ -19,18 +19,6 @@ end_include
 
 begin_decl_stmt
 name|bool
-name|iwon
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if comp won last game */
-end_comment
-
-begin_decl_stmt
-name|bool
 name|explain
 init|=
 name|FALSE
@@ -43,14 +31,14 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|rflag
+name|iwon
 init|=
 name|FALSE
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if all cuts random */
+comment|/* if comp won last game */
 end_comment
 
 begin_decl_stmt
@@ -67,14 +55,14 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|Hasread
+name|rflag
 init|=
-name|TRUE
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if has read msg */
+comment|/* if all cuts random */
 end_comment
 
 begin_decl_stmt
@@ -92,26 +80,14 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|knownum
+name|cgames
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of cards we know */
-end_comment
-
-begin_decl_stmt
-name|int
-name|pscore
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* player score in this game */
+comment|/* number games comp won */
 end_comment
 
 begin_decl_stmt
@@ -124,30 +100,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* comp score in this game */
-end_comment
-
-begin_decl_stmt
-name|int
-name|pgames
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number games player won */
-end_comment
-
-begin_decl_stmt
-name|int
-name|cgames
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number games comp won */
 end_comment
 
 begin_decl_stmt
@@ -175,29 +127,39 @@ comment|/* game playe to glimit */
 end_comment
 
 begin_decl_stmt
-name|CARD
-name|deck
-index|[
-name|CARDS
-index|]
+name|int
+name|knownum
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* a deck */
+comment|/* number of cards we know */
 end_comment
 
 begin_decl_stmt
-name|CARD
-name|phand
-index|[
-name|FULLHAND
-index|]
+name|int
+name|pgames
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* player's hand */
+comment|/* number games player won */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pscore
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* player score in this game */
 end_comment
 
 begin_decl_stmt
@@ -228,12 +190,15 @@ end_comment
 
 begin_decl_stmt
 name|CARD
-name|turnover
+name|deck
+index|[
+name|CARDS
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the starter */
+comment|/* a deck */
 end_comment
 
 begin_decl_stmt
@@ -247,6 +212,51 @@ end_decl_stmt
 
 begin_comment
 comment|/* cards we have seen */
+end_comment
+
+begin_decl_stmt
+name|CARD
+name|phand
+index|[
+name|FULLHAND
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* player's hand */
+end_comment
+
+begin_decl_stmt
+name|CARD
+name|turnover
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the starter */
+end_comment
+
+begin_decl_stmt
+name|WINDOW
+modifier|*
+name|Compwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* computer's hand window */
+end_comment
+
+begin_decl_stmt
+name|WINDOW
+modifier|*
+name|Msgwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* messages for the player */
 end_comment
 
 begin_decl_stmt
@@ -269,17 +279,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* table window */
-end_comment
-
-begin_decl_stmt
-name|WINDOW
-modifier|*
-name|Compwin
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* computer's hand window */
 end_comment
 
 end_unit

@@ -218,17 +218,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|BOOLEAN
-name|Hasread
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* has had chance to read msg */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|BOOLEAN
 name|playing
 decl_stmt|;
 end_decl_stmt

@@ -788,10 +788,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|Hasread
-operator|=
-name|FALSE
-expr_stmt|;
 name|msg
 argument_list|(
 literal|"My %s scores %d"

@@ -74,7 +74,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCORE_SZ
+name|Y_SCORE_SZ
+value|11
+end_define
+
+begin_comment
+comment|/* X size of score board */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|X_SCORE_SZ
 value|41
 end_define
 
@@ -97,7 +108,21 @@ begin_define
 define|#
 directive|define
 name|CRIB_X
-value|(PLAY_X + TABLE_X + SCORE_SZ)
+value|(PLAY_X + TABLE_X + X_SCORE_SZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_Y
+value|(LINES - (Y_SCORE_SZ + 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_X
+value|X_SCORE_SZ
 end_define
 
 begin_define
@@ -109,6 +134,30 @@ end_define
 
 begin_comment
 comment|/* what a peg looks like on the board */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|WINDOW
+modifier|*
+name|Compwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* computer's hand window */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|WINDOW
+modifier|*
+name|Msgwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* message window */
 end_comment
 
 begin_decl_stmt
@@ -133,18 +182,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* table window */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|WINDOW
-modifier|*
-name|Compwin
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* computer's hand window */
 end_comment
 
 end_unit
