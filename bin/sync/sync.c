@@ -70,6 +70,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
