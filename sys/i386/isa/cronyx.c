@@ -362,6 +362,459 @@ begin_comment
 comment|/* univ. chan. interface: upper/lower */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|cx_chan_opt_t
+name|chan_opt_dflt
+init|=
+block|{
+comment|/* mode-independent options */
+block|{
+comment|/* cor4 */
+literal|7
+block|,
+comment|/* FIFO threshold, odd is better */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* don't detect 1 to 0 on CTS */
+literal|1
+block|,
+comment|/* detect 1 to 0 on CD */
+literal|0
+block|,
+comment|/* detect 1 to 0 on DSR */
+block|}
+block|,
+block|{
+comment|/* cor5 */
+literal|0
+block|,
+comment|/* receive flow control FIFO threshold */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* don't detect 0 to 1 on CTS */
+literal|1
+block|,
+comment|/* detect 0 to 1 on CD */
+literal|0
+block|,
+comment|/* detect 0 to 1 on DSR */
+block|}
+block|,
+block|{
+comment|/* rcor */
+literal|0
+block|,
+comment|/* dummy clock source */
+name|ENCOD_NRZ
+block|,
+comment|/* NRZ mode */
+literal|0
+block|,
+comment|/* disable DPLL */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* transmit line value */
+block|}
+block|,
+block|{
+comment|/* tcor */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* local loopback mode */
+literal|0
+block|,
+literal|1
+block|,
+comment|/* external 1x clock mode */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* dummy transmit clock source */
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cx_opt_async_t
+name|opt_async_dflt
+init|=
+block|{
+comment|/* default async options */
+block|{
+comment|/* cor1 */
+literal|8
+operator|-
+literal|1
+block|,
+comment|/* 8-bit char length */
+literal|0
+block|,
+comment|/* don't ignore parity */
+name|PARM_NOPAR
+block|,
+comment|/* no parity */
+name|PAR_EVEN
+block|,
+comment|/* even parity */
+block|}
+block|,
+block|{
+comment|/* cor2 */
+literal|0
+block|,
+comment|/* disable automatic DSR */
+literal|1
+block|,
+comment|/* enable automatic CTS */
+literal|0
+block|,
+comment|/* disable automatic RTS */
+literal|0
+block|,
+comment|/* no remote loopback */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* disable embedded cmds */
+literal|0
+block|,
+comment|/* disable XON/XOFF */
+literal|0
+block|,
+comment|/* disable XANY */
+block|}
+block|,
+block|{
+comment|/* cor3 */
+name|STOPB_1
+block|,
+comment|/* 1 stop bit */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* disable special char detection */
+name|FLOWCC_PASS
+block|,
+comment|/* pass flow ctl chars to the host */
+literal|0
+block|,
+comment|/* range detect disable */
+literal|0
+block|,
+comment|/* disable extended spec. char detect */
+block|}
+block|,
+block|{
+comment|/* cor6 */
+name|PERR_INTR
+block|,
+comment|/* generate exception on parity errors */
+name|BRK_INTR
+block|,
+comment|/* generate exception on break condition */
+literal|0
+block|,
+comment|/* don't translate NL to CR on input */
+literal|0
+block|,
+comment|/* don't translate CR to NL on input */
+literal|0
+block|,
+comment|/* don't discard CR on input */
+block|}
+block|,
+block|{
+comment|/* cor7 */
+literal|0
+block|,
+comment|/* don't translate CR to NL on output */
+literal|0
+block|,
+comment|/* don't translate NL to CR on output */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* don't process flow ctl err chars */
+literal|0
+block|,
+comment|/* disable LNext option */
+literal|0
+block|,
+comment|/* don't strip 8 bit on input */
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* clear schr1-4, scrl, scrh, lnxt */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cx_opt_hdlc_t
+name|opt_hdlc_dflt
+init|=
+block|{
+comment|/* default hdlc options */
+block|{
+comment|/* cor1 */
+literal|2
+block|,
+comment|/* 2 inter-frame flags */
+literal|0
+block|,
+comment|/* no-address mode */
+name|CLRDET_DISABLE
+block|,
+comment|/* disable clear detect */
+name|AFLO_1OCT
+block|,
+comment|/* 1-byte address field length */
+block|}
+block|,
+block|{
+comment|/* cor2 */
+literal|0
+block|,
+comment|/* disable automatic DSR */
+literal|0
+block|,
+comment|/* disable automatic CTS */
+literal|0
+block|,
+comment|/* disable automatic RTS */
+literal|0
+block|,
+name|CRC_INVERT
+block|,
+comment|/* use CRC V.41 */
+literal|0
+block|,
+name|FCS_NOTPASS
+block|,
+comment|/* don't pass received CRC to the host */
+literal|0
+block|, 	}
+block|,
+block|{
+comment|/* cor3 */
+literal|0
+block|,
+comment|/* 0 pad characters sent */
+name|IDLE_FLAG
+block|,
+comment|/* idle in flag */
+literal|0
+block|,
+comment|/* enable FCS */
+name|FCSP_ONES
+block|,
+comment|/* FCS preset to all ones (V.41) */
+name|SYNC_AA
+block|,
+comment|/* use AAh as sync char */
+literal|0
+block|,
+comment|/* disable pad characters */
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* clear rfar1-4 */
+name|POLY_V41
+block|,
+comment|/* use V.41 CRC polynomial */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cx_opt_bisync_t
+name|opt_bisync_dflt
+init|=
+block|{
+comment|/* default bisync options */
+block|{
+comment|/* cor1 */
+literal|8
+operator|-
+literal|1
+block|,
+comment|/* 8-bit char length */
+literal|0
+block|,
+comment|/* don't ignore parity */
+name|PARM_NOPAR
+block|,
+comment|/* no parity */
+name|PAR_EVEN
+block|,
+comment|/* even parity */
+block|}
+block|,
+block|{
+comment|/* cor2 */
+literal|3
+operator|-
+literal|2
+block|,
+comment|/* send three SYN chars */
+name|CRC_DONT_INVERT
+block|,
+comment|/* don't invert CRC (CRC-16) */
+literal|0
+block|,
+comment|/* use ASCII, not EBCDIC */
+literal|0
+block|,
+comment|/* disable bcc append */
+name|BCC_CRC16
+block|,
+comment|/* user CRC16, not LRC */
+block|}
+block|,
+block|{
+comment|/* cor3 */
+literal|0
+block|,
+comment|/* send 0 pad chars */
+name|IDLE_FLAG
+block|,
+comment|/* idle in SYN */
+literal|0
+block|,
+comment|/* enable FCS */
+name|FCSP_ZEROS
+block|,
+comment|/* FCS preset to all zeros (CRC-16) */
+name|PAD_AA
+block|,
+comment|/* use AAh as pad char */
+literal|0
+block|,
+comment|/* disable pad characters */
+block|}
+block|,
+block|{
+comment|/* cor6 */
+literal|10
+block|,
+comment|/* DLE - disable special termination char */
+block|}
+block|,
+name|POLY_16
+block|,
+comment|/* use CRC-16 polynomial */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cx_opt_x21_t
+name|opt_x21_dflt
+init|=
+block|{
+comment|/* default x21 options */
+block|{
+comment|/* cor1 */
+literal|8
+operator|-
+literal|1
+block|,
+comment|/* 8-bit char length */
+literal|0
+block|,
+comment|/* don't ignore parity */
+name|PARM_NOPAR
+block|,
+comment|/* no parity */
+name|PAR_EVEN
+block|,
+comment|/* even parity */
+block|}
+block|,
+block|{
+comment|/* cor2 */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* disable embedded transmitter cmds */
+literal|0
+block|, 	}
+block|,
+block|{
+comment|/* cor3 */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* disable special character detect */
+literal|0
+block|,
+comment|/* don't treat SYN as special condition */
+literal|0
+block|,
+comment|/* disable steady state detect */
+name|X21SYN_2
+block|,
+comment|/* 2 SYN chars on receive are required */
+block|}
+block|,
+block|{
+comment|/* cor6 */
+literal|16
+block|,
+comment|/* SYN - standard SYN character */
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* clear schr1-3 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -5596,459 +6049,6 @@ literal|255
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|cx_chan_opt_t
-name|chan_opt_dflt
-init|=
-block|{
-comment|/* mode-independent options */
-block|{
-comment|/* cor4 */
-literal|7
-block|,
-comment|/* FIFO threshold, odd is better */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* don't detect 1 to 0 on CTS */
-literal|1
-block|,
-comment|/* detect 1 to 0 on CD */
-literal|0
-block|,
-comment|/* detect 1 to 0 on DSR */
-block|}
-block|,
-block|{
-comment|/* cor5 */
-literal|0
-block|,
-comment|/* receive flow control FIFO threshold */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* don't detect 0 to 1 on CTS */
-literal|1
-block|,
-comment|/* detect 0 to 1 on CD */
-literal|0
-block|,
-comment|/* detect 0 to 1 on DSR */
-block|}
-block|,
-block|{
-comment|/* rcor */
-literal|0
-block|,
-comment|/* dummy clock source */
-name|ENCOD_NRZ
-block|,
-comment|/* NRZ mode */
-literal|0
-block|,
-comment|/* disable DPLL */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* transmit line value */
-block|}
-block|,
-block|{
-comment|/* tcor */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* local loopback mode */
-literal|0
-block|,
-literal|1
-block|,
-comment|/* external 1x clock mode */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* dummy transmit clock source */
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|cx_opt_async_t
-name|opt_async_dflt
-init|=
-block|{
-comment|/* default async options */
-block|{
-comment|/* cor1 */
-literal|8
-operator|-
-literal|1
-block|,
-comment|/* 8-bit char length */
-literal|0
-block|,
-comment|/* don't ignore parity */
-name|PARM_NOPAR
-block|,
-comment|/* no parity */
-name|PAR_EVEN
-block|,
-comment|/* even parity */
-block|}
-block|,
-block|{
-comment|/* cor2 */
-literal|0
-block|,
-comment|/* disable automatic DSR */
-literal|1
-block|,
-comment|/* enable automatic CTS */
-literal|0
-block|,
-comment|/* disable automatic RTS */
-literal|0
-block|,
-comment|/* no remote loopback */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* disable embedded cmds */
-literal|0
-block|,
-comment|/* disable XON/XOFF */
-literal|0
-block|,
-comment|/* disable XANY */
-block|}
-block|,
-block|{
-comment|/* cor3 */
-name|STOPB_1
-block|,
-comment|/* 1 stop bit */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* disable special char detection */
-name|FLOWCC_PASS
-block|,
-comment|/* pass flow ctl chars to the host */
-literal|0
-block|,
-comment|/* range detect disable */
-literal|0
-block|,
-comment|/* disable extended spec. char detect */
-block|}
-block|,
-block|{
-comment|/* cor6 */
-name|PERR_INTR
-block|,
-comment|/* generate exception on parity errors */
-name|BRK_INTR
-block|,
-comment|/* generate exception on break condition */
-literal|0
-block|,
-comment|/* don't translate NL to CR on input */
-literal|0
-block|,
-comment|/* don't translate CR to NL on input */
-literal|0
-block|,
-comment|/* don't discard CR on input */
-block|}
-block|,
-block|{
-comment|/* cor7 */
-literal|0
-block|,
-comment|/* don't translate CR to NL on output */
-literal|0
-block|,
-comment|/* don't translate NL to CR on output */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* don't process flow ctl err chars */
-literal|0
-block|,
-comment|/* disable LNext option */
-literal|0
-block|,
-comment|/* don't strip 8 bit on input */
-block|}
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* clear schr1-4, scrl, scrh, lnxt */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|cx_opt_hdlc_t
-name|opt_hdlc_dflt
-init|=
-block|{
-comment|/* default hdlc options */
-block|{
-comment|/* cor1 */
-literal|2
-block|,
-comment|/* 2 inter-frame flags */
-literal|0
-block|,
-comment|/* no-address mode */
-name|CLRDET_DISABLE
-block|,
-comment|/* disable clear detect */
-name|AFLO_1OCT
-block|,
-comment|/* 1-byte address field length */
-block|}
-block|,
-block|{
-comment|/* cor2 */
-literal|0
-block|,
-comment|/* disable automatic DSR */
-literal|0
-block|,
-comment|/* disable automatic CTS */
-literal|0
-block|,
-comment|/* disable automatic RTS */
-literal|0
-block|,
-name|CRC_INVERT
-block|,
-comment|/* use CRC V.41 */
-literal|0
-block|,
-name|FCS_NOTPASS
-block|,
-comment|/* don't pass received CRC to the host */
-literal|0
-block|, 	}
-block|,
-block|{
-comment|/* cor3 */
-literal|0
-block|,
-comment|/* 0 pad characters sent */
-name|IDLE_FLAG
-block|,
-comment|/* idle in flag */
-literal|0
-block|,
-comment|/* enable FCS */
-name|FCSP_ONES
-block|,
-comment|/* FCS preset to all ones (V.41) */
-name|SYNC_AA
-block|,
-comment|/* use AAh as sync char */
-literal|0
-block|,
-comment|/* disable pad characters */
-block|}
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* clear rfar1-4 */
-name|POLY_V41
-block|,
-comment|/* use V.41 CRC polynomial */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|cx_opt_bisync_t
-name|opt_bisync_dflt
-init|=
-block|{
-comment|/* default bisync options */
-block|{
-comment|/* cor1 */
-literal|8
-operator|-
-literal|1
-block|,
-comment|/* 8-bit char length */
-literal|0
-block|,
-comment|/* don't ignore parity */
-name|PARM_NOPAR
-block|,
-comment|/* no parity */
-name|PAR_EVEN
-block|,
-comment|/* even parity */
-block|}
-block|,
-block|{
-comment|/* cor2 */
-literal|3
-operator|-
-literal|2
-block|,
-comment|/* send three SYN chars */
-name|CRC_DONT_INVERT
-block|,
-comment|/* don't invert CRC (CRC-16) */
-literal|0
-block|,
-comment|/* use ASCII, not EBCDIC */
-literal|0
-block|,
-comment|/* disable bcc append */
-name|BCC_CRC16
-block|,
-comment|/* user CRC16, not LRC */
-block|}
-block|,
-block|{
-comment|/* cor3 */
-literal|0
-block|,
-comment|/* send 0 pad chars */
-name|IDLE_FLAG
-block|,
-comment|/* idle in SYN */
-literal|0
-block|,
-comment|/* enable FCS */
-name|FCSP_ZEROS
-block|,
-comment|/* FCS preset to all zeros (CRC-16) */
-name|PAD_AA
-block|,
-comment|/* use AAh as pad char */
-literal|0
-block|,
-comment|/* disable pad characters */
-block|}
-block|,
-block|{
-comment|/* cor6 */
-literal|10
-block|,
-comment|/* DLE - disable special termination char */
-block|}
-block|,
-name|POLY_16
-block|,
-comment|/* use CRC-16 polynomial */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|cx_opt_x21_t
-name|opt_x21_dflt
-init|=
-block|{
-comment|/* default x21 options */
-block|{
-comment|/* cor1 */
-literal|8
-operator|-
-literal|1
-block|,
-comment|/* 8-bit char length */
-literal|0
-block|,
-comment|/* don't ignore parity */
-name|PARM_NOPAR
-block|,
-comment|/* no parity */
-name|PAR_EVEN
-block|,
-comment|/* even parity */
-block|}
-block|,
-block|{
-comment|/* cor2 */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* disable embedded transmitter cmds */
-literal|0
-block|, 	}
-block|,
-block|{
-comment|/* cor3 */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* disable special character detect */
-literal|0
-block|,
-comment|/* don't treat SYN as special condition */
-literal|0
-block|,
-comment|/* disable steady state detect */
-name|X21SYN_2
-block|,
-comment|/* 2 SYN chars on receive are required */
-block|}
-block|,
-block|{
-comment|/* cor6 */
-literal|16
-block|,
-comment|/* SYN - standard SYN character */
-block|}
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* clear schr1-3 */
-block|}
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 
