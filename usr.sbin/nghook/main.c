@@ -164,6 +164,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|loopFlag
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|ch
 decl_stmt|;
 comment|/* Parse flags */
@@ -178,7 +183,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"da"
+literal|"adl"
 argument_list|)
 operator|)
 operator|!=
@@ -190,6 +195,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+name|asciiFlag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -206,9 +219,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'a'
+literal|'l'
 case|:
-name|asciiFlag
+name|loopFlag
 operator|=
 literal|1
 expr_stmt|;
@@ -557,6 +570,35 @@ name|wl
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* Loopback */
+if|if
+condition|(
+name|loopFlag
+condition|)
+block|{
+if|if
+condition|(
+name|NgSendData
+argument_list|(
+name|dsock
+argument_list|,
+name|NG_SOCK_HOOK_NAME
+argument_list|,
+name|buf
+argument_list|,
+name|rl
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"write(hook)"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* Check data from stdin */
