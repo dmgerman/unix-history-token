@@ -106,6 +106,7 @@ operator|(
 name|FILE
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -134,6 +135,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -286,6 +290,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|filename

@@ -149,9 +149,11 @@ name|file
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -901,6 +903,7 @@ name|name
 parameter_list|,
 name|mode
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name

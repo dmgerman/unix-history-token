@@ -223,6 +223,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|CURS_UP
@@ -496,6 +497,7 @@ block|{
 name|int
 name|c
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|termtype
@@ -768,9 +770,9 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-specifier|register
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -1188,12 +1190,12 @@ name|void
 name|flushln
 parameter_list|()
 block|{
-specifier|register
+name|int
 name|lastmode
-expr_stmt|;
-specifier|register
+decl_stmt|;
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 name|int
 name|hadmodes
 init|=
@@ -1757,11 +1759,11 @@ name|void
 name|fwd
 parameter_list|()
 block|{
-specifier|register
+name|int
 name|oldcol
-operator|,
+decl_stmt|,
 name|oldmax
-expr_stmt|;
+decl_stmt|;
 name|oldcol
 operator|=
 name|col

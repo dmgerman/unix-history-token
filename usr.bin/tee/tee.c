@@ -134,6 +134,7 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -158,6 +159,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -540,6 +542,7 @@ parameter_list|)
 name|int
 name|fd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
