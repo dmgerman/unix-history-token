@@ -1232,18 +1232,45 @@ argument_list|,
 name|hc_qhead
 argument_list|)
 expr_stmt|;
-comment|/* 		 * At first we were dropping the last element, just to 		 * reaquire it in the next two lines again which ain't 		 * very efficient. Instead just reuse the least used element. 		 * maybe we drop something that is still "in-use" but we can 		 * be "lossy". 		 */
-if|#
-directive|if
-literal|0
-block|TAILQ_REMOVE(&hc_head->hch_bucket, hc_entry, rmx_q); 		uma_zfree(tcp_hostcache.zone, hc_entry); 		tcp_hostcache.hashbase[hash].hch_length--; 		tcp_hostcache.cache_count--;
-endif|#
-directive|endif
+comment|/* 		 * At first we were dropping the last element, just to 		 * reaquire it in the next two lines again which ain't 		 * very efficient. Instead just reuse the least used element. 		 * Maybe we drop something that is still "in-use" but we can 		 * be "lossy". 		 */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|hc_head
+operator|->
+name|hch_bucket
+argument_list|,
+name|hc_entry
+argument_list|,
+name|rmx_q
+argument_list|)
+expr_stmt|;
+name|tcp_hostcache
+operator|.
+name|hashbase
+index|[
+name|hash
+index|]
+operator|.
+name|hch_length
+operator|--
+expr_stmt|;
+name|tcp_hostcache
+operator|.
+name|cache_count
+operator|--
+expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_hc_bucketoverflow
 operator|++
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|uma_zfree(tcp_hostcache.zone, hc_entry);
+endif|#
+directive|endif
 block|}
 else|else
 block|{
