@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<security/pam_mod_misc.h>
+file|"pam_mod_misc.h"
 end_include
 
 begin_include
