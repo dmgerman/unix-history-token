@@ -2397,6 +2397,10 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 comment|/* {user, system, interrupt, total} {ticks, usec}; previous tu: */
 name|u_int64_t
 name|ut
@@ -2418,11 +2422,9 @@ decl_stmt|,
 name|ptu
 decl_stmt|;
 name|int
+name|problemcase
+decl_stmt|,
 name|s
-decl_stmt|;
-name|struct
-name|timeval
-name|tv
 decl_stmt|;
 comment|/* XXX: why spl-protect ?  worst case is an off-by-one report */
 name|s
@@ -2482,6 +2484,10 @@ operator|=
 name|p
 operator|->
 name|p_runtime
+expr_stmt|;
+name|problemcase
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2560,6 +2566,28 @@ operator|)
 literal|1000000
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SRUN
+operator|||
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SZOMB
+condition|)
+block|{
+comment|/* 		 * XXX: this case should add the difference between 		 * the current time and the switch time as above, 		 * but the switch time is inaccessible, so we can't 		 * do the adjustment and will end up with a wrong 		 * runtime.  A previous call with a different 		 * curthread may have obtained a (right or wrong) 		 * runtime that is in advance of ours.  Just set a 		 * flag to avoid warning about this known problem. 		 * 		 * In the SRUN case, the inaccessibility is due to 		 * the switch time being in the PCPU info for a 		 * different CPU.  In the SZOMB case, it is caused 		 * by the relevant switch time going away in exit1() 		 * and neglecting to use it to update p_runtime there. 		 */
+name|problemcase
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|ptu
 operator|=
 name|p
@@ -2579,7 +2607,43 @@ condition|(
 name|tu
 operator|<
 name|ptu
-operator|||
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|problemcase
+condition|)
+name|printf
+argument_list|(
+literal|"calcru: runtime went backwards from %qu usec to %qu usec for pid %d (%s)\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|ptu
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|tu
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|int64_t
 operator|)
@@ -2588,12 +2652,12 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
-literal|"calcru: negative time of %ld usec for pid %d (%s)\n"
+literal|"calcru: negative runtime of %qd usec for pid %d (%s)\n"
 argument_list|,
 operator|(
+name|long
 name|long
 operator|)
 name|tu
