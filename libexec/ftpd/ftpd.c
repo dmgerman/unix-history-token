@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.45 1998/02/24 08:45:57 eivind Exp $"
+literal|"$Id: ftpd.c,v 1.46 1998/04/28 03:37:23 dg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1491,10 +1491,19 @@ name|FILE
 modifier|*
 name|fd
 decl_stmt|;
+name|setenv
+argument_list|(
+literal|"TZ"
+argument_list|,
+literal|""
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* since protocol have no way to tell offset */
 name|tzset
 argument_list|()
 expr_stmt|;
-comment|/* in case no timezone database in ~ftp */
 ifdef|#
 directive|ifdef
 name|OLD_SETPROCTITLE
