@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.44 1995/11/05 04:50:48 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.45 1995/11/06 05:21:13 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -6214,17 +6214,23 @@ name|sblkctl
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Number of SCBs that will be used. Rev E aic7770s supposedly 	 * can do 255 concurrent commands.  Right now, we just ID the 	 * card until we can find out how this is done. 	 */
-if|if
+switch|switch
 condition|(
-operator|!
-operator|(
 name|ahc
 operator|->
 name|type
 operator|&
-name|AHC_AIC78X0
+operator|~
+operator|(
+name|AHC_TWIN
+operator||
+name|AHC_WIDE
 operator|)
 condition|)
+block|{
+case|case
+name|AHC_AIC7770
+case|:
 block|{
 comment|/* 		 * See if we have a Rev E or higher 		 * aic7770. Anything below a Rev E will 		 * have a R/O autoflush disable configuration 		 * bit. 		 */
 name|u_char
@@ -6297,41 +6303,50 @@ argument_list|(
 literal|"aic7770<= Rev C, "
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-elseif|else
-if|if
-condition|(
-name|ahc
-operator|->
-name|type
-operator|&
+case|case
+name|AHC_394U
+case|:
+case|case
+name|AHC_294U
+case|:
+case|case
 name|AHC_AIC7880
-condition|)
+case|:
 name|printf
 argument_list|(
 literal|"aic7880, "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ahc
-operator|->
-name|type
-operator|&
+break|break;
+case|case
 name|AHC_AIC7850
-condition|)
+case|:
 name|printf
 argument_list|(
 literal|"aic7850, "
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+case|case
+name|AHC_394
+case|:
+case|case
+name|AHC_294
+case|:
+case|case
+name|AHC_AIC7870
+case|:
 name|printf
 argument_list|(
 literal|"aic7870, "
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 if|if
 condition|(
 name|ahc
