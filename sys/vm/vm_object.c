@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.25 1995/02/21 01:22:47 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.26 1995/02/22 09:15:28 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1302,12 +1302,6 @@ begin_comment
 comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  *	Leaves page on whatever queue it is currently on.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_function
 name|boolean_t
 name|vm_object_page_clean
@@ -1574,57 +1568,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  *	If syncio is TRUE, page cleaning is done synchronously.  *	If de_queue is TRUE, pages are removed from any paging queue  *	they were on, otherwise they are left on whatever queue they  *	were on before the cleaning operation began.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  *  *	Returns TRUE if all was well, FALSE if there was a pager error  *	somewhere.  We attempt to clean (and dequeue) all pages regardless  *	of where an error occurs.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|boolean_t vm_object_page_clean(object, start, end, syncio, de_queue) 	register vm_object_t object; 	register vm_offset_t start; 	register vm_offset_t end; 	boolean_t syncio; 	boolean_t de_queue; { 	register vm_page_t p; 	int onqueue; 	boolean_t noerror = TRUE;  	if (object == NULL) 		return (TRUE);
-comment|/* 	 * If it is an internal object and there is no pager, attempt to 	 * allocate one.  Note that vm_object_collapse may relocate one from a 	 * collapsed object so we must recheck afterward. 	 */
-end_comment
-
-begin_comment
-unit|if ((object->flags& OBJ_INTERNAL)&& object->pager == NULL) { 		vm_object_collapse(object); 		if (object->pager == NULL) { 			vm_pager_t pager;  			vm_object_unlock(object); 			pager = vm_pager_allocate(PG_DFLT, (caddr_t) 0, 			    object->size, VM_PROT_ALL, 			    (vm_offset_t) 0); 			if (pager) 				vm_object_setpager(object, pager, 0, FALSE); 			vm_object_lock(object); 		} 	} 	if (object->pager == NULL) 		return (FALSE);  again:
-comment|/* 	 * Wait until the pageout daemon is through with the object. 	 */
-end_comment
-
-begin_comment
-unit|while (object->paging_in_progress) { 		vm_object_sleep((int) object, object, FALSE); 		vm_object_lock(object); 	}
-comment|/* 	 * Loop through the object page list cleaning as necessary. 	 */
-end_comment
-
-begin_comment
-unit|for (p = object->memq.tqh_first; p != NULL; p = p->listq.tqe_next) { 		onqueue = 0; 		if ((start == end || p->offset>= start&& p->offset< end)&& 		    !(p->flags& PG_FICTITIOUS)) { 			vm_page_test_dirty(p);
-comment|/* 			 * Remove the page from any paging queue. This needs 			 * to be done if either we have been explicitly asked 			 * to do so or it is about to be cleaned (see comment 			 * below). 			 */
-end_comment
-
-begin_comment
-unit|if (de_queue || (p->dirty& p->valid)) { 				vm_page_lock_queues(); 				if (p->flags& PG_ACTIVE) { 					TAILQ_REMOVE(&vm_page_queue_active, 					    p, pageq); 					p->flags&= ~PG_ACTIVE; 					cnt.v_active_count--; 					onqueue = 1; 				} else if (p->flags& PG_INACTIVE) { 					TAILQ_REMOVE(&vm_page_queue_inactive, 					    p, pageq); 					p->flags&= ~PG_INACTIVE; 					cnt.v_inactive_count--; 					onqueue = -1; 				} else 					onqueue = 0; 				vm_page_unlock_queues(); 			}
-comment|/* 			 * To ensure the state of the page doesn't change 			 * during the clean operation we do two things. First 			 * we set the busy bit and write-protect all mappings 			 * to ensure that write accesses to the page block (in 			 * vm_fault).  Second, we remove the page from any 			 * paging queue to foil the pageout daemon 			 * (vm_pageout_scan). 			 */
-end_comment
-
-begin_comment
-unit|pmap_page_protect(VM_PAGE_TO_PHYS(p), VM_PROT_READ); 			if (p->dirty& p->valid) { 				p->flags |= PG_BUSY; 				object->paging_in_progress++; 				vm_object_unlock(object);
-comment|/* 				 * XXX if put fails we mark the page as clean 				 * to avoid an infinite loop. Will loose 				 * changes to the page. 				 */
-end_comment
-
-begin_endif
-unit|if (vm_pager_put(object->pager, p, syncio)) { 					printf("%s: pager_put error\n", 					    "vm_object_page_clean"); 					p->dirty = 0; 					noerror = FALSE; 				} 				vm_object_lock(object); 				object->paging_in_progress--; 				if (!de_queue&& onqueue) { 					vm_page_lock_queues(); 					if (onqueue> 0) 						vm_page_activate(p); 					else 						vm_page_deactivate(p); 					vm_page_unlock_queues(); 				} 				PAGE_WAKEUP(p); 				goto again; 			} 		} 	} 	return (noerror); }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	vm_object_deactivate_pages  *  *	Deactivate all pages in the specified object.  (Keep its pages  *	in memory even though it is no longer referenced.)  *  *	The object must be locked.  */
@@ -4266,29 +4209,6 @@ name|backing_object
 operator|->
 name|shadow_offset
 expr_stmt|;
-if|if
-condition|(
-name|object
-operator|->
-name|shadow
-operator|!=
-name|NULL
-operator|&&
-name|object
-operator|->
-name|shadow
-operator|->
-name|copy
-operator|!=
-name|NULL
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"vm_object_collapse: we collapsed a copy-object!"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 			 * Discard backing_object. 			 *  			 * Since the backing object has no pages, no pager left, 			 * and no object references within it, all that is 			 * necessary is to dispose of it. 			 */
 name|vm_object_unlock
 argument_list|(
