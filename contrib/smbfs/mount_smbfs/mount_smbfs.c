@@ -352,6 +352,8 @@ name|kldload
 argument_list|(
 name|SMBFS_VFSNAME
 argument_list|)
+operator|<
+literal|0
 condition|)
 name|err
 argument_list|(
