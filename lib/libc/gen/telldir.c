@@ -97,6 +97,7 @@ name|long
 name|loc_loc
 decl_stmt|;
 comment|/* offset of entry in buffer */
+specifier|const
 name|DIR
 modifier|*
 name|loc_dirp
@@ -479,6 +480,7 @@ parameter_list|(
 name|dirp
 parameter_list|)
 specifier|register
+specifier|const
 name|DIR
 modifier|*
 name|dirp
