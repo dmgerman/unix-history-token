@@ -9712,7 +9712,11 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
+operator|(
 name|P_STOPPED_SINGLE
+operator||
+name|P_SINGLE_EXIT
+operator|)
 expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
