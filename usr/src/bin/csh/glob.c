@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.30 (Berkeley) %G%"
+literal|"@(#)glob.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3288,6 +3288,23 @@ name|cp
 operator|++
 operator|&=
 name|TRIM
+expr_stmt|;
+comment|/* 	 * In the child ``forget'' everything about current aliases or 	 * eval vectors. 	 */
+name|alvec
+operator|=
+name|NULL
+expr_stmt|;
+name|evalvec
+operator|=
+name|NULL
+expr_stmt|;
+name|alvecp
+operator|=
+name|NULL
+expr_stmt|;
+name|evalp
+operator|=
+name|NULL
 expr_stmt|;
 operator|(
 name|void
