@@ -42,6 +42,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -92,6 +104,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -120,6 +136,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|size_t
 name|len
 init|=
@@ -141,8 +160,14 @@ index|]
 operator|=
 name|KERN_HOSTNAME
 expr_stmt|;
-return|return
-operator|(
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|userland_sysctl
 argument_list|(
 name|p
@@ -166,6 +191,16 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -196,6 +231,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -244,6 +283,12 @@ index|]
 operator|=
 name|KERN_HOSTNAME
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -258,14 +303,12 @@ argument_list|,
 name|PRISON_ROOT
 argument_list|)
 operator|)
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
+block|{
 name|error
-operator|)
-return|;
-return|return
-operator|(
+operator|=
 name|userland_sysctl
 argument_list|(
 name|p
@@ -290,6 +333,17 @@ name|len
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -316,6 +370,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -399,6 +457,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -424,6 +486,12 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -434,25 +502,32 @@ argument_list|(
 name|p
 argument_list|)
 operator|)
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|hostid
 operator|=
 name|uap
 operator|->
 name|hostid
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -538,6 +613,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -566,7 +645,7 @@ index|[
 literal|2
 index|]
 decl_stmt|,
-name|rtval
+name|error
 decl_stmt|;
 name|size_t
 name|len
@@ -595,13 +674,21 @@ expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|uap
 operator|->
 name|name
 operator|->
 name|sysname
+argument_list|)
 expr_stmt|;
-name|rtval
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
 operator|=
 name|userland_sysctl
 argument_list|(
@@ -631,11 +718,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rtval
+name|error
 condition|)
-return|return
-name|rtval
-return|;
+goto|goto
+name|done2
+goto|;
 name|subyte
 argument_list|(
 name|uap
@@ -674,7 +761,7 @@ name|name
 operator|->
 name|nodename
 expr_stmt|;
-name|rtval
+name|error
 operator|=
 name|userland_sysctl
 argument_list|(
@@ -704,11 +791,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rtval
+name|error
 condition|)
-return|return
-name|rtval
-return|;
+goto|goto
+name|done2
+goto|;
 name|subyte
 argument_list|(
 name|uap
@@ -747,7 +834,7 @@ name|name
 operator|->
 name|release
 expr_stmt|;
-name|rtval
+name|error
 operator|=
 name|userland_sysctl
 argument_list|(
@@ -777,11 +864,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rtval
+name|error
 condition|)
-return|return
-name|rtval
-return|;
+goto|goto
+name|done2
+goto|;
 name|subyte
 argument_list|(
 name|uap
@@ -804,7 +891,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	name = KERN_VERSION; 	len = sizeof uap->name->version; 	rtval = userland_sysctl(p, name, 2, uap->name->version,&len,  		1, 0, 0, 0); 	if( rtval) return rtval; 	subyte( uap->name->version + sizeof(uap->name->version) - 1, 0); */
+comment|/* 	name = KERN_VERSION; 	len = sizeof uap->name->version; 	error = userland_sysctl(p, name, 2, uap->name->version,&len,  		1, 0, 0, 0); 	if (error) 		goto done2; 	subyte( uap->name->version + sizeof(uap->name->version) - 1, 0); */
 comment|/*  * this stupid hackery to make the version field look like FreeBSD 1.1  */
 for|for
 control|(
@@ -846,7 +933,7 @@ name|s
 operator|++
 control|)
 block|{
-name|rtval
+name|error
 operator|=
 name|subyte
 argument_list|(
@@ -859,13 +946,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rtval
+name|error
 condition|)
-return|return
-name|rtval
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
-name|rtval
+name|error
 operator|=
 name|subyte
 argument_list|(
@@ -877,11 +964,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rtval
+name|error
 condition|)
-return|return
-name|rtval
-return|;
+goto|goto
+name|done2
+goto|;
 name|name
 index|[
 literal|0
@@ -905,7 +992,7 @@ name|name
 operator|->
 name|machine
 expr_stmt|;
-name|rtval
+name|error
 operator|=
 name|userland_sysctl
 argument_list|(
@@ -935,11 +1022,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rtval
+name|error
 condition|)
-return|return
-name|rtval
-return|;
+goto|goto
+name|done2
+goto|;
 name|subyte
 argument_list|(
 name|uap
@@ -962,8 +1049,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
@@ -995,6 +1092,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1019,14 +1120,25 @@ decl_stmt|;
 block|{
 name|int
 name|domainnamelen
-init|=
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|domainnamelen
+operator|=
 name|strlen
 argument_list|(
 name|domainname
 argument_list|)
 operator|+
 literal|1
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1048,8 +1160,8 @@ name|domainnamelen
 operator|+
 literal|1
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -1068,6 +1180,16 @@ name|uap
 operator|->
 name|len
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -1098,6 +1220,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1127,6 +1253,12 @@ name|error
 decl_stmt|,
 name|domainnamelen
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1138,11 +1270,9 @@ name|p
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 operator|(
@@ -1159,9 +1289,15 @@ argument_list|)
 operator|-
 literal|1
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|EINVAL
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|domainnamelen
 operator|=
 name|uap
@@ -1192,6 +1328,14 @@ name|domainnamelen
 index|]
 operator|=
 literal|0
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

@@ -1621,6 +1621,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1653,6 +1657,17 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -1665,11 +1680,15 @@ operator|<<
 literal|16
 operator|)
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 name|uap
@@ -1684,11 +1703,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|upp
 operator|=
@@ -1747,9 +1764,17 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

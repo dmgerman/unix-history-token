@@ -46,6 +46,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -1032,6 +1044,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|ntp_adjtime
@@ -1100,6 +1116,12 @@ name|error
 operator|)
 return|;
 comment|/* 	 * Update selected clock variables - only the superuser can 	 * change anything. Note that there is no error checking here on 	 * the assumption the superuser should know what it is doing. 	 * Note that either the time constant or TAI offset are loaded 	 * from the ntv.constant member, depending on the mode bits. If 	 * the STA_PLL bit in the status word is cleared, the state and 	 * status words are reset to the initial values at boot. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|modes
 operator|=
 name|ntv
@@ -1121,11 +1143,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|s
 operator|=
 name|splclock
@@ -1661,11 +1681,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 comment|/* 	 * Status word error decode. See comments in 	 * ntp_gettime() routine. 	 */
 if|if
 condition|(
@@ -1720,6 +1738,7 @@ name|STA_PPSERROR
 operator|)
 operator|)
 condition|)
+block|{
 name|p
 operator|->
 name|p_retval
@@ -1729,7 +1748,9 @@ index|]
 operator|=
 name|TIME_ERROR
 expr_stmt|;
+block|}
 else|else
+block|{
 name|p
 operator|->
 name|p_retval
@@ -1738,6 +1759,15 @@ literal|0
 index|]
 operator|=
 name|time_state
+expr_stmt|;
+block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
