@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	1.6	86/11/25	*/
+comment|/*	trap.c	1.7	86/12/15	*/
 end_comment
 
 begin_include
@@ -1278,7 +1278,7 @@ condition|)
 block|{
 specifier|register
 name|int
-name|i
+name|a
 decl_stmt|;
 name|char
 modifier|*
@@ -1314,17 +1314,17 @@ literal|"("
 expr_stmt|;
 for|for
 control|(
-name|i
+name|a
 operator|=
 literal|0
 init|;
-name|i
+name|a
 operator|<
 name|callp
 operator|->
 name|sy_narg
 condition|;
-name|i
+name|a
 operator|++
 control|)
 block|{
@@ -1338,7 +1338,7 @@ name|u
 operator|.
 name|u_arg
 index|[
-name|i
+name|a
 index|]
 argument_list|)
 expr_stmt|;
@@ -1349,20 +1349,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|i
+name|a
 condition|)
-name|putchar
+name|printf
 argument_list|(
-literal|')'
-argument_list|,
-literal|0
+literal|")"
 argument_list|)
 expr_stmt|;
-name|putchar
+name|printf
 argument_list|(
-literal|'\n'
-argument_list|,
-literal|0
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

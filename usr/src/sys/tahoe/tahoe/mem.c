@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	1.3	86/07/16	*/
+comment|/*	mem.c	1.4	86/12/15	*/
 end_comment
 
 begin_comment
@@ -209,7 +209,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|extern
-name|int
+name|caddr_t
 name|vmembeg
 decl_stmt|,
 name|vmemend

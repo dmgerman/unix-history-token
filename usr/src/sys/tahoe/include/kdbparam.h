@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdbparam.h	7.4	86/11/23	*/
+comment|/*	kdbparam.h	7.5	86/12/15	*/
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ name|getprevpc
 parameter_list|(
 name|fp
 parameter_list|)
-value|get((fp)-8, DSP)
+value|get((off_t)(fp)-8, DSP)
 end_define
 
 begin_comment
@@ -140,7 +140,7 @@ name|getprevframe
 parameter_list|(
 name|fp
 parameter_list|)
-value|(get((fp), DSP)&~3)
+value|(get((off_t)(fp), DSP)&~3)
 end_define
 
 begin_comment
@@ -154,7 +154,7 @@ name|getnargs
 parameter_list|(
 name|fp
 parameter_list|)
-value|(((get((fp)-4, DSP)&0xffff)-4)/4)
+value|(((get((off_t)(fp)-4, DSP)&0xffff)-4)/4)
 end_define
 
 begin_define
@@ -189,7 +189,7 @@ name|issignalpc
 parameter_list|(
 name|pc
 parameter_list|)
-value|(MAXSTOR< (pc)&& (pc)< MAXSTOR+ctob(UPAGES))
+value|((unsigned)MAXSTOR< (pc)&& (pc)< (unsigned)KERNBASE)
 end_define
 
 begin_define
@@ -199,7 +199,7 @@ name|getsignalpc
 parameter_list|(
 name|fp
 parameter_list|)
-value|get((fp)+44, DSP)
+value|get((off_t)(fp)+44, DSP)
 end_define
 
 begin_comment
@@ -235,7 +235,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(((a)<< 16) | ((b)& 0xffff))
+value|((long)(((a)<< 16) | ((b)& 0xffff)))
 end_define
 
 begin_define
@@ -255,7 +255,7 @@ name|btol
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)<< 24)
+value|((long)((a)<< 24))
 end_define
 
 begin_comment

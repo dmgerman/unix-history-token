@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_access.c	7.2	86/11/20	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_access.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -15,6 +15,10 @@ end_include
 
 begin_comment
 comment|/*  * Primitives: put a value in a space, get a value from a space  * and get a word or byte not returning if an error occurred.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -34,6 +38,12 @@ name|addr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|long
+name|value
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 operator|(
@@ -41,6 +51,9 @@ name|void
 operator|)
 name|kdbpoke
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|addr
 argument_list|,
 name|value
@@ -48,6 +61,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_function
 name|u_int
@@ -65,6 +82,9 @@ return|return
 operator|(
 name|kdbpeek
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|addr
 argument_list|)
 operator|)

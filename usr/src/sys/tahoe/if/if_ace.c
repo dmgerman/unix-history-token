@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ace.c	1.11	86/11/29	*/
+comment|/*	if_ace.c	1.12	86/12/15	*/
 end_comment
 
 begin_comment
@@ -453,6 +453,18 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
 name|acerint
 argument_list|(
 literal|0
@@ -651,10 +663,6 @@ modifier|*
 name|wp
 decl_stmt|,
 name|i
-decl_stmt|;
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 name|ifp
 operator|->
@@ -4500,7 +4508,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|u_char
 modifier|*
 name|station
 decl_stmt|;

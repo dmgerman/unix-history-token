@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_message.c	7.2	86/11/20	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_message.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -78,24 +78,6 @@ modifier|*
 name|BADVAR
 init|=
 literal|"bad variable"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|BADTXT
-init|=
-literal|"text address not found"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|BADDAT
-init|=
-literal|"data address not found"
 decl_stmt|;
 end_decl_stmt
 

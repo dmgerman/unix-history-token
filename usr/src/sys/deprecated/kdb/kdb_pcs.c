@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_pcs.c	7.1	86/11/20	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_pcs.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -60,6 +60,15 @@ name|lastc
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|kdbmalloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|long
 name|loopcnt
@@ -115,6 +124,9 @@ name|bkptr
 operator|=
 name|scanbkpt
 argument_list|(
+operator|(
+name|ADDR
+operator|)
 name|dot
 argument_list|)
 condition|)
@@ -145,6 +157,9 @@ name|bkptr
 operator|=
 name|scanbkpt
 argument_list|(
+operator|(
+name|ADDR
+operator|)
 name|dot
 argument_list|)
 condition|)
@@ -256,6 +271,9 @@ name|bkptr
 operator|->
 name|comm
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|rdc
 argument_list|()
 expr_stmt|;

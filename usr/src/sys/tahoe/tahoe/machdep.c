@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.8	86/11/25	*/
+comment|/*	machdep.c	1.9	86/12/15	*/
 end_comment
 
 begin_include
@@ -295,10 +295,6 @@ decl_stmt|,
 name|base
 decl_stmt|,
 name|residual
-decl_stmt|;
-specifier|extern
-name|char
-name|etext
 decl_stmt|;
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
 name|maxmem
@@ -1515,6 +1511,9 @@ operator|.
 name|u_ssize
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|grow
 argument_list|(
 operator|(

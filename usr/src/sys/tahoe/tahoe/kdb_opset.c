@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_opset.c	7.2	86/11/23	*/
+comment|/*	kdb_opset.c	7.3	86/12/15	*/
 end_comment
 
 begin_include
@@ -490,7 +490,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|POS
+name|int
 name|type
 decl_stmt|,
 name|space
@@ -559,8 +559,14 @@ name|value
 decl_stmt|;
 name|value
 operator|=
+operator|(
+name|u_int
+operator|)
 name|chkget
 argument_list|(
+operator|(
+name|off_t
+operator|)
 name|inkdot
 argument_list|(
 name|incp
@@ -617,8 +623,9 @@ name|r
 expr_stmt|;
 comment|/* register name */
 specifier|register
+name|long
 name|d
-expr_stmt|;
+decl_stmt|;
 comment|/* assembled byte, word, long or float */
 specifier|register
 name|char

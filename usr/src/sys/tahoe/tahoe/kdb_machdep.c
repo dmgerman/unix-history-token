@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_machdep.c	7.2	86/11/21	*/
+comment|/*	kdb_machdep.c	7.3	86/12/15	*/
 end_comment
 
 begin_include
@@ -853,7 +853,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|long
 name|type
 decl_stmt|,
 name|code
@@ -1226,10 +1226,11 @@ init|=
 literal|0
 decl_stmt|;
 specifier|extern
-name|char
+name|caddr_t
 name|Sysbase
-index|[]
-decl_stmt|,
+decl_stmt|;
+specifier|extern
+name|int
 name|etext
 decl_stmt|;
 name|u_short
@@ -1243,9 +1244,6 @@ decl_stmt|;
 comment|/* 	 * If we're writing to the kernel's text space, 	 * make the page writeable for the duration of 	 * the access. 	 */
 if|if
 condition|(
-operator|(
-name|caddr_t
-operator|)
 name|Sysbase
 operator|<=
 name|addr

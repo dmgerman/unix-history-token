@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	1.7	86/11/03	*/
+comment|/*	cy.c	1.8	86/12/15	*/
 end_comment
 
 begin_include
@@ -130,6 +130,12 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
 end_include
 
 begin_include
@@ -617,11 +623,28 @@ operator|,
 name|cvec
 expr_stmt|;
 comment|/* must be r12, r11 */
-name|struct
-name|cy_softc
-modifier|*
-name|cy
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|cyintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|badcyaddr
@@ -1690,15 +1713,6 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
-name|unit
-init|=
-name|CYUNIT
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -2149,12 +2163,6 @@ name|struct
 name|cy_softc
 modifier|*
 name|cy
-decl_stmt|;
-specifier|register
-name|struct
-name|vba_device
-modifier|*
-name|vi
 decl_stmt|;
 name|int
 name|ycunit
@@ -3305,6 +3313,9 @@ name|cy_ccb
 operator|.
 name|cbtpb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cy
 operator|->
@@ -3382,6 +3393,19 @@ argument_list|(
 name|cy
 argument_list|)
 expr_stmt|;
+name|yc
+operator|=
+operator|&
+name|yc_softc
+index|[
+name|YCUNIT
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+index|]
+expr_stmt|;
 comment|/* 	 * If last command was a rewind and tape is 	 * still moving, wait for the operation to complete. 	 */
 if|if
 condition|(
@@ -3430,19 +3454,6 @@ return|return;
 block|}
 block|}
 comment|/* 	 * An operation completed...record status. 	 */
-name|yc
-operator|=
-operator|&
-name|yc_softc
-index|[
-name|YCUNIT
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-index|]
-expr_stmt|;
 name|yc
 operator|->
 name|yc_timo
@@ -3878,6 +3889,9 @@ index|]
 condition|)
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|bp
 operator|->
 name|b_command
@@ -5379,8 +5393,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|,
-name|ctlr
-decl_stmt|,
 name|error
 decl_stmt|;
 if|if
@@ -5450,7 +5462,7 @@ name|phys
 argument_list|(
 name|cyminfo
 index|[
-name|ctlr
+name|unit
 index|]
 operator|->
 name|um_addr

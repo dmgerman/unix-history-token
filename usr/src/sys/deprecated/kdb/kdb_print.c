@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_print.c	7.4	86/11/23	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -122,8 +122,6 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
-name|stack
-decl_stmt|,
 name|ntramp
 decl_stmt|;
 specifier|register
@@ -451,8 +449,14 @@ name|ntramp
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|findsym
 argument_list|(
+operator|(
+name|long
+operator|)
 name|callpc
 argument_list|,
 name|ISYM
@@ -511,11 +515,16 @@ literal|"%R"
 argument_list|,
 name|get
 argument_list|(
+call|(
+name|off_t
+call|)
+argument_list|(
 name|argp
 operator|=
 name|nextarg
 argument_list|(
 name|argp
+argument_list|)
 argument_list|)
 argument_list|,
 name|DSP
@@ -542,6 +551,9 @@ argument_list|)
 expr_stmt|;
 name|psymoff
 argument_list|(
+operator|(
+name|long
+operator|)
 name|callpc
 argument_list|,
 name|ISYM
@@ -560,9 +572,10 @@ while|while
 condition|(
 name|localsym
 argument_list|(
+operator|(
+name|long
+operator|)
 name|frame
-argument_list|,
-name|argp
 argument_list|)
 condition|)
 block|{
@@ -570,6 +583,9 @@ name|word
 operator|=
 name|get
 argument_list|(
+operator|(
+name|off_t
+operator|)
 name|localval
 argument_list|,
 name|DSP
@@ -713,6 +729,9 @@ name|n_name
 argument_list|,
 name|get
 argument_list|(
+operator|(
+name|off_t
+operator|)
 name|sp
 operator|->
 name|n_value
@@ -766,6 +785,9 @@ argument_list|)
 expr_stmt|;
 name|psymoff
 argument_list|(
+operator|(
+name|long
+operator|)
 name|bkptr
 operator|->
 name|loc
@@ -872,6 +894,9 @@ argument_list|)
 expr_stmt|;
 name|psymoff
 argument_list|(
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_wchan
@@ -959,6 +984,9 @@ argument_list|)
 expr_stmt|;
 name|valpr
 argument_list|(
+operator|(
+name|long
+operator|)
 name|v
 argument_list|,
 name|p
@@ -1107,6 +1135,9 @@ operator|)
 block|{
 name|psymoff
 argument_list|(
+operator|(
+name|long
+operator|)
 name|pcb
 operator|.
 name|pcb_pc
@@ -1120,8 +1151,14 @@ name|printins
 argument_list|(
 name|ISP
 argument_list|,
+operator|(
+name|long
+operator|)
 name|chkget
 argument_list|(
+operator|(
+name|off_t
+operator|)
 name|pcb
 operator|.
 name|pcb_pc

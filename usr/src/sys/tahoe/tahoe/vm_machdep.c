@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	1.6	86/11/03	*/
+comment|/*	vm_machdep.c	1.7	86/12/15	*/
 end_comment
 
 begin_include
@@ -337,7 +337,7 @@ end_expr_stmt
 begin_block
 block|{
 specifier|extern
-name|int
+name|unsigned
 name|maxtsize
 decl_stmt|;
 if|if

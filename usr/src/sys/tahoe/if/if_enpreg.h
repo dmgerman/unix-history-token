@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_enpreg.h	1.2	86/11/29	*/
+comment|/*	if_enpreg.h	1.3	86/12/15	*/
 end_comment
 
 begin_comment
@@ -589,34 +589,9 @@ parameter_list|)
 value|(addr->enp_iow.enp2hst_clear_intr&0x80)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ACK_ENP_INTR
-parameter_list|(
-name|addr
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_ENP_INTR
-parameter_list|(
-name|addr
-parameter_list|)
-value|(1)
-end_define
-
 begin_endif
 endif|#
 directive|endif
-endif|ENP == 30
 end_endif
 
 begin_ifdef
@@ -670,7 +645,7 @@ name|addr
 parameter_list|,
 name|start
 parameter_list|)
-value|{ \ 	int v = start; \ 	enpcopy(&v,&addr->enp_prog_start, sizeof(v) ); \ 	v = 0x80800000; \ 	enpcopy(&v,&addr->enp_go, sizeof(v) ); \ }
+value|{ \ 	int v = start; \ 	enpcopy((u_char *)&v, (u_char *)&addr->enp_prog_start, sizeof(v) ); \ 	v = 0x80800000; \ 	enpcopy((u_char *)&v, (u_char *)&addr->enp_go, sizeof(v) ); \ }
 end_define
 
 begin_else
@@ -851,7 +826,7 @@ decl_stmt|;
 name|short
 name|b_len
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|b_addr
 decl_stmt|;

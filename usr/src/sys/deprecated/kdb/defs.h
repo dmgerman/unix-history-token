@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	7.3	86/11/23	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -400,12 +400,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|maxstor
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|errflg
@@ -460,15 +454,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|POS
+name|u_int
 name|get
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|POS
+name|u_int
 name|chkget
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|bchkget
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -477,13 +478,6 @@ begin_function_decl
 name|char
 modifier|*
 name|exform
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|long
-name|round
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_input.c	7.2	86/11/20	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_input.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -32,12 +32,6 @@ decl_stmt|,
 name|lastc
 init|=
 name|EOR
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|eof
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +76,9 @@ end_macro
 begin_block
 block|{
 do|do
+operator|(
+name|void
+operator|)
 name|readchar
 argument_list|()
 expr_stmt|;
@@ -145,6 +142,10 @@ name|mkfault
 condition|)
 name|error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

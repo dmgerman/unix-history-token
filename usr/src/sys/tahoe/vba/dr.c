@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dr.c	1.5	86/11/29	*/
+comment|/*	dr.c	1.6	86/12/15	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*      DRV11-W DMA interface driver.  * UNTESTED WITH 4.3  */
+comment|/*  * DRV11-W DMA interface driver.  *  * UNTESTED WITH 4.3  */
 end_comment
 
 begin_include
@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../tahoevba/vbavar.h"
 end_include
 
@@ -141,13 +147,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|caddr_t
-name|vtoph
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|drminphys
 parameter_list|()
@@ -165,7 +164,7 @@ decl_stmt|,
 name|drattach
 argument_list|()
 decl_stmt|,
-name|drtime
+name|drtimo
 argument_list|()
 decl_stmt|,
 name|drrwtimo
@@ -225,13 +224,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|long
-name|hz
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -261,43 +253,6 @@ name|dr_aux
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_struct
-struct|struct
-name|rs_data
-block|{
-name|struct
-name|buf
-name|rs_buf
-decl_stmt|;
-name|int
-name|rs_ubainfo
-decl_stmt|;
-name|short
-name|rs_debug
-decl_stmt|;
-name|short
-name|rs_busy
-decl_stmt|;
-name|short
-name|rs_tout
-decl_stmt|;
-name|short
-name|rs_uid
-decl_stmt|;
-name|short
-name|rs_isopen
-decl_stmt|;
-name|short
-name|rs_func
-decl_stmt|;
-block|}
-name|rs_data
-index|[
-name|NDR
-index|]
-struct|;
-end_struct
 
 begin_ifdef
 ifdef|#
@@ -350,16 +305,33 @@ decl_stmt|,
 name|cvec
 decl_stmt|;
 comment|/* must be r12, r11 */
-specifier|register
 name|struct
 name|rsdevice
 modifier|*
 name|dr
 decl_stmt|;
-specifier|register
-name|ushort
-name|status
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|drintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|badaddr
@@ -383,9 +355,6 @@ operator|*
 operator|)
 name|reg
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 name|dr
 operator|->
 name|dr_intvect
@@ -397,20 +366,6 @@ name|ui_hd
 operator|->
 name|vh_lastiv
 expr_stmt|;
-else|#
-directive|else
-name|dr
-operator|->
-name|dr_intvect
-operator|=
-name|DRINTV
-operator|+
-name|vi
-operator|->
-name|ui_unit
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DR_DEBUG
@@ -433,13 +388,6 @@ operator|=
 name|MCLR
 expr_stmt|;
 comment|/* init board and device */
-name|status
-operator|=
-name|dr
-operator|->
-name|dr_cstat
-expr_stmt|;
-comment|/* read initial status */
 ifdef|#
 directive|ifdef
 name|DR_DEBUG
@@ -447,9 +395,9 @@ name|printf
 argument_list|(
 literal|"drprobe: Initial status %lx\n"
 argument_list|,
-name|status
-operator|&
-literal|0xffff
+name|dr
+operator|->
+name|dr_cstat
 argument_list|)
 expr_stmt|;
 endif|#
@@ -560,9 +508,12 @@ name|currenttimo
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|dropen
@@ -610,16 +561,13 @@ name|rsd
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|drinfo
 index|[
 name|unit
 index|]
 operator|==
 literal|0
-operator|)
 operator|||
-operator|(
 operator|!
 name|drinfo
 index|[
@@ -627,10 +575,11 @@ name|unit
 index|]
 operator|->
 name|ui_alive
-operator|)
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|dr
 operator|=
@@ -669,7 +618,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 comment|/* DR11 already open */
 block|}
@@ -728,7 +679,9 @@ argument_list|)
 expr_stmt|;
 comment|/* start the self kicker */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -783,7 +736,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dra
 operator|->
@@ -791,6 +743,8 @@ name|dr_flags
 operator|&
 name|DR_OPEN
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 ifdef|#
@@ -857,6 +811,9 @@ name|B_BUSY
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|dra
 operator|->
@@ -871,7 +828,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_block
 
@@ -917,7 +873,7 @@ modifier|*
 name|bp
 decl_stmt|;
 specifier|register
-name|long
+name|int
 name|spl
 decl_stmt|,
 name|err
@@ -940,8 +896,8 @@ operator|->
 name|iov_len
 operator|<=
 literal|0
-comment|/* Negative count */
 operator|||
+comment|/* Negative count */
 name|uio
 operator|->
 name|uio_iov
@@ -949,8 +905,8 @@ operator|->
 name|iov_len
 operator|&
 literal|1
-comment|/* odd count */
 operator|||
+comment|/* odd count */
 operator|(
 name|int
 operator|)
@@ -961,10 +917,12 @@ operator|->
 name|iov_base
 operator|&
 literal|1
-comment|/* odd destination address */
 condition|)
+comment|/* odd destination address */
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -975,7 +933,6 @@ name|DR11
 operator|&
 literal|8
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"\ndrread: (len:%ld)(base:%lx)"
@@ -996,7 +953,6 @@ operator|->
 name|iov_base
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|dra
@@ -1038,7 +994,7 @@ operator|&
 name|DR_NORSTALL
 condition|)
 block|{
-comment|/* We are in no stall mode, start the timer, raise IPL so nothing 	   can stop us once the timer's running */
+comment|/* 		 * We are in no stall mode, start the timer, 		 * raise IPL so nothing can stop us once the 		 * timer's running 		 */
 name|spl
 operator|=
 name|SPL_UP
@@ -1063,6 +1019,9 @@ operator||
 name|unit
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dra
 operator|->
 name|rtimoticks
@@ -1131,10 +1090,14 @@ literal|0
 expr_stmt|;
 comment|/* Made the error ourself, ignore it */
 block|}
-block|}
-else|else
-block|{
 return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
+return|return
+operator|(
 name|physio
 argument_list|(
 name|drstrategy
@@ -1149,8 +1112,8 @@ name|drminphys
 argument_list|,
 name|uio
 argument_list|)
+operator|)
 return|;
-block|}
 block|}
 end_block
 
@@ -1200,8 +1163,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-specifier|register
-name|long
+name|int
 name|spl
 decl_stmt|,
 name|err
@@ -1236,7 +1198,9 @@ operator|&
 literal|1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -1247,7 +1211,6 @@ name|DR11
 operator|&
 literal|4
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"\ndrwrite: (len:%ld)(base:%lx)"
@@ -1268,7 +1231,6 @@ operator|->
 name|iov_base
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|dra
@@ -1310,7 +1272,7 @@ operator|&
 name|DR_NOWSTALL
 condition|)
 block|{
-comment|/* We are in no stall mode, start the timer, raise IPL so nothing 	   can stop us once the timer's running */
+comment|/* 		 * We are in no stall mode, start the timer, 		 * raise IPL so nothing can stop us once the 		 * timer's running 		 */
 name|spl
 operator|=
 name|SPL_UP
@@ -1335,6 +1297,9 @@ operator||
 name|unit
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dra
 operator|->
 name|wtimoticks
@@ -1403,10 +1368,14 @@ literal|0
 expr_stmt|;
 comment|/* Made the error ourself, ignore it */
 block|}
-block|}
-else|else
-block|{
 return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
+return|return
+operator|(
 name|physio
 argument_list|(
 name|drstrategy
@@ -1421,13 +1390,13 @@ name|drminphys
 argument_list|,
 name|uio
 argument_list|)
+operator|)
 return|;
-block|}
 block|}
 end_block
 
 begin_comment
-comment|/*  Routine used by calling program to issue commands to dr11 driver and      through it to the device.     It is also used to read status from the device and driver and to wait      for attention interrupts.     Status is returned in an 8 elements unsigned short integer array, the      first two elements of the array are also used to pass arguments to      drioctl() if required.     The function bits to be written to the dr11 are included in the cmd     argument. Even if they are not being written to the dr11 in a particular     drioctl() call, they will update the copy of cmd that is stored in the     driver. When drstrategy() is called, this updated copy is used if a      deferred function bit write has been specified. The "side effect" of     calls to the drioctl() requires that the last call prior to a read or     write has an appropriate copy of the function bits in cmd if they are     to be used in drstrategy().     When used as command value, the contents of data[0] is the command     parameter. */
+comment|/*  * Routine used by calling program to issue commands to dr11 driver and   * through it to the device.  * It is also used to read status from the device and driver and to wait   * for attention interrupts.  * Status is returned in an 8 elements unsigned short integer array, the   * first two elements of the array are also used to pass arguments to   * drioctl() if required.  * The function bits to be written to the dr11 are included in the cmd  * argument. Even if they are not being written to the dr11 in a particular  * drioctl() call, they will update the copy of cmd that is stored in the  * driver. When drstrategy() is called, this updated copy is used if a   * deferred function bit write has been specified. The "side effect" of  * calls to the drioctl() requires that the last call prior to a read or  * write has an appropriate copy of the function bits in cmd if they are  * to be used in drstrategy().  * When used as command value, the contents of data[0] is the command  * parameter.  */
 end_comment
 
 begin_macro
@@ -1438,8 +1407,6 @@ argument_list|,
 argument|cmd
 argument_list|,
 argument|data
-argument_list|,
-argument|flag
 argument_list|)
 end_macro
 
@@ -1459,12 +1426,6 @@ begin_decl_stmt
 name|long
 modifier|*
 name|data
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -1496,15 +1457,10 @@ argument_list|(
 name|unit
 argument_list|)
 decl_stmt|;
-name|struct
-name|dr11io
-name|dio
-decl_stmt|;
-name|ushort
+name|int
 name|s
-decl_stmt|,
-name|errcode
-decl_stmt|,
+decl_stmt|;
+name|u_short
 name|status
 decl_stmt|;
 name|long
@@ -1576,10 +1532,9 @@ operator|=
 name|SPL_UP
 argument_list|()
 expr_stmt|;
-comment|/* If the attention flag in dr_flags is set, it probably means that 	   an attention has arrived by the time a previous DMA end-of-range 	   interrupt was serviced. If ATRX is set, we will return with out 	   sleeping, since we have received an attention since the last call 	   to wait on attention. 	   This may not be appropriate for some applications. 	*/
+comment|/*  		 * If the attention flag in dr_flags is set, it probably 		 * means that an attention has arrived by the time a 		 * previous DMA end-of-range interrupt was serviced. If 		 * ATRX is set, we will return with out sleeping, since 		 * we have received an attention since the last call to 		 * wait on attention.  This may not be appropriate for 		 * some applications. 		 */
 if|if
 condition|(
-operator|!
 operator|(
 name|dra
 operator|->
@@ -1587,6 +1542,8 @@ name|dr_flags
 operator|&
 name|DR_ATRX
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|dra
@@ -1596,13 +1553,13 @@ operator||=
 name|DR_ATWT
 expr_stmt|;
 comment|/* Set waiting flag */
+comment|/* 			 * Enable interrupt; use pulse reg. 			 * so function bits are not changed 			 */
 name|rsaddr
 operator|->
 name|dr_pulse
 operator|=
 name|IENB
 expr_stmt|;
-comment|/* Enable interrupt; use pulse 						   reg. so function bits are 						   not changed */
 name|sleep
 argument_list|(
 operator|(
@@ -1673,7 +1630,7 @@ break|break;
 case|case
 name|DRDFCN
 case|:
-comment|/* Do not update function bits until next go issued */
+comment|/* Update function with next go */
 name|dra
 operator|->
 name|dr_cmd
@@ -1684,7 +1641,7 @@ break|break;
 case|case
 name|DRRATN
 case|:
-comment|/* Reset attention flag -- use with extreme caution */
+comment|/* Reset attention flag */
 name|rsaddr
 operator|->
 name|dr_pulse
@@ -1695,7 +1652,7 @@ break|break;
 case|case
 name|DRRDMA
 case|:
-comment|/* Reset DMA e-o-r flag -- should never used */
+comment|/* Reset DMA e-o-r flag */
 name|rsaddr
 operator|->
 name|dr_pulse
@@ -1716,14 +1673,13 @@ index|]
 operator|&
 name|DR_FMSK
 expr_stmt|;
+comment|/* 		 * This has a very important side effect -- It clears 		 * the interrupt enable flag. That is fine for this driver, 		 * but if it is desired to leave interrupt enable at all 		 * times, it will be necessary to read the status register 		 * first to get IENB, or carry a software flag that indicates 		 * whether interrupts are set, and or this into the control 		 * register value being written. 		 */
 name|rsaddr
 operator|->
 name|dr_cstat
 operator|=
 name|temp
 expr_stmt|;
-comment|/* Write to control register */
-comment|/* This has a very important side effect -- It clears the interrupt 	   enable flag. That is fine for this driver, but if it is desired 	   to leave interrupt enable at all times, it will be necessary to 	   to read the status register first to get IENB, or carry a software 	   flag that indicates whether interrupts are set, and or this into  	   the controll register value being written. 	*/
 break|break;
 case|case
 name|DRRPER
@@ -1764,7 +1720,7 @@ break|break;
 case|case
 name|DRGETRSTALL
 case|:
-comment|/* Returns true if in read stall mode. */
+comment|/* Returns true if in read stall mode */
 name|data
 index|[
 literal|0
@@ -1786,7 +1742,7 @@ break|break;
 case|case
 name|DRSETRTIMEOUT
 case|:
-comment|/* Set the number of ticks before a no stall read times out. 	   The argument is given in tenths of a second. */
+comment|/* Set read stall timeout (1/10 secs) */
 if|if
 condition|(
 name|data
@@ -1827,8 +1783,7 @@ break|break;
 case|case
 name|DRGETRTIMEOUT
 case|:
-comment|/* Returns the number of tenths of seconds before 	   a no stall read times out. */
-comment|/* The argument is given in tenths of a second. */
+comment|/* Return read stall timeout */
 name|data
 index|[
 literal|0
@@ -1875,7 +1830,7 @@ break|break;
 case|case
 name|DRGETWSTALL
 case|:
-comment|/* Returns true if in write stall mode. */
+comment|/* Return true if in write stall mode */
 name|data
 index|[
 literal|0
@@ -1897,7 +1852,7 @@ break|break;
 case|case
 name|DRSETWTIMEOUT
 case|:
-comment|/* Set the number of ticks before a no stall write times out. 	   The argument is given in tenths of a second. */
+comment|/* Set write stall timeout (1/10's) */
 if|if
 condition|(
 name|data
@@ -1938,8 +1893,7 @@ break|break;
 case|case
 name|DRGETWTIMEOUT
 case|:
-comment|/* Returns the number of tenths of seconds before 	   a no stall write times out. */
-comment|/* The argument is given in tenths of a second. */
+comment|/* Return write stall timeout */
 name|data
 index|[
 literal|0
@@ -1961,7 +1915,7 @@ break|break;
 case|case
 name|DRWRITEREADY
 case|:
-comment|/* Returns a value of 1 if the device can accept 	   data, 0 otherwise. Internally this is the 	   DR11-W STAT A bit. */
+comment|/* Return true if can write data */
 name|data
 index|[
 literal|0
@@ -1983,7 +1937,7 @@ break|break;
 case|case
 name|DRREADREADY
 case|:
-comment|/* Returns a value of 1 if the device has data 	   for host to be read, 0 otherwise. Internally 	   this is the DR11-W STAT B bit. */
+comment|/* Return true if data to be read */
 name|data
 index|[
 literal|0
@@ -2005,7 +1959,30 @@ break|break;
 case|case
 name|DRBUSY
 case|:
-comment|/* Returns a value of 1 if the device is busy, 	   0 otherwise. Internally this is the DR11-W 	   STAT C bit, but there is a bug in the Omega 500/FIFO interface 	   board that it cannot drive this signal low for certain DR11-W 	   ctlr such as the Ikon. We use the REDY signal of the CSR on 	   the Ikon DR11-W instead.   	data[0] = (rsaddr->dr_cstat& STTC)? 1 : 0; 	*/
+comment|/* Return true if device busy */
+comment|/* 		 * Internally this is the DR11-W 		 * STAT C bit, but there is a bug in the Omega 500/FIFO 		 * interface board that it cannot drive this signal low 		 * for certain DR11-W ctlr such as the Ikon. We use the 		 * REDY signal of the CSR on the Ikon DR11-W instead.  		 */
+ifdef|#
+directive|ifdef
+name|notdef
+name|data
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|rsaddr
+operator|->
+name|dr_cstat
+operator|&
+name|STTC
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+else|#
+directive|else
 name|data
 index|[
 literal|0
@@ -2025,10 +2002,14 @@ else|:
 literal|1
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|DRRESET
 case|:
+comment|/* Reset device */
+comment|/* Reset DMA ATN RPER flag */
 name|rsaddr
 operator|->
 name|dr_pulse
@@ -2043,7 +2024,6 @@ operator||
 name|RPER
 operator|)
 expr_stmt|;
-comment|/* Reset DMA ATN RPER flag */
 name|DELAY
 argument_list|(
 literal|0x1f000
@@ -2051,7 +2031,6 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|!
 operator|(
 name|rsaddr
 operator|->
@@ -2059,8 +2038,9 @@ name|dr_cstat
 operator|&
 name|REDY
 operator|)
+operator|==
+literal|0
 condition|)
-block|{
 name|sleep
 argument_list|(
 operator|(
@@ -2072,7 +2052,6 @@ name|DRPRI
 argument_list|)
 expr_stmt|;
 comment|/* Wakeup by drtimo() */
-block|}
 name|dra
 operator|->
 name|dr_istat
@@ -2096,6 +2075,7 @@ case|case
 name|DR11STAT
 case|:
 block|{
+comment|/* Copy back dr11 status to user */
 specifier|register
 name|struct
 name|dr11io
@@ -2109,7 +2089,6 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-comment|/* Copy back dr11 status to user */
 name|dr
 operator|->
 name|arg
@@ -2143,7 +2122,7 @@ name|dra
 operator|->
 name|dr_istat
 expr_stmt|;
-comment|/* Status reg. at last interrupt */
+comment|/* Status at last interrupt */
 name|dr
 operator|->
 name|arg
@@ -2159,7 +2138,7 @@ comment|/* P-i/o input data */
 name|status
 operator|=
 call|(
-name|ushort
+name|u_short
 call|)
 argument_list|(
 operator|(
@@ -2183,7 +2162,7 @@ operator|=
 name|status
 operator||
 call|(
-name|ushort
+name|u_short
 call|)
 argument_list|(
 name|rsaddr
@@ -2231,7 +2210,8 @@ block|}
 case|case
 name|DR11LOOP
 case|:
-comment|/* Perform loopback test -- MUST HAVE LOOPBACK CABLE ATTACHED -- 	   Test results are printed on system console */
+comment|/* Perform loopback test */
+comment|/* 		 * NB: MUST HAVE LOOPBACK CABLE ATTACHED -- 		 * Test results are printed on system console 		 */
 if|if
 condition|(
 name|suser
@@ -2248,15 +2228,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
-argument_list|(
-literal|"\ndrioctl: Invalid ioctl cmd : %lx"
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 ifdef|#
@@ -2281,7 +2256,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -2301,7 +2278,7 @@ value|20
 end_define
 
 begin_decl_stmt
-name|ushort
+name|u_short
 name|tstpat
 index|[
 name|DMATBL
@@ -2322,6 +2299,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Perform loopback test -- MUST HAVE LOOPBACK CABLE ATTACHED  * Test results are printed on system console  */
+end_comment
 
 begin_macro
 name|dr11loop
@@ -2351,7 +2332,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|int
 name|unit
 decl_stmt|;
 end_decl_stmt
@@ -2365,7 +2346,7 @@ decl_stmt|,
 name|ix
 decl_stmt|;
 name|long
-name|baddr
+name|addr
 decl_stmt|,
 name|wait
 decl_stmt|;
@@ -2376,7 +2357,6 @@ operator|=
 name|MCLR
 expr_stmt|;
 comment|/* Clear board& device, disable intr */
-comment|/* Perform loopback test -- MUST HAVE LOOPBACK CABLE ATTACHED -- 	   Test results are printed on system console */
 name|printf
 argument_list|(
 literal|"\n\t ----- DR11 unit %ld loopback test -----"
@@ -2415,13 +2395,11 @@ expr_stmt|;
 comment|/* Write to Data out register */
 name|result
 operator|=
-operator|(
 name|dr
 operator|->
 name|dr_data
 operator|&
 literal|0xFFFF
-operator|)
 expr_stmt|;
 comment|/* Read it back */
 if|if
@@ -2606,103 +2584,85 @@ literal|0xCCCC
 expr_stmt|;
 comment|/* Last word output */
 comment|/* Setup normal DMA */
-name|baddr
+name|addr
 operator|=
 operator|(
 name|long
 operator|)
 name|vtoph
 argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|tstpat
 argument_list|)
 expr_stmt|;
-comment|/* Virtual --> physical */
 name|dr
 operator|->
 name|dr_walo
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 operator|(
-name|baddr
+name|addr
 operator|>>
 literal|1
 operator|)
 operator|&
 literal|0xffff
-argument_list|)
 expr_stmt|;
 name|dr
 operator|->
 name|dr_wahi
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 operator|(
-name|baddr
+name|addr
 operator|>>
 literal|17
 operator|)
 operator|&
 literal|0x7fff
-argument_list|)
 expr_stmt|;
 comment|/* Set DMA range count: (number of words - 1) */
 name|dr
 operator|->
 name|dr_range
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 name|DMATBL
 operator|-
 literal|1
-argument_list|)
 expr_stmt|;
-comment|/* Set  address modifier code to be used for DMA access to memory */
+comment|/* Set address modifier code to be used for DMA access to memory */
 name|dr
 operator|->
 name|dr_addmod
 operator|=
-operator|(
-name|char
-operator|)
 name|DRADDMOD
 expr_stmt|;
-comment|/* Clear dmaf and attf to assure a clean dma start, also disable 	   attention interrupt 	*/
+comment|/* 	 * Clear dmaf and attf to assure a clean dma start, also disable 	 * attention interrupt 	 */
 name|dr
 operator|->
 name|dr_pulse
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 name|RDMA
 operator||
 name|RATN
 operator||
 name|RMSK
-argument_list|)
 expr_stmt|;
 comment|/* Use pulse register */
 name|dr
 operator|->
 name|dr_cstat
 operator|=
-operator|(
 name|GO
 operator||
 name|CYCL
-operator|)
 expr_stmt|;
 comment|/* GO...... */
 comment|/* Wait for DMA complete; REDY and DMAF are true in ISR */
@@ -2802,68 +2762,58 @@ literal|0x1111
 expr_stmt|;
 comment|/* DMA input data */
 comment|/* Setup normal DMA */
-name|baddr
+name|addr
 operator|=
 operator|(
 name|long
 operator|)
 name|vtoph
 argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|tstpat
 argument_list|)
 expr_stmt|;
-comment|/* Virtual --> physical */
 name|dr
 operator|->
 name|dr_walo
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 operator|(
-name|baddr
+name|addr
 operator|>>
 literal|1
 operator|)
 operator|&
 literal|0xffff
-argument_list|)
 expr_stmt|;
 name|dr
 operator|->
 name|dr_wahi
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 operator|(
-name|baddr
+name|addr
 operator|>>
 literal|17
 operator|)
 operator|&
 literal|0x7fff
-argument_list|)
 expr_stmt|;
-comment|/* Set DMA range count: (number of words - 1) */
 name|dr
 operator|->
 name|dr_range
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 name|DMATBL
 operator|-
 literal|1
-argument_list|)
 expr_stmt|;
-comment|/* Set  address modifier code to be used for DMA access to memory */
 name|dr
 operator|->
 name|dr_addmod
@@ -2873,16 +2823,15 @@ name|char
 operator|)
 name|DRADDMOD
 expr_stmt|;
-comment|/* Set FCN1 in ICR to DMA in*/
 name|dr
 operator|->
 name|dr_cstat
 operator|=
 name|FCN1
 expr_stmt|;
+comment|/* Set FCN1 in ICR to DMA in*/
 if|if
 condition|(
-operator|!
 operator|(
 name|dra
 operator|->
@@ -2890,6 +2839,8 @@ name|dr_flags
 operator|&
 name|DR_LOOPTST
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Use pulse reg */
@@ -2897,10 +2848,6 @@ name|dr
 operator|->
 name|dr_pulse
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 name|RDMA
 operator||
 name|RATN
@@ -2910,7 +2857,6 @@ operator||
 name|CYCL
 operator||
 name|GO
-argument_list|)
 expr_stmt|;
 comment|/* Wait for DMA complete; REDY and DMAF are true in ISR */
 name|wait
@@ -2975,10 +2921,6 @@ name|dr
 operator|->
 name|dr_pulse
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 name|IENB
 operator||
 name|RDMA
@@ -2988,7 +2930,6 @@ operator||
 name|CYCL
 operator||
 name|GO
-argument_list|)
 expr_stmt|;
 comment|/* Wait for DMA complete; DR_LOOPTST is false in dra->dr_flags*/
 name|wait
@@ -3053,24 +2994,19 @@ expr_stmt|;
 block|}
 name|mtpr
 argument_list|(
-name|tstpat
-argument_list|,
 name|P1DC
+argument_list|,
+name|tstpat
 argument_list|)
 expr_stmt|;
 comment|/* Purge cache */
 name|mtpr
 argument_list|(
-operator|(
+name|P1DC
+argument_list|,
 literal|0x3ff
 operator|+
-operator|(
-name|long
-operator|)
 name|tstpat
-operator|)
-argument_list|,
-name|P1DC
 argument_list|)
 expr_stmt|;
 for|for
@@ -3099,7 +3035,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t Fails, ix:%ld,expected : %lx --- actual : %lx"
+literal|"\n\t Fails, ix:%d, expected:%x --- actual:%x"
 argument_list|,
 name|ix
 argument_list|,
@@ -3116,7 +3052,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|dra
 operator|->
@@ -3124,6 +3059,8 @@ name|dr_flags
 operator|&
 name|DR_LOOPTST
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|dra
@@ -3146,27 +3083,18 @@ argument_list|(
 literal|" OK..\n\tAttention interrupt...."
 argument_list|)
 expr_stmt|;
-comment|/* Pulse FCN2 in pulse register with IENB */
 name|dr
 operator|->
 name|dr_pulse
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 name|IENB
 operator||
 name|RDMA
-argument_list|)
 expr_stmt|;
 name|dr
 operator|->
 name|dr_pulse
 operator|=
-operator|(
-name|ushort
-operator|)
 name|FCN2
 expr_stmt|;
 comment|/* Wait for ATTN interrupt; DR_LOOPTST is false in dra->dr_flags*/
@@ -3242,6 +3170,10 @@ begin_comment
 comment|/* Reset state on Unibus reset */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|drreset
 argument_list|(
@@ -3256,92 +3188,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
-name|struct
-name|vba_device
-modifier|*
-name|ui
-decl_stmt|;
-specifier|register
-name|struct
-name|dr_aux
-modifier|*
-name|dra
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NDR
-condition|;
-name|i
-operator|++
-operator|,
-name|dra
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|ui
-operator|=
-name|drinfo
-index|[
-name|i
-index|]
-operator|)
-operator|==
-literal|0
-operator|||
-operator|!
-name|ui
-operator|->
-name|ui_alive
-operator|||
-name|ui
-operator|->
-name|ui_vbanum
-operator|!=
-name|uban
-condition|)
-continue|continue;
-name|printf
-argument_list|(
-literal|"\ndrreset: %ld"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-comment|/* Do something; reset board */
-block|}
-return|return;
-block|}
+block|{  }
 end_block
 
 begin_comment
 comment|/*  * An interrupt is caused either by an error,  * base address overflow, or transfer complete  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|drintr
 argument_list|(
-name|unit
+argument|dr11
 argument_list|)
-specifier|register
-name|long
-name|unit
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+name|int
+name|dr11
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3354,7 +3219,7 @@ init|=
 operator|&
 name|dr_aux
 index|[
-name|unit
+name|dr11
 index|]
 decl_stmt|;
 specifier|register
@@ -3365,7 +3230,7 @@ name|rsaddr
 init|=
 name|RSADDR
 argument_list|(
-name|unit
+name|dr11
 argument_list|)
 decl_stmt|;
 specifier|register
@@ -3377,8 +3242,6 @@ decl_stmt|;
 specifier|register
 name|short
 name|status
-decl_stmt|,
-name|csrtmp
 decl_stmt|;
 name|status
 operator|=
@@ -3424,7 +3287,7 @@ operator|&
 name|DR_LOOPTST
 condition|)
 block|{
-comment|/* Controller is doing loopback test */
+comment|/* doing loopback test */
 name|dra
 operator|->
 name|dr_flags
@@ -3434,7 +3297,7 @@ name|DR_LOOPTST
 expr_stmt|;
 return|return;
 block|}
-comment|/* Make sure this is not a stray interrupt; at least one of dmaf or attf        must be set. Note that if the dr11 interrupt enable latch is reset         during a hardware interrupt ack sequence, and by the we get to this         point in the interrupt code it will be 0. This is done to give the        programmer some control over how the two more-or-less independent        interrupt sources on the board are handled.        If the attention flag is set when drstrategy() is called to start a        dma read or write an interrupt will be generated as soon as the        strategy routine enables interrupts for dma end-of-range. This will        cause execution of the interrupt routine (not necessarily bad) and        will cause the interrupt enable mask to be reset (very bad since the        dma end-of-range condition will not be able to generate an interrupt        when it occurs) causing the dma operation to time-out (even though        the dma transfer will be done successfully) or hang the process if a        software time-out capability is not implemented. One way to avoid         this situation is to check for a pending attention interrupt (attf        set) by calling drioctl() before doing a read or a write. For the        time being this driver will solve the problem by clearing the attf        flag in the status register before enabling interrupts in drstrategy().         **** The IKON 10084 for which this driver is written will set both        attf and dmaf if dma is terminated by an attention pulse. This will        cause a wakeup(&dr_aux), which will be ignored since it is not being         waited on, and an iodone(bp) which is the desired action. Some other        dr11 emulators, in particular the IKON 10077 for the Multibus, donot        dmaf in this case. This may require some addtional code in the inter-        rupt routine to ensure that en iodone(bp) is issued when dma is term-        inated by attention.     */
+comment|/* 	 * Make sure this is not a stray interrupt; at least one of dmaf or attf 	 * must be set. Note that if the dr11 interrupt enable latch is reset  	 * during a hardware interrupt ack sequence, and by the we get to this  	 * point in the interrupt code it will be 0. This is done to give the 	 * programmer some control over how the two more-or-less independent 	 * interrupt sources on the board are handled. 	 * If the attention flag is set when drstrategy() is called to start a 	 * dma read or write an interrupt will be generated as soon as the 	 * strategy routine enables interrupts for dma end-of-range. This will 	 * cause execution of the interrupt routine (not necessarily bad) and 	 * will cause the interrupt enable mask to be reset (very bad since the 	 * dma end-of-range condition will not be able to generate an interrupt 	 * when it occurs) causing the dma operation to time-out (even though 	 * the dma transfer will be done successfully) or hang the process if a 	 * software time-out capability is not implemented. One way to avoid  	 * this situation is to check for a pending attention interrupt (attf 	 * set) by calling drioctl() before doing a read or a write. For the 	 * time being this driver will solve the problem by clearing the attf 	 * flag in the status register before enabling interrupts in 	 * drstrategy(). 	 * 	 * **** The IKON 10084 for which this driver is written will set both 	 * attf and dmaf if dma is terminated by an attention pulse. This will 	 * cause a wakeup(&dr_aux), which will be ignored since it is not being  	 * waited on, and an iodone(bp) which is the desired action. Some other 	 * dr11 emulators, in particular the IKON 10077 for the Multibus, donot 	 * dmaf in this case. This may require some addtional code in the inter- 	 * rupt routine to ensure that en iodone(bp) is issued when dma is term- 	 * inated by attention. 	 */
 name|bp
 operator|=
 name|dra
@@ -3443,7 +3306,6 @@ name|dr_actf
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|status
 operator|&
@@ -3453,11 +3315,15 @@ operator||
 name|DMAF
 operator|)
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\ndrintr: Stray interrupt, dr11 status : %lx"
+literal|"dr%d: stray interrupt, status=%x"
+argument_list|,
+name|dr11
 argument_list|,
 name|status
 argument_list|)
@@ -3506,7 +3372,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
 operator|(
 name|dra
 operator|->
@@ -3514,6 +3379,8 @@ name|dr_flags
 operator|&
 name|DR_ACTV
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* We are not doing DMA !! */
@@ -3536,13 +3403,13 @@ name|DR_READ
 condition|)
 name|mtpr
 argument_list|(
+name|P1DC
+argument_list|,
 name|bp
 operator|->
 name|b_un
 operator|.
 name|b_addr
-argument_list|,
-name|P1DC
 argument_list|)
 expr_stmt|;
 name|dra
@@ -3611,10 +3478,13 @@ name|DR_ACTV
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|dra
 argument_list|)
 expr_stmt|;
-comment|/* Wakeup proc waiting in drwait() */
+comment|/* Wakeup waiting in drwait() */
 name|rsaddr
 operator|->
 name|dr_pulse
@@ -3629,7 +3499,7 @@ operator|)
 expr_stmt|;
 comment|/* reset dma e-o-r flag */
 block|}
-comment|/* Now test for attention interrupt -- It may be set in addition to         the dma e-o-r interrupt. If we get one we will issue a wakeup to        the drioctl() routine which is presumable waiting for one.        The program may have to monitor the attention interrupt received        flag in addition to doing waits for the interrupt. Futhermore,         interrupts are not enabled unless dma is in progress or drioctl()        has been called to wait for attention -- this may produce some        strange results if attf is set on the dr11 when a read or a write        is initiated, since that will enables interrupts.        **** The appropriate code for this interrupt routine will probably        be rather application dependent.     */
+comment|/* 	 * Now test for attention interrupt -- It may be set in addition to  	 * the dma e-o-r interrupt. If we get one we will issue a wakeup to 	 * the drioctl() routine which is presumable waiting for one. 	 * The program may have to monitor the attention interrupt received 	 * flag in addition to doing waits for the interrupt. Futhermore,  	 * interrupts are not enabled unless dma is in progress or drioctl() 	 * has been called to wait for attention -- this may produce some 	 * strange results if attf is set on the dr11 when a read or a write 	 * is initiated, since that will enables interrupts. 	 * **** The appropriate code for this interrupt routine will probably 	 * be rather application dependent. 	 */
 if|if
 condition|(
 name|status
@@ -3657,6 +3527,7 @@ operator|=
 name|RATN
 expr_stmt|;
 comment|/* reset attention flag */
+comment|/* 		 * Some applications which use attention to terminate 		 * dma may also want to issue an iodone() here to 		 * wakeup physio(). 		 */
 name|wakeup
 argument_list|(
 operator|(
@@ -3668,9 +3539,7 @@ operator|->
 name|dr_cmd
 argument_list|)
 expr_stmt|;
-comment|/* Some applications which use attention to terminate dma may also 	   want to issue an iodone() here to wakeup physio().  	*/
 block|}
-return|return;
 block|}
 end_block
 
@@ -3704,7 +3573,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  This routine performs the device unique operations on the DR11W  *  it is passed as an argument to and invoked by physio  */
+comment|/*  * This routine performs the device unique operations on the DR11W  * it is passed as an argument to and invoked by physio  */
 end_comment
 
 begin_expr_stmt
@@ -3760,15 +3629,7 @@ name|unit
 index|]
 decl_stmt|;
 specifier|register
-name|short
-name|go
-init|=
-literal|0
-decl_stmt|;
-specifier|register
-name|long
-name|baddr
-decl_stmt|,
+name|int
 name|ok
 decl_stmt|;
 ifdef|#
@@ -3787,7 +3648,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
 operator|(
 name|dra
 operator|->
@@ -3795,6 +3655,8 @@ name|dr_flags
 operator|&
 name|DR_OPEN
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Device not open */
@@ -3825,7 +3687,6 @@ name|dr_flags
 operator|&
 name|DR_ACTV
 condition|)
-block|{
 comment|/* Device is active; should never be in here... */
 name|sleep
 argument_list|(
@@ -3840,7 +3701,6 @@ argument_list|,
 name|DRPRI
 argument_list|)
 expr_stmt|;
-block|}
 name|dra
 operator|->
 name|dr_actf
@@ -3941,7 +3801,6 @@ operator|>>
 name|PGSHIFT
 operator|)
 condition|)
-block|{
 name|bp
 operator|->
 name|b_bcount
@@ -3963,14 +3822,13 @@ operator|&
 name|PGOFSET
 operator|)
 expr_stmt|;
-block|}
 name|dra
 operator|->
 name|dr_flags
 operator||=
 name|DR_ACTV
 expr_stmt|;
-comment|/* Mark it active (use in intr handler) */
+comment|/* Mark active (use in intr handler) */
 name|s
 operator|=
 name|SPL_UP
@@ -4087,12 +3945,12 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
+comment|/* Mark buffer B_DONE,so physstrat() in ml/machdep.c won't sleep */
 name|iodone
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* Mark buffer B_DONE,so physstrat() 					   in ml/machdep.c won't sleep */
 name|wakeup
 argument_list|(
 operator|(
@@ -4104,8 +3962,7 @@ operator|->
 name|dr_flags
 argument_list|)
 expr_stmt|;
-comment|/* Return to the calling program (physio()). Physio() will sleep        until awaken by a call to iodone() in the interupt handler --        which will be called by the dispatcher when it receives dma        end-of-range interrupt.     */
-return|return;
+comment|/* 	 * Return to the calling program (physio()). Physio() will sleep 	 * until awaken by a call to iodone() in the interupt handler -- 	 * which will be called by the dispatcher when it receives dma 	 * end-of-range interrupt. 	 */
 block|}
 end_block
 
@@ -4135,10 +3992,7 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|long
-name|status
-decl_stmt|,
+name|int
 name|s
 decl_stmt|;
 name|s
@@ -4192,8 +4046,6 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|rs
@@ -4209,11 +4061,9 @@ name|TERR
 operator|)
 condition|)
 block|{
-operator|(
 name|dr
 operator|->
 name|dr_actf
-operator|)
 operator|->
 name|b_flags
 operator||=
@@ -4224,7 +4074,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 name|dr
 operator|->
@@ -4241,21 +4090,20 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  *  * The lower 8-bit of tinfo is the minor device number, the  * remaining higher 8-bit is the current timout number  */
+end_comment
+
 begin_expr_stmt
 name|drrwtimo
 argument_list|(
 name|tinfo
 argument_list|)
 specifier|register
-name|unsigned
-name|long
+name|u_long
 name|tinfo
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * 	The lower 8-bit of tinfo is the minor device number, the  *	remaining higher 8-bit is the current timout number */
-end_comment
 
 begin_block
 block|{
@@ -4289,16 +4137,14 @@ name|dr
 operator|->
 name|dr_addr
 decl_stmt|;
-comment|/* If this is not the timeout that drwrite/drread is waiting 	   for then we should just go away */
+comment|/* 	 * If this is not the timeout that drwrite/drread is waiting 	 * for then we should just go away 	 */
 if|if
 condition|(
 operator|(
 name|tinfo
 operator|&
-operator|(
 operator|~
 literal|0xff
-operator|)
 operator|)
 operator|!=
 operator|(
@@ -4346,13 +4192,11 @@ name|IENB
 operator|)
 expr_stmt|;
 comment|/* Clear DMA logic */
-comment|/* Some applications will not issue a master after dma timeout, 	   since doing so sends an INIT H pulse to the external device, 	   which may produce undesirable side-effects.  */
+comment|/* 	 * Some applications will not issue a master after dma timeout, 	 * since doing so sends an INIT H pulse to the external device, 	 * which may produce undesirable side-effects. 	 */
 comment|/* Wake up process waiting in drwait() and flag the error */
-operator|(
 name|dr
 operator|->
 name|dr_actf
-operator|)
 operator|->
 name|b_flags
 operator||=
@@ -4372,7 +4216,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	Kick the driver every second */
+comment|/*  * Kick the driver every second  */
 end_comment
 
 begin_macro
@@ -4521,6 +4365,9 @@ name|vtoph
 argument_list|(
 name|p
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|va
 argument_list|)
 argument_list|)
@@ -4539,6 +4386,9 @@ name|vtoph
 argument_list|(
 name|p
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|va
 operator|+
 name|bcnt
@@ -4619,28 +4469,21 @@ begin_block
 block|{
 specifier|register
 name|long
-name|baddr
+name|addr
 decl_stmt|;
-name|ushort
+name|u_short
 name|go
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|caddr
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DR_DEBUG
 if|if
 condition|(
-operator|(
 name|dra
 operator|->
 name|dr_op
 operator|==
 name|DR_READ
-operator|)
 operator|&&
 operator|(
 name|DR11
@@ -4649,17 +4492,10 @@ literal|8
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"\ndrstart: READ, bcnt:%ld"
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|)
-expr_stmt|;
+name|char
+modifier|*
 name|caddr
-operator|=
+init|=
 operator|(
 name|char
 operator|*
@@ -4669,6 +4505,15 @@ operator|->
 name|b_un
 operator|.
 name|b_addr
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"\ndrstart: READ, bcnt:%ld"
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -4693,7 +4538,7 @@ block|}
 endif|#
 directive|endif
 comment|/* we are doing raw IO, bp->b_un.b_addr is user's address */
-name|baddr
+name|addr
 operator|=
 operator|(
 name|long
@@ -4705,7 +4550,7 @@ operator|->
 name|b_proc
 argument_list|,
 operator|(
-name|caddr_t
+name|unsigned
 operator|)
 name|bp
 operator|->
@@ -4714,50 +4559,36 @@ operator|.
 name|b_addr
 argument_list|)
 expr_stmt|;
-comment|/* Set DMA address into DR11 interace registers: DR11 requires that        the address be right shifted 1 bit position before it is written        to the board (The board will left shift it one bit position before        it places the address on the bus     */
+comment|/* 	 * Set DMA address into DR11 interace registers: DR11 requires that 	 * the address be right shifted 1 bit position before it is written 	 * to the board (The board will left shift it one bit position before 	 * it places the address on the bus 	 */
 name|rsaddr
 operator|->
 name|dr_walo
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 operator|(
-name|baddr
+name|addr
 operator|>>
 literal|1
 operator|)
 operator|&
 literal|0xffff
-argument_list|)
 expr_stmt|;
 name|rsaddr
 operator|->
 name|dr_wahi
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 operator|(
-name|baddr
+name|addr
 operator|>>
 literal|17
 operator|)
 operator|&
 literal|0x7fff
-argument_list|)
 expr_stmt|;
 comment|/* Set DMA range count: (number of words - 1) */
 name|rsaddr
 operator|->
 name|dr_range
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 operator|(
 name|bp
 operator|->
@@ -4767,19 +4598,15 @@ literal|1
 operator|)
 operator|-
 literal|1
-argument_list|)
 expr_stmt|;
 comment|/* Set address modifier code to be used for DMA access to memory */
 name|rsaddr
 operator|->
 name|dr_addmod
 operator|=
-operator|(
-name|char
-operator|)
 name|DRADDMOD
 expr_stmt|;
-comment|/* Now determine whether this is a read or a write. ***** This is        probably only usefull for link mode operation, since dr11 doesnot        controll the direction of data transfer. The C1 control input         controls whether the hardware is doing a read or a write. In link        mode this is controlled by function 1 latch (looped back by the        cable) and could be set the program. In the general case, the dr11        doesnot know in advance what the direction of transfer is - although        the program and protocol logic probably is     */
+comment|/* 	 * Now determine whether this is a read or a write. ***** This is 	 * probably only usefull for link mode operation, since dr11 doesnot 	 * controll the direction of data transfer. The C1 control input  	 * controls whether the hardware is doing a read or a write. In link 	 * mode this is controlled by function 1 latch (looped back by the 	 * cable) and could be set the program. In the general case, the dr11 	 * doesnot know in advance what the direction of transfer is - although 	 * the program and protocol logic probably is 	 */
 ifdef|#
 directive|ifdef
 name|DR_DEBUG
@@ -4816,7 +4643,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Update function latches may have been done already by drioctl() if        request from drioctl()     */
+comment|/* 	 * Update function latches may have been done already by drioctl() if 	 * request from drioctl() 	 */
 if|if
 condition|(
 name|dra
@@ -4857,25 +4684,16 @@ name|rsaddr
 operator|->
 name|dr_pulse
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 name|RATN
 operator||
 name|RDMA
 operator||
 name|RPER
-argument_list|)
 expr_stmt|;
 name|rsaddr
 operator|->
 name|dr_cstat
 operator|=
-call|(
-name|ushort
-call|)
-argument_list|(
 name|IENB
 operator||
 name|GO
@@ -4885,10 +4703,9 @@ operator||
 name|dra
 operator|->
 name|dr_op
-argument_list|)
 expr_stmt|;
 comment|/* GO...... */
-comment|/* Now check for software cycle request -- usually by transmitter in        link mode.     */
+comment|/* 	 * Now check for software cycle request -- usually 	 * by transmitter in link mode. 	 */
 if|if
 condition|(
 name|dra
@@ -4914,7 +4731,7 @@ name|CYCL
 expr_stmt|;
 comment|/* Use pulse register again */
 block|}
-comment|/* Now check for deferred ACLO FCNT2 pulse request -- usually to tell        the transmitter (via its attention) that we have enabled dma.     */
+comment|/* 	 * Now check for deferred ACLO FCNT2 pulse request -- usually to tell 	 * the transmitter (via its attention) that we have enabled dma. 	 */
 if|if
 condition|(
 name|dra

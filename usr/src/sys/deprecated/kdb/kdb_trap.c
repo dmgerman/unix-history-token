@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_trap.c	7.4	86/11/23	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_trap.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -135,8 +135,14 @@ name|curproc
 expr_stmt|;
 name|printtrap
 argument_list|(
+operator|(
+name|long
+operator|)
 name|type
 argument_list|,
+operator|(
+name|long
+operator|)
 name|code
 argument_list|)
 expr_stmt|;
@@ -178,8 +184,6 @@ condition|(
 name|nextpcs
 argument_list|(
 name|type
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 name|printf
@@ -266,14 +270,24 @@ name|lp
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|rdc
 argument_list|()
 expr_stmt|;
 name|lp
 operator|--
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|command
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|lastcom

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_runpcs.c	7.2	86/11/23	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_runpcs.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -123,8 +123,6 @@ block|{
 name|execbkpt
 argument_list|(
 name|bkpt
-argument_list|,
-name|execsig
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -155,16 +153,12 @@ begin_macro
 name|nextpcs
 argument_list|(
 argument|tracetrap
-argument_list|,
-argument|execsig
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|tracetrap
-decl_stmt|,
-name|execsig
 decl_stmt|;
 end_decl_stmt
 
@@ -272,13 +266,7 @@ expr_stmt|;
 name|execbkpt
 argument_list|(
 name|bkpt
-argument_list|,
-name|execsig
 argument_list|)
-expr_stmt|;
-name|execsig
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -298,16 +286,10 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
-name|execsig
-operator|=
-literal|0
-expr_stmt|;
 name|rc
 operator|=
 literal|0
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|--
@@ -361,8 +343,6 @@ begin_macro
 name|execbkpt
 argument_list|(
 argument|bkptr
-argument_list|,
-argument|execsig
 argument_list|)
 end_macro
 
@@ -451,7 +431,7 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|ADDR
+name|off_t
 name|a
 decl_stmt|;
 specifier|register
@@ -494,10 +474,16 @@ name|loc
 expr_stmt|;
 name|put
 argument_list|(
+operator|(
+name|off_t
+operator|)
 name|a
 argument_list|,
 name|ISP
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bkptr
 operator|->
 name|ins
@@ -519,7 +505,7 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|ADDR
+name|off_t
 name|a
 decl_stmt|;
 specifier|register
@@ -577,6 +563,9 @@ name|a
 argument_list|,
 name|ISP
 argument_list|,
+operator|(
+name|long
+operator|)
 name|SETBP
 argument_list|(
 name|bkptr

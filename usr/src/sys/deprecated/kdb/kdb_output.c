@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_output.c	7.1	86/11/20	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_output.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -366,10 +366,6 @@ name|long
 modifier|*
 name|dptr
 decl_stmt|;
-name|double
-modifier|*
-name|rptr
-decl_stmt|;
 specifier|register
 name|width
 operator|,
@@ -490,14 +486,6 @@ name|digitptr
 operator|=
 name|digits
 expr_stmt|;
-name|rptr
-operator|=
-operator|(
-name|double
-operator|*
-operator|)
-name|dptr
-expr_stmt|;
 name|x
 operator|=
 name|lx
@@ -524,6 +512,9 @@ literal|'d'
 case|:
 name|printnum
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|x
 argument_list|,
 operator|-
@@ -537,8 +528,7 @@ case|:
 name|printnum
 argument_list|(
 operator|(
-name|unsigned
-name|short
+name|u_long
 operator|)
 name|x
 argument_list|,
@@ -552,8 +542,7 @@ case|:
 name|printnum
 argument_list|(
 operator|(
-name|unsigned
-name|short
+name|u_long
 operator|)
 name|x
 argument_list|,
@@ -566,6 +555,9 @@ literal|'q'
 case|:
 name|printnum
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|x
 argument_list|,
 operator|-
@@ -579,8 +571,7 @@ case|:
 name|printnum
 argument_list|(
 operator|(
-name|unsigned
-name|short
+name|u_long
 operator|)
 name|x
 argument_list|,
@@ -594,8 +585,7 @@ case|:
 name|printnum
 argument_list|(
 operator|(
-name|unsigned
-name|short
+name|u_long
 operator|)
 name|x
 argument_list|,
@@ -609,6 +599,9 @@ literal|'R'
 case|:
 name|printnum
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|lx
 argument_list|,
 name|radix
@@ -620,6 +613,9 @@ literal|'D'
 case|:
 name|printnum
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|lx
 argument_list|,
 operator|-
@@ -632,6 +628,9 @@ literal|'U'
 case|:
 name|printnum
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|lx
 argument_list|,
 literal|10
@@ -643,6 +642,9 @@ literal|'O'
 case|:
 name|printnum
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|lx
 argument_list|,
 literal|8
@@ -654,6 +656,9 @@ literal|'Q'
 case|:
 name|printnum
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|lx
 argument_list|,
 operator|-
@@ -666,6 +671,9 @@ literal|'X'
 case|:
 name|printnum
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|lx
 argument_list|,
 literal|16
@@ -677,6 +685,9 @@ literal|'Z'
 case|:
 name|printnum
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|lx
 argument_list|,
 operator|-
@@ -935,7 +946,7 @@ argument_list|,
 name|base
 argument_list|)
 specifier|register
-name|POS
+name|u_long
 name|n
 expr_stmt|;
 end_expr_stmt

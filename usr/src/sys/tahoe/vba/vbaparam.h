@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vbaparam.h	1.2	86/12/08	*/
+comment|/*	vbaparam.h	1.3	86/12/15	*/
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ name|VBIO16BIT
 parameter_list|(
 name|a
 parameter_list|)
-value|(0xfffe0000<= ((unsigned)(a)))
+value|((unsigned)0xfffe0000<= ((unsigned)(a)))
 end_define
 
 begin_define
@@ -71,8 +71,7 @@ name|VBIO24BIT
 parameter_list|(
 name|a
 parameter_list|)
-define|\
-value|(0xff000000<= ((unsigned)(a))&& ((unsigned)(a))< 0xfffe0000)
+value|((unsigned)0xff000000<= ((unsigned)(a))&& \ 			 ((unsigned)(a))< (unsigned)0xfffe0000)
 end_define
 
 begin_define
@@ -82,7 +81,7 @@ name|VBIO32BIT
 parameter_list|(
 name|a
 parameter_list|)
-value|(((unsigned)(a))< 0xff000000)
+value|(((unsigned)(a))< (unsigned)0xff000000)
 end_define
 
 begin_comment
@@ -133,8 +132,7 @@ name|VBIOMAPPED
 parameter_list|(
 name|a
 parameter_list|)
-define|\
-value|(VBIOBASE<= ((unsigned)(a))&& ((unsigned)(a))<= VBIOEND)
+value|((unsigned)VBIOBASE<= ((unsigned)(a))&& \ 			 ((unsigned)(a))<= (unsigned)VBIOEND)
 end_define
 
 begin_define

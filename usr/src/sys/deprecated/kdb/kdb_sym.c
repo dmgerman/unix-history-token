@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_sym.c	7.1	86/11/20	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_sym.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -37,18 +37,13 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|struct
-name|nlist
+name|char
 modifier|*
 name|sym
 decl_stmt|,
 modifier|*
 name|esym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
+decl_stmt|,
 modifier|*
 name|strtab
 decl_stmt|;
@@ -64,10 +59,20 @@ name|sp
 decl_stmt|;
 name|symtab
 operator|=
+operator|(
+expr|struct
+name|nlist
+operator|*
+operator|)
 name|sym
 operator|,
 name|esymtab
 operator|=
+operator|(
+expr|struct
+name|nlist
+operator|*
+operator|)
 name|esym
 expr_stmt|;
 for|for
@@ -240,6 +245,7 @@ argument_list|,
 name|type
 argument_list|)
 specifier|register
+name|long
 name|val
 expr_stmt|;
 end_expr_stmt
@@ -375,7 +381,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|ADDR
+name|long
 name|cframe
 decl_stmt|;
 end_decl_stmt
@@ -552,6 +558,7 @@ argument_list|,
 name|s
 argument_list|)
 specifier|register
+name|long
 name|v
 expr_stmt|;
 end_expr_stmt
@@ -649,6 +656,12 @@ argument_list|,
 argument|idsp
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|long
+name|v
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

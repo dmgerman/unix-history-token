@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_format.c	7.3	86/11/23	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_format.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -248,6 +248,9 @@ operator|==
 literal|'i'
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|exform
 argument_list|(
 literal|1
@@ -337,6 +340,10 @@ name|mkfault
 condition|)
 name|error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -516,6 +523,10 @@ name|mkfault
 condition|)
 name|error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -681,6 +692,9 @@ literal|'C'
 condition|)
 name|printesc
 argument_list|(
+operator|(
+name|int
+operator|)
 name|byte
 argument_list|(
 name|w
@@ -690,6 +704,9 @@ expr_stmt|;
 else|else
 name|printc
 argument_list|(
+operator|(
+name|char
+operator|)
 name|byte
 argument_list|(
 name|w
@@ -818,6 +835,9 @@ literal|'S'
 condition|)
 name|printesc
 argument_list|(
+operator|(
+name|int
+operator|)
 name|c
 argument_list|)
 expr_stmt|;
@@ -1124,6 +1144,7 @@ argument_list|(
 name|c
 argument_list|)
 specifier|register
+name|int
 name|c
 expr_stmt|;
 end_expr_stmt

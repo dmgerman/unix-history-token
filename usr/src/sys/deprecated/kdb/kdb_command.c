@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_command.c	7.2	86/11/20	*/
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_command.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -419,6 +419,9 @@ name|savdot
 operator|=
 name|dot
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|expr
 argument_list|(
 literal|1
@@ -548,6 +551,9 @@ index|]
 operator|=
 name|lastc
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|expr
 argument_list|(
 literal|1
@@ -568,6 +574,9 @@ argument_list|,
 literal|":%16t"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|exform
 argument_list|(
 literal|1
@@ -629,6 +638,9 @@ argument_list|(
 literal|"=%8t"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|exform
 argument_list|(
 literal|1

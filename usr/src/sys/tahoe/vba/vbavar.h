@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vbavar.h	1.3	86/01/20	*/
+comment|/*	vbavar.h	1.4	86/12/15	*/
 end_comment
 
 begin_comment
@@ -326,9 +326,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|caddr_t
 name|vmem
-index|[]
 decl_stmt|;
 end_decl_stmt
 

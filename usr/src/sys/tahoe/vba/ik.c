@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ik.c	1.3	86/12/11	*/
+comment|/*	ik.c	1.4	86/12/15	*/
 end_comment
 
 begin_include
@@ -401,6 +401,28 @@ name|ikdevice
 modifier|*
 name|ik
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|ikintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|badaddr
@@ -686,6 +708,9 @@ name|sc
 operator|->
 name|is_uid
 operator|!=
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 operator|&&
@@ -708,6 +733,9 @@ name|sc
 operator|->
 name|is_uid
 operator|==
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -749,6 +777,9 @@ name|timeout
 argument_list|(
 name|iktimer
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|unit
 argument_list|,
 name|hz
@@ -817,6 +848,9 @@ name|untimeout
 argument_list|(
 name|iktimer
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -961,6 +995,9 @@ name|untimeout
 argument_list|(
 name|iktimer
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -1395,6 +1432,9 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 operator|->
 name|iov_len
@@ -1509,6 +1549,9 @@ name|iov
 operator|->
 name|iov_base
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 operator|->
 name|iov_len
@@ -1888,12 +1931,6 @@ name|ik_softc
 modifier|*
 name|sc
 decl_stmt|;
-specifier|register
-name|struct
-name|psalist
-modifier|*
-name|ap
-decl_stmt|;
 name|u_short
 name|bc
 decl_stmt|,
@@ -1969,6 +2006,9 @@ name|ui_addr
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|bp
 operator|->
 name|b_command
@@ -2009,6 +2049,9 @@ name|diowrite
 argument_list|(
 name|ik
 argument_list|,
+operator|(
+name|u_short
+operator|)
 name|bp
 operator|->
 name|b_command
@@ -2036,6 +2079,9 @@ name|diowrite
 argument_list|(
 name|ik
 argument_list|,
+operator|(
+name|u_short
+operator|)
 name|bp
 operator|->
 name|b_bcount
@@ -2054,6 +2100,9 @@ name|diowrite
 argument_list|(
 name|ik
 argument_list|,
+operator|(
+name|u_short
+operator|)
 literal|0
 comment|/* !swab */
 argument_list|)
@@ -2138,6 +2187,9 @@ operator|*
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|sc
 operator|->
 name|is_buf
@@ -2240,7 +2292,7 @@ name|FETCHWORD
 parameter_list|(
 name|i
 parameter_list|)
-value|{ \ 	int v; \ \ 	v = dioread(ik); \ 	if (v == -1) { \ 		sc->is_error = PSERROR_NAMETIMO; \ 		goto bad; \ 	} \ 	sc->is_nameaddr.w[i] = v; \ }
+value|{ \ 	v = dioread(ik); \ 	if (v == -1) { \ 		sc->is_error = PSERROR_NAMETIMO; \ 		goto bad; \ 	} \ 	sc->is_nameaddr.w[i] = v; \ }
 end_define
 
 begin_comment
@@ -2286,9 +2338,7 @@ specifier|register
 name|u_short
 name|data
 decl_stmt|;
-name|u_short
-name|i
-decl_stmt|,
+name|int
 name|v
 decl_stmt|;
 comment|/* should go by controller, but for now... */
@@ -2873,6 +2923,9 @@ name|timeout
 argument_list|(
 name|iktimer
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|unit
 argument_list|,
 name|hz
@@ -2902,22 +2955,22 @@ begin_block
 block|{
 specifier|register
 name|int
-name|timeout
+name|t
 decl_stmt|;
 name|u_short
 name|data
 decl_stmt|;
 for|for
 control|(
-name|timeout
+name|t
 operator|=
 name|ikdiotimo
 init|;
-name|timeout
+name|t
 operator|>
 literal|0
 condition|;
-name|timeout
+name|t
 operator|--
 control|)
 if|if
@@ -3003,7 +3056,7 @@ begin_block
 block|{
 specifier|register
 name|int
-name|timeout
+name|t
 decl_stmt|;
 specifier|register
 name|u_short
@@ -3034,15 +3087,15 @@ name|IKPULSE_FNC2
 expr_stmt|;
 for|for
 control|(
-name|timeout
+name|t
 operator|=
 name|ikdiotimo
 init|;
-name|timeout
+name|t
 operator|>
 literal|0
 condition|;
-name|timeout
+name|t
 operator|--
 control|)
 block|{
@@ -3313,6 +3366,9 @@ name|sc
 operator|->
 name|is_buf
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|lp
 operator|->
 name|pl_len
