@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	misc.c	1.1	85/07/21	*/
+comment|/*	misc.c	1.2	85/07/29	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"../tahoe/mtpr.h"
 end_include
 
 begin_comment
@@ -37,9 +37,9 @@ begin_block
 block|{
 name|mtpr
 argument_list|(
-name|addr
-argument_list|,
 name|PDCS
+argument_list|,
+name|addr
 argument_list|)
 expr_stmt|;
 block|}
