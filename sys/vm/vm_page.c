@@ -1804,9 +1804,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-ifndef|#
-directive|ifndef
-name|__alpha__
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
@@ -1816,8 +1813,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(

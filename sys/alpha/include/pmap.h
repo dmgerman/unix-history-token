@@ -526,10 +526,6 @@ modifier|*
 name|pm_lev1
 decl_stmt|;
 comment|/* KVA of lev0map */
-name|vm_object_t
-name|pm_pteobj
-decl_stmt|;
-comment|/* Container for pte's */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
