@@ -5056,6 +5056,8 @@ name|vm_offset_t
 name|va
 decl_stmt|;
 name|pv_entry_t
+name|npv
+decl_stmt|,
 name|pv
 decl_stmt|;
 name|struct
@@ -5131,13 +5133,15 @@ name|PAGE_SHIFT
 operator|)
 condition|)
 block|{
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|pv
 argument_list|,
 argument|&pmap->pm_pvlist
 argument_list|,
 argument|pv_plist
+argument_list|,
+argument|npv
 argument_list|)
 block|{
 name|va
