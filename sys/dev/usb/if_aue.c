@@ -284,6 +284,7 @@ name|USB_VENDOR_KINGSTON
 block|,
 name|USB_PRODUCT_KINGSTON_KNU101TX
 block|, }
+block|,
 block|{
 literal|0
 block|,
