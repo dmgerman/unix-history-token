@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.13	%G%"
+literal|"@(#)collect.c	3.14	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,6 +430,10 @@ operator|!=
 name|NULL
 control|)
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 comment|/* check for end-of-message */
 if|if
 condition|(
@@ -486,16 +490,39 @@ name|MsgSize
 operator|++
 expr_stmt|;
 block|}
-name|MsgSize
-operator|+=
+comment|/* 		**  Figure message length, output the line to the temp 		**  file, and insert a newline if missing. 		*/
+name|i
+operator|=
 name|strlen
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+name|MsgSize
+operator|+=
+name|i
+expr_stmt|;
 name|fputs
 argument_list|(
 name|buf
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\n'
+condition|)
+name|fputs
+argument_list|(
+literal|"\n"
 argument_list|,
 name|tf
 argument_list|)
