@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -297,6 +297,30 @@ block|{
 name|int
 name|name
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+name|suser
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_acflag
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|name
 operator|=
 name|KERN_HOSTNAME
