@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.13 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1207,6 +1207,10 @@ modifier|*
 name|_gethtbyname
 parameter_list|()
 function_decl|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|n
 operator|=
 name|res_mkquery
