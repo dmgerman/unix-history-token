@@ -436,7 +436,7 @@ name|char
 name|neteol
 index|[]
 init|=
-literal|"\n\r"
+literal|"\r\n"
 decl_stmt|;
 name|s
 operator|=
