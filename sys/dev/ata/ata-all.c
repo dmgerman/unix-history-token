@@ -1968,13 +1968,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"suspend\n"
-argument_list|)
-expr_stmt|;
 name|ch
 operator|->
 name|locking
@@ -1987,13 +1980,6 @@ expr_stmt|;
 name|ATA_SLEEPLOCK_CH
 argument_list|(
 name|ch
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"suspend done\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2036,13 +2022,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"resume\n"
-argument_list|)
-expr_stmt|;
 name|ch
 operator|->
 name|locking
@@ -2071,13 +2050,6 @@ expr_stmt|;
 name|ata_start
 argument_list|(
 name|ch
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"resume done\n"
 argument_list|)
 expr_stmt|;
 return|return
