@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vars.c	4.1	81/05/09	*/
+comment|/*	vars.c	4.2	81/06/02	*/
 end_comment
 
 begin_include
@@ -591,6 +591,28 @@ block|,
 name|NOSTR
 block|,
 name|NOSTR
+block|}
+block|,
+block|{
+literal|"echocheck"
+block|,
+name|BOOL
+block|,
+operator|(
+name|READ
+operator||
+name|WRITE
+operator|)
+operator|<<
+name|PUBLIC
+block|,
+literal|"ec"
+block|,
+operator|(
+name|char
+operator|*
+operator|)
+name|FALSE
 block|}
 block|,
 block|{

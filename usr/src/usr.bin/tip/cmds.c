@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmds.c	4.2	81/05/31	*/
+comment|/*	cmds.c	4.3	81/06/02	*/
 end_comment
 
 begin_include
@@ -1073,6 +1073,45 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|ECHOCHECK
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|struct
+name|sgttyb
+name|buf
+decl_stmt|;
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCGETP
+argument_list|,
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+comment|/* this does a */
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCSETP
+argument_list|,
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+comment|/*   wflushtty */
+block|}
 block|}
 end_block
 
@@ -1199,6 +1238,16 @@ operator|*
 name|pc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|ECHOCHECK
+argument_list|)
+argument_list|)
+condition|)
 name|read
 argument_list|(
 name|FD
@@ -1214,6 +1263,41 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* trailing \n */
+else|else
+block|{
+name|struct
+name|sgttyb
+name|buf
+decl_stmt|;
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCGETP
+argument_list|,
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+comment|/* this does a */
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCSETP
+argument_list|,
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+comment|/*   wflushtty */
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+comment|/* wait for remote stty to take effect */
+block|}
 block|}
 name|lcount
 operator|=
@@ -1369,6 +1453,17 @@ operator|++
 name|lcount
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|ECHOCHECK
+argument_list|)
+argument_list|)
+condition|)
+block|{
 name|alarm
 argument_list|(
 literal|10
@@ -1443,6 +1538,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|out
 label|:
@@ -1659,11 +1755,34 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|ECHOCHECK
+argument_list|)
+argument_list|)
+condition|)
 name|sprintf
 argument_list|(
 name|line
 argument_list|,
 literal|"cat>'%s'\r"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"stty -echo;cat>'%s';stty echo\r"
 argument_list|,
 name|argv
 index|[
@@ -1728,6 +1847,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|ECHOCHECK
+argument_list|)
+argument_list|)
+condition|)
+return|return;
 name|tryagain
 label|:
 name|timedout

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.h	4.1	81/05/09	*/
+comment|/*	tip.h	4.2	81/06/02	*/
 end_comment
 
 begin_comment
@@ -863,6 +863,13 @@ name|HOME
 value|23
 end_define
 
+begin_define
+define|#
+directive|define
+name|ECHOCHECK
+value|24
+end_define
+
 begin_else
 else|#
 directive|else
@@ -943,6 +950,13 @@ define|#
 directive|define
 name|HOME
 value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECHOCHECK
+value|22
 end_define
 
 begin_endif
