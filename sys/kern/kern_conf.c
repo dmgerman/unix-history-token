@@ -256,13 +256,6 @@ modifier|*
 name|newentry
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-specifier|static
-name|int
-name|setup
-decl_stmt|;
 if|if
 condition|(
 name|newentry
