@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)boggle.c	5.3 (Berkeley) %G%"
+literal|"@(#)boggle.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -383,28 +389,6 @@ end_function_decl
 begin_comment
 comment|/* dictionary interface */
 end_comment
-
-begin_decl_stmt
-name|char
-name|defname
-index|[]
-init|=
-literal|"/usr/games/lib/bogdict"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|dictname
-init|=
-operator|&
-name|defname
-index|[
-literal|0
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|FILE
@@ -3177,7 +3161,7 @@ name|dict
 operator|=
 name|fopen
 argument_list|(
-name|dictname
+name|_PATH_DICTIONARY
 argument_list|,
 literal|"r"
 argument_list|)
@@ -3190,7 +3174,7 @@ name|printf
 argument_list|(
 literal|"can't open %s\n"
 argument_list|,
-name|dictname
+name|_PATH_DICTIONARY
 argument_list|)
 expr_stmt|;
 name|goodbye
