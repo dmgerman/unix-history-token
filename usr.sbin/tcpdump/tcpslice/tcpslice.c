@@ -3,38 +3,20 @@ begin_comment
 comment|/*  * Copyright (c) 1987-1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|lint
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1987-1990 The Regents of the University of California.\nAll rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)$Header: /home/ncvs/src/usr.sbin/tcpdump/tcpslice/tcpslice.c,v 1.3 1995/08/23 05:18:59 pst Exp $ (LBL)"
+literal|"@(#) Copyright (c) 1987-1990\n\ 	The Regents of the University of California. All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,8 +26,44 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
 comment|/*  * tcpslice - extract pieces of and/or glue together tcpdump files  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -74,13 +92,6 @@ end_decl_stmt
 begin_comment
 comment|/* XXX: libpcap needs this global */
 end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|program_name
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Style in which to print timestamps; RAW is "secs.usecs"; READABLE is  * ala the Unix "date" tool; and PARSEABLE is tcpslice's custom format,  * designed to be easy to parse.  The default is RAW.  */
@@ -297,6 +308,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -371,24 +383,6 @@ name|pcap_t
 modifier|*
 name|pcap
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|,
-name|opterr
-decl_stmt|;
-name|program_name
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|opterr
 operator|=
 literal|0
@@ -822,18 +816,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"tcpslice: gettimeofday"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"gettimeofday"
 argument_list|)
 expr_stmt|;
-block|}
 name|localzone
 operator|=
 name|tz
@@ -2312,6 +2301,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2339,12 +2329,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: tcpslice [-dRrt] [-w file] [start-time [end-time]] file ... \n"
+literal|"usage: tcpslice [-dRrt] [-w file] [start-time [end-time]] file ... \n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
