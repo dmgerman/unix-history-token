@@ -1606,22 +1606,6 @@ decl_stmt|;
 name|u_int
 name|idx
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|fin
-operator|->
-name|fin_fi
-operator|.
-name|fi_fl
-operator|&
-name|FI_FRAG
-operator|)
-condition|)
-return|return
-name|NULL
-return|;
 comment|/* 	 * For fragments, we record protocol, packet id, TOS and both IP#'s 	 * (these should all be the same for all fragments of a packet). 	 * 	 * build up a hash value to index the table with. 	 */
 name|frag
 operator|.
@@ -1797,15 +1781,13 @@ name|atoff
 decl_stmt|,
 name|off
 decl_stmt|;
-comment|/* 			 * XXX - We really need to be guarding against the 			 * retransmission of (src,dst,id,offset-range) here 			 * because a fragmented packet is never resent with 			 * the same IP ID#. 			 */
 name|off
 operator|=
-name|ip
+name|fin
 operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
+name|fin_off
 expr_stmt|;
+comment|/* 			 * XXX - We really need to be guarding against the 			 * retransmission of (src,dst,id,offset-range) here 			 * because a fragmented packet is never resent with 			 * the same IP ID#. 			 */
 if|if
 condition|(
 name|f
@@ -1821,9 +1803,7 @@ operator|||
 operator|(
 name|fin
 operator|->
-name|fin_fi
-operator|.
-name|fi_fl
+name|fin_fl
 operator|&
 name|FI_SHORT
 operator|)
