@@ -2082,6 +2082,7 @@ argument_list|,
 literal|"Parent: PPP enabled\n"
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|EX_REDIAL
 case|:
