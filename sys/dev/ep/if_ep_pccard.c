@@ -842,11 +842,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"detach\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
