@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.9 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.10 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.9 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.10 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3816,16 +3816,6 @@ name|st_uid
 operator|!=
 name|geteuid
 argument_list|()
-operator|||
-operator|(
-name|st
-operator|.
-name|st_mode
-operator|&
-literal|07777
-operator|)
-operator|!=
-name|FileMode
 condition|)
 block|{
 ifdef|#
