@@ -19,6 +19,17 @@ literal|"@(#) Copyright (c) 1980, 1993\n\ 	The Regents of the University of Cali
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -283,6 +294,11 @@ comment|/* 			 * Next argument is person to pretend to be. 			 */
 name|myname
 operator|=
 name|optarg
+expr_stmt|;
+name|unsetenv
+argument_list|(
+literal|"MAIL"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
