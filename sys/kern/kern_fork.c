@@ -876,12 +876,6 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Here we don't create a new process, but we divorce 	 * certain parts of a process from itself. 	 */
 if|if
 condition|(
@@ -894,6 +888,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|vm_forkproc
 argument_list|(
 name|td
@@ -903,6 +903,12 @@ argument_list|,
 name|NULL
 argument_list|,
 name|flags
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Close all file descriptors. 		 */
@@ -1011,12 +1017,6 @@ name|p_fd
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 operator|*
 name|procp
 operator|=
@@ -1039,6 +1039,12 @@ name|P_SA
 condition|)
 block|{
 comment|/* 		 * Idle the other threads for a second. 		 * Since the user space is copied, it must remain stable. 		 * In addition, all threads (from the user perspective) 		 * need to either be suspended or in the kernel, 		 * where they will try restart in the parent and will 		 * be aborted in the child. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p1
@@ -1075,6 +1081,12 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 		 * All other activity in this process 		 * is now suspended at the user boundary, 		 * (or other safe places if we think of any). 		 */
 block|}
 comment|/* Allocate new proc. */
@@ -1097,6 +1109,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* We have to lock the process tree while we look for a pid. */
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Although process entries are dynamically created, we still keep 	 * a global limit on the maximum number we will create.  Don't allow 	 * a nonprivileged user to use the last ten processes; don't let root 	 * exceed the limit. The variable nprocs is the current number of 	 * processes, maxproc is the limit. 	 */
 name|sx_xlock
 argument_list|(
@@ -1323,6 +1342,14 @@ name|p_pid
 operator|==
 name|trypid
 operator|||
+operator|(
+name|p2
+operator|->
+name|p_pgrp
+operator|!=
+name|NULL
+operator|&&
+operator|(
 name|p2
 operator|->
 name|p_pgrp
@@ -1331,6 +1358,13 @@ name|pg_id
 operator|==
 name|trypid
 operator|||
+operator|(
+name|p2
+operator|->
+name|p_session
+operator|!=
+name|NULL
+operator|&&
 name|p2
 operator|->
 name|p_session
@@ -1338,6 +1372,9 @@ operator|->
 name|s_sid
 operator|==
 name|trypid
+operator|)
+operator|)
+operator|)
 condition|)
 block|{
 name|trypid
@@ -1385,6 +1422,15 @@ condition|(
 name|p2
 operator|->
 name|p_pgrp
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|p2
+operator|->
+name|p_pgrp
 operator|->
 name|pg_id
 operator|>
@@ -1411,6 +1457,12 @@ condition|(
 name|p2
 operator|->
 name|p_session
+operator|!=
+name|NULL
+operator|&&
+name|p2
+operator|->
+name|p_session
 operator|->
 name|s_sid
 operator|>
@@ -1432,6 +1484,7 @@ name|p_session
 operator|->
 name|s_sid
 expr_stmt|;
+block|}
 name|PROC_UNLOCK
 argument_list|(
 name|p2
@@ -1461,6 +1514,12 @@ name|again
 goto|;
 block|}
 block|}
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * RFHIGHPID does not mess with the lastpid counter during boot. 	 */
 if|if
 condition|(
@@ -2100,6 +2159,13 @@ operator|->
 name|p_textvp
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX: for VREF() */
 name|p2
 operator|->
 name|p_fd
@@ -2573,6 +2639,12 @@ name|p2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finish creating the child process.  It will return via a different 	 * execution path later.  (ie: directly into user mode) 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|vm_forkproc
 argument_list|(
 name|td
@@ -2722,6 +2794,12 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set the child start time and mark the process as being complete. 	 */
 name|microuptime
 argument_list|(
@@ -2865,12 +2943,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Return child proc pointer to parent. 	 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 operator|*
 name|procp
 operator|=
@@ -2883,6 +2955,12 @@ operator|)
 return|;
 name|fail
 label|:
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ppsratecheck
@@ -2961,12 +3039,6 @@ argument_list|,
 name|hz
 operator|/
 literal|2
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -3175,12 +3247,6 @@ block|{
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|printf
