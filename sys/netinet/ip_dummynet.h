@@ -299,7 +299,7 @@ decl_stmt|;
 name|u_int
 name|len_bytes
 decl_stmt|;
-name|long
+name|u_long
 name|numbytes
 decl_stmt|;
 comment|/* credit for transmission (dynamic queues) */
