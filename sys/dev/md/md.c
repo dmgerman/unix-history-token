@@ -1262,7 +1262,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|ENOMEM
+name|ENOSPC
 operator|)
 return|;
 name|cip
@@ -2522,7 +2522,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"mdstrategy(%p) %s %x, %lld, %ld, %p)\n"
+literal|"mdstrategy(%p) %s %x, %jd, %jd %ld, %p)\n"
 argument_list|,
 operator|(
 name|void
@@ -2542,12 +2542,18 @@ operator|->
 name|bio_flags
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|bp
 operator|->
 name|bio_blkno
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|bp
+operator|->
+name|bio_pblkno
 argument_list|,
 name|bp
 operator|->
