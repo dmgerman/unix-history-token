@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)test.c	5.3 (Berkeley) %G%"
+literal|"@(#)test.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -528,8 +528,16 @@ case|case
 literal|1
 case|:
 comment|/* % test arg */
+comment|/* MIPS machine returns NULL of '[ ]' is called. */
 return|return
 operator|(
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+operator|||
 operator|*
 name|argv
 index|[
