@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.11 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  * connection-oriented services are invoked each time a  * connection is made, by creating a process.  This process  * is passed the connection as file descriptor 0 and is  * expected to do a getpeername to find out the source host  * and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.   *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must being with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (5)  *  * Comment lines are indicated by a `#' in column 1.  */
@@ -2831,11 +2837,6 @@ decl_stmt|;
 name|long
 name|omask
 decl_stmt|;
-name|char
-modifier|*
-name|strdup
-parameter_list|()
-function_decl|;
 name|sep
 operator|=
 operator|(
@@ -3048,15 +3049,19 @@ init|=
 operator|&
 name|serv
 decl_stmt|;
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|cp
 decl_stmt|,
 modifier|*
 name|arg
-decl_stmt|;
-name|int
-name|argc
+decl_stmt|,
+modifier|*
+name|strdup
+argument_list|()
 decl_stmt|;
 name|more
 label|:
