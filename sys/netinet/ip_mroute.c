@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.22 1995/08/23 18:20:15 wollman Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.23 1995/10/06 19:30:43 wollman Exp $  */
 end_comment
 
 begin_include
@@ -2263,7 +2263,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mrouter_init: so_type = %d, pr_protocol = %d"
+literal|"ip_mrouter_init: so_type = %d, pr_protocol = %d\n"
 argument_list|,
 name|so
 operator|->
@@ -2398,7 +2398,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mrouter_init"
+literal|"ip_mrouter_init\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2745,7 +2745,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mrouter_done"
+literal|"ip_mrouter_done\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3150,7 +3150,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Source routed tunnels not supported."
+literal|"source routed tunnels not supported\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3430,7 +3430,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_vif #%d, lcladdr %x, %s %x, thresh %x, rate %d"
+literal|"add_vif #%d, lcladdr %x, %s %x, thresh %x, rate %d\n"
 argument_list|,
 name|vifcp
 operator|->
@@ -3764,7 +3764,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"del_vif %d, numvifs %d"
+literal|"del_vif %d, numvifs %d\n"
 argument_list|,
 operator|*
 name|vifip
@@ -3862,7 +3862,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mfc update o %x g %x p %x"
+literal|"add_mfc update o %x g %x p %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4040,7 +4040,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"add_mfc %s o %x g %x p %x dbx %x"
+literal|"add_mfc %s o %x g %x p %x dbx %x\n"
 argument_list|,
 literal|"multiple kernel entries"
 argument_list|,
@@ -4081,7 +4081,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mfc o %x g %x p %x dbg %x"
+literal|"add_mfc o %x g %x p %x dbg %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4307,7 +4307,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mfc no upcall h %d o %x g %x p %x"
+literal|"add_mfc no upcall h %d o %x g %x p %x\n"
 argument_list|,
 name|hash
 argument_list|,
@@ -4851,7 +4851,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"del_mfc orig %x mcastgrp %x"
+literal|"del_mfc orig %x mcastgrp %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5193,7 +5193,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: src %x, dst %x, ifp %x"
+literal|"ip_mforward: src %x, dst %x, ifp %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5270,7 +5270,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ip_mforward: received source-routed packet from %x"
+literal|"ip_mforward: received source-routed packet from %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5595,7 +5595,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: no rte s %x g %x"
+literal|"ip_mforward: no rte s %x g %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5946,7 +5946,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"ip_mforward: ip_mrouter socket queue full"
+literal|"ip_mforward: ip_mrouter socket queue full\n"
 argument_list|)
 expr_stmt|;
 operator|++
@@ -6379,7 +6379,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"expire_upcalls: expiring (%x %x)"
+literal|"expire_upcalls: expiring (%x %x)\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -6653,7 +6653,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"wrong if: ifp %x vifi %d vififp %x"
+literal|"wrong if: ifp %x vifi %d vififp %x\n"
 argument_list|,
 name|ifp
 argument_list|,
@@ -7897,7 +7897,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: no tunnel with %x"
+literal|"ip_mforward: no tunnel with %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -8882,7 +8882,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"phyint_send on vif %d err %d"
+literal|"phyint_send on vif %d err %d\n"
 argument_list|,
 name|vifp
 operator|-
@@ -9120,7 +9120,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"port %x prio%d"
+literal|"port %x prio%d\n"
 argument_list|,
 name|ntohs
 argument_list|(
