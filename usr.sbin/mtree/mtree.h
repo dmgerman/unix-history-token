@@ -78,6 +78,11 @@ decl_stmt|;
 comment|/* SHA-1 digest */
 name|char
 modifier|*
+name|sha256digest
+decl_stmt|;
+comment|/* SHA-256 digest */
+name|char
+modifier|*
 name|rmd160digest
 decl_stmt|;
 comment|/* RIPEMD160 digest */
@@ -211,6 +216,11 @@ directive|define
 name|F_FLAGS
 value|0x80000
 comment|/* file flags */
+define|#
+directive|define
+name|F_SHA256
+value|0x100000
+comment|/* SHA-256 digest */
 name|u_int
 name|flags
 decl_stmt|;
