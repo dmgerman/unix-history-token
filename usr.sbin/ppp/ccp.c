@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.34 1998/06/15 19:06:02 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
+comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.35 1998/06/25 22:33:12 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -575,22 +581,13 @@ name|ccp
 modifier|*
 name|ccp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|l
 operator|=
 name|command_ChooseLink
 argument_list|(
 name|arg
 argument_list|)
-operator|)
-condition|)
-return|return
-operator|-
-literal|1
-return|;
+expr_stmt|;
 name|ccp
 operator|=
 operator|&
@@ -1773,7 +1770,7 @@ name|log_Printf
 argument_list|(
 name|LogCCP
 argument_list|,
-literal|"%s: CcpLayerStart.\n"
+literal|"%s: LayerStart.\n"
 argument_list|,
 name|fp
 operator|->
@@ -1816,7 +1813,7 @@ name|log_Printf
 argument_list|(
 name|LogCCP
 argument_list|,
-literal|"%s: CcpLayerDown.\n"
+literal|"%s: LayerDown.\n"
 argument_list|,
 name|fp
 operator|->
@@ -2000,7 +1997,7 @@ name|log_Printf
 argument_list|(
 name|LogCCP
 argument_list|,
-literal|"%s: CcpLayerFinish.\n"
+literal|"%s: LayerFinish.\n"
 argument_list|,
 name|fp
 operator|->
@@ -2042,7 +2039,7 @@ name|log_Printf
 argument_list|(
 name|LogCCP
 argument_list|,
-literal|"%s: CcpLayerUp.\n"
+literal|"%s: LayerUp.\n"
 argument_list|,
 name|fp
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.59 1998/06/15 19:06:13 brian Exp $  *  * TODO:  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.60 1998/06/25 22:33:28 brian Exp $  *  * TODO:  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -243,7 +249,7 @@ name|u_short
 name|proto
 decl_stmt|;
 comment|/* Quality protocol */
-name|u_long
+name|u_int32_t
 name|period
 decl_stmt|;
 comment|/* Reporting interval */
@@ -535,22 +541,13 @@ name|lcp
 modifier|*
 name|lcp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|l
 operator|=
 name|command_ChooseLink
 argument_list|(
 name|arg
 argument_list|)
-operator|)
-condition|)
-return|return
-operator|-
-literal|1
-return|;
+expr_stmt|;
 name|lcp
 operator|=
 operator|&
@@ -1714,7 +1711,7 @@ condition|)
 block|{
 operator|*
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|o
@@ -1796,7 +1793,7 @@ condition|)
 block|{
 operator|*
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|o
@@ -1810,7 +1807,7 @@ argument_list|)
 expr_stmt|;
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|(
@@ -1850,7 +1847,7 @@ name|PROTO_PAP
 case|:
 operator|*
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|o
@@ -1877,7 +1874,7 @@ name|PROTO_CHAP
 case|:
 operator|*
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|o
@@ -1926,7 +1923,7 @@ condition|)
 block|{
 operator|*
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|o
@@ -2200,7 +2197,7 @@ name|log_Printf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"%s: LcpLayerStart\n"
+literal|"%s: LayerStart\n"
 argument_list|,
 name|fp
 operator|->
@@ -2234,7 +2231,7 @@ name|log_Printf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"%s: LcpLayerFinish\n"
+literal|"%s: LayerFinish\n"
 argument_list|,
 name|fp
 operator|->
@@ -2284,7 +2281,7 @@ name|log_Printf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"%s: LcpLayerUp\n"
+literal|"%s: LayerUp\n"
 argument_list|,
 name|fp
 operator|->
@@ -2350,7 +2347,7 @@ name|log_Printf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"%s: LcpLayerDown\n"
+literal|"%s: LayerDown\n"
 argument_list|,
 name|fp
 operator|->
@@ -2441,10 +2438,11 @@ name|mtu
 decl_stmt|,
 name|mru
 decl_stmt|,
+name|proto
+decl_stmt|;
+name|u_int16_t
 modifier|*
 name|sp
-decl_stmt|,
-name|proto
 decl_stmt|;
 name|struct
 name|lqrreq
@@ -2590,7 +2588,7 @@ expr_stmt|;
 name|sp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 operator|(
@@ -2698,7 +2696,7 @@ operator|=
 name|htons
 argument_list|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|)
 name|lcp
 operator|->
@@ -2857,7 +2855,7 @@ case|:
 name|sp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 operator|(
@@ -2942,7 +2940,7 @@ operator|=
 name|htons
 argument_list|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|)
 name|lcp
 operator|->
@@ -3147,7 +3145,7 @@ case|:
 name|sp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 operator|(
@@ -3716,7 +3714,7 @@ name|log_Printf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"%s proto %x, interval %ldms\n"
+literal|"%s proto %x, interval %lums\n"
 argument_list|,
 name|request
 argument_list|,
@@ -3728,7 +3726,7 @@ name|proto
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|u_long
 operator|)
 name|ntohl
 argument_list|(
@@ -3791,13 +3789,17 @@ name|lcp
 operator|->
 name|his_lqrperiod
 operator|<
-literal|500
+name|MIN_LQRPERIOD
+operator|*
+literal|100
 condition|)
 name|lcp
 operator|->
 name|his_lqrperiod
 operator|=
-literal|500
+name|MIN_LQRPERIOD
+operator|*
+literal|100
 expr_stmt|;
 name|req
 operator|->
@@ -4619,8 +4621,12 @@ name|log_Printf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|" ENDDISC rejected - local max length is %d\n"
+literal|" ENDDISC rejected - local max length is %ld\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 sizeof|sizeof
 name|p
 operator|->
@@ -4633,6 +4639,7 @@ operator|.
 name|address
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.60 1998/06/27 14:18:06 brian Exp $  *  *	TODO:  *		o More RFC1772 backward compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.61 1998/06/27 16:24:52 brian Exp $  *  *	TODO:  *		o More RFC1772 backward compatibility  */
 end_comment
 
 begin_include
@@ -2750,22 +2750,6 @@ name|my_reject
 operator|=
 literal|0
 expr_stmt|;
-name|throughput_stop
-argument_list|(
-operator|&
-name|ipcp
-operator|->
-name|throughput
-argument_list|)
-expr_stmt|;
-name|throughput_init
-argument_list|(
-operator|&
-name|ipcp
-operator|->
-name|throughput
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3285,7 +3269,7 @@ name|struct
 name|in_addr
 name|try
 decl_stmt|;
-name|int
+name|u_long
 name|f
 decl_stmt|;
 for|for
@@ -3332,7 +3316,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"ChooseHisAddr: Check item %d (%s)\n"
+literal|"ChooseHisAddr: Check item %ld (%s)\n"
 argument_list|,
 name|f
 argument_list|,
@@ -3579,7 +3563,7 @@ condition|)
 block|{
 operator|*
 operator|(
-name|u_short
+name|u_int32_t
 operator|*
 operator|)
 name|o
@@ -3825,7 +3809,7 @@ name|log_Printf
 argument_list|(
 name|LogIPCP
 argument_list|,
-literal|"%s: IpcpLayerStart.\n"
+literal|"%s: LayerStart.\n"
 argument_list|,
 name|fp
 operator|->
@@ -3883,7 +3867,7 @@ name|log_Printf
 argument_list|(
 name|LogIPCP
 argument_list|,
-literal|"%s: IpcpLayerFinish.\n"
+literal|"%s: LayerFinish.\n"
 argument_list|,
 name|fp
 operator|->
@@ -4234,7 +4218,7 @@ name|log_Printf
 argument_list|(
 name|LogIPCP
 argument_list|,
-literal|"%s: IpcpLayerDown: %s\n"
+literal|"%s: LayerDown: %s\n"
 argument_list|,
 name|fp
 operator|->
@@ -4468,7 +4452,7 @@ name|log_Printf
 argument_list|(
 name|LogIPCP
 argument_list|,
-literal|"%s: IpcpLayerUp.\n"
+literal|"%s: LayerUp.\n"
 argument_list|,
 name|fp
 operator|->

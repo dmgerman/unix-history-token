@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.32 1998/06/20 01:55:28 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.33 1998/06/25 22:33:20 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1301,6 +1301,47 @@ operator|<=
 name|ST_STOPPED
 condition|)
 block|{
+if|if
+condition|(
+name|fp
+operator|->
+name|state
+operator|!=
+name|ST_STARTING
+condition|)
+block|{
+comment|/*        * In practice, we're only here in ST_STOPPED (when delaying the        * first config request) or ST_CLOSED (when openmode == 0).        *        * The ST_STOPPED bit is breaking the RFC already :-(        *        * According to the RFC (1661) state transition table, a TLS isn't        * required for an Open event when state == Closed, but the RFC        * must be wrong as TLS hasn't yet been called (since the last TLF)        * ie, Initial gets an `Up' event, Closing gets a RTA etc.        */
+call|(
+modifier|*
+name|fp
+operator|->
+name|fn
+operator|->
+name|LayerStart
+call|)
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|fp
+operator|->
+name|parent
+operator|->
+name|LayerStart
+call|)
+argument_list|(
+name|fp
+operator|->
+name|parent
+operator|->
+name|object
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 name|FsmInitRestartCounter
 argument_list|(
 name|fp
@@ -1399,6 +1440,7 @@ argument_list|,
 name|ST_STOPPED
 argument_list|)
 expr_stmt|;
+comment|/* XXX: This is a hack ! */
 block|}
 elseif|else
 if|if
@@ -1442,6 +1484,7 @@ argument_list|,
 name|ST_STOPPED
 argument_list|)
 expr_stmt|;
+comment|/* XXX: This is a not-so-bad hack ! */
 name|timer_Stop
 argument_list|(
 operator|&
