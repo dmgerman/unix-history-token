@@ -78,6 +78,11 @@ name|options
 block|{
 struct|struct
 block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
 name|int
 name|bool
 decl_stmt|;
@@ -253,6 +258,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|_pam_verbose_error
+parameter_list|(
+name|pam_handle_t
+modifier|*
+parameter_list|,
+name|struct
+name|options
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
@@ -277,7 +310,19 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|do {								\ 	_pam_log_retval(&options, __FILE__, __FUNCTION__, arg);		\ 	return arg;							\ 	} while (0)
+value|do {								\ 		_pam_log_retval(&options, __FILE__, __FUNCTION__, arg);	\ 		return arg;						\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAM_VERBOSE_ERROR
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|_pam_verbose_error(pamh,&options, __FILE__, __FUNCTION__, ##args)
 end_define
 
 begin_endif
