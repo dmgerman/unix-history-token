@@ -77,7 +77,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<less.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"less.h"
 end_include
 
 begin_decl_stmt
@@ -961,11 +973,17 @@ name|envargv
 index|[
 literal|2
 index|]
-decl_stmt|,
-modifier|*
-name|getenv
-argument_list|()
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Process command line arguments and MORE environment arguments. 	 * Command line arguments override environment arguments. 	 */
 if|if
 condition|(
