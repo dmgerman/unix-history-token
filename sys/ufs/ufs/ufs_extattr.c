@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ufs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -125,12 +131,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/ufs_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ufs.h"
 end_include
 
 begin_ifdef
@@ -1844,7 +1844,6 @@ operator|!=
 name|VREG
 condition|)
 block|{
-comment|/*  * Eventually, this will be uncommented, but in the mean time, the ".."  * entry causes unnecessary console warnings. 				printf("ufs_extattr_iterate_directory: " 				    "%s not VREG\n", dp->d_name); */
 name|vput
 argument_list|(
 name|attr_vp
