@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|TIMEFMT
-value|"%Ex %H:%M %Y"
+value|"%Ef %H:%M %Y"
 end_define
 
 begin_define
