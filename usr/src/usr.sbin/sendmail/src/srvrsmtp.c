@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.35.1.1 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.36 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.35.1.1 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.36 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1807,6 +1807,39 @@ name|e
 operator|->
 name|e_id
 expr_stmt|;
+comment|/* check to see if we need to re-expand aliases */
+for|for
+control|(
+name|a
+operator|=
+name|e
+operator|->
+name|e_sendqueue
+init|;
+name|a
+operator|!=
+name|NULL
+condition|;
+name|a
+operator|=
+name|a
+operator|->
+name|q_next
+control|)
+block|{
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QVERIFIED
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+break|break;
+block|}
 comment|/* send to all recipients */
 name|sendall
 argument_list|(
@@ -1866,6 +1899,41 @@ operator|&=
 operator|~
 name|EF_FATALERRS
 expr_stmt|;
+comment|/* if we just queued, poke it */
+if|if
+condition|(
+name|a
+operator|!=
+name|NULL
+operator|&&
+name|e
+operator|->
+name|e_sendmode
+operator|!=
+name|SM_QUEUE
+condition|)
+block|{
+name|unlockqueue
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+name|dowork
+argument_list|(
+name|id
+argument_list|,
+name|TRUE
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_id
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* now make it really happen */
 if|if
 condition|(
