@@ -617,8 +617,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PSM_CONFIG_SYNCHACK
+value|0x8000
+end_define
+
+begin_comment
+comment|/* enable `out-of-sync' hack */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PSM_CONFIG_FLAGS
-value|(PSM_CONFIG_RESOLUTION 		\ 				    | PSM_CONFIG_ACCEL		\ 				    | PSM_CONFIG_NOCHECKSYNC	\ 				    | PSM_CONFIG_NOIDPROBE	\ 				    | PSM_CONFIG_NORESET	\ 				    | PSM_CONFIG_FORCETAP	\ 				    | PSM_CONFIG_IGNPORTERROR	\ 				    | PSM_CONFIG_HOOKRESUME	\ 				    | PSM_CONFIG_INITAFTERSUSPEND)
+value|(PSM_CONFIG_RESOLUTION 		\ 				    | PSM_CONFIG_ACCEL		\ 				    | PSM_CONFIG_NOCHECKSYNC	\ 				    | PSM_CONFIG_SYNCHACK	\ 				    | PSM_CONFIG_NOIDPROBE	\ 				    | PSM_CONFIG_NORESET	\ 				    | PSM_CONFIG_FORCETAP	\ 				    | PSM_CONFIG_IGNPORTERROR	\ 				    | PSM_CONFIG_HOOKRESUME	\ 				    | PSM_CONFIG_INITAFTERSUSPEND)
 end_define
 
 begin_comment
@@ -9086,6 +9097,38 @@ name|inputbytes
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_SYNCHACK
+condition|)
+block|{
+comment|/* 		 * XXX: this is a grotesque hack to get us out of 		 * dreaded "out of sync" error. 		 */
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psmintr: re-enable the mouse.\n"
+argument_list|)
+expr_stmt|;
+name|disable_aux_dev
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+expr_stmt|;
+name|enable_aux_dev
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+expr_stmt|;
+block|}
 continue|continue;
 block|}
 comment|/*  	 * A kludge for Kensington device!  	 * The MSB of the horizontal count appears to be stored in  	 * a strange place. 	 */
