@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6protosw.h,v 1.10 2000/03/29 22:51:25 itojun Exp $	*/
+comment|/*	$KAME: ip6protosw.h,v 1.11 2000/10/03 09:59:35 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -119,7 +119,7 @@ begin_struct
 struct|struct
 name|ip6protosw
 block|{
-name|int
+name|short
 name|pr_type
 decl_stmt|;
 comment|/* socket type used for */
