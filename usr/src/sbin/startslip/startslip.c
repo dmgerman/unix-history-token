@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startslip.c	5.6 (Berkeley) %G%"
+literal|"@(#)startslip.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1826,11 +1826,14 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: startslip [-d] [-s string] dev user passwd\n"
+literal|"usage: startslip [-d] [-b speed] [-s string] dev user passwd\n"
 argument_list|)
 expr_stmt|;
 name|exit
