@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	t6.c	1.2	(Berkeley)	83/08/15	*/
+comment|/*	t6.c	1.3	(Berkeley)	83/09/23	*/
 end_comment
 
 begin_include
@@ -396,13 +396,8 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* it's not on current font */
-comment|/* search through search list of xfont 		/* to see what font it ought to be on. 		/* for now, searches S, then remaining fonts in wraparound order. 		*/
-if|if
-condition|(
-name|smnt
-condition|)
-block|{
+comment|/* NOT current font */
+comment|/* search through search list of xfont 		/* to see what font it ought to be on. 		/* for now, searches from current font in wraparound order. */
 name|int
 name|ii
 decl_stmt|,
@@ -412,7 +407,7 @@ for|for
 control|(
 name|ii
 operator|=
-name|smnt
+name|xfont
 operator|,
 name|jj
 operator|=
@@ -501,7 +496,6 @@ expr_stmt|;
 goto|goto
 name|g1
 goto|;
-block|}
 block|}
 block|}
 name|code
