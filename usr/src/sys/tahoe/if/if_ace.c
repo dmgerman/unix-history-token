@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ace.c	1.10	86/07/16	*/
+comment|/*	if_ace.c	1.11	86/11/29	*/
 end_comment
 
 begin_comment
@@ -20,12 +20,6 @@ name|NACE
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -180,6 +174,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"../machine/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
