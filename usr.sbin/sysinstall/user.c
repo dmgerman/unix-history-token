@@ -2560,16 +2560,6 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|strncpy
-argument_list|(
-name|homedir
-argument_list|,
-name|cp
-argument_list|,
-sizeof|sizeof
-name|homedir
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
