@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_RFC1490_COOKIE
-value|861060632
+value|1086947474
 end_define
 
 begin_comment
@@ -64,6 +64,23 @@ directive|define
 name|NG_RFC1490_HOOK_ETHERNET
 value|"ethernet"
 end_define
+
+begin_comment
+comment|/* Netgraph commands */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NGM_RFC1490_SET_ENCAP
+block|,
+comment|/* sets encapsulation method */
+name|NGM_RFC1490_GET_ENCAP
+block|,
+comment|/* gets current encapsulation method */
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#
