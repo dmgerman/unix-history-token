@@ -19,52 +19,6 @@ directive|define
 name|_IF_SNREG_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_comment
-comment|/*  * Ethernet software status per interface.  The first element MUST  * be the arpcom struct since the address of the arpcom struct is  * used as a backdoor to obtain the address of this whole structure  * in many cases.  */
-end_comment
-
-begin_struct
-struct|struct
-name|sn_softc
-block|{
-name|struct
-name|arpcom
-name|arpcom
-decl_stmt|;
-comment|/* Ethernet common part */
-name|short
-name|sn_io_addr
-decl_stmt|;
-comment|/* i/o bus address (BASE) */
-name|int
-name|pages_wanted
-decl_stmt|;
-comment|/* Size of outstanding MMU ALLOC */
-name|int
-name|intr_mask
-decl_stmt|;
-comment|/* Most recently set interrupt mask */
-if|#
-directive|if
-name|NCARD
-operator|>
-literal|0
-name|int
-name|gone
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* NCARD> 0 */
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Wait time for memory to be free.  This probably shouldn't be  * tuned that much, as waiting for this means nothing else happens  * in the system  */
 end_comment
@@ -1367,54 +1321,6 @@ directive|define
 name|CHIP_91100
 value|7
 end_define
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|chip_ids
-index|[
-literal|15
-index|]
-init|=
-block|{
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* 3 */
-literal|"SMC91C90/91C92"
-block|,
-comment|/* 4 */
-literal|"SMC91C94"
-block|,
-comment|/* 5 */
-literal|"SMC91C95"
-block|,
-name|NULL
-block|,
-comment|/* 7 */
-literal|"SMC91C100"
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* When packets are stuffed into the card or sucked out of the card  * they are set up more or less as follows:  *  * Addr msbyte   lsbyte  * 00   SSSSSSSS SSSSSSSS - STATUS-WORD 16 bit TX or RX status  * 02   RRRRR             - RESERVED (unused)  * 02        CCC CCCCCCCC - BYTE COUNT (RX: always even, TX: bit 0 ignored)  * 04   DDDDDDDD DDDDDDDD - DESTINATION ADDRESS  * 06   DDDDDDDD DDDDDDDD        (48 bit Ethernet MAC Address)  * 08   DDDDDDDD DDDDDDDD  * 0A   SSSSSSSS SSSSSSSS - SOURCE ADDRESS  * 0C   SSSSSSSS SSSSSSSS        (48 bit Ethernet MAC Address)  * 0E   SSSSSSSS SSSSSSSS  * 10   PPPPPPPP PPPPPPPP  * ..   PPPPPPPP PPPPPPPP  * C-2  CCCCCCCC          - CONTROL BYTE  * C-2           PPPPPPPP - Last data byte (If odd length)  *  * The STATUS_WORD is derived from the EPH_STATUS_REG_W register  * during transmit and is composed of another set of bits described  * below during receive.  */
