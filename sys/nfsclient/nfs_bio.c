@@ -4409,6 +4409,7 @@ argument_list|,
 literal|"nfs_vinvalbuf"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX This check stops us from needlessly doing a vinvalbuf when 	 * being called through vclean().  It is not clear that this is 	 * unsafe. 	 */
 if|if
 condition|(
 name|vp
@@ -4417,21 +4418,11 @@ name|v_iflag
 operator|&
 name|VI_XLOCK
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|backtrace
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
