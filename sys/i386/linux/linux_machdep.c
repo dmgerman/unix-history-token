@@ -1102,7 +1102,7 @@ name|ARGS
 argument_list|(
 name|old_select
 argument_list|,
-literal|"%x"
+literal|"%p"
 argument_list|)
 argument_list|,
 name|args
