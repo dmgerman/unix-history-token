@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.4 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1529,6 +1529,12 @@ begin_macro
 name|error
 argument_list|(
 argument|fmt
+argument_list|,
+argument|a1
+argument_list|,
+argument|a2
+argument_list|,
+argument|a3
 argument_list|)
 end_macro
 
@@ -1536,6 +1542,16 @@ begin_decl_stmt
 name|char
 modifier|*
 name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|a1
+decl_stmt|,
+name|a2
+decl_stmt|,
+name|a3
 decl_stmt|;
 end_decl_stmt
 
@@ -1564,6 +1580,12 @@ operator|+
 literal|1
 argument_list|,
 name|fmt
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|a3
 argument_list|)
 expr_stmt|;
 operator|(
