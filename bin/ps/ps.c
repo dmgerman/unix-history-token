@@ -234,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|DEF_UREAD
-value|0;
+value|0
 end_define
 
 begin_define
@@ -253,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|DEF_UREAD
-value|1;
+value|1
 end_define
 
 begin_comment
