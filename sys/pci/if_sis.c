@@ -8647,6 +8647,12 @@ name|sis_type
 operator|==
 name|SIS_TYPE_83815
 operator|&&
+name|sc
+operator|->
+name|sis_srr
+operator|<
+name|NS_SRR_16A
+operator|&&
 name|IFM_SUBTYPE
 argument_list|(
 name|mii
