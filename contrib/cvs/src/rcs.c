@@ -10918,13 +10918,6 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"path: `%s'\n"
-argument_list|,
-name|path
-argument_list|)
-expr_stmt|;
 name|path
 operator|=
 name|escape_keyword_value
