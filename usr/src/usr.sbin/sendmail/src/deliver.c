@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.114
+literal|3.115
 operator|%
 name|G
 operator|%
@@ -3502,7 +3502,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		fp -- file to put it to. **		oldstyle -- TRUE if this is an old style header. **		m -- a pointer to the mailer descriptor. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
+comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		fp -- file to put it to. **		oldstyle -- TRUE if this is an old style header. **		m -- a pointer to the mailer descriptor.  If NULL, **			don't transform the name at all. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
 end_comment
 
 begin_expr_stmt
@@ -3567,14 +3567,7 @@ decl_stmt|;
 name|bool
 name|fullsmtp
 init|=
-name|bitset
-argument_list|(
-name|M_FULLSMTP
-argument_list|,
-name|m
-operator|->
-name|m_flags
-argument_list|)
+name|FALSE
 decl_stmt|;
 name|bool
 name|firstone
@@ -3614,6 +3607,25 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+operator|&&
+name|bitset
+argument_list|(
+name|M_FULLSMTP
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|fullsmtp
+operator|=
+name|TRUE
+expr_stmt|;
 name|obp
 operator|=
 name|obuf
@@ -3851,6 +3863,12 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* translate the name to be relative */
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
 name|name
 operator|=
 name|remotename
