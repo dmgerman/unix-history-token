@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.13 (Berkeley) 83/07/01"
+literal|"@(#)more.c	4.14 (Berkeley) 83/07/02"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ** more.c - General purpose tty output filter and file perusal program ** **	by Eric Shienbrood, UC Berkeley ** **	modified by Geoff Peck, UCB to add underlining, single spacing **	modified by John Foderaro, UCB to add -c and MORE environment variable */
@@ -61,28 +72,18 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<local/uparm.h>
-end_include
-
-begin_comment
-comment|/* Help file will eventually go in libpath(more.help) on all systems */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|HELPFILE
-value|libpath(more.help)
+value|"/usr/lib/more.help"
 end_define
 
 begin_define
 define|#
 directive|define
 name|VI
-value|binpath(vi)
+value|"/usr/ucb/vi"
 end_define
 
 begin_define
