@@ -241,7 +241,7 @@ name|pp
 operator|>=
 name|parts
 operator|+
-literal|4
+literal|3
 condition|)
 return|return
 operator|(
@@ -290,17 +290,6 @@ name|pp
 operator|-
 name|parts
 expr_stmt|;
-if|if
-condition|(
-name|n
-operator|>
-literal|4
-condition|)
-return|return
-operator|(
-name|INADDR_NONE
-operator|)
-return|;
 for|for
 control|(
 name|val
