@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_frag.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_frag.c	7.10 (Berkeley) %G% */
+comment|/*	@(#)clnp_frag.c	7.11 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -279,9 +279,12 @@ name|int
 name|frag_size
 init|=
 operator|(
+name|SN_MTU
+argument_list|(
 name|ifp
-operator|->
-name|if_mtu
+argument_list|,
+name|rt
+argument_list|)
 operator|-
 name|hdr_len
 operator|)
