@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iso.c	5.2 (Berkeley) %G%"
+literal|"@(#)iso.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
 
 begin_include
 include|#
@@ -106,12 +112,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netiso/cltp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netiso/esis.h>
 end_include
 
@@ -151,12 +151,6 @@ directive|include
 file|<netiso/tp_astring.c>
 end_include
 
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
@@ -173,6 +167,12 @@ begin_include
 include|#
 directive|include
 file|<netiso/iso_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netiso/cltp_var.h>
 end_include
 
 begin_include
