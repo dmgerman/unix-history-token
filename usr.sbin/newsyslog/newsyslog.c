@@ -1479,6 +1479,8 @@ block|{
 if|if
 condition|(
 name|noaction
+operator|||
+name|verbose
 condition|)
 name|printf
 argument_list|(
@@ -1498,6 +1500,33 @@ argument_list|(
 name|stmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|noaction
+condition|)
+name|printf
+argument_list|(
+literal|"\tsleep 10\n"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Pause 10 seconds to allow daemon(s)"
+literal|" to close log file(s)\n"
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Compress all files that we're expected to compress, now 	 * that all processes should have closed the files which 	 * have been rotated. 	 */
 if|if
@@ -1513,6 +1542,8 @@ block|{
 if|if
 condition|(
 name|noaction
+operator|||
+name|verbose
 condition|)
 name|printf
 argument_list|(
@@ -7676,8 +7707,15 @@ modifier|*
 name|swork
 parameter_list|)
 block|{
+name|struct
+name|sigwork_entry
+modifier|*
+name|nextsig
+decl_stmt|;
 name|int
 name|kres
+decl_stmt|,
+name|secs
 decl_stmt|;
 if|if
 condition|(
@@ -7716,6 +7754,47 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Compute the pause between consecutive signals.  Use a longer 	 * sleep time if we will be sending two signals to the same 	 * deamon or process-group. 	 */
+name|secs
+operator|=
+literal|0
+expr_stmt|;
+name|nextsig
+operator|=
+name|SLIST_NEXT
+argument_list|(
+name|swork
+argument_list|,
+name|sw_nextp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nextsig
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|swork
+operator|->
+name|sw_pid
+operator|==
+name|nextsig
+operator|->
+name|sw_pid
+condition|)
+name|secs
+operator|=
+literal|10
+expr_stmt|;
+else|else
+name|secs
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|noaction
@@ -7723,7 +7802,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\tkill -%d %d\n"
+literal|"\tkill -%d %d \t\t# %s\n"
 argument_list|,
 name|swork
 operator|->
@@ -7735,11 +7814,23 @@ operator|)
 name|swork
 operator|->
 name|sw_pid
+argument_list|,
+name|swork
+operator|->
+name|sw_fname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|secs
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"\tsleep 10\n"
+literal|"\tsleep %d\n"
+argument_list|,
+name|secs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7800,10 +7891,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"%s pid %d notified\n"
+literal|"Notified %s pid %d = %s\n"
 argument_list|,
 name|swork
 operator|->
@@ -7815,19 +7905,36 @@ operator|)
 name|swork
 operator|->
 name|sw_pid
+argument_list|,
+name|swork
+operator|->
+name|sw_fname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|secs
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
-literal|"pause to allow daemon(s) to close log(s)\n"
+literal|"Pause %d second(s) between signals\n"
+argument_list|,
+name|secs
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+name|secs
 argument_list|)
 expr_stmt|;
 block|}
-name|sleep
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
