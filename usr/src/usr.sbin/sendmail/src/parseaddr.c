@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.17 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5950,7 +5950,7 @@ if|if
 condition|(
 name|bitnset
 argument_list|(
-name|M_LOCAL
+name|M_LOCALMAILER
 argument_list|,
 name|a
 operator|->

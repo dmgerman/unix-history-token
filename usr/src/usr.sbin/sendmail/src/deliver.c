@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.20 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1892,7 +1892,7 @@ name|NULL
 operator|&&
 name|bitnset
 argument_list|(
-name|M_LOCAL
+name|M_LOCALMAILER
 argument_list|,
 name|m
 operator|->
@@ -6250,7 +6250,7 @@ condition|(
 operator|!
 name|bitnset
 argument_list|(
-name|M_LOCAL
+name|M_LOCALMAILER
 argument_list|,
 name|qq
 operator|->
