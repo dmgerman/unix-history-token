@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw_user.c,v 1.17 1997/03/03 07:59:54 ache Exp $  */
+comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw_user.c,v 1.18 1997/03/11 14:11:43 ache Exp $  */
 end_comment
 
 begin_include
@@ -142,6 +142,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+specifier|static
+name|randinit
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -5187,6 +5193,28 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* 	 * Calculate a salt value 	 */
+if|if
+condition|(
+operator|!
+name|randinit
+condition|)
+block|{
+name|randinit
+operator|=
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|srandomdev
+argument_list|()
+operator|<
+literal|0
+condition|)
+endif|#
+directive|endif
 name|srandom
 argument_list|(
 call|(
@@ -5204,6 +5232,7 @@ argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -5252,15 +5281,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_if
 if|#
@@ -5496,97 +5516,6 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Use random device (preferred) */
-end_comment
-
-begin_function
-specifier|static
-name|u_char
-modifier|*
-name|pw_getrand
-parameter_list|(
-name|u_char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|fd
-operator|=
-name|open
-argument_list|(
-literal|"/dev/urandom"
-argument_list|,
-name|O_RDONLY
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|==
-operator|-
-literal|1
-condition|)
-name|cmderr
-argument_list|(
-name|EX_OSFILE
-argument_list|,
-literal|"can't open /dev/urandom: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|read
-argument_list|(
-name|fd
-argument_list|,
-name|buf
-argument_list|,
-name|len
-argument_list|)
-operator|!=
-name|len
-condition|)
-name|cmderr
-argument_list|(
-name|EX_IOERR
-argument_list|,
-literal|"read error on /dev/urandom\n"
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-name|buf
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
 comment|/* Portable version */
 end_comment
 
@@ -5622,6 +5551,7 @@ operator|++
 control|)
 block|{
 name|unsigned
+name|long
 name|val
 init|=
 name|random
@@ -5722,6 +5652,28 @@ operator|-
 literal|1
 case|:
 comment|/* Random password */
+if|if
+condition|(
+operator|!
+name|randinit
+condition|)
+block|{
+name|randinit
+operator|=
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|srandomdev
+argument_list|()
+operator|<
+literal|0
+condition|)
+endif|#
+directive|endif
 name|srandom
 argument_list|(
 call|(
@@ -5739,6 +5691,7 @@ argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|l
 operator|=
 operator|(
