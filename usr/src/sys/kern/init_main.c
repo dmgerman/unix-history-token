@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.27	82/03/14	*/
+comment|/*	init_main.c	4.28	82/03/28	*/
 end_comment
 
 begin_include
@@ -352,9 +352,6 @@ comment|/* needed by dmc-11 driver */
 ifdef|#
 directive|ifdef
 name|INET
-name|pfinit
-argument_list|()
-expr_stmt|;
 if|#
 directive|if
 name|NLOOP
@@ -369,6 +366,10 @@ directive|endif
 name|ifinit
 argument_list|()
 expr_stmt|;
+name|pfinit
+argument_list|()
+expr_stmt|;
+comment|/* must follow interfaces */
 endif|#
 directive|endif
 name|ihinit
