@@ -107,6 +107,13 @@ begin_comment
 comment|/* Where we keep track of MBR chunks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CHUNK_INFO_ENTRIES
+value|16
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -114,7 +121,7 @@ name|chunk
 modifier|*
 name|chunk_info
 index|[
-literal|16
+name|CHUNK_INFO_ENTRIES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1385,6 +1392,9 @@ name|key
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|Boolean
 name|chunking
 decl_stmt|;
@@ -2450,6 +2460,41 @@ break|break;
 case|case
 literal|'S'
 case|:
+comment|/* Clear active states so we won't have two */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+operator|(
+name|chunk_info
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|i
+operator|<
+name|CHUNK_INFO_ENTRIES
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+name|chunk_info
+index|[
+name|i
+index|]
+operator|->
+name|flags
+operator|&=
+operator|!
+name|CHUNK_ACTIVE
+expr_stmt|;
 comment|/* Set Bootable */
 name|chunk_info
 index|[
