@@ -42,7 +42,7 @@ comment|/* last character */
 name|int
 name|equiv
 index|[
-literal|2
+name|NCHARS
 index|]
 decl_stmt|;
 comment|/* equivalence set */
