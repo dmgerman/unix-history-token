@@ -38,6 +38,13 @@ argument_list|)
 name|list_entry
 expr_stmt|;
 comment|/* list of buffers */
+name|TAILQ_ENTRY
+argument_list|(
+argument|sf_buf
+argument_list|)
+name|free_entry
+expr_stmt|;
+comment|/* list of buffers */
 name|struct
 name|vm_page
 modifier|*
