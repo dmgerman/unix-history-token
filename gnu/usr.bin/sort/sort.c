@@ -1375,6 +1375,8 @@ name|open
 argument_list|(
 name|file
 argument_list|,
+name|O_EXCL
+operator||
 name|O_WRONLY
 operator||
 name|O_CREAT
