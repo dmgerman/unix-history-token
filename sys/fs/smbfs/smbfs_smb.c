@@ -8574,9 +8574,12 @@ name|error
 operator|=
 name|smbfs_smb_lookup
 argument_list|(
+name|VTOSMB
+argument_list|(
 name|dnp
 operator|->
 name|n_parent
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,

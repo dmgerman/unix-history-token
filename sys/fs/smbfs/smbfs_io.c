@@ -401,9 +401,12 @@ name|np
 operator|->
 name|n_parent
 condition|?
+name|VTOSMB
+argument_list|(
 name|np
 operator|->
 name|n_parent
+argument_list|)
 operator|->
 name|n_ino
 else|:

@@ -784,10 +784,13 @@ name|vp
 operator|=
 name|VTOSMB
 argument_list|(
+name|VTOSMB
+argument_list|(
 name|dvp
 argument_list|)
 operator|->
 name|n_parent
+argument_list|)
 operator|->
 name|n_vnode
 expr_stmt|;
@@ -925,7 +928,7 @@ name|np
 operator|->
 name|n_parent
 operator|!=
-name|dnp
+name|dvp
 operator|||
 name|np
 operator|->
@@ -1137,7 +1140,7 @@ name|np
 operator|->
 name|n_parent
 operator|=
-name|dnp
+name|dvp
 expr_stmt|;
 if|if
 condition|(
@@ -1225,7 +1228,7 @@ name|np2
 operator|->
 name|n_parent
 operator|!=
-name|dnp
+name|dvp
 operator|||
 name|np2
 operator|->
@@ -1490,8 +1493,6 @@ condition|?
 name|np
 operator|->
 name|n_parent
-operator|->
-name|n_vnode
 else|:
 name|NULL
 expr_stmt|;

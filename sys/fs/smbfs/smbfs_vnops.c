@@ -4184,12 +4184,9 @@ name|np
 operator|->
 name|n_parent
 condition|?
-name|SMBTOV
-argument_list|(
 name|np
 operator|->
 name|n_parent
-argument_list|)
 else|:
 name|NULL
 argument_list|,
@@ -6068,9 +6065,12 @@ name|error
 operator|=
 name|smbfs_smb_lookup
 argument_list|(
+name|VTOSMB
+argument_list|(
 name|dnp
 operator|->
 name|n_parent
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
