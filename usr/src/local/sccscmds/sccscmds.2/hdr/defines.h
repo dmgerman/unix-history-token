@@ -24,7 +24,7 @@ file|"time.h"
 end_include
 
 begin_comment
-comment|/*  *	defines.h 2.3 of 5/18/78  *	defines.h 1.2 of %G%  */
+comment|/*  *	defines.h 2.3 of 5/18/78  *	defines.h 1.3 of %G%  */
 end_comment
 
 begin_define
