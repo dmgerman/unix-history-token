@@ -5062,6 +5062,31 @@ block|}
 end_function
 
 begin_function
+name|void
+name|clear_history
+parameter_list|()
+block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|CONS_CLRHIST
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warn
+argument_list|(
+literal|"clear history buffer"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -5500,7 +5525,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: kbdcontrol [-dFKix] [-b  duration.pitch | [quiet.]belltype]"
+literal|"usage: kbdcontrol [-cdFKix] [-b duration.pitch | [quiet.]belltype]"
 argument_list|,
 literal|"                  [-r delay.repeat | speed] [-l mapfile] [-f # string]"
 argument_list|,
@@ -5542,7 +5567,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:df:h:iKk:Fl:L:r:x"
+literal|"b:cdf:h:iKk:Fl:L:r:x"
 argument_list|)
 operator|)
 operator|!=
@@ -5561,6 +5586,13 @@ name|set_bell_values
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|clear_history
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
