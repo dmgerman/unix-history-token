@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)order.c	1.16 (Berkeley) %G%"
+literal|"@(#)order.c	1.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1698,10 +1698,9 @@ operator|.
 name|left
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|SZINT
+operator|/
+name|SZCHAR
 operator|)
 condition|)
 block|{
@@ -1768,10 +1767,9 @@ operator|.
 name|left
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|SZINT
+operator|/
+name|SZCHAR
 operator|)
 condition|)
 block|{
@@ -1844,10 +1842,9 @@ operator|.
 name|left
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|SZINT
+operator|/
+name|SZCHAR
 condition|)
 block|{
 name|order
@@ -1889,10 +1886,9 @@ operator|.
 name|right
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|SZINT
+operator|/
+name|SZCHAR
 condition|)
 block|{
 name|order
