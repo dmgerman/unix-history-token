@@ -94,8 +94,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|inprogress
+name|char
+modifier|*
+modifier|*
+name|shells
+decl_stmt|,
+modifier|*
+name|strings
 decl_stmt|;
 end_decl_stmt
 
@@ -104,10 +109,9 @@ specifier|static
 name|char
 modifier|*
 modifier|*
-name|shells
-decl_stmt|,
-modifier|*
-name|strings
+name|curshell
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -135,18 +139,13 @@ name|char
 modifier|*
 name|ret
 decl_stmt|;
-specifier|static
-name|char
-modifier|*
-modifier|*
-name|shells
-decl_stmt|;
 if|if
 condition|(
-operator|!
-name|inprogress
+name|curshell
+operator|==
+name|NULL
 condition|)
-name|shells
+name|curshell
 operator|=
 name|initshells
 argument_list|()
@@ -154,16 +153,15 @@ expr_stmt|;
 name|ret
 operator|=
 operator|*
-name|shells
+name|curshell
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|shells
+name|ret
 operator|!=
 name|NULL
 condition|)
-name|shells
+name|curshell
 operator|++
 expr_stmt|;
 return|return
@@ -215,9 +213,9 @@ name|strings
 operator|=
 name|NULL
 expr_stmt|;
-name|inprogress
+name|curshell
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 end_block
@@ -229,7 +227,7 @@ end_macro
 
 begin_block
 block|{
-name|shells
+name|curshell
 operator|=
 name|initshells
 argument_list|()
@@ -273,10 +271,6 @@ modifier|*
 name|calloc
 argument_list|()
 decl_stmt|;
-name|inprogress
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|shells
@@ -478,16 +472,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
+while|while
 condition|(
 operator|*
 name|cp
-operator|==
+operator|!=
 literal|'#'
-condition|)
-continue|continue;
-while|while
-condition|(
+operator|&&
 operator|*
 name|cp
 operator|!=
@@ -503,6 +494,11 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|cp
+operator|==
+literal|'#'
+operator|||
 operator|*
 name|cp
 operator|==
