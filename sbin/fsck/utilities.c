@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/fsck/utilities.c,v 1.3 1993/03/23 00:28:16 cgd Exp $"
+literal|"$Header: /home/cvs/386BSD/src/sbin/fsck/utilities.c,v 1.2 1993/07/22 16:52:01 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -915,6 +915,9 @@ if|if
 condition|(
 operator|!
 name|bp
+operator|||
+operator|!
+name|bp
 operator|->
 name|b_dirty
 condition|)
@@ -1233,9 +1236,13 @@ operator|.
 name|b_prev
 init|;
 name|bp
+operator|&&
+operator|(
+name|bp
 operator|!=
 operator|&
 name|bufhead
+operator|)
 condition|;
 name|bp
 operator|=
