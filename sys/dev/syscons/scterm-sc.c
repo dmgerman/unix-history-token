@@ -2783,7 +2783,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-comment|/*  	     * The cursor shape is global property; all virtual consoles 	     * are affected. Update the cursor in the current console... 	     */
+comment|/*  			 * The cursor shape is global property;  			 * all virtual consoles are affected.  			 * Update the cursor in the current console... 			 */
 if|if
 condition|(
 operator|!
