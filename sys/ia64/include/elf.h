@@ -120,7 +120,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|Elf64_Off
+name|Elf64_Half
 name|Elf64_Hashelt
 typedef|;
 end_typedef
