@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)CONFIG.c	2.5 (Berkeley) 83/09/19"
+literal|"@(#)CONFIG.c	2.6 (Berkeley) 84/02/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,11 +117,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PXP
-end_ifdef
+end_ifndef
 
 begin_decl_stmt
 name|char
