@@ -324,11 +324,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
 name|__sparc64__
-end_ifndef
+operator|&&
+operator|!
+name|__powerpc__
+end_if
 
 begin_function_decl
 specifier|static
@@ -1598,11 +1602,15 @@ begin_comment
 comment|/* SMP */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
 name|__sparc64__
-end_ifndef
+operator|&&
+operator|!
+name|__powerpc__
+end_if
 
 begin_function
 specifier|static
