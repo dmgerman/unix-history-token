@@ -467,15 +467,14 @@ break|break;
 case|case
 literal|'c'
 case|:
+comment|/* NOTE: c_fmt is intentionally ignored */
 name|buf
 operator|=
 name|_strptime
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
-operator|->
-name|c_fmt
+literal|"%a %Ef %T %Y"
 argument_list|,
 name|tm
 argument_list|)
