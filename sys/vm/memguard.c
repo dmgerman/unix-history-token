@@ -1064,7 +1064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vtomgfifo() converts a virtual address of the first page allocated for  * an item to a memguard_fifo_pool reference for the corresponding item's  * size.  *  * vsetmgfifo() sets a reference in an underlying page for the specified  * virtual address to an appropriate memguard_fifo_pool.  *  * These routines are very similar to those defined by UMA in uma_int.h  */
+comment|/*  * vtomgfifo() converts a virtual address of the first page allocated for  * an item to a memguard_fifo_pool reference for the corresponding item's  * size.  *  * vsetmgfifo() sets a reference in an underlying page for the specified  * virtual address to an appropriate memguard_fifo_pool.  *  * These routines are very similar to those defined by UMA in uma_int.h.  * The difference is that these routines store the mgfifo in one of the  * page's fields that is unused when the page is wired rather than the  * object field, which is used.  */
 end_comment
 
 begin_function
@@ -1096,6 +1096,25 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|->
+name|wire_count
+operator|!=
+literal|0
+operator|&&
+name|p
+operator|->
+name|queue
+operator|==
+name|PQ_NONE
+argument_list|,
+operator|(
+literal|"MEMGUARD: Expected wired page in vtomgfifo!"
+operator|)
+argument_list|)
+expr_stmt|;
 name|mgfifo
 operator|=
 operator|(
@@ -1105,25 +1124,9 @@ operator|*
 operator|)
 name|p
 operator|->
-name|object
-expr_stmt|;
-comment|/* 	 * We use PG_SLAB, just like UMA does, even though we stash a 	 * reference to a memguard_fifo, and not a slab. 	 */
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|flags
-operator|&
-name|PG_SLAB
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"MEMGUARD: Expected memguard_fifo reference to be set!"
-argument_list|)
+name|pageq
+operator|.
+name|tqe_next
 expr_stmt|;
 return|return
 name|mgfifo
@@ -1158,21 +1161,35 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
 name|p
 operator|->
-name|object
+name|wire_count
+operator|!=
+literal|0
+operator|&&
+name|p
+operator|->
+name|queue
+operator|==
+name|PQ_NONE
+argument_list|,
+operator|(
+literal|"MEMGUARD: Expected wired page in vsetmgfifo!"
+operator|)
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|pageq
+operator|.
+name|tqe_next
 operator|=
 operator|(
-name|vm_object_t
+name|vm_page_t
 operator|)
 name|mgfifo
-expr_stmt|;
-comment|/* 	 * We use PG_SLAB, just like UMA does, even though we stash a reference 	 * to a memguard_fifo, and not a slab. 	 */
-name|p
-operator|->
-name|flags
-operator||=
-name|PG_SLAB
 expr_stmt|;
 block|}
 end_function
@@ -1199,18 +1216,32 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
 name|p
 operator|->
-name|object
-operator|=
-name|NULL
+name|wire_count
+operator|!=
+literal|0
+operator|&&
+name|p
+operator|->
+name|queue
+operator|==
+name|PQ_NONE
+argument_list|,
+operator|(
+literal|"MEMGUARD: Expected wired page in vclrmgfifo!"
+operator|)
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_SLAB
+name|pageq
+operator|.
+name|tqe_next
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
