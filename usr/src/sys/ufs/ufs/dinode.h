@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dinode.h	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dinode.h	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -124,11 +124,11 @@ name|short
 name|ic_nlink
 decl_stmt|;
 comment|/*  2: number of links to file */
-name|short
+name|uid_t
 name|ic_uid
 decl_stmt|;
 comment|/*  4: owner's user id */
-name|short
+name|gid_t
 name|ic_gid
 decl_stmt|;
 comment|/*  6: owner's group id */
