@@ -362,11 +362,11 @@ begin_comment
 comment|/*  * rep_add()  *	parses the -s replacement string; compiles the regular expression  *	and stores the compiled value and it's replacement string together in  *	replacement string list. Input to this function is of the form:  *		/old/new/pg  *	The first char in the string specifies the delimiter used by this  *	replacement string. "Old" is a regular expression in "ed" format which  *	is compiled by regcomp() and is applied to filenames. "new" is the  *	substitution string; p and g are options flags for printing and global  *	replacement (over the single filename)  * Return:  *	0 if a proper replacement string and regular expression was added to  *	the list of replacement patterns; -1 otherwise.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -445,7 +445,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -479,7 +479,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -517,7 +517,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -603,7 +603,7 @@ name|rebuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -703,7 +703,7 @@ operator|)
 name|rep
 argument_list|)
 expr_stmt|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -832,7 +832,7 @@ operator|=
 operator|*
 name|str
 expr_stmt|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -895,8 +895,8 @@ operator|)
 return|;
 block|}
 comment|/*  * pat_add()  *	add a pattern match to the pattern match list. Pattern matches are used  *	to select which archive members are extracted. (They appear as  *	arguments to pax in the list and read modes). If no patterns are  *	supplied to pax, all members in the archive will be selected (and the  *	pattern match list is empty).  * Return:  *	0 if the pattern was added to the list, -1 otherwise  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|pat_add
@@ -940,7 +940,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -976,7 +976,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1059,8 +1059,8 @@ operator|)
 return|;
 block|}
 comment|/*  * pat_chk()  *	complain if any the user supplied pattern did not result in a match to  *	a selected archive member.  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|void
 name|pat_chk
@@ -1119,7 +1119,7 @@ operator|!
 name|wban
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1147,8 +1147,8 @@ expr_stmt|;
 block|}
 block|}
 comment|/*  * pat_sel()  *	the archive member which matches a pattern was selected. Mark the  *	pattern as having selected an archive member. arcn->pat points at the  *	pattern that was matched. arcn->pat is set in pat_match()  *  *	NOTE: When the -c option is used, we are called when there was no match  *	by pat_match() (that means we did match before the inverted sense of  *	the logic). Now this seems really strange at first, but with -c  we  *	need to keep track of those patterns that cause a archive member to NOT  *	be selected (it found an archive member with a specified pattern)  * Return:  *	0 if the pattern pointed at by arcn->pat was tagged as creating a  *	match, -1 otherwise.  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|pat_sel
@@ -1306,7 +1306,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1488,7 +1488,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * should never happen.... 		 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1534,8 +1534,8 @@ operator|)
 return|;
 block|}
 comment|/*  * pat_match()  *	see if this archive member matches any supplied pattern, if a match  *	is found, arcn->pat is set to point at the potential pattern. Later if  *	this archive member is "selected" we process and mark the pattern as  *	one which matched a selected archive member (see pat_sel())  * Return:  *	0 if this archive member should be processed, 1 if it should be  *	skipped and -1 if we are done with all patterns (and pax should quit  *	looking for more members)  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|pat_match
@@ -1747,8 +1747,8 @@ operator|)
 return|;
 block|}
 comment|/*  * fn_match()  * Return:  *	0 if this archive member should be processed, 1 if it should be  *	skipped and -1 if we are done with all patterns (and pax should quit  *	looking for more members)  *	Note: *pend may be changed to show where the prefix ends.  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 specifier|static
 name|int
@@ -2207,8 +2207,8 @@ operator|)
 return|;
 block|}
 comment|/*  * mod_name()  *	modify a selected file name. first attempt to apply replacement string  *	expressions, then apply interactive file rename. We apply replacement  *	string expressions to both filenames and file links (if we didn't the  *	links would point to the wrong place, and we could never be able to  *	move an archive that has a file link in it). When we rename files  *	interactively, we store that mapping (old name to user input name) so  *	if we spot any file links to the old file name in the future, we will  *	know exactly how to fix the file link.  * Return:  *	0 continue to  process file, 1 skip this file, -1 pax is finished  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|mod_name
@@ -2407,8 +2407,8 @@ operator|)
 return|;
 block|}
 comment|/*  * tty_rename()  *	Prompt the user for a replacement file name. A "." keeps the old name,  *	a empty line skips the file, and an EOF on reading the tty, will cause  *	pax to stop processing and exit. Otherwise the file name input, replaces  *	the old one.  * Return:  *	0 process this file, 1 skip this file, -1 we need to exit pax  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 specifier|static
 name|int
@@ -2660,8 +2660,8 @@ operator|)
 return|;
 block|}
 comment|/*  * set_dest()  *	fix up the file name and the link name (if any) so this file will land  *	in the destination directory (used during copy() -rw).  * Return:  *	0 if ok, -1 if failure (name too long)  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|set_dest
@@ -2791,8 +2791,8 @@ operator|)
 return|;
 block|}
 comment|/*  * fix_path  *	concatenate dir_name and or_name and store the result in or_name (if  *	it fits). This is one ugly function.  * Return:  *	0 if ok, -1 if the final name is too long  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 specifier|static
 name|int
@@ -2907,7 +2907,7 @@ operator|>
 name|PAXPATHLEN
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2984,8 +2984,8 @@ operator|)
 return|;
 block|}
 comment|/*  * rep_name()  *	walk down the list of replacement strings applying each one in order.  *	when we find one with a successful substitution, we modify the name  *	as specified. if required, we print the results. if the resulting name  *	is empty, we will skip this archive member. We use the regexp(3)  *	routines (regexp() ought to win a prize as having the most cryptic  *	library function manual page).  *	--Parameters--  *	name is the file name we are going to apply the regular expressions to  *	(and may be modified)  *	nlen is the length of this name (and is modified to hold the length of  *	the final string).  *	prnt is a flag that says whether to print the final result.  * Return:  *	0 if substitution was successful, 1 if we are to skip the file (the name  *	ended up empty)  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 specifier|static
 name|int
@@ -3301,7 +3301,7 @@ if|if
 condition|(
 name|prnt
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3447,7 +3447,7 @@ if|if
 condition|(
 name|prnt
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3558,8 +3558,8 @@ ifdef|#
 directive|ifdef
 name|NET2_REGEX
 comment|/*  * resub()  *	apply the replacement to the matched expression. expand out the old  * 	style ed(1) subexpression expansion.  * Return:  *	-1 if error, or the number of characters added to the destination.  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 specifier|static
 name|int
@@ -3850,8 +3850,8 @@ block|}
 else|#
 directive|else
 comment|/*  * resub()  *	apply the replacement to the matched expression. expand out the old  * 	style ed(1) subexpression expansion.  * Return:  *	-1 if error, or the number of characters added to the destination.  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 specifier|static
 name|int

@@ -645,11 +645,11 @@ begin_comment
 comment|/*  * options()  *	figure out if we are pax, tar or cpio. Call the appropriate options  *	parser  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -796,11 +796,11 @@ begin_comment
 comment|/*  * pax_options()  *	look at the user specified flags. set globals as required and check if  *	the user specified a legal set of flags. If not, complain and exit  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -936,7 +936,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1145,7 +1145,7 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1307,7 +1307,7 @@ name|XF
 expr_stmt|;
 break|break;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1398,7 +1398,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1418,7 +1418,7 @@ operator|%
 name|BLKMULT
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1488,7 +1488,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1852,7 +1852,7 @@ operator|>=
 name|argc
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -1919,11 +1919,11 @@ begin_comment
 comment|/*  * tar_options()  *	look at the user specified flags. set globals as required and check if  *	the user specified a legal set of flags. If not, complain and exit  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2032,14 +2032,10 @@ condition|(
 operator|*
 name|argv
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2068,7 +2064,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2113,14 +2109,10 @@ condition|(
 operator|*
 name|argv
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2411,10 +2403,6 @@ condition|(
 operator|*
 name|argv
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 if|if
@@ -2443,10 +2431,6 @@ condition|(
 operator|*
 name|argv
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 if|if
@@ -2479,10 +2463,6 @@ operator|(
 operator|(
 name|arcname
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 operator|||
@@ -2507,10 +2487,6 @@ condition|(
 operator|(
 name|arcname
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 operator|||
@@ -2539,11 +2515,11 @@ begin_comment
 comment|/*  * cpio_options()  *	look at the user specified flags. set globals as required and check if  *	the user specified a legal set of flags. If not, complain and exit  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2603,11 +2579,11 @@ begin_comment
 comment|/*  * printflg()  *	print out those invalid flag sets found to the user  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -2708,11 +2684,11 @@ begin_comment
 comment|/*  * c_frmt()  *	comparison routine used by bsearch to find the format specified  *	by the user  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -2781,11 +2757,11 @@ begin_comment
 comment|/*  * opt_next()  *	called by format specific options routines to get each format specific  *	flag and value specified with -o  * Return:  *	pointer to next OPLIST entry or NULL (end of list).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|OPLIST
@@ -2835,11 +2811,11 @@ begin_comment
 comment|/*  * bad_opt()  *	generic routine used to complain about a format specific options  *	when the format does not support options.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -2872,7 +2848,7 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * print all we were given 	 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2923,11 +2899,11 @@ begin_comment
 comment|/*  * opt_add()  *	breaks the value supplied to -o into a option name and value. options  *	are given to -o in the form -o name-value,name=value  *	multiple -o may be specified.  * Return:  *	0 if format in name=value format, -1 if -o is passed junk  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -2995,7 +2971,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -3068,7 +3044,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -3103,7 +3079,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -3196,11 +3172,11 @@ begin_comment
 comment|/*  * str_offt()  *	Convert an expression of the following forms to an off_t> 0.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1024).  *	4) A positive decimal number followed by a m (mult by 512).  *	5) A positive decimal number followed by a w (mult by sizeof int)  *	6) Two or more positive decimal numbers (with/without k,b or w).  *	   separated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  * Return:  *	0 for an error, a positive value o.w.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -3483,11 +3459,11 @@ begin_comment
 comment|/*  * no_op()  *	for those option functions where the archive format has nothing to do.  * Return:  *	0  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -3517,11 +3493,11 @@ begin_comment
 comment|/*  * pax_usage()  *	print the usage summary to the user  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -3779,11 +3755,11 @@ begin_comment
 comment|/*  * tar_usage()  *	print the usage summary to the user  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -3837,11 +3813,11 @@ begin_comment
 comment|/*  * cpio_usage()  *	print the usage summary to the user  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void

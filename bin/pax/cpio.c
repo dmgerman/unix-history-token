@@ -171,11 +171,11 @@ begin_comment
 comment|/*  * cpio_strd()  *	Fire up the hard link detection code  * Return:  *      0 if ok -1 otherwise (the return values of lnk_start())  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -204,11 +204,11 @@ begin_comment
 comment|/*  * cpio_trail()  *	Called to determine if a header block is a valid trailer. We are  *	passed the block, the in_sync flag (which tells us we are in resync  *	mode; looking for a valid header), and cnt (which starts at zero)  *	which is used to count the number of empty blocks we have seen so far.  * Return:  *	0 if a valid trailer, -1 if not a valid trailer,  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -284,11 +284,11 @@ begin_comment
 comment|/*  * com_rd()  *	operations common to all cpio read functions.  * Return:  *	0  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -484,11 +484,11 @@ begin_comment
 comment|/*  * cpio_end_wr()  *	write the special file with the name trailer in the proper format  * Return:  *	result of the write of the trailer from the cpio specific write func  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -508,14 +508,12 @@ name|ARCHD
 name|last
 decl_stmt|;
 comment|/* 	 * create a trailer request and call the proper format write function 	 */
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|last
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -581,11 +579,11 @@ begin_comment
 comment|/*  * rd_nam()  *	read in the file name which follows the cpio header  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -651,7 +649,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -708,7 +706,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -734,11 +732,11 @@ begin_comment
 comment|/*  * rd_ln_nm()  *	read in the link name for a file with links. The link name is stored  *	like file data (and is NOT \0 terminated!)  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -804,7 +802,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|NET2_STAT
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -819,7 +817,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -870,7 +868,7 @@ operator|.
 name|st_size
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -918,7 +916,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -948,11 +946,11 @@ begin_comment
 comment|/*  * cpio_id()  *      determine if a block given to us is a valid extended byte oriented  *	cpio header  * Return:  *      0 if a valid header, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -1030,11 +1028,11 @@ begin_comment
 comment|/*  * cpio_rd()  *	determine if a buffer is a byte oriented extended cpio archive entry.  *	convert and store the values in the ARCHD parameter.  * Return:  *	0 if a valid header, -1 otherwise.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1544,11 +1542,11 @@ begin_comment
 comment|/*  * cpio_endrd()  *      no cleanup needed here, just return size of the trailer (for append)  * Return:  *      size of trailer header in this format  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|off_t
@@ -1589,11 +1587,11 @@ begin_comment
 comment|/*  * cpio_stwr()  *	start up the device mapping table  * Return:  *	0 if ok, -1 otherwise (what dev_start() returns)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1622,11 +1620,11 @@ begin_comment
 comment|/*  * cpio_wr()  *	copy the data in the ARCHD to buffer in extended byte oriented cpio  *	format.  * Return  *      0 if file has data to be written after the header, 1 if file has NO  *	data to write after the header, -1 if archive write failed  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1830,7 +1828,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2193,7 +2191,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2273,7 +2271,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2299,7 +2297,7 @@ return|;
 name|out
 label|:
 comment|/* 	 * header field is out of range 	 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2318,8 +2316,8 @@ return|;
 block|}
 comment|/*  * Routines common to the system VR4 version of cpio (with/without file CRC)  */
 comment|/*  * vcpio_id()  *      determine if a block given to us is a valid system VR4 cpio header  *	WITHOUT crc. WATCH it the magic cookies are in OCTAL, the header  *	uses HEX  * Return:  *      0 if a valid header, -1 otherwise  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|vcpio_id
@@ -2391,8 +2389,8 @@ operator|)
 return|;
 block|}
 comment|/*  * crc_id()  *      determine if a block given to us is a valid system VR4 cpio header  *	WITH crc. WATCH it the magic cookies are in OCTAL the header uses HEX  * Return:  *      0 if a valid header, -1 otherwise  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|crc_id
@@ -2464,8 +2462,8 @@ operator|)
 return|;
 block|}
 comment|/*  * crc_strd()  w	set file data CRC calculations. Fire up the hard link detection code  * Return:  *      0 if ok -1 otherwise (the return values of lnk_start())  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|crc_strd
@@ -2492,8 +2490,8 @@ operator|)
 return|;
 block|}
 comment|/*  * vcpio_rd()  *	determine if a buffer is a system VR4 archive entry. (with/without CRC)  *	convert and store the values in the ARCHD parameter.  * Return:  *	0 if a valid header, -1 otherwise.  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|vcpio_rd
@@ -3169,8 +3167,8 @@ operator|)
 return|;
 block|}
 comment|/*  * vcpio_endrd()  *      no cleanup needed here, just return size of the trailer (for append)  * Return:  *      size of trailer header in this format  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|off_t
 name|vcpio_endrd
@@ -3220,8 +3218,8 @@ operator|)
 return|;
 block|}
 comment|/*  * crc_stwr()  *	start up the device mapping table, enable crc file calculation  * Return:  *	0 if ok, -1 otherwise (what dev_start() returns)  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|crc_stwr
@@ -3248,8 +3246,8 @@ operator|)
 return|;
 block|}
 comment|/*  * vcpio_wr()  *	copy the data in the ARCHD to buffer in system VR4 cpio  *	(with/without crc) format.  * Return  *	0 if file has data to be written after the header, 1 if file has  *	NO data to write after the header, -1 if archive write failed  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|vcpio_wr
@@ -3559,7 +3557,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -4000,7 +3998,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -4102,7 +4100,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -4128,7 +4126,7 @@ return|;
 name|out
 label|:
 comment|/* 	 * header field is out of range 	 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -4147,8 +4145,8 @@ return|;
 block|}
 comment|/*  * Routines common to the old binary header cpio  */
 comment|/*  * bcpio_id()  *      determine if a block given to us is a old binary cpio header  *	(with/without header byte swapping)  * Return:  *      0 if a valid header, -1 otherwise  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|bcpio_id
@@ -4250,8 +4248,8 @@ operator|)
 return|;
 block|}
 comment|/*  * bcpio_rd()  *	determine if a buffer is a old binary archive entry. (it may have byte  *	swapped header) convert and store the values in the ARCHD parameter.  *	This is a very old header format and should not really be used.  * Return:  *	0 if a valid header, -1 otherwise.  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|bcpio_rd
@@ -5014,8 +5012,8 @@ operator|)
 return|;
 block|}
 comment|/*  * bcpio_endrd()  *      no cleanup needed here, just return size of the trailer (for append)  * Return:  *      size of trailer header in this format  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|off_t
 name|bcpio_endrd
@@ -5065,8 +5063,8 @@ operator|)
 return|;
 block|}
 comment|/*  * bcpio_wr()  *	copy the data in the ARCHD to buffer in old binary cpio format  *	There is a real chance of field overflow with this critter. So we  *	always check the conversion is ok. nobody in his their right mind  *	should write an achive in this format...  * Return  *      0 if file has data to be written after the header, 1 if file has NO  *	data to write after the header, -1 if archive write failed  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|bcpio_wr
@@ -5319,7 +5317,7 @@ operator|!=
 name|t_offt
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -6139,7 +6137,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -6241,7 +6239,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -6267,7 +6265,7 @@ return|;
 name|out
 label|:
 comment|/* 	 * header field is out of range 	 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,

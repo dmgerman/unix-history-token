@@ -203,11 +203,11 @@ begin_comment
 comment|/*  * ls_list()  *	list the members of an archive in ls format  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -638,11 +638,11 @@ begin_comment
 comment|/*  * tty_ls()  * 	print a short summary of file to tty.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -722,10 +722,6 @@ operator|)
 operator|<=
 name|time
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
 name|NULL
 argument_list|)
 condition|)
@@ -808,14 +804,14 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * zf_strncpy()  *	copy src to dest up to len chars (stopping at first '\0'), when src is  *	shorter than len, pads to len with '\0'. big performance win (and  *	a lot easier to code) over strncpy(), then a strlen() then a  *	bzero(). (or doing the bzero() first).  */
+comment|/*  * zf_strncpy()  *	copy src to dest up to len chars (stopping at first '\0'), when src is  *	shorter than len, pads to len with '\0'. big performance win (and  *	a lot easier to code) over strncpy(), then a strlen() then a  *	memset(). (or doing the memset() first).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -927,11 +923,11 @@ begin_comment
 comment|/*  * l_strncpy()  *	copy src to dest up to len chars (stopping at first '\0')  * Return:  *	number of chars copied. (Note this is a real performance win over  *	doing a strncpy() then a strlen()  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1057,11 +1053,11 @@ begin_comment
 comment|/*  * asc_ul()  *	convert hex/octal character string into a u_long. We do not have to  *	check for overflow! (the headers in all supported formats are not large  *	enough to create an overflow).  *	NOTE: strings passed to us are NOT TERMINATED.  * Return:  *	unsigned long value  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|u_long
@@ -1335,11 +1331,11 @@ begin_comment
 comment|/*  * ul_asc()  *	convert an unsigned long into an hex/oct ascii string. pads with LEADING  *	ascii 0's to fill string completely  *	NOTE: the string created is NOT TERMINATED.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -1575,11 +1571,11 @@ begin_comment
 comment|/*  * asc_uqd()  *	convert hex/octal character string into a u_quad_t. We do not have to  *	check for overflow! (the headers in all supported formats are not large  *	enough to create an overflow).  *	NOTE: strings passed to us are NOT TERMINATED.  * Return:  *	u_quad_t value  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|u_quad_t
@@ -1853,11 +1849,11 @@ begin_comment
 comment|/*  * uqd_asc()  *	convert an u_quad_t into a hex/oct ascii string. pads with LEADING  *	ascii 0's to fill string completely  *	NOTE: the string created is NOT TERMINATED.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int

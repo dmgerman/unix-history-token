@@ -477,11 +477,11 @@ begin_comment
 comment|/*  * main()  *	parse options, set up and operate as specified by the user.  *	any operational flaw will set exit_val to non-zero  * Return: 0 if ok, 1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -600,7 +600,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -722,11 +722,11 @@ begin_comment
 comment|/*  * sig_cleanup()  *	when interrupted we try to do whatever delayed processing we can.  *	This is not critical, but we really ought to limit our damage when we  *	are aborted by the user.  * Return:  *	never....  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
@@ -760,7 +760,7 @@ name|which_sig
 operator|==
 name|SIGXCPU
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -768,7 +768,7 @@ literal|"Cpu time limit reached, cleaning up."
 argument_list|)
 expr_stmt|;
 else|else
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -800,11 +800,11 @@ begin_comment
 comment|/*  * gen_init()  *	general setup routines. Not all are required, but they really help  *	when dealing with a medium to large sized archives.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1068,7 +1068,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1363,7 +1363,7 @@ operator|)
 return|;
 name|out
 label|:
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,

@@ -2410,7 +2410,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|pax_warn
+name|paxwarn
 name|__P
 argument_list|(
 operator|(
@@ -2434,7 +2434,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|sys_warn
+name|syswarn
 name|__P
 argument_list|(
 operator|(

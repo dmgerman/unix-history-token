@@ -227,7 +227,7 @@ decl_stmt|;
 comment|/* default block size. used when the user */
 comment|/* does not specify a blocksize for writing */
 comment|/* Appends continue to with the blocksize */
-comment|/* the archive is currently using.*/
+comment|/* the archive is currently using. */
 name|int
 name|hsz
 decl_stmt|;

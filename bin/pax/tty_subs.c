@@ -95,11 +95,11 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -170,11 +170,11 @@ begin_comment
 comment|/*  * tty_init()  *	try to open the controlling terminal (if any) for this process. if the  *	open fails, future ops that require user input will get an EOF  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -268,7 +268,7 @@ condition|(
 name|iflag
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -296,11 +296,11 @@ begin_comment
 comment|/*  * tty_prnt()  *	print a message using the specified format to the controlling tty  *	if there is no controlling terminal, just return.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -343,8 +343,8 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -401,11 +401,11 @@ begin_comment
 comment|/*  * tty_read()  *	read a string from the controlling terminal if it is open into the  *	supplied buffer  * Return:  *	0 if data was read, -1 otherwise.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -514,18 +514,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pax_warn()  *	write a pax_warning message to stderr. if "set" the exit value of pax  *	will be non-zero.  */
+comment|/*  * paxwarn()  *	write a warning message to stderr. if "set" the exit value of pax  *	will be non-zero.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
-name|pax_warn
+name|paxwarn
 parameter_list|(
 name|int
 name|set
@@ -539,7 +539,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|void pax_warn
+function|void paxwarn
 parameter_list|(
 name|set
 parameter_list|,
@@ -562,8 +562,8 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -655,18 +655,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sys_warn()  *	write a pax_warning message to stderr. if "set" the exit value of pax  *	will be non-zero.  */
+comment|/*  * syswarn()  *	write a warning message to stderr. if "set" the exit value of pax  *	will be non-zero.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
-name|sys_warn
+name|syswarn
 parameter_list|(
 name|int
 name|set
@@ -683,7 +683,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|void sys_warn
+function|void syswarn
 parameter_list|(
 name|set
 parameter_list|,
@@ -711,8 +711,8 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -806,10 +806,10 @@ name|stderr
 argument_list|,
 literal|"<%s>"
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errnum
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(

@@ -168,11 +168,11 @@ begin_comment
 comment|/*  * file_creat()  *	Create and open a file.  * Return:  *	file descriptor or -1 for failure  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -338,7 +338,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -371,11 +371,11 @@ begin_comment
 comment|/*  * file_close()  *	Close file descriptor to a file just created by pax. Sets modes,  *	ownership and times as required.  * Return:  *	0 for success, -1 for failure  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -439,7 +439,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|0
 argument_list|,
@@ -548,11 +548,11 @@ begin_comment
 comment|/*  * lnk_creat()  *	Create a hard link to arcn->ln_name from arcn->name. arcn->ln_name  *	must exist;  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -604,7 +604,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -638,7 +638,7 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -679,14 +679,14 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * cross_lnk()  *	Create a hard link to arcn->org_name from arcn->name. Only used in copy  *	with the -l flag. No pax_warning or error if this does not succeed (we will  *	then just create the file)  * Return:  *	1 if copy() should try to create this file node  *	0 if cross_lnk() ok, -1 for fatal flaw (like linking to self).  */
+comment|/*  * cross_lnk()  *	Create a hard link to arcn->org_name from arcn->name. Only used in copy  *	with the -l flag. No warning or error if this does not succeed (we will  *	then just create the file)  * Return:  *	1 if copy() should try to create this file node  *	0 if cross_lnk() ok, -1 for fatal flaw (like linking to self).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -762,11 +762,11 @@ begin_comment
 comment|/*  * chk_same()  *	In copy mode if we are not trying to make hard links between the src  *	and destinations, make sure we are not going to overwrite ourselves by  *	accident. This slows things down a little, but we have to protect all  *	those people who make typing errors.  * Return:  *	1 the target does not exist, go ahead and copy  *	0 skip it file exists (-k) or may be the same as source file  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -859,7 +859,7 @@ name|st_ino
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -888,11 +888,11 @@ begin_comment
 comment|/*  * mk_link()  *	try to make a hard link between two files. if ign set, we do not  *	complain.  * Return:  *	0 if successful (or we are done with this file but no error, such as  *	finding the from file exists and the user has set -k).  *	1 when ign was set to indicates we could not make the link but we  *	should try to copy/extract the file as that might work (and is an  *	allowed option). -1 an error occurred.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1023,7 +1023,7 @@ name|st_ino
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1061,7 +1061,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1097,7 +1097,7 @@ operator|!
 name|ign
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1169,7 +1169,7 @@ operator|!
 name|ign
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1208,11 +1208,11 @@ begin_comment
 comment|/*  * node_creat()  *	create an entry in the file system (other than a file or hard link).  *	If successful, sets uid/gid modes and times as required.  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1387,7 +1387,7 @@ case|case
 name|PAX_SCK
 case|:
 comment|/* 			 * Skip sockets, operation has no meaning under BSD 			 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -1446,7 +1446,7 @@ name|PAX_REG
 case|:
 default|default:
 comment|/* 			 * we should never get here 			 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -1534,7 +1534,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1665,7 +1665,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|0
 argument_list|,
@@ -1819,11 +1819,11 @@ begin_comment
 comment|/*  * unlnk_exist()  *	Remove node from file system with the specified name. We pass the type  *	of the node that is going to replace it. When we try to create a  *	directory and find that it already exists, we allow processing to  *	continue as proper modes etc will always be set for it later on.  * Return:  *	0 is ok to proceed, no file with the specified name exists  *	-1 we were unable to remove the node, or we should not remove it (-k)  *	1 we found a directory and we were going to create a directory.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1932,7 +1932,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1967,7 +1967,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1997,11 +1997,11 @@ begin_comment
 comment|/*  * chk_path()  *	We were trying to create some kind of node in the file system and it  *	failed. chk_path() makes sure the path up to the node exists and is  *	writeable. When we have to create a directory that is missing along the  *	path somewhere, the directory we create will be set to the same  *	uid/gid as the file has (when uid and gid are being preserved).  *	NOTE: this routine is a real performance loss. It is only used as a  *	last resort when trying to create entries in the file system.  * Return:  *	-1 when it could find nothing it is allowed to fix.  *	0 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -2267,14 +2267,14 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * set_ftime()  *	Set the access time and modification time for a named file. If frc is  *	non-zero we force these times to be set even if the the user did not  *	request access and/or modification time preservation (this is also  *	used by -t to reset access times).  *	When ign is zero, only those times the user has asked for are set, the  *	other ones are left alone. We do not assume the un-documented feature  *	of many utimes() implementations that consider a 0 time value as a do  *	not set request.  */
+comment|/*  * set_ftime()  *	Set the access time and modification time for a named file. If frc is  *	non-zero we force these times to be set even if the user did not  *	request access and/or modification time preservation (this is also  *	used by -t to reset access times).  *	When ign is zero, only those times the user has asked for are set, the  *	other ones are left alone. We do not assume the un-documented feature  *	of many utimes() implementations that consider a 0 time value as a do  *	not set request.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
@@ -2439,7 +2439,7 @@ name|st_mtime
 expr_stmt|;
 block|}
 else|else
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|0
 argument_list|,
@@ -2463,7 +2463,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2482,11 +2482,11 @@ begin_comment
 comment|/*  * set_ids()  *	set the uid and gid of a file system node  * Return:  *	0 when set, -1 on failure  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -2539,7 +2539,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2569,11 +2569,11 @@ begin_comment
 comment|/*  * set_pmode()  *	Set file access mode  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
@@ -2619,7 +2619,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2638,11 +2638,11 @@ begin_comment
 comment|/*  * file_write()  *	Write/copy a file (during copy or archive extract). This routine knows  *	how to copy files with lseek holes in it. (Which are read as file  *	blocks containing all 0's but do not have any file blocks associated  *	with the data). Typical examples of these are files created by dbm  *	variants (.pag files). While the file size of these files are huge, the  *	actual storage is quite small (the files are sparse). The problem is  *	the holes read as all zeros so are probably stored on the archive that  *	way (there is no way to determine if the file block is really a hole,  *	we only know that a file block of all zero's can be a hole).  *	At this writing, no major archive format knows how to archive files  *	with holes. However, on extraction (or during copy, -rw) we have to  *	deal with these files. Without detecting the holes, the files can  *	consume a lot of file space if just written to disk. This replacement  *	for write when passed the basic allocation size of a file system block,  *	uses lseek whenever it detects the input data is all 0 within that  *	file block. In more detail, the strategy is as follows:  *	While the input is all zero keep doing an lseek. Keep track of when we  *	pass over file block boundries. Only write when we hit a non zero  *	input. once we have written a file block, we continue to write it to  *	the end (we stop looking at the input). When we reach the start of the  *	next file block, start checking for zero blocks again. Working on file  *	block boundries significantly reduces the overhead when copying files  *	that are NOT very sparse. This overhead (when compared to a write) is  *	almost below the measurement resolution on many systems. Without it,  *	files with holes cannot be safely copied. It does has a side effect as  *	it can put holes into files that did not have them before, but that is  *	not a problem since the file contents are unchanged (in fact it saves  *	file space). (Except on paging files for diskless clients. But since we  *	cannot determine one of those file from here, we ignore them). If this  *	ever ends up on a system where CTG files are supported and the holes  *	are not desired, just do a conditional test in those routines that  *	call file_write() and have it call write() instead. BEFORE CLOSING THE  *	FILE, make sure to call file_flush() when the last write finishes with  *	an empty block. A lot of file systems will not create an lseek hole at  *	the end. In this case we drop a single 0 at the end to force the  *	trailing 0's in the file.  *	---Parameters---  *	rem: how many bytes left in this file system block  *	isempt: have we written to the file block yet (is it empty)  *	sz: basic file block allocation size  *	cnt: number of bytes on this write  *	str: buffer to write  * Return:  *	number of bytes written, -1 on write (or lseek) error.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -2848,7 +2848,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2894,7 +2894,7 @@ operator|!=
 name|wcnt
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2931,11 +2931,11 @@ begin_comment
 comment|/*  * file_flush()  *	when the last file block in a file is zero, many file systems will not  *	let us create a hole at the end. To get the last block with zeros, we  *	write the last BYTE with a zero (back up one byte and write a zero).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
@@ -3007,7 +3007,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3033,7 +3033,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3052,11 +3052,11 @@ begin_comment
 comment|/*  * rdfile_close()  *	close a file we have beed reading (to copy or archive). If we have to  *	reset access time (tflag) do so (the times are stored in arcn).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -3163,11 +3163,11 @@ begin_comment
 comment|/*  * set_crc()  *	read a file to calculate its crc. This is a real drag. Archive formats  *	that have this, end up reading the file twice (we have to write the  *	header WITH the crc before writing the file contents. Oh well...  * Return:  *	0 if was able to calculate the crc, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -3362,7 +3362,7 @@ name|sb
 operator|.
 name|st_size
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3386,7 +3386,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3412,7 +3412,7 @@ name|sb
 operator|.
 name|st_mtime
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3440,7 +3440,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
