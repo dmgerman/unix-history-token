@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_sl.c	7.6.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_sl.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ file|"../machine/mtpr.h"
 end_include
 
 begin_comment
-comment|/*  * N.B.: SLMTU is now a hard limit on input packet size.  * SLMTU must be<= CLBYTES - sizeof(struct ifnet *).  */
+comment|/*  * N.B.: SLMTU is now a hard limit on input packet size.  * SLMTU must be<= MCLBYTES - sizeof(struct ifnet *).  */
 end_comment
 
 begin_define
@@ -1651,7 +1651,7 @@ name|m
 operator|->
 name|m_len
 operator|==
-name|CLBYTES
+name|MCLBYTES
 condition|)
 block|{
 name|cp
@@ -1706,7 +1706,7 @@ name|MIN
 argument_list|(
 name|len
 argument_list|,
-name|CLBYTES
+name|MCLBYTES
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -1724,7 +1724,7 @@ name|MIN
 argument_list|(
 name|len
 argument_list|,
-name|CLBYTES
+name|MCLBYTES
 argument_list|)
 expr_stmt|;
 goto|goto
