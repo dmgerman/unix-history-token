@@ -11584,6 +11584,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Top level filesystem related information gathering.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -11744,9 +11748,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Top level filesystem related information gathering.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -12100,6 +12106,15 @@ end_endif
 
 begin_comment
 comment|/* 1 || COMPAT_PRELITE2 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !BURN_BRIDGES */
 end_comment
 
 begin_define
