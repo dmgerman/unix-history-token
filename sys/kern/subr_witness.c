@@ -2593,16 +2593,6 @@ argument_list|(
 name|spinlocks
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try locks do not block if they fail to acquire the lock, thus 	 * there is no danger of deadlocks or of switching while holding a 	 * spin lock if we acquire a lock via a try operation. 	 */
-if|if
-condition|(
-name|flags
-operator|&
-name|LOP_TRYLOCK
-condition|)
-goto|goto
-name|out
-goto|;
 comment|/* 	 * Is this the first lock acquired?  If so, then no order checking 	 * is needed. 	 */
 if|if
 condition|(
@@ -2839,6 +2829,16 @@ name|line
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Try locks do not block if they fail to acquire the lock, thus 	 * there is no danger of deadlocks or of switching while holding a 	 * spin lock if we acquire a lock via a try operation. 	 */
+if|if
+condition|(
+name|flags
+operator|&
+name|LOP_TRYLOCK
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * Check for duplicate locks of the same type.  Note that we only 	 * have to check for this on the last lock we just acquired.  Any 	 * other cases will be caught as lock order violations. 	 */
 name|lock1
 operator|=
