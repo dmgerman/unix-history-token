@@ -1387,7 +1387,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AdlDSUt:T:u:va:p:"
+literal|"AdlDSURt:T:u:va:p:"
 argument_list|)
 operator|)
 operator|!=
