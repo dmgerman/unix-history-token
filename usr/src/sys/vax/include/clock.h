@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.h	4.1	%G%	*/
+comment|/*	clock.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -96,11 +96,11 @@ name|LEAPYEAR
 parameter_list|(
 name|year
 parameter_list|)
-value|((year)%4==0&& year != 2000)
+value|((year)%4==0)
 end_define
 
 begin_comment
-comment|/* good till 2100 */
+comment|/* good till time becomes negative */
 end_comment
 
 begin_comment
