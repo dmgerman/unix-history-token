@@ -286,15 +286,10 @@ name|struct
 name|vmspace
 name|vmspace
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BAD_JHB_NO_COOKIE
 name|struct
-name|procsig
-name|procsig
+name|sigacts
+name|sigacts
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|pstats
 name|pstats
@@ -799,14 +794,11 @@ name|proc
 operator|.
 name|p_vmspace
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BAD_JHB_NO_COOKIE
 if|if
 condition|(
 name|proc
 operator|.
-name|p_procsig
+name|p_sigacts
 operator|!=
 name|NULL
 condition|)
@@ -822,10 +814,10 @@ name|u_long
 operator|)
 name|proc
 operator|.
-name|p_procsig
+name|p_sigacts
 argument_list|,
 operator|&
-name|procsig
+name|sigacts
 argument_list|)
 condition|)
 block|{
@@ -837,11 +829,11 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read procsig at %x"
+literal|"can't read sigacts at %x"
 argument_list|,
 name|proc
 operator|.
-name|p_procsig
+name|p_sigacts
 argument_list|)
 expr_stmt|;
 return|return
@@ -855,7 +847,7 @@ name|kp
 operator|->
 name|ki_sigignore
 operator|=
-name|procsig
+name|sigacts
 operator|.
 name|ps_sigignore
 expr_stmt|;
@@ -863,13 +855,11 @@ name|kp
 operator|->
 name|ki_sigcatch
 operator|=
-name|procsig
+name|sigacts
 operator|.
 name|ps_sigcatch
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
