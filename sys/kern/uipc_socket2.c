@@ -212,9 +212,6 @@ name|so
 operator|->
 name|so_head
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|so
 operator|->
 name|so_state
@@ -260,11 +257,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|so
 operator|->
 name|so_upcall
@@ -301,11 +293,6 @@ name|so_options
 operator|&=
 operator|~
 name|SO_ACCEPTFILTER
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|so
 operator|->
