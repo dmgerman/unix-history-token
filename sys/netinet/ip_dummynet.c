@@ -1804,6 +1804,9 @@ name|dn_pkt
 modifier|*
 name|pkt
 decl_stmt|;
+name|DUMMYNET_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1833,6 +1836,10 @@ name|DN_NEXT
 argument_list|(
 name|pkt
 argument_list|)
+expr_stmt|;
+comment|/* XXX: drop the lock for now to avoid LOR's */
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * The actual mbuf is preceded by a struct dn_pkt, resembling an mbuf 	 * (NOT A REAL one, just a small block of malloc'ed memory) with 	 *     m_type = MT_TAG, m_flags = PACKET_TAG_DUMMYNET 	 *     dn_m (m_next) = actual mbuf to be processed by ip_input/output 	 * and some other fields. 	 * The block IS FREED HERE because it contains parameters passed 	 * to the called routine. 	 */
 switch|switch
@@ -2054,6 +2061,9 @@ name|pkt
 argument_list|,
 name|M_DUMMYNET
 argument_list|)
+expr_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* if there are leftover packets, put into the heap for next event */
