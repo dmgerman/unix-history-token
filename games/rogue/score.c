@@ -1933,7 +1933,7 @@ case|:
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strcat
 argument_list|(
 name|buf
 argument_list|,
