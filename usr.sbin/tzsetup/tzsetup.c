@@ -1139,6 +1139,21 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
 name|cp
 operator|->
 name|tlc
@@ -1146,6 +1161,21 @@ operator|=
 name|strdup
 argument_list|(
 name|t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|tlc
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1307,7 +1337,7 @@ name|zp
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1347,6 +1377,21 @@ argument_list|(
 name|descr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zp
+operator|->
+name|descr
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
 name|zp
 operator|->
 name|filename
@@ -1354,6 +1399,21 @@ operator|=
 name|strdup
 argument_list|(
 name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zp
+operator|->
+name|filename
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|zp
@@ -1432,6 +1492,21 @@ operator|=
 name|strdup
 argument_list|(
 name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|filename
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|cp
@@ -2055,7 +2130,7 @@ name|menu
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2209,7 +2284,7 @@ name|submenu
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
