@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.31	83/02/18	*/
+comment|/*	sys_generic.c	5.32	83/02/25	*/
 end_comment
 
 begin_include
@@ -2986,6 +2986,24 @@ name|data
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|com
+operator|&
+name|IOC_VOID
+condition|)
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|data
+operator|=
+name|uap
+operator|->
+name|cmarg
 expr_stmt|;
 if|if
 condition|(
