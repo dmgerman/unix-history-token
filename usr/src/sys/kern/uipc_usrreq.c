@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.13	83/06/14	*/
+comment|/*	uipc_usrreq.c	1.14	83/06/14	*/
 end_comment
 
 begin_include
@@ -76,8 +76,19 @@ file|"../h/file.h"
 end_include
 
 begin_comment
-comment|/*  * Unix communications domain.  *  * TODO:  *	SEQPACKET, RDM  *	change for names in file system  *	need a proper out-of-band  */
+comment|/*  * Unix communications domain.  *  * TODO:  *	SEQPACKET, RDM  *	rethink name space problems  *	need a proper out-of-band  */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|sockaddr
+name|sun_noname
+init|=
+block|{
+name|AF_UNIX
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -567,6 +578,7 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* 				 * There's no record of source socket's 				 * name, so send null name for the moment. 				 */
 operator|(
 name|void
 operator|)
@@ -577,14 +589,8 @@ name|so2
 operator|->
 name|so_rcv
 argument_list|,
-name|mtod
-argument_list|(
-name|nam
-argument_list|,
-expr|struct
-name|sockaddr
-operator|*
-argument_list|)
+operator|&
+name|sun_noname
 argument_list|,
 name|m
 argument_list|,
