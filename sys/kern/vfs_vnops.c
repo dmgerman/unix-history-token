@@ -4165,19 +4165,6 @@ name|lf
 decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|fp
-operator|->
-name|f_type
-operator|==
-name|DTYPE_VNODE
-argument_list|,
-operator|(
-literal|"vn_closefile: !DTYPE_VNODE"
-operator|)
-argument_list|)
-expr_stmt|;
 name|vp
 operator|=
 name|fp
@@ -4186,6 +4173,12 @@ name|f_vnode
 expr_stmt|;
 if|if
 condition|(
+name|fp
+operator|->
+name|f_type
+operator|==
+name|DTYPE_VNODE
+operator|&&
 name|fp
 operator|->
 name|f_flag
