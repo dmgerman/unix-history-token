@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.12 (Berkeley) %G%"
+literal|"@(#)man.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -857,6 +857,20 @@ block|}
 block|}
 block|}
 comment|/* 	 * 2: If the user did not specify MANPATH, -M or a section, rewrite 	 *    the _default list to include the _subdir list and the machine. 	 */
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+condition|)
+name|section
+operator|=
+name|NULL
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
