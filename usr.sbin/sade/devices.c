@@ -853,7 +853,7 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"cuaa%d"
+literal|"cuad%d"
 block|,
 literal|"%s on device %s (COM%d)"
 block|,
