@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.17	81/03/21	*/
+comment|/*	lp.c	4.18	81/04/02	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * LP-11 Line printer driver  *  * This driver has been modified to work on printers where  * leaving IENABLE set would cause continuous interrupts.  *  * TODO:  *	Test driver  *	Test driver on multiple printers  */
+comment|/*  * LP-11 Line printer driver  *  * This driver has been modified to work on printers where  * leaving IENABLE set would cause continuous interrupts.  *  * TODO:  *	Test driver on multiple printers  */
 end_comment
 
 begin_include
