@@ -2336,14 +2336,14 @@ block|{
 return|return
 operator|(
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|xdrs
 operator|->
 name|x_private
 operator|-
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|xdrs
 operator|->

@@ -1036,9 +1036,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 function_decl|;
 name|u_short

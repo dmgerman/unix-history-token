@@ -1126,7 +1126,7 @@ argument_list|,
 name|nip
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|ia
 argument_list|)
@@ -1512,6 +1512,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|i
 argument_list|,

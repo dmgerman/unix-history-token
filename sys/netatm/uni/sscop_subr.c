@@ -227,7 +227,7 @@ comment|/* 		 * Get element from this buffer 		 */
 if|if
 condition|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|cp
 operator|&
@@ -1554,7 +1554,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|n
 argument_list|,
@@ -2439,7 +2439,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|n
 argument_list|,

@@ -175,10 +175,10 @@ name|void
 modifier|*
 name|tok
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg2
 decl_stmt|;
 block|{
@@ -207,7 +207,7 @@ name|err
 decl_stmt|;
 name|ATM_DEBUG5
 argument_list|(
-literal|"sscf_uni_upper: cmd=0x%x, uvp=%p, lstate=%d, arg1=0x%x, arg2=0x%x\n"
+literal|"sscf_uni_upper: cmd=0x%x, uvp=%p, lstate=%d, arg1=%p, arg2=%p\n"
 argument_list|,
 name|cmd
 argument_list|,
@@ -217,8 +217,16 @@ name|uvp
 operator|->
 name|uv_lstate
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|arg1
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|arg2
 argument_list|)
 expr_stmt|;

@@ -1065,9 +1065,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1087,13 +1087,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|intptr_t
 name|arg1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|intptr_t
 name|arg2
 decl_stmt|;
 end_decl_stmt

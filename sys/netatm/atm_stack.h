@@ -76,9 +76,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 function_decl|;
 name|void
@@ -93,9 +93,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 function_decl|;
 comment|/* Variables used during stack instantiation */
@@ -723,9 +723,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 function_decl|;
 name|void
@@ -733,11 +733,11 @@ modifier|*
 name|sq_token
 decl_stmt|;
 comment|/* Destination token */
-name|int
+name|intptr_t
 name|sq_arg1
 decl_stmt|;
 comment|/* Command-specific argument */
-name|int
+name|intptr_t
 name|sq_arg2
 decl_stmt|;
 comment|/* Command-specific argument */

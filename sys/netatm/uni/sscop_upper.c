@@ -900,10 +900,10 @@ name|void
 modifier|*
 name|tok
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg2
 decl_stmt|;
 block|{
@@ -960,7 +960,7 @@ name|type
 decl_stmt|;
 name|ATM_DEBUG5
 argument_list|(
-literal|"sscop_upper: cmd=0x%x, sop=%p, state=%d, arg1=0x%x, arg2=0x%x\n"
+literal|"sscop_upper: cmd=0x%x, sop=%p, state=%d, arg1=%p, arg2=%p\n"
 argument_list|,
 name|cmd
 argument_list|,
@@ -970,8 +970,16 @@ name|sop
 operator|->
 name|so_state
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|arg1
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|arg2
 argument_list|)
 expr_stmt|;
@@ -1411,7 +1419,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|cp
 operator|&

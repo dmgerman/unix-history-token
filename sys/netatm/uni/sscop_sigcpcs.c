@@ -349,7 +349,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -595,7 +595,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -839,7 +839,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -1117,7 +1117,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -1398,7 +1398,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -1598,9 +1598,10 @@ block|{
 name|int
 name|source
 decl_stmt|,
-name|uu
-decl_stmt|,
 name|err
+decl_stmt|;
+name|intptr_t
+name|uu
 decl_stmt|;
 comment|/* 	 * Stop retransmit timer 	 */
 name|sop
@@ -1652,7 +1653,7 @@ block|{
 name|uu
 operator|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 expr_stmt|;
@@ -2213,7 +2214,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -5236,7 +5237,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,

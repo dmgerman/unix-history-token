@@ -2946,7 +2946,7 @@ argument_list|,
 name|nip
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|ifa
 argument_list|)

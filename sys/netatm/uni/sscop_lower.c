@@ -276,10 +276,10 @@ name|void
 modifier|*
 name|tok
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg2
 decl_stmt|;
 block|{
@@ -306,9 +306,9 @@ name|struct
 name|sscop
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 function_decl|;
 name|void
@@ -321,9 +321,9 @@ name|struct
 name|sscop
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 function_decl|;
 name|int
@@ -331,7 +331,7 @@ name|val
 decl_stmt|;
 name|ATM_DEBUG5
 argument_list|(
-literal|"sscop_lower: cmd=0x%x, sop=%p, state=%d, arg1=0x%x, arg2=0x%x\n"
+literal|"sscop_lower: cmd=0x%x, sop=%p, state=%d, arg1=%p, arg2=%p\n"
 argument_list|,
 name|cmd
 argument_list|,
@@ -341,8 +341,16 @@ name|sop
 operator|->
 name|so_state
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|arg1
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|arg2
 argument_list|)
 expr_stmt|;
@@ -560,10 +568,10 @@ name|sscop
 modifier|*
 name|sop
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg2
 decl_stmt|;
 block|{
@@ -591,10 +599,10 @@ name|sscop
 modifier|*
 name|sop
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg2
 decl_stmt|;
 block|{
@@ -635,10 +643,10 @@ name|sscop
 modifier|*
 name|sop
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg2
 decl_stmt|;
 block|{
@@ -765,10 +773,10 @@ name|sscop
 modifier|*
 name|sop
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg2
 decl_stmt|;
 block|{

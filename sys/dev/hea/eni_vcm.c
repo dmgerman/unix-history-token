@@ -540,7 +540,7 @@ name|VCI_PTI_SHIFT
 operator||
 operator|(
 call|(
-name|u_int
+name|uintptr_t
 call|)
 argument_list|(
 name|evp

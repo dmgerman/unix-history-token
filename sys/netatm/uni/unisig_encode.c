@@ -4943,7 +4943,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|ie
 operator|+

@@ -192,7 +192,7 @@ name|Eni_mem
 call|)
 argument_list|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|eup
 operator|->
@@ -561,7 +561,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|eptr
 operator|->
@@ -588,7 +588,7 @@ name|caddr_t
 call|)
 argument_list|(
 call|(
-name|u_int
+name|uintptr_t
 call|)
 argument_list|(
 name|eptr

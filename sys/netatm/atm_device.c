@@ -594,10 +594,10 @@ name|void
 modifier|*
 name|tok
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg2
 decl_stmt|;
 block|{
@@ -943,7 +943,7 @@ operator|*
 name|ip
 operator|==
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|cvp
 condition|)
@@ -1424,7 +1424,7 @@ operator|)
 name|roundup
 argument_list|(
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|mep
 operator|->

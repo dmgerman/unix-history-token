@@ -1727,7 +1727,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -1946,7 +1946,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -2179,7 +2179,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -2424,7 +2424,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -2594,7 +2594,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -3140,7 +3140,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -3334,7 +3334,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -4396,7 +4396,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
@@ -4520,7 +4520,7 @@ operator|->
 name|so_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|php
 operator|->

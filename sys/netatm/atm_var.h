@@ -534,9 +534,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -932,9 +932,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -1192,9 +1192,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -1203,9 +1203,9 @@ parameter_list|,
 name|Atm_connvc
 modifier|*
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|,
-name|int
+name|intptr_t
 parameter_list|)
 function_decl|;
 end_function_decl

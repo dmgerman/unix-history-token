@@ -202,7 +202,7 @@ name|atm_nif
 modifier|*
 name|nip
 decl_stmt|;
-name|int
+name|intptr_t
 name|arg
 decl_stmt|;
 block|{
