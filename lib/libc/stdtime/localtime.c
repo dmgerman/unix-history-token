@@ -6813,6 +6813,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+end_ifdef
+
 begin_function
 name|char
 modifier|*
@@ -6853,6 +6859,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ** Adapted from code provided by Robert Elz, who writes: **	The "best" way to do mktime I think is based on an idea of Bob **	Kridle's (so its said...) from a long time ago. **	[kridle@xinet.com as of 1996-01-16.] **	It does a binary search of the time_t space.  Since time_t's are **	just 32 bits, its a max of 32 iterations (even at 64 bits it **	would still be very reasonable). */
