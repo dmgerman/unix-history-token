@@ -355,6 +355,23 @@ name|sc_sigio
 argument_list|)
 expr_stmt|;
 comment|/* signal process only */
+if|if
+condition|(
+name|log_wakeups_per_second
+operator|<
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"syslog wakeup is less than one.  Adjusting to 1.\n"
+argument_list|)
+expr_stmt|;
+name|log_wakeups_per_second
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|callout_reset
 argument_list|(
 operator|&
@@ -774,6 +791,23 @@ operator|!
 name|log_open
 condition|)
 return|return;
+if|if
+condition|(
+name|log_wakeups_per_second
+operator|<
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"syslog wakeup is less than one.  Adjusting to 1.\n"
+argument_list|)
+expr_stmt|;
+name|log_wakeups_per_second
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|msgbuftrigger
