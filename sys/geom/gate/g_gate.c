@@ -306,7 +306,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|atomic_set_16
+name|atomic_set_32
 argument_list|(
 operator|&
 name|sc
@@ -510,7 +510,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|atomic_subtract_rel_16
+name|atomic_subtract_rel_32
 argument_list|(
 operator|&
 name|sc
@@ -591,7 +591,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|atomic_subtract_rel_16
+name|atomic_subtract_rel_32
 argument_list|(
 operator|&
 name|sc
@@ -906,7 +906,7 @@ name|g_gate_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|qcount
 decl_stmt|;
 name|sc
@@ -993,7 +993,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|atomic_store_rel_16
+name|atomic_store_rel_32
 argument_list|(
 operator|&
 name|qcount
@@ -1030,7 +1030,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|atomic_add_acq_16
+name|atomic_add_acq_32
 argument_list|(
 operator|&
 name|sc
@@ -1501,7 +1501,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|atomic_subtract_rel_16
+name|atomic_subtract_rel_32
 argument_list|(
 operator|&
 name|sc
@@ -1580,7 +1580,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|atomic_subtract_rel_16
+name|atomic_subtract_rel_32
 argument_list|(
 operator|&
 name|sc
@@ -2723,7 +2723,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|atomic_subtract_rel_16
+name|atomic_subtract_rel_32
 argument_list|(
 operator|&
 name|sc
@@ -2746,7 +2746,7 @@ operator|->
 name|gctl_seq
 operator|=
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|bp
 operator|->
@@ -2874,7 +2874,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|atomic_add_acq_16
+name|atomic_add_acq_32
 argument_list|(
 operator|&
 name|sc
@@ -2967,7 +2967,7 @@ operator|->
 name|gctl_seq
 operator|==
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|bp
 operator|->
@@ -2992,7 +2992,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|atomic_subtract_rel_16
+name|atomic_subtract_rel_32
 argument_list|(
 operator|&
 name|sc
@@ -3054,7 +3054,7 @@ argument_list|,
 literal|"Request desisted."
 argument_list|)
 expr_stmt|;
-name|atomic_add_acq_16
+name|atomic_add_acq_32
 argument_list|(
 operator|&
 name|sc

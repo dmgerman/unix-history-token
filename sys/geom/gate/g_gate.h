@@ -182,7 +182,7 @@ modifier|*
 name|sc_provider
 decl_stmt|;
 comment|/* P: (read-only) */
-name|uint16_t
+name|uint32_t
 name|sc_flags
 decl_stmt|;
 comment|/* P: (read-only) */
@@ -204,11 +204,11 @@ name|struct
 name|mtx
 name|sc_outqueue_mtx
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|sc_queue_count
 decl_stmt|;
 comment|/* P: (atomic) */
-name|uint16_t
+name|uint32_t
 name|sc_queue_size
 decl_stmt|;
 comment|/* P: (read-only) */
@@ -221,7 +221,7 @@ name|callout
 name|sc_callout
 decl_stmt|;
 comment|/* P: (modified only 							       from callout 							       thread) */
-name|u_int
+name|uintptr_t
 name|sc_seq
 decl_stmt|;
 comment|/* P: (modified only 							       from g_down 							       thread) */
@@ -348,7 +348,7 @@ decl_stmt|;
 name|int
 name|gctl_unit
 decl_stmt|;
-name|u_int
+name|uintptr_t
 name|gctl_seq
 decl_stmt|;
 name|u_int
