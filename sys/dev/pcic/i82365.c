@@ -2544,8 +2544,7 @@ name|h
 operator|->
 name|event_thread
 argument_list|,
-name|RFTHREAD
-argument_list|,
+literal|0
 literal|"%s,%s"
 argument_list|,
 name|device_get_name
