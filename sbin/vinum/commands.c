@@ -2344,7 +2344,7 @@ comment|/* start everything */
 comment|/* XXX how should we do this right? */
 name|vinum_read
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
