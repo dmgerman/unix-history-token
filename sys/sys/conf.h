@@ -88,6 +88,11 @@ directive|define
 name|SI_CHEAPCLONE
 value|0x0008
 comment|/* can be removed_dev'ed when vnode reclaims */
+define|#
+directive|define
+name|SI_CHILD
+value|0x0010
+comment|/* child of another dev_t */
 name|struct
 name|timespec
 name|si_atime
@@ -121,8 +126,17 @@ argument_list|(
 argument_list|,
 argument|specinfo
 argument_list|)
-name|si_names
+name|si_children
 expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|specinfo
+argument_list|)
+name|si_siblings
+expr_stmt|;
+name|dev_t
+name|si_parent
+decl_stmt|;
 name|struct
 name|snaphead
 name|si_snapshots
@@ -1284,6 +1298,22 @@ argument_list|(
 operator|(
 name|dev_t
 name|dev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|dev_depends
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|pdev
+operator|,
+name|dev_t
+name|cdev
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1415,12 +1415,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|u_long	secperunit;
-endif|#
-directive|endif
 name|lp
 operator|->
 name|d_nsectors
@@ -1439,13 +1433,6 @@ name|d_secpercyl
 operator|=
 name|secpercyl
 expr_stmt|;
-comment|/* 		 * Temporarily, don't even consider adjusting the drive's 		 * size, since the adjusted size may exceed the hardware's 		 * addressing capabilities.  The adjustment helped mainly 		 * for ancient MFM drives with> 1024 cylinders, but now 		 * breaks at least IDE drives with 63*16*65536 sectors if 		 * they are controlled by the wd driver in CHS mode. 		 */
-if|#
-directive|if
-literal|0
-block|secperunit = secpercyl * max_ncyls; 		if (lp->d_secperunit< secperunit) 			lp->d_secperunit = secperunit;
-endif|#
-directive|endif
 name|lp
 operator|->
 name|d_ncylinders

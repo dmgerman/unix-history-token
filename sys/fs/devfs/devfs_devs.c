@@ -1796,7 +1796,7 @@ name|pdev
 operator|=
 name|dev
 operator|->
-name|si_drv1
+name|si_parent
 expr_stmt|;
 name|j
 operator|=
