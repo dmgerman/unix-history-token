@@ -636,7 +636,9 @@ expr_stmt|;
 comment|/* swap config files */
 name|printf
 argument_list|(
-literal|"Don't forget to run \"make depend\"\n"
+literal|"Kernel build directory is %s\n"
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|exit
