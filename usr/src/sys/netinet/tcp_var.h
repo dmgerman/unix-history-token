@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.13	81/12/12	*/
+comment|/*	tcp_var.h	4.14	82/01/17	*/
 end_comment
 
 begin_comment
@@ -176,6 +176,15 @@ name|float
 name|t_srtt
 decl_stmt|;
 comment|/* smoothed round-trip time */
+comment|/* out-of-band data; treat char before urgent pointer as out-of-band */
+name|char
+name|t_haveoob
+decl_stmt|;
+comment|/* have some */
+name|char
+name|t_oobc
+decl_stmt|;
+comment|/* the character */
 block|}
 struct|;
 end_struct
