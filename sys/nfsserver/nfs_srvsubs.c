@@ -5170,7 +5170,7 @@ argument_list|()
 expr_stmt|;
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5251,7 +5251,7 @@ argument_list|()
 expr_stmt|;
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5526,7 +5526,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5584,7 +5584,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|fhlen
 argument_list|,
@@ -5670,7 +5670,7 @@ argument_list|()
 expr_stmt|;
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5698,7 +5698,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5731,7 +5731,7 @@ expr_stmt|;
 block|}
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5759,7 +5759,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5794,7 +5794,7 @@ expr_stmt|;
 block|}
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5822,7 +5822,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5857,7 +5857,7 @@ expr_stmt|;
 block|}
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5885,7 +5885,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 literal|2
 operator|*
@@ -5919,7 +5919,7 @@ expr_stmt|;
 block|}
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -5953,7 +5953,7 @@ name|NFSV3SATTRTIME_TOCLIENT
 case|:
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 literal|2
 operator|*
@@ -6003,7 +6003,7 @@ break|break;
 block|}
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 name|NFSX_UNSIGNED
 argument_list|,
@@ -6037,7 +6037,7 @@ name|NFSV3SATTRTIME_TOCLIENT
 case|:
 name|tl
 operator|=
-name|nfsm_dissect_xx
+name|nfsm_dissect_xx_nonblock
 argument_list|(
 literal|2
 operator|*

@@ -729,7 +729,7 @@ argument_list|)
 expr_stmt|;
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -1636,7 +1636,7 @@ argument_list|)
 expr_stmt|;
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -1661,7 +1661,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -1685,7 +1685,7 @@ else|else
 block|{
 name|sp
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 expr|struct
 name|nfsv2_sattr
@@ -4094,7 +4094,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -4116,7 +4116,7 @@ else|else
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -5658,7 +5658,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -5695,7 +5695,7 @@ else|else
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -6935,7 +6935,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -6976,7 +6976,7 @@ else|else
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -9222,7 +9222,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -9276,7 +9276,7 @@ name|NFSV3CREATE_EXCLUSIVE
 case|:
 name|cp
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|caddr_t
 argument_list|,
@@ -9310,7 +9310,7 @@ else|else
 block|{
 name|sp
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 expr|struct
 name|nfsv2_sattr
@@ -10700,7 +10700,7 @@ goto|;
 block|}
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -10766,7 +10766,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -14930,7 +14930,7 @@ condition|)
 block|{
 name|sp
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 expr|struct
 name|nfsv2_sattr
@@ -15922,7 +15922,7 @@ else|else
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -17516,7 +17516,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -17553,7 +17553,7 @@ else|else
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -19188,7 +19188,7 @@ argument_list|)
 expr_stmt|;
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -21059,7 +21059,7 @@ argument_list|()
 expr_stmt|;
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*

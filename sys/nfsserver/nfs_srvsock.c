@@ -1095,7 +1095,7 @@ condition|)
 block|{
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -1142,7 +1142,7 @@ block|}
 else|else
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -1459,7 +1459,7 @@ argument_list|)
 expr_stmt|;
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
@@ -1559,7 +1559,7 @@ return|;
 block|}
 name|tl
 operator|=
-name|nfsm_dissect
+name|nfsm_dissect_nonblock
 argument_list|(
 name|u_int32_t
 operator|*
