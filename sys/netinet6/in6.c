@@ -4332,12 +4332,17 @@ name|IFF_LOOPBACK
 condition|)
 block|{
 name|struct
+name|in6_ifaddr
+modifier|*
+name|ia_loop
+decl_stmt|;
+name|struct
 name|in6_addr
 name|loop6
 init|=
 name|in6addr_loopback
 decl_stmt|;
-name|ia
+name|ia_loop
 operator|=
 name|in6ifa_ifpwithaddr
 argument_list|(
@@ -4370,7 +4375,7 @@ name|in6m
 operator|==
 name|NULL
 operator|&&
-name|ia
+name|ia_loop
 operator|!=
 name|NULL
 condition|)
@@ -4393,7 +4398,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|ia
+name|ia_loop
 operator|->
 name|ia_addr
 argument_list|,
