@@ -1869,6 +1869,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsv3_commit_on_close
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nfsv3_commit_on_close
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfsv3_commit_on_close
+argument_list|,
+literal|0
+argument_list|,
+literal|"write+commit on close, else only write"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|#
 directive|if
@@ -3205,6 +3235,16 @@ name|vp
 argument_list|)
 condition|)
 block|{
+comment|/* 		     * Under NFSv3 we have dirty buffers to dispose of.  We 		     * must flush them to the NFS server.  We have the option 		     * of waiting all the way through the commit rpc or just 		     * waiting for the initial write.  The default is to only 		     * wait through the initial write so the data is in the 		     * server's cache, which is roughly similar to the state 		     * a standard disk subsystem leaves the file in on close(). 		     * 		     * We cannot clear the NMODIFIED bit in np->n_flag due to 		     * potential races with other processes, and certainly 		     * cannot clear it if we don't commit. 		     */
+name|int
+name|cm
+init|=
+name|nfsv3_commit_on_close
+condition|?
+literal|1
+else|:
+literal|0
+decl_stmt|;
 name|error
 operator|=
 name|nfs_flush
@@ -3221,18 +3261,13 @@ name|ap
 operator|->
 name|a_p
 argument_list|,
-literal|0
+name|cm
 argument_list|)
 expr_stmt|;
-name|np
-operator|->
-name|n_flag
-operator|&=
-operator|~
-name|NMODIFIED
-expr_stmt|;
+comment|/* np->n_flag&= ~NMODIFIED; */
 block|}
 else|else
+block|{
 name|error
 operator|=
 name|nfs_vinvalbuf
@@ -3252,6 +3287,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|np
 operator|->
 name|n_attrstamp
