@@ -544,6 +544,31 @@ name|SIS_EECMD_ERASE
 value|0x1c0
 end_define
 
+begin_comment
+comment|/*  * EEPROM Commands for SiS96x  * chipsets.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIS_EECMD_REQ
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_EECMD_DONE
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_EECMD_GNT
+value|0x00000100
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1900,6 +1925,13 @@ define|#
 directive|define
 name|SIS_REV_635
 value|0x0090
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_REV_96x
+value|0x0091
 end_define
 
 begin_comment
