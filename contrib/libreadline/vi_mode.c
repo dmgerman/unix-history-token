@@ -295,6 +295,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|vi_motion
@@ -423,6 +424,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|vi_textmod
@@ -952,7 +954,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 break|break;
@@ -1201,7 +1203,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -1286,7 +1288,7 @@ literal|1
 operator|)
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -1350,7 +1352,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -2874,10 +2876,20 @@ name|rl_mark
 operator|=
 name|rl_point
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 operator|*
 name|nextkey
@@ -2921,12 +2933,22 @@ name|rl_numeric_arg
 operator|*=
 name|save
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
 expr_stmt|;
 comment|/* real command */
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 operator|*
 name|nextkey
 operator|=
@@ -3184,7 +3206,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* A simplified loop for vi. Don't dispatch key at end.    Don't recognize minus sign? */
+comment|/* A simplified loop for vi. Don't dispatch key at end.    Don't recognize minus sign?    Should this do rl_save_prompt/rl_restore_prompt? */
 end_comment
 
 begin_function
@@ -3198,11 +3220,44 @@ name|key
 decl_stmt|,
 name|c
 decl_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_NUMERICARG
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|rl_numeric_arg
+operator|>
+literal|1000000
+condition|)
+block|{
+name|rl_explicit_arg
+operator|=
+name|rl_numeric_arg
+operator|=
+literal|0
+expr_stmt|;
+name|rl_ding
+argument_list|()
+expr_stmt|;
+name|rl_clear_message
+argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_NUMERICARG
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|rl_message
 argument_list|(
 literal|"(arg: %d) "
@@ -3214,12 +3269,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|key
 operator|=
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3306,6 +3371,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_NUMERICARG
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3364,7 +3434,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -3466,7 +3536,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -3653,7 +3723,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -3736,7 +3806,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -3921,18 +3991,25 @@ operator|=
 name|_rl_vi_last_search_char
 expr_stmt|;
 else|else
+block|{
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|_rl_vi_last_search_char
 operator|=
 name|target
 operator|=
-call|(
-modifier|*
-name|rl_getc_function
-call|)
+name|rl_read_key
+argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
 argument_list|(
-name|rl_instream
+name|RL_STATE_MOREINPUT
 argument_list|)
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|key
@@ -4083,7 +4160,7 @@ name|rl_point
 operator|=
 name|pos
 expr_stmt|;
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -4150,7 +4227,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -4210,7 +4287,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -4320,18 +4397,25 @@ operator|=
 name|_rl_vi_last_replacement
 expr_stmt|;
 else|else
+block|{
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|_rl_vi_last_replacement
 operator|=
 name|c
 operator|=
-call|(
-modifier|*
-name|rl_getc_function
-call|)
+name|rl_read_key
+argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
 argument_list|(
-name|rl_instream
+name|RL_STATE_MOREINPUT
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -4653,7 +4737,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 break|break;
@@ -4865,7 +4949,7 @@ comment|/* Try to complete the word we are standing on or the word that ends wit
 end_comment
 
 begin_endif
-unit|int rl_vi_possible_completions() {   int save_pos = rl_point;    if (rl_line_buffer[rl_point] != ' '&& rl_line_buffer[rl_point] != ';')     {       while (rl_point< rl_end&& rl_line_buffer[rl_point] != ' '&& 	     rl_line_buffer[rl_point] != ';') 	rl_point++;     }   else if (rl_line_buffer[rl_point - 1] == ';')     {       ding ();       return (0);     }    rl_possible_completions ();   rl_point = save_pos;    return (0); }
+unit|int rl_vi_possible_completions() {   int save_pos = rl_point;    if (rl_line_buffer[rl_point] != ' '&& rl_line_buffer[rl_point] != ';')     {       while (rl_point< rl_end&& rl_line_buffer[rl_point] != ' '&& 	     rl_line_buffer[rl_point] != ';') 	rl_point++;     }   else if (rl_line_buffer[rl_point - 1] == ';')     {       rl_ding ();       return (0);     }    rl_possible_completions ();   rl_point = save_pos;    return (0); }
 endif|#
 directive|endif
 end_endif
@@ -4891,10 +4975,20 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|ch
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4906,7 +5000,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -4948,10 +5042,20 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|ch
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4979,7 +5083,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -5002,7 +5106,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return

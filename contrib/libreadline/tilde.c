@@ -188,64 +188,36 @@ else|#
 directive|else
 end_else
 
-begin_if
-if|#
-directive|if
-name|defined
-name|__STDC__
-end_if
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|xrealloc
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|xmalloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|xrealloc
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__STDC__ */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|xrealloc
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -272,11 +244,29 @@ name|struct
 name|passwd
 modifier|*
 name|getpwuid
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|uid_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|passwd
 modifier|*
 name|getpwnam
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -402,7 +392,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|get_home_dir
+name|sh_get_home_dir
 name|__P
 argument_list|(
 operator|(
@@ -416,10 +406,11 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|get_env_value
+name|sh_get_env_value
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -433,6 +424,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|default_prefixes
@@ -444,6 +436,7 @@ block|,
 literal|"\t~"
 block|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -458,6 +451,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|default_suffixes
@@ -469,6 +463,7 @@ block|,
 literal|"\n"
 block|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -482,12 +477,12 @@ comment|/* If non-null, this contains the address of a function that the applica
 end_comment
 
 begin_decl_stmt
-name|CPFunction
+name|tilde_hook_func_t
 modifier|*
 name|tilde_expansion_preexpansion_hook
 init|=
 operator|(
-name|CPFunction
+name|tilde_hook_func_t
 operator|*
 operator|)
 name|NULL
@@ -499,12 +494,12 @@ comment|/* If non-null, this contains the address of a function to call if the  
 end_comment
 
 begin_decl_stmt
-name|CPFunction
+name|tilde_hook_func_t
 modifier|*
 name|tilde_expansion_failure_hook
 init|=
 operator|(
-name|CPFunction
+name|tilde_hook_func_t
 operator|*
 operator|)
 name|NULL
@@ -521,6 +516,11 @@ modifier|*
 modifier|*
 name|tilde_additional_prefixes
 init|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|default_prefixes
 decl_stmt|;
 end_decl_stmt
@@ -535,6 +535,11 @@ modifier|*
 modifier|*
 name|tilde_additional_suffixes
 init|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|default_suffixes
 decl_stmt|;
 end_decl_stmt
@@ -860,6 +865,7 @@ name|tilde_expand
 parameter_list|(
 name|string
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1078,8 +1084,8 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__CYGWIN32__
-comment|/* Fix for Cygwin to prevent ~user/xxx from expanding to //xxx when          $HOME for `user' is /.  On cygwin, // denotes a network drive. */
+name|__CYGWIN__
+comment|/* Fix for Cygwin to prevent ~user/xxx from expanding to //xxx when 	 $HOME for `user' is /.  On cygwin, // denotes a network drive. */
 if|if
 condition|(
 name|len
@@ -1417,6 +1423,7 @@ name|tilde_expand_word
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1491,7 +1498,7 @@ block|{
 comment|/* Prefix $HOME to the rest of the string. */
 name|expansion
 operator|=
-name|get_env_value
+name|sh_get_env_value
 argument_list|(
 literal|"HOME"
 argument_list|)
@@ -1505,7 +1512,7 @@ literal|0
 condition|)
 name|expansion
 operator|=
-name|get_home_dir
+name|sh_get_home_dir
 argument_list|()
 expr_stmt|;
 return|return

@@ -179,6 +179,23 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
+comment|/* The currently executing macro string.  If this is non-zero,    then it is a malloc ()'ed string where input is coming from. */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|rl_executing_macro
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Non-zero means to save keys that we dispatch on in a kbd macro. */
 end_comment
 
@@ -187,23 +204,6 @@ name|int
 name|_rl_defining_kbd_macro
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The currently executing macro string.  If this is non-zero,    then it is a malloc ()'ed string where input is coming from. */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|_rl_executing_macro
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -320,13 +320,18 @@ block|{
 name|_rl_push_executing_macro
 argument_list|()
 expr_stmt|;
-name|_rl_executing_macro
+name|rl_executing_macro
 operator|=
 name|string
 expr_stmt|;
 name|executing_macro_index
 operator|=
 literal|0
+expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MACROINPUT
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -342,7 +347,7 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|_rl_executing_macro
+name|rl_executing_macro
 operator|==
 literal|0
 condition|)
@@ -353,7 +358,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|_rl_executing_macro
+name|rl_executing_macro
 index|[
 name|executing_macro_index
 index|]
@@ -373,7 +378,7 @@ return|;
 block|}
 return|return
 operator|(
-name|_rl_executing_macro
+name|rl_executing_macro
 index|[
 name|executing_macro_index
 operator|++
@@ -429,7 +434,7 @@ name|saver
 operator|->
 name|string
 operator|=
-name|_rl_executing_macro
+name|rl_executing_macro
 expr_stmt|;
 name|macro_list
 operator|=
@@ -452,16 +457,12 @@ name|saved_macro
 modifier|*
 name|macro
 decl_stmt|;
-if|if
-condition|(
-name|_rl_executing_macro
-condition|)
-name|free
+name|FREE
 argument_list|(
-name|_rl_executing_macro
+name|rl_executing_macro
 argument_list|)
 expr_stmt|;
-name|_rl_executing_macro
+name|rl_executing_macro
 operator|=
 operator|(
 name|char
@@ -482,7 +483,7 @@ name|macro
 operator|=
 name|macro_list
 expr_stmt|;
-name|_rl_executing_macro
+name|rl_executing_macro
 operator|=
 name|macro_list
 operator|->
@@ -506,6 +507,17 @@ name|macro
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rl_executing_macro
+operator|==
+literal|0
+condition|)
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MACROINPUT
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -608,17 +620,12 @@ name|current_macro_index
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|_rl_executing_macro
-condition|)
-block|{
-name|free
+name|FREE
 argument_list|(
-name|_rl_executing_macro
+name|rl_executing_macro
 argument_list|)
 expr_stmt|;
-name|_rl_executing_macro
+name|rl_executing_macro
 operator|=
 operator|(
 name|char
@@ -626,7 +633,6 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-block|}
 name|executing_macro_index
 operator|=
 literal|0
@@ -634,6 +640,11 @@ expr_stmt|;
 name|_rl_defining_kbd_macro
 operator|=
 literal|0
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MACRODEF
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -696,6 +707,11 @@ name|_rl_defining_kbd_macro
 operator|=
 literal|1
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MACRODEF
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -752,6 +768,11 @@ name|_rl_defining_kbd_macro
 operator|=
 literal|0
 expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MACRODEF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rl_call_last_kbd_macro
@@ -798,7 +819,7 @@ condition|(
 name|_rl_defining_kbd_macro
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 comment|/* no recursive macros */

@@ -271,6 +271,7 @@ name|_rl_read_init_file
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -304,6 +305,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|*
@@ -353,7 +355,7 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/* rl_add_defun (char *name, Function *function, int key)    Add NAME to the list of named functions.  Make FUNCTION be the function    that gets called.  If KEY is not -1, then bind it. */
+comment|/* rl_add_defun (char *name, rl_command_func_t *function, int key)    Add NAME to the list of named functions.  Make FUNCTION be the function    that gets called.  If KEY is not -1, then bind it. */
 end_comment
 
 begin_function
@@ -366,11 +368,12 @@ name|function
 parameter_list|,
 name|key
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -420,7 +423,7 @@ parameter_list|)
 name|int
 name|key
 decl_stmt|;
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -554,7 +557,7 @@ parameter_list|)
 name|int
 name|key
 decl_stmt|;
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -618,7 +621,7 @@ argument_list|(
 name|key
 argument_list|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL
@@ -654,7 +657,7 @@ argument_list|(
 name|key
 argument_list|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL
@@ -678,7 +681,7 @@ name|func
 parameter_list|,
 name|map
 parameter_list|)
-name|Function
+name|rl_command_func_t
 modifier|*
 name|func
 decl_stmt|;
@@ -737,7 +740,7 @@ operator|.
 name|function
 operator|=
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL
@@ -762,6 +765,7 @@ name|command
 parameter_list|,
 name|map
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|command
@@ -770,7 +774,7 @@ name|Keymap
 name|map
 decl_stmt|;
 block|{
-name|Function
+name|rl_command_func_t
 modifier|*
 name|func
 decl_stmt|;
@@ -817,11 +821,12 @@ name|function
 parameter_list|,
 name|map
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|keyseq
 decl_stmt|;
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -864,6 +869,7 @@ name|macro
 parameter_list|,
 name|map
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|keyseq
@@ -967,22 +973,18 @@ parameter_list|)
 name|int
 name|type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|keyseq
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 name|data
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|Keymap
 name|map
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -1276,7 +1278,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Translate the ASCII representation of SEQ, stuffing the values into ARRAY,    an array of characters.  LEN gets the final length of ARRAY.  Return    non-zero if there was an error parsing SEQ. */
@@ -1292,23 +1294,19 @@ name|array
 parameter_list|,
 name|len
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|seq
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 name|array
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|int
 modifier|*
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1840,7 +1838,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -2289,12 +2287,13 @@ comment|/* Return a pointer to the function that STRING represents.    If STRING
 end_comment
 
 begin_function
-name|Function
+name|rl_command_func_t
 modifier|*
 name|rl_named_function
 parameter_list|(
 name|string
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -2350,7 +2349,7 @@ return|;
 return|return
 operator|(
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL
@@ -2364,7 +2363,7 @@ comment|/* Return the function (or macro) definition which would be invoked via 
 end_comment
 
 begin_function
-name|Function
+name|rl_command_func_t
 modifier|*
 name|rl_function_of_keyseq
 parameter_list|(
@@ -2374,6 +2373,7 @@ name|map
 parameter_list|,
 name|type
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|keyseq
@@ -2577,7 +2577,7 @@ block|}
 return|return
 operator|(
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL
@@ -2610,6 +2610,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|current_readline_init_file
@@ -2883,6 +2884,7 @@ operator|=
 name|rl_read_init_file
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2908,6 +2910,7 @@ name|rl_read_init_file
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -2933,7 +2936,7 @@ literal|0
 condition|)
 name|filename
 operator|=
-name|get_env_value
+name|sh_get_env_value
 argument_list|(
 literal|"INPUTRC"
 argument_list|)
@@ -3008,6 +3011,7 @@ name|filename
 parameter_list|,
 name|include_level
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -3155,7 +3159,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__CYGWIN32__
+name|__CYGWIN__
 argument_list|)
 comment|/* ``Be liberal in what you accept.'' */
 if|if
@@ -3321,6 +3325,67 @@ begin_comment
 comment|/* **************************************************************** */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|int
+name|_rl_parser_func_t
+name|__P
+typedef|((
+name|char
+modifier|*
+typedef|));
+end_typedef
+
+begin_comment
+comment|/* Things that mean `Control'. */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|_rl_possible_control_prefixes
+index|[]
+init|=
+block|{
+literal|"Control-"
+block|,
+literal|"C-"
+block|,
+literal|"CTRL-"
+block|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|_rl_possible_meta_prefixes
+index|[]
+init|=
+block|{
+literal|"Meta"
+block|,
+literal|"M-"
+block|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Conditionals. */
 end_comment
@@ -3330,6 +3395,7 @@ comment|/* Calling programs set this to have their argv[0]. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rl_readline_name
@@ -3802,10 +3868,12 @@ modifier|*
 name|args
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|old_init_file
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|e
 decl_stmt|;
@@ -3859,6 +3927,11 @@ name|r
 operator|=
 name|_rl_read_init_file
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|args
 argument_list|,
 name|old_include_level
@@ -3892,11 +3965,12 @@ begin_struct
 specifier|static
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-name|Function
+name|_rl_parser_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -3937,7 +4011,7 @@ operator|)
 literal|0x0
 block|,
 operator|(
-name|Function
+name|_rl_parser_func_t
 operator|*
 operator|)
 literal|0x0
@@ -4870,7 +4944,7 @@ name|substring_member_of_array
 argument_list|(
 name|string
 argument_list|,
-name|possible_control_prefixes
+name|_rl_possible_control_prefixes
 argument_list|)
 condition|)
 name|key
@@ -4889,7 +4963,7 @@ name|substring_member_of_array
 argument_list|(
 name|string
 argument_list|,
-name|possible_meta_prefixes
+name|_rl_possible_meta_prefixes
 argument_list|)
 condition|)
 name|key
@@ -5070,6 +5144,7 @@ begin_struct
 specifier|static
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -5329,6 +5404,7 @@ name|int
 name|i
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -5387,6 +5463,17 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_typedef
+typedef|typedef
+name|int
+name|_rl_sv_func_t
+name|__P
+typedef|((const
+name|char
+modifier|*
+typedef|));
+end_typedef
 
 begin_comment
 comment|/* These *must* correspond to the array indices for the appropriate    string variable.  (Though they're not used right now.) */
@@ -5452,6 +5539,7 @@ name|sv_bell_style
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -5466,6 +5554,7 @@ name|sv_combegin
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -5480,6 +5569,7 @@ name|sv_compquery
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -5494,6 +5584,7 @@ name|sv_editmode
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -5508,6 +5599,7 @@ name|sv_isrchterm
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -5522,6 +5614,7 @@ name|sv_keymap
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -5533,6 +5626,7 @@ begin_struct
 specifier|static
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -5540,7 +5634,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|Function
+name|_rl_sv_func_t
 modifier|*
 name|set_func
 decl_stmt|;
@@ -5734,6 +5828,7 @@ name|name
 parameter_list|,
 name|value
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -5854,6 +5949,7 @@ name|sv_editmode
 parameter_list|(
 name|value
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|value
@@ -5934,6 +6030,7 @@ name|sv_combegin
 parameter_list|(
 name|value
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|value
@@ -5976,6 +6073,7 @@ name|sv_compquery
 parameter_list|(
 name|value
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|value
@@ -6029,6 +6127,7 @@ name|sv_keymap
 parameter_list|(
 name|value
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|value
@@ -6081,6 +6180,7 @@ name|sv_bell_style
 parameter_list|(
 name|value
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|value
@@ -6191,6 +6291,7 @@ name|sv_isrchterm
 parameter_list|(
 name|value
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|value
@@ -6368,6 +6469,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6547,6 +6649,7 @@ begin_struct
 specifier|static
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6638,6 +6741,7 @@ name|rl_get_keymap_by_name
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6665,7 +6769,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|strcmp
+name|_rl_stricmp
 argument_list|(
 name|name
 argument_list|,
@@ -6744,6 +6848,10 @@ name|map
 condition|)
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|keymap_names
 index|[
 name|i
@@ -6914,6 +7022,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -7219,7 +7328,7 @@ name|function
 parameter_list|,
 name|map
 parameter_list|)
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -7656,7 +7765,7 @@ name|rl_invoking_keyseqs
 parameter_list|(
 name|function
 parameter_list|)
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -7692,11 +7801,13 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|names
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -7730,7 +7841,7 @@ name|i
 operator|++
 control|)
 block|{
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -8383,6 +8494,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|kname
@@ -8769,16 +8881,17 @@ name|keyseq
 parameter_list|,
 name|default_func
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|keyseq
 decl_stmt|;
-name|Function
+name|rl_command_func_t
 modifier|*
 name|default_func
 decl_stmt|;
 block|{
-name|Function
+name|rl_command_func_t
 modifier|*
 name|func
 decl_stmt|;
@@ -8840,14 +8953,13 @@ parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 modifier|*
 name|array
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 while|while
 condition|(
@@ -8880,7 +8992,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -151,13 +151,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|_rl_qsort_string_compare
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|FUNMAP
@@ -506,7 +517,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|__CYGWIN32__
+name|__CYGWIN__
 block|{
 literal|"paste-from-clipboard"
 block|,
@@ -693,12 +704,6 @@ block|{
 literal|"vi-bWord"
 block|,
 name|rl_vi_bWord
-block|}
-block|,
-block|{
-literal|"vi-bracktype"
-block|,
-name|rl_vi_bracktype
 block|}
 block|,
 block|{
@@ -934,7 +939,7 @@ operator|)
 name|NULL
 block|,
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL
@@ -951,11 +956,12 @@ name|name
 parameter_list|,
 name|function
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-name|Function
+name|rl_command_func_t
 modifier|*
 name|function
 decl_stmt|;
@@ -1121,12 +1127,14 @@ comment|/* Produce a NULL terminated array of known function names.  The array  
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|rl_funmap_names
 parameter_list|()
 block|{
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1152,6 +1160,7 @@ operator|,
 name|result
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -1183,6 +1192,7 @@ expr_stmt|;
 name|result
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -1253,52 +1263,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* Things that mean `Control'. */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|possible_control_prefixes
-index|[]
-init|=
-block|{
-literal|"Control-"
-block|,
-literal|"C-"
-block|,
-literal|"CTRL-"
-block|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|possible_meta_prefixes
-index|[]
-init|=
-block|{
-literal|"Meta"
-block|,
-literal|"M-"
-block|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 

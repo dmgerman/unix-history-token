@@ -250,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|RL_LIBRARY_VERSION
-value|"4.1"
+value|"4.2"
 end_define
 
 begin_endif
@@ -393,6 +393,7 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rl_library_version
@@ -400,6 +401,10 @@ init|=
 name|RL_LIBRARY_VERSION
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* True if this is `real' readline as opposed to some stub substitute. */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -502,14 +507,31 @@ name|rl_initialized
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/* If non-zero, this program is running in an EMACS buffer. */
 end_comment
 
+begin_endif
+unit|static int running_in_emacs;
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Flags word encapsulating the current readline state. */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|int
-name|running_in_emacs
+name|rl_readline_state
+init|=
+name|RL_STATE_NONE
 decl_stmt|;
 end_decl_stmt
 
@@ -558,12 +580,12 @@ comment|/* The last function executed by readline. */
 end_comment
 
 begin_decl_stmt
-name|Function
+name|rl_command_func_t
 modifier|*
 name|rl_last_func
 init|=
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL
@@ -644,6 +666,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|rl_prompt
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -684,12 +712,12 @@ comment|/* If non-zero, then this is the address of a function to call just    b
 end_comment
 
 begin_decl_stmt
-name|Function
+name|rl_hook_func_t
 modifier|*
 name|rl_startup_hook
 init|=
 operator|(
-name|Function
+name|rl_hook_func_t
 operator|*
 operator|)
 name|NULL
@@ -701,12 +729,12 @@ comment|/* If non-zero, this is the address of a function to call just before   
 end_comment
 
 begin_decl_stmt
-name|Function
+name|rl_hook_func_t
 modifier|*
 name|rl_pre_input_hook
 init|=
 operator|(
-name|Function
+name|rl_hook_func_t
 operator|*
 operator|)
 name|NULL
@@ -757,11 +785,13 @@ comment|/* Pointer to a useful terminal name. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rl_terminal_name
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -971,6 +1001,64 @@ comment|/* Forward declaration */
 end_comment
 
 begin_comment
+comment|/* Set up the prompt and expand it.  Called from readline() and    rl_callback_handler_install (). */
+end_comment
+
+begin_function
+name|int
+name|rl_set_prompt
+parameter_list|(
+name|prompt
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|prompt
+decl_stmt|;
+block|{
+name|FREE
+argument_list|(
+name|rl_prompt
+argument_list|)
+expr_stmt|;
+name|rl_prompt
+operator|=
+name|prompt
+condition|?
+name|savestring
+argument_list|(
+name|prompt
+argument_list|)
+else|:
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+name|rl_visible_prompt_length
+operator|=
+operator|(
+name|rl_prompt
+operator|&&
+operator|*
+name|rl_prompt
+operator|)
+condition|?
+name|rl_expand_prompt
+argument_list|(
+name|rl_prompt
+argument_list|)
+else|:
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Read a line of input.  Prompt with PROMPT.  An empty PROMPT means    none.  A return value of NULL means that EOF was encountered. */
 end_comment
 
@@ -981,6 +1069,7 @@ name|readline
 parameter_list|(
 name|prompt
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|prompt
@@ -990,10 +1079,6 @@ name|char
 modifier|*
 name|value
 decl_stmt|;
-name|rl_prompt
-operator|=
-name|prompt
-expr_stmt|;
 comment|/* If we are at EOF return a NULL string. */
 if|if
 condition|(
@@ -1002,9 +1087,8 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|rl_pending_input
-operator|=
-literal|0
+name|rl_clear_pending_input
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1016,11 +1100,9 @@ name|NULL
 operator|)
 return|;
 block|}
-name|rl_visible_prompt_length
-operator|=
-name|rl_expand_prompt
+name|rl_set_prompt
 argument_list|(
-name|rl_prompt
+name|prompt
 argument_list|)
 expr_stmt|;
 name|rl_initialize
@@ -1321,7 +1403,7 @@ if|if
 condition|(
 name|rl_undo_list
 condition|)
-name|free_undo_list
+name|rl_free_undo_list
 argument_list|()
 expr_stmt|;
 return|return
@@ -1436,10 +1518,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_READCMD
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_READCMD
+argument_list|)
 expr_stmt|;
 comment|/* EOF typed to a non-blank line is a<NL>. */
 if|if
@@ -1483,6 +1575,11 @@ name|defined
 argument_list|(
 name|READLINE_CALLBACKS
 argument_list|)
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_DONE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rl_done
@@ -1779,7 +1876,7 @@ name|char
 modifier|*
 name|macro
 decl_stmt|;
-name|Function
+name|rl_command_func_t
 modifier|*
 name|func
 decl_stmt|;
@@ -1846,7 +1943,7 @@ operator|)
 return|;
 block|}
 else|else
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -1891,12 +1988,6 @@ expr_stmt|;
 if|if
 condition|(
 name|func
-operator|!=
-operator|(
-name|Function
-operator|*
-operator|)
-name|NULL
 condition|)
 block|{
 comment|/* Special case rl_do_lowercase_version (). */
@@ -1933,6 +2024,11 @@ name|rl_dispatching
 operator|=
 literal|1
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_DISPATCHING
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 operator|(
@@ -1952,6 +2048,11 @@ operator|,
 name|key
 operator|)
 expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_DISPATCHING
+argument_list|)
+expr_stmt|;
 name|rl_dispatching
 operator|=
 literal|0
@@ -1959,8 +2060,9 @@ expr_stmt|;
 comment|/* If we have input pending, then the last command was a prefix 	     command.  Don't change the state of rl_last_func.  Otherwise, 	     remember the last command executed in this variable. */
 if|if
 condition|(
-operator|!
 name|rl_pending_input
+operator|==
+literal|0
 operator|&&
 name|map
 index|[
@@ -2004,20 +2106,48 @@ index|]
 operator|.
 name|function
 operator|!=
-operator|(
-name|Function
-operator|*
-operator|)
-name|NULL
+literal|0
 condition|)
 block|{
 name|rl_key_sequence_length
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|key
+operator|==
+name|ESC
+condition|)
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_METANEXT
+argument_list|)
+expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|newkey
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|key
+operator|==
+name|ESC
+condition|)
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_METANEXT
+argument_list|)
 expr_stmt|;
 name|r
 operator|=
@@ -2057,11 +2187,7 @@ index|]
 operator|.
 name|function
 operator|!=
-operator|(
-name|Function
-operator|*
-operator|)
-name|NULL
+literal|0
 condition|)
 block|{
 name|macro
@@ -2167,11 +2293,26 @@ operator|!
 name|rl_initialized
 condition|)
 block|{
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_INITIALIZING
+argument_list|)
+expr_stmt|;
 name|readline_initialize_everything
 argument_list|()
 expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_INITIALIZING
+argument_list|)
+expr_stmt|;
 name|rl_initialized
 operator|++
+expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_INITIALIZED
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Initalize the current line information. */
@@ -2182,6 +2323,11 @@ comment|/* We aren't done yet.  We haven't even gotten started yet! */
 name|rl_done
 operator|=
 literal|0
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_DONE
+argument_list|)
 expr_stmt|;
 comment|/* Tell the history routines what is going on. */
 name|start_using_history
@@ -2195,7 +2341,7 @@ comment|/* No such function typed yet. */
 name|rl_last_func
 operator|=
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL
@@ -2282,20 +2428,13 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* Find out if we are running in Emacs. */
-name|running_in_emacs
-operator|=
-name|get_env_value
-argument_list|(
-literal|"EMACS"
-argument_list|)
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
+if|#
+directive|if
 literal|0
-expr_stmt|;
+comment|/* Find out if we are running in Emacs -- UNUSED. */
+block|running_in_emacs = sh_get_env_value ("EMACS") != (char *)0;
+endif|#
+directive|endif
 comment|/* Set up input and output if they are not already set up. */
 if|if
 condition|(
@@ -2341,13 +2480,22 @@ name|DEFAULT_BUFFER_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the terminal interface. */
+if|if
+condition|(
+name|rl_terminal_name
+operator|==
+literal|0
+condition|)
+name|rl_terminal_name
+operator|=
+name|sh_get_env_value
+argument_list|(
+literal|"TERM"
+argument_list|)
+expr_stmt|;
 name|_rl_init_terminal_io
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|rl_terminal_name
 argument_list|)
 expr_stmt|;
 comment|/* Bind tty characters to readline functions. */
@@ -2380,12 +2528,12 @@ operator|&&
 name|_rl_term_autowrap
 condition|)
 block|{
-name|screenwidth
+name|_rl_screenwidth
 operator|--
 expr_stmt|;
-name|screenchars
+name|_rl_screenchars
 operator|-=
-name|screenheight
+name|_rl_screenheight
 expr_stmt|;
 block|}
 comment|/* Override the effect of any `set keymap' assignments in the      inputrc file. */
@@ -2432,7 +2580,7 @@ name|void
 name|readline_default_bindings
 parameter_list|()
 block|{
-name|rltty_set_default_bindings
+name|rl_tty_set_default_bindings
 argument_list|(
 name|_rl_keymap
 argument_list|)
@@ -2446,7 +2594,7 @@ name|void
 name|bind_arrow_keys_internal
 parameter_list|()
 block|{
-name|Function
+name|rl_command_func_t
 modifier|*
 name|f
 decl_stmt|;
@@ -2714,6 +2862,11 @@ decl_stmt|;
 name|rl_save_prompt
 argument_list|()
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_NUMERICARG
+argument_list|)
+expr_stmt|;
 name|sawminus
 operator|=
 name|sawdigits
@@ -2740,7 +2893,7 @@ name|rl_numeric_arg
 operator|=
 literal|0
 expr_stmt|;
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|rl_restore_prompt
@@ -2748,6 +2901,11 @@ argument_list|()
 expr_stmt|;
 name|rl_clear_message
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_NUMERICARG
+argument_list|)
 expr_stmt|;
 return|return
 literal|1
@@ -2762,12 +2920,22 @@ operator|*
 name|rl_numeric_arg
 argument_list|)
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|key
 operator|=
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 comment|/* If we see a key bound to `universal-argument' after seeing digits, 	 it ends the argument but is otherwise ignored. */
 if|if
@@ -2806,16 +2974,31 @@ continue|continue;
 block|}
 else|else
 block|{
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|key
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 name|rl_restore_prompt
 argument_list|()
 expr_stmt|;
 name|rl_clear_message
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_NUMERICARG
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2918,6 +3101,11 @@ expr_stmt|;
 name|rl_clear_message
 argument_list|()
 expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_NUMERICARG
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|_rl_dispatch
@@ -2930,6 +3118,11 @@ operator|)
 return|;
 block|}
 block|}
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_NUMERICARG
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2954,9 +3147,10 @@ decl_stmt|,
 name|key
 decl_stmt|;
 block|{
-name|rl_pending_input
-operator|=
+name|rl_execute_next
+argument_list|(
 name|key
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2976,7 +3170,7 @@ name|int
 name|rl_discard_argument
 parameter_list|()
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|rl_clear_message
@@ -3077,6 +3271,7 @@ name|rl_insert_text
 parameter_list|(
 name|string
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -3445,6 +3640,7 @@ name|start
 parameter_list|,
 name|end
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|text
@@ -3591,12 +3787,18 @@ name|int
 name|lend
 init|=
 name|rl_end
+operator|>
+literal|0
+condition|?
+name|rl_end
 operator|-
 operator|(
 name|rl_editing_mode
 operator|==
 name|vi_mode
 operator|)
+else|:
+name|rl_end
 decl_stmt|;
 else|#
 directive|else
@@ -3618,7 +3820,7 @@ name|rl_point
 operator|=
 name|lend
 expr_stmt|;
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 block|}
@@ -3695,7 +3897,7 @@ name|rl_point
 operator|=
 literal|0
 expr_stmt|;
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 block|}
@@ -3831,7 +4033,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|alphabetic
+name|rl_alphabetic
 argument_list|(
 name|c
 argument_list|)
@@ -3856,7 +4058,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|alphabetic
+name|rl_alphabetic
 argument_list|(
 name|c
 argument_list|)
@@ -3890,7 +4092,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|alphabetic
+name|rl_alphabetic
 argument_list|(
 name|c
 argument_list|)
@@ -3974,7 +4176,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|alphabetic
+name|rl_alphabetic
 argument_list|(
 name|c
 argument_list|)
@@ -3999,7 +4201,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|alphabetic
+name|rl_alphabetic
 argument_list|(
 name|c
 argument_list|)
@@ -4023,7 +4225,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|alphabetic
+name|rl_alphabetic
 argument_list|(
 name|c
 argument_list|)
@@ -4172,10 +4374,20 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|ch
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -4230,7 +4442,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 block|}
@@ -4514,10 +4726,20 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -4596,6 +4818,11 @@ name|rl_done
 operator|=
 literal|1
 expr_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_DONE
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -4619,7 +4846,7 @@ block|}
 endif|#
 directive|endif
 comment|/* VI_MODE */
-comment|/* If we've been asked to erase empty lines, suppress the final update,      since _rl_update_final calls crlf(). */
+comment|/* If we've been asked to erase empty lines, suppress the final update,      since _rl_update_final calls rl_crlf(). */
 if|if
 condition|(
 name|rl_erase_empty_line
@@ -4715,7 +4942,7 @@ operator|!
 name|rl_point
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -4853,7 +5080,7 @@ operator|==
 name|rl_end
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -5460,7 +5687,7 @@ argument_list|)
 expr_stmt|;
 name|inword
 operator|=
-name|alphabetic
+name|rl_alphabetic
 argument_list|(
 name|the_line
 index|[
@@ -5470,7 +5697,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -5617,7 +5844,7 @@ name|w1_end
 operator|)
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|rl_point
@@ -5752,7 +5979,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -5918,7 +6145,7 @@ name|rl_end
 operator|)
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -6035,10 +6262,20 @@ block|{
 name|int
 name|c
 decl_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6164,7 +6401,7 @@ end_comment
 begin_decl_stmt
 name|HIST_ENTRY
 modifier|*
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 init|=
 operator|(
 name|HIST_ENTRY
@@ -6189,14 +6426,14 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 condition|)
 name|_rl_free_history_entry
 argument_list|(
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 argument_list|)
 expr_stmt|;
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|=
 operator|(
 name|HIST_ENTRY
@@ -6256,7 +6493,7 @@ end_comment
 
 begin_function
 name|int
-name|maybe_replace_line
+name|rl_maybe_replace_line
 parameter_list|()
 block|{
 name|HIST_ENTRY
@@ -6323,12 +6560,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Put back the saved_line_for_history if there is one. */
+comment|/* Restore the _rl_saved_line_for_history if there is one. */
 end_comment
 
 begin_function
 name|int
-name|maybe_unsave_line
+name|rl_maybe_unsave_line
 parameter_list|()
 block|{
 name|int
@@ -6336,14 +6573,14 @@ name|line_len
 decl_stmt|;
 if|if
 condition|(
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 condition|)
 block|{
 name|line_len
 operator|=
 name|strlen
 argument_list|(
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|->
 name|line
 argument_list|)
@@ -6363,7 +6600,7 @@ name|strcpy
 argument_list|(
 name|the_line
 argument_list|,
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|->
 name|line
 argument_list|)
@@ -6374,16 +6611,16 @@ operator|(
 name|UNDO_LIST
 operator|*
 operator|)
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|->
 name|data
 expr_stmt|;
 name|_rl_free_history_entry
 argument_list|(
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 argument_list|)
 expr_stmt|;
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|=
 operator|(
 name|HIST_ENTRY
@@ -6402,7 +6639,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -6412,22 +6649,22 @@ block|}
 end_function
 
 begin_comment
-comment|/* Save the current line in saved_line_for_history. */
+comment|/* Save the current line in _rl_saved_line_for_history. */
 end_comment
 
 begin_function
 name|int
-name|maybe_save_line
+name|rl_maybe_save_line
 parameter_list|()
 block|{
 if|if
 condition|(
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|==
 literal|0
 condition|)
 block|{
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|=
 operator|(
 name|HIST_ENTRY
@@ -6441,7 +6678,7 @@ name|HIST_ENTRY
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|->
 name|line
 operator|=
@@ -6450,7 +6687,7 @@ argument_list|(
 name|the_line
 argument_list|)
 expr_stmt|;
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|->
 name|data
 operator|=
@@ -6459,6 +6696,36 @@ name|char
 operator|*
 operator|)
 name|rl_undo_list
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|_rl_free_saved_history_line
+parameter_list|()
+block|{
+if|if
+condition|(
+name|_rl_saved_line_for_history
+condition|)
+block|{
+name|_rl_free_history_entry
+argument_list|(
+name|_rl_saved_line_for_history
+argument_list|)
+expr_stmt|;
+name|_rl_saved_line_for_history
+operator|=
+operator|(
+name|HIST_ENTRY
+operator|*
+operator|)
+name|NULL
 expr_stmt|;
 block|}
 return|return
@@ -6539,13 +6806,13 @@ decl_stmt|,
 name|key
 decl_stmt|;
 block|{
-name|maybe_replace_line
+name|rl_maybe_replace_line
 argument_list|()
 expr_stmt|;
 name|using_history
 argument_list|()
 expr_stmt|;
-name|maybe_unsave_line
+name|rl_maybe_unsave_line
 argument_list|()
 expr_stmt|;
 return|return
@@ -6605,7 +6872,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|maybe_replace_line
+name|rl_maybe_replace_line
 argument_list|()
 expr_stmt|;
 name|temp
@@ -6642,7 +6909,7 @@ name|temp
 operator|==
 literal|0
 condition|)
-name|maybe_unsave_line
+name|rl_maybe_unsave_line
 argument_list|()
 expr_stmt|;
 else|else
@@ -6776,11 +7043,11 @@ return|return
 literal|0
 return|;
 comment|/* If we don't have a line saved, then save this one. */
-name|maybe_save_line
+name|rl_maybe_save_line
 argument_list|()
 expr_stmt|;
 comment|/* If the current line has changed, save the changes. */
-name|maybe_replace_line
+name|rl_maybe_replace_line
 argument_list|()
 expr_stmt|;
 name|temp
@@ -6836,7 +7103,7 @@ name|temp
 operator|==
 literal|0
 condition|)
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 else|else
@@ -7036,7 +7303,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return

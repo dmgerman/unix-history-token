@@ -202,7 +202,7 @@ operator|.
 name|function
 operator|=
 operator|(
-name|Function
+name|rl_command_func_t
 operator|*
 operator|)
 name|NULL

@@ -303,6 +303,7 @@ name|history_filename
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -311,7 +312,9 @@ block|{
 name|char
 modifier|*
 name|return_val
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|home
 decl_stmt|;
@@ -344,7 +347,7 @@ operator|)
 return|;
 name|home
 operator|=
-name|get_env_value
+name|sh_get_env_value
 argument_list|(
 literal|"HOME"
 argument_list|)
@@ -449,6 +452,7 @@ name|read_history
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -484,6 +488,7 @@ name|from
 parameter_list|,
 name|to
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -829,7 +834,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Truncate the history file FNAME, leaving only LINES trailing lines.    If FNAME is NULL, then use ~/.history. */
+comment|/* Truncate the history file FNAME, leaving only LINES trailing lines.    If FNAME is NULL, then use ~/.history.  Returns 0 on success, errno    on failure. */
 end_comment
 
 begin_function
@@ -840,6 +845,7 @@ name|fname
 parameter_list|,
 name|lines
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -856,6 +862,8 @@ name|int
 name|file
 decl_stmt|,
 name|chars_read
+decl_stmt|,
+name|rv
 decl_stmt|;
 name|char
 modifier|*
@@ -899,6 +907,11 @@ argument_list|,
 literal|0666
 argument_list|)
 expr_stmt|;
+name|rv
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Don't try to truncate non-regular files. */
 if|if
 condition|(
 name|file
@@ -917,10 +930,27 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|rv
+operator|=
+name|errno
+expr_stmt|;
+if|if
+condition|(
+name|file
+operator|!=
+operator|-
+literal|1
+condition|)
+name|close
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 goto|goto
 name|truncate_exit
 goto|;
-comment|/* Don't try to truncate non-regular files. */
+block|}
 if|if
 condition|(
 name|S_ISREG
@@ -932,9 +962,31 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|close
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EFTYPE
+name|rv
+operator|=
+name|EFTYPE
+expr_stmt|;
+else|#
+directive|else
+name|rv
+operator|=
+name|EINVAL
+expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|truncate_exit
 goto|;
+block|}
 name|file_size
 operator|=
 operator|(
@@ -971,9 +1023,31 @@ name|defined
 argument_list|(
 name|EFBIG
 argument_list|)
+name|rv
+operator|=
 name|errno
 operator|=
 name|EFBIG
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|EOVERFLOW
+argument_list|)
+name|rv
+operator|=
+name|errno
+operator|=
+name|EOVERFLOW
+expr_stmt|;
+else|#
+directive|else
+name|rv
+operator|=
+name|errno
+operator|=
+name|EINVAL
 expr_stmt|;
 endif|#
 directive|endif
@@ -1012,9 +1086,23 @@ name|chars_read
 operator|<=
 literal|0
 condition|)
+block|{
+name|rv
+operator|=
+operator|(
+name|chars_read
+operator|<
+literal|0
+operator|)
+condition|?
+name|errno
+else|:
+literal|0
+expr_stmt|;
 goto|goto
 name|truncate_exit
 goto|;
+block|}
 comment|/* Count backwards from the end of buffer until we have passed      LINES lines. */
 for|for
 control|(
@@ -1147,7 +1235,7 @@ name|filename
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|rv
 return|;
 block|}
 end_function
@@ -1167,6 +1255,7 @@ name|nelements
 parameter_list|,
 name|overwrite
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1189,6 +1278,8 @@ name|int
 name|file
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|rv
 decl_stmt|;
 name|mode
 operator|=
@@ -1214,6 +1305,10 @@ name|history_filename
 argument_list|(
 name|filename
 argument_list|)
+expr_stmt|;
+name|rv
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1376,6 +1471,8 @@ operator|=
 literal|'\n'
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|write
 argument_list|(
 name|file
@@ -1384,6 +1481,12 @@ name|buffer
 argument_list|,
 name|buffer_size
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|rv
+operator|=
+name|errno
 expr_stmt|;
 name|free
 argument_list|(
@@ -1403,7 +1506,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|rv
 operator|)
 return|;
 block|}
@@ -1424,6 +1527,7 @@ parameter_list|)
 name|int
 name|nelements
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1454,6 +1558,7 @@ name|write_history
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename

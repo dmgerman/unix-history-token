@@ -184,6 +184,19 @@ name|HISTORY_QUOTE_CHARACTERS
 value|"\"'`"
 end_define
 
+begin_typedef
+typedef|typedef
+name|int
+name|_hist_search_func_t
+name|__P
+typedef|((const
+name|char
+modifier|*
+typedef|,
+name|int
+typedef|));
+end_typedef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -340,11 +353,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Used to split words by history_tokenize_internal. */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|history_word_delimiters
+init|=
+name|HISTORY_WORD_DELIMITERS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* If set, this points to a function that is called to verify that a    particular history expansion should be performed. */
 end_comment
 
 begin_decl_stmt
-name|Function
+name|rl_linebuf_func_t
 modifier|*
 name|history_inhibit_expansion_function
 decl_stmt|;
@@ -413,6 +439,7 @@ name|caller_index
 parameter_list|,
 name|delimiting_quote
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -446,7 +473,7 @@ name|local_index
 decl_stmt|,
 name|substring_okay
 decl_stmt|;
-name|Function
+name|_hist_search_func_t
 modifier|*
 name|search_func
 decl_stmt|;
@@ -1232,7 +1259,9 @@ block|{
 name|char
 modifier|*
 name|temp
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|emsg
 decl_stmt|;
@@ -2372,9 +2401,6 @@ block|{
 name|char
 modifier|*
 name|new_event
-decl_stmt|,
-modifier|*
-name|t
 decl_stmt|;
 name|int
 name|delimiter
@@ -2847,7 +2873,7 @@ literal|'q'
 condition|)
 name|x
 operator|=
-name|single_quote
+name|sh_single_quote
 argument_list|(
 name|temp
 argument_list|)
@@ -3020,6 +3046,15 @@ name|char
 modifier|*
 name|temp
 decl_stmt|;
+if|if
+condition|(
+name|output
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Setting the history expansion character to 0 inhibits all      history expansion. */
 if|if
 condition|(
@@ -3192,7 +3227,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|HISTORY_WORD_DELIMITERS
+name|history_word_delimiters
 argument_list|)
 operator|)
 condition|)
@@ -3537,7 +3572,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|HISTORY_WORD_DELIMITERS
+name|history_word_delimiters
 argument_list|)
 condition|)
 block|{
@@ -4303,6 +4338,7 @@ name|first
 decl_stmt|,
 name|last
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|string
@@ -4625,6 +4661,7 @@ name|wind
 parameter_list|,
 name|indp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -4659,6 +4696,22 @@ name|len
 decl_stmt|,
 name|delimiter
 decl_stmt|;
+comment|/* If we're searching for a string that's not part of a word (e.g., " "),      make sure we set *INDP to a reasonable value. */
+if|if
+condition|(
+name|indp
+operator|&&
+name|wind
+operator|!=
+operator|-
+literal|1
+condition|)
+operator|*
+name|indp
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* Get a token, and stuff it into RESULT.  The tokens are split      exactly where the shell would split them. */
 for|for
 control|(
@@ -5030,7 +5083,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|HISTORY_WORD_DELIMITERS
+name|history_word_delimiters
 argument_list|)
 operator|)
 condition|)
@@ -5192,6 +5245,7 @@ name|history_tokenize
 parameter_list|(
 name|string
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -5270,6 +5324,10 @@ name|wind
 operator|==
 operator|-
 literal|1
+operator|||
+name|words
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

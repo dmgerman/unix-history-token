@@ -905,7 +905,7 @@ condition|(
 operator|!
 name|rl_point
 condition|)
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 else|else
@@ -1004,7 +1004,7 @@ name|rl_point
 operator|==
 literal|0
 condition|)
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 else|else
@@ -1106,7 +1106,7 @@ name|rl_point
 operator|==
 literal|0
 condition|)
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 else|else
@@ -1749,7 +1749,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -1780,7 +1780,7 @@ operator|*
 name|arg
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -2031,7 +2031,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__CYGWIN32__
+name|__CYGWIN__
 argument_list|)
 end_if
 
@@ -2180,7 +2180,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __CYGWIN32__ */
+comment|/* __CYGWIN__ */
 end_comment
 
 end_unit

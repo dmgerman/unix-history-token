@@ -38,46 +38,17 @@ name|READLINE_LIBRARY
 include|#
 directive|include
 file|"rlstdc.h"
+include|#
+directive|include
+file|"rltypedefs.h"
 else|#
 directive|else
 include|#
 directive|include
 file|<readline/rlstdc.h>
-endif|#
-directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_FUNCTION_DEF
-argument_list|)
-define|#
-directive|define
-name|_FUNCTION_DEF
-typedef|typedef
-name|int
-name|Function
-parameter_list|()
-function_decl|;
-typedef|typedef
-name|void
-name|VFunction
-parameter_list|()
-function_decl|;
-typedef|typedef
-name|char
-modifier|*
-name|CPFunction
-parameter_list|()
-function_decl|;
-typedef|typedef
-name|char
-modifier|*
-modifier|*
-name|CPPFunction
-parameter_list|()
-function_decl|;
+include|#
+directive|include
+file|<readline/rltypedefs.h>
 endif|#
 directive|endif
 ifdef|#
@@ -190,6 +161,7 @@ name|add_history
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -217,6 +189,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -372,6 +345,7 @@ name|history_search
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -386,6 +360,7 @@ name|history_search_prefix
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -400,6 +375,7 @@ name|history_search_pos
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -417,6 +393,7 @@ name|read_history
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -429,6 +406,7 @@ name|read_history_range
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -445,6 +423,7 @@ name|write_history
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -459,6 +438,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -471,6 +451,7 @@ name|history_truncate_file
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -507,6 +488,7 @@ name|int
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -520,6 +502,7 @@ name|get_history_event
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -539,6 +522,7 @@ name|history_tokenize
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -555,7 +539,7 @@ name|history_length
 decl_stmt|;
 specifier|extern
 name|int
-name|max_input_history
+name|history_max_entries
 decl_stmt|;
 specifier|extern
 name|char
@@ -564,6 +548,11 @@ decl_stmt|;
 specifier|extern
 name|char
 name|history_subst_char
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|history_word_delimiters
 decl_stmt|;
 specifier|extern
 name|char
@@ -583,9 +572,14 @@ specifier|extern
 name|int
 name|history_quotes_inhibit_expansion
 decl_stmt|;
+comment|/* Backwards compatibility */
+specifier|extern
+name|int
+name|max_input_history
+decl_stmt|;
 comment|/* If set, this function is called to decide whether or not a particular    history expansion should be treated as a special case for the calling    application and not expanded. */
 specifier|extern
-name|Function
+name|rl_linebuf_func_t
 modifier|*
 name|history_inhibit_expansion_function
 decl_stmt|;

@@ -157,7 +157,7 @@ begin_decl_stmt
 specifier|extern
 name|HIST_ENTRY
 modifier|*
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 decl_stmt|;
 end_decl_stmt
 
@@ -307,14 +307,14 @@ name|line_len
 expr_stmt|;
 if|if
 condition|(
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 condition|)
 name|_rl_free_history_entry
 argument_list|(
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 argument_list|)
 expr_stmt|;
-name|saved_line_for_history
+name|_rl_saved_line_for_history
 operator|=
 operator|(
 name|HIST_ENTRY
@@ -355,14 +355,37 @@ name|ret
 decl_stmt|,
 name|old
 decl_stmt|;
+if|if
+condition|(
+name|pos
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|old
 operator|=
 name|where_history
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|history_set_pos
 argument_list|(
 name|pos
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_SEARCH
 argument_list|)
 expr_stmt|;
 if|if
@@ -391,6 +414,11 @@ argument_list|(
 name|string
 argument_list|,
 name|dir
+argument_list|)
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_SEARCH
 argument_list|)
 expr_stmt|;
 if|if
@@ -464,7 +492,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return;
@@ -491,7 +519,7 @@ literal|1
 condition|)
 block|{
 comment|/* Search failed, current history position unchanged. */
-name|maybe_unsave_line
+name|rl_maybe_unsave_line
 argument_list|()
 expr_stmt|;
 name|rl_clear_message
@@ -501,7 +529,7 @@ name|rl_point
 operator|=
 literal|0
 expr_stmt|;
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return;
@@ -588,7 +616,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|maybe_save_line
+name|rl_maybe_save_line
 argument_list|()
 expr_stmt|;
 name|saved_point
@@ -637,16 +665,40 @@ expr_stmt|;
 define|#
 directive|define
 name|SEARCH_RETURN
-value|rl_restore_prompt (); return
+value|rl_restore_prompt (); RL_UNSETSTATE(RL_STATE_NSEARCH); return
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_NSEARCH
+argument_list|)
+expr_stmt|;
 comment|/* Read the search string. */
 while|while
 condition|(
+literal|1
+condition|)
+block|{
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|0
 condition|)
-block|{
+break|break;
 switch|switch
 condition|(
 name|c
@@ -668,7 +720,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|maybe_unsave_line
+name|rl_maybe_unsave_line
 argument_list|()
 expr_stmt|;
 name|rl_clear_message
@@ -740,7 +792,7 @@ argument_list|(
 literal|'G'
 argument_list|)
 case|:
-name|maybe_unsave_line
+name|rl_maybe_unsave_line
 argument_list|()
 expr_stmt|;
 name|rl_clear_message
@@ -750,7 +802,7 @@ name|rl_point
 operator|=
 name|saved_point
 expr_stmt|;
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|SEARCH_RETURN
@@ -788,7 +840,7 @@ operator|!
 name|noninc_search_string
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|SEARCH_RETURN
@@ -824,6 +876,11 @@ argument_list|(
 name|noninc_search_string
 argument_list|,
 name|dir
+argument_list|)
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_NSEARCH
 argument_list|)
 expr_stmt|;
 block|}
@@ -932,7 +989,7 @@ operator|!
 name|noninc_search_string
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -979,7 +1036,7 @@ operator|!
 name|noninc_search_string
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 return|return
@@ -1027,7 +1084,7 @@ name|ret
 decl_stmt|,
 name|oldpos
 decl_stmt|;
-name|maybe_save_line
+name|rl_maybe_save_line
 argument_list|()
 expr_stmt|;
 name|temp
@@ -1123,10 +1180,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|maybe_unsave_line
+name|rl_maybe_unsave_line
 argument_list|()
 expr_stmt|;
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 comment|/* If you don't want the saved history line (last match) to show up          in the line buffer after the search fails, change the #if 0 to          #if 1 */
@@ -1140,7 +1197,7 @@ name|rl_point
 operator|=
 name|rl_history_search_len
 expr_stmt|;
-comment|/* maybe_unsave_line changes it */
+comment|/* rl_maybe_unsave_line changes it */
 endif|#
 directive|endif
 return|return
@@ -1244,6 +1301,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+name|_rl_free_saved_history_line
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
