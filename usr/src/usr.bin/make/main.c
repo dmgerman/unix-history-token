@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1509,6 +1509,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|setenv
 argument_list|(
 literal|"PWD"
@@ -1518,6 +1519,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|path
+operator|=
+literal|"."
+expr_stmt|;
+block|}
 name|create
 operator|=
 name|Lst_Init
