@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  *  *	@(#)machdep.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  *  *	@(#)machdep.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -427,21 +427,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Machine-dependent startup code  */
+comment|/*  * cpu_startup: allocate memory for variable-sized tables,  * initialize cpu, and do autoconfiguration.  */
 end_comment
 
 begin_macro
-name|startup
-argument_list|(
-argument|firstaddr
-argument_list|)
+name|cpu_startup
+argument_list|()
 end_macro
-
-begin_decl_stmt
-name|int
-name|firstaddr
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -452,6 +444,8 @@ decl_stmt|;
 specifier|register
 name|caddr_t
 name|v
+decl_stmt|,
+name|firstaddr
 decl_stmt|;
 name|int
 name|base
@@ -1136,7 +1130,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Clear registers on exec  */
+comment|/*  * Set registers on exec.  * XXX Should clear registers except sp, pc,  * but would break init; should be fixed soon.  */
 end_comment
 
 begin_expr_stmt
