@@ -257,6 +257,19 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|__ia64__
+block|{
+literal|"FreeBSD ELF64"
+block|,
+name|ia64_syscall_entry
+block|,
+name|ia64_syscall_exit
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|__sparc64__
 block|{
 literal|"FreeBSD ELF64"
