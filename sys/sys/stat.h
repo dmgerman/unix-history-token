@@ -1061,6 +1061,17 @@ begin_comment
 comment|/* file may not be removed or renamed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SF_SNAPSHOT
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* snapshot inode */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

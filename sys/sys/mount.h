@@ -360,6 +360,10 @@ name|mnt_lock
 decl_stmt|;
 comment|/* mount structure lock */
 name|int
+name|mnt_writeopcount
+decl_stmt|;
+comment|/* write syscalls in progress */
+name|int
 name|mnt_flag
 decl_stmt|;
 comment|/* flags shared with user */
@@ -669,16 +673,14 @@ comment|/* do not show entry in df */
 end_comment
 
 begin_comment
-comment|/*  * Mask of flags that are visible to statfs()  * XXX I think that this could now become (~(MNT_CMDFLAGS))  * but the 'mount' program may need changing to handle this.  * XXX MNT_EXPUBLIC is presently left out. I don't know why.  */
+comment|/*  * Mask of flags that are visible to statfs()  * XXX I think that this could now become (~(MNT_CMDFLAGS))  * but the 'mount' program may need changing to handle this.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_NODEV	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE \
-comment|/*	| MNT_EXPUBLIC */
-value|)
+value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_NODEV	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW)
 end_define
 
 begin_comment
@@ -732,8 +734,44 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNT_SNAPSHOT
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* snapshot the filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNT_CMDFLAGS
-value|(MNT_UPDATE|MNT_DELEXPORT|MNT_RELOAD|MNT_FORCE)
+value|(MNT_UPDATE	| MNT_DELEXPORT	| MNT_RELOAD	| \ 			MNT_FORCE	| MNT_SNAPSHOT)
+end_define
+
+begin_comment
+comment|/*  * Still available  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_SPARE1
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_SPARE2
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_SPARE3
+value|0x08000000
 end_define
 
 begin_comment
@@ -771,6 +809,28 @@ end_define
 
 begin_comment
 comment|/* upgrade to read/write requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_SUSPEND
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* request write suspension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_SUSPENDED
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* write operations are suspended */
 end_comment
 
 begin_comment

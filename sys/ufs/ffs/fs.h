@@ -128,6 +128,35 @@ value|FS_OPTTIME
 end_define
 
 begin_comment
+comment|/*  * The maximum number of snapshot nodes that can be associated  * with each filesystem. This limit affects only the number of  * snapshot files that can be recorded within the superblock so  * that they can be found when the filesystem is mounted. However,  * maintaining too many will slow the filesystem performance, so  * having this limit is a good idea.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSMAXSNAP
+value|20
+end_define
+
+begin_comment
+comment|/*  * Used to identify special blocks in snapshots:  *  * BLK_NOCOPY - A block that was unallocated at the time the snapshot  *	was taken, hence does not need to be copied when written.  * BLK_SNAP - A block held by another snapshot that is not needed by this  *	snapshot. When the other snapshot is freed, the BLK_SNAP entries  *	are converted to BLK_NOCOPY. These are needed to allow fsck to  *	identify blocks that are in use by other snapshots (which are  *	expunged from this snapshot).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLK_NOCOPY
+value|((ufs_daddr_t)(1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLK_SNAP
+value|((ufs_daddr_t)(2))
+end_define
+
+begin_comment
 comment|/*  * Per cylinder group information; summarized in blocks allocated  * from first cylinder group data blocks.  These blocks have to be  * read in from fs_csaddr (size fs_cssize) in addition to the  * super block.  *  * N.B. sizeof(struct csum) must be a power of two in order for  * the ``fs_cs'' macro to work (see below).  */
 end_comment
 
@@ -429,9 +458,16 @@ index|]
 decl_stmt|;
 comment|/* old rotation block list head */
 name|int32_t
+name|fs_snapinum
+index|[
+name|FSMAXSNAP
+index|]
+decl_stmt|;
+comment|/* list of snapshot inode numbers */
+name|int32_t
 name|fs_sparecon
 index|[
-literal|50
+literal|30
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
