@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.27 1996/07/30 18:00:32 bde Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.28 1996/08/13 07:21:44 julian Exp $  */
 end_comment
 
 begin_include
@@ -3135,8 +3135,7 @@ name|vget
 argument_list|(
 name|vn_p
 argument_list|,
-literal|0
-comment|/*lockflag ?*/
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*XXX*/
@@ -3407,6 +3406,11 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+name|VOP_LOCK
+argument_list|(
+name|vn_p
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|error
