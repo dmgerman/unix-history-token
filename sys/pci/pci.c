@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pci.c,v 1.40 1996/01/19 19:01:19 se Exp $ ** **  General subroutines for the PCI bus. **  pci_configure () ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pci.c,v 1.41 1996/01/23 21:47:16 se Exp $ ** **  General subroutines for the PCI bus. **  pci_configure () ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -1139,6 +1139,13 @@ modifier|*
 modifier|*
 name|dvpp
 decl_stmt|;
+name|int
+name|func
+decl_stmt|,
+name|maxfunc
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1152,6 +1159,20 @@ operator|&
 literal|1
 condition|)
 continue|continue;
+for|for
+control|(
+name|func
+operator|=
+literal|0
+init|;
+name|func
+operator|<=
+name|maxfunc
+condition|;
+name|func
+operator|++
+control|)
+block|{
 name|tag
 operator|=
 name|pcibus
@@ -1164,7 +1185,7 @@ name|pcicb_bus
 argument_list|,
 name|device
 argument_list|,
-literal|0
+name|func
 argument_list|)
 expr_stmt|;
 name|type
@@ -1242,6 +1263,17 @@ block|}
 block|}
 empty_stmt|;
 comment|/* 		**	check for mirrored devices. 		*/
+if|if
+condition|(
+name|func
+operator|!=
+literal|0
+condition|)
+block|{
+goto|goto
+name|real_device
+goto|;
+block|}
 if|if
 condition|(
 name|device
@@ -1398,6 +1430,31 @@ directive|endif
 continue|continue;
 name|real_device
 label|:
+if|if
+condition|(
+name|func
+operator|==
+literal|0
+operator|&&
+operator|(
+name|pcibus
+operator|->
+name|pb_read
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_HEADER_MISC
+argument_list|)
+operator|&
+name|PCI_HEADER_MULTIFUNCTION
+operator|)
+condition|)
+block|{
+name|maxfunc
+operator|=
+literal|7
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dvp
@@ -1855,6 +1912,14 @@ operator|.
 name|pi_device
 operator|=
 name|device
+expr_stmt|;
+name|pdcp
+operator|->
+name|pdc_pi
+operator|.
+name|pi_func
+operator|=
+name|func
 expr_stmt|;
 name|pdcp
 operator|->
@@ -2542,6 +2607,7 @@ operator|=
 name|subordinate
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 ifndef|#
@@ -3777,7 +3843,9 @@ name|pip
 operator|->
 name|pi_device
 argument_list|,
-literal|0
+name|pip
+operator|->
+name|pi_func
 argument_list|)
 expr_stmt|;
 name|buffer
