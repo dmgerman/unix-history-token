@@ -1933,12 +1933,21 @@ expr_stmt|;
 comment|/* call us when you're done */
 name|rqe
 operator|->
+name|b
+operator|.
+name|b_iodone
+operator|=
+name|complete_rqe
+expr_stmt|;
+comment|/* by calling us here */
+name|rqe
+operator|->
 name|flags
 operator|&=
 operator|~
 name|XFR_PARITYOP
 expr_stmt|;
-comment|/* reset flags that brought use here */
+comment|/* reset flags that brought us here */
 name|rqe
 operator|->
 name|b
@@ -2213,12 +2222,13 @@ expr_stmt|;
 comment|/* call us when you're done */
 name|rqe
 operator|->
-name|flags
-operator|&=
-operator|~
-name|XFR_PARITYOP
+name|b
+operator|.
+name|b_iodone
+operator|=
+name|complete_rqe
 expr_stmt|;
-comment|/* reset flags that brought use here */
+comment|/* by calling us here */
 name|rqg
 operator|->
 name|flags
@@ -2226,7 +2236,7 @@ operator|&=
 operator|~
 name|XFR_PARITYOP
 expr_stmt|;
-comment|/* reset flags that brought use here */
+comment|/* reset flags that brought us here */
 name|rqe
 operator|->
 name|b
