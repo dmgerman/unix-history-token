@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)l.c	5.3 (Berkeley) %G%"
+literal|"@(#)l.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * This is the list command. It's not wrapped in with n and p because  * of the unambiguous printing needed.  */
+comment|/*  * This is the list command. It's not wrapped in with n and p because  * of the unambiguous printing need.  */
 end_comment
 
 begin_function
