@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.47 1996/08/28 17:54:17 bde Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.48 1996/09/06 23:06:50 phk Exp $  */
 end_comment
 
 begin_include
@@ -2659,50 +2659,6 @@ init|=
 operator|&
 name|apm_softc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DSVALUE_BUG
-name|caddr_t
-name|apm_bios_work
-decl_stmt|;
-comment|/* 	 * XXX - Malloc enough space for the APM DS, and then copy the 	 * current DS into the new space since the DS setup by the 	 * APM bios is going to get wiped out. 	 */
-name|apm_bios_work
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|malloc
-argument_list|(
-name|apm_ds_limit
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-name|bcopy
-argument_list|(
-call|(
-name|caddr_t
-call|)
-argument_list|(
-operator|(
-name|apm_ds_base
-operator|<<
-literal|4
-operator|)
-operator|+
-name|APM_KERNBASE
-argument_list|)
-argument_list|,
-name|apm_bios_work
-argument_list|,
-name|apm_ds_limit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* APM_DSVALUE_BUG */
 name|sc
 operator|->
 name|initialized
@@ -2771,22 +2727,6 @@ name|cs_entry
 operator|=
 name|apm_cs_entry
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DSVALUE_BUG
-comment|/* Set the DS base to point to the newly made copy of the APM DS */
-name|sc
-operator|->
-name|ds_base
-operator|=
-operator|(
-name|u_int
-operator|)
-name|apm_bios_work
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* APM_DSVALUE_BUG */
 comment|/* Always call HLT in idle loop */
 name|sc
 operator|->
