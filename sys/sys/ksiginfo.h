@@ -38,12 +38,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
-
 begin_comment
 comment|/*  * Structures and prototypes for working with the in-kernel representation  * of pending signals, and all the information we have about them.  */
 end_comment
@@ -154,20 +148,6 @@ parameter_list|(
 name|struct
 name|ksiginfo
 modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ksiginfo_to_siginfo_t
-parameter_list|(
-name|struct
-name|ksiginfo
-modifier|*
-parameter_list|,
-name|siginfo_t
 modifier|*
 parameter_list|)
 function_decl|;
