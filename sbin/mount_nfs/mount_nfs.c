@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_nfs.c,v 1.14 1996/09/14 02:58:13 bde Exp $"
+literal|"$Id: mount_nfs.c,v 1.14.2.1 1997/05/14 08:19:20 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2745,7 +2745,32 @@ name|NFSSVC_MNTD
 operator||
 name|NFSSVC_GOTAUTH
 expr_stmt|;
+block|}
+name|setreuid
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NFSKERB */
+block|}
+block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return RPC_SUCCESS if server responds.  */
+end_comment
+
+begin_function
 name|enum
 name|clnt_stat
 name|pingnfsserver
@@ -2944,25 +2969,6 @@ expr_stmt|;
 return|return
 name|stat
 return|;
-block|}
-block|}
-name|setreuid
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* NFSKERB */
-block|}
-block|}
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
