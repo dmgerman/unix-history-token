@@ -212,15 +212,15 @@ file|<dev/em/if_em_hw.h>
 end_include
 
 begin_comment
-comment|/* Tunables -- Begin */
+comment|/* Tunables */
 end_comment
 
 begin_comment
-comment|/*   * FlowControl  * Valid Range: 0-3 (0=none, 1=Rx only, 2=Tx only, 3=Rx&Tx)  * Default: Read flow control settings from the EEPROM  *   This parameter controls the automatic generation(Tx) and response(Rx) to  *   Ethernet PAUSE frames.  */
+comment|/*  * FlowControl  * Valid Range: 0-3 (0=none, 1=Rx only, 2=Tx only, 3=Rx&Tx)  * Default: Read flow control settings from the EEPROM  *   This parameter controls the automatic generation(Tx) and response(Rx) to  *   Ethernet PAUSE frames.  */
 end_comment
 
 begin_comment
-comment|/*   * TxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *            80-4096 for 82540, 82544, 82545, and 82546-based adapters  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.   */
+comment|/*  * TxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *            80-4096 for 82540, 82544, 82545, and 82546-based adapters  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  */
 end_comment
 
 begin_define
@@ -231,7 +231,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * RxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *            80-4096 for 82540, 82544, 82545, and 82546-based adapters  * Default Value: 256   *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *	  */
+comment|/*  * RxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *            80-4096 for 82540, 82544, 82545, and 82546-based adapters  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *  */
 end_comment
 
 begin_define
@@ -249,11 +249,22 @@ begin_define
 define|#
 directive|define
 name|EM_TIDV
-value|128
+value|64
 end_define
 
 begin_comment
-comment|/*  * RxIntDelay  * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting RxIntDelay to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.   *            If this occurs a WATCHDOG message is logged in the system event log.  *            In addition, the controller is automatically reset, restoring the  *            network connection. To eliminate the potential for the hang  *            ensure that RxIntDelay is set to 0.  */
+comment|/*  * TxAbsIntDelay (82540, 82545, and 82546-based adapters only)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if TxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with TxIntDelay, may improve traffic throughput in specific  *   network conditions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_TADV
+value|64
+end_define
+
+begin_comment
+comment|/*  * RxIntDelay  * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting RxIntDelay to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.  *            If this occurs a WATCHDOG message is logged in the system event log.  *            In addition, the controller is automatically reset, restoring the  *            network connection. To eliminate the potential for the hang  *            ensure that RxIntDelay is set to 0.  */
 end_comment
 
 begin_define
@@ -261,6 +272,17 @@ define|#
 directive|define
 name|EM_RDTR
 value|0
+end_define
+
+begin_comment
+comment|/*  * RxAbsIntDelay (82540, 82545, and 82546-based adapters only)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   receive interrupt is generated. Useful only if RxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is received within the set amount of time.  Proper tuning,  *   along with RxIntDelay, may improve traffic throughput in specific network  *   conditions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_RADV
+value|64
 end_define
 
 begin_comment
@@ -677,49 +699,12 @@ end_typedef
 
 begin_struct
 struct|struct
-name|em_tx_buffer
+name|em_buffer
 block|{
-name|STAILQ_ENTRY
-argument_list|(
-argument|em_tx_buffer
-argument_list|)
-name|em_tx_entry
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m_head
-decl_stmt|;
-name|struct
-name|em_tx_desc
-modifier|*
-name|used_tx_desc
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* ******************************************************************************  * This structure stores information about the 2k aligned receive buffer  * into which the E1000 DMA's frames.   * ******************************************************************************/
-end_comment
-
-begin_struct
-struct|struct
-name|em_rx_buffer
-block|{
-name|STAILQ_ENTRY
-argument_list|(
-argument|em_rx_buffer
-argument_list|)
-name|em_rx_entry
-expr_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m_head
-decl_stmt|;
-name|u_int64_t
-name|buffer_addr
 decl_stmt|;
 block|}
 struct|;
@@ -826,31 +811,28 @@ name|u_int32_t
 name|tx_int_delay
 decl_stmt|;
 name|u_int32_t
+name|tx_abs_int_delay
+decl_stmt|;
+name|u_int32_t
 name|rx_int_delay
+decl_stmt|;
+name|u_int32_t
+name|rx_abs_int_delay
 decl_stmt|;
 name|XSUM_CONTEXT_T
 name|active_checksum_context
 decl_stmt|;
-comment|/* Transmit definitions */
-name|struct
-name|em_tx_desc
-modifier|*
-name|first_tx_desc
-decl_stmt|;
-name|struct
-name|em_tx_desc
-modifier|*
-name|last_tx_desc
-decl_stmt|;
-name|struct
-name|em_tx_desc
-modifier|*
-name|next_avail_tx_desc
-decl_stmt|;
+comment|/*          * Transmit definitions          *          * We have an array of num_tx_desc descriptors (handled          * by the controller) paired with an array of tx_buffers          * (at tx_buffer_area).          * The index of the next available descriptor is next_avail_tx_desc.          * The number of remaining tx_desc is num_tx_desc_avail.          */
 name|struct
 name|em_tx_desc
 modifier|*
 name|tx_desc_base
+decl_stmt|;
+name|u_int32_t
+name|next_avail_tx_desc
+decl_stmt|;
+name|u_int32_t
+name|oldest_used_tx_desc
 decl_stmt|;
 specifier|volatile
 name|u_int16_t
@@ -863,46 +845,18 @@ name|u_int32_t
 name|txd_cmd
 decl_stmt|;
 name|struct
-name|em_tx_buffer
+name|em_buffer
 modifier|*
 name|tx_buffer_area
 decl_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument|__em_tx_buffer_free
-argument_list|,
-argument|em_tx_buffer
-argument_list|)
-name|free_tx_buffer_list
-expr_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument|__em_tx_buffer_used
-argument_list|,
-argument|em_tx_buffer
-argument_list|)
-name|used_tx_buffer_list
-expr_stmt|;
-comment|/* Receive definitions */
-name|struct
-name|em_rx_desc
-modifier|*
-name|first_rx_desc
-decl_stmt|;
-name|struct
-name|em_rx_desc
-modifier|*
-name|last_rx_desc
-decl_stmt|;
-name|struct
-name|em_rx_desc
-modifier|*
-name|next_rx_desc_to_check
-decl_stmt|;
+comment|/*  	 * Receive definitions          *          * we have an array of num_rx_desc rx_desc (handled by the          * controller), and paired with an array of rx_buffers          * (at rx_buffer_area).          * The next pair to check on receive is at offset next_rx_desc_to_check          */
 name|struct
 name|em_rx_desc
 modifier|*
 name|rx_desc_base
+decl_stmt|;
+name|u_int32_t
+name|next_rx_desc_to_check
 decl_stmt|;
 name|u_int16_t
 name|num_rx_desc
@@ -911,18 +865,10 @@ name|u_int32_t
 name|rx_buffer_len
 decl_stmt|;
 name|struct
-name|em_rx_buffer
+name|em_buffer
 modifier|*
 name|rx_buffer_area
 decl_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument|__em_rx_buffer
-argument_list|,
-argument|em_rx_buffer
-argument_list|)
-name|rx_buffer_list
-expr_stmt|;
 comment|/* Jumbo frame */
 name|struct
 name|mbuf
@@ -954,14 +900,6 @@ decl_stmt|;
 name|unsigned
 name|long
 name|no_tx_desc_avail2
-decl_stmt|;
-name|unsigned
-name|long
-name|no_tx_buffer_avail1
-decl_stmt|;
-name|unsigned
-name|long
-name|no_tx_buffer_avail2
 decl_stmt|;
 ifdef|#
 directive|ifdef
