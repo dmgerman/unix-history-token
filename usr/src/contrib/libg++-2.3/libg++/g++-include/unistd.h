@@ -851,9 +851,9 @@ name|setregid
 name|_G_ARGS
 argument_list|(
 operator|(
-name|int
+name|_G_gid_t
 operator|,
-name|int
+name|_G_gid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -863,9 +863,9 @@ name|setreuid
 name|_G_ARGS
 argument_list|(
 operator|(
-name|int
+name|_G_uid_t
 operator|,
-name|int
+name|_G_uid_t
 operator|)
 argument_list|)
 decl_stmt|;
