@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	5.2 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	5.3 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1636,17 +1636,6 @@ end_comment
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|uba_ctlr
-modifier|*
-name|um
-init|=
-name|ui
-operator|->
-name|ui_mi
-decl_stmt|;
-comment|/* ptr to controller struct */
 name|ui
 operator|->
 name|ui_flags
