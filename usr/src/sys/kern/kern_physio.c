@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_physio.c	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_physio.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Raw I/O. The arguments are  *	The strategy routine for the device  *	A buffer, which will either be a special buffer header owned  *	    exclusively by the device for this purpose, or NULL,  *	    indicating that we should use a swap buffer  *	The device number  *	Read/write flag  * Essentially all the work is computing physical addresses and  * validating them.  * If the user has the proper access privilidges, the process is  * marked 'delayed unlock' and the pages involved in the I/O are  * faulted and locked. After the completion of the I/O, the above pages  * are unlocked.  */
+comment|/*  * This routine does device I/O for a user process.  *  * If the user has the proper access privilidges, the process is  * marked 'delayed unlock' and the pages involved in the I/O are  * faulted and locked. After the completion of the I/O, the pages  * are unlocked.  */
 end_comment
 
 begin_macro
@@ -720,6 +720,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Calculate the maximum size of I/O request that can be requested  * in a single operation. This limit is necessary to prevent a single  * process from being able to lock more than a fixed amount of memory  * in the kernel.  */
+end_comment
+
 begin_function
 name|u_int
 name|minphys
@@ -919,6 +923,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Do a read on a device for a user process.  */
+end_comment
+
 begin_macro
 name|rawread
 argument_list|(
@@ -977,6 +985,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Do a write on a device for a user process.  */
+end_comment
 
 begin_macro
 name|rawwrite
