@@ -700,7 +700,7 @@ name|shmmax
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum shared memory segment size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -723,7 +723,7 @@ name|shmmin
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Minimum shared memory segment size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -746,7 +746,7 @@ name|shmmni
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of shared memory identifiers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -769,7 +769,7 @@ name|shmseg
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of segments per process"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -792,7 +792,7 @@ name|shmall
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of pages available for shared memory"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -813,7 +813,7 @@ name|shm_use_phys
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable/Disable locking of shared memory pages in core"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -834,7 +834,7 @@ name|shm_allow_removed
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable/Disable attachment to attached segments marked for removal"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -858,7 +858,7 @@ name|sysctl_shmsegs
 argument_list|,
 literal|""
 argument_list|,
-literal|""
+literal|"Current number of shared memory segments allocated"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
