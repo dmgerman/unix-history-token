@@ -439,7 +439,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
+name|struct
+name|Buffer
 modifier|*
 name|Var_Subst
 parameter_list|(

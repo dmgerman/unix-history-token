@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"config.h"
 end_include
 
@@ -376,7 +382,11 @@ condition|(
 name|subLibName
 condition|)
 block|{
-name|libName
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -387,6 +397,22 @@ argument_list|,
 name|ctxt
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+name|libName
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -599,7 +625,12 @@ decl_stmt|;
 name|size_t
 name|sz
 decl_stmt|;
-name|memName
+name|Buffer
+modifier|*
+name|buf1
+decl_stmt|;
+comment|/* 			 * Now form an archive spec and recurse to deal with 			 * nested variables and multi-word variable values.... 			 * The results are just placed at the end of the 			 * nodeLst we're returning. 			 */
+name|buf1
 operator|=
 name|Var_Subst
 argument_list|(
@@ -612,7 +643,15 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Now form an archive spec and recurse to deal with 			 * nested variables and multi-word variable values.... 			 * The results are just placed at the end of the 			 * nodeLst we're returning. 			 */
+name|memName
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf1
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|sz
 operator|=
 name|strlen
@@ -628,8 +667,6 @@ operator|+
 literal|3
 expr_stmt|;
 name|buf
-operator|=
-name|sacrifice
 operator|=
 name|emalloc
 argument_list|(
@@ -648,6 +685,10 @@ name|libName
 argument_list|,
 name|memName
 argument_list|)
+expr_stmt|;
+name|sacrifice
+operator|=
+name|buf
 expr_stmt|;
 if|if
 condition|(
@@ -688,6 +729,13 @@ block|{
 name|free
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf1
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
@@ -736,16 +784,30 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf1
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FAILURE
 operator|)
 return|;
 block|}
-comment|/* 			 * Free buffer and continue with our work. 			 */
+comment|/* Free buffer and continue with our work. */
 name|free
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf1
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}

@@ -3893,6 +3893,10 @@ modifier|*
 name|opc
 decl_stmt|;
 comment|/* ptr to operator character to 				 * null-terminate the variable name */
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
 comment|/*      * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
 if|#
 directive|if
@@ -4187,7 +4191,7 @@ argument_list|,
 name|ctxt
 argument_list|)
 expr_stmt|;
-name|cp
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -4196,6 +4200,22 @@ argument_list|,
 name|cp
 argument_list|,
 name|ctxt
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
 argument_list|,
 name|FALSE
 argument_list|)
@@ -4255,7 +4275,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 	     * There's a dollar sign in the command, so perform variable 	     * expansion on the whole thing. The resulting string will need 	     * freeing when we're done, so set freeCmd to TRUE. 	     */
-name|cp
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -4266,6 +4286,22 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|freeCmd
@@ -4489,6 +4525,10 @@ modifier|*
 name|errmsg
 parameter_list|)
 block|{
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4529,7 +4569,7 @@ condition|)
 name|errmsg
 operator|++
 expr_stmt|;
-name|errmsg
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -4542,6 +4582,15 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|errmsg
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
@@ -4549,6 +4598,13 @@ argument_list|,
 literal|"%s"
 argument_list|,
 name|errmsg
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* Terminate immediately. */
@@ -4574,6 +4630,10 @@ modifier|*
 name|warnmsg
 parameter_list|)
 block|{
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4614,7 +4674,7 @@ condition|)
 name|warnmsg
 operator|++
 expr_stmt|;
-name|warnmsg
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -4627,6 +4687,15 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|warnmsg
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|Parse_Error
 argument_list|(
 name|PARSE_WARNING
@@ -4634,6 +4703,13 @@ argument_list|,
 literal|"%s"
 argument_list|,
 name|warnmsg
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4676,6 +4752,10 @@ name|Boolean
 name|isSystem
 decl_stmt|;
 comment|/* TRUE if makefile is a system makefile */
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
 comment|/*      * Skip to delimiter character so we know where to look      */
 while|while
 condition|(
@@ -4802,7 +4882,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/*      * Substitute for any variables in the file name before trying to      * find the thing.      */
-name|file
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -4811,6 +4891,22 @@ argument_list|,
 name|file
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|file
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
 argument_list|,
 name|FALSE
 argument_list|)
@@ -5033,6 +5129,7 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+comment|/* XXXHB free(file) */
 return|return;
 block|}
 name|free
@@ -5294,6 +5391,10 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/* current position in file spec */
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
 comment|/*      * Skip over whitespace      */
 while|while
 condition|(
@@ -5370,7 +5471,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/*      * Substitute for any variables in the file name before trying to      * find the thing.      */
-name|file
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -5379,6 +5480,22 @@ argument_list|,
 name|file
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|file
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
 argument_list|,
 name|FALSE
 argument_list|)
@@ -5447,8 +5564,10 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+comment|/* XXXHB free(file) */
 return|return;
 block|}
+comment|/* XXXHB free(file) */
 comment|/*      * Once we find the absolute path to the file, we get to save all the      * state from the current file before we can start reading this      * include file. The state is stored in an IFile structure which      * is placed on a list with other IFile structures. The list makes      * a very nice stack to track how we got here...      */
 name|oldFile
 operator|=
@@ -6835,6 +6954,10 @@ modifier|*
 name|line
 decl_stmt|;
 comment|/* the line we're working on */
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
 name|inLine
 operator|=
 name|FALSE
@@ -7070,7 +7193,7 @@ name|cp2
 operator|=
 literal|'\0'
 expr_stmt|;
-name|cp
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -7079,6 +7202,22 @@ argument_list|,
 name|cp
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
 argument_list|,
 name|FALSE
 argument_list|)
@@ -7314,7 +7453,7 @@ block|}
 name|ParseFinishLine
 argument_list|()
 expr_stmt|;
-name|cp
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -7325,6 +7464,22 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|free

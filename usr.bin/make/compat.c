@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"compat.h"
 end_include
 
@@ -709,6 +715,10 @@ modifier|*
 name|cmd_save
 decl_stmt|;
 comment|/* saved cmd */
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
 comment|/*      * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
 if|#
 directive|if
@@ -762,7 +772,7 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-name|cmdStart
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -771,6 +781,22 @@ argument_list|,
 name|cmd
 argument_list|,
 name|gn
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|cmdStart
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
 argument_list|,
 name|FALSE
 argument_list|)

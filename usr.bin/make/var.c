@@ -452,13 +452,17 @@ modifier|*
 name|ctxt
 parameter_list|)
 block|{
-name|char
+name|Buffer
 modifier|*
-name|tmp
+name|buf
 decl_stmt|;
 name|char
 modifier|*
-name|result
+name|str
+decl_stmt|;
+name|char
+modifier|*
+name|tmp
 decl_stmt|;
 comment|/* 	 * XXX make a temporary copy of the name because Var_Subst insists 	 * on writing into the string. 	 */
 name|tmp
@@ -480,7 +484,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|result
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -493,6 +497,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|str
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|tmp
@@ -500,16 +520,18 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|result
+name|str
 operator|)
 return|;
 block|}
 else|else
+block|{
 return|return
 operator|(
 name|tmp
 operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -3766,6 +3788,8 @@ index|]
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Make sure this variable is fully expanded. 	 * XXX This section really should be its own function. 	 */
+block|{
 if|if
 condition|(
 name|v
@@ -3784,7 +3808,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 else|else
 block|{
@@ -3795,7 +3819,7 @@ operator||=
 name|VAR_IN_USE
 expr_stmt|;
 block|}
-comment|/*      * Before doing any modification, we have to make sure the value      * has been fully expanded. If it looks like recursion might be      * necessary (there's a dollar sign somewhere in the variable's value)      * we just call Var_Subst to do any other substitutions that are      * necessary. Note that the value returned by Var_Subst will have      * been dynamically-allocated, so it will need freeing when we      * return.      */
+comment|/* 		 * Before doing any modification, we have to make sure the 		 * value has been fully expanded. If it looks like recursion 		 * might be necessary (there's a dollar sign somewhere in the 		 * variable's value) we just call Var_Subst to do any other 		 * substitutions that are necessary. Note that the value 		 * returned by Var_Subst will have been 		 * dynamically-allocated, so it will need freeing when we 		 * return. 		 */
 name|str
 operator|=
 operator|(
@@ -3824,14 +3848,14 @@ argument_list|,
 literal|'$'
 argument_list|)
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
-name|str
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -3842,6 +3866,22 @@ argument_list|,
 name|ctxt
 argument_list|,
 name|err
+argument_list|)
+expr_stmt|;
+name|str
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3857,6 +3897,7 @@ operator|&=
 operator|~
 name|VAR_IN_USE
 expr_stmt|;
+block|}
 comment|/*      * Now we need to apply any modifiers the user wants applied.      * These are:      *  	  :M<pattern>	words which match the given<pattern>.      *<pattern> is of the standard file      *  	  	    	wildcarding form.      *  	  :S<d><pat1><d><pat2><d>[g]      *  	  	    	Substitute<pat2> for<pat1> in the value      *		  :C<d><pat1><d><pat2><d>[g]      *				Substitute<pat2> for regex<pat1> in the value      *  	  :H	    	Substitute the head of each word      *  	  :T	    	Substitute the tail of each word      *  	  :E	    	Substitute the extension (minus '.') of      *  	  	    	each word      *  	  :R	    	Substitute the root of each word      *  	  	    	(pathname minus the suffix).      *	    	  :lhs=rhs  	Like :S, but the rhs goes to the end of      *	    	    	    	the invocation.      *		  :U		Converts variable to upper-case.      *		  :L		Converts variable to lower-case.      */
 if|if
 condition|(
@@ -6400,7 +6441,7 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
-name|char
+name|Buffer
 modifier|*
 name|Var_Subst
 parameter_list|(
@@ -6421,43 +6462,25 @@ name|Boolean
 name|undefErr
 parameter_list|)
 block|{
+name|Boolean
+name|errorReported
+decl_stmt|;
 name|Buffer
 modifier|*
 name|buf
 decl_stmt|;
 comment|/* Buffer for forming things */
-name|char
-modifier|*
-name|val
-decl_stmt|;
-comment|/* Value to substitute for a variable */
-name|size_t
-name|length
-decl_stmt|;
-comment|/* Length of the variable invocation */
-name|Boolean
-name|doFree
-decl_stmt|;
-comment|/* Set true if val should be freed */
-name|char
-modifier|*
-name|result
-decl_stmt|;
-specifier|static
-name|Boolean
+comment|/*      * Set TRUE if an error has already been reported to prevent a      * plethora of messages when recursing.      * XXXHB this comment sounds wrong.      */
 name|errorReported
-decl_stmt|;
-comment|/* Set true if an error has already 					 * been reported to prevent a plethora 					 * of messages when recursing */
+operator|=
+name|FALSE
+expr_stmt|;
 name|buf
 operator|=
 name|Buf_Init
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-name|errorReported
-operator|=
-name|FALSE
 expr_stmt|;
 while|while
 condition|(
@@ -6520,6 +6543,19 @@ operator|==
 literal|'$'
 condition|)
 block|{
+name|char
+modifier|*
+name|val
+decl_stmt|;
+comment|/* Value to substitute for a variable */
+name|size_t
+name|length
+decl_stmt|;
+comment|/* Length of the variable invocation */
+name|Boolean
+name|doFree
+decl_stmt|;
+comment|/* Set true if val should be freed */
 comment|/* 	     * Variable invocation. 	     */
 if|if
 condition|(
@@ -6926,33 +6962,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|result
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|Buf_GetAll
-argument_list|(
-name|buf
-argument_list|,
-operator|(
-name|size_t
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-name|Buf_Destroy
-argument_list|(
-name|buf
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|result
+name|buf
 operator|)
 return|;
 block|}

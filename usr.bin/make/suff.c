@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"config.h"
 end_include
 
@@ -4000,6 +4006,10 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/* Expanded value */
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
 comment|/*      * New nodes effectively take the place of the child, so place them      * after the child      */
 name|prevLN
 operator|=
@@ -4041,7 +4051,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
-name|cp
+name|buf
 operator|=
 name|Var_Subst
 argument_list|(
@@ -4054,6 +4064,22 @@ argument_list|,
 name|pgn
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
