@@ -724,7 +724,7 @@ directive|else
 end_else
 
 begin_endif
-unit|switch(c) {     case '\b':         crtat--; 	break;     case '\r':         crtat -= (crtat - Crtat) % col; 	break;     case '\n':         crtat += col; 	break;     default:         *crtat = (c == 0x5c ? 0xfc : c); 	*(crtat++ + 0x1000) = 0xe1; 	break;     }      if (crtat>= Crtat + col * row) {         cp = Crtat; 	for (i = 1; i< row; i++) { 	    bcopy((void *)(cp+col), (void *)cp, col*2); 	    cp += col; 	} 	for (i = 0; i< col; i++) { 	    *cp++ = ' '; 	} 	crtat -= col;     }     pos = crtat - Crtat;     while((inb(0x60)& 0x04) == 0) {}     outb(0x62, 0x49);     outb(0x60, pos& 0xff);     outb(0x60, pos>> 8);
+unit|switch(c) {     case '\b':         crtat--; 	break;     case '\r':         crtat -= (crtat - Crtat) % col; 	break;     case '\n':         crtat += col; 	break;     default:         *crtat = (c == 0x5c ? 0xfc : c); 	*(crtat++ + 0x1000) = 0xe1; 	break;     }      if (crtat>= Crtat + col * row) {         cp = Crtat; 	for (i = 1; i< row; i++) { 	    bcopy((void *)(cp + col), (void *)cp, col * 2); 	    cp += col; 	} 	for (i = 0; i< col; i++) { 	    *cp++ = ' '; 	} 	crtat -= col;     }     pos = crtat - Crtat;     while ((inb(0x60)& 0x04) == 0) {}     outb(0x62, 0x49);     outb(0x60, pos& 0xff);     outb(0x60, pos>> 8);
 endif|#
 directive|endif
 end_endif
@@ -902,7 +902,7 @@ argument_list|,
 name|cury
 argument_list|)
 expr_stmt|;
-comment|/* write_char(' ',fg_c,bg_c); XXX destructive(!) */
+comment|/* write_char(' ', fg_c, bg_c); XXX destructive(!) */
 return|return;
 block|}
 return|return;
@@ -1159,7 +1159,7 @@ name|isvisible
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)>32)&& ((c)<255))
+value|(((c)> 32)&& ((c)< 255))
 if|if
 condition|(
 operator|!
@@ -1273,7 +1273,7 @@ name|isvisible
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)>32)&& ((c)<255))
+value|(((c)> 32)&& ((c)< 255))
 if|if
 condition|(
 operator|!
@@ -3134,6 +3134,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* PC98 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -3357,10 +3361,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* PC98 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* TERM_EMU */
+end_comment
 
 end_unit
 
