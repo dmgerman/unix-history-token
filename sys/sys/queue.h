@@ -631,6 +631,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|LIST_FOREACH_SAFE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|,
+name|tvar
+parameter_list|)
+define|\
+value|for ((var) = LIST_FIRST((head)),				\ 	    (var) != NULL ? (tvar) = LIST_NEXT((var), field) : NULL;	\ 	    (var) != NULL;						\ 	    (var) = (tvar),						\ 	    (var) != NULL ? (tvar) = LIST_NEXT((var), field) : NULL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LIST_INIT
 parameter_list|(
 name|head
