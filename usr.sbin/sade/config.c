@@ -1907,7 +1907,7 @@ name|fprintf
 argument_list|(
 name|rcSite
 argument_list|,
-literal|"sendmail_enable=\"YES\"\n\b"
+literal|"sendmail_enable=\"YES\"\n"
 argument_list|)
 expr_stmt|;
 block|}
