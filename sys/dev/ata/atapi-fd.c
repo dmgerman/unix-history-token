@@ -1280,6 +1280,23 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
+comment|/* hold off access to we are fully attached */
+while|while
+condition|(
+name|ata_delayed_attach
+condition|)
+name|tsleep
+argument_list|(
+operator|&
+name|ata_delayed_attach
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"afdopn"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|atapi_test_ready
 argument_list|(
 name|fdp

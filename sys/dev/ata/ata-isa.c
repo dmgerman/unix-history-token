@@ -131,6 +131,39 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
+name|ata_isa_intrnoop
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+name|ch
+parameter_list|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ata_isa_lock
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+name|ch
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|int
 name|ata_isa_probe
 parameter_list|(
 name|device_t
@@ -178,7 +211,7 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* allocate the io port range to get the start address */
+comment|/* allocate the io port range */
 name|rid
 operator|=
 name|ATA_IOADDR_RID
@@ -272,6 +305,18 @@ operator|->
 name|flags
 operator||=
 name|ATA_USE_16BIT
+expr_stmt|;
+name|ch
+operator|->
+name|intr_func
+operator|=
+name|ata_isa_intrnoop
+expr_stmt|;
+name|ch
+operator|->
+name|lock_func
+operator|=
+name|ata_isa_lock
 expr_stmt|;
 return|return
 name|ata_probe

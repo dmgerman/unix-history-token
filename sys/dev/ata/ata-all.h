@@ -857,6 +857,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_PC98_ALTOFFSET
+value|0x10c
+end_define
+
+begin_comment
+comment|/* do for PC98 devices */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_A_IDS
 value|0x02
 end_define
@@ -908,6 +919,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_PC98_BANK
+value|0x432
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_IOSIZE
 value|0x08
 end_define
@@ -924,6 +942,13 @@ define|#
 directive|define
 name|ATA_BMIOSIZE
 value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PC98_BANKIOSIZE
+value|0x01
 end_define
 
 begin_define
@@ -959,6 +984,20 @@ define|#
 directive|define
 name|ATA_BMADDR_RID
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PC98_ALTADDR_RID
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PC98_BANKADDR_RID
+value|9
 end_define
 
 begin_define
@@ -1380,7 +1419,7 @@ comment|/* last controller error */
 name|int
 name|active
 decl_stmt|;
-comment|/* active processing request */
+comment|/* ATA channel state control */
 define|#
 directive|define
 name|ATA_IDLE
@@ -1417,6 +1456,28 @@ define|#
 directive|define
 name|ATA_CONTROL
 value|0x0080
+name|void
+function_decl|(
+modifier|*
+name|lock_func
+function_decl|)
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* controller lock function */
+define|#
+directive|define
+name|ATA_LF_LOCK
+value|0x0001
+define|#
+directive|define
+name|ATA_LF_UNLOCK
+value|0x0002
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1482,6 +1543,15 @@ begin_decl_stmt
 specifier|extern
 name|devclass_t
 name|ata_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|intr_config_hook
+modifier|*
+name|ata_delayed_attach
 decl_stmt|;
 end_decl_stmt
 
@@ -1894,7 +1964,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|atomic_cmpset_int(&(ch)->active, ATA_IDLE, (value))
+value|atomic_cmpset_acq_int(&(ch)->active, ATA_IDLE, (value))
 end_define
 
 begin_define
@@ -1907,7 +1977,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|while (!atomic_cmpset_int(&(ch)->active, ATA_IDLE, (value)))\ 	    tsleep((caddr_t)&(ch), PRIBIO, "atalck", 1);
+value|while (!atomic_cmpset_acq_int(&(ch)->active, ATA_IDLE, (value))) \ 	    tsleep((caddr_t)&(ch), PRIBIO, "atalck", 1);
 end_define
 
 begin_define
@@ -1919,8 +1989,7 @@ name|ch
 parameter_list|,
 name|value
 parameter_list|)
-define|\
-value|(ch)->active = value;
+value|atomic_store_rel_int(&(ch)->active, (value))
 end_define
 
 begin_define
@@ -1930,8 +1999,7 @@ name|ATA_UNLOCK_CH
 parameter_list|(
 name|ch
 parameter_list|)
-define|\
-value|(ch)->active = ATA_IDLE
+value|atomic_store_rel_int(&(ch)->active, ATA_IDLE)
 end_define
 
 begin_comment
