@@ -49,8 +49,6 @@ literal|"The msg command constructs a netgraph control message from the"
 literal|" command name and ASCII arguments (if any) and sends that message"
 literal|" to the node.  It does this by first asking the node to convert"
 literal|" the ASCII message into binary format, and resending the result."
-literal|" The typecookie used for the message is assumed to be the typecookie"
-literal|" corresponding to the target node's type."
 block|,
 block|{
 literal|"cmd"
