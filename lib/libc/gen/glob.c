@@ -113,16 +113,16 @@ directive|include
 file|"collate.h"
 end_include
 
+begin_comment
+comment|/*  * XXX  * Arbitrarily limit the number of pathnames that glob may  * return, to prevent DoS attacks.  This should probably be  * configurable by the user.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAX_GLOBENTRIES
-value|10000
+value|16384
 end_define
-
-begin_comment
-comment|/* limit number of entries */
-end_comment
 
 begin_define
 define|#
