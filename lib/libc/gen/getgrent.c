@@ -107,6 +107,24 @@ directive|ifdef
 name|YP
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/yp_prot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/ypclnt.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -134,7 +152,6 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1406,7 +1423,6 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|map
