@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.12 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2302,9 +2302,24 @@ operator|)
 operator|!=
 name|S_IFDIR
 condition|)
-goto|goto
-name|err
-goto|;
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Bad Exports File, %s: %s, mountd Failed"
+argument_list|,
+name|cp
+argument_list|,
+literal|"Not a directory"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 name|fep
 operator|=
 operator|(
@@ -2388,6 +2403,15 @@ name|ep
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 name|ep
 operator|->
 name|ex_next
@@ -2440,9 +2464,20 @@ name|len
 expr_stmt|;
 block|}
 else|else
-goto|goto
-name|err
-goto|;
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Bad Exports File, mountd Failed"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 name|cp
 operator|=
 name|endcp
@@ -2482,10 +2517,12 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|<=
+operator|>
 name|RPCMNT_NAMELEN
 condition|)
-block|{
+goto|goto
+name|more
+goto|;
 if|if
 condition|(
 operator|*
@@ -2511,9 +2548,10 @@ operator|&
 name|rootuid
 argument_list|)
 expr_stmt|;
+goto|goto
+name|more
+goto|;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|isdigit
@@ -2559,9 +2597,22 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Bad Exports File, %s: %s"
+argument_list|,
+name|cp
+argument_list|,
+literal|"Gethostbyaddr failed, ignored"
+argument_list|)
+expr_stmt|;
 goto|goto
-name|err
+name|more
 goto|;
+block|}
 block|}
 elseif|else
 if|if
@@ -2577,9 +2628,22 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Bad Exports File, %s: %s"
+argument_list|,
+name|cp
+argument_list|,
+literal|"Gethostbyname failed, ignored"
+argument_list|)
+expr_stmt|;
 goto|goto
-name|err
+name|more
 goto|;
+block|}
 name|grp
 operator|=
 operator|(
@@ -2830,8 +2894,8 @@ name|ex_groups
 operator|=
 name|grp
 expr_stmt|;
-block|}
-block|}
+name|more
+label|:
 name|cp
 operator|=
 name|endcp
@@ -3126,7 +3190,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad Exports File, mountd Failed"
+literal|"No more memory: mountd Failed"
 argument_list|)
 expr_stmt|;
 name|exit
