@@ -600,6 +600,12 @@ else|#
 directive|else
 end_else
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -607,9 +613,7 @@ name|__MPN
 parameter_list|(
 name|x
 parameter_list|)
-value|__mpn_
-comment|/**/
-value|x
+value|__CONCAT(__mpn_,x)
 end_define
 
 begin_endif
