@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.71 1998/04/01 21:07:35 tegge Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.72 1998/04/06 08:25:30 phk Exp $  */
 end_comment
 
 begin_include
@@ -221,6 +221,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cputypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/globaldata.h>
 end_include
 
 begin_include
@@ -6629,9 +6635,10 @@ name|pt_entry_t
 modifier|*
 name|newpt
 decl_stmt|;
-name|int
+name|struct
+name|globaldata
 modifier|*
-name|newpp
+name|gd
 decl_stmt|;
 name|char
 modifier|*
@@ -6835,10 +6842,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* allocate a new private data page */
-name|newpp
+name|gd
 operator|=
 operator|(
-name|int
+expr|struct
+name|globaldata
 operator|*
 operator|)
 name|kmem_alloc
@@ -6864,7 +6872,7 @@ name|PG_RW
 operator||
 name|vtophys
 argument_list|(
-name|newpp
+name|gd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7008,99 +7016,30 @@ literal|0
 expr_stmt|;
 comment|/* *prv_CMAP3 */
 comment|/* prime data page for it to use */
-name|newpp
-index|[
-literal|0
-index|]
+name|gd
+operator|->
+name|cpuid
 operator|=
 name|x
 expr_stmt|;
-comment|/* cpuid */
-name|newpp
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* curproc */
-name|newpp
-index|[
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* curpcb */
-name|newpp
-index|[
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* npxproc */
-name|newpp
-index|[
-literal|4
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* runtime.tv_sec */
-name|newpp
-index|[
-literal|5
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* runtime.tv_usec */
-name|newpp
-index|[
-literal|6
-index|]
+name|gd
+operator|->
+name|cpu_lockid
 operator|=
 name|x
 operator|<<
 literal|24
 expr_stmt|;
-comment|/* cpu_lockid */
-name|newpp
-index|[
-literal|7
-index|]
+name|gd
+operator|->
+name|my_idlePTD
 operator|=
-literal|0
-expr_stmt|;
-comment|/* other_cpus */
-name|newpp
-index|[
-literal|8
-index|]
-operator|=
-operator|(
-name|int
-operator|)
 name|myPTD
 expr_stmt|;
-comment|/* my_idlePTD */
-name|newpp
-index|[
-literal|9
-index|]
+name|gd
+operator|->
+name|prv_CMAP1
 operator|=
-literal|0
-expr_stmt|;
-comment|/* ss_tpr */
-name|newpp
-index|[
-literal|10
-index|]
-operator|=
-operator|(
-name|int
-operator|)
 operator|&
 name|newpt
 index|[
@@ -7109,15 +7048,10 @@ operator|+
 name|UPAGES
 index|]
 expr_stmt|;
-comment|/* prv_CMAP1 */
-name|newpp
-index|[
-literal|11
-index|]
+name|gd
+operator|->
+name|prv_CMAP2
 operator|=
-operator|(
-name|int
-operator|)
 operator|&
 name|newpt
 index|[
@@ -7126,15 +7060,10 @@ operator|+
 name|UPAGES
 index|]
 expr_stmt|;
-comment|/* prv_CMAP2 */
-name|newpp
-index|[
-literal|12
-index|]
+name|gd
+operator|->
+name|prv_CMAP3
 operator|=
-operator|(
-name|int
-operator|)
 operator|&
 name|newpt
 index|[
@@ -7143,7 +7072,6 @@ operator|+
 name|UPAGES
 index|]
 expr_stmt|;
-comment|/* prv_CMAP3 */
 comment|/* setup a vector to our boot code */
 operator|*
 operator|(
