@@ -2767,7 +2767,7 @@ name|IEEE80211_VERIFY_ELEMENT
 argument_list|(
 name|rates
 argument_list|,
-name|IEEE80211_RATE_SIZE
+name|IEEE80211_RATE_MAXSIZE
 argument_list|)
 expr_stmt|;
 name|IEEE80211_VERIFY_ELEMENT
@@ -3343,7 +3343,7 @@ name|IEEE80211_VERIFY_ELEMENT
 argument_list|(
 name|rates
 argument_list|,
-name|IEEE80211_RATE_SIZE
+name|IEEE80211_RATE_MAXSIZE
 argument_list|)
 expr_stmt|;
 name|IEEE80211_VERIFY_ELEMENT
@@ -4200,7 +4200,7 @@ name|IEEE80211_VERIFY_ELEMENT
 argument_list|(
 name|rates
 argument_list|,
-name|IEEE80211_RATE_SIZE
+name|IEEE80211_RATE_MAXSIZE
 argument_list|)
 expr_stmt|;
 name|IEEE80211_VERIFY_ELEMENT
@@ -4870,7 +4870,7 @@ name|IEEE80211_VERIFY_ELEMENT
 argument_list|(
 name|rates
 argument_list|,
-name|IEEE80211_RATE_SIZE
+name|IEEE80211_RATE_MAXSIZE
 argument_list|)
 expr_stmt|;
 name|ieee80211_setup_rates
