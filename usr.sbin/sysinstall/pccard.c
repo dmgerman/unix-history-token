@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * PC-card support for sysinstall  *  * $Id:$  *  * Copyright (c) 1997-1999  *	Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>.  All rights reserved.  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  */
+comment|/*  * PC-card support for sysinstall  *  * $Id: pccard.c,v 1.1 1999/06/17 19:04:56 markm Exp $  *  * Copyright (c) 1997-1999  *	Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>.  All rights reserved.  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  */
 end_comment
 
 begin_include
@@ -73,7 +73,7 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"pcicmem=0"
+literal|"_pcicmem=0"
 block|}
 block|,
 block|{
@@ -87,7 +87,7 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"pcicmem=1"
+literal|"_pcicmem=1"
 block|}
 block|,
 block|{
@@ -101,7 +101,7 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"pcicmem=2"
+literal|"_pcicmem=2"
 block|}
 block|,
 block|{
@@ -115,7 +115,7 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"pcicmem=3"
+literal|"_pcicmem=3"
 block|}
 block|,
 block|{
@@ -158,7 +158,7 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"cardirq=0"
+literal|"_cardirq=0"
 block|}
 block|,
 block|{
@@ -172,7 +172,7 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"cardirq=1"
+literal|"_cardirq=1"
 block|}
 block|,
 block|{
@@ -186,7 +186,7 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"cardirq=2"
+literal|"_cardirq=2"
 block|}
 block|,
 block|{
@@ -269,7 +269,7 @@ name|spcic_mem
 operator|=
 name|variable_get
 argument_list|(
-literal|"pcicmem"
+literal|"_pcicmem"
 argument_list|)
 expr_stmt|;
 name|dmenuOpenSimple
@@ -284,7 +284,7 @@ name|scard_irq
 operator|=
 name|variable_get
 argument_list|(
-literal|"cardirq"
+literal|"_cardirq"
 argument_list|)
 expr_stmt|;
 name|sscanf
