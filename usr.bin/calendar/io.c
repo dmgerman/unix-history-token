@@ -1920,10 +1920,6 @@ literal|"-F"
 argument_list|,
 literal|"\"Reminder Service\""
 argument_list|,
-literal|"-f"
-argument_list|,
-literal|"root"
-argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
