@@ -492,6 +492,11 @@ name|atm_intr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize subsystems 	 */
+name|atm_cm_init
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|atm_aal5_init
 argument_list|()
 expr_stmt|;

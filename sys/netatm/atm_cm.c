@@ -423,53 +423,91 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|sp_info
-name|atm_connection_pool
-init|=
-block|{
-literal|"atm connection pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-name|Atm_connection
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|100
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|atm_connection_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|sp_info
-name|atm_connvc_pool
-init|=
+name|uma_zone_t
+name|atm_connvc_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|atm_cm_init
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
 block|{
-literal|"atm connection vcc pool"
-block|,
-comment|/* si_name */
+name|atm_connection_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"atm connection"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Atm_connection
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|atm_connection_zone
+argument_list|,
+literal|100
+argument_list|)
+expr_stmt|;
+name|atm_connvc_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"atm connvc"
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Atm_connvc
 argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|atm_connvc_zone
+argument_list|,
 literal|100
-comment|/* si_maxallow */
+argument_list|)
+expr_stmt|;
 block|}
-decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Initiate Outgoing ATM Call  *   * Called by an endpoint service to create a new Connection Manager API  * instance and to initiate an outbound ATM connection.  The endpoint  * provided token will be used in all further CM -> endpoint function  * calls, and the returned connection block pointer must be used in all  * subsequent endpoint -> CM function calls.  *  * If the return indicates that the connection setup has been immediately  * successful (typically only for PVCs and shared SVCs), then the connection  * is ready for data transmission.  *  * If the return indicates that the connection setup is still in progress,  * then the endpoint must wait for notification from the Connection Manager  * indicating the final status of the call setup.  If the call setup completes  * successfully, then a "call connected" notification will be sent to the  * endpoint by the Connection Manager.  If the call setup fails, then the  * endpoint will receive a "call cleared" notification.  *  * All connection instances must be freed with an atm_cm_release() call.  *  * Arguments:  *	epp	pointer to endpoint definition structure  *	token	endpoint's connection instance token  *	ap	pointer to requested connection attributes  *	copp	pointer to location to return allocated connection block  *  * Returns:  *	0	connection has been successfully established  *	EINPROGRESS	connection establishment is in progress  *	errno	connection failed - reason indicated  *  */
@@ -564,14 +602,11 @@ expr_stmt|;
 comment|/* 	 * Get a connection block 	 */
 name|cop
 operator|=
-operator|(
-name|Atm_connection
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|atm_connection_pool
+name|atm_connection_zone
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1302,14 +1337,11 @@ block|}
 comment|/* 	 * Get a connection VCC block 	 */
 name|cvp
 operator|=
-operator|(
-name|Atm_connvc
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|atm_connvc_pool
+name|atm_connvc_zone
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1566,11 +1598,10 @@ if|if
 condition|(
 name|cop
 condition|)
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|atm_connection_zone
+argument_list|,
 name|cop
 argument_list|)
 expr_stmt|;
@@ -1688,14 +1719,11 @@ expr_stmt|;
 comment|/* 	 * Get a connection block 	 */
 name|cop
 operator|=
-operator|(
-name|Atm_connection
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|atm_connection_pool
+name|atm_connection_zone
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2207,11 +2235,10 @@ operator|->
 name|co_lattr
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|atm_connection_zone
+argument_list|,
 name|cop
 argument_list|)
 expr_stmt|;
@@ -2349,14 +2376,11 @@ return|;
 comment|/* 	 * Get a connection block 	 */
 name|cop
 operator|=
-operator|(
-name|Atm_connection
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|atm_connection_pool
+name|atm_connection_zone
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2691,11 +2715,10 @@ if|if
 condition|(
 name|cop
 condition|)
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|atm_connection_zone
+argument_list|,
 name|cop
 argument_list|)
 expr_stmt|;
@@ -3663,14 +3686,11 @@ return|;
 comment|/* 	 * Get a connection VCC block 	 */
 name|cvp
 operator|=
-operator|(
-name|Atm_connvc
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|atm_connvc_pool
+name|atm_connvc_zone
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3814,11 +3834,10 @@ if|if
 condition|(
 name|cvp
 condition|)
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|atm_connvc_zone
+argument_list|,
 name|cvp
 argument_list|)
 expr_stmt|;
@@ -4464,14 +4483,11 @@ block|{
 comment|/* 			 * Need a new connection block 			 */
 name|cop
 operator|=
-operator|(
-name|Atm_connection
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|atm_connection_pool
+name|atm_connection_zone
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4813,11 +4829,10 @@ if|if
 condition|(
 name|cop
 condition|)
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|atm_connection_zone
+argument_list|,
 name|cop
 argument_list|)
 expr_stmt|;
@@ -4831,11 +4846,10 @@ if|if
 condition|(
 name|cop
 condition|)
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|atm_connection_zone
+argument_list|,
 name|cop
 argument_list|)
 expr_stmt|;
@@ -7172,11 +7186,10 @@ name|co_state
 operator|=
 name|COS_FREE
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|atm_connection_zone
+argument_list|,
 name|cop
 argument_list|)
 expr_stmt|;
@@ -7641,11 +7654,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Finally, free our own control blocks 	 */
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|atm_connvc_zone
+argument_list|,
 name|cvp
 argument_list|)
 expr_stmt|;
