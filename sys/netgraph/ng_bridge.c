@@ -1000,6 +1000,8 @@ operator|&
 name|priv
 operator|->
 name|timer
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Allocate and initialize hash table, etc. */
