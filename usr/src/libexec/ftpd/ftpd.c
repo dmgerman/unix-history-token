@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.34	(Berkeley) %G%"
+literal|"@(#)ftpd.c	5.35	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,22 +202,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sys_nerr
 decl_stmt|;
 end_decl_stmt
 
@@ -3411,16 +3395,10 @@ operator|.
 name|sin_port
 argument_list|)
 argument_list|,
+name|strerror
+argument_list|(
 name|errno
-operator|<
-name|sys_nerr
-condition|?
-name|sys_errlist
-index|[
-name|errno
-index|]
-else|:
-literal|"unknown error"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6385,12 +6363,6 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|errno
-operator|<
-name|sys_nerr
-condition|)
 name|reply
 argument_list|(
 name|code
@@ -6399,22 +6371,10 @@ literal|"%s: %s."
 argument_list|,
 name|string
 argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
-argument_list|)
-expr_stmt|;
-else|else
-name|reply
+name|strerror
 argument_list|(
-name|code
-argument_list|,
-literal|"%s: unknown error %d."
-argument_list|,
-name|string
-argument_list|,
 name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

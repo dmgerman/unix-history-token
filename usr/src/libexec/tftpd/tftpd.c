@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	5.10 (Berkeley) %G%"
+literal|"@(#)tftpd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -101,7 +107,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
 end_include
 
 begin_include
@@ -125,19 +137,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -2341,12 +2347,6 @@ name|errmsg
 modifier|*
 name|pe
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
 name|tp
 operator|=
 operator|(
@@ -2417,12 +2417,12 @@ name|pe
 operator|->
 name|e_msg
 operator|=
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|error
 operator|-
 literal|100
-index|]
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->

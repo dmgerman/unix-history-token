@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)err.c	5.2	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)err.c	5.3	%G%  */
 end_comment
 
 begin_comment
@@ -324,15 +324,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|sys_nerr
 decl_stmt|;
@@ -375,6 +366,11 @@ block|{
 name|ftnint
 name|lu
 decl_stmt|;
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
 for|for
 control|(
 name|lu
@@ -432,10 +428,10 @@ name|s
 argument_list|,
 name|n
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|n
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	5.1 (Berkeley) %G%"
+literal|"@(#)utility.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -978,12 +978,10 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-specifier|extern
-name|char
+decl_stmt|,
 modifier|*
-name|sys_errlist
-index|[]
+name|strerror
+argument_list|()
 decl_stmt|;
 operator|(
 name|void
@@ -996,10 +994,10 @@ literal|"%s: %s\r\n"
 argument_list|,
 name|msg
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fatal

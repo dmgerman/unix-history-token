@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)gerror_.c	5.1	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)gerror_.c	5.2	%G%  */
 end_comment
 
 begin_comment
@@ -18,15 +18,6 @@ include|#
 directive|include
 file|"../libI77/f_errno.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -79,6 +70,11 @@ name|char
 modifier|*
 name|mesg
 decl_stmt|;
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|errno
@@ -91,10 +87,10 @@ name|sys_nerr
 condition|)
 name|mesg
 operator|=
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
