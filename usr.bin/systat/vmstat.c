@@ -65,13 +65,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -95,7 +95,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<vm/vm_param.h>
 end_include
 
 begin_include

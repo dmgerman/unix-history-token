@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/dkstat.h>
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -134,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<vm/vm_param.h>
 end_include
 
 begin_include
