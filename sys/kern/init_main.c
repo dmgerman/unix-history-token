@@ -957,18 +957,6 @@ name|vm_init2
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Create process 0 (the swapper). 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_mtx
-argument_list|,
-literal|"process lock"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
