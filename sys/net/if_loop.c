@@ -178,12 +178,35 @@ directive|include
 file|"bpfilter.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TINY_LOMTU
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|LOMTU
 value|(1024+512)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOMTU
+value|65535
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
