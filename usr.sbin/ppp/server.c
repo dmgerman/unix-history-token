@@ -141,6 +141,27 @@ block|{
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|VarLocalAuth
+operator|==
+name|LOCAL_DENY
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Local: Can't open socket %s: No password "
+literal|"in ppp.secret\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|ifsun
 operator|.
 name|sun_len
@@ -174,7 +195,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|2
 return|;
 block|}
 name|ifsun
@@ -223,7 +244,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|2
+literal|3
 return|;
 block|}
 name|setsockopt
@@ -314,7 +335,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-literal|3
+literal|4
 return|;
 block|}
 name|umask
@@ -352,7 +373,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-literal|4
+literal|5
 return|;
 block|}
 name|ServerClose
@@ -398,6 +419,27 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|VarLocalAuth
+operator|==
+name|LOCAL_DENY
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Tcp: Can't open socket %d: No password "
+literal|"in ppp.secret\n"
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+return|return
+literal|6
+return|;
+block|}
 name|s
 operator|=
 name|socket
@@ -429,7 +471,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|5
+literal|7
 return|;
 block|}
 name|ifsin
@@ -526,7 +568,7 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
-literal|6
+literal|8
 return|;
 block|}
 if|if
@@ -554,7 +596,7 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
-literal|7
+literal|9
 return|;
 block|}
 name|ServerClose
