@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yppoll.c,v 1.3 1997/10/27 12:30:30 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,7 +172,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"h:d:?"
+literal|"h:d:"
 argument_list|)
 operator|)
 operator|!=
