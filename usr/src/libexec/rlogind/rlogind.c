@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  *	$Source: /mit/kerberos/ucb/mit/rlogind/RCS/rlogind.c,v $  *	$Header: rlogind.c,v 5.0 89/06/26 18:31:01 kfall Locked $  */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1983, 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
@@ -39,7 +43,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.35 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.35 (Berkeley) 4/2/89"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,9 +305,18 @@ name|int
 name|opterr
 decl_stmt|,
 name|optind
-decl_stmt|,
+decl_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>
+literal|43
+specifier|extern
+name|int
 name|_check_rhosts_file
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ch
 decl_stmt|;
@@ -355,6 +368,11 @@ condition|(
 name|ch
 condition|)
 block|{
+if|#
+directive|if
+name|BSD
+operator|>
+literal|43
 case|case
 literal|'l'
 case|:
@@ -363,6 +381,8 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'n'
 case|:
