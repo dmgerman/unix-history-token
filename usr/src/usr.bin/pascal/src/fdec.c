@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.2 %G%"
+literal|"@(#)fdec.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,6 +187,13 @@ comment|/* kludge */
 block|}
 name|pfcnt
 operator|++
+expr_stmt|;
+name|parts
+index|[
+name|cbn
+index|]
+operator||=
+name|RPRT
 expr_stmt|;
 name|line
 operator|=
@@ -1667,6 +1674,9 @@ operator|=
 name|syneflg
 expr_stmt|;
 name|parts
+index|[
+name|cbn
+index|]
 operator|=
 name|NIL
 expr_stmt|;
@@ -4749,9 +4759,33 @@ operator|=
 operator|-
 name|DPOFF1
 expr_stmt|;
-name|parts
+name|gotos
+index|[
+name|cbn
+index|]
 operator|=
 name|NIL
+expr_stmt|;
+name|errcnt
+index|[
+name|cbn
+index|]
+operator|=
+name|syneflg
+expr_stmt|;
+name|parts
+index|[
+name|cbn
+index|]
+operator|=
+name|NIL
+expr_stmt|;
+name|dfiles
+index|[
+name|cbn
+index|]
+operator|=
+name|FALSE
 expr_stmt|;
 name|progseen
 operator|++

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c 1.2 %G%"
+literal|"@(#)const.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ end_macro
 
 begin_block
 block|{
-comment|/*  * PC allows for multiple declaration  * parts, unless the "standard" option  * has been specified.  * If a routine segment is being compiled,  * do level one processing.  */
+comment|/*  * this allows for multiple declaration  * parts, unless the "standard" option  * has been specified.  * If a routine segment is being compiled,  * do level one processing.  */
 if|if
 condition|(
 operator|!
@@ -57,9 +57,22 @@ condition|)
 name|level1
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC
+if|if
+condition|(
+name|parts
+index|[
+name|cbn
+index|]
+operator|&
+operator|(
+name|TPRT
+operator||
+name|VPRT
+operator||
+name|RPRT
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|opt
@@ -68,79 +81,60 @@ literal|'s'
 argument_list|)
 condition|)
 block|{
+name|standard
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|warning
+argument_list|()
+expr_stmt|;
+block|}
+name|error
+argument_list|(
+literal|"Constant declarations should precede type, var and routine declarations"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|parts
+index|[
+name|cbn
+index|]
 operator|&
-operator|(
-name|TPRT
-operator||
-name|VPRT
-operator|)
+name|CPRT
+condition|)
+block|{
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'s'
+argument_list|)
 condition|)
 block|{
 name|standard
 argument_list|()
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Constant declarations must precede type and variable declarations"
-argument_list|)
-expr_stmt|;
 block|}
-if|if
-condition|(
-name|parts
-operator|&
-name|CPRT
-condition|)
+else|else
 block|{
-name|standard
+name|warning
 argument_list|()
 expr_stmt|;
+block|}
 name|error
 argument_list|(
-literal|"All constants must be declared in one const part"
+literal|"All constants should be declared in one const part"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-endif|#
-directive|endif
-endif|PC
-ifdef|#
-directive|ifdef
-name|OBJ
-if|if
-condition|(
 name|parts
-operator|&
-operator|(
-name|TPRT
-operator||
-name|VPRT
-operator|)
-condition|)
-name|error
-argument_list|(
-literal|"Constant declarations must precede type and variable declarations"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|parts
-operator|&
-name|CPRT
-condition|)
-name|error
-argument_list|(
-literal|"All constants must be declared in one const part"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|OBJ
-name|parts
+index|[
+name|cbn
+index|]
 operator||=
 name|CPRT
 expr_stmt|;

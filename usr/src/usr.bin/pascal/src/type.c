@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 1.2 %G%"
+literal|"@(#)type.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ end_macro
 
 begin_block
 block|{
-comment|/*  * PC allows for multiple  * declaration parts unless  * standard option has been  * specified.  * If routine segment is being  * compiled, do level one processing.  */
+comment|/*  * this allows for multiple  * declaration parts unless  * standard option has been  * specified.  * If routine segment is being  * compiled, do level one processing.  */
 ifndef|#
 directive|ifndef
 name|PI1
@@ -60,9 +60,20 @@ condition|)
 name|level1
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC
+if|if
+condition|(
+name|parts
+index|[
+name|cbn
+index|]
+operator|&
+operator|(
+name|VPRT
+operator||
+name|RPRT
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|opt
@@ -71,71 +82,60 @@ literal|'s'
 argument_list|)
 condition|)
 block|{
+name|standard
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|warning
+argument_list|()
+expr_stmt|;
+block|}
+name|error
+argument_list|(
+literal|"Type declarations should precede var and routine declarations"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|parts
+index|[
+name|cbn
+index|]
 operator|&
-name|VPRT
+name|TPRT
+condition|)
+block|{
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'s'
+argument_list|)
 condition|)
 block|{
 name|standard
 argument_list|()
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Type declarations must precede var declarations"
-argument_list|)
-expr_stmt|;
 block|}
-if|if
-condition|(
-name|parts
-operator|&
-name|TPRT
-condition|)
+else|else
 block|{
-name|standard
+name|warning
 argument_list|()
 expr_stmt|;
+block|}
 name|error
 argument_list|(
-literal|"All types must be declared in one type part"
+literal|"All types should be declared in one type part"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-endif|#
-directive|endif
-endif|PC
-ifdef|#
-directive|ifdef
-name|OBJ
-if|if
-condition|(
 name|parts
-operator|&
-name|VPRT
-condition|)
-name|error
-argument_list|(
-literal|"Type declarations must precede var declarations"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|parts
-operator|&
-name|TPRT
-condition|)
-name|error
-argument_list|(
-literal|"All types must be declared in one type part"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|OBJ
-name|parts
+index|[
+name|cbn
+index|]
 operator||=
 name|TPRT
 expr_stmt|;

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)0.h 1.1 %G%"; */
+comment|/* static	char sccsid[] = "@(#)0.h 1.2 %G%"; */
 end_comment
 
 begin_define
@@ -1458,12 +1458,15 @@ value|!compat
 end_define
 
 begin_comment
-comment|/*  * Parts records which declaration parts have been seen.  * The grammar allows the "const" "type" and "var"  * parts to be repeated and to be in any order, so that  * they can be detected semantically to give better  * error diagnostics.  */
+comment|/*  * Parts records which declaration parts have been seen.  * The grammar allows the "label" "const" "type" "var" and routine  * parts to be repeated and to be in any order, so that  * they can be detected semantically to give better  * error diagnostics.  */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|parts
+index|[
+name|DSPLYSZ
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1471,28 +1474,35 @@ begin_define
 define|#
 directive|define
 name|LPRT
-value|01
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPRT
-value|02
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|TPRT
-value|04
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|VPRT
-value|08
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|RPRT
+value|16
 end_define
 
 begin_comment
