@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getcap.c	5.11 (Berkeley) %G%"
+literal|"@(#)getcap.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2638,6 +2638,16 @@ else|else
 continue|continue;
 block|}
 block|}
+else|else
+name|line
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|isspace
@@ -2848,6 +2858,17 @@ operator|)
 return|;
 block|}
 block|}
+else|else
+block|{
+name|line
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 block|}
 name|rp
@@ -2944,13 +2965,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_function
-
-begin_comment
 comment|/*  * Cgetstr retrieves the value of the string capability cap from the  * capability record pointed to by buf.  A pointer to a decoded, NUL  * terminated, malloc'd copy of the string is returned in the char *  * pointed to by str.  The length of the string not including the trailing  * NUL is returned on success, -1 if the requested string capability  * couldn't be found, -2 if a system error was encountered (storage  * allocation failure).  */
-end_comment
-
-begin_function
 name|int
 name|cgetstr
 parameter_list|(
@@ -2967,17 +2982,11 @@ decl_stmt|,
 decl|*
 name|cap
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_int
@@ -3442,13 +3451,7 @@ name|len
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * Cgetustr retrieves the value of the string capability cap from the  * capability record pointed to by buf.  The difference between cgetustr()  * and cgetstr() is that cgetustr does not decode escapes but rather treats  * all characters literally.  A pointer to a  NUL terminated malloc'd   * copy of the string is returned in the char pointed to by str.  The   * length of the string not including the trailing NUL is returned on success,  * -1 if the requested string capability couldn't be found, -2 if a system   * error was encountered (storage allocation failure).  */
-end_comment
-
-begin_function
 name|int
 name|cgetustr
 parameter_list|(
@@ -3469,9 +3472,6 @@ modifier|*
 modifier|*
 name|str
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|register
 name|u_int
@@ -3690,13 +3690,7 @@ name|len
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * Cgetnum retrieves the value of the numeric capability cap from the  * capability record pointed to by buf.  The numeric value is returned in  * the long pointed to by num.  0 is returned on success, -1 if the requested  * numeric capability couldn't be found.  */
-end_comment
-
-begin_function
 name|int
 name|cgetnum
 parameter_list|(
@@ -3713,16 +3707,10 @@ decl_stmt|,
 decl|*
 name|cap
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|long
 modifier|*
 name|num
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|long
@@ -3914,13 +3902,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * Compare name field of record.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nfcmp
@@ -3936,9 +3918,6 @@ decl_stmt|,
 decl|*
 name|rec
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -4006,7 +3985,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
