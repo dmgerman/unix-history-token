@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.19 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.20 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.19 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.20 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3404,7 +3404,7 @@ if|if
 condition|(
 name|sap
 operator|->
-name|sun
+name|sunix
 operator|.
 name|sun_path
 index|[
@@ -3421,7 +3421,7 @@ literal|"[UNIX: %.64s]"
 argument_list|,
 name|sap
 operator|->
-name|sun
+name|sunix
 operator|.
 name|sun_path
 argument_list|)
