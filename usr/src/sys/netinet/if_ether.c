@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -234,18 +234,6 @@ specifier|extern
 name|struct
 name|ifnet
 name|loif
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Local addresses in the range oldmap to infinity are  * mapped according to the old mapping scheme.  That is,  * mapping of Internet to Ethernet addresses is performed  * by taking the high three bytes of the network interface's  * address and the low three bytes of the local address part.  * This only allows boards from the same manufacturer to  * communicate unless the on-board address is overridden  * (not possible in many manufacture's hardware).  *  * NB: setting oldmap to zero completely disables ARP  *     (i.e. identical to setting IFF_NOARP with an ioctl).  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|oldmap
-init|=
-literal|1024
 decl_stmt|;
 end_decl_stmt
 
@@ -885,17 +873,11 @@ block|{
 comment|/* not found */
 if|if
 condition|(
-operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_NOARP
-operator|)
-operator|||
-name|lna
-operator|>=
-name|oldmap
 condition|)
 block|{
 name|bcopy
