@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_rec.c,v 1.1 1993/10/27 05:41:12 paul Exp $"
+literal|"$Id: xdr_rec.c,v 1.1 1994/08/07 18:39:33 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,14 +74,6 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
