@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fwrite.c	5.5 (Berkeley) %G%"
+literal|"@(#)fwrite.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,43 +59,32 @@ begin_comment
 comment|/*  * Write `count' objects (each size `size') from memory to the given file.  * Return the number of whole objects written.  */
 end_comment
 
-begin_macro
+begin_function
+name|size_t
 name|fwrite
-argument_list|(
-argument|buf
-argument_list|,
-argument|size
-argument_list|,
-argument|count
-argument_list|,
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|buf
+parameter_list|,
+name|size
+parameter_list|,
+name|count
+parameter_list|,
+name|fp
+parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 name|size
 decl_stmt|,
 name|count
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|size_t
 name|n
@@ -177,7 +166,7 @@ name|size
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

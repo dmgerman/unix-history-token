@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fread.c	5.4 (Berkeley) %G%"
+literal|"@(#)fread.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,43 +49,32 @@ directive|include
 file|<string.h>
 end_include
 
-begin_macro
+begin_function
+name|size_t
 name|fread
-argument_list|(
-argument|buf
-argument_list|,
-argument|size
-argument_list|,
-argument|count
-argument_list|,
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|buf
+parameter_list|,
+name|size
+parameter_list|,
+name|count
+parameter_list|,
+name|fp
+parameter_list|)
 name|void
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 name|size
 decl_stmt|,
 name|count
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|size_t
@@ -257,7 +246,7 @@ name|count
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
