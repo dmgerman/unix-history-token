@@ -3695,7 +3695,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	long diff = (b)->ki_pctcpu - (a)->ki_pctcpu; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+value|do { \ 	long diff = (long)(b)->ki_pctcpu - (long)(a)->ki_pctcpu; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
 end_define
 
 begin_define
