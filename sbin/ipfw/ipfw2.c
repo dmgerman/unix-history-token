@@ -1284,6 +1284,12 @@ name|TOK_TCPWIN
 block|}
 block|,
 block|{
+literal|"icmptype"
+block|,
+name|TOK_ICMPTYPES
+block|}
+block|,
+block|{
 literal|"icmptypes"
 block|,
 name|TOK_ICMPTYPES
@@ -4030,7 +4036,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|" log logamount %d "
+literal|" log logamount %d"
 argument_list|,
 name|logptr
 operator|->
@@ -4040,7 +4046,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" log "
+literal|" log"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5026,8 +5032,14 @@ operator|++
 control|)
 if|if
 condition|(
+operator|(
 name|x
 operator|&
+name|p
+operator|->
+name|x
+operator|)
+operator|==
 name|p
 operator|->
 name|x
@@ -9183,7 +9195,7 @@ name|strtoul
 argument_list|(
 name|av
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 operator|&
@@ -13542,6 +13554,18 @@ break|break;
 case|case
 name|TOK_KEEPSTATE
 case|:
+if|if
+condition|(
+name|have_state
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"only one of check-state "
+literal|"and limit is allowed"
+argument_list|)
+expr_stmt|;
 name|have_state
 operator|=
 literal|1
@@ -13564,6 +13588,18 @@ case|:
 name|NEED1
 argument_list|(
 literal|"limit needs mask and # of connections"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|have_state
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"only one of check-state "
+literal|"and limit is allowed"
 argument_list|)
 expr_stmt|;
 block|{
@@ -13963,16 +13999,6 @@ name|void
 operator|*
 operator|)
 name|rule
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|do_quiet
-condition|)
-name|show_ipfw
-argument_list|(
-name|rule
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -15792,13 +15818,6 @@ argument_list|(
 name|EX_UNAVAILABLE
 argument_list|,
 literal|"socket"
-argument_list|)
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the last argument is an absolute pathname, interpret it 	 * as a file to be preprocessed. 	 */
