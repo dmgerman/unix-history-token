@@ -362,7 +362,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SAFETY
+name|DIAGNOSTIC
 comment|/* 	 * We require at least one vp. 	 */
 if|if
 condition|(
@@ -383,7 +383,7 @@ name|VDESC_NO_OFFSET
 condition|)
 name|panic
 argument_list|(
-literal|"umap_bypass: no vp's in map."
+literal|"umap_bypass: no vp's in map"
 argument_list|)
 expr_stmt|;
 endif|#

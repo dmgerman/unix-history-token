@@ -252,7 +252,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This is the 10-Apr-92 bypass routine.  *    This version has been optimized for speed, throwing away some  * safety checks.  It should still always work, but it's not as  * robust to programmer errors.  *    Define SAFETY to include some error checking code.  *  * In general, we map all vnodes going down and unmap them on the way back.  * As an exception to this, vnodes can be marked "unmapped" by setting  * the Nth bit in operation's vdesc_flags.  *  * Also, some BSD vnode operations have the side effect of vrele'ing  * their arguments.  With stacking, the reference counts are held  * by the upper node, not the lower one, so we must handle these  * side-effects here.  This is not of concern in Sun-derived systems  * since there are no such side-effects.  *  * This makes the following assumptions:  * - only one returned vpp  * - no INOUT vpp's (Sun's vop_open has one of these)  * - the vnode operation vector of the first vnode should be used  *   to determine what implementation of the op should be invoked  * - all mapped vnodes are of our vnode-type (NEEDSWORK:  *   problems on rmdir'ing mount points and renaming?)  */
+comment|/*  * This is the 10-Apr-92 bypass routine.  *    This version has been optimized for speed, throwing away some  * safety checks.  It should still always work, but it's not as  * robust to programmer errors.  *  * In general, we map all vnodes going down and unmap them on the way back.  * As an exception to this, vnodes can be marked "unmapped" by setting  * the Nth bit in operation's vdesc_flags.  *  * Also, some BSD vnode operations have the side effect of vrele'ing  * their arguments.  With stacking, the reference counts are held  * by the upper node, not the lower one, so we must handle these  * side-effects here.  This is not of concern in Sun-derived systems  * since there are no such side-effects.  *  * This makes the following assumptions:  * - only one returned vpp  * - no INOUT vpp's (Sun's vop_open has one of these)  * - the vnode operation vector of the first vnode should be used  *   to determine what implementation of the op should be invoked  * - all mapped vnodes are of our vnode-type (NEEDSWORK:  *   problems on rmdir'ing mount points and renaming?)  */
 end_comment
 
 begin_function
@@ -331,7 +331,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SAFETY
+name|DIAGNOSTIC
 comment|/* 	 * We require at least one vp. 	 */
 if|if
 condition|(
@@ -352,7 +352,7 @@ name|VDESC_NO_OFFSET
 condition|)
 name|panic
 argument_list|(
-literal|"null_bypass: no vp's in map."
+literal|"null_bypass: no vp's in map"
 argument_list|)
 expr_stmt|;
 endif|#
