@@ -326,6 +326,14 @@ name|PII
 block|}
 block|,
 block|{
+name|USB_VENDOR_BELKIN
+block|,
+name|USB_PRODUCT_BELKIN_USB2LAN
+block|,
+name|PII
+block|}
+block|,
+block|{
 name|USB_VENDOR_BILLIONTON
 block|,
 name|USB_PRODUCT_BILLIONTON_USB100
