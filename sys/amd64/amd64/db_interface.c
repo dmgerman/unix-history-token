@@ -144,37 +144,6 @@ name|db_global_jmpbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|__inline
-name|u_short
-name|rss
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_short
-name|ss
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUC__
-asm|__asm __volatile("mov %%ss,%0" : "=r" (ss));
-else|#
-directive|else
-name|ss
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXXX Fix for other compilers. */
-endif|#
-directive|endif
-return|return
-name|ss
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  *  kdb_trap - field a TRACE or BPT trap  */
 end_comment
