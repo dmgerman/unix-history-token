@@ -1596,6 +1596,10 @@ name|savacctflags
 operator|=
 name|acctflags
 expr_stmt|;
+name|savacctcred
+operator|=
+name|acctcred
+expr_stmt|;
 name|acctp
 operator|=
 name|NULLVP
