@@ -8227,6 +8227,9 @@ condition|)
 block|{
 break|break;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8288,6 +8291,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|mpte
 operator|=
 name|pmap_enter_quick
@@ -8306,6 +8312,9 @@ argument_list|,
 name|mpte
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|p
@@ -8319,6 +8328,9 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|objpgs
 operator|-=
 literal|1
@@ -8377,8 +8389,15 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|&&
-operator|(
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|p
 operator|->
@@ -8388,7 +8407,6 @@ name|VM_PAGE_BITS_ALL
 operator|)
 operator|==
 name|VM_PAGE_BITS_ALL
-operator|)
 operator|&&
 operator|(
 name|p
@@ -8437,6 +8455,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|mpte
 operator|=
 name|pmap_enter_quick
@@ -8455,6 +8476,9 @@ argument_list|,
 name|mpte
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|p
@@ -8468,6 +8492,9 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 return|return;
@@ -8843,6 +8870,9 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8906,6 +8936,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|mpte
 operator|=
 name|pmap_enter_quick
@@ -8918,6 +8951,9 @@ name|m
 argument_list|,
 name|mpte
 argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
@@ -8932,6 +8968,9 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_function
