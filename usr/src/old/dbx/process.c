@@ -9,17 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.12 8/19/83"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Header: process.c,v 1.3 84/03/27 10:23:24 linton Exp $"
+literal|"@(#)process.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

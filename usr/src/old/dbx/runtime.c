@@ -9,17 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runtime.c 1.8 8/10/83"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Header: runtime.c,v 1.3 84/03/27 10:23:40 linton Exp $"
+literal|"@(#)runtime.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

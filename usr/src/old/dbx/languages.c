@@ -9,17 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)languages.c 1.3 5/18/83"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Header: languages.c,v 1.3 84/03/27 10:21:09 linton Exp $"
+literal|"@(#)languages.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

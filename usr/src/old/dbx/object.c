@@ -9,17 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c 1.14 10/22/83"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Header: object.c,v 1.4 84/03/27 10:22:25 linton Exp $"
+literal|"@(#)object.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

@@ -9,17 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)events.c 1.3 4/8/83"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Header: events.c,v 1.3 84/03/27 10:20:41 linton Exp $"
+literal|"@(#)events.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

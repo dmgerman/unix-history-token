@@ -6,10 +6,10 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$Header: mkdate.c,v 1.3 84/03/27 10:21:59 linton Exp $"
+literal|"@(#)mkdate.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
