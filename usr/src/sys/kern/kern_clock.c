@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.45	82/11/13	*/
+comment|/*	kern_clock.c	4.46	82/12/09	*/
 end_comment
 
 begin_include
@@ -68,6 +68,23 @@ include|#
 directive|include
 file|"../h/text.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../vax/mtpr.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -448,7 +465,7 @@ name|ps
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * CPU was in user state.  Increment 		 * user time counter, and process process-virtual time 		 * interval timer. 		 */
+comment|/* 		 * CPU was in user state.  Increment 		 * user time counter, and process process-virtual time 		 * interval timer.  		 */
 name|bumptime
 argument_list|(
 operator|&
@@ -940,6 +957,33 @@ name|arg
 argument_list|,
 name|a
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * If trapped user-mode, give it a profiling tick. 	 */
+if|if
+condition|(
+name|USERMODE
+argument_list|(
+name|ps
+argument_list|)
+operator|&&
+name|u
+operator|.
+name|u_prof
+operator|.
+name|pr_scale
+condition|)
+block|{
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator||=
+name|SOWEUPC
+expr_stmt|;
+name|aston
+argument_list|()
 expr_stmt|;
 block|}
 block|}
