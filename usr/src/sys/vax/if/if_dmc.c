@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmmac.h"
 end_include
 
@@ -3040,11 +3046,6 @@ condition|(
 name|off
 condition|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 name|ifp
 operator|=
 operator|*
@@ -3370,8 +3371,10 @@ operator|&
 name|DMC_FATAL
 condition|)
 block|{
-name|printd
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"dmc%d: fatal error, flags=%b\n"
 argument_list|,
 name|unit
@@ -4267,11 +4270,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|ifubinfo
-modifier|*
-name|ifu
-decl_stmt|;
 name|addr
 operator|=
 operator|(
@@ -4282,13 +4280,6 @@ operator|)
 name|ui
 operator|->
 name|ui_addr
-expr_stmt|;
-name|ifu
-operator|=
-operator|&
-name|sc
-operator|->
-name|sc_ifuba
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4378,8 +4369,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"dmc%d: M820 Test Failed\n"
 argument_list|,
 name|unit
@@ -4583,8 +4576,10 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-name|printd
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"dmc%d hung: bsel0=%b bsel2=%b\n"
 argument_list|,
 name|i
