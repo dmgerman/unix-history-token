@@ -96,7 +96,7 @@ name|__warn_references
 argument_list|(
 name|fgetrune
 argument_list|,
-literal|"warning: fgetrune() is deprecated. See fgetrune(3)."
+literal|"warning: fgetrune() is obsolete. See fgetrune(3)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -156,7 +156,7 @@ name|__warn_references
 argument_list|(
 name|fungetrune
 argument_list|,
-literal|"warning: fungetrune() is deprecated. See fungetrune(3)."
+literal|"warning: fungetrune() is obsolete. See fungetrune(3)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -204,7 +204,7 @@ name|__warn_references
 argument_list|(
 name|fputrune
 argument_list|,
-literal|"warning: fputrune() is deprecated. See fputrune(3)."
+literal|"warning: fputrune() is obsolete. See fputrune(3)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -221,7 +221,7 @@ name|__warn_references
 argument_list|(
 name|setrunelocale
 argument_list|,
-literal|"warning: setrunelocale() is deprecated. See setrunelocale(3)."
+literal|"warning: setrunelocale() is obsolete. See setrunelocale(3)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

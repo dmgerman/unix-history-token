@@ -38,7 +38,7 @@ name|__warn_references
 argument_list|(
 name|setinvalidrune
 argument_list|,
-literal|"warning: setinvalidrune() is deprecated. See setinvalidrune(3)."
+literal|"warning: setinvalidrune() is obsolete. See setinvalidrune(3)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

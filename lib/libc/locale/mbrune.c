@@ -90,7 +90,7 @@ name|__warn_references
 argument_list|(
 name|mbrune
 argument_list|,
-literal|"warning: mbrune() is deprecated. See mbrune(3)."
+literal|"warning: mbrune() is obsolete. See mbrune(3)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -190,7 +190,7 @@ name|__warn_references
 argument_list|(
 name|mbrrune
 argument_list|,
-literal|"warning: mbrrune() is deprecated. See mbrrune(3)."
+literal|"warning: mbrrune() is obsolete. See mbrrune(3)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -296,7 +296,7 @@ name|__warn_references
 argument_list|(
 name|mbmb
 argument_list|,
-literal|"warning: mbmb() is deprecated. See mbmb(3)."
+literal|"warning: mbmb() is obsolete. See mbmb(3)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
