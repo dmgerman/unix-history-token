@@ -1211,7 +1211,7 @@ define|#
 directive|define
 name|OUT_OF_RANGE
 define|\
-value|{	\     warnx( \ "\n\tinput file: %s\n\tencoded file: %s\n\tcharacter out of range: [%d-%d]", \  	filename, buffn, 1 + ' ', 077 + ' ' + 1); \         return(1); \ }
+value|{	\     warnx( \ "\n\tinput file: %s\n\tencoded file: %s\n\tcharacter out of range: [%d-%d]", \  	filename, buffn, 1 + ' ', 077 + ' ' + 1); \         return (1); \ }
 comment|/* 		 * `n' is used to avoid writing out all the characters 		 * at the end of the file. 		 */
 if|if
 condition|(
