@@ -3992,10 +3992,6 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|devfs
-init|=
-literal|0
-decl_stmt|,
 name|c
 decl_stmt|,
 name|i
@@ -4140,10 +4136,6 @@ block|{
 case|case
 literal|'d'
 case|:
-name|devfs
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 literal|'s'
@@ -4170,23 +4162,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|devfs
-condition|)
-name|mount
-argument_list|(
-literal|"devfs"
-argument_list|,
-name|_PATH_DEV
-argument_list|,
-name|MNT_NOEXEC
-operator||
-name|MNT_RDONLY
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Fill in the sess structures. */
 comment|/* XXX Really, should be filled based upon config file. */
 for|for
