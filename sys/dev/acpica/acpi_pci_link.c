@@ -3,6 +3,14 @@ begin_comment
 comment|/*-  * Copyright (c) 2002 Mitsuru IWASAKI<iwasaki@jp.freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_comment
+comment|/* XXX Uncomment this if you have new PCI IRQ problems starting 2004/8/5. */
+end_comment
+
+begin_comment
+comment|/* #define ACPI_OLD_PCI_LINK 1 */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -219,6 +227,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_OLD_PCI_LINK
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -246,6 +260,15 @@ directive|define
 name|ACPI_STA_FUNCTIONAL
 value|0x00000008
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_OLD_PCI_LINK */
+end_comment
 
 begin_comment
 comment|/*  * PCI link object management  */
@@ -602,6 +625,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_OLD_PCI_LINK
+end_ifdef
+
 begin_function
 specifier|static
 name|ACPI_STATUS
@@ -838,6 +867,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_OLD_PCI_LINK */
+end_comment
 
 begin_function
 specifier|static
@@ -1892,9 +1930,14 @@ decl_stmt|;
 name|ACPI_STATUS
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_OLD_PCI_LINK
 name|UINT32
 name|sta
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|acpi_prt_entry
 modifier|*
@@ -1994,6 +2037,10 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * PCI link status (_STA) is unreliable.  Many systems return 	 * erroneous values so we ignore it. 	 */
+ifdef|#
+directive|ifdef
+name|ACPI_OLD_PCI_LINK
 name|error
 operator|=
 name|acpi_pci_link_get_object_status
@@ -2072,6 +2119,9 @@ name|AE_ERROR
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* ACPI_OLD_PCI_LINK */
 name|TAILQ_FOREACH
 argument_list|(
 argument|entry
@@ -2394,9 +2444,14 @@ decl_stmt|;
 name|ACPI_BUFFER
 name|crsbuf
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_OLD_PCI_LINK
 name|UINT32
 name|sta
 decl_stmt|;
+endif|#
+directive|endif
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -2802,6 +2857,14 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
+name|AE_OK
+expr_stmt|;
+comment|/* 	 * PCI link status (_STA) is unreliable.  Many systems return 	 * erroneous values so we ignore it. 	 */
+ifdef|#
+directive|ifdef
+name|ACPI_OLD_PCI_LINK
+name|error
+operator|=
 name|acpi_pci_link_get_object_status
 argument_list|(
 name|link
@@ -2880,6 +2943,13 @@ name|AE_ERROR
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* ACPI_OLD_PCI_LINK */
+comment|/* 	 * Many systems always return invalid values for current settings 	 * (_CRS).  Since we can't trust the value returned, we have to 	 * assume we were successful. 	 */
+ifdef|#
+directive|ifdef
+name|ACPI_OLD_PCI_LINK
 name|error
 operator|=
 name|acpi_pci_link_get_current_irq
@@ -2976,6 +3046,9 @@ operator|=
 name|AE_ERROR
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* ACPI_OLD_PCI_LINK */
 name|return_ACPI_STATUS
 argument_list|(
 name|error
