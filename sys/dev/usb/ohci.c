@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  */
 end_comment
 
 begin_include
@@ -6884,27 +6884,6 @@ argument_list|,
 name|xfer
 argument_list|)
 expr_stmt|;
-name|cc
-operator|=
-name|OHCI_TD_GET_CC
-argument_list|(
-name|le32toh
-argument_list|(
-name|std
-operator|->
-name|td
-operator|.
-name|td_flags
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cc
-operator|==
-name|OHCI_CC_NO_ERROR
-condition|)
-block|{
 name|len
 operator|=
 name|std
@@ -6972,6 +6951,27 @@ name|actlen
 operator|+=
 name|len
 expr_stmt|;
+name|cc
+operator|=
+name|OHCI_TD_GET_CC
+argument_list|(
+name|le32toh
+argument_list|(
+name|std
+operator|->
+name|td
+operator|.
+name|td_flags
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cc
+operator|==
+name|OHCI_CC_NO_ERROR
+condition|)
+block|{
 if|if
 condition|(
 name|std
