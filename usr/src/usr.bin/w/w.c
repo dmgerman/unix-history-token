@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.11 (Berkeley) %G%"
+literal|"@(#)w.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1948,10 +1948,7 @@ block|{
 comment|/* print CPU time for all processes& children */
 name|prttime
 argument_list|(
-name|DIV60
-argument_list|(
 name|jobtime
-argument_list|)
 argument_list|,
 literal|" "
 argument_list|)
@@ -1959,10 +1956,7 @@ expr_stmt|;
 comment|/* print cpu time for interesting process */
 name|prttime
 argument_list|(
-name|DIV60
-argument_list|(
 name|proctime
-argument_list|)
 argument_list|,
 literal|" "
 argument_list|)
