@@ -19,7 +19,16 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.3 %G%"
+literal|"@(#)lex.c	2.4 %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|prompt
+init|=
+literal|"& "
 decl_stmt|;
 end_decl_stmt
 
@@ -329,7 +338,7 @@ block|{
 name|int
 name|eofloop
 decl_stmt|,
-name|prompt
+name|shudprompt
 decl_stmt|,
 name|firstsw
 decl_stmt|,
@@ -411,7 +420,7 @@ name|input
 operator|=
 name|stdin
 expr_stmt|;
-name|prompt
+name|shudprompt
 operator|=
 literal|1
 expr_stmt|;
@@ -420,7 +429,7 @@ condition|(
 operator|!
 name|intty
 condition|)
-name|prompt
+name|shudprompt
 operator|=
 literal|0
 expr_stmt|;
@@ -505,7 +514,7 @@ name|top
 label|:
 if|if
 condition|(
-name|prompt
+name|shudprompt
 operator|&&
 operator|!
 name|sourcing
@@ -518,7 +527,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"_\r"
+name|prompt
 argument_list|)
 expr_stmt|;
 block|}
@@ -583,7 +592,7 @@ argument_list|)
 operator|!=
 name|NOSTR
 operator|&&
-name|prompt
+name|shudprompt
 condition|)
 block|{
 if|if
@@ -1479,7 +1488,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"_\r"
+name|prompt
 argument_list|)
 expr_stmt|;
 name|fflush
