@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_cksum.c	6.2	84/08/28	*/
+comment|/*	in_cksum.c	6.3	85/05/01	*/
 end_comment
 
 begin_include
@@ -209,8 +209,14 @@ block|{
 undef|#
 directive|undef
 name|ADD
-asm|asm("clrl r0");
+ifdef|#
+directive|ifdef
+name|unneeded
+comment|/* The loop construct clears carry for us... */
+asm|asm("bicpsr $1");
 comment|/* clears carry */
+endif|#
+directive|endif
 define|#
 directive|define
 name|ADD
@@ -248,7 +254,14 @@ operator|>=
 literal|0
 condition|)
 block|{
-asm|asm("clrl r0");
+ifdef|#
+directive|ifdef
+name|unneeded
+comment|/* The loop construct clears carry for us... */
+asm|asm("bicpsr $1");
+comment|/* clears carry */
+endif|#
+directive|endif
 name|ADD
 expr_stmt|;
 name|ADD
