@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.23 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.24 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.23 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.24 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -910,6 +910,41 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|hostbuf
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|hostbuf
+argument_list|,
+literal|" ("
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|hostbuf
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|RealHostAddr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcasecmp
@@ -922,40 +957,42 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|char
-name|hostbuf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcat
 argument_list|(
 name|hostbuf
 argument_list|,
-literal|"%s (%s)"
-argument_list|,
-name|p
+literal|"; "
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|hostbuf
 argument_list|,
 name|RealHostName
 argument_list|)
 expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|hostbuf
+argument_list|,
+literal|")"
+argument_list|)
+expr_stmt|;
 name|sendinghost
 operator|=
 name|newstr
 argument_list|(
 name|hostbuf
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|sendinghost
-operator|=
-name|newstr
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|message
