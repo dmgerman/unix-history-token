@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.23	82/11/22	*/
+comment|/*	ioctl.h	4.24	82/12/05	*/
 end_comment
 
 begin_comment
-comment|/*  * ioctl definitions, and special character and local tty definitions  */
+comment|/*  * Ioctl definitions  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,58 @@ define|#
 directive|define
 name|_IOCTL_
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../h/ttychars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ttydev.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/ttychars.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ttydev.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOCOMPAT
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
 
 begin_struct
 struct|struct
@@ -83,368 +135,10 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * local mode settings  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCRTBS
-value|0000001
-end_define
-
-begin_comment
-comment|/* correct backspacing for crt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LPRTERA
-value|0000002
-end_define
-
-begin_comment
-comment|/* printing terminal \ ... / erase */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCRTERA
-value|0000004
-end_define
-
-begin_comment
-comment|/* do " \b " to wipe out character */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LTILDE
-value|0000010
-end_define
-
-begin_comment
-comment|/* IIASA - hazeltine tilde kludge */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LMDMBUF
-value|0000020
-end_define
-
-begin_comment
-comment|/* IIASA - start/stop output on carrier intr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLITOUT
-value|0000040
-end_define
-
-begin_comment
-comment|/* IIASA - suppress any output translations */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LTOSTOP
-value|0000100
-end_define
-
-begin_comment
-comment|/* send stop for any background tty output */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LFLUSHO
-value|0000200
-end_define
-
-begin_comment
-comment|/* flush output sent to terminal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LNOHANG
-value|0000400
-end_define
-
-begin_comment
-comment|/* IIASA - don't send hangup on carrier drop */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LETXACK
-value|0001000
-end_define
-
-begin_comment
-comment|/* IIASA - diablo style buffer hacking */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCRTKIL
-value|0002000
-end_define
-
-begin_comment
-comment|/* erase whole line on kill with " \b " */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L004000
-value|0004000
-end_define
-
-begin_define
-define|#
-directive|define
-name|LCTLECH
-value|0010000
-end_define
-
-begin_comment
-comment|/* echo control characters as ^X */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LPENDIN
-value|0020000
-end_define
-
-begin_comment
-comment|/* tp->t_rawq is waiting to be reread */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDECCTQ
-value|0040000
-end_define
-
-begin_comment
-comment|/* only ^Q starts after ^S */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LNOFLSH
-value|0100000
-end_define
-
-begin_comment
-comment|/* dont flush output on signals */
-end_comment
-
-begin_comment
-comment|/* local state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LSBKSL
-value|01
-end_define
-
-begin_comment
-comment|/* state bit for lowercase backslash work */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LSQUOT
-value|02
-end_define
-
-begin_comment
-comment|/* last character input was \ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LSERASE
-value|04
-end_define
-
-begin_comment
-comment|/* within a \.../ for LPRTRUB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LSLNCH
-value|010
-end_define
-
-begin_comment
-comment|/* next character is literal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LSTYPEN
-value|020
-end_define
-
-begin_comment
-comment|/* retyping suspended input (LPENDIN) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LSCNTTB
-value|040
-end_define
-
-begin_comment
-comment|/* counting width of tab; leave LFLUSHO alone */
-end_comment
-
-begin_comment
-comment|/* modem control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MLE
-value|0001
-end_define
-
-begin_comment
-comment|/* line enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MDTR
-value|0002
-end_define
-
-begin_comment
-comment|/* data terminal ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MRTS
-value|0004
-end_define
-
-begin_comment
-comment|/* request to send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MST
-value|0010
-end_define
-
-begin_comment
-comment|/* secondary transmit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSR
-value|0020
-end_define
-
-begin_comment
-comment|/* secondary receive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCTS
-value|0040
-end_define
-
-begin_comment
-comment|/* clear to send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCAR
-value|0100
-end_define
-
-begin_comment
-comment|/* carrier detect */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCD
-value|MCAR
-end_define
-
-begin_define
-define|#
-directive|define
-name|MRNG
-value|0200
-end_define
-
-begin_comment
-comment|/* ring */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MRI
-value|MRNG
-end_define
-
-begin_define
-define|#
-directive|define
-name|MDSR
-value|0400
-end_define
-
-begin_comment
-comment|/* data set ready */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Ioctl's have the command encoded in the lower word,  * and the size of any in or out parameters in the upper  * word.  The high 2 bits of the upper word are used  * to encode the in/out status of the parameter; for now  * we restrict parameters to at most 128 bytes.  */
@@ -620,6 +314,119 @@ end_define
 
 begin_comment
 comment|/* set modem control state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_LE
+value|0001
+end_define
+
+begin_comment
+comment|/* line enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_DTR
+value|0002
+end_define
+
+begin_comment
+comment|/* data terminal ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_RTS
+value|0004
+end_define
+
+begin_comment
+comment|/* request to send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_ST
+value|0010
+end_define
+
+begin_comment
+comment|/* secondary transmit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_SR
+value|0020
+end_define
+
+begin_comment
+comment|/* secondary receive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_CTS
+value|0040
+end_define
+
+begin_comment
+comment|/* clear to send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_CAR
+value|0100
+end_define
+
+begin_comment
+comment|/* carrier detect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_CD
+value|TIOCM_CAR
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIOCM_RNG
+value|0200
+end_define
+
+begin_comment
+comment|/* ring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_RI
+value|TIOCM_RNG
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIOCM_DSR
+value|0400
+end_define
+
+begin_comment
+comment|/* data set ready */
 end_comment
 
 begin_define
@@ -1036,6 +843,527 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TIOCSET
+value|_IOW(t, 104, long)
+end_define
+
+begin_comment
+comment|/* set tty flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCBIS
+value|_IOW(t, 103, long)
+end_define
+
+begin_comment
+comment|/* bis tty flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCBIC
+value|_IOW(t, 102, long)
+end_define
+
+begin_comment
+comment|/* bic tty flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCGET
+value|_IOR(t, 101, long)
+end_define
+
+begin_comment
+comment|/* get all tty flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TANDEM
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* send stopc on out q full */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBREAK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* half-cooked mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCASE
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* simulate lower case */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ECHO
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* echo input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRMOD
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* map \r to \r\n on output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAW
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* no i/o processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ODDP
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* get/send odd parity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVENP
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* get/send even parity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ANYP
+value|0x000000c0
+end_define
+
+begin_comment
+comment|/* get any parity/send none */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NLDELAY
+value|0x00000300
+end_define
+
+begin_comment
+comment|/* \n delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NL0
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NL1
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* tty 37 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NL2
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* vt05 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NL3
+value|0x00000300
+end_define
+
+begin_define
+define|#
+directive|define
+name|TBDELAY
+value|0x00000c00
+end_define
+
+begin_comment
+comment|/* horizontal tab delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAB0
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAB1
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* tty 37 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAB2
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|XTABS
+value|0x00000c00
+end_define
+
+begin_comment
+comment|/* expand tabs on output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRDELAY
+value|0x00003000
+end_define
+
+begin_comment
+comment|/* \r delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CR0
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CR1
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* tn 300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CR2
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* tty 37 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CR3
+value|0x00003000
+end_define
+
+begin_comment
+comment|/* concept 100 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTDELAY
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* vertical tab delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FF0
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FF1
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* tty 37 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSDELAY
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* \b delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BS0
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BS1
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* used to be local mode settings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRTBS
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* do backspacing for crt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRTERA
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* \ ... / erase */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRTERA
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* " \b " to wipe out char */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TILDE
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* hazeltine tilde kludge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDMBUF
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* start/stop output on carrier intr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LITOUT
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* literal output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOSTOP
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* SIGSTOP on background output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLUSHO
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* flush output to terminal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOHANG
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* no SIGHUP on carrier drop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L001000
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRTKIL
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* kill line with " \b " */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L004000
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTLECH
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* echo control chars as ^X */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PENDIN
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* tp->t_rawq needs reread */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECCTQ
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* only ^Q starts after ^S */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOFLSH
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* no output flush on signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALLDELAY
+value|(NLDELAY|TBDELAY|CRDELAY|VTDELAY|BSDELAY)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OTTYDISC
 value|0
 end_define
@@ -1206,10 +1534,6 @@ begin_comment
 comment|/* get linger time */
 end_comment
 
-begin_comment
-comment|/* these are really variable length */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1218,7 +1542,7 @@ value|_IOW(s, 5, char)
 end_define
 
 begin_comment
-comment|/* send out of band */
+comment|/* send oob data */
 end_comment
 
 begin_define
@@ -1229,7 +1553,7 @@ value|_IOR(s, 6, char)
 end_define
 
 begin_comment
-comment|/* get out of band */
+comment|/* recv oob data */
 end_comment
 
 begin_define
