@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.64 (Berkeley) 7/25/97"
+literal|"@(#)err.c	8.65 (Berkeley) 10/18/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -1778,6 +1778,28 @@ literal|0
 index|]
 operator|!=
 literal|'\0'
+operator|&&
+name|strncmp
+argument_list|(
+name|num
+argument_list|,
+literal|"551"
+argument_list|,
+literal|3
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strncmp
+argument_list|(
+name|num
+argument_list|,
+literal|"251"
+argument_list|,
+literal|3
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(

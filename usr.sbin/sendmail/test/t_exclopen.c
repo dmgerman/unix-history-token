@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  This program tests your system to see if you have the lovely **  security-defeating semantics that an open with O_CREAT|O_EXCL **  set will successfully open a file named by a symbolic link that **  points to a non-existent file.  Sadly, Posix is mute on what **  should happen in this situation. ** **  Results to date: **	AIX 3.2		OK **	BSD family	OK **	  BSD/OS 2.1	OK **	  FreeBSD 2.1	OK **	DEC OSF/1 3.0	OK **	HP-UX 9.04	FAIL **	HP-UX 9.05	FAIL **	HP-UX 9.07	OK **	HP-UX 10.01	OK **	HP-UX 10.10	OK **	HP-UX 10.20	OK **	Irix 5.3	OK **	Irix 6.2	OK **	Linux		OK **	NeXT 2.1	OK **	Solaris 2.x	OK **	SunOS 4.x	OK **	Ultrix 4.3	OK */
+comment|/* **  This program tests your system to see if you have the lovely **  security-defeating semantics that an open with O_CREAT|O_EXCL **  set will successfully open a file named by a symbolic link that **  points to a non-existent file.  Sadly, Posix is mute on what **  should happen in this situation. ** **  Results to date: **	AIX 3.2		OK **	BSD family	OK **	  BSD/OS 2.1	OK **	  FreeBSD 2.1	OK **	DEC OSF/1 3.0	OK **	HP-UX 9.04	FAIL **	HP-UX 9.05	FAIL **	HP-UX 9.07	OK **	HP-UX 10.01	OK **	HP-UX 10.10	OK **	HP-UX 10.20	OK **	Irix 5.3	OK **	Irix 6.2	OK **	Irix 6.3	OK **	Irix 6.4	OK **	Linux		OK **	NeXT 2.1	OK **	Solaris 2.x	OK **	SunOS 4.x	OK **	Ultrix 4.3	OK */
 end_comment
 
 begin_include

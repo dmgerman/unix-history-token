@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.174 (Berkeley) 7/23/97 (with queueing)"
+literal|"@(#)queue.c	8.175 (Berkeley) 10/4/97 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.174 (Berkeley) 7/23/97 (without queueing)"
+literal|"@(#)queue.c	8.175 (Berkeley) 10/4/97 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2241,10 +2241,6 @@ name|char
 modifier|*
 name|uname
 decl_stmt|;
-name|char
-modifier|*
-name|paddr
-decl_stmt|;
 specifier|register
 name|ADDRESS
 modifier|*
@@ -2408,19 +2404,6 @@ name|lastctladdr
 operator|=
 name|a
 expr_stmt|;
-name|paddr
-operator|=
-name|denlstring
-argument_list|(
-name|a
-operator|->
-name|q_paddr
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|uid
@@ -2442,9 +2425,7 @@ name|fprintf
 argument_list|(
 name|tfp
 argument_list|,
-literal|"C:%s\n"
-argument_list|,
-name|paddr
+literal|"C"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2452,9 +2433,16 @@ name|fprintf
 argument_list|(
 name|tfp
 argument_list|,
-literal|"C%s:%ld:%ld:%s\n"
+literal|"C%s:%ld:%ld"
 argument_list|,
+name|denlstring
+argument_list|(
 name|uname
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
 argument_list|,
 operator|(
 name|long
@@ -2465,8 +2453,24 @@ operator|(
 name|long
 operator|)
 name|gid
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|tfp
 argument_list|,
-name|paddr
+literal|":%s\n"
+argument_list|,
+name|denlstring
+argument_list|(
+name|a
+operator|->
+name|q_paddr
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
