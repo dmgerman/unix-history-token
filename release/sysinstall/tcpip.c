@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tcpip.c,v 1.83 1999/07/19 10:06:18 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * $Id: tcpip.c,v 1.84 1999/07/19 10:18:52 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -1050,6 +1050,9 @@ literal|"Do you want to try DHCP configuration of the interface?"
 argument_list|)
 condition|)
 block|{
+name|int
+name|k
+decl_stmt|;
 name|Mkdir
 argument_list|(
 literal|"/var/db"
@@ -1070,12 +1073,25 @@ argument_list|(
 literal|"Scanning for DHCP servers..."
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|k
+operator|=
+literal|3
+init|;
+name|k
+condition|;
+operator|--
+name|k
+control|)
+block|{
 if|if
 condition|(
-operator|!
+literal|0
+operator|==
 name|vsystem
 argument_list|(
-literal|"dhclient %s"
+literal|"dhclient -1 %s"
 argument_list|,
 name|devp
 operator|->
@@ -1092,6 +1108,8 @@ name|use_dhcp
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 comment|/* Get old IP address from variable space, if available */
