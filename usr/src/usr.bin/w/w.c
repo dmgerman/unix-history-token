@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.32 (Berkeley) %G%"
+literal|"@(#)w.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -904,6 +910,31 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ut
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|_PATH_UTMP
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|fread
