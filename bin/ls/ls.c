@@ -938,16 +938,6 @@ name|f_numericonly
 operator|=
 literal|1
 expr_stmt|;
-name|f_longform
-operator|=
-literal|1
-expr_stmt|;
-name|f_column
-operator|=
-name|f_singlecol
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 literal|'o'
