@@ -195,6 +195,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ffs/ffs_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<gnu/ext2fs/ext2_fs.h>
 end_include
 
@@ -600,7 +606,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|ufs_reclaim
+name|ffs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -1143,7 +1149,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|ufs_reclaim
+name|ffs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -1686,7 +1692,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|ufs_reclaim
+name|ffs_reclaim
 block|}
 block|,
 comment|/* reclaim */
