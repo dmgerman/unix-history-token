@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Varian and Versatec queue  */
+comment|/* vpq.c		%G%  * Varian and Versatec queue  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|vpqSCCSid
+index|[]
+init|=
+literal|"@(#)vpq.c	1.2\t%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -599,7 +609,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'B'
+literal|'C'
+case|:
+case|case
+literal|'V'
 case|:
 case|case
 literal|'F'
