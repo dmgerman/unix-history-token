@@ -1470,7 +1470,7 @@ block|,
 block|{
 literal|0x07
 block|,
-literal|"OS/2 HPFS, QNX or Advanced UNIX"
+literal|"OS/2 HPFS, NTFS, QNX or Advanced UNIX"
 block|}
 block|,
 block|{
@@ -2737,7 +2737,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    start %ld, size %ld (%qd Meg), flag %x\n"
+literal|"    start %ld, size %ld (%qd Meg), flag %x%s\n"
 argument_list|,
 name|partp
 operator|->
@@ -2752,6 +2752,16 @@ argument_list|,
 name|partp
 operator|->
 name|dp_flag
+argument_list|,
+name|partp
+operator|->
+name|dp_flag
+operator|==
+name|ACTIVE
+condition|?
+literal|" (active)"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3066,7 +3076,7 @@ do|do
 block|{
 name|Decimal
 argument_list|(
-literal|"sysid"
+literal|"sysid (165=FreeBSD)"
 argument_list|,
 name|partp
 operator|->
@@ -3483,7 +3493,14 @@ literal|"Do you want to change the active partition?"
 argument_list|)
 condition|)
 return|return;
+name|setactive
+label|:
+name|active
+operator|=
+literal|4
+expr_stmt|;
 do|do
+block|{
 name|Decimal
 argument_list|(
 literal|"active partition"
@@ -3493,6 +3510,28 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|active
+operator|<
+literal|1
+operator|||
+literal|4
+operator|<
+name|active
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Active partition number must be in range 1-4."
+literal|"  Try again.\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|setactive
+goto|;
+block|}
+block|}
 do|while
 condition|(
 operator|!
@@ -4631,7 +4670,7 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"%s is an invalid decimal number.  Try again\n"
+literal|"%s is an invalid decimal number.  Try again.\n"
 argument_list|,
 name|lbuf
 argument_list|)
@@ -4647,7 +4686,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int hex(char *str, int *num, int deflt) { int acc = 0, c; char *cp;  	while (1) { 		printf("Supply a hex value for \"%s\" [%x] ", str, deflt); 		fgets(lbuf, LBUF, stdin); 		lbuf[strlen(lbuf)-1] = 0;  		if (!*lbuf) 			return 0;  		cp = lbuf; 		while ((c = *cp)&& (c == ' ' || c == '\t')) cp++; 		if (!c) 			return 0; 		while ((c = *cp++)) { 			if (c<= '9'&& c>= '0') 				acc = (acc<< 4) + c - '0'; 			else if (c<= 'f'&& c>= 'a') 				acc = (acc<< 4) + c - 'a' + 10; 			else if (c<= 'F'&& c>= 'A') 				acc = (acc<< 4) + c - 'A' + 10; 			else 				break; 		} 		if (c == ' ' || c == '\t') 			while ((c = *cp)&& (c == ' ' || c == '\t')) cp++; 		if (!c) { 			*num = acc; 			return 1; 		} else 			printf("%s is an invalid hex number.  Try again\n", 				lbuf); 	}  }  static int string(char *str, char **ans) { int c; char *cp = lbuf;  	while (1) { 		printf("Supply a string value for \"%s\" [%s] ", str, *ans); 		fgets(lbuf, LBUF, stdin); 		lbuf[strlen(lbuf)-1] = 0;  		if (!*lbuf) 			return 0;  		while ((c = *cp)&& (c == ' ' || c == '\t')) cp++; 		if (c == '"') { 			c = *++cp; 			*ans = cp; 			while ((c = *cp)&& c != '"') cp++; 		} else { 			*ans = cp; 			while ((c = *cp)&& c != ' '&& c != '\t') cp++; 		}  		if (c) 			*cp = 0; 		return 1; 	} }
+unit|static int hex(char *str, int *num, int deflt) { int acc = 0, c; char *cp;  	while (1) { 		printf("Supply a hex value for \"%s\" [%x] ", str, deflt); 		fgets(lbuf, LBUF, stdin); 		lbuf[strlen(lbuf)-1] = 0;  		if (!*lbuf) 			return 0;  		cp = lbuf; 		while ((c = *cp)&& (c == ' ' || c == '\t')) cp++; 		if (!c) 			return 0; 		while ((c = *cp++)) { 			if (c<= '9'&& c>= '0') 				acc = (acc<< 4) + c - '0'; 			else if (c<= 'f'&& c>= 'a') 				acc = (acc<< 4) + c - 'a' + 10; 			else if (c<= 'F'&& c>= 'A') 				acc = (acc<< 4) + c - 'A' + 10; 			else 				break; 		} 		if (c == ' ' || c == '\t') 			while ((c = *cp)&& (c == ' ' || c == '\t')) cp++; 		if (!c) { 			*num = acc; 			return 1; 		} else 			printf("%s is an invalid hex number.  Try again.\n", 				lbuf); 	}  }  static int string(char *str, char **ans) { int c; char *cp = lbuf;  	while (1) { 		printf("Supply a string value for \"%s\" [%s] ", str, *ans); 		fgets(lbuf, LBUF, stdin); 		lbuf[strlen(lbuf)-1] = 0;  		if (!*lbuf) 			return 0;  		while ((c = *cp)&& (c == ' ' || c == '\t')) cp++; 		if (c == '"') { 			c = *++cp; 			*ans = cp; 			while ((c = *cp)&& c != '"') cp++; 		} else { 			*ans = cp; 			while ((c = *cp)&& c != ' '&& c != '\t') cp++; 		}  		if (c) 			*cp = 0; 		return 1; 	} }
 endif|#
 directive|endif
 end_endif
