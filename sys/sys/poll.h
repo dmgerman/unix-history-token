@@ -138,15 +138,15 @@ begin_comment
 comment|/* OOB/Urgent data can be written */
 end_comment
 
-begin_comment
-comment|/* General FreeBSD extension (currently only supported for sockets): */
-end_comment
-
 begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
+
+begin_comment
+comment|/* General FreeBSD extension (currently only supported for sockets): */
+end_comment
 
 begin_define
 define|#
