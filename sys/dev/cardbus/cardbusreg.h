@@ -155,6 +155,20 @@ name|CARDBUS_ROM_REG
 value|0x30
 end_define
 
+begin_define
+define|#
+directive|define
+name|CARDBUS_ROM_ENABLE
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARDBUS_ROM_ADDRMASK
+value|0xfffff800
+end_define
+
 begin_comment
 comment|/* EXROM offsets for reading CIS */
 end_comment
