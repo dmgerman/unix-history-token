@@ -813,12 +813,6 @@ name|ext2_specop_p
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FIFO
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|vop_t
@@ -827,30 +821,6 @@ modifier|*
 name|ext2_fifoop_p
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|EXT2_FIFOOPS
-value|ext2_fifoop_p
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXT2_FIFOOPS
-value|NULL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

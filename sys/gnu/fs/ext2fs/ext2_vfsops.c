@@ -5167,7 +5167,7 @@ name|mp
 argument_list|,
 name|ext2_specop_p
 argument_list|,
-name|EXT2_FIFOOPS
+name|ext2_fifoop_p
 argument_list|,
 operator|&
 name|vp
