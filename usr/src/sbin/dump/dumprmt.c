@@ -5,15 +5,9 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumprmt.c	1.3 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -36,7 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/in.h>
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_define
@@ -155,6 +161,51 @@ end_macro
 
 begin_block
 block|{
+specifier|static
+name|struct
+name|servent
+modifier|*
+name|sp
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+literal|0
+condition|)
+block|{
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"shell"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"rdump: shell/tcp: unknown service\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|rmtape
 operator|=
 name|rcmd
@@ -162,7 +213,9 @@ argument_list|(
 operator|&
 name|rmtpeer
 argument_list|,
-name|IPPORT_CMDSERVER
+name|sp
+operator|->
+name|s_port
 argument_list|,
 literal|"root"
 argument_list|,
