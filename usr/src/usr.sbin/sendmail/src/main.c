@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.42 (Berkeley) %G%"
+literal|"@(#)main.c	6.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -797,16 +797,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* 	**  Set default values for variables. 	**	These cannot be in initialized data space. 	*/
-end_comment
-
-begin_expr_stmt
-name|setdefaults
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* set up the blank envelope */
 end_comment
 
@@ -864,6 +854,19 @@ name|CurEnv
 operator|=
 operator|&
 name|MainEnvelope
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* 	**  Set default values for variables. 	**	These cannot be in initialized data space. 	*/
+end_comment
+
+begin_expr_stmt
+name|setdefaults
+argument_list|(
+operator|&
+name|BlankEnvelope
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -2058,6 +2061,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|TRUE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2270,6 +2275,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|TRUE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2286,6 +2293,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|TRUE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2302,6 +2311,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|TRUE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2695,6 +2706,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|FALSE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 comment|/* turn on interactive delivery */
@@ -2707,6 +2720,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|FALSE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 block|}
@@ -3928,7 +3943,9 @@ name|OpMode
 operator|==
 name|MD_VERIFY
 condition|)
-name|SendMode
+name|CurEnv
+operator|->
+name|e_sendmode
 operator|=
 name|SM_VERIFY
 expr_stmt|;
@@ -5471,7 +5488,9 @@ name|HoldErrs
 operator|=
 name|TRUE
 expr_stmt|;
-name|ErrorMode
+name|CurEnv
+operator|->
+name|e_errormode
 operator|=
 name|EM_MAIL
 expr_stmt|;

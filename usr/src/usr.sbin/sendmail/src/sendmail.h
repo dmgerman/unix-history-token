@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.29		%G%"
+literal|"@(#)sendmail.h	6.30		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1229,6 +1229,14 @@ name|short
 name|e_nsent
 decl_stmt|;
 comment|/* number of sends since checkpoint */
+name|short
+name|e_sendmode
+decl_stmt|;
+comment|/* message send mode */
+name|short
+name|e_errormode
+decl_stmt|;
+comment|/* error return mode */
 name|int
 function_decl|(
 modifier|*
@@ -2571,15 +2579,8 @@ begin_comment
 comment|/* freeze the configuration file */
 end_comment
 
-begin_decl_stmt
-name|EXTERN
-name|char
-name|SendMode
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* send mode, see below */
+comment|/* values for e_sendmode -- send modes */
 end_comment
 
 begin_define
@@ -2652,15 +2653,8 @@ begin_comment
 comment|/* unspecified, use SendMode */
 end_comment
 
-begin_decl_stmt
-name|EXTERN
-name|char
-name|ErrorMode
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* error mode, see below */
+comment|/* values for e_errormode -- error handling modes */
 end_comment
 
 begin_define

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.50 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5627,7 +5627,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SENDALL -- actually send all the messages. ** **	Parameters: **		e -- the envelope to send. **		mode -- the delivery mode to use.  If SM_DEFAULT, use **			the current SendMode. ** **	Returns: **		none. ** **	Side Effects: **		Scans the send lists and sends everything it finds. **		Delivers any appropriate error messages. **		If we are running in a non-interactive mode, takes the **			appropriate action. */
+comment|/* **  SENDALL -- actually send all the messages. ** **	Parameters: **		e -- the envelope to send. **		mode -- the delivery mode to use.  If SM_DEFAULT, use **			the current e->e_sendmode. ** **	Returns: **		none. ** **	Side Effects: **		Scans the send lists and sends everything it finds. **		Delivers any appropriate error messages. **		If we are running in a non-interactive mode, takes the **			appropriate action. */
 end_comment
 
 begin_macro
@@ -5692,7 +5692,9 @@ parameter_list|()
 function_decl|;
 name|mode
 operator|=
-name|SendMode
+name|e
+operator|->
+name|e_sendmode
 expr_stmt|;
 if|if
 condition|(
@@ -6302,6 +6304,12 @@ name|NULL
 expr_stmt|;
 name|ee
 operator|->
+name|e_errormode
+operator|=
+name|EM_MAIL
+expr_stmt|;
+name|ee
+operator|->
 name|e_sibling
 operator|=
 name|splitenv
@@ -6588,6 +6596,12 @@ operator|.
 name|q_flags
 operator||=
 name|QDONTSEND
+expr_stmt|;
+name|e
+operator|->
+name|e_errormode
+operator|=
+name|EM_MAIL
 expr_stmt|;
 block|}
 ifdef|#

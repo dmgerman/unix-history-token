@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.24 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,7 +487,9 @@ operator|->
 name|e_flags
 argument_list|)
 operator|&&
-name|ErrorMode
+name|e
+operator|->
+name|e_errormode
 operator|!=
 name|EM_QUIET
 condition|)

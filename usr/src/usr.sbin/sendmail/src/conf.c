@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.37 (Berkeley) %G%"
+literal|"@(#)conf.c	6.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -332,13 +332,20 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETDEFAULTS -- set default values ** **	Because of the way freezing is done, these must be initialized **	using direct code. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Initializes a bunch of global variables to their **		default values. */
+comment|/* **  SETDEFAULTS -- set default values ** **	Because of the way freezing is done, these must be initialized **	using direct code. ** **	Parameters: **		e -- the default envelope. ** **	Returns: **		none. ** **	Side Effects: **		Initializes a bunch of global variables to their **		default values. */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|setdefaults
-argument_list|()
-end_macro
+argument_list|(
+name|e
+argument_list|)
+specifier|register
+name|ENVELOPE
+operator|*
+name|e
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -414,12 +421,16 @@ operator|=
 literal|25
 expr_stmt|;
 comment|/* option h */
-name|SendMode
+name|e
+operator|->
+name|e_sendmode
 operator|=
 name|SM_FORK
 expr_stmt|;
 comment|/* option d */
-name|ErrorMode
+name|e
+operator|->
+name|e_errormode
 operator|=
 name|EM_PRINT
 expr_stmt|;

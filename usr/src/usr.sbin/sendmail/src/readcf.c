@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.17 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3379,7 +3379,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETOPTION -- set global processing option ** **	Parameters: **		opt -- option name. **		val -- option value (as a text string). **		sticky -- if set, don't let other setoptions override **			this value. ** **	Returns: **		none. ** **	Side Effects: **		Sets options as implied by the arguments. */
+comment|/* **  SETOPTION -- set global processing option ** **	Parameters: **		opt -- option name. **		val -- option value (as a text string). **		sticky -- if set, don't let other setoptions override **			this value. **		e -- the main envelope. ** **	Returns: **		none. ** **	Side Effects: **		Sets options as implied by the arguments. */
 end_comment
 
 begin_decl_stmt
@@ -3492,6 +3492,14 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|sticky
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -3730,7 +3738,9 @@ block|{
 case|case
 literal|'\0'
 case|:
-name|SendMode
+name|e
+operator|->
+name|e_sendmode
 operator|=
 name|SM_DELIVER
 expr_stmt|;
@@ -3759,7 +3769,9 @@ case|case
 name|SM_FORK
 case|:
 comment|/* fork after verification */
-name|SendMode
+name|e
+operator|->
+name|e_sendmode
 operator|=
 operator|*
 name|val
@@ -3847,7 +3859,9 @@ case|case
 name|EM_PRINT
 case|:
 comment|/* print errors normally (default) */
-name|ErrorMode
+name|e
+operator|->
+name|e_errormode
 operator|=
 operator|*
 name|val

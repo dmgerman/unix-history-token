@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.35 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.36 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.35 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.36 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3150,7 +3150,9 @@ name|QueueRun
 operator|=
 name|TRUE
 expr_stmt|;
-name|ErrorMode
+name|e
+operator|->
+name|e_errormode
 operator|=
 name|EM_MAIL
 expr_stmt|;

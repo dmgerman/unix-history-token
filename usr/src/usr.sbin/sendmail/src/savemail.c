@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.24 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,9 +215,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nsavemail, ErrorMode = %c\n  e_from="
+literal|"\nsavemail, errormode = %c\n  e_from="
 argument_list|,
-name|ErrorMode
+name|e
+operator|->
+name|e_errormode
 argument_list|)
 expr_stmt|;
 name|printaddr
@@ -310,7 +312,9 @@ comment|/* 	**  Basic state machine. 	** 	**	This machine runs through the follo
 comment|/* determine starting state */
 switch|switch
 condition|(
-name|ErrorMode
+name|e
+operator|->
+name|e_errormode
 condition|)
 block|{
 case|case
@@ -357,7 +361,11 @@ return|return;
 default|default:
 name|syserr
 argument_list|(
-literal|"554 savemail: ErrorMode x%x\n"
+literal|"554 savemail: bogus errormode x%x\n"
+argument_list|,
+name|e
+operator|->
+name|e_errormode
 argument_list|)
 expr_stmt|;
 name|state
