@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.17	83/05/27	*/
+comment|/*	kern_sig.c	5.18	83/05/30	*/
 end_comment
 
 begin_include
@@ -287,7 +287,7 @@ decl_stmt|;
 if|if
 condition|(
 name|signo
-operator|==
+operator|<
 literal|0
 operator|||
 name|signo
@@ -339,6 +339,10 @@ operator|(
 name|ESRCH
 operator|)
 return|;
+if|if
+condition|(
+name|signo
+condition|)
 name|psignal
 argument_list|(
 name|p
@@ -523,6 +527,10 @@ continue|continue;
 name|f
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|signo
+condition|)
 name|psignal
 argument_list|(
 name|p
