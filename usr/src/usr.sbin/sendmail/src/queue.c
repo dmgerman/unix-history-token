@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.17 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.18 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.17 (Berkeley) %G%"
+literal|"@(#)queue.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2292,6 +2292,8 @@ expr_stmt|;
 name|clearenvelope
 argument_list|(
 name|CurEnv
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|QueueRun

@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.16 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.17 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.16 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2278,6 +2278,8 @@ expr_stmt|;
 name|clearenvelope
 argument_list|(
 name|CurEnv
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}

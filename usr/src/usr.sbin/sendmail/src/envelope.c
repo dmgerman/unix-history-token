@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)envelope.c	5.11 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,13 @@ parameter_list|()
 function|;
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|ENVELOPE
+name|BlankEnvelope
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|parent
 operator|=
@@ -105,6 +112,8 @@ begin_expr_stmt
 name|clearenvelope
 argument_list|(
 name|e
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -627,13 +636,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CLEARENVELOPE -- clear an envelope without unlocking ** **	This is normally used by a child process to get a clean **	envelope without disturbing the parent. ** **	Parameters: **		e -- the envelope to clear. ** **	Returns: **		none. ** **	Side Effects: **		Closes files associated with the envelope. **		Marks the envelope as unallocated. */
+comment|/* **  CLEARENVELOPE -- clear an envelope without unlocking ** **	This is normally used by a child process to get a clean **	envelope without disturbing the parent. ** **	Parameters: **		e -- the envelope to clear. **		fullclear - if set, the current envelope is total **			garbage and should be ignored; otherwise, **			release any resources it may indicate. ** **	Returns: **		none. ** **	Side Effects: **		Closes files associated with the envelope. **		Marks the envelope as unallocated. */
 end_comment
 
 begin_expr_stmt
 name|clearenvelope
 argument_list|(
 name|e
+argument_list|,
+name|fullclear
 argument_list|)
 specifier|register
 name|ENVELOPE
@@ -641,6 +652,12 @@ operator|*
 name|e
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|fullclear
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -659,6 +676,12 @@ specifier|extern
 name|ENVELOPE
 name|BlankEnvelope
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|fullclear
+condition|)
+block|{
 comment|/* clear out any file information */
 if|if
 condition|(
@@ -696,6 +719,7 @@ operator|->
 name|e_dfp
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* now clear out the data */
 name|STRUCTCOPY
 argument_list|(
