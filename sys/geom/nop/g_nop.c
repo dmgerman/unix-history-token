@@ -931,12 +931,6 @@ name|g_nop_start
 expr_stmt|;
 name|gp
 operator|->
-name|spoiled
-operator|=
-name|g_nop_orphan
-expr_stmt|;
-name|gp
-operator|->
 name|orphan
 operator|=
 name|g_nop_orphan
