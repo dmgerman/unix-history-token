@@ -4380,6 +4380,35 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* phk's main */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"phk"
+argument_list|)
+condition|)
+block|{
+return|return
+name|Xmain
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+return|;
+block|}
+comment|/* paul's main */
 comment|/* Are we running as init? */
 if|if
 condition|(
