@@ -165,9 +165,9 @@ name|osf1_sysent
 block|,
 literal|0x0
 block|,
-name|NSIG
+literal|0
 block|,
-name|bsd_to_osf1_sig
+literal|0
 block|,
 literal|0
 block|,
