@@ -310,13 +310,13 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|d
-operator|->
-name|d_packname
-argument_list|,
 name|ptr
 operator|+
 literal|24
+argument_list|,
+name|d
+operator|->
+name|d_packname
 argument_list|,
 literal|16
 argument_list|)
