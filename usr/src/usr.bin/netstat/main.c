@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.6 83/03/11"
+literal|"@(#)main.c	4.7 83/03/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -1136,10 +1136,9 @@ name|ctob
 argument_list|(
 name|Sysmap
 index|[
-name|btoc
-argument_list|(
 name|base
-argument_list|)
+operator|>>
+name|PGSHIFT
 index|]
 operator|.
 name|pg_pfnum
@@ -1148,11 +1147,7 @@ operator|+
 operator|(
 name|base
 operator|&
-operator|(
-name|NBPG
-operator|-
-literal|1
-operator|)
+name|PGOFSET
 operator|)
 expr_stmt|;
 block|}
