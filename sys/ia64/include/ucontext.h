@@ -41,7 +41,11 @@ typedef|typedef
 struct|struct
 name|__mcontext
 block|{
-comment|/* 	 * These fields must match the definition 	 * of struct sigcontext. That way we can support 	 * struct sigcontext and ucontext_t at the same 	 * time. 	 * 	 * We use the same layout as Linux/ia64 to make emulation 	 * easier.  	 */
+comment|/* 	 * These fields must match the definition 	 * of struct sigcontext. That way we can support 	 * struct sigcontext and ucontext_t at the same 	 * time. 	 */
+name|long
+name|mc_onstack
+decl_stmt|;
+comment|/* XXX - sigcontext compat. */
 name|unsigned
 name|long
 name|mc_flags

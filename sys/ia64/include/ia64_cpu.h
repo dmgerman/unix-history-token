@@ -673,6 +673,12 @@ parameter_list|)
 value|((x) | IA64_RR_BASE(7))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_comment
 comment|/*  * Various special ia64 instructions.  */
 end_comment
@@ -1277,6 +1283,11 @@ block|{
 asm|__asm __volatile("mov rr[%0]=%1" :: "r"(rrbase), "r"(v) : "memory");
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -22,13 +22,21 @@ file|<machine/reg.h>
 end_include
 
 begin_comment
-comment|/*  * Software trap, exception, and syscall frame.  *  * This is loosely based on the Linux pt_regs structure. When I  * understand things better, I might change it.  */
+comment|/*  * Software trap, exception, and syscall frame.  */
 end_comment
 
 begin_struct
 struct|struct
 name|trapframe
 block|{
+name|u_int64_t
+name|tf_flags
+decl_stmt|;
+define|#
+directive|define
+name|FRAME_SYSCALL
+value|1
+comment|/* syscalls use a partial trapframe */
 name|u_int64_t
 name|tf_cr_iip
 decl_stmt|;
@@ -220,9 +228,6 @@ define|#
 directive|define
 name|FRAME_R31
 value|30
-name|u_int64_t
-name|tf_pad1
-decl_stmt|;
 comment|/* 	 * We rely on the compiler to save/restore f2-f5 and 	 * f16-f31. We also tell the compiler to avoid f32-f127 	 * completely so we don't worry about them at all. 	 */
 name|struct
 name|ia64_fpreg

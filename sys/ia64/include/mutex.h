@@ -72,7 +72,7 @@ name|char
 name|STR_SIEN
 index|[]
 init|=
-literal|"mpp->mtx_saveintr& PSR_I"
+literal|"mpp->mtx_saveintr& IA64_PSR_I"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,7 +148,7 @@ name|ASS_SIEN
 parameter_list|(
 name|mpp
 parameter_list|)
-value|MPASS2((mpp)->mtx_saveintr& IA64_PSR_I), STR_SIEN)
+value|MPASS2(((mpp)->mtx_saveintr& IA64_PSR_I), STR_SIEN)
 end_define
 
 begin_define
@@ -156,7 +156,7 @@ define|#
 directive|define
 name|mtx_legal2block
 parameter_list|()
-value|((save_intr()& IA64_PSL_I)
+value|((save_intr()& IA64_PSR_I)
 end_define
 
 begin_endif

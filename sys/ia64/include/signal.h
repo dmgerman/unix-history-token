@@ -110,6 +110,10 @@ decl_stmt|;
 comment|/* signal mask to restore */
 name|unsigned
 name|long
+name|sc_onstack
+decl_stmt|;
+name|unsigned
+name|long
 name|sc_flags
 decl_stmt|;
 name|unsigned

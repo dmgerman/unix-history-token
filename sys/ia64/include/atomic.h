@@ -208,7 +208,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|static __inline u_int##width##_t				\ ia64_ld_acq_##width(volatile u_int##width##_t* p)		\ {								\ 	u_int##width_t v;					\ 								\ 	__asm __volatile ("ld" size ".acq %0=%1"		\ 			  : "r" (v)				\ 			  : "=m" (*p)				\ 			  : "memory");				\ 	return (v);						\ }								\ 								\ static __inline u_int##width##_t				\ atomic_load_acq_##width(volatile u_int##width##_t* p)		\ {								\ 	u_int##width_t v;					\ 								\ 	__asm __volatile ("ld" size ".acq %0=%1"		\ 			  : "r" (v)				\ 			  : "=m" (*p)				\ 			  : "memory");				\ 	return (v);						\ }								\ 								\ static __inline u_int##width##_t				\ atomic_load_acq_##type(volatile u_int##width##_t* p)		\ {								\ 	u_int##width_t v;					\ 								\ 	__asm __volatile ("ld" size ".acq %0=%1"		\ 			  : "r" (v)				\ 			  : "=m" (*p)				\ 			  : "memory");				\ 	return (v);						\ }								\ 							       	\ static __inline void						\ ia64_st_rel_##width(volatile u_int##width##_t* p, u_int##width##_t v)\ {								\ 	__asm __volatile ("st" size ".rel %0=%1"		\ 			  : "=m" (*p)				\ 			  : "r" (v)				\ 			  : "memory");				\ }								\ 							       	\ static __inline void						\ atomic_store_rel_##width(volatile u_int##width##_t* p, u_int##width##_t v)\ {								\ 	__asm __volatile ("st" size ".rel %0=%1"		\ 			  : "=m" (*p)				\ 			  : "r" (v)				\ 			  : "memory");				\ }								\ 							       	\ static __inline void						\ atomic_store_rel_##type(volatile u_int##width##_t* p, u_int##width##_t v)\ {								\ 	__asm __volatile ("st" size ".rel %0=%1"		\ 			  : "=m" (*p)				\ 			  : "r" (v)				\ 			  : "memory");				\ }
+value|static __inline u_int##width##_t				\ ia64_ld_acq_##width(volatile u_int##width##_t* p)		\ {								\ 	u_int##width##_t v;					\ 								\ 	__asm __volatile ("ld" size ".acq %0=%1"		\ 			  : "=r" (v)				\ 			  : "m" (*p)				\ 			  : "memory");				\ 	return (v);						\ }								\ 								\ static __inline u_int##width##_t				\ atomic_load_acq_##width(volatile u_int##width##_t* p)		\ {								\ 	u_int##width##_t v;					\ 								\ 	__asm __volatile ("ld" size ".acq %0=%1"		\ 			  : "=r" (v)				\ 			  : "m" (*p)				\ 			  : "memory");				\ 	return (v);						\ }								\ 								\ static __inline u_int##width##_t				\ atomic_load_acq_##type(volatile u_int##width##_t* p)		\ {								\ 	u_int##width##_t v;					\ 								\ 	__asm __volatile ("ld" size ".acq %0=%1"		\ 			  : "=r" (v)				\ 			  : "m" (*p)				\ 			  : "memory");				\ 	return (v);						\ }								\ 							       	\ static __inline void						\ ia64_st_rel_##width(volatile u_int##width##_t* p, u_int##width##_t v)\ {								\ 	__asm __volatile ("st" size ".rel %0=%1"		\ 			  : "=m" (*p)				\ 			  : "r" (v)				\ 			  : "memory");				\ }								\ 							       	\ static __inline void						\ atomic_store_rel_##width(volatile u_int##width##_t* p, u_int##width##_t v)\ {								\ 	__asm __volatile ("st" size ".rel %0=%1"		\ 			  : "=m" (*p)				\ 			  : "r" (v)				\ 			  : "memory");				\ }								\ 							       	\ static __inline void						\ atomic_store_rel_##type(volatile u_int##width##_t* p, u_int##width##_t v)\ {								\ 	__asm __volatile ("st" size ".rel %0=%1"		\ 			  : "=m" (*p)				\ 			  : "r" (v)				\ 			  : "memory");				\ }
 end_define
 
 begin_macro
@@ -979,6 +979,66 @@ directive|define
 name|atomic_subtract_rel_long
 value|atomic_subtract_rel_64
 end_define
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_set_ptr
+parameter_list|(
+specifier|volatile
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+name|atomic_set_64
+argument_list|(
+operator|(
+specifier|volatile
+name|u_int64_t
+operator|*
+operator|)
+name|p
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_clear_ptr
+parameter_list|(
+specifier|volatile
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+name|atomic_clear_64
+argument_list|(
+operator|(
+specifier|volatile
+name|u_int64_t
+operator|*
+operator|)
+name|p
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
