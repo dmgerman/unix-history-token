@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.31 (Berkeley) 5/20/95  * $Id: ffs_vfsops.c,v 1.66 1998/01/22 17:30:17 dyson Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.31 (Berkeley) 5/20/95  * $Id: ffs_vfsops.c,v 1.67 1998/02/01 01:59:12 dyson Exp $  */
 end_comment
 
 begin_include
@@ -3961,9 +3961,6 @@ name|allerror
 init|=
 literal|0
 decl_stmt|;
-name|u_long
-name|fmask
-decl_stmt|;
 name|fs
 operator|=
 name|ump
@@ -4002,34 +3999,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Write back each (modified) inode. 	 */
-name|fmask
-operator|=
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_NOATIME
-operator|)
-condition|?
-operator|(
-name|IN_CHANGE
-operator||
-name|IN_MODIFIED
-operator||
-name|IN_UPDATE
-operator|)
-else|:
-operator|(
-name|IN_CHANGE
-operator||
-name|IN_MODIFIED
-operator||
-name|IN_UPDATE
-operator||
-name|IN_ACCESS
-operator|)
-expr_stmt|;
 name|simple_lock
 argument_list|(
 operator|&
@@ -4100,7 +4069,15 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|fmask
+operator|(
+name|IN_ACCESS
+operator||
+name|IN_CHANGE
+operator||
+name|IN_MODIFIED
+operator||
+name|IN_UPDATE
+operator|)
 operator|)
 operator|==
 literal|0
@@ -4239,6 +4216,7 @@ operator|&
 name|tv
 argument_list|)
 expr_stmt|;
+comment|/* UFS_UPDATE(vp,&tv,&tv, waitfor == MNT_WAIT); */
 name|UFS_UPDATE
 argument_list|(
 name|vp
