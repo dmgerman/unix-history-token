@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwadd.c	3.3 83/08/16"
+literal|"@(#)wwadd.c	3.4 83/09/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,9 +64,8 @@ name|ww_back
 operator|!=
 literal|0
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
+return|return;
+comment|/* sanity */
 name|w1
 operator|->
 name|ww_order
@@ -176,7 +175,7 @@ name|i
 init|=
 name|w1
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|t
 decl_stmt|;
@@ -197,7 +196,7 @@ name|i
 operator|<
 name|w1
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|b
 condition|;
@@ -213,7 +212,7 @@ name|j
 init|=
 name|w1
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|nc
 decl_stmt|;
@@ -222,6 +221,7 @@ name|char
 modifier|*
 name|win
 init|=
+operator|&
 name|w1
 operator|->
 name|ww_win
@@ -233,6 +233,19 @@ operator|->
 name|ww_w
 operator|.
 name|t
+index|]
+index|[
+name|w1
+operator|->
+name|ww_i
+operator|.
+name|l
+operator|-
+name|w1
+operator|->
+name|ww_w
+operator|.
+name|l
 index|]
 decl_stmt|;
 specifier|register
@@ -248,7 +261,7 @@ index|]
 index|[
 name|w1
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|l
 index|]
@@ -267,7 +280,7 @@ index|]
 index|[
 name|w1
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|l
 index|]
@@ -278,6 +291,7 @@ name|ww_char
 modifier|*
 name|buf
 init|=
+operator|&
 name|w1
 operator|->
 name|ww_buf
@@ -293,6 +307,19 @@ operator|->
 name|ww_w
 operator|.
 name|t
+index|]
+index|[
+name|w1
+operator|->
+name|ww_i
+operator|.
+name|l
+operator|-
+name|w1
+operator|->
+name|ww_w
+operator|.
+name|l
 index|]
 decl_stmt|;
 while|while

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.12 83/09/01	  */
+comment|/*  *	@(#)ww.h	3.13 83/09/14	  */
 end_comment
 
 begin_include
@@ -136,6 +136,11 @@ name|ww_dim
 name|ww_w
 decl_stmt|;
 comment|/* window dimemsions */
+name|struct
+name|ww_dim
+name|ww_i
+decl_stmt|;
+comment|/* the part inside the screen */
 name|int
 name|ww_nline
 decl_stmt|;

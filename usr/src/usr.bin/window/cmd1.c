@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.10 83/08/31"
+literal|"@(#)cmd1.c	3.11 83/09/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -788,13 +788,33 @@ return|;
 if|if
 condition|(
 name|row
+operator|+
+name|nrow
 operator|<=
 literal|0
+operator|||
+name|row
+operator|>
+name|wwnrow
+operator|-
+literal|1
+operator|||
+name|col
+operator|+
+name|ncol
+operator|<=
+literal|0
+operator|||
+name|col
+operator|>
+name|wwncol
+operator|-
+literal|1
 condition|)
 block|{
 name|error
 argument_list|(
-literal|"Bad row number."
+literal|"Illegal window size or position."
 argument_list|)
 expr_stmt|;
 return|return

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwflush.c	3.3 83/08/15"
+literal|"@(#)wwflush.c	3.4 83/09/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,37 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|wwcursorrow
+operator|<
+literal|0
+operator|||
+name|wwcursorrow
+operator|>=
+name|wwnrow
+operator|||
+name|wwcursorcol
+operator|<
+literal|0
+operator|||
+name|wwcursorcol
+operator|>=
+name|wwncol
+condition|)
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_move
+call|)
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 call|(
 modifier|*
 name|tt

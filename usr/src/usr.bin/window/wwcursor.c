@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwcursor.c	3.1 83/08/19"
+literal|"@(#)wwcursor.c	3.2 83/09/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,6 @@ name|win
 operator|^=
 name|wwcursormodes
 expr_stmt|;
-block|}
 name|r
 operator|=
 name|wwcurrow
@@ -176,6 +175,41 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|<
+name|w
+operator|->
+name|ww_i
+operator|.
+name|t
+operator|||
+name|r
+operator|>=
+name|w
+operator|->
+name|ww_i
+operator|.
+name|b
+operator|||
+name|c
+operator|<
+name|w
+operator|->
+name|ww_i
+operator|.
+name|l
+operator|||
+name|c
+operator|>=
+name|w
+operator|->
+name|ww_i
+operator|.
+name|r
+condition|)
+return|return;
 if|if
 condition|(
 name|wwsmap
@@ -210,6 +244,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

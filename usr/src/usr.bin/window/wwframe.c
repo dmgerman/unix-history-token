@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwframe.c	3.8 83/08/23"
+literal|"@(#)wwframe.c	3.9 83/09/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,7 +129,7 @@ name|c
 operator|=
 name|w
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|l
 operator|-
@@ -184,7 +184,7 @@ name|c
 operator|<
 name|w
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|r
 condition|;
@@ -357,7 +357,7 @@ name|c
 operator|=
 name|w
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|l
 operator|-
@@ -412,7 +412,7 @@ name|c
 operator|<
 name|w
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|r
 condition|;
@@ -573,7 +573,7 @@ name|r
 operator|=
 name|w
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|t
 operator|-
@@ -623,7 +623,7 @@ name|r
 operator|<
 name|w
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|b
 condition|;
@@ -792,7 +792,7 @@ name|r
 operator|=
 name|w
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|t
 operator|-
@@ -840,7 +840,7 @@ name|r
 operator|<
 name|w
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|b
 condition|;
@@ -1046,7 +1046,7 @@ name|rr
 operator|<
 name|f
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|t
 operator|||
@@ -1054,7 +1054,7 @@ name|rr
 operator|>=
 name|f
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|b
 operator|||
@@ -1062,7 +1062,7 @@ name|cc
 operator|<
 name|f
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|l
 operator|||
@@ -1070,7 +1070,7 @@ name|cc
 operator|>=
 name|f
 operator|->
-name|ww_w
+name|ww_i
 operator|.
 name|r
 condition|)
