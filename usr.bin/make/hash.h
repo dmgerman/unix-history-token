@@ -187,9 +187,11 @@ name|Hash_Entry
 modifier|*
 name|Hash_FindEntry
 parameter_list|(
+specifier|const
 name|Hash_Table
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -204,6 +206,7 @@ parameter_list|(
 name|Hash_Table
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

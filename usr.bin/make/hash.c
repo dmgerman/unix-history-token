@@ -285,10 +285,12 @@ name|Hash_Entry
 modifier|*
 name|Hash_FindEntry
 parameter_list|(
+specifier|const
 name|Hash_Table
 modifier|*
 name|t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|key
@@ -301,6 +303,7 @@ decl_stmt|;
 name|unsigned
 name|h
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -407,6 +410,7 @@ name|Hash_Table
 modifier|*
 name|t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|key
@@ -424,6 +428,7 @@ name|unsigned
 name|int
 name|h
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
