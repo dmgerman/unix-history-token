@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3430,14 +3430,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|radix_tree_head
-modifier|*
-name|x25_rnhead
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|pk_init
 argument_list|()
@@ -3455,11 +3447,12 @@ function_decl|;
 name|rn_inithead
 argument_list|(
 operator|&
-name|x25_rnhead
+name|rt_tables
+index|[
+name|AF_CCITT
+index|]
 argument_list|,
 literal|32
-argument_list|,
-name|AF_CCITT
 argument_list|)
 expr_stmt|;
 name|x25_dgram_sockmask
