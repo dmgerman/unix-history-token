@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.31	82/06/14	*/
+comment|/*	init_main.c	4.32	82/07/15	*/
 end_comment
 
 begin_include
@@ -389,6 +389,14 @@ expr_stmt|;
 name|bswinit
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GPROF
+name|kmstartup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|fs
 operator|=
 name|mountfs
