@@ -51,6 +51,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_comment
 comment|/*  * sizeof(word) MUST BE A POWER OF TWO  * SO THAT wmask BELOW IS ALL ONES  */
 end_comment
@@ -216,7 +222,7 @@ comment|/* 		 * Copy forward. 		 */
 name|t
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|src
 expr_stmt|;
@@ -227,7 +233,7 @@ operator|(
 name|t
 operator||
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dst
 operator|)
@@ -242,7 +248,7 @@ operator|(
 name|t
 operator|^
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dst
 operator|)
@@ -328,7 +334,7 @@ expr_stmt|;
 name|t
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|src
 expr_stmt|;
@@ -338,7 +344,7 @@ operator|(
 name|t
 operator||
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dst
 operator|)
@@ -352,7 +358,7 @@ operator|(
 name|t
 operator|^
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dst
 operator|)
