@@ -1883,6 +1883,12 @@ argument_list|,
 name|pp
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_sigparent
+operator|=
+name|SIGCHLD
+expr_stmt|;
 block|}
 name|p
 operator|->

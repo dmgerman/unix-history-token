@@ -1622,6 +1622,12 @@ argument_list|,
 name|initproc
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_sigparent
+operator|=
+name|SIGCHLD
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
