@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gcore.c,v 1.8 1998/08/24 16:25:30 wosch Exp $"
+literal|"$Id: gcore.c,v 1.9 1998/09/14 10:09:30 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<elf.h>
 end_include
 
 begin_include
@@ -777,6 +783,50 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|N_BADMAG
+argument_list|(
+name|exec
+argument_list|)
+condition|)
+block|{
+specifier|const
+name|Elf_Ehdr
+modifier|*
+name|ehdr
+init|=
+operator|(
+specifier|const
+name|Elf_Ehdr
+operator|*
+operator|)
+operator|&
+name|exec
+decl_stmt|;
+if|if
+condition|(
+name|IS_ELF
+argument_list|(
+operator|*
+name|ehdr
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"ELF executables are not supported yet"
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Invalid executable file"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* check the text segment size of the executable and the process */
 if|if
 condition|(
