@@ -1542,6 +1542,21 @@ name|ipflags
 init|=
 literal|0
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|tp
+operator|!=
+name|NULL
+operator|||
+name|m
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"tcp_respond: tp and m both NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
