@@ -1191,7 +1191,7 @@ begin_struct
 struct|struct
 name|select_args
 block|{
-name|u_int
+name|int
 name|nd
 decl_stmt|;
 name|fd_set
