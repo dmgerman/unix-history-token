@@ -1360,7 +1360,7 @@ name|u_int
 name|flags
 parameter_list|)
 block|{
-comment|/*      * If no memory preference is given, use upper 256MB slot most      * bioses use for their memory window.  Typically other bridges      * before us get in the way to assert their preferences on memory.      * Hardcoding like this sucks, so a more MD/MI way needs to be      * found to do it.      */
+comment|/*      * If no memory preference is given, use upper 2GB slot most      * bioses use for their memory window.  Typically other bridges      * before us get in the way to assert their preferences on memory.      * Hardcoding like this sucks, so a more MD/MI way needs to be      * found to do it.  This is typically only used on older laptops      * that don't have pci busses behind pci bridge, so assuming< 2GB      * is liekly OK.      */
 if|if
 condition|(
 name|type
@@ -1378,7 +1378,7 @@ literal|0UL
 condition|)
 name|start
 operator|=
-literal|0xf0000000
+literal|0x80000000
 expr_stmt|;
 return|return
 operator|(
