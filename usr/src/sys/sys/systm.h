@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -18,13 +18,25 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
 name|version
+index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* system version */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|copyright
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system copyright */
 end_comment
 
 begin_decl_stmt
@@ -128,41 +140,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|intstack
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* interrupt stack */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|icode
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* user init code */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|szicode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* size of icode */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|dev_t
 name|dumpdev
 decl_stmt|;
@@ -231,30 +208,6 @@ begin_comment
 comment|/* vnode equivalent to above */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|dev_t
-name|argdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* argument lists device */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vnode
-modifier|*
-name|argdev_vp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vnode equivalent to above */
-end_comment
-
 begin_struct
 specifier|extern
 struct|struct
@@ -279,6 +232,17 @@ index|[]
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|boothowto
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* reboot flags, from console subsystem */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -301,17 +265,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|boothowto
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* reboot flags, from console subsystem */
-end_comment
 
 begin_comment
 comment|/* casts to keep lint happy */
@@ -340,8 +293,20 @@ value|_remque((caddr_t)q)
 end_define
 
 begin_comment
-comment|/*  * General function prototypes.  */
+comment|/*  * General function declarations.  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|nullop
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -393,18 +358,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nullop
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|seltrue
 name|__P
 argument_list|(
@@ -419,6 +372,32 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|panic
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tablefull
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -460,19 +439,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|panic
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|printf
 name|__P
 argument_list|(
@@ -482,19 +448,6 @@ name|char
 operator|*
 operator|,
 operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|tablefull
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -521,18 +474,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|bcmp
+name|void
+name|bcopy
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
-name|str1
+name|from
 operator|,
 name|void
 operator|*
-name|str2
+name|to
 operator|,
 name|u_int
 name|len
@@ -543,7 +496,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|bcopy
+name|ovbcopy
 name|__P
 argument_list|(
 operator|(
@@ -580,18 +533,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|ovbcopy
+name|int
+name|bcmp
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
-name|from
+name|str1
 operator|,
 name|void
 operator|*
-name|to
+name|str2
 operator|,
 name|u_int
 name|len
@@ -616,20 +569,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|copyin
+name|copystr
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
-name|udaddr
+name|kfaddr
 operator|,
 name|void
 operator|*
-name|kaddr
+name|kdaddr
 operator|,
 name|u_int
 name|len
+operator|,
+name|u_int
+operator|*
+name|done
 operator|)
 argument_list|)
 decl_stmt|;
@@ -662,27 +619,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|copyout
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|kaddr
-operator|,
-name|void
-operator|*
-name|udaddr
-operator|,
-name|u_int
-name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|copyoutstr
 name|__P
 argument_list|(
@@ -708,24 +644,41 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|copystr
+name|copyin
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
-name|kfaddr
+name|udaddr
 operator|,
 name|void
 operator|*
-name|kdaddr
+name|kaddr
 operator|,
 name|u_int
 name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|copyout
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|kaddr
+operator|,
+name|void
+operator|*
+name|udaddr
 operator|,
 name|u_int
-operator|*
-name|done
+name|len
 operator|)
 argument_list|)
 decl_stmt|;
@@ -772,34 +725,6 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|fuiword
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|base
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fuword
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|base
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|subyte
 name|__P
 argument_list|(
@@ -834,16 +759,27 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|suiword
+name|fuword
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
 name|base
-operator|,
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|word
+name|fuiword
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|base
 operator|)
 argument_list|)
 decl_stmt|;
@@ -868,32 +804,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ffs
+name|suiword
 name|__P
 argument_list|(
 operator|(
-name|long
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|locc
-name|__P
-argument_list|(
-operator|(
-name|int
-name|mask
-operator|,
-name|char
+name|void
 operator|*
-name|cp
+name|base
 operator|,
-name|unsigned
-name|size
+name|int
+name|word
 operator|)
 argument_list|)
 decl_stmt|;
@@ -938,6 +858,39 @@ operator|,
 name|char
 operator|*
 name|cp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|locc
+name|__P
+argument_list|(
+operator|(
+name|int
+name|mask
+operator|,
+name|char
+operator|*
+name|cp
+operator|,
+name|unsigned
+name|size
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ffs
+name|__P
+argument_list|(
+operator|(
+name|long
+name|value
 operator|)
 argument_list|)
 decl_stmt|;
