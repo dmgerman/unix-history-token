@@ -154,8 +154,16 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.3"
+value|"2.4"
 end_define
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef ssize_t */
+end_comment
 
 begin_comment
 comment|/* Hack for Visual C++ suggested by irox. */
@@ -281,6 +289,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the memmove function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MEMMOVE
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the munmap function.  */
 end_comment
 
@@ -386,6 +405,14 @@ directive|define
 name|HAVE_STRERROR
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the wctype function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_WCTYPE */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<argz.h> header file.  */
@@ -557,6 +584,41 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_LIBI */
 end_comment
+
+begin_comment
+comment|/* Number of bits in a file offset, on hosts where this is settable. */
+end_comment
+
+begin_comment
+comment|/* #undef _FILE_OFFSET_BITS */
+end_comment
+
+begin_comment
+comment|/* Define to make fseeko etc. visible, on some hosts. */
+end_comment
+
+begin_comment
+comment|/* #undef _LARGEFILE_SOURCE */
+end_comment
+
+begin_comment
+comment|/* Define for large files, on AIX-style hosts. */
+end_comment
+
+begin_comment
+comment|/* #undef _LARGE_FILES */
+end_comment
+
+begin_comment
+comment|/* Define if compiler has function prototypes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROTOTYPES
+value|1
+end_define
 
 end_unit
 
