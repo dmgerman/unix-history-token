@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: head.c,v 1.3.2.2 1997/08/29 05:29:20 imp Exp $"
+literal|"$Id: head.c,v 1.3.2.3 1997/09/15 08:17:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,7 +634,7 @@ if|if
 condition|(
 name|readlen
 operator|==
-name|EOF
+literal|0
 condition|)
 break|break;
 if|if
