@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_qe.c	7.2 (Berkeley) %G% */
+comment|/*	@(#)if_qe.c	7.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -2823,12 +2823,21 @@ if|if
 condition|(
 name|bcmp
 argument_list|(
-operator|(
+call|(
 name|caddr_t
+call|)
+argument_list|(
+operator|(
+expr|struct
+name|ether_header
+operator|*
 operator|)
 name|ifxp
 operator|->
 name|ifw_addr
+argument_list|)
+operator|->
+name|ether_dhost
 argument_list|,
 operator|(
 name|caddr_t
@@ -2853,6 +2862,12 @@ operator|->
 name|ifrw
 argument_list|,
 name|len
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_header
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3057,6 +3072,17 @@ name|status1
 operator|&
 name|QE_ERROR
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|status1
+operator|&
+name|QE_RUNT
+operator|)
+operator|==
+literal|0
+condition|)
 name|sc
 operator|->
 name|is_if
@@ -3064,6 +3090,7 @@ operator|.
 name|if_ierrors
 operator|++
 expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* 			 * We don't process setup packets. 			 */
