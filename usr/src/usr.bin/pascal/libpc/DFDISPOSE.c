@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)DFDISPOSE.c	4.2	(Berkeley)	%G%"
+literal|"@(#)DFDISPOSE.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,6 +158,10 @@ condition|(
 name|next
 operator|!=
 name|FILNIL
+operator|&&
+name|start
+operator|<=
+name|next
 operator|&&
 name|next
 operator|<
