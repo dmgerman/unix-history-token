@@ -88,6 +88,34 @@ file|"pk_var.h"
 end_include
 
 begin_comment
+comment|/*  * forward references  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|old_to_new
+argument_list|(
+expr|struct
+name|mbuf
+operator|*
+name|m
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|new_to_old
+argument_list|(
+expr|struct
+name|mbuf
+operator|*
+name|m
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  *   *  X.25 Packet level protocol interface to socket abstraction.  *  *  Process an X.25 user request on a logical channel.  If this is a send  *  request then m is the mbuf chain of the send data. If this is a timer  *  expiration (called from the software clock routine) them timertype is  *  the particular timer.  *  */
 end_comment
 
