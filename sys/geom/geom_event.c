@@ -174,7 +174,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx
-name|g_doorlock
+name|g_eventlock
 decl_stmt|;
 end_decl_stmt
 
@@ -296,7 +296,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|g_doorlock
+name|g_eventlock
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -312,7 +312,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|g_doorlock
+name|g_eventlock
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -854,7 +854,7 @@ block|{
 name|mtx_lock
 argument_list|(
 operator|&
-name|g_doorlock
+name|g_eventlock
 argument_list|)
 expr_stmt|;
 name|pp
@@ -884,7 +884,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|g_doorlock
+name|g_eventlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1285,7 +1285,7 @@ block|{
 name|mtx_init
 argument_list|(
 operator|&
-name|g_doorlock
+name|g_eventlock
 argument_list|,
 literal|"GEOM orphanage"
 argument_list|,
