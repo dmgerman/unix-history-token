@@ -193,7 +193,7 @@ index|]
 condition|)
 block|{
 comment|/* Skip any whitespace */
-while|while
+if|if
 condition|(
 operator|(
 operator|*
@@ -231,6 +231,13 @@ name|ihp
 operator|==
 literal|'#'
 operator|)
+operator|||
+operator|(
+operator|*
+name|ihp
+operator|==
+literal|'\0'
+operator|)
 condition|)
 break|break;
 comment|/* Found a token */
@@ -262,6 +269,23 @@ operator|*
 name|ihp
 operator|!=
 literal|'#'
+operator|)
+operator|&&
+operator|(
+operator|*
+name|ihp
+operator|!=
+literal|'\0'
+operator|)
+operator|&&
+operator|(
+name|ihp
+operator|<
+operator|&
+name|image_header
+index|[
+name|MAXSHELLCMDLEN
+index|]
 operator|)
 condition|)
 block|{
@@ -467,14 +491,16 @@ index|]
 condition|)
 block|{
 comment|/* Skip whitespace */
-while|while
+if|if
 condition|(
 operator|(
 operator|*
 name|ihp
 operator|==
 literal|' '
+operator|)
 operator|||
+operator|(
 operator|*
 name|ihp
 operator|==
@@ -502,6 +528,13 @@ operator|*
 name|ihp
 operator|==
 literal|'#'
+operator|)
+operator|||
+operator|(
+operator|*
+name|ihp
+operator|==
+literal|'\0'
 operator|)
 condition|)
 break|break;
@@ -534,6 +567,23 @@ operator|*
 name|ihp
 operator|!=
 literal|'#'
+operator|)
+operator|&&
+operator|(
+operator|*
+name|ihp
+operator|!=
+literal|'\0'
+operator|)
+operator|&&
+operator|(
+name|ihp
+operator|<
+operator|&
+name|image_header
+index|[
+name|MAXSHELLCMDLEN
+index|]
 operator|)
 condition|)
 block|{
