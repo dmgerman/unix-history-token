@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	5.10 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,6 +626,8 @@ name|fsid
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|nodaemon
 decl_stmt|;
 name|int
 name|opt
@@ -643,6 +645,8 @@ name|optind
 decl_stmt|;
 name|cmd_err
 operator|=
+name|nodaemon
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -656,7 +660,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sm"
+literal|"smd"
 argument_list|)
 operator|)
 operator|!=
@@ -681,6 +685,14 @@ case|case
 literal|'m'
 case|:
 name|do_mmap
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|nodaemon
 operator|=
 literal|1
 expr_stmt|;
@@ -713,7 +725,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: lfs_cleanerd [-sm] fs_name"
+literal|"usage: lfs_cleanerd [-smd] fs_name"
 argument_list|)
 expr_stmt|;
 name|fs_name
@@ -770,6 +782,31 @@ name|fs_name
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|nodaemon
+condition|)
+comment|/* should we become a daemon, chdir to /& close fd's */
+if|if
+condition|(
+name|daemon
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"lfs_cleanerd: couldn't become a daemon!"
+argument_list|)
+expr_stmt|;
 name|timeout
 operator|.
 name|tv_sec
