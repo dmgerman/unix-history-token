@@ -4137,6 +4137,12 @@ operator|=
 operator|*
 name|flagsp
 expr_stmt|;
+name|obj
+operator|=
+name|vp
+operator|->
+name|v_object
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -4149,15 +4155,9 @@ block|{
 comment|/* 		 * Get the proper underlying object 		 */
 if|if
 condition|(
-name|VOP_GETVOBJECT
-argument_list|(
-name|vp
-argument_list|,
-operator|&
 name|obj
-argument_list|)
-operator|!=
-literal|0
+operator|==
+name|NULL
 condition|)
 block|{
 name|error

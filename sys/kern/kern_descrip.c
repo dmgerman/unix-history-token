@@ -9127,7 +9127,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like fget() but loads the underlying vnode, or returns an error if  * the descriptor does not represent a vnode.  Note that pipes use vnodes  * but never have VM objects (so VOP_GETVOBJECT() calls will return an  * error).  The returned vnode will be vref()d.  *  * XXX: what about the unused flags ?  */
+comment|/*  * Like fget() but loads the underlying vnode, or returns an error if  * the descriptor does not represent a vnode.  Note that pipes use vnodes  * but never have VM objects.  The returned vnode will be vref()d.  *  * XXX: what about the unused flags ?  */
 end_comment
 
 begin_function
