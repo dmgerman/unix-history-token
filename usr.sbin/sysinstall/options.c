@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: options.c,v 1.10 1995/10/16 23:02:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: options.c,v 1.11 1995/10/17 02:57:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -110,30 +110,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Nuke all the flags */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|resetFlags
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-block|{
-name|OptFlags
-operator|=
-name|OPT_DEFAULT_FLAGS
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Show our little logo */
 end_comment
 
@@ -149,7 +125,7 @@ name|str
 parameter_list|)
 block|{
 return|return
-literal|"[whap!]"
+literal|"[WHAP!]"
 return|;
 block|}
 end_function
@@ -202,7 +178,7 @@ block|,
 block|{
 literal|"Debugging"
 block|,
-literal|"Emit extra debugging output on VTY1 (ALT-F2)"
+literal|"Emit extra debugging output on VTY2 (ALT-F2)"
 block|,
 name|OPT_IS_FLAG
 block|,
@@ -294,9 +270,9 @@ literal|"Tape Blocksize"
 block|,
 literal|"Tape media block size in 512 byte blocks"
 block|,
-name|OPT_IS_FUNC
+name|OPT_IS_VAR
 block|,
-name|mediaSetTapeBlocksize
+literal|"Please enter the tape block size in 512 byte blocks"
 block|,
 name|TAPE_BLOCKSIZE
 block|,
@@ -304,9 +280,9 @@ name|varCheck
 block|}
 block|,
 block|{
-literal|"Detail Level"
+literal|"Extract Detail"
 block|,
-literal|"How to display filenames on debug screen as CPIO extracts them"
+literal|"How verbosely to display file name information during extractions"
 block|,
 name|OPT_IS_FUNC
 block|,
@@ -322,9 +298,9 @@ literal|"Release Name"
 block|,
 literal|"Which release to attempt to load from installation media"
 block|,
-name|OPT_IS_FUNC
+name|OPT_IS_VAR
 block|,
-name|installSelectRelease
+literal|"Please specify the release you wish to load"
 block|,
 name|RELNAME
 block|,
@@ -336,9 +312,9 @@ literal|"Browser Pkg"
 block|,
 literal|"This is the browser package that will be used for viewing HTML"
 block|,
-name|OPT_IS_FUNC
+name|OPT_IS_VAR
 block|,
-name|docSelectBrowserPkg
+literal|"Please specify the name of the HTML browser package:"
 block|,
 name|BROWSER_PACKAGE
 block|,
@@ -350,11 +326,25 @@ literal|"Browser Exec"
 block|,
 literal|"This is the path to the main binary of the browser package"
 block|,
-name|OPT_IS_FUNC
+name|OPT_IS_VAR
 block|,
-name|docSelectBrowserBin
+literal|"Please specify a full pathname to the HTML browser binary:"
 block|,
 name|BROWSER_BINARY
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"Config File"
+block|,
+literal|"Name of default configuration file for Load command (top menu)"
+block|,
+name|OPT_IS_VAR
+block|,
+literal|"Please specify the name of a configuration file"
+block|,
+name|CONFIG_FILE
 block|,
 name|varCheck
 block|}
@@ -366,7 +356,7 @@ literal|"Reset all flag values to defaults"
 block|,
 name|OPT_IS_FUNC
 block|,
-name|resetFlags
+name|installVarDefaults
 block|,
 literal|0
 block|,
@@ -516,6 +506,9 @@ return|;
 case|case
 name|OPT_IS_FUNC
 case|:
+case|case
+name|OPT_IS_VAR
+case|:
 if|if
 condition|(
 name|opt
@@ -647,6 +640,37 @@ name|cp
 argument_list|(
 name|NULL
 argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|opt
+operator|.
+name|type
+operator|==
+name|OPT_IS_VAR
+condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|variable_get_value
+argument_list|(
+name|opt
+operator|.
+name|aux
+argument_list|,
+name|opt
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -877,6 +901,11 @@ condition|)
 name|standout
 argument_list|()
 expr_stmt|;
+name|attron
+argument_list|(
+name|A_UNDERLINE
+argument_list|)
+expr_stmt|;
 name|mvprintw
 argument_list|(
 name|optrow
@@ -893,6 +922,11 @@ index|[
 name|i
 index|]
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|attroff
+argument_list|(
+name|A_UNDERLINE
 argument_list|)
 expr_stmt|;
 if|if
