@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs.h	1.1 (Berkeley) 6/3/92  *  * $Id: lofs.h,v 1.8 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null.h	1.7 (Berkeley) %G%  *  * $Id: lofs.h,v 1.8 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_struct
@@ -72,9 +72,6 @@ modifier|*
 name|null_vnode
 decl_stmt|;
 comment|/* Back pointer */
-name|int
-name|null_isinactive
-decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	1.5 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	1.6 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -127,7 +127,7 @@ decl_stmt|;
 name|struct
 name|null_mount
 modifier|*
-name|amp
+name|xmp
 decl_stmt|;
 name|u_int
 name|size
@@ -231,18 +231,6 @@ name|ndp
 operator|->
 name|ni_vp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"vp = %x, check for VDIR...\n"
-argument_list|,
-name|lowerrootvp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vrele
 argument_list|(
 name|ndp
@@ -254,42 +242,9 @@ name|ndp
 operator|->
 name|ni_dvp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
-comment|/* 	 * NEEDSWORK: Is this check really necessary, or just not 	 * the way it's been? 	 */
-if|if
-condition|(
-name|lowerrootvp
-operator|->
-name|v_type
-operator|!=
-name|VDIR
-condition|)
-block|{
-name|vput
-argument_list|(
-name|lowerrootvp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"mp = %x\n"
-argument_list|,
-name|mp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|amp
+name|xmp
 operator|=
 operator|(
 expr|struct
@@ -310,8 +265,8 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* 	 * Save reference to underlying lower FS 	 */
-name|amp
+comment|/* 	 * Save reference to underlying FS 	 */
+name|xmp
 operator|->
 name|nullm_vfs
 operator|=
@@ -351,7 +306,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|amp
+name|xmp
 argument_list|,
 name|M_UFSMNT
 argument_list|)
@@ -374,7 +329,7 @@ name|v_flag
 operator||=
 name|VROOT
 expr_stmt|;
-name|amp
+name|xmp
 operator|->
 name|nullm_rootvp
 operator|=
@@ -406,7 +361,7 @@ operator|=
 operator|(
 name|qaddr_t
 operator|)
-name|amp
+name|xmp
 expr_stmt|;
 name|getnewfsid
 argument_list|(
@@ -681,17 +636,6 @@ operator|(
 name|error
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-comment|/* 	 * Flush any remaining vnode references 	 */
-name|null_node_flushmp
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|NULLFS_DIAGNOSTIC
