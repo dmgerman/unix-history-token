@@ -3432,6 +3432,11 @@ condition|(
 name|lbn
 operator|<
 name|NDADDR
+operator|+
+name|NINDIR
+argument_list|(
+name|fs
+argument_list|)
 condition|)
 block|{
 name|cg
