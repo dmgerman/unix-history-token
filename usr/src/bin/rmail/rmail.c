@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * rmail: front end for mail to stack up those stupid>From ... remote from ...  * lines and make a correct return address.  This works with the -f option  * to /etc/delivermail so it won't work on systems without delivermail.  * However, it ought to be easy to modify a standard /bin/mail to do the  * same thing.  *  * NOTE: Rmail is SPECIFICALLY INTENDED for ERNIE COVAX because of its  * physical position as a gateway between the uucp net and the arpanet.  * By default, other sites will probably want /bin/rmail to be a link  * to /bin/mail, as it was intended by BTL.  However, other than the  * (somewhat annoying) loss of information about when the mail was  * originally sent, rmail should work OK on other systems running uucp.  * If you don't run uucp you don't even need any rmail.  */
+comment|/*  * rmail: front end for mail to stack up those stupid>From ... remote from ...  * lines and make a correct return address.  This works with the -f option  * to /usr/lib/sendmail so it won't work on systems without sendmail.  * However, it ought to be easy to modify a standard /bin/mail to do the  * same thing.  *  * NOTE: Rmail is SPECIFICALLY INTENDED for ERNIE COVAX because of its  * physical position as a gateway between the uucp net and the arpanet.  * By default, other sites will probably want /bin/rmail to be a link  * to /bin/mail, as it was intended by BTL.  However, other than the  * (somewhat annoying) loss of information about when the mail was  * originally sent, rmail should work OK on other systems running uucp.  * If you don't run uucp you don't even need any rmail.  */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)rmail.c	1.1	%G%"
+literal|"@(#)rmail.c	3.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,7 +19,20 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"useful.h"
+end_include
+
 begin_function_decl
+specifier|extern
 name|FILE
 modifier|*
 name|popen
@@ -28,6 +41,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|char
 modifier|*
 name|index
@@ -35,11 +49,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|bool
+name|Debug
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|MAILER
-value|"/etc/delivermail"
+value|"/usr/lib/sendmail"
 end_define
 
 begin_function
@@ -59,7 +79,7 @@ name|FILE
 modifier|*
 name|out
 decl_stmt|;
-comment|/* output to delivermail */
+comment|/* output to sendmail */
 name|char
 name|lbuf
 index|[
@@ -98,27 +118,54 @@ comment|/* scratchpad */
 name|char
 name|cmd
 index|[
-literal|512
+literal|2000
 index|]
 decl_stmt|;
+specifier|register
 name|char
-modifier|*
-name|to
-decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|to
-operator|=
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|strcmp
+argument_list|(
 name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+literal|"-T"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|Debug
+operator|=
+name|TRUE
 expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DEBUG
 if|if
 condition|(
 name|argc
-operator|!=
+operator|<
 literal|2
 condition|)
 block|{
@@ -126,12 +173,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: rmail user\n"
+literal|"Usage: rmail user ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -161,6 +208,8 @@ literal|"From "
 argument_list|,
 literal|5
 argument_list|)
+operator|!=
+literal|0
 operator|&&
 name|strncmp
 argument_list|(
@@ -170,9 +219,10 @@ literal|">From "
 argument_list|,
 literal|6
 argument_list|)
+operator|!=
+literal|0
 condition|)
 break|break;
-comment|/* sscanf(lbuf, "%s %s %s %s %s %s %s remote from %s", junk, ufrom, junk, junk, junk, junk, junk, sys); */
 name|sscanf
 argument_list|(
 name|lbuf
@@ -218,6 +268,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|Debug
+condition|)
 name|printf
 argument_list|(
 literal|"cp='%s'\n"
@@ -268,6 +322,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|Debug
+condition|)
 name|printf
 argument_list|(
 literal|"ufrom='%s', sys='%s', from now '%s'\n"
@@ -293,18 +351,52 @@ name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"%s -r%s %s"
+literal|"%s -f%s"
 argument_list|,
 name|MAILER
 argument_list|,
 name|from
-argument_list|,
-name|to
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|++
+name|argv
+operator|!=
+name|NULL
+condition|)
+block|{
+name|strcat
+argument_list|(
+name|cmd
+argument_list|,
+literal|" '"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|cmd
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|cmd
+argument_list|,
+literal|"'"
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|Debug
+condition|)
 name|printf
 argument_list|(
 literal|"cmd='%s'\n"
@@ -354,57 +446,11 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Return the ptr in sp at which the character c appears;  * NULL if not found  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|index
-parameter_list|(
-name|sp
-parameter_list|,
-name|c
-parameter_list|)
-specifier|register
-name|char
-modifier|*
-name|sp
-decl_stmt|,
-name|c
-decl_stmt|;
-block|{
-do|do
-block|{
-if|if
-condition|(
-operator|*
-name|sp
-operator|==
-name|c
-condition|)
-return|return
-operator|(
-name|sp
-operator|)
-return|;
-block|}
-do|while
-condition|(
-operator|*
-name|sp
-operator|++
-condition|)
-do|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+name|exit
+argument_list|(
+name|EX_OK
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
