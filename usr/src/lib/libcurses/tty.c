@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	8.4 (Berkeley) %G%"
+literal|"@(#)tty.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -789,6 +795,15 @@ name|void
 name|__startwin
 parameter_list|()
 block|{
+specifier|static
+name|char
+modifier|*
+name|stdbuf
+decl_stmt|;
+specifier|static
+name|size_t
+name|len
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -797,6 +812,50 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Some C libraries default to a 1K buffer when talking to a tty. 	 * With a larger screen, especially across a network, we'd like 	 * to get it to all flush in a single write.  Make it twice as big 	 * as just the characters (so that we have room for cursor motions 	 * and standout information) but no more than 8K. 	 */
+if|if
+condition|(
+name|stdbuf
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|len
+operator|=
+name|LINES
+operator|*
+name|COLS
+operator|*
+literal|2
+operator|)
+operator|>
+literal|8192
+condition|)
+name|len
+operator|=
+literal|8192
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|stdbuf
+operator|=
+name|malloc
+argument_list|(
+name|len
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|len
+operator|=
+literal|0
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -804,11 +863,11 @@ name|setvbuf
 argument_list|(
 name|stdout
 argument_list|,
-name|NULL
+name|stdbuf
 argument_list|,
 name|_IOFBF
 argument_list|,
-literal|0
+name|len
 argument_list|)
 expr_stmt|;
 name|tputs
