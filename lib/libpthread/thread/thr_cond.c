@@ -1741,6 +1741,7 @@ name|interrupted
 operator|||
 name|done
 condition|)
+block|{
 name|rval
 operator|=
 name|_mutex_cv_lock
@@ -1748,6 +1749,11 @@ argument_list|(
 name|mutex
 argument_list|)
 expr_stmt|;
+name|unlock_mutex
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
@@ -2470,7 +2476,7 @@ argument_list|,
 name|sqe
 argument_list|)
 expr_stmt|;
-name|THR_CONDQ_SET
+name|THR_CONDQ_CLEAR
 argument_list|(
 name|pthread
 argument_list|)
