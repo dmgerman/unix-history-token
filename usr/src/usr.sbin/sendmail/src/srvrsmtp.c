@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.17
+literal|3.18
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.17
+literal|3.18
 operator|%
 name|G
 operator|%
@@ -211,7 +211,29 @@ value|12
 end_define
 
 begin_comment
-comment|/* showq -- show send queue (DEBUG) */
+comment|/* _showq -- show send queue (DEBUG) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDDBGDEBUG
+value|13
+end_define
+
+begin_comment
+comment|/* _debug -- set debug mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDDBGVERBOSE
+value|14
+end_define
+
+begin_comment
+comment|/* _verbose -- go into verbose mode */
 end_comment
 
 begin_decl_stmt
@@ -274,9 +296,17 @@ block|,
 ifdef|#
 directive|ifdef
 name|DEBUG
-literal|"showq"
+literal|"_showq"
 block|,
 name|CMDDBGSHOWQ
+block|,
+literal|"_debug"
+block|,
+name|CMDDBGDEBUG
+block|,
+literal|"_verbose"
+block|,
+name|CMDDBGVERBOSE
 block|,
 endif|#
 directive|endif
@@ -352,6 +382,19 @@ name|rcps
 operator|=
 literal|0
 expr_stmt|;
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|dup
+argument_list|(
+name|fileno
+argument_list|(
+name|OutChannel
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|message
 argument_list|(
 literal|"220"
@@ -378,6 +421,14 @@ expr_stmt|;
 name|Errors
 operator|=
 literal|0
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -993,6 +1044,43 @@ operator|->
 name|e_sendqueue
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMDDBGDEBUG
+case|:
+comment|/* set debug mode */
+name|Debug
+operator|=
+name|atoi
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"200"
+argument_list|,
+literal|"Debug = %d"
+argument_list|,
+name|Debug
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMDDBGVERBOSE
+case|:
+comment|/* set verbose mode */
+name|Verbose
+operator|=
+name|TRUE
+expr_stmt|;
+name|message
+argument_list|(
+literal|"200"
+argument_list|,
+literal|"Verbose mode"
 argument_list|)
 expr_stmt|;
 break|break;
