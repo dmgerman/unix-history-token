@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.5 (Berkeley) %G%"
+literal|"@(#)more.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,6 +442,8 @@ decl_stmt|,
 name|hardtabs
 decl_stmt|,
 name|clreol
+decl_stmt|,
+name|eatnl
 decl_stmt|;
 end_decl_stmt
 
@@ -3791,6 +3793,23 @@ name|Mcol
 operator|&&
 name|fold_opt
 expr_stmt|;
+if|if
+condition|(
+name|colflg
+operator|&&
+name|eatnl
+operator|&&
+name|Wrap
+condition|)
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\n'
+expr_stmt|;
+comment|/* simulate normal wrap */
+block|}
 operator|*
 name|length
 operator|=
@@ -7041,6 +7060,17 @@ operator|=
 literal|24
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tgetflag
+argument_list|(
+literal|"xn"
+argument_list|)
+condition|)
+name|eatnl
+operator|++
+expr_stmt|;
+comment|/* Eat newline at last column + 1; dec, concept */
 if|if
 condition|(
 name|Mcol
