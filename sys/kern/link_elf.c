@@ -41,6 +41,23 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/gmon.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -106,23 +123,6 @@ include|#
 directive|include
 file|<machine/elf.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GPROF
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/profile.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
