@@ -439,7 +439,7 @@ specifier|static
 name|void
 name|ithread_enable
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 function_decl|;
@@ -450,7 +450,7 @@ specifier|static
 name|void
 name|ithread_disable
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 function_decl|;
@@ -1874,7 +1874,7 @@ specifier|static
 name|void
 name|ithread_enable
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{
@@ -1918,7 +1918,7 @@ specifier|static
 name|void
 name|ithread_disable
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{
