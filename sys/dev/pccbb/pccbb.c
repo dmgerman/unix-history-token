@@ -843,7 +843,7 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|int
-name|cb_chipset
+name|pccbb_chipset
 parameter_list|(
 name|uint32_t
 name|pci_id
@@ -2118,7 +2118,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|cb_chipset
+name|pccbb_chipset
 parameter_list|(
 name|uint32_t
 name|pci_id
@@ -2183,7 +2183,7 @@ condition|;
 operator|++
 name|ycp
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|ycp
@@ -2258,7 +2258,7 @@ name|name
 decl_stmt|;
 if|if
 condition|(
-name|cb_chipset
+name|pccbb_chipset
 argument_list|(
 name|pci_get_devid
 argument_list|(
@@ -2763,7 +2763,7 @@ name|sc
 operator|->
 name|sc_chipset
 operator|=
-name|cb_chipset
+name|pccbb_chipset
 argument_list|(
 name|pci_get_devid
 argument_list|(
@@ -6303,6 +6303,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * XXX The following function belongs in the pci bus layer.  */
+end_comment
 
 begin_function
 specifier|static
