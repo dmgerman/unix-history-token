@@ -221,6 +221,20 @@ name|CPU_IMPL_ULTRASPARCIIe
 value|0x13
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_ULTRASPARCIII
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_ULTRASPARCIIIp
+value|0x15
+end_define
+
 begin_endif
 endif|#
 directive|endif
