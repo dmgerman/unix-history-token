@@ -113,38 +113,6 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * Private mode bit for aio.  * (This bit is set by the library routine  *  to allow the kernel to support sync  *  or async operations in the future.)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AIO_PMODE_SYNC
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|AIO_PMODE_DONE
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|AIO_PMODE_SUSPEND
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|AIO_PMODE_ACTIVE
-value|0x2357c0de
-end_define
-
-begin_comment
 comment|/*  * Private members for aiocb -- don't access  * directly.  */
 end_comment
 
@@ -157,9 +125,6 @@ name|status
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|int
-name|privatemodes
 decl_stmt|;
 name|void
 modifier|*
