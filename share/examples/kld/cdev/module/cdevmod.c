@@ -43,12 +43,37 @@ directive|include
 file|"cdev.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
 begin_define
 define|#
 directive|define
 name|CDEV_MAJOR
 value|32
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CDEV_MAJOR
+value|MAJOR_AUTO
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -58,47 +83,46 @@ name|my_devsw
 init|=
 block|{
 comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|mydev_open
 block|,
 comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|mydev_close
 block|,
 comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|mydev_read
 block|,
 comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|mydev_write
 block|,
 comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|mydev_ioctl
 block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
 comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"cdev"
 block|,
 comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-name|D_TTY
-block|,
-comment|/* bmaj */
-operator|-
-literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
