@@ -278,6 +278,16 @@ comment|/* calculated width of requested variables */
 end_comment
 
 begin_decl_stmt
+name|time_t
+name|now
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current time(3) value */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|needuser
@@ -655,6 +665,13 @@ argument_list|(
 name|LC_ALL
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+comment|/* Set the time to what it is right now. */
+name|time
+argument_list|(
+operator|&
+name|now
 argument_list|)
 expr_stmt|;
 if|if
