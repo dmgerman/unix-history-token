@@ -1868,28 +1868,6 @@ case|:
 case|case
 name|TSP_SETDATEREQ
 case|:
-ifdef|#
-directive|ifdef
-name|sgi
-operator|(
-name|void
-operator|)
-name|cftime
-argument_list|(
-name|tm
-argument_list|,
-literal|"%D %T"
-argument_list|,
-operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|tsp_time_sec
 operator|=
 name|msg
@@ -1926,9 +1904,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* ugh */
-endif|#
-directive|endif
-comment|/* sgi */
 name|fprintf
 argument_list|(
 name|fd

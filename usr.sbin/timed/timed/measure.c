@@ -459,18 +459,6 @@ operator|&
 name|ready
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|sgi
-name|sginap
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* start at a clock tick */
-endif|#
-directive|endif
-comment|/* sgi */
 operator|(
 name|void
 operator|)
@@ -1243,9 +1231,6 @@ name|long
 name|x
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|sgi
 if|if
 condition|(
 name|x
@@ -1281,9 +1266,6 @@ name|x
 operator|*=
 literal|5
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* sgi */
 name|res
 operator|->
 name|tv_sec

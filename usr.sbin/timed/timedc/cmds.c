@@ -107,29 +107,6 @@ directive|include
 file|<protocols/timed.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<bstring.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/clock.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -143,15 +120,6 @@ directive|define
 name|SECDAY
 value|(24*SECHR)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* sgi */
-end_comment
 
 begin_define
 define|#

@@ -159,36 +159,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|logwtmp
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|,
-expr|struct
-name|timeval
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -208,15 +178,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* sgi */
-end_comment
 
 begin_function
 name|int
@@ -1170,43 +1131,6 @@ operator|&
 name|otime
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|sgi
-operator|(
-name|void
-operator|)
-name|cftime
-argument_list|(
-name|newdate
-argument_list|,
-literal|"%D %T"
-argument_list|,
-operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|cftime
-argument_list|(
-name|olddate
-argument_list|,
-literal|"%D %T"
-argument_list|,
-operator|&
-name|otime
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 comment|/* 			 * the following line is necessary due to syslog 			 * calling ctime() which clobbers the static buffer 			 */
 operator|(
 name|void
@@ -1241,9 +1165,6 @@ name|tsp_time_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* sgi */
 if|if
 condition|(
 operator|!
@@ -1347,46 +1268,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|sgi
-if|if
-condition|(
-literal|0
-operator|>
-name|settimeofday
-argument_list|(
-operator|&
-name|msg
-operator|->
-name|tsp_time
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"settimeofdate(): %m"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|logwtmp
-argument_list|(
-operator|&
-name|otime
-argument_list|,
-operator|&
-name|msg
-operator|->
-name|tsp_time
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|logwtmp
 argument_list|(
 literal|"|"
@@ -1416,9 +1297,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* sgi */
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -1629,28 +1507,6 @@ break|break;
 case|case
 name|TSP_SETDATE
 case|:
-ifdef|#
-directive|ifdef
-name|sgi
-operator|(
-name|void
-operator|)
-name|cftime
-argument_list|(
-name|newdate
-argument_list|,
-literal|"%D %T"
-argument_list|,
-operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|tsp_time_sec
 operator|=
 name|msg
@@ -1673,9 +1529,6 @@ name|tsp_time_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* sgi */
 name|schgdate
 argument_list|(
 name|msg
@@ -1696,28 +1549,6 @@ operator|!=
 name|MASTER
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
-name|sgi
-operator|(
-name|void
-operator|)
-name|cftime
-argument_list|(
-name|newdate
-argument_list|,
-literal|"%D %T"
-argument_list|,
-operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|tsp_time_sec
 operator|=
 name|msg
@@ -1740,9 +1571,6 @@ name|tsp_time_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* sgi */
 name|htp
 operator|=
 name|findhost
@@ -3220,16 +3048,6 @@ name|void
 name|answerdelay
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|sgi
-name|sginap
-argument_list|(
-name|delay1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|struct
 name|timeval
 name|timeout
@@ -3276,9 +3094,6 @@ name|timeout
 argument_list|)
 expr_stmt|;
 return|return;
-endif|#
-directive|endif
-comment|/* sgi */
 block|}
 end_function
 

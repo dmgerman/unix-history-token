@@ -99,46 +99,6 @@ directive|include
 file|<protocols/timed.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<bstring.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/clock.h>
-end_include
-
-begin_comment
-comment|/* use the constant HZ instead of the function CLK_TCK */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLK_TCK
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CLK_TCK
-value|HZ
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -152,15 +112,6 @@ directive|define
 name|SECDAY
 value|(24*SECHR)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* sgi */
-end_comment
 
 begin_decl_stmt
 specifier|extern
