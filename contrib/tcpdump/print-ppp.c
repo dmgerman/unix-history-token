@@ -2484,26 +2484,11 @@ operator|==
 literal|0x00
 condition|)
 block|{
+comment|/* This is a data packet */
 name|p
 operator|+=
 literal|4
 expr_stmt|;
-name|length
-operator|-=
-literal|4
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|>
-name|length
-condition|)
-name|len
-operator|=
-name|length
-expr_stmt|;
-comment|/* puke ! */
-comment|/* This is a data packet */
 name|fputs
 argument_list|(
 literal|"] "
@@ -2511,13 +2496,24 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+comment|/* If eflag is set, ignore the trailing 2 bytes for LCP... */
 name|do_ppp_print
 argument_list|(
 name|p
 argument_list|,
+name|eflag
+condition|?
 name|len
+operator|-
+literal|2
+else|:
+name|len
+operator|+
+literal|2
 argument_list|,
 name|len
+operator|+
+literal|4
 argument_list|)
 expr_stmt|;
 return|return;
