@@ -246,11 +246,6 @@ operator|==
 name|ENXIO
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"*** unknown PnP ID\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -270,13 +265,6 @@ name|ENOENT
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"*** Some other error (%d)\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -298,13 +286,6 @@ condition|)
 goto|goto
 name|end
 goto|;
-name|printf
-argument_list|(
-literal|"*** Failed ed_probe_WD80x3() (%d)\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 name|ed_release_resources
 argument_list|(
 name|dev
