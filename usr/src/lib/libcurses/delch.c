@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine performs an insert-char on the line, leaving  * (_cury,_curx) unchanged.  *  * @(#)delch.c	1.1 (Berkeley) %G%  */
+comment|/*  *	This routine performs an insert-char on the line, leaving  * (_cury,_curx) unchanged.  *  * @(#)delch.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_macro
@@ -58,7 +58,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-name|temp2
+name|temp1
 operator|=
 operator|&
 name|win
@@ -73,14 +73,12 @@ index|[
 name|win
 operator|->
 name|_curx
-operator|+
-literal|1
 index|]
 expr_stmt|;
-name|temp1
-operator|=
 name|temp2
-operator|-
+operator|=
+name|temp1
+operator|+
 literal|1
 expr_stmt|;
 while|while
