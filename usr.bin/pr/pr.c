@@ -5073,7 +5073,7 @@ name|fprintf
 argument_list|(
 name|err
 argument_list|,
-literal|"pr: Cannot open %s, %s\n"
+literal|"pr: cannot open %s, %s\n"
 argument_list|,
 name|argv
 index|[
@@ -5230,7 +5230,7 @@ name|fprintf
 argument_list|(
 name|err
 argument_list|,
-literal|"pr: Cannot stat %s, %s\n"
+literal|"pr: cannot stat %s, %s\n"
 argument_list|,
 name|argv
 index|[
@@ -6444,7 +6444,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"pr: Number of lines must be 1 or more\n"
+literal|"pr: number of lines must be 1 or more\n"
 argument_list|,
 name|err
 argument_list|)
