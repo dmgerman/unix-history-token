@@ -9,17 +9,6 @@ directive|include
 file|<paths.h>
 end_include
 
-begin_comment
-comment|/*  * Offset file name started with '.', because "adjkerntz -i"  * called in /etc/rc before cleaning '*' in /var/run,  * and this file should be keeped after it.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PATH_OFFSET
-value|"/var/run/.adjkerntz"
-end_define
-
 begin_define
 define|#
 directive|define
