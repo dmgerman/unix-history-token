@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.54 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.55 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -383,6 +383,32 @@ end_define
 begin_comment
 comment|/* has lstat(2) call */
 end_comment
+
+begin_comment
+comment|/* **  General "standard C" defines. ** **	These may be undone later, to cope with systems that claim to **	be Standard C but aren't.  Gcc is the biggest offender -- it **	doesn't realize that the library is part of the language. ** **	Life would be much easier if we could get rid of this sort **	of bozo problems. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* we have setvbuf(3) in libc */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/********************************************************************** **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. **********************************************************************/
@@ -960,17 +986,6 @@ end_define
 
 begin_comment
 comment|/* has initgroups(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASSETVBUF
-value|1
-end_define
-
-begin_comment
-comment|/* we have setvbuf(3) in libc */
 end_comment
 
 begin_undef
@@ -1650,6 +1665,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|HASSETVBUF
+end_undef
+
+begin_comment
+comment|/* don't actually have setvbuf(3) */
+end_comment
 
 begin_undef
 undef|#
@@ -2567,6 +2592,181 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Sequent DYNIX 3.2.0 ** **	From Jim Davis<jdavis@cs.arizona.edu>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sequent
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BSD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSD4_3
+value|1
+end_define
+
+begin_comment
+comment|/* to get signal() in conf.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAITUNION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_FLOAT
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_VERSION
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_POSIX_VERSION
+end_undef
+
+begin_comment
+comment|/* set in<unistd.h> */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|HASSETVBUF
+end_undef
+
+begin_comment
+comment|/* don't actually have setvbuf(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_comment
+comment|/* Have to redefine WIFEXITED to take an int, to work with waitfor() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WIFEXITED
+parameter_list|(
+name|s
+parameter_list|)
+value|(((union wait*)&(s))->w_stopval != WSTOPPED&& \ 			 ((union wait*)&(s))->w_termsig == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WEXITSTATUS
+parameter_list|(
+name|s
+parameter_list|)
+value|(((union wait*)&(s))->w_retcode)
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|isgraph
+parameter_list|(
+name|c
+parameter_list|)
+value|(isprint(c)&& (c != ' '))
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_UNIX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/dynix"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
@@ -2682,6 +2882,17 @@ begin_comment
 comment|/* use System V setpgrp(2) syscall */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* we have setvbuf(3) in libc */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2739,48 +2950,6 @@ name|l
 parameter_list|)
 value|(memcmp((s), (d), (l)))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* general "standard C" defines */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|MACH386
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|SYSTEM5
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HASSETVBUF
-value|1
-end_define
-
-begin_comment
-comment|/* we have setvbuf(3) in libc */
-end_comment
 
 begin_endif
 endif|#
