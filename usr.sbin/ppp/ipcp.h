@@ -306,6 +306,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* True if he is speaking rfc1172 */
+name|unsigned
+name|peer_req
+range|:
+literal|1
+decl_stmt|;
+comment|/* Any TY_IPADDR REQs from the peer ? */
 name|struct
 name|in_addr
 name|peer_ip
