@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.9 84/01/11"
+literal|"@(#)lcmd.c	3.10 84/01/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|l_unset
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|l_window
 parameter_list|()
 function_decl|;
@@ -183,6 +190,14 @@ begin_decl_stmt
 name|struct
 name|lcmd_arg
 name|arg_terse
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_unset
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -289,6 +304,14 @@ block|,
 name|l_terse
 block|,
 name|arg_terse
+block|,
+literal|"unset"
+block|,
+literal|1
+block|,
+name|l_unset
+block|,
+name|arg_unset
 block|,
 literal|"window"
 block|,
