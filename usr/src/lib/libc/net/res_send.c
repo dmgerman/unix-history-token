@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.2 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,15 +694,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sendto
+name|connect
 argument_list|(
 name|s
-argument_list|,
-name|buf
-argument_list|,
-name|buflen
-argument_list|,
-literal|0
 argument_list|,
 operator|&
 name|_res
@@ -717,6 +711,19 @@ argument_list|(
 expr|struct
 name|sockaddr
 argument_list|)
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|send
+argument_list|(
+name|s
+argument_list|,
+name|buf
+argument_list|,
+name|buflen
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 name|buflen
@@ -735,7 +742,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"sendto errno = %d\n"
+literal|"connect/send errno = %d\n"
 argument_list|,
 name|errno
 argument_list|)
@@ -771,6 +778,8 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+name|wait
+label|:
 name|dsmask
 operator|=
 literal|1
@@ -934,7 +943,9 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-continue|continue;
+goto|goto
+name|wait
+goto|;
 block|}
 if|if
 condition|(
