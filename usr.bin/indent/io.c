@@ -3,17 +3,17 @@ begin_comment
 comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)io.c	8.1 (Berkeley) 6/6/93";
@@ -21,25 +21,28 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -118,7 +121,6 @@ name|void
 parameter_list|)
 block|{
 comment|/* dump_line is the routine that actually 				 * effects the printing of the new source. It 				 * prints the label section, followed by the 				 * code section with the appropriate nesting 				 * level, followed by any comments */
-specifier|register
 name|int
 name|cur_col
 decl_stmt|,
@@ -424,7 +426,6 @@ literal|0
 operator|)
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -520,9 +521,14 @@ literal|"\t%.*s"
 else|:
 literal|"\t/* %.*s */"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|e_lab
 operator|-
 name|s
+argument_list|)
 argument_list|,
 name|s
 argument_list|)
@@ -535,9 +541,14 @@ name|output
 argument_list|,
 literal|"%.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|e_lab
 operator|-
 name|s_lab
+argument_list|)
 argument_list|,
 name|s_lab
 argument_list|)
@@ -572,7 +583,6 @@ name|e_code
 condition|)
 block|{
 comment|/* print code section, if any */
-specifier|register
 name|char
 modifier|*
 name|p
@@ -600,7 +610,6 @@ name|compute_code_target
 argument_list|()
 expr_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -729,7 +738,6 @@ name|all_here
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -926,7 +934,6 @@ operator|==
 literal|2
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|follow
@@ -1073,7 +1080,6 @@ block|}
 else|else
 block|{
 comment|/* print comment, if any */
-specifier|register
 name|int
 name|target
 init|=
@@ -1081,7 +1087,6 @@ name|ps
 operator|.
 name|com_col
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|com_st
@@ -1505,7 +1510,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|target_col
 init|=
@@ -1534,17 +1538,27 @@ name|target_col
 operator|+=
 name|continuation_indent
 operator|*
+operator|(
+literal|2
+operator|*
+name|continuation_indent
+operator|==
+name|ps
+operator|.
+name|ind_size
+condition|?
+literal|1
+else|:
 name|ps
 operator|.
 name|paren_level
+operator|)
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|int
 name|w
 decl_stmt|;
-specifier|register
 name|int
 name|t
 init|=
@@ -1678,16 +1692,13 @@ name|void
 parameter_list|)
 block|{
 comment|/* this routine reads stuff from the input */
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|f
@@ -1742,7 +1753,6 @@ operator|>=
 name|in_buffer_limit
 condition|)
 block|{
-specifier|register
 name|int
 name|size
 init|=
@@ -1756,7 +1766,6 @@ literal|2
 operator|+
 literal|10
 decl_stmt|;
-specifier|register
 name|int
 name|offset
 init|=
@@ -1777,9 +1786,9 @@ if|if
 condition|(
 name|in_buffer
 operator|==
-literal|0
+name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2221,12 +2230,10 @@ comment|/* writes tabs and blanks (if necessary) to 				 * get the current outpu
 comment|/* current: the current column value */
 comment|/* target: position we want it at */
 block|{
-specifier|register
 name|int
 name|curr
 decl_stmt|;
 comment|/* internal column pointer */
-specifier|register
 name|int
 name|tcur
 decl_stmt|;
@@ -2267,6 +2274,11 @@ name|curr
 operator|=
 name|current
 expr_stmt|;
+if|if
+condition|(
+name|use_tabs
+condition|)
+block|{
 while|while
 condition|(
 operator|(
@@ -2301,6 +2313,7 @@ name|curr
 operator|=
 name|tcur
 expr_stmt|;
+block|}
 block|}
 while|while
 condition|(
@@ -2343,13 +2356,11 @@ name|buffer
 parameter_list|)
 comment|/*  * this routine figures out where the character position will be after  * printing the text in buffer starting at column "current"  */
 block|{
-specifier|register
 name|char
 modifier|*
 name|buf
 decl_stmt|;
 comment|/* used to look thru buffer */
-specifier|register
 name|int
 name|cur
 decl_stmt|;
@@ -2449,6 +2460,7 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -2559,6 +2571,7 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -2662,6 +2675,7 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -2995,12 +3009,13 @@ name|fstate
 modifier|*
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s0
 parameter_list|)
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|s

@@ -72,6 +72,7 @@ name|diag2
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -84,6 +85,7 @@ name|diag3
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -98,6 +100,7 @@ name|diag4
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -143,6 +146,7 @@ name|struct
 name|fstate
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)

@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char sccsid[] = "@(#)lexi.c	8.1 (Berkeley) 6/6/93"; static const char rcsid[] =   "$FreeBSD$";
+unit|static char sccsid[] = "@(#)lexi.c	8.1 (Berkeley) 6/6/93";
 endif|#
 directive|endif
 end_endif
@@ -30,9 +30,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Here we have the token scanner for indent.  It scans off one token and puts  * it in the global variable "token".  It returns a code, indicating the type  * of token scanned.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -70,6 +90,12 @@ directive|include
 file|"indent_codes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"indent.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -84,19 +110,11 @@ name|opchar
 value|3
 end_define
 
-begin_function_decl
-name|void
-name|fill_buffer
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|templ
 block|{
+specifier|const
 name|char
 modifier|*
 name|rwd
@@ -238,6 +256,18 @@ literal|4
 block|}
 block|,
 block|{
+literal|"const"
+block|,
+literal|4
+block|}
+block|,
+block|{
+literal|"volatile"
+block|,
+literal|4
+block|}
+block|,
+block|{
 literal|"goto"
 block|,
 literal|0
@@ -283,18 +313,6 @@ block|{
 literal|"sizeof"
 block|,
 literal|7
-block|}
-block|,
-block|{
-literal|"const"
-block|,
-literal|9
-block|}
-block|,
-block|{
-literal|"volatile"
-block|,
-literal|9
 block|}
 block|,
 block|{
@@ -692,13 +710,12 @@ operator|)
 condition|)
 block|{
 comment|/* 	 * we have a character or number 	 */
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|j
 decl_stmt|;
 comment|/* used for searching thru list of 				 * 				 * reserved words */
-specifier|register
 name|struct
 name|templ
 modifier|*
@@ -1140,9 +1157,14 @@ expr_stmt|;
 if|if
 condition|(
 name|l_struct
+operator|&&
+operator|!
+name|ps
+operator|.
+name|p_l_follow
 condition|)
 block|{
-comment|/* if last token was 'struct', then this token 				 * should be treated as a declaration */
+comment|/* if last token was 'struct' and we're not 				 * in parentheses, then this token 				 * should be treated as a declaration */
 name|l_struct
 operator|=
 name|false
@@ -1167,9 +1189,13 @@ name|ps
 operator|.
 name|last_u_d
 operator|=
+name|l_struct
+expr_stmt|;
+comment|/* Operator after identifier is binary 				 * unless last token was 'struct' */
+name|l_struct
+operator|=
 name|false
 expr_stmt|;
-comment|/* Operator after indentifier is binary */
 name|last_code
 operator|=
 name|ident
@@ -1196,10 +1222,10 @@ name|p
 operator|++
 control|)
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
-name|p
+name|q
 init|=
 name|s_token
 decl_stmt|;
@@ -1211,7 +1237,7 @@ name|j
 operator|++
 operator|!=
 operator|*
-name|p
+name|q
 operator|++
 operator|||
 operator|*
@@ -1219,14 +1245,14 @@ name|j
 operator|++
 operator|!=
 operator|*
-name|p
+name|q
 operator|++
 condition|)
 continue|continue;
 comment|/* This test depends on the fact that 				 * identifiers are always at least 1 character 				 * long (ie. the first two bytes of the 				 * identifier are always meaningful) */
 if|if
 condition|(
-name|p
+name|q
 index|[
 operator|-
 literal|1
@@ -1239,7 +1265,7 @@ comment|/* If its a one-character identifier */
 while|while
 condition|(
 operator|*
-name|p
+name|q
 operator|++
 operator|==
 operator|*
@@ -1309,20 +1335,12 @@ case|case
 literal|3
 case|:
 comment|/* a "struct" */
-if|if
-condition|(
-name|ps
-operator|.
-name|p_l_follow
-condition|)
-break|break;
-comment|/* inside parens: cast */
-comment|/* 		 * Next time around, we may want to know that we have had a 		 * 'struct' 		 */
+comment|/* 		 * Next time around, we will want to know that we have had a 		 * 'struct' 		 */
 name|l_struct
 operator|=
 name|true
 expr_stmt|;
-comment|/* 		 * Fall through to test for a cast, function prototype or 		 * sizeof(). 		 */
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -1338,25 +1356,21 @@ name|ps
 operator|.
 name|cast_mask
 operator||=
+operator|(
 literal|1
 operator|<<
 name|ps
 operator|.
 name|p_l_follow
-expr_stmt|;
-comment|/* 		     * Forget that we saw `struct' if we're in a sizeof(). 		     */
-if|if
-condition|(
+operator|)
+operator|&
+operator|~
 name|ps
 operator|.
 name|sizeof_mask
-condition|)
-name|l_struct
-operator|=
-name|false
 expr_stmt|;
 break|break;
-comment|/* inside parens: cast, prototype or sizeof() */
+comment|/* inside parens: cast, param list or sizeof */
 block|}
 name|last_code
 operator|=
@@ -1425,7 +1439,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|tp
@@ -1666,7 +1679,7 @@ else|:
 name|newline
 operator|)
 expr_stmt|;
-comment|/* 	 * if data has been exausted, the newline is a dummy, and we should 	 * return code to stop 	 */
+comment|/* 	 * if data has been exhausted, the newline is a dummy, and we should 	 * return code to stop 	 */
 break|break;
 case|case
 literal|'\''
@@ -2558,7 +2571,6 @@ name|int
 name|val
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|templ
 modifier|*

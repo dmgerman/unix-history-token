@@ -106,7 +106,7 @@ define|#
 directive|define
 name|CHECK_SIZE_CODE
 define|\
-value|if (e_code>= l_code) { \ 	    register int nsize = l_code-s_code+400; \ 	    codebuf = (char *) realloc(codebuf, nsize); \ 	    e_code = codebuf + (e_code-s_code) + 1; \ 	    l_code = codebuf + nsize - 5; \ 	    s_code = codebuf + 1; \ 	}
+value|if (e_code>= l_code) { \ 	    int nsize = l_code-s_code+400; \ 	    codebuf = (char *) realloc(codebuf, nsize); \ 	    if (codebuf == NULL) \ 		err(1, NULL); \ 	    e_code = codebuf + (e_code-s_code) + 1; \ 	    l_code = codebuf + nsize - 5; \ 	    s_code = codebuf + 1; \ 	}
 end_define
 
 begin_define
@@ -114,7 +114,7 @@ define|#
 directive|define
 name|CHECK_SIZE_COM
 define|\
-value|if (e_com>= l_com) { \ 	    register int nsize = l_com-s_com+400; \ 	    combuf = (char *) realloc(combuf, nsize); \ 	    e_com = combuf + (e_com-s_com) + 1; \ 	    l_com = combuf + nsize - 5; \ 	    s_com = combuf + 1; \ 	}
+value|if (e_com>= l_com) { \ 	    int nsize = l_com-s_com+400; \ 	    combuf = (char *) realloc(combuf, nsize); \ 	    if (combuf == NULL) \ 		err(1, NULL); \ 	    e_com = combuf + (e_com-s_com) + 1; \ 	    l_com = combuf + nsize - 5; \ 	    s_com = combuf + 1; \ 	}
 end_define
 
 begin_define
@@ -122,7 +122,7 @@ define|#
 directive|define
 name|CHECK_SIZE_LAB
 define|\
-value|if (e_lab>= l_lab) { \ 	    register int nsize = l_lab-s_lab+400; \ 	    labbuf = (char *) realloc(labbuf, nsize); \ 	    e_lab = labbuf + (e_lab-s_lab) + 1; \ 	    l_lab = labbuf + nsize - 5; \ 	    s_lab = labbuf + 1; \ 	}
+value|if (e_lab>= l_lab) { \ 	    int nsize = l_lab-s_lab+400; \ 	    labbuf = (char *) realloc(labbuf, nsize); \ 	    if (labbuf == NULL) \ 		err(1, NULL); \ 	    e_lab = labbuf + (e_lab-s_lab) + 1; \ 	    l_lab = labbuf + nsize - 5; \ 	    s_lab = labbuf + 1; \ 	}
 end_define
 
 begin_define
@@ -130,7 +130,7 @@ define|#
 directive|define
 name|CHECK_SIZE_TOKEN
 define|\
-value|if (e_token>= l_token) { \ 	    register int nsize = l_token-s_token+400; \ 	    tokenbuf = (char *) realloc(tokenbuf, nsize); \ 	    e_token = tokenbuf + (e_token-s_token) + 1; \ 	    l_token = tokenbuf + nsize - 5; \ 	    s_token = tokenbuf + 1; \ 	}
+value|if (e_token>= l_token) { \ 	    int nsize = l_token-s_token+400; \ 	    tokenbuf = (char *) realloc(tokenbuf, nsize); \ 	    if (tokenbuf == NULL) \ 		err(1, NULL); \ 	    e_token = tokenbuf + (e_token-s_token) + 1; \ 	    l_token = tokenbuf + nsize - 5; \ 	    s_token = tokenbuf + 1; \ 	}
 end_define
 
 begin_decl_stmt
@@ -677,7 +677,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* True if continuation lines from the 					 * expression part of "if(e)", 					 * "while(e)", "for(e;e;e)" should be 					 * indented an extra tab stop so that 					 * they don't conflict with the code 					 * that follows */
+comment|/* true if continuation lines from the 					 * expression part of "if(e)", 					 * "while(e)", "for(e;e;e)" should be 					 * indented an extra tab stop so that 					 * they don't conflict with the code 					 * that follows */
+end_comment
+
+begin_decl_stmt
+name|int
+name|function_brace_split
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* split function declaration and 					 * brace onto separate lines */
+end_comment
+
+begin_decl_stmt
+name|int
+name|use_tabs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set true to use tabs for spacing, 					 * false uses all spaces */
 end_comment
 
 begin_comment
@@ -710,7 +730,18 @@ begin_function_decl
 name|char
 modifier|*
 name|chfont
-parameter_list|()
+parameter_list|(
+name|struct
+name|fstate
+modifier|*
+parameter_list|,
+name|struct
+name|fstate
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -824,7 +855,7 @@ comment|/* set to true if the last token started in 				 * column 1 */
 name|int
 name|com_col
 decl_stmt|;
-comment|/* this is the column in which the current 				 * coment should start */
+comment|/* this is the column in which the current 				 * comment should start */
 name|int
 name|com_ind
 decl_stmt|;
@@ -896,7 +927,7 @@ comment|/* used to remember how to indent following 				 * statement */
 name|int
 name|paren_level
 decl_stmt|;
-comment|/* parenthesization level. used to indent 				 * within stmts */
+comment|/* parenthesization level. used to indent 				 * within statements */
 name|short
 name|paren_indents
 index|[
@@ -932,6 +963,10 @@ name|int
 name|decl_indent
 decl_stmt|;
 comment|/* column to indent declared identifiers to */
+name|int
+name|local_decl_indent
+decl_stmt|;
+comment|/* like decl_indent but for locals */
 name|int
 name|its_a_keyword
 decl_stmt|;
