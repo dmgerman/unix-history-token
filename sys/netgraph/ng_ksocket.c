@@ -288,6 +288,17 @@ begin_comment
 comment|/* Cloned node with no hooks yet */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KSF_SENDING
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Sending on socket */
+end_comment
+
 begin_comment
 comment|/* Netgraph node methods */
 end_comment
@@ -3962,6 +3973,31 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+comment|/* Avoid reentrantly sending on the socket */
+if|if
+condition|(
+operator|(
+name|priv
+operator|->
+name|flags
+operator|&
+name|KSF_SENDING
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EDEADLK
+operator|)
+return|;
+block|}
 comment|/* Extract data and meta information */
 name|NGI_GET_M
 argument_list|(
@@ -4071,6 +4107,12 @@ break|break;
 block|}
 block|}
 comment|/* Send packet */
+name|priv
+operator|->
+name|flags
+operator||=
+name|KSF_SENDING
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -4098,6 +4140,13 @@ literal|0
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|priv
+operator|->
+name|flags
+operator|&=
+operator|~
+name|KSF_SENDING
 expr_stmt|;
 comment|/* Clean up and exit */
 name|NG_FREE_META
