@@ -12,7 +12,7 @@ end_include
 begin_decl_stmt
 name|u_char
 specifier|const
-name|_bin2bcd
+name|_bcd2bin
 index|[]
 init|=
 block|{
@@ -330,7 +330,7 @@ end_decl_stmt
 begin_decl_stmt
 name|u_char
 specifier|const
-name|_bcd2bin
+name|_bin2bcd
 index|[]
 init|=
 block|{
