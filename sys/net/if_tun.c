@@ -2253,8 +2253,6 @@ operator|(
 name|IFF_BROADCAST
 operator||
 name|IFF_POINTOPOINT
-operator||
-name|IFF_MULTICAST
 operator|)
 expr_stmt|;
 name|tp
