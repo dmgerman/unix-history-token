@@ -4660,6 +4660,7 @@ block|}
 end_block
 
 begin_function_decl
+specifier|extern
 name|char
 modifier|*
 name|devname
@@ -4720,7 +4721,7 @@ name|devname
 argument_list|(
 name|dev
 argument_list|,
-literal|1
+name|S_IFCHR
 argument_list|)
 operator|)
 operator|==
@@ -4844,7 +4845,7 @@ name|devname
 argument_list|(
 name|dev
 argument_list|,
-literal|1
+name|S_IFCHR
 argument_list|)
 operator|)
 operator|==
