@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.15	%G%	*/
+comment|/*	dz.c	4.16	%G%	*/
 end_comment
 
 begin_include
@@ -730,6 +730,29 @@ name|ui
 operator|->
 name|ui_flags
 expr_stmt|;
+if|if
+condition|(
+name|dz_timer
+operator|==
+literal|0
+condition|)
+block|{
+name|dz_timer
+operator|++
+expr_stmt|;
+name|timeout
+argument_list|(
+name|dzscan
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+name|HZ
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
@@ -811,32 +834,6 @@ operator|=
 name|ENXIO
 expr_stmt|;
 return|return;
-block|}
-end_if
-
-begin_if
-if|if
-condition|(
-name|dz_timer
-operator|==
-literal|0
-condition|)
-block|{
-name|dz_timer
-operator|++
-expr_stmt|;
-name|timeout
-argument_list|(
-name|dzscan
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|HZ
-argument_list|)
-expr_stmt|;
 block|}
 end_if
 
@@ -2598,6 +2595,13 @@ index|]
 operator|.
 name|p_addr
 expr_stmt|;
+if|if
+condition|(
+name|dzaddr
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|tp
 operator|=
 operator|&
