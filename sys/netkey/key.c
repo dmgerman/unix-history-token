@@ -4038,7 +4038,7 @@ block|}
 continue|continue;
 comment|/*NOTREACHED*/
 block|}
-comment|/* prefered new sa rather than old sa */
+comment|/* preferred new sa rather than old sa */
 if|if
 condition|(
 name|candidate
@@ -19524,13 +19524,6 @@ name|void
 name|key_srandom
 parameter_list|()
 block|{
-if|#
-directive|if
-literal|0
-comment|/* Already called in kern/init_main.c:proc0_post() */
-block|struct timeval tv;  	microtime(&tv);  	srandom(tv.tv_usec);
-endif|#
-directive|endif
 return|return;
 block|}
 end_function
