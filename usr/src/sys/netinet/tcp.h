@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.12 81/11/03 */
+comment|/* tcp.h 1.13 81/11/04 */
 end_comment
 
 begin_comment
@@ -134,6 +134,7 @@ begin_struct
 struct|struct
 name|tcb
 block|{
+comment|/* first four elements of this struct must match tcphead below */
 name|struct
 name|th
 modifier|*
@@ -158,6 +159,13 @@ modifier|*
 name|tcb_prev
 decl_stmt|;
 comment|/* next tcb */
+comment|/* end must match */
+name|struct
+name|th
+modifier|*
+name|t_template
+decl_stmt|;
+comment|/* skeletal packet for transmit */
 name|struct
 name|ucb
 modifier|*
@@ -505,10 +513,6 @@ define|\
 value|(((x)->tc_flags&TC_USR_ABORT) || \       ((x)->t_ucb->uc_rbuf == NULL&& (x)->t_rcv_next == (x)->t_rcv_prev))
 end_define
 
-begin_comment
-comment|/*  * THESE NEED TO BE JUSTIFIED!  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -523,23 +527,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPROTO
-value|6
-end_define
-
-begin_comment
-comment|/* TCP-4 protocol number */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPSIZE
 value|20
 end_define
 
 begin_comment
 comment|/* size of TCP leader (bytes) */
+end_comment
+
+begin_comment
+comment|/*  * THESE NEED TO BE JUSTIFIED!  */
 end_comment
 
 begin_define
@@ -835,6 +832,15 @@ name|b
 parameter_list|)
 value|((int)((a)-(b))>= 0)
 end_define
+
+begin_function_decl
+name|struct
+name|th
+modifier|*
+name|tcp_template
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 

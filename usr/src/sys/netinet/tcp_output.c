@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_output.c 4.8 81/11/01 */
+comment|/* tcp_output.c 4.9 81/11/04 */
 end_comment
 
 begin_include
@@ -1093,7 +1093,7 @@ name|n
 operator|->
 name|t_pr
 operator|=
-name|TCPROTO
+name|IPPROTO_TCP
 expr_stmt|;
 name|n
 operator|->
@@ -1299,9 +1299,7 @@ name|t
 operator|=
 name|tp
 operator|->
-name|t_ucb
-operator|->
-name|uc_template
+name|t_template
 operator|)
 operator|==
 literal|0

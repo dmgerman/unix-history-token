@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.23 81/11/03 */
+comment|/* tcp_usrreq.c 1.24 81/11/04 */
 end_comment
 
 begin_include
@@ -85,6 +85,14 @@ include|#
 directive|include
 file|"../inet/tcp_fsm.h"
 end_include
+
+begin_comment
+comment|/*  * Tcp finite state machine entries for timer and user generated  * requests.  These routines raise the ipl to that of the network  * to prevent reentry.  In particluar, this requires that the software  * clock interrupt have lower priority than the network so that  * we can enter the network from timeout routines without improperly  * nesting the interrupt stack.  */
+end_comment
+
+begin_comment
+comment|/*  * Tcp protocol timeout routine called once per second.  * Updates the timers in all active tcb's and  * causes finite state machine actions if timers expire.  */
+end_comment
 
 begin_macro
 name|tcp_timeo
@@ -212,6 +220,63 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Cancel all timers for tcp tp.  */
+end_comment
+
+begin_macro
+name|tcp_tcancel
+argument_list|(
+argument|tp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|tcb
+modifier|*
+name|tp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|u_char
+modifier|*
+name|tmp
+init|=
+operator|&
+name|tp
+operator|->
+name|t_init
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|TNTIMERS
+condition|;
+name|i
+operator|++
+control|)
+operator|*
+name|tmp
+operator|++
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_block
@@ -371,7 +436,6 @@ comment|/* 	 * Passive open.  Create a tcp control block 	 * and enter listen st
 case|case
 name|IUOPENA
 case|:
-comment|/* 2 */
 if|if
 condition|(
 name|nstate
@@ -401,7 +465,6 @@ comment|/* 	 * Active open.  Create a tcp control block, 	 * send a SYN and ente
 case|case
 name|IUOPENR
 case|:
-comment|/* 1 */
 if|if
 condition|(
 name|nstate
@@ -448,7 +511,6 @@ case|:
 case|case
 name|SYN_SENT
 case|:
-comment|/* 10 */
 name|tcp_close
 argument_list|(
 name|tp
@@ -465,7 +527,6 @@ comment|/* 		 * If we have gotten as far as receiving a syn from 		 * our foreig
 case|case
 name|SYN_RCVD
 case|:
-comment|/* 24,25 */
 case|case
 name|L_SYN_RCVD
 case|:
@@ -475,7 +536,6 @@ case|:
 case|case
 name|CLOSE_WAIT
 case|:
-comment|/* 10 */
 name|tp
 operator|->
 name|tc_flags
@@ -543,7 +603,6 @@ comment|/* 	 * TCP Timer processing. 	 * Timers should expire only on open conne
 case|case
 name|ISTIMER
 case|:
-comment|/* 14,17,34,35,36,37,38 */
 switch|switch
 condition|(
 name|nstate
@@ -577,7 +636,6 @@ comment|/* 	 * User notification of more window availability after 	 * reading o
 case|case
 name|IURECV
 case|:
-comment|/* 42 */
 if|if
 condition|(
 name|nstate
@@ -596,7 +654,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* send new window */
 if|if
 condition|(
 operator|(
@@ -658,7 +715,6 @@ comment|/* 	 * Send request on open connection. 	 * Should not happen if the con
 case|case
 name|IUSEND
 case|:
-comment|/* 40,41 */
 switch|switch
 condition|(
 name|nstate
@@ -704,7 +760,6 @@ comment|/* 	 * User abort of connection. 	 * If a SYN has been received, but we 
 case|case
 name|IUABORT
 case|:
-comment|/* 44,45 */
 if|if
 condition|(
 name|nstate
@@ -773,7 +828,6 @@ comment|/* 	 * Network down entry.  Discard the tcb and force 	 * the state to b
 case|case
 name|INCLEAR
 case|:
-comment|/* 47 */
 if|if
 condition|(
 name|nstate
@@ -1127,30 +1181,7 @@ argument_list|(
 name|TCP_CLOSE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Cancel all timers. 	 * SHOULD LOOP HERE !?! 	 */
-name|tp
-operator|->
-name|t_init
-operator|=
-name|tp
-operator|->
-name|t_rexmt
-operator|=
-name|tp
-operator|->
-name|t_rexmttl
-operator|=
-name|tp
-operator|->
-name|t_persist
-operator|=
-name|tp
-operator|->
-name|t_finack
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * Remque the tcb 	 */
+comment|/* 	 * Remove from tcb queue and cancel timers. 	 */
 name|tp
 operator|->
 name|tcb_prev
@@ -1171,7 +1202,12 @@ name|tp
 operator|->
 name|tcb_prev
 expr_stmt|;
-comment|/* 	 * Discard all buffers... 	 * 	 * SHOULD COUNT EACH RESOURCE TO 0 AND PANIC IF CONFUSED 	 */
+name|tcp_tcancel
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Discard all buffers. 	 */
 for|for
 control|(
 name|t
@@ -1208,8 +1244,6 @@ condition|(
 name|up
 operator|->
 name|uc_rbuf
-operator|!=
-name|NULL
 condition|)
 block|{
 name|m_freem
@@ -1237,8 +1271,6 @@ condition|(
 name|up
 operator|->
 name|uc_sbuf
-operator|!=
-name|NULL
 condition|)
 block|{
 name|m_freem
@@ -1292,32 +1324,31 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Free tcp send template. 	 */
+comment|/* 	 * Free tcp send template, the tcb itself, 	 * the routing table entry, and the space we had reserved 	 * in the meory pool. 	 */
 if|if
 condition|(
-name|up
+name|tp
 operator|->
-name|uc_template
+name|t_template
 condition|)
 block|{
 name|m_free
 argument_list|(
 name|dtom
 argument_list|(
-name|up
+name|tp
 operator|->
-name|uc_template
+name|t_template
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|up
+name|tp
 operator|->
-name|uc_template
+name|t_template
 operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Free the tcb 	 * WOULD THIS BETTER BE DONE AT USER CLOSE? 	 */
 name|wmemfree
 argument_list|(
 operator|(
@@ -1330,47 +1361,15 @@ argument_list|)
 expr_stmt|;
 name|up
 operator|->
-name|uc_tcb
+name|uc_pcb
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
-comment|/* 	 * Lower buffer allocation. 	 * SHOULD BE A M_ROUTINE CALL. 	 */
-name|mbstat
-operator|.
-name|m_lowat
-operator|-=
-name|up
-operator|->
-name|uc_snd
-operator|+
-operator|(
-name|up
-operator|->
-name|uc_rhiwat
-operator|/
-name|MSIZE
-operator|)
-operator|+
-literal|2
-expr_stmt|;
-name|mbstat
-operator|.
-name|m_hiwat
-operator|=
-literal|2
-operator|*
-name|mbstat
-operator|.
-name|m_lowat
-expr_stmt|;
-comment|/* 	 * Free routing table entry. 	 */
 if|if
 condition|(
 name|up
 operator|->
 name|uc_host
-operator|!=
-name|NULL
 condition|)
 block|{
 name|h_free
@@ -1384,9 +1383,26 @@ name|up
 operator|->
 name|uc_host
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
+name|m_release
+argument_list|(
+name|up
+operator|->
+name|uc_snd
+operator|+
+operator|(
+name|up
+operator|->
+name|uc_rhiwat
+operator|/
+name|MSIZE
+operator|)
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If user has initiated close (via close call), delete ucb 	 * entry, otherwise just wakeup so user can issue close call 	 */
 if|if
 condition|(
@@ -1396,13 +1412,16 @@ name|tc_flags
 operator|&
 name|TC_USR_ABORT
 condition|)
+comment|/* ### */
 name|up
 operator|->
 name|uc_proc
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* ### */
 else|else
+comment|/* ### */
 name|to_user
 argument_list|(
 name|up
@@ -1415,7 +1434,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * User routine to send data queue headed by m0 into the protocol.  */
+comment|/*  * Send data queue headed by m0 into the protocol.  */
 end_comment
 
 begin_expr_stmt

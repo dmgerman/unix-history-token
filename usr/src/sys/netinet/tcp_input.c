@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.18 81/11/03 */
+comment|/* tcp_input.c 1.19 81/11/04 */
 end_comment
 
 begin_include
@@ -1050,9 +1050,7 @@ name|t_src
 expr_stmt|;
 name|tp
 operator|->
-name|t_ucb
-operator|->
-name|uc_template
+name|t_template
 operator|=
 name|tcp_template
 argument_list|(

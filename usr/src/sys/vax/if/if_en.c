@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* if_en.c 4.3 81/11/01 */
+comment|/* if_en.c 4.4 81/11/04 */
 end_comment
 
 begin_include
@@ -2316,7 +2316,7 @@ name|ip_p
 condition|)
 block|{
 case|case
-name|TCPROTO
+name|IPPROTO_TCP
 case|:
 name|hlen
 operator|+=
