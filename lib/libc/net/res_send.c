@@ -2687,9 +2687,19 @@ block|}
 ifndef|#
 directive|ifndef
 name|CANNOT_CONNECT_DGRAM
-comment|/* 			 * On a 4.3BSD+ machine (client and server, 			 * actually), sending to a nameserver datagram 			 * port with no nameserver will cause an 			 * ICMP port unreachable message to be returned. 			 * If our datagram socket is "connected" to the 			 * server, we get an ECONNREFUSED error on the next 			 * socket operation, and select returns if the 			 * error message is received.  We can thus detect 			 * the absence of a nameserver without timing out. 			 * If we have sent queries to at least two servers, 			 * however, we don't want to remain connected, 			 * as we wish to receive answers from the first 			 * server to respond. 			 */
+comment|/* 			 * On a 4.3BSD+ machine (client and server, 			 * actually), sending to a nameserver datagram 			 * port with no nameserver will cause an 			 * ICMP port unreachable message to be returned. 			 * If our datagram socket is "connected" to the 			 * server, we get an ECONNREFUSED error on the next 			 * socket operation, and select returns if the 			 * error message is received.  We can thus detect 			 * the absence of a nameserver without timing out. 			 * If we have sent queries to at least two servers, 			 * however, we don't want to remain connected, 			 * as we wish to receive answers from the first 			 * server to respond. 			 * 			 * When the option "insecure1" is specified, we'd 			 * rather expect to see responses from an "unknown" 			 * address.  In order to let the kernel accept such 			 * responses, do not connect the socket here. 			 * XXX: or do we need an explicit option to disable 			 * connecting? 			 */
 if|if
 condition|(
+operator|!
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_INSECURE1
+operator|)
+operator|&&
+operator|(
 name|_res
 operator|.
 name|nscount
@@ -2704,6 +2714,7 @@ operator|&&
 name|ns
 operator|==
 literal|0
+operator|)
 operator|)
 condition|)
 block|{
