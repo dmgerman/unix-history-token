@@ -233,9 +233,9 @@ if|if
 condition|(
 name|destline
 operator|!=
-name|destcol
-operator|||
 name|outline
+operator|||
+name|destcol
 operator|!=
 name|outcol
 condition|)
