@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.41 1998/08/20 14:32:40 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.44 1998/08/23 21:30:02 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -178,7 +178,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_xl.c,v 1.41 1998/08/20 14:32:40 wpaul Exp $"
+literal|"$Id: if_xl.c,v 1.44 1998/08/23 21:30:02 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1004,7 +1004,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Murphy's law says that it's possible the chip can wedge and  * the 'command in progress' bit may never clear. Hence, we wait  * only a finite amount of time to avoid getting caught in an  * infinite loop. Normally this delay routine would be a macro,  * but it isn't called during normal operation so we can aford  * to make it a function.  */
+comment|/*  * Murphy's law says that it's possible the chip can wedge and  * the 'command in progress' bit may never clear. Hence, we wait  * only a finite amount of time to avoid getting caught in an  * infinite loop. Normally this delay routine would be a macro,  * but it isn't called during normal operation so we can afford  * to make it a function.  */
 end_comment
 
 begin_function
@@ -7671,7 +7671,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Handle the 'end of channel' condition. When the upload 	 * engine hits the end of the RX ring, it will stall. This 	 * is our cue to flush the RX ring, reload the uplist pointer 	 * regtser and unstall the engine. 	 * XXX This is actually a little goofy. With the ThunderLAN 	 * chip, you get an interrupt when the receiver hits the end 	 * of the receive ring, which tells you exactly when you 	 * you need to reload the ring pointer. Here we have to 	 * fake it. I'm mad at myself for not being clever enough 	 * to avoid the use of a goto here. 	 */
+comment|/* 	 * Handle the 'end of channel' condition. When the upload 	 * engine hits the end of the RX ring, it will stall. This 	 * is our cue to flush the RX ring, reload the uplist pointer 	 * register and unstall the engine. 	 * XXX This is actually a little goofy. With the ThunderLAN 	 * chip, you get an interrupt when the receiver hits the end 	 * of the receive ring, which tells you exactly when you 	 * you need to reload the ring pointer. Here we have to 	 * fake it. I'm mad at myself for not being clever enough 	 * to avoid the use of a goto here. 	 */
 if|if
 condition|(
 name|CSR_READ_4
@@ -8193,6 +8193,16 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+comment|/* Disable interrupts. */
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|XL_COMMAND
+argument_list|,
+name|XL_CMD_INTR_ENB
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -8213,19 +8223,7 @@ condition|(
 operator|(
 name|status
 operator|&
-operator|(
-name|XL_STAT_UP_COMPLETE
-operator||
-name|XL_STAT_DOWN_COMPLETE
-operator||
-name|XL_STAT_TX_COMPLETE
-operator||
-name|XL_STAT_STATSOFLOW
-operator||
-name|XL_STAT_INTLATCH
-operator||
-name|XL_STAT_ADFAIL
-operator|)
+name|XL_INTRS
 operator|)
 operator|==
 literal|0
@@ -8376,6 +8374,18 @@ name|XL_STAT_INTLATCH
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Re-enable interrupts. */
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|XL_COMMAND
+argument_list|,
+name|XL_CMD_INTR_ENB
+operator||
+name|XL_INTRS
+argument_list|)
+expr_stmt|;
 name|XL_SEL_WIN
 argument_list|(
 literal|7
@@ -9302,6 +9312,12 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
+comment|/* 	 * XXX Under certain conditions, usually on slower machines 	 * where interrupts may be dropped, it's possible for the 	 * adapter to chew up all the buffers in the receive ring 	 * and stall, without us being able to do anything about it. 	 * To guard against this, we need to make a pass over the 	 * RX queue to make sure there aren't any packets pending. 	 * Doing it here means we can flush the receive ring at the 	 * same time the chip is DMAing the transmit descriptors we 	 * just gave it.  	 * 	 * 3Com goes to some lengths to emphasize the Parallel Tasking (tm) 	 * nature of their chips in all their marketing literature; 	 * we may as well take advantage of it. :) 	 */
+name|xl_rxeof
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -9344,10 +9360,6 @@ name|i
 decl_stmt|;
 name|u_int16_t
 name|rxfilt
-init|=
-literal|0
-decl_stmt|,
-name|rxintrs
 init|=
 literal|0
 decl_stmt|;
@@ -9790,17 +9802,16 @@ name|XL_CMD_STATS_ENABLE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable interrupts. 	 */
-name|rxintrs
-operator|=
-name|XL_STAT_UP_COMPLETE
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|XL_COMMAND
+argument_list|,
+name|XL_CMD_INTR_ACK
 operator||
-name|XL_STAT_STATSOFLOW
-operator||
-name|XL_STAT_ADFAIL
-operator||
-name|XL_STAT_DOWN_COMPLETE
-operator||
-name|XL_STAT_TX_COMPLETE
+literal|0xFF
+argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
@@ -9810,24 +9821,7 @@ name|XL_COMMAND
 argument_list|,
 name|XL_CMD_STAT_ENB
 operator||
-name|rxintrs
-argument_list|)
-expr_stmt|;
-name|CSR_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|XL_COMMAND
-argument_list|,
-name|XL_CMD_INTR_ACK
-operator||
-name|XL_STAT_INTLATCH
-operator||
-name|XL_STAT_TX_AVAIL
-operator||
-name|XL_STAT_RX_EARLY
-operator||
-name|XL_STAT_INTREQ
+name|XL_INTRS
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
@@ -9838,9 +9832,7 @@ name|XL_COMMAND
 argument_list|,
 name|XL_CMD_INTR_ENB
 operator||
-name|rxintrs
-operator||
-name|XL_STAT_INTLATCH
+name|XL_INTRS
 argument_list|)
 expr_stmt|;
 comment|/* Set the RX early threshold */
@@ -10821,6 +10813,15 @@ name|sc
 argument_list|,
 name|XL_COMMAND
 argument_list|,
+name|XL_CMD_INTR_ENB
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|XL_COMMAND
+argument_list|,
 name|XL_CMD_RX_DISCARD
 argument_list|)
 expr_stmt|;
@@ -10889,17 +10890,6 @@ argument_list|,
 name|XL_CMD_INTR_ACK
 operator||
 name|XL_STAT_INTLATCH
-argument_list|)
-expr_stmt|;
-name|CSR_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|XL_COMMAND
-argument_list|,
-name|XL_CMD_INTR_ENB
-operator||
-literal|0x0000
 argument_list|)
 expr_stmt|;
 comment|/* Stop the stats updater. */
