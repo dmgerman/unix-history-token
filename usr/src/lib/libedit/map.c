@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	5.3 (Berkeley) %G%"
+literal|"@(#)map.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4205,6 +4205,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|tty_bind_char
+argument_list|(
+name|el
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|term_bind_arrow
 argument_list|(
 name|el
@@ -4391,6 +4398,13 @@ name|EM_EXCHANGE_MARK
 argument_list|)
 argument_list|,
 name|XK_CMD
+argument_list|)
+expr_stmt|;
+name|tty_bind_char
+argument_list|(
+name|el
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|term_bind_arrow
