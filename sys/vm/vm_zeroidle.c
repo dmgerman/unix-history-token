@@ -298,6 +298,12 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 name|zero_state
 operator|=
 literal|0
@@ -363,6 +369,12 @@ name|queue
 operator|=
 name|PQ_NONE
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 comment|/* maybe drop out of Giant here */
 name|pmap_zero_page
 argument_list|(
@@ -370,6 +382,12 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* and return here */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -445,6 +463,12 @@ name|PQ_PRIME2
 operator|)
 operator|&
 name|PQ_L2_MASK
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
