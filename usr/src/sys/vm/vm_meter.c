@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.13	81/08/30	*/
+comment|/*	vm_meter.c	4.14	82/03/31	*/
 end_comment
 
 begin_include
@@ -351,7 +351,7 @@ expr_stmt|;
 if|if
 condition|(
 name|nswdev
-operator|==
+operator|>=
 literal|2
 condition|)
 name|maxpgio
