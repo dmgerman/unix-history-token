@@ -121,7 +121,6 @@ name|char
 modifier|*
 parameter_list|,
 name|int
-name|maxpacketsize
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -135,7 +134,6 @@ name|char
 modifier|*
 parameter_list|,
 name|int
-name|maxpacketsize
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -149,7 +147,6 @@ name|char
 modifier|*
 parameter_list|,
 name|int
-name|maxpacketsize
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -193,14 +190,11 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|link
 parameter_list|,
 name|struct
 name|in_addr
-name|addr
 parameter_list|,
 name|u_short
-name|port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -306,7 +300,6 @@ name|PacketAliasSetTarget
 parameter_list|(
 name|struct
 name|in_addr
-name|addr
 parameter_list|)
 function_decl|;
 end_function_decl
