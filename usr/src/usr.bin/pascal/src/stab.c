@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.4 %G%"
+literal|"@(#)stab.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,11 +76,151 @@ value|( x< 0 ? -x : x )
 end_define
 
 begin_comment
-comment|/*      *	variables      */
+comment|/*      *	global variables      */
 end_comment
 
 begin_macro
-name|stabvar
+name|stabgvar
+argument_list|(
+argument|name
+argument_list|,
+argument|type
+argument_list|,
+argument|offset
+argument_list|,
+argument|length
+argument_list|,
+argument|line
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|offset
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|length
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|line
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* 	     *	for separate compilation 	     */
+name|putprintf
+argument_list|(
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
+argument_list|,
+literal|0
+argument_list|,
+name|name
+argument_list|,
+name|N_PC
+argument_list|,
+name|N_PGVAR
+argument_list|,
+name|ABS
+argument_list|(
+name|line
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	     *	for sdb 	     */
+if|if
+condition|(
+operator|!
+name|opt
+argument_list|(
+literal|'g'
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+name|putprintf
+argument_list|(
+literal|"	.stabs	\""
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+name|NAMEFORMAT
+argument_list|,
+literal|1
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"\",0x%x,0,0x%x,0"
+argument_list|,
+literal|0
+argument_list|,
+name|N_GSYM
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	.stabs	\""
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+name|NAMEFORMAT
+argument_list|,
+literal|1
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"\",0x%x,0,0,0x%x"
+argument_list|,
+literal|0
+argument_list|,
+name|N_LENG
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*      *	local variables      */
+end_comment
+
+begin_macro
+name|stablvar
 argument_list|(
 argument|name
 argument_list|,
@@ -91,8 +231,6 @@ argument_list|,
 argument|offset
 argument_list|,
 argument|length
-argument_list|,
-argument|line
 argument_list|)
 end_macro
 
@@ -127,42 +265,8 @@ name|length
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|line
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
-comment|/* 	     *	for separate compilation 	     */
-if|if
-condition|(
-name|level
-operator|==
-literal|1
-condition|)
-block|{
-name|putprintf
-argument_list|(
-literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
-argument_list|,
-literal|0
-argument_list|,
-name|name
-argument_list|,
-name|N_PC
-argument_list|,
-name|N_PGVAR
-argument_list|,
-name|ABS
-argument_list|(
-name|line
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	     *	for sdb 	     */
 if|if
 condition|(
 operator|!
@@ -190,27 +294,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|level
-operator|==
-literal|1
-condition|)
-block|{
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0x%x,0"
-argument_list|,
-literal|0
-argument_list|,
-name|N_GSYM
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|putprintf
 argument_list|(
 literal|"\",0x%x,0,0x%x,0x%x"
@@ -225,7 +308,6 @@ operator|-
 name|offset
 argument_list|)
 expr_stmt|;
-block|}
 name|putprintf
 argument_list|(
 literal|"	.stabs	\""

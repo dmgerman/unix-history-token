@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.4 %G%"
+literal|"@(#)var.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -532,8 +532,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-name|stabvar
+name|stabgvar
 argument_list|(
 name|vidl
 index|[
@@ -545,8 +544,6 @@ argument_list|(
 name|np
 argument_list|)
 argument_list|,
-name|cbn
-argument_list|,
 name|o2
 argument_list|,
 name|w
@@ -554,6 +551,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|PC
