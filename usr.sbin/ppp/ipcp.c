@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.34 1997/11/08 00:28:07 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.35 1997/11/11 22:58:11 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -481,16 +481,63 @@ name|cftypes
 index|[]
 init|=
 block|{
+comment|/* Check out the latest ``Assigned numbers'' rfc (rfc1700.txt) */
 literal|"???"
 block|,
 literal|"IPADDRS"
 block|,
+comment|/* 1: IP-Addresses */
+comment|/* deprecated */
 literal|"COMPPROTO"
 block|,
+comment|/* 2: IP-Compression-Protocol */
 literal|"IPADDR"
-block|, }
+block|,
+comment|/* 3: IP-Address */
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NCFTYPES
+value|(sizeof(cftypes)/sizeof(char *))
+end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|cftypes128
+index|[]
+init|=
+block|{
+comment|/* Check out the latest ``Assigned numbers'' rfc (rfc1700.txt) */
+literal|"???"
+block|,
+literal|"PRIDNS"
+block|,
+comment|/* 129: Primary DNS Server Address */
+literal|"PRINBNS"
+block|,
+comment|/* 130: Primary NBNS Server Address */
+literal|"SECDNS"
+block|,
+comment|/* 131: Secondary DNS Server Address */
+literal|"SECNBNS"
+block|,
+comment|/* 132: Secondary NBNS Server Address */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NCFTYPES128
+value|(sizeof(cftypes)/sizeof(char *))
+end_define
 
 begin_comment
 comment|/*  * Function called every second. Updates connection period and idle period,  * also update LQR information.  */
@@ -1134,6 +1181,8 @@ argument_list|)
 condition|)
 name|PutConfValue
 argument_list|(
+name|LogIPCP
+argument_list|,
 operator|&
 name|cp
 argument_list|,
@@ -1176,6 +1225,8 @@ name|heis1172
 condition|)
 name|PutConfValue
 argument_list|(
+name|LogIPCP
+argument_list|,
 operator|&
 name|cp
 argument_list|,
@@ -1195,6 +1246,8 @@ expr_stmt|;
 else|else
 name|PutConfValue
 argument_list|(
+name|LogIPCP
+argument_list|,
 operator|&
 name|cp
 argument_list|,
@@ -1858,8 +1911,8 @@ expr_stmt|;
 if|if
 condition|(
 name|type
-operator|<=
-name|TY_IPADDR
+operator|<
+name|NCFTYPES
 condition|)
 name|snprintf
 argument_list|(
@@ -1880,6 +1933,38 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|type
+operator|>
+literal|128
+operator|&&
+name|type
+operator|<
+literal|128
+operator|+
+name|NCFTYPES128
+condition|)
+name|snprintf
+argument_list|(
+name|tbuff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuff
+argument_list|)
+argument_list|,
+literal|" %s[%d] "
+argument_list|,
+name|cftypes128
+index|[
+name|type
+index|]
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 else|else
 name|snprintf
 argument_list|(
@@ -1890,7 +1975,7 @@ argument_list|(
 name|tbuff
 argument_list|)
 argument_list|,
-literal|" "
+literal|" ??? "
 argument_list|)
 expr_stmt|;
 switch|switch

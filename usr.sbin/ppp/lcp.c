@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.43 1997/11/08 00:28:07 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.44 1997/11/11 13:08:12 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -339,30 +339,88 @@ name|cftypes
 index|[]
 init|=
 block|{
+comment|/* Check out the latest ``Assigned numbers'' rfc (rfc1700.txt) */
 literal|"???"
 block|,
 literal|"MRU"
 block|,
+comment|/* 1: Maximum-Receive-Unit */
 literal|"ACCMAP"
 block|,
+comment|/* 2: Async-Control-Character-Map */
 literal|"AUTHPROTO"
 block|,
+comment|/* 3: Authentication-Protocol */
 literal|"QUALPROTO"
 block|,
+comment|/* 4: Quality-Protocol */
 literal|"MAGICNUM"
 block|,
+comment|/* 5: Magic-Number */
 literal|"RESERVED"
 block|,
+comment|/* 6: RESERVED */
 literal|"PROTOCOMP"
 block|,
+comment|/* 7: Protocol-Field-Compression */
 literal|"ACFCOMP"
 block|,
+comment|/* 8: Address-and-Control-Field-Compression */
 literal|"FCSALT"
 block|,
+comment|/* 9: FCS-Alternatives */
 literal|"SDP"
-block|, }
+block|,
+comment|/* 10: Self-Describing-Pad */
+literal|"NUMMODE"
+block|,
+comment|/* 11: Numbered-Mode */
+literal|"MULTIPROC"
+block|,
+comment|/* 12: Multi-Link-Procedure */
+literal|"CALLBACK"
+block|,
+comment|/* 13: Callback */
+literal|"CONTIME"
+block|,
+comment|/* 14: Connect-Time */
+literal|"COMPFRAME"
+block|,
+comment|/* 15: Compound-Frames */
+literal|"NDE"
+block|,
+comment|/* 16: Nominal-Data-Encapsulation */
+literal|"MULTIMRRU"
+block|,
+comment|/* 17: Multilink-MRRU */
+literal|"MULTISSNH"
+block|,
+comment|/* 18: Multilink-Short-Sequence-Number-Header */
+literal|"MULTIED"
+block|,
+comment|/* 19: Multilink-Endpoint-Descriminator */
+literal|"PROPRIETRY"
+block|,
+comment|/* 20: Proprietary */
+literal|"DCEID"
+block|,
+comment|/* 21: DCE-Identifier */
+literal|"MULTIPP"
+block|,
+comment|/* 22: Multi-Link-Plus-Procedure */
+literal|"LDBACP"
+block|,
+comment|/* 23: Link Discriminator for BACP */
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NCFTYPES
+value|(sizeof(cftypes)/sizeof(char *))
+end_define
 
 begin_decl_stmt
 name|struct
@@ -872,6 +930,9 @@ begin_function
 name|void
 name|PutConfValue
 parameter_list|(
+name|int
+name|level
+parameter_list|,
 name|u_char
 modifier|*
 modifier|*
@@ -942,7 +1003,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|level
 argument_list|,
 literal|" %s [%d] %s\n"
 argument_list|,
@@ -961,10 +1022,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|level
 argument_list|,
 literal|" %s [%d] %08x\n"
 argument_list|,
@@ -978,7 +1038,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|cp
 operator|++
@@ -1007,7 +1066,7 @@ block|}
 else|else
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|level
 argument_list|,
 literal|" %s [%d] %d\n"
 argument_list|,
@@ -1186,6 +1245,8 @@ argument_list|)
 condition|)
 name|PutConfValue
 argument_list|(
+name|LogLCP
+argument_list|,
 operator|&
 name|cp
 argument_list|,
@@ -1213,6 +1274,8 @@ argument_list|)
 condition|)
 name|PutConfValue
 argument_list|(
+name|LogLCP
+argument_list|,
 operator|&
 name|cp
 argument_list|,
@@ -1243,6 +1306,8 @@ argument_list|)
 condition|)
 name|PutConfValue
 argument_list|(
+name|LogLCP
+argument_list|,
 operator|&
 name|cp
 argument_list|,
@@ -1354,6 +1419,8 @@ name|PROTO_PAP
 case|:
 name|PutConfValue
 argument_list|(
+name|LogLCP
+argument_list|,
 operator|&
 name|cp
 argument_list|,
@@ -1374,6 +1441,8 @@ name|PROTO_CHAP
 case|:
 name|PutConfValue
 argument_list|(
+name|LogLCP
+argument_list|,
 operator|&
 name|cp
 argument_list|,
@@ -1945,8 +2014,8 @@ expr_stmt|;
 if|if
 condition|(
 name|type
-operator|<=
-name|TY_ACFCOMP
+operator|<
+name|NCFTYPES
 condition|)
 name|request
 operator|=
@@ -3210,7 +3279,9 @@ name|LogPrintf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|" ???[%02x]\n"
+literal|" %s[02x]\n"
+argument_list|,
+name|request
 argument_list|,
 name|type
 argument_list|)

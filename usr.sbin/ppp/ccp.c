@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.17 1997/10/26 01:02:10 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
+comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.18 1997/11/08 00:28:06 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
 end_comment
 
 begin_include
@@ -319,16 +319,19 @@ name|cftypes
 index|[]
 init|=
 block|{
-comment|/*  0 */
+comment|/* Check out the latest ``Compression Control Protocol'' rfc (rfc1962.txt) */
 literal|"OUI"
 block|,
+comment|/* 0: OUI */
 literal|"PRED1"
 block|,
+comment|/* 1: Predictor type 1 */
 literal|"PRED2"
 block|,
+comment|/* 2: Predictor type 2 */
 literal|"PUDDLE"
 block|,
-comment|/*  4 */
+comment|/* 3: Puddle Jumber */
 literal|"???"
 block|,
 literal|"???"
@@ -337,7 +340,6 @@ literal|"???"
 block|,
 literal|"???"
 block|,
-comment|/*  8 */
 literal|"???"
 block|,
 literal|"???"
@@ -346,7 +348,6 @@ literal|"???"
 block|,
 literal|"???"
 block|,
-comment|/* 12 */
 literal|"???"
 block|,
 literal|"???"
@@ -355,22 +356,34 @@ literal|"???"
 block|,
 literal|"???"
 block|,
-comment|/* 16 */
 literal|"HWPPC"
 block|,
+comment|/* 16: Hewlett-Packard PPC */
 literal|"STAC"
 block|,
+comment|/* 17: Stac Electronics LZS */
 literal|"MSPPC"
 block|,
+comment|/* 18: Microsoft PPC */
 literal|"GAND"
 block|,
-comment|/* 20 */
+comment|/* 19: Gandalf FZA */
 literal|"V42BIS"
 block|,
+comment|/* 20: V.42bis compression */
 literal|"BSD"
-block|, }
+block|,
+comment|/* BSD LZW Compress */
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NCFTYPES
+value|(sizeof(cftypes)/sizeof(char *))
+end_define
 
 begin_function
 name|int
@@ -967,8 +980,8 @@ expr_stmt|;
 if|if
 condition|(
 name|type
-operator|<=
-name|TY_BSD
+operator|<
+name|NCFTYPES
 condition|)
 name|snprintf
 argument_list|(
