@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2524,7 +2524,7 @@ operator|)
 operator|(
 name|vp
 operator|,
-literal|0
+name|IO_NDELAY
 operator|,
 name|NOCRED
 operator|,
