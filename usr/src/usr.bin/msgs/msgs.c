@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.13 (Berkeley) %G%"
+literal|"@(#)msgs.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2647,7 +2647,14 @@ argument_list|(
 name|outf
 argument_list|)
 condition|)
+block|{
+name|clearerr
+argument_list|(
+name|outf
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
