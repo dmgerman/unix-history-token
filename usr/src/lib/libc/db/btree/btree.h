@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -629,7 +629,7 @@ comment|/* R: number of records */
 define|#
 directive|define
 name|SAVEMETA
-value|(BTF_NODUPS | BTF_RECNO)
+value|(B_NODUPS | R_RECNO)
 name|u_long
 name|m_flags
 decl_stmt|;
@@ -839,77 +839,87 @@ name|u_char
 name|bt_bval
 decl_stmt|;
 comment|/* R: delimiting byte/pad character */
-comment|/*  * NB:  * BTF_NODUPS and BTF_RECNO are stored on disk, and may not be changed.  */
+comment|/*  * NB:  * B_NODUPS and R_RECNO are stored on disk, and may not be changed.  */
 define|#
 directive|define
-name|BTF_CLOSEFP
-value|0x0001
-comment|/* R: opened a file pointer */
-define|#
-directive|define
-name|BTF_DELCRSR
-value|0x0002
+name|B_DELCRSR
+value|0x00001
 comment|/* cursor has been deleted */
 define|#
 directive|define
-name|BTF_EOF
-value|0x0004
-comment|/* R: end of input file reached. */
+name|B_INMEM
+value|0x00002
+comment|/* in-memory tree */
 define|#
 directive|define
-name|BTF_FIXEDLEN
-value|0x0008
-comment|/* R: fixed length records */
+name|B_METADIRTY
+value|0x00004
+comment|/* need to write metadata */
 define|#
 directive|define
-name|BTF_INMEM
-value|0x0010
-comment|/* B: in-memory tree */
-define|#
-directive|define
-name|BTF_NODUPS
-value|0x0020
-comment|/* B: no duplicate keys permitted */
-define|#
-directive|define
-name|BTF_MEMMAPPED
-value|0x0040
-comment|/* R: memory mapped file. */
-define|#
-directive|define
-name|BTF_RECNO
-value|0x0080
-comment|/* R: record oriented tree */
-define|#
-directive|define
-name|BTF_METADIRTY
-value|0x0100
-comment|/* B: need to write metadata */
-define|#
-directive|define
-name|BTF_MODIFIED
-value|0x0200
+name|B_MODIFIED
+value|0x00008
 comment|/* tree modified */
 define|#
 directive|define
-name|BTF_NEEDSWAP
-value|0x0400
+name|B_NEEDSWAP
+value|0x00010
 comment|/* if byte order requires swapping */
 define|#
 directive|define
-name|BTF_RDONLY
-value|0x0800
+name|B_NODUPS
+value|0x00020
+comment|/* no duplicate keys permitted */
+define|#
+directive|define
+name|B_RDONLY
+value|0x00040
 comment|/* read-only tree */
 define|#
 directive|define
-name|BTF_RINMEM
-value|0x1000
-comment|/* R: in-memory tree */
+name|B_SEQINIT
+value|0x00100
+comment|/* sequential scan initialized */
 define|#
 directive|define
-name|BTF_SEQINIT
-value|0x2000
-comment|/* sequential scan initialized */
+name|R_CLOSEFP
+value|0x00200
+comment|/* opened a file pointer */
+define|#
+directive|define
+name|R_EOF
+value|0x00400
+comment|/* end of input file reached. */
+define|#
+directive|define
+name|R_FIXLEN
+value|0x00800
+comment|/* fixed length records */
+define|#
+directive|define
+name|R_MEMMAPPED
+value|0x01000
+comment|/* memory mapped file. */
+define|#
+directive|define
+name|R_RECNO
+value|0x00080
+comment|/* record oriented tree */
+define|#
+directive|define
+name|R_INMEM
+value|0x02000
+comment|/* in-memory file */
+define|#
+directive|define
+name|R_MODIFIED
+value|0x04000
+comment|/* modified file */
+define|#
+directive|define
+name|R_RDONLY
+value|0x08000
+comment|/* read-only file */
 name|u_long
 name|bt_flags
 decl_stmt|;
