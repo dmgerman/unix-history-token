@@ -2481,6 +2481,20 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAKE_VERSION
+name|Var_Set
+argument_list|(
+literal|"MAKE_VERSION"
+argument_list|,
+name|MAKE_VERSION
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * First snag any flags out of the MAKE environment variable. 	 * (Note this is *not* MAKEFLAGS since /bin/make uses that and it's 	 * in a different format). 	 */
 ifdef|#
 directive|ifdef
