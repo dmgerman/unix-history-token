@@ -815,38 +815,6 @@ name|AUE_RXSTAT_MASK
 value|0x1E
 end_define
 
-begin_struct
-struct|struct
-name|aue_type
-block|{
-name|u_int16_t
-name|aue_vid
-decl_stmt|;
-name|u_int16_t
-name|aue_did
-decl_stmt|;
-name|u_int16_t
-name|aue_flags
-decl_stmt|;
-define|#
-directive|define
-name|LSYS
-value|0x0001
-comment|/* use Linksys reset */
-define|#
-directive|define
-name|PNA
-value|0x0002
-comment|/* has Home PNA */
-define|#
-directive|define
-name|PII
-value|0x0004
-comment|/* Pegasus II chip */
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -1004,10 +972,11 @@ decl_stmt|;
 name|usbd_interface_handle
 name|aue_iface
 decl_stmt|;
-name|struct
-name|aue_type
-modifier|*
-name|aue_info
+name|u_int16_t
+name|aue_vendor
+decl_stmt|;
+name|u_int16_t
+name|aue_product
 decl_stmt|;
 name|int
 name|aue_ed
@@ -1041,6 +1010,9 @@ decl_stmt|;
 name|struct
 name|mtx
 name|aue_mtx
+decl_stmt|;
+name|u_int16_t
+name|aue_flags
 decl_stmt|;
 name|char
 name|aue_dying
