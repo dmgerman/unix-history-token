@@ -39,6 +39,17 @@ value|16
 end_define
 
 begin_comment
+comment|/*  * device name for the mmap device  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVSTAT_DEVICE_NAME
+value|"devstat"
+end_define
+
+begin_comment
 comment|/*  * ATTENTION:  The devstat version below should be incremented any time a  * change is made in struct devstat, or any time a change is made in the  * enumerated types that struct devstat uses.  (Only if those changes  * would require a recompile -- i.e. re-arranging the order of an  * enumerated type or something like that.)  This version number is used by  * userland utilities to determine whether or not they are in sync with the  * kernel.  */
 end_comment
 
@@ -372,6 +383,7 @@ name|devstat_priority
 name|priority
 decl_stmt|;
 comment|/* Controls list pos. */
+specifier|const
 name|void
 modifier|*
 name|id

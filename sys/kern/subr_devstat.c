@@ -1398,7 +1398,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0400
 argument_list|,
-literal|"devstat"
+name|DEVSTAT_DEVICE_NAME
 argument_list|)
 expr_stmt|;
 name|once
