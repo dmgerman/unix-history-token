@@ -3305,7 +3305,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %si %d"
+literal|" %s %d"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -12323,11 +12323,6 @@ name|p
 init|=
 name|limit_masks
 decl_stmt|;
-name|int
-name|found
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -12374,14 +12369,18 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
+break|break ;
 block|}
 if|if
 condition|(
-name|found
+name|p
+operator|->
+name|s
 operator|==
-literal|0
+name|NULL
 condition|)
-block|{
+break|break ;
+block|}
 if|if
 condition|(
 name|rule
@@ -12397,9 +12396,6 @@ argument_list|,
 literal|"missing limit mask"
 argument_list|)
 expr_stmt|;
-break|break ;
-block|}
-block|}
 if|if
 condition|(
 name|ac
