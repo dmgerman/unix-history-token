@@ -455,7 +455,7 @@ name|_G_gid_t
 parameter_list|)
 function_decl|;
 specifier|extern
-name|_G_pid_t
+name|pid_t
 name|fork
 name|_G_ARGS
 argument_list|(
@@ -537,7 +537,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_uid_t
+name|uid_t
 name|geteuid
 name|_G_ARGS
 argument_list|(
@@ -547,7 +547,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_gid_t
+name|gid_t
 name|getegid
 name|_G_ARGS
 argument_list|(
@@ -557,7 +557,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_gid_t
+name|gid_t
 name|getgid
 name|_G_ARGS
 argument_list|(
@@ -590,7 +590,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_pid_t
+name|pid_t
 name|getpgrp
 name|_G_ARGS
 argument_list|(
@@ -600,7 +600,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_pid_t
+name|pid_t
 name|getpid
 name|_G_ARGS
 argument_list|(
@@ -610,7 +610,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_pid_t
+name|pid_t
 name|getppid
 name|_G_ARGS
 argument_list|(
@@ -644,7 +644,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_uid_t
+name|uid_t
 name|getuid
 name|_G_ARGS
 argument_list|(
@@ -816,7 +816,7 @@ specifier|extern
 name|int
 name|setgid
 parameter_list|(
-name|_G_gid_t
+name|gid_t
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -839,9 +839,9 @@ name|setpgrp
 name|_G_ARGS
 argument_list|(
 operator|(
-name|_G_pid_t
+name|pid_t
 operator|,
-name|_G_pid_t
+name|pid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -851,9 +851,9 @@ name|setregid
 name|_G_ARGS
 argument_list|(
 operator|(
-name|_G_gid_t
+name|gid_t
 operator|,
-name|_G_gid_t
+name|gid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -863,9 +863,9 @@ name|setreuid
 name|_G_ARGS
 argument_list|(
 operator|(
-name|_G_uid_t
+name|uid_t
 operator|,
-name|_G_uid_t
+name|uid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -873,7 +873,7 @@ specifier|extern
 name|int
 name|setuid
 parameter_list|(
-name|_G_uid_t
+name|uid_t
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -938,7 +938,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|_G_off_t
+name|off_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -977,7 +977,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_pid_t
+name|pid_t
 name|vfork
 name|_G_ARGS
 argument_list|(
@@ -1007,7 +1007,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_off_t
+name|off_t
 name|lseek
 name|_G_ARGS
 argument_list|(

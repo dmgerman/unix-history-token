@@ -118,7 +118,7 @@ name|kill
 name|_G_ARGS
 argument_list|(
 operator|(
-name|_G_pid_t
+name|pid_t
 name|pid
 operator|,
 name|int
@@ -132,7 +132,7 @@ name|killpg
 name|_G_ARGS
 argument_list|(
 operator|(
-name|_G_pid_t
+name|pid_t
 operator|,
 name|int
 operator|)

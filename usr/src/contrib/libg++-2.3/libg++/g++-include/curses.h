@@ -376,8 +376,7 @@ name|WINDOW
 modifier|*
 parameter_list|)
 function_decl|;
-name|char
-modifier|*
+name|int
 function_decl|(
 name|wstandend
 function_decl|)
@@ -386,8 +385,7 @@ name|WINDOW
 modifier|*
 parameter_list|)
 function_decl|;
-name|char
-modifier|*
+name|int
 function_decl|(
 name|wstandout
 function_decl|)
