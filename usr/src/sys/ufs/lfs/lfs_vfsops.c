@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2224,7 +2224,7 @@ name|f_bsize
 operator|=
 name|fs
 operator|->
-name|lfs_bsize
+name|lfs_fsize
 expr_stmt|;
 name|sbp
 operator|->
@@ -2238,7 +2238,7 @@ name|sbp
 operator|->
 name|f_blocks
 operator|=
-name|dbtofsb
+name|dbtofrags
 argument_list|(
 name|fs
 argument_list|,
@@ -2251,7 +2251,7 @@ name|sbp
 operator|->
 name|f_bfree
 operator|=
-name|dbtofsb
+name|dbtofrags
 argument_list|(
 name|fs
 argument_list|,
@@ -2303,7 +2303,7 @@ name|sbp
 operator|->
 name|f_bavail
 operator|=
-name|dbtofsb
+name|dbtofrags
 argument_list|(
 name|fs
 argument_list|,
