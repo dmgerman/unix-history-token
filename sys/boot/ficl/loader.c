@@ -7,11 +7,33 @@ begin_comment
 comment|/******************************************************************* ** l o a d e r . c ** Additional FICL words designed for FreeBSD's loader **  *******************************************************************/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TESTMAIN
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<stand.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
