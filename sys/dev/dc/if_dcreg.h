@@ -2827,6 +2827,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DC_AL_CR
+value|0x88
+end_define
+
+begin_comment
+comment|/* command register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DC_AL_PAR0
 value|0xA4
 end_define
@@ -2943,6 +2954,17 @@ end_define
 
 begin_comment
 comment|/* built in PHY autoneg expansion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_AL_CR_ATUR
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* automatic TX underrun recovery */
 end_comment
 
 begin_define
