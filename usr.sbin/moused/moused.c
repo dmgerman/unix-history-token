@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/un.h>
 end_include
 
@@ -355,8 +361,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-define|\
-value|if (debug&&nodaemon) warnx(fmt, ##args)
+value|do {				\ 	if (debug&& nodaemon)					\ 		warnx(fmt, ##args);				\ } while (0)
 end_define
 
 begin_define
@@ -371,7 +376,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|{				\ 	if (background) {					\ 	    syslog(LOG_DAEMON | LOG_ERR, fmt ": %m", ##args);	\ 	    exit(e);						\ 	} else							\ 	    err(e, fmt, ##args);				\ }
+value|do {				\ 	log_or_warn(LOG_DAEMON | LOG_ERR, errno, fmt, ##args);	\ 	exit(e);						\ } while (0)
 end_define
 
 begin_define
@@ -386,7 +391,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|{				\ 	if (background) {					\ 	    syslog(LOG_DAEMON | LOG_ERR, fmt, ##args);		\ 	    exit(e);						\ 	} else							\ 	    errx(e, fmt, ##args);				\ }
+value|do {				\ 	log_or_warn(LOG_DAEMON | LOG_ERR, 0, fmt, ##args);	\ 	exit(e);						\ } while (0)
 end_define
 
 begin_define
@@ -399,7 +404,8 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|{					\ 	if (background)						\ 	    syslog(LOG_DAEMON | LOG_WARNING, fmt ": %m", ##args); \ 	else							\ 	    warn(fmt, ##args);					\ }
+define|\
+value|log_or_warn(LOG_DAEMON | LOG_WARNING, errno, fmt, ##args)
 end_define
 
 begin_define
@@ -412,7 +418,8 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|{				\ 	if (background)						\ 	    syslog(LOG_DAEMON | LOG_WARNING, fmt, ##args);	\ 	else							\ 	    warnx(fmt, ##args);					\ }
+define|\
+value|log_or_warn(LOG_DAEMON | LOG_WARNING, 0, fmt, ##args)
 end_define
 
 begin_comment
@@ -2187,6 +2194,36 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|log_or_warn
+parameter_list|(
+name|int
+name|log_pri
+parameter_list|,
+name|int
+name|errnum
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -4177,8 +4214,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"cannot open /dev/consolectl"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4189,6 +4224,7 @@ operator|&&
 operator|!
 name|background
 condition|)
+block|{
 if|if
 condition|(
 name|daemon
@@ -4204,8 +4240,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"failed to become a daemon"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4246,6 +4280,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* clear mouse data */
@@ -4521,8 +4556,6 @@ comment|/* error */
 name|logwarn
 argument_list|(
 literal|"failed to read from mouse"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5261,6 +5294,121 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Output an error message to syslog or stderr as appropriate. If  * `errnum' is non-zero, append its string form to the message.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|log_or_warn
+parameter_list|(
+name|int
+name|log_pri
+parameter_list|,
+name|int
+name|errnum
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vsnprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errnum
+condition|)
+block|{
+name|strlcat
+argument_list|(
+name|buf
+argument_list|,
+literal|": "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strlcat
+argument_list|(
+name|buf
+argument_list|,
+name|strerror
+argument_list|(
+name|errnum
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|background
+condition|)
+name|syslog
+argument_list|(
+name|log_pri
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+else|else
+name|warnx
+argument_list|(
+literal|"%s"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -12247,8 +12395,6 @@ block|{
 name|logwarn
 argument_list|(
 literal|"unable to get status of mouse fd"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12406,8 +12552,6 @@ block|{
 name|logwarn
 argument_list|(
 literal|"unable to set status of mouse fd"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12548,8 +12692,6 @@ block|{
 name|logwarn
 argument_list|(
 literal|"unable to write to mouse fd"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12579,8 +12721,6 @@ condition|)
 name|logwarn
 argument_list|(
 literal|"unable to set status of mouse fd"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -13192,8 +13332,6 @@ argument_list|()
 condition|)
 block|{
 comment|/* 	 * According to PnP spec, we should set DTR = 1 and RTS = 0 while  	 * in idle state.  But, `moused' shall set DTR = RTS = 1 and proceed,  	 * assuming there is something at the port even if it didn't  	 * respond to the PnP enumeration procedure. 	 */
-name|disconnect_idle
-label|:
 name|i
 operator|=
 name|TIOCM_DTR
@@ -14624,11 +14762,12 @@ name|act
 parameter_list|)
 block|{
 specifier|static
+name|int
 name|buf
 index|[
 literal|5
 index|]
-expr_stmt|;
+decl_stmt|;
 specifier|static
 name|int
 name|buflen
