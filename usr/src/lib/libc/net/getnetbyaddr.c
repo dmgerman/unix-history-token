@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getnetbyaddr.c	4.2	82/10/05	*/
+comment|/*	getnetbyaddr.c	4.3	82/10/06	*/
 end_comment
 
 begin_include
@@ -16,10 +16,14 @@ modifier|*
 name|getnetbyaddr
 parameter_list|(
 name|net
+parameter_list|,
+name|type
 parameter_list|)
 specifier|register
 name|int
 name|net
+decl_stmt|,
+name|type
 decl_stmt|;
 block|{
 specifier|register
@@ -42,6 +46,12 @@ argument_list|()
 condition|)
 if|if
 condition|(
+name|p
+operator|->
+name|n_addrtype
+operator|==
+name|type
+operator|&&
 name|p
 operator|->
 name|n_net
