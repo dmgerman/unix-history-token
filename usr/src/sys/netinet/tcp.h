@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -124,6 +124,32 @@ directive|define
 name|TCP_MSS
 value|MIN(512, IP_MSS - sizeof (struct tcpiphdr))
 end_define
+
+begin_comment
+comment|/*  * User-settable options (used with setsockopt).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_NODELAY
+value|0x01
+end_define
+
+begin_comment
+comment|/* don't delay send to coalesce packets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_MAXSEG
+value|0x02
+end_define
+
+begin_comment
+comment|/* set maximum segment size */
+end_comment
 
 end_unit
 
