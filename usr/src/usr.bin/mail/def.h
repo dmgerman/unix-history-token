@@ -27,6 +27,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -40,7 +46,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.3 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.4 %G%";  */
 end_comment
 
 begin_comment
@@ -122,17 +128,6 @@ end_define
 
 begin_comment
 comment|/* max readable line width */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCREEN
-value|18
-end_define
-
-begin_comment
-comment|/* screen size in lines (effective) */
 end_comment
 
 begin_define
