@@ -304,17 +304,18 @@ modifier|*
 name|group
 decl_stmt|;
 block|{
-comment|/* Sanity check: no null group names allowed! */
+comment|/* Sanity check */
 if|if
 condition|(
 name|group
 operator|==
 name|NULL
 operator|||
-operator|*
+operator|!
+name|strlen
+argument_list|(
 name|group
-operator|==
-literal|'\0'
+argument_list|)
 condition|)
 return|return;
 if|if
@@ -755,6 +756,24 @@ decl_stmt|,
 modifier|*
 name|dm
 decl_stmt|;
+comment|/* Sanity check */
+if|if
+condition|(
+name|group
+operator|==
+name|NULL
+operator|||
+operator|!
+name|strlen
+argument_list|(
+name|group
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|setnetgrent
 argument_list|(
 name|group
