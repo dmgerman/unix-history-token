@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ac.c	4.7 (Berkeley) %G%"
+literal|"@(#)ac.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -859,7 +859,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t%-*.*s%6.2f\n"
+literal|"\t%-*.*s %6.2f\n"
 argument_list|,
 name|NMAX
 argument_list|,
@@ -896,7 +896,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ttotal%9.2f\n"
+literal|"\ttotal %9.2f\n"
 argument_list|,
 name|ttime
 operator|/
