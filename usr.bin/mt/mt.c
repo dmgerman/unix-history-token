@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mt.c,v 1.20 1998/12/22 17:28:25 mjacob Exp $"
+literal|"$Id: mt.c,v 1.21 1999/02/05 02:46:21 mjacob Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2892,6 +2892,25 @@ name|densities
 modifier|*
 name|sd
 decl_stmt|;
+comment|/* densities 0 and 0x7f are handled as special cases */
+if|if
+condition|(
+name|d
+operator|==
+literal|0
+condition|)
+return|return
+literal|"default"
+return|;
+if|if
+condition|(
+name|d
+operator|==
+literal|0x7f
+condition|)
+return|return
+literal|"same"
+return|;
 for|for
 control|(
 name|sd
@@ -2922,7 +2941,6 @@ name|dens
 operator|==
 literal|0
 condition|)
-block|{
 name|sprintf
 argument_list|(
 name|buf
@@ -2932,15 +2950,22 @@ argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
-return|return
-name|buf
-return|;
-block|}
 else|else
-return|return
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"0x%02x:%s"
+argument_list|,
+name|d
+argument_list|,
 name|sd
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
 return|;
 block|}
 end_function
