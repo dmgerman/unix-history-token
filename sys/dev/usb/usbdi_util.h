@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.h,v 1.29 2004/06/23 02:30:52 mycroft Exp $	*/
+comment|/*	$NetBSD: usbdi_util.h,v 1.31 2004/12/03 08:53:40 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -175,6 +175,20 @@ name|usbd_device_handle
 parameter_list|,
 name|usb_hub_status_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usbd_status
+name|usbd_get_protocol
+parameter_list|(
+name|usbd_interface_handle
+name|dev
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|report
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -491,6 +505,31 @@ name|device_ptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|const
+name|usb_descriptor_t
+modifier|*
+name|usb_find_desc
+parameter_list|(
+name|usbd_device_handle
+name|dev
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|subtype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|USBD_SUBTYPE_ANY
+value|(~0)
+end_define
 
 end_unit
 
