@@ -1191,6 +1191,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|iter
+decl_stmt|;
+name|int
+name|found
+decl_stmt|;
 comment|/* 	 * Remove routes and flush queues. 	 */
 name|s
 operator|=
@@ -1414,6 +1422,18 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* We can now free link ifaddr. */
+if|if
+condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_addrhead
+argument_list|)
+condition|)
+block|{
 name|ifa
 operator|=
 name|TAILQ_FIRST
@@ -1441,6 +1461,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Delete all remaining routes using this interface 	 * Unfortuneatly the only way to do this is to slog through 	 * the entire routing table looking for routes which point 	 * to this interface...oh well... 	 */
 for|for
 control|(
@@ -1493,6 +1514,35 @@ argument_list|,
 name|IFAN_DEPARTURE
 argument_list|)
 expr_stmt|;
+name|found
+operator|=
+literal|0
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|iter
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|if_link
+argument_list|)
+if|if
+condition|(
+name|iter
+operator|==
+name|ifp
+condition|)
+block|{
+name|found
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|found
+condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
