@@ -518,9 +518,10 @@ literal|1
 operator|!=
 name|argc
 operator|)
+condition|)
 name|usage
 argument_list|()
-empty_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|listmode
@@ -2631,8 +2632,7 @@ index|]
 operator|==
 literal|0
 condition|)
-name|next
-expr_stmt|;
+continue|continue;
 if|if
 condition|(
 name|bars
