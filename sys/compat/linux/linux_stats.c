@@ -437,7 +437,7 @@ operator|.
 name|stat_mode
 operator|&=
 operator|~
-name|S_IFCHR
+name|S_IFMT
 expr_stmt|;
 name|tbuf
 operator|.
