@@ -8465,9 +8465,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USER_LDT
+name|PCPU_SET
+argument_list|(
 name|currentldt
-operator|=
+argument_list|,
 name|_default_ldt
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
