@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.25	%G%"
+literal|"@(#)conf.c	3.26	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -341,6 +341,49 @@ endif|#
 directive|endif
 endif|NEWFTP
 end_endif
+
+begin_comment
+comment|/* **  Location of system files/databases/etc. */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|AliasFile
+init|=
+literal|"/usr/lib/aliases"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* alias file */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ConfFile
+init|=
+literal|"/usr/lib/sendmail.cf"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* runtime configuration */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|StatFile
+init|=
+literal|"/usr/eric/mailstats"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* statistics summary */
+end_comment
 
 begin_escape
 end_escape

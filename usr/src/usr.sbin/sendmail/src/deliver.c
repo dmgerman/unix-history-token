@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.31	%G%"
+literal|"@(#)deliver.c	3.32	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,6 +725,31 @@ name|q_flags
 argument_list|)
 condition|)
 continue|continue;
+comment|/* save statistics.... */
+name|Stat
+operator|.
+name|stat_nt
+index|[
+name|to
+operator|->
+name|q_mailer
+index|]
+operator|++
+expr_stmt|;
+name|Stat
+operator|.
+name|stat_bt
+index|[
+name|to
+operator|->
+name|q_mailer
+index|]
+operator|+=
+name|kbytes
+argument_list|(
+name|MsgSize
+argument_list|)
+expr_stmt|;
 comment|/* 		**  See if this user name is "special". 		**	If the user name has a slash in it, assume that this 		**	is a file -- send it off without further ado. 		**	Note that this means that editfcn's will not 		**	be applied to the message.  Also note that 		**	this type of addresses is not processed along 		**	with the others, so we fudge on the To person. 		*/
 if|if
 condition|(
@@ -1717,10 +1742,6 @@ decl_stmt|;
 specifier|extern
 name|int
 name|N_SysEx
-decl_stmt|;
-specifier|extern
-name|long
-name|MsgSize
 decl_stmt|;
 name|char
 name|buf

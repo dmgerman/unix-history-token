@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.34	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.35	%G% */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ file|"useful.h"
 end_include
 
 begin_comment
-comment|/* **  Manifest constants. */
+comment|/* **  Configuration constants. **	There shouldn't be much need to change these.... */
 end_comment
 
 begin_define
@@ -100,28 +100,6 @@ end_define
 
 begin_comment
 comment|/* maximum mailers known to system */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ALIASFILE
-value|"/usr/lib/aliases"
-end_define
-
-begin_comment
-comment|/* location of alias file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONFFILE
-value|"/usr/lib/sendmail.cf"
-end_define
-
-begin_comment
-comment|/* configuration file */
 end_comment
 
 begin_comment
@@ -981,18 +959,75 @@ comment|/* enter if not there */
 end_comment
 
 begin_comment
-comment|/* **  Global variables. */
+comment|/* **  Statistics structure. */
 end_comment
+
+begin_struct
+struct|struct
+name|statistics
+block|{
+name|time_t
+name|stat_itime
+decl_stmt|;
+comment|/* file initialization time */
+name|short
+name|stat_size
+decl_stmt|;
+comment|/* size of this structure */
+name|long
+name|stat_nf
+index|[
+name|MAXMAILERS
+index|]
+decl_stmt|;
+comment|/* # msgs from each mailer */
+name|long
+name|stat_bf
+index|[
+name|MAXMAILERS
+index|]
+decl_stmt|;
+comment|/* kbytes from each mailer */
+name|long
+name|stat_nt
+index|[
+name|MAXMAILERS
+index|]
+decl_stmt|;
+comment|/* # msgs to each mailer */
+name|long
+name|stat_bt
+index|[
+name|MAXMAILERS
+index|]
+decl_stmt|;
+comment|/* kbytes to each mailer */
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|ArpaMode
+name|struct
+name|statistics
+name|Stat
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|long
+name|kbytes
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/* ARPANET handling mode */
+comment|/* for _bf, _bt */
+end_comment
+
+begin_comment
+comment|/* **  Global variables. */
 end_comment
 
 begin_decl_stmt
@@ -1158,6 +1193,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* exit status code */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ArpaMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ARPANET handling mode */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|MsgSize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of the message in bytes */
 end_comment
 
 begin_decl_stmt

@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.29	%G%"
+literal|"@(#)main.c	3.30	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,14 +419,24 @@ modifier|*
 name|arpadate
 parameter_list|()
 function_decl|;
+specifier|extern
 name|char
 modifier|*
-name|cfname
+name|AliasFile
 decl_stmt|;
+comment|/* location of alias file */
+specifier|extern
 name|char
 modifier|*
-name|aliasname
+name|ConfFile
 decl_stmt|;
+comment|/* location of configuration file */
+specifier|extern
+name|char
+modifier|*
+name|StatFile
+decl_stmt|;
+comment|/* location of statistics summary */
 specifier|register
 name|int
 name|i
@@ -643,14 +653,6 @@ comment|/* 	**  Initialize and define basic system macros. 	**	Collect should be
 name|from
 operator|=
 name|NULL
-expr_stmt|;
-name|cfname
-operator|=
-name|CONFFILE
-expr_stmt|;
-name|aliasname
-operator|=
-name|ALIASFILE
 expr_stmt|;
 comment|/* process id */
 operator|(
@@ -1160,12 +1162,12 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|cfname
+name|ConfFile
 operator|=
 literal|"sendmail.cf"
 expr_stmt|;
 else|else
-name|cfname
+name|ConfFile
 operator|=
 operator|&
 name|p
@@ -1191,12 +1193,12 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|aliasname
+name|AliasFile
 operator|=
 literal|"aliases"
 expr_stmt|;
 else|else
-name|aliasname
+name|AliasFile
 operator|=
 operator|&
 name|p
@@ -1324,7 +1326,7 @@ block|}
 comment|/* 	**  Read control file. 	*/
 name|readcf
 argument_list|(
-name|cfname
+name|ConfFile
 argument_list|,
 name|safecf
 argument_list|)
@@ -1402,7 +1404,7 @@ directive|endif
 endif|V6
 name|initaliases
 argument_list|(
-name|aliasname
+name|AliasFile
 argument_list|,
 name|aliasinit
 argument_list|)
@@ -1978,6 +1980,31 @@ condition|)
 name|finis
 argument_list|()
 expr_stmt|;
+comment|/* collect statistics */
+name|Stat
+operator|.
+name|stat_nf
+index|[
+name|From
+operator|.
+name|q_mailer
+index|]
+operator|++
+expr_stmt|;
+name|Stat
+operator|.
+name|stat_bf
+index|[
+name|From
+operator|.
+name|q_mailer
+index|]
+operator|+=
+name|kbytes
+argument_list|(
+name|MsgSize
+argument_list|)
+expr_stmt|;
 comment|/* 	**  Arrange that the person who is sending the mail 	**  will not be expanded (unless explicitly requested). 	*/
 name|From
 operator|.
@@ -2115,6 +2142,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|poststats
+argument_list|(
+name|StatFile
+argument_list|)
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
