@@ -57,6 +57,13 @@ name|DS1_RECPRIMARY
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|DS1_IRQHZ
+value|((48000<< 8) / 256)
+end_define
+
 begin_struct
 struct|struct
 name|pbank
@@ -2847,6 +2854,40 @@ name|u_int32_t
 name|blocksize
 parameter_list|)
 block|{
+name|struct
+name|sc_pchinfo
+modifier|*
+name|ch
+init|=
+name|data
+decl_stmt|;
+name|int
+name|drate
+decl_stmt|;
+comment|/* irq rate is fixed at 187.5hz */
+name|drate
+operator|=
+name|ch
+operator|->
+name|spd
+operator|*
+name|sndbuf_getbps
+argument_list|(
+name|ch
+operator|->
+name|buffer
+argument_list|)
+expr_stmt|;
+name|blocksize
+operator|=
+operator|(
+name|drate
+operator|<<
+literal|8
+operator|)
+operator|/
+name|DS1_IRQHZ
+expr_stmt|;
 return|return
 name|blocksize
 return|;
