@@ -172,11 +172,9 @@ name|usbd_status
 name|usbd_get_hub_status
 parameter_list|(
 name|usbd_device_handle
-name|dev
 parameter_list|,
 name|usb_hub_status_t
 modifier|*
-name|st
 parameter_list|)
 function_decl|;
 end_function_decl
