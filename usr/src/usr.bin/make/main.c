@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.15 (Berkeley) %G%"
+literal|"@(#)main.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -651,14 +651,6 @@ case|:
 name|debug
 operator||=
 name|DEBUG_MAKE
-expr_stmt|;
-break|break;
-case|case
-literal|'p'
-case|:
-name|debug
-operator||=
-name|DEBUG_PARSE
 expr_stmt|;
 break|break;
 case|case
