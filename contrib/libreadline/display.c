@@ -1564,6 +1564,13 @@ operator|>=
 name|screenwidth
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|temp = ((newlines + 1) * screenwidth) - ((newlines == 0) ? wrap_offset : 0);
+else|#
+directive|else
+comment|/* XXX - possible fix from Darin Johnson<darin@acuson.com> for prompt        string with invisible characters that is longer than the screen        width. */
 name|temp
 operator|=
 operator|(
@@ -1575,7 +1582,7 @@ operator|)
 operator|*
 name|screenwidth
 operator|)
-operator|-
+operator|+
 operator|(
 operator|(
 name|newlines
@@ -1588,6 +1595,8 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 name|inv_lbreaks
 index|[
 operator|++
