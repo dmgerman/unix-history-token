@@ -243,7 +243,7 @@ value|1536
 end_define
 
 begin_comment
-comment|/*  * Ethernet software status per interface.  *  * Each interface is referenced by a network interface structure,  * ns_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its address, ...  */
+comment|/*  * Ethernet software status per interface.  *  * Each interface is referenced by a network interface structure,  * arpcom.ac_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its address, ...  */
 end_comment
 
 begin_struct
@@ -252,19 +252,9 @@ name|ne_softc
 block|{
 name|struct
 name|arpcom
-name|ns_ac
+name|arpcom
 decl_stmt|;
 comment|/* Ethernet common part */
-define|#
-directive|define
-name|ns_if
-value|ns_ac.ac_if
-comment|/* network-visible interface */
-define|#
-directive|define
-name|ns_addr
-value|ns_ac.ac_enaddr
-comment|/* hardware Ethernet address */
 name|int
 name|ns_flags
 decl_stmt|;
@@ -983,7 +973,9 @@ operator|++
 control|)
 name|ns
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 index|[
 name|i
 index|]
@@ -1566,7 +1558,9 @@ init|=
 operator|&
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 decl_stmt|;
 name|ifp
 operator|->
@@ -1590,9 +1584,18 @@ name|ETHERMTU
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ne%d: NE%s address %s"
+literal|"ne%d: address %s, type NE%s\n"
 argument_list|,
 name|unit
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|ns
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+argument_list|)
 argument_list|,
 operator|(
 name|ns
@@ -1605,13 +1608,6 @@ condition|?
 literal|"2000"
 else|:
 literal|"1000"
-argument_list|,
-name|ether_sprintf
-argument_list|(
-name|ns
-operator|->
-name|ns_addr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -1707,7 +1703,9 @@ init|=
 operator|&
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 decl_stmt|;
 name|int
 name|s
@@ -1791,7 +1789,9 @@ name|i
 argument_list|,
 name|ns
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 index|[
 name|i
 index|]
@@ -2046,7 +2046,9 @@ argument_list|)
 expr_stmt|;
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_flags
 operator||=
@@ -2167,7 +2169,9 @@ condition|(
 operator|(
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_flags
 operator|&
@@ -2206,7 +2210,9 @@ argument_list|(
 operator|&
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_snd
 argument_list|,
@@ -2826,7 +2832,9 @@ argument_list|)
 expr_stmt|;
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_ierrors
 operator|++
@@ -3216,7 +3224,9 @@ expr_stmt|;
 comment|/* Need to read these registers to clear status */
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_collisions
 operator|+=
@@ -3229,7 +3239,9 @@ argument_list|)
 expr_stmt|;
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_oerrors
 operator|++
@@ -3253,13 +3265,17 @@ expr_stmt|;
 operator|++
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_opackets
 expr_stmt|;
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_collisions
 operator|+=
@@ -3378,7 +3394,9 @@ argument_list|(
 operator|&
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 argument_list|)
 expr_stmt|;
 name|outb
@@ -3445,7 +3463,9 @@ name|i
 decl_stmt|;
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_ipackets
 operator|++
@@ -3917,7 +3937,9 @@ argument_list|,
 operator|&
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 argument_list|)
 expr_stmt|;
 if|if
@@ -3932,7 +3954,9 @@ argument_list|(
 operator|&
 name|ns
 operator|->
-name|ns_if
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
 name|eh
 argument_list|,
@@ -4511,7 +4535,9 @@ operator|)
 operator|(
 name|ns
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 operator|)
 expr_stmt|;
 else|else
@@ -4540,13 +4566,17 @@ name|caddr_t
 operator|)
 name|ns
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ns
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4657,7 +4687,9 @@ name|caddr_t
 operator|)
 name|ns
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|,
 operator|(
 name|caddr_t
@@ -4671,7 +4703,9 @@ sizeof|sizeof
 argument_list|(
 name|ns
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
