@@ -352,7 +352,7 @@ if|if
 condition|(
 name|sysctlbyname
 argument_list|(
-literal|"machdep.msgbuf"
+literal|"kern.msgbuf"
 argument_list|,
 name|NULL
 argument_list|,
@@ -371,7 +371,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl machdep.msgbuf"
+literal|"sysctl kern.msgbuf"
 argument_list|)
 expr_stmt|;
 if|if
@@ -398,7 +398,7 @@ if|if
 condition|(
 name|sysctlbyname
 argument_list|(
-literal|"machdep.msgbuf"
+literal|"kern.msgbuf"
 argument_list|,
 name|bp
 argument_list|,
@@ -417,7 +417,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl machdep.msgbuf"
+literal|"sysctl kern.msgbuf"
 argument_list|)
 expr_stmt|;
 comment|/* We get a dewrapped buffer using sysctl. */
