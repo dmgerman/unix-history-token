@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.86 2003/08/07 11:13:56 agc Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.90 2004/07/21 00:09:14 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1996-2002 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1996-2004 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -65,7 +65,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.86 2003/08/07 11:13:56 agc Exp $"
+literal|"$NetBSD: main.c,v 1.90 2004/07/21 00:09:14 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -128,6 +128,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -301,6 +307,10 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+name|sigint_raised
+operator|=
+literal|0
 expr_stmt|;
 name|ftpport
 operator|=
@@ -629,7 +639,9 @@ literal|0
 condition|)
 name|rcvbuf_size
 operator|=
-literal|8192
+literal|8
+operator|*
+literal|1024
 expr_stmt|;
 if|if
 condition|(
@@ -639,7 +651,45 @@ literal|0
 condition|)
 name|sndbuf_size
 operator|=
-literal|8192
+literal|8
+operator|*
+literal|1024
+expr_stmt|;
+if|if
+condition|(
+name|sndbuf_size
+operator|>
+literal|8
+operator|*
+literal|1024
+operator|*
+literal|1024
+condition|)
+name|sndbuf_size
+operator|=
+literal|8
+operator|*
+literal|1024
+operator|*
+literal|1024
+expr_stmt|;
+if|if
+condition|(
+name|rcvbuf_size
+operator|>
+literal|8
+operator|*
+literal|1024
+operator|*
+literal|1024
+condition|)
+name|rcvbuf_size
+operator|=
+literal|8
+operator|*
+literal|1024
+operator|*
+literal|1024
 expr_stmt|;
 name|marg_sl
 operator|=
@@ -1883,6 +1933,29 @@ argument_list|,
 name|upload_path
 argument_list|)
 expr_stmt|;
+name|sigint_or_rval_exit
+label|:
+if|if
+condition|(
+name|sigint_raised
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|xsignal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|raise
+argument_list|(
+name|SIGINT
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|rval
@@ -1930,11 +2003,9 @@ operator|>=
 literal|0
 condition|)
 comment|/* -1 == connected and cd-ed */
-name|exit
-argument_list|(
-name|rval
-argument_list|)
-expr_stmt|;
+goto|goto
+name|sigint_or_rval_exit
+goto|;
 block|}
 else|else
 block|{
@@ -1953,18 +2024,20 @@ name|host
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|rval
+operator|=
 name|sigsetjmp
 argument_list|(
 name|toplevel
 argument_list|,
 literal|1
 argument_list|)
+operator|)
 condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+goto|goto
+name|sigint_or_rval_exit
+goto|;
 operator|(
 name|void
 operator|)
@@ -4176,8 +4249,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-46AadefginpRtvV] [-N netrc] [-o outfile] [-P port] [-r retry]\n"
-literal|"           [-T dir,max[,inc][[user@]host [port]]] [host:path[/]]\n"
+literal|"usage: %s [-46AadefginpRtvV] [-N netrc] [-o outfile] [-P port] [-q quittime]\n"
+literal|"           [-r retry] [-T dir,max[,inc][[user@]host [port]]] [host:path[/]]\n"
 literal|"           [file:///file] [ftp://[user[:pass]@]host[:port]/path[/]]\n"
 literal|"           [http://[user[:pass]@]host[:port]/path] [...]\n"
 literal|"       %s -u URL file [...]\n"
