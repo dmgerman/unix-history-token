@@ -1809,9 +1809,11 @@ name|len
 decl_stmt|;
 if|if
 condition|(
-name|path
-operator|==
-name|NULL
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ROOTFS
 condition|)
 block|{
 name|printf

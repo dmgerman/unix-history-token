@@ -251,6 +251,19 @@ name|mnt_flag
 operator||=
 name|MNT_NOCLUSTERW
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ROOTFS
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 comment|/* 	 * Update is a no-op 	 */
 if|if
 condition|(

@@ -531,18 +531,15 @@ name|mp
 operator|->
 name|mnt_flag
 operator|&
+operator|(
 name|MNT_UPDATE
+operator||
+name|MNT_ROOTFS
+operator|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"MNT_UPDATE not implemented"
-argument_list|)
-expr_stmt|;
 return|return
 name|EOPNOTSUPP
 return|;
-block|}
 name|error
 operator|=
 name|copyin

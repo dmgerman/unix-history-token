@@ -277,7 +277,11 @@ name|mp
 operator|->
 name|mnt_flag
 operator|&
+operator|(
 name|MNT_UPDATE
+operator||
+name|MNT_ROOTFS
+operator|)
 condition|)
 block|{
 return|return
