@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.44 (Berkeley) %G%"
+literal|"@(#)mount.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1303,6 +1303,9 @@ name|mnttype
 condition|)
 block|{
 case|case
+name|MOUNT_LFS
+case|:
+case|case
 name|MOUNT_UFS
 case|:
 if|if
@@ -2140,6 +2143,21 @@ condition|)
 return|return
 operator|(
 name|MOUNT_MFS
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|fstype
+argument_list|,
+literal|"lfs"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|MOUNT_LFS
 operator|)
 return|;
 return|return
