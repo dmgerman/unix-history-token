@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.8 (Berkeley) 86/12/15"
+literal|"@(#)route.c	5.9 (Berkeley) 87/02/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,12 @@ block|{
 name|RTF_DYNAMIC
 block|,
 literal|'D'
+block|}
+block|,
+block|{
+name|RTF_MODIFIED
+block|,
+literal|'M'
 block|}
 block|,
 block|{
