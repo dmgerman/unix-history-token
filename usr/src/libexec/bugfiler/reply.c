@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reply.c	5.9 (Berkeley) %G%"
+literal|"@(#)reply.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dirent.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -61,7 +61,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_include
@@ -74,12 +86,10 @@ begin_comment
 comment|/*  * reply --  *	tell the user we got their silly little bug report  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|reply
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -102,17 +112,8 @@ comment|/* return value */
 name|FILE
 modifier|*
 name|pf
-decl_stmt|,
-comment|/* pipe pointer */
-modifier|*
-name|popen
-argument_list|()
 decl_stmt|;
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
+comment|/* pipe pointer */
 if|if
 condition|(
 name|mailhead
@@ -295,7 +296,7 @@ if|if
 condition|(
 name|to
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|C
 argument_list|,
@@ -593,7 +594,7 @@ name|pf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

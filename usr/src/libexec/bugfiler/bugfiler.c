@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.17 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,12 +89,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -113,7 +107,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -140,7 +146,34 @@ begin_comment
 comment|/* temp bug file */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|logit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|make_copy
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -152,8 +185,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -186,14 +219,6 @@ modifier|*
 name|argversion
 decl_stmt|;
 comment|/* folder name provided */
-specifier|static
-name|void
-name|logit
-argument_list|()
-decl_stmt|,
-name|make_copy
-argument_list|()
-decl_stmt|;
 name|do_ack
 operator|=
 name|do_redist
@@ -223,9 +248,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -432,11 +454,6 @@ comment|/* read return value */
 name|tfd
 decl_stmt|;
 comment|/* temp file descriptor */
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|access
@@ -556,10 +573,6 @@ name|C1
 decl_stmt|,
 modifier|*
 name|C2
-decl_stmt|,
-modifier|*
-name|ctime
-argument_list|()
 decl_stmt|;
 if|if
 condition|(

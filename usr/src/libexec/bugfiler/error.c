@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)error.c	5.8 (Berkeley) %G%"
+literal|"@(#)error.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,12 +43,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -61,7 +55,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -79,12 +91,10 @@ begin_comment
 comment|/*  * seterr --  *	redirect stderr for error processing  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|seterr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -110,28 +120,29 @@ operator|=
 name|YES
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * error --  *	write errors to log file and die  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|error
-argument_list|(
+parameter_list|(
 name|fmt
-argument_list|,
+parameter_list|,
 name|arg
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|fmt
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|arg
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -143,15 +154,6 @@ name|MAXLINELEN
 index|]
 decl_stmt|;
 comment|/* syslog message */
-name|char
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcat
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 name|err_redir

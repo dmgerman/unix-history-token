@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.9 (Berkeley) %G%"
+literal|"@(#)process.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -55,7 +55,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -67,19 +67,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -95,16 +101,27 @@ begin_comment
 comment|/* permanent file name */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|getnext
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * process --  *	copy report to permanent file,  *	update summary file.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|process
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -120,11 +137,6 @@ name|int
 name|lfd
 decl_stmt|;
 comment|/* lock file descriptor */
-specifier|static
-name|int
-name|getnext
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|access
@@ -381,7 +393,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * getnext --  *	get next file name (number)  */

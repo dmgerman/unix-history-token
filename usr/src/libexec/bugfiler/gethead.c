@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethead.c	5.10 (Berkeley) %G%"
+literal|"@(#)gethead.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -73,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -82,14 +82,37 @@ directive|include
 file|"bug.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
 name|chk1
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|pbuf
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -277,20 +300,15 @@ begin_comment
 comment|/*  * gethead --  *	read mail and bug headers from bug report, construct redist headers  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|gethead
-argument_list|(
-argument|redist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|redist
+parameter_list|)
 name|int
 name|redist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|HEADER
@@ -551,25 +569,23 @@ name|CHN
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * chk1 --  *	parse the "Index:" line into folder and directory  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|chk1
-argument_list|(
-argument|line
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|line
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|line
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -582,11 +598,6 @@ name|stat
 name|sbuf
 decl_stmt|;
 comment|/* existence check */
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|sscanf
@@ -611,7 +622,7 @@ if|if
 condition|(
 name|C
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|folder
 argument_list|,
@@ -676,25 +687,23 @@ name|YES
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * pbuf --  *	kludge so that summary file looks pretty  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|pbuf
-argument_list|(
-argument|line
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|line
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|line
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -803,7 +812,7 @@ name|YES
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

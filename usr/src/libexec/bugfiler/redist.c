@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)redist.c	5.12 (Berkeley) %G%"
+literal|"@(#)redist.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dirent.h>
 end_include
 
@@ -44,12 +50,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -70,16 +70,20 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * redist --  *	Redistribute a bug report to those people indicated in the  *	redistribution list file.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|redist
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|FILE
@@ -104,21 +108,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|pf
-decl_stmt|,
-modifier|*
-name|popen
-argument_list|()
 decl_stmt|;
 name|int
 name|group
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
 decl_stmt|;
 operator|(
 name|void
@@ -175,7 +167,7 @@ if|if
 condition|(
 name|C1
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|bfr
 argument_list|,
@@ -355,7 +347,7 @@ name|pf
 argument_list|,
 literal|"To%s"
 argument_list|,
-name|index
+name|strchr
 argument_list|(
 name|mailhead
 index|[
@@ -410,7 +402,7 @@ if|if
 condition|(
 name|C2
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|C1
 argument_list|,
@@ -449,7 +441,7 @@ if|if
 condition|(
 name|C1
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|bfr
 argument_list|,
@@ -595,7 +587,7 @@ name|pf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
