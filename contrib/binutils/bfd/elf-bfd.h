@@ -6425,6 +6425,34 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|elfcore_write_lwpstatus
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|long
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* MIPS ELF specific routines.  */
 end_comment

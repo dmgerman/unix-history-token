@@ -27,7 +27,7 @@ parameter_list|,
 name|ext
 parameter_list|)
 define|\
-value|bfd_h_get_32(abfd, (bfd_byte *) ext->x_sym.x_fcnary.x_fcn.x_lnnoptr)
+value|H_GET_32 (abfd, ext->x_sym.x_fcnary.x_fcn.x_lnnoptr)
 end_define
 
 begin_endif
@@ -51,7 +51,7 @@ parameter_list|,
 name|ext
 parameter_list|)
 define|\
-value|bfd_h_get_32(abfd, (bfd_byte *) ext->x_sym.x_fcnary.x_fcn.x_endndx)
+value|H_GET_32 (abfd, ext->x_sym.x_fcnary.x_fcn.x_endndx)
 end_define
 
 begin_endif
@@ -76,7 +76,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_32(abfd,  in, (bfd_byte *) ext->x_sym.x_fcnary.x_fcn.x_lnnoptr)
+define|\
+value|H_PUT_32(abfd, in, ext->x_sym.x_fcnary.x_fcn.x_lnnoptr)
 end_define
 
 begin_endif
@@ -101,7 +102,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_32(abfd, in, (bfd_byte *) ext->x_sym.x_fcnary.x_fcn.x_endndx)
+define|\
+value|H_PUT_32(abfd, in, ext->x_sym.x_fcnary.x_fcn.x_endndx)
 end_define
 
 begin_endif
@@ -124,7 +126,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *) ext->x_sym.x_misc.x_lnsz.x_lnno)
+define|\
+value|H_GET_16 (abfd, ext->x_sym.x_misc.x_lnsz.x_lnno)
 end_define
 
 begin_endif
@@ -147,7 +150,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *) ext->x_sym.x_misc.x_lnsz.x_size)
+define|\
+value|H_GET_16 (abfd, ext->x_sym.x_misc.x_lnsz.x_size)
 end_define
 
 begin_endif
@@ -172,7 +176,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd, in, (bfd_byte *)ext->x_sym.x_misc.x_lnsz.x_lnno)
+define|\
+value|H_PUT_16(abfd, in, ext->x_sym.x_misc.x_lnsz.x_lnno)
 end_define
 
 begin_endif
@@ -197,7 +202,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd, in, (bfd_byte*) ext->x_sym.x_misc.x_lnsz.x_size)
+define|\
+value|H_PUT_16(abfd, in, ext->x_sym.x_misc.x_lnsz.x_size)
 end_define
 
 begin_endif
@@ -220,7 +226,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_32(abfd, (bfd_byte *) ext->x_scn.x_scnlen)
+define|\
+value|H_GET_32 (abfd, ext->x_scn.x_scnlen)
 end_define
 
 begin_endif
@@ -243,7 +250,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *)ext->x_scn.x_nreloc)
+define|\
+value|H_GET_16 (abfd, ext->x_scn.x_nreloc)
 end_define
 
 begin_endif
@@ -266,7 +274,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *)ext->x_scn.x_nlinno)
+define|\
+value|H_GET_16 (abfd, ext->x_scn.x_nlinno)
 end_define
 
 begin_endif
@@ -291,7 +300,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_32(abfd, in, (bfd_byte *) ext->x_scn.x_scnlen)
+define|\
+value|H_PUT_32(abfd, in, ext->x_scn.x_scnlen)
 end_define
 
 begin_endif
@@ -316,7 +326,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd, in, (bfd_byte *)ext->x_scn.x_nreloc)
+define|\
+value|H_PUT_16(abfd, in, ext->x_scn.x_nreloc)
 end_define
 
 begin_endif
@@ -341,7 +352,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd,in, (bfd_byte  *) ext->x_scn.x_nlinno)
+define|\
+value|H_PUT_16(abfd,in, ext->x_scn.x_nlinno)
 end_define
 
 begin_endif
@@ -364,7 +376,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *) (ext->l_lnno));
+define|\
+value|H_GET_16 (abfd, ext->l_lnno);
 end_define
 
 begin_endif
@@ -389,7 +402,8 @@ name|val
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd,val,  (bfd_byte *) (ext->l_lnno));
+define|\
+value|H_PUT_16(abfd,val, ext->l_lnno);
 end_define
 
 begin_endif
@@ -411,7 +425,7 @@ begin_define
 define|#
 directive|define
 name|GET_FILEHDR_SYMPTR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -429,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|PUT_FILEHDR_SYMPTR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -451,7 +465,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_TSIZE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -469,7 +483,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_TSIZE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -487,7 +501,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_DSIZE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -505,7 +519,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_DSIZE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -523,7 +537,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_BSIZE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -541,7 +555,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_BSIZE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -559,7 +573,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_ENTRY
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -577,7 +591,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_ENTRY
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -595,7 +609,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_TEXT_START
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -613,7 +627,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_TEXT_START
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -631,7 +645,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_DATA_START
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -649,7 +663,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_DATA_START
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -671,7 +685,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_PADDR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -689,7 +703,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_PADDR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -707,7 +721,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_VADDR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -725,7 +739,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_VADDR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -743,7 +757,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_SIZE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -761,7 +775,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_SIZE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -779,7 +793,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_SCNPTR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -797,7 +811,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_SCNPTR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -815,7 +829,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_RELPTR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -833,7 +847,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_RELPTR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -851,7 +865,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_LNNOPTR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -869,7 +883,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_LNNOPTR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -887,70 +901,70 @@ begin_define
 define|#
 directive|define
 name|GET_OPTHDR_IMAGE_BASE
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_IMAGE_BASE
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_OPTHDR_SIZE_OF_STACK_RESERVE
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_SIZE_OF_STACK_RESERVE
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_OPTHDR_SIZE_OF_STACK_COMMIT
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_SIZE_OF_STACK_COMMIT
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_OPTHDR_SIZE_OF_HEAP_RESERVE
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_SIZE_OF_HEAP_RESERVE
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_OPTHDR_SIZE_OF_HEAP_COMMIT
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_SIZE_OF_HEAP_COMMIT
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
@@ -1092,70 +1106,70 @@ begin_define
 define|#
 directive|define
 name|GET_OPTHDR_IMAGE_BASE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_IMAGE_BASE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_OPTHDR_SIZE_OF_STACK_RESERVE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_SIZE_OF_STACK_RESERVE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_OPTHDR_SIZE_OF_STACK_COMMIT
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_SIZE_OF_STACK_COMMIT
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_OPTHDR_SIZE_OF_HEAP_RESERVE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_SIZE_OF_HEAP_RESERVE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_OPTHDR_SIZE_OF_HEAP_COMMIT
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_OPTHDR_SIZE_OF_HEAP_COMMIT
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_define

@@ -4250,7 +4250,7 @@ name|unw_decoder
 typedef|)
 name|PARAMS
 argument_list|(
-argument|(const unsigned char *, unsigned char, void *)
+argument|(const unsigned char *, unsigned int, void *)
 argument_list|)
 typedef|;
 end_typedef

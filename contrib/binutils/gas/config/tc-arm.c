@@ -34727,7 +34727,7 @@ modifier|*
 name|str
 decl_stmt|;
 name|enum
-name|vfp_sp_reg_pos
+name|vfp_dp_reg_pos
 name|pos
 decl_stmt|;
 block|{

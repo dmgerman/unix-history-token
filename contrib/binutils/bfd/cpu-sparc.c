@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD support for the SPARC architecture.    Copyright 1992, 1995, 1996, 1998, 2000 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD support for the SPARC architecture.    Copyright 1992, 1995, 1996, 1998, 2000, 2002    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -20,77 +20,6 @@ include|#
 directive|include
 file|"libbfd.h"
 end_include
-
-begin_comment
-comment|/* Don't mix 32 bit and 64 bit files.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_arch_info_type
-modifier|*
-name|sparc_compatible
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|bfd_arch_info_type
-operator|*
-operator|,
-specifier|const
-name|bfd_arch_info_type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-specifier|const
-name|bfd_arch_info_type
-modifier|*
-name|sparc_compatible
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-specifier|const
-name|bfd_arch_info_type
-modifier|*
-name|a
-decl_stmt|;
-specifier|const
-name|bfd_arch_info_type
-modifier|*
-name|b
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|a
-operator|->
-name|bits_per_word
-operator|!=
-name|b
-operator|->
-name|bits_per_word
-condition|)
-return|return
-name|NULL
-return|;
-return|return
-name|bfd_default_compatible
-argument_list|(
-name|a
-argument_list|,
-name|b
-argument_list|)
-return|;
-block|}
-end_function
 
 begin_decl_stmt
 specifier|static
@@ -122,7 +51,7 @@ literal|3
 block|,
 name|false
 block|,
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
@@ -155,7 +84,7 @@ literal|3
 block|,
 name|false
 block|,
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
@@ -188,7 +117,7 @@ literal|3
 block|,
 name|false
 block|,
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
@@ -221,7 +150,7 @@ literal|3
 block|,
 name|false
 block|,
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
@@ -254,7 +183,7 @@ literal|3
 block|,
 name|false
 block|,
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
@@ -287,7 +216,7 @@ literal|3
 block|,
 name|false
 block|,
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
@@ -320,7 +249,7 @@ literal|3
 block|,
 name|false
 block|,
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
@@ -353,7 +282,7 @@ literal|3
 block|,
 name|false
 block|,
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
@@ -386,7 +315,7 @@ literal|3
 block|,
 name|false
 block|,
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
@@ -424,7 +353,7 @@ block|,
 name|true
 block|,
 comment|/* the default */
-name|sparc_compatible
+name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,

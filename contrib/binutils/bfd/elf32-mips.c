@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MIPS-specific support for 32-bit ELF    Copyright 1993, 94, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.     Most of the information added by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.    N32/64 ABI support added by Mark Mitchell, CodeSourcery, LLC.<mark@codesourcery.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MIPS-specific support for 32-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     Most of the information added by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.    N32/64 ABI support added by Mark Mitchell, CodeSourcery, LLC.<mark@codesourcery.com>    Traditional MIPS targets support added by Koundinya.K, Dansk Data    Elektronik& Operations Research Group.<kk@ddeorg.soft.net>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -86,7 +86,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|ECOFF_32
+name|ECOFF_SIGNED_32
 end_define
 
 begin_include
@@ -149,10 +149,18 @@ name|unsigned
 name|int
 name|possibly_dynamic_relocs
 decl_stmt|;
+comment|/* If the R_MIPS_32, R_MIPS_REL32, or R_MIPS_64 reloc is against      a readonly section.  */
+name|boolean
+name|readonly_reloc
+decl_stmt|;
 comment|/* The index of the first dynamic relocation (in the .rel.dyn      section) against this symbol.  */
 name|unsigned
 name|int
 name|min_dyn_reloc_index
+decl_stmt|;
+comment|/* We must not create a stub for a symbol that has relocations      related to taking the function's address, i.e. any but      R_MIPS_CALL*16 ones -- see "MIPS ABI Supplement, 3rd Edition",      p. 4-20.  */
+name|boolean
+name|no_fn_stub
 decl_stmt|;
 comment|/* If there is a stub that 32 bit functions should use to call this      16 bit function, this points to the section containing the stub.  */
 name|asection
@@ -330,7 +338,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void bfd_mips_elf_swap_msym_in    PARAMS ((bfd *, const Elf32_External_Msym *, Elf32_Internal_Msym *));
+unit|static void bfd_mips_elf_swap_msym_in   PARAMS ((bfd *, const Elf32_External_Msym *, Elf32_Internal_Msym *));
 endif|#
 directive|endif
 end_endif
@@ -417,7 +425,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|INLINE
-name|int
+name|unsigned
+name|long
 name|elf_mips_mach
 name|PARAMS
 argument_list|(
@@ -1110,6 +1119,8 @@ operator|,
 name|asection
 operator|*
 operator|*
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1153,6 +1164,8 @@ name|bfd_link_info
 operator|*
 operator|,
 name|bfd_vma
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1229,6 +1242,198 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|sort_dynamic_relocs
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|_bfd_mips_elf_hide_symbol
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|,
+name|boolean
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|_bfd_mips_elf_copy_indirect_symbol
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|,
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_grok_prstatus
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|Elf_Internal_Note
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_grok_psinfo
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|Elf_Internal_Note
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_discard_info
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|elf_reloc_cookie
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_ignore_discarded_relocs
+name|PARAMS
+argument_list|(
+operator|(
+name|asection
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_write_section
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|bfd_byte
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_tradbigmips_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_tradlittlemips_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD64
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf64_tradbigmips_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf64_tradlittlemips_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* The level of IRIX compatibility we're striving for.  */
 end_comment
@@ -1248,6 +1453,18 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* This will be used when we sort the dynamic relocation records.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bfd
+modifier|*
+name|reldyn_sorting_bfd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero if ABFD is using the N32 ABI.  */
 end_comment
 
@@ -1263,7 +1480,7 @@ value|((elf_elfheader (abfd)->e_flags& EF_MIPS_ABI2) != 0)
 end_define
 
 begin_comment
-comment|/* Nonzero if ABFD is using the 64-bit ABI.  FIXME: This is never    true, yet.  */
+comment|/* Nonzero if ABFD is using the 64-bit ABI. */
 end_comment
 
 begin_define
@@ -1278,8 +1495,14 @@ value|((elf_elfheader (abfd)->e_ident[EI_CLASS] == ELFCLASS64) != 0)
 end_define
 
 begin_comment
-comment|/* What version of Irix we are trying to be compatible with.  FIXME:    At the moment, we never generate "normal" MIPS ELF ABI executables;    we always use some version of Irix.  */
+comment|/* Depending on the target vector we generate some version of Irix    executables or "normal" MIPS ELF ABI executables.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD64
+end_ifdef
 
 begin_define
 define|#
@@ -1289,7 +1512,38 @@ parameter_list|(
 name|abfd
 parameter_list|)
 define|\
-value|((ABI_N32_P (abfd) || ABI_64_P (abfd)) ? ict_irix6 : ict_irix5)
+value|(((abfd->xvec ==&bfd_elf64_tradbigmips_vec) || \     (abfd->xvec ==&bfd_elf64_tradlittlemips_vec) || \     (abfd->xvec ==&bfd_elf32_tradbigmips_vec) || \     (abfd->xvec ==&bfd_elf32_tradlittlemips_vec)) ? ict_none : \   ((ABI_N32_P (abfd) || ABI_64_P (abfd)) ? ict_irix6 : ict_irix5))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IRIX_COMPAT
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|(((abfd->xvec ==&bfd_elf32_tradbigmips_vec) || \     (abfd->xvec ==&bfd_elf32_tradlittlemips_vec)) ? ict_none : \   ((ABI_N32_P (abfd) || ABI_64_P (abfd)) ? ict_irix6 : ict_irix5))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NEWABI_P
+parameter_list|(
+name|abfd
+parameter_list|)
+value|(ABI_N32_P(abfd) || ABI_64_P(abfd))
 end_define
 
 begin_comment
@@ -1512,7 +1766,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|(ABI_64_P (elf_hash_table (info)->dynobj)	   \    ? bfd_elf64_add_dynamic_entry (info, tag, val)  \    : bfd_elf32_add_dynamic_entry (info, tag, val))
+value|(ABI_64_P (elf_hash_table (info)->dynobj)				\    ? bfd_elf64_add_dynamic_entry (info, (bfd_vma) tag, (bfd_vma) val)	\    : bfd_elf32_add_dynamic_entry (info, (bfd_vma) tag, (bfd_vma) val))
 end_define
 
 begin_else
@@ -1532,7 +1786,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|(ABI_64_P (elf_hash_table (info)->dynobj)	   \    ? (abort (), false)                             \    : bfd_elf32_add_dynamic_entry (info, tag, val))
+value|(ABI_64_P (elf_hash_table (info)->dynobj)				\    ? (boolean) (abort (), false)					\    : bfd_elf32_add_dynamic_entry (info, (bfd_vma) tag, (bfd_vma) val))
 end_define
 
 begin_endif
@@ -1577,7 +1831,7 @@ value|(SGI_COMPAT (abfd)						\    ? (ABI_64_P (abfd)  						\       ? 0xdf99801
 comment|/* ld t9,0x8010(gp) */
 value|\       : 0x8f998010)
 comment|/* lw t9,0x8010(gp) */
-value|\    : 0x8f998000)
+value|\    : 0x8f998010)
 end_define
 
 begin_comment
@@ -1588,7 +1842,11 @@ begin_define
 define|#
 directive|define
 name|STUB_MOVE
-value|0x03e07825
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|(SGI_COMPAT (abfd) ? 0x03e07825 : 0x03e07821)
 end_define
 
 begin_comment
@@ -1610,7 +1868,11 @@ begin_define
 define|#
 directive|define
 name|STUB_LI16
-value|0x34180000
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|(SGI_COMPAT (abfd) ? 0x34180000 : 0x24180000)
 end_define
 
 begin_comment
@@ -1797,7 +2059,7 @@ name|rtype
 range|:
 literal|4
 decl_stmt|;
-comment|/* Relocation types. See below. */
+comment|/* Relocation types. See below.  */
 name|unsigned
 name|int
 name|dist2to
@@ -1843,7 +2105,7 @@ name|rtype
 range|:
 literal|4
 decl_stmt|;
-comment|/* Relocation types. See below. */
+comment|/* Relocation types. See below.  */
 name|unsigned
 name|int
 name|dist2to
@@ -2115,17 +2377,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|USE_REL
-value|1
-end_define
-
-begin_comment
-comment|/* MIPS uses REL relocations instead of RELA */
-end_comment
-
 begin_comment
 comment|/* In case we're on a 32-bit machine, construct a 64-bit "-1" value    from smaller values.  Start with zero, widen, *then* decrement.  */
 end_comment
@@ -2137,10 +2388,14 @@ name|MINUS_ONE
 value|(((bfd_vma)0) - 1)
 end_define
 
+begin_comment
+comment|/* The relocation table used for SHT_REL sections.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|reloc_howto_type
-name|elf_mips_howto_table
+name|elf_mips_howto_table_rel
 index|[]
 init|=
 block|{
@@ -2196,7 +2451,7 @@ comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|1
+literal|2
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -2208,7 +2463,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_signed
 argument_list|,
 comment|/* complain_on_overflow */
 name|bfd_elf_generic_reloc
@@ -2220,10 +2475,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -2251,7 +2506,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
 name|bfd_elf_generic_reloc
@@ -2294,7 +2549,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
 name|bfd_elf_generic_reloc
@@ -2316,7 +2571,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 26 bit branch address.  */
+comment|/* 26 bit jump address.  */
 name|HOWTO
 argument_list|(
 name|R_MIPS_26
@@ -2340,7 +2595,7 @@ comment|/* bitpos */
 name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
-comment|/* This needs complex overflow 				   detection, because the upper four 				   bits must match the PC.  */
+comment|/* This needs complex overflow 				   detection, because the upper four 				   bits must match the PC + 4.  */
 name|bfd_elf_generic_reloc
 argument_list|,
 comment|/* special_function */
@@ -2350,10 +2605,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0x3ffffff
+literal|0x03ffffff
 argument_list|,
 comment|/* src_mask */
-literal|0x3ffffff
+literal|0x03ffffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -2393,10 +2648,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -2436,10 +2691,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -2479,10 +2734,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -2522,10 +2777,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -2562,13 +2817,13 @@ comment|/* special_function */
 literal|"R_MIPS_GOT16"
 argument_list|,
 comment|/* name */
-name|false
+name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -2608,10 +2863,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|true
@@ -2648,13 +2903,13 @@ comment|/* special_function */
 literal|"R_MIPS_CALL16"
 argument_list|,
 comment|/* name */
-name|false
+name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -2682,7 +2937,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
 name|_bfd_mips_elf_gprel32_reloc
@@ -2704,7 +2959,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* The remaining relocs are defined on Irix 5, although they are        not defined by the ABI.  */
+comment|/* The remaining relocs are defined on Irix 5, although they are      not defined by the ABI.  */
 name|EMPTY_HOWTO
 argument_list|(
 literal|13
@@ -2828,7 +3083,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
 name|mips32_64bit_reloc
@@ -2871,7 +3126,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_signed
 argument_list|,
 comment|/* complain_on_overflow */
 name|bfd_elf_generic_reloc
@@ -2914,7 +3169,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_signed
 argument_list|,
 comment|/* complain_on_overflow */
 name|bfd_elf_generic_reloc
@@ -2957,7 +3212,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_signed
 argument_list|,
 comment|/* complain_on_overflow */
 name|bfd_elf_generic_reloc
@@ -3086,7 +3341,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
 name|bfd_elf_generic_reloc
@@ -3157,10 +3412,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -3200,10 +3455,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -3326,7 +3581,7 @@ comment|/* special_function */
 literal|"R_MIPS_SCN_DISP"
 argument_list|,
 comment|/* name */
-name|false
+name|true
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -3359,7 +3614,7 @@ argument_list|(
 name|R_MIPS_RELGOT
 argument_list|)
 block|,
-comment|/* Protected jump conversion.  This is an optimization hint.  No       relocation is required for correctness.  */
+comment|/* Protected jump conversion.  This is an optimization hint.  No      relocation is required for correctness.  */
 name|HOWTO
 argument_list|(
 name|R_MIPS_JALR
@@ -3368,10 +3623,10 @@ comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|0
+literal|2
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
+literal|32
 argument_list|,
 comment|/* bitsize */
 name|false
@@ -3396,6 +3651,1482 @@ literal|0x00000000
 argument_list|,
 comment|/* src_mask */
 literal|0x00000000
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The relocation table used for SHT_RELA sections.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|elf_mips_howto_table_rela
+index|[]
+init|=
+block|{
+comment|/* No relocation.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_NONE
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|0
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_NONE"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 16 bit relocation.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 32 bit relocation.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_32
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_32"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 32 bit symbol relative relocation.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_REL32
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_REL32"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 26 bit jump address.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_26
+argument_list|,
+comment|/* type */
+literal|2
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|26
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+comment|/* This needs complex overflow 				   detection, because the upper 36 				   bits must match the PC + 4.  */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_26"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x03ffffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* R_MIPS_HI16 and R_MIPS_LO16 are unsupported for 64 bit REL.  */
+comment|/* High 16 bits of symbol value.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_HI16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_HI16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Low 16 bits of symbol value.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_LO16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_LO16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* GP relative reference.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GPREL16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_gprel16_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GPREL16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Reference to literal section.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_LITERAL
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_gprel16_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_LITERAL"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Reference to global offset table.  */
+comment|/* FIXME: This is not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GOT16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GOT16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 16 bit PC relative reference.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_PC16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|true
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_PC16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|true
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 16 bit call through global offset table.  */
+comment|/* FIXME: This is not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_CALL16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_CALL16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 32 bit GP relative reference.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GPREL32
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_gprel32_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GPREL32"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+name|EMPTY_HOWTO
+argument_list|(
+literal|13
+argument_list|)
+block|,
+name|EMPTY_HOWTO
+argument_list|(
+literal|14
+argument_list|)
+block|,
+name|EMPTY_HOWTO
+argument_list|(
+literal|15
+argument_list|)
+block|,
+comment|/* A 5 bit shift field.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_SHIFT5
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|5
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|6
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_bitfield
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_SHIFT5"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x000007c0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* A 6 bit shift field.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_SHIFT6
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|6
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|6
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_bitfield
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_SHIFT6"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x000007c4
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 64 bit relocation.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_64
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|4
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|64
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_64"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+name|MINUS_ONE
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Displacement in the global offset table.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GOT_DISP
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GOT_DISP"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Displacement to page pointer in the global offset table.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GOT_PAGE
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GOT_PAGE"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Offset from page pointer in the global offset table.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GOT_OFST
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GOT_OFST"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* High 16 bits of displacement in global offset table.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GOT_HI16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GOT_HI16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Low 16 bits of displacement in global offset table.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GOT_LO16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GOT_LO16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 64 bit substraction.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_SUB
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|4
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|64
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_SUB"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+name|MINUS_ONE
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Insert the addend as an instruction.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_INSERT_A
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_INSERT_A"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Insert the addend as an instruction, and change all relocations      to refer to the old instruction at the address.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_INSERT_B
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_INSERT_B"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Delete a 32 bit instruction.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_DELETE
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_DELETE"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Get the higher value of a 64 bit addend.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_HIGHER
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_HIGHER"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Get the highest value of a 64 bit addend.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_HIGHEST
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_HIGHEST"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* High 16 bits of displacement in global offset table.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_CALL_HI16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_CALL_HI16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Low 16 bits of displacement in global offset table.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_CALL_LO16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_CALL_LO16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Section displacement, used by an associated event location section.  */
+comment|/* FIXME: Not handled correctly.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_SCN_DISP
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_SCN_DISP"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+name|HOWTO
+argument_list|(
+name|R_MIPS_REL16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|1
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_REL16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* These two are obsolete.  */
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS_ADD_IMMEDIATE
+argument_list|)
+block|,
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS_PJUMP
+argument_list|)
+block|,
+comment|/* Similiar to R_MIPS_REL32, but used for relocations in a GOT section.      It must be used for multigot GOT's (and only there).  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_RELGOT
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_RELGOT"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Protected jump conversion.  This is an optimization hint.  No      relocation is required for correctness.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_JALR
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_JALR"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -3972,7 +5703,7 @@ comment|/* pcrel_offset */
 end_comment
 
 begin_comment
-comment|/* Do a R_MIPS_HI16 relocation.  This has to be done in combination    with a R_MIPS_LO16 reloc, because there is a carry from the LO16 to    the HI16.  Here we just save the information we need; we do the    actual relocation when we see the LO16.  MIPS ELF requires that the    LO16 immediately follow the HI16.  As a GNU extension, we permit an    arbitrary number of HI16 relocs to be associated with a single LO16    reloc.  This extension permits gcc to output the HI and LO relocs    itself.  */
+comment|/* Do a R_MIPS_HI16 relocation.  This has to be done in combination    with a R_MIPS_LO16 reloc, because there is a carry from the LO16 to    the HI16.  Here we just save the information we need; we do the    actual relocation when we see the LO16.     MIPS ELF requires that the LO16 immediately follow the HI16.  As a    GNU extension, for non-pc-relative relocations, we permit an    arbitrary number of HI16 relocs to be associated with a single LO16    reloc.  This extension permits gcc to output the HI and LO relocs    itself.     This cannot be done for PC-relative relocations because both the HI16    and LO16 parts of the relocations must be done relative to the LO16    part, and there can be carry to or borrow from the HI16 part.  */
 end_comment
 
 begin_struct
@@ -4293,6 +6024,9 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 expr|*
 name|n
@@ -4469,7 +6203,6 @@ argument_list|)
 expr_stmt|;
 name|vallo
 operator|=
-operator|(
 name|bfd_get_32
 argument_list|(
 name|abfd
@@ -4484,9 +6217,21 @@ name|reloc_entry
 operator|->
 name|address
 argument_list|)
+expr_stmt|;
+comment|/* The low order 16 bits are always treated as a signed 	     value.  */
+name|vallo
+operator|=
+operator|(
+operator|(
+name|vallo
 operator|&
 literal|0xffff
 operator|)
+operator|^
+literal|0x8000
+operator|)
+operator|-
+literal|0x8000
 expr_stmt|;
 name|val
 operator|=
@@ -4508,45 +6253,28 @@ name|l
 operator|->
 name|addend
 expr_stmt|;
-comment|/* The low order 16 bits are always treated as a signed 	     value.  Therefore, a negative value in the low order bits 	     requires an adjustment in the high order bits.  We need 	     to make this adjustment in two ways: once for the bits we 	     took from the data, and once for the bits we are putting 	     back in to the data.  */
+comment|/* If PC-relative, we need to subtract out the address of the LO 	     half of the HI/LO.  (The actual relocation is relative 	     to that instruction.)  */
 if|if
 condition|(
-operator|(
-name|vallo
-operator|&
-literal|0x8000
-operator|)
-operator|!=
-literal|0
+name|reloc_entry
+operator|->
+name|howto
+operator|->
+name|pc_relative
 condition|)
 name|val
 operator|-=
-literal|0x10000
+name|reloc_entry
+operator|->
+name|address
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|val
-operator|&
-literal|0x8000
-operator|)
-operator|!=
-literal|0
-condition|)
+comment|/* At this point, "val" has the value of the combined HI/LO 	     pair.  If the low order 16 bits (which will be used for 	     the LO16 insn) are negative, then we will need an 	     adjustment for the high order 16 bits.  */
 name|val
 operator|+=
-literal|0x10000
+literal|0x8000
 expr_stmt|;
-name|insn
+name|val
 operator|=
-operator|(
-name|insn
-operator|&
-operator|~
-literal|0xffff
-operator|)
-operator||
-operator|(
 operator|(
 name|val
 operator|>>
@@ -4554,12 +6282,26 @@ literal|16
 operator|)
 operator|&
 literal|0xffff
+expr_stmt|;
+name|insn
+operator|&=
+operator|~
+operator|(
+name|bfd_vma
 operator|)
+literal|0xffff
+expr_stmt|;
+name|insn
+operator||=
+name|val
 expr_stmt|;
 name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|insn
 argument_list|,
 name|l
@@ -4996,7 +6738,7 @@ operator|++
 control|)
 block|{
 specifier|register
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -5682,13 +7424,20 @@ expr_stmt|;
 comment|/* Make sure it fit in 16 bits.  */
 if|if
 condition|(
+operator|(
+name|long
+operator|)
 name|val
 operator|>=
 literal|0x8000
-operator|&&
+operator|||
+operator|(
+name|long
+operator|)
 name|val
 operator|<
-literal|0xffff8000
+operator|-
+literal|0x8000
 condition|)
 return|return
 name|bfd_reloc_overflow
@@ -6089,6 +7838,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|val
 argument_list|,
 operator|(
@@ -6121,7 +7873,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle a 64 bit reloc in a 32 bit MIPS ELF file.  These are    generated when addreses are 64 bits.  The upper 32 bits are a simle    sign extension.  */
+comment|/* Handle a 64 bit reloc in a 32 bit MIPS ELF file.  These are    generated when addresses are 64 bits.  The upper 32 bits are a simple    sign extension.  */
 end_comment
 
 begin_function
@@ -6237,7 +7989,7 @@ operator|.
 name|howto
 operator|=
 operator|&
-name|elf_mips_howto_table
+name|elf_mips_howto_table_rel
 index|[
 name|R_MIPS_32
 index|]
@@ -6318,6 +8070,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|val
 argument_list|,
 operator|(
@@ -6685,7 +8440,10 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
+call|(
+name|bfd_vma
+call|)
+argument_list|(
 operator|(
 operator|(
 name|extend
@@ -6707,7 +8465,7 @@ name|insn
 operator|&
 literal|0x1f
 operator|)
-operator|)
+argument_list|)
 argument_list|,
 operator|(
 name|bfd_byte
@@ -6760,7 +8518,10 @@ name|bfd_put_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
+call|(
+name|bfd_vma
+call|)
+argument_list|(
 operator|(
 name|extend
 operator|&
@@ -6782,7 +8543,7 @@ name|final
 operator|&
 literal|0x7e0
 operator|)
-operator|)
+argument_list|)
 argument_list|,
 operator|(
 name|bfd_byte
@@ -6799,7 +8560,10 @@ name|bfd_put_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
+call|(
+name|bfd_vma
+call|)
+argument_list|(
 operator|(
 name|insn
 operator|&
@@ -6811,7 +8575,7 @@ name|final
 operator|&
 literal|0x1f
 operator|)
-operator|)
+argument_list|)
 argument_list|,
 operator|(
 name|bfd_byte
@@ -6879,6 +8643,24 @@ case|:
 return|return
 literal|4
 return|;
+case|case
+name|E_MIPS_ARCH_5
+case|:
+return|return
+literal|5
+return|;
+case|case
+name|E_MIPS_ARCH_32
+case|:
+return|return
+literal|32
+return|;
+case|case
+name|E_MIPS_ARCH_64
+case|:
+return|return
+literal|64
+return|;
 block|}
 return|return
 literal|4
@@ -6893,7 +8675,8 @@ end_comment
 begin_function
 specifier|static
 name|INLINE
-name|int
+name|unsigned
+name|long
 name|elf_mips_mach
 parameter_list|(
 name|flags
@@ -6939,6 +8722,12 @@ case|:
 return|return
 name|bfd_mach_mips4650
 return|;
+case|case
+name|E_MIPS_MACH_SB1
+case|:
+return|return
+name|bfd_mach_mips_sb1
+return|;
 default|default:
 switch|switch
 condition|(
@@ -6976,6 +8765,27 @@ return|return
 name|bfd_mach_mips8000
 return|;
 break|break;
+case|case
+name|E_MIPS_ARCH_5
+case|:
+return|return
+name|bfd_mach_mips5
+return|;
+break|break;
+case|case
+name|E_MIPS_ARCH_32
+case|:
+return|return
+name|bfd_mach_mipsisa32
+return|;
+break|break;
+case|case
+name|E_MIPS_ARCH_64
+case|:
+return|return
+name|bfd_mach_mipsisa64
+return|;
+break|break;
 block|}
 block|}
 return|return
@@ -6985,7 +8795,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return printable name for ABI. */
+comment|/* Return printable name for ABI.  */
 end_comment
 
 begin_function
@@ -7005,6 +8815,25 @@ block|{
 name|flagword
 name|flags
 decl_stmt|;
+name|flags
+operator|=
+name|elf_elfheader
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|e_flags
+expr_stmt|;
+switch|switch
+condition|(
+name|flags
+operator|&
+name|EF_MIPS_ABI
+condition|)
+block|{
+case|case
+literal|0
+case|:
 if|if
 condition|(
 name|ABI_N32_P
@@ -7026,25 +8855,7 @@ condition|)
 return|return
 literal|"64"
 return|;
-name|flags
-operator|=
-name|elf_elfheader
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|e_flags
-expr_stmt|;
-switch|switch
-condition|(
-name|flags
-operator|&
-name|EF_MIPS_ABI
-condition|)
-block|{
-case|case
-literal|0
-case|:
+else|else
 return|return
 literal|"none"
 return|;
@@ -7099,14 +8910,14 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|CONST
-expr|struct
+specifier|const
+name|struct
 name|elf_reloc_map
 name|mips_reloc_map
 index|[]
-operator|=
+init|=
 block|{
 block|{
 name|BFD_RELOC_NONE
@@ -7151,7 +8962,7 @@ name|R_MIPS_LO16
 block|}
 block|,
 block|{
-name|BFD_RELOC_MIPS_GPREL
+name|BFD_RELOC_GPREL16
 block|,
 name|R_MIPS_GPREL16
 block|}
@@ -7181,7 +8992,7 @@ name|R_MIPS_CALL16
 block|}
 block|,
 block|{
-name|BFD_RELOC_MIPS_GPREL32
+name|BFD_RELOC_GPREL32
 block|,
 name|R_MIPS_GPREL32
 block|}
@@ -7234,8 +9045,8 @@ block|,
 name|R_MIPS_GOT_DISP
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Given a BFD reloc type, return a howto structure.  */
@@ -7299,7 +9110,7 @@ name|code
 condition|)
 return|return
 operator|&
-name|elf_mips_howto_table
+name|elf_mips_howto_table_rel
 index|[
 operator|(
 name|int
@@ -7342,7 +9153,7 @@ literal|32
 condition|)
 return|return
 operator|&
-name|elf_mips_howto_table
+name|elf_mips_howto_table_rel
 index|[
 operator|(
 name|int
@@ -7530,7 +9341,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|&
-name|elf_mips_howto_table
+name|elf_mips_howto_table_rel
 index|[
 name|r_type
 index|]
@@ -7719,14 +9530,10 @@ name|in
 operator|->
 name|ri_gprmask
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_gprmask
@@ -7739,14 +9546,10 @@ index|[
 literal|0
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -7762,14 +9565,10 @@ index|[
 literal|1
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -7785,14 +9584,10 @@ index|[
 literal|2
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -7808,14 +9603,10 @@ index|[
 literal|3
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -7828,14 +9619,10 @@ name|in
 operator|->
 name|ri_gp_value
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_gp_value
@@ -7868,33 +9655,23 @@ modifier|*
 name|ex
 decl_stmt|;
 block|{
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_gprmask
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_gprmask
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_cprmask
@@ -7902,10 +9679,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -7914,13 +9687,10 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_cprmask
@@ -7928,10 +9698,6 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -7940,13 +9706,10 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_cprmask
@@ -7954,10 +9717,6 @@ index|[
 literal|2
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -7966,13 +9725,10 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_cprmask
@@ -7980,10 +9736,6 @@ index|[
 literal|3
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -7992,21 +9744,14 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_gp_value
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_gp_value
@@ -8047,14 +9792,10 @@ name|in
 operator|->
 name|ri_gprmask
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_gprmask
@@ -8064,14 +9805,10 @@ name|in
 operator|->
 name|ri_pad
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_pad
@@ -8084,14 +9821,10 @@ index|[
 literal|0
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -8107,14 +9840,10 @@ index|[
 literal|1
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -8130,14 +9859,10 @@ index|[
 literal|2
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -8153,14 +9878,10 @@ index|[
 literal|3
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -8173,14 +9894,10 @@ name|in
 operator|->
 name|ri_gp_value
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_gp_value
@@ -8213,53 +9930,36 @@ modifier|*
 name|ex
 decl_stmt|;
 block|{
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_gprmask
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_gprmask
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_pad
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_pad
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_cprmask
@@ -8267,10 +9967,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -8279,13 +9975,10 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_cprmask
@@ -8293,10 +9986,6 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -8305,13 +9994,10 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_cprmask
@@ -8319,10 +10005,6 @@ index|[
 literal|2
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -8331,13 +10013,10 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_cprmask
@@ -8345,10 +10024,6 @@ index|[
 literal|3
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_cprmask
@@ -8357,21 +10032,14 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|ri_gp_value
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|ri_gp_value
@@ -8415,7 +10083,7 @@ name|gt_entry
 operator|.
 name|gt_g_value
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -8432,7 +10100,7 @@ name|gt_entry
 operator|.
 name|gt_bytes
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -8471,13 +10139,10 @@ modifier|*
 name|ex
 decl_stmt|;
 block|{
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|gt_entry
@@ -8491,13 +10156,10 @@ operator|.
 name|gt_g_value
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|gt_entry
@@ -8539,13 +10201,10 @@ modifier|*
 name|ex
 decl_stmt|;
 block|{
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|id1
@@ -8555,13 +10214,10 @@ operator|->
 name|id1
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|num
@@ -8571,13 +10227,10 @@ operator|->
 name|num
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|id2
@@ -8587,13 +10240,10 @@ operator|->
 name|id2
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|offset
@@ -8603,13 +10253,10 @@ operator|->
 name|offset
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|reserved0
@@ -8619,13 +10266,10 @@ operator|->
 name|reserved0
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|reserved1
@@ -8719,13 +10363,10 @@ name|CRINFO_RELVADDR_SH
 operator|)
 operator|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|l
 argument_list|,
 name|ex
@@ -8733,13 +10374,10 @@ operator|->
 name|info
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|konst
@@ -8749,13 +10387,10 @@ operator|->
 name|konst
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|in
 operator|->
 name|vaddr
@@ -8800,7 +10435,7 @@ name|in
 operator|->
 name|kind
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8813,7 +10448,7 @@ name|in
 operator|->
 name|size
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8826,7 +10461,7 @@ name|in
 operator|->
 name|section
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -8839,7 +10474,7 @@ name|in
 operator|->
 name|info
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -8879,7 +10514,7 @@ modifier|*
 name|ex
 decl_stmt|;
 block|{
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8892,7 +10527,7 @@ operator|->
 name|kind
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -8905,7 +10540,7 @@ operator|->
 name|size
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -8918,7 +10553,7 @@ operator|->
 name|section
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -8945,7 +10580,7 @@ comment|/* Swap in an MSYM entry.  */
 end_comment
 
 begin_endif
-unit|static void bfd_mips_elf_swap_msym_in (abfd, ex, in)      bfd *abfd;      const Elf32_External_Msym *ex;      Elf32_Internal_Msym *in; {   in->ms_hash_value = bfd_h_get_32 (abfd, ex->ms_hash_value);   in->ms_info = bfd_h_get_32 (abfd, ex->ms_info); }
+unit|static void bfd_mips_elf_swap_msym_in (abfd, ex, in)      bfd *abfd;      const Elf32_External_Msym *ex;      Elf32_Internal_Msym *in; {   in->ms_hash_value = H_GET_32 (abfd, ex->ms_hash_value);   in->ms_info = H_GET_32 (abfd, ex->ms_info); }
 endif|#
 directive|endif
 end_endif
@@ -8979,7 +10614,7 @@ modifier|*
 name|ex
 decl_stmt|;
 block|{
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -8992,7 +10627,7 @@ operator|->
 name|ms_hash_value
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -9015,10 +10650,6 @@ begin_comment
 comment|/* Determine whether a symbol is global for the purposes of splitting    the symbol table into global symbols and local symbols.  At least    on Irix 5, this split must be between section symbols and all other    symbols.  On most ELF targets the split is between static symbols    and externally visible symbols.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -9038,6 +10669,13 @@ modifier|*
 name|sym
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|SGI_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
 return|return
 operator|(
 name|sym
@@ -9048,10 +10686,40 @@ name|BSF_SECTION_SYM
 operator|)
 operator|==
 literal|0
-condition|?
-name|true
-else|:
-name|false
+return|;
+else|else
+return|return
+operator|(
+operator|(
+name|sym
+operator|->
+name|flags
+operator|&
+operator|(
+name|BSF_GLOBAL
+operator||
+name|BSF_WEAK
+operator|)
+operator|)
+operator|!=
+literal|0
+operator|||
+name|bfd_is_und_section
+argument_list|(
+name|bfd_get_section
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|||
+name|bfd_is_com_section
+argument_list|(
+name|bfd_get_section
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -9074,7 +10742,14 @@ modifier|*
 name|abfd
 decl_stmt|;
 block|{
-comment|/* Irix 5 and 6 is broken.  Object file symbol tables are not always      sorted correctly such that local symbols precede global symbols,      and the sh_info field in the symbol table is not always right.  */
+comment|/* Irix 5 and 6 are broken.  Object file symbol tables are not always      sorted correctly such that local symbols precede global symbols,      and the sh_info field in the symbol table is not always right.  */
+if|if
+condition|(
+name|SGI_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
 name|elf_bad_symtab
 argument_list|(
 name|abfd
@@ -9107,10 +10782,6 @@ end_function
 
 begin_comment
 comment|/* The final processing done just before writing out a MIPS ELF object    file.  This gets the MIPS architecture right based on the machine    number.  This is used by both the 32-bit and the 64-bit ABI.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -9193,6 +10864,12 @@ case|:
 case|case
 name|bfd_mach_mips4300
 case|:
+case|case
+name|bfd_mach_mips4400
+case|:
+case|case
+name|bfd_mach_mips4600
+case|:
 name|val
 operator|=
 name|E_MIPS_ARCH_3
@@ -9239,13 +10916,55 @@ name|E_MIPS_MACH_4650
 expr_stmt|;
 break|break;
 case|case
+name|bfd_mach_mips5000
+case|:
+case|case
 name|bfd_mach_mips8000
+case|:
+case|case
+name|bfd_mach_mips10000
+case|:
+case|case
+name|bfd_mach_mips12000
 case|:
 name|val
 operator|=
 name|E_MIPS_ARCH_4
 expr_stmt|;
 break|break;
+case|case
+name|bfd_mach_mips5
+case|:
+name|val
+operator|=
+name|E_MIPS_ARCH_5
+expr_stmt|;
+break|break;
+case|case
+name|bfd_mach_mips_sb1
+case|:
+name|val
+operator|=
+name|E_MIPS_ARCH_64
+operator||
+name|E_MIPS_MACH_SB1
+expr_stmt|;
+break|break;
+case|case
+name|bfd_mach_mipsisa32
+case|:
+name|val
+operator|=
+name|E_MIPS_ARCH_32
+expr_stmt|;
+break|break;
+case|case
+name|bfd_mach_mipsisa64
+case|:
+name|val
+operator|=
+name|E_MIPS_ARCH_64
+expr_stmt|;
 block|}
 name|elf_elfheader
 argument_list|(
@@ -9288,12 +11007,10 @@ literal|1
 init|;
 name|i
 operator|<
-name|elf_elfheader
+name|elf_numsections
 argument_list|(
 name|abfd
 argument_list|)
-operator|->
-name|e_shnum
 condition|;
 name|i
 operator|++
@@ -9715,7 +11432,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Function to keep MIPS specific file flags like as EF_MIPS_PIC. */
+comment|/* Function to keep MIPS specific file flags like as EF_MIPS_PIC.  */
 end_comment
 
 begin_function
@@ -9775,108 +11492,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy backend specific data from one object module to another */
-end_comment
-
-begin_function
-name|boolean
-name|_bfd_mips_elf_copy_private_bfd_data
-parameter_list|(
-name|ibfd
-parameter_list|,
-name|obfd
-parameter_list|)
-name|bfd
-modifier|*
-name|ibfd
-decl_stmt|;
-name|bfd
-modifier|*
-name|obfd
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|bfd_get_flavour
-argument_list|(
-name|ibfd
-argument_list|)
-operator|!=
-name|bfd_target_elf_flavour
-operator|||
-name|bfd_get_flavour
-argument_list|(
-name|obfd
-argument_list|)
-operator|!=
-name|bfd_target_elf_flavour
-condition|)
-return|return
-name|true
-return|;
-name|BFD_ASSERT
-argument_list|(
-operator|!
-name|elf_flags_init
-argument_list|(
-name|obfd
-argument_list|)
-operator|||
-operator|(
-name|elf_elfheader
-argument_list|(
-name|obfd
-argument_list|)
-operator|->
-name|e_flags
-operator|==
-name|elf_elfheader
-argument_list|(
-name|ibfd
-argument_list|)
-operator|->
-name|e_flags
-operator|)
-argument_list|)
-expr_stmt|;
-name|elf_gp
-argument_list|(
-name|obfd
-argument_list|)
-operator|=
-name|elf_gp
-argument_list|(
-name|ibfd
-argument_list|)
-expr_stmt|;
-name|elf_elfheader
-argument_list|(
-name|obfd
-argument_list|)
-operator|->
-name|e_flags
-operator|=
-name|elf_elfheader
-argument_list|(
-name|ibfd
-argument_list|)
-operator|->
-name|e_flags
-expr_stmt|;
-name|elf_flags_init
-argument_list|(
-name|obfd
-argument_list|)
-operator|=
-name|true
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Merge backend specific data from an object file to the output    object file when linking.  */
 end_comment
 
@@ -9906,79 +11521,30 @@ decl_stmt|;
 name|boolean
 name|ok
 decl_stmt|;
+name|boolean
+name|null_input_bfd
+init|=
+name|true
+decl_stmt|;
+name|asection
+modifier|*
+name|sec
+decl_stmt|;
 comment|/* Check if we have the same endianess */
 if|if
 condition|(
-name|ibfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|!=
-name|obfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|&&
-name|obfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|!=
-name|BFD_ENDIAN_UNKNOWN
-condition|)
-block|{
-specifier|const
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-if|if
-condition|(
-name|bfd_big_endian
+name|_bfd_generic_verify_endian_match
 argument_list|(
 name|ibfd
-argument_list|)
-condition|)
-name|msg
-operator|=
-name|_
-argument_list|(
-literal|"%s: compiled for a big endian system and target is little endian"
-argument_list|)
-expr_stmt|;
-else|else
-name|msg
-operator|=
-name|_
-argument_list|(
-literal|"%s: compiled for a little endian system and target is big endian"
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|msg
 argument_list|,
-name|bfd_get_filename
-argument_list|(
-name|ibfd
+name|obfd
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|bfd_set_error
-argument_list|(
-name|bfd_error_wrong_format
-argument_list|)
-expr_stmt|;
+operator|==
+name|false
+condition|)
 return|return
 name|false
 return|;
-block|}
 if|if
 condition|(
 name|bfd_get_flavour
@@ -10138,6 +11704,102 @@ condition|)
 return|return
 name|true
 return|;
+comment|/* Check to see if the input BFD actually contains any sections.      If not, its flags may not have been initialised either, but it cannot      actually cause any incompatibility.  */
+for|for
+control|(
+name|sec
+operator|=
+name|ibfd
+operator|->
+name|sections
+init|;
+name|sec
+operator|!=
+name|NULL
+condition|;
+name|sec
+operator|=
+name|sec
+operator|->
+name|next
+control|)
+block|{
+comment|/* Ignore synthetic sections and empty .text, .data and .bss sections 	  which are automatically generated by gas.  */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|sec
+operator|->
+name|name
+argument_list|,
+literal|".reginfo"
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|sec
+operator|->
+name|name
+argument_list|,
+literal|".mdebug"
+argument_list|)
+operator|&&
+operator|(
+operator|(
+operator|!
+name|strcmp
+argument_list|(
+name|sec
+operator|->
+name|name
+argument_list|,
+literal|".text"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|sec
+operator|->
+name|name
+argument_list|,
+literal|".data"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|sec
+operator|->
+name|name
+argument_list|,
+literal|".bss"
+argument_list|)
+operator|)
+operator|&&
+name|sec
+operator|->
+name|_raw_size
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|null_input_bfd
+operator|=
+name|false
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|null_input_bfd
+condition|)
+return|return
+name|true
+return|;
 name|ok
 operator|=
 name|true
@@ -10177,7 +11839,7 @@ argument_list|(
 literal|"%s: linking PIC files with non-PIC files"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -10223,7 +11885,7 @@ argument_list|(
 literal|"%s: linking abicalls files with non-abicalls files"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -10234,7 +11896,7 @@ operator|=
 name|false
 expr_stmt|;
 block|}
-comment|/* Compare the ISA's. */
+comment|/* Compare the ISA's.  */
 if|if
 condition|(
 operator|(
@@ -10288,7 +11950,7 @@ argument_list|(
 name|old_flags
 argument_list|)
 decl_stmt|;
-comment|/* If either has no machine specified, just compare the general isa's. 	 Some combinations of machines are ok, if the isa's match. */
+comment|/* If either has no machine specified, just compare the general isa's. 	 Some combinations of machines are ok, if the isa's match.  */
 if|if
 condition|(
 operator|!
@@ -10302,10 +11964,11 @@ operator|==
 name|old_mach
 condition|)
 block|{
-comment|/* Don't warn about mixing -mips1 and -mips2 code, or mixing -mips3 	     and -mips4 code.  They will normally use the same data sizes and 	     calling conventions.  */
+comment|/* Don't warn about mixing code using 32-bit ISAs, or mixing code 	     using 64-bit ISAs.  They will normally use the same data sizes 	     and calling conventions.  */
 if|if
 condition|(
 operator|(
+operator|(
 name|new_isa
 operator|==
 literal|1
@@ -10313,18 +11976,12 @@ operator|||
 name|new_isa
 operator|==
 literal|2
+operator|||
+name|new_isa
+operator|==
+literal|32
 operator|)
-condition|?
-operator|(
-name|old_isa
-operator|!=
-literal|1
-operator|&&
-name|old_isa
-operator|!=
-literal|2
-operator|)
-else|:
+operator|^
 operator|(
 name|old_isa
 operator|==
@@ -10333,7 +11990,14 @@ operator|||
 name|old_isa
 operator|==
 literal|2
+operator|||
+name|old_isa
+operator|==
+literal|32
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 call|(
@@ -10346,7 +12010,7 @@ argument_list|(
 literal|"%s: ISA mismatch (-mips%d) with previous modules (-mips%d)"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -10360,6 +12024,59 @@ name|ok
 operator|=
 name|false
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Do we need to update the mach field?  */
+if|if
+condition|(
+name|old_mach
+operator|==
+literal|0
+operator|&&
+name|new_mach
+operator|!=
+literal|0
+condition|)
+name|elf_elfheader
+argument_list|(
+name|obfd
+argument_list|)
+operator|->
+name|e_flags
+operator||=
+name|new_mach
+expr_stmt|;
+comment|/* Do we need to update the ISA field?  */
+if|if
+condition|(
+name|new_isa
+operator|>
+name|old_isa
+condition|)
+block|{
+name|elf_elfheader
+argument_list|(
+name|obfd
+argument_list|)
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_MIPS_ARCH
+expr_stmt|;
+name|elf_elfheader
+argument_list|(
+name|obfd
+argument_list|)
+operator|->
+name|e_flags
+operator||=
+name|new_flags
+operator|&
+name|EF_MIPS_ARCH
+expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -10374,7 +12091,7 @@ argument_list|(
 literal|"%s: ISA mismatch (%d) with previous modules (%d)"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -10452,7 +12169,7 @@ index|]
 operator|)
 condition|)
 block|{
-comment|/* Only error if both are set (to different values). */
+comment|/* Only error if both are set (to different values).  */
 if|if
 condition|(
 operator|(
@@ -10502,7 +12219,7 @@ argument_list|(
 literal|"%s: ABI mismatch: linking %s module with previous %s modules"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -10552,7 +12269,7 @@ argument_list|(
 literal|"%s: uses different e_flags (0x%lx) fields than previous modules (0x%lx)"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -10936,6 +12653,84 @@ argument_list|,
 name|_
 argument_list|(
 literal|" [mips4]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|elf_elfheader
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|e_flags
+operator|&
+name|EF_MIPS_ARCH
+operator|)
+operator|==
+name|E_MIPS_ARCH_5
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [mips5]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|elf_elfheader
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|e_flags
+operator|&
+name|EF_MIPS_ARCH
+operator|)
+operator|==
+name|E_MIPS_ARCH_32
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [mips32]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|elf_elfheader
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|e_flags
+operator|&
+name|EF_MIPS_ARCH
+operator|)
+operator|==
+name|E_MIPS_ARCH_64
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [mips64]"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11426,6 +13221,9 @@ name|file_ptr
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 name|ext
 argument_list|)
@@ -11908,7 +13706,10 @@ name|SGI_COMPAT
 argument_list|(
 name|abfd
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|abfd
 operator|->
@@ -11934,6 +13735,17 @@ operator|->
 name|sh_entsize
 operator|=
 literal|1
+expr_stmt|;
+block|}
+else|else
+name|hdr
+operator|->
+name|sh_entsize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_RegInfo
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -11974,6 +13786,13 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|SGI_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
 name|hdr
 operator|->
 name|sh_entsize
@@ -12272,9 +14091,16 @@ operator|=
 literal|8
 expr_stmt|;
 block|}
-comment|/* The generic elf_fake_sections will set up REL_HDR using the      default kind of relocations.  But, we may actually need both      kinds of relocations, so we set up the second header here.  */
+comment|/* The generic elf_fake_sections will set up REL_HDR using the      default kind of relocations.  But, we may actually need both      kinds of relocations, so we set up the second header here.       This is not necessary for the O32 ABI since that only uses Elf32_Rel      relocations (cf. System V ABI, MIPS RISC Processor Supplement,      3rd Edition, p. 4-17).  It breaks the IRIX 5/6 32-bit ld, since one      of the resulting empty .rela.<section> sections starts with      sh_offset == object size, and ld doesn't allow that.  While the check      is arguably bogus for empty or SHT_NOBITS sections, it can easily be      avoided by not emitting those useless sections in the first place.  */
 if|if
 condition|(
+name|IRIX_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+operator|!=
+name|ict_irix5
+operator|&&
 operator|(
 name|sec
 operator|->
@@ -12290,6 +14116,14 @@ name|struct
 name|bfd_elf_section_data
 modifier|*
 name|esd
+decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+name|Elf_Internal_Shdr
+argument_list|)
 decl_stmt|;
 name|esd
 operator|=
@@ -12319,10 +14153,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf_Internal_Shdr
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -12371,8 +14202,6 @@ name|_bfd_mips_elf_section_from_bfd_section
 parameter_list|(
 name|abfd
 parameter_list|,
-name|hdr
-parameter_list|,
 name|sec
 parameter_list|,
 name|retval
@@ -12380,11 +14209,6 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|Elf32_Internal_Shdr
-modifier|*
-name|hdr
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
@@ -12520,6 +14344,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bfd_elf_section_data
+argument_list|)
+decl_stmt|;
 name|section
 operator|->
 name|used_by_bfd
@@ -12531,11 +14364,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bfd_elf_section_data
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -12638,6 +14467,9 @@ name|offset
 argument_list|,
 name|location
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|count
 argument_list|)
 expr_stmt|;
@@ -12741,20 +14573,16 @@ literal|4
 argument_list|,
 name|SEEK_SET
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 return|return
 name|false
 return|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|elf_gp
 argument_list|(
 name|abfd
@@ -12765,14 +14593,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 name|buf
-argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-literal|1
 argument_list|,
 operator|(
 name|bfd_size_type
@@ -12944,14 +14767,13 @@ operator|)
 argument_list|,
 name|SEEK_SET
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 return|return
 name|false
 return|;
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -12965,12 +14787,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 name|buf
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|8
 argument_list|,
 name|abfd
@@ -13032,14 +14855,13 @@ operator|)
 argument_list|,
 name|SEEK_SET
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 return|return
 name|false
 return|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -13053,12 +14875,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 name|buf
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|4
 argument_list|,
 name|abfd
@@ -13358,70 +15181,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The Irix 5 support uses two virtual sections, which represent    text/data symbols defined in dynamic objects.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|asection
-name|mips_elf_text_section
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asection
-modifier|*
-name|mips_elf_text_section_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asymbol
-name|mips_elf_text_symbol
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asymbol
-modifier|*
-name|mips_elf_text_symbol_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asection
-name|mips_elf_data_section
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asection
-modifier|*
-name|mips_elf_data_section_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asymbol
-name|mips_elf_data_symbol
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asymbol
-modifier|*
-name|mips_elf_data_symbol_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Handle the special MIPS section numbers that a symbol may use.    This is used for both the 32-bit and the 64-bit ABI.  */
 end_comment
 
@@ -13704,17 +15463,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|SGI_COMPAT
-argument_list|(
-name|abfd
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
 comment|/* See if we need a PT_MIPS_REGINFO segment.  */
 name|s
 operator|=
@@ -13824,17 +15572,9 @@ modifier|*
 modifier|*
 name|pm
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|SGI_COMPAT
-argument_list|(
-name|abfd
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 comment|/* If there is a .reginfo section, we need a PT_MIPS_REGINFO      segment.  */
 name|s
 operator|=
@@ -13899,6 +15639,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|amt
+operator|=
+sizeof|sizeof
+expr|*
+name|m
+expr_stmt|;
 name|m
 operator|=
 operator|(
@@ -13910,9 +15656,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-expr|*
-name|m
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -14018,10 +15762,6 @@ operator|==
 name|ict_irix6
 condition|)
 block|{
-name|asection
-modifier|*
-name|s
-decl_stmt|;
 for|for
 control|(
 name|s
@@ -14102,17 +15842,21 @@ operator|==
 name|PT_PHDR
 condition|)
 break|break;
+name|amt
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|elf_segment_map
+argument_list|)
+expr_stmt|;
 name|options_segment
 operator|=
 name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|elf_segment_map
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 name|options_segment
@@ -14164,7 +15908,17 @@ block|}
 block|}
 else|else
 block|{
-comment|/* If there are .dynamic and .mdebug sections, we make a room 	 for the RTPROC header.  FIXME: Rewrite without section names.  */
+if|if
+condition|(
+name|IRIX_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+name|ict_irix5
+condition|)
+block|{
+comment|/* If there are .dynamic and .mdebug sections, we make a room 	     for the RTPROC header.  FIXME: Rewrite without section names.  */
 if|if
 condition|(
 name|bfd_get_section_by_name
@@ -14232,6 +15986,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|amt
+operator|=
+sizeof|sizeof
+expr|*
+name|m
+expr_stmt|;
 name|m
 operator|=
 operator|(
@@ -14243,9 +16003,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-expr|*
-name|m
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -14384,6 +16142,7 @@ name|m
 expr_stmt|;
 block|}
 block|}
+block|}
 comment|/* On Irix 5, the PT_DYNAMIC segment includes the .dynamic, 	 .dynstr, .dynsym, and .hash sections, and everything in 	 between.  */
 for|for
 control|(
@@ -14429,6 +16188,51 @@ operator|=
 operator|*
 name|pm
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+operator|&&
+name|IRIX_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+name|ict_none
+condition|)
+block|{
+comment|/* For a normal mips executable the permissions for the PT_DYNAMIC 	     segment are read, write and execute. We do that here since 	     the code in elf.c sets only the read permission. This matters 	     sometimes for the dynamic linker.  */
+if|if
+condition|(
+name|bfd_get_section_by_name
+argument_list|(
+name|abfd
+argument_list|,
+literal|".dynamic"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|m
+operator|->
+name|p_flags
+operator|=
+name|PF_R
+operator||
+name|PF_W
+operator||
+name|PF_X
+expr_stmt|;
+name|m
+operator|->
+name|p_flags_valid
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|m
@@ -14673,9 +16477,29 @@ condition|)
 operator|++
 name|c
 expr_stmt|;
+name|amt
+operator|=
+sizeof|sizeof
+expr|*
+name|n
+operator|+
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
+name|c
+operator|-
+literal|1
+argument_list|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|asection
+operator|*
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
-operator|(
 operator|(
 expr|struct
 name|elf_segment_map
@@ -14685,23 +16509,8 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-expr|*
-name|n
-operator|+
-operator|(
-name|c
-operator|-
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|asection
-operator|*
+name|amt
 argument_list|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -14888,7 +16697,7 @@ begin_define
 define|#
 directive|define
 name|cbRPDR
-value|sizeof(RPDR)
+value|sizeof (RPDR)
 end_define
 
 begin_define
@@ -14950,8 +16759,8 @@ modifier|*
 name|ex
 decl_stmt|;
 block|{
-comment|/* ecoff_put_off was defined in ecoffswap.h.  */
-name|ecoff_put_off
+comment|/* ECOFF_PUT_OFF was defined in ecoffswap.h.  */
+name|ECOFF_PUT_OFF
 argument_list|(
 name|abfd
 argument_list|,
@@ -14959,16 +16768,12 @@ name|in
 operator|->
 name|adr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|p_adr
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -14976,16 +16781,12 @@ name|in
 operator|->
 name|regmask
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|p_regmask
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -14993,16 +16794,12 @@ name|in
 operator|->
 name|regoffset
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|p_regoffset
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -15010,16 +16807,12 @@ name|in
 operator|->
 name|fregmask
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|p_fregmask
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -15027,16 +16820,12 @@ name|in
 operator|->
 name|fregoffset
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|p_fregoffset
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -15044,16 +16833,12 @@ name|in
 operator|->
 name|frameoffset
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|p_frameoffset
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -15061,16 +16846,12 @@ name|in
 operator|->
 name|framereg
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|p_framereg
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -15078,16 +16859,12 @@ name|in
 operator|->
 name|pcreg
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|p_pcreg
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -15095,10 +16872,6 @@ name|in
 operator|->
 name|irpss
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ex
 operator|->
 name|p_irpss
@@ -15108,7 +16881,7 @@ if|#
 directive|if
 literal|0
 comment|/* FIXME */
-block|ecoff_put_off (abfd, in->exception_info, (bfd_byte *) ex->p_exception_info);
+block|ECOFF_PUT_OFF (abfd, in->exception_info, ex->p_exception_info);
 endif|#
 directive|endif
 block|}
@@ -15191,9 +16964,6 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
-operator|(
-name|size_t
-operator|)
 name|swap
 operator|->
 name|external_hdr_size
@@ -15276,7 +17046,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|if (symhdr->count == 0)						\     debug->ptr = NULL;							\   else									\     {									\       debug->ptr = (type) bfd_malloc ((size_t) (size * symhdr->count));	\       if (debug->ptr == NULL)						\ 	goto error_return;						\       if (bfd_seek (abfd, (file_ptr) symhdr->offset, SEEK_SET) != 0	\ 	  || (bfd_read (debug->ptr, size, symhdr->count,		\ 			abfd) != size * symhdr->count))			\ 	goto error_return;						\     }
+value|if (symhdr->count == 0)						\     debug->ptr = NULL;							\   else									\     {									\       bfd_size_type amt = (bfd_size_type) size * symhdr->count;		\       debug->ptr = (type) bfd_malloc (amt);				\       if (debug->ptr == NULL)						\ 	goto error_return;						\       if (bfd_seek (abfd, (file_ptr) symhdr->offset, SEEK_SET) != 0	\ 	  || bfd_bread (debug->ptr, amt, abfd) != amt)			\ 	goto error_return;						\     }
 name|READ
 argument_list|(
 argument|line
@@ -15657,10 +17427,6 @@ begin_comment
 comment|/* MIPS ELF local labels start with '$', not 'L'.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -15820,6 +17586,10 @@ name|functionname_ptr
 argument_list|,
 name|line_ptr
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|ABI_64_P
 argument_list|(
 name|abfd
@@ -15828,6 +17598,15 @@ condition|?
 literal|8
 else|:
 literal|0
+argument_list|)
+argument_list|,
+operator|&
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|dwarf2_find_line_info
 argument_list|)
 condition|)
 return|return
@@ -15929,9 +17708,17 @@ name|fdr
 modifier|*
 name|fdr_ptr
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mips_elf_find_line
+argument_list|)
+decl_stmt|;
 name|fi
 operator|=
-operator|(
 operator|(
 expr|struct
 name|mips_elf_find_line
@@ -15941,13 +17728,8 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mips_elf_find_line
+name|amt
 argument_list|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -15993,23 +17775,8 @@ name|false
 return|;
 block|}
 comment|/* Swap in the FDR information.  */
-name|fi
-operator|->
-name|d
-operator|.
-name|fdr
+name|amt
 operator|=
-operator|(
-operator|(
-expr|struct
-name|fdr
-operator|*
-operator|)
-name|bfd_alloc
-argument_list|(
-name|abfd
-argument_list|,
-operator|(
 name|fi
 operator|->
 name|d
@@ -16023,9 +17790,24 @@ argument_list|(
 expr|struct
 name|fdr
 argument_list|)
+expr_stmt|;
+name|fi
+operator|->
+name|d
+operator|.
+name|fdr
+operator|=
+operator|(
+expr|struct
+name|fdr
+operator|*
 operator|)
+name|bfd_alloc
+argument_list|(
+name|abfd
+argument_list|,
+name|amt
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -16257,7 +18039,7 @@ comment|/* The size of the .compact_rel section (if SGI_COMPAT).  */
 name|bfd_size_type
 name|compact_rel_size
 decl_stmt|;
-comment|/* This flag indicates that the value of DT_MIPS_RLD_MAP dynamic      entry is set to the address of __rld_obj_head as in Irix 5. */
+comment|/* This flag indicates that the value of DT_MIPS_RLD_MAP dynamic      entry is set to the address of __rld_obj_head as in Irix 5.  */
 name|boolean
 name|use_rld_obj_head
 decl_stmt|;
@@ -16265,7 +18047,7 @@ comment|/* This is the value of the __rld_map or __rld_obj_head symbol.  */
 name|bfd_vma
 name|rld_value
 decl_stmt|;
-comment|/* This is set if we see any mips16 stub sections. */
+comment|/* This is set if we see any mips16 stub sections.  */
 name|boolean
 name|mips16_stubs_seen
 decl_stmt|;
@@ -16513,9 +18295,21 @@ literal|0
 expr_stmt|;
 name|ret
 operator|->
+name|readonly_reloc
+operator|=
+name|false
+expr_stmt|;
+name|ret
+operator|->
 name|min_dyn_reloc_index
 operator|=
 literal|0
+expr_stmt|;
+name|ret
+operator|->
+name|no_fn_stub
+operator|=
+name|false
 expr_stmt|;
 name|ret
 operator|->
@@ -16553,6 +18347,120 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|_bfd_mips_elf_hide_symbol
+parameter_list|(
+name|info
+parameter_list|,
+name|entry
+parameter_list|,
+name|force_local
+parameter_list|)
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
+decl_stmt|;
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|entry
+decl_stmt|;
+name|boolean
+name|force_local
+decl_stmt|;
+block|{
+name|bfd
+modifier|*
+name|dynobj
+decl_stmt|;
+name|asection
+modifier|*
+name|got
+decl_stmt|;
+name|struct
+name|mips_got_info
+modifier|*
+name|g
+decl_stmt|;
+name|struct
+name|mips_elf_link_hash_entry
+modifier|*
+name|h
+decl_stmt|;
+name|h
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|entry
+expr_stmt|;
+name|dynobj
+operator|=
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|dynobj
+expr_stmt|;
+name|got
+operator|=
+name|bfd_get_section_by_name
+argument_list|(
+name|dynobj
+argument_list|,
+literal|".got"
+argument_list|)
+expr_stmt|;
+name|g
+operator|=
+operator|(
+expr|struct
+name|mips_got_info
+operator|*
+operator|)
+name|elf_section_data
+argument_list|(
+name|got
+argument_list|)
+operator|->
+name|tdata
+expr_stmt|;
+name|_bfd_elf_link_hash_hide_symbol
+argument_list|(
+name|info
+argument_list|,
+operator|&
+name|h
+operator|->
+name|root
+argument_list|,
+name|force_local
+argument_list|)
+expr_stmt|;
+comment|/* FIXME: Do we allocate too much GOT space here?  */
+name|g
+operator|->
+name|local_gotno
+operator|++
+expr_stmt|;
+name|got
+operator|->
+name|_raw_size
+operator|+=
+name|MIPS_ELF_GOT_SIZE
+argument_list|(
+name|dynobj
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Create a MIPS ELF linker hash table.  */
 end_comment
@@ -16575,9 +18483,17 @@ name|mips_elf_link_hash_table
 modifier|*
 name|ret
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mips_elf_link_hash_table
+argument_list|)
+decl_stmt|;
 name|ret
 operator|=
-operator|(
 operator|(
 expr|struct
 name|mips_elf_link_hash_table
@@ -16587,13 +18503,8 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mips_elf_link_hash_table
+name|amt
 argument_list|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -16686,10 +18597,6 @@ end_function
 
 begin_comment
 comment|/* Hook called by the linker routine which adds symbols from an object    file.  We must handle the special MIPS section numbers here.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -16850,81 +18757,167 @@ case|:
 comment|/* This section is used in a shared object.  */
 if|if
 condition|(
-name|mips_elf_text_section_ptr
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_text_section
 operator|==
 name|NULL
 condition|)
 block|{
+name|asymbol
+modifier|*
+name|elf_text_symbol
+decl_stmt|;
+name|asection
+modifier|*
+name|elf_text_section
+decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+name|asection
+argument_list|)
+decl_stmt|;
+name|elf_text_section
+operator|=
+name|bfd_zalloc
+argument_list|(
+name|abfd
+argument_list|,
+name|amt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|elf_text_section
+operator|==
+name|NULL
+condition|)
+return|return
+name|false
+return|;
+name|amt
+operator|=
+sizeof|sizeof
+argument_list|(
+name|asymbol
+argument_list|)
+expr_stmt|;
+name|elf_text_symbol
+operator|=
+name|bfd_zalloc
+argument_list|(
+name|abfd
+argument_list|,
+name|amt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|elf_text_symbol
+operator|==
+name|NULL
+condition|)
+return|return
+name|false
+return|;
 comment|/* Initialize the section.  */
-name|mips_elf_text_section
-operator|.
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_text_section
+operator|=
+name|elf_text_section
+expr_stmt|;
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_text_symbol
+operator|=
+name|elf_text_symbol
+expr_stmt|;
+name|elf_text_section
+operator|->
+name|symbol
+operator|=
+name|elf_text_symbol
+expr_stmt|;
+name|elf_text_section
+operator|->
+name|symbol_ptr_ptr
+operator|=
+operator|&
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_text_symbol
+expr_stmt|;
+name|elf_text_section
+operator|->
 name|name
 operator|=
 literal|".text"
 expr_stmt|;
-name|mips_elf_text_section
-operator|.
+name|elf_text_section
+operator|->
 name|flags
 operator|=
 name|SEC_NO_FLAGS
 expr_stmt|;
-name|mips_elf_text_section
-operator|.
+name|elf_text_section
+operator|->
 name|output_section
 operator|=
 name|NULL
 expr_stmt|;
-name|mips_elf_text_section
-operator|.
-name|symbol
+name|elf_text_section
+operator|->
+name|owner
 operator|=
-operator|&
-name|mips_elf_text_symbol
+name|abfd
 expr_stmt|;
-name|mips_elf_text_section
-operator|.
-name|symbol_ptr_ptr
-operator|=
-operator|&
-name|mips_elf_text_symbol_ptr
-expr_stmt|;
-name|mips_elf_text_symbol
-operator|.
+name|elf_text_symbol
+operator|->
 name|name
 operator|=
 literal|".text"
 expr_stmt|;
-name|mips_elf_text_symbol
-operator|.
+name|elf_text_symbol
+operator|->
 name|flags
 operator|=
 name|BSF_SECTION_SYM
 operator||
 name|BSF_DYNAMIC
 expr_stmt|;
-name|mips_elf_text_symbol
-operator|.
+name|elf_text_symbol
+operator|->
 name|section
 operator|=
-operator|&
-name|mips_elf_text_section
-expr_stmt|;
-name|mips_elf_text_symbol_ptr
-operator|=
-operator|&
-name|mips_elf_text_symbol
-expr_stmt|;
-name|mips_elf_text_section_ptr
-operator|=
-operator|&
-name|mips_elf_text_section
+name|elf_text_section
 expr_stmt|;
 block|}
 comment|/* This code used to do *secp = bfd_und_section_ptr if          info->shared.  I don't know why, and that doesn't make sense,          so I took it out.  */
 operator|*
 name|secp
 operator|=
-name|mips_elf_text_section_ptr
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_text_section
 expr_stmt|;
 break|break;
 case|case
@@ -16937,81 +18930,167 @@ case|:
 comment|/* This section is used in a shared object.  */
 if|if
 condition|(
-name|mips_elf_data_section_ptr
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_data_section
 operator|==
 name|NULL
 condition|)
 block|{
+name|asymbol
+modifier|*
+name|elf_data_symbol
+decl_stmt|;
+name|asection
+modifier|*
+name|elf_data_section
+decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+name|asection
+argument_list|)
+decl_stmt|;
+name|elf_data_section
+operator|=
+name|bfd_zalloc
+argument_list|(
+name|abfd
+argument_list|,
+name|amt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|elf_data_section
+operator|==
+name|NULL
+condition|)
+return|return
+name|false
+return|;
+name|amt
+operator|=
+sizeof|sizeof
+argument_list|(
+name|asymbol
+argument_list|)
+expr_stmt|;
+name|elf_data_symbol
+operator|=
+name|bfd_zalloc
+argument_list|(
+name|abfd
+argument_list|,
+name|amt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|elf_data_symbol
+operator|==
+name|NULL
+condition|)
+return|return
+name|false
+return|;
 comment|/* Initialize the section.  */
-name|mips_elf_data_section
-operator|.
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_data_section
+operator|=
+name|elf_data_section
+expr_stmt|;
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_data_symbol
+operator|=
+name|elf_data_symbol
+expr_stmt|;
+name|elf_data_section
+operator|->
+name|symbol
+operator|=
+name|elf_data_symbol
+expr_stmt|;
+name|elf_data_section
+operator|->
+name|symbol_ptr_ptr
+operator|=
+operator|&
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_data_symbol
+expr_stmt|;
+name|elf_data_section
+operator|->
 name|name
 operator|=
 literal|".data"
 expr_stmt|;
-name|mips_elf_data_section
-operator|.
+name|elf_data_section
+operator|->
 name|flags
 operator|=
 name|SEC_NO_FLAGS
 expr_stmt|;
-name|mips_elf_data_section
-operator|.
+name|elf_data_section
+operator|->
 name|output_section
 operator|=
 name|NULL
 expr_stmt|;
-name|mips_elf_data_section
-operator|.
-name|symbol
+name|elf_data_section
+operator|->
+name|owner
 operator|=
-operator|&
-name|mips_elf_data_symbol
+name|abfd
 expr_stmt|;
-name|mips_elf_data_section
-operator|.
-name|symbol_ptr_ptr
-operator|=
-operator|&
-name|mips_elf_data_symbol_ptr
-expr_stmt|;
-name|mips_elf_data_symbol
-operator|.
+name|elf_data_symbol
+operator|->
 name|name
 operator|=
 literal|".data"
 expr_stmt|;
-name|mips_elf_data_symbol
-operator|.
+name|elf_data_symbol
+operator|->
 name|flags
 operator|=
 name|BSF_SECTION_SYM
 operator||
 name|BSF_DYNAMIC
 expr_stmt|;
-name|mips_elf_data_symbol
-operator|.
+name|elf_data_symbol
+operator|->
 name|section
 operator|=
-operator|&
-name|mips_elf_data_section
-expr_stmt|;
-name|mips_elf_data_symbol_ptr
-operator|=
-operator|&
-name|mips_elf_data_symbol
-expr_stmt|;
-name|mips_elf_data_section_ptr
-operator|=
-operator|&
-name|mips_elf_data_section
+name|elf_data_section
 expr_stmt|;
 block|}
 comment|/* This code used to do *secp = bfd_und_section_ptr if          info->shared.  I don't know why, and that doesn't make sense,          so I took it out.  */
 operator|*
 name|secp
 operator|=
-name|mips_elf_data_section_ptr
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|elf_data_section
 expr_stmt|;
 break|break;
 case|case
@@ -17267,6 +19346,37 @@ name|h
 operator|->
 name|root
 operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
 name|indx
 operator|==
 operator|-
@@ -17469,14 +19579,6 @@ name|stGlobal
 expr_stmt|;
 if|if
 condition|(
-name|SGI_COMPAT
-argument_list|(
-name|einfo
-operator|->
-name|abfd
-argument_list|)
-operator|&&
-operator|(
 name|h
 operator|->
 name|root
@@ -17496,7 +19598,6 @@ operator|.
 name|type
 operator|==
 name|bfd_link_hash_undefweak
-operator|)
 condition|)
 block|{
 specifier|const
@@ -18183,6 +20284,67 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|struct
+name|mips_elf_link_hash_entry
+modifier|*
+name|hd
+init|=
+name|h
+decl_stmt|;
+name|boolean
+name|no_fn_stub
+init|=
+name|h
+operator|->
+name|no_fn_stub
+decl_stmt|;
+while|while
+condition|(
+name|hd
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+condition|)
+block|{
+name|hd
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+name|no_fn_stub
+operator|=
+name|no_fn_stub
+operator|||
+name|hd
+operator|->
+name|no_fn_stub
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|no_fn_stub
+condition|)
+block|{
 comment|/* Set type and value for a symbol with a function stub.  */
 name|h
 operator|->
@@ -18196,7 +20358,7 @@ name|stProc
 expr_stmt|;
 name|sec
 operator|=
-name|h
+name|hd
 operator|->
 name|root
 operator|.
@@ -18247,7 +20409,7 @@ operator|.
 name|value
 operator|=
 operator|(
-name|h
+name|hd
 operator|->
 name|root
 operator|.
@@ -18283,6 +20445,7 @@ comment|/* FIXME?  */
 block|h->esym.ifd = 0;
 endif|#
 directive|endif
+block|}
 block|}
 if|if
 condition|(
@@ -18427,10 +20590,10 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|unsigned
-name|long
+name|bfd_size_type
 name|size
-decl_stmt|,
+decl_stmt|;
+name|bfd_size_type
 name|count
 decl_stmt|;
 name|unsigned
@@ -18584,6 +20747,14 @@ condition|)
 goto|goto
 name|error_return
 goto|;
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
 name|sv
 operator|=
 operator|(
@@ -18593,11 +20764,7 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
+name|size
 operator|*
 name|count
 argument_list|)
@@ -18718,6 +20885,10 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|unsigned
+name|long
+operator|)
 name|count
 condition|;
 name|i
@@ -19047,20 +21218,13 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|ecoff_put_off
+name|ECOFF_PUT_OFF
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 operator|-
 literal|1
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 operator|(
 name|erp
 operator|+
@@ -19369,6 +21533,70 @@ name|mdebug_handle
 init|=
 name|NULL
 decl_stmt|;
+name|asection
+modifier|*
+name|s
+decl_stmt|;
+name|EXTR
+name|esym
+decl_stmt|;
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|secname
+index|[]
+init|=
+block|{
+literal|".text"
+block|,
+literal|".init"
+block|,
+literal|".fini"
+block|,
+literal|".data"
+block|,
+literal|".rodata"
+block|,
+literal|".sdata"
+block|,
+literal|".sbss"
+block|,
+literal|".bss"
+block|}
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|sc
+index|[]
+init|=
+block|{
+name|scText
+block|,
+name|scInit
+block|,
+name|scFini
+block|,
+name|scData
+block|,
+name|scRData
+block|,
+name|scSData
+block|,
+name|scSBss
+block|,
+name|scBss
+block|}
+decl_stmt|;
 comment|/* If all the things we linked together were PIC, but we're      producing an executable (rather than a shared object), then the      resulting file is CPIC (i.e., it calls PIC code.)  */
 if|if
 condition|(
@@ -19536,6 +21764,13 @@ name|abfd
 argument_list|)
 operator|==
 name|ict_irix5
+operator|||
+name|IRIX_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+name|ict_none
 condition|)
 for|for
 control|(
@@ -19633,15 +21868,12 @@ name|link_order_head
 operator|=
 name|NULL
 expr_stmt|;
-operator|*
+name|bfd_section_list_remove
+argument_list|(
+name|abfd
+argument_list|,
 name|secpp
-operator|=
-operator|(
-operator|*
-name|secpp
-operator|)
-operator|->
-name|next
+argument_list|)
 expr_stmt|;
 operator|--
 name|abfd
@@ -20006,6 +22238,9 @@ name|file_ptr
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 name|ext
 argument_list|)
@@ -20145,6 +22380,9 @@ block|{
 name|struct
 name|extsym_info
 name|einfo
+decl_stmt|;
+name|bfd_vma
+name|last
 decl_stmt|;
 comment|/* We have found the .mdebug section in the output file. 	     Look through all the link_orders comprising it and merge 	     the information together.  */
 name|symhdr
@@ -20335,78 +22573,6 @@ condition|)
 return|return
 name|false
 return|;
-if|if
-condition|(
-name|SGI_COMPAT
-argument_list|(
-name|abfd
-argument_list|)
-condition|)
-block|{
-name|asection
-modifier|*
-name|s
-decl_stmt|;
-name|EXTR
-name|esym
-decl_stmt|;
-name|bfd_vma
-name|last
-decl_stmt|;
-name|unsigned
-name|int
-name|i
-decl_stmt|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|name
-index|[]
-init|=
-block|{
-literal|".text"
-block|,
-literal|".init"
-block|,
-literal|".fini"
-block|,
-literal|".data"
-block|,
-literal|".rodata"
-block|,
-literal|".sdata"
-block|,
-literal|".sbss"
-block|,
-literal|".bss"
-block|}
-decl_stmt|;
-specifier|static
-specifier|const
-name|int
-name|sc
-index|[]
-init|=
-block|{
-name|scText
-block|,
-name|scInit
-block|,
-name|scFini
-block|,
-name|scData
-block|,
-name|scRData
-block|,
-name|scSData
-block|,
-name|scSBss
-block|,
-name|scBss
-block|}
-decl_stmt|;
 name|esym
 operator|.
 name|jmptbl
@@ -20481,7 +22647,18 @@ literal|0
 init|;
 name|i
 operator|<
-literal|8
+sizeof|sizeof
+argument_list|(
+name|secname
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|secname
+index|[
+literal|0
+index|]
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -20504,7 +22681,7 @@ name|bfd_get_section_by_name
 argument_list|(
 name|abfd
 argument_list|,
-name|name
+name|secname
 index|[
 name|i
 index|]
@@ -20559,7 +22736,7 @@ name|debug
 argument_list|,
 name|swap
 argument_list|,
-name|name
+name|secname
 index|[
 name|i
 index|]
@@ -20571,7 +22748,6 @@ condition|)
 return|return
 name|false
 return|;
-block|}
 block|}
 for|for
 control|(
@@ -21256,7 +23432,7 @@ name|ext_tab
 decl_stmt|;
 name|unsigned
 name|int
-name|i
+name|j
 decl_stmt|;
 comment|/* The .gptab.sdata and .gptab.sbss sections hold 	     information describing how the small data area would 	     change depending upon the -G switch.  These sections 	     not used in executables files.  */
 if|if
@@ -21267,11 +23443,6 @@ operator|->
 name|relocateable
 condition|)
 block|{
-name|asection
-modifier|*
-modifier|*
-name|secpp
-decl_stmt|;
 for|for
 control|(
 name|p
@@ -21379,15 +23550,12 @@ operator|->
 name|next
 control|)
 empty_stmt|;
-operator|*
+name|bfd_section_list_remove
+argument_list|(
+name|abfd
+argument_list|,
 name|secpp
-operator|=
-operator|(
-operator|*
-name|secpp
-operator|)
-operator|->
-name|next
+argument_list|)
 expr_stmt|;
 operator|--
 name|abfd
@@ -21535,6 +23703,15 @@ name|c
 operator|=
 literal|1
 expr_stmt|;
+name|amt
+operator|=
+name|c
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Elf32_gptab
+argument_list|)
+expr_stmt|;
 name|tab
 operator|=
 operator|(
@@ -21543,12 +23720,7 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
-name|c
-operator|*
-sizeof|sizeof
-argument_list|(
-name|Elf32_gptab
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -21738,8 +23910,14 @@ operator|)
 operator|&
 name|ext_gptab
 argument_list|,
+operator|(
+name|file_ptr
+operator|)
 name|gpentry
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 argument_list|(
 name|Elf32_External_gptab
@@ -21861,9 +24039,24 @@ name|int
 name|max
 decl_stmt|;
 comment|/* We need a new table entry.  */
+name|amt
+operator|=
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
+name|c
+operator|+
+literal|1
+argument_list|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Elf32_gptab
+argument_list|)
+expr_stmt|;
 name|new_tab
 operator|=
-operator|(
 operator|(
 name|Elf32_gptab
 operator|*
@@ -21875,18 +24068,8 @@ name|PTR
 operator|)
 name|tab
 argument_list|,
-operator|(
-name|c
-operator|+
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|Elf32_gptab
+name|amt
 argument_list|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -22068,9 +24251,20 @@ name|gptab_compare
 argument_list|)
 expr_stmt|;
 comment|/* Swap out the table.  */
-name|ext_tab
+name|amt
 operator|=
 operator|(
+name|bfd_size_type
+operator|)
+name|c
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_gptab
+argument_list|)
+expr_stmt|;
+name|ext_tab
+operator|=
 operator|(
 name|Elf32_External_gptab
 operator|*
@@ -22079,14 +24273,8 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-name|c
-operator|*
-sizeof|sizeof
-argument_list|(
-name|Elf32_External_gptab
+name|amt
 argument_list|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -22106,15 +24294,15 @@ return|;
 block|}
 for|for
 control|(
-name|i
+name|j
 operator|=
 literal|0
 init|;
-name|i
+name|j
 operator|<
 name|c
 condition|;
-name|i
+name|j
 operator|++
 control|)
 name|bfd_mips_elf32_swap_gptab_out
@@ -22123,11 +24311,11 @@ name|abfd
 argument_list|,
 name|tab
 operator|+
-name|i
+name|j
 argument_list|,
 name|ext_tab
 operator|+
-name|i
+name|j
 argument_list|)
 expr_stmt|;
 name|free
@@ -22267,6 +24455,9 @@ name|file_ptr
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 name|ext
 argument_list|)
@@ -22467,6 +24658,98 @@ block|}
 end_function
 
 begin_comment
+comment|/* This function is called via qsort() to sort the dynamic relocation    entries by increasing r_symndx value.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|sort_dynamic_relocs
+parameter_list|(
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+specifier|const
+name|PTR
+name|arg1
+decl_stmt|;
+specifier|const
+name|PTR
+name|arg2
+decl_stmt|;
+block|{
+specifier|const
+name|Elf32_External_Rel
+modifier|*
+name|ext_reloc1
+init|=
+operator|(
+specifier|const
+name|Elf32_External_Rel
+operator|*
+operator|)
+name|arg1
+decl_stmt|;
+specifier|const
+name|Elf32_External_Rel
+modifier|*
+name|ext_reloc2
+init|=
+operator|(
+specifier|const
+name|Elf32_External_Rel
+operator|*
+operator|)
+name|arg2
+decl_stmt|;
+name|Elf_Internal_Rel
+name|int_reloc1
+decl_stmt|;
+name|Elf_Internal_Rel
+name|int_reloc2
+decl_stmt|;
+name|bfd_elf32_swap_reloc_in
+argument_list|(
+name|reldyn_sorting_bfd
+argument_list|,
+name|ext_reloc1
+argument_list|,
+operator|&
+name|int_reloc1
+argument_list|)
+expr_stmt|;
+name|bfd_elf32_swap_reloc_in
+argument_list|(
+name|reldyn_sorting_bfd
+argument_list|,
+name|ext_reloc2
+argument_list|,
+operator|&
+name|int_reloc2
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ELF32_R_SYM
+argument_list|(
+name|int_reloc1
+operator|.
+name|r_info
+argument_list|)
+operator|-
+name|ELF32_R_SYM
+argument_list|(
+name|int_reloc2
+operator|.
+name|r_info
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Returns the GOT section for ABFD.  */
 end_comment
 
@@ -22495,7 +24778,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns the GOT information associated with the link indicated by    INFO.  If SGOTP is non-NULL, it is filled in with the GOT     section.  */
+comment|/* Returns the GOT information associated with the link indicated by    INFO.  If SGOTP is non-NULL, it is filled in with the GOT    section.  */
 end_comment
 
 begin_function
@@ -22602,6 +24885,8 @@ parameter_list|,
 name|relocation
 parameter_list|,
 name|local_sections
+parameter_list|,
+name|check_forced
 parameter_list|)
 name|bfd
 modifier|*
@@ -22617,6 +24902,9 @@ modifier|*
 modifier|*
 name|local_sections
 decl_stmt|;
+name|boolean
+name|check_forced
+decl_stmt|;
 block|{
 name|unsigned
 name|long
@@ -22625,6 +24913,14 @@ decl_stmt|;
 name|Elf_Internal_Shdr
 modifier|*
 name|symtab_hdr
+decl_stmt|;
+name|struct
+name|mips_elf_link_hash_entry
+modifier|*
+name|h
+decl_stmt|;
+name|size_t
+name|extsymoff
 decl_stmt|;
 name|r_symndx
 operator|=
@@ -22645,33 +24941,133 @@ argument_list|)
 operator|->
 name|symtab_hdr
 expr_stmt|;
-if|if
-condition|(
-operator|!
+name|extsymoff
+operator|=
+operator|(
 name|elf_bad_symtab
 argument_list|(
 name|input_bfd
 argument_list|)
-condition|)
-return|return
-name|r_symndx
-operator|<
+operator|)
+condition|?
+literal|0
+else|:
 name|symtab_hdr
 operator|->
 name|sh_info
-return|;
-else|else
-block|{
-comment|/* The symbol table does not follow the rule that local symbols 	 must come before globals.  */
+expr_stmt|;
+if|if
+condition|(
+name|r_symndx
+operator|<
+name|extsymoff
+condition|)
 return|return
+name|true
+return|;
+if|if
+condition|(
+name|elf_bad_symtab
+argument_list|(
+name|input_bfd
+argument_list|)
+operator|&&
 name|local_sections
 index|[
 name|r_symndx
 index|]
 operator|!=
 name|NULL
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|check_forced
+condition|)
+block|{
+comment|/* Look up the hash table to check whether the symbol  	 was forced local.  */
+name|h
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|elf_sym_hashes
+argument_list|(
+name|input_bfd
+argument_list|)
+index|[
+name|r_symndx
+operator|-
+name|extsymoff
+index|]
+expr_stmt|;
+comment|/* Find the real hash-table entry for this symbol.  */
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|h
+operator|->
+name|root
+operator|.
+name|elf_link_hash_flags
+operator|&
+name|ELF_LINK_FORCED_LOCAL
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|true
 return|;
 block|}
+return|return
+name|false
+return|;
 block|}
 end_function
 
@@ -23164,7 +25560,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* If we've already marked this entry as need GOT space, we don't      need to do it again.  */
+comment|/* If we've already marked this entry as needing GOT space, we don't      need to do it again.  */
 if|if
 condition|(
 name|h
@@ -23182,14 +25578,14 @@ condition|)
 return|return
 name|true
 return|;
-comment|/* By setting this to a value other than -1, we are indicating that      there needs to be a GOT entry for H.  */
+comment|/* By setting this to a value other than -1, we are indicating that      there needs to be a GOT entry for H.  Avoid using zero, as the      generic ELF copy_indirect_symbol tests for<= 0.  */
 name|h
 operator|->
 name|got
 operator|.
 name|offset
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 return|return
 name|true
@@ -23224,7 +25620,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* If H needs a GOT entry, assign it the highest available dynamic    index.  Otherwise, assign it the lowest available dynamic     index.  */
+comment|/* If H needs a GOT entry, assign it the highest available dynamic    index.  Otherwise, assign it the lowest available dynamic    index.  */
 end_comment
 
 begin_function
@@ -23257,6 +25653,37 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 comment|/* Symbols without dynamic symbol table entries aren't interesting      at all.  */
 if|if
 condition|(
@@ -23282,7 +25709,7 @@ name|got
 operator|.
 name|offset
 operator|!=
-literal|0
+literal|1
 condition|)
 name|h
 operator|->
@@ -23414,16 +25841,16 @@ operator|&
 name|hsd
 argument_list|)
 expr_stmt|;
-comment|/* There shoud have been enough room in the symbol table to      accomodate both the GOT and non-GOT symbols.  */
+comment|/* There should have been enough room in the symbol table to      accomodate both the GOT and non-GOT symbols.  */
 name|BFD_ASSERT
 argument_list|(
 name|hsd
 operator|.
-name|min_got_dynindx
-operator|==
+name|max_non_got_dynindx
+operator|<=
 name|hsd
 operator|.
-name|max_non_got_dynindx
+name|min_got_dynindx
 argument_list|)
 expr_stmt|;
 comment|/* Now we know which dynamic symbol has the lowest dynamic symbol      table index in the GOT.  */
@@ -23907,6 +26334,8 @@ parameter_list|,
 name|info
 parameter_list|,
 name|value
+parameter_list|,
+name|external
 parameter_list|)
 name|bfd
 modifier|*
@@ -23919,6 +26348,9 @@ name|info
 decl_stmt|;
 name|bfd_vma
 name|value
+decl_stmt|;
+name|boolean
+name|external
 decl_stmt|;
 block|{
 name|asection
@@ -23946,7 +26378,13 @@ decl_stmt|;
 name|bfd_vma
 name|address
 decl_stmt|;
-comment|/* Although the ABI says that it is "the high-order 16 bits" that we      want, it is really the %high value.  The complete value is      calculated with a `addiu' of a LO16 relocation, just as with a      HI16/LO16 pair.  */
+if|if
+condition|(
+operator|!
+name|external
+condition|)
+block|{
+comment|/* Although the ABI says that it is "the high-order 16 bits" that we 	 want, it is really the %high value.  The complete value is 	 calculated with a `addiu' of a LO16 relocation, just as with a 	 HI16/LO16 pair.  */
 name|value
 operator|=
 name|mips_elf_high
@@ -23956,6 +26394,7 @@ argument_list|)
 operator|<<
 literal|16
 expr_stmt|;
+block|}
 name|g
 operator|=
 name|mips_elf_got_info
@@ -24027,16 +26466,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|address
-operator|&
-literal|0xffff0000
-operator|)
 operator|==
 name|value
 condition|)
 block|{
-comment|/* This entry has the right high-order 16 bits.  */
+comment|/* This entry has the right high-order 16 bits, and the low-order 	     16 bits are set to zero.  */
 name|index
 operator|=
 name|entry
@@ -24145,7 +26580,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create a rel.dyn relocation for the dynamic linker to resolve.  REL    is the original relocation, which is now being transformed into a    dyanmic relocation.  The ADDENDP is adjusted if necessary; the    caller should store the result in place of the original addend.  */
+comment|/* Create a rel.dyn relocation for the dynamic linker to resolve.  REL    is the original relocation, which is now being transformed into a    dynamic relocation.  The ADDENDP is adjusted if necessary; the    caller should store the result in place of the original addend.  */
 end_comment
 
 begin_function
@@ -24258,67 +26693,52 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|sreloc
+operator|->
+name|contents
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|sreloc
+operator|->
+name|reloc_count
+operator|*
+name|MIPS_ELF_REL_SIZE
+argument_list|(
+name|output_bfd
+argument_list|)
+operator|<
+name|sreloc
+operator|->
+name|_raw_size
+argument_list|)
+expr_stmt|;
 name|skip
 operator|=
 name|false
 expr_stmt|;
-comment|/* We begin by assuming that the offset for the dynamic relocation      is the same as for the original relocation.  We'll adjust this      later to reflect the correct output offsets.  */
-if|if
-condition|(
-name|elf_section_data
-argument_list|(
-name|input_section
-argument_list|)
-operator|->
-name|stab_info
-operator|==
-name|NULL
-condition|)
 name|outrel
 operator|.
 name|r_offset
 operator|=
-name|rel
-operator|->
-name|r_offset
-expr_stmt|;
-else|else
-block|{
-comment|/* Except that in a stab section things are more complex. 	 Because we compress stab information, the offset given in the 	 relocation may not be the one we want; we must let the stabs 	 machinery tell us the offset.  */
-name|outrel
-operator|.
-name|r_offset
-operator|=
-operator|(
-name|_bfd_stab_section_offset
+name|_bfd_elf_section_offset
 argument_list|(
 name|output_bfd
 argument_list|,
-operator|&
-name|elf_hash_table
-argument_list|(
 name|info
-argument_list|)
-operator|->
-name|stab_info
 argument_list|,
 name|input_section
-argument_list|,
-operator|&
-name|elf_section_data
-argument_list|(
-name|input_section
-argument_list|)
-operator|->
-name|stab_info
 argument_list|,
 name|rel
 operator|->
 name|r_offset
 argument_list|)
-operator|)
 expr_stmt|;
-comment|/* If we didn't need the relocation at all, this value will be 	 -1.  */
 if|if
 condition|(
 name|outrel
@@ -24335,8 +26755,21 @@ name|skip
 operator|=
 name|true
 expr_stmt|;
-block|}
-comment|/* If we've decided to skip this relocation, just output an emtpy      record.  Note that R_MIPS_NONE == 0, so that this call to memset      is a way of setting R_TYPE to R_MIPS_NONE.  */
+comment|/* FIXME: For -2 runtime relocation needs to be skipped, but      properly resolved statically and installed.  */
+name|BFD_ASSERT
+argument_list|(
+name|outrel
+operator|.
+name|r_offset
+operator|!=
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* If we've decided to skip this relocation, just output an empty      record.  Note that R_MIPS_NONE == 0, so that this call to memset      is a way of setting R_TYPE to R_MIPS_NONE.  */
 if|if
 condition|(
 name|skip
@@ -24397,13 +26830,17 @@ name|root
 operator|.
 name|dynindx
 expr_stmt|;
-name|BFD_ASSERT
-argument_list|(
+comment|/* h->root.dynindx may be -1 if this symbol was marked to 	     become local.  */
+if|if
+condition|(
 name|indx
-operator|!=
+operator|==
 operator|-
 literal|1
-argument_list|)
+condition|)
+name|indx
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -24484,13 +26921,7 @@ comment|/* The relocation we're building is section-relative. 	     Therefore, t
 operator|*
 name|addendp
 operator|+=
-name|symbol
-operator|-
-name|sec
-operator|->
-name|output_section
-operator|->
-name|vma
+name|section_offset
 expr_stmt|;
 comment|/* Now, the relocation is just against the section.  */
 name|symbol
@@ -24502,9 +26933,12 @@ operator|->
 name|vma
 expr_stmt|;
 block|}
-comment|/* If the relocation was previously an absolute relocation, we 	 must adjust it by the value we give it in the dynamic symbol 	 table.  */
+comment|/* If the relocation was previously an absolute relocation and 	 this symbol will not be referred to by the relocation, we must 	 adjust it by the value we give it in the dynamic symbol table. 	 Otherwise leave the job up to the dynamic linker.  */
 if|if
 condition|(
+operator|!
+name|indx
+operator|&&
 name|r_type
 operator|!=
 name|R_MIPS_REL32
@@ -25048,6 +27482,8 @@ argument_list|,
 name|relocation
 argument_list|,
 name|local_sections
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -25210,12 +27646,16 @@ name|h
 operator|->
 name|root
 operator|.
+name|root
+operator|.
 name|type
 operator|==
 name|bfd_link_hash_indirect
 operator|||
 name|h
 operator|->
+name|root
+operator|.
 name|root
 operator|.
 name|type
@@ -25421,10 +27861,16 @@ name|info
 operator|->
 name|shared
 operator|&&
+operator|(
 operator|!
 name|info
 operator|->
 name|symbolic
+operator|||
+name|info
+operator|->
+name|allow_shlib_undefined
+operator|)
 operator|&&
 operator|!
 name|info
@@ -25465,9 +27911,26 @@ literal|"_DYNAMIC_LINK"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|root
+operator|.
+name|string
+argument_list|,
+literal|"_DYNAMIC_LINKING"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* If this is a dynamic link, we should have created a 	     _DYNAMIC_LINK symbol in mips_elf_create_dynamic_sections. 	     Otherwise, we should define the symbol with a value of 0. 	     FIXME: It should probably get into the symbol table 	     somehow as well.  */
+comment|/* If this is a dynamic link, we should have created a 	     _DYNAMIC_LINK symbol or _DYNAMIC_LINKING(for normal mips) symbol 	     in in mips_elf_create_dynamic_sections. 	     Otherwise, we should define the symbol with a value of 0. 	     FIXME: It should probably get into the symbol table 	     somehow as well.  */
 name|BFD_ASSERT
 argument_list|(
 operator|!
@@ -25855,14 +28318,40 @@ name|relocateable
 operator|&&
 operator|(
 operator|(
+operator|(
 name|r_type
 operator|==
 name|R_MIPS16_26
 operator|)
-operator|!=
+operator|&&
+operator|!
+name|target_is_16_bit_code_p
+operator|)
+operator|||
+operator|(
+operator|(
+name|r_type
+operator|==
+name|R_MIPS_26
+operator|)
+operator|&&
 name|target_is_16_bit_code_p
 operator|)
 operator|)
+operator|)
+expr_stmt|;
+name|local_p
+operator|=
+name|mips_elf_local_relocation_p
+argument_list|(
+name|input_bfd
+argument_list|,
+name|relocation
+argument_list|,
+name|local_sections
+argument_list|,
+name|true
+argument_list|)
 expr_stmt|;
 comment|/* If we haven't already determined the GOT offset, or the GP value,      and we're going to need it, get it now.  */
 switch|switch
@@ -25924,6 +28413,84 @@ operator|)
 name|h
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|dynamic_sections_created
+operator|||
+operator|(
+name|info
+operator|->
+name|shared
+operator|&&
+operator|(
+name|info
+operator|->
+name|symbolic
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|dynindx
+operator|==
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|h
+operator|->
+name|root
+operator|.
+name|elf_link_hash_flags
+operator|&
+name|ELF_LINK_HASH_DEF_REGULAR
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* This is a static link or a -Bsymbolic link.  The 		 symbol is defined locally, or was forced to be local. 		 We must initialize this entry in the GOT.  */
+name|asection
+modifier|*
+name|sgot
+init|=
+name|mips_elf_got_section
+argument_list|(
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|dynobj
+argument_list|)
+decl_stmt|;
+name|MIPS_ELF_PUT_WORD
+argument_list|(
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|dynobj
+argument_list|,
+name|symbol
+operator|+
+name|addend
+argument_list|,
+name|sgot
+operator|->
+name|contents
+operator|+
+name|g
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -25931,6 +28498,10 @@ condition|(
 name|r_type
 operator|==
 name|R_MIPS_GOT16
+operator|||
+name|r_type
+operator|==
+name|R_MIPS_CALL16
 condition|)
 comment|/* There's no need to create a local GOT entry here; the 	   calculation for a local GOT16 entry does not involve G.  */
 break|break;
@@ -25960,7 +28531,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|false
+name|bfd_reloc_outofrange
 return|;
 block|}
 comment|/* Convert GOT indices to actual offsets.  */
@@ -25986,6 +28557,9 @@ name|R_MIPS_HI16
 case|:
 case|case
 name|R_MIPS_LO16
+case|:
+case|case
+name|R_MIPS16_GPREL
 case|:
 case|case
 name|R_MIPS_GPREL16
@@ -26086,6 +28660,20 @@ name|root
 operator|.
 name|elf_link_hash_flags
 operator|&
+name|ELF_LINK_HASH_DEF_DYNAMIC
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|h
+operator|->
+name|root
+operator|.
+name|elf_link_hash_flags
+operator|&
 name|ELF_LINK_HASH_DEF_REGULAR
 operator|)
 operator|==
@@ -26093,6 +28681,10 @@ literal|0
 operator|)
 operator|)
 operator|)
+operator|&&
+name|r_symndx
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|input_section
@@ -26134,7 +28726,7 @@ name|input_section
 argument_list|)
 condition|)
 return|return
-name|false
+name|bfd_reloc_undefined
 return|;
 block|}
 else|else
@@ -26231,6 +28823,7 @@ break|break;
 case|case
 name|R_MIPS_GNU_REL_HI16
 case|:
+comment|/* Instead of subtracting 'p' here, we should be subtracting the 	 equivalent value for the LO part of the reloc, since the value 	 here is relative to that address.  Because that's not easy to do, 	 we adjust 'addend' in _bfd_mips_elf_relocate_section().  See also 	 the comment there for more information.  */
 name|value
 operator|=
 name|mips_elf_high
@@ -26252,7 +28845,7 @@ break|break;
 case|case
 name|R_MIPS16_26
 case|:
-comment|/* The calculation for R_MIPS_26 is just the same as for an 	 R_MIPS_26.  It's only the storage of the relocated field into 	 the output file that's different.  That's handled in 	 mips_elf_perform_relocation.  So, we just fall through to the 	 R_MIPS_26 case here.  */
+comment|/* The calculation for R_MIPS16_26 is just the same as for an 	 R_MIPS_26.  It's only the storage of the relocated field into 	 the output file that's different.  That's handled in 	 mips_elf_perform_relocation.  So, we just fall through to the 	 R_MIPS_26 case here.  */
 case|case
 name|R_MIPS_26
 case|:
@@ -26271,7 +28864,11 @@ literal|2
 operator|)
 operator||
 operator|(
+operator|(
 name|p
+operator|+
+literal|4
+operator|)
 operator|&
 literal|0xf0000000
 operator|)
@@ -26449,11 +29046,32 @@ break|break;
 case|case
 name|R_MIPS_GOT16
 case|:
+case|case
+name|R_MIPS_CALL16
+case|:
 if|if
 condition|(
 name|local_p
 condition|)
 block|{
+name|boolean
+name|forced
+decl_stmt|;
+comment|/* The special case is when the symbol is forced to be local.  We 	     need the full address in the GOT since no R_MIPS_LO16 relocation 	     follows.  */
+name|forced
+operator|=
+operator|!
+name|mips_elf_local_relocation_p
+argument_list|(
+name|input_bfd
+argument_list|,
+name|relocation
+argument_list|,
+name|local_sections
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
 name|value
 operator|=
 name|mips_elf_got16_entry
@@ -26465,6 +29083,8 @@ argument_list|,
 name|symbol
 operator|+
 name|addend
+argument_list|,
+name|forced
 argument_list|)
 expr_stmt|;
 if|if
@@ -26478,7 +29098,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|false
+name|bfd_reloc_outofrange
 return|;
 name|value
 operator|=
@@ -26508,9 +29128,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Fall through.  */
-case|case
-name|R_MIPS_CALL16
-case|:
 case|case
 name|R_MIPS_GOT_DISP
 case|:
@@ -26564,6 +29181,15 @@ name|symbol
 operator|-
 name|p
 expr_stmt|;
+name|overflowed_p
+operator|=
+name|mips_elf_overflow_p
+argument_list|(
+name|value
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
 name|value
 operator|=
 call|(
@@ -26576,15 +29202,6 @@ operator|)
 name|value
 operator|/
 literal|4
-argument_list|)
-expr_stmt|;
-name|overflowed_p
-operator|=
-name|mips_elf_overflow_p
-argument_list|(
-name|value
-argument_list|,
-literal|16
 argument_list|)
 expr_stmt|;
 break|break;
@@ -26657,7 +29274,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|false
+name|bfd_reloc_outofrange
 return|;
 name|value
 operator|=
@@ -26881,12 +29498,19 @@ name|x
 operator|=
 name|bfd_get
 argument_list|(
+operator|(
+call|(
+name|bfd_vma
+call|)
+argument_list|(
 literal|8
 operator|*
 name|bfd_get_reloc_size
 argument_list|(
 name|howto
 argument_list|)
+argument_list|)
+operator|)
 argument_list|,
 name|input_bfd
 argument_list|,
@@ -27065,7 +29689,7 @@ operator|==
 name|R_MIPS16_26
 condition|)
 block|{
-comment|/* R_MIPS16_26 is used for the mips16 jal and jalx instructions. 	 Most mips16 instructions are 16 bits, but these instructions 	 are 32 bits.  	 The format of these instructions is:  	 +--------------+--------------------------------+ 	 !     JALX     ! X!   Imm 20:16  !   Imm 25:21  ! 	 +--------------+--------------------------------+ 	 !	  	  Immediate  15:0		    ! 	 +-----------------------------------------------+ 	  	 JALX is the 5-bit value 00011.  X is 0 for jal, 1 for jalx. 	 Note that the immediate value in the first word is swapped.  	 When producing a relocateable object file, R_MIPS16_26 is 	 handled mostly like R_MIPS_26.  In particular, the addend is 	 stored as a straight 26-bit value in a 32-bit instruction. 	 (gas makes life simpler for itself by never adjusting a 	 R_MIPS16_26 reloc to be against a section, so the addend is 	 always zero).  However, the 32 bit instruction is stored as 2 	 16-bit values, rather than a single 32-bit value.  In a 	 big-endian file, the result is the same; in a little-endian 	 file, the two 16-bit halves of the 32 bit value are swapped. 	 This is so that a disassembler can recognize the jal 	 instruction.  	 When doing a final link, R_MIPS16_26 is treated as a 32 bit 	 instruction stored as two 16-bit values.  The addend A is the 	 contents of the targ26 field.  The calculation is the same as 	 R_MIPS_26.  When storing the calculated value, reorder the 	 immediate value as shown above, and don't forget to store the 	 value as two 16-bit values.  	 To put it in MIPS ABI terms, the relocation field is T-targ26-16, 	 defined as 	  	 big-endian: 	 +--------+----------------------+ 	 |        |                      | 	 |        |    targ26-16         | 	 |31    26|25                   0| 	 +--------+----------------------+ 	  	 little-endian: 	 +----------+------+-------------+ 	 |          |      |             | 	 |  sub1    |      |     sub2    | 	 |0        9|10  15|16         31| 	 +----------+--------------------+ 	 where targ26-16 is sub1 followed by sub2 (i.e., the addend field A is 	 ((sub1<< 16) | sub2)). 	  	 When producing a relocateable object file, the calculation is 	 (((A< 2) | (P& 0xf0000000) + S)>> 2) 	 When producing a fully linked file, the calculation is 	 let R = (((A< 2) | (P& 0xf0000000) + S)>> 2) 	 ((R& 0x1f0000)<< 5) | ((R& 0x3e00000)>> 5) | (R& 0xffff)  */
+comment|/* R_MIPS16_26 is used for the mips16 jal and jalx instructions. 	 Most mips16 instructions are 16 bits, but these instructions 	 are 32 bits.  	 The format of these instructions is:  	 +--------------+--------------------------------+ 	 !     JALX     ! X!   Imm 20:16  !   Imm 25:21  ! 	 +--------------+--------------------------------+ 	 !	  	  Immediate  15:0		    ! 	 +-----------------------------------------------+  	 JALX is the 5-bit value 00011.  X is 0 for jal, 1 for jalx. 	 Note that the immediate value in the first word is swapped.  	 When producing a relocateable object file, R_MIPS16_26 is 	 handled mostly like R_MIPS_26.  In particular, the addend is 	 stored as a straight 26-bit value in a 32-bit instruction. 	 (gas makes life simpler for itself by never adjusting a 	 R_MIPS16_26 reloc to be against a section, so the addend is 	 always zero).  However, the 32 bit instruction is stored as 2 	 16-bit values, rather than a single 32-bit value.  In a 	 big-endian file, the result is the same; in a little-endian 	 file, the two 16-bit halves of the 32 bit value are swapped. 	 This is so that a disassembler can recognize the jal 	 instruction.  	 When doing a final link, R_MIPS16_26 is treated as a 32 bit 	 instruction stored as two 16-bit values.  The addend A is the 	 contents of the targ26 field.  The calculation is the same as 	 R_MIPS_26.  When storing the calculated value, reorder the 	 immediate value as shown above, and don't forget to store the 	 value as two 16-bit values.  	 To put it in MIPS ABI terms, the relocation field is T-targ26-16, 	 defined as  	 big-endian: 	 +--------+----------------------+ 	 |        |                      | 	 |        |    targ26-16         | 	 |31    26|25                   0| 	 +--------+----------------------+  	 little-endian: 	 +----------+------+-------------+ 	 |          |      |             | 	 |  sub1    |      |     sub2    | 	 |0        9|10  15|16         31| 	 +----------+--------------------+ 	 where targ26-16 is sub1 followed by sub2 (i.e., the addend field A is 	 ((sub1<< 16) | sub2)).  	 When producing a relocateable object file, the calculation is 	 (((A< 2) | ((P + 4)& 0xf0000000) + S)>> 2) 	 When producing a fully linked file, the calculation is 	 let R = (((A< 2) | ((P + 4)& 0xf0000000) + S)>> 2) 	 ((R& 0x1f0000)<< 5) | ((R& 0x3e00000)>> 5) | (R& 0xffff)  */
 if|if
 condition|(
 operator|!
@@ -27113,7 +29737,7 @@ operator|==
 name|R_MIPS16_GPREL
 condition|)
 block|{
-comment|/* R_MIPS16_GPREL is used for GP-relative addressing in mips16 	 mode.  A typical instruction will have a format like this:  	 +--------------+--------------------------------+ 	 !    EXTEND    !     Imm 10:5    !   Imm 15:11  ! 	 +--------------+--------------------------------+ 	 !    Major     !   rx   !   ry   !   Imm  4:0   ! 	 +--------------+--------------------------------+ 	  	 EXTEND is the five bit value 11110.  Major is the instruction 	 opcode. 	  	 This is handled exactly like R_MIPS_GPREL16, except that the 	 addend is retrieved and stored as shown in this diagram; that 	 is, the Imm fields above replace the V-rel16 field.             All we need to do here is shuffle the bits appropriately.  As 	 above, the two 16-bit halves must be swapped on a 	 little-endian system.  */
+comment|/* R_MIPS16_GPREL is used for GP-relative addressing in mips16 	 mode.  A typical instruction will have a format like this:  	 +--------------+--------------------------------+ 	 !    EXTEND    !     Imm 10:5    !   Imm 15:11  ! 	 +--------------+--------------------------------+ 	 !    Major     !   rx   !   ry   !   Imm  4:0   ! 	 +--------------+--------------------------------+  	 EXTEND is the five bit value 11110.  Major is the instruction 	 opcode.  	 This is handled exactly like R_MIPS_GPREL16, except that the 	 addend is retrieved and stored as shown in this diagram; that 	 is, the Imm fields above replace the V-rel16 field.           All we need to do here is shuffle the bits appropriately.  As 	 above, the two 16-bit halves must be swapped on a 	 little-endian system.  */
 name|value
 operator|=
 operator|(
@@ -27244,7 +29868,7 @@ argument_list|(
 literal|"%s: %s+0x%lx: jump to stub routine which is not jal"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|input_bfd
 argument_list|)
@@ -27579,6 +30203,7 @@ name|rela_relocation_p
 init|=
 name|true
 decl_stmt|;
+name|unsigned
 name|int
 name|r_type
 init|=
@@ -27588,6 +30213,18 @@ name|rel
 operator|->
 name|r_info
 argument_list|)
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|msg
+init|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|NULL
 decl_stmt|;
 comment|/* Find the relocation howto for this relocation.  */
 if|if
@@ -27603,10 +30240,10 @@ name|output_bfd
 argument_list|)
 condition|)
 block|{
-comment|/* Some 32-bit code uses R_MIPS_64.  In particular, people use 	     64-bit code, but make sure all their addresses are in the  	     lowermost or uppermost 32-bit section of the 64-bit address 	     space.  Thus, when they use an R_MIPS_64 they mean what is 	     usually meant by R_MIPS_32, with the exception that the 	     stored value is sign-extended to 64 bits.  */
+comment|/* Some 32-bit code uses R_MIPS_64.  In particular, people use 	     64-bit code, but make sure all their addresses are in the 	     lowermost or uppermost 32-bit section of the 64-bit address 	     space.  Thus, when they use an R_MIPS_64 they mean what is 	     usually meant by R_MIPS_32, with the exception that the 	     stored value is sign-extended to 64 bits.  */
 name|howto
 operator|=
-name|elf_mips_howto_table
+name|elf_mips_howto_table_rel
 operator|+
 name|R_MIPS_32
 expr_stmt|;
@@ -27666,13 +30303,10 @@ name|relocs
 argument_list|)
 operator|>=
 operator|(
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|rel_hdr
-operator|->
-name|sh_size
-operator|/
-name|rel_hdr
-operator|->
-name|sh_entsize
+argument_list|)
 operator|*
 name|bed
 operator|->
@@ -27750,6 +30384,8 @@ argument_list|,
 name|rel
 argument_list|,
 name|local_sections
+argument_list|,
+name|false
 argument_list|)
 operator|)
 condition|)
@@ -27766,10 +30402,11 @@ name|reloc_howto_type
 modifier|*
 name|lo16_howto
 decl_stmt|;
+name|unsigned
 name|int
 name|lo
 decl_stmt|;
-comment|/* The combined value is the sum of the HI16 addend, 		     left-shifted by sixteen bits, and the LO16 		     addend, sign extended.  (Usually, the code does 		     a `lui' of the HI16 value, and then an `addiu' of 		     the LO16 value.)    		     Scan ahead to find a matching LO16 relocation.  */
+comment|/* The combined value is the sum of the HI16 addend, 		     left-shifted by sixteen bits, and the LO16 		     addend, sign extended.  (Usually, the code does 		     a `lui' of the HI16 value, and then an `addiu' of 		     the LO16 value.)  		     Scan ahead to find a matching LO16 relocation.  */
 if|if
 condition|(
 name|r_type
@@ -27849,6 +30486,25 @@ comment|/* Compute the combined addend.  */
 name|addend
 operator|+=
 name|l
+expr_stmt|;
+comment|/* If PC-relative, subtract the difference between the 		     address of the LO part of the reloc and the address of 		     the HI part.  The relocation is relative to the LO 		     part, but mips_elf_calculate_relocation() doesn't know 		     it address or the difference from the HI part, so 		     we subtract that difference here.  See also the 		     comment in mips_elf_calculate_relocation().  */
+if|if
+condition|(
+name|r_type
+operator|==
+name|R_MIPS_GNU_REL_HI16
+condition|)
+name|addend
+operator|-=
+operator|(
+name|lo16_relocation
+operator|->
+name|r_offset
+operator|-
+name|rel
+operator|->
+name|r_offset
+operator|)
 expr_stmt|;
 block|}
 elseif|else
@@ -27949,6 +30605,8 @@ argument_list|,
 name|rel
 argument_list|,
 name|local_sections
+argument_list|,
+name|false
 argument_list|)
 condition|)
 comment|/* There's nothing to do for non-local relocations.  */
@@ -28130,12 +30788,40 @@ if|if
 condition|(
 name|addend
 operator|&
-literal|0x80000000u
+operator|(
+operator|(
+name|bfd_vma
+operator|)
+literal|1
+operator|<<
+literal|31
+operator|)
 condition|)
+ifdef|#
+directive|ifdef
+name|BFD64
 name|sign_bits
 operator|=
-literal|0xffffffffu
+operator|(
+operator|(
+name|bfd_vma
+operator|)
+literal|1
+operator|<<
+literal|32
+operator|)
+operator|-
+literal|1
 expr_stmt|;
+else|#
+directive|else
+name|sign_bits
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 name|sign_bits
 operator|=
@@ -28318,10 +31004,37 @@ continue|continue;
 case|case
 name|bfd_reloc_notsupported
 case|:
-name|abort
-argument_list|()
+name|msg
+operator|=
+name|_
+argument_list|(
+literal|"internal error: unsupported relocation error"
+argument_list|)
 expr_stmt|;
-break|break;
+name|info
+operator|->
+name|callbacks
+operator|->
+name|warning
+argument_list|(
+name|info
+argument_list|,
+name|msg
+argument_list|,
+name|name
+argument_list|,
+name|input_bfd
+argument_list|,
+name|input_section
+argument_list|,
+name|rel
+operator|->
+name|r_offset
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
 case|case
 name|bfd_reloc_overflow
 case|:
@@ -28430,12 +31143,40 @@ if|if
 condition|(
 name|value
 operator|&
-literal|0x80000000u
+operator|(
+operator|(
+name|bfd_vma
+operator|)
+literal|1
+operator|<<
+literal|31
+operator|)
 condition|)
+ifdef|#
+directive|ifdef
+name|BFD64
 name|sign_bits
 operator|=
-literal|0xffffffffu
+operator|(
+operator|(
+name|bfd_vma
+operator|)
+literal|1
+operator|<<
+literal|32
+operator|)
+operator|-
+literal|1
 expr_stmt|;
+else|#
+directive|else
+name|sign_bits
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 name|sign_bits
 operator|=
@@ -28543,10 +31284,6 @@ end_function
 
 begin_comment
 comment|/* This hook function is called before the linker writes out a global    symbol.  We mark symbols as small common if appropriate.  This is    also where we undo the increment of the value for a mips16 symbol.  */
-end_comment
-
-begin_comment
-comment|/*ARGSIGNORED*/
 end_comment
 
 begin_function
@@ -28855,12 +31592,21 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|IRIX_COMPAT
 argument_list|(
 name|abfd
 argument_list|)
 operator|==
 name|ict_irix5
+operator|||
+name|IRIX_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+name|ict_none
+operator|)
 operator|&&
 operator|!
 name|info
@@ -28902,6 +31648,9 @@ argument_list|,
 name|flags
 operator|&
 operator|~
+operator|(
+name|flagword
+operator|)
 name|SEC_READONLY
 argument_list|)
 operator|||
@@ -29040,6 +31789,14 @@ block|}
 comment|/* We need to create a .compact_rel section.  */
 if|if
 condition|(
+name|SGI_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|mips_elf_create_compact_rel_section
 argument_list|(
@@ -29051,6 +31808,7 @@ condition|)
 return|return
 name|false
 return|;
+block|}
 comment|/* Change aligments of some sections.  */
 name|s
 operator|=
@@ -29187,6 +31945,14 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|SGI_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 operator|(
 name|_bfd_generic_link_add_one_symbol
@@ -29236,6 +32002,62 @@ condition|)
 return|return
 name|false
 return|;
+block|}
+else|else
+block|{
+comment|/* For normal mips it is _DYNAMIC_LINKING.  */
+if|if
+condition|(
+operator|!
+operator|(
+name|_bfd_generic_link_add_one_symbol
+argument_list|(
+name|info
+argument_list|,
+name|abfd
+argument_list|,
+literal|"_DYNAMIC_LINKING"
+argument_list|,
+name|BSF_GLOBAL
+argument_list|,
+name|bfd_abs_section_ptr
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|false
+argument_list|,
+name|get_elf_backend_data
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|collect
+argument_list|,
+operator|(
+expr|struct
+name|bfd_link_hash_entry
+operator|*
+operator|*
+operator|)
+operator|&
+name|h
+argument_list|)
+operator|)
+condition|)
+return|return
+name|false
+return|;
+block|}
 name|h
 operator|->
 name|elf_link_hash_flags
@@ -29302,6 +32124,14 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|SGI_COMPAT
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 operator|(
 name|_bfd_generic_link_add_one_symbol
@@ -29351,6 +32181,62 @@ condition|)
 return|return
 name|false
 return|;
+block|}
+else|else
+block|{
+comment|/* For normal mips the symbol is __RLD_MAP.  */
+if|if
+condition|(
+operator|!
+operator|(
+name|_bfd_generic_link_add_one_symbol
+argument_list|(
+name|info
+argument_list|,
+name|abfd
+argument_list|,
+literal|"__RLD_MAP"
+argument_list|,
+name|BSF_GLOBAL
+argument_list|,
+name|s
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|false
+argument_list|,
+name|get_elf_backend_data
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|collect
+argument_list|,
+operator|(
+expr|struct
+name|bfd_link_hash_entry
+operator|*
+operator|*
+operator|)
+operator|&
+name|h
+argument_list|)
+operator|)
+condition|)
+return|return
+name|false
+return|;
+block|}
 name|h
 operator|->
 name|elf_link_hash_flags
@@ -29505,7 +32391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create the .got section to hold the global offset table. */
+comment|/* Create the .got section to hold the global offset table.  */
 end_comment
 
 begin_function
@@ -29544,6 +32430,9 @@ name|struct
 name|mips_got_info
 modifier|*
 name|g
+decl_stmt|;
+name|bfd_size_type
+name|amt
 decl_stmt|;
 comment|/* This function may be called more than once.  */
 if|if
@@ -29712,6 +32601,14 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
+name|amt
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mips_got_info
+argument_list|)
+expr_stmt|;
 name|g
 operator|=
 operator|(
@@ -29723,11 +32620,7 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mips_got_info
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -29767,6 +32660,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|amt
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bfd_elf_section_data
+argument_list|)
+expr_stmt|;
 name|s
 operator|->
 name|used_by_bfd
@@ -29778,11 +32679,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bfd_elf_section_data
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -29982,7 +32879,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Make room for a null element. */
+comment|/* Make room for a null element.  */
 name|s
 operator|->
 name|_raw_size
@@ -30432,7 +33329,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/* Record this stub in an array of local symbol stubs for              this BFD. */
+comment|/* Record this stub in an array of local symbol stubs for              this BFD.  */
 if|if
 condition|(
 name|elf_tdata
@@ -30454,6 +33351,9 @@ modifier|*
 modifier|*
 name|n
 decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 if|if
 condition|(
 name|elf_bad_symtab
@@ -30463,13 +33363,10 @@ argument_list|)
 condition|)
 name|symcount
 operator|=
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|symtab_hdr
-operator|->
-name|sh_size
-operator|/
-name|symtab_hdr
-operator|->
-name|sh_entsize
+argument_list|)
 expr_stmt|;
 else|else
 name|symcount
@@ -30477,6 +33374,16 @@ operator|=
 name|symtab_hdr
 operator|->
 name|sh_info
+expr_stmt|;
+name|amt
+operator|=
+name|symcount
+operator|*
+sizeof|sizeof
+argument_list|(
+name|asection
+operator|*
+argument_list|)
 expr_stmt|;
 name|n
 operator|=
@@ -30489,13 +33396,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-name|symcount
-operator|*
-sizeof|sizeof
-argument_list|(
-name|asection
-operator|*
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -30858,6 +33759,7 @@ name|unsigned
 name|long
 name|r_symndx
 decl_stmt|;
+name|unsigned
 name|int
 name|r_type
 decl_stmt|;
@@ -30894,6 +33796,46 @@ name|h
 operator|=
 name|NULL
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|r_symndx
+operator|>=
+name|extsymoff
+operator|+
+name|NUM_SHDR_ENTRIES
+argument_list|(
+name|symtab_hdr
+argument_list|)
+condition|)
+block|{
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"%s: Malformed reloc detected for section %s"
+argument_list|)
+argument_list|,
+name|bfd_archive_filename
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 else|else
 block|{
 name|h
@@ -31098,7 +34040,7 @@ name|R_MIPS_GOT_DISP
 operator|)
 condition|)
 block|{
-comment|/* We may need a local GOT entry for this relocation.  We 	     don't count R_MIPS_GOT_PAGE because we can estimate the 	     maximum number of pages needed by looking at the size of 	     the segment.  Similar comments apply to R_MIPS_GOT16.  We 	     don't count R_MIPS_GOT_HI16, or R_MIPS_CALL_HI16 because 	     these are always followed by an R_MIPS_GOT_LO16 or 	     R_MIPS_CALL_LO16.  	     This estimation is very conservative since we can merge 	     duplicate entries in the GOT.  In order to be less 	     conservative, we could actually build the GOT here, 	     rather than in relocate_section.  */
+comment|/* We may need a local GOT entry for this relocation.  We 	     don't count R_MIPS_GOT_PAGE because we can estimate the 	     maximum number of pages needed by looking at the size of 	     the segment.  Similar comments apply to R_MIPS_GOT16 and 	     R_MIPS_CALL16.  We don't count R_MIPS_GOT_HI16, or 	     R_MIPS_CALL_HI16 because these are always followed by an 	     R_MIPS_GOT_LO16 or R_MIPS_CALL_LO16.  	     This estimation is very conservative since we can merge 	     duplicate entries in the GOT.  In order to be less 	     conservative, we could actually build the GOT here, 	     rather than in relocate_section.  */
 name|g
 operator|->
 name|local_gotno
@@ -31139,7 +34081,7 @@ argument_list|(
 literal|"%s: CALL16 reloc at 0x%lx not against global symbol"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|abfd
 argument_list|)
@@ -31280,7 +34222,7 @@ block|{
 specifier|const
 name|char
 modifier|*
-name|name
+name|dname
 init|=
 name|MIPS_ELF_REL_DYN_SECTION_NAME
 argument_list|(
@@ -31293,7 +34235,7 @@ name|bfd_get_section_by_name
 argument_list|(
 name|dynobj
 argument_list|,
-name|name
+name|dname
 argument_list|)
 expr_stmt|;
 if|if
@@ -31309,7 +34251,7 @@ name|bfd_make_section
 argument_list|(
 name|dynobj
 argument_list|,
-name|name
+name|dname
 argument_list|)
 expr_stmt|;
 if|if
@@ -31355,13 +34297,18 @@ name|false
 return|;
 block|}
 block|}
+define|#
+directive|define
+name|MIPS_READONLY_SECTION
+value|(SEC_ALLOC | SEC_LOAD | SEC_READONLY)
 if|if
 condition|(
 name|info
 operator|->
 name|shared
 condition|)
-comment|/* When creating a shared object, we must copy these 		   reloc types into the output file as R_MIPS_REL32 		   relocs.  We make room for this reloc in the 		   .rel.dyn reloc section.  */
+block|{
+comment|/* When creating a shared object, we must copy these 		     reloc types into the output file as R_MIPS_REL32 		     relocs.  We make room for this reloc in the 		     .rel.dyn reloc section.  */
 name|mips_elf_allocate_dynamic_relocations
 argument_list|(
 name|dynobj
@@ -31369,6 +34316,26 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sec
+operator|->
+name|flags
+operator|&
+name|MIPS_READONLY_SECTION
+operator|)
+operator|==
+name|MIPS_READONLY_SECTION
+condition|)
+comment|/* We tell the dynamic linker that there are 		       relocations against the text segment.  */
+name|info
+operator|->
+name|flags
+operator||=
+name|DF_TEXTREL
+expr_stmt|;
+block|}
 else|else
 block|{
 name|struct
@@ -31390,6 +34357,25 @@ operator|++
 name|hmips
 operator|->
 name|possibly_dynamic_relocs
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sec
+operator|->
+name|flags
+operator|&
+name|MIPS_READONLY_SECTION
+operator|)
+operator|==
+name|MIPS_READONLY_SECTION
+condition|)
+comment|/* We need it to tell the dynamic linker if there 		       are relocations against the text segment.  */
+name|hmips
+operator|->
+name|readonly_reloc
+operator|=
+name|true
 expr_stmt|;
 block|}
 comment|/* Even though we don't directly need a GOT entry for 		 this symbol, a symbol must have a dynamic symbol 		 table index greater that DT_MIPS_GOTSYM if there are 		 dynamic relocations against it.  */
@@ -31417,7 +34403,7 @@ if|if
 condition|(
 name|SGI_COMPAT
 argument_list|(
-name|dynobj
+name|abfd
 argument_list|)
 condition|)
 name|mips_elf_hash_table
@@ -31449,7 +34435,7 @@ if|if
 condition|(
 name|SGI_COMPAT
 argument_list|(
-name|dynobj
+name|abfd
 argument_list|)
 condition|)
 name|mips_elf_hash_table
@@ -31516,7 +34502,54 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* If this reloc is not a 16 bit call, and it has a global          symbol, then we will need the fn_stub if there is one.          References from a stub section do not count. */
+comment|/* We must not create a stub for a symbol that has relocations          related to taking the function's address.  */
+switch|switch
+condition|(
+name|r_type
+condition|)
+block|{
+default|default:
+if|if
+condition|(
+name|h
+operator|!=
+name|NULL
+condition|)
+block|{
+name|struct
+name|mips_elf_link_hash_entry
+modifier|*
+name|mh
+decl_stmt|;
+name|mh
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|h
+expr_stmt|;
+name|mh
+operator|->
+name|no_fn_stub
+operator|=
+name|true
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|R_MIPS_CALL16
+case|:
+case|case
+name|R_MIPS_CALL_HI16
+case|:
+case|case
+name|R_MIPS_CALL_LO16
+case|:
+break|break;
+block|}
+comment|/* If this reloc is not a 16 bit call, and it has a global          symbol, then we will need the fn_stub if there is one.          References from a stub section do not count.  */
 if|if
 condition|(
 name|h
@@ -31731,49 +34764,6 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|elf_bad_symtab
-argument_list|(
-name|abfd
-argument_list|)
-operator|&&
-name|ELF_ST_BIND
-argument_list|(
-name|sym
-operator|->
-name|st_info
-argument_list|)
-operator|!=
-name|STB_LOCAL
-operator|)
-operator|&&
-operator|!
-operator|(
-operator|(
-name|sym
-operator|->
-name|st_shndx
-operator|<=
-literal|0
-operator|||
-name|sym
-operator|->
-name|st_shndx
-operator|>=
-name|SHN_LORESERVE
-operator|)
-operator|&&
-name|sym
-operator|->
-name|st_shndx
-operator|!=
-name|SHN_COMMON
-operator|)
-condition|)
-block|{
 return|return
 name|bfd_section_from_elf_index
 argument_list|(
@@ -31784,7 +34774,6 @@ operator|->
 name|st_shndx
 argument_list|)
 return|;
-block|}
 block|}
 return|return
 name|NULL
@@ -31844,6 +34833,142 @@ name|true
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Copy data from a MIPS ELF indirect symbol to its direct symbol,    hiding the old indirect symbol.  Process additional relocation    information.  Also called for weakdefs, in which case we just let    _bfd_elf_link_hash_copy_indirect copy the flags for us.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|_bfd_mips_elf_copy_indirect_symbol
+parameter_list|(
+name|dir
+parameter_list|,
+name|ind
+parameter_list|)
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|dir
+decl_stmt|,
+decl|*
+name|ind
+decl_stmt|;
+end_function
+
+begin_block
+block|{
+name|struct
+name|mips_elf_link_hash_entry
+modifier|*
+name|dirmips
+decl_stmt|,
+modifier|*
+name|indmips
+decl_stmt|;
+name|_bfd_elf_link_hash_copy_indirect
+argument_list|(
+name|dir
+argument_list|,
+name|ind
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ind
+operator|->
+name|root
+operator|.
+name|type
+operator|!=
+name|bfd_link_hash_indirect
+condition|)
+return|return;
+name|dirmips
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|dir
+expr_stmt|;
+name|indmips
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|ind
+expr_stmt|;
+name|dirmips
+operator|->
+name|possibly_dynamic_relocs
+operator|+=
+name|indmips
+operator|->
+name|possibly_dynamic_relocs
+expr_stmt|;
+if|if
+condition|(
+name|indmips
+operator|->
+name|readonly_reloc
+condition|)
+name|dirmips
+operator|->
+name|readonly_reloc
+operator|=
+name|true
+expr_stmt|;
+if|if
+condition|(
+name|dirmips
+operator|->
+name|min_dyn_reloc_index
+operator|==
+literal|0
+operator|||
+operator|(
+name|indmips
+operator|->
+name|min_dyn_reloc_index
+operator|!=
+literal|0
+operator|&&
+name|indmips
+operator|->
+name|min_dyn_reloc_index
+operator|<
+name|dirmips
+operator|->
+name|min_dyn_reloc_index
+operator|)
+condition|)
+name|dirmips
+operator|->
+name|min_dyn_reloc_index
+operator|=
+name|indmips
+operator|->
+name|min_dyn_reloc_index
+expr_stmt|;
+if|if
+condition|(
+name|indmips
+operator|->
+name|no_fn_stub
+condition|)
+name|dirmips
+operator|->
+name|no_fn_stub
+operator|=
+name|true
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/* Adjust a symbol defined by a dynamic object and referenced by a    regular object.  The current definition is in some section of the    dynamic object, but we're not including those sections.  We have to    change the definition to something the rest of the link can    understand.  */
@@ -31972,13 +35097,24 @@ operator|&&
 operator|(
 name|h
 operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_defweak
+operator|||
+operator|(
+name|h
+operator|->
 name|elf_link_hash_flags
 operator|&
 name|ELF_LINK_HASH_DEF_REGULAR
 operator|)
 operator|==
 literal|0
+operator|)
 condition|)
+block|{
 name|mips_elf_allocate_dynamic_relocations
 argument_list|(
 name|dynobj
@@ -31988,15 +35124,28 @@ operator|->
 name|possibly_dynamic_relocs
 argument_list|)
 expr_stmt|;
-comment|/* For a function, create a stub, if needed. */
 if|if
 condition|(
-name|h
+name|hmips
 operator|->
-name|type
-operator|==
-name|STT_FUNC
-operator|||
+name|readonly_reloc
+condition|)
+comment|/* We tell the dynamic linker that there are relocations 	   against the text segment.  */
+name|info
+operator|->
+name|flags
+operator||=
+name|DF_TEXTREL
+expr_stmt|;
+block|}
+comment|/* For a function, create a stub, if allowed.  */
+if|if
+condition|(
+operator|!
+name|hmips
+operator|->
+name|no_fn_stub
+operator|&&
 operator|(
 name|h
 operator|->
@@ -32104,6 +35253,45 @@ return|return
 name|true
 return|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|h
+operator|->
+name|type
+operator|==
+name|STT_FUNC
+operator|)
+operator|&&
+operator|(
+name|h
+operator|->
+name|elf_link_hash_flags
+operator|&
+name|ELF_LINK_HASH_NEEDS_PLT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* This will set the entry for this symbol in the GOT to 0, and          the dynamic linker will take care of this.  */
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|def
+operator|.
+name|value
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|true
+return|;
 block|}
 comment|/* If this is a weak symbol, and there is a real definition, the      processor independent code will have arranged for us to see the      real definition first, and we can just use the same value.  */
 if|if
@@ -32258,6 +35446,9 @@ name|output_bfd
 argument_list|,
 name|ri
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 argument_list|(
 name|Elf32_External_RegInfo
@@ -32306,10 +35497,6 @@ begin_comment
 comment|/* Check the mips16 stubs for a particular symbol, and see if we can    discard them.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -32329,6 +35516,37 @@ name|data
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|mips_elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 if|if
 condition|(
 name|h
@@ -32875,8 +36093,7 @@ decl_stmt|;
 name|bfd_size_type
 name|local_gotno
 decl_stmt|;
-name|struct
-name|_bfd
+name|bfd
 modifier|*
 name|sub
 decl_stmt|;
@@ -32911,7 +36128,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Calculate the total loadable size of the output.  That  	     will give us the maximum number of GOT_PAGE entries  	     required.  */
+comment|/* Calculate the total loadable size of the output.  That 	     will give us the maximum number of GOT_PAGE entries 	     required.  */
 for|for
 control|(
 name|sub
@@ -32966,6 +36183,7 @@ continue|continue;
 name|loadable_size
 operator|+=
 operator|(
+operator|(
 name|subsection
 operator|->
 name|_raw_size
@@ -32974,7 +36192,11 @@ literal|0xf
 operator|)
 operator|&
 operator|~
+operator|(
+name|bfd_size_type
+operator|)
 literal|0xf
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -32982,7 +36204,7 @@ name|loadable_size
 operator|+=
 name|MIPS_FUNCTION_STUB_SIZE
 expr_stmt|;
-comment|/* Assume there are two loadable segments consisting of  	     contiguous sections.  Is 5 enough?  */
+comment|/* Assume there are two loadable segments consisting of 	     contiguous sections.  Is 5 enough?  */
 name|local_gotno
 operator|=
 operator|(
@@ -33024,7 +36246,7 @@ argument_list|(
 name|dynobj
 argument_list|)
 expr_stmt|;
-comment|/* There has to be a global GOT entry for every symbol with  	     a dynamic symbol table index of DT_MIPS_GOTSYM or  	     higher.  Therefore, it make sense to put those symbols  	     that need GOT entries at the end of the symbol table.  We  	     do that here.  */
+comment|/* There has to be a global GOT entry for every symbol with 	     a dynamic symbol table index of DT_MIPS_GOTSYM or 	     higher.  Therefore, it make sense to put those symbols 	     that need GOT entries at the end of the symbol table.  We 	     do that here.  */
 if|if
 condition|(
 operator|!
@@ -33309,15 +36531,7 @@ operator|->
 name|shared
 condition|)
 block|{
-if|if
-condition|(
-name|SGI_COMPAT
-argument_list|(
-name|output_bfd
-argument_list|)
-condition|)
-block|{
-comment|/* SGI object has the equivalence of DT_DEBUG in the 		 DT_MIPS_RLD_MAP entry.  */
+comment|/* SGI object has the equivalence of DT_DEBUG in the 	     DT_MIPS_RLD_MAP entry.  */
 if|if
 condition|(
 operator|!
@@ -33333,8 +36547,15 @@ condition|)
 return|return
 name|false
 return|;
-block|}
-elseif|else
+if|if
+condition|(
+operator|!
+name|SGI_COMPAT
+argument_list|(
+name|output_bfd
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -33351,9 +36572,62 @@ return|return
 name|false
 return|;
 block|}
+block|}
+else|else
+block|{
+comment|/* Shared libraries on traditional mips have DT_DEBUG.  */
+if|if
+condition|(
+operator|!
+name|SGI_COMPAT
+argument_list|(
+name|output_bfd
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|MIPS_ELF_ADD_DYNAMIC_ENTRY
+argument_list|(
+name|info
+argument_list|,
+name|DT_DEBUG
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+block|}
+block|}
 if|if
 condition|(
 name|reltext
+operator|&&
+name|SGI_COMPAT
+argument_list|(
+name|output_bfd
+argument_list|)
+condition|)
+name|info
+operator|->
+name|flags
+operator||=
+name|DF_TEXTREL
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|info
+operator|->
+name|flags
+operator|&
+name|DF_TEXTREL
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -33448,6 +36722,14 @@ return|;
 block|}
 if|if
 condition|(
+name|SGI_COMPAT
+argument_list|(
+name|output_bfd
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|MIPS_ELF_ADD_DYNAMIC_ENTRY
 argument_list|(
@@ -33461,6 +36743,15 @@ condition|)
 return|return
 name|false
 return|;
+block|}
+if|if
+condition|(
+name|SGI_COMPAT
+argument_list|(
+name|output_bfd
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -33476,6 +36767,7 @@ condition|)
 return|return
 name|false
 return|;
+block|}
 if|if
 condition|(
 name|bfd_get_section_by_name
@@ -34072,6 +37364,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|STUB_LW
 argument_list|(
 name|output_bfd
@@ -34088,7 +37383,13 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|STUB_MOVE
+argument_list|(
+name|output_bfd
+argument_list|)
 argument_list|,
 name|p
 argument_list|)
@@ -34113,6 +37414,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|STUB_JALR
 argument_list|,
 name|p
@@ -34126,7 +37430,13 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|STUB_LI16
+argument_list|(
+name|output_bfd
+argument_list|)
 operator|+
 name|h
 operator|->
@@ -34206,6 +37516,16 @@ name|dynindx
 operator|!=
 operator|-
 literal|1
+operator|||
+operator|(
+name|h
+operator|->
+name|elf_link_hash_flags
+operator|&
+name|ELF_LINK_FORCED_LOCAL
+operator|)
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 name|sgot
@@ -34292,7 +37612,27 @@ operator|->
 name|st_value
 expr_stmt|;
 else|else
-comment|/* For an entity defined in a shared object, this will be 	   NULL.  (For functions in shared objects for 	   which we have created stubs, ST_VALUE will be non-NULL. 	   That's because such the functions are now no longer defined 	   in a shared object.)  */
+block|{
+comment|/* For an entity defined in a shared object, this will be 	     NULL.  (For functions in shared objects for 	     which we have created stubs, ST_VALUE will be non-NULL. 	     That's because such the functions are now no longer defined 	     in a shared object.)  */
+if|if
+condition|(
+name|info
+operator|->
+name|shared
+operator|&&
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_undefined
+condition|)
+name|value
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|value
 operator|=
 name|h
@@ -34305,6 +37645,7 @@ name|def
 operator|.
 name|value
 expr_stmt|;
+block|}
 name|offset
 operator|=
 name|mips_elf_global_got_index
@@ -34449,6 +37790,15 @@ literal|"_DYNAMIC_LINK"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"_DYNAMIC_LINKING"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|sym
@@ -34476,14 +37826,6 @@ literal|1
 expr_stmt|;
 block|}
 elseif|else
-if|if
-condition|(
-name|SGI_COMPAT
-argument_list|(
-name|output_bfd
-argument_list|)
-condition|)
-block|{
 if|if
 condition|(
 name|strcmp
@@ -34524,6 +37866,14 @@ argument_list|)
 expr_stmt|;
 block|}
 elseif|else
+if|if
+condition|(
+name|SGI_COMPAT
+argument_list|(
+name|output_bfd
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|strcmp
@@ -34700,11 +38050,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SGI_COMPAT
-argument_list|(
-name|output_bfd
-argument_list|)
-operator|&&
 operator|!
 name|info
 operator|->
@@ -34721,6 +38066,7 @@ argument_list|)
 operator|->
 name|use_rld_obj_head
 operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|name
@@ -34729,6 +38075,16 @@ literal|"__rld_map"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"__RLD_MAP"
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|asection
@@ -34829,6 +38185,13 @@ name|output_bfd
 argument_list|)
 operator|==
 name|ict_irix5
+operator|||
+name|IRIX_COMPAT
+argument_list|(
+name|output_bfd
+argument_list|)
+operator|==
+name|ict_none
 condition|)
 name|BFD_ASSERT
 argument_list|(
@@ -35144,7 +38507,7 @@ name|d_un
 operator|.
 name|d_val
 operator|=
-name|_bfd_stringtab_size
+name|_bfd_elf_strtab_size
 argument_list|(
 name|elf_hash_table
 argument_list|(
@@ -35394,8 +38757,9 @@ name|vma
 operator|&
 operator|~
 operator|(
-literal|0xffff
+name|bfd_vma
 operator|)
+literal|0xffff
 expr_stmt|;
 break|break;
 case|case
@@ -35641,7 +39005,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* The first entry of the global offset table will be filled at      runtime. The second entry will be used by some runtime loaders.      This isn't the case of Irix rld. */
+comment|/* The first entry of the global offset table will be filled at      runtime. The second entry will be used by some runtime loaders.      This isn't the case of Irix rld.  */
 if|if
 condition|(
 name|sgot
@@ -35964,6 +39328,80 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* We need to sort the entries of the dynamic relocation section.  */
+if|if
+condition|(
+operator|!
+name|ABI_64_P
+argument_list|(
+name|output_bfd
+argument_list|)
+condition|)
+block|{
+name|asection
+modifier|*
+name|reldyn
+decl_stmt|;
+name|reldyn
+operator|=
+name|bfd_get_section_by_name
+argument_list|(
+name|dynobj
+argument_list|,
+name|MIPS_ELF_REL_DYN_SECTION_NAME
+argument_list|(
+name|dynobj
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reldyn
+operator|!=
+name|NULL
+operator|&&
+name|reldyn
+operator|->
+name|reloc_count
+operator|>
+literal|2
+condition|)
+block|{
+name|reldyn_sorting_bfd
+operator|=
+name|output_bfd
+expr_stmt|;
+name|qsort
+argument_list|(
+operator|(
+name|Elf32_External_Rel
+operator|*
+operator|)
+name|reldyn
+operator|->
+name|contents
+operator|+
+literal|1
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|reldyn
+operator|->
+name|reloc_count
+operator|-
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_Rel
+argument_list|)
+argument_list|,
+name|sort_dynamic_relocs
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Clean up a first relocation in .rel.dyn.  */
 name|s
 operator|=
@@ -36006,6 +39444,1577 @@ expr_stmt|;
 block|}
 return|return
 name|true
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Support for core dump NOTE sections */
+end_comment
+
+begin_function
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_grok_prstatus
+parameter_list|(
+name|abfd
+parameter_list|,
+name|note
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|Elf_Internal_Note
+modifier|*
+name|note
+decl_stmt|;
+block|{
+name|int
+name|offset
+decl_stmt|;
+name|unsigned
+name|int
+name|raw_size
+decl_stmt|;
+switch|switch
+condition|(
+name|note
+operator|->
+name|descsz
+condition|)
+block|{
+default|default:
+return|return
+name|false
+return|;
+case|case
+literal|256
+case|:
+comment|/* Linux/MIPS */
+comment|/* pr_cursig */
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|core_signal
+operator|=
+name|bfd_get_16
+argument_list|(
+name|abfd
+argument_list|,
+name|note
+operator|->
+name|descdata
+operator|+
+literal|12
+argument_list|)
+expr_stmt|;
+comment|/* pr_pid */
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|core_pid
+operator|=
+name|bfd_get_32
+argument_list|(
+name|abfd
+argument_list|,
+name|note
+operator|->
+name|descdata
+operator|+
+literal|24
+argument_list|)
+expr_stmt|;
+comment|/* pr_reg */
+name|offset
+operator|=
+literal|72
+expr_stmt|;
+name|raw_size
+operator|=
+literal|180
+expr_stmt|;
+break|break;
+block|}
+comment|/* Make a ".reg/999" section.  */
+return|return
+name|_bfd_elfcore_make_pseudosection
+argument_list|(
+name|abfd
+argument_list|,
+literal|".reg"
+argument_list|,
+name|raw_size
+argument_list|,
+name|note
+operator|->
+name|descpos
+operator|+
+name|offset
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_grok_psinfo
+parameter_list|(
+name|abfd
+parameter_list|,
+name|note
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|Elf_Internal_Note
+modifier|*
+name|note
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|note
+operator|->
+name|descsz
+condition|)
+block|{
+default|default:
+return|return
+name|false
+return|;
+case|case
+literal|128
+case|:
+comment|/* Linux/MIPS elf_prpsinfo */
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|core_program
+operator|=
+name|_bfd_elfcore_strndup
+argument_list|(
+name|abfd
+argument_list|,
+name|note
+operator|->
+name|descdata
+operator|+
+literal|32
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|core_command
+operator|=
+name|_bfd_elfcore_strndup
+argument_list|(
+name|abfd
+argument_list|,
+name|note
+operator|->
+name|descdata
+operator|+
+literal|48
+argument_list|,
+literal|80
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Note that for some reason, a spurious space is tacked      onto the end of the args in some (at least one anyway)      implementations, so strip it off if it exists.  */
+block|{
+name|char
+modifier|*
+name|command
+init|=
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|core_command
+decl_stmt|;
+name|int
+name|n
+init|=
+name|strlen
+argument_list|(
+name|command
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+literal|0
+operator|<
+name|n
+operator|&&
+name|command
+index|[
+name|n
+operator|-
+literal|1
+index|]
+operator|==
+literal|' '
+condition|)
+name|command
+index|[
+name|n
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_define
+define|#
+directive|define
+name|PDR_SIZE
+value|32
+end_define
+
+begin_function
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_discard_info
+parameter_list|(
+name|abfd
+parameter_list|,
+name|cookie
+parameter_list|,
+name|info
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|struct
+name|elf_reloc_cookie
+modifier|*
+name|cookie
+decl_stmt|;
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
+decl_stmt|;
+block|{
+name|asection
+modifier|*
+name|o
+decl_stmt|;
+name|struct
+name|elf_backend_data
+modifier|*
+name|bed
+init|=
+name|get_elf_backend_data
+argument_list|(
+name|abfd
+argument_list|)
+decl_stmt|;
+name|boolean
+name|ret
+init|=
+name|false
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|tdata
+decl_stmt|;
+name|size_t
+name|i
+decl_stmt|,
+name|skip
+decl_stmt|;
+name|o
+operator|=
+name|bfd_get_section_by_name
+argument_list|(
+name|abfd
+argument_list|,
+literal|".pdr"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|o
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|o
+operator|->
+name|_raw_size
+operator|==
+literal|0
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|o
+operator|->
+name|_raw_size
+operator|%
+name|PDR_SIZE
+operator|!=
+literal|0
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|o
+operator|->
+name|output_section
+operator|!=
+name|NULL
+operator|&&
+name|bfd_is_abs_section
+argument_list|(
+name|o
+operator|->
+name|output_section
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+name|tdata
+operator|=
+name|bfd_zmalloc
+argument_list|(
+name|o
+operator|->
+name|_raw_size
+operator|/
+name|PDR_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tdata
+condition|)
+return|return
+name|false
+return|;
+name|cookie
+operator|->
+name|rels
+operator|=
+name|_bfd_elf32_link_read_relocs
+argument_list|(
+name|abfd
+argument_list|,
+name|o
+argument_list|,
+operator|(
+name|PTR
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|Elf_Internal_Rela
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|info
+operator|->
+name|keep_memory
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cookie
+operator|->
+name|rels
+condition|)
+block|{
+name|free
+argument_list|(
+name|tdata
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+name|cookie
+operator|->
+name|rel
+operator|=
+name|cookie
+operator|->
+name|rels
+expr_stmt|;
+name|cookie
+operator|->
+name|relend
+operator|=
+name|cookie
+operator|->
+name|rels
+operator|+
+name|o
+operator|->
+name|reloc_count
+operator|*
+name|bed
+operator|->
+name|s
+operator|->
+name|int_rels_per_ext_rel
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|skip
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|o
+operator|->
+name|_raw_size
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|_bfd_elf32_reloc_symbol_deleted_p
+argument_list|(
+name|i
+operator|*
+name|PDR_SIZE
+argument_list|,
+name|cookie
+argument_list|)
+condition|)
+block|{
+name|tdata
+index|[
+name|i
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|skip
+operator|++
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|skip
+operator|!=
+literal|0
+condition|)
+block|{
+name|elf_section_data
+argument_list|(
+name|o
+argument_list|)
+operator|->
+name|tdata
+operator|=
+name|tdata
+expr_stmt|;
+name|o
+operator|->
+name|_cooked_size
+operator|=
+name|o
+operator|->
+name|_raw_size
+operator|-
+name|skip
+operator|*
+name|PDR_SIZE
+expr_stmt|;
+name|ret
+operator|=
+name|true
+expr_stmt|;
+block|}
+else|else
+name|free
+argument_list|(
+name|tdata
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|info
+operator|->
+name|keep_memory
+condition|)
+name|free
+argument_list|(
+name|cookie
+operator|->
+name|rels
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_ignore_discarded_relocs
+parameter_list|(
+name|sec
+parameter_list|)
+name|asection
+modifier|*
+name|sec
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|sec
+operator|->
+name|name
+argument_list|,
+literal|".pdr"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
+name|_bfd_elf32_mips_write_section
+parameter_list|(
+name|output_bfd
+parameter_list|,
+name|sec
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|output_bfd
+decl_stmt|;
+name|asection
+modifier|*
+name|sec
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+decl_stmt|;
+block|{
+name|bfd_byte
+modifier|*
+name|to
+decl_stmt|,
+modifier|*
+name|from
+decl_stmt|,
+modifier|*
+name|end
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|sec
+operator|->
+name|name
+argument_list|,
+literal|".pdr"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|elf_section_data
+argument_list|(
+name|sec
+argument_list|)
+operator|->
+name|tdata
+operator|==
+name|NULL
+condition|)
+return|return
+name|false
+return|;
+name|to
+operator|=
+name|contents
+expr_stmt|;
+name|end
+operator|=
+name|contents
+operator|+
+name|sec
+operator|->
+name|_raw_size
+expr_stmt|;
+for|for
+control|(
+name|from
+operator|=
+name|contents
+operator|,
+name|i
+operator|=
+literal|0
+init|;
+name|from
+operator|<
+name|end
+condition|;
+name|from
+operator|+=
+name|PDR_SIZE
+operator|,
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|elf_section_data
+argument_list|(
+name|sec
+argument_list|)
+operator|->
+name|tdata
+operator|)
+index|[
+name|i
+index|]
+operator|==
+literal|1
+condition|)
+continue|continue;
+if|if
+condition|(
+name|to
+operator|!=
+name|from
+condition|)
+name|memcpy
+argument_list|(
+name|to
+argument_list|,
+name|from
+argument_list|,
+name|PDR_SIZE
+argument_list|)
+expr_stmt|;
+name|to
+operator|+=
+name|PDR_SIZE
+expr_stmt|;
+block|}
+name|bfd_set_section_contents
+argument_list|(
+name|output_bfd
+argument_list|,
+name|sec
+operator|->
+name|output_section
+argument_list|,
+name|contents
+argument_list|,
+operator|(
+name|file_ptr
+operator|)
+name|sec
+operator|->
+name|output_offset
+argument_list|,
+name|sec
+operator|->
+name|_cooked_size
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Given a data section and an in-memory embedded reloc section, store    relocation information into the embedded reloc section which can be    used at runtime to relocate the data section.  This is called by the    linker when the --embedded-relocs switch is used.  This is called    after the add_symbols entry point has been called for all the    objects, and before the final_link entry point is called.  */
+end_comment
+
+begin_function
+name|boolean
+name|bfd_mips_elf32_create_embedded_relocs
+parameter_list|(
+name|abfd
+parameter_list|,
+name|info
+parameter_list|,
+name|datasec
+parameter_list|,
+name|relsec
+parameter_list|,
+name|errmsg
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
+decl_stmt|;
+name|asection
+modifier|*
+name|datasec
+decl_stmt|;
+name|asection
+modifier|*
+name|relsec
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|errmsg
+decl_stmt|;
+block|{
+name|Elf_Internal_Shdr
+modifier|*
+name|symtab_hdr
+decl_stmt|;
+name|Elf_Internal_Shdr
+modifier|*
+name|shndx_hdr
+decl_stmt|;
+name|Elf32_External_Sym
+modifier|*
+name|extsyms
+decl_stmt|;
+name|Elf32_External_Sym
+modifier|*
+name|free_extsyms
+init|=
+name|NULL
+decl_stmt|;
+name|Elf_External_Sym_Shndx
+modifier|*
+name|shndx_buf
+init|=
+name|NULL
+decl_stmt|;
+name|Elf_Internal_Rela
+modifier|*
+name|internal_relocs
+decl_stmt|;
+name|Elf_Internal_Rela
+modifier|*
+name|free_relocs
+init|=
+name|NULL
+decl_stmt|;
+name|Elf_Internal_Rela
+modifier|*
+name|irel
+decl_stmt|,
+modifier|*
+name|irelend
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|p
+decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
+name|BFD_ASSERT
+argument_list|(
+operator|!
+name|info
+operator|->
+name|relocateable
+argument_list|)
+expr_stmt|;
+operator|*
+name|errmsg
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|datasec
+operator|->
+name|reloc_count
+operator|==
+literal|0
+condition|)
+return|return
+name|true
+return|;
+name|symtab_hdr
+operator|=
+operator|&
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|symtab_hdr
+expr_stmt|;
+comment|/* Read this BFD's symbols if we haven't done so already, or get the cached      copy if it exists.  */
+if|if
+condition|(
+name|symtab_hdr
+operator|->
+name|contents
+operator|!=
+name|NULL
+condition|)
+name|extsyms
+operator|=
+operator|(
+name|Elf32_External_Sym
+operator|*
+operator|)
+name|symtab_hdr
+operator|->
+name|contents
+expr_stmt|;
+else|else
+block|{
+comment|/* Go get them off disk.  */
+if|if
+condition|(
+name|info
+operator|->
+name|keep_memory
+condition|)
+name|extsyms
+operator|=
+operator|(
+operator|(
+name|Elf32_External_Sym
+operator|*
+operator|)
+name|bfd_alloc
+argument_list|(
+name|abfd
+argument_list|,
+name|symtab_hdr
+operator|->
+name|sh_size
+argument_list|)
+operator|)
+expr_stmt|;
+else|else
+name|extsyms
+operator|=
+operator|(
+operator|(
+name|Elf32_External_Sym
+operator|*
+operator|)
+name|bfd_malloc
+argument_list|(
+name|symtab_hdr
+operator|->
+name|sh_size
+argument_list|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|extsyms
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|error_return
+goto|;
+if|if
+condition|(
+operator|!
+name|info
+operator|->
+name|keep_memory
+condition|)
+name|free_extsyms
+operator|=
+name|extsyms
+expr_stmt|;
+if|if
+condition|(
+name|bfd_seek
+argument_list|(
+name|abfd
+argument_list|,
+name|symtab_hdr
+operator|->
+name|sh_offset
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|bfd_bread
+argument_list|(
+name|extsyms
+argument_list|,
+name|symtab_hdr
+operator|->
+name|sh_size
+argument_list|,
+name|abfd
+argument_list|)
+operator|!=
+name|symtab_hdr
+operator|->
+name|sh_size
+operator|)
+condition|)
+goto|goto
+name|error_return
+goto|;
+if|if
+condition|(
+name|info
+operator|->
+name|keep_memory
+condition|)
+name|symtab_hdr
+operator|->
+name|contents
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|extsyms
+expr_stmt|;
+block|}
+name|shndx_hdr
+operator|=
+operator|&
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|symtab_shndx_hdr
+expr_stmt|;
+if|if
+condition|(
+name|shndx_hdr
+operator|->
+name|sh_size
+operator|!=
+literal|0
+condition|)
+block|{
+name|amt
+operator|=
+name|symtab_hdr
+operator|->
+name|sh_info
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Sym_Shndx
+argument_list|)
+expr_stmt|;
+name|shndx_buf
+operator|=
+operator|(
+name|Elf_External_Sym_Shndx
+operator|*
+operator|)
+name|bfd_malloc
+argument_list|(
+name|amt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|shndx_buf
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|error_return
+goto|;
+if|if
+condition|(
+name|bfd_seek
+argument_list|(
+name|abfd
+argument_list|,
+name|shndx_hdr
+operator|->
+name|sh_offset
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|bfd_bread
+argument_list|(
+operator|(
+name|PTR
+operator|)
+name|shndx_buf
+argument_list|,
+name|amt
+argument_list|,
+name|abfd
+argument_list|)
+operator|!=
+name|amt
+condition|)
+goto|goto
+name|error_return
+goto|;
+block|}
+comment|/* Get a copy of the native relocations.  */
+name|internal_relocs
+operator|=
+operator|(
+name|_bfd_elf32_link_read_relocs
+argument_list|(
+name|abfd
+argument_list|,
+name|datasec
+argument_list|,
+operator|(
+name|PTR
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|Elf_Internal_Rela
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|info
+operator|->
+name|keep_memory
+argument_list|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|internal_relocs
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|error_return
+goto|;
+if|if
+condition|(
+operator|!
+name|info
+operator|->
+name|keep_memory
+condition|)
+name|free_relocs
+operator|=
+name|internal_relocs
+expr_stmt|;
+name|relsec
+operator|->
+name|contents
+operator|=
+operator|(
+name|bfd_byte
+operator|*
+operator|)
+name|bfd_alloc
+argument_list|(
+name|abfd
+argument_list|,
+name|datasec
+operator|->
+name|reloc_count
+operator|*
+literal|12
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|relsec
+operator|->
+name|contents
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|error_return
+goto|;
+name|p
+operator|=
+name|relsec
+operator|->
+name|contents
+expr_stmt|;
+name|irelend
+operator|=
+name|internal_relocs
+operator|+
+name|datasec
+operator|->
+name|reloc_count
+expr_stmt|;
+for|for
+control|(
+name|irel
+operator|=
+name|internal_relocs
+init|;
+name|irel
+operator|<
+name|irelend
+condition|;
+name|irel
+operator|++
+operator|,
+name|p
+operator|+=
+literal|12
+control|)
+block|{
+name|asection
+modifier|*
+name|targetsec
+decl_stmt|;
+comment|/* We are going to write a four byte longword into the runtime        reloc section.  The longword will be the address in the data        section which must be relocated.  It is followed by the name        of the target section NUL-padded or truncated to 8        characters.  */
+comment|/* We can only relocate absolute longword relocs at run time.  */
+if|if
+condition|(
+operator|(
+name|ELF32_R_TYPE
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+operator|!=
+operator|(
+name|int
+operator|)
+name|R_MIPS_32
+operator|)
+operator|&&
+operator|(
+name|ELF32_R_TYPE
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+operator|!=
+operator|(
+name|int
+operator|)
+name|R_MIPS_64
+operator|)
+condition|)
+block|{
+operator|*
+name|errmsg
+operator|=
+name|_
+argument_list|(
+literal|"unsupported reloc type"
+argument_list|)
+expr_stmt|;
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error_return
+goto|;
+block|}
+comment|/* Get the target section referred to by the reloc.  */
+if|if
+condition|(
+name|ELF32_R_SYM
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+operator|<
+name|symtab_hdr
+operator|->
+name|sh_info
+condition|)
+block|{
+name|Elf32_External_Sym
+modifier|*
+name|esym
+decl_stmt|;
+name|Elf_External_Sym_Shndx
+modifier|*
+name|shndx
+decl_stmt|;
+name|Elf_Internal_Sym
+name|isym
+decl_stmt|;
+comment|/* A local symbol.  */
+name|esym
+operator|=
+name|extsyms
+operator|+
+name|ELF32_R_SYM
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+expr_stmt|;
+name|shndx
+operator|=
+name|shndx_buf
+operator|+
+operator|(
+name|shndx_buf
+condition|?
+name|ELF32_R_SYM
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+else|:
+literal|0
+operator|)
+expr_stmt|;
+name|bfd_elf32_swap_symbol_in
+argument_list|(
+name|abfd
+argument_list|,
+name|esym
+argument_list|,
+name|shndx
+argument_list|,
+operator|&
+name|isym
+argument_list|)
+expr_stmt|;
+name|targetsec
+operator|=
+name|bfd_section_from_elf_index
+argument_list|(
+name|abfd
+argument_list|,
+name|isym
+operator|.
+name|st_shndx
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|unsigned
+name|long
+name|indx
+decl_stmt|;
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|h
+decl_stmt|;
+comment|/* An external symbol.  */
+name|indx
+operator|=
+name|ELF32_R_SYM
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+expr_stmt|;
+name|h
+operator|=
+name|elf_sym_hashes
+argument_list|(
+name|abfd
+argument_list|)
+index|[
+name|indx
+index|]
+expr_stmt|;
+name|targetsec
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 	   * For some reason, in certain programs, the symbol will 	   * not be in the hash table.  It seems to happen when you 	   * declare a static table of pointers to const external structures. 	   * In this case, the relocs are relative to data, not 	   * text, so just treating it like an undefined link 	   * should be sufficient. 	   */
+name|BFD_ASSERT
+argument_list|(
+name|h
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_defined
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_defweak
+condition|)
+name|targetsec
+operator|=
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|def
+operator|.
+name|section
+expr_stmt|;
+block|}
+comment|/*        * Set the low bit of the relocation offset if it's a MIPS64 reloc.        * Relocations will always be on (at least) 32-bit boundaries.        */
+name|bfd_put_32
+argument_list|(
+name|abfd
+argument_list|,
+operator|(
+operator|(
+name|irel
+operator|->
+name|r_offset
+operator|+
+name|datasec
+operator|->
+name|output_offset
+operator|)
+operator|+
+operator|(
+operator|(
+name|ELF32_R_TYPE
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+operator|==
+operator|(
+name|int
+operator|)
+name|R_MIPS_64
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+operator|)
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|p
+operator|+
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|targetsec
+operator|!=
+name|NULL
+condition|)
+name|strncpy
+argument_list|(
+name|p
+operator|+
+literal|4
+argument_list|,
+name|targetsec
+operator|->
+name|output_section
+operator|->
+name|name
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|shndx_buf
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|shndx_buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|free_extsyms
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|free_extsyms
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|free_relocs
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|free_relocs
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+name|error_return
+label|:
+if|if
+condition|(
+name|shndx_buf
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|shndx_buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|free_extsyms
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|free_extsyms
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|free_relocs
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|free_relocs
+argument_list|)
+expr_stmt|;
+return|return
+name|false
 return|;
 block|}
 end_function
@@ -36127,6 +41136,9 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 name|reloc_size
 argument_list|)
 expr_stmt|;
@@ -36158,6 +41170,9 @@ name|PTR
 operator|)
 name|data
 argument_list|,
+operator|(
+name|file_ptr
+operator|)
 literal|0
 argument_list|,
 name|input_section
@@ -36895,34 +41910,6 @@ end_escape
 begin_define
 define|#
 directive|define
-name|TARGET_LITTLE_SYM
-value|bfd_elf32_littlemips_vec
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_LITTLE_NAME
-value|"elf32-littlemips"
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_BIG_SYM
-value|bfd_elf32_bigmips_vec
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_BIG_NAME
-value|"elf32-bigmips"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ELF_ARCH
 value|bfd_arch_mips
 end_define
@@ -36969,13 +41956,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|elf_backend_sign_extend_vma
-value|true
-end_define
-
-begin_define
-define|#
-directive|define
 name|elf_info_to_howto
 value|mips_info_to_howto_rela
 end_define
@@ -37004,6 +41984,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|elf_backend_symbol_processing
+value|_bfd_mips_elf_symbol_processing
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_section_processing
+value|_bfd_mips_elf_section_processing
+end_define
+
+begin_define
+define|#
+directive|define
 name|elf_backend_section_from_shdr
 value|_bfd_mips_elf_section_from_shdr
 end_define
@@ -37026,52 +42020,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|elf_backend_section_processing
-value|_bfd_mips_elf_section_processing
-end_define
-
-begin_define
-define|#
-directive|define
-name|elf_backend_symbol_processing
-value|_bfd_mips_elf_symbol_processing
-end_define
-
-begin_define
-define|#
-directive|define
-name|elf_backend_additional_program_headers
-define|\
-value|_bfd_mips_elf_additional_program_headers
-end_define
-
-begin_define
-define|#
-directive|define
-name|elf_backend_modify_segment_map
-value|_bfd_mips_elf_modify_segment_map
-end_define
-
-begin_define
-define|#
-directive|define
-name|elf_backend_final_write_processing
-define|\
-value|_bfd_mips_elf_final_write_processing
-end_define
-
-begin_define
-define|#
-directive|define
-name|elf_backend_ecoff_debug_swap
-value|&mips_elf32_ecoff_debug_swap
-end_define
-
-begin_define
-define|#
-directive|define
 name|elf_backend_add_symbol_hook
 value|_bfd_mips_elf_add_symbol_hook
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_link_output_symbol_hook
+define|\
+value|_bfd_mips_elf_link_output_symbol_hook
 end_define
 
 begin_define
@@ -37123,14 +42081,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|elf_backend_link_output_symbol_hook
-define|\
-value|_bfd_mips_elf_link_output_symbol_hook
-end_define
-
-begin_define
-define|#
-directive|define
 name|elf_backend_finish_dynamic_symbol
 define|\
 value|_bfd_mips_elf_finish_dynamic_symbol
@@ -37142,6 +42092,29 @@ directive|define
 name|elf_backend_finish_dynamic_sections
 define|\
 value|_bfd_mips_elf_finish_dynamic_sections
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_final_write_processing
+define|\
+value|_bfd_mips_elf_final_write_processing
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_additional_program_headers
+define|\
+value|_bfd_mips_elf_additional_program_headers
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_modify_segment_map
+value|_bfd_mips_elf_modify_segment_map
 end_define
 
 begin_define
@@ -37161,8 +42134,44 @@ end_define
 begin_define
 define|#
 directive|define
+name|elf_backend_copy_indirect_symbol
+define|\
+value|_bfd_mips_elf_copy_indirect_symbol
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_hide_symbol
+value|_bfd_mips_elf_hide_symbol
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_grok_prstatus
+value|_bfd_elf32_mips_grok_prstatus
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_grok_psinfo
+value|_bfd_elf32_mips_grok_psinfo
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_ecoff_debug_swap
+value|&mips_elf32_ecoff_debug_swap
+end_define
+
+begin_define
+define|#
+directive|define
 name|elf_backend_got_header_size
-value|(4*MIPS_RESERVED_GOTNO)
+value|(4 * MIPS_RESERVED_GOTNO)
 end_define
 
 begin_define
@@ -37170,6 +42179,56 @@ define|#
 directive|define
 name|elf_backend_plt_header_size
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_may_use_rel_p
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_may_use_rela_p
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_default_use_rela_p
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_sign_extend_vma
+value|true
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_discard_info
+value|_bfd_elf32_mips_discard_info
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_ignore_discarded_relocs
+define|\
+value|_bfd_elf32_mips_ignore_discarded_relocs
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_write_section
+value|_bfd_elf32_mips_write_section
 end_define
 
 begin_define
@@ -37212,14 +42271,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|bfd_elf32_bfd_copy_private_bfd_data
-define|\
-value|_bfd_mips_elf_copy_private_bfd_data
-end_define
-
-begin_define
-define|#
-directive|define
 name|bfd_elf32_bfd_merge_private_bfd_data
 define|\
 value|_bfd_mips_elf_merge_private_bfd_data
@@ -37239,6 +42290,114 @@ name|bfd_elf32_bfd_print_private_bfd_data
 define|\
 value|_bfd_mips_elf_print_private_bfd_data
 end_define
+
+begin_comment
+comment|/* Support for SGI-ish mips targets.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_LITTLE_SYM
+value|bfd_elf32_littlemips_vec
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_LITTLE_NAME
+value|"elf32-littlemips"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_BIG_SYM
+value|bfd_elf32_bigmips_vec
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_BIG_NAME
+value|"elf32-bigmips"
+end_define
+
+begin_include
+include|#
+directive|include
+file|"elf32-target.h"
+end_include
+
+begin_comment
+comment|/* Support for traditional mips targets.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INCLUDED_TARGET_FILE
+end_define
+
+begin_comment
+comment|/* More a type of flag.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_LITTLE_SYM
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_LITTLE_NAME
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_BIG_SYM
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_BIG_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_LITTLE_SYM
+value|bfd_elf32_tradlittlemips_vec
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_LITTLE_NAME
+value|"elf32-tradlittlemips"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_BIG_SYM
+value|bfd_elf32_tradbigmips_vec
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_BIG_NAME
+value|"elf32-tradbigmips"
+end_define
+
+begin_comment
+comment|/* Include the target file again for this target */
+end_comment
 
 begin_include
 include|#

@@ -2359,7 +2359,45 @@ literal|0
 block|,
 literal|0
 block|}
-block|, }
+block|,
+comment|/* The WS field.  */
+define|#
+directive|define
+name|WS
+value|SHB + 1
+define|#
+directive|define
+name|WS_MASK
+value|(0x7<< 11)
+block|{
+literal|3
+block|,
+literal|11
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* The L field in an mtmsrd instruction */
+define|#
+directive|define
+name|MTMSRD_L
+value|WS + 1
+block|{
+literal|1
+block|,
+literal|16
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|PPC_OPERAND_OPTIONAL
+block|}
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
@@ -6451,6 +6489,17 @@ value|(X_MASK | RA_MASK | RB_MASK)
 end_define
 
 begin_comment
+comment|/* An XRARB_MASK, but with the L bit clear. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XRLARB_MASK
+value|(XRARB_MASK& ~((unsigned long) 1<< 16))
+end_define
+
+begin_comment
 comment|/* An X_MASK with the RT and RA fields fixed.  */
 end_comment
 
@@ -6459,6 +6508,17 @@ define|#
 directive|define
 name|XRTRA_MASK
 value|(X_MASK | RT_MASK | RA_MASK)
+end_define
+
+begin_comment
+comment|/* An XRTRA_MASK, but with L bit clear.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XRTLRA_MASK
+value|(XRTRA_MASK& ~((unsigned long) 1<< 21))
 end_define
 
 begin_comment
@@ -11943,9 +12003,9 @@ name|VD
 block|,
 name|VA
 block|,
-name|VB
-block|,
 name|VC
+block|,
+name|VB
 block|}
 block|}
 block|,
@@ -37387,12 +37447,14 @@ argument_list|,
 literal|178
 argument_list|)
 block|,
-name|XRARB_MASK
+name|XRLARB_MASK
 block|,
 name|PPC64
 block|,
 block|{
 name|RS
+block|,
+name|MTMSRD_L
 block|}
 block|}
 block|,
@@ -39633,12 +39695,14 @@ argument_list|,
 literal|306
 argument_list|)
 block|,
-name|XRTRA_MASK
+name|XRTLRA_MASK
 block|,
 name|PPC
 block|,
 block|{
 name|RB
+block|,
+name|L
 block|}
 block|}
 block|,
@@ -50904,7 +50968,7 @@ name|RT
 block|,
 name|RA
 block|,
-name|SH
+name|WS
 block|}
 block|}
 block|,
@@ -51201,7 +51265,7 @@ name|RT
 block|,
 name|RA
 block|,
-name|SH
+name|WS
 block|}
 block|}
 block|,

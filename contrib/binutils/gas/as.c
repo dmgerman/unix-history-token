@@ -2161,6 +2161,9 @@ case|case
 name|OPTION_VERSION
 case|:
 comment|/* This output is intended to follow the GNU standards document.  */
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
 name|printf
 argument_list|(
 name|_
@@ -2171,6 +2174,20 @@ argument_list|,
 name|BFD_VERSION_STRING
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+name|_
+argument_list|(
+literal|"GNU assembler %s\n"
+argument_list|)
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 name|_

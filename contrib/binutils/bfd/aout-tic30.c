@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for TMS320C30 a.out binaries.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* BFD back-end for TMS320C30 a.out binaries.    Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -61,6 +61,10 @@ name|ARCH_SIZE
 value|32
 end_define
 
+begin_comment
+comment|/* Do not "beautify" the CONCAT* macro args.  Traditional C will not    remove whitespace added here, and thus will fail to concatenate    the tokens.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -68,7 +72,7 @@ name|MY
 parameter_list|(
 name|OP
 parameter_list|)
-value|CAT(tic30_aout_,OP)
+value|CONCAT2 (tic30_aout_,OP)
 end_define
 
 begin_define
@@ -87,7 +91,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|CAT3(tic30_aout,_32_,y)
+value|CONCAT3 (tic30_aout,_32_,y)
 end_define
 
 begin_include
@@ -345,6 +349,118 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bfd_target
+modifier|*
+name|tic30_aout_callback
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|MY_bfd_copy_private_section_data
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|MY_bfd_final_link
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|reloc_howto_type
+modifier|*
+name|tic30_aout_reloc_type_lookup
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|bfd_reloc_code_real_type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|enum
+name|machine_type
+name|tic30_aout_machine_type
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|bfd_architecture
+operator|,
+name|unsigned
+name|long
+operator|,
+name|boolean
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|boolean
+name|tic30_aout_set_arch_mach
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|enum
+name|bfd_architecture
+operator|,
+name|unsigned
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -360,7 +476,8 @@ name|EX
 parameter_list|,
 name|PC
 parameter_list|)
-value|tic30_aout_reloc_howto(BFD,REL,&IN,&EX,&PC)
+define|\
+value|tic30_aout_reloc_howto(BFD, REL,&IN,&EX,&PC)
 end_define
 
 begin_define
@@ -602,13 +719,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|CONST
-expr|struct
+specifier|const
+name|struct
 name|aout_backend_data
 name|tic30_aout_backend_data
-operator|=
+init|=
 block|{
 name|MY_zmagic_contiguous
 block|,
@@ -637,8 +754,8 @@ name|MY_check_dynamic_reloc
 block|,
 name|MY_finish_dynamic_link
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -856,19 +973,27 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|reloc_howto_type
 modifier|*
 name|NAME
-argument_list|(
+parameter_list|(
 name|aout
-argument_list|,
+parameter_list|,
 name|reloc_type_lookup
-argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *
+operator|,
+function_decl|bfd_reloc_code_real_type
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 name|reloc_howto_type
@@ -1674,7 +1799,7 @@ name|unsigned
 name|long
 name|arch_align
 decl_stmt|;
-comment|/* Calculate the file positions of the parts of a newly read aout header */
+comment|/* Calculate the file positions of the parts of a newly read aout header.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -1688,7 +1813,7 @@ operator|*
 name|execp
 argument_list|)
 expr_stmt|;
-comment|/* The virtual memory addresses of the sections */
+comment|/* The virtual memory addresses of the sections.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -1770,7 +1895,7 @@ argument_list|)
 operator|->
 name|vma
 expr_stmt|;
-comment|/* The file offsets of the sections */
+comment|/* The file offsets of the sections.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -1797,7 +1922,7 @@ operator|*
 name|execp
 argument_list|)
 expr_stmt|;
-comment|/* The file offsets of the relocation info */
+comment|/* The file offsets of the relocation info.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -1867,7 +1992,7 @@ name|abfd
 argument_list|,
 name|DEFAULT_ARCH
 argument_list|,
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2595,6 +2720,9 @@ name|reloc_bits
 operator|)
 operator|!=
 operator|(
+operator|(
+name|bfd_vma
+operator|)
 operator|-
 literal|1
 operator|&
@@ -2743,7 +2871,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Finish up the reading of an a.out file header */
+comment|/* Finish up the reading of an a.out file header.  */
 end_comment
 
 begin_function
@@ -2764,20 +2892,25 @@ name|struct
 name|external_exec
 name|exec_bytes
 decl_stmt|;
-comment|/* Raw exec header from file */
+comment|/* Raw exec header from file.  */
 name|struct
 name|internal_exec
 name|exec
 decl_stmt|;
-comment|/* Cleaned-up exec header */
+comment|/* Cleaned-up exec header.  */
 specifier|const
 name|bfd_target
 modifier|*
 name|target
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+name|EXEC_BYTES_SIZE
+decl_stmt|;
 if|if
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 operator|(
 name|PTR
@@ -2785,14 +2918,12 @@ operator|)
 operator|&
 name|exec_bytes
 argument_list|,
-literal|1
-argument_list|,
-name|EXEC_BYTES_SIZE
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|EXEC_BYTES_SIZE
+name|amt
 condition|)
 block|{
 if|if
@@ -2831,7 +2962,7 @@ name|exec
 operator|.
 name|a_info
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -2928,7 +3059,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ENTRY_CAN_BE_ZERO
-comment|/* The NEWSOS3 entry-point is/was 0, which (amongst other lossage)    * means that it isn't obvious if EXEC_P should be set.    * All of the following must be true for an executable:    * There must be no relocations, the bfd can be neither an    * archive nor an archive element, and the file must be executable.  */
+comment|/* The NEWSOS3 entry-point is/was 0, which (amongst other lossage)      means that it isn't obvious if EXEC_P should be set.      All of the following must be true for an executable:      There must be no relocations, the bfd can be neither an      archive nor an archive element, and the file must be executable.  */
 if|if
 condition|(
 name|exec
@@ -3109,7 +3240,7 @@ block|{
 name|bfd_size_type
 name|text_size
 decl_stmt|;
-comment|/* dummy vars */
+comment|/* Dummy vars.  */
 name|file_ptr
 name|text_end
 decl_stmt|;
@@ -3227,6 +3358,9 @@ operator|>
 literal|0
 condition|)
 block|{
+name|bfd_size_type
+name|amt
+decl_stmt|;
 if|if
 condition|(
 name|bfd_seek
@@ -3246,9 +3380,18 @@ condition|)
 return|return
 name|false
 return|;
+name|amt
+operator|=
+name|adata
+argument_list|(
+name|abfd
+argument_list|)
+operator|.
+name|exec_bytes_size
+expr_stmt|;
 if|if
 condition|(
-name|bfd_write
+name|bfd_bwrite
 argument_list|(
 operator|(
 name|PTR
@@ -3256,30 +3399,18 @@ operator|)
 operator|&
 name|exec_bytes
 argument_list|,
-literal|1
-argument_list|,
-name|adata
-argument_list|(
-name|abfd
-argument_list|)
-operator|.
-name|exec_bytes_size
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|adata
-argument_list|(
-name|abfd
-argument_list|)
-operator|.
-name|exec_bytes_size
+name|amt
 condition|)
 return|return
 name|false
 return|;
 block|}
-comment|/* Now write out reloc info, followed by syms and strings */
+comment|/* Now write out reloc info, followed by syms and strings.  */
 if|if
 condition|(
 name|bfd_get_outsymbols
@@ -3858,7 +3989,6 @@ name|vma
 operator|<
 name|vma
 condition|)
-block|{
 name|obj_datasec
 argument_list|(
 name|abfd
@@ -3873,7 +4003,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-block|}
 name|obj_datasec
 argument_list|(
 name|abfd
@@ -4893,6 +5022,24 @@ define|#
 directive|define
 name|MY_bfd_gc_sections
 value|bfd_generic_gc_sections
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MY_bfd_merge_sections
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_bfd_merge_sections
+value|bfd_generic_merge_sections
 end_define
 
 begin_endif

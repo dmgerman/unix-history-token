@@ -401,6 +401,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_bfd_xcoff_bfd_merge_sections
+value|coff_bfd_merge_sections
+end_define
+
+begin_define
+define|#
+directive|define
 name|_bfd_xcoff_bfd_link_split_section
 value|coff_bfd_link_split_section
 end_define
