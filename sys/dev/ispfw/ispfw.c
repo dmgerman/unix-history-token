@@ -445,15 +445,6 @@ break|break;
 case|case
 name|PCI_PRODUCT_QLOGIC_ISP12160
 case|:
-if|if
-condition|(
-name|tgtmode
-condition|)
-name|rp
-operator|=
-name|isp_12160_risc_code_it
-expr_stmt|;
-else|else
 name|rp
 operator|=
 name|isp_12160_risc_code
