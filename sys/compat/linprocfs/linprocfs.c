@@ -419,15 +419,21 @@ decl_stmt|,
 name|cached
 decl_stmt|;
 comment|/* buffer / cache memory ??? */
-name|u_quad_t
+name|unsigned
+name|long
+name|long
 name|swaptotal
 decl_stmt|;
 comment|/* total swap space in bytes */
-name|u_quad_t
+name|unsigned
+name|long
+name|long
 name|swapused
 decl_stmt|;
 comment|/* used swap space in bytes */
-name|u_quad_t
+name|unsigned
+name|long
+name|long
 name|swapfree
 decl_stmt|;
 comment|/* free swap space in bytes */
@@ -770,20 +776,20 @@ argument_list|,
 literal|"cpu\t\t\t: Alpha\n"
 literal|"cpu model\t\t: %s\n"
 literal|"cpu variation\t\t: %ld\n"
-literal|"cpu revision\t\t: %ld\n"
+literal|"cpu revision\t\t: %d\n"
 literal|"cpu serial number\t: %s\n"
 literal|"system type\t\t: %s\n"
 literal|"system variation\t: %s\n"
-literal|"system revision\t\t: %ld\n"
+literal|"system revision\t\t: %d\n"
 literal|"system serial number\t: %s\n"
 literal|"cycle frequency [Hz]\t: %lu\n"
-literal|"timer frequency [Hz]\t: %lu\n"
+literal|"timer frequency [Hz]\t: %u\n"
 literal|"page size [bytes]\t: %ld\n"
 literal|"phys. address bits\t: %ld\n"
 literal|"max. addr. space #\t: %ld\n"
-literal|"BogoMIPS\t\t: %lu.%02lu\n"
-literal|"kernel unaligned acc\t: %ld (pc=%lx,va=%lx)\n"
-literal|"user unaligned acc\t: %ld (pc=%lx,va=%lx)\n"
+literal|"BogoMIPS\t\t: %u.%02u\n"
+literal|"kernel unaligned acc\t: %d (pc=%x,va=%x)\n"
+literal|"user unaligned acc\t: %d (pc=%x,va=%x)\n"
 literal|"platform string\t\t: %s\n"
 literal|"cpus detected\t\t: %d\n"
 argument_list|,
@@ -1657,7 +1663,8 @@ operator|.
 name|v_swtch
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|boottime
 operator|.
@@ -1701,7 +1708,8 @@ argument_list|,
 literal|"%lld.%02ld %ld.%02ld\n"
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|tv
 operator|.
@@ -2228,8 +2236,11 @@ name|PS_ADD
 argument_list|(
 literal|"vsize"
 argument_list|,
-literal|"%u"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|kp
 operator|.
 name|ki_size
@@ -2239,10 +2250,13 @@ name|PS_ADD
 argument_list|(
 literal|"rss"
 argument_list|,
-literal|"%u"
+literal|"%ju"
 argument_list|,
 name|P2K
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|kp
 operator|.
 name|ki_rssize
@@ -2762,10 +2776,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"VmSize:\t%8u kB\n"
+literal|"VmSize:\t%8ju kB\n"
 argument_list|,
 name|B2K
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|kp
 operator|.
 name|ki_size
@@ -2789,10 +2806,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"VmRss:\t%8u kB\n"
+literal|"VmRss:\t%8ju kB\n"
 argument_list|,
 name|P2K
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|kp
 operator|.
 name|ki_rssize
@@ -2803,10 +2823,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"VmData:\t%8u kB\n"
+literal|"VmData:\t%8ju kB\n"
 argument_list|,
 name|P2K
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|kp
 operator|.
 name|ki_dsize
@@ -2817,10 +2840,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"VmStk:\t%8u kB\n"
+literal|"VmStk:\t%8ju kB\n"
 argument_list|,
 name|P2K
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|kp
 operator|.
 name|ki_ssize
@@ -2831,10 +2857,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"VmExe:\t%8u kB\n"
+literal|"VmExe:\t%8ju kB\n"
 argument_list|,
 name|P2K
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|kp
 operator|.
 name|ki_tsize
@@ -2868,10 +2897,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"VmLib:\t%8u kB\n"
+literal|"VmLib:\t%8ju kB\n"
 argument_list|,
 name|P2K
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|lsize
 argument_list|)
 argument_list|)
