@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	5.7 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -928,16 +928,16 @@ operator|!
 name|ForceMail
 condition|)
 block|{
-name|usrerr
-argument_list|(
-literal|"Cannot mail directly to programs"
-argument_list|)
-expr_stmt|;
 name|a
 operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
+expr_stmt|;
+name|usrerr
+argument_list|(
+literal|"Cannot mail directly to programs"
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1280,16 +1280,16 @@ operator|!
 name|ForceMail
 condition|)
 block|{
-name|usrerr
-argument_list|(
-literal|"Cannot mail directly to files"
-argument_list|)
-expr_stmt|;
 name|a
 operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
+expr_stmt|;
+name|usrerr
+argument_list|(
+literal|"Cannot mail directly to files"
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.12 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -859,6 +859,10 @@ operator|->
 name|m_maxsize
 condition|)
 block|{
+name|NoReturn
+operator|=
+name|TRUE
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"Message is too large; %ld bytes max"
@@ -867,10 +871,6 @@ name|m
 operator|->
 name|m_maxsize
 argument_list|)
-expr_stmt|;
-name|NoReturn
-operator|=
-name|TRUE
 expr_stmt|;
 name|giveresponse
 argument_list|(
