@@ -400,6 +400,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|termios
+name|tty_orig
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* For saving original tty state */
+end_comment
+
+begin_decl_stmt
 name|char
 name|devname
 index|[
@@ -1001,6 +1012,33 @@ argument_list|,
 literal|"cannot install SIGHUP handler: %s: %m"
 argument_list|)
 expr_stmt|;
+comment|/* Keep track of our original terminal values for redialing */
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|tty_orig
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"tcgetattr: %m"
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|setup_line
 argument_list|()
 expr_stmt|;
@@ -1477,7 +1515,7 @@ name|CLOCAL
 operator|)
 condition|)
 block|{
-name|tty
+name|tty_orig
 operator|.
 name|c_cflag
 operator||=
@@ -1492,7 +1530,7 @@ argument_list|,
 name|TCSAFLUSH
 argument_list|,
 operator|&
-name|tty
+name|tty_orig
 argument_list|)
 operator|<
 literal|0
