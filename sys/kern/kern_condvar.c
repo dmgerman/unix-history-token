@@ -582,20 +582,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-comment|/* 	 * Process may be sitting on a slpque if asleep() was called, remove it 	 * before re-adding. 	 */
-if|if
-condition|(
-name|td
-operator|->
-name|td_wchan
-operator|!=
-name|NULL
-condition|)
-name|unsleep
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_flags
