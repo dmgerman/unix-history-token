@@ -156,6 +156,11 @@ init|=
 literal|7
 block|,
 comment|/* Session closed down */
+name|NGM_PPPOE_SERVICE
+init|=
+literal|8
+block|,
+comment|/* additional Service to advertise (in PADO) */
 name|NGM_PPPOE_GET_STATUS
 block|}
 enum|;
@@ -197,7 +202,7 @@ value|{				\ 	{							\ 	  { "packets_in",&ng_parse_uint_type	},	\ 	  { "packets
 end_define
 
 begin_comment
-comment|/*  * When this structure is accepted by the NGM_PPPOE_CONNECT command :  * The data field is MANDATORY.  * The session sends out a PADI request for the named service.  *  *  * When this structure is accepted by the NGM_PPPOE_WAIT command.  * If no service is given this is assumed to accept ALL PADI requests.  * This may at some time take a regexp expression, but not yet.  * Matching PADI requests will be passed up the named hook.  *  *  * When this structure is accepted by the NGM_PPPOE_OFFER command:  * The AC-NAme field is set from that given and a PADI  * packet is expected to arrive from the session control daemon, on the  * named hook. The session will then issue the appropriate PADO  * and begin negotiation.  */
+comment|/*  * When this structure is accepted by the NGM_PPPOE_CONNECT command :  * The data field is MANDATORY.  * The session sends out a PADI request for the named service.  *  *  * When this structure is accepted by the NGM_PPPOE_LISTEN command.  * If no service is given this is assumed to accept ALL PADI requests.  * This may at some time take a regexp expression, but not yet.  * Matching PADI requests will be passed up the named hook.  *  *  * When this structure is accepted by the NGM_PPPOE_OFFER command:  * The AC-NAme field is set from that given and a PADI  * packet is expected to arrive from the session control daemon, on the  * named hook. The session will then issue the appropriate PADO  * and begin negotiation.  */
 end_comment
 
 begin_struct
