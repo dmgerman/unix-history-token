@@ -2763,9 +2763,8 @@ name|via
 operator|->
 name|sgd_dmamap
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|bad
@@ -2800,6 +2799,8 @@ name|via
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|bad
