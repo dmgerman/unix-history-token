@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.7	%G%	*/
+comment|/*	up.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -997,15 +997,15 @@ return|return;
 block|}
 if|if
 condition|(
-name|DK_N
+name|UPDK_N
 operator|+
 name|unit
 operator|<=
-name|DK_NMAX
+name|UPDK_NMAX
 condition|)
 name|dk_mspw
 index|[
-name|DK_N
+name|UPDK_N
 operator|+
 name|unit
 index|]
@@ -1161,9 +1161,9 @@ if|if
 condition|(
 name|unit
 operator|+
-name|DK_N
+name|UPDK_N
 operator|<=
-name|DK_NMAX
+name|UPDK_NMAX
 condition|)
 name|dk_busy
 operator|&=
@@ -1174,7 +1174,7 @@ operator|<<
 operator|(
 name|unit
 operator|+
-name|DK_N
+name|UPDK_N
 operator|)
 operator|)
 expr_stmt|;
@@ -1462,13 +1462,13 @@ expr_stmt|;
 comment|/* 	 * Mark this unit busy. 	 */
 name|unit
 operator|+=
-name|DK_N
+name|UPDK_N
 expr_stmt|;
 if|if
 condition|(
 name|unit
 operator|<=
-name|DK_NMAX
+name|UPDK_NMAX
 condition|)
 block|{
 name|dk_busy
@@ -1981,18 +1981,18 @@ name|upcs1
 operator|=
 name|cmd
 expr_stmt|;
-comment|/* 	 * This is a controller busy situation. 	 * Record in dk slot NUP+DK_N (after last drive) 	 * unless there aren't that many slots reserved for 	 * us in which case we record this as a drive busy 	 * (if there is room for that). 	 */
+comment|/* 	 * This is a controller busy situation. 	 * Record in dk slot NUP+UPDK_N (after last drive) 	 * unless there aren't that many slots reserved for 	 * us in which case we record this as a drive busy 	 * (if there is room for that). 	 */
 name|unit
 operator|=
 name|dn
 operator|+
-name|DK_N
+name|UPDK_N
 expr_stmt|;
 if|if
 condition|(
 name|unit
 operator|<=
-name|DK_NMAX
+name|UPDK_NMAX
 condition|)
 block|{
 name|dk_busy
@@ -2171,11 +2171,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|DK_N
+name|UPDK_N
 operator|+
 name|unit
 operator|<=
-name|DK_NMAX
+name|UPDK_NMAX
 condition|)
 name|dk_busy
 operator|&=
@@ -2184,7 +2184,7 @@ operator|(
 literal|1
 operator|<<
 operator|(
-name|DK_N
+name|UPDK_N
 operator|+
 name|unit
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.2	%G%	*/
+comment|/*	hp.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -857,15 +857,15 @@ break|break;
 block|}
 if|if
 condition|(
-name|DK_N
+name|HPDK_N
 operator|+
 name|unit
 operator|<=
-name|DK_NMAX
+name|HPDK_NMAX
 condition|)
 name|dk_mspw
 index|[
-name|DK_N
+name|HPDK_N
 operator|+
 name|unit
 index|]
@@ -1145,9 +1145,9 @@ if|if
 condition|(
 name|unit
 operator|+
-name|DK_N
+name|HPDK_N
 operator|<=
-name|DK_NMAX
+name|HPDK_NMAX
 condition|)
 name|dk_busy
 operator|&=
@@ -1158,7 +1158,7 @@ operator|<<
 operator|(
 name|unit
 operator|+
-name|DK_N
+name|HPDK_N
 operator|)
 operator|)
 expr_stmt|;
@@ -1464,13 +1464,13 @@ expr_stmt|;
 block|}
 name|unit
 operator|+=
-name|DK_N
+name|HPDK_N
 expr_stmt|;
 if|if
 condition|(
 name|unit
 operator|<=
-name|DK_NMAX
+name|HPDK_NMAX
 condition|)
 block|{
 name|dk_busy
@@ -1915,13 +1915,13 @@ name|unit
 operator|=
 name|dn
 operator|+
-name|DK_N
+name|HPDK_N
 expr_stmt|;
 if|if
 condition|(
 name|unit
 operator|<=
-name|DK_NMAX
+name|HPDK_NMAX
 condition|)
 block|{
 name|dk_busy
@@ -2008,11 +2008,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|DK_N
+name|HPDK_N
 operator|+
 name|unit
 operator|<=
-name|DK_NMAX
+name|HPDK_NMAX
 condition|)
 name|dk_busy
 operator|&=
@@ -2021,7 +2021,7 @@ operator|(
 literal|1
 operator|<<
 operator|(
-name|DK_N
+name|HPDK_N
 operator|+
 name|unit
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.2	%G%	*/
+comment|/*	rk.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -1071,11 +1071,11 @@ name|dk_busy
 operator||=
 literal|1
 operator|<<
-name|DK_N
+name|RKDK_N
 expr_stmt|;
 name|dk_xfer
 index|[
-name|DK_N
+name|RKDK_N
 index|]
 operator|+=
 literal|1
@@ -1090,7 +1090,7 @@ literal|6
 expr_stmt|;
 name|dk_wds
 index|[
-name|DK_N
+name|RKDK_N
 index|]
 operator|+=
 name|com
@@ -1144,7 +1144,7 @@ operator|~
 operator|(
 literal|1
 operator|<<
-name|DK_N
+name|RKDK_N
 operator|)
 expr_stmt|;
 name|bp
