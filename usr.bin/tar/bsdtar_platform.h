@@ -359,6 +359,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_UINTMAX_T
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_UNISTD_H
 value|1
 end_define
