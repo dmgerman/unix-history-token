@@ -1579,6 +1579,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|NCARD
+operator|>
+literal|0
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -1612,6 +1620,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
