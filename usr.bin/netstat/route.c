@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.10 1996/01/14 23:42:19 peter Exp $"
+literal|"$Id: route.c,v 1.11 1996/01/15 02:18:35 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,11 +113,22 @@ directive|include
 file|<netipx/ipx.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netns/ns.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -713,6 +724,9 @@ operator|=
 literal|"IPX"
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|AF_NS
 case|:
@@ -721,6 +735,8 @@ operator|=
 literal|"XNS"
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|AF_ISO
 case|:
@@ -1975,6 +1991,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|AF_NS
 case|:
@@ -1986,6 +2005,8 @@ name|sa
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|AF_LINK
 case|:
@@ -4209,6 +4230,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_decl_stmt
 name|short
 name|ns_nullh
@@ -4668,6 +4695,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
