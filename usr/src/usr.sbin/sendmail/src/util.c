@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	5.4 (Berkeley) %G%"
+literal|"@(#)util.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,10 +379,19 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
 name|p
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|sz
 argument_list|)
 expr_stmt|;

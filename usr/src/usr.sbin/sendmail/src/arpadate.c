@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	5.2 (Berkeley) %G%"
+literal|"@(#)arpadate.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -866,6 +866,11 @@ name|euptr
 operator|++
 control|)
 block|{
+specifier|extern
+name|bool
+name|sameword
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|sameword

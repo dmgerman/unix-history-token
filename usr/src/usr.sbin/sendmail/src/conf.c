@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	5.2 (Berkeley) %G%"
+literal|"@(#)conf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1232,8 +1232,15 @@ name|ioctl
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|int
+operator|)
 name|FIOCLEX
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1269,7 +1276,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|Nl
 index|[
@@ -1287,6 +1294,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|avenrun
 argument_list|,
 sizeof|sizeof
@@ -1353,46 +1364,6 @@ endif|#
 directive|endif
 endif|VMUNIX
 end_endif
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  DBMCLOSE -- close the DBM file ** **	This depends on the implementation of the DBM library.  It **	seems to work for all versions that I have come across. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Closes the current DBM file; dbminit must be **		called again to continue using the DBM routines. */
-end_comment
-
-begin_macro
-name|dbmclose
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|extern
-name|int
-name|pagf
-decl_stmt|,
-name|dirf
-decl_stmt|;
-comment|/* defined in the DBM package */
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|pagf
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|dirf
-argument_list|)
-expr_stmt|;
-block|}
-end_block
 
 end_unit
 

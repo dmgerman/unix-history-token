@@ -27,15 +27,27 @@ directive|ifndef
 name|SMTP
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.3 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.4 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_else
 else|#
@@ -43,15 +55,27 @@ directive|else
 else|SMTP
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.3 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/* **  SMTP -- run the SMTP protocol. ** **	Parameters: **		none. ** **	Returns: **		never. ** **	Side Effects: **		Reads commands from the input channel and processes **			them. */

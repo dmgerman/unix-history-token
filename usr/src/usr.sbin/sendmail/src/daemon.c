@@ -27,15 +27,27 @@ directive|ifndef
 name|DAEMON
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.3 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.4 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_else
 else|#
@@ -66,15 +78,39 @@ directive|include
 file|<sys/wait.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.3 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.4 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. ** **	The semantics of both of these should be clean. */
@@ -237,8 +273,6 @@ argument_list|,
 name|SOCK_STREAM
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -322,8 +356,6 @@ name|SendmailAddress
 argument_list|,
 sizeof|sizeof
 name|SendmailAddress
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -346,13 +378,35 @@ goto|goto
 name|severe
 goto|;
 block|}
+if|if
+condition|(
 name|listen
 argument_list|(
 name|DaemonSocket
 argument_list|,
 literal|10
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"getrequests: cannot listen"
+argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|DaemonSocket
+argument_list|)
+expr_stmt|;
+goto|goto
+name|severe
+goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -715,8 +769,6 @@ argument_list|,
 name|SOCK_STREAM
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -855,8 +907,6 @@ name|SendmailAddress
 argument_list|,
 sizeof|sizeof
 name|SendmailAddress
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -1023,13 +1073,29 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+if|if
+condition|(
 name|gethostname
 argument_list|(
 name|hostbuf
 argument_list|,
 name|size
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|hostbuf
+argument_list|,
+literal|"localhost"
+argument_list|)
 expr_stmt|;
+block|}
 name|hp
 operator|=
 name|gethostbyname

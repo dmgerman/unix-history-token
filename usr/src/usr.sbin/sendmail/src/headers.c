@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	5.3 (Berkeley) %G%"
+literal|"@(#)headers.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,8 +527,16 @@ name|NULL
 expr_stmt|;
 name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|mopts
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|h
 operator|->
 name|h_mflags

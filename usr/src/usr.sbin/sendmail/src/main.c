@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,24 @@ include|#
 directive|include
 file|"sendmail.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|edata
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_comment
 comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables read in from /usr/lib/sendmail.cf **	(read by readcf.c).  Some more static configuration info, **	including some code that you may want to tailor for your **	installation, is in conf.c.  You may also want to touch **	daemon.c (if you have some other IPC mechanism), acct.c **	(to change your accounting), names.c (to adjust the name **	server mechanism). ** **	Usage: **		/usr/lib/sendmail [flags] addr ... ** **		See the associated documentation for details. ** **	Author: **		Eric Allman, UCB/INGRES (until 10/81) **			     Britton-Lee, Inc., purveyors of fine **				database computers (from 11/81) **		The support of the INGRES Project and Britton-Lee is **			gratefully acknowledged.  Britton-Lee in **			particular had absolutely nothing to gain from **			my involvement in this project. */
@@ -3241,6 +3259,11 @@ name|char
 name|Version
 index|[]
 decl_stmt|;
+specifier|extern
+name|caddr_t
+name|brk
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|freezefile
@@ -3339,8 +3362,12 @@ name|frzinfo
 operator|.
 name|frzbrk
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|(
+name|caddr_t
+operator|)
+operator|-
+literal|1
 condition|)
 block|{
 name|syserr
@@ -3715,8 +3742,15 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|int
+operator|)
 name|TIOCNOTTY
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3734,6 +3768,8 @@ name|void
 operator|)
 name|setpgrp
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;

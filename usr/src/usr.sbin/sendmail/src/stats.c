@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stats.c	5.2 (Berkeley) %G%"
+literal|"@(#)stats.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,7 +239,7 @@ name|statistics
 name|stat
 decl_stmt|;
 specifier|extern
-name|long
+name|off_t
 name|lseek
 parameter_list|()
 function_decl|;
@@ -417,7 +417,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 literal|0
 argument_list|)

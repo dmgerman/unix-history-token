@@ -3,18 +3,6 @@ begin_comment
 comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_endif
-endif|#
-directive|endif
-endif|not lint
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -45,15 +33,27 @@ directive|ifndef
 name|SMTP
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.2 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)usersmtp.c	5.3 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_else
 else|#
@@ -61,15 +61,27 @@ directive|else
 else|SMTP
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.2 (Berkeley) %G%"
+literal|"@(#)usersmtp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/* **  USERSMTP -- run SMTP protocol from the user end. ** **	This protocol is described in RFC821. */

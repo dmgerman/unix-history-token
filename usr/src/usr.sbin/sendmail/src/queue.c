@@ -39,15 +39,27 @@ directive|ifndef
 name|QUEUE
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.3 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.4 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_else
 else|#
@@ -55,15 +67,27 @@ directive|else
 else|QUEUE
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.3 (Berkeley) %G%"
+literal|"@(#)queue.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/* **  Work queue. */
@@ -1691,6 +1715,10 @@ end_comment
 begin_expr_stmt
 name|qsort
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|wlist
 argument_list|,
 name|min
