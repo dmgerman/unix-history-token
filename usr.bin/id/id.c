@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: id.c,v 1.5 1997/07/15 09:48:49 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -738,7 +738,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"euid\t%s"
+literal|"euid\t%s\n"
 argument_list|,
 name|pw
 operator|->
@@ -751,7 +751,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"euid\t%u"
+literal|"euid\t%u\n"
 argument_list|,
 name|eid
 argument_list|)
