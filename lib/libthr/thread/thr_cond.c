@@ -500,20 +500,17 @@ modifier|*
 name|cond
 parameter_list|)
 block|{
+comment|/* 	 * Short circuit for a statically initialized condvar 	 * that is being destroyed without having been used. 	 */
 if|if
 condition|(
-name|cond
-operator|==
-name|NULL
-operator|||
 operator|*
 name|cond
 operator|==
-name|NULL
+name|PTHREAD_COND_INITIALIZER
 condition|)
 return|return
 operator|(
-name|EINVAL
+literal|0
 operator|)
 return|;
 name|COND_LOCK
