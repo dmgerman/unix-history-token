@@ -163,6 +163,36 @@ define|\
 value|(kernel_debugging ? fbsd_kern_frame_saved_pc(FRAME) : \   (((FRAME)->signal_handler_caller \     ? sigtramp_saved_pc (FRAME) \     : read_memory_integer ((FRAME)->frame + 4, 4)) \    ))
 end_define
 
+begin_comment
+comment|/* Sigtramp is not the same address as BSD/OS.. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SIGTRAMP_START
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|SIGTRAMP_END
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SIGTRAMP_START
+value|0xefbfdfc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGTRAMP_END
+value|0xefbfe000
+end_define
+
 begin_endif
 endif|#
 directive|endif

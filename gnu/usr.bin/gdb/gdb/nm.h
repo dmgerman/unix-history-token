@@ -63,6 +63,16 @@ define|\
 value|(addr) = i386_register_u_addr ((blockend),(regno));
 end_define
 
+begin_comment
+comment|/* We define our own fetch/store methods */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FETCH_INFERIOR_REGISTERS
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
