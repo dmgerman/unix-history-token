@@ -576,8 +576,6 @@ condition|)
 block|{
 name|int
 name|fd
-decl_stmt|,
-name|type
 decl_stmt|;
 name|RunningAsInit
 operator|=
@@ -635,11 +633,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* 	 * To make _sure_ we're on a VTY and don't have /dev/console switched 	 * away to a serial port or something, attempt to set the cursor appearance. 	 */
-name|type
-operator|=
-literal|0
-expr_stmt|;
-comment|/* normal */
 if|if
 condition|(
 name|OnVTY
@@ -647,7 +640,14 @@ condition|)
 block|{
 name|int
 name|fd2
+decl_stmt|,
+name|type
 decl_stmt|;
+name|type
+operator|=
+literal|0
+expr_stmt|;
+comment|/* normal */
 if|if
 condition|(
 operator|(
