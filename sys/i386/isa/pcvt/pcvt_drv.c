@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (c) 1993 Charles Hannum.  *  * All rights reserved.  *  * Parts of this code regarding the NetBSD interface were written  * by Charles Hannum.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Scott Turner  *	and Charles Hannum.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_drv.c, 3.20, Last Edit-Date: [Mon Apr 19 17:10:09 1999]  *  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 1999 Hellmuth Michaelis  *  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (c) 1993 Charles Hannum.  *  * All rights reserved.  *  * Parts of this code regarding the NetBSD interface were written  * by Charles Hannum.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Scott Turner  *	and Charles Hannum.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_drv.c	VT220 Driver Main Module / OS - Interface  *	---------------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	adding ttrstrt() proto for NetBSD 0.9  *	-hm	kernel/console output cursor positioning fixed  *	-hm	kernel/console output switches optional to screen 0  *	-hm	FreeBSD 1.1 porting  *	-hm	the NetBSD 0.9 compiler detected a nondeclared var which was  *		 NOT detected by neither the NetBSD-current nor FreeBSD 1.x!  *	-hm	including Michael's keyboard fifo code  *	-hm	Joergs patch for FreeBSD tty-malloc code  *	-hm	adjustments for NetBSD-current  *	-hm	FreeBSD bugfix from Joerg re timeout/untimeout casts  *	-jw	including Thomas Gellekum's FreeBSD 1.1.5 patch  *	-hm	adjusting #if's for NetBSD-current  *	-hm	applying Joerg's patch for FreeBSD 2.0  *	-hm	patch from Onno& Martin for NetBSD-current (post 1.0)  *	-hm	some adjustments for NetBSD 1.0  *	-hm	NetBSD PR #400: screen size report for new session  *	-hm	patch from Rafael Boni/Lon Willett for NetBSD-current  *	-hm	bell patch from Thomas Eberhardt for NetBSD  *	-hm	multiple X server bugfixes from Lon Willett  *	-hm	patch from joerg - pcdevtotty for FreeBSD pre-2.1  *	-hm	delay patch from Martin Husemann after port-i386 ml-discussion  *	-jw	add some code to provide more FreeBSD pre-2.1 support  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_drv.c	VT220 Driver Main Module / OS - Interface  *	---------------------------------------------------------  *  *	Last Edit-Date: [Mon Dec 27 14:03:36 1999]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -3611,6 +3611,25 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|vs
+index|[
+name|minor
+argument_list|(
+name|tp
+operator|->
+name|t_dev
+argument_list|)
+index|]
+operator|.
+name|scrolling
+condition|)
+name|sgetc
+argument_list|(
+literal|31337
+argument_list|)
+expr_stmt|;
 comment|/* 		 * We need to do this outside spl since it could be fairly 		 * expensive and we don't want our serial ports to overflow. 		 */
 name|splx
 argument_list|(

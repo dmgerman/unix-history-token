@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_hdr.h, 3.20, Last Edit-Date: [Fri Apr  7 10:16:58 1995]  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1999 Hellmuth Michaelis  *  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	integrating patches from Thomas Gellekum  *	-hm	moving vt_selattr() inline into this file  *	-hm	Michael's keyboard fifo diffs  *	-hm	documenting some #ifdef's ...  *	-hm	Joerg's patches for FreeBSD's ttymalloc  *	-jw	introduced kbd_emulate_pc() if scanset> 1  *	-hm	moved user configurable items to pcvt_conf.h  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	patch from Onno& Martin for NetBSD-current (post 1.0)  *	-hm	some adjustments for NetBSD 1.0  *	-hm	patch from Joerg fixing FreeBSD 2.0 support  *	-hm	patch from Onno/John for NetBSD-current  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	added pcstop (patch from Onno)  *	-hm	multiple X server bugfixes from Lon Willett  *	-hm	patch from Joerg for FreeBSD pre-2.1  *	-jw	adding more support for FreeBSD pre-2.1  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *  *	Last Edit-Date: [Mon Dec 27 14:06:31 1999]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -1130,6 +1130,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* initial default scrollback buffer size (in pages) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCROLLBACK_PAGES
+value|8
+end_define
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	Keyboard and Keyboard Controller  *---------------------------------------------------------------------------*/
@@ -5252,6 +5263,27 @@ name|u_char
 name|abs_write
 decl_stmt|;
 comment|/* write outside of scroll region */
+name|u_short
+modifier|*
+name|Scrollback
+decl_stmt|;
+comment|/* scrollback buffer */
+name|u_short
+name|scrollback_pages
+decl_stmt|;
+comment|/* size of scrollback buffer */
+name|u_short
+name|scr_offset
+decl_stmt|;
+comment|/* current scrollback offset (lines) */
+name|short
+name|scrolling
+decl_stmt|;
+comment|/* current scrollback page */
+name|u_short
+name|max_off
+decl_stmt|;
+comment|/* maximum scrollback offset */
 if|#
 directive|if
 name|PCVT_USL_VT_COMPAT
@@ -7977,6 +8009,21 @@ name|svsp
 parameter_list|,
 name|int
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|reallocate_scrollbuffer
+parameter_list|(
+name|struct
+name|video_state
+modifier|*
+name|svsp
+parameter_list|,
+name|int
+name|pages
 parameter_list|)
 function_decl|;
 end_function_decl
