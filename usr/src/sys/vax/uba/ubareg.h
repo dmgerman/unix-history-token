@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.15	81/02/27	*/
+comment|/*	ubareg.h	4.16	81/03/06	*/
 end_comment
 
 begin_comment
@@ -429,13 +429,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UBA_UBSSTO
+name|UBA_UBSSYNTO
 value|0x00000001
 end_define
 
 begin_comment
 comment|/* UNIBUS slave sync timeout */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UBASR_BITS
+define|\
+value|"\20\13RDTO\12RDS\11CRD\10CXTER\7CXTMO\6DPPE\5IVMR\4MRPF\3LEB\2UBSTO\1UBSSYNTO"
+end_define
 
 begin_comment
 comment|/* BR receive vector register, BRRVR */

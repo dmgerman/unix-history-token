@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nexus.h	4.4	81/02/27	*/
+comment|/*	nexus.h	4.5	81/03/06	*/
 end_comment
 
 begin_comment
@@ -193,7 +193,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SBI_UIDFLT
+name|SBI_URDFLT
 value|(1<<29)
 end_define
 
@@ -240,6 +240,44 @@ directive|define
 name|NEX_CFGFLT
 value|(0xfc000000)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_define
+define|#
+directive|define
+name|NEXFLT_BITS
+define|\
+value|"\20\40PARFLT\37WSQFLT\36URDFLT\35ISQFLT\34MXTFLT\33XMTFLT"
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|nexflt_bits
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
