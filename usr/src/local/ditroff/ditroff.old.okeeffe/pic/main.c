@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	(Berkeley)	1.2	83/08/09	*/
+comment|/* main.c	(Berkeley)	1.3	83/08/15	*/
 end_comment
 
 begin_include
@@ -187,7 +187,7 @@ begin_decl_stmt
 name|float
 name|deltx
 init|=
-literal|6
+literal|6.0
 decl_stmt|;
 end_decl_stmt
 
@@ -199,12 +199,36 @@ begin_decl_stmt
 name|float
 name|delty
 init|=
-literal|6
+literal|6.0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* max y value in output, for scaling */
+end_comment
+
+begin_decl_stmt
+name|float
+name|xbound
+init|=
+literal|8.0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max allowed x value in output */
+end_comment
+
+begin_decl_stmt
+name|float
+name|ybound
+init|=
+literal|10.0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max allowed y value in output */
 end_comment
 
 begin_decl_stmt
@@ -505,6 +529,42 @@ name|useDline
 operator|=
 operator|!
 name|useDline
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|xbound
+operator|=
+name|atof
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|ybound
+operator|=
+name|atof
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

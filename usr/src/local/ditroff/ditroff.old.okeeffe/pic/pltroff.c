@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* pltroff.c	(Berkeley)	1.3	83/08/09  *	This version has code generators to drive the old-style troff  *	that produces output for the Graphic Systems C/A/T.    *	Very few people actually have a C/A/T; they instead typically  *	use some other typesetter that simulates it.  This is slow and  *	rather silly, but compatibility with the past is important.  *	Or so they say.  Anyway ...   *	The code generator can be turned on to old-style troff by setting  *	the constant OLDTROFF with a #define statement;  this will also  *	have the effect of setting the default typesetter to the C/A/T  *	in a consistent manner.  */
+comment|/* pltroff.c	(Berkeley)	1.4	83/08/15  *	This version has code generators to drive the old-style troff  *	that produces output for the Graphic Systems C/A/T.    *	Very few people actually have a C/A/T; they instead typically  *	use some other typesetter that simulates it.  This is slow and  *	rather silly, but compatibility with the past is important.  *	Or so they say.  Anyway ...   *	The code generator can be turned on to old-style troff by setting  *	the constant OLDTROFF with a #define statement;  this will also  *	have the effect of setting the default typesetter to the C/A/T  *	in a consistent manner.  */
 end_comment
 
 begin_include
@@ -320,6 +320,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|float
+name|xbound
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|float
+name|ybound
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|float
 name|xmin
 decl_stmt|,
 name|ymin
@@ -387,23 +401,14 @@ operator|*
 name|res
 expr_stmt|;
 comment|/* default = 6 x 6 */
-name|maxdelt
-operator|=
-name|max
-argument_list|(
-name|deltx
-argument_list|,
-name|delty
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|maxdelt
+name|deltx
 operator|>
-literal|8
+name|xbound
 condition|)
 block|{
-comment|/* 8 inches */
+comment|/* default 8 inches */
 name|fprintf
 argument_list|(
 name|stderr
@@ -417,15 +422,58 @@ argument_list|)
 expr_stmt|;
 name|deltx
 operator|*=
-literal|8
+name|xbound
 operator|/
-name|maxdelt
+name|deltx
 expr_stmt|;
 name|delty
 operator|*=
-literal|8
+name|xbound
 operator|/
-name|maxdelt
+name|deltx
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" %g X %g\n"
+argument_list|,
+name|deltx
+argument_list|,
+name|delty
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|delty
+operator|>
+name|ybound
+condition|)
+block|{
+comment|/* default 10 inches */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"pic: %g X %g picture shrunk to"
+argument_list|,
+name|deltx
+argument_list|,
+name|delty
+argument_list|)
+expr_stmt|;
+name|deltx
+operator|*=
+name|ybound
+operator|/
+name|delty
+expr_stmt|;
+name|delty
+operator|*=
+name|ybound
+operator|/
+name|delty
 expr_stmt|;
 name|fprintf
 argument_list|(
