@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Steve Gerakines  *   * This is freely redistributable software.  You may do anything you wish with  * it, so long as the above notice stays intact.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *   * ft.c - QIC-40/80 floppy tape driver $Id: ft.c,v 1.9 1994/08/21 20:16:14 paul  * Exp $  *   *   * 01/26/94 v0.3b - Jim Babb Got rid of the hard coded device selection.  Moved  * (some of) the static variables into a structure for support of multiple  * devices. ( still has a way to go for 2 controllers - but closer ) Changed  * the interface with fd.c so we no longer 'steal' it's driver routine  * vectors.  *   * 10/30/93 v0.3 Fixed a couple more bugs.  Reading was sometimes looping when  * an an error such as address-mark-missing was encountered.  Both reading  * and writing was having more backup-and-retries than was necessary.  Added  * support to get hardware info.  Updated for use with FreeBSD.  *   * 09/15/93 v0.2 pl01 Fixed a bunch of bugs:  extra isa_dmadone() in  * async_write() (shouldn't matter), fixed double buffering in async_req(),  * changed tape_end() in set_fdcmode() to reduce unexpected interrupts,  * changed end of track processing in async_req(), protected more of  * ftreq_rw() with an splbio().  Changed some of the ftreq_*() functions so  * that they wait for inactivity and then go, instead of aborting  * immediately.  *   * 08/07/93 v0.2 release Shifted from ftstrat to ioctl support for I/O.  * Streaming is now much more reliable.  Added internal support for error  * correction, QIC-40, and variable length tapes.  Random access of segments  * greatly improved.  Formatting and verification support is close but still  * incomplete.  *   * 06/03/93 v0.1 Alpha release Hopefully the last re-write.  Many bugs fixed,  * many remain.  *   * $Id: ft.c,v 1.10 1994/08/23 07:52:12 paul Exp $  */
+comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.7 1994/06/22 05:52:36 jkh Exp $  *  *  06/07/94 v0.9 ++sg  *  Tape stuck on segment problem should be gone.  Re-wrote buffering  *  scheme.  Added support for drives that do not automatically perform  *  seek load point.  Can handle more wakeup types now and should correctly  *  report most manufacturer names.  Fixed places where unit 0 was being  *  sent to the fdc instead of the actual unit number.  Added ioctl support  *  for an in-core badmap.  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's   *  driver routine vectors.  *   *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  */
 end_comment
 
 begin_include
@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -81,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ftape.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
 end_include
 
 begin_include
@@ -131,11 +143,11 @@ value|0
 end_define
 
 begin_comment
-comment|/* everything */
+comment|/* 1 if you want everything */
 end_comment
 
 begin_comment
-comment|/* #define DPRT(a) printf a		 */
+comment|/*#define DPRT(a) printf a		*/
 end_comment
 
 begin_define
@@ -160,6 +172,17 @@ end_define
 
 begin_comment
 comment|/* sleep priority */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTNBUFF
+value|9
+end_define
+
+begin_comment
+comment|/* 8 for buffering, 1 for header */
 end_comment
 
 begin_comment
@@ -244,9 +267,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FT_NONE
+value|(F_TAPE_TYPE | 0)
+end_define
+
+begin_comment
+comment|/* no method required */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FT_MOUNTAIN
 value|(F_TAPE_TYPE | 1)
 end_define
+
+begin_comment
+comment|/* mountain */
+end_comment
 
 begin_define
 define|#
@@ -254,6 +292,21 @@ directive|define
 name|FT_COLORADO
 value|(F_TAPE_TYPE | 2)
 end_define
+
+begin_comment
+comment|/* colorado */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FT_INSIGHT
+value|(F_TAPE_TYPE | 3)
+end_define
+
+begin_comment
+comment|/* insight */
+end_comment
 
 begin_comment
 comment|/* Mode FDC is currently in: tape or disk */
@@ -718,18 +771,7 @@ comment|/* Current tape's geometry */
 end_comment
 
 begin_comment
-comment|/*  * things relating to asynchronous commands  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|astk_depth
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* async_cmd stack depth */
+comment|/*  *  things relating to asynchronous commands  */
 end_comment
 
 begin_decl_stmt
@@ -801,15 +843,34 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|async_arg
-index|[
-literal|5
-index|]
+name|async_arg0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* up to 5 arguments for async cmds */
+comment|/* up to 3 arguments for async cmds */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|async_arg1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/**/
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|async_arg2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/**/
 end_comment
 
 begin_decl_stmt
@@ -821,6 +882,56 @@ end_decl_stmt
 
 begin_comment
 comment|/* return value */
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+name|_astk
+block|{
+name|int
+name|over_func
+decl_stmt|;
+name|int
+name|over_state
+decl_stmt|;
+name|int
+name|over_retries
+decl_stmt|;
+name|int
+name|over_arg0
+decl_stmt|;
+name|int
+name|over_arg1
+decl_stmt|;
+name|int
+name|over_arg2
+decl_stmt|;
+block|}
+name|astk
+index|[
+literal|10
+index|]
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|_astk
+modifier|*
+name|astk_ptr
+init|=
+operator|&
+name|astk
+index|[
+literal|0
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pointer to stack position */
 end_comment
 
 begin_comment
@@ -872,13 +983,9 @@ parameter_list|,
 name|b
 parameter_list|,
 name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
 parameter_list|)
 define|\
-value|astk[astk_depth].over_retries = async_retries; \ 			astk[astk_depth].over_func = async_func; \ 			astk[astk_depth].over_state = (r); \ 			for (i = 0; i< 5; i++) \ 			   astk[astk_depth].over_arg[i] = async_arg[i]; \ 			async_func = (f); async_state = 0; async_retries = 0; \ 			async_arg[0]=(a); async_arg[1]=(b); async_arg[2]=(c); \ 			async_arg[3]=(d); async_arg[4]=(e); \ 			astk_depth++; \ 			goto restate
+value|astk_ptr->over_retries = async_retries; \ 			astk_ptr->over_func = async_func; \ 			astk_ptr->over_state = (r); \ 			astk_ptr->over_arg0 = async_arg0; \ 			astk_ptr->over_arg1 = async_arg1; \ 			astk_ptr->over_arg2 = async_arg2; \ 			async_func = (f); async_state = 0; async_retries = 0; \ 			async_arg0=(a); async_arg1=(b); async_arg2=(c); \ 			astk_ptr++; \ 			goto restate
 end_define
 
 begin_comment
@@ -899,38 +1006,75 @@ parameter_list|,
 name|b
 parameter_list|,
 name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
 parameter_list|)
-value|over_async = (r); astk_depth = 0; \ 			async_func = (f); async_state = 0; async_retries = 0; \ 			async_arg[0]=(a); async_arg[1]=(b); async_arg[2]=(c); \ 			async_arg[3]=(d); async_arg[4]=(e); \ 			async_cmd(ftu); \ 			return
+value|over_async = (r); astk_ptr =&astk[0]; \ 			async_func = (f); async_state = 0; async_retries = 0; \ 			async_arg0=(a); async_arg1=(b); async_arg2=(c); \ 			async_cmd(ftu); \ 			return
 end_define
 
 begin_comment
 comment|/* Various wait channels */
 end_comment
 
-begin_struct
+begin_decl_stmt
 specifier|static
-struct|struct
-block|{
-name|int
-name|buff_avail
+name|char
+modifier|*
+name|wc_buff_avail
+init|=
+literal|"bavail"
 decl_stmt|;
-name|int
-name|iosts_change
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|wc_buff_done
+init|=
+literal|"bdone"
 decl_stmt|;
-name|int
-name|long_delay
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|wc_iosts_change
+init|=
+literal|"iochg"
 decl_stmt|;
-name|int
-name|intr_wait
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|wc_long_delay
+init|=
+literal|"ldelay"
 decl_stmt|;
-block|}
-name|ftsem
-struct|;
-end_struct
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|wc_intr_wait
+init|=
+literal|"intrw"
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ftsleep
+parameter_list|(
+name|wc
+parameter_list|,
+name|to
+parameter_list|)
+value|tsleep((caddr_t)(wc),FTPRI,(wc),(to))
+end_define
 
 begin_comment
 comment|/***********************************************************************\ * Per controller structure.						* \***********************************************************************/
@@ -969,7 +1113,7 @@ name|int
 name|type
 decl_stmt|;
 comment|/* Drive type (Mountain, Colorado) */
-comment|/* QIC_Geom *ftg;	 */
+comment|/*	QIC_Geom *ftg;	*/
 comment|/* pointer to Current tape's geometry */
 name|int
 name|flags
@@ -977,11 +1121,11 @@ decl_stmt|;
 name|int
 name|cmd_wait
 decl_stmt|;
-comment|/* Command we are awaiting completion 					 * of */
+comment|/* Command we are awaiting completion of */
 name|int
 name|sts_wait
 decl_stmt|;
-comment|/* Tape interrupt status of current 					 * request */
+comment|/* Tape interrupt status of current request */
 name|int
 name|io_sts
 decl_stmt|;
@@ -1011,16 +1155,52 @@ name|int
 name|xblk
 decl_stmt|;
 comment|/* block number to transfer       */
+name|int
+name|xseg
+decl_stmt|;
+comment|/* segment being transferred	  */
 name|SegReq
 modifier|*
-name|curseg
+name|segh
 decl_stmt|;
-comment|/* Current segment to do I/O on	  */
+comment|/* Current I/O request		  */
 name|SegReq
 modifier|*
-name|bufseg
+name|segt
 decl_stmt|;
-comment|/* Buffered segment to r/w ahead  */
+comment|/* Tail of queued I/O requests	  */
+name|SegReq
+modifier|*
+name|doneh
+decl_stmt|;
+comment|/* Completed I/O request queue    */
+name|SegReq
+modifier|*
+name|donet
+decl_stmt|;
+comment|/* Completed I/O request tail	  */
+name|SegReq
+modifier|*
+name|segfree
+decl_stmt|;
+comment|/* Free segments		  */
+name|SegReq
+modifier|*
+name|hdr
+decl_stmt|;
+comment|/* Current tape header		  */
+name|int
+name|nsegq
+decl_stmt|;
+comment|/* Segments on request queue	  */
+name|int
+name|ndoneq
+decl_stmt|;
+comment|/* Segments on completed queue	  */
+name|int
+name|nfreelist
+decl_stmt|;
+comment|/* Segments on free list	  */
 comment|/* the next 3 should be defines in 'flags' */
 name|int
 name|active
@@ -1072,29 +1252,6 @@ end_struct
 begin_comment
 comment|/***********************************************************************\ * Throughout this file the following conventions will be used:		* * ft is a pointer to the ft_data struct for the drive in question	* * fdc is a pointer to the fdc_data struct for the controller		* * ftu is the tape drive unit number					* * fdcu is the floppy controller unit number				* * ftsu is the tape drive unit number on that controller. (sub-unit)	* \***********************************************************************/
 end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|ftu_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|ftsu_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|ft_data
-modifier|*
-name|ft_p
-typedef|;
-end_typedef
 
 begin_define
 define|#
@@ -1189,6 +1346,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|async_cmd
 parameter_list|(
@@ -1198,6 +1356,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|async_req
 parameter_list|(
@@ -1209,6 +1368,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|async_read
 parameter_list|(
@@ -1220,6 +1380,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|async_write
 parameter_list|(
@@ -1231,15 +1392,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|tape_start
 parameter_list|(
 name|ftu_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|tape_end
 parameter_list|(
@@ -1249,6 +1414,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|tape_inactive
 parameter_list|(
@@ -1257,8 +1423,497 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|tape_cmd
+parameter_list|(
+name|ftu_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|tape_status
+parameter_list|(
+name|ftu_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|qic_status
+parameter_list|(
+name|ftu_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ftreq_rewind
+parameter_list|(
+name|ftu_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ftreq_hwinfo
+parameter_list|(
+name|ftu_t
+parameter_list|,
+name|QIC_HWInfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Probe/attach floppy tapes.  */
+comment|/*****************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  *  Allocate a segment I/O buffer from the free list.  */
+end_comment
+
+begin_function
+specifier|static
+name|SegReq
+modifier|*
+name|segio_alloc
+parameter_list|(
+name|ft_p
+name|ft
+parameter_list|)
+block|{
+name|SegReq
+modifier|*
+name|r
+decl_stmt|;
+comment|/* Grab first item from free list */
+if|if
+condition|(
+operator|(
+name|r
+operator|=
+name|ft
+operator|->
+name|segfree
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ft
+operator|->
+name|segfree
+operator|=
+name|ft
+operator|->
+name|segfree
+operator|->
+name|next
+expr_stmt|;
+name|ft
+operator|->
+name|nfreelist
+operator|--
+expr_stmt|;
+block|}
+name|DPRT
+argument_list|(
+operator|(
+literal|"segio_alloc: nfree=%d ndone=%d nreq=%d\n"
+operator|,
+name|ft
+operator|->
+name|nfreelist
+operator|,
+name|ft
+operator|->
+name|ndoneq
+operator|,
+name|ft
+operator|->
+name|nsegq
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|r
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *  Queue a segment I/O request.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|segio_queue
+parameter_list|(
+name|ft_p
+name|ft
+parameter_list|,
+name|SegReq
+modifier|*
+name|sp
+parameter_list|)
+block|{
+comment|/* Put request on in process queue. */
+if|if
+condition|(
+name|ft
+operator|->
+name|segt
+operator|==
+name|NULL
+condition|)
+name|ft
+operator|->
+name|segh
+operator|=
+name|sp
+expr_stmt|;
+else|else
+name|ft
+operator|->
+name|segt
+operator|->
+name|next
+operator|=
+name|sp
+expr_stmt|;
+name|sp
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+name|ft
+operator|->
+name|segt
+operator|=
+name|sp
+expr_stmt|;
+name|ft
+operator|->
+name|nsegq
+operator|++
+expr_stmt|;
+name|DPRT
+argument_list|(
+operator|(
+literal|"segio_queue: nfree=%d ndone=%d nreq=%d\n"
+operator|,
+name|ft
+operator|->
+name|nfreelist
+operator|,
+name|ft
+operator|->
+name|ndoneq
+operator|,
+name|ft
+operator|->
+name|nsegq
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *  Segment I/O completed, place on correct queue.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|segio_done
+parameter_list|(
+name|ft_p
+name|ft
+parameter_list|,
+name|SegReq
+modifier|*
+name|sp
+parameter_list|)
+block|{
+comment|/* First remove from current I/O queue */
+name|ft
+operator|->
+name|segh
+operator|=
+name|sp
+operator|->
+name|next
+expr_stmt|;
+if|if
+condition|(
+name|ft
+operator|->
+name|segh
+operator|==
+name|NULL
+condition|)
+name|ft
+operator|->
+name|segt
+operator|=
+name|NULL
+expr_stmt|;
+name|ft
+operator|->
+name|nsegq
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|reqtype
+operator|==
+name|FTIO_WRITING
+condition|)
+block|{
+comment|/* Place on free list */
+name|sp
+operator|->
+name|next
+operator|=
+name|ft
+operator|->
+name|segfree
+expr_stmt|;
+name|ft
+operator|->
+name|segfree
+operator|=
+name|sp
+expr_stmt|;
+name|ft
+operator|->
+name|nfreelist
+operator|++
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|wc_buff_avail
+argument_list|)
+expr_stmt|;
+name|DPRT
+argument_list|(
+operator|(
+literal|"segio_done: (w) nfree=%d ndone=%d nreq=%d\n"
+operator|,
+name|ft
+operator|->
+name|nfreelist
+operator|,
+name|ft
+operator|->
+name|ndoneq
+operator|,
+name|ft
+operator|->
+name|nsegq
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Put on completed I/O queue */
+if|if
+condition|(
+name|ft
+operator|->
+name|donet
+operator|==
+name|NULL
+condition|)
+name|ft
+operator|->
+name|doneh
+operator|=
+name|sp
+expr_stmt|;
+else|else
+name|ft
+operator|->
+name|donet
+operator|->
+name|next
+operator|=
+name|sp
+expr_stmt|;
+name|sp
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+name|ft
+operator|->
+name|donet
+operator|=
+name|sp
+expr_stmt|;
+name|ft
+operator|->
+name|ndoneq
+operator|++
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|wc_buff_done
+argument_list|)
+expr_stmt|;
+name|DPRT
+argument_list|(
+operator|(
+literal|"segio_done: (r) nfree=%d ndone=%d nreq=%d\n"
+operator|,
+name|ft
+operator|->
+name|nfreelist
+operator|,
+name|ft
+operator|->
+name|ndoneq
+operator|,
+name|ft
+operator|->
+name|nsegq
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  *  Take I/O request from finished queue to free queue.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|segio_free
+parameter_list|(
+name|ft_p
+name|ft
+parameter_list|,
+name|SegReq
+modifier|*
+name|sp
+parameter_list|)
+block|{
+comment|/* First remove from done queue */
+name|ft
+operator|->
+name|doneh
+operator|=
+name|sp
+operator|->
+name|next
+expr_stmt|;
+if|if
+condition|(
+name|ft
+operator|->
+name|doneh
+operator|==
+name|NULL
+condition|)
+name|ft
+operator|->
+name|donet
+operator|=
+name|NULL
+expr_stmt|;
+name|ft
+operator|->
+name|ndoneq
+operator|--
+expr_stmt|;
+comment|/* Place on free list */
+name|sp
+operator|->
+name|next
+operator|=
+name|ft
+operator|->
+name|segfree
+expr_stmt|;
+name|ft
+operator|->
+name|segfree
+operator|=
+name|sp
+expr_stmt|;
+name|ft
+operator|->
+name|nfreelist
+operator|++
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|wc_buff_avail
+argument_list|)
+expr_stmt|;
+name|DPRT
+argument_list|(
+operator|(
+literal|"segio_free: nfree=%d ndone=%d nreq=%d\n"
+operator|,
+name|ft
+operator|->
+name|nfreelist
+operator|,
+name|ft
+operator|->
+name|ndoneq
+operator|,
+name|ft
+operator|->
+name|nsegq
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *  Probe/attach floppy tapes.  */
 end_comment
 
 begin_function
@@ -1296,7 +1951,7 @@ name|fdc_data
 operator|+
 name|fdcu
 decl_stmt|;
-comment|/* pointer to controller 						 * structure */
+comment|/* pointer to controller structure */
 name|ftu_t
 name|ftu
 init|=
@@ -1313,6 +1968,13 @@ init|=
 name|fdup
 operator|->
 name|id_physid
+decl_stmt|;
+name|QIC_HWInfo
+name|hw
+decl_stmt|;
+name|char
+modifier|*
+name|manu
 decl_stmt|;
 if|if
 condition|(
@@ -1356,12 +2018,50 @@ name|ftsu
 operator|=
 name|ftsu
 expr_stmt|;
+comment|/*    *  FT_NONE - no method, just do it    */
 name|tape_start
 argument_list|(
 name|ftu
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* ready controller for tape */
+if|if
+condition|(
+name|tape_status
+argument_list|(
+name|ftu
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+name|ft
+operator|->
+name|type
+operator|=
+name|FT_NONE
+expr_stmt|;
+name|ftreq_hwinfo
+argument_list|(
+name|ftu
+argument_list|,
+operator|&
+name|hw
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/*    *  FT_COLORADO - colorado style    */
+name|tape_start
+argument_list|(
+name|ftu
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|tape_cmd
 argument_list|(
 name|ftu
@@ -1374,6 +2074,8 @@ argument_list|(
 name|ftu
 argument_list|,
 name|QC_COL_ENABLE2
+operator|+
+name|ftu
 argument_list|)
 expr_stmt|;
 if|if
@@ -1392,23 +2094,12 @@ name|type
 operator|=
 name|FT_COLORADO
 expr_stmt|;
-name|fdc
-operator|->
-name|flags
-operator||=
-name|FDC_HASFTAPE
-expr_stmt|;
-name|printf
+name|ftreq_hwinfo
 argument_list|(
-literal|" [%d: ft%d: Colorado tape]"
+name|ftu
 argument_list|,
-name|fdup
-operator|->
-name|id_physid
-argument_list|,
-name|fdup
-operator|->
-name|id_unit
+operator|&
+name|hw
 argument_list|)
 expr_stmt|;
 name|tape_cmd
@@ -1422,12 +2113,14 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/*    *  FT_MOUNTAIN - mountain style    */
 name|tape_start
 argument_list|(
 name|ftu
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* ready controller for tape */
 name|tape_cmd
 argument_list|(
 name|ftu
@@ -1458,23 +2151,12 @@ name|type
 operator|=
 name|FT_MOUNTAIN
 expr_stmt|;
-name|fdc
-operator|->
-name|flags
-operator||=
-name|FDC_HASFTAPE
-expr_stmt|;
-name|printf
+name|ftreq_hwinfo
 argument_list|(
-literal|" [%d: ft%d: Mountain tape]"
+name|ftu
 argument_list|,
-name|fdup
-operator|->
-name|id_physid
-argument_list|,
-name|fdup
-operator|->
-name|id_unit
+operator|&
+name|hw
 argument_list|)
 expr_stmt|;
 name|tape_cmd
@@ -1488,6 +2170,42 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/*    *  FT_INSIGHT - insight style    */
+name|tape_start
+argument_list|(
+name|ftu
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tape_status
+argument_list|(
+name|ftu
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+name|ft
+operator|->
+name|type
+operator|=
+name|FT_INSIGHT
+expr_stmt|;
+name|ftreq_hwinfo
+argument_list|(
+name|ftu
+argument_list|,
+operator|&
+name|hw
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|out
 label|:
 name|tape_end
@@ -1495,6 +2213,170 @@ argument_list|(
 name|ftu
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ft
+operator|->
+name|type
+operator|!=
+name|NO_TYPE
+condition|)
+block|{
+name|fdc
+operator|->
+name|flags
+operator||=
+name|FDC_HASFTAPE
+expr_stmt|;
+switch|switch
+condition|(
+name|hw
+operator|.
+name|hw_make
+condition|)
+block|{
+case|case
+literal|0x0000
+case|:
+if|if
+condition|(
+name|ft
+operator|->
+name|type
+operator|==
+name|FT_COLORADO
+condition|)
+name|manu
+operator|=
+literal|"Colorado"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ft
+operator|->
+name|type
+operator|==
+name|FT_INSIGHT
+condition|)
+name|manu
+operator|=
+literal|"Insight"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ft
+operator|->
+name|type
+operator|==
+name|FT_MOUNTAIN
+operator|&&
+name|hw
+operator|.
+name|hw_model
+operator|==
+literal|0x05
+condition|)
+name|manu
+operator|=
+literal|"Archive"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ft
+operator|->
+name|type
+operator|==
+name|FT_MOUNTAIN
+condition|)
+name|manu
+operator|=
+literal|"Mountain"
+expr_stmt|;
+else|else
+name|manu
+operator|=
+literal|"Unknown"
+expr_stmt|;
+break|break;
+case|case
+literal|0x0001
+case|:
+name|manu
+operator|=
+literal|"Colorado"
+expr_stmt|;
+break|break;
+case|case
+literal|0x0005
+case|:
+if|if
+condition|(
+name|hw
+operator|.
+name|hw_model
+operator|>=
+literal|0x09
+condition|)
+name|manu
+operator|=
+literal|"Conner"
+expr_stmt|;
+else|else
+name|manu
+operator|=
+literal|"Archive"
+expr_stmt|;
+break|break;
+case|case
+literal|0x0006
+case|:
+name|manu
+operator|=
+literal|"Mountain"
+expr_stmt|;
+break|break;
+case|case
+literal|0x0007
+case|:
+name|manu
+operator|=
+literal|"Wangtek"
+expr_stmt|;
+break|break;
+case|case
+literal|0x0222
+case|:
+name|manu
+operator|=
+literal|"IOMega"
+expr_stmt|;
+break|break;
+default|default:
+name|manu
+operator|=
+literal|"Unknown"
+expr_stmt|;
+break|break;
+block|}
+name|printf
+argument_list|(
+literal|" [%d: ft%d: %s tape]"
+argument_list|,
+name|fdup
+operator|->
+name|id_physid
+argument_list|,
+name|fdup
+operator|->
+name|id_unit
+argument_list|,
+name|manu
+argument_list|)
+expr_stmt|;
+block|}
 name|ft
 operator|->
 name|attaching
@@ -1512,10 +2394,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Perform common commands asynchronously.  */
+comment|/*  *  Perform common commands asynchronously.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|async_cmd
 parameter_list|(
@@ -1565,30 +2448,6 @@ decl_stmt|,
 name|newcn
 decl_stmt|;
 specifier|static
-struct|struct
-block|{
-name|int
-name|over_func
-decl_stmt|;
-name|int
-name|over_state
-decl_stmt|;
-name|int
-name|over_retries
-decl_stmt|;
-name|int
-name|over_arg
-index|[
-literal|5
-index|]
-decl_stmt|;
-block|}
-name|astk
-index|[
-literal|15
-index|]
-struct|;
-specifier|static
 name|int
 name|wanttrk
 decl_stmt|,
@@ -1598,8 +2457,6 @@ name|wantdir
 decl_stmt|;
 specifier|static
 name|int
-name|curpos
-decl_stmt|,
 name|curtrk
 decl_stmt|,
 name|curblk
@@ -1640,7 +2497,7 @@ block|{
 case|case
 name|ACMD_SEEK
 case|:
-comment|/* 		 * Arguments: 0 - command to perform 		 */
+comment|/* 	 *  Arguments: 	 *     0 - command to perform 	 */
 switch|switch
 condition|(
 name|async_state
@@ -1651,10 +2508,7 @@ literal|0
 case|:
 name|cmd
 operator|=
-name|async_arg
-index|[
-literal|0
-index|]
+name|async_arg0
 expr_stmt|;
 if|#
 directive|if
@@ -1724,7 +2578,7 @@ name|out_fdc
 argument_list|(
 name|fdcu
 argument_list|,
-literal|0x00
+name|ftu
 argument_list|)
 operator|<
 literal|0
@@ -1924,10 +2778,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|async_arg
-index|[
-literal|1
-index|]
+name|async_arg1
 condition|)
 goto|goto
 name|complete
@@ -1963,7 +2814,7 @@ break|break;
 case|case
 name|ACMD_STATUS
 case|:
-comment|/* 		 * Arguments: 0 - command to issue report from 1 - number of 		 * bits modifies: bitn, retval, st3 		 */
+comment|/* 	 *  Arguments: 	 *     0 - command to issue report from 	 *     1 - number of bits 	 *  modifies: bitn, retval, st3 	 */
 switch|switch
 condition|(
 name|async_state
@@ -1982,17 +2833,11 @@ literal|0
 expr_stmt|;
 name|cmd
 operator|=
-name|async_arg
-index|[
-literal|0
-index|]
+name|async_arg0
 expr_stmt|;
 name|nbits
 operator|=
-name|async_arg
-index|[
-literal|1
-index|]
+name|async_arg1
 expr_stmt|;
 name|DPRT
 argument_list|(
@@ -2016,10 +2861,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -2037,7 +2878,7 @@ name|out_fdc
 argument_list|(
 name|fdcu
 argument_list|,
-literal|0x00
+name|ftu
 argument_list|)
 expr_stmt|;
 name|st3
@@ -2152,17 +2993,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|async_arg
-index|[
-literal|0
-index|]
+name|async_arg0
 operator|==
 name|QC_STATUS
 operator|&&
-name|async_arg
-index|[
-literal|2
-index|]
+name|async_arg2
 operator|==
 literal|0
 operator|&&
@@ -2233,10 +3068,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -2266,10 +3097,6 @@ argument_list|,
 literal|16
 argument_list|,
 literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -2322,17 +3149,11 @@ expr_stmt|;
 block|}
 name|cmd
 operator|=
-name|async_arg
-index|[
-literal|0
-index|]
+name|async_arg0
 expr_stmt|;
 name|nbits
 operator|=
-name|async_arg
-index|[
-literal|1
-index|]
+name|async_arg1
 expr_stmt|;
 name|CALL_ACMD
 argument_list|(
@@ -2345,10 +3166,6 @@ argument_list|,
 literal|8
 argument_list|,
 literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -2371,10 +3188,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -2391,10 +3204,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -2411,10 +3220,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -2422,10 +3227,7 @@ literal|8
 case|:
 name|cmd
 operator|=
-name|async_arg
-index|[
-literal|0
-index|]
+name|async_arg0
 expr_stmt|;
 name|CALL_ACMD
 argument_list|(
@@ -2438,10 +3240,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2449,7 +3247,7 @@ break|break;
 case|case
 name|ACMD_STATE
 case|:
-comment|/* 		 * Arguments: 0 - status bits to check 		 */
+comment|/* 	 *  Arguments: 	 *     0 - status bits to check 	 */
 switch|switch
 condition|(
 name|async_state
@@ -2469,10 +3267,6 @@ argument_list|,
 literal|8
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -2483,10 +3277,7 @@ condition|(
 operator|(
 name|async_ret
 operator|&
-name|async_arg
-index|[
-literal|0
-index|]
+name|async_arg0
 operator|)
 operator|!=
 literal|0
@@ -2540,7 +3331,7 @@ break|break;
 case|case
 name|ACMD_SEEKSTS
 case|:
-comment|/* 		 * Arguments: 0 - command to perform 1 - status bits to check 		 * 2 - (optional) seconds to wait until completion 		 */
+comment|/* 	 *  Arguments: 	 *     0 - command to perform 	 *     1 - status bits to check 	 *     2 - (optional) seconds to wait until completion 	 */
 switch|switch
 condition|(
 name|async_state
@@ -2551,25 +3342,16 @@ literal|0
 case|:
 name|cmd
 operator|=
-name|async_arg
-index|[
-literal|0
-index|]
+name|async_arg0
 expr_stmt|;
 name|async_retries
 operator|=
 operator|(
-name|async_arg
-index|[
-literal|2
-index|]
+name|async_arg2
 operator|)
 condition|?
 operator|(
-name|async_arg
-index|[
-literal|2
-index|]
+name|async_arg2
 operator|*
 literal|4
 operator|)
@@ -2583,10 +3365,6 @@ argument_list|,
 name|ACMD_SEEK
 argument_list|,
 name|cmd
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -2607,10 +3385,6 @@ argument_list|,
 literal|8
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -2621,10 +3395,7 @@ condition|(
 operator|(
 name|async_ret
 operator|&
-name|async_arg
-index|[
-literal|1
-index|]
+name|async_arg1
 operator|)
 operator|!=
 literal|0
@@ -2677,7 +3448,7 @@ break|break;
 case|case
 name|ACMD_READID
 case|:
-comment|/* 		 * Arguments: (none) 		 */
+comment|/* 	 *  Arguments: (none) 	 */
 switch|switch
 condition|(
 name|async_state
@@ -2705,10 +3476,6 @@ argument_list|,
 name|QS_READY
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -2729,7 +3496,7 @@ name|out_fdc
 argument_list|(
 name|fdcu
 argument_list|,
-literal|0
+name|ftu
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2861,16 +3628,21 @@ index|]
 operator|&
 literal|0xc0
 operator|)
-operator|==
-literal|0x40
+operator|!=
+literal|0
+operator|||
+name|async_ret
+operator|<
+literal|0
 condition|)
 block|{
+comment|/* 			 *  Method for retry: 			 *    errcnt == 1 regular retry 			 *		2 microstep head 1 			 * 		3 microstep head 2 			 *		4 microstep head back to 0 			 *		5 fail 			 */
 if|if
 condition|(
 operator|++
 name|errcnt
 operator|>=
-literal|10
+literal|5
 condition|)
 block|{
 name|DPRT
@@ -2884,9 +3656,8 @@ argument_list|)
 expr_stmt|;
 name|async_ret
 operator|=
-name|ft
-operator|->
-name|lastpos
+operator|-
+literal|2
 expr_stmt|;
 name|errcnt
 operator|=
@@ -2899,8 +3670,8 @@ block|}
 if|if
 condition|(
 name|errcnt
-operator|>
-literal|2
+operator|==
+literal|1
 condition|)
 block|{
 name|ft
@@ -2920,8 +3691,26 @@ argument_list|,
 name|QS_READY
 argument_list|,
 literal|0
-argument_list|,
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ft
+operator|->
+name|moving
+operator|=
 literal|0
+expr_stmt|;
+name|CALL_ACMD
+argument_list|(
+literal|4
+argument_list|,
+name|ACMD_SEEKSTS
+argument_list|,
+name|QC_STPAUSE
+argument_list|,
+name|QS_READY
 argument_list|,
 literal|0
 argument_list|)
@@ -2930,7 +3719,9 @@ block|}
 name|DPRT
 argument_list|(
 operator|(
-literal|"readid retry...\n"
+literal|"readid retry %d...\n"
+operator|,
+name|errcnt
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2985,10 +3776,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -3017,10 +3804,6 @@ argument_list|,
 name|ACMD_STATE
 argument_list|,
 name|QS_READY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3055,10 +3838,6 @@ argument_list|,
 name|ACMD_SEEK
 argument_list|,
 name|QC_FORWARD
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3099,7 +3878,7 @@ break|break;
 case|case
 name|ACMD_RUNBLK
 case|:
-comment|/* 		 * Arguments: 0 - block number I/O will be performed on 		 *  		 * modifies: curpos 		 */
+comment|/* 	 *  Arguments: 	 *     0 - block number I/O will be performed on 	 * 	 *  modifies: curpos 	 */
 switch|switch
 condition|(
 name|async_state
@@ -3110,10 +3889,7 @@ literal|0
 case|:
 name|wanttrk
 operator|=
-name|async_arg
-index|[
-literal|0
-index|]
+name|async_arg0
 operator|/
 name|ftg
 operator|->
@@ -3121,10 +3897,7 @@ name|g_blktrk
 expr_stmt|;
 name|wantblk
 operator|=
-name|async_arg
-index|[
-literal|0
-index|]
+name|async_arg0
 operator|%
 name|ftg
 operator|->
@@ -3151,10 +3924,6 @@ argument_list|,
 name|QC_STOP
 argument_list|,
 name|QS_READY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -3192,10 +3961,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -3218,10 +3983,6 @@ argument_list|,
 name|QS_READY
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -3236,10 +3997,6 @@ argument_list|,
 name|QC_STATUS
 argument_list|,
 literal|8
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -3285,10 +4042,6 @@ argument_list|,
 name|QS_READY
 argument_list|,
 literal|90
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3371,15 +4124,67 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
 literal|5
 case|:
+if|if
+condition|(
+name|async_ret
+operator|<
+literal|0
+condition|)
+block|{
+name|ft
+operator|->
+name|moving
+operator|=
+literal|0
+expr_stmt|;
+name|ft
+operator|->
+name|lastpos
+operator|=
+operator|-
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|async_ret
+operator|==
+operator|-
+literal|2
+condition|)
+block|{
+name|CALL_ACMD
+argument_list|(
+literal|9
+argument_list|,
+name|ACMD_SEEKSTS
+argument_list|,
+name|QC_STOP
+argument_list|,
+name|QS_READY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|CALL_ACMD
+argument_list|(
+literal|1
+argument_list|,
+name|ACMD_SEEKSTS
+argument_list|,
+name|QC_STOP
+argument_list|,
+name|QS_READY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|curtrk
 operator|=
 operator|(
@@ -3443,10 +4248,6 @@ argument_list|,
 name|QC_STOP
 argument_list|,
 name|QS_READY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -3514,10 +4315,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3546,10 +4343,6 @@ argument_list|,
 name|QS_READY
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3561,7 +4354,7 @@ operator|-
 name|curblk
 operator|)
 operator|<=
-literal|96
+literal|256
 condition|)
 block|{
 comment|/* approaching it */
@@ -3570,10 +4363,6 @@ argument_list|(
 literal|5
 argument_list|,
 name|ACMD_READID
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3601,10 +4390,6 @@ argument_list|,
 name|QS_READY
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3624,10 +4409,6 @@ argument_list|,
 name|ACMD_SEEK
 argument_list|,
 name|QC_FORWARD
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3721,10 +4502,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -3750,10 +4527,6 @@ literal|0xf
 operator|)
 operator|+
 literal|2
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3791,10 +4564,6 @@ argument_list|,
 name|QS_READY
 argument_list|,
 literal|90
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -3805,10 +4574,6 @@ argument_list|(
 literal|5
 argument_list|,
 name|ACMD_READID
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3868,10 +4633,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 case|case
@@ -3897,10 +4658,6 @@ literal|0xf
 operator|)
 operator|+
 literal|2
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3938,10 +4695,6 @@ argument_list|,
 name|QS_READY
 argument_list|,
 literal|90
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3952,66 +4705,53 @@ name|complete
 label|:
 if|if
 condition|(
-name|astk_depth
+name|astk_ptr
+operator|!=
+operator|&
+name|astk
+index|[
+literal|0
+index|]
 condition|)
 block|{
-name|astk_depth
+name|astk_ptr
 operator|--
 expr_stmt|;
 name|async_retries
 operator|=
-name|astk
-index|[
-name|astk_depth
-index|]
-operator|.
+name|astk_ptr
+operator|->
 name|over_retries
 expr_stmt|;
 name|async_func
 operator|=
-name|astk
-index|[
-name|astk_depth
-index|]
-operator|.
+name|astk_ptr
+operator|->
 name|over_func
 expr_stmt|;
 name|async_state
 operator|=
-name|astk
-index|[
-name|astk_depth
-index|]
-operator|.
+name|astk_ptr
+operator|->
 name|over_state
 expr_stmt|;
-for|for
-control|(
-name|i
+name|async_arg0
 operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|5
-condition|;
-name|i
-operator|++
-control|)
-name|async_arg
-index|[
-name|i
-index|]
+name|astk_ptr
+operator|->
+name|over_arg0
+expr_stmt|;
+name|async_arg1
 operator|=
-name|astk
-index|[
-name|astk_depth
-index|]
-operator|.
-name|over_arg
-index|[
-name|i
-index|]
+name|astk_ptr
+operator|->
+name|over_arg1
+expr_stmt|;
+name|async_arg2
+operator|=
+name|astk_ptr
+operator|->
+name|over_arg2
 expr_stmt|;
 goto|goto
 name|restate
@@ -4045,6 +4785,9 @@ expr_stmt|;
 break|break;
 case|case
 name|FTIO_READING
+case|:
+case|case
+name|FTIO_RDAHEAD
 case|:
 name|async_read
 argument_list|(
@@ -4081,10 +4824,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Entry point for the async request processor.  */
+comment|/*  *  Entry point for the async request processor.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|async_req
 parameter_list|(
@@ -4113,8 +4857,6 @@ name|int
 name|over_async
 decl_stmt|,
 name|lastreq
-decl_stmt|,
-name|domore
 decl_stmt|;
 name|int
 name|cmd
@@ -4140,13 +4882,25 @@ case|case
 literal|0
 case|:
 comment|/* Process segment */
+name|sp
+operator|=
+name|ft
+operator|->
+name|segh
+expr_stmt|;
 name|ft
 operator|->
 name|io_sts
 operator|=
-name|ft
-operator|->
-name|curseg
+operator|(
+name|sp
+operator|==
+name|NULL
+operator|)
+condition|?
+name|FTIO_READY
+else|:
+name|sp
 operator|->
 name|reqtype
 expr_stmt|;
@@ -4182,53 +4936,62 @@ operator|!=
 name|FTIO_READY
 condition|)
 return|return;
-comment|/* Swap buffered and current segment */
+comment|/* Pull buffer from current I/O queue */
+if|if
+condition|(
+name|sp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|lastreq
 operator|=
-name|ft
-operator|->
-name|curseg
+name|sp
 operator|->
 name|reqtype
 expr_stmt|;
+name|segio_done
+argument_list|(
+name|ft
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+comment|/* If I/O cancelled, clear finished queue. */
+if|if
+condition|(
+name|sp
+operator|->
+name|reqcan
+condition|)
+block|{
+while|while
+condition|(
 name|ft
 operator|->
-name|curseg
+name|doneh
+operator|!=
+name|NULL
+condition|)
+name|segio_free
+argument_list|(
+name|ft
+argument_list|,
+name|ft
 operator|->
-name|reqtype
+name|doneh
+argument_list|)
+expr_stmt|;
+name|lastreq
 operator|=
 name|FTIO_READY
 expr_stmt|;
-name|sp
+block|}
+block|}
+else|else
+name|lastreq
 operator|=
-name|ft
-operator|->
-name|curseg
-expr_stmt|;
-name|ft
-operator|->
-name|curseg
-operator|=
-name|ft
-operator|->
-name|bufseg
-expr_stmt|;
-name|ft
-operator|->
-name|bufseg
-operator|=
-name|sp
-expr_stmt|;
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|buff_avail
-argument_list|)
+name|FTIO_READY
 expr_stmt|;
 comment|/* Detect end of track */
 if|if
@@ -4250,18 +5013,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|domore
-operator|=
-operator|(
-name|ft
-operator|->
-name|curseg
-operator|->
-name|reqtype
-operator|!=
-name|FTIO_READY
-operator|)
-expr_stmt|;
 name|ACMD_FUNC
 argument_list|(
 literal|2
@@ -4271,10 +5022,6 @@ argument_list|,
 name|QS_BOT
 operator||
 name|QS_EOT
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -4293,20 +5040,23 @@ case|case
 literal|1
 case|:
 comment|/* Next request */
+comment|/* If we have another request queued, start it running. */
 if|if
 condition|(
 name|ft
 operator|->
-name|curseg
-operator|->
-name|reqtype
+name|segh
 operator|!=
-name|FTIO_READY
+name|NULL
 condition|)
 block|{
+name|sp
+operator|=
 name|ft
 operator|->
-name|curseg
+name|segh
+expr_stmt|;
+name|sp
 operator|->
 name|reqcrc
 operator|=
@@ -4324,11 +5074,17 @@ name|ft
 operator|->
 name|xblk
 operator|=
-name|ft
-operator|->
-name|curseg
+name|sp
 operator|->
 name|reqblk
+expr_stmt|;
+name|ft
+operator|->
+name|xseg
+operator|=
+name|sp
+operator|->
+name|reqseg
 expr_stmt|;
 name|ft
 operator|->
@@ -4340,9 +5096,7 @@ name|ft
 operator|->
 name|xptr
 operator|=
-name|ft
-operator|->
-name|curseg
+name|sp
 operator|->
 name|buff
 expr_stmt|;
@@ -4353,9 +5107,7 @@ literal|"I/O reqblk = %d\n"
 operator|,
 name|ft
 operator|->
-name|curseg
-operator|->
-name|reqblk
+name|xblk
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4363,24 +5115,38 @@ goto|goto
 name|restate
 goto|;
 block|}
+comment|/* If the last request was reading, do read ahead. */
 if|if
 condition|(
+operator|(
 name|lastreq
 operator|==
 name|FTIO_READING
+operator|||
+name|lastreq
+operator|==
+name|FTIO_RDAHEAD
+operator|)
+operator|&&
+operator|(
+name|sp
+operator|=
+name|segio_alloc
+argument_list|(
+name|ft
+argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
-name|ft
-operator|->
-name|curseg
+name|sp
 operator|->
 name|reqtype
 operator|=
 name|FTIO_RDAHEAD
 expr_stmt|;
-name|ft
-operator|->
-name|curseg
+name|sp
 operator|->
 name|reqblk
 operator|=
@@ -4388,27 +5154,38 @@ name|ft
 operator|->
 name|xblk
 expr_stmt|;
+name|sp
+operator|->
+name|reqseg
+operator|=
 name|ft
 operator|->
-name|curseg
+name|xseg
+operator|+
+literal|1
+expr_stmt|;
+name|sp
 operator|->
 name|reqcrc
 operator|=
 literal|0
 expr_stmt|;
-name|ft
-operator|->
-name|curseg
+name|sp
 operator|->
 name|reqcan
 operator|=
 literal|0
 expr_stmt|;
-name|bzero
+name|segio_queue
 argument_list|(
 name|ft
-operator|->
-name|curseg
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|sp
 operator|->
 name|buff
 argument_list|,
@@ -4427,11 +5204,17 @@ name|ft
 operator|->
 name|xblk
 operator|=
-name|ft
-operator|->
-name|curseg
+name|sp
 operator|->
 name|reqblk
+expr_stmt|;
+name|ft
+operator|->
+name|xseg
+operator|=
+name|sp
+operator|->
+name|reqseg
 expr_stmt|;
 name|ft
 operator|->
@@ -4443,9 +5226,7 @@ name|ft
 operator|->
 name|xptr
 operator|=
-name|ft
-operator|->
-name|curseg
+name|sp
 operator|->
 name|buff
 expr_stmt|;
@@ -4456,9 +5237,7 @@ literal|"Processing readahead reqblk = %d\n"
 operator|,
 name|ft
 operator|->
-name|curseg
-operator|->
-name|reqblk
+name|xblk
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4480,19 +5259,21 @@ literal|"No more I/O.. Stopping.\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|ft
+operator|->
+name|moving
+operator|=
+literal|0
+expr_stmt|;
 name|ACMD_FUNC
 argument_list|(
 literal|7
 argument_list|,
 name|ACMD_SEEKSTS
 argument_list|,
-name|QC_STOP
+name|QC_PAUSE
 argument_list|,
 name|QS_READY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -4523,10 +5304,6 @@ argument_list|,
 name|ACMD_STATE
 argument_list|,
 name|QS_READY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -4563,10 +5340,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4589,7 +5362,11 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
-name|domore
+name|ft
+operator|->
+name|segh
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ACMD_FUNC
@@ -4601,10 +5378,6 @@ argument_list|,
 name|cmd
 argument_list|,
 name|QS_READY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -4621,10 +5394,6 @@ argument_list|,
 name|cmd
 argument_list|,
 name|QS_READY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -4647,10 +5416,6 @@ argument_list|,
 name|ACMD_SEEK
 argument_list|,
 name|QC_FORWARD
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -4684,39 +5449,6 @@ break|break;
 case|case
 literal|7
 case|:
-name|ft
-operator|->
-name|moving
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Check one last time to see if a request came in. */
-if|if
-condition|(
-name|ft
-operator|->
-name|curseg
-operator|->
-name|reqtype
-operator|!=
-name|FTIO_READY
-condition|)
-block|{
-name|DPRT
-argument_list|(
-operator|(
-literal|"async_req: Never say no!\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|arq_state
-operator|=
-literal|1
-expr_stmt|;
-goto|goto
-name|restate
-goto|;
-block|}
 comment|/* Time to rest. */
 name|ft
 operator|->
@@ -4724,28 +5456,33 @@ name|active
 operator|=
 literal|0
 expr_stmt|;
+name|ft
+operator|->
+name|lastpos
+operator|=
+operator|-
+literal|2
+expr_stmt|;
+comment|/* wakeup those who want an i/o chg */
 name|wakeup
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|ftsem
-operator|.
-name|iosts_change
+name|wc_iosts_change
 argument_list|)
 expr_stmt|;
-comment|/* wakeup those who want 							 * an i/o chg */
 break|break;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * Entry for async read.  */
+comment|/*  *  Entry for async read.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|async_read
 parameter_list|(
@@ -4775,16 +5512,8 @@ operator|->
 name|fdcu
 decl_stmt|;
 comment|/* fdc active unit */
-name|unsigned
-name|long
-name|paddr
-decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|cmd
-decl_stmt|,
-name|newcn
 decl_stmt|,
 name|rddta
 index|[
@@ -4792,15 +5521,17 @@ literal|7
 index|]
 decl_stmt|;
 name|int
-name|st0
-decl_stmt|,
-name|pcn
-decl_stmt|,
 name|where
 decl_stmt|;
 specifier|static
 name|int
 name|over_async
+decl_stmt|;
+specifier|static
+name|int
+name|retries
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -4885,10 +5616,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4915,10 +5642,6 @@ argument_list|,
 name|ACMD_STATE
 argument_list|,
 name|QS_READY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -4963,7 +5686,7 @@ name|out_fdc
 argument_list|(
 name|fdcu
 argument_list|,
-literal|0x00
+name|ftu
 argument_list|)
 expr_stmt|;
 comment|/* unit */
@@ -5202,17 +5925,114 @@ operator|!=
 literal|0x00
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|FTDBGALL
+name|where
+operator|=
+operator|(
+name|rddta
+index|[
+literal|3
+index|]
+operator|*
+name|ftg
+operator|->
+name|g_fdtrk
+operator|)
+operator|+
+operator|(
+name|rddta
+index|[
+literal|4
+index|]
+operator|*
+name|ftg
+operator|->
+name|g_fdside
+operator|)
+operator|+
+name|rddta
+index|[
+literal|5
+index|]
+operator|-
+literal|1
+expr_stmt|;
+name|DPRT
+argument_list|(
+operator|(
+literal|"xd: st0:%02x st1:%02x st2:%02x c:%d h:%d s:%d pos:%d want:%d\n"
+operator|,
+name|rddta
+index|[
+literal|0
+index|]
+operator|,
+name|rddta
+index|[
+literal|1
+index|]
+operator|,
+name|rddta
+index|[
+literal|2
+index|]
+operator|,
+name|rddta
+index|[
+literal|3
+index|]
+operator|,
+name|rddta
+index|[
+literal|4
+index|]
+operator|,
+name|rddta
+index|[
+literal|5
+index|]
+operator|,
+name|where
+operator|,
+name|ft
+operator|->
+name|xblk
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
+operator|(
 name|rddta
 index|[
 literal|1
 index|]
 operator|&
 literal|0x04
+operator|)
+operator|==
+literal|0x04
+operator|&&
+name|retries
+operator|<
+literal|2
 condition|)
 block|{
 comment|/* Probably wrong position */
+name|DPRT
+argument_list|(
+operator|(
+literal|"async_read: doing retry %d\n"
+operator|,
+name|retries
+operator|)
+argument_list|)
+expr_stmt|;
 name|ft
 operator|->
 name|lastpos
@@ -5224,6 +6044,9 @@ expr_stmt|;
 name|ard_state
 operator|=
 literal|0
+expr_stmt|;
+name|retries
+operator|++
 expr_stmt|;
 goto|goto
 name|restate
@@ -5247,7 +6070,7 @@ argument_list|)
 expr_stmt|;
 name|ft
 operator|->
-name|curseg
+name|segh
 operator|->
 name|reqcrc
 operator||=
@@ -5262,6 +6085,10 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Otherwise, transfer completed okay. */
+name|retries
+operator|=
+literal|0
+expr_stmt|;
 name|ft
 operator|->
 name|lastpos
@@ -5296,7 +6123,7 @@ name|QCV_BLKSEG
 operator|&&
 name|ft
 operator|->
-name|curseg
+name|segh
 operator|->
 name|reqcan
 operator|==
@@ -5318,7 +6145,7 @@ literal|"Read done..  Cancel = %d\n"
 operator|,
 name|ft
 operator|->
-name|curseg
+name|segh
 operator|->
 name|reqcan
 operator|)
@@ -5347,10 +6174,6 @@ argument_list|,
 name|ACMD_SEEK
 argument_list|,
 name|QC_FORWARD
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -5399,10 +6222,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Entry for async write.  If from is 0, this came from the interrupt  * routine, if it's 1 then it was a timeout, if it's 2, then an async_cmd  * completed.  */
+comment|/*  *  Entry for async write.  If from is 0, this came from the interrupt  *  routine, if it's 1 then it was a timeout, if it's 2, then an  *  async_cmd completed.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|async_write
 parameter_list|(
@@ -5432,16 +6256,8 @@ operator|->
 name|fdcu
 decl_stmt|;
 comment|/* fdc active unit */
-name|unsigned
-name|long
-name|paddr
-decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|cmd
-decl_stmt|,
-name|newcn
 decl_stmt|,
 name|rddta
 index|[
@@ -5449,10 +6265,6 @@ literal|7
 index|]
 decl_stmt|;
 name|int
-name|st0
-decl_stmt|,
-name|pcn
-decl_stmt|,
 name|where
 decl_stmt|;
 specifier|static
@@ -5548,10 +6360,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5578,10 +6386,6 @@ argument_list|,
 name|ACMD_STATE
 argument_list|,
 name|QS_READY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -5626,7 +6430,7 @@ name|out_fdc
 argument_list|(
 name|fdcu
 argument_list|,
-literal|0x00
+name|ftu
 argument_list|)
 expr_stmt|;
 comment|/* unit */
@@ -5649,7 +6453,7 @@ operator|->
 name|g_fdtrk
 argument_list|)
 expr_stmt|;
-comment|/* cylinder */
+comment|/* cyl */
 name|out_fdc
 argument_list|(
 name|fdcu
@@ -5865,42 +6669,103 @@ operator|!=
 literal|0x00
 condition|)
 block|{
-if|if
-condition|(
+if|#
+directive|if
+operator|!
+name|FTDBGALL
+name|where
+operator|=
+operator|(
+name|rddta
+index|[
+literal|3
+index|]
+operator|*
+name|ftg
+operator|->
+name|g_fdtrk
+operator|)
+operator|+
+operator|(
+name|rddta
+index|[
+literal|4
+index|]
+operator|*
+name|ftg
+operator|->
+name|g_fdside
+operator|)
+operator|+
+name|rddta
+index|[
+literal|5
+index|]
+operator|-
+literal|1
+expr_stmt|;
+name|DPRT
+argument_list|(
+operator|(
+literal|"xfer done: st0:%02x st1:%02x st2:%02x c:%d h:%d s:%d pos:%d want:%d\n"
+operator|,
+name|rddta
+index|[
+literal|0
+index|]
+operator|,
 name|rddta
 index|[
 literal|1
 index|]
-operator|&
-literal|0x04
-condition|)
-block|{
-comment|/* Probably wrong position */
-name|ft
-operator|->
-name|lastpos
-operator|=
+operator|,
+name|rddta
+index|[
+literal|2
+index|]
+operator|,
+name|rddta
+index|[
+literal|3
+index|]
+operator|,
+name|rddta
+index|[
+literal|4
+index|]
+operator|,
+name|rddta
+index|[
+literal|5
+index|]
+operator|,
+name|where
+operator|,
 name|ft
 operator|->
 name|xblk
+operator|)
+argument_list|)
 expr_stmt|;
-name|awr_state
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|restate
-goto|;
-block|}
-elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|retries
 operator|<
-literal|5
+literal|3
 condition|)
 block|{
 comment|/* Something happened -- try again */
+name|DPRT
+argument_list|(
+operator|(
+literal|"async_write: doing retry %d\n"
+operator|,
+name|retries
+operator|)
+argument_list|)
+expr_stmt|;
 name|ft
 operator|->
 name|lastpos
@@ -5922,7 +6787,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 				 * Retries failed.  Note the unrecoverable 				 * error. Marking the block as bad is fairly 				 * useless. 				 */
+comment|/* 			 *  Retries failed.  Note the unrecoverable error. 			 *  Marking the block as bad is useless right now. 			 */
 name|printf
 argument_list|(
 literal|"ft%d: unrecoverable write error on block %d\n"
@@ -5936,7 +6801,7 @@ argument_list|)
 expr_stmt|;
 name|ft
 operator|->
-name|curseg
+name|segh
 operator|->
 name|reqcrc
 operator||=
@@ -6036,10 +6901,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6084,7 +6945,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Interrupt handler for active tape.  Bounced off of fdintr().  */
+comment|/*  *  Interrupt handler for active tape.  Bounced off of fdintr().  */
 end_comment
 
 begin_function
@@ -6121,6 +6982,12 @@ operator|->
 name|fdcu
 decl_stmt|;
 comment|/* fdc active unit */
+name|int
+name|s
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
 name|st0
 operator|=
 literal|0
@@ -6149,6 +7016,11 @@ argument_list|(
 name|ftu
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -6172,6 +7044,11 @@ argument_list|(
 name|ftu
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -6240,6 +7117,11 @@ argument_list|,
 name|pcn
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -6267,10 +7149,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|ftsem
-operator|.
-name|intr_wait
+name|wc_intr_wait
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6305,10 +7184,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|ftsem
-operator|.
-name|intr_wait
+name|wc_intr_wait
 argument_list|)
 expr_stmt|;
 block|}
@@ -6371,10 +7247,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|ftsem
-operator|.
-name|intr_wait
+name|wc_intr_wait
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6383,6 +7256,11 @@ goto|goto
 name|huh_what
 goto|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -6392,7 +7270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Interrupt timeout routine.  */
+comment|/*  *  Interrupt timeout routine.  */
 end_comment
 
 begin_function
@@ -6477,10 +7355,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|ftsem
-operator|.
-name|intr_wait
+name|wc_intr_wait
 argument_list|)
 expr_stmt|;
 block|}
@@ -6493,10 +7368,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait for a particular interrupt to occur.  ftintr() will wake us up if it  * sees what we want.  Otherwise, time out and return error. Should always  * disable ints before trigger is sent and calling here.  */
+comment|/*  *  Wait for a particular interrupt to occur.  ftintr() will wake us up  *  if it sees what we want.  Otherwise, time out and return error.  *  Should always disable ints before trigger is sent and calling here.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftintr_wait
 parameter_list|(
@@ -6660,37 +7536,11 @@ goto|goto
 name|intrdone
 goto|;
 block|}
-if|if
-condition|(
-name|ticks
-condition|)
-name|timeout
+name|ftsleep
 argument_list|(
-name|ft_timeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|ftu
+name|wc_intr_wait
 argument_list|,
 name|ticks
-argument_list|)
-expr_stmt|;
-name|tsleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|intr_wait
-argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftwait"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|intrdone
@@ -6705,6 +7555,9 @@ name|FTSTS_TIMEOUT
 condition|)
 block|{
 comment|/* timeout */
+if|#
+directive|if
+name|FTDBGALL
 if|if
 condition|(
 name|ft
@@ -6726,6 +7579,8 @@ name|cmd_wait
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ft
 operator|->
 name|cmd_wait
@@ -6786,10 +7641,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Recalibrate tape drive.  Parameter totape is true, if we should  * recalibrate to tape drive settings.  */
+comment|/*  *  Recalibrate tape drive.  Parameter totape is true, if we should  *  recalibrate to tape drive settings.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tape_recal
 parameter_list|(
@@ -6872,7 +7728,7 @@ name|out_fdc
 argument_list|(
 name|fdcu
 argument_list|,
-literal|0x00
+name|ftu
 argument_list|)
 expr_stmt|;
 if|if
@@ -6954,43 +7810,12 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|state_timeout
-parameter_list|(
-name|void
-modifier|*
-name|arg1
-parameter_list|)
-block|{
-name|ftu_t
-name|ftu
-init|=
-operator|(
-name|ftu_t
-operator|)
-name|arg1
-decl_stmt|;
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|long_delay
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
-comment|/*  * Wait for a particular tape status to be met.  If all is TRUE, then all  * states must be met, otherwise any state can be met.  */
+comment|/*  *  Wait for a particular tape status to be met.  If all is TRUE, then  *  all states must be met, otherwise any state can be met.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tape_state
 parameter_list|(
@@ -7093,39 +7918,15 @@ if|if
 condition|(
 name|seconds
 condition|)
-block|{
-name|timeout
+name|ftsleep
 argument_list|(
-name|state_timeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|ftu
+name|wc_long_delay
 argument_list|,
 name|hz
 operator|/
 literal|4
 argument_list|)
 expr_stmt|;
-name|tsleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|long_delay
-argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftstate"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|DPRT
 argument_list|(
@@ -7150,10 +7951,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a QIC command to tape drive, wait for completion.  */
+comment|/*  *  Send a QIC command to tape drive, wait for completion.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tape_cmd
 parameter_list|(
@@ -7244,7 +8046,7 @@ name|out_fdc
 argument_list|(
 name|fdcu
 argument_list|,
-literal|0x00
+name|ftu
 argument_list|)
 expr_stmt|;
 name|out_fdc
@@ -7354,10 +8156,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return status of tape drive  */
+comment|/*  *  Return status of tape drive  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tape_status
 parameter_list|(
@@ -7381,6 +8184,19 @@ index|[
 name|ftu
 index|]
 decl_stmt|;
+name|int
+name|max
+init|=
+operator|(
+name|ft
+operator|->
+name|attaching
+operator|)
+condition|?
+literal|2
+else|:
+literal|3
+decl_stmt|;
 for|for
 control|(
 name|r
@@ -7398,7 +8214,7 @@ literal|0
 operator|&&
 name|tries
 operator|<
-literal|3
+name|max
 condition|;
 name|tries
 operator|++
@@ -7418,7 +8234,7 @@ if|if
 condition|(
 name|tries
 operator|==
-literal|3
+name|max
 condition|)
 return|return
 operator|(
@@ -7426,6 +8242,8 @@ operator|-
 literal|1
 operator|)
 return|;
+name|recheck
+label|:
 name|DPRT
 argument_list|(
 operator|(
@@ -7452,18 +8270,6 @@ name|QS_NEWCART
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|r
-operator|&
-name|QS_NEWCART
-condition|)
-name|ft
-operator|->
-name|newcart
-operator|=
-literal|1
-expr_stmt|;
 name|err
 operator|=
 name|qic_status
@@ -7483,21 +8289,95 @@ name|err
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|r
 operator|&
 name|QS_NEWCART
+condition|)
+block|{
+name|ft
+operator|->
+name|newcart
+operator|=
+literal|1
+expr_stmt|;
+comment|/* If tape not referenced, do a seek load point. */
+if|if
+condition|(
+operator|(
+name|r
+operator|&
+name|QS_FMTOK
 operator|)
 operator|==
 literal|0
 operator|&&
-name|err
-operator|&&
+operator|!
 name|ft
 operator|->
 name|attaching
-operator|==
+condition|)
+block|{
+name|tape_cmd
+argument_list|(
+name|ftu
+argument_list|,
+name|QC_SEEKLP
+argument_list|)
+expr_stmt|;
+do|do
+block|{
+name|ftsleep
+argument_list|(
+name|wc_long_delay
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|r
+operator|=
+name|qic_status
+argument_list|(
+name|ftu
+argument_list|,
+name|QC_STATUS
+argument_list|,
+literal|8
+argument_list|)
+operator|)
+operator|<
 literal|0
+operator|||
+operator|(
+name|r
+operator|&
+operator|(
+name|QS_READY
+operator||
+name|QS_CART
+operator|)
+operator|)
+operator|==
+name|QS_CART
+condition|)
+do|;
+goto|goto
+name|recheck
+goto|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|err
+operator|&&
+operator|!
+name|ft
+operator|->
+name|attaching
 condition|)
 block|{
 name|DPRT
@@ -7566,15 +8446,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Transfer control to tape drive.  */
+comment|/*  *  Transfer control to tape drive.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|tape_start
 parameter_list|(
 name|ftu_t
 name|ftu
+parameter_list|,
+name|int
+name|motor
 parameter_list|)
 block|{
 name|ft_p
@@ -7595,18 +8479,20 @@ name|fdc
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|mbits
 decl_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 name|DPRT
 argument_list|(
 operator|(
 literal|"tape_start start\n"
 operator|)
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 comment|/* reset, dma disable */
 name|outb
@@ -7615,7 +8501,7 @@ name|fdc
 operator|->
 name|baseport
 operator|+
-name|fdout
+name|FDOUT
 argument_list|,
 literal|0x00
 argument_list|)
@@ -7634,18 +8520,40 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* raise reset, enable DMA */
+comment|/* raise reset, enable DMA, motor on if needed */
+if|if
+condition|(
+name|motor
+condition|)
+name|mbits
+operator|=
+operator|(
+operator|!
+name|ftu
+operator|)
+condition|?
+name|FDO_MOEN0
+else|:
+name|FDO_MOEN1
+expr_stmt|;
+else|else
+name|mbits
+operator|=
+literal|0
+expr_stmt|;
 name|outb
 argument_list|(
 name|fdc
 operator|->
 name|baseport
 operator|+
-name|fdout
+name|FDOUT
 argument_list|,
 name|FDO_FRST
 operator||
 name|FDO_FDMAEN
+operator||
+name|mbits
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7681,7 +8589,7 @@ name|fdc
 operator|->
 name|baseport
 operator|+
-name|fdctl
+name|FDCTL
 argument_list|,
 name|FDC_500KBPS
 argument_list|)
@@ -7702,10 +8610,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Transfer control back to floppy disks.  */
+comment|/*  *  Transfer control back to floppy disks.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|tape_end
 parameter_list|(
@@ -7758,7 +8667,7 @@ name|fdc
 operator|->
 name|baseport
 operator|+
-name|fdout
+name|FDOUT
 argument_list|,
 literal|0x00
 argument_list|)
@@ -7784,7 +8693,7 @@ name|fdc
 operator|->
 name|baseport
 operator|+
-name|fdout
+name|FDOUT
 argument_list|,
 name|FDO_FRST
 operator||
@@ -7817,7 +8726,7 @@ name|fdc
 operator|->
 name|baseport
 operator|+
-name|fdctl
+name|FDCTL
 argument_list|,
 name|FDC_500KBPS
 argument_list|)
@@ -7845,10 +8754,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait for the driver to go inactive, cancel readahead if necessary.  */
+comment|/*  *  Wait for the driver to go inactive, cancel readahead if necessary.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|tape_inactive
 parameter_list|(
@@ -7865,49 +8775,130 @@ index|[
 name|ftu
 index|]
 decl_stmt|;
+name|int
+name|s
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|ft
 operator|->
-name|curseg
+name|segh
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|ft
+operator|->
+name|segh
 operator|->
 name|reqtype
 operator|==
 name|FTIO_RDAHEAD
 condition|)
 block|{
+comment|/* cancel read-ahead */
 name|ft
 operator|->
-name|curseg
+name|segh
 operator|->
 name|reqcan
 operator|=
 literal|1
 expr_stmt|;
-comment|/* XXX cancel rdahead */
-while|while
+block|}
+elseif|else
+if|if
 condition|(
+name|ft
+operator|->
+name|segh
+operator|->
+name|reqtype
+operator|==
+name|FTIO_WRITING
+operator|&&
+operator|!
 name|ft
 operator|->
 name|active
 condition|)
-name|tsleep
+block|{
+comment|/* flush out any remaining writes */
+name|DPRT
 argument_list|(
+operator|(
+literal|"Flushing write I/O chain\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|arq_state
+operator|=
+name|ard_state
+operator|=
+name|awr_state
+operator|=
+literal|0
+expr_stmt|;
+name|ft
+operator|->
+name|xblk
+operator|=
+name|ft
+operator|->
+name|segh
+operator|->
+name|reqblk
+expr_stmt|;
+name|ft
+operator|->
+name|xseg
+operator|=
+name|ft
+operator|->
+name|segh
+operator|->
+name|reqseg
+expr_stmt|;
+name|ft
+operator|->
+name|xcnt
+operator|=
+literal|0
+expr_stmt|;
+name|ft
+operator|->
+name|xptr
+operator|=
+name|ft
+operator|->
+name|segh
+operator|->
+name|buff
+expr_stmt|;
+name|ft
+operator|->
+name|active
+operator|=
+literal|1
+expr_stmt|;
+name|timeout
+argument_list|(
+name|ft_timeout
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|ftsem
-operator|.
-name|iosts_change
+name|ftu
 argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftinact"
-argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 while|while
 condition|(
@@ -7915,31 +8906,27 @@ name|ft
 operator|->
 name|active
 condition|)
-name|tsleep
+name|ftsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|iosts_change
-argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftinact"
+name|wc_iosts_change
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Get the geometry of the tape currently in the drive.  */
+comment|/*  *  Get the geometry of the tape currently in the drive.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftgetgeom
 parameter_list|(
@@ -7987,6 +8974,10 @@ expr_stmt|;
 comment|/* XXX fix me when format mode is finished */
 if|if
 condition|(
+name|r
+operator|<
+literal|0
+operator|||
 operator|(
 name|r
 operator|&
@@ -8115,15 +9106,15 @@ name|cfg
 operator|&
 name|QCF_EXTRA
 expr_stmt|;
-comment|/* 	 * XXX - This doesn't seem to work on my Colorado Jumbo 250... if it 	 * works on your drive, I'd sure like to hear about it. 	 */
+comment|/*  *  XXX - This doesn't seem to work on my Colorado Jumbo 250...  *  if it works on your drive, I'd sure like to hear about it.  */
 if|#
 directive|if
 literal|0
 comment|/* Report drive status */
-block|for (sts = -1, tries = 0; sts< 0&& tries< 3; tries++) 		sts = qic_status(ftu, QC_TSTATUS, 8); 	if (tries == 3) { 		DPRT(("ftgetgeom report tape status failed\n")); 		ftg = NULL; 		return (-1); 	} 	DPRT(("ftgetgeom report tape status got $%04x\n", sts));
+block|for (sts = -1, tries = 0; sts< 0&& tries< 3; tries++) 	sts = qic_status(ftu, QC_TSTATUS, 8);   if (tries == 3) { 	DPRT(("ftgetgeom report tape status failed\n")); 	ftg = NULL; 	return(-1);   }   DPRT(("ftgetgeom report tape status got $%04x\n", sts));
 else|#
 directive|else
-comment|/* 	 * XXX - Forge a fake tape status based upon the returned 	 * configuration, since the above command or code is broken for my 	 * drive and probably other older drives. 	 */
+comment|/*    *  XXX - Forge a fake tape status based upon the returned    *  configuration, since the above command or code is broken    *  for my drive and probably other older drives.    */
 name|sts
 operator|=
 literal|0
@@ -8348,10 +9339,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Switch between tape/floppy.  This will send the tape enable/disable codes  * for this drive's manufacturer.  */
+comment|/*  *  Switch between tape/floppy.  This will send the tape enable/disable  *  codes for this drive's manufacturer.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|set_fdcmode
 parameter_list|(
@@ -8395,20 +9387,15 @@ name|havebufs
 init|=
 literal|0
 decl_stmt|;
-name|void
-modifier|*
-name|buf
-decl_stmt|;
 name|int
-name|r
-decl_stmt|,
-name|s
-decl_stmt|,
 name|i
 decl_stmt|;
 name|SegReq
 modifier|*
 name|sp
+decl_stmt|,
+modifier|*
+name|rsp
 decl_stmt|;
 if|if
 condition|(
@@ -8441,11 +9428,24 @@ name|ENXIO
 operator|)
 return|;
 case|case
+name|FT_NONE
+case|:
+name|tape_start
+argument_list|(
+name|ftu
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|FT_COLORADO
 case|:
 name|tape_start
 argument_list|(
 name|ftu
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -8476,6 +9476,8 @@ argument_list|(
 name|ftu
 argument_list|,
 name|QC_COL_ENABLE2
+operator|+
+name|ftu
 argument_list|)
 condition|)
 block|{
@@ -8497,6 +9499,8 @@ case|:
 name|tape_start
 argument_list|(
 name|ftu
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -8542,6 +9546,17 @@ operator|)
 return|;
 block|}
 break|break;
+case|case
+name|FT_INSIGHT
+case|:
+name|tape_start
+argument_list|(
+name|ftu
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|DPRT
 argument_list|(
@@ -8568,20 +9583,34 @@ operator|<
 literal|0
 condition|)
 block|{
-name|tape_cmd
-argument_list|(
-name|ftu
-argument_list|,
-operator|(
+if|if
+condition|(
 name|ft
 operator|->
 name|type
 operator|==
 name|FT_COLORADO
-operator|)
-condition|?
+condition|)
+name|tape_cmd
+argument_list|(
+name|ftu
+argument_list|,
 name|QC_COL_DISABLE
-else|:
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ft
+operator|->
+name|type
+operator|==
+name|FT_MOUNTAIN
+condition|)
+name|tape_cmd
+argument_list|(
+name|ftu
+argument_list|,
 name|QC_MTN_DISABLE
 argument_list|)
 expr_stmt|;
@@ -8605,7 +9634,65 @@ condition|)
 block|{
 name|ft
 operator|->
-name|curseg
+name|segh
+operator|=
+name|ft
+operator|->
+name|segt
+operator|=
+name|NULL
+expr_stmt|;
+name|ft
+operator|->
+name|doneh
+operator|=
+name|ft
+operator|->
+name|donet
+operator|=
+name|NULL
+expr_stmt|;
+name|ft
+operator|->
+name|segfree
+operator|=
+name|NULL
+expr_stmt|;
+name|ft
+operator|->
+name|hdr
+operator|=
+name|NULL
+expr_stmt|;
+name|ft
+operator|->
+name|nsegq
+operator|=
+name|ft
+operator|->
+name|ndoneq
+operator|=
+name|ft
+operator|->
+name|nfreelist
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|FTNBUFF
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sp
 operator|=
 name|malloc
 argument_list|(
@@ -8616,14 +9703,12 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ft
-operator|->
-name|curseg
+name|sp
 operator|==
 name|NULL
 condition|)
@@ -8635,50 +9720,64 @@ argument_list|,
 name|ftu
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
-name|ft
-operator|->
-name|bufseg
+for|for
+control|(
+name|sp
 operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|SegReq
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|ft
 operator|->
-name|bufseg
-operator|==
+name|segfree
+init|;
+name|sp
+operator|!=
 name|NULL
-condition|)
-block|{
+condition|;
+name|sp
+operator|=
+name|sp
+operator|->
+name|next
+control|)
 name|free
 argument_list|(
-name|ft
-operator|->
-name|curseg
+name|sp
 argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|ft
+operator|->
+name|type
+operator|==
+name|FT_COLORADO
+condition|)
+name|tape_cmd
 argument_list|(
-literal|"ft%d: not enough memory for buffers\n"
+name|ftu
 argument_list|,
+name|QC_COL_DISABLE
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ft
+operator|->
+name|type
+operator|==
+name|FT_MOUNTAIN
+condition|)
+name|tape_cmd
+argument_list|(
+name|ftu
+argument_list|,
+name|QC_MTN_DISABLE
+argument_list|)
+expr_stmt|;
+name|tape_end
+argument_list|(
 name|ftu
 argument_list|)
 expr_stmt|;
@@ -8688,27 +9787,61 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|sp
+operator|->
+name|reqtype
+operator|=
+name|FTIO_READY
+expr_stmt|;
+name|sp
+operator|->
+name|next
+operator|=
+name|ft
+operator|->
+name|segfree
+expr_stmt|;
+name|ft
+operator|->
+name|segfree
+operator|=
+name|sp
+expr_stmt|;
+name|ft
+operator|->
+name|nfreelist
+operator|++
+expr_stmt|;
+block|}
+comment|/* take one buffer for header */
+name|ft
+operator|->
+name|hdr
+operator|=
+name|ft
+operator|->
+name|segfree
+expr_stmt|;
+name|ft
+operator|->
+name|segfree
+operator|=
+name|ft
+operator|->
+name|segfree
+operator|->
+name|next
+expr_stmt|;
+name|ft
+operator|->
+name|nfreelist
+operator|--
+expr_stmt|;
 name|havebufs
 operator|=
 literal|1
 expr_stmt|;
 block|}
-name|ft
-operator|->
-name|curseg
-operator|->
-name|reqtype
-operator|=
-name|FTIO_READY
-expr_stmt|;
-name|ft
-operator|->
-name|bufseg
-operator|->
-name|reqtype
-operator|=
-name|FTIO_READY
-expr_stmt|;
 name|ft
 operator|->
 name|io_sts
@@ -8743,7 +9876,7 @@ name|newcart
 operator|=
 literal|0
 expr_stmt|;
-comment|/* a new cart was inserted */
+comment|/* new cartridge flag */
 name|ft
 operator|->
 name|lastpos
@@ -8752,6 +9885,11 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* tape is rewound */
+name|async_func
+operator|=
+name|ACMD_NONE
+expr_stmt|;
+comment|/* No async function */
 name|tape_state
 argument_list|(
 name|ftu
@@ -8804,7 +9942,7 @@ argument_list|,
 name|QC_PRIMARY
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we're in primary 						 * mode */
+comment|/* Make sure we're in primary mode */
 name|tape_state
 argument_list|(
 name|ftu
@@ -8836,20 +9974,34 @@ comment|/* Make sure tape is rewound */
 block|}
 else|else
 block|{
-name|tape_cmd
-argument_list|(
-name|ftu
-argument_list|,
-operator|(
+if|if
+condition|(
 name|ft
 operator|->
 name|type
 operator|==
 name|FT_COLORADO
-operator|)
-condition|?
+condition|)
+name|tape_cmd
+argument_list|(
+name|ftu
+argument_list|,
 name|QC_COL_DISABLE
-else|:
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ft
+operator|->
+name|type
+operator|==
+name|FT_MOUNTAIN
+condition|)
+name|tape_cmd
+argument_list|(
+name|ftu
+argument_list|,
 name|QC_MTN_DISABLE
 argument_list|)
 expr_stmt|;
@@ -8865,27 +10017,128 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* clear new cartridge */
+if|if
+condition|(
+name|ft
+operator|->
+name|hdr
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|ft
+operator|->
+name|hdr
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|havebufs
+condition|)
+block|{
+for|for
+control|(
+name|sp
+operator|=
+name|ft
+operator|->
+name|segfree
+init|;
+name|sp
+operator|!=
+name|NULL
+condition|;
+control|)
+block|{
+name|rsp
+operator|=
+name|sp
+expr_stmt|;
+name|sp
+operator|=
+name|sp
+operator|->
+name|next
+expr_stmt|;
+name|free
+argument_list|(
+name|rsp
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|sp
+operator|=
+name|ft
+operator|->
+name|segh
+init|;
+name|sp
+operator|!=
+name|NULL
+condition|;
+control|)
+block|{
+name|rsp
+operator|=
+name|sp
+expr_stmt|;
+name|sp
+operator|=
+name|sp
+operator|->
+name|next
+expr_stmt|;
+name|free
+argument_list|(
+name|rsp
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|sp
+operator|=
+name|ft
+operator|->
+name|doneh
+init|;
+name|sp
+operator|!=
+name|NULL
+condition|;
+control|)
+block|{
+name|rsp
+operator|=
+name|sp
+expr_stmt|;
+name|sp
+operator|=
+name|sp
+operator|->
+name|next
+expr_stmt|;
+name|free
+argument_list|(
+name|rsp
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|havebufs
 operator|=
 literal|0
-expr_stmt|;
-name|free
-argument_list|(
-name|ft
-operator|->
-name|curseg
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ft
-operator|->
-name|bufseg
-argument_list|,
-name|M_DEVBUF
-argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -8897,10 +10150,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform a QIC status function.  */
+comment|/*  *  Perform a QIC status function.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|qic_status
 parameter_list|(
@@ -8916,8 +10170,6 @@ parameter_list|)
 block|{
 name|int
 name|st3
-decl_stmt|,
-name|val
 decl_stmt|,
 name|r
 decl_stmt|,
@@ -8980,7 +10232,7 @@ name|out_fdc
 argument_list|(
 name|fdcu
 argument_list|,
-literal|0x00
+name|ftu
 argument_list|)
 expr_stmt|;
 name|st3
@@ -9073,7 +10325,7 @@ name|out_fdc
 argument_list|(
 name|fdcu
 argument_list|,
-literal|0x00
+name|ftu
 argument_list|)
 expr_stmt|;
 name|st3
@@ -9189,7 +10441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Open tape drive for use.  Bounced off of Fdopen if tape minor is detected.  */
+comment|/*  *  Open tape drive for use.  Bounced off of Fdopen if tape minor is  *  detected.  */
 end_comment
 
 begin_function
@@ -9207,17 +10459,6 @@ name|ftu_t
 name|ftu
 init|=
 name|FDUNIT
-argument_list|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|int
-name|type
-init|=
-name|FDTYPE
 argument_list|(
 name|minor
 argument_list|(
@@ -9307,7 +10548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close tape and return floppy controller to disk mode.  */
+comment|/*  *  Close tape and return floppy controller to disk mode.  */
 end_comment
 
 begin_function
@@ -9321,13 +10562,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|SegReq
-modifier|*
-name|sp
-decl_stmt|;
 name|ftu_t
 name|ftu
 init|=
@@ -9349,45 +10583,9 @@ name|ftu
 index|]
 decl_stmt|;
 comment|/* Wait for any remaining I/O activity to complete. */
-if|if
-condition|(
-name|ft
-operator|->
-name|curseg
-operator|->
-name|reqtype
-operator|==
-name|FTIO_RDAHEAD
-condition|)
-name|ft
-operator|->
-name|curseg
-operator|->
-name|reqcan
-operator|=
-literal|1
-expr_stmt|;
-while|while
-condition|(
-name|ft
-operator|->
-name|active
-condition|)
-name|tsleep
+name|tape_inactive
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|iosts_change
-argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftclose"
-argument_list|,
-literal|0
+name|ftu
 argument_list|)
 expr_stmt|;
 name|ft
@@ -9434,7 +10632,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform strategy on a given buffer (not!).  The driver was not performing  * very efficiently using the buffering routines.  After support for error  * correction was added, this routine became obsolete in favor of doing  * ioctl's.  Ugly, yes.  */
+comment|/*  *  Perform strategy on a given buffer (not!).  Changed so that the  *  driver will at least return 'Operation not supported'.  */
 end_comment
 
 begin_function
@@ -9447,15 +10645,32 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-return|return;
+name|bp
+operator|->
+name|b_error
+operator|=
+name|ENODEV
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|biodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Read or write a segment. */
+comment|/*  *  Read or write a segment.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_rw
 parameter_list|(
@@ -9479,8 +10694,6 @@ name|int
 name|r
 decl_stmt|,
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|SegReq
 modifier|*
@@ -9493,6 +10706,8 @@ name|long
 name|blk
 decl_stmt|,
 name|bad
+decl_stmt|,
+name|seg
 decl_stmt|;
 name|unsigned
 name|char
@@ -9517,6 +10732,12 @@ operator|!
 name|ft
 operator|->
 name|active
+operator|&&
+name|ft
+operator|->
+name|segh
+operator|==
+name|NULL
 condition|)
 block|{
 name|r
@@ -9536,14 +10757,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
 comment|/* No cartridge */
-block|}
 if|if
 condition|(
 operator|(
@@ -9554,14 +10773,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
 comment|/* Not formatted */
-block|}
 name|tape_state
 argument_list|(
 name|ftu
@@ -9585,27 +10802,9 @@ operator|->
 name|newcart
 condition|)
 block|{
-while|while
-condition|(
-name|ft
-operator|->
-name|active
-condition|)
-name|tsleep
+name|tape_inactive
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|iosts_change
-argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftrw"
-argument_list|,
-literal|0
+name|ftu
 argument_list|)
 expr_stmt|;
 name|tape_state
@@ -9628,13 +10827,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 block|}
 comment|/* Write not allowed on a read-only tape. */
 if|if
@@ -9647,13 +10844,11 @@ name|ft
 operator|->
 name|rdonly
 condition|)
-block|{
 return|return
 operator|(
 name|EROFS
 operator|)
 return|;
-block|}
 comment|/* Quick check of request and buffer. */
 if|if
 condition|(
@@ -9667,13 +10862,12 @@ name|sg_data
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
+comment|/* Make sure requested track and segment is in range. */
 if|if
 condition|(
 name|sr
@@ -9692,13 +10886,11 @@ name|ftg
 operator|->
 name|g_segtrk
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 name|blk
 operator|=
 name|sr
@@ -9715,6 +10907,20 @@ name|sg_seg
 operator|*
 name|QCV_BLKSEG
 expr_stmt|;
+name|seg
+operator|=
+name|sr
+operator|->
+name|sg_trk
+operator|*
+name|ftg
+operator|->
+name|g_segtrk
+operator|+
+name|sr
+operator|->
+name|sg_seg
+expr_stmt|;
 name|s
 operator|=
 name|splbio
@@ -9727,15 +10933,40 @@ operator|==
 name|QIOREAD
 condition|)
 block|{
+comment|/* 	 *  See if the driver is reading ahead. 	 */
 if|if
 condition|(
 name|ft
 operator|->
-name|curseg
+name|doneh
+operator|!=
+name|NULL
+operator|||
+operator|(
+name|ft
+operator|->
+name|segh
+operator|!=
+name|NULL
+operator|&&
+name|ft
+operator|->
+name|segh
 operator|->
 name|reqtype
 operator|==
 name|FTIO_RDAHEAD
+operator|)
+condition|)
+block|{
+comment|/* 		 *  Eat the completion queue and see if the request 		 *  is already there. 		 */
+while|while
+condition|(
+name|ft
+operator|->
+name|doneh
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -9744,7 +10975,7 @@ name|blk
 operator|==
 name|ft
 operator|->
-name|curseg
+name|doneh
 operator|->
 name|reqblk
 condition|)
@@ -9753,7 +10984,67 @@ name|sp
 operator|=
 name|ft
 operator|->
-name|curseg
+name|doneh
+expr_stmt|;
+name|sp
+operator|->
+name|reqtype
+operator|=
+name|FTIO_READING
+expr_stmt|;
+name|sp
+operator|->
+name|reqbad
+operator|=
+name|sr
+operator|->
+name|sg_badmap
+expr_stmt|;
+goto|goto
+name|rddone
+goto|;
+block|}
+name|segio_free
+argument_list|(
+name|ft
+argument_list|,
+name|ft
+operator|->
+name|doneh
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 *  Not on the completed queue, in progress maybe? 		 */
+if|if
+condition|(
+name|ft
+operator|->
+name|segh
+operator|!=
+name|NULL
+operator|&&
+name|ft
+operator|->
+name|segh
+operator|->
+name|reqtype
+operator|==
+name|FTIO_RDAHEAD
+operator|&&
+name|blk
+operator|==
+name|ft
+operator|->
+name|segh
+operator|->
+name|reqblk
+condition|)
+block|{
+name|sp
+operator|=
+name|ft
+operator|->
+name|segh
 expr_stmt|;
 name|sp
 operator|->
@@ -9773,47 +11064,20 @@ goto|goto
 name|rdwait
 goto|;
 block|}
-else|else
-name|ft
-operator|->
-name|curseg
-operator|->
-name|reqcan
-operator|=
-literal|1
-expr_stmt|;
-comment|/* XXX cancel rdahead */
 block|}
 comment|/* Wait until we're ready. */
-while|while
-condition|(
-name|ft
-operator|->
-name|active
-condition|)
-name|tsleep
+name|tape_inactive
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|iosts_change
-argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftrw"
-argument_list|,
-literal|0
+name|ftu
 argument_list|)
 expr_stmt|;
 comment|/* Set up a new read request. */
 name|sp
 operator|=
+name|segio_alloc
+argument_list|(
 name|ft
-operator|->
-name|curseg
+argument_list|)
 expr_stmt|;
 name|sp
 operator|->
@@ -9837,6 +11101,12 @@ name|blk
 expr_stmt|;
 name|sp
 operator|->
+name|reqseg
+operator|=
+name|seg
+expr_stmt|;
+name|sp
+operator|->
 name|reqcan
 operator|=
 literal|0
@@ -9846,6 +11116,13 @@ operator|->
 name|reqtype
 operator|=
 name|FTIO_READING
+expr_stmt|;
+name|segio_queue
+argument_list|(
+name|ft
+argument_list|,
+name|sp
+argument_list|)
 expr_stmt|;
 comment|/* Start the read request off. */
 name|DPRT
@@ -9870,6 +11147,14 @@ operator|=
 name|sp
 operator|->
 name|reqblk
+expr_stmt|;
+name|ft
+operator|->
+name|xseg
+operator|=
+name|sp
+operator|->
+name|reqseg
 expr_stmt|;
 name|ft
 operator|->
@@ -9905,23 +11190,15 @@ argument_list|)
 expr_stmt|;
 name|rdwait
 label|:
-name|tsleep
+name|ftsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|buff_avail
-argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftrw"
+name|wc_buff_done
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|rddone
+label|:
 name|bad
 operator|=
 name|sp
@@ -9995,6 +11272,13 @@ operator|+=
 name|QCV_BLKSIZE
 expr_stmt|;
 block|}
+name|segio_free
+argument_list|(
+name|ft
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -10002,94 +11286,144 @@ if|if
 condition|(
 name|ft
 operator|->
-name|curseg
-operator|->
-name|reqtype
-operator|==
-name|FTIO_RDAHEAD
-condition|)
-block|{
+name|segh
+operator|!=
+name|NULL
+operator|&&
 name|ft
 operator|->
-name|curseg
+name|segh
 operator|->
-name|reqcan
-operator|=
-literal|1
+name|reqtype
+operator|!=
+name|FTIO_WRITING
+condition|)
+name|tape_inactive
+argument_list|(
+name|ftu
+argument_list|)
 expr_stmt|;
-comment|/* XXX cancel rdahead */
-while|while
+comment|/* Allocate a buffer and start tape if we're running low. */
+name|sp
+operator|=
+name|segio_alloc
+argument_list|(
+name|ft
+argument_list|)
+expr_stmt|;
+if|if
 condition|(
+operator|!
 name|ft
 operator|->
 name|active
+operator|&&
+operator|(
+name|sp
+operator|==
+name|NULL
+operator|||
+name|ft
+operator|->
+name|nfreelist
+operator|<=
+literal|1
+operator|)
 condition|)
-name|tsleep
+block|{
+name|DPRT
 argument_list|(
+operator|(
+literal|"Starting write I/O chain\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|arq_state
+operator|=
+name|ard_state
+operator|=
+name|awr_state
+operator|=
+literal|0
+expr_stmt|;
+name|ft
+operator|->
+name|xblk
+operator|=
+name|ft
+operator|->
+name|segh
+operator|->
+name|reqblk
+expr_stmt|;
+name|ft
+operator|->
+name|xseg
+operator|=
+name|ft
+operator|->
+name|segh
+operator|->
+name|reqseg
+expr_stmt|;
+name|ft
+operator|->
+name|xcnt
+operator|=
+literal|0
+expr_stmt|;
+name|ft
+operator|->
+name|xptr
+operator|=
+name|ft
+operator|->
+name|segh
+operator|->
+name|buff
+expr_stmt|;
+name|ft
+operator|->
+name|active
+operator|=
+literal|1
+expr_stmt|;
+name|timeout
+argument_list|(
+name|ft_timeout
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|ftsem
-operator|.
-name|iosts_change
+name|ftu
 argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftrw"
-argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* Sleep until a buffer becomes available. */
 while|while
 condition|(
-name|ft
-operator|->
-name|bufseg
-operator|->
-name|reqtype
-operator|!=
-name|FTIO_READY
+name|sp
+operator|==
+name|NULL
 condition|)
-name|tsleep
+block|{
+name|ftsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ftsem
-operator|.
-name|buff_avail
-argument_list|,
-name|FTPRI
-argument_list|,
-literal|"ftrwbuf"
+name|wc_buff_avail
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|sp
 operator|=
-operator|(
+name|segio_alloc
+argument_list|(
 name|ft
-operator|->
-name|curseg
-operator|->
-name|reqtype
-operator|==
-name|FTIO_READY
-operator|)
-condition|?
-name|ft
-operator|->
-name|curseg
-else|:
-name|ft
-operator|->
-name|bufseg
+argument_list|)
 expr_stmt|;
+block|}
 comment|/* Copy in segment and expand bad blocks. */
 name|bad
 operator|=
@@ -10160,6 +11494,12 @@ name|blk
 expr_stmt|;
 name|sp
 operator|->
+name|reqseg
+operator|=
+name|seg
+expr_stmt|;
+name|sp
+operator|->
 name|reqcan
 operator|=
 literal|0
@@ -10170,70 +11510,13 @@ name|reqtype
 operator|=
 name|FTIO_WRITING
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ft
-operator|->
-name|active
-condition|)
-block|{
-name|DPRT
+name|segio_queue
 argument_list|(
-operator|(
-literal|"Starting write I/O chain\n"
-operator|)
+name|ft
+argument_list|,
+name|sp
 argument_list|)
 expr_stmt|;
-name|arq_state
-operator|=
-name|ard_state
-operator|=
-name|awr_state
-operator|=
-literal|0
-expr_stmt|;
-name|ft
-operator|->
-name|xblk
-operator|=
-name|sp
-operator|->
-name|reqblk
-expr_stmt|;
-name|ft
-operator|->
-name|xcnt
-operator|=
-literal|0
-expr_stmt|;
-name|ft
-operator|->
-name|xptr
-operator|=
-name|sp
-operator|->
-name|buff
-expr_stmt|;
-name|ft
-operator|->
-name|active
-operator|=
-literal|1
-expr_stmt|;
-name|timeout
-argument_list|(
-name|ft_timeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|ftu
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|splx
 argument_list|(
@@ -10249,10 +11532,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Rewind to beginning of tape */
+comment|/*  *  Rewind to beginning of tape  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_rewind
 parameter_list|(
@@ -10357,10 +11641,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Move to logical beginning or end of track */
+comment|/*  *  Move to logical beginning or end of track  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_trkpos
 parameter_list|(
@@ -10553,10 +11838,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Seek tape head to a particular track. */
+comment|/*  *  Seek tape head to a particular track.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_trkset
 parameter_list|(
@@ -10569,11 +11855,7 @@ name|trk
 parameter_list|)
 block|{
 name|int
-name|curtrk
-decl_stmt|,
 name|r
-decl_stmt|,
-name|cmd
 decl_stmt|;
 name|ft_p
 name|ft
@@ -10709,10 +11991,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start tape moving forward. */
+comment|/*  *  Start tape moving forward.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_lfwd
 parameter_list|(
@@ -10720,6 +12003,15 @@ name|ftu_t
 name|ftu
 parameter_list|)
 block|{
+name|ft_p
+name|ft
+init|=
+operator|&
+name|ft_data
+index|[
+name|ftu
+index|]
+decl_stmt|;
 name|tape_inactive
 argument_list|(
 name|ftu
@@ -10750,6 +12042,12 @@ argument_list|,
 name|QC_FORWARD
 argument_list|)
 expr_stmt|;
+name|ft
+operator|->
+name|moving
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10759,10 +12057,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Stop the tape */
+comment|/*  *  Stop the tape  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_stop
 parameter_list|(
@@ -10770,6 +12069,15 @@ name|ftu_t
 name|ftu
 parameter_list|)
 block|{
+name|ft_p
+name|ft
+init|=
+operator|&
+name|ft_data
+index|[
+name|ftu
+index|]
+decl_stmt|;
 name|tape_inactive
 argument_list|(
 name|ftu
@@ -10793,6 +12101,12 @@ argument_list|,
 literal|90
 argument_list|)
 expr_stmt|;
+name|ft
+operator|->
+name|moving
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10802,10 +12116,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the particular mode the drive should be in. */
+comment|/*  *  Set the particular mode the drive should be in.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_setmode
 parameter_list|(
@@ -10947,10 +12262,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return drive status bits */
+comment|/*  *  Return drive status bits  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_status
 parameter_list|(
@@ -11013,10 +12329,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return drive configuration bits */
+comment|/*  *  Return drive configuration bits  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_config
 parameter_list|(
@@ -11123,10 +12440,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return current tape's geometry. */
+comment|/*  *  Return current tape's geometry.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_geom
 parameter_list|(
@@ -11182,10 +12500,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return drive hardware information */
+comment|/*  *  Return drive hardware information  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ftreq_hwinfo
 parameter_list|(
@@ -11198,8 +12517,6 @@ name|hwp
 parameter_list|)
 block|{
 name|int
-name|r
-decl_stmt|,
 name|tries
 decl_stmt|;
 name|int
@@ -11353,7 +12670,129 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * I/O functions.  */
+comment|/*  *  Receive or Send the in-core header segment.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ftreq_hdr
+parameter_list|(
+name|ftu_t
+name|ftu
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|QIC_Segment
+modifier|*
+name|sp
+parameter_list|)
+block|{
+name|ft_p
+name|ft
+init|=
+operator|&
+name|ft_data
+index|[
+name|ftu
+index|]
+decl_stmt|;
+name|QIC_Header
+modifier|*
+name|h
+init|=
+operator|(
+name|QIC_Header
+operator|*
+operator|)
+name|ft
+operator|->
+name|hdr
+operator|->
+name|buff
+decl_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+operator|||
+name|sp
+operator|->
+name|sg_data
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
+name|cmd
+operator|==
+name|QIOSENDHDR
+condition|)
+block|{
+name|copyin
+argument_list|(
+name|sp
+operator|->
+name|sg_data
+argument_list|,
+name|ft
+operator|->
+name|hdr
+operator|->
+name|buff
+argument_list|,
+name|QCV_SEGSIZE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|h
+operator|->
+name|qh_sig
+operator|!=
+name|QCV_HDRMAGIC
+condition|)
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+name|copyout
+argument_list|(
+name|ft
+operator|->
+name|hdr
+operator|->
+name|buff
+argument_list|,
+name|sp
+operator|->
+name|sg_data
+argument_list|,
+name|QCV_SEGSIZE
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *  I/O functions.  */
 end_comment
 
 begin_function
@@ -11389,15 +12828,6 @@ name|dev
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|ft_p
-name|ft
-init|=
-operator|&
-name|ft_data
-index|[
-name|ftu
-index|]
-decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -11406,11 +12836,11 @@ block|{
 case|case
 name|QIOREAD
 case|:
-comment|/* Request reading a segment from tape.		 */
+comment|/* Request reading a segment from tape.		*/
 case|case
 name|QIOWRITE
 case|:
-comment|/* Request writing a segment to tape.		 */
+comment|/* Request writing a segment to tape.		*/
 return|return
 operator|(
 name|ftreq_rw
@@ -11432,7 +12862,7 @@ return|;
 case|case
 name|QIOREWIND
 case|:
-comment|/* Rewind tape.					 */
+comment|/* Rewind tape.					*/
 return|return
 operator|(
 name|ftreq_rewind
@@ -11444,11 +12874,11 @@ return|;
 case|case
 name|QIOBOT
 case|:
-comment|/* Seek to logical beginning of track.		 */
+comment|/* Seek to logical beginning of track.		*/
 case|case
 name|QIOEOT
 case|:
-comment|/* Seek to logical end of track.		 */
+comment|/* Seek to logical end of track.		*/
 return|return
 operator|(
 name|ftreq_trkpos
@@ -11462,7 +12892,7 @@ return|;
 case|case
 name|QIOTRACK
 case|:
-comment|/* Seek tape head to specified track.		 */
+comment|/* Seek tape head to specified track.		*/
 return|return
 operator|(
 name|ftreq_trkset
@@ -11480,14 +12910,14 @@ return|;
 case|case
 name|QIOSEEKLP
 case|:
-comment|/* Seek load point.				 */
+comment|/* Seek load point.				*/
 goto|goto
 name|badreq
 goto|;
 case|case
 name|QIOFORWARD
 case|:
-comment|/* Move tape in logical forward direction.	 */
+comment|/* Move tape in logical forward direction.	*/
 return|return
 operator|(
 name|ftreq_lfwd
@@ -11499,7 +12929,7 @@ return|;
 case|case
 name|QIOSTOP
 case|:
-comment|/* Causes tape to stop.				 */
+comment|/* Causes tape to stop.				*/
 return|return
 operator|(
 name|ftreq_stop
@@ -11511,15 +12941,15 @@ return|;
 case|case
 name|QIOPRIMARY
 case|:
-comment|/* Enter primary mode.				 */
+comment|/* Enter primary mode.				*/
 case|case
 name|QIOFORMAT
 case|:
-comment|/* Enter format mode.				 */
+comment|/* Enter format mode.				*/
 case|case
 name|QIOVERIFY
 case|:
-comment|/* Enter verify mode.				 */
+comment|/* Enter verify mode.				*/
 return|return
 operator|(
 name|ftreq_setmode
@@ -11533,14 +12963,14 @@ return|;
 case|case
 name|QIOWRREF
 case|:
-comment|/* Write reference burst.			 */
+comment|/* Write reference burst.			*/
 goto|goto
 name|badreq
 goto|;
 case|case
 name|QIOSTATUS
 case|:
-comment|/* Get drive status.				 */
+comment|/* Get drive status.				*/
 return|return
 operator|(
 name|ftreq_status
@@ -11562,7 +12992,7 @@ return|;
 case|case
 name|QIOCONFIG
 case|:
-comment|/* Get tape configuration.			 */
+comment|/* Get tape configuration.			*/
 return|return
 operator|(
 name|ftreq_config
@@ -11615,6 +13045,28 @@ name|data
 argument_list|)
 operator|)
 return|;
+case|case
+name|QIOSENDHDR
+case|:
+case|case
+name|QIORECVHDR
+case|:
+return|return
+operator|(
+name|ftreq_hdr
+argument_list|(
+name|ftu
+argument_list|,
+name|cmd
+argument_list|,
+operator|(
+name|QIC_Segment
+operator|*
+operator|)
+name|data
+argument_list|)
+operator|)
+return|;
 block|}
 name|badreq
 label|:
@@ -11638,7 +13090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Not implemented */
+comment|/*  *  Not implemented  */
 end_comment
 
 begin_function
@@ -11658,7 +13110,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Not implemented */
+comment|/*  *  Not implemented  */
 end_comment
 
 begin_function
