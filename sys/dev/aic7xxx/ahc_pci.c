@@ -2609,9 +2609,6 @@ literal|0
 condition|)
 block|{
 name|u_int
-name|optionmode
-decl_stmt|;
-name|u_int
 name|sfunct
 decl_stmt|;
 comment|/* Perform ALT-Mode Setup */
@@ -2636,22 +2633,6 @@ argument_list|,
 name|sfunct
 operator||
 name|ALT_MODE
-argument_list|)
-expr_stmt|;
-name|optionmode
-operator|=
-name|ahc_inb
-argument_list|(
-name|ahc
-argument_list|,
-name|OPTIONMODE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"OptionMode = %x\n"
-argument_list|,
-name|optionmode
 argument_list|)
 expr_stmt|;
 name|ahc_outb
