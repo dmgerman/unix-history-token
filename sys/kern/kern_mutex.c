@@ -765,9 +765,7 @@ argument_list|)
 expr_stmt|;
 name|mtx_assert
 argument_list|(
-operator|(
 name|m
-operator|)
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -934,9 +932,7 @@ argument_list|)
 expr_stmt|;
 name|mtx_assert
 argument_list|(
-operator|(
 name|m
-operator|)
 argument_list|,
 name|MA_OWNED
 argument_list|)
