@@ -240,7 +240,7 @@ name|size
 parameter_list|,
 name|label
 parameter_list|)
-value|do {              	\ 	size_t	length;							\ 	length = size;							\ 	tmp =&res->Package.Elements[idx]; 				\ 	bzero(dest, sizeof(dest));					\ 	switch (tmp->Type) {						\ 	case ACPI_TYPE_STRING:						\ 		if (tmp->String.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->String.Pointer, length);		\ 		break;							\ 	case ACPI_TYPE_BUFFER:						\ 		if (tmp->Buffer.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->Buffer.Pointer, length);		\ 		break;							\ 	default:							\ 		goto label;						\ 	}								\ 	dest[length-1] = '\0';						\ } while(0)
+value|do {              	\ 	size_t	length;							\ 	length = size;							\ 	tmp =&res->Package.Elements[idx]; 				\ 	bzero(dest, sizeof(dest));					\ 	switch (tmp->Type) {						\ 	case ACPI_TYPE_STRING:						\ 		if (tmp->String.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->String.Pointer, length);		\ 		break;							\ 	case ACPI_TYPE_BUFFER:						\ 		if (tmp->Buffer.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->Buffer.Pointer, length);		\ 		break;							\ 	default:							\ 		goto label;						\ 	}								\ 	dest[sizeof(dest)-1] = '\0';					\ } while(0)
 end_define
 
 begin_function
