@@ -71,6 +71,20 @@ begin_comment
 comment|/*  * Do not add any new variables here.  (See the comment at the end of  * the file for why.)  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -81,6 +95,27 @@ end_define
 begin_comment
 comment|/* max bytes for an exec function */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARG_MAX
+value|262144
+end_define
+
+begin_comment
+comment|/* max bytes for an exec function */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
