@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.31 (Berkeley) %G%"
+literal|"@(#)setup.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -718,6 +718,14 @@ operator|.
 name|fs_interleave
 operator|<
 literal|1
+operator|||
+name|sblock
+operator|.
+name|fs_interleave
+operator|>
+name|sblock
+operator|.
+name|fs_nsect
 condition|)
 block|{
 name|sblock
@@ -753,6 +761,16 @@ operator|<
 name|sblock
 operator|.
 name|fs_nsect
+operator|||
+name|sblock
+operator|.
+name|fs_npsect
+operator|>
+name|sblock
+operator|.
+name|fs_nsect
+operator|*
+literal|2
 operator|)
 block|{
 name|sblock
