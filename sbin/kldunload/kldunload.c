@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kldunload.c,v 1.6 1998/07/06 06:59:52 charnier Exp $"
+literal|"$Id: kldunload.c,v 1.7 1998/11/07 00:42:52 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +157,20 @@ name|fileid
 operator|=
 name|atoi
 argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fileid
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Invalid ID %s"
+argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
