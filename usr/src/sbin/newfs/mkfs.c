@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	8.4 (Berkeley) %G%"
+literal|"@(#)mkfs.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3726,7 +3726,7 @@ if|if
 condition|(
 name|cylno
 operator|%
-literal|9
+literal|8
 operator|==
 literal|0
 condition|)
