@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD4C.C - RSA Data Security, Inc., MD4 message-digest algorithm  * $Id$  */
+comment|/* MD4C.C - RSA Data Security, Inc., MD4 message-digest algorithm  * $FreeBSD$  */
 end_comment
 
 begin_comment

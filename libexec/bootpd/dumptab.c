@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * dumptab.c - handles dumping the database  *  *	$Id: dumptab.c,v 1.2 1996/09/22 21:52:07 wosch Exp $  */
+comment|/*  * dumptab.c - handles dumping the database  *  * $FreeBSD$  */
 end_comment
 
 begin_include

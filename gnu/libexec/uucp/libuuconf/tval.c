@@ -21,7 +21,7 @@ name|char
 name|_uuconf_tval_rcsid
 index|[]
 init|=
-literal|"$Id: tval.c,v 1.5 1995/06/21 19:25:03 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

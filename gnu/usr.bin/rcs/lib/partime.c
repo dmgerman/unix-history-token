@@ -121,7 +121,7 @@ specifier|const
 name|partimeId
 index|[]
 init|=
-literal|"$Id: partime.c,v 5.13 1995/06/16 06:19:24 eggert Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/usr.bin/lex/dfa.c,v 1.1.1.2 1996/06/19 20:26:04 nate Exp $ */
+comment|/* $Header: /home/ncvs/src/usr.bin/lex/dfa.c,v 1.3 1996/06/19 20:47:04 nate Exp $ */
 end_comment
 
 begin_include

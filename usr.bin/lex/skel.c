@@ -23,7 +23,7 @@ literal|""
 block|,
 literal|"/* Scanner skeleton version:"
 block|,
-literal|" * $Header: /home/ncvs/src/usr.bin/lex/skel.c,v 1.1.1.2 1996/06/19 20:26:34 nate Exp $"
+literal|" * $Header: /home/ncvs/src/usr.bin/lex/skel.c,v 1.1.1.2.2.1 1997/02/23 01:37:10 joerg Exp $"
 block|,
 literal|" */"
 block|,

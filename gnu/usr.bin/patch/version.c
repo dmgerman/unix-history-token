@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /home/ncvs/src/gnu/usr.bin/patch/version.c,v 1.1.1.1 1993/06/19 14:21:52 paul Exp $  *  * $Log: version.c,v $  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0  86/09/17  15:40:11  lwall  * Baseline for netwide release.  *  */
+comment|/* $Header: /home/ncvs/src/gnu/usr.bin/patch/version.c,v 1.2 1995/05/30 05:02:39 rgrimes Exp $  *  * $Log: version.c,v $  * Revision 1.2  1995/05/30 05:02:39  rgrimes  * Remove trailing whitespace.  *  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0  86/09/17  15:40:11  lwall  * Baseline for netwide release.  *  */
 end_comment
 
 begin_include

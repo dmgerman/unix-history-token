@@ -4,7 +4,7 @@ comment|/* Copyright 1988,1990,1993,1994 by Paul Vixie  * All rights reserved  *
 end_comment
 
 begin_comment
-comment|/* config.h - configurables for Vixie Cron  *  * $Id: config.h,v 1.4 1995/05/09 12:48:05 rgrimes Exp $  */
+comment|/* config.h - configurables for Vixie Cron  *  * $FreeBSD$  */
 end_comment
 
 begin_if

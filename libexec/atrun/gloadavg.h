@@ -19,7 +19,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char atrun_h_rcsid[] = "$Id: gloadavg.h,v 1.2 1995/08/10 04:06:55 ache Exp $";
+unit|static char atrun_h_rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 end_endif

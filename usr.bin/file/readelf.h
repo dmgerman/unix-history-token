@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * readelf.h   * @(#)$Id: readelf.h,v 1.2 1997/03/29 22:26:03 jdp Exp $  *  * Provide elf data structures for non-elf machines, allowing file  * non-elf hosts to determine if an elf binary is stripped.  * Note: cobbled from the linux header file, with modifications  */
+comment|/*  * readelf.h   * @(#)$FreeBSD$  *  * Provide elf data structures for non-elf machines, allowing file  * non-elf hosts to determine if an elf binary is stripped.  * Note: cobbled from the linux header file, with modifications  */
 end_comment
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: md-static-funcs.c,v 1.2 1993/12/08 10:28:56 pk Exp $  *  * Simple SPARC relocations for the benefit of self-relocation of ld.so  * avoiding the use of global variables (ie. reloc_bitshift[] et. al.).  * Only types supported are RELOC_32 and RELOC_RELATIVE.  *  * This *must* be a static function, so it is not called through a jmpslot.  */
+comment|/*  * $FreeBSD$  *  * Simple SPARC relocations for the benefit of self-relocation of ld.so  * avoiding the use of global variables (ie. reloc_bitshift[] et. al.).  * Only types supported are RELOC_32 and RELOC_RELATIVE.  *  * This *must* be a static function, so it is not called through a jmpslot.  */
 end_comment
 
 begin_function

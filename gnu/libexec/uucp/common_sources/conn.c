@@ -21,7 +21,7 @@ name|char
 name|conn_rcsid
 index|[]
 init|=
-literal|"$Id: conn.c,v 1.15 1995/06/21 19:14:35 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -56,7 +56,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mk-amd-map.c,v 1.1.1.1.8.2 1997/09/03 06:27:19 charnier Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

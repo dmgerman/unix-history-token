@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Header: /home/daffy/u0/vern/flex/RCS/ccl.c,v 2.9 93/09/16 20:32:14 vern Exp $ */
+comment|/* $Header: /home/ncvs/src/usr.bin/lex/ccl.c,v 1.3 1996/06/19 20:47:00 nate Exp $ */
 end_comment
 
 begin_include

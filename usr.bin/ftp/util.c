@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: util.c,v 1.4 1997/12/16 08:17:26 ache Exp $	*/
+comment|/* $FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: util.c,v 1.4 1997/12/16 08:17:26 ache Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

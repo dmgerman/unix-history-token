@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fpurge.c,v 1.6 1998/04/11 07:40:43 jb Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

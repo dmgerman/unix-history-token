@@ -4,7 +4,7 @@ comment|/* expr.h -> header file for expr.c    Copyright (C) 1987, 1992 Free Sof
 end_comment
 
 begin_comment
-comment|/*  * $Id: expr.h,v 1.2 1993/11/03 00:51:31 paul Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment

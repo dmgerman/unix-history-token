@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/lib/libc/gen/crypt.c,v 1.3 1995/05/30 05:40:10 rgrimes Exp $"
+literal|"$Header: /home/ncvs/src/lib/libc/gen/crypt.c,v 1.4 1995/10/22 14:36:04 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 

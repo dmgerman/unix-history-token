@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * getif.c : get an interface structure  *  *	$Id: getif.c,v 1.3 1996/09/22 21:52:12 wosch Exp $  */
+comment|/*  * getif.c : get an interface structure  *  * $FreeBSD$  */
 end_comment
 
 begin_include

@@ -21,7 +21,7 @@ name|char
 name|tstuu_rcsid
 index|[]
 init|=
-literal|"$Id: tstuu.c,v 1.86 1995/06/29 19:34:59 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md5.c,v 1.7.2.2 1998/03/06 08:15:33 jkh Exp $  *  * Derived from:  */
+comment|/*  * $FreeBSD$  *  * Derived from:  */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

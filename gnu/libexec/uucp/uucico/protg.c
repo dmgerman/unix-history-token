@@ -21,7 +21,7 @@ name|char
 name|protg_rcsid
 index|[]
 init|=
-literal|"$Id: protg.c,v 1.68 1995/06/21 19:15:22 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

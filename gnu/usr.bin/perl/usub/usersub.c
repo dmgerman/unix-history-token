@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: usersub.c,v $$Revision: 1.1 $$Date: 1995/03/24 04:33:54 $  *  * $Log: usersub.c,v $  * Revision 1.1  1995/03/24  04:33:54  jkh  * Bring back perl/usub as usub/, this time containing an updated curseperl  * which is also installed by default (the reason for which should also be  * plain shortly).  *  * Revision 4.0.1.1  91/11/05  19:07:24  lwall  * patch11: there are now subroutines for calling back from C into Perl  *  * Revision 4.0  91/03/20  01:56:34  lwall  * 4.0 baseline.  *  * Revision 3.0.1.1  90/08/09  04:06:10  lwall  * patch19: Initial revision  *  */
+comment|/* $RCSfile: usersub.c,v $$Revision: 1.2 $$Date: 1995/05/30 05:03:33 $  *  * $Log: usersub.c,v $  * Revision 1.2  1995/05/30 05:03:33  rgrimes  * Remove trailing whitespace.  *  * Revision 1.1  1995/03/24  04:33:54  jkh  * Bring back perl/usub as usub/, this time containing an updated curseperl  * which is also installed by default (the reason for which should also be  * plain shortly).  *  * Revision 4.0.1.1  91/11/05  19:07:24  lwall  * patch11: there are now subroutines for calling back from C into Perl  *  * Revision 4.0  91/03/20  01:56:34  lwall  * 4.0 baseline.  *  * Revision 3.0.1.1  90/08/09  04:06:10  lwall  * patch19: Initial revision  *  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Header: /home/ncvs/src/lib/libcom_err/error_message.c,v 1.1.1.1 1995/01/14 22:23:41 wollman Exp $  * $Source: /home/ncvs/src/lib/libcom_err/error_message.c,v $  * $Locker:  $  *  * Copyright 1987 by the Student Information Processing Board  * of the Massachusetts Institute of Technology  *  * For copyright info, see "mit-sipb-copyright.h".  */
+comment|/*  * $Header: /home/ncvs/src/lib/libcom_err/error_message.c,v 1.2 1996/07/12 18:55:46 jkh Exp $  * $Source: /home/ncvs/src/lib/libcom_err/error_message.c,v $  * $Locker:  $  *  * Copyright 1987 by the Student Information Processing Board  * of the Massachusetts Institute of Technology  *  * For copyright info, see "mit-sipb-copyright.h".  */
 end_comment
 
 begin_include
@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/lib/libcom_err/error_message.c,v 1.1.1.1 1995/01/14 22:23:41 wollman Exp $"
+literal|"$Header: /home/ncvs/src/lib/libcom_err/error_message.c,v 1.2 1996/07/12 18:55:46 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|uuxqt_rcsid
 index|[]
 init|=
-literal|"$Id: uuxqt.c,v 1.82 1995/07/19 04:22:26 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

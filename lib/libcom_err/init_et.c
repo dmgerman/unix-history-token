@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Header: init_et.c,v 1.5 88/10/27 08:34:54 raeburn Exp $  * $Source: /mit/raeburn/Work/et/src/RCS/init_et.c,v $  * $Locker:  $  *  * Copyright 1986, 1987, 1988 by MIT Information Systems and  *	the MIT Student Information Processing Board.  *  * For copyright info, see mit-sipb-copyright.h.  */
+comment|/*  * $Header: /home/ncvs/src/lib/libcom_err/init_et.c,v 1.1.1.1 1995/01/14 22:23:41 wollman Exp $  * $Source: /home/ncvs/src/lib/libcom_err/init_et.c,v $  * $Locker:  $  *  * Copyright 1986, 1987, 1988 by MIT Information Systems and  *	the MIT Student Information Processing Board.  *  * For copyright info, see mit-sipb-copyright.h.  */
 end_comment
 
 begin_include
@@ -51,7 +51,7 @@ name|char
 name|rcsid_init_et_c
 index|[]
 init|=
-literal|"$Header: init_et.c,v 1.5 88/10/27 08:34:54 raeburn Exp $"
+literal|"$Header: /home/ncvs/src/lib/libcom_err/init_et.c,v 1.1.1.1 1995/01/14 22:23:41 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: memalloc.c,v 1.12 1998/09/13 19:24:57 tegge Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

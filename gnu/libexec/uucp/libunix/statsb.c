@@ -21,7 +21,7 @@ name|char
 name|statsb_rcsid
 index|[]
 init|=
-literal|"$Id: statsb.c,v 1.19 1995/06/21 19:20:39 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cd.c,v 1.18 1998/09/06 21:01:57 tegge Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_addstr_rcsid
 index|[]
 init|=
-literal|"$Id: addstr.c,v 1.7 1995/06/21 19:21:26 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

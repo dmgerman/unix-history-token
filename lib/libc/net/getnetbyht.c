@@ -48,7 +48,7 @@ name|chat
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetbyht.c,v 1.6 1997/06/27 08:22:02 peter Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

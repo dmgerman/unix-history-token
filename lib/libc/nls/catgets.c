@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: catgets.c,v 1.4 1998/04/30 10:14:54 ache Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/* Copyright 1988,1990,1993,1994 by Paul Vixie  * All rights reserved  *
 end_comment
 
 begin_comment
-comment|/* cron.h - header for vixie's cron  *  * $Id: cron.h,v 1.3.2.1 1997/09/16 07:01:37 charnier Exp $  *  * vix 14nov88 [rest of log is in RCS]  * vix 14jan87 [0 or 7 can be sunday; thanks, mwm@berkeley]  * vix 30dec86 [written]  */
+comment|/* cron.h - header for vixie's cron  *  * $FreeBSD$  *  * vix 14nov88 [rest of log is in RCS]  * vix 14jan87 [0 or 7 can be sunday; thanks, mwm@berkeley]  * vix 30dec86 [written]  */
 end_comment
 
 begin_comment

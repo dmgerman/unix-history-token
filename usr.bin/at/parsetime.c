@@ -757,7 +757,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.7.2.4 1998/08/08 14:02:59 alex Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

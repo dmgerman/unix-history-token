@@ -167,7 +167,7 @@ name|char
 operator|*
 name|moduleid
 operator|=
-literal|"@(#)$Id: fsmagic.c,v 1.3.2.1 1997/08/18 18:59:09 jdp Exp $"
+literal|"@(#)$FreeBSD$"
 expr_stmt|;
 end_expr_stmt
 

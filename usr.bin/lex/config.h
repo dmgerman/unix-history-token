@@ -4,7 +4,7 @@ comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
-comment|/* $Header: /home/daffy/u0/vern/flex/RCS/conf.in,v 1.2 95/01/09 12:11:51 vern Exp $ */
+comment|/* $Header: /home/ncvs/src/usr.bin/lex/config.h,v 1.2 1996/06/19 20:47:02 nate Exp $ */
 end_comment
 
 begin_comment

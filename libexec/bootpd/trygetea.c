@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * trygetea.c - test program for getether.c  *  *	$Id$  */
+comment|/*  * trygetea.c - test program for getether.c  *  * $FreeBSD$  */
 end_comment
 
 begin_include

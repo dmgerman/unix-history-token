@@ -21,7 +21,7 @@ name|char
 name|_uuconf_chatc_rcsid
 index|[]
 init|=
-literal|"$Id: chatc.c,v 1.6 1995/06/21 19:21:48 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// $Header: /home/daffy/u0/vern/flex/RCS/FlexLexer.h,v 1.19 96/05/25 20:43:02 vern Exp $
+comment|// $Header: /home/ncvs/src/usr.bin/lex/FlexLexer.h,v 1.1.1.2 1996/06/19 20:25:59 nate Exp $
 end_comment
 
 begin_comment

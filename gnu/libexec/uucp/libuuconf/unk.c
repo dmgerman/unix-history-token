@@ -21,7 +21,7 @@ name|char
 name|_uuconf_unk_rcsid
 index|[]
 init|=
-literal|"$Id: unk.c,v 1.5 1995/06/21 19:25:08 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

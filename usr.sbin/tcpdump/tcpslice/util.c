@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpslice/util.c,v 1.1 1995/03/08 12:53:42 olah Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpslice/util.c,v 1.2 1995/08/23 05:19:00 pst Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

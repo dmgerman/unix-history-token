@@ -22,7 +22,7 @@ name|libId
 argument_list|(
 argument|revId
 argument_list|,
-literal|"$Id: rcsrev.c,v 1.4 1995/10/29 22:06:29 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

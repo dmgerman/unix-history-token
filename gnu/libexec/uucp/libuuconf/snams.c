@@ -21,7 +21,7 @@ name|char
 name|_uuconf_snams_rcsid
 index|[]
 init|=
-literal|"$Id: snams.c,v 1.5 1995/06/21 19:24:07 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

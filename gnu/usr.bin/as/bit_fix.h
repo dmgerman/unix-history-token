@@ -4,7 +4,7 @@ comment|/* write.h     Copyright (C) 1987, 1992 Free Software Foundation, Inc.  
 end_comment
 
 begin_comment
-comment|/*  * $Id: bit_fix.h,v 1.1 1993/11/03 00:51:19 paul Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment

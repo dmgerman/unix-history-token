@@ -21,7 +21,7 @@ name|char
 name|_uuconf_tgcmp_rcsid
 index|[]
 init|=
-literal|"$Id: tgcmp.c,v 1.5 1995/06/21 19:24:34 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|picksb_rcsid
 index|[]
 init|=
-literal|"$Id: picksb.c,v 1.10 1995/06/21 19:19:54 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mksyntax.c,v 1.12 1998/09/06 21:13:09 tegge Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This DES validation program shipped with FreeSec is derived from that  * shipped with UFC-crypt which is apparently derived from one distributed  * with Phil Karns PD DES package.  *  * $Id: cert.c,v 1.1.1.1 1994/09/07 21:18:08 csgr Exp $  */
+comment|/*  * This DES validation program shipped with FreeSec is derived from that  * shipped with UFC-crypt which is apparently derived from one distributed  * with Phil Karns PD DES package.  *  * $FreeBSD$  */
 end_comment
 
 begin_include

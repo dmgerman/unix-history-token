@@ -45,7 +45,7 @@ name|char
 name|rcsid_et_name_c
 index|[]
 init|=
-literal|"$Header: et_name.c,v 1.7 89/01/01 06:14:56 raeburn Exp $"
+literal|"$Header: /home/ncvs/src/lib/libcom_err/et_name.c,v 1.1.1.1 1995/01/14 22:23:41 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/* struct_symbol.h - Internal symbol structure    Copyright (C) 1987, 19
 end_comment
 
 begin_comment
-comment|/*  * $Id: struc-symbol.h,v 1.5 1995/05/30 04:46:33 rgrimes Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

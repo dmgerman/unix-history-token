@@ -21,7 +21,7 @@ name|char
 name|_uuconf_debfil_rcsid
 index|[]
 init|=
-literal|"$Id: debfil.c,v 1.6 1995/06/21 19:21:57 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

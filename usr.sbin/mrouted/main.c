@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: main.c,v 1.8 1996/10/01 23:14:33 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: main.c,v 1.8 1996/10/01 23:14:33 fenner Exp $"
+literal|"@(#) $FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -12,7 +12,7 @@ name|_STRHASH_H_INCLUDE
 end_define
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/include/strhash.h,v 1.1 1995/03/26 10:12:53 jkh Exp $ */
+comment|/* $Header: /home/ncvs/src/include/strhash.h,v 1.2 1995/05/30 04:54:49 rgrimes Exp $ */
 end_comment
 
 begin_comment

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.8.2.16 1998/05/25 20:21:34 fenner Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

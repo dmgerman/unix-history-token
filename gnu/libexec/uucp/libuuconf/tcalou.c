@@ -21,7 +21,7 @@ name|char
 name|_uuconf_tcalou_rcsid
 index|[]
 init|=
-literal|"$Id: tcalou.c,v 1.8 1995/06/21 19:24:24 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

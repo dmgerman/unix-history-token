@@ -21,7 +21,7 @@ name|char
 name|_uuconf_lckdir_rcsid
 index|[]
 init|=
-literal|"$Id: lckdir.c,v 1.5 1995/06/21 19:23:22 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

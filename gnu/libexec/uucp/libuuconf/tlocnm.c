@@ -21,7 +21,7 @@ name|char
 name|_uuconf_tlocnm_rcsid
 index|[]
 init|=
-literal|"$Id: tlocnm.c,v 1.6 1995/06/21 19:24:45 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

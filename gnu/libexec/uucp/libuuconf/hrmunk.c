@@ -21,7 +21,7 @@ name|char
 name|_uuconf_hrmunk_rcsid
 index|[]
 init|=
-literal|"$Id: hrmunk.c,v 1.4 1995/06/21 19:23:00 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

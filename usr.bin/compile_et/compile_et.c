@@ -98,7 +98,7 @@ name|char
 name|rcsid_compile_et_c
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.3 1996/07/12 19:05:17 jkh Exp $"
+literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.3.2.1 1997/07/01 06:22:11 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

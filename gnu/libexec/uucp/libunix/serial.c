@@ -21,7 +21,7 @@ name|char
 name|serial_rcsid
 index|[]
 init|=
-literal|"$Id: serial.c,v 1.7 1996/10/12 10:41:56 joerg Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

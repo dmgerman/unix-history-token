@@ -16,7 +16,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  * $Id: lib.c,v 1.21 1997/02/22 15:46:22 peter Exp $	- library routines  */
+comment|/*  * $FreeBSD$	- library routines  */
 end_comment
 
 begin_include
