@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_de.c	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_de.c	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5818,6 +5818,18 @@ decl_stmt|;
 name|int
 name|csr0
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ds
+operator|->
+name|ds_flags
+operator|&
+name|DSF_RUNNING
+operator|)
+condition|)
+return|return;
 name|bcopy
 argument_list|(
 name|physaddr
@@ -5844,21 +5856,10 @@ name|addr
 operator|->
 name|pclow
 operator|=
-name|CMD_GETCMD
+name|PCSR0_INTE
+operator||
+name|CMD_PDMD
 expr_stmt|;
-while|while
-condition|(
-operator|(
-name|addr
-operator|->
-name|pcsr0
-operator|&
-name|PCSR0_INTR
-operator|)
-operator|==
-literal|0
-condition|)
-empty_stmt|;
 name|csr0
 operator|=
 name|addr
