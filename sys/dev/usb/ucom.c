@@ -889,16 +889,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|ttwakeup
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-name|ttwwakeup
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 else|else
