@@ -141,6 +141,14 @@ directive|define
 name|F_ATLEAST
 value|1
 comment|/* perm */
+define|#
+directive|define
+name|F_PRINT0
+value|1
+define|#
+directive|define
+name|F_PRINTF
+value|2
 name|int
 name|flags
 decl_stmt|;
