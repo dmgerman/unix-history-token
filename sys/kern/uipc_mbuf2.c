@@ -1143,6 +1143,11 @@ name|m_tag
 modifier|*
 name|t
 decl_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|wait
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -1535,6 +1540,11 @@ name|m_tag
 modifier|*
 name|p
 decl_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|t
@@ -1678,6 +1688,11 @@ name|tprev
 init|=
 name|NULL
 decl_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|to

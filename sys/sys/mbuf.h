@@ -43,6 +43,23 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -1222,6 +1239,16 @@ parameter_list|)
 value|atomic_add_int((m)->m_ext.ref_cnt, 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MBUF_CHECKSLEEP
+parameter_list|(
+name|how
+parameter_list|)
+value|do {					\ 	if (how == M_WAITOK)						\ 		WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK, NULL,		\ 		    "Sleeping in \"%s\"", __func__);			\ } while(0)
+end_define
+
 begin_comment
 comment|/*  * Network buffer allocation API  *  * The rest of it is defined in kern/subr_mbuf.c  */
 end_comment
@@ -1390,6 +1417,11 @@ block|{ 	struct
 name|mb_args
 name|args
 block|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+block|;
 name|args
 operator|.
 name|flags
@@ -1447,6 +1479,11 @@ name|m
 block|; 	struct
 name|mb_args
 name|args
+block|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
 block|;
 name|args
 operator|.
@@ -1520,6 +1557,11 @@ name|struct
 name|mb_args
 name|args
 decl_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 name|args
 operator|.
 name|flags
@@ -1571,6 +1613,11 @@ argument_list|)
 block|{ 	struct
 name|mb_args
 name|args
+block|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
 block|;
 name|args
 operator|.
@@ -1680,6 +1727,11 @@ name|int
 name|how
 parameter_list|)
 block|{
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_ext
@@ -1928,7 +1980,7 @@ name|plen
 parameter_list|,
 name|how
 parameter_list|)
-value|do {					\ 	struct mbuf **_mmp =&(m);					\ 	struct mbuf *_mm = *_mmp;					\ 	int _mplen = (plen);						\ 	int __mhow = (how);						\ 									\ 	if (M_LEADINGSPACE(_mm)>= _mplen) {				\ 		_mm->m_data -= _mplen;					\ 		_mm->m_len += _mplen;					\ 	} else								\ 		_mm = m_prepend(_mm, _mplen, __mhow);			\ 	if (_mm != NULL&& _mm->m_flags& M_PKTHDR)			\ 		_mm->m_pkthdr.len += _mplen;				\ 	*_mmp = _mm;							\ } while (0)
+value|do {					\ 	struct mbuf **_mmp =&(m);					\ 	struct mbuf *_mm = *_mmp;					\ 	int _mplen = (plen);						\ 	int __mhow = (how);						\ 									\ 	MBUF_CHECKSLEEP(how);						\ 	if (M_LEADINGSPACE(_mm)>= _mplen) {				\ 		_mm->m_data -= _mplen;					\ 		_mm->m_len += _mplen;					\ 	} else								\ 		_mm = m_prepend(_mm, _mplen, __mhow);			\ 	if (_mm != NULL&& _mm->m_flags& M_PKTHDR)			\ 		_mm->m_pkthdr.len += _mplen;				\ 	*_mmp = _mm;							\ } while (0)
 end_define
 
 begin_comment

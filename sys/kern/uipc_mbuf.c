@@ -458,6 +458,11 @@ literal|"m_getm(): len is< 0"
 operator|)
 argument_list|)
 expr_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 comment|/* If m != NULL, we will append to the end of that chain. */
 if|if
 condition|(
@@ -1260,6 +1265,11 @@ comment|/* Note: with MAC, this may not be a good assertion. */
 block|KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), ("m_dup_pkthdr: to has tags"));
 endif|#
 directive|endif
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -1383,6 +1393,11 @@ name|mbuf
 modifier|*
 name|mn
 decl_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -1557,6 +1572,11 @@ literal|"m_copym, negative len %d"
 operator|,
 name|len
 operator|)
+argument_list|)
+expr_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|wait
 argument_list|)
 expr_stmt|;
 if|if
@@ -1919,6 +1939,11 @@ decl_stmt|,
 modifier|*
 name|o
 decl_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 name|MGET
 argument_list|(
 name|n
@@ -2391,6 +2416,11 @@ name|moff
 decl_stmt|,
 name|nsize
 decl_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 comment|/* Sanity check */
 if|if
 condition|(
@@ -3467,6 +3497,11 @@ name|len0
 decl_stmt|,
 name|remain
 decl_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|wait
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|m
@@ -4997,6 +5032,11 @@ literal|0
 decl_stmt|,
 name|length
 decl_stmt|;
+name|MBUF_CHECKSLEEP
+argument_list|(
+name|how
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
