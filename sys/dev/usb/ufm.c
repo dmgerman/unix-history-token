@@ -258,23 +258,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD_version
-operator|>=
-literal|500023
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
-name|struct
-name|thread
+name|d_thread_t
 name|usb_proc_t
 typedef|;
 end_typedef
