@@ -1143,7 +1143,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"23a:bcdD:g:I:iLl:No:PpR:r:sTt:w:x:U"
+literal|"23a:bcdD:g:I:iLl:No:PR:r:sTt:w:x:U"
 argument_list|)
 operator|)
 operator|!=
