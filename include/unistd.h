@@ -1740,6 +1740,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|off_t
+name|__syscall
+name|__P
+argument_list|(
+operator|(
+name|quad_t
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|truncate
 name|__P

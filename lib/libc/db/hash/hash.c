@@ -2576,7 +2576,7 @@ name|EFTYPE
 expr_stmt|;
 name|hashp
 operator|->
-name|errno
+name|error
 operator|=
 name|errno
 expr_stmt|;
@@ -2712,7 +2712,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|errno
+name|error
 operator|=
 name|errno
 operator|=
@@ -2801,7 +2801,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|errno
+name|error
 operator|=
 name|errno
 operator|=
@@ -2828,7 +2828,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|errno
+name|error
 operator|=
 name|errno
 operator|=
@@ -2922,7 +2922,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|errno
+name|error
 operator|=
 name|errno
 operator|=
@@ -2949,7 +2949,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|errno
+name|error
 operator|=
 name|errno
 operator|=
@@ -3782,7 +3782,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|errno
+name|error
 operator|=
 name|errno
 operator|=

@@ -594,7 +594,7 @@ return|return
 operator|(
 name|hp
 operator|->
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -628,7 +628,7 @@ name|internal
 expr_stmt|;
 name|hp
 operator|->
-name|errno
+name|error
 operator|=
 literal|0
 expr_stmt|;

@@ -277,7 +277,7 @@ name|cndx
 decl_stmt|;
 comment|/* Index of next item on cpage */
 name|int
-name|errno
+name|error
 decl_stmt|;
 comment|/* Error Number -- for DBM compatability */
 name|int

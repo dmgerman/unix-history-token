@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.8 1995/12/18 12:03:54 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.9 1996/01/05 23:30:41 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -170,6 +170,29 @@ include|#
 directive|include
 file|<sys/mman.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pthread_private.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This structure describes a page worth of chunks.  */
@@ -3189,6 +3212,14 @@ name|void
 modifier|*
 name|result
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|int
+name|status
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3204,6 +3235,17 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_block
+argument_list|(
+operator|&
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|size
@@ -3250,6 +3292,16 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|result
 return|;
@@ -3291,6 +3343,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|int
+name|status
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|suicide
@@ -3343,6 +3403,17 @@ return|return
 literal|0
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_block
+argument_list|(
+operator|&
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|index
 operator|=
 name|ptr2index
@@ -3362,6 +3433,16 @@ argument_list|(
 literal|"realloc(): junk pointer (too low)\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -3378,6 +3459,16 @@ argument_list|(
 literal|"realloc(): junk pointer (too high)\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -3415,6 +3506,16 @@ argument_list|(
 literal|"realloc(): modified page pointer.\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -3456,11 +3557,23 @@ operator|-
 name|malloc_pagesize
 operator|)
 condition|)
+block|{
 comment|/* .. or can free a page, */
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|ptr
 return|;
 comment|/* don't do anything. */
+block|}
 block|}
 elseif|else
 if|if
@@ -3499,6 +3612,16 @@ argument_list|(
 literal|"realloc(): modified chunk pointer.\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -3539,6 +3662,16 @@ argument_list|(
 literal|"realloc(): already free chunk.\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -3576,11 +3709,23 @@ operator|==
 name|malloc_minsize
 operator|)
 condition|)
+block|{
 comment|/* ..(if there is one) */
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|ptr
 return|;
 comment|/* ..Don't do anything */
+block|}
 block|}
 else|else
 block|{
@@ -3589,6 +3734,16 @@ argument_list|(
 literal|"realloc(): wrong page pointer.\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -3637,6 +3792,16 @@ name|ptr
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|p
 return|;
@@ -4493,6 +4658,14 @@ decl_stmt|;
 name|int
 name|index
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|int
+name|status
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* This is legal */
 if|if
 condition|(
@@ -4519,6 +4692,17 @@ condition|(
 name|suicide
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_block
+argument_list|(
+operator|&
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|index
 operator|=
 name|ptr2index
@@ -4538,6 +4722,16 @@ argument_list|(
 literal|"free(): junk pointer (too low)\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 if|if
@@ -4552,6 +4746,16 @@ argument_list|(
 literal|"free(): junk pointer (too high)\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 name|info
@@ -4586,6 +4790,16 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_kern_sig_unblock
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
