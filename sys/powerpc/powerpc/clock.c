@@ -909,21 +909,18 @@ parameter_list|)
 block|{
 name|u_quad_t
 name|tb
-decl_stmt|;
-name|u_long
-name|tbh
 decl_stmt|,
-name|tbl
-decl_stmt|,
-name|scratch
+name|ttb
 decl_stmt|;
 name|tb
 operator|=
 name|mftb
 argument_list|()
 expr_stmt|;
+name|ttb
+operator|=
 name|tb
-operator|+=
+operator|+
 operator|(
 name|n
 operator|*
@@ -936,55 +933,34 @@ operator|)
 operator|/
 name|ns_per_tick
 expr_stmt|;
-name|tbh
-operator|=
+while|while
+condition|(
 name|tb
-operator|>>
-literal|32
-expr_stmt|;
-name|tbl
-operator|=
+operator|<
+name|ttb
+condition|)
 name|tb
+operator|=
+name|mftb
+argument_list|()
 expr_stmt|;
-asm|__asm ("1: mftbu %0; cmplw %0,%1; blt 1b; bgt 2f;"
-literal|"mftb %0; cmplw %0,%2; blt 1b; 2:"
-operator|:
-literal|"=r"
-operator|(
-name|scratch
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|tbh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|tbl
-operator|)
-block|)
-function|;
+block|}
 end_function
 
 begin_comment
-unit|}
 comment|/*  * Nothing to do.  */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|cpu_startprofclock
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Do nothing */
 block|}
-end_block
+end_function
 
 begin_function
 name|void
