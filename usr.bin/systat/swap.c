@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	8.2 (Berkeley) 2/21/94"
+literal|"@(#)swap.c	8.3 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,22 +109,6 @@ include|#
 directive|include
 file|"extern.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|devname
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -884,6 +868,9 @@ block|{
 name|char
 modifier|*
 name|header
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|row
@@ -955,6 +942,20 @@ name|i
 operator|++
 control|)
 block|{
+name|p
+operator|=
+name|devname
+argument_list|(
+name|sw
+index|[
+name|i
+index|]
+operator|.
+name|sw_dev
+argument_list|,
+name|S_IFBLK
+argument_list|)
+expr_stmt|;
 name|mvwprintw
 argument_list|(
 name|wnd
@@ -967,17 +968,13 @@ literal|0
 argument_list|,
 literal|"%-5s"
 argument_list|,
-name|devname
-argument_list|(
-name|sw
-index|[
-name|i
-index|]
-operator|.
-name|sw_dev
-argument_list|,
-name|S_IFBLK
-argument_list|)
+name|p
+operator|==
+name|NULL
+condition|?
+literal|"??"
+else|:
+name|p
 argument_list|)
 expr_stmt|;
 block|}
