@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.8 1999/02/16 14:19:50 des Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.9 1999/05/06 03:23:24 archie Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -542,6 +542,14 @@ name|int
 name|nprobes
 init|=
 literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|min_ttl
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1220,7 +1228,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Sdnrvg:m:P:p:q:s:t:w:"
+literal|"Sdnrvg:M:m:P:p:q:s:t:w:"
 argument_list|)
 operator|)
 operator|!=
@@ -1291,6 +1299,45 @@ name|lsrr
 expr_stmt|;
 break|break;
 case|case
+literal|'M'
+case|:
+name|min_ttl
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|min_ttl
+operator|<
+literal|1
+operator|||
+name|min_ttl
+operator|>
+literal|0xff
+condition|)
+block|{
+name|Fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: invalid ttl value %s\n"
+argument_list|,
+name|prog
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|'m'
 case|:
 name|max_ttl
@@ -1303,17 +1350,23 @@ expr_stmt|;
 if|if
 condition|(
 name|max_ttl
-operator|<=
+operator|<
 literal|1
+operator|||
+name|max_ttl
+operator|>
+literal|0xff
 condition|)
 block|{
 name|Fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: max ttl must be> 1\n"
+literal|"%s: invalid ttl value %s\n"
 argument_list|,
 name|prog
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1654,6 +1707,29 @@ break|break;
 default|default:
 name|usage
 argument_list|()
+expr_stmt|;
+block|}
+comment|/* Check min vs. max TTL */
+if|if
+condition|(
+name|min_ttl
+operator|>
+name|max_ttl
+condition|)
+block|{
+name|Fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: min ttl must be<= max ttl\n"
+argument_list|,
+name|prog
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Process destination and optional packet size */
@@ -2710,7 +2786,7 @@ for|for
 control|(
 name|ttl
 operator|=
-literal|1
+name|min_ttl
 init|;
 name|ttl
 operator|<=
@@ -5317,7 +5393,7 @@ name|Fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-dnrv] [-w wait] [-m max_ttl] [-p port#] \ [-q nqueries]\n\t [-t tos] [-s src_addr] [-g gateway] host [data_size]\n"
+literal|"Usage: %s [-dnrv] [-w wait] [-m max_ttl] [-M min_ttl] \ [-P proto]\n\t [-p port#] [-q nqueries] [-t tos] [-s src_addr] [-g gateway] \ \n\t host [data_size]\n"
 argument_list|,
 name|prog
 argument_list|)
