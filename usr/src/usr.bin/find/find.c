@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.32 (Berkeley) %G%"
+literal|"@(#)find.c	4.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,6 +712,7 @@ operator|!
 name|depth
 condition|)
 continue|continue;
+break|break;
 case|case
 name|FTS_NS
 case|:
