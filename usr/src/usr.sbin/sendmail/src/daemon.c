@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.18 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.19 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.18 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.19 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,6 +683,9 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
+name|int
+name|sav_errno
+decl_stmt|;
 comment|/* 	**  Set up the address for the mailer. 	**	Accept "[a.b.c.d]" syntax for host name. 	*/
 name|h_errno
 operator|=
@@ -969,6 +972,10 @@ argument_list|(
 literal|"makeconnection: no socket"
 argument_list|)
 expr_stmt|;
+name|sav_errno
+operator|=
+name|errno
+expr_stmt|;
 goto|goto
 name|failure
 goto|;
@@ -1111,12 +1118,24 @@ endif|#
 directive|endif
 endif|NVMUNIX
 block|{
+name|sav_errno
+operator|=
+name|errno
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 comment|/* failure, decide if temporary or not */
 name|failure
 label|:
 switch|switch
 condition|(
-name|errno
+name|sav_errno
 condition|)
 block|{
 case|case
