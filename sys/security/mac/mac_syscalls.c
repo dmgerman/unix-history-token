@@ -258,7 +258,7 @@ name|MODULE_VERSION
 argument_list|(
 name|kernel_mac_support
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
