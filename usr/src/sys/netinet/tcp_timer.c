@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -651,24 +651,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * If losing, let the lower level know 		 * and try for a better route. 		 */
-if|if
-condition|(
-name|tp
-operator|->
-name|t_rxtshift
-operator|>
-name|TCP_MAXRXTSHIFT
-operator|/
-literal|3
-condition|)
-name|in_losing
-argument_list|(
-name|tp
-operator|->
-name|t_inpcb
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -722,6 +704,30 @@ argument_list|,
 name|TCPTV_MIN
 argument_list|,
 name|TCPTV_MAX
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If losing, let the lower level know 		 * and try for a better route. 		 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_rxtshift
+operator|>=
+name|TCP_MAXRXTSHIFT
+operator|/
+literal|4
+operator|||
+name|rexmt
+operator|>=
+literal|10
+operator|*
+name|PR_SLOWHZ
+condition|)
+name|in_losing
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 name|tp
