@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: docmd.c,v 1.2 1995/02/21 04:32:54 wollman Exp $"
+literal|"$Id: docmd.c,v 1.4 1996/07/12 04:00:13 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1196,9 +1196,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s -Server%s"
 argument_list|,
@@ -2661,9 +2666,14 @@ comment|/* 	 * Create a pipe to mailling program. 	 */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s -oi -t"
 argument_list|,

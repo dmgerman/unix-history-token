@@ -506,9 +506,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s redefined"
 argument_list|,
@@ -540,9 +545,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s undefined"
 argument_list|,
