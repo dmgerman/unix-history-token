@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: mailstats.c,v 8.95 2001/12/30 04:59:40 gshapiro Exp $"
+literal|"@(#)$Id: mailstats.c,v 1.1.1.8 2002/02/17 21:56:43 gshapiro Exp $"
 argument_list|)
 end_macro
 

@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: savemail.c,v 8.297 2001/12/28 22:32:19 ca Exp $"
+literal|"@(#)$Id: savemail.c,v 1.1.1.9 2002/02/17 21:56:41 gshapiro Exp $"
 argument_list|)
 end_macro
 
