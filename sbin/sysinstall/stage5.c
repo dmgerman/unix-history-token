@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.15 1994/11/11 07:58:09 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.16 1994/11/17 19:44:54 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -90,33 +90,6 @@ name|exec_sh
 init|=
 literal|1
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|dialog_yesno
-argument_list|(
-literal|"End of initial installation"
-argument_list|,
-name|msg
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-condition|)
-name|exec_sh
-operator|=
-literal|0
-expr_stmt|;
-name|end_dialog
-argument_list|()
-expr_stmt|;
-name|dialog_active
-operator|=
-literal|0
-expr_stmt|;
 name|setenv
 argument_list|(
 literal|"PATH"
@@ -132,6 +105,28 @@ init|;
 condition|;
 control|)
 block|{
+name|exec_sh
+operator|=
+name|dialog_yesno
+argument_list|(
+literal|"End of initial installation"
+argument_list|,
+name|msg
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|end_dialog
+argument_list|()
+expr_stmt|;
+name|dialog_active
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|exec_sh
@@ -158,6 +153,10 @@ literal|"/stand/-bininst"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|dialog_active
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}

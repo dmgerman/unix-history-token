@@ -66,19 +66,23 @@ literal|"3. Troubleshooting"
 block|,
 literal|"Read this in case of trouble."
 block|,
-literal|"4. COPYRIGHT"
+literal|"4. Partitions and MBRs"
+block|,
+literal|"Verbose description of how these work."
+block|,
+literal|"5. COPYRIGHT"
 block|,
 literal|"Read FreeBSD Copyright Information."
 block|,
-literal|"5. Install"
+literal|"6. Install"
 block|,
 literal|"Proceed with full installation."
 block|,
-literal|"6. Fixit"
+literal|"7. Fixit"
 block|,
 literal|"Repair existing installation (`fixit' mode)."
 block|,
-literal|"7. Quit"
+literal|"8. Quit"
 block|,
 literal|"Don't do anything, just reboot."
 block|, }
@@ -106,9 +110,9 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|7
+literal|8
 argument_list|,
-literal|7
+literal|8
 argument_list|,
 name|welcome
 argument_list|,
@@ -174,6 +178,21 @@ break|break;
 case|case
 literal|4
 case|:
+comment|/* View DISK FAQ */
+name|ShowFile
+argument_list|(
+name|HELPME_FILE
+argument_list|,
+literal|"DISK FAQ"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|evil_goto
+goto|;
+break|break;
+case|case
+literal|5
+case|:
 comment|/* View copyrights */
 name|ShowFile
 argument_list|(
@@ -187,18 +206,18 @@ name|evil_goto
 goto|;
 break|break;
 case|case
-literal|5
+literal|6
 case|:
 comment|/* Proceed (do nothing special, really) */
 break|break;
 case|case
-literal|6
+literal|7
 case|:
 name|dialog_msgbox
 argument_list|(
-literal|"Sorry!"
+literal|"WARNING!"
 argument_list|,
-literal|"This feature is not currently implemented."
+literal|"The usual install procedure will be invoked, but with most of the sanity checks disabled.  The suggested course of action is to: 	1. Go to (F)disk and do a (W)rite, and possibly a (B)oot too 	   if your MBR has been wiped. 	2. Go into (D)isklabel and identify your root (/) and swap 	   partitions. 	3. Select (P)roceed to reboot and load the cpio floppy. 	4. You will now be in the stand-alone shell, where you may 	   conduct further repairs with the tools you'll find in 	   /stand. 	5. Good luck...  You'll probably need it."
 argument_list|,
 operator|-
 literal|1
@@ -209,12 +228,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-goto|goto
-name|evil_goto
-goto|;
+name|fixit
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
-literal|7
+literal|8
 case|:
 comment|/* Be neat.. */
 name|ExitSysinstall

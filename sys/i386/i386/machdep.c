@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.92 1994/11/15 14:12:55 bde Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.87 1994/11/06 04:46:53 davidg Exp $  */
 end_comment
 
 begin_include
@@ -4101,18 +4101,6 @@ comment|/*  * Initialize segments& interrupt table  */
 end_comment
 
 begin_decl_stmt
-name|int
-name|currentldt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_default_ldt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|union
 name|descriptor
 name|gdt
@@ -4122,8 +4110,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|union
+name|descriptor
+name|ldt
+index|[
+name|NLDT
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* global descriptor table */
+comment|/* local descriptor table */
 end_comment
 
 begin_decl_stmt
@@ -4141,18 +4139,12 @@ comment|/* interrupt descriptor table */
 end_comment
 
 begin_decl_stmt
-name|union
-name|descriptor
-name|ldt
-index|[
-name|NLDT
-index|]
+name|int
+name|_default_ldt
+decl_stmt|,
+name|currentldt
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* local descriptor table */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -4678,35 +4670,50 @@ comment|/* default 32 vs 16 bit size */
 literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_decl_stmt
 name|void
 name|setidt
-parameter_list|(
+argument_list|(
 name|idx
-parameter_list|,
+argument_list|,
 name|func
-parameter_list|,
+argument_list|,
 name|typ
-parameter_list|,
+argument_list|,
 name|dpl
-parameter_list|)
+argument_list|)
 name|int
 name|idx
 decl_stmt|;
-name|inthand_t
+end_decl_stmt
+
+begin_function_decl
+name|void
+function_decl|(
 modifier|*
 name|func
-decl_stmt|;
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|int
 name|typ
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|dpl
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|struct
 name|gate_descriptor
@@ -4776,7 +4783,7 @@ operator|>>
 literal|16
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_define
 define|#
@@ -4788,9 +4795,17 @@ parameter_list|)
 value|__CONCAT(X,name)
 end_define
 
+begin_typedef
+typedef|typedef
+name|void
+name|idtvec_t
+parameter_list|()
+function_decl|;
+end_typedef
+
 begin_decl_stmt
 specifier|extern
-name|inthand_t
+name|idtvec_t
 name|IDTVEC
 argument_list|(
 name|div
@@ -4958,8 +4973,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|_gsel_tss
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* added sdtossd() by HOSOKAWA Tatsumi<hosokawa@mt.cs.keio.ac.jp> */
+end_comment
+
 begin_function
-name|void
+name|int
 name|sdtossd
 parameter_list|(
 name|sd
@@ -5049,6 +5074,9 @@ name|sd
 operator|->
 name|sd_gran
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -5062,70 +5090,115 @@ name|int
 name|first
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-name|etext
-index|[]
-decl_stmt|;
+extern|extern lgdt(
+block|)
+operator|,
+function|lidt
+parameter_list|()
+operator|,
+function|lldt
+parameter_list|()
+function|;
+end_function
+
+begin_decl_stmt
 name|int
 name|x
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|biosbasemem
 decl_stmt|,
 name|biosextmem
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|gate_descriptor
 modifier|*
 name|gdp
 decl_stmt|;
-name|int
-name|gsel_tss
-decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|sigcode
 decl_stmt|,
 name|szsigcode
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* table descriptors - used to load tables by microp */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|region_descriptor
 name|r_gdt
 decl_stmt|,
 name|r_idt
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|pagesinbase
 decl_stmt|,
 name|pagesinext
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|target_page
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|struct
 name|pte
 modifier|*
 name|CMAP1
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|caddr_t
 name|CADDR1
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|proc0
 operator|.
 name|p_addr
 operator|=
 name|proc0paddr
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Initialize the console before we print anything out. 	 */
+end_comment
+
+begin_expr_stmt
 name|cninit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * make gdt memory segments, the code segment goes up to end of the 	 * page with etext in it, the data segment goes to the end of 	 * the address space 	 */
-comment|/* 	 * XXX text protection is temporarily (?) disabled.  The limit was 	 * i386_btop(i386_round_page(etext)) - 1. 	 */
+end_comment
+
+begin_expr_stmt
 name|gdt_segs
 index|[
 name|GCODE_SEL
@@ -5139,7 +5212,11 @@ literal|0
 argument_list|)
 operator|-
 literal|1
+comment|/* i386_btop(i386_round_page(&etext)) - 1 */
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gdt_segs
 index|[
 name|GDATA_SEL
@@ -5154,6 +5231,9 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|x
@@ -5169,32 +5249,44 @@ operator|++
 control|)
 name|ssdtosd
 argument_list|(
-operator|&
 name|gdt_segs
-index|[
+operator|+
 name|x
-index|]
 argument_list|,
-operator|&
 name|gdt
-index|[
+operator|+
 name|x
-index|]
-operator|.
-name|sd
 argument_list|)
 expr_stmt|;
+end_for
+
+begin_comment
 comment|/* make ldt memory segments */
+end_comment
+
+begin_comment
 comment|/* 	 * The data segment limit must not cover the user area because we 	 * don't want the user area to be writable in copyout() etc. (page 	 * level protection is lost in kernel mode on 386's).  Also, we 	 * don't want the user area to be writable directly (page level 	 * protection of the user area is not available on 486's with 	 * CR0_WP set, because there is no user-read/kernel-write mode). 	 * 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  And it 	 * should be spelled ...MAX_USER... 	 */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|VM_END_USER_RW_ADDRESS
 value|VM_MAXUSER_ADDRESS
+end_define
+
+begin_comment
 comment|/* 	 * The code segment limit has to cover the user area until we move 	 * the signal trampoline out of the user area.  This is safe because 	 * the code segment cannot be written to directly. 	 */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|VM_END_USER_R_ADDRESS
 value|(VM_END_USER_RW_ADDRESS + UPAGES * NBPG)
+end_define
+
+begin_expr_stmt
 name|ldt_segs
 index|[
 name|LUCODE_SEL
@@ -5209,6 +5301,9 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ldt_segs
 index|[
 name|LUDATA_SEL
@@ -5223,7 +5318,13 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Note. eventually want private ldts per process */
+end_comment
+
+begin_for
 for|for
 control|(
 name|x
@@ -5232,29 +5333,29 @@ literal|0
 init|;
 name|x
 operator|<
-name|NLDT
+literal|5
 condition|;
 name|x
 operator|++
 control|)
 name|ssdtosd
 argument_list|(
-operator|&
 name|ldt_segs
-index|[
+operator|+
 name|x
-index|]
 argument_list|,
-operator|&
 name|ldt
-index|[
+operator|+
 name|x
-index|]
-operator|.
-name|sd
 argument_list|)
 expr_stmt|;
+end_for
+
+begin_comment
 comment|/* exceptions */
+end_comment
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|0
@@ -5270,6 +5371,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|1
@@ -5285,6 +5389,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|2
@@ -5300,6 +5407,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|3
@@ -5315,6 +5425,9 @@ argument_list|,
 name|SEL_UPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|4
@@ -5330,6 +5443,9 @@ argument_list|,
 name|SEL_UPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|5
@@ -5345,6 +5461,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|6
@@ -5360,6 +5479,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|7
@@ -5375,6 +5497,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|8
@@ -5390,6 +5515,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|9
@@ -5405,6 +5533,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|10
@@ -5420,6 +5551,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|11
@@ -5435,6 +5569,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|12
@@ -5450,6 +5587,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|13
@@ -5465,6 +5605,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|14
@@ -5480,6 +5623,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|15
@@ -5495,6 +5641,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|16
@@ -5510,6 +5659,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|17
@@ -5525,6 +5677,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|18
@@ -5540,6 +5695,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|19
@@ -5555,6 +5713,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|20
@@ -5570,6 +5731,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|21
@@ -5585,6 +5749,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|22
@@ -5600,6 +5767,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|23
@@ -5615,6 +5785,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|24
@@ -5630,6 +5803,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|25
@@ -5645,6 +5821,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|26
@@ -5660,6 +5839,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|27
@@ -5675,6 +5857,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|28
@@ -5690,6 +5875,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|29
@@ -5705,6 +5893,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|30
@@ -5720,6 +5911,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setidt
 argument_list|(
 literal|31
@@ -5735,19 +5929,34 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_include
 include|#
 directive|include
 file|"isa.h"
+end_include
+
+begin_if
 if|#
 directive|if
 name|NISA
 operator|>
 literal|0
+end_if
+
+begin_expr_stmt
 name|isa_defaultirq
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|r_gdt
 operator|.
 name|rd_limit
@@ -5759,6 +5968,9 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|r_gdt
 operator|.
 name|rd_base
@@ -5768,12 +5980,18 @@ name|int
 operator|)
 name|gdt
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lgdt
 argument_list|(
 operator|&
 name|r_gdt
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|r_idt
 operator|.
 name|rd_limit
@@ -5785,6 +6003,9 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|r_idt
 operator|.
 name|rd_base
@@ -5794,12 +6015,18 @@ name|int
 operator|)
 name|idt
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lidt
 argument_list|(
 operator|&
 name|r_idt
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_default_ldt
 operator|=
 name|GSEL
@@ -5809,21 +6036,36 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldt
 argument_list|(
 name|_default_ldt
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|currentldt
 operator|=
 name|_default_ldt
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|DDB
+end_ifdef
+
+begin_expr_stmt
 name|kdb_init
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|boothowto
@@ -5835,9 +6077,18 @@ argument_list|(
 literal|"Boot flags requested debugger"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* Use BIOS values stored in RTC CMOS RAM, since probing 	 * breaks certain 386 AT relics. 	 */
+end_comment
+
+begin_expr_stmt
 name|biosbasemem
 operator|=
 name|rtcin
@@ -5854,6 +6105,9 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|biosextmem
 operator|=
 name|rtcin
@@ -5870,7 +6124,13 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * If BIOS tells us that it has more than 640k in the basemem, 	 *	don't believe it - set it to 640k. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|biosbasemem
@@ -5881,10 +6141,19 @@ name|biosbasemem
 operator|=
 literal|640
 expr_stmt|;
+end_if
+
+begin_comment
 comment|/* 	 * Some 386 machines might give us a bogus number for extended 	 *	mem. If this happens, stop now. 	 */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|LARGEMEM
+end_ifndef
+
+begin_if
 if|if
 condition|(
 name|biosextmem
@@ -5899,8 +6168,14 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+end_if
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|pagesinbase
 operator|=
 name|biosbasemem
@@ -5909,6 +6184,9 @@ literal|1024
 operator|/
 name|NBPG
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pagesinext
 operator|=
 name|biosextmem
@@ -5917,8 +6195,17 @@ literal|1024
 operator|/
 name|NBPG
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Special hack for chipsets that still remap the 384k hole when 	 *	there's 16MB of memory - this really confuses people that 	 *	are trying to use bus mastering ISA controllers with the 	 *	"16MB limit"; they only have 16MB, but the remapping puts 	 *	them beyond the limit. 	 * XXX - this should be removed when bounce buffers are 	 *	implemented. 	 */
+end_comment
+
+begin_comment
 comment|/* 	 * If extended memory is between 15-16MB (16-17MB phys address range), 	 *	chop it to 15MB. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -5937,7 +6224,13 @@ name|pagesinext
 operator|=
 literal|3840
 expr_stmt|;
+end_if
+
+begin_comment
 comment|/* 	 * Maxmem isn't the "maximum memory", it's the highest page of 	 * of the physical address space. It should be "Maxphyspage". 	 */
+end_comment
+
+begin_expr_stmt
 name|Maxmem
 operator|=
 name|pagesinext
@@ -5946,18 +6239,41 @@ literal|0x100000
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|MAXMEM
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|MAXMEM
+operator|/
+literal|4
+operator|<
+name|Maxmem
+condition|)
 name|Maxmem
 operator|=
 name|MAXMEM
 operator|/
 literal|4
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* 	 * Calculate number of physical pages, but account for Maxmem 	 *	adjustment above. 	 */
+end_comment
+
+begin_expr_stmt
 name|physmem
 operator|=
 name|pagesinbase
@@ -5968,7 +6284,13 @@ literal|0x100000
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* call pmap initialization to make new kernel address space */
+end_comment
+
+begin_expr_stmt
 name|pmap_bootstrap
 argument_list|(
 name|first
@@ -5976,7 +6298,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Do simple memory test over range of extended memory that BIOS 	 *	indicates exists. Adjust Maxmem to the highest page of 	 *	good memory. 	 */
+end_comment
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Testing memory (%dMB)..."
@@ -5991,13 +6319,16 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|target_page
 operator|=
 name|Maxmem
 operator|-
-literal|2
+literal|1
 init|;
 name|target_page
 operator|>=
@@ -6179,11 +6510,17 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+end_for
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"done.\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 operator|(
 name|int
@@ -6193,9 +6530,15 @@ name|CMAP1
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pmap_update
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|avail_end
 operator|=
 operator|(
@@ -6213,12 +6556,24 @@ name|msgbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Initialize pointers to the two chunks of memory; for use 	 *	later in vm_page_startup. 	 */
+end_comment
+
+begin_comment
 comment|/* avail_start is initialized in pmap_bootstrap */
+end_comment
+
+begin_expr_stmt
 name|x
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|pagesinbase
@@ -6247,6 +6602,9 @@ name|NBPG
 expr_stmt|;
 comment|/* memory up to the ISA hole */
 block|}
+end_if
+
+begin_expr_stmt
 name|phys_avail
 index|[
 name|x
@@ -6255,7 +6613,13 @@ index|]
 operator|=
 name|avail_start
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* memory up to the end */
+end_comment
+
+begin_expr_stmt
 name|phys_avail
 index|[
 name|x
@@ -6264,6 +6628,9 @@ index|]
 operator|=
 name|avail_end
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|phys_avail
 index|[
 name|x
@@ -6272,7 +6639,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* no more chunks */
+end_comment
+
+begin_expr_stmt
 name|phys_avail
 index|[
 name|x
@@ -6281,8 +6654,17 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* now running on new page tables, configured,and u/iom is accessible */
+end_comment
+
+begin_comment
 comment|/* make a initial tss so microp can get interrupt stack on syscall! */
+end_comment
+
+begin_expr_stmt
 name|proc0
 operator|.
 name|p_addr
@@ -6302,6 +6684,9 @@ name|UPAGES
 operator|*
 name|NBPG
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|proc0
 operator|.
 name|p_addr
@@ -6319,7 +6704,10 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
-name|gsel_tss
+end_expr_stmt
+
+begin_expr_stmt
+name|_gsel_tss
 operator|=
 name|GSEL
 argument_list|(
@@ -6328,6 +6716,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|(
 operator|(
 expr|struct
@@ -6353,12 +6744,21 @@ operator|)
 operator|<<
 literal|16
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ltr
 argument_list|(
-name|gsel_tss
+name|_gsel_tss
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* make a call gate to reenter kernel with */
+end_comment
+
+begin_expr_stmt
 name|gdp
 operator|=
 operator|&
@@ -6369,6 +6769,9 @@ index|]
 operator|.
 name|gd
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|x
 operator|=
 operator|(
@@ -6380,6 +6783,9 @@ argument_list|(
 name|syscall
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gdp
 operator|->
 name|gd_looffset
@@ -6387,6 +6793,9 @@ operator|=
 name|x
 operator|++
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gdp
 operator|->
 name|gd_selector
@@ -6398,30 +6807,45 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gdp
 operator|->
 name|gd_stkcpy
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gdp
 operator|->
 name|gd_type
 operator|=
 name|SDT_SYS386CGT
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gdp
 operator|->
 name|gd_dpl
 operator|=
 name|SEL_UPL
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gdp
 operator|->
 name|gd_p
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gdp
 operator|->
 name|gd_hioffset
@@ -6439,7 +6863,13 @@ operator|)
 operator|>>
 literal|16
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* transfer to user mode */
+end_comment
+
+begin_expr_stmt
 name|_ucodesel
 operator|=
 name|LSEL
@@ -6449,6 +6879,9 @@ argument_list|,
 name|SEL_UPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_udatasel
 operator|=
 name|LSEL
@@ -6458,7 +6891,13 @@ argument_list|,
 name|SEL_UPL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* setup proc 0's pcb */
+end_comment
+
+begin_expr_stmt
 name|bcopy
 argument_list|(
 operator|&
@@ -6475,6 +6914,9 @@ argument_list|,
 name|szsigcode
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|proc0
 operator|.
 name|p_addr
@@ -6485,6 +6927,9 @@ name|pcb_flags
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|proc0
 operator|.
 name|p_addr
@@ -6495,24 +6940,32 @@ name|pcb_ptd
 operator|=
 name|IdlePTD
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
-begin_function
-name|int
+begin_macro
+unit|}  int
 name|test_page
-parameter_list|(
-name|address
-parameter_list|,
-name|pattern
-parameter_list|)
+argument_list|(
+argument|address
+argument_list|,
+argument|pattern
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 modifier|*
 name|address
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|pattern
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|int
 modifier|*
@@ -6563,7 +7016,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * The registers are in the frame; the frame is in the user area of  * the process in question; when the process is active, the registers  * are in "the kernel stack"; when it's not, they're still there, but  * things get flipped around.  So, since p->p_md.md_regs is the whole address  * of the register set, take its offset from the kernel stack, and  * index into the user block.  Don't you just *love* virtual memory?  * (I'm starting to think seymour is right...)  */
@@ -7193,6 +7646,12 @@ end_endif
 begin_comment
 comment|/* no DDB */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/dkbad.h>
+end_include
 
 begin_include
 include|#

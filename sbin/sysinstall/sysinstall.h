@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|TITLE
-value|"FreeBSD 2.0-ALPHA Installation"
+value|"FreeBSD 2.0-BETA Installation"
 end_define
 
 begin_define
@@ -27,22 +27,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_NO_DEVICES
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAX_NO_DISKS
 value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_NO_MOUNTS
-value|30
 end_define
 
 begin_define
@@ -58,6 +44,17 @@ directive|define
 name|MAXFS
 value|MAX_NO_FS
 end_define
+
+begin_define
+define|#
+directive|define
+name|BBSIZE
+value|8192
+end_define
+
+begin_comment
+comment|/* Actually in ufs/ffs/fs.h I think */
+end_comment
 
 begin_include
 include|#
@@ -130,30 +127,6 @@ include|#
 directive|include
 file|<sys/disklabel.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)< (b) ? (a) : (b))
-end_define
-
-begin_define
-define|#
-directive|define
-name|max
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)> (b) ? (a) : (b))
-end_define
 
 begin_define
 define|#
@@ -380,6 +353,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
+name|int
+name|Faction
+index|[
+name|MAX_NO_FS
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
 name|u_long
 name|Fsize
 index|[
@@ -415,19 +400,28 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|int
-name|no_mounts
+name|dialog_active
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
-name|struct
-name|fstab
-modifier|*
-name|mounts
-index|[
-name|MAX_NO_MOUNTS
-index|]
+name|int
+name|fixit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|no_disks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inst_disk
 decl_stmt|;
 end_decl_stmt
 
@@ -464,36 +458,6 @@ end_function_decl
 begin_comment
 comment|/* utils.c */
 end_comment
-
-begin_decl_stmt
-name|int
-name|strheight
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|strwidth
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -750,6 +714,32 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|enable_label
+name|__P
+argument_list|(
+operator|(
+name|int
+name|fd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|disable_label
+name|__P
+argument_list|(
+operator|(
+name|int
+name|fd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* exec.c */
 end_comment
@@ -960,71 +950,59 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* label.c */
-end_comment
-
-begin_function_decl
-name|int
-name|sectstoMb
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|Mb_to_cylbdry
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|disklabel
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|default_disklabel
-parameter_list|(
-name|struct
-name|disklabel
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|disk_size
-parameter_list|(
-name|struct
-name|disklabel
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* mbr.c */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|int
-name|edit_mbr
-parameter_list|(
+name|build_bootblocks
+name|__P
+argument_list|(
+operator|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+name|dfd
+operator|,
+expr|struct
+name|disklabel
+operator|*
+name|label
+operator|,
+expr|struct
+name|dos_partition
+operator|*
+name|dospart
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|Fdisk
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* label.c */
+end_comment
+
+begin_decl_stmt
+name|void
+name|DiskLabel
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
