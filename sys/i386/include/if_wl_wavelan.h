@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $Id$ */
+end_comment
+
+begin_comment
 comment|/*   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain all copyright   *    notices, this list of conditions and the following disclaimer.  * 2. The names of the authors may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *   */
 end_comment
 
@@ -44,6 +48,31 @@ end_comment
 begin_comment
 comment|/* Modem Management Controler write commands */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_ENCR_KEY
+value|0x00
+end_define
+
+begin_comment
+comment|/* to 0x07 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_ENCR_ENABLE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMC_DES_IO_INVERT
+value|0x0a
+end_define
 
 begin_define
 define|#
@@ -146,27 +175,149 @@ end_define
 begin_define
 define|#
 directive|define
-name|MMC_ENCR_KEY
-value|0x00
+name|MMC_EECTRL
+value|0x20
 end_define
 
 begin_comment
-comment|/* to 0x07 */
+comment|/* 2.4 Gz */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MMC_ENCR_ENABLE
-value|0x08
+name|MMC_EEADDR
+value|0x21
 end_define
+
+begin_comment
+comment|/* 2.4 Gz */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MMC_DES_IO_INVERT
-value|0x0a
+name|MMC_EEDATAL
+value|0x22
 end_define
+
+begin_comment
+comment|/* 2.4 Gz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EEDATAH
+value|0x23
+end_define
+
+begin_comment
+comment|/* 2.4 Gz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_ANALCTRL
+value|0x24
+end_define
+
+begin_comment
+comment|/* 2.4 Gz */
+end_comment
+
+begin_comment
+comment|/* fields in MMC registers that relate to EEPROM in WaveMODEM daughtercard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EECTRL_EEPRE
+value|0x10
+end_define
+
+begin_comment
+comment|/* 2.4 Gz EEPROM Protect Reg Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EECTRL_DWLD
+value|0x08
+end_define
+
+begin_comment
+comment|/* 2.4 Gz EEPROM Download Synths   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EECTRL_EEOP
+value|0x07
+end_define
+
+begin_comment
+comment|/* 2.4 Gz EEPROM Opcode mask	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EECTRL_EEOP_READ
+value|0x06
+end_define
+
+begin_comment
+comment|/* 2.4 Gz EEPROM Read Opcode	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EEADDR_CHAN
+value|0xf0
+end_define
+
+begin_comment
+comment|/* 2.4 Gz EEPROM Channel # mask	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EEADDR_WDCNT
+value|0x0f
+end_define
+
+begin_comment
+comment|/* 2.4 Gz EEPROM DNLD WordCount-1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_ANALCTRL_ANTPOL
+value|0x02
+end_define
+
+begin_comment
+comment|/* 2.4 Gz Antenna Polarity mask	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_ANALCTRL_EXTANT
+value|0x01
+end_define
+
+begin_comment
+comment|/* 2.4 Gz External Antenna mask	 */
+end_comment
 
 begin_comment
 comment|/* MMC read register names */
@@ -242,6 +393,76 @@ name|MMC_DES_AVAIL
 value|0x09
 end_define
 
+begin_define
+define|#
+directive|define
+name|MMC_EECTRLstat
+value|0x20
+end_define
+
+begin_comment
+comment|/* 2.4 Gz  EEPROM r/w/dwld status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EEDATALrv
+value|0x22
+end_define
+
+begin_comment
+comment|/* 2.4 Gz  EEPROM read value	  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EEDATAHrv
+value|0x23
+end_define
+
+begin_comment
+comment|/* 2.4 Gz  EEPROM read value	  */
+end_comment
+
+begin_comment
+comment|/* fields in MMC registers that relate to EEPROM in WaveMODEM daughtercard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EECTRLstat_ID24
+value|0xf0
+end_define
+
+begin_comment
+comment|/* 2.4 Gz  =A0 rev-A, =B0 rev-B   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EECTRLstat_DWLD
+value|0x08
+end_define
+
+begin_comment
+comment|/* 2.4 Gz  Synth/Tx-Pwr DWLD busy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_EECTRLstat_EEBUSY
+value|0x04
+end_define
+
+begin_comment
+comment|/* 2.4 Gz  EEPROM busy		  */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -294,6 +515,61 @@ end_define
 
 begin_comment
 comment|/* set wlan PSA (all) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCDWLCACHE
+value|_IOW('i',  64, struct ifreq)
+end_define
+
+begin_comment
+comment|/* clear SNR cache    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSWLTHR
+value|_IOW('i',  65, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set new quality threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGWLEEPROM
+value|_IOWR('i', 66, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get modem EEPROM   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGWLCACHE
+value|_IOWR('i', 67, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get SNR cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGWLCITEM
+value|_IOWR('i', 68, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get cache element count */
 end_comment
 
 begin_comment
@@ -608,6 +884,17 @@ begin_comment
 comment|/* CRC OK flag */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WLPSA_COMPATNO_WL24B
+value|0x04
+end_define
+
+begin_comment
+comment|/* 2.4 Gz WaveMODEM ISA rev-B  */
+end_comment
+
 begin_comment
 comment|/*   * signal strength cache  *  * driver (wlp only at the moment) keeps cache of last  * IP (only) packets to arrive including signal strength info.  * daemons may read this with kvm.  See if_wlp.c for globals  * that may be accessed through kvm.  *  * Each entry in the w_sigcache has a unique macsrc and age.  * Each entry is identified by its macsrc field.  * Age of the packet is identified by its age field.  */
 end_comment
@@ -676,7 +963,7 @@ name|quality
 decl_stmt|;
 comment|/* quality of the packet */
 name|int
-name|age
+name|snr
 decl_stmt|;
 comment|/* packet has unique age between 1 to MAX_AGE - 1 */
 block|}
