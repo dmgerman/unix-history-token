@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.12 1996/05/13 09:17:42 asami Exp $ */
+comment|/* $Id: ccd.c,v 1.10.2.3 1996/05/13 09:18:26 asami Exp $ */
 end_comment
 
 begin_comment
@@ -3982,6 +3982,18 @@ operator|.
 name|b_bcount
 operator|=
 name|bcount
+expr_stmt|;
+name|cbp
+operator|->
+name|cb_buf
+operator|.
+name|b_bufsize
+operator|=
+name|cbp
+operator|->
+name|cb_buf
+operator|.
+name|b_bcount
 expr_stmt|;
 comment|/* 	 * context for ccdiodone 	 */
 name|cbp
