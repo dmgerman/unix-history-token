@@ -77,6 +77,16 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|df_disconnect
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|df02_dialer
@@ -471,9 +481,12 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|void
 name|df_disconnect
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|write
 argument_list|(

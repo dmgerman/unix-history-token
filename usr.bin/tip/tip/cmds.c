@@ -276,6 +276,7 @@ name|EOFREAD
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -874,7 +875,10 @@ end_comment
 begin_function
 name|void
 name|pipefile
-parameter_list|()
+parameter_list|(
+name|char
+name|c
+parameter_list|)
 block|{
 name|int
 name|cpid
@@ -2264,6 +2268,7 @@ begin_function
 name|void
 name|pipeout
 parameter_list|(
+name|char
 name|c
 parameter_list|)
 block|{
@@ -2549,6 +2554,7 @@ begin_function
 name|void
 name|consh
 parameter_list|(
+name|char
 name|c
 parameter_list|)
 block|{
@@ -2839,7 +2845,10 @@ end_comment
 begin_function
 name|void
 name|shell
-parameter_list|()
+parameter_list|(
+name|char
+name|c
+parameter_list|)
 block|{
 name|int
 name|shpid
@@ -3098,7 +3107,10 @@ end_comment
 begin_function
 name|void
 name|chdirectory
-parameter_list|()
+parameter_list|(
+name|char
+name|c
+parameter_list|)
 block|{
 name|char
 name|dirname
@@ -3230,7 +3242,10 @@ end_function
 begin_function
 name|void
 name|finish
-parameter_list|()
+parameter_list|(
+name|char
+name|c
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3655,7 +3670,10 @@ end_function
 begin_function
 name|void
 name|variable
-parameter_list|()
+parameter_list|(
+name|char
+name|c
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -3908,7 +3926,10 @@ end_function
 begin_function
 name|void
 name|listvariables
-parameter_list|()
+parameter_list|(
+name|char
+name|c
+parameter_list|)
 block|{
 name|value_t
 modifier|*
@@ -4210,7 +4231,10 @@ end_comment
 begin_function
 name|void
 name|genbrk
-parameter_list|()
+parameter_list|(
+name|char
+name|c
+parameter_list|)
 block|{
 name|ioctl
 argument_list|(

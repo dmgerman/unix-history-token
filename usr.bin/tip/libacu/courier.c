@@ -138,6 +138,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|void
+name|cour_write
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|char
+modifier|*
+name|cp
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|cour_disconnect
 parameter_list|(

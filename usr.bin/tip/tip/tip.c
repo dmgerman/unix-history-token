@@ -221,6 +221,11 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|p2
+decl_stmt|;
 name|char
 name|sbuf
 index|[
@@ -752,7 +757,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|p
+name|p2
 operator|=
 name|connect
 argument_list|()
@@ -763,7 +768,7 @@ name|printf
 argument_list|(
 literal|"\07%s\n[EOT]\n"
 argument_list|,
-name|p
+name|p2
 argument_list|)
 expr_stmt|;
 name|daemon_uid

@@ -928,12 +928,8 @@ specifier|extern
 name|char
 modifier|*
 name|interp
-argument_list|()
-decl_stmt|,
-modifier|*
-name|ctrl
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|col
