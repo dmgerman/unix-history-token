@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_5.c	2.4 83/12/17"
+literal|"@(#)pl_5.c	2.5 83/12/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -780,7 +780,7 @@ index|[
 name|n
 index|]
 operator|.
-name|turnsent
+name|mensent
 expr_stmt|;
 block|}
 for|for
@@ -817,7 +817,7 @@ index|[
 name|n
 index|]
 operator|.
-name|turnsent
+name|mensent
 expr_stmt|;
 block|}
 if|if
