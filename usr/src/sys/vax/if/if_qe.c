@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_qe.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_qe.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -697,6 +697,13 @@ name|QE_RESET
 expr_stmt|;
 name|addr
 operator|->
+name|qe_csr
+operator|&=
+operator|~
+name|QE_RESET
+expr_stmt|;
+name|addr
+operator|->
 name|qe_vector
 operator|=
 operator|(
@@ -1201,13 +1208,29 @@ index|]
 operator|&
 literal|0xff
 expr_stmt|;
+name|addr
+operator|->
+name|qe_vector
+operator||=
+literal|1
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"qe%d: hardware address %s\n"
+literal|"qe%d: %s, hardware address %s\n"
 argument_list|,
 name|ui
 operator|->
 name|ui_unit
+argument_list|,
+name|addr
+operator|->
+name|qe_vector
+operator|&
+literal|01
+condition|?
+literal|"delqa"
+else|:
+literal|"deqna"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -1216,6 +1239,13 @@ operator|->
 name|qe_addr
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|addr
+operator|->
+name|qe_vector
+operator|&=
+operator|~
+literal|1
 expr_stmt|;
 comment|/* 	 * Save the vector for initialization at reset time. 	 */
 name|sc
