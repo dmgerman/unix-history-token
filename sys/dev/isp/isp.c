@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp.c,v 1.16 1999/03/26 00:33:13 mjacob Exp $ */
+comment|/* $Id: isp.c,v 1.17 1999/04/04 02:28:29 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_4_3_99 */
+comment|/* release_4_3_99+ */
 end_comment
 
 begin_comment
@@ -7282,7 +7282,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * It really has to be a bounced request just copied 			 * from the request queue to the response queue. 			 */
+comment|/* 			 * It really has to be a bounced request just copied 			 * from the request queue to the response queue. If 			 * not, something bad has happened. 			 */
 if|if
 condition|(
 name|sp
@@ -7303,8 +7303,6 @@ argument_list|,
 name|optr
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
 name|PRINTF
 argument_list|(
 literal|"%s: not RESPONSE in RESPONSE Queue "
@@ -7325,6 +7323,8 @@ argument_list|,
 name|optr
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 name|buddaboom
 operator|=
 literal|1
@@ -7341,6 +7341,11 @@ operator|&
 literal|0xf
 condition|)
 block|{
+define|#
+directive|define
+name|_RQS_OFLAGS
+define|\
+value|~(RQSFLAG_CONTINUATION|RQSFLAG_FULL|RQSFLAG_BADHEADER|RQSFLAG_BADPACKET)
 if|if
 condition|(
 name|sp
@@ -7352,6 +7357,19 @@ operator|&
 name|RQSFLAG_CONTINUATION
 condition|)
 block|{
+name|IDPRINTF
+argument_list|(
+literal|3
+argument_list|,
+operator|(
+literal|"%s: continuation segment\n"
+operator|,
+name|isp
+operator|->
+name|isp_name
+operator|)
+argument_list|)
+expr_stmt|;
 name|ISP_WRITE
 argument_list|(
 name|isp
@@ -7363,23 +7381,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|PRINTF
-argument_list|(
-literal|"%s: rqs_flags=%x"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|sp
-operator|->
-name|req_header
-operator|.
-name|rqs_flags
-operator|&
-literal|0xf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sp
@@ -7391,19 +7392,20 @@ operator|&
 name|RQSFLAG_FULL
 condition|)
 block|{
-name|PRINTF
+name|IDPRINTF
 argument_list|(
-literal|"%s: internal queues full\n"
+literal|2
 argument_list|,
+operator|(
+literal|"%s: internal queues full\n"
+operator|,
 name|isp
 operator|->
 name|isp_name
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXXX: this command *could* get restarted */
-name|buddaboom
-operator|++
-expr_stmt|;
+comment|/* 				 * We'll synthesize a QUEUE FULL message below. 				 */
 block|}
 if|if
 condition|(
@@ -7453,6 +7455,39 @@ name|buddaboom
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_header
+operator|.
+name|rqs_flags
+operator|&
+name|_RQS_OFLAGS
+condition|)
+block|{
+name|PRINTF
+argument_list|(
+literal|"%s: unknown flags in response (0x%x)\n"
+argument_list|,
+name|isp
+operator|->
+name|isp_name
+argument_list|,
+name|sp
+operator|->
+name|req_header
+operator|.
+name|rqs_flags
+argument_list|)
+expr_stmt|;
+name|buddaboom
+operator|++
+expr_stmt|;
+block|}
+undef|#
+directive|undef
+name|_RQS_OFLAGS
 block|}
 if|if
 condition|(
@@ -7677,6 +7712,63 @@ operator|.
 name|dev_refresh
 operator|=
 literal|1
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|sp
+operator|->
+name|req_header
+operator|.
+name|rqs_entry_type
+operator|==
+name|RQSTYPE_REQUEST
+condition|)
+block|{
+if|if
+condition|(
+name|sp
+operator|->
+name|req_header
+operator|.
+name|rqs_flags
+operator|&
+name|RQSFLAG_FULL
+condition|)
+block|{
+comment|/* 				 * Force Queue Full status. 				 */
+name|XS_STS
+argument_list|(
+name|xs
+argument_list|)
+operator|=
+literal|0x28
+expr_stmt|;
+name|XS_SETERR
+argument_list|(
+name|xs
+argument_list|,
+name|HBA_NOERROR
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
+name|XS_SETERR
+argument_list|(
+name|xs
+argument_list|,
+name|HBA_BOTCH
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -17227,7 +17319,7 @@ name|sdp
 operator|->
 name|isp_max_queue_depth
 operator|=
-literal|128
+name|MAXISPREQUEST
 expr_stmt|;
 name|sdp
 operator|->
