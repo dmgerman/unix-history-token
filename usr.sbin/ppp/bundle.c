@@ -573,10 +573,15 @@ name|phase
 operator|=
 name|new
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|MPPE_MasterKeyValid
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|log_DisplayPrompts
 argument_list|()
 expr_stmt|;
