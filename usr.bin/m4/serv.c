@@ -1287,11 +1287,12 @@ else|else
 block|{
 name|scommt
 operator|=
-name|SCOMMT
+literal|'\0'
 expr_stmt|;
+comment|/* assuming no nulls in input */
 name|ecommt
 operator|=
-name|ECOMMT
+literal|'\0'
 expr_stmt|;
 block|}
 block|}

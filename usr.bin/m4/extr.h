@@ -365,14 +365,6 @@ name|optind
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|int
-name|getopt
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
