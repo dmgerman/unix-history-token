@@ -465,6 +465,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|sig
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -524,7 +526,6 @@ block|{
 comment|/* do we need to test for a signature? */
 if|if
 condition|(
-operator|(
 name|amr_device_ids
 index|[
 name|i
@@ -533,9 +534,10 @@ operator|.
 name|flag
 operator|&
 name|PROBE_SIGNATURE
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+name|sig
+operator|=
 name|pci_read_config
 argument_list|(
 name|dev
@@ -544,11 +546,23 @@ name|AMR_CFG_SIG
 argument_list|,
 literal|2
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sig
 operator|!=
-name|AMR_SIGNATURE
+name|AMR_SIGNATURE_1
+operator|)
+operator|&&
+operator|(
+name|sig
+operator|!=
+name|AMR_SIGNATURE_2
 operator|)
 condition|)
 continue|continue;
+block|}
 name|device_set_desc
 argument_list|(
 name|dev

@@ -1459,12 +1459,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AMR_SIGNATURE
+name|AMR_SIGNATURE_1
+value|0xCCCC
+end_define
+
+begin_comment
+comment|/* i960 signature (older adapters) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMR_SIGNATURE_2
 value|0x3344
 end_define
 
 begin_comment
-comment|/* signature for Quartz adapters */
+comment|/* i960 signature (newer adapters) */
 end_comment
 
 begin_comment
