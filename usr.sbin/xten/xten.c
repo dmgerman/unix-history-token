@@ -836,7 +836,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|s
 argument_list|,
