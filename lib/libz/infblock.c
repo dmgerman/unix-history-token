@@ -49,6 +49,24 @@ comment|/* for buggy compilers */
 end_comment
 
 begin_comment
+comment|/* simplify the use of the inflate_huft type with some defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|exop
+value|word.what.Exop
+end_define
+
+begin_define
+define|#
+directive|define
+name|bits
+value|word.what.Bits
+end_define
+
+begin_comment
 comment|/* Table for deflate from PKZIP's appnote.txt. */
 end_comment
 
@@ -1462,19 +1480,13 @@ name|t
 operator|=
 name|h
 operator|->
-name|word
-operator|.
-name|what
-operator|.
-name|Bits
+name|bits
 expr_stmt|;
 name|c
 operator|=
 name|h
 operator|->
-name|more
-operator|.
-name|Base
+name|base
 expr_stmt|;
 if|if
 condition|(
@@ -2005,33 +2017,6 @@ operator|=
 name|TYPE
 expr_stmt|;
 break|break;
-block|}
-if|if
-condition|(
-name|k
-operator|>
-literal|7
-condition|)
-comment|/* return unused byte, if any */
-block|{
-name|Assert
-argument_list|(
-argument|k<
-literal|16
-argument_list|,
-literal|"inflate_codes grabbed too many bytes"
-argument_list|)
-name|k
-operator|-=
-literal|8
-expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
-name|p
-operator|--
-expr_stmt|;
-comment|/* can always return one */
 block|}
 name|s
 operator|->

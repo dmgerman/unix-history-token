@@ -219,6 +219,7 @@ name|Bytef
 modifier|*
 name|dest
 decl_stmt|;
+specifier|const
 name|Bytef
 modifier|*
 name|source
@@ -267,10 +268,12 @@ name|s2
 parameter_list|,
 name|len
 parameter_list|)
+specifier|const
 name|Bytef
 modifier|*
 name|s1
 decl_stmt|;
+specifier|const
 name|Bytef
 modifier|*
 name|s2
@@ -791,7 +794,7 @@ argument_list|)
 operator|||
 operator|(
 name|_MSC_VER
-operator|<
+operator|<=
 literal|600
 operator|)
 operator|)
