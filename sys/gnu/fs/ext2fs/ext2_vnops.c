@@ -2198,7 +2198,6 @@ argument_list|,
 name|fcnp
 argument_list|)
 expr_stmt|;
-comment|/* XXX - temporarily preserve previous behavior */
 if|if
 condition|(
 name|fdvp
