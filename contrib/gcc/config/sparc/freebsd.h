@@ -4,7 +4,11 @@ comment|/* Definitions for Sun Sparc64 running FreeBSD using the ELF format    C
 end_comment
 
 begin_comment
-comment|/* FreeBSD needs's the platform name (sparc64) defined.  */
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
+comment|/* FreeBSD needs's the platform name (sparc64) defined.    Emacs needs to know if the arch is 64 or 32-bits.  */
 end_comment
 
 begin_undef
@@ -17,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|CPP_CPU64_DEFAULT_SPEC
-value|"-D__sparc64__ -D__sparc_v9__"
+value|"-D__sparc64__ -D__sparc_v9__ -D__arch64__"
 end_define
 
 begin_undef
