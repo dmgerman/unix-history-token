@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.41	83/07/25	*/
+comment|/*	in_pcb.c	4.42	83/07/26	*/
 end_comment
 
 begin_include
@@ -774,6 +774,27 @@ name|s_addr
 operator|==
 name|INADDR_ANY
 condition|)
+block|{
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_lport
+operator|==
+literal|0
+condition|)
+name|in_pcbbind
+argument_list|(
+name|inp
+argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 name|inp
 operator|->
 name|inp_laddr
@@ -782,6 +803,7 @@ name|ifaddr
 operator|->
 name|sin_addr
 expr_stmt|;
+block|}
 name|inp
 operator|->
 name|inp_faddr
