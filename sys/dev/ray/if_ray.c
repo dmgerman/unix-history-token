@@ -4,11 +4,11 @@ comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.dem
 end_comment
 
 begin_comment
-comment|/*  *  * Card configuration  * ==================  *  * This card is unusual in that it uses both common and attribute  * memory whilst working. The -stable versions of FreeBSD have a real  * problem managing and setting up the correct memory maps. This  * driver should reset the memory maps correctly under PAO and non-PAO  * -stable systems. Work is in hand to fix these problems for -current.  *  * So, if you want to use this driver make sure that  *	options RAY_NEED_CM_FIXUP  *	options RAY_NEED_CM_REMAPPING  * are in your kernel configuration file.  *  * The first fixes the brain deadness of pccardd (where it reads the  * CIS for common memory, sets it all up and then throws it all away  * assuming the card is an ed driver...).  *  * The second option ensures that common memory is remapped whenever  * we are going to access it (we can't just do it once, as something  * like pccardd may have read the attribute memory and pccard.c  * doesn't re-map the last active window - it remaps the last  * non-active window...).  *  *  * Ad-hoc and infra-structure modes  * ================================  *   * At present only the ad-hoc mode is being worked on.  *  * Apart from just writing the code for infrastructure mode I have a  * few concerns about both the Linux and NetBSD drivers in this area.  * They don't seem to differentiate between the MAC address of the AP  * and the BSS_ID of the network. I presume this is handled when  * joining a managed n/w and the network parameters are updated, but  * I'm not sure. How does this interact with ARP? For mobility we want  * to be able to move around without worrying about which AP we are  * actually talking to - we should always talk to the BSS_ID.  *  * The Linux driver also seems to have the capability to act as an AP.  * I wonder what facilities the "AP" can provide within a driver? We can  * probably use the BRIDGE code to form an ESS but I don't think  * power saving etc. is easy.  *  *  * Packet translation/encapsulation  * ================================  *   * Currently we only support the Webgear encapsulation  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * We should support whatever packet types the following drivers have  *   	if_wi.c		FreeBSD, RFC1042  *	if_ray.c	NetBSD	Webgear, RFC1042  *	rayctl.c	Linux Webgear, RFC1042  * also whatever we can divine from the NDC Access points and Kanda's boxes.  *  * Most drivers appear to have a RFC1042 translation. The incoming packet is  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.2	LLC header  *	802.2	SNAP header  *  * This is translated to  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * Linux seems to look at the SNAP org_code and do some translations  * for IPX and APPLEARP on that. This just may be how Linux does IPX  * and NETATALK. Need to see how FreeBSD does these.  *  * Translation should be selected via if_media stuff or link types.  */
+comment|/*  *  * Card configuration  * ==================  *  * This card is unusual in that it uses both common and attribute  * memory whilst working. The -stable versions of FreeBSD have a real  * problem managing and setting up the correct memory maps. This  * driver should reset the memory maps correctly under PAO and non-PAO  * -stable systems. Work is in hand to fix these problems for -current.  *  * So, if you want to use this driver make sure that  *	options RAY_NEED_CM_FIXUP  *	options RAY_NEED_CM_REMAPPING  * are in your kernel configuration file.  *  * The first fixes the brain deadness of pccardd (where it reads the  * CIS for common memory, sets it all up and then throws it all away  * assuming the card is an ed driver...). Note that this could be  * dangerous (because it doesn't interact with pccardd) if you  * use other memory mapped cards at the same time.  *  * The second option ensures that common memory is remapped whenever  * we are going to access it (we can't just do it once, as something  * like pccardd may have read the attribute memory and pccard.c  * doesn't re-map the last active window - it remaps the last  * non-active window...).  *  *  * Ad-hoc and infra-structure modes  * ================================  *   * At present only the ad-hoc mode is being worked on.  *  * Apart from just writing the code for infrastructure mode I have a  * few concerns about both the Linux and NetBSD drivers in this area.  * They don't seem to differentiate between the MAC address of the AP  * and the BSS_ID of the network. I presume this is handled when  * joining a managed n/w and the network parameters are updated, but  * I'm not sure. How does this interact with ARP? For mobility we want  * to be able to move around without worrying about which AP we are  * actually talking to - we should always talk to the BSS_ID.  *  * The Linux driver also seems to have the capability to act as an AP.  * I wonder what facilities the "AP" can provide within a driver? We can  * probably use the BRIDGE code to form an ESS but I don't think  * power saving etc. is easy.  *  *  * Packet translation/encapsulation  * ================================  *   * Currently we only support the Webgear encapsulation  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * We should support whatever packet types the following drivers have  *   	if_wi.c		FreeBSD, RFC1042  *	if_ray.c	NetBSD	Webgear, RFC1042  *	rayctl.c	Linux Webgear, RFC1042  * also whatever we can divine from the NDC Access points and Kanda's boxes.  *  * Most drivers appear to have a RFC1042 translation. The incoming packet is  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.2	LLC header  *	802.2	SNAP header  *  * This is translated to  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * Linux seems to look at the SNAP org_code and do some translations  * for IPX and APPLEARP on that. This just may be how Linux does IPX  * and NETATALK. Need to see how FreeBSD does these.  *  * Translation should be selected via if_media stuff or link types.  */
 end_comment
 
 begin_comment
-comment|/*  * TODO  *  * _stop  * _reset  * havenet checking  * unload  * shutdown  *  * TX bpf  * RX bpf  * promisoius  * multicast  * ifp->if_hdr length  *  * apm  *  * more commands  * ioctls - translation, BSS_ID, countrycode  * faster TX routine  * more translations  * infrastructure mode  * differeniate between parameters set in attach and init  * start_join_done needs a restart in download_done  * spinning in ray_issue_cmd  *  * command tracking - really needed? if not remove SCP_ stuff  * 	will simplify ray_issue_cmd away  */
+comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted most panic to resets  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it  *  * TX bpf  * RX bpf  * shutdown  * promisoius  * multicast  * ifp->if_hdr length  *  * apm  *  * more commands  * ioctls - translation, BSS_ID, countrycode  * faster TX routine  * more translations  * infrastructure mode  * differeniate between parameters set in attach and init  * start_join_done needs a restart in download_done  * spinning in ray_issue_cmd  *  * command tracking - really needed? if not remove SCP_ stuff  * 	will simplify ray_issue_cmd away  */
 end_comment
 
 begin_define
@@ -51,13 +51,13 @@ begin_define
 define|#
 directive|define
 name|RAY_DEBUG
-value|6
+value|101
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAY_CCS_TIMEOUT
+name|RAY_DOWNLOAD_TIMEOUT
 value|(hz/2)
 end_define
 
@@ -118,6 +118,39 @@ end_define
 
 begin_comment
 comment|/* Dump some common memory when the SIOCGIFMEDIA ioctl is issued - a nasty hack for debugging and will be placed by an ioctl and control program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_RESET_TIMEOUT
+value|(5*hz)
+end_define
+
+begin_comment
+comment|/* Timeout for resetting the card */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_SIMPLE_TX
+value|1
+end_define
+
+begin_comment
+comment|/* Simple TX routine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_DECENT_TX
+value|0
+end_define
+
+begin_comment
+comment|/* Decent TX routine - tbd */
 end_comment
 
 begin_comment
@@ -1300,6 +1333,37 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|ray_reset
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ray_softc
+operator|*
+name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ray_reset_timo
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|xsc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|ray_rcs_intr
 name|__P
 argument_list|(
@@ -1706,19 +1770,19 @@ value|bcopy((vp), (sc)->maddr + (off), (n))
 end_define
 
 begin_comment
-comment|/*  * Macro's  */
+comment|/*  * Macro's and constants  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|RAY_CCS_TIMEOUT
+name|RAY_DOWNLOAD_TIMEOUT
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|RAY_CCS_TIMEOUT
+name|RAY_DOWNLOAD_TIMEOUT
 value|(hz / 2)
 end_define
 
@@ -1738,6 +1802,55 @@ define|#
 directive|define
 name|RAY_START_TIMEOUT
 value|(hz / 2)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RAY_RESET_TIMEOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RAY_RESET_TIMEOUT
+value|(10 * hz)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|RAY_SIMPLE_TX
+end_if
+
+begin_define
+define|#
+directive|define
+name|RAY_IFQ_MAXLEN
+value|(2)
+end_define
+
+begin_else
+else|#
+directive|else
+else|if RAY_DECENT_TX
+end_else
+
+begin_define
+define|#
+directive|define
+name|RAY_IFQ_MAXLEN
+value|(RAY_CCS_TX_LAST+1)
 end_define
 
 begin_endif
@@ -2093,6 +2206,32 @@ name|sc
 operator|->
 name|md
 operator|.
+name|start
+operator|=
+literal|0x0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ray%d: pccardd did not map CM - giving up\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|md
+operator|.
 name|flags
 operator|!=
 name|MDF_ACTIVE
@@ -2383,6 +2522,15 @@ operator|.
 name|id_unit
 index|]
 expr_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -2401,35 +2549,86 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* XXX shouldn't we call _stop? */
-comment|/* Cleardown interface */
-name|ifp
-operator|=
-operator|&
+comment|/*      * Clear out timers and sort out driver state      */
+name|untimeout
+argument_list|(
+name|ray_download_timo
+argument_list|,
+name|sc
+argument_list|,
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|timerh
+argument_list|)
+expr_stmt|;
+name|untimeout
+argument_list|(
+name|ray_reset_timo
+argument_list|,
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|timerh
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|RAY_NEED_STARTJOIN_TIMO
+name|untimeout
+argument_list|(
+name|ray_start_join_timo
+argument_list|,
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|sj_timerh
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* RAY_NEED_STARTJOIN_TIMO */
+name|untimeout
+argument_list|(
+name|ray_start_timo
+argument_list|,
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|start_timerh
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_havenet
+operator|=
+literal|0
+expr_stmt|;
+comment|/*      * Mark as not running      */
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
 operator|&=
 operator|~
-operator|(
-name|IFF_RUNNING
-operator||
 name|IFF_OACTIVE
-operator|)
 expr_stmt|;
+comment|/*      * Cleardown interface      */
 name|if_down
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* XXX probably should be if_detach but I don't know if it works in 3.1 */
-comment|/* Mark card as gone */
+comment|/* XXX should be if_detach for -current */
+comment|/*      * Mark card as gone      */
 name|sc
 operator|->
 name|gone
@@ -2805,10 +3004,37 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
+name|printf
+argument_list|(
+literal|"  maddr 0x%x\n"
+argument_list|,
+name|sc
+operator|->
+name|maddr
+argument_list|)
+expr_stmt|;
+name|RAY_DHEX8
+argument_list|(
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|sc
+operator|->
+name|maddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_ecf_startup
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/*      * Read startup results, check the card is okay and work out what      * version we are using.      */
 name|ep
 operator|=
@@ -2868,7 +3094,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -2902,7 +3128,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -2920,27 +3146,6 @@ argument_list|,
 name|sc
 operator|->
 name|unit
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|RAY_DEBUG
-operator|>
-literal|10
-condition|)
-name|RAY_DHEX8
-argument_list|(
-operator|(
-name|u_int8_t
-operator|*
-operator|)
-name|sc
-operator|->
-name|maddr
-operator|+
-name|RAY_ECF_TO_HOST_BASE
-argument_list|,
-literal|0x40
 argument_list|)
 expr_stmt|;
 if|if
@@ -3275,7 +3480,7 @@ name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
-name|RAY_CCS_TX_LAST
+name|RAY_IFQ_MAXLEN
 expr_stmt|;
 comment|/*      * If this logical interface has already been attached,      * don't attach it again or chaos will ensue.      */
 name|sprintf
@@ -3511,6 +3716,19 @@ name|sc
 argument_list|)
 condition|)
 block|{
+name|RAY_DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"ray%d: ray_start busy, schedule a timeout\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|start_timerh
@@ -5360,7 +5578,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* XXX may need to have remedial action here    for example    	ray_reset - may be useful elsewhere 		ray_stop 		... 		ray_init      do we only use on TX?     	if so then we should clear OACTIVE etc.  */
+comment|/* XXX may need to have remedial action here    for example    	ray_reset 	    ray_stop 	    ... 	    ray_init      do we only use on TX?     	if so then we should clear OACTIVE etc.  */
 return|return;
 block|}
 end_function
@@ -5787,7 +6005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Network stop.  */
+comment|/*  * Network stop.  *  * Assumes that a ray_init is used to restart the card.  *  */
 end_comment
 
 begin_function
@@ -5807,6 +6025,9 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
@@ -5853,12 +6074,21 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* XXX how do we clear ccs etc. properly */
-comment|/* XXX how do we inhibit interrupts properly */
-comment|/* XXX do these matter are we always restated with an _init? */
+comment|/*      * Clear out timers and sort out driver state      */
 name|untimeout
 argument_list|(
 name|ray_download_timo
+argument_list|,
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|timerh
+argument_list|)
+expr_stmt|;
+name|untimeout
+argument_list|(
+name|ray_reset_timo
 argument_list|,
 name|sc
 argument_list|,
@@ -5895,13 +6125,240 @@ operator|->
 name|start_timerh
 argument_list|)
 expr_stmt|;
-comment|/* Mark as not running */
+name|sc
+operator|->
+name|sc_havenet
+operator|=
+literal|0
+expr_stmt|;
+comment|/*      * Inhibit card - if we can't prevent reception then do not worry;      * stopping a NIC only guarantees no TX.      */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+comment|/* XXX what does the SHUTDOWN command do? Or power saving in COR */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/*      * Mark as not running      */
 name|ifp
 operator|->
 name|if_flags
 operator|&=
 operator|~
 name|IFF_RUNNING
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_OACTIVE
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reset the card  *  * I'm using the soft reset command in the COR register. I'm not sure  * if the sequence is right but it does seem to do the right thing. A  * nano second after reset is written the flashing light goes out, and  * a few seconds after the default is written the main card light goes  * out. We wait a while and then re-init the card.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ray_reset
+parameter_list|(
+name|sc
+parameter_list|)
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+decl_stmt|;
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"ray%d: ray_reset\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|RAY_MAP_CM
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RUNNING
+condition|)
+name|ray_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ray%d: resetting card\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+name|ray_attr_write
+argument_list|(
+operator|(
+name|sc
+operator|)
+argument_list|,
+name|RAY_COR
+argument_list|,
+name|RAY_COR_RESET
+argument_list|)
+expr_stmt|;
+name|ray_attr_write
+argument_list|(
+operator|(
+name|sc
+operator|)
+argument_list|,
+name|RAY_COR
+argument_list|,
+name|RAY_COR_DEFAULT
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|timerh
+operator|=
+name|timeout
+argument_list|(
+name|ray_reset_timo
+argument_list|,
+name|sc
+argument_list|,
+name|RAY_RESET_TIMEOUT
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Finishing resetting and restarting the card  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ray_reset_timo
+parameter_list|(
+name|xsc
+parameter_list|)
+name|void
+modifier|*
+name|xsc
+decl_stmt|;
+block|{
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+init|=
+name|xsc
+decl_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"ray%d: ray_reset_timo\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|RAY_MAP_CM
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RAY_ECF_READY
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
+name|RAY_DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"ray%d: ray_reset_timo still busy, re-schedule\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|timerh
+operator|=
+name|timeout
+argument_list|(
+name|ray_reset_timo
+argument_list|,
+name|sc
+argument_list|,
+name|RAY_RESET_TIMEOUT
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|RAY_HCS_CLEAR_INTR
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ray_init
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -6400,7 +6857,7 @@ argument_list|(
 literal|20
 argument_list|,
 operator|(
-literal|"ray%d: ray_rcs_intr got UPDATE_PARAMS\n"
+literal|"ray%d: ray_rcs_intr got REJOIN_DONE\n"
 operator|,
 name|sc
 operator|->
@@ -6408,6 +6865,13 @@ name|unit
 operator|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_havenet
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Should not be here but in function */
 name|XXX
 expr_stmt|;
 break|break;
@@ -8407,7 +8871,6 @@ name|sc
 operator|->
 name|sc_priv_join
 expr_stmt|;
-comment|/* XXX I don't really want to panic here but we must ensure that the      * XXX card is idle - maybe stop it and reset it? */
 if|if
 condition|(
 operator|!
@@ -8416,7 +8879,8 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"ray%d: ray_download_params something is already happening\n"
 argument_list|,
@@ -8425,6 +8889,12 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+name|ray_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -8482,7 +8952,8 @@ argument_list|,
 name|SCP_UPD_STARTUP
 argument_list|)
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"ray%d: ray_download_params can't get a CCS\n"
 argument_list|,
@@ -8491,6 +8962,12 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+name|ray_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -8505,7 +8982,8 @@ argument_list|,
 name|SCP_UPD_STARTUP
 argument_list|)
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"ray%d: ray_download_params can't issue command\n"
 argument_list|,
@@ -8514,6 +8992,12 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+name|ray_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|timerh
@@ -8524,7 +9008,7 @@ name|ray_download_timo
 argument_list|,
 name|sc
 argument_list|,
-name|RAY_CCS_TIMEOUT
+name|RAY_DOWNLOAD_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
@@ -8660,14 +9144,23 @@ name|RAY_CMD_START_PARAMS
 operator|)
 operator|||
 operator|(
+operator|(
 name|status
 operator|!=
 name|RAY_CCS_STATUS_FREE
 operator|)
+operator|&&
+operator|(
+name|status
+operator|!=
+name|RAY_CCS_STATUS_BUSY
+operator|)
+operator|)
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"ray%d: Download ccs odd cmd = 0x%02x, status = 0x%02x"
+literal|"ray%d: Download ccs odd cmd = 0x%02x, status = 0x%02x\n"
 argument_list|,
 name|sc
 operator|->
@@ -8678,7 +9171,12 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-comment|/*XXX so what do we do? reset or retry? */
+name|ray_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * If the card is still busy, re-schedule ourself      */
 if|if
 condition|(
@@ -8710,7 +9208,7 @@ name|ray_download_timo
 argument_list|,
 name|sc
 argument_list|,
-name|RAY_CCS_TIMEOUT
+name|RAY_DOWNLOAD_TIMEOUT
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8769,7 +9267,8 @@ argument_list|,
 name|SCP_UPD_STARTJOIN
 argument_list|)
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"ray%d: ray_download_timo can't get a CCS to start/join net\n"
 argument_list|,
@@ -8778,6 +9277,12 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+name|ray_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|SRAM_WRITE_FIELD_1
 argument_list|(
 name|sc
@@ -8803,7 +9308,8 @@ argument_list|,
 name|SCP_UPD_STARTJOIN
 argument_list|)
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"ray%d: ray_download_timo can't issue start/join\n"
 argument_list|,
@@ -8812,6 +9318,12 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+name|ray_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|RAY_NEED_STARTJOIN_TIMO
@@ -8825,7 +9337,7 @@ name|ray_start_join_timo
 argument_list|,
 name|sc
 argument_list|,
-name|RAY_CCS_TIMEOUT
+name|RAY_SJ_TIMEOUT
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8940,6 +9452,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* XXX_TRACKING */
+comment|/*      * XXX This switch and the following test are badly done. I      * XXX need to take remedial action in each case branch and      * XXX return from there. Then remove the test.      * XXX FAIL comment       * XXX    if we fired the start command we successfully set the card up      * XXX    so just restart ray_start_join sequence and dont reset the card      * XXX    may need to split download_done for this      * XXX FREE      * XXX    not sure      * XXX BUSY      * XXX    maybe timeout but why would we get an interrupt when      * XXX    the card is not finished?       */
 switch|switch
 condition|(
 name|status
@@ -8983,14 +9496,7 @@ name|sc_havenet
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|XXX
-if|if we fired the start command we successfully set the card up 	    so just restart ray_start_join sequence and dont reset the card 	    may need to split download_done for this
-endif|#
-directive|endif
-if|break
-empty_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
