@@ -316,7 +316,6 @@ argument_list|(
 operator|&
 name|server_addr
 argument_list|,
-operator|*
 operator|(
 name|u_long
 operator|*
