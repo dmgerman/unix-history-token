@@ -356,6 +356,16 @@ comment|/* after writing the last tape block */
 end_comment
 
 begin_decl_stmt
+name|int
+name|passno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current dump pass number */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|fs
 modifier|*

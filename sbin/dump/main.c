@@ -1826,6 +1826,17 @@ name|c_level
 operator|<
 name|honorlevel
 expr_stmt|;
+name|passno
+operator|=
+literal|1
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s: pass 1: regular files"
+argument_list|,
+name|disk
+argument_list|)
+expr_stmt|;
 name|msg
 argument_list|(
 literal|"mapping (Pass I) [regular files]\n"
@@ -1839,6 +1850,17 @@ name|maxino
 argument_list|,
 operator|&
 name|tapesize
+argument_list|)
+expr_stmt|;
+name|passno
+operator|=
+literal|2
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s: pass 2: directories"
+argument_list|,
+name|disk
 argument_list|)
 expr_stmt|;
 name|msg
@@ -2104,6 +2126,17 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|passno
+operator|=
+literal|3
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s: pass 3: directories"
+argument_list|,
+name|disk
+argument_list|)
+expr_stmt|;
 name|msg
 argument_list|(
 literal|"dumping (Pass III) [directories]\n"
@@ -2201,6 +2234,17 @@ name|ino
 argument_list|)
 expr_stmt|;
 block|}
+name|passno
+operator|=
+literal|4
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s: pass 4: regular files"
+argument_list|,
+name|disk
+argument_list|)
+expr_stmt|;
 name|msg
 argument_list|(
 literal|"dumping (Pass IV) [regular files]\n"

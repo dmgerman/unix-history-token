@@ -2445,6 +2445,12 @@ name|interrupt_save
 argument_list|)
 expr_stmt|;
 comment|/* 	 *	All signals are inherited... 	 */
+name|setproctitle
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Restore the proctitle. */
 name|childpid
 operator|=
 name|fork
