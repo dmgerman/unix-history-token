@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * code to manage AT bus  * @(#)isa.c	1.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist%  *  *	@(#)isa.c	1.4 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * code to manage AT bus  */
 end_comment
 
 begin_include
@@ -30,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"user.h"
 end_include
 
@@ -43,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm.h"
 end_include
 
 begin_include
@@ -72,19 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine/pte.h"
+file|"i386/isa/isa_device.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/isa/isa_device.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/isa/icu.h"
+file|"i386/isa/icu.h"
 end_include
 
 begin_comment
@@ -277,7 +263,6 @@ block|{
 specifier|extern
 name|int
 name|atdevbase
-index|[]
 decl_stmt|;
 name|isdp
 operator|->
@@ -289,10 +274,6 @@ name|isdp
 operator|->
 name|id_maddr
 operator|+=
-operator|(
-name|int
-operator|)
-operator|&
 name|atdevbase
 expr_stmt|;
 block|}
