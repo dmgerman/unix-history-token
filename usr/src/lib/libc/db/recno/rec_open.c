@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.6 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +303,7 @@ name|flags
 operator|&
 name|R_FIXEDLEN
 condition|)
+block|{
 name|t
 operator|->
 name|bt_flags
@@ -333,6 +334,7 @@ expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 block|}
 name|t
 operator|->
@@ -508,6 +510,9 @@ literal|0
 argument_list|)
 operator|)
 operator|==
+operator|(
+name|caddr_t
+operator|)
 operator|-
 literal|1
 condition|)
