@@ -3744,6 +3744,13 @@ operator|&&
 operator|!
 name|witness_cold
 condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|w_mtx
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"spin lock %s not in order list"
@@ -3751,6 +3758,7 @@ argument_list|,
 name|description
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -3833,6 +3841,13 @@ name|w_typelist
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|w_mtx
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"lock class %s is not sleep or spin"
@@ -3842,6 +3857,7 @@ operator|->
 name|lc_name
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
