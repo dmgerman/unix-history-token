@@ -15,6 +15,24 @@ directive|define
 name|_SYS_RESOURCE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_timeval.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
 begin_comment
 comment|/*  * Process priority specifications to get/setpriority.  */
 end_comment
@@ -282,6 +300,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RLIMIT_AS
+value|RLIMIT_VMEM
+end_define
+
+begin_comment
+comment|/* standard name for RLIMIT_VMEM */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RLIM_NLIMITS
 value|11
 end_define
@@ -296,6 +325,10 @@ directive|define
 name|RLIM_INFINITY
 value|((rlim_t)(((u_quad_t)1<< 63) - 1))
 end_define
+
+begin_comment
+comment|/* XXX Missing: RLIM_SAVED_MAX, RLIM_SAVED_CUR */
+end_comment
 
 begin_comment
 comment|/*  * Resource limit string identifiers  */
@@ -345,21 +378,29 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct
-struct|struct
-name|orlimit
-block|{
-name|int32_t
-name|rlim_cur
-decl_stmt|;
-comment|/* current (soft) limit */
-name|int32_t
-name|rlim_max
-decl_stmt|;
-comment|/* maximum value for rlim_cur */
-block|}
-struct|;
-end_struct
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_RLIM_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__rlim_t
+name|rlim_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_RLIM_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -377,15 +418,33 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Load average structure. */
-end_comment
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_struct
+struct|struct
+name|orlimit
+block|{
+name|__int32_t
+name|rlim_cur
+decl_stmt|;
+comment|/* current (soft) limit */
+name|__int32_t
+name|rlim_max
+decl_stmt|;
+comment|/* maximum value for rlim_cur */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
 name|loadavg
 block|{
-name|fixpt_t
+name|__fixpt_t
 name|ldavg
 index|[
 literal|3
@@ -440,6 +499,15 @@ name|CPUSTATES
 value|5
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -486,14 +554,9 @@ else|#
 directive|else
 end_else
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_function_decl
 name|__BEGIN_DECLS
+comment|/* XXX 2nd arg to [gs]etpriority() should be an id_t */
 name|int
 name|getpriority
 parameter_list|(
