@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c	4.5 (Berkeley) %G%"
+literal|"@(#)init.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1423,13 +1423,13 @@ literal|0
 block|,
 literal|"Signal 29"
 block|,
-literal|0
+literal|"USR1"
 block|,
-literal|"Signal 30"
+literal|"User defined signal 1"
 block|,
-literal|0
+literal|"USR2"
 block|,
-literal|"Signal 31"
+literal|"User defined signal 2"
 block|,
 literal|0
 block|,

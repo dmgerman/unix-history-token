@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msg.c	4.3 %G%"
+literal|"@(#)msg.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -598,9 +598,9 @@ literal|"Window changed"
 operator|,
 literal|"Signal 29"
 operator|,
-literal|"Signal 30"
+literal|"User defined signal 1"
 operator|,
-literal|"Signal 31"
+literal|"User defined signal 2"
 operator|,
 literal|"Signal 32"
 operator|,
