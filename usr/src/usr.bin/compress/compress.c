@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.22 (Berkeley) %G%"
+literal|"@(#)compress.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -907,7 +907,7 @@ decl_stmt|;
 name|int
 name|exists
 decl_stmt|,
-name|ireg
+name|isreg
 decl_stmt|,
 name|oreg
 decl_stmt|;
@@ -949,6 +949,8 @@ name|out
 argument_list|)
 condition|)
 return|return;
+name|isreg
+operator|=
 name|oreg
 operator|=
 operator|!
@@ -1029,18 +1031,23 @@ goto|goto
 name|err
 goto|;
 block|}
-name|ireg
-operator|=
+if|if
+condition|(
+operator|!
 name|S_ISREG
 argument_list|(
 name|sb
 operator|.
 name|st_mode
 argument_list|)
+condition|)
+name|isreg
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ireg
+name|isreg
 condition|)
 block|{
 name|origsize
@@ -1265,7 +1272,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|oreg
+name|isreg
 condition|)
 block|{
 if|if
@@ -1301,8 +1308,6 @@ if|if
 condition|(
 operator|!
 name|force
-operator|&&
-name|ireg
 operator|&&
 name|sb
 operator|.
@@ -1350,11 +1355,8 @@ goto|goto
 name|err
 goto|;
 block|}
-block|}
 if|if
 condition|(
-name|ireg
-operator|&&
 name|unlink
 argument_list|(
 name|in
@@ -1376,8 +1378,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|oreg
-operator|&&
 name|utimes
 argument_list|(
 name|out
@@ -1401,10 +1401,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ireg
-operator|&&
-name|oreg
-operator|&&
 name|verbose
 condition|)
 block|{
@@ -1469,6 +1465,7 @@ operator|*
 literal|100.0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return;
 name|err
@@ -1564,7 +1561,7 @@ modifier|*
 name|ofp
 decl_stmt|;
 name|int
-name|ireg
+name|isreg
 decl_stmt|,
 name|oreg
 decl_stmt|;
@@ -1574,8 +1571,11 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+name|isreg
+operator|=
 name|oreg
 operator|=
+operator|!
 name|stat
 argument_list|(
 name|out
@@ -1583,8 +1583,6 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
-operator|==
-literal|0
 operator|&&
 name|S_ISREG
 argument_list|(
@@ -1598,7 +1596,7 @@ condition|(
 operator|!
 name|force
 operator|&&
-name|oreg
+name|isreg
 operator|&&
 operator|!
 name|permission
@@ -1710,18 +1708,23 @@ goto|goto
 name|err
 goto|;
 block|}
-name|ireg
-operator|=
+if|if
+condition|(
+operator|!
 name|S_ISREG
 argument_list|(
 name|sb
 operator|.
 name|st_mode
 argument_list|)
+condition|)
+name|isreg
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ireg
+name|isreg
 condition|)
 block|{
 name|times
@@ -1900,8 +1903,11 @@ goto|;
 block|}
 if|if
 condition|(
-name|ireg
-operator|&&
+name|isreg
+condition|)
+block|{
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|in
@@ -1923,8 +1929,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|oreg
-operator|&&
 name|utimes
 argument_list|(
 name|out
@@ -1946,6 +1950,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 name|err
 label|:
