@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.1 (Berkeley) %G%"
+literal|"@(#)man.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -73,7 +73,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -85,7 +97,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -758,9 +770,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|fname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fname
+argument_list|)
 argument_list|,
 literal|"%s/%s.0"
 argument_list|,
@@ -782,9 +799,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|fname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fname
+argument_list|)
 argument_list|,
 literal|"%s/%s/%s.0"
 argument_list|,
@@ -805,8 +827,17 @@ name|R_OK
 argument_list|)
 condition|)
 block|{
-operator|++
+if|if
+condition|(
 name|cp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|':'
 expr_stmt|;
 continue|continue;
 block|}
@@ -868,6 +899,8 @@ expr_stmt|;
 if|if
 condition|(
 name|cp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|cp
