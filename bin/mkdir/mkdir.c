@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkdir.c,v 1.13 1998/10/20 08:04:15 msmith Exp $"
+literal|"$Id: mkdir.c,v 1.15 1998/10/23 06:28:40 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,6 +312,11 @@ operator||
 name|S_IRWXG
 operator||
 name|S_IRWXO
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|set
 argument_list|)
 expr_stmt|;
 block|}
