@@ -1769,6 +1769,10 @@ decl_stmt|;
 name|sigset_t
 name|sigpend
 decl_stmt|;
+name|sigset_t
+modifier|*
+name|oldsigmask
+decl_stmt|;
 specifier|volatile
 name|int
 name|check_pending

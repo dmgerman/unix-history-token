@@ -1012,6 +1012,12 @@ name|ss_flags
 operator|=
 name|SS_DISABLE
 expr_stmt|;
+name|new_thread
+operator|->
+name|oldsigmask
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|new_thread
