@@ -761,12 +761,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOGIN_CAP
-argument_list|)
 if|if
 condition|(
 name|e
@@ -786,6 +780,12 @@ operator|->
 name|envp
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOGIN_CAP
+argument_list|)
 if|if
 condition|(
 operator|(
