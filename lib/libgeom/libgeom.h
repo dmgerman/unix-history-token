@@ -425,6 +425,7 @@ name|gmesh
 modifier|*
 name|gmp
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|id

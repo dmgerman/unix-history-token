@@ -1299,7 +1299,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"<<<%s>>>\n"
+literal|"Unexpected XML: name=%s data=\"%s\"\n"
+argument_list|,
+name|name
 argument_list|,
 name|p
 argument_list|)
@@ -1599,6 +1601,7 @@ name|gmesh
 modifier|*
 name|gmp
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|id
