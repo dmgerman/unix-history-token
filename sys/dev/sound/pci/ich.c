@@ -110,6 +110,17 @@ begin_comment
 comment|/* ICH5 needs to be treated as ICH4 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICH6ID
+value|0x266e8086
+end_define
+
+begin_comment
+comment|/* ICH6 needs to be treated as ICH4 */
+end_comment
+
 begin_comment
 comment|/* buffer descriptor */
 end_comment
@@ -2854,6 +2865,17 @@ argument_list|)
 operator|!=
 name|ICH5ID
 operator|)
+operator|&&
+operator|(
+name|pci_get_devid
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+operator|!=
+name|ICH6ID
+operator|)
 condition|)
 block|{
 return|return
@@ -3112,6 +3134,21 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel ICH5 (82801EB)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1000
+return|;
+comment|/* allow a better driver to override us */
+case|case
+name|ICH6ID
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel ICH6 (82801FB)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3380,6 +3417,13 @@ name|dev
 argument_list|)
 operator|==
 name|ICH5ID
+operator|||
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|ICH6ID
 condition|)
 block|{
 name|sc
