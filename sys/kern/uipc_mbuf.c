@@ -171,6 +171,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|nmbcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|u_long
 name|m_mballoc_wid
 init|=
@@ -416,6 +422,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nmbcnt
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nmbcnt
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of ext_buf counters available"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -456,6 +483,18 @@ operator|*
 literal|4
 argument_list|,
 name|nmbufs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"kern.ipc.nmbcnt"
+argument_list|,
+name|EXT_COUNTERS
+argument_list|,
+name|nmbcnt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -530,7 +569,7 @@ name|nmbclusters
 operator|*
 name|MCLBYTES
 operator|+
-name|EXT_COUNTERS
+name|nmbcnt
 operator|*
 sizeof|sizeof
 argument_list|(
