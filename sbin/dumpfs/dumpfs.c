@@ -1276,6 +1276,10 @@ operator|&
 name|disk
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+condition|)
 name|warn
 argument_list|(
 literal|"%s"
