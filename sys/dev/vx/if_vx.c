@@ -3580,6 +3580,14 @@ name|m_flags
 operator|=
 name|M_PKTHDR
 expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|m
 operator|->
