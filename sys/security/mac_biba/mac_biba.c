@@ -400,7 +400,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_biba_revocation_enabled
+name|revocation_enabled
 init|=
 literal|0
 decl_stmt|;
@@ -418,7 +418,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_biba_revocation_enabled
+name|revocation_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -433,7 +433,7 @@ argument_list|(
 literal|"security.mac.biba.revocation_enabled"
 argument_list|,
 operator|&
-name|mac_biba_revocation_enabled
+name|revocation_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7346,7 +7346,7 @@ operator|!
 name|mac_biba_enabled
 operator|||
 operator|!
-name|mac_biba_revocation_enabled
+name|revocation_enabled
 condition|)
 return|return
 operator|(
@@ -7594,7 +7594,7 @@ operator|!
 name|mac_biba_enabled
 operator|||
 operator|!
-name|mac_biba_revocation_enabled
+name|revocation_enabled
 condition|)
 return|return
 operator|(
@@ -7681,7 +7681,7 @@ operator|!
 name|mac_biba_enabled
 operator|||
 operator|!
-name|mac_biba_revocation_enabled
+name|revocation_enabled
 condition|)
 return|return
 operator|(
@@ -9008,7 +9008,7 @@ operator|!
 name|mac_biba_enabled
 operator|||
 operator|!
-name|mac_biba_revocation_enabled
+name|revocation_enabled
 condition|)
 return|return
 operator|(
