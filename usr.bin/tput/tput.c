@@ -594,6 +594,7 @@ end_function
 begin_block
 block|{
 specifier|static
+specifier|const
 name|char
 name|errfew
 index|[]
@@ -601,6 +602,7 @@ init|=
 literal|"not enough arguments (%d) for capability `%s'"
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|errmany
 index|[]
@@ -608,6 +610,7 @@ init|=
 literal|"too many arguments (%d) for capability `%s'"
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|erresc
 index|[]
