@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	5.12 (Berkeley) %G%"
+literal|"@(#)subr.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -319,9 +319,6 @@ name|invrt
 expr_stmt|;
 block|}
 block|}
-define|#
-directive|define
-name|DEBUG
 ifdef|#
 directive|ifdef
 name|DEBUG
