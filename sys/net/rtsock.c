@@ -4393,6 +4393,23 @@ name|ifa
 operator|->
 name|ifa_ifp
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|cmd
+operator|==
+name|RTM_ADD
+operator|||
+name|cmd
+operator|==
+name|RTM_DELETE
+argument_list|,
+operator|(
+literal|"unexpected cmd %u"
+operator|,
+name|cmd
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|route_cb
