@@ -630,6 +630,8 @@ name|bufp
 operator|=
 name|buf
 expr_stmt|;
+if|if
+condition|(
 name|snprintf
 argument_list|(
 name|buf
@@ -637,6 +639,17 @@ argument_list|,
 name|BUFSIZ
 argument_list|,
 literal|"%s"
+argument_list|,
+name|string
+argument_list|)
+operator|>=
+name|BUFSIZ
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"oid too long: '%s'"
 argument_list|,
 name|string
 argument_list|)
