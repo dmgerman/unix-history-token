@@ -581,7 +581,7 @@ else|else
 asm|__asm __volatile("mov %0=ar.rnat;;" : "=r"(rnat));
 comment|/* 		 * Switch the RSE back on. 		 */
 asm|__asm __volatile("mov ar.rsc=3;;");
-comment|/* 		 * Setup the child's pcb so that its ar.bspstore 		 * starts just above the region which we copied. This 		 * should work since the child will normally return 		 * straight into exception_return. 		 */
+comment|/* 		 * Setup the child's pcb so that its ar.bspstore 		 * starts just above the region which we copied. This 		 * should work since the child will normally return 		 * straight into exception_restore. 		 */
 name|up
 operator|->
 name|u_pcb
@@ -621,7 +621,7 @@ name|pcb_rnat
 operator|=
 name|rnat
 expr_stmt|;
-comment|/* 		 * Arrange for continuation at child_return(), which 		 * will return to exception_return().  Note that the child 		 * process doesn't stay in the kernel for long! 		 * 		 * We should really deal with the function descriptor 		 * for child_return in switch_trampoline so that a 		 * kthread started from a loaded module can have the 		 * right value for gp. 		 */
+comment|/* 		 * Arrange for continuation at child_return(), which 		 * will return to exception_restore().  Note that the 		 * child process doesn't stay in the kernel for long! 		 * 		 * We should really deal with the function descriptor 		 * for child_return in switch_trampoline so that a 		 * kthread started from a loaded module can have the 		 * right value for gp. 		 */
 name|up
 operator|->
 name|u_pcb
@@ -654,7 +654,7 @@ name|pcb_r5
 operator|=
 name|FDESC_FUNC
 argument_list|(
-name|exception_return
+name|exception_restore
 argument_list|)
 expr_stmt|;
 name|up

@@ -1046,7 +1046,10 @@ case|:
 comment|/* 		 * on exit from the kernel, if proc == fpcurproc, 		 * FP is enabled. 		 */
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|fpcurproc
+argument_list|)
 operator|==
 name|p
 condition|)
@@ -1073,6 +1076,12 @@ goto|;
 break|break;
 case|case
 name|IA64_VEC_PAGE_NOT_PRESENT
+case|:
+case|case
+name|IA64_VEC_INST_ACCESS_RIGHTS
+case|:
+case|case
+name|IA64_VEC_DATA_ACCESS_RIGHTS
 case|:
 block|{
 name|vm_offset_t
@@ -1277,11 +1286,20 @@ name|framep
 operator|->
 name|tf_cr_isr
 operator|&
-operator|(
 name|IA64_ISR_X
-operator||
+condition|)
+name|ftype
+operator|=
+name|VM_PROT_EXECUTE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|framep
+operator|->
+name|tf_cr_isr
+operator|&
 name|IA64_ISR_R
-operator|)
 condition|)
 name|ftype
 operator|=

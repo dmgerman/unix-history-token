@@ -118,12 +118,12 @@ end_struct_decl
 
 begin_decl_stmt
 name|void
-name|restorefpstate
+name|restorehighfp
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|fpreg
+name|ia64_fpreg
 operator|*
 operator|)
 argument_list|)
@@ -132,12 +132,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|savefpstate
+name|savehighfp
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|fpreg
+name|ia64_fpreg
 operator|*
 operator|)
 argument_list|)

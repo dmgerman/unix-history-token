@@ -106,6 +106,14 @@ name|u_int64_t
 name|pcb_accessaddr
 decl_stmt|;
 comment|/* for [fs]uswintr */
+name|struct
+name|ia64_fpreg
+name|pcb_highfp
+index|[
+literal|96
+index|]
+decl_stmt|;
+comment|/* f32-f127 */
 block|}
 struct|;
 end_struct

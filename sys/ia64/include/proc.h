@@ -34,6 +34,12 @@ block|{
 name|u_long
 name|md_flags
 decl_stmt|;
+name|struct
+name|user
+modifier|*
+name|md_uservirt
+decl_stmt|;
+comment|/* virtual address of p_addr */
 name|vm_offset_t
 name|md_bspstore
 decl_stmt|;

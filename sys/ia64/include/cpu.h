@@ -330,15 +330,6 @@ end_struct_decl
 begin_decl_stmt
 specifier|extern
 name|struct
-name|proc
-modifier|*
-name|fpcurproc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|rpb
 modifier|*
 name|hwrpb
@@ -459,7 +450,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|exception_return
+name|exception_restore
 name|__P
 argument_list|(
 operator|(

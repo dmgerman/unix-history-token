@@ -121,13 +121,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|fpcurproc
-value|PCPU_GET(fpcurproc)
-end_define
-
-begin_define
-define|#
-directive|define
 name|switchtime
 value|PCPU_GET(switchtime)
 end_define

@@ -346,6 +346,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|user
+modifier|*
+name|proc0paddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|machine
 index|[]
@@ -2492,6 +2500,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Init mapping for u page(s) for proc 0 	 */
+name|proc0paddr
+operator|=
 name|proc0
 operator|.
 name|p_addr
@@ -2541,7 +2551,7 @@ argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
-name|ia64_set_k5
+name|ia64_set_k4
 argument_list|(
 operator|(
 name|u_int64_t
@@ -4225,6 +4235,27 @@ name|entry
 expr_stmt|;
 name|frame
 operator|->
+name|tf_cr_ipsr
+operator|=
+operator|(
+name|IA64_PSR_IC
+comment|/* | IA64_PSR_I XXX not yet */
+operator||
+name|IA64_PSR_IT
+operator||
+name|IA64_PSR_DT
+operator||
+name|IA64_PSR_RT
+operator||
+name|IA64_PSR_DFH
+operator||
+name|IA64_PSR_BN
+operator||
+name|IA64_PSR_CPL_USER
+operator|)
+expr_stmt|;
+name|frame
+operator|->
 name|tf_r
 index|[
 name|FRAME_SP
@@ -4273,6 +4304,19 @@ literal|63
 operator|)
 expr_stmt|;
 comment|/* ifm=0, v=1 */
+name|frame
+operator|->
+name|tf_ar_rsc
+operator|=
+literal|0xf
+expr_stmt|;
+comment|/* user mode rsc */
+name|frame
+operator|->
+name|tf_ar_fpsr
+operator|=
+name|IA64_FPSR_DEFAULT
+expr_stmt|;
 name|p
 operator|->
 name|p_md
@@ -4997,44 +5041,41 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-if|#
-directive|if
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_cr_ipsr
+operator|&
+name|IA64_PSR_DFH
+operator|)
+operator|==
 literal|0
-comment|/* TODO panic if p has fp enabled and p != fpcurproc */
-block|if (p->p_addr->u_pcb.pcb_hw.apcb_flags& IA64_PCB_FLAGS_FEN) 		if (p != fpcurproc) 			panic("ia64_check_fpcurproc: bogus");
-endif|#
-directive|endif
+condition|)
+if|if
+condition|(
+name|p
+operator|!=
+name|PCPU_GET
+argument_list|(
+name|fpcurproc
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"ia64_check_fpcurproc: bogus"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|SET_FEN
-parameter_list|(
-name|p
-parameter_list|)
-end_define
-
 begin_comment
-comment|/* TODO set fp enable for p */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLEAR_FEN
-parameter_list|(
-name|p
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* TODO clear fp enable for p */
-end_comment
-
-begin_comment
-comment|/*  * Save the floating point state in the pcb. Use this to get read-only  * access to the floating point state. If write is true, the current  * fp process is cleared so that fp state can safely be modified. The  * process will automatically reload the changed state by generating a   * FEN trap.  */
+comment|/*  * Save the high floating point state in the pcb. Use this to get  * read-only access to the floating point state. If write is true, the  * current fp process is cleared so that fp state can safely be  * modified. The process will automatically reload the changed state  * by generating a disabled fp trap.  */
 end_comment
 
 begin_function
@@ -5050,20 +5091,52 @@ name|int
 name|write
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|if (p == fpcurproc) {
-comment|/* 		 * If curproc != fpcurproc, then we need to enable FEN  		 * so that we can dump the fp state. 		 */
-block|ia64_pal_wrfen(1);
+if|if
+condition|(
+name|p
+operator|==
+name|PCPU_GET
+argument_list|(
+name|fpcurproc
+argument_list|)
+condition|)
+block|{
 comment|/* 		 * Save the state in the pcb. 		 */
-block|savefpstate(&p->p_addr->u_pcb.pcb_fp);  		if (write) {
-comment|/* 			 * If fpcurproc == curproc, just ask the 			 * PALcode to disable FEN, otherwise we must 			 * clear the FEN bit in fpcurproc's pcb. 			 */
-block|if (fpcurproc == curproc) 				ia64_pal_wrfen(0); 			else 				CLEAR_FEN(fpcurproc); 			fpcurproc = NULL; 		} else {
-comment|/* 			 * Make sure that we leave FEN enabled if 			 * curproc == fpcurproc. We must have at most 			 * one process with FEN enabled. Note that FEN  			 * must already be set in fpcurproc's pcb. 			 */
-block|if (curproc != fpcurproc) 				ia64_pal_wrfen(0); 		} 	}
-endif|#
-directive|endif
+name|savehighfp
+argument_list|(
+name|p
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_highfp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|write
+condition|)
+block|{
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_cr_ipsr
+operator||=
+name|IA64_PSR_DFH
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|fpcurproc
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -5081,16 +5154,34 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|if (p == fpcurproc) { 		if (p == curproc) {
-comment|/* 			 * Disable FEN via the PALcode. This will 			 * clear the bit in the pcb as well. 			 */
-block|ia64_pal_wrfen(0); 		} else {
-comment|/* 			 * Clear the FEN bit of the pcb. 			 */
-block|CLEAR_FEN(p); 		} 		fpcurproc = NULL; 	}
-endif|#
-directive|endif
+if|if
+condition|(
+name|p
+operator|==
+name|PCPU_GET
+argument_list|(
+name|fpcurproc
+argument_list|)
+condition|)
+block|{
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_cr_ipsr
+operator||=
+name|IA64_PSR_DFH
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|fpcurproc
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5108,19 +5199,81 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* 	 * Enable FEN so that we can access the fp registers. 	 */
-block|ia64_pal_wrfen(1); 	if (fpcurproc) {
+if|if
+condition|(
+name|PCPU_GET
+argument_list|(
+name|fpcurproc
+argument_list|)
+condition|)
+block|{
 comment|/* 		 * Dump the old fp state if its valid. 		 */
-block|savefpstate(&fpcurproc->p_addr->u_pcb.pcb_fp); 		CLEAR_FEN(fpcurproc); 	}
+name|savehighfp
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|fpcurproc
+argument_list|)
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_highfp
+argument_list|)
+expr_stmt|;
+name|PCPU_GET
+argument_list|(
+name|fpcurproc
+argument_list|)
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_cr_ipsr
+operator||=
+name|IA64_PSR_DFH
+expr_stmt|;
+block|}
 comment|/* 	 * Remember the new FP owner and reload its state. 	 */
-block|fpcurproc = p; 	restorefpstate(&fpcurproc->p_addr->u_pcb.pcb_fp);
-comment|/* 	 * If the new owner is curproc, leave FEN enabled, otherwise 	 * mark its PCB so that it gets FEN when we context switch to 	 * it later. 	 */
-block|if (p != curproc) { 		ia64_pal_wrfen(0); 		SET_FEN(p); 	}  	p->p_md.md_flags |= MDP_FPUSED;
-endif|#
-directive|endif
+name|PCPU_SET
+argument_list|(
+name|fpcurproc
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|restorehighfp
+argument_list|(
+name|p
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_highfp
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_cr_ipsr
+operator|&=
+operator|~
+name|IA64_PSR_DFH
+expr_stmt|;
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_flags
+operator||=
+name|MDP_FPUSED
+expr_stmt|;
 block|}
 end_function
 
