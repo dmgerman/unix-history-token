@@ -141,6 +141,14 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+name|int
+name|ret
+decl_stmt|;
+name|free_variables
+argument_list|()
+expr_stmt|;
+name|ret
+operator|=
 name|execl
 argument_list|(
 name|StartName
@@ -152,6 +160,16 @@ name|char
 operator|*
 operator|)
 name|NULL
+argument_list|)
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"execl failed (%s)\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
