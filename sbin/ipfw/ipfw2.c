@@ -243,6 +243,20 @@ value|0xffffffff
 end_define
 
 begin_comment
+comment|/*  * the following macro returns an error message if we run out of  * arguments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED1
+parameter_list|(
+name|msg
+parameter_list|)
+value|{if (!ac) errx(EX_USAGE, msg);}
+end_define
+
+begin_comment
 comment|/*  * _s_x is a structure that stores a string<-> token pairs, used in  * various places in the parser. Entries are stored in arrays,  * with an entry with s=NULL as terminator.  * The search routines are match_token() and match_value().  * Often, an element with x=0 contains an error string.  *  */
 end_comment
 
@@ -11038,6 +11052,11 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
+name|NEED1
+argument_list|(
+literal|"missing rule specification"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ac
@@ -11362,20 +11381,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * the following macro returns an error message if we run out of  * arguments.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEED1
-parameter_list|(
-name|msg
-parameter_list|)
-value|{if (!ac) errx(EX_USAGE, msg);}
-end_define
 
 begin_function
 specifier|static
