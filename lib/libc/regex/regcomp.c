@@ -9630,7 +9630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - altoffset - choose biggest offset among multiple choices  = static int altoffset(sop *scan, int offset, int mccs);  *  * Compute, recursively if necessary, the largest offset among multiple  * re paths.  */
+comment|/*  - altoffset - choose biggest offset among multiple choices  == static int altoffset(sop *scan, int offset, int mccs);  *  * Compute, recursively if necessary, the largest offset among multiple  * re paths.  */
 end_comment
 
 begin_function
@@ -10334,6 +10334,12 @@ condition|(
 name|suffix
 operator|<=
 name|ssuffix
+operator|&&
+name|suffix
+operator|<
+name|g
+operator|->
+name|mlen
 condition|)
 block|{
 name|g
