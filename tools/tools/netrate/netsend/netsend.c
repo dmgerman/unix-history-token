@@ -75,6 +75,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|MAX_RATE
+value|100000000
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -691,14 +698,16 @@ if|if
 condition|(
 name|rate
 operator|>
-literal|1000000
+name|MAX_RATE
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rate> 100000\n"
+literal|"rate> %d\n"
+argument_list|,
+name|MAX_RATE
 argument_list|)
 expr_stmt|;
 return|return
