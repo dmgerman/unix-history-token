@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.4	%G%	*/
+comment|/*	tty_pty.c	4.5	%G%	*/
 end_comment
 
 begin_comment
@@ -63,6 +63,12 @@ directive|include
 file|"../h/buf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/file.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -93,7 +99,7 @@ value|(NLDELAY|TBDELAY|XTABS|CRDELAY|VTDELAY)
 end_define
 
 begin_comment
-comment|/*  * A pseudo-teletype is a special device which is not unlike a pipe.  * It is used to communicate between two processes.  However, it allows  * one to simulate a teletype, including mode setting, interrupt, and  * multiple end of files (all not possible on a pipe).  There are  * really two drivers here.  One is the device which looks like a TTY  * and can be thought of as the slave device, and hence its routines  * are prefixed with 'pts' (PTY Slave).  The other driver can be  * thought of as the controlling device, and its routines are prefixed  * by 'ptc' (PTY Controller).  To type on the simulated keyboard of the  * PTY, one does a 'write' to the controlling device.  To get the  * simulated printout from the PTY, one does a 'read' on the controlling  * device.  Normally, the controlling device is called 'ptyx' and the  * slave device is called 'ttyx' (to make programs like 'who' happy).  */
+comment|/*  * A pseudo-teletype is a special device which is not unlike a pipe.  * It is used to communicate between two processes.  However, it allows  * one to simulate a teletype, including mode setting, interrupt, and  * multiple end of files (all not possible on a pipe).	There are  * really two drivers here.  One is the device which looks like a TTY  * and can be thought of as the slave device, and hence its routines  * are prefixed with 'pts' (PTY Slave).	 The other driver can be  * thought of as the controlling device, and its routines are prefixed  * by 'ptc' (PTY Controller).  To type on the simulated keyboard of the  * PTY, one does a 'write' to the controlling device.  To get the  * simulated printout from the PTY, one does a 'read' on the controlling  * device.  Normally, the controlling device is called 'ptyx' and the  * slave device is called 'ttyx' (to make programs like 'who' happy).  */
 end_comment
 
 begin_decl_stmt
@@ -683,6 +689,10 @@ comment|/* Virtual carrier is gone */
 name|flushtty
 argument_list|(
 name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
 argument_list|)
 expr_stmt|;
 comment|/* Clean things up */
