@@ -131,7 +131,7 @@ specifier|extern
 name|struct
 name|ddpcb
 modifier|*
-name|ddpcb
+name|ddpcb_list
 decl_stmt|;
 end_decl_stmt
 
