@@ -47,12 +47,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -4887,7 +4881,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 if|if
 condition|(
 name|stg_debug
@@ -4901,7 +4895,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DDB */
+comment|/* KDB */
 block|}
 endif|#
 directive|endif
