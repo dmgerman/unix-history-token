@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.10 1995/05/07 01:28:16 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.11 1995/05/08 02:08:25 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -1163,6 +1163,16 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
+name|type
+operator|==
+name|freebsd
+condition|)
+name|subtype
+operator|=
+literal|0xa5
+expr_stmt|;
 name|c1
 operator|=
 literal|0
@@ -2353,6 +2363,18 @@ name|c2
 operator|=
 name|new_chunk
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|c2
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
 expr_stmt|;
 operator|*
 name|c2
