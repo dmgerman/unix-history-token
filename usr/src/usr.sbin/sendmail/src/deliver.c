@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"postbox.h"
+file|"sendmail.h"
 end_include
 
 begin_ifdef
@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.7	%G%"
+literal|"@(#)deliver.c	3.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -820,7 +820,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* 		**  See if the user exists. 		**	Strictly, this is only needed to print a pretty 		**	error message. 		** 		**>>>>>>>>>> This clause assumes that the local mailer 		**>> NOTE>> cannot do any further aliasing; that 		**>>>>>>>>>> function is subsumed by postbox. 		*/
+comment|/* 		**  See if the user exists. 		**	Strictly, this is only needed to print a pretty 		**	error message. 		** 		**>>>>>>>>>> This clause assumes that the local mailer 		**>> NOTE>> cannot do any further aliasing; that 		**>>>>>>>>>> function is subsumed by sendmail. 		*/
 if|if
 condition|(
 name|m

@@ -4,7 +4,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"@(#)PostBox version 3.1 of %G%"
+literal|"@(#)SendMail version 3.2 of %G%"
 decl_stmt|;
 end_decl_stmt
 

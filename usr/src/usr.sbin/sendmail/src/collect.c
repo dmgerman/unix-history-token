@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"postbox.h"
+file|"sendmail.h"
 end_include
 
 begin_decl_stmt
@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.6	%G%"
+literal|"@(#)collect.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 

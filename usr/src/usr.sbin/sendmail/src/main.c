@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"postbox.h"
+file|"sendmail.h"
 end_include
 
 begin_ifdef
@@ -53,12 +53,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.6	%G%"
+literal|"@(#)main.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  POSTBOX -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Postbox in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Postbox is driven by tables defined in conf.c.  This **	file will be different from system to system, but the rest **	of the code will be the same.  This table could be read in, **	but it seemed nicer to have it compiled in, since deliver- **	mail will potentially be exercised a lot. ** **	Usage: **		/etc/postbox [-f name] [-a] [-q] [-v] [-n] [-m] addr ... ** **	Positional Parameters: **		addr -- the address to deliver the mail to.  There **			can be several. ** **	Flags: **		-f name		The mail is from "name" -- used for **				the header in local mail, and to **				deliver reports of failures to. **		-r name		Same as -f; however, this flag is **				reserved to indicate special processing **				for remote mail delivery as needed **				in the future.  So, network servers **				should use -r. **		-a		This mail should be in ARPANET std **				format (not used). **		-n		Don't do aliasing.  This might be used **				when delivering responses, for **				instance. **		-d		Run in debug mode. **		-em		Mail back a response if there was an **				error in processing.  This should be **				used when the origin of this message **				is another machine. **		-ew		Write back a response if the user is **				still logged in, otherwise, act like **				-em. **		-eq		Don't print any error message (just **				return exit status). **		-ep		(default)  Print error messages **				normally. **		-ee		Send BerkNet style errors.  This **				is equivalent to MailBack except **				that it has gives zero return code **				(unless there were errors during **				returning).  This used to be **				"EchoBack", but you know how the old **				software bounces. **		-m		In group expansion, send to the **				sender also (stands for the Mail metoo **				option. **		-i		Do not terminate mail on a line **				containing just dot. **		-s		Save UNIX-like "From" lines on the **				front of messages. ** **	Return Codes: **		As defined in<sysexits.h>. ** **		These codes are actually returned from the auxiliary **		mailers; it is their responsibility to make them **		correct. ** **	Compilation Flags: **		LOG -- if set, everything is logged. ** **	Compilation Instructions: **		cc -c -O main.c conf.c deliver.c parse.c **		cc -n -s *.o -lS **		chown root a.out **		chmod 755 a.out **		mv a.out postbox ** **	Deficiencies: **		It ought to collect together messages that are **			destined for a single host and send these **			to the auxiliary mail server together. **		It should take "user at host" as three separate **			parameters and combine them into one address. ** **	Author: **		Eric Allman, UCB/INGRES */
+comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables defined in conf.c.  This **	file will be different from system to system, but the rest **	of the code will be the same.  This table could be read in, **	but it seemed nicer to have it compiled in, since deliver- **	mail will potentially be exercised a lot. ** **	Usage: **		/etc/sendmail [-f name] [-a] [-q] [-v] [-n] [-m] addr ... ** **	Positional Parameters: **		addr -- the address to deliver the mail to.  There **			can be several. ** **	Flags: **		-f name		The mail is from "name" -- used for **				the header in local mail, and to **				deliver reports of failures to. **		-r name		Same as -f; however, this flag is **				reserved to indicate special processing **				for remote mail delivery as needed **				in the future.  So, network servers **				should use -r. **		-a		This mail should be in ARPANET std **				format (not used). **		-n		Don't do aliasing.  This might be used **				when delivering responses, for **				instance. **		-d		Run in debug mode. **		-em		Mail back a response if there was an **				error in processing.  This should be **				used when the origin of this message **				is another machine. **		-ew		Write back a response if the user is **				still logged in, otherwise, act like **				-em. **		-eq		Don't print any error message (just **				return exit status). **		-ep		(default)  Print error messages **				normally. **		-ee		Send BerkNet style errors.  This **				is equivalent to MailBack except **				that it has gives zero return code **				(unless there were errors during **				returning).  This used to be **				"EchoBack", but you know how the old **				software bounces. **		-m		In group expansion, send to the **				sender also (stands for the Mail metoo **				option. **		-i		Do not terminate mail on a line **				containing just dot. **		-s		Save UNIX-like "From" lines on the **				front of messages. ** **	Return Codes: **		As defined in<sysexits.h>. ** **		These codes are actually returned from the auxiliary **		mailers; it is their responsibility to make them **		correct. ** **	Compilation Flags: **		LOG -- if set, everything is logged. ** **	Compilation Instructions: **		cc -c -O main.c conf.c deliver.c parse.c **		cc -n -s *.o -lS **		chown root a.out **		chmod 755 a.out **		mv a.out sendmail ** **	Deficiencies: **		It ought to collect together messages that are **			destined for a single host and send these **			to the auxiliary mail server together. **		It should take "user at host" as three separate **			parameters and combine them into one address. ** **	Author: **		Eric Allman, UCB/INGRES */
 end_comment
 
 begin_decl_stmt
@@ -518,7 +518,7 @@ directive|ifdef
 name|LOG
 name|openlog
 argument_list|(
-literal|"postbox"
+literal|"sendmail"
 argument_list|,
 literal|0
 argument_list|)
@@ -591,7 +591,7 @@ name|NULL
 expr_stmt|;
 name|cfname
 operator|=
-literal|"postbox.cf"
+literal|"sendmail.cf"
 expr_stmt|;
 comment|/* 	** Crack argv. 	*/
 while|while
@@ -1478,10 +1478,10 @@ literal|0
 condition|)
 name|usrerr
 argument_list|(
-literal|"Usage: /etc/postbox [flags] addr..."
+literal|"Usage: /etc/sendmail [flags] addr..."
 argument_list|)
 expr_stmt|;
-comment|/* 	**  Process Hop count. 	**	The Hop count tells us how many times this message has 	**	been processed by postbox.  If it exceeds some 	**	fairly large threshold, then we assume that we have 	**	an infinite forwarding loop and die. 	*/
+comment|/* 	**  Process Hop count. 	**	The Hop count tells us how many times this message has 	**	been processed by sendmail.  If it exceeds some 	**	fairly large threshold, then we assume that we have 	**	an infinite forwarding loop and die. 	*/
 if|if
 condition|(
 operator|++
@@ -1779,7 +1779,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FINIS -- Clean up and exit. ** **	Parameters: **		none ** **	Returns: **		never ** **	Side Effects: **		exits postbox ** **	Called By: **		main **		via signal on interrupt. ** **	Deficiencies: **		It may be that it should only remove the input **			file if there have been no errors. */
+comment|/* **  FINIS -- Clean up and exit. ** **	Parameters: **		none ** **	Returns: **		never ** **	Side Effects: **		exits sendmail ** **	Called By: **		main **		via signal on interrupt. ** **	Deficiencies: **		It may be that it should only remove the input **			file if there have been no errors. */
 end_comment
 
 begin_macro

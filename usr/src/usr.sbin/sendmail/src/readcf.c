@@ -8,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"postbox.h"
+file|"sendmail.h"
 end_include
 
 begin_include
@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	1.1	%G%"
+literal|"@(#)readcf.c	3.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
