@@ -111,7 +111,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|pci_device
 name|chipset_device
@@ -131,15 +130,9 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|DATA_SET
-argument_list|(
-name|pcidevice_set
-argument_list|,
-name|chipset_device
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*DATA_SET (pcidevice_set, chipset_device);*/
+end_comment
 
 begin_struct
 struct|struct
