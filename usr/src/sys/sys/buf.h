@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	6.4	85/01/10	*/
+comment|/*	buf.h	6.5	85/03/13	*/
 end_comment
 
 begin_comment
@@ -232,7 +232,7 @@ begin_define
 define|#
 directive|define
 name|BUFHSZ
-value|509
+value|512
 end_define
 
 begin_define
@@ -241,6 +241,42 @@ directive|define
 name|RND
 value|(MAXBSIZE/DEV_BSIZE)
 end_define
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+name|BUFHSZ
+operator|&
+operator|(
+name|BUFHSZ
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BUFHASH
+parameter_list|(
+name|dev
+parameter_list|,
+name|dblkno
+parameter_list|)
+define|\
+value|((struct buf *)&bufhash[((int)(dev)+(((int)(dblkno))/RND))&(BUFHSZ-1)])
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -254,6 +290,11 @@ parameter_list|)
 define|\
 value|((struct buf *)&bufhash[((int)(dev)+(((int)(dblkno))/RND)) % BUFHSZ])
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
