@@ -445,6 +445,12 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|__FBSDID
+end_undef
+
 begin_if
 if|#
 directive|if
