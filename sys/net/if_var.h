@@ -150,26 +150,11 @@ name|IF_DUNIT_NONE
 value|-1
 end_define
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* ALTQ */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<altq/if_altq.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|TAILQ_HEAD
@@ -503,24 +488,11 @@ name|u_int
 name|if_spare_flags2
 decl_stmt|;
 comment|/* spare flags 2 */
-if|#
-directive|if
-literal|1
-comment|/* ALTQ */
 name|struct
 name|ifaltq
 name|if_snd
 decl_stmt|;
 comment|/* output queue (includes altq) */
-else|#
-directive|else
-name|struct
-name|ifqueue
-name|if_snd
-decl_stmt|;
-comment|/* output queue */
-endif|#
-directive|endif
 specifier|const
 name|u_int8_t
 modifier|*
@@ -1191,16 +1163,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* ALTQ */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1300,120 +1262,6 @@ parameter_list|)
 define|\
 value|do { ((ifq)->altq_flags |= ALTQF_READY); } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !ALTQ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFQ_ENQUEUE
-parameter_list|(
-name|ifq
-parameter_list|,
-name|m
-parameter_list|,
-name|err
-parameter_list|)
-define|\
-value|do {									\ 	IF_LOCK(ifq);							\ 	if (_IF_QFULL(ifq)) {						\ 		m_freem(m);						\ 		(err) = ENOBUFS;					\ 	} else {							\ 		_IF_ENQUEUE(ifq, m);					\ 		(err) = 0;						\ 	}								\ 	if (err)							\ 		(ifq)->ifq_drops++;					\ 	IF_UNLOCK(ifq);							\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFQ_DEQUEUE_NOLOCK
-parameter_list|(
-name|ifq
-parameter_list|,
-name|m
-parameter_list|)
-value|_IF_DEQUEUE(ifq, m)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFQ_DEQUEUE
-parameter_list|(
-name|ifq
-parameter_list|,
-name|m
-parameter_list|)
-value|IF_DEQUEUE(ifq, m)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFQ_POLL_NOLOCK
-parameter_list|(
-name|ifq
-parameter_list|,
-name|m
-parameter_list|)
-value|_IF_POLL(ifq, m)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFQ_POLL
-parameter_list|(
-name|ifq
-parameter_list|,
-name|m
-parameter_list|)
-value|IF_POLL(ifq, m)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFQ_PURGE_NOLOCK
-parameter_list|(
-name|ifq
-parameter_list|)
-value|_IF_DRAIN(ifq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFQ_PURGE
-parameter_list|(
-name|ifq
-parameter_list|)
-value|IF_DRAIN(ifq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFQ_SET_READY
-parameter_list|(
-name|ifq
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !ALTQ */
-end_comment
 
 begin_define
 define|#
