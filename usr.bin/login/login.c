@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.45 1999/01/19 22:59:37 abial Exp $"
+literal|"$Id: login.c,v 1.46 1999/04/07 14:05:03 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -640,6 +640,9 @@ name|uid
 decl_stmt|,
 name|euid
 decl_stmt|;
+name|gid_t
+name|egid
+decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -798,6 +801,11 @@ expr_stmt|;
 name|euid
 operator|=
 name|geteuid
+argument_list|()
+expr_stmt|;
+name|egid
+operator|=
+name|getegid
 argument_list|()
 expr_stmt|;
 while|while
@@ -1504,30 +1512,11 @@ name|endpwent
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Establish the login class. 	 */
-operator|(
-name|void
-operator|)
-name|seteuid
-argument_list|(
-name|rootlogin
-condition|?
-literal|0
-else|:
-name|pwd
-operator|->
-name|pw_uid
-argument_list|)
-expr_stmt|;
 name|lc
 operator|=
 name|login_getpwclass
 argument_list|(
 name|pwd
-argument_list|)
-expr_stmt|;
-name|seteuid
-argument_list|(
-name|euid
 argument_list|)
 expr_stmt|;
 comment|/* if user not super-user, check for disabled logins */
@@ -1550,6 +1539,17 @@ argument_list|,
 literal|"hushlogin"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Switching needed for NFS with root access disabled */
+operator|(
+name|void
+operator|)
+name|setegid
+argument_list|(
+name|pwd
+operator|->
+name|pw_gid
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1650,6 +1650,14 @@ operator|)
 name|seteuid
 argument_list|(
 name|euid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setegid
+argument_list|(
+name|egid
 argument_list|)
 expr_stmt|;
 if|if
