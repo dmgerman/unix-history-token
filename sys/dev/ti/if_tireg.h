@@ -150,6 +150,13 @@ name|NG_DEVICEID_GA620
 value|0x620A
 end_define
 
+begin_define
+define|#
+directive|define
+name|NG_DEVICEID_GA620T
+value|0x630A
+end_define
+
 begin_comment
 comment|/*  * SGI device/vendor ID.  */
 end_comment

@@ -308,7 +308,15 @@ name|NG_VENDORID
 block|,
 name|NG_DEVICEID_GA620
 block|,
-literal|"Netgear GA620 Gigabit Ethernet"
+literal|"Netgear GA620 1000baseSX Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|NG_VENDORID
+block|,
+name|NG_DEVICEID_GA620T
+block|,
+literal|"Netgear GA620 1000baseT Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -8004,6 +8012,29 @@ name|dev
 argument_list|)
 operator|==
 name|ALT_DEVICEID_ACENIC_COPPER
+condition|)
+name|sc
+operator|->
+name|ti_copper
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Ok, it's not the only copper card available. */
+if|if
+condition|(
+name|pci_get_vendor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|NG_VENDORID
+operator|&&
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|NG_DEVICEID_GA620T
 condition|)
 name|sc
 operator|->
