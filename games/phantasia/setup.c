@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<unistd.h>
 end_include
 
 begin_comment
@@ -162,22 +162,9 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-name|srandom
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|time
-argument_list|(
-operator|(
-name|long
-operator|*
-operator|)
-name|NULL
-argument_list|)
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
-comment|/* prime random numbers */
 name|umask
 argument_list|(
 literal|0117

@@ -520,10 +520,8 @@ operator|&
 name|initialtime
 argument_list|)
 expr_stmt|;
-name|srand
-argument_list|(
-name|initialtime
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
 name|lcreat
 argument_list|(

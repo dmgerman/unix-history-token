@@ -116,10 +116,10 @@ name|reg
 name|bool
 name|restore
 decl_stmt|;
-comment|/* run as the user */
-name|setuid
+comment|/* revoke */
+name|setgid
 argument_list|(
-name|getuid
+name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -305,24 +305,9 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PROF
-name|srandom
-argument_list|(
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|srandom
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|crmode
 argument_list|()
 expr_stmt|;

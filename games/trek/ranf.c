@@ -34,6 +34,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_macro
 name|ranf
 argument_list|(
@@ -49,10 +55,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|t
-decl_stmt|;
 if|if
 condition|(
 name|max
@@ -64,16 +66,10 @@ operator|(
 literal|0
 operator|)
 return|;
-name|t
-operator|=
-name|rand
-argument_list|()
-operator|>>
-literal|5
-expr_stmt|;
 return|return
 operator|(
-name|t
+name|random
+argument_list|()
 operator|%
 name|max
 operator|)
@@ -91,7 +87,7 @@ name|t
 decl_stmt|;
 name|t
 operator|=
-name|rand
+name|random
 argument_list|()
 operator|&
 literal|077777

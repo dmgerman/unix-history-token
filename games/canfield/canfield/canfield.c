@@ -7901,11 +7901,8 @@ operator|<
 literal|0
 condition|)
 return|return;
-name|srandom
-argument_list|(
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|time
 argument_list|(

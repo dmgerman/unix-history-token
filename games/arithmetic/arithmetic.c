@@ -335,20 +335,8 @@ name|usage
 argument_list|()
 expr_stmt|;
 comment|/* Seed the random-number generator. */
-name|srandom
-argument_list|(
-operator|(
-name|int
-operator|)
-name|time
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-name|NULL
-argument_list|)
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
 operator|(
 name|void

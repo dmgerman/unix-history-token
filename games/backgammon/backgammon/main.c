@@ -426,10 +426,6 @@ name|char
 name|c
 decl_stmt|;
 comment|/* non-descript character storage */
-name|long
-name|t
-decl_stmt|;
-comment|/* time for random num generator */
 comment|/* revoke privs */
 name|setgid
 argument_list|(
@@ -580,19 +576,9 @@ name|begscr
 operator|=
 literal|0
 expr_stmt|;
-name|t
-operator|=
-name|time
-argument_list|(
-literal|0
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
-name|srandom
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-comment|/* 'random' seed */
 name|getarg
 argument_list|(
 name|argc

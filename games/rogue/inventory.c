@@ -367,7 +367,7 @@ literal|'n'
 block|,
 literal|"n       down& right"
 block|,
-name|NULL
+literal|'\0'
 block|,
 literal|"<SHIFT><dir>: run that way"
 block|,
@@ -375,7 +375,7 @@ literal|')'
 block|,
 literal|")       print current weapon"
 block|,
-name|NULL
+literal|'\0'
 block|,
 literal|"<CTRL><dir>: run till adjacent"
 block|,

@@ -27,6 +27,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
 comment|/*  * @(#)mille.h	1.1 (Berkeley) 4/1/82  */
 end_comment

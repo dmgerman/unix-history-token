@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"machdep.h"
 end_include
 
@@ -133,7 +139,7 @@ define|#
 directive|define
 name|die
 parameter_list|()
-value|((rand()>> 3) % 6 + 1)
+value|(random() % 6 + 1)
 end_define
 
 begin_define
@@ -975,14 +981,14 @@ comment|/* 70 */
 name|char
 name|movebuf
 index|[
-literal|10
+literal|60
 index|]
 decl_stmt|;
 comment|/* 72 */
 name|char
 name|drift
 decl_stmt|;
-comment|/* 82 */
+comment|/* 132 */
 name|short
 name|nfoul
 decl_stmt|;
@@ -996,7 +1002,7 @@ index|[
 name|NSHIP
 index|]
 decl_stmt|;
-comment|/* 84 */
+comment|/* 134 */
 name|struct
 name|snag
 name|grap
@@ -1004,31 +1010,31 @@ index|[
 name|NSHIP
 index|]
 decl_stmt|;
-comment|/* 124 */
+comment|/* 144 */
 name|char
 name|RH
 decl_stmt|;
-comment|/* 224 */
+comment|/* 274 */
 name|char
 name|RG
 decl_stmt|;
-comment|/* 226 */
+comment|/* 276 */
 name|char
 name|RR
 decl_stmt|;
-comment|/* 228 */
+comment|/* 278 */
 name|char
 name|FS
 decl_stmt|;
-comment|/* 230 */
+comment|/* 280 */
 name|char
 name|explode
 decl_stmt|;
-comment|/* 232 */
+comment|/* 282 */
 name|char
 name|sink
 decl_stmt|;
-comment|/* 234 */
+comment|/* 284 */
 name|char
 name|dir
 decl_stmt|;
@@ -1524,14 +1530,6 @@ name|struct
 name|ship
 modifier|*
 name|closestenemy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|calloc
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -31,6 +31,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"robots.h"
 end_include
 
@@ -148,13 +154,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|unsigned
-name|int
-name|rand
-parameter_list|()
-function_decl|;
 return|return
-name|rand
+name|random
 argument_list|()
 operator|%
 name|range

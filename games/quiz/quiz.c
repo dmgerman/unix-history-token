@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quiz.c	8.2 (Berkeley) 1/3/94"
+literal|"@(#)quiz.c	8.3 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,13 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -92,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -300,6 +306,13 @@ name|char
 modifier|*
 name|indexfile
 decl_stmt|;
+comment|/* revoke */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|indexfile
 operator|=
 name|_PATH_QUIZIDX
@@ -1020,13 +1033,8 @@ index|[
 name|LINE_SZ
 index|]
 decl_stmt|;
-name|srandom
-argument_list|(
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
 name|guesses
 operator|=
@@ -1481,6 +1489,9 @@ return|;
 case|case
 literal|'\\'
 case|:
+name|s
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|':'
@@ -1490,9 +1501,6 @@ operator|(
 name|s
 operator|)
 return|;
-name|s
-operator|++
-expr_stmt|;
 block|}
 comment|/* NOTREACHED */
 block|}

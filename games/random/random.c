@@ -134,9 +134,6 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
-name|time_t
-name|now
-decl_stmt|;
 name|double
 name|denom
 decl_stmt|;
@@ -265,7 +262,7 @@ expr_stmt|;
 if|if
 condition|(
 name|denom
-operator|==
+operator|<=
 literal|0
 operator|||
 operator|*
@@ -280,6 +277,21 @@ argument_list|,
 literal|"denominator is not valid."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|random_exit
+operator|&&
+name|denom
+operator|>
+literal|255
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"denominator must be<= 255 for random exit."
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|usage
@@ -287,27 +299,8 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-name|srandom
-argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
-name|now
-operator|+
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/* Compute a random exit status between 0 and denom - 1. */
 if|if

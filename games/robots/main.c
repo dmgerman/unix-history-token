@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -186,18 +192,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|Scorefile
 operator|=
 name|av
@@ -460,11 +454,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|srand
-argument_list|(
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

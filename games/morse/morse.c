@@ -447,6 +447,11 @@ block|,
 literal|"."
 block|,
 comment|/* ye */
+literal|'£'
+block|,
+literal|"."
+block|,
+comment|/* yo, the same as ye */
 literal|'Ö'
 block|,
 literal|"...-"
@@ -880,15 +885,6 @@ name|freq
 operator|=
 name|FREQUENCY
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SPEAKER
@@ -983,6 +979,15 @@ name|p
 operator|=
 name|getenv
 argument_list|(
+literal|"LC_ALL"
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|p
+operator|=
+name|getenv
+argument_list|(
 literal|"LANG"
 argument_list|)
 operator|)
@@ -995,9 +1000,9 @@ argument_list|(
 name|p
 argument_list|)
 operator|>=
-name|strlen
+sizeof|sizeof
 argument_list|(
-literal|"KOI8-R"
+literal|".KOI8-R"
 argument_list|)
 operator|&&
 name|strcasecmp
@@ -1009,14 +1014,16 @@ name|strlen
 argument_list|(
 name|p
 argument_list|)
+operator|+
+literal|1
 operator|-
-name|strlen
+sizeof|sizeof
 argument_list|(
-literal|"KOI8-R"
+literal|".KOI8-R"
 argument_list|)
 index|]
 argument_list|,
-literal|"KOI8-R"
+literal|".KOI8-R"
 argument_list|)
 operator|==
 literal|0
@@ -1025,16 +1032,10 @@ name|hightab
 operator|=
 name|koi8rtab
 expr_stmt|;
-name|setlocale
-argument_list|(
-name|LC_CTYPE
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 block|}
-else|else
-block|{
+operator|(
+name|void
+operator|)
 name|setlocale
 argument_list|(
 name|LC_CTYPE
@@ -1042,7 +1043,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*
@@ -1067,9 +1067,6 @@ control|)
 block|{
 name|morse
 argument_list|(
-operator|(
-name|int
-operator|)
 operator|*
 name|p
 argument_list|)
@@ -1077,9 +1074,6 @@ expr_stmt|;
 block|}
 name|morse
 argument_list|(
-operator|(
-name|int
-operator|)
 literal|' '
 argument_list|)
 expr_stmt|;
@@ -1136,6 +1130,10 @@ if|if
 condition|(
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -1143,6 +1141,10 @@ name|c
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 expr_stmt|;
@@ -1344,9 +1346,6 @@ control|)
 block|{
 switch|switch
 condition|(
-operator|(
-name|int
-operator|)
 operator|*
 name|c
 condition|)

@@ -31,6 +31,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hangman.h"
 end_include
 
@@ -149,16 +155,8 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
-name|srand
-argument_list|(
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|+
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

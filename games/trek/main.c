@@ -77,6 +77,12 @@ directive|include
 file|<setjmp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -128,9 +134,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|long
-name|vect
-decl_stmt|;
 comment|/* extern FILE		*f_log; */
 specifier|register
 name|char
@@ -153,6 +156,13 @@ name|struct
 name|sgttyb
 name|argp
 decl_stmt|;
+comment|/* revoke */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|av
 operator|=
 name|argv
@@ -164,16 +174,8 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-name|time
-argument_list|(
-operator|&
-name|vect
-argument_list|)
-expr_stmt|;
-name|srand
-argument_list|(
-name|vect
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
 name|opencode
 operator|=

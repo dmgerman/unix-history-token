@@ -1803,10 +1803,6 @@ end_macro
 
 begin_block
 block|{
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 name|demo
 operator|=
 name|Start
@@ -1814,26 +1810,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|srand
-argument_list|(
-call|(
-name|int
-call|)
-argument_list|(
-name|time
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-name|NULL
-argument_list|)
-argument_list|)
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
-comment|/* random seed */
-comment|/* srand(371); */
-comment|/* non-random seed */
 name|hinted
 index|[
 literal|3

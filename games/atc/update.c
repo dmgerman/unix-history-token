@@ -942,7 +942,7 @@ comment|/* 	 * Check every other update.  Actually, only add on even updates. 	 
 if|if
 condition|(
 operator|(
-name|rand
+name|random
 argument_list|()
 operator|%
 name|sp
