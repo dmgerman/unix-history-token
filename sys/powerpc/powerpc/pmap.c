@@ -6951,13 +6951,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 end_function
