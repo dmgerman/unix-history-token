@@ -1561,7 +1561,7 @@ literal|"Found interface %.*s for %s\n"
 argument_list|,
 name|dl
 operator|->
-name|sdl_alen
+name|sdl_nlen
 argument_list|,
 name|dl
 operator|->
