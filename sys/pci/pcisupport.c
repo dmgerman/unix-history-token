@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.40 1996/09/16 08:56:39 rgrimes Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.40.2.1 1997/01/02 01:26:18 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -4831,6 +4831,45 @@ end_function
 begin_function
 specifier|static
 name|void
+name|config_i1225
+parameter_list|(
+name|pcici_t
+name|tag
+parameter_list|)
+block|{
+name|int
+name|sublementarybus
+decl_stmt|;
+name|sublementarybus
+operator|=
+operator|(
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+literal|0x40
+argument_list|)
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+if|if
+condition|(
+name|sublementarybus
+operator|!=
+literal|0xff
+condition|)
+name|pciroots
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|chipset_attach
 parameter_list|(
 name|pcici_t
@@ -4861,15 +4900,35 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+case|case
+literal|0x12258086
+case|:
+comment|/* unidentified Intel host bridge, dev ID == 0x1225 */
+name|config_i1225
+argument_list|(
+name|config_id
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+end_function
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|PCI_QUIET
+end_ifndef
+
+begin_if
 if|if
 condition|(
 operator|!
 name|bootverbose
 condition|)
 return|return;
+end_if
+
+begin_switch
 switch|switch
 condition|(
 name|pci_conf_read
@@ -4982,19 +5041,28 @@ block|writeconfig (config_id, conf_pci2pci); 		break;
 endif|#
 directive|endif
 block|}
+end_switch
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_endif
 endif|#
 directive|endif
-comment|/* PCI_QUIET */
-block|}
-end_function
+end_endif
 
 begin_comment
+comment|/* PCI_QUIET */
+end_comment
+
+begin_comment
+unit|}
 comment|/*--------------------------------------------------------- ** **	Catchall driver for VGA devices ** **	By Garrett Wollman **<wollman@halloran-eldar.lcs.mit.edu> ** **--------------------------------------------------------- */
 end_comment
 
 begin_function_decl
-specifier|static
+unit|static
 name|char
 modifier|*
 name|vga_probe
