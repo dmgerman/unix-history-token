@@ -438,7 +438,7 @@ begin_define
 define|#
 directive|define
 name|MLD6_MTRACE_RESP
-value|141
+value|200
 end_define
 
 begin_comment
@@ -449,7 +449,7 @@ begin_define
 define|#
 directive|define
 name|MLD6_MTRACE
-value|142
+value|201
 end_define
 
 begin_comment
@@ -460,7 +460,7 @@ begin_define
 define|#
 directive|define
 name|ICMP6_HADISCOV_REQUEST
-value|143
+value|202
 end_define
 
 begin_comment
@@ -471,7 +471,7 @@ begin_define
 define|#
 directive|define
 name|ICMP6_HADISCOV_REPLY
-value|144
+value|203
 end_define
 
 begin_comment
@@ -482,7 +482,7 @@ begin_define
 define|#
 directive|define
 name|ICMP6_MAXTYPE
-value|144
+value|203
 end_define
 
 begin_define
@@ -1304,11 +1304,11 @@ begin_define
 define|#
 directive|define
 name|ND_OPT_ROUTE_INFO
-value|9
+value|200
 end_define
 
 begin_comment
-comment|/* draft-draves-router-preference, not officially assigned yet */
+comment|/* draft-ietf-ipngwg-router-preference, not officially assigned yet */
 end_comment
 
 begin_struct
