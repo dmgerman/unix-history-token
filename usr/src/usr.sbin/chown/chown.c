@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	8.2 (Berkeley) %G%"
+literal|"@(#)chown.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -641,9 +641,21 @@ break|break;
 case|case
 name|FTS_DC
 case|:
-name|warnx
+comment|/* Ignore. */
+continue|continue;
+case|case
+name|FTS_DNR
+case|:
+comment|/* Warn, chown, continue. */
+name|errno
+operator|=
+name|p
+operator|->
+name|fts_errno
+expr_stmt|;
+name|warn
 argument_list|(
-literal|"tree cycle: %s"
+literal|"%s"
 argument_list|,
 name|p
 operator|->
@@ -654,10 +666,11 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
-continue|continue;
+break|break;
 case|case
 name|FTS_ERR
 case|:
+comment|/* Warn, continue. */
 name|errno
 operator|=
 name|p
@@ -681,11 +694,14 @@ continue|continue;
 case|case
 name|FTS_SL
 case|:
+comment|/* Ignore. */
 case|case
 name|FTS_SLNONE
 case|:
 comment|/* 			 * The only symlinks that end up here are ones that 			 * don't point to anything and ones that we found 			 * doing a physical walk. 			 */
 continue|continue;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
