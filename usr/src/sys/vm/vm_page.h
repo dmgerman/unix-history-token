@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.h	7.3 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.h	7.4 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -314,105 +314,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* physical address for last_page */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_page_free_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many pages are free? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_page_active_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many pages are active? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_page_inactive_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many pages are inactive? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_page_wire_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many pages are wired? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_page_free_target
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many do we want free? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_page_free_min
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* When to wakeup pageout */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_page_inactive_target
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many do we want inactive? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_page_free_reserved
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many pages reserved to do pageout */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_page_laundry_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many pages being laundered? */
 end_comment
 
 begin_define
