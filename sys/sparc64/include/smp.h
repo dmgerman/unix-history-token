@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|IPI_RETRIES
-value|100
+value|5000
 end_define
 
 begin_struct
