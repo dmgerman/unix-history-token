@@ -6207,6 +6207,17 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+name|p1
+operator|==
+name|p2
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|error
 operator|=
