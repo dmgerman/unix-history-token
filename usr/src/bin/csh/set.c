@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)set.c 4.1 %G%"
+literal|"@(#)set.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,13 @@ condition|(
 name|vp
 operator|==
 name|p
+operator|||
+operator|!
+name|letter
+argument_list|(
+operator|*
+name|vp
+argument_list|)
 condition|)
 goto|goto
 name|setsyn
@@ -765,7 +772,7 @@ name|vp
 operator|=
 name|p
 init|;
-name|letter
+name|alnum
 argument_list|(
 operator|*
 name|p
@@ -780,6 +787,13 @@ condition|(
 name|vp
 operator|==
 name|p
+operator|||
+operator|!
+name|letter
+argument_list|(
+operator|*
+name|vp
+argument_list|)
 condition|)
 goto|goto
 name|letsyn
