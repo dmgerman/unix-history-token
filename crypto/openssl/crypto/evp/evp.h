@@ -1579,7 +1579,7 @@ name|EVP_CIPHER_mode
 parameter_list|(
 name|e
 parameter_list|)
-value|((e)->flags)& EVP_CIPH_MODE)
+value|(((e)->flags)& EVP_CIPH_MODE)
 define|#
 directive|define
 name|EVP_CIPHER_CTX_cipher
