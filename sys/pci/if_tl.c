@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -14,6 +14,20 @@ end_comment
 begin_comment
 comment|/*  * Some notes about this driver:  *  * The ThunderLAN chip provides a couple of different ways to organize  * reception, transmission and interrupt handling. The simplest approach  * is to use one list each for transmission and reception. In this mode,  * the ThunderLAN will generate two interrupts for every received frame  * (one RX EOF and one RX EOC) and two for each transmitted frame (one  * TX EOF and one TX EOC). This may make the driver simpler but it hurts  * performance to have to handle so many interrupts.  *  * Initially I wanted to create a circular list of receive buffers so  * that the ThunderLAN chip would think there was an infinitely long  * receive channel and never deliver an RXEOC interrupt. However this  * doesn't work correctly under heavy load: while the manual says the  * chip will trigger an RXEOF interrupt each time a frame is copied into  * memory, you can't count on the chip waiting around for you to acknowledge  * the interrupt before it starts trying to DMA the next frame. The result  * is that the chip might traverse the entire circular list and then wrap  * around before you have a chance to do anything about it. Consequently,  * the receive list is terminated (with a 0 in the forward pointer in the  * last element). Each time an RXEOF interrupt arrives, the used list  * is shifted to the end of the list. This gives the appearance of an  * infinitely large RX chain so long as the driver doesn't fall behind  * the chip and allow all of the lists to be filled up.  *  * If all the lists are filled, the adapter will deliver an RX 'end of  * channel' interrupt when it hits the 0 forward pointer at the end of  * the chain. The RXEOC handler then cleans out the RX chain and resets  * the list head pointer in the ch_parm register and restarts the receiver.  *  * For frame transmission, it is possible to program the ThunderLAN's  * transmit interrupt threshold so that the chip can acknowledge multiple  * lists with only a single TX EOF interrupt. This allows the driver to  * queue several frames in one shot, and only have to handle a total  * two interrupts (one TX EOF and one TX EOC) no matter how many frames  * are transmitted. Frame transmission is done directly out of the  * mbufs passed to the tl_start() routine via the interface send queue.  * The driver simply sets up the fragment descriptors in the transmit  * lists to point to the mbuf data regions and sends a TX GO command.  *  * Note that since the RX and TX lists themselves are always used  * only by the driver, the are malloc()ed once at driver initialization  * time and never free()ed.  *  * Also, in order to remain as platform independent as possible, this  * driver uses memory mapped register access to manipulate the card  * as opposed to programmed I/O. This avoids the use of the inb/outb  * (and related) instructions which are specific to the i386 platform.  *  * Using these techniques, this driver achieves very high performance  * by minimizing the amount of interrupts generated during large  * transfers and by completely avoiding buffer copies. Frame transfer  * to and from the ThunderLAN chip is performed entirely by the chip  * itself thereby reducing the load on the host CPU.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -214,32 +228,6 @@ include|#
 directive|include
 file|"miibus_if.h"
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Various supported device vendors/types and their names.  */

@@ -15,6 +15,20 @@ begin_comment
 comment|/*  * The WaveLAN/IEEE adapter is the second generation of the WaveLAN  * from Lucent. Unlike the older cards, the new ones are programmed  * entirely via a firmware-driven controller called the Hermes.  * Unfortunately, Lucent will not release the Hermes programming manual  * without an NDA (if at all). What they do release is an API library  * called the HCF (Hardware Control Functions) which is supposed to  * do the device-specific operations of a device driver for you. The  * publically available version of the HCF library (the 'HCF Light') is   * a) extremely gross, b) lacks certain features, particularly support  * for 802.11 frames, and c) is contaminated by the GNU Public License.  *  * This driver does not use the HCF or HCF Light at all. Instead, it  * programs the Hermes controller directly, using information gleaned  * from the HCF Light code and corresponding documentation.  *  * This driver supports the ISA, PCMCIA and PCI versions of the Lucent  * WaveLan cards (based on the Hermes chipset), as well as the newer  * Prism 2 chipsets with firmware from Intersil and Symbol.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -288,32 +302,6 @@ name|m
 parameter_list|)
 value|IF_DEQUEUE((ifq), (m))
 end_define
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static

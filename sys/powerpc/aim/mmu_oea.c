@@ -11,31 +11,19 @@ begin_comment
 comment|/*  * Copyright (C) 2001 Benno Rice.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Benno Rice ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Manages physical address maps.  *  * In addition to hardware address maps, this module is called upon to  * provide software-use-only maps which may or may not be stored in the  * same form as hardware maps.  These pseudo-maps are used to store  * intermediate results from copy operations to and from address spaces.  *  * Since the information managed by this module is also stored by the  * logical address mapping module, this module may throw away valid virtual  * to physical mappings at almost any time.  However, invalidations of  * mappings must be done as requested.  *  * In order to cope with hardware architectures which make virtual to  * physical map invalidates expensive, this module may delay invalidate  * reduced protection operations until such time as they are actually  * necessary.  This module is given full information as to which processors  * are currently using which maps, and to when physical maps must be made  * correct.  */

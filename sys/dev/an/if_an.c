@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -10,6 +10,20 @@ end_comment
 begin_comment
 comment|/*  * The Aironet 4500/4800 series cards come in PCMCIA, ISA and PCI form.  * This driver supports all three device types (PCI devices are supported  * through an extra PCI shim: /sys/dev/an/if_an_pci.c). ISA devices can be  * supported either using hard-coded IO port/IRQ settings or via Plug  * and Play. The 4500 series devices support 1Mbps and 2Mbps data rates.  * The 4800 devices support 1, 2, 5.5 and 11Mbps rates.  *  * Like the WaveLAN/IEEE cards, the Aironet NICs are all essentially  * PCMCIA devices. The ISA and PCI cards are a combination of a PCMCIA  * device and a PCMCIA to ISA or PCMCIA to PCI adapter card. There are  * a couple of important differences though:  *  * - Lucent ISA card looks to the host like a PCMCIA controller with  *   a PCMCIA WaveLAN card inserted. This means that even desktop  *   machines need to be configured with PCMCIA support in order to  *   use WaveLAN/IEEE ISA cards. The Aironet cards on the other hand  *   actually look like normal ISA and PCI devices to the host, so  *   no PCMCIA controller support is needed  *  * The latter point results in a small gotcha. The Aironet PCMCIA  * cards can be configured for one of two operating modes depending  * on how the Vpp1 and Vpp2 programming voltages are set when the  * card is activated. In order to put the card in proper PCMCIA  * operation (where the CIS table is visible and the interface is  * programmed for PCMCIA operation), both Vpp1 and Vpp2 have to be  * set to 5 volts. FreeBSD by default doesn't set the Vpp voltages,  * which leaves the card in ISA/PCI mode, which prevents it from  * being activated as an PCMCIA device.  *  * Note that some PCMCIA controller software packages for Windows NT  * fail to set the voltages as well.  *  * The Aironet devices can operate in both station mode and access point  * mode. Typically, when programmed for station mode, the card can be set  * to automatically perform encapsulation/decapsulation of Ethernet II  * and 802.3 frames within 802.11 frames so that the host doesn't have  * to do it itself. This driver doesn't program the card that way: the  * driver handles all of the encapsulation/decapsulation itself.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -267,32 +281,6 @@ include|#
 directive|include
 file|<dev/an/if_anreg.h>
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* These are global because we need them in sys/pci/if_an_p.c. */
