@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.37 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +135,9 @@ name|file
 decl_stmt|;
 name|bool
 name|optional
+decl_stmt|;
+name|int
+name|mid
 decl_stmt|;
 name|char
 name|buf
@@ -375,7 +378,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* map $ into \201 for macro expansion */
+comment|/* do macro expansion mappings */
 for|for
 control|(
 name|p
@@ -519,6 +522,13 @@ operator|*
 name|p
 operator|!=
 literal|'$'
+operator|||
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
 condition|)
 continue|continue;
 if|if
@@ -549,8 +559,36 @@ block|}
 comment|/* convert to macro expansion character */
 operator|*
 name|p
+operator|++
 operator|=
 name|MACROEXPAND
+expr_stmt|;
+comment|/* convert macro name to code */
+operator|*
+name|p
+operator|=
+name|macid
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|ep
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|!=
+name|p
+condition|)
+name|strcpy
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|,
+name|ep
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* interpret this line */
@@ -1258,25 +1296,32 @@ case|case
 literal|'D'
 case|:
 comment|/* macro definition */
-name|p
+name|mid
 operator|=
-name|munchstring
+name|macid
 argument_list|(
 operator|&
 name|bp
 index|[
-literal|2
+literal|1
 index|]
+argument_list|,
+operator|&
+name|ep
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|munchstring
+argument_list|(
+name|ep
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 name|define
 argument_list|(
-name|bp
-index|[
-literal|1
-index|]
+name|mid
 argument_list|,
 name|newstr
 argument_list|(
@@ -1313,13 +1358,23 @@ literal|'C'
 case|:
 comment|/* word class */
 comment|/* scan the list of words and set class for all */
-name|expand
+name|mid
+operator|=
+name|macid
 argument_list|(
 operator|&
 name|bp
 index|[
-literal|2
+literal|1
 index|]
+argument_list|,
+operator|&
+name|ep
+argument_list|)
+expr_stmt|;
+name|expand
+argument_list|(
+name|ep
 argument_list|,
 name|exbuf
 argument_list|,
@@ -1426,10 +1481,7 @@ literal|'\0'
 condition|)
 name|setclass
 argument_list|(
-name|bp
-index|[
-literal|1
-index|]
+name|mid
 argument_list|,
 name|wd
 argument_list|)
@@ -1445,15 +1497,25 @@ case|case
 literal|'F'
 case|:
 comment|/* word class from file */
+name|mid
+operator|=
+name|macid
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|ep
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|p
 operator|=
-operator|&
-name|bp
-index|[
-literal|2
-index|]
+name|ep
 init|;
 name|isascii
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.43 (Berkeley) %G%"
+literal|"@(#)util.c	8.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,7 +666,17 @@ condition|(
 name|c
 operator|==
 name|MATCHREPL
-operator|||
+condition|)
+block|{
+name|putchar
+argument_list|(
+literal|'$'
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|c
 operator|==
 name|MACROEXPAND
@@ -675,6 +685,30 @@ block|{
 name|putchar
 argument_list|(
 literal|'$'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+literal|0200
+argument_list|,
+operator|*
+name|s
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"{%s}"
+argument_list|,
+name|macname
+argument_list|(
+operator|*
+name|s
+operator|++
+operator|&
+literal|0377
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
