@@ -1480,6 +1480,30 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: This uses the old definition of the rate field (units of 	 * 500kbps).  Technically the new definition is that this field 	 * contains arbitrary values, but no devices which need this 	 * support exist and the IEEE seems to intend to use the old 	 * definition until they get something big so we'll keep using 	 * it as well because this will work with new cards with 	 * rate<= 63.5Mbps. 	 */
+name|printf
+argument_list|(
+literal|"\nCurrent TX rate:\t[ %d%s ]"
+argument_list|,
+name|sts
+operator|->
+name|an_current_tx_rate
+operator|/
+literal|2
+argument_list|,
+operator|(
+name|sts
+operator|->
+name|an_current_tx_rate
+operator|%
+literal|2
+operator|)
+condition|?
+literal|".5"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\nCurrent SSID:\t\t"
