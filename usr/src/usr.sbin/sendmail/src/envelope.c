@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.23 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1524,10 +1524,7 @@ modifier|*
 name|pw
 decl_stmt|;
 name|char
-modifier|*
 name|delimchar
-init|=
-name|NULL
 decl_stmt|;
 name|char
 name|buf
@@ -1628,6 +1625,14 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	SuprErrs = TRUE; */
+name|delimchar
+operator|=
+name|internal
+condition|?
+literal|'\0'
+else|:
+literal|' '
+expr_stmt|;
 if|if
 condition|(
 name|from
@@ -1645,7 +1650,7 @@ name|e_from
 argument_list|,
 literal|1
 argument_list|,
-literal|' '
+name|delimchar
 argument_list|,
 name|delimptr
 argument_list|,
