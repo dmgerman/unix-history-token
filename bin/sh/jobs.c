@@ -1233,11 +1233,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|struct
-name|job
-modifier|*
-name|jp
-decl_stmt|;
 name|char
 modifier|*
 name|id
@@ -4471,9 +4466,6 @@ name|done
 decl_stmt|;
 name|int
 name|stopped
-decl_stmt|;
-name|int
-name|core
 decl_stmt|;
 name|int
 name|sig
