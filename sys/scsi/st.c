@@ -2167,16 +2167,18 @@ name|flags
 operator||=
 name|ST_WRITTEN
 expr_stmt|;
+comment|/* PREVENT ALLOW MEDIUM REMOVAL is optional per the SCSI-2 specs */
 name|scsi_prevent
 argument_list|(
 name|sc_link
 argument_list|,
 name|PR_PREVENT
 argument_list|,
-literal|0
+name|SCSI_SILENT
+operator||
+name|SCSI_ERR_OK
 argument_list|)
 expr_stmt|;
-comment|/* who cares if it fails? */
 name|SC_DEBUG
 argument_list|(
 name|sc_link
