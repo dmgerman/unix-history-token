@@ -1150,6 +1150,9 @@ decl_stmt|;
 name|int
 name|release
 decl_stmt|;
+name|int
+name|matchlvl
+decl_stmt|;
 name|usbd_device_handle
 name|device
 decl_stmt|;
