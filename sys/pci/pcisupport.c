@@ -4877,6 +4877,14 @@ literal|"Intel 82454NX PCI Expander Bridge"
 operator|)
 return|;
 case|case
+literal|0x11318086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA/BAM (ICH2) PCI-PCI (AGP) bridge"
+operator|)
+return|;
+case|case
 literal|0x124b8086
 case|:
 return|return
@@ -4898,6 +4906,14 @@ case|:
 return|return
 operator|(
 literal|"Intel 82801AB (ICH0) Hub to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x244e8086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA/BAM (ICH2) Hub to PCI bridge"
 operator|)
 return|;
 comment|/* VLSI -- vendor 0x1004 */
@@ -5493,6 +5509,14 @@ operator|(
 literal|"Intel 82801AB (ICH0) PCI to LPC bridge"
 operator|)
 return|;
+case|case
+literal|0x24408086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA/BAM (ICH2) PCI to LPC bridge"
+operator|)
+return|;
 comment|/* VLSI -- vendor 0x1004 */
 case|case
 literal|0x00061004
@@ -6006,6 +6030,22 @@ case|:
 return|return
 operator|(
 literal|"Intel 82801AB (ICH0) USB controller"
+operator|)
+return|;
+case|case
+literal|0x24428086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA/BAM (ICH2) USB controller USB-A"
+operator|)
+return|;
+case|case
+literal|0x24448086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA/BAM (ICH2) USB controller USB-B"
 operator|)
 return|;
 comment|/* VIA Technologies -- vendor 0x1106 (0x1107 on the Apollo Master) */
