@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_frag.c,v 2.10.2.4 2000/06/06 15:49:15 darrenr Exp $"
+literal|"@(#)$Id: ip_frag.c,v 2.10.2.7 2000/11/27 10:26:56 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -978,6 +978,14 @@ name|ip_dst
 operator|.
 name|s_addr
 expr_stmt|;
+name|frag
+operator|.
+name|ipfr_ifp
+operator|=
+name|fin
+operator|->
+name|fin_ifp
+expr_stmt|;
 name|idx
 operator|*=
 literal|127
@@ -1252,7 +1260,8 @@ name|fr_frag_lock
 operator|)
 condition|)
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 name|WRITE_ENTER
 argument_list|(
@@ -1337,7 +1346,8 @@ name|fr_frag_lock
 operator|)
 condition|)
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 name|WRITE_ENTER
 argument_list|(
@@ -1510,6 +1520,14 @@ operator|->
 name|ip_dst
 operator|.
 name|s_addr
+expr_stmt|;
+name|frag
+operator|.
+name|ipfr_ifp
+operator|=
+name|fin
+operator|->
+name|fin_ifp
 expr_stmt|;
 name|idx
 operator|*=

@@ -11,7 +11,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|ident
-literal|"@(#)$Id: solaris.c,v 2.15.2.6 2000/07/18 13:56:33 darrenr Exp $"
+literal|"@(#)$Id: solaris.c,v 2.15.2.8 2000/11/27 10:28:41 darrenr Exp $"
 end_pragma
 
 begin_include
@@ -271,6 +271,12 @@ begin_include
 include|#
 directive|include
 file|"ip_nat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip_state.h"
 end_include
 
 begin_decl_stmt
@@ -3381,9 +3387,9 @@ name|char
 operator|*
 operator|)
 operator|&
-name|ip
+name|ip6
 operator|->
-name|ip_len
+name|ip6_plen
 operator|)
 index|[
 literal|0
@@ -3407,9 +3413,9 @@ name|char
 operator|*
 operator|)
 operator|&
-name|ip
+name|ip6
 operator|->
-name|ip_len
+name|ip6_plen
 operator|)
 index|[
 literal|1
@@ -3596,10 +3602,7 @@ argument_list|(
 name|m2
 argument_list|)
 operator|=
-name|MTYPE
-argument_list|(
-name|mt
-argument_list|)
+name|M_DATA
 expr_stmt|;
 name|freemsg
 argument_list|(
@@ -8622,7 +8625,7 @@ name|ip6
 operator|->
 name|ip6_dst
 argument_list|,
-literal|0xffffffff
+name|NULL
 argument_list|,
 literal|0
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4 2000/03/13 22:10:21 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4.2.2 2000/11/10 13:10:54 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -46,6 +46,10 @@ decl_stmt|;
 name|struct
 name|in_addr
 name|ipfr_dst
+decl_stmt|;
+name|void
+modifier|*
+name|ipfr_ifp
 decl_stmt|;
 name|u_short
 name|ipfr_id
@@ -356,6 +360,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* (BSD>= 199306) || SOLARIS */
+end_comment
 
 begin_endif
 endif|#

@@ -248,7 +248,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_tx.c,v 2.3 2000/03/13 22:10:24 darrenr Exp $"
+literal|"@(#)$Id: ipft_tx.c,v 2.3.2.1 2001/01/10 06:19:53 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -349,7 +349,7 @@ name|char
 name|_tcp_flagset
 index|[]
 init|=
-literal|"FSRPAU"
+literal|"FSRPAUEC"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,6 +371,10 @@ block|,
 name|TH_ACK
 block|,
 name|TH_URG
+block|,
+name|TH_ECN
+block|,
+name|TH_CWR
 block|}
 decl_stmt|;
 end_decl_stmt

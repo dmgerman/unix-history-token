@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.11.2.3 2000/06/17 06:24:31 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.11.2.5 2001/01/10 06:18:35 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,7 +304,7 @@ literal|199802
 operator|)
 operator|||
 operator|(
-name|__FreeBSD_Version
+name|__FreeBSD_version
 operator|>=
 literal|400000
 operator|)
@@ -1985,7 +1985,7 @@ name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fr_info_t
+name|frauth_t
 argument_list|)
 argument_list|)
 expr_stmt|;

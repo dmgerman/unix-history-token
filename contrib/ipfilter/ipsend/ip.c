@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip.c,v 2.1 1999/08/04 17:31:04 darrenr Exp $"
+literal|"@(#)$Id: ip.c,v 2.1.4.1 2001/01/10 06:21:19 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -549,6 +549,7 @@ condition|(
 operator|!
 name|ipbuf
 condition|)
+block|{
 name|ipbuf
 operator|=
 operator|(
@@ -560,6 +561,23 @@ argument_list|(
 literal|65536
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ipbuf
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|2
+return|;
+block|}
+block|}
 name|eh
 operator|=
 operator|(

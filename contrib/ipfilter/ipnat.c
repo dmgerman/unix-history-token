@@ -345,7 +345,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipnat.c,v 2.16.2.2 2000/05/15 06:54:18 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.16.2.5 2000/12/02 00:15:04 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -688,6 +688,10 @@ init|=
 literal|0
 decl_stmt|,
 name|c
+decl_stmt|,
+name|mode
+init|=
+name|O_RDWR
 decl_stmt|;
 while|while
 condition|(
@@ -759,6 +763,10 @@ name|opts
 operator||=
 name|OPT_LIST
 expr_stmt|;
+name|mode
+operator|=
+name|O_RDONLY
+expr_stmt|;
 break|break;
 case|case
 literal|'n'
@@ -766,6 +774,10 @@ case|:
 name|opts
 operator||=
 name|OPT_NODO
+expr_stmt|;
+name|mode
+operator|=
+name|O_RDONLY
 expr_stmt|;
 break|break;
 case|case
@@ -782,6 +794,10 @@ case|:
 name|opts
 operator||=
 name|OPT_STAT
+expr_stmt|;
+name|mode
+operator|=
+name|O_RDONLY
 expr_stmt|;
 break|break;
 case|case
@@ -841,7 +857,7 @@ name|open
 argument_list|(
 name|IPL_NAT
 argument_list|,
-name|O_RDWR
+name|mode
 argument_list|)
 operator|)
 operator|==
@@ -1531,7 +1547,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\trptr %p wptr %p seq %x junk %d\n"
+literal|"\t\trptr %p wptr %p seq %x len %d junk %d\n"
 argument_list|,
 name|ftp
 operator|.
@@ -1559,6 +1575,15 @@ literal|0
 index|]
 operator|.
 name|ftps_seq
+argument_list|,
+name|ftp
+operator|.
+name|ftp_side
+index|[
+literal|0
+index|]
+operator|.
+name|ftps_len
 argument_list|,
 name|ftp
 operator|.
@@ -1598,7 +1623,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\trptr %p wptr %p seq %x junk %d\n"
+literal|"\t\trptr %p wptr %p seq %x len %d junk %d\n"
 argument_list|,
 name|ftp
 operator|.
@@ -1626,6 +1651,15 @@ literal|1
 index|]
 operator|.
 name|ftps_seq
+argument_list|,
+name|ftp
+operator|.
+name|ftp_side
+index|[
+literal|1
+index|]
+operator|.
+name|ftps_len
 argument_list|,
 name|ftp
 operator|.
@@ -1921,6 +1955,15 @@ argument_list|,
 name|ns
 operator|.
 name|ns_rules
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"wilds\t%u\n"
+argument_list|,
+name|ns
+operator|.
+name|ns_wilds
 argument_list|)
 expr_stmt|;
 if|if

@@ -250,7 +250,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.10.2.1 2000/07/08 02:19:46 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.10.2.5 2000/10/25 10:37:11 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,6 +517,9 @@ operator|,
 name|size_t
 operator|,
 name|FILE
+operator|*
+operator|,
+name|int
 operator|*
 operator|)
 argument_list|)
@@ -1238,12 +1241,12 @@ name|line
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+operator|&
+name|linenum
 argument_list|)
 condition|)
 block|{
-name|linenum
-operator|++
-expr_stmt|;
 comment|/* 		 * treat CR as EOL.  LF is converted to NUL by getline(). 		 */
 if|if
 condition|(
@@ -1674,6 +1677,8 @@ parameter_list|,
 name|size
 parameter_list|,
 name|file
+parameter_list|,
+name|linenum
 parameter_list|)
 specifier|register
 name|char
@@ -1686,6 +1691,10 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|file
+decl_stmt|;
+name|int
+modifier|*
+name|linenum
 decl_stmt|;
 block|{
 name|char
@@ -1774,6 +1783,12 @@ literal|'\0'
 expr_stmt|;
 break|break;
 block|}
+operator|(
+operator|*
+name|linenum
+operator|)
+operator|++
+expr_stmt|;
 name|p
 index|[
 name|len
@@ -2925,6 +2940,9 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|int
+name|vfd
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"ipf: %s (%d)\n"
@@ -2942,17 +2960,33 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|opendevice
+operator|(
+name|vfd
+operator|=
+name|open
 argument_list|(
 name|ipfname
+argument_list|,
+name|O_RDONLY
 argument_list|)
-operator|!=
+operator|)
+operator|==
 operator|-
-literal|2
-operator|&&
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"open device"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|ioctl
 argument_list|(
-name|fd
+name|vfd
 argument_list|,
 name|SIOCGETFS
 argument_list|,
@@ -2963,11 +2997,21 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl(SIOCGETFS"
+literal|"ioctl(SIOCGETFS)"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|vfd
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|close
+argument_list|(
+name|vfd
+argument_list|)
+expr_stmt|;
 name|flags
 operator|=
 name|get_flags
