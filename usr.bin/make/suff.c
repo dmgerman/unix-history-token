@@ -490,20 +490,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|SuffExpandChildren
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|Boolean
 name|SuffApplyTransform
 parameter_list|(
@@ -4006,10 +3992,6 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/* Expanded value */
-name|Buffer
-modifier|*
-name|buf
-decl_stmt|;
 comment|/* 	 * New nodes effectively take the place of the child, so place them 	 * after the child 	 */
 name|prevLN
 operator|=
@@ -4038,6 +4020,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
 name|DEBUGF
 argument_list|(
 name|SUFF
@@ -4075,20 +4061,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|Buf_Destroy
-argument_list|(
-name|buf
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|!=
-name|NULL
-condition|)
-block|{
 name|Lst
 name|members
 init|=
@@ -4106,17 +4078,11 @@ operator|&
 name|OP_ARCHV
 condition|)
 block|{
-comment|/* 				 * Node was an archive(member) target, so we 				 * want to call on the Arch module to find the 				 * nodes for us, expanding variables in the 				 * parent's context. 				 */
-name|char
-modifier|*
-name|sacrifice
-init|=
-name|cp
-decl_stmt|;
+comment|/* 			 * Node was an archive(member) target, so we 			 * want to call on the Arch module to find the 			 * nodes for us, expanding variables in the 			 * parent's context. 			 */
 name|Arch_ParseArchive
 argument_list|(
 operator|&
-name|sacrifice
+name|cp
 argument_list|,
 operator|&
 name|members
@@ -4127,18 +4093,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Break the result into a vector of strings 				 * whose nodes we can find, then add those 				 * nodes to the members list. Unfortunately, 				 * we can't use brk_string b/c it doesn't 				 * understand about variable specifications with 				 * spaces in them... 				 */
+comment|/* 			 * Break the result into a vector of strings 			 * whose nodes we can find, then add those 			 * nodes to the members list. Unfortunately, 			 * we can't use brk_string b/c it doesn't 			 * understand about variable specifications with 			 * spaces in them... 			 */
 name|char
 modifier|*
 name|start
 decl_stmt|;
-name|char
-modifier|*
-name|initcp
-init|=
-name|cp
-decl_stmt|;
-comment|/* For freeing... */
 for|for
 control|(
 name|start
@@ -4187,7 +4146,7 @@ operator|==
 literal|'\t'
 condition|)
 block|{
-comment|/* 						 * White-space -- terminate 						 * element, find the node, 						 * add it, skip any further 						 * spaces. 						 */
+comment|/* 					 * White-space -- terminate element, 					 * find the node, add it, skip any 					 * further spaces. 					 */
 operator|*
 name|cp
 operator|++
@@ -4228,7 +4187,7 @@ name|cp
 operator|++
 expr_stmt|;
 block|}
-comment|/* 						 * Adjust cp for increment at 						 * start of loop, but set start 						 * to first non-space. 						 */
+comment|/* 					 * Adjust cp for increment at 					 * start of loop, but set start 					 * to first non-space. 					 */
 name|start
 operator|=
 name|cp
@@ -4244,7 +4203,7 @@ operator|==
 literal|'$'
 condition|)
 block|{
-comment|/* 						 * Start of a variable spec -- 						 * contact variable module 						 * to find the end so we can 						 * skip over it. 						 */
+comment|/* 					 * Start of a variable spec -- 					 * contact variable module 					 * to find the end so we can 					 * skip over it. 					 */
 name|char
 modifier|*
 name|junk
@@ -4314,7 +4273,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* 						 * Escaped something -- skip 						 * over it 						 */
+comment|/* 					 * Escaped something -- skip over it 					 */
 name|cp
 operator|++
 expr_stmt|;
@@ -4327,7 +4286,7 @@ operator|!=
 name|start
 condition|)
 block|{
-comment|/* 					 * Stuff left over -- add it to the 					 * list too 					 */
+comment|/* 				 * Stuff left over -- add it to the 				 * list too 				 */
 name|gn
 operator|=
 name|Targ_FindNode
@@ -4346,13 +4305,16 @@ name|gn
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 				 * Point cp back at the beginning again so the 				 * variable value can be freed. 				 */
-name|cp
-operator|=
-name|initcp
-expr_stmt|;
 block|}
-comment|/* 			 * Add all elements of the members list to 			 * the parent node. 			 */
+comment|/* 		 * Free the result of Var_Subst 		 */
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Add all elements of the members list to 		 * the parent node. 		 */
 while|while
 condition|(
 operator|!
@@ -4434,13 +4396,6 @@ name|unmade
 operator|++
 expr_stmt|;
 block|}
-block|}
-comment|/* 			 * Free the result 			 */
-name|free
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 		 * Now the source is expanded, remove it from the list 		 * of children to keep it from being processed. 		 */
 name|ln
