@@ -21,7 +21,7 @@ name|char
 name|uux_rcsid
 index|[]
 init|=
-literal|"$Id: uux.c,v 1.72 1994/03/22 06:33:26 ian Rel $"
+literal|"$Id: uux.c,v 1.4 1994/05/07 18:14:35 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -807,7 +807,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+a:bcCg:I:jlnprs:Wvx:z"
+literal|"+a::bcCg:I:jlnprs:Wvx:z"
 argument_list|,
 name|asXlongopts
 argument_list|,
