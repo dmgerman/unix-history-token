@@ -38,31 +38,6 @@ begin_comment
 comment|/* Netgraph socket(2) constants */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PF_NETGRAPH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PF_NETGRAPH
-value|31
-end_define
-
-begin_define
-define|#
-directive|define
-name|AF_NETGRAPH
-value|31
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
