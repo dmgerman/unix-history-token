@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)header.c	5.1 (Berkeley) %G%"
+literal|"@(#)header.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,6 +468,15 @@ name|badfmt
 argument_list|()
 expr_stmt|;
 block|}
+name|chdr
+operator|.
+name|name
+index|[
+name|len
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|chdr
 operator|.
 name|size
