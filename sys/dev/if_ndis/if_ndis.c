@@ -5824,6 +5824,11 @@ name|ndis_link
 operator|=
 literal|1
 expr_stmt|;
+name|NDIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -5831,6 +5836,11 @@ operator|->
 name|ndis_80211
 condition|)
 name|ndis_getstate_80211
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|NDIS_LOCK
 argument_list|(
 name|sc
 argument_list|)
