@@ -64,9 +64,6 @@ decl_stmt|;
 name|caddr_t
 name|ibase
 decl_stmt|;
-name|u_int32_t
-name|phys_ibase
-decl_stmt|;
 name|caddr_t
 name|obase
 decl_stmt|;

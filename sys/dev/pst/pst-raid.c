@@ -567,7 +567,7 @@ name|reply
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|M_PSTRAID
+name|M_PSTIOP
 argument_list|)
 expr_stmt|;
 return|return
@@ -597,7 +597,7 @@ name|reply
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|M_PSTRAID
+name|M_PSTIOP
 argument_list|)
 expr_stmt|;
 if|if
@@ -733,7 +733,7 @@ name|reply
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|M_PSTRAID
+name|M_PSTIOP
 argument_list|)
 expr_stmt|;
 name|bioq_init
