@@ -47,13 +47,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_WAITOK
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
 name|M_NOWAIT
 value|0x0001
 end_define
@@ -65,19 +58,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_USE_RESERVE
+name|M_WAITOK
 value|0x0002
 end_define
 
 begin_comment
-comment|/* can alloc out of reserve memory */
+comment|/* do not block */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_ZERO
-value|0x0004
+value|0x0100
 end_define
 
 begin_comment
@@ -88,11 +81,22 @@ begin_define
 define|#
 directive|define
 name|M_NOVM
-value|0x0008
+value|0x0200
 end_define
 
 begin_comment
 comment|/* don't ask VM for pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_USE_RESERVE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* can alloc out of reserve memory */
 end_comment
 
 begin_define

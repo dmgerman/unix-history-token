@@ -1110,15 +1110,23 @@ begin_define
 define|#
 directive|define
 name|M_DONTWAIT
-value|1
+value|0x4
 end_define
+
+begin_comment
+comment|/* don't conflict with M_NOWAIT */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|M_TRYWAIT
-value|0
+value|0x8
 end_define
+
+begin_comment
+comment|/* or M_WAITOK */
+end_comment
 
 begin_define
 define|#
