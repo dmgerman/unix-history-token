@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tape.c,v 1.9 1998/06/15 06:58:11 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3776,6 +3776,26 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 		 * Handle ENOSPC as an EOT condition. 		 */
+if|if
+condition|(
+name|wrote
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|ENOSPC
+condition|)
+block|{
+name|wrote
+operator|=
+literal|0
+expr_stmt|;
+name|eot_count
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|eot_count
@@ -3786,7 +3806,6 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * fixme: Pyramids running OSx return ENOSPC 		 * at EOT on 1/2 inch drives. 		 */
 if|if
 condition|(
 name|wrote

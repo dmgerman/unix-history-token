@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dumprmt.c,v 1.11 1998/06/15 06:58:09 charnier Exp $"
+literal|"$Id: dumprmt.c,v 1.12 1998/07/14 09:19:46 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1231,7 +1231,6 @@ name|i
 decl_stmt|,
 name|cc
 decl_stmt|;
-extern|extern errno;
 operator|(
 name|void
 operator|)
@@ -1264,18 +1263,12 @@ name|n
 operator|<
 literal|0
 condition|)
-block|{
-name|errno
-operator|=
-name|n
-expr_stmt|;
+comment|/* rmtcall() properly sets errno for us on errors. */
 return|return
 operator|(
-operator|-
-literal|1
+name|n
 operator|)
 return|;
-block|}
 for|for
 control|(
 name|i
@@ -1312,11 +1305,9 @@ name|cc
 operator|<=
 literal|0
 condition|)
-block|{
 name|rmtconnaborted
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -1768,6 +1759,10 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|rmtgets
 argument_list|(
 name|code
@@ -1810,6 +1805,15 @@ argument_list|,
 name|emsg
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|atoi
+argument_list|(
+name|code
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1817,18 +1821,10 @@ name|code
 operator|==
 literal|'F'
 condition|)
-block|{
 name|rmtstate
 operator|=
 name|TS_CLOSED
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 return|return
 operator|(
 operator|-
