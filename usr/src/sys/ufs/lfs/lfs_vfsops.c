@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -129,80 +129,6 @@ directive|include
 file|"inode.h"
 end_include
 
-begin_comment
-comment|/*  * ufs vfs operations.  */
-end_comment
-
-begin_function_decl
-name|int
-name|ufs_mount
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ufs_start
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ufs_unmount
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ufs_root
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ufs_quotactl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ufs_statfs
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ufs_sync
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ufs_fhtovp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ufs_vptofh
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ufs_init
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|vfsops
@@ -262,6 +188,14 @@ name|vnode
 modifier|*
 name|rootvp
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|ufsmount
 modifier|*
@@ -334,6 +268,8 @@ argument_list|(
 name|rootvp
 argument_list|,
 name|mp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -375,6 +311,8 @@ argument_list|(
 name|mp
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|free
@@ -519,6 +457,8 @@ operator|&
 name|mp
 operator|->
 name|mnt_stat
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vfs_unlock
@@ -555,6 +495,8 @@ argument_list|,
 name|data
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -582,6 +524,14 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -740,6 +690,8 @@ operator|.
 name|fspec
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 operator|)
 operator|!=
@@ -757,6 +709,8 @@ argument_list|(
 name|devvp
 argument_list|,
 name|mp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -826,6 +780,8 @@ operator|.
 name|fspec
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 operator|)
 operator|!=
@@ -997,6 +953,8 @@ operator|&
 name|mp
 operator|->
 name|mnt_stat
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1017,6 +975,8 @@ argument_list|(
 name|devvp
 argument_list|,
 name|mp
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -1031,6 +991,14 @@ name|struct
 name|mount
 modifier|*
 name|mp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1140,6 +1108,8 @@ operator||
 name|FWRITE
 argument_list|,
 name|NOCRED
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1168,16 +1138,16 @@ argument_list|,
 name|FREAD
 argument_list|,
 name|NOCRED
+argument_list|,
+name|p
 argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|size
 operator|=
 name|DEV_BSIZE
 expr_stmt|;
-block|}
 else|else
 block|{
 name|havepart
@@ -1977,6 +1947,8 @@ operator||
 name|FWRITE
 argument_list|,
 name|NOCRED
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 end_if
@@ -2044,6 +2016,8 @@ operator|(
 name|mp
 operator|,
 name|flags
+operator|,
+name|p
 operator|)
 expr|struct
 name|mount
@@ -2055,6 +2029,14 @@ end_expr_stmt
 begin_decl_stmt
 name|int
 name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -2078,6 +2060,8 @@ argument_list|(
 argument|mp
 argument_list|,
 argument|mntflags
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2092,6 +2076,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|mntflags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -2441,6 +2433,8 @@ argument_list|,
 argument|uid
 argument_list|,
 argument|arg
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2470,6 +2464,14 @@ name|arg
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -2482,14 +2484,6 @@ argument_list|(
 name|mp
 argument_list|)
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
 name|int
 name|cmd
 decl_stmt|,
@@ -2756,6 +2750,8 @@ argument_list|(
 argument|mp
 argument_list|,
 argument|sbp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2773,6 +2769,14 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -4269,6 +4273,8 @@ argument_list|,
 argument|fname
 argument_list|,
 argument|ndp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4293,6 +4299,14 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -4335,10 +4349,9 @@ name|namei
 argument_list|(
 name|ndp
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 condition|)
-comment|/* XXX */
 return|return
 operator|(
 name|error
