@@ -370,5 +370,29 @@ parameter_list|)
 value|VOP_UNLOCK(devvp, 0, curproc)
 end_define
 
+begin_comment
+comment|/*  * To lock a buffer, set the B_LOCKED flag and then brelse() it. To unlock,  * reset the B_LOCKED flag and brelse() the buffer back on the LRU list  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCK_BUF
+parameter_list|(
+name|bp
+parameter_list|)
+value|{ \ 	int s; \ 	s = splbio(); \ 	(bp)->b_flags |= B_LOCKED; \ 	splx(s); \ 	brelse(bp); \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ULCK_BUF
+parameter_list|(
+name|bp
+parameter_list|)
+value|{ \ 	int s; \ 	s = splbio(); \ 	(bp)->b_flags&= ~B_LOCKED; \ 	splx(s); \ 	bremfree(bp); \ 	brelse(bp); \ }
+end_define
+
 end_unit
 

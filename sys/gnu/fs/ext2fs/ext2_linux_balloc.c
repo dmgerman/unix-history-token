@@ -245,6 +245,10 @@ index|]
 operator|=
 name|bh
 expr_stmt|;
+name|LCK_BUF
+argument_list|(
+argument|bh
+argument_list|)
 block|}
 end_function
 
@@ -514,18 +518,12 @@ name|s_loaded_block_bitmaps
 operator|++
 expr_stmt|;
 else|else
-name|brelse
+name|ULCK_BUF
 argument_list|(
-name|sb
-operator|->
-name|s_block_bitmap
-index|[
-name|EXT2_MAX_GROUP_LOADED
-operator|-
+argument|sb->s_block_bitmap[EXT2_MAX_GROUP_LOADED -
 literal|1
-index|]
+argument|]
 argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j
