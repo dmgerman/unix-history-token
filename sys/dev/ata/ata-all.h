@@ -1015,6 +1015,13 @@ name|ATA_OP_FINISHED
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATA_MAX_28BIT_LBA
+value|268435455
+end_define
+
 begin_comment
 comment|/* ATAPI request sense structure */
 end_comment
