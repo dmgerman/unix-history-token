@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_wrtfmt[] = "@(#)wrtfmt.c	1.4";  *  * formatted write routines  */
+comment|/* char id_wrtfmt[] = "@(#)wrtfmt.c	1.5";  *  * formatted write routines  */
 end_comment
 
 begin_include
@@ -166,6 +166,30 @@ case|:
 case|case
 name|DE
 case|:
+return|return
+operator|(
+name|wrt_E
+argument_list|(
+name|ptr
+argument_list|,
+name|p
+operator|->
+name|p1
+argument_list|,
+name|p
+operator|->
+name|p2
+argument_list|,
+name|p
+operator|->
+name|p3
+argument_list|,
+name|len
+argument_list|,
+literal|'d'
+argument_list|)
+operator|)
+return|;
 case|case
 name|E
 case|:
@@ -191,6 +215,8 @@ operator|->
 name|p3
 argument_list|,
 name|len
+argument_list|,
+literal|'e'
 argument_list|)
 operator|)
 return|;
@@ -1041,6 +1067,8 @@ argument_list|,
 argument|e
 argument_list|,
 argument|len
+argument_list|,
+argument|expch
 argument_list|)
 end_macro
 
@@ -1057,6 +1085,12 @@ name|len
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|expch
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|char
@@ -1067,8 +1101,6 @@ name|ex
 index|[
 literal|4
 index|]
-decl_stmt|,
-name|expch
 decl_stmt|;
 name|int
 name|dd
@@ -1090,21 +1122,6 @@ modifier|*
 name|ecvt
 parameter_list|()
 function_decl|;
-name|expch
-operator|=
-operator|(
-name|len
-operator|==
-sizeof|sizeof
-argument_list|(
-name|float
-argument_list|)
-condition|?
-literal|'e'
-else|:
-literal|'d'
-operator|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1773,6 +1790,8 @@ argument_list|,
 name|e
 argument_list|,
 name|len
+argument_list|,
+literal|'e'
 argument_list|)
 operator|)
 return|;
