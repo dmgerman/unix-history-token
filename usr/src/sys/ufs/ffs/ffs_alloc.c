@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	6.8	85/01/07	*/
+comment|/*	ffs_alloc.c	6.9	85/01/10	*/
 end_comment
 
 begin_include
@@ -1495,7 +1495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Select the desired position for the next block in a file.  The file is  * logically divided into sections. The first section is composed of the  * direct blocks. Each additional section contains fs_maxbpg blocks.  *   * If no blocks have been allocated in the first section, the policy is to  * request a block in the same cylinder group as the inode that describes  * the file. If no blocks have been allocated in any other section, the  * policy is to place the section in a cylinder group with a greater than  * average number of free blocks.  An appropriate cylinder group is found  * by maintaining a rotor that sweeps the cylinder groups. When a new  * group of blocks is needed, the rotor is advanced until a cylinder group  * with greater than the average number of free blocks is found.  *   * If a section is already partially allocated, the policy is to  * contiguously allocate fs_maxcontig blocks.  The end of one of these  * contiguous blocks and the beginning of the next is physically separated  * so that the disk head will be in transit between them for at least  * fs_rotdelay milliseconds.  This is to allow time for the processor to  * schedule another I/O transfer.  */
+comment|/*  * Select the desired position for the next block in a file.  The file is  * logically divided into sections. The first section is composed of the  * direct blocks. Each additional section contains fs_maxbpg blocks.  *   * If no blocks have been allocated in the first section, the policy is to  * request a block in the same cylinder group as the inode that describes  * the file. If no blocks have been allocated in any other section, the  * policy is to place the section in a cylinder group with a greater than  * average number of free blocks.  An appropriate cylinder group is found  * by using a rotor that sweeps the cylinder groups. When a new group of  * blocks is needed, the sweep begins in the cylinder group following the  * cylinder group from which the previous allocation was made. The sweep  * continues until a cylinder group with greater than the average number  * of free blocks is found. If the allocation is for the first block in an  * indirect block, the information on the previous allocation is unavailable;  * here a best guess is made based upon the logical block number being  * allocated.  *   * If a section is already partially allocated, the policy is to  * contiguously allocate fs_maxcontig blocks.  The end of one of these  * contiguous blocks and the beginning of the next is physically separated  * so that the disk head will be in transit between them for at least  * fs_rotdelay milliseconds.  This is to allow time for the processor to  * schedule another I/O transfer.  */
 end_comment
 
 begin_function
@@ -1532,10 +1532,14 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
+specifier|register
 name|int
 name|cg
-decl_stmt|,
+decl_stmt|;
+name|int
 name|avgbfree
+decl_stmt|,
+name|startcg
 decl_stmt|;
 name|daddr_t
 name|nextblk
@@ -1599,6 +1603,61 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Find a cylinder with greater than average number of 		 * unused data blocks. 		 */
+if|if
+condition|(
+name|indx
+operator|==
+literal|0
+operator|||
+name|bap
+index|[
+name|indx
+operator|-
+literal|1
+index|]
+operator|==
+literal|0
+condition|)
+name|startcg
+operator|=
+name|itog
+argument_list|(
+name|fs
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|)
+operator|+
+name|lbn
+operator|/
+name|fs
+operator|->
+name|fs_maxbpg
+expr_stmt|;
+else|else
+name|startcg
+operator|=
+name|dtog
+argument_list|(
+name|fs
+argument_list|,
+name|bap
+index|[
+name|indx
+operator|-
+literal|1
+index|]
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|startcg
+operator|%=
+name|fs
+operator|->
+name|fs_ncg
+expr_stmt|;
 name|avgbfree
 operator|=
 name|fs
@@ -1615,11 +1674,7 @@ for|for
 control|(
 name|cg
 operator|=
-name|fs
-operator|->
-name|fs_cgrotor
-operator|+
-literal|1
+name|startcg
 init|;
 name|cg
 operator|<
@@ -1674,9 +1729,7 @@ literal|0
 init|;
 name|cg
 operator|<=
-name|fs
-operator|->
-name|fs_cgrotor
+name|startcg
 condition|;
 name|cg
 operator|++
