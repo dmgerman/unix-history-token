@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.26.4.2 1995/08/31 06:36:26 davidg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.26.4.3 1996/01/08 02:54:46 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -1017,7 +1017,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* XXX-HA: dufault@hda.com: SDEV_BOUNCE is set down in the adapter drivers  * in an sc_link structure to indicate that this host adapter requires  * ISA DMA bounce buffers.  I think the link structure should  * be associated only with the type drive and not the adapter driver,  * and the bounce flag should be in something associated with the  * adapter driver.  * XXX-HA And I added the "supports residuals properly" flag that ALSO goes  * in an adapter structure.  I figure I'll fix both at once.  *  * XXX SDEV_OPEN is used for two things: To prevent more than one  * open and to make unit attentions errors be logged on the console.  * These should be split up; I'm adding SDEV_IS_OPEN to enforce one  * open only.  */
+comment|/* XXX-HA: dufault@hda.com: SDEV_BOUNCE is set down in the adapter drivers  * in an sc_link structure to indicate that this host adapter requires  * ISA DMA bounce buffers.  I think the link structure should  * be associated only with the type drive and not the adapter driver,  * and the bounce flag should be in something associated with the  * adapter driver.  * XXX-HA And I added the "supports residuals properly" flag that ALSO goes  * in an adapter structure.  I figure I'll fix both at once.  *  * XXX SDEV_OPEN is used for two things: To prevent more than one  * open and to make unit attentions errors be logged on the console.  * These should be split up; I'm adding SDEV_IS_OPEN to enforce one  * open only.  *  * XXX SDEV_UK is used to mark the "uk" device.  */
 end_comment
 
 begin_define
@@ -1128,6 +1128,17 @@ end_define
 
 begin_comment
 comment|/* at least 1 open session */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDEV_UK
+value|0x2000
+end_define
+
+begin_comment
+comment|/* this is the "uk" device */
 end_comment
 
 begin_comment
