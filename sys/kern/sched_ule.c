@@ -3981,6 +3981,12 @@ block|{
 comment|/* 		 * If the priority has been elevated due to priority 		 * propagation, we may have to move ourselves to a new 		 * queue.  We still call adjustrunqueue below in case kse 		 * needs to fix things up. 		 */
 if|if
 condition|(
+name|prio
+operator|<
+name|td
+operator|->
+name|td_priority
+operator|&&
 name|ke
 operator|&&
 operator|(
