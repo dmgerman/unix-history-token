@@ -127,11 +127,6 @@ name|DOSMounted
 operator|=
 name|TRUE
 expr_stmt|;
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
 name|msgDebug
 argument_list|(
 literal|"DOS partition %s mounted\n"

@@ -1716,8 +1716,6 @@ return|return
 name|i
 operator||
 name|DITEM_RECREATE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1810,8 +1808,6 @@ return|return
 name|i
 operator||
 name|DITEM_RECREATE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1870,8 +1866,6 @@ return|return
 name|i
 operator||
 name|DITEM_RECREATE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1948,8 +1942,6 @@ return|return
 name|i
 operator||
 name|DITEM_RECREATE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function

@@ -670,7 +670,7 @@ expr_stmt|;
 return|return
 name|i
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 end_function

@@ -208,9 +208,23 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to get proper FTP path.  FTP media not initialized."
+argument_list|)
+expr_stmt|;
+name|netdev
+operator|->
+name|shutdown
+argument_list|(
+name|netdev
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 block|}
 name|hostname
 operator|=
@@ -234,11 +248,23 @@ operator|||
 operator|!
 name|dir
 condition|)
-name|msgFatal
+block|{
+name|msgConfirm
 argument_list|(
-literal|"Missing FTP host or directory specification - something's wrong!"
+literal|"Missing FTP host or directory specification.  FTP media not initialized,"
 argument_list|)
 expr_stmt|;
+name|netdev
+operator|->
+name|shutdown
+argument_list|(
+name|netdev
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 name|user
 operator|=
 name|variable_get
@@ -326,23 +352,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|variable_get
-argument_list|(
-name|VAR_NO_CONFIRM
-argument_list|)
-condition|)
-name|msgNotify
-argument_list|(
-literal|"Couldn't open FTP connection to %s, errcode = %d"
-argument_list|,
-name|hostname
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-else|else
 name|msgConfirm
 argument_list|(
 literal|"Couldn't open FTP connection to %s, errcode = %d"
@@ -563,6 +572,13 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|netdev
+operator|->
+name|shutdown
+argument_list|(
+name|netdev
+argument_list|)
+expr_stmt|;
 name|variable_unset
 argument_list|(
 name|VAR_FTP_PATH
@@ -825,11 +841,6 @@ operator|!
 name|ftpInitted
 condition|)
 return|return;
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
 name|msgDebug
 argument_list|(
 literal|"FTP shutdown called.  OpenConn = %x\n"

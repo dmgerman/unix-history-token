@@ -927,7 +927,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 name|dialog_clear_norefresh
 argument_list|()
@@ -972,7 +972,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 name|dialog_clear_norefresh
 argument_list|()
@@ -1024,7 +1024,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 if|if
@@ -1176,7 +1176,7 @@ expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 comment|/* Don't write out MBR info */
@@ -1214,7 +1214,7 @@ expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 if|if
@@ -1244,7 +1244,7 @@ expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 name|chdir
@@ -1347,7 +1347,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 if|if

@@ -648,6 +648,11 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Request for %s from floppy on /dist, probe is %d.\n"

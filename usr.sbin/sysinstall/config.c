@@ -2713,8 +2713,6 @@ return|return
 name|DITEM_SUCCESS
 operator||
 name|DITEM_RESTORE
-operator||
-name|DITEM_RECREATE
 return|;
 block|}
 end_function

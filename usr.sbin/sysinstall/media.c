@@ -317,7 +317,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -339,7 +339,7 @@ else|:
 name|DITEM_FAILURE
 operator|)
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -482,7 +482,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -502,7 +502,7 @@ else|:
 name|DITEM_FAILURE
 operator|)
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -643,7 +643,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -663,7 +663,7 @@ else|:
 name|DITEM_FAILURE
 operator|)
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -806,7 +806,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -868,7 +868,7 @@ else|:
 name|DITEM_FAILURE
 operator|)
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -962,7 +962,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 else|else
 name|cp
@@ -974,7 +974,7 @@ argument_list|)
 expr_stmt|;
 name|what
 operator|=
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 expr_stmt|;
 block|}
 if|if
@@ -3016,7 +3016,7 @@ expr_stmt|;
 return|return
 name|i
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 end_function

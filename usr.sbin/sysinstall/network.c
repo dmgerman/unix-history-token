@@ -124,6 +124,13 @@ condition|(
 name|pppPID
 condition|)
 block|{
+name|msgNotify
+argument_list|(
+literal|"Killing previous PPP process %d."
+argument_list|,
+name|pppPID
+argument_list|)
+expr_stmt|;
 name|kill
 argument_list|(
 name|pppPID
@@ -247,9 +254,16 @@ condition|(
 operator|!
 name|val
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"slattach command was empty.  Try again!"
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 else|else
 name|SAFE_STRCPY
 argument_list|(
@@ -270,7 +284,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"slattach returned a bad status!  Please verify that\n"
-literal|"the command is correct and try again."
+literal|"the command is correct and try this operation again."
 argument_list|)
 expr_stmt|;
 return|return
@@ -447,11 +461,6 @@ operator|!
 name|networkInitialized
 condition|)
 return|return;
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
 name|msgDebug
 argument_list|(
 literal|"Shutdown called for network device %s\n"

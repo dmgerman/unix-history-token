@@ -107,9 +107,21 @@ operator|->
 name|private
 argument_list|)
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to CD to %s before extracting tape!\n"
+literal|"Tape media not selected."
+argument_list|,
+name|dev
+operator|->
+name|private
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 comment|/* We know the tape is already in the drive, so go for it */
 name|msgNotify
 argument_list|(
@@ -185,7 +197,8 @@ block|}
 else|else
 name|msgConfirm
 argument_list|(
-literal|"Tape extract command failed with status %d!"
+literal|"Tape extract command failed with status %d!\n"
+literal|"Unable to use tape media."
 argument_list|,
 name|i
 argument_list|)

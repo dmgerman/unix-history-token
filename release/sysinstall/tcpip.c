@@ -1822,8 +1822,6 @@ expr_stmt|;
 return|return
 name|DITEM_SUCCESS
 operator||
-name|DITEM_RECREATE
-operator||
 name|DITEM_RESTORE
 return|;
 block|}

@@ -167,13 +167,13 @@ condition|)
 return|return
 name|DITEM_SUCCESS
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 else|else
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 end_function

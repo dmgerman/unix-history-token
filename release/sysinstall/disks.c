@@ -2253,7 +2253,7 @@ name|i
 operator|=
 name|i
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 expr_stmt|;
 block|}
 return|return
