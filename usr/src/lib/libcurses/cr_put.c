@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.3 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1224,6 +1224,8 @@ condition|)
 name|_putchar
 argument_list|(
 name|i
+operator|&
+literal|0177
 argument_list|)
 expr_stmt|;
 else|else
