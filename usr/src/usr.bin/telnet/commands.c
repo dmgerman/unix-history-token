@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.8 (Berkeley) %G%"
+literal|"@(#)commands.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5212,6 +5212,10 @@ end_decl_stmt
 
 begin_comment
 comment|/*  * Call routine with argc, argv set from args (terminated by 0).  */
+end_comment
+
+begin_comment
+comment|/*VARARGS1*/
 end_comment
 
 begin_expr_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	1.13 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1279,16 +1279,16 @@ begin_function
 name|int
 name|NetClose
 parameter_list|(
-name|net
+name|fd
 parameter_list|)
 name|int
-name|net
+name|fd
 decl_stmt|;
 block|{
 return|return
 name|close
 argument_list|(
-name|net
+name|fd
 argument_list|)
 return|;
 block|}
@@ -1523,18 +1523,6 @@ name|void
 name|sys_telnet_init
 parameter_list|()
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TN3270
-argument_list|)
-name|int
-name|myPid
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* defined(TN3270) */
 operator|(
 name|void
 operator|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.12 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,18 @@ begin_include
 include|#
 directive|include
 file|"../general/globals.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../telextrn.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../ctlr/externs.h"
 end_include
 
 begin_if
@@ -591,8 +603,6 @@ comment|/* how much to send */
 block|{
 specifier|register
 name|int
-name|loop
-decl_stmt|,
 name|c
 decl_stmt|;
 name|int
@@ -634,7 +644,9 @@ endif|#
 directive|endif
 comment|/* defined(unix) */
 name|ttyflush
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -694,7 +706,9 @@ endif|#
 directive|endif
 comment|/* defined(unix) */
 name|ttyflush
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -801,7 +815,7 @@ operator|+
 literal|1
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 literal|0
@@ -810,7 +824,7 @@ operator|&
 name|o
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 literal|0
@@ -865,7 +879,7 @@ operator|+
 literal|1
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 literal|0
@@ -874,7 +888,7 @@ operator|&
 name|o
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 literal|0
@@ -1260,6 +1274,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+end_if
+
 begin_function
 name|void
 name|ExitPerror
@@ -1291,6 +1314,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(MSDOS) */
+end_comment
 
 begin_function
 name|void
@@ -1606,10 +1638,6 @@ begin_block
 block|{
 name|int
 name|i
-decl_stmt|,
-name|len
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1633,33 +1661,6 @@ literal|1
 condition|)
 block|{
 return|return;
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|argc
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|len
-operator|+=
-literal|1
-operator|+
-name|strlen
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 block|}
 name|transcom
 operator|=
