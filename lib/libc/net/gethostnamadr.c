@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.45 (Berkeley) 2/24/91"
+literal|"@(#)gethostnamadr.c	6.48 (Berkeley) 1/10/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,13 +822,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|cp
-operator|+=
-name|n
-expr_stmt|;
-continue|continue;
-block|}
+break|break;
 name|cp
 operator|+=
 name|n
@@ -1122,6 +1116,7 @@ name|gethostbyname
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1131,6 +1126,7 @@ name|querybuf
 name|buf
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -1183,22 +1179,17 @@ operator|==
 literal|'.'
 condition|)
 break|break;
-comment|/* 				 * All-numeric, no dot at the end. 				 * Fake up a hostent as if we'd actually 				 * done a lookup.  What if someone types 				 * 255.255.255.255?  The test below will 				 * succeed spuriously... ??? 				 */
+comment|/* 				 * All-numeric, no dot at the end. 				 * Fake up a hostent as if we'd actually 				 * done a lookup. 				 */
 if|if
 condition|(
-operator|(
-name|host_addr
-operator|.
-name|s_addr
-operator|=
-name|inet_addr
+operator|!
+name|inet_aton
 argument_list|(
 name|name
+argument_list|,
+operator|&
+name|host_addr
 argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 name|h_errno
@@ -1220,6 +1211,10 @@ name|host
 operator|.
 name|h_name
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|name
 expr_stmt|;
 name|host
