@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.6 %G%"
+literal|"@(#)eval.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,17 @@ include|#
 directive|include
 file|"tree.rep"
 end_include
+
+begin_define
+define|#
+directive|define
+name|Boolean
+value|char
+end_define
+
+begin_comment
+comment|/* underlying representation type for booleans */
+end_comment
 
 begin_comment
 comment|/*  * Evaluate a parse tree using a stack; value is left at top.  */
@@ -330,7 +341,7 @@ expr_stmt|;
 block|}
 name|push
 argument_list|(
-name|int
+name|long
 argument_list|,
 name|address
 argument_list|(
@@ -479,7 +490,7 @@ name|n
 operator|=
 name|pop
 argument_list|(
-name|int
+name|long
 argument_list|)
 expr_stmt|;
 name|i
@@ -504,7 +515,7 @@ argument_list|)
 expr_stmt|;
 name|push
 argument_list|(
-name|int
+name|long
 argument_list|,
 name|n
 operator|+
@@ -585,7 +596,7 @@ name|addr
 operator|=
 name|pop
 argument_list|(
-name|int
+name|long
 argument_list|)
 expr_stmt|;
 if|if
@@ -832,7 +843,7 @@ name|O_LT
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|r0
 operator|<
@@ -845,7 +856,7 @@ name|O_LTF
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|fr0
 operator|<
@@ -858,7 +869,7 @@ name|O_LE
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|r0
 operator|<=
@@ -871,7 +882,7 @@ name|O_LEF
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|fr0
 operator|<=
@@ -884,7 +895,7 @@ name|O_GT
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|r0
 operator|>
@@ -897,7 +908,7 @@ name|O_GTF
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|fr0
 operator|>
@@ -910,7 +921,7 @@ name|O_EQ
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|r0
 operator|==
@@ -923,7 +934,7 @@ name|O_EQF
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|fr0
 operator|==
@@ -936,7 +947,7 @@ name|O_NE
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|r0
 operator|!=
@@ -949,7 +960,7 @@ name|O_NEF
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|fr0
 operator|!=
@@ -962,7 +973,7 @@ name|O_AND
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|r0
 operator|&&
@@ -975,7 +986,7 @@ name|O_OR
 case|:
 name|push
 argument_list|(
-name|BOOLEAN
+name|Boolean
 argument_list|,
 name|r0
 operator|||
