@@ -5602,7 +5602,7 @@ block|{
 comment|/* Auto restart mode. Transfer the whole buffer */
 name|isa_dmastart
 argument_list|(
-name|B_RAW
+name|ISADMA_RAW
 operator||
 operator|(
 operator|(
@@ -5611,9 +5611,9 @@ operator|==
 literal|0
 operator|)
 condition|?
-name|B_READ
+name|ISADMA_READ
 else|:
-name|B_WRITE
+name|ISADMA_WRITE
 operator|)
 argument_list|,
 operator|(
@@ -5650,9 +5650,9 @@ operator|==
 literal|0
 operator|)
 condition|?
-name|B_READ
+name|ISADMA_READ
 else|:
-name|B_WRITE
+name|ISADMA_WRITE
 argument_list|,
 operator|(
 name|caddr_t

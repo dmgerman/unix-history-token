@@ -21,6 +21,27 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|ISADMA_READ
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISADMA_WRITE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISADMA_RAW
+value|0x00080000
+end_define
+
 begin_decl_stmt
 name|void
 name|isa_dmacascade

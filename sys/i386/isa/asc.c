@@ -1244,7 +1244,7 @@ block|{
 comment|/* color */
 name|isa_dmastart
 argument_list|(
-name|B_READ
+name|ISADMA_READ
 argument_list|,
 name|scu
 operator|->
@@ -1309,7 +1309,7 @@ block|{
 comment|/* normal */
 name|isa_dmastart
 argument_list|(
-name|B_READ
+name|ISADMA_READ
 argument_list|,
 name|scu
 operator|->
@@ -2126,7 +2126,7 @@ expr_stmt|;
 comment|/* bounce buffers... */
 name|isa_dmadone
 argument_list|(
-name|B_READ
+name|ISADMA_READ
 argument_list|,
 name|scu
 operator|->

@@ -130,6 +130,27 @@ name|ISA_NDRQ
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISADMA_READ
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISADMA_WRITE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISADMA_RAW
+value|0x00080000
+end_define
+
 begin_comment
 comment|/*  * Plug and play cards can support a range of resource  * configurations. This structure is used by the isapnp parser to  * inform the isa bus about the resource possibilities of the  * device. Each different alternative should be supplied by calling  * ISA_ADD_CONFIG().  */
 end_comment
