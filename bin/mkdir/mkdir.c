@@ -128,6 +128,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|int
 name|build
 parameter_list|(
@@ -140,6 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -174,11 +176,11 @@ name|exitval
 decl_stmt|,
 name|success
 decl_stmt|,
-name|omode
-decl_stmt|,
 name|pflag
 decl_stmt|;
 name|mode_t
+name|omode
+decl_stmt|,
 modifier|*
 name|set
 init|=
