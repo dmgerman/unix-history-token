@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 85 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -103,7 +103,7 @@ end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ROOT_SYSTEM_DESCRIPTOR_POINTER
+name|RSDP_DESCRIPTOR
 modifier|*
 name|AcpiGbl_RSDP
 decl_stmt|;
@@ -111,33 +111,17 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ROOT_SYSTEM_DESCRIPTION_TABLE
+name|XSDT_DESCRIPTOR
 modifier|*
-name|AcpiGbl_RSDT
+name|AcpiGbl_XSDT
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|FIRMWARE_ACPI_CONTROL_STRUCTURE
+name|FADT_DESCRIPTOR
 modifier|*
-name|AcpiGbl_FACS
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|FIXED_ACPI_DESCRIPTION_TABLE
-modifier|*
-name|AcpiGbl_FACP
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|APIC_TABLE
-modifier|*
-name|AcpiGbl_APIC
+name|AcpiGbl_FADT
 decl_stmt|;
 end_decl_stmt
 
@@ -151,9 +135,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ACPI_TABLE_HEADER
+name|ACPI_COMMON_FACS
 modifier|*
-name|AcpiGbl_SBST
+name|AcpiGbl_FACS
 decl_stmt|;
 end_decl_stmt
 
@@ -530,6 +514,14 @@ name|AcpiGbl_StartupFlags
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_DecodeTo8bit
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*****************************************************************************  *  * Namespace globals  *  ****************************************************************************/
 end_comment
@@ -620,78 +612,11 @@ end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|UINT32
-name|AcpiGbl_WhenToParseMethods
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
 name|ACPI_WALK_LIST
 modifier|*
 name|AcpiGbl_CurrentWalkList
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Base of AML block, and pointer to current location in it */
-end_comment
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT8
-modifier|*
-name|AcpiGbl_PCodeBase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT8
-modifier|*
-name|AcpiGbl_PCode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Length of AML block, and remaining length of current package.  */
-end_comment
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT32
-name|AcpiGbl_PCodeBlockLen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT32
-name|AcpiGbl_PCodeLen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT32
-name|AcpiGbl_BufSeq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Counts allocated Buffer descriptors */
-end_comment
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT32
-name|AcpiGbl_NodeErr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Indicate if inc_error should be called */
-end_comment
 
 begin_comment
 comment|/*  * Handle to the last method found - used during pass1 of load  */
@@ -738,24 +663,6 @@ name|ACPI_EXTERN
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiGbl_ParsedNamespaceRoot
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ACPI_OPCODE_INFO
-name|AcpiGbl_AmlOpInfo
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT8
-name|AcpiGbl_AmlOpInfoIndex
-index|[
-literal|256
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -867,6 +774,12 @@ begin_comment
 comment|/*****************************************************************************  *  * Debugger globals  *  ****************************************************************************/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_DEBUGGER
+end_ifdef
+
 begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
@@ -880,6 +793,11 @@ name|BOOLEAN
 name|AcpiGbl_DbTerminateThreads
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Memory allocation metrics - Debug Only! */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 61 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -82,6 +82,41 @@ directive|define
 name|DEBUGGER_THREADING
 value|DEBUGGER_SINGLE_THREADED
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_APPLICATION
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENABLE_DEBUGGER
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_CLIBRARY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_ACPI_ASL_COMPILER
+end_ifdef
 
 begin_define
 define|#
@@ -870,54 +905,6 @@ end_comment
 begin_comment
 comment|/* this has been moved to compiler-specific headers, which are included from the    platform header. */
 end_comment
-
-begin_comment
-comment|/* TBD: move this elsewhere! */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ia64__
-end_ifdef
-
-begin_comment
-comment|/* Look at interim FADT to determine IO or memory mapped */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IoAddressSpace
-parameter_list|(
-name|flag
-parameter_list|)
-value|(AcpiGbl_FACP->AddressSpace& flag)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* always IO space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IoAddressSpace
-parameter_list|(
-name|flag
-parameter_list|)
-value|(1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

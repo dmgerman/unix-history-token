@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmxface - External interfaces for "global" ACPI functions  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmxface - External interfaces for "global" ACPI functions  *              $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -245,10 +245,10 @@ argument_list|(
 literal|"AcpiEnableSubsystem"
 argument_list|)
 expr_stmt|;
-comment|/* Sanity check the FACP for valid values */
+comment|/* Sanity check the FADT for valid values */
 name|Status
 operator|=
-name|AcpiCmValidateFacp
+name|AcpiCmValidateFadt
 argument_list|()
 expr_stmt|;
 if|if
@@ -365,9 +365,25 @@ literal|"[Init] Going into ACPI mode\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiEnable
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/*      * Note:      * We must have the hardware AND events initialized before we can execute      * ANY control methods SAFELY.  Any control method can require ACPI hardware      * support, so the hardware MUST be initialized before execution!      */
 if|if
@@ -518,9 +534,12 @@ literal|"AcpiTerminate"
 argument_list|)
 expr_stmt|;
 comment|/* Terminate the AML Debuger if present */
+name|DEBUGGER_EXEC
+argument_list|(
 name|AcpiGbl_DbTerminateThreads
 operator|=
 name|TRUE
+argument_list|)
 expr_stmt|;
 comment|/* TBD: [Investigate] This is no longer needed?*/
 comment|/*    AcpiCmReleaseMutex (ACPI_MTX_DEBUG_CMD_READY); */

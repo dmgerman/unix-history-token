@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 46 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 47 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -757,8 +757,10 @@ name|Handle
 condition|)
 block|{
 comment|/* handle invalid */
-name|REPORT_WARNING
+name|DEBUG_PRINT
 argument_list|(
+name|ACPI_WARN
+argument_list|,
 operator|(
 literal|"NsGetAttachedObject: Null handle\n"
 operator|)

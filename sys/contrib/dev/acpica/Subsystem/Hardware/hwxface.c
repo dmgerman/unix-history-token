@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwxface.c - Hardware access external interfaces  *              $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwxface.c - Hardware access external interfaces  *              $Revision: 36 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -103,8 +103,6 @@ name|i
 decl_stmt|;
 name|UINT8
 name|DutyWidth
-init|=
-literal|0
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -179,18 +177,13 @@ name|AE_NOT_FOUND
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|_IA64
-comment|/*      * No Duty fields in IA64 tables      */
+comment|/*      * (Duty Width on IA-64 is zero)      */
 name|DutyWidth
 operator|=
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|DutyWidth
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*      *  P0 must always have a P_BLK all others may be null      *  in either case, we can't throttle a processor that has no P_BLK      *      *  Also if no Duty width, one state and it is 100%      *      */
 if|if
 condition|(
@@ -379,13 +372,9 @@ name|DutyCycle
 decl_stmt|;
 name|UINT8
 name|DutyOffset
-init|=
-literal|0
 decl_stmt|;
 name|UINT8
 name|DutyWidth
-init|=
-literal|0
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -438,24 +427,19 @@ name|AE_NOT_FOUND
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|_IA64
 comment|/*      * No Duty fields in IA64 tables      */
 name|DutyOffset
 operator|=
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|DutyOffset
 expr_stmt|;
 name|DutyWidth
 operator|=
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|DutyWidth
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*      *  Must have a valid P_BLK P0 must have a P_BLK all others may be null      *  in either case, we can't thottle a processor that has no P_BLK      *  that means we are in the only supported state (0 - 100%)      *      *  also, if DutyWidth is zero there are no additional states      */
 if|if
 condition|(
@@ -581,13 +565,9 @@ literal|0
 decl_stmt|;
 name|UINT8
 name|DutyOffset
-init|=
-literal|0
 decl_stmt|;
 name|UINT8
 name|DutyWidth
-init|=
-literal|0
 decl_stmt|;
 name|UINT32
 name|DutyCycle
@@ -642,24 +622,19 @@ name|AE_NOT_FOUND
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|_IA64
 comment|/*      * No Duty fields in IA64 tables      */
 name|DutyOffset
 operator|=
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|DutyOffset
 expr_stmt|;
 name|DutyWidth
 operator|=
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|DutyWidth
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*      *  Must have a valid P_BLK P0 must have a P_BLK all others may be null      *  in either case, we can't thottle a processor that has no P_BLK      *  that means we are in the only supported state (0 - 100%)      *      *  also, if DutyWidth is zero there are no additional states      */
 if|if
 condition|(
@@ -708,7 +683,7 @@ block|}
 name|NumThrottleStates
 operator|=
 operator|(
-name|int
+name|UINT32
 operator|)
 name|AcpiHwLocalPow
 argument_list|(
@@ -1177,8 +1152,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiSetFirmwareWakingVector
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|)
 block|{
@@ -1201,20 +1175,40 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Set the vector */
+if|if
+condition|(
+name|AcpiGbl_FACS
+operator|->
+name|VectorWidth
+operator|==
+literal|32
+condition|)
+block|{
 operator|*
 operator|(
-operator|(
-name|void
-operator|*
+name|UINT32
 operator|*
 operator|)
 name|AcpiGbl_FACS
 operator|->
 name|FirmwareWakingVector
+operator|=
+operator|(
+name|UINT32
 operator|)
+name|PhysicalAddress
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|AcpiGbl_FACS
+operator|->
+name|FirmwareWakingVector
 operator|=
 name|PhysicalAddress
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -1224,15 +1218,14 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetFirmwareWakingVector  *  * PARAMETERS:  *PhysicalAddress    - Output buffer where contents of  *                                    the dFirmwareWakingVector field of  *                                    the FACS will be stored.  *  * RETURN:      Status  *  * DESCRIPTION: Access function for dFirmwareWakingVector field in FACS  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetFirmwareWakingVector  *  * PARAMETERS:  *PhysicalAddress    - Output buffer where contents of  *                                    the FirmwareWakingVector field of  *                                    the FACS will be stored.  *  * RETURN:      Status  *  * DESCRIPTION: Access function for dFirmwareWakingVector field in FACS  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiGetFirmwareWakingVector
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 modifier|*
 name|PhysicalAddress
 parameter_list|)
@@ -1268,21 +1261,39 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the vector */
+if|if
+condition|(
+name|AcpiGbl_FACS
+operator|->
+name|VectorWidth
+operator|==
+literal|32
+condition|)
+block|{
 operator|*
 name|PhysicalAddress
 operator|=
 operator|*
 operator|(
-operator|(
-name|void
-operator|*
+name|UINT32
 operator|*
 operator|)
 name|AcpiGbl_FACS
 operator|->
 name|FirmwareWakingVector
-operator|)
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|PhysicalAddress
+operator|=
+operator|*
+name|AcpiGbl_FACS
+operator|->
+name|FirmwareWakingVector
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -512,6 +512,34 @@ value|_MOD(a,16)
 end_define
 
 begin_comment
+comment|/*  * Divide and Modulo  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DIVIDE
+parameter_list|(
+name|n
+parameter_list|,
+name|d
+parameter_list|)
+value|((n) / (d))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MODULO
+parameter_list|(
+name|n
+parameter_list|,
+name|d
+parameter_list|)
+value|((n) % (d))
+end_define
+
+begin_comment
 comment|/*  * Rounding macros (Power of two boundaries only)  */
 end_comment
 
@@ -552,6 +580,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ROUND_DOWN_TO_64_BITS
+parameter_list|(
+name|a
+parameter_list|)
+value|ROUND_DOWN(a,8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ROUND_DOWN_TO_NATIVE_WORD
 parameter_list|(
 name|a
@@ -567,6 +605,16 @@ parameter_list|(
 name|a
 parameter_list|)
 value|ROUND_UP(a,4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROUND_UP_TO_64BITS
+parameter_list|(
+name|a
+parameter_list|)
+value|ROUND_UP(a,8)
 end_define
 
 begin_define
@@ -591,6 +639,28 @@ parameter_list|)
 value|((b *)(((NATIVE_UINT)(a) + 3)& ~3))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ROUND_PTR_UP_TO_8
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((b *)(((NATIVE_UINT)(a) + 7)& ~7))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROUND_UP_TO_1K
+parameter_list|(
+name|a
+parameter_list|)
+value|(((a) + 1023)>> 10)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -607,6 +677,71 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Macros for GAS addressing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_DEVICE_MASK
+value|(UINT64) 0x0000FFFF00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_FUNCTION_MASK
+value|(UINT64) 0x00000000FFFF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_REGISTER_MASK
+value|(UINT64) 0x000000000000FFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_FUNCTION
+parameter_list|(
+name|a
+parameter_list|)
+value|(UINT32) ((((a)& ACPI_PCI_FUNCTION_MASK)>> 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_DEVICE
+parameter_list|(
+name|a
+parameter_list|)
+value|(UINT32) ((((a)& ACPI_PCI_DEVICE_MASK)>> 32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_REGISTER
+parameter_list|(
+name|a
+parameter_list|)
+value|(UINT32) (((a)& ACPI_PCI_REGISTER_MASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_DEVFUN
+parameter_list|(
+name|a
+parameter_list|)
+value|(UINT32) ((ACPI_PCI_DEVICE(a)<< 16) | ACPI_PCI_FUNCTION(a))
+end_define
 
 begin_comment
 comment|/*  * An ACPI_HANDLE (which is actually an ACPI_NAMESPACE_NODE *) can appear in some contexts,  * such as on apObjStack, where a pointer to an ACPI_OPERAND_OBJECT  can also  * appear.  This macro is used to distinguish them.  *  * The DataType field is the first field in both structures.  */
@@ -1083,7 +1218,7 @@ name|REPORT_INFO
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportInfo("",__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportInfo("ACPI",__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1093,7 +1228,7 @@ name|REPORT_ERROR
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportError("",__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportError("ACPI",__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1103,7 +1238,7 @@ name|REPORT_WARNING
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportWarning("",__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportWarning("ACPI",__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
 end_define
 
 begin_endif
@@ -1301,7 +1436,7 @@ name|DEBUG_EXEC
 parameter_list|(
 name|a
 parameter_list|)
-value|a;
+value|a
 end_define
 
 begin_define
@@ -1844,7 +1979,7 @@ name|DEBUGGER_EXEC
 parameter_list|(
 name|a
 parameter_list|)
-value|a;
+value|a
 end_define
 
 begin_else

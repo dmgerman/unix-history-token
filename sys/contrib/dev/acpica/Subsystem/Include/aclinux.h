@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclinux.h - OS specific defines, etc.  *       $Revision: 1 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclinux.h - OS specific defines, etc.  *       $Revision: 4 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -71,6 +71,40 @@ include|#
 directive|include
 file|"acgcc.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|DEBUGGER_THREADING
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DEBUGGER_THREADING
+value|DEBUGGER_SINGLE_THREADED
+end_define
+
+begin_comment
+comment|/* Linux ia32 can't do int64 well */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IA64
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_INTEGER64_SUPPORT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

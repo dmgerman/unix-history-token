@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 143 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 152 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -130,7 +130,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|UINT64
-name|ACPI_MEM_ADDRESS
+name|ACPI_PHYSICAL_ADDRESS
 typedef|;
 end_typedef
 
@@ -240,7 +240,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|UINT32
-name|ACPI_MEM_ADDRESS
+name|ACPI_PHYSICAL_ADDRESS
 typedef|;
 end_typedef
 
@@ -258,13 +258,13 @@ name|_HW_ALIGNMENT_SUPPORT
 end_define
 
 begin_comment
-comment|/* (16-bit only) Force internal integers to be 32, not 64 bits */
+comment|/*  * (16-bit only) internal integers must be 32-bits, so  * 64-bit integers cannot be supported  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_VERSION_1
+name|ACPI_NO_INTEGER64_SUPPORT
 end_define
 
 begin_else
@@ -360,8 +360,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|UINT32
-name|ACPI_MEM_ADDRESS
+name|UINT64
+name|ACPI_PHYSICAL_ADDRESS
 typedef|;
 end_typedef
 
@@ -615,23 +615,13 @@ comment|/* Actually a ptr to an Node */
 end_comment
 
 begin_comment
-comment|/* TBD: TEMP ONLY! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_VERSION_1
-end_define
-
-begin_comment
-comment|/*  * Acpi integer width. In ACPI version 1, integers are  * 32 bits.  In ACPI version 2, integers are 64 bits.  Period.  * Note that this pertains to the ACPI integer type only, not  * other integers used in the implementation of the ACPI CA  * subsystem.  */
+comment|/*  * Acpi integer width. In ACPI version 1, integers are  * 32 bits.  In ACPI version 2, integers are 64 bits.  * Note that this pertains to the ACPI integer type only, not  * other integers used in the implementation of the ACPI CA  * subsystem.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_VERSION_1
+name|ACPI_NO_INTEGER64_SUPPORT
 end_ifdef
 
 begin_comment
@@ -842,78 +832,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_APIC
+name|ACPI_TABLE_DSDT
 value|(ACPI_TABLE_TYPE) 1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_DSDT
+name|ACPI_TABLE_FADT
 value|(ACPI_TABLE_TYPE) 2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_FACP
+name|ACPI_TABLE_FACS
 value|(ACPI_TABLE_TYPE) 3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_FACS
+name|ACPI_TABLE_PSDT
 value|(ACPI_TABLE_TYPE) 4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_PSDT
+name|ACPI_TABLE_SSDT
 value|(ACPI_TABLE_TYPE) 5
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_RSDT
+name|ACPI_TABLE_XSDT
 value|(ACPI_TABLE_TYPE) 6
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_SSDT
-value|(ACPI_TABLE_TYPE) 7
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_SBST
-value|(ACPI_TABLE_TYPE) 8
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_SPIC
-value|(ACPI_TABLE_TYPE) 9
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_BOOT
-value|(ACPI_TABLE_TYPE) 10
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_TABLE_MAX
-value|10
+value|6
 end_define
 
 begin_define
@@ -1226,8 +1188,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INTERNAL_TYPE_RESOURCE
+value|24
+end_define
+
+begin_comment
+comment|/* 0x18  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INTERNAL_TYPE_NODE_MAX
-value|23
+value|24
 end_define
 
 begin_comment
@@ -1238,105 +1211,94 @@ begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_DEF_FIELD_DEFN
-value|24
+value|25
 end_define
 
 begin_comment
-comment|/* 0x18  Name, ByteConst, multiple FieldElement */
+comment|/* 0x19  Name, ByteConst, multiple FieldElement */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_BANK_FIELD_DEFN
-value|25
+value|26
 end_define
 
 begin_comment
-comment|/* 0x19  2 Name,DWordConst,ByteConst,multi FieldElement */
+comment|/* 0x1A  2 Name,DWordConst,ByteConst,multi FieldElement */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_INDEX_FIELD_DEFN
-value|26
+value|27
 end_define
 
 begin_comment
-comment|/* 0x1A  2 Name, ByteConst, multiple FieldElement */
+comment|/* 0x1B  2 Name, ByteConst, multiple FieldElement */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_IF
-value|27
+value|28
 end_define
 
 begin_comment
-comment|/* 0x1B  OpCode, multiple Code */
+comment|/* 0x1C  OpCode, multiple Code */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_ELSE
-value|28
+value|29
 end_define
 
 begin_comment
-comment|/* 0x1C  multiple Code */
+comment|/* 0x1D  multiple Code */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_WHILE
-value|29
+value|30
 end_define
 
 begin_comment
-comment|/* 0x1D  OpCode, multiple Code */
+comment|/* 0x1E  OpCode, multiple Code */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_SCOPE
-value|30
+value|31
 end_define
 
 begin_comment
-comment|/* 0x1E  Name, multiple Node */
+comment|/* 0x1F  Name, multiple Node */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_DEF_ANY
-value|31
+value|32
 end_define
 
 begin_comment
-comment|/* 0x1F  type is Any, suppress search of enclosing scopes */
+comment|/* 0x20  type is Any, suppress search of enclosing scopes */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_METHOD_ARGUMENT
-value|32
-end_define
-
-begin_comment
-comment|/* 0x20  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_METHOD_LOCAL_VAR
 value|33
 end_define
 
@@ -1347,7 +1309,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_EXTRA
+name|INTERNAL_TYPE_METHOD_LOCAL_VAR
 value|34
 end_define
 
@@ -1358,15 +1320,26 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INTERNAL_TYPE_EXTRA
+value|35
+end_define
+
+begin_comment
+comment|/* 0x23  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INTERNAL_TYPE_MAX
-value|34
+value|35
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_INVALID
-value|35
+value|36
 end_define
 
 begin_define
@@ -1517,6 +1490,13 @@ name|UINT32
 name|ACPI_EVENT_STATUS
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_FLAG_DISABLED
+value|(ACPI_EVENT_STATUS) 0x00
+end_define
 
 begin_define
 define|#
@@ -2061,7 +2041,7 @@ parameter_list|(
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
 name|UINT32
@@ -2293,8 +2273,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|UINT8
-modifier|*
+name|UINT64
 name|MappedPhysicalAddress
 decl_stmt|;
 name|UINT8

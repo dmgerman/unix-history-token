@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 30 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 33 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -340,6 +340,9 @@ decl_stmt|;
 name|UINT32
 name|Actual
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Read the table header */
 if|if
 condition|(
@@ -360,7 +363,7 @@ argument_list|)
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|TableHeader
+name|ACPI_TABLE_HEADER
 argument_list|)
 condition|)
 block|{
@@ -375,24 +378,111 @@ name|AE_BAD_SIGNATURE
 operator|)
 return|;
 block|}
-comment|/* Get and validate the table length */
-operator|*
-name|TableLength
+comment|/* Validate the table header/length */
+name|Status
 operator|=
+name|AcpiTbValidateTableHeader
+argument_list|(
+operator|&
 name|TableHeader
-operator|.
-name|Length
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|TableHeader
+operator|.
+name|Length
+operator|>
+operator|(
+literal|1024
 operator|*
-name|TableLength
+literal|1024
+operator|)
+operator|)
 condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Found a table length of zero!\n"
+literal|"Table header is invalid!\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
+comment|/* We only support a limited number of table types */
+if|if
+condition|(
+name|STRNCMP
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|TableHeader
+operator|.
+name|Signature
+argument_list|,
+name|DSDT_SIG
+argument_list|,
+literal|4
+argument_list|)
+operator|&&
+name|STRNCMP
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|TableHeader
+operator|.
+name|Signature
+argument_list|,
+name|PSDT_SIG
+argument_list|,
+literal|4
+argument_list|)
+operator|&&
+name|STRNCMP
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|TableHeader
+operator|.
+name|Signature
+argument_list|,
+name|SSDT_SIG
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Table signature is invalid\n"
+argument_list|)
+expr_stmt|;
+name|DUMP_BUFFER
+argument_list|(
+operator|&
+name|TableHeader
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -403,13 +493,20 @@ return|;
 block|}
 comment|/* Allocate a buffer for the table */
 operator|*
+name|TableLength
+operator|=
+name|TableHeader
+operator|.
+name|Length
+expr_stmt|;
+operator|*
 name|TablePtr
 operator|=
 operator|(
 name|ACPI_TABLE_HEADER
 operator|*
 operator|)
-name|malloc
+name|AcpiCmAllocate
 argument_list|(
 operator|(
 name|size_t
@@ -536,7 +633,7 @@ argument_list|(
 literal|"Error - could not read the table file\n"
 argument_list|)
 expr_stmt|;
-name|free
+name|AcpiCmFree
 argument_list|(
 operator|*
 name|TablePtr
@@ -836,7 +933,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|AcpiCmFree
 argument_list|(
 name|TablePtr
 argument_list|)

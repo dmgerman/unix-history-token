@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsGetPredicateValue  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION:   *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsGetPredicateValue  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION:  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -138,6 +138,20 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"DsGetPredicateValue: Missing or null operand, %s\n"
+operator|,
+name|AcpiCmFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -234,7 +248,7 @@ name|AE_AML_NO_OPERAND
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Result of predicate evaluation currently must      * be a number      */
+comment|/*      * Result of predicate evaluation currently must      * be a number      */
 if|if
 condition|(
 name|ObjDesc
@@ -273,7 +287,19 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*       * Save the result of the predicate evaluation on      * the control stack       */
+comment|/* TBD: 64/32-bit */
+name|ObjDesc
+operator|->
+name|Number
+operator|.
+name|Value
+operator|&=
+operator|(
+name|UINT64
+operator|)
+literal|0x00000000FFFFFFFF
+expr_stmt|;
+comment|/*      * Save the result of the predicate evaluation on      * the control stack      */
 if|if
 condition|(
 name|ObjDesc
@@ -296,7 +322,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*           * Predicate is FALSE, we will just toss the          * rest of the package           */
+comment|/*          * Predicate is FALSE, we will just toss the          * rest of the package          */
 name|WalkState
 operator|->
 name|ControlState
@@ -344,7 +370,7 @@ name|WalkState
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*       * Delete the predicate result object (we know that      * we don't need it anymore)      */
+comment|/*      * Delete the predicate result object (we know that      * we don't need it anymore)      */
 name|AcpiCmRemoveReference
 argument_list|(
 name|ObjDesc
@@ -1446,6 +1472,14 @@ name|AE_NOT_IMPLEMENTED
 expr_stmt|;
 break|break;
 block|}
+comment|/*      * ACPI 2.0 support for 64-bit integers:      * Truncate numeric result value if we are executing from a 32-bit ACPI table      */
+name|AcpiAmlTruncateFor32bitTable
+argument_list|(
+name|ResultObj
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
 comment|/*      * Check if we just completed the evaluation of a      * conditional predicate      */
 if|if
 condition|(

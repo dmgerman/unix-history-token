@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 26 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -44,6 +44,13 @@ argument_list|(
 literal|"tbget"
 argument_list|)
 end_macro
+
+begin_define
+define|#
+directive|define
+name|RSDP_CHECKSUM_LENGTH
+value|20
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTablePtr  *  * PARAMETERS:  TableType       - one of the defined table types  *              Instance        - Which table of this type  *              TablePtrLoc     - pointer to location to place the pointer for  *                                return  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the pointer to an ACPI table.  *  ******************************************************************************/
@@ -201,8 +208,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiTbGetTable
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|,
 name|ACPI_TABLE_HEADER
@@ -480,16 +486,15 @@ name|ACPI_TABLE_DESC
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Get the table via the RSDT */
+comment|/* Get the table via the XSDT */
 name|Status
 operator|=
 name|AcpiTbGetTable
 argument_list|(
 operator|(
-name|void
-operator|*
+name|ACPI_PHYSICAL_ADDRESS
 operator|)
-name|AcpiGbl_RSDT
+name|AcpiGbl_XSDT
 operator|->
 name|TableOffsetEntry
 index|[
@@ -555,74 +560,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Dump the FACP Header */
-name|DEBUG_PRINT
+comment|/*      * Convert the FADT to a common format.  This allows earlier revisions of the      * table to coexist with newer versions, using common access code.      */
+name|Status
+operator|=
+name|AcpiTbConvertTableFadt
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
-operator|(
-literal|"Hex dump of FADT Header:\n"
-operator|)
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
 argument_list|)
 expr_stmt|;
-name|DUMP_BUFFER
-argument_list|(
-operator|(
-name|UINT8
-operator|*
-operator|)
-name|AcpiGbl_FACP
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Dump the entire FACP */
-name|DEBUG_PRINT
-argument_list|(
-name|TRACE_TABLES
-argument_list|,
-operator|(
-literal|"Hex dump of FADT (After header), size %d (0x%x)\n"
-operator|,
-name|AcpiGbl_FACP
-operator|->
-name|header
-operator|.
-name|Length
-operator|,
-name|AcpiGbl_FACP
-operator|->
-name|header
-operator|.
-name|Length
-operator|)
-argument_list|)
-expr_stmt|;
-name|DUMP_BUFFER
-argument_list|(
-operator|(
-name|UINT8
-operator|*
-operator|)
-operator|(
-operator|&
-name|AcpiGbl_FACP
-operator|->
-name|FirmwareCtrl
-operator|)
-argument_list|,
-name|AcpiGbl_FACP
-operator|->
-name|header
-operator|.
-name|Length
-argument_list|)
-expr_stmt|;
-comment|/*      * Get the minimum set of ACPI tables, namely:      *      * 1) FACP (via RSDT in loop above)      * 2) FACS      * 3) DSDT      *      */
-comment|/*      * Get the FACS (must have the FACP first, from loop above)      * AcpiTbGetTableFacs will fail if FACP pointer is not valid      */
+block|}
+comment|/*      * Get the minimum set of ACPI tables, namely:      *      * 1) FADT (via RSDT in loop above)      * 2) FACS      * 3) DSDT      *      */
+comment|/*      * Get the FACS (must have the FADT first, from loop above)      * AcpiTbGetTableFacs will fail if FADT pointer is not valid      */
 name|Status
 operator|=
 name|AcpiTbGetTableFacs
@@ -672,18 +631,37 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get the DSDT (We know that the FACP if valid now) */
+comment|/*      * Create the common FACS pointer table      * (Contains pointers to the original table)      */
+name|Status
+operator|=
+name|AcpiTbBuildCommonFacs
+argument_list|(
+operator|&
+name|TableInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Get the DSDT (We know that the FADT is valid now)      */
 name|Status
 operator|=
 name|AcpiTbGetTable
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
-name|Dsdt
+name|XDsdt
 argument_list|,
 name|TablePtr
 argument_list|,
@@ -795,6 +773,12 @@ operator||=
 name|AcpiHwGetModeCapabilities
 argument_list|()
 expr_stmt|;
+comment|/* Always delete the RSDP mapping, we are done with it */
+name|AcpiTbDeleteAcpiTable
+argument_list|(
+name|ACPI_TABLE_RSDP
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -811,8 +795,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiTbVerifyRsdp
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|RsdpPhysicalAddress
 parameter_list|)
 block|{
@@ -840,7 +823,7 @@ name|RsdpPhysicalAddress
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ROOT_SYSTEM_DESCRIPTOR_POINTER
+name|RSDP_DESCRIPTOR
 argument_list|)
 argument_list|,
 operator|(
@@ -905,10 +888,7 @@ name|AcpiTbChecksum
 argument_list|(
 name|TablePtr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ROOT_SYSTEM_DESCRIPTOR_POINTER
-argument_list|)
+name|RSDP_CHECKSUM_LENGTH
 argument_list|)
 operator|!=
 literal|0
@@ -923,6 +903,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+comment|/* TBD: Check extended checksum if table version>= 2 */
 comment|/* The RSDP supplied is OK */
 name|TableInfo
 operator|.
@@ -940,7 +921,7 @@ name|Length
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ROOT_SYSTEM_DESCRIPTOR_POINTER
+name|RSDP_DESCRIPTOR
 argument_list|)
 expr_stmt|;
 name|TableInfo
@@ -982,7 +963,7 @@ comment|/* Save the RSDP in a global for easy access */
 name|AcpiGbl_RSDP
 operator|=
 operator|(
-name|ROOT_SYSTEM_DESCRIPTOR_POINTER
+name|RSDP_DESCRIPTOR
 operator|*
 operator|)
 name|TableInfo
@@ -1003,7 +984,7 @@ name|TablePtr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ROOT_SYSTEM_DESCRIPTOR_POINTER
+name|RSDP_DESCRIPTOR
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1036,6 +1017,16 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
+name|ACPI_PHYSICAL_ADDRESS
+name|PhysicalAddress
+decl_stmt|;
+name|UINT32
+name|SignatureLength
+decl_stmt|;
+name|char
+modifier|*
+name|TableSignature
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiTbGetTableRsdt"
@@ -1057,17 +1048,87 @@ name|RsdtPhysicalAddress
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*      * For RSDP revision 0 or 1, we use the RSDT.      * For RSDP revision 2 (and above), we use the XSDT      */
+if|if
+condition|(
+name|AcpiGbl_RSDP
+operator|->
+name|Revision
+operator|<
+literal|2
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|_IA64
+comment|/* 0.71 RSDP has 64bit Rsdt address field */
+name|PhysicalAddress
+operator|=
+operator|(
+operator|(
+name|RSDP_DESCRIPTOR_REV071
+operator|*
+operator|)
+name|AcpiGbl_RSDP
+operator|)
+operator|->
+name|RsdtPhysicalAddress
+expr_stmt|;
+else|#
+directive|else
+name|PhysicalAddress
+operator|=
+name|AcpiGbl_RSDP
+operator|->
+name|RsdtPhysicalAddress
+expr_stmt|;
+endif|#
+directive|endif
+name|TableSignature
+operator|=
+name|RSDT_SIG
+expr_stmt|;
+name|SignatureLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|RSDT_SIG
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|PhysicalAddress
+operator|=
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
+name|AcpiGbl_RSDP
+operator|->
+name|XsdtPhysicalAddress
+expr_stmt|;
+name|TableSignature
+operator|=
+name|XSDT_SIG
+expr_stmt|;
+name|SignatureLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|XSDT_SIG
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
+comment|/* Get the RSDT/XSDT */
 name|Status
 operator|=
 name|AcpiTbGetTable
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|AcpiGbl_RSDP
-operator|->
-name|RsdtPhysicalAddress
+name|PhysicalAddress
 argument_list|,
 name|NULL
 argument_list|,
@@ -1097,18 +1158,38 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Check the RSDT or XSDT signature */
 if|if
 condition|(
-name|Status
-operator|==
-name|AE_BAD_SIGNATURE
+name|STRNCMP
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|TableInfo
+operator|.
+name|Pointer
+argument_list|,
+name|TableSignature
+argument_list|,
+name|SignatureLength
+argument_list|)
 condition|)
 block|{
-comment|/* Invalid RSDT signature */
+comment|/* Invalid RSDT or XSDT signature */
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Invalid signature where RSDP indicates RSDT should be located\n"
+literal|"Invalid signature where RSDP indicates %s should be located\n"
+operator|,
+name|TableSignature
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1124,7 +1205,9 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"RSDP points to RSDT at %lXh, but RSDT signature is invalid\n"
+literal|"RSDP points to %X at %lXh, but signature is invalid\n"
+operator|,
+name|TableSignature
 operator|,
 operator|(
 name|void
@@ -1136,32 +1219,53 @@ name|RsdtPhysicalAddress
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-name|REPORT_ERROR
-argument_list|(
-operator|(
-literal|"Unable to locate the RSDT\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Always delete the RSDP mapping */
-name|AcpiTbDeleteAcpiTable
+comment|/* Valid RSDT signature, verify the checksum */
+name|Status
+operator|=
+name|AcpiTbVerifyTableChecksum
 argument_list|(
-name|ACPI_TABLE_RSDP
+name|TableInfo
+operator|.
+name|Pointer
 argument_list|)
 expr_stmt|;
+comment|/* Convert and/or copy to an XSDT structure */
+name|Status
+operator|=
+name|AcpiTbConvertToXsdt
+argument_list|(
+operator|&
+name|TableInfo
+argument_list|,
+name|NumberOfTables
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Save the table pointers and allocation info */
 name|Status
 operator|=
 name|AcpiTbInitTableDescriptor
 argument_list|(
-name|ACPI_TABLE_RSDT
+name|ACPI_TABLE_XSDT
 argument_list|,
 operator|&
 name|TableInfo
@@ -1181,63 +1285,26 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiGbl_RSDT
+name|AcpiGbl_XSDT
 operator|=
 operator|(
-name|ROOT_SYSTEM_DESCRIPTION_TABLE
+name|XSDT_DESCRIPTOR
 operator|*
 operator|)
 name|TableInfo
 operator|.
 name|Pointer
 expr_stmt|;
-comment|/* Valid RSDT signature, verify the checksum */
 name|DEBUG_PRINT
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"RSDT located at %p\n"
+literal|"XSDT located at %p\n"
 operator|,
-name|AcpiGbl_RSDT
+name|AcpiGbl_XSDT
 operator|)
 argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiTbVerifyTableChecksum
-argument_list|(
-operator|(
-name|ACPI_TABLE_HEADER
-operator|*
-operator|)
-name|AcpiGbl_RSDT
-argument_list|)
-expr_stmt|;
-comment|/*      * Determine the number of tables pointed to by the RSDT.      * This is defined by the ACPI Specification to be the number of      * pointers contained within the RSDT.  The size of the pointers      * is architecture-dependent.      */
-operator|*
-name|NumberOfTables
-operator|=
-operator|(
-operator|(
-name|AcpiGbl_RSDT
-operator|->
-name|header
-operator|.
-name|Length
-operator|-
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|)
-operator|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -1248,7 +1315,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiTbGetTableFacs  *  * PARAMETERS:  *BufferPtr              - If BufferPtr is valid, read data from  *                                          buffer rather than searching memory  *              *TableInfo              - Where the table info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns a pointer to the FACS as defined in FACP.  This  *              function assumes the global variable FACP has been  *              correctly initialized.  The value of FACP->FirmwareCtrl  *              into a far pointer which is returned.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiTbGetTableFacs  *  * PARAMETERS:  *BufferPtr              - If BufferPtr is valid, read data from  *                                          buffer rather than searching memory  *              *TableInfo              - Where the table info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns a pointer to the FACS as defined in FADT.  This  *              function assumes the global variable FADT has been  *              correctly initialized.  The value of FADT->FirmwareCtrl  *              into a far pointer which is returned.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1286,11 +1353,11 @@ argument_list|(
 literal|"TbGetTableFacs"
 argument_list|)
 expr_stmt|;
-comment|/* Must have a valid FACP pointer */
+comment|/* Must have a valid FADT pointer */
 if|if
 condition|(
 operator|!
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -1303,7 +1370,7 @@ name|Size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|FIRMWARE_ACPI_CONTROL_STRUCTURE
+name|FACS_DESCRIPTOR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1353,13 +1420,9 @@ name|Status
 operator|=
 name|AcpiTbMapAcpiTable
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
-name|FirmwareCtrl
+name|XFirmwareCtrl
 argument_list|,
 operator|&
 name|Size

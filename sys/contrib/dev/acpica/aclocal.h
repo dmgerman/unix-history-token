@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 82 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 89 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -459,6 +459,17 @@ name|ANOBJ_END_OF_PEER_LIST
 value|0x2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ANOBJ_DATA_WIDTH_32
+value|0x4
+end_define
+
+begin_comment
+comment|/* Parent table is 64-bits */
+end_comment
+
 begin_comment
 comment|/*  * ACPI Table Descriptor.  One per ACPI table  */
 end_comment
@@ -494,6 +505,9 @@ decl_stmt|;
 name|UINT8
 modifier|*
 name|AmlPointer
+decl_stmt|;
+name|UINT64
+name|PhysicalAddress
 decl_stmt|;
 name|UINT32
 name|AmlLength
@@ -1174,7 +1188,7 @@ decl_stmt|;
 comment|/* Interpret time arguments */
 name|DEBUG_ONLY_MEMBERS
 argument_list|(
-argument|NATIVE_CHAR             *Name
+argument|NATIVE_CHAR *Name
 argument_list|)
 comment|/* op name (debug only) */
 block|}
@@ -1441,7 +1455,7 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Origin
 decl_stmt|;
-comment|/* Start of walk */
+comment|/* Start of walk [Obsolete] */
 comment|/* TBD: Obsolete with removal of WALK procedure ? */
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -1773,6 +1787,10 @@ name|REGISTER_BLOCK_MASK
 value|0xFF00
 end_define
 
+begin_comment
+comment|/* Register Block Id    */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1780,185 +1798,364 @@ name|BIT_IN_REGISTER_MASK
 value|0x00FF
 end_define
 
+begin_comment
+comment|/* Bit Id in the Register Block Id    */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PM1_EVT
+name|BYTE_IN_REGISTER_MASK
+value|0x00FF
+end_define
+
+begin_comment
+comment|/* Register Offset in the Register Block    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REGISTER_BLOCK_ID
+parameter_list|(
+name|RegId
+parameter_list|)
+value|(RegId& REGISTER_BLOCK_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGISTER_BIT_ID
+parameter_list|(
+name|RegId
+parameter_list|)
+value|(RegId& BIT_IN_REGISTER_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGISTER_OFFSET
+parameter_list|(
+name|RegId
+parameter_list|)
+value|(RegId& BYTE_IN_REGISTER_MASK)
+end_define
+
+begin_comment
+comment|/*  * Access Rule  *  To access a Register Bit:  *  -> Use Bit Name (= Register Block Id | Bit Id) defined in the enum.  *  *  To access a Register:  *  -> Use Register Id (= Register Block Id | Register Offset)  */
+end_comment
+
+begin_comment
+comment|/*  * Register Block Id  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PM1_STS
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PM1_CONTROL
+name|PM1_EN
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|PM2_CONTROL
+name|PM1_CONTROL
 value|0x0300
 end_define
 
 begin_define
 define|#
 directive|define
-name|PM_TIMER
+name|PM2_CONTROL
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|PROCESSOR_BLOCK
+name|PM_TIMER
 value|0x0500
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE0_STS_BLOCK
+name|PROCESSOR_BLOCK
 value|0x0600
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE0_EN_BLOCK
+name|GPE0_STS_BLOCK
 value|0x0700
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE1_STS_BLOCK
+name|GPE0_EN_BLOCK
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE1_EN_BLOCK
+name|GPE1_STS_BLOCK
 value|0x0900
 end_define
 
-begin_enum
-enum|enum
-block|{
-comment|/* PM1 status register ids */
+begin_define
+define|#
+directive|define
+name|GPE1_EN_BLOCK
+value|0x0A00
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMI_CMD_BLOCK
+value|0x0B00
+end_define
+
+begin_comment
+comment|/*  * Address space bitmasks for mmio or io spaces  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMI_CMD_ADDRESS_SPACE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM1_BLK_ADDRESS_SPACE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2_CNT_BLK_ADDRESS_SPACE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM_TMR_BLK_ADDRESS_SPACE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPE0_BLK_ADDRESS_SPACE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPE1_BLK_ADDRESS_SPACE
+value|0x20
+end_define
+
+begin_comment
+comment|/*  * Control bit definitions  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TMR_STS
-init|=
-operator|(
-name|PM1_EVT
-operator||
-literal|0x01
-operator|)
-block|,
+value|(PM1_STS | 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BM_STS
-block|,
+value|(PM1_STS | 0x02)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GBL_STS
-block|,
+value|(PM1_STS | 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PWRBTN_STS
-block|,
+value|(PM1_STS | 0x04)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SLPBTN_STS
-block|,
+value|(PM1_STS | 0x05)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RTC_STS
-block|,
+value|(PM1_STS | 0x06)
+end_define
+
+begin_define
+define|#
+directive|define
 name|WAK_STS
-block|,
-comment|/* PM1 enable register ids */
+value|(PM1_STS | 0x07)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TMR_EN
-block|,
-comment|/* need to skip 1 enable number since there's no bus master enable register */
+value|(PM1_EN | 0x01)
+end_define
+
+begin_comment
+comment|/* no BM_EN */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GBL_EN
-init|=
-operator|(
-name|PM1_EVT
-operator||
-literal|0x0A
-operator|)
-block|,
+value|(PM1_EN | 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PWRBTN_EN
-block|,
+value|(PM1_EN | 0x04)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SLPBTN_EN
-block|,
+value|(PM1_EN | 0x05)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RTC_EN
-block|,
-comment|/* PM1 control register ids */
+value|(PM1_EN | 0x06)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WAK_EN
+value|(PM1_EN | 0x07)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCI_EN
-init|=
-operator|(
-name|PM1_CONTROL
-operator||
-literal|0x01
-operator|)
-block|,
+value|(PM1_CONTROL | 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BM_RLD
-block|,
+value|(PM1_CONTROL | 0x02)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GBL_RLS
-block|,
+value|(PM1_CONTROL | 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SLP_TYPE_A
-block|,
+value|(PM1_CONTROL | 0x04)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SLP_TYPE_B
-block|,
+value|(PM1_CONTROL | 0x05)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SLP_EN
-block|,
-comment|/* PM2 control register ids */
+value|(PM1_CONTROL | 0x06)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARB_DIS
-init|=
-operator|(
-name|PM2_CONTROL
-operator||
-literal|0x01
-operator|)
-block|,
-comment|/* PM Timer register ids */
+value|(PM2_CONTROL | 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TMR_VAL
-init|=
-operator|(
-name|PM_TIMER
-operator||
-literal|0x01
-operator|)
-block|,
+value|(PM_TIMER | 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GPE0_STS
-init|=
-operator|(
-name|GPE0_STS_BLOCK
-operator||
-literal|0x01
-operator|)
-block|,
+value|(GPE0_STS_BLOCK | 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GPE0_EN
-init|=
-operator|(
-name|GPE0_EN_BLOCK
-operator||
-literal|0x01
-operator|)
-block|,
+value|(GPE0_EN_BLOCK  | 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GPE1_STS
-init|=
-operator|(
-name|GPE1_STS_BLOCK
-operator||
-literal|0x01
-operator|)
-block|,
+value|(GPE1_STS_BLOCK | 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GPE1_EN
-init|=
-operator|(
-name|GPE0_EN_BLOCK
-operator||
-literal|0x01
-operator|)
-block|,
-comment|/* Last register value is one less than LAST_REG */
-name|LAST_REG
-block|}
-enum|;
-end_enum
+value|(GPE1_EN_BLOCK  | 0x01)
+end_define
 
 begin_define
 define|#
@@ -2013,7 +2210,7 @@ begin_define
 define|#
 directive|define
 name|ALL_FIXED_STS_BITS
-value|(TMR_STS_MASK   | BM_STS_MASK  | GBL_STS_MASK | PWRBTN_STS_MASK |  \                             SLPBTN_STS_MASK | RTC_STS_MASK | WAK_STS_MASK)
+value|(TMR_STS_MASK   | BM_STS_MASK  | GBL_STS_MASK \                              | PWRBTN_STS_MASK | SLPBTN_STS_MASK \                              | RTC_STS_MASK | WAK_STS_MASK)
 end_define
 
 begin_define
@@ -2096,6 +2293,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TMR_VAL_MASK
+value|0xFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
 name|GPE0_STS_MASK
 end_define
 
@@ -2130,56 +2334,6 @@ directive|define
 name|ACPI_WRITE
 value|2
 end_define
-
-begin_define
-define|#
-directive|define
-name|LOW_BYTE
-value|0x00FF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ONE_BYTE
-value|0x08
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SET
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SET
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CLEAR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CLEAR
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Plug and play */

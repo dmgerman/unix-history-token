@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 26 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 28 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -66,36 +66,6 @@ argument_list|(
 literal|"cmclib"
 argument_list|)
 end_macro
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_comment
-comment|/* disable some level-4 warnings for VC++ */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4706
-name|)
-end_pragma
-
-begin_comment
-comment|/* warning C4706: assignment within conditional expression */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -1773,7 +1743,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* Walk entire string, uppercasing the letters */
+comment|/* Walk entire string, comparing the letters */
 for|for
 control|(
 name|String

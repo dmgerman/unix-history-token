@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmglobal - Global variables for the ACPI subsystem  *              $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmglobal - Global variables for the ACPI subsystem  *              $Revision: 110 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -170,6 +170,33 @@ name|BOOLEAN
 name|AcpiGbl_Shutdown
 init|=
 name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT8
+name|AcpiGbl_DecodeTo8bit
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|4
+block|,
+literal|8
+block|,
+literal|16
+block|,
+literal|32
+block|,
+literal|64
+block|,
+literal|128
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -343,47 +370,52 @@ comment|/* 22 Notify           */
 name|NSP_NORMAL
 block|,
 comment|/* 23 Address Handler  */
-name|NSP_NORMAL
-block|,
-comment|/* 24 DefFieldDefn     */
-name|NSP_NORMAL
-block|,
-comment|/* 25 BankFieldDefn    */
-name|NSP_NORMAL
-block|,
-comment|/* 26 IndexFieldDefn   */
-name|NSP_NORMAL
-block|,
-comment|/* 27 If               */
-name|NSP_NORMAL
-block|,
-comment|/* 28 Else             */
-name|NSP_NORMAL
-block|,
-comment|/* 29 While            */
 name|NSP_NEWSCOPE
-block|,
-comment|/* 30 Scope            */
+operator||
 name|NSP_LOCAL
 block|,
-comment|/* 31 DefAny           */
+comment|/* 24 Resource         */
 name|NSP_NORMAL
 block|,
-comment|/* 32 Method Arg       */
+comment|/* 25 DefFieldDefn     */
 name|NSP_NORMAL
 block|,
-comment|/* 33 Method Local     */
+comment|/* 26 BankFieldDefn    */
 name|NSP_NORMAL
 block|,
-comment|/* 34 Extra            */
+comment|/* 27 IndexFieldDefn   */
 name|NSP_NORMAL
-comment|/* 35 Invalid          */
+block|,
+comment|/* 28 If               */
+name|NSP_NORMAL
+block|,
+comment|/* 29 Else             */
+name|NSP_NORMAL
+block|,
+comment|/* 30 While            */
+name|NSP_NEWSCOPE
+block|,
+comment|/* 31 Scope            */
+name|NSP_LOCAL
+block|,
+comment|/* 32 DefAny           */
+name|NSP_NORMAL
+block|,
+comment|/* 33 Method Arg       */
+name|NSP_NORMAL
+block|,
+comment|/* 34 Method Local     */
+name|NSP_NORMAL
+block|,
+comment|/* 35 Extra            */
+name|NSP_NORMAL
+comment|/* 36 Invalid          */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/******************************************************************************  *  * Table globals  *  ******************************************************************************/
+comment|/******************************************************************************  *  * Table globals  *  * NOTE: This table includes ONLY the ACPI tables that the subsystem consumes.  * it is NOT an exhaustive list of all possible ACPI tables.  All ACPI tables  * that are not used by the subsystem are simply ignored.  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -403,10 +435,10 @@ name|NUM_ACPI_TABLES
 index|]
 init|=
 block|{
-comment|/* Name,   Signature,  Signature size,    How many allowed?,   Supported?  Global typed pointer */
+comment|/***********    Name,    Signature,  Signature size,    How many allowed?,   Supported?  Global typed pointer */
 comment|/* RSDP 0 */
 block|{
-literal|"RSDP"
+name|RSDP_NAME
 block|,
 name|RSDP_SIG
 block|,
@@ -424,33 +456,7 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* APIC 1 */
-block|{
-name|APIC_SIG
-block|,
-name|APIC_SIG
-block|,
-sizeof|sizeof
-argument_list|(
-name|APIC_SIG
-argument_list|)
-operator|-
-literal|1
-block|,
-name|ACPI_TABLE_SINGLE
-block|,
-name|AE_OK
-block|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|AcpiGbl_APIC
-block|}
-block|,
-comment|/* DSDT 2 */
+comment|/* DSDT 1 */
 block|{
 name|DSDT_SIG
 block|,
@@ -476,15 +482,15 @@ operator|&
 name|AcpiGbl_DSDT
 block|}
 block|,
-comment|/* FACP 3 */
+comment|/* FADT 2 */
 block|{
-name|FACP_SIG
+name|FADT_SIG
 block|,
-name|FACP_SIG
+name|FADT_SIG
 block|,
 sizeof|sizeof
 argument_list|(
-name|FACP_SIG
+name|FADT_SIG
 argument_list|)
 operator|-
 literal|1
@@ -499,10 +505,10 @@ operator|*
 operator|*
 operator|)
 operator|&
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 block|}
 block|,
-comment|/* FACS 4 */
+comment|/* FACS 3 */
 block|{
 name|FACS_SIG
 block|,
@@ -528,7 +534,7 @@ operator|&
 name|AcpiGbl_FACS
 block|}
 block|,
-comment|/* PSDT 5 */
+comment|/* PSDT 4 */
 block|{
 name|PSDT_SIG
 block|,
@@ -548,27 +554,7 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* RSDT 6 */
-block|{
-name|RSDT_SIG
-block|,
-name|RSDT_SIG
-block|,
-sizeof|sizeof
-argument_list|(
-name|RSDT_SIG
-argument_list|)
-operator|-
-literal|1
-block|,
-name|ACPI_TABLE_SINGLE
-block|,
-name|AE_OK
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SSDT 7 */
+comment|/* SSDT 5 */
 block|{
 name|SSDT_SIG
 block|,
@@ -588,15 +574,15 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* SBST 8 */
+comment|/* XSDT 6 */
 block|{
-name|SBST_SIG
+name|XSDT_SIG
 block|,
-name|SBST_SIG
+name|XSDT_SIG
 block|,
 sizeof|sizeof
 argument_list|(
-name|SBST_SIG
+name|RSDT_SIG
 argument_list|)
 operator|-
 literal|1
@@ -605,55 +591,9 @@ name|ACPI_TABLE_SINGLE
 block|,
 name|AE_OK
 block|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|AcpiGbl_SBST
-block|}
-block|,
-comment|/* SPIC 9 */
-block|{
-name|SPIC_SIG
-block|,
-name|SPIC_SIG
-block|,
-sizeof|sizeof
-argument_list|(
-name|SPIC_SIG
-argument_list|)
-operator|-
-literal|1
-block|,
-name|ACPI_TABLE_MULTIPLE
-block|,
-name|AE_OK
-block|,
 name|NULL
 block|}
-block|,
-comment|/* BOOT 10 */
-block|{
-name|BOOT_SIG
-block|,
-name|BOOT_SIG
-block|,
-sizeof|sizeof
-argument_list|(
-name|BOOT_SIG
-argument_list|)
-operator|-
-literal|1
-block|,
-name|ACPI_TABLE_SINGLE
-block|,
-name|AE_SUPPORT
-block|,
-name|NULL
-block|}
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -820,39 +760,42 @@ comment|/* 23 */
 literal|"AddrHndlr"
 block|,
 comment|/* 24 */
-literal|"DefFldDfn"
+literal|"Resource"
 block|,
 comment|/* 25 */
-literal|"BnkFldDfn"
+literal|"DefFldDfn"
 block|,
 comment|/* 26 */
-literal|"IdxFldDfn"
+literal|"BnkFldDfn"
 block|,
 comment|/* 27 */
-literal|"If"
+literal|"IdxFldDfn"
 block|,
 comment|/* 28 */
-literal|"Else"
+literal|"If"
 block|,
 comment|/* 29 */
-literal|"While"
+literal|"Else"
 block|,
 comment|/* 30 */
-literal|"Scope"
+literal|"While"
 block|,
 comment|/* 31 */
-literal|"DefAny"
+literal|"Scope"
 block|,
 comment|/* 32 */
-literal|"MethodArg"
+literal|"DefAny"
 block|,
 comment|/* 33 */
-literal|"MethodLcl"
+literal|"MethodArg"
 block|,
 comment|/* 34 */
-literal|"Extra"
+literal|"MethodLcl"
 block|,
 comment|/* 35 */
+literal|"Extra"
+block|,
+comment|/* 36 */
 literal|"Invalid"
 block|}
 decl_stmt|;
@@ -1385,7 +1328,7 @@ name|AcpiGbl_RSDP
 operator|=
 name|NULL
 expr_stmt|;
-name|AcpiGbl_RSDT
+name|AcpiGbl_XSDT
 operator|=
 name|NULL
 expr_stmt|;
@@ -1393,19 +1336,11 @@ name|AcpiGbl_FACS
 operator|=
 name|NULL
 expr_stmt|;
-name|AcpiGbl_FACP
-operator|=
-name|NULL
-expr_stmt|;
-name|AcpiGbl_APIC
+name|AcpiGbl_FADT
 operator|=
 name|NULL
 expr_stmt|;
 name|AcpiGbl_DSDT
-operator|=
-name|NULL
-expr_stmt|;
-name|AcpiGbl_SBST
 operator|=
 name|NULL
 expr_stmt|;
@@ -1434,10 +1369,6 @@ expr_stmt|;
 name|AcpiGbl_RsdpOriginalLocation
 operator|=
 literal|0
-expr_stmt|;
-name|AcpiGbl_WhenToParseMethods
-operator|=
-name|METHOD_PARSE_CONFIGURATION
 expr_stmt|;
 name|AcpiGbl_CmSingleStep
 operator|=
@@ -1555,20 +1486,6 @@ expr_stmt|;
 name|AcpiGbl_WalkStateCacheHits
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Interpreter */
-name|AcpiGbl_BufSeq
-operator|=
-literal|0
-expr_stmt|;
-name|AcpiGbl_NodeErr
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Parser */
-name|AcpiGbl_ParsedNamespaceRoot
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* Hardware oriented */
 name|AcpiGbl_Gpe0EnableRegisterSave

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amutils - interpreter/scanner utilities  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amutils - interpreter/scanner utilities  *              $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -237,22 +237,74 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlBufSeq  *  * RETURN:      The next buffer descriptor sequence number  *  * DESCRIPTION: Provide a unique sequence number for each Buffer descriptor  *              allocated during the interpreter's existence.  These numbers  *              are used to relate FieldUnit descriptors to the Buffers  *              within which the fields are defined.  *  *              Just increment the global counter and return it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlTruncateFor32bitTable  *  * PARAMETERS:  ObjDesc         - Object to be truncated  *              WalkState       - Current walk state  *                                (A method must be executing)  *  * RETURN:      none  *  * DESCRIPTION: Truncate a number to 32-bits if the currently executing method  *              belongs to a 32-bit ACPI table.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|UINT32
-name|AcpiAmlBufSeq
-parameter_list|(
 name|void
+name|AcpiAmlTruncateFor32bitTable
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
 parameter_list|)
 block|{
-return|return
+comment|/*      * Object must be a valid number and we must be executing      * a control method      */
+if|if
+condition|(
 operator|(
-operator|++
-name|AcpiGbl_BufSeq
+operator|!
+name|ObjDesc
 operator|)
-return|;
+operator|||
+operator|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|!=
+name|ACPI_TYPE_NUMBER
+operator|)
+operator|||
+operator|(
+operator|!
+name|WalkState
+operator|->
+name|MethodNode
+operator|)
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
+name|WalkState
+operator|->
+name|MethodNode
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_DATA_WIDTH_32
+condition|)
+block|{
+comment|/*          * We are running a method that exists in a 32-bit ACPI table.          * Truncate the value to 32 bits by zeroing out the upper 32-bit field          */
+name|ObjDesc
+operator|->
+name|Number
+operator|.
+name|Value
+operator|&=
+operator|(
+name|UINT64
+operator|)
+name|ACPI_UINT32_MAX
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -455,9 +507,16 @@ operator|<
 literal|0
 operator|)
 init|;
+operator|(
 name|val
-operator|/=
+operator|=
+name|ACPI_DIVIDE
+argument_list|(
+name|val
+argument_list|,
 name|base
+argument_list|)
+operator|)
 condition|;
 operator|++
 name|NumDigits
@@ -479,6 +538,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|UINT32
 name|_ntohl
 parameter_list|(
@@ -820,15 +880,23 @@ argument_list|(
 literal|'0'
 operator|+
 operator|(
+name|ACPI_MODULO
+argument_list|(
 name|Value
-operator|%
+argument_list|,
 literal|10
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
 name|Value
-operator|/=
+operator|=
+name|ACPI_DIVIDE
+argument_list|(
+name|Value
+argument_list|,
 literal|10
+argument_list|)
 expr_stmt|;
 block|}
 return|return

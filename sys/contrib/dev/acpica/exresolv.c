@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amresolv - AML Interpreter object resolution  *              $Revision: 76 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amresolv - AML Interpreter object resolution  *              $Revision: 77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -553,6 +553,8 @@ operator|*
 operator|*
 operator|)
 name|StackPtr
+argument_list|,
+name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
@@ -947,6 +949,14 @@ operator|.
 name|Value
 operator|=
 name|ACPI_INTEGER_MAX
+expr_stmt|;
+comment|/* Truncate value if we are executing from a 32-bit ACPI table */
+name|AcpiAmlTruncateFor32bitTable
+argument_list|(
+name|StackDesc
+argument_list|,
+name|WalkState
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

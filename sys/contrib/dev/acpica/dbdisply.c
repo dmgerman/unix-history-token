@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 34 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 35 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1328,9 +1328,7 @@ name|Node
 operator|=
 name|WalkState
 operator|->
-name|Origin
-operator|->
-name|Node
+name|MethodNode
 expr_stmt|;
 name|NumArgs
 operator|=
@@ -1588,9 +1586,7 @@ name|Node
 operator|=
 name|WalkState
 operator|->
-name|Origin
-operator|->
-name|Node
+name|MethodNode
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
@@ -1966,9 +1962,7 @@ name|Node
 operator|=
 name|WalkState
 operator|->
-name|Origin
-operator|->
-name|Node
+name|MethodNode
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
@@ -1997,9 +1991,7 @@ name|Node
 operator|=
 name|WalkState
 operator|->
-name|Origin
-operator|->
-name|Node
+name|MethodNode
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(

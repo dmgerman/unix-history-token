@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 48 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -103,10 +103,23 @@ operator|*
 operator|)
 name|Context
 decl_stmt|;
+name|UINT8
+name|TableRevision
+decl_stmt|;
 name|Info
 operator|->
 name|ObjectCount
 operator|++
+expr_stmt|;
+name|TableRevision
+operator|=
+name|Info
+operator|->
+name|TableDesc
+operator|->
+name|Pointer
+operator|->
+name|Revision
 expr_stmt|;
 comment|/*      * We are only interested in objects owned by the table that      * was just loaded      */
 if|if
@@ -178,6 +191,27 @@ literal|"."
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*          * Set the execution data width (32 or 64) based upon the          * revision number of the parent ACPI table.          */
+if|if
+condition|(
+name|TableRevision
+operator|==
+literal|1
+condition|)
+block|{
+operator|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|ObjHandle
+operator|)
+operator|->
+name|Flags
+operator||=
+name|ANOBJ_DATA_WIDTH_32
+expr_stmt|;
+block|}
 comment|/*          * Always parse methods to detect errors, we may delete          * the parse tree below          */
 name|Status
 operator|=
@@ -224,20 +258,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*          * Keep the parse tree only if we are parsing all methods          * at init time (versus just-in-time)          */
-if|if
-condition|(
-name|AcpiGbl_WhenToParseMethods
-operator|!=
-name|METHOD_PARSE_AT_INIT
-condition|)
-block|{
+comment|/*          * Delete the parse tree.  We simple re-parse the method          * for every execution since there isn't much overhead          */
 name|AcpiNsDeleteNamespaceSubtree
 argument_list|(
 name|ObjHandle
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 default|default:
 break|break;
@@ -1002,6 +1028,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiDsBuildInternalSimpleObj
 parameter_list|(
@@ -1180,11 +1207,6 @@ operator|*
 name|ObjDescPtr
 operator|=
 name|NULL
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS

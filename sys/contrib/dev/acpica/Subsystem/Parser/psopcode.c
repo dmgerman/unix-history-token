@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 20 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,20 +38,6 @@ argument_list|(
 literal|"psopcode"
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|UINT8
-name|AcpiGbl_AmlShortOpInfoIndex
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT8
-name|AcpiGbl_AmlLongOpInfoIndex
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -122,181 +108,6 @@ directive|define
 name|NUM_INTERNAL_OPCODE
 value|MAX_INTERNAL_OPCODE + 1
 end_define
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetOpcodeInfo  *  * PARAMETERS:  Opcode              - The AML opcode  *  * RETURN:      A pointer to the info about the opcode.  NULL if the opcode was  *              not found in the table.  *  * DESCRIPTION: Find AML opcode description based on the opcode.  *              NOTE: This procedure must ALWAYS return a valid pointer!  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_OPCODE_INFO
-modifier|*
-name|AcpiPsGetOpcodeInfo
-parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|)
-block|{
-name|ACPI_OPCODE_INFO
-modifier|*
-name|OpInfo
-decl_stmt|;
-name|UINT8
-name|UpperOpcode
-decl_stmt|;
-name|UINT8
-name|LowerOpcode
-decl_stmt|;
-comment|/* Split the 16-bit opcode into separate bytes */
-name|UpperOpcode
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-name|Opcode
-operator|>>
-literal|8
-argument_list|)
-expr_stmt|;
-name|LowerOpcode
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|Opcode
-expr_stmt|;
-comment|/* Default is "unknown opcode" */
-name|OpInfo
-operator|=
-operator|&
-name|AcpiGbl_AmlOpInfo
-index|[
-name|_UNK
-index|]
-expr_stmt|;
-comment|/*      * Detect normal 8-bit opcode or extended 16-bit opcode      */
-switch|switch
-condition|(
-name|UpperOpcode
-condition|)
-block|{
-case|case
-literal|0
-case|:
-comment|/* Simple (8-bit) opcode: 0-255, can't index beyond table  */
-name|OpInfo
-operator|=
-operator|&
-name|AcpiGbl_AmlOpInfo
-index|[
-name|AcpiGbl_AmlShortOpInfoIndex
-index|[
-name|LowerOpcode
-index|]
-index|]
-expr_stmt|;
-break|break;
-case|case
-name|AML_EXTOP
-case|:
-comment|/* Extended (16-bit, prefix+opcode) opcode */
-if|if
-condition|(
-name|LowerOpcode
-operator|<=
-name|MAX_EXTENDED_OPCODE
-condition|)
-block|{
-name|OpInfo
-operator|=
-operator|&
-name|AcpiGbl_AmlOpInfo
-index|[
-name|AcpiGbl_AmlLongOpInfoIndex
-index|[
-name|LowerOpcode
-index|]
-index|]
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|AML_LNOT_OP
-case|:
-comment|/* This case is for the bogus opcodes LNOTEQUAL, LLESSEQUAL, LGREATEREQUAL */
-comment|/* TBD: [Investigate] remove this case? */
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"PsGetOpcodeInfo: Bad multi-byte opcode=%X\n"
-operator|,
-name|Opcode
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"PsGetOpcodeInfo: Unknown extended opcode=%X\n"
-operator|,
-name|Opcode
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-comment|/* Get the Op info pointer for this opcode */
-return|return
-operator|(
-name|OpInfo
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetOpcodeName  *  * PARAMETERS:  Opcode              - The AML opcode  *  * RETURN:      A pointer to the name of the opcode (ASCII String)  *              Note: Never returns NULL.  *  * DESCRIPTION: Translate an opcode into a human-readable string  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|NATIVE_CHAR
-modifier|*
-name|AcpiPsGetOpcodeName
-parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|)
-block|{
-name|ACPI_OPCODE_INFO
-modifier|*
-name|Op
-decl_stmt|;
-name|Op
-operator|=
-name|AcpiPsGetOpcodeInfo
-argument_list|(
-name|Opcode
-argument_list|)
-expr_stmt|;
-comment|/* Always guaranteed to return a valid pointer */
-name|DEBUG_ONLY_MEMBERS
-argument_list|(
-argument|return Op->Name
-argument_list|)
-empty_stmt|;
-return|return
-operator|(
-literal|"AE_NOT_CONFIGURED"
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * NAME:        AcpiGbl_AmlOpInfo  *  * DESCRIPTION: Opcode table. Each entry contains<opcode, type, name, operands>  *              The name is a simple ascii string, the operand specifier is an  *              ascii string with one letter per operand.  The letter specifies  *              the operand type.  *  ******************************************************************************/
@@ -1690,7 +1501,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_REGION_OP
-value|ARGI_INVALID_OPCODE
+value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_NUMBER)
 end_define
 
 begin_define
@@ -1817,8 +1628,9 @@ comment|/*  * Master Opcode information table.  A summary of everything we know 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|ACPI_OPCODE_INFO
-name|AcpiGbl_AmlOpInfo
+name|AmlOpInfo
 index|[]
 init|=
 block|{
@@ -3703,8 +3515,9 @@ comment|/*  * This table is directly indexed by the opcodes, and returns an  * i
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|UINT8
-name|AcpiGbl_AmlShortOpInfoIndex
+name|AmlShortOpInfoIndex
 index|[
 literal|256
 index|]
@@ -4259,8 +4072,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|UINT8
-name|AcpiGbl_AmlLongOpInfoIndex
+name|AmlLongOpInfoIndex
 index|[
 name|NUM_EXTENDED_OPCODE
 index|]
@@ -4566,6 +4380,190 @@ end_comment
 begin_comment
 comment|/* 0x00 */
 end_comment
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetOpcodeInfo  *  * PARAMETERS:  Opcode              - The AML opcode  *  * RETURN:      A pointer to the info about the opcode.  NULL if the opcode was  *              not found in the table.  *  * DESCRIPTION: Find AML opcode description based on the opcode.  *              NOTE: This procedure must ALWAYS return a valid pointer!  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_OPCODE_INFO
+modifier|*
+name|AcpiPsGetOpcodeInfo
+parameter_list|(
+name|UINT16
+name|Opcode
+parameter_list|)
+block|{
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
+name|UINT8
+name|UpperOpcode
+decl_stmt|;
+name|UINT8
+name|LowerOpcode
+decl_stmt|;
+comment|/* Split the 16-bit opcode into separate bytes */
+name|UpperOpcode
+operator|=
+call|(
+name|UINT8
+call|)
+argument_list|(
+name|Opcode
+operator|>>
+literal|8
+argument_list|)
+expr_stmt|;
+name|LowerOpcode
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|Opcode
+expr_stmt|;
+comment|/* Default is "unknown opcode" */
+name|OpInfo
+operator|=
+operator|&
+name|AmlOpInfo
+index|[
+name|_UNK
+index|]
+expr_stmt|;
+comment|/*      * Detect normal 8-bit opcode or extended 16-bit opcode      */
+switch|switch
+condition|(
+name|UpperOpcode
+condition|)
+block|{
+case|case
+literal|0
+case|:
+comment|/* Simple (8-bit) opcode: 0-255, can't index beyond table  */
+name|OpInfo
+operator|=
+operator|&
+name|AmlOpInfo
+index|[
+name|AmlShortOpInfoIndex
+index|[
+name|LowerOpcode
+index|]
+index|]
+expr_stmt|;
+break|break;
+case|case
+name|AML_EXTOP
+case|:
+comment|/* Extended (16-bit, prefix+opcode) opcode */
+if|if
+condition|(
+name|LowerOpcode
+operator|<=
+name|MAX_EXTENDED_OPCODE
+condition|)
+block|{
+name|OpInfo
+operator|=
+operator|&
+name|AmlOpInfo
+index|[
+name|AmlLongOpInfoIndex
+index|[
+name|LowerOpcode
+index|]
+index|]
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|AML_LNOT_OP
+case|:
+comment|/* This case is for the bogus opcodes LNOTEQUAL, LLESSEQUAL, LGREATEREQUAL */
+comment|/* TBD: [Investigate] remove this case? */
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"PsGetOpcodeInfo: Bad multi-byte opcode=%X\n"
+operator|,
+name|Opcode
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"PsGetOpcodeInfo: Unknown extended opcode=%X\n"
+operator|,
+name|Opcode
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* Get the Op info pointer for this opcode */
+return|return
+operator|(
+name|OpInfo
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetOpcodeName  *  * PARAMETERS:  Opcode              - The AML opcode  *  * RETURN:      A pointer to the name of the opcode (ASCII String)  *              Note: Never returns NULL.  *  * DESCRIPTION: Translate an opcode into a human-readable string  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|NATIVE_CHAR
+modifier|*
+name|AcpiPsGetOpcodeName
+parameter_list|(
+name|UINT16
+name|Opcode
+parameter_list|)
+block|{
+name|ACPI_OPCODE_INFO
+modifier|*
+name|Op
+decl_stmt|;
+name|Op
+operator|=
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|Opcode
+argument_list|)
+expr_stmt|;
+comment|/* Always guaranteed to return a valid pointer */
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+return|return
+operator|(
+name|Op
+operator|->
+name|Name
+operator|)
+return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|"AE_NOT_CONFIGURED"
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
+end_function
 
 end_unit
 

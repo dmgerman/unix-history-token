@@ -234,8 +234,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsMapMemory
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|,
 name|UINT32
@@ -422,7 +421,7 @@ begin_function_decl
 name|UINT8
 name|AcpiOsMemIn8
 parameter_list|(
-name|ACPI_MEM_ADDRESS
+name|ACPI_PHYSICAL_ADDRESS
 name|InAddr
 parameter_list|)
 function_decl|;
@@ -432,7 +431,7 @@ begin_function_decl
 name|UINT16
 name|AcpiOsMemIn16
 parameter_list|(
-name|ACPI_MEM_ADDRESS
+name|ACPI_PHYSICAL_ADDRESS
 name|InAddr
 parameter_list|)
 function_decl|;
@@ -442,7 +441,7 @@ begin_function_decl
 name|UINT32
 name|AcpiOsMemIn32
 parameter_list|(
-name|ACPI_MEM_ADDRESS
+name|ACPI_PHYSICAL_ADDRESS
 name|InAddr
 parameter_list|)
 function_decl|;
@@ -452,7 +451,7 @@ begin_function_decl
 name|void
 name|AcpiOsMemOut8
 parameter_list|(
-name|ACPI_MEM_ADDRESS
+name|ACPI_PHYSICAL_ADDRESS
 name|OutAddr
 parameter_list|,
 name|UINT8
@@ -465,7 +464,7 @@ begin_function_decl
 name|void
 name|AcpiOsMemOut16
 parameter_list|(
-name|ACPI_MEM_ADDRESS
+name|ACPI_PHYSICAL_ADDRESS
 name|OutAddr
 parameter_list|,
 name|UINT16
@@ -478,7 +477,7 @@ begin_function_decl
 name|void
 name|AcpiOsMemOut32
 parameter_list|(
-name|ACPI_MEM_ADDRESS
+name|ACPI_PHYSICAL_ADDRESS
 name|OutAddr
 parameter_list|,
 name|UINT32

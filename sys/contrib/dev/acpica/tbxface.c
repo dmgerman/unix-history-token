@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,8 +59,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiLoadTables
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|RsdpPhysicalAddress
 parameter_list|)
 block|{
@@ -95,6 +94,18 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiLoadTables: RSDP Failed validation: %s\n"
+operator|,
+name|AcpiCmFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|ErrorExit
 goto|;
@@ -116,6 +127,18 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiLoadTables: Could not load RSDT: %s\n"
+operator|,
+name|AcpiCmFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|ErrorExit
 goto|;
@@ -138,6 +161,18 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiLoadTables: Error getting required tables (DSDT/FADT/FACS): %s\n"
+operator|,
+name|AcpiCmFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|ErrorExit
 goto|;
@@ -165,6 +200,18 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiLoadTables: Could not load namespace: %s\n"
+operator|,
+name|AcpiCmFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|ErrorExit
 goto|;
@@ -237,7 +284,7 @@ name|Status
 operator|=
 name|AcpiTbGetTable
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
 name|TablePtr
 argument_list|,
@@ -727,7 +774,7 @@ name|RetBufLen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ROOT_SYSTEM_DESCRIPTOR_POINTER
+name|RSDP_DESCRIPTOR
 argument_list|)
 expr_stmt|;
 block|}

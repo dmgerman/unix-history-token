@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 21 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1593,6 +1593,52 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Resolve the length and address operands to numbers */
+name|Status
+operator|=
+name|AcpiAmlResolveOperands
+argument_list|(
+name|Op
+operator|->
+name|Opcode
+argument_list|,
+name|WALK_OPERANDS
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|DUMP_OPERANDS
+argument_list|(
+name|WALK_OPERANDS
+argument_list|,
+name|IMODE_EXECUTE
+argument_list|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|Op
+operator|->
+name|Opcode
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+literal|"after AcpiAmlResolveOperands"
+argument_list|)
+expr_stmt|;
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
@@ -1612,8 +1658,7 @@ name|AE_NOT_EXIST
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get the length and save it */
-comment|/* Top of stack */
+comment|/*      * Get the length operand and save it      * (at Top of stack)      */
 name|OperandDesc
 operator|=
 name|WalkState
@@ -1647,8 +1692,7 @@ argument_list|(
 name|OperandDesc
 argument_list|)
 expr_stmt|;
-comment|/* Get the address and save it */
-comment|/* Top of stack - 1 */
+comment|/*      * Get the address and save it      * (at top of stack - 1)      */
 name|OperandDesc
 operator|=
 name|WalkState
@@ -1668,6 +1712,9 @@ name|Region
 operator|.
 name|Address
 operator|=
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|OperandDesc
 operator|->
 name|Number

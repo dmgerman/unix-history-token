@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -40,54 +40,6 @@ define|#
 directive|define
 name|ACPI_CA_VERSION
 value|__DATE__
-end_define
-
-begin_comment
-comment|/*  * How and when control methods will be parsed  * The default action is to parse all methods at table load time to verify them, but delete the parse trees  * to conserve memory.  Methods are parsed just in time before execution and the parse tree is deleted  * when execution completes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|METHOD_PARSE_AT_INIT
-value|0x0
-end_define
-
-begin_comment
-comment|/* Parse at table init, never delete the method parse tree */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|METHOD_PARSE_JUST_IN_TIME
-value|0x1
-end_define
-
-begin_comment
-comment|/* Parse only when a method is invoked */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|METHOD_DELETE_AT_COMPLETION
-value|0x2
-end_define
-
-begin_comment
-comment|/* Delete parse tree on method completion */
-end_comment
-
-begin_comment
-comment|/* Default parsing configuration */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|METHOD_PARSE_CONFIGURATION
-value|(METHOD_PARSE_JUST_IN_TIME | METHOD_DELETE_AT_COMPLETION)
 end_define
 
 begin_comment
@@ -148,17 +100,6 @@ end_define
 begin_comment
 comment|/* Objects for parse tree walks (method execution) */
 end_comment
-
-begin_comment
-comment|/*  * NameSpace Table size  *  * All tables are the same size to simplify the implementation.  * Tables may be extended by allocating additional tables that  * are in turn linked together to form a chain of tables.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NS_TABLE_SIZE
-value|4
-end_define
 
 begin_comment
 comment|/* String size constants */
@@ -354,15 +295,23 @@ begin_define
 define|#
 directive|define
 name|LO_RSDP_WINDOW_BASE
-value|(void *) 0
+value|0
 end_define
+
+begin_comment
+comment|/* Physical Address */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|HI_RSDP_WINDOW_BASE
-value|(void *) 0xE0000
+value|0xE0000
 end_define
+
+begin_comment
+comment|/* Physical Address */
+end_comment
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmobject - ACPI object create/delete/size/cache routines  *              $Revision: 30 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmobject - ACPI object create/delete/size/cache routines  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1005,18 +1005,6 @@ name|ParentObj
 index|[
 name|MAX_PACKAGE_DEPTH
 index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1030,18 +1018,6 @@ name|Index
 index|[
 name|MAX_PACKAGE_DEPTH
 index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
 decl_stmt|;
 name|UINT32
 name|Length
@@ -1069,6 +1045,25 @@ argument_list|(
 literal|"CmGetPackageObjectSize"
 argument_list|,
 name|InternalObj
+argument_list|)
+expr_stmt|;
+comment|/* Init the package stack TBD: replace with linked list */
+name|MEMSET
+argument_list|(
+name|ParentObj
+argument_list|,
+literal|0
+argument_list|,
+name|MAX_PACKAGE_DEPTH
+argument_list|)
+expr_stmt|;
+name|MEMSET
+argument_list|(
+name|Index
+argument_list|,
+literal|0
+argument_list|,
+name|MAX_PACKAGE_DEPTH
 argument_list|)
 expr_stmt|;
 name|ParentObj

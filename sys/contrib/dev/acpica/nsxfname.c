@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -94,6 +94,8 @@ decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
+init|=
+name|NULL
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -126,7 +128,7 @@ argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
-name|Node
+name|PrefixNode
 operator|=
 name|AcpiNsConvertHandleToEntry
 argument_list|(
@@ -136,7 +138,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|Node
+name|PrefixNode
 condition|)
 block|{
 name|AcpiCmReleaseMutex
@@ -150,12 +152,6 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-name|PrefixNode
-operator|=
-name|Node
-operator|->
-name|Child
-expr_stmt|;
 name|AcpiCmReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
@@ -191,17 +187,13 @@ operator|)
 return|;
 block|}
 comment|/*      *  Find the Node and convert to the user format      */
-name|Node
-operator|=
-name|NULL
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsGetNode
 argument_list|(
 name|Pathname
 argument_list|,
-name|PrefixNode
+name|Node
 argument_list|,
 operator|&
 name|Node

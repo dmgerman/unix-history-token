@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI hardware functions - mode and timer  *              $Revision: 24 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI hardware functions - mode and timer  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -67,7 +67,7 @@ comment|/* We must have the ACPI tables by the time we get here */
 if|if
 condition|(
 operator|!
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 condition|)
 block|{
 name|AcpiGbl_RestoreAcpiChipset
@@ -79,7 +79,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"HwInitialize: No FACP!\n"
+literal|"HwInitialize: No FADT!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -202,61 +202,41 @@ name|SYS_MODE_ACPI
 condition|)
 block|{
 comment|/* Target system supports ACPI mode */
-comment|/*          * The purpose of this block of code is to save the initial state          * of the ACPI event enable registers. An exit function will be          * registered which will restore this state when the application          * exits. The exit function will also clear all of the ACPI event          * status bits prior to restoring the original mode.          *          * The location of the PM1aEvtBlk enable registers is defined as the          * base of PM1aEvtBlk + PM1aEvtBlkLength / 2. Since the spec further          * fully defines the PM1aEvtBlk to be a total of 4 bytes, the offset          * for the enable registers is always 2 from the base. It is hard          * coded here. If this changes in the spec, this code will need to          * be modified. The PM1bEvtBlk behaves as expected.          */
+comment|/*          * The purpose of this code is to save the initial state          * of the ACPI event enable registers. An exit function will be          * registered which will restore this state when the application          * exits. The exit function will also clear all of the ACPI event          * status bits prior to restoring the original mode.          *          * The location of the PM1aEvtBlk enable registers is defined as the          * base of PM1aEvtBlk + DIV_2(PM1aEvtBlkLength). Since the spec further          * fully defines the PM1aEvtBlk to be a total of 4 bytes, the offset          * for the enable registers is always 2 from the base. It is hard          * coded here. If this changes in the spec, this code will need to          * be modified. The PM1bEvtBlk behaves as expected.          */
 name|AcpiGbl_Pm1EnableRegisterSave
 operator|=
-name|AcpiOsIn16
-argument_list|(
 operator|(
-name|AcpiGbl_FACP
-operator|->
-name|Pm1aEvtBlk
-operator|+
-literal|2
+name|UINT16
 operator|)
+name|AcpiHwRegisterRead
+argument_list|(
+name|ACPI_MTX_LOCK
+argument_list|,
+name|PM1_EN
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|AcpiGbl_FACP
-operator|->
-name|Pm1bEvtBlk
-condition|)
-block|{
-name|AcpiGbl_Pm1EnableRegisterSave
-operator||=
-name|AcpiOsIn16
-argument_list|(
-operator|(
-name|AcpiGbl_FACP
-operator|->
-name|Pm1bEvtBlk
-operator|+
-literal|2
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*          * The GPEs behave similarly, except that the length of the register          * block is not fixed, so the buffer must be allocated with malloc          */
 if|if
 condition|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
-name|Gpe0Blk
+name|XGpe0Blk
+operator|.
+name|Address
 operator|&&
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Gpe0BlkLen
 condition|)
 block|{
-comment|/* GPE0 specified in FACP  */
+comment|/* GPE0 specified in FADT  */
 name|AcpiGbl_Gpe0EnableRegisterSave
 operator|=
 name|AcpiCmAllocate
 argument_list|(
 name|DIV_2
 argument_list|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Gpe0BlkLen
 argument_list|)
@@ -285,7 +265,7 @@ name|Index
 operator|<
 name|DIV_2
 argument_list|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Gpe0BlkLen
 argument_list|)
@@ -299,18 +279,16 @@ index|[
 name|Index
 index|]
 operator|=
-name|AcpiOsIn8
+operator|(
+name|UINT8
+operator|)
+name|AcpiHwRegisterRead
 argument_list|(
-name|AcpiGbl_FACP
-operator|->
-name|Gpe0Blk
-operator|+
-name|DIV_2
-argument_list|(
-name|AcpiGbl_FACP
-operator|->
-name|Gpe0BlkLen
-argument_list|)
+name|ACPI_MTX_LOCK
+argument_list|,
+name|GPE0_EN_BLOCK
+operator||
+name|Index
 argument_list|)
 expr_stmt|;
 block|}
@@ -324,11 +302,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
-name|Gpe1Blk
+name|XGpe1Blk
+operator|.
+name|Address
 operator|&&
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Gpe1BlkLen
 condition|)
@@ -340,7 +320,7 @@ name|AcpiCmAllocate
 argument_list|(
 name|DIV_2
 argument_list|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Gpe1BlkLen
 argument_list|)
@@ -369,7 +349,7 @@ name|Index
 operator|<
 name|DIV_2
 argument_list|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Gpe1BlkLen
 argument_list|)
@@ -383,18 +363,16 @@ index|[
 name|Index
 index|]
 operator|=
-name|AcpiOsIn8
+operator|(
+name|UINT8
+operator|)
+name|AcpiHwRegisterRead
 argument_list|(
-name|AcpiGbl_FACP
-operator|->
-name|Gpe1Blk
-operator|+
-name|DIV_2
-argument_list|(
-name|AcpiGbl_FACP
-operator|->
-name|Gpe1BlkLen
-argument_list|)
+name|ACPI_MTX_LOCK
+argument_list|,
+name|GPE1_EN_BLOCK
+operator||
+name|Index
 argument_list|)
 expr_stmt|;
 block|}
@@ -447,11 +425,11 @@ block|{
 comment|/* BIOS should have disabled ALL fixed and GP events */
 name|AcpiOsOut8
 argument_list|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|SmiCmd
 argument_list|,
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|AcpiEnable
 argument_list|)
@@ -477,11 +455,11 @@ block|{
 comment|/*          * BIOS should clear all fixed status bits and restore fixed event          * enable bits to default          */
 name|AcpiOsOut8
 argument_list|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|SmiCmd
 argument_list|,
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|AcpiDisable
 argument_list|)
@@ -546,7 +524,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_READ
 argument_list|,
@@ -692,9 +670,14 @@ name|Ticks
 operator|=
 name|AcpiOsIn32
 argument_list|(
-name|AcpiGbl_FACP
+operator|(
+name|ACPI_IO_ADDRESS
+operator|)
+name|AcpiGbl_FADT
 operator|->
-name|PmTmrBlk
+name|XPmTmrBlk
+operator|.
+name|Address
 argument_list|)
 expr_stmt|;
 name|return_VALUE
@@ -725,7 +708,7 @@ if|if
 condition|(
 literal|0
 operator|==
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|TmrValExt
 condition|)

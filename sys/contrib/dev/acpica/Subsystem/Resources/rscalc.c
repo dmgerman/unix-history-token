@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscalc - AcpiRsCalculateByteStreamLength  *                       AcpiRsCalculateListLength  *              $Revision: 11 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscalc - AcpiRsCalculateByteStreamLength  *                       AcpiRsCalculateListLength  *              $Revision: 16 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acresrc.h"
 end_include
 
 begin_define
@@ -1325,6 +1331,8 @@ name|NumberOfElements
 decl_stmt|;
 name|UINT32
 name|TempSizeNeeded
+init|=
+literal|0
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1363,23 +1371,6 @@ operator|.
 name|Count
 expr_stmt|;
 comment|/*      * Calculate the size of the return buffer.      * The base size is the number of elements * the sizes of the      * structures.  Additional space for the strings is added below.      * The minus one is to subtract the size of the UINT8 Source[1]      * member because it is added below.      *      * NOTE: The NumberOfElements is incremented by one to add an end      * table structure that is essentially a structure of zeros.      */
-name|TempSizeNeeded
-operator|=
-operator|(
-name|NumberOfElements
-operator|+
-literal|1
-operator|)
-operator|*
-operator|(
-sizeof|sizeof
-argument_list|(
-name|PCI_ROUTING_TABLE
-argument_list|)
-operator|-
-literal|1
-operator|)
-expr_stmt|;
 comment|/*      * But each PRT_ENTRY structure has a pointer to a string and      * the size of that string must be found.      */
 name|TopObjectList
 operator|=
@@ -1467,6 +1458,17 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|TempSizeNeeded
+operator|+=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|PCI_ROUTING_TABLE
+argument_list|)
+operator|-
+literal|1
+operator|)
+expr_stmt|;
 comment|/*          * Was a String type found?          */
 if|if
 condition|(
@@ -1499,18 +1501,27 @@ name|UINT32
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Round up the size since each element must be aligned */
+name|TempSizeNeeded
+operator|=
+name|ROUND_UP_TO_64BITS
+argument_list|(
+name|TempSizeNeeded
+argument_list|)
+expr_stmt|;
 comment|/*          * Point to the next ACPI_OPERAND_OBJECT          */
 name|TopObjectList
 operator|++
 expr_stmt|;
 block|}
-comment|/* Align the count before returning it */
 operator|*
 name|BufferSizeNeeded
 operator|=
-name|ROUND_UP_TO_32BITS
-argument_list|(
 name|TempSizeNeeded
+operator|+
+sizeof|sizeof
+argument_list|(
+name|PCI_ROUTING_TABLE
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

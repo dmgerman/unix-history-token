@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - AcpiRsCreateResourceList  *                         AcpiRsCreatePciRoutingTable  *                         AcpiRsCreateByteStream  *              $Revision: 19 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - AcpiRsCreateResourceList  *                         AcpiRsCreatePciRoutingTable  *                         AcpiRsCreateByteStream  *              $Revision: 21 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -381,6 +381,15 @@ operator|*
 operator|)
 name|Buffer
 expr_stmt|;
+name|Buffer
+operator|=
+name|ROUND_PTR_UP_TO_8
+argument_list|(
+name|Buffer
+argument_list|,
+name|UINT8
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|Index
@@ -401,15 +410,6 @@ operator|+=
 name|UserPrt
 operator|->
 name|Length
-expr_stmt|;
-name|Buffer
-operator|=
-name|ROUND_PTR_UP_TO_4
-argument_list|(
-name|Buffer
-argument_list|,
-name|UINT8
-argument_list|)
 expr_stmt|;
 name|UserPrt
 operator|=
@@ -625,7 +625,7 @@ name|UserPrt
 operator|->
 name|Length
 operator|=
-name|ROUND_UP_TO_32BITS
+name|ROUND_UP_TO_64BITS
 argument_list|(
 name|UserPrt
 operator|->
