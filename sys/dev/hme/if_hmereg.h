@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	from: NetBSD: hmereg.h,v 1.7 2001/04/30 03:47:34 lukem Exp  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	from: NetBSD: hmereg.h,v 1.16 2003/11/02 11:07:45 wiz Exp  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -333,7 +333,7 @@ value|0x00040000
 end_define
 
 begin_comment
-comment|/* rx dma error */
+comment|/* rx DMA error */
 end_comment
 
 begin_define
@@ -344,7 +344,7 @@ value|0x00080000
 end_define
 
 begin_comment
-comment|/* late error during rx dma */
+comment|/* late error during rx DMA */
 end_comment
 
 begin_define
@@ -355,7 +355,7 @@ value|0x00100000
 end_define
 
 begin_comment
-comment|/* parity error during rx dma */
+comment|/* parity error during rx DMA */
 end_comment
 
 begin_define
@@ -366,7 +366,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* tag error during rx dma */
+comment|/* tag error during rx DMA */
 end_comment
 
 begin_define
@@ -421,7 +421,7 @@ value|0x04000000
 end_define
 
 begin_comment
-comment|/* error during tx dma */
+comment|/* error during tx DMA */
 end_comment
 
 begin_define
@@ -432,7 +432,7 @@ value|0x08000000
 end_define
 
 begin_comment
-comment|/* late error during tx dma */
+comment|/* late error during tx DMA */
 end_comment
 
 begin_define
@@ -443,7 +443,7 @@ value|0x10000000
 end_define
 
 begin_comment
-comment|/* parity error during tx dma */
+comment|/* parity error during tx DMA */
 end_comment
 
 begin_define
@@ -454,7 +454,7 @@ value|0x20000000
 end_define
 
 begin_comment
-comment|/* tag error durig tx dma */
+comment|/* tag error durig tx DMA */
 end_comment
 
 begin_define
@@ -672,7 +672,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* Enable TX dma */
+comment|/* Enable TX DMA */
 end_comment
 
 begin_define
@@ -808,7 +808,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* Enable RX dma */
+comment|/* Enable RX DMA */
 end_comment
 
 begin_define
@@ -1334,7 +1334,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* Enable promiscous mode */
+comment|/* Enable promiscuous mode */
 end_comment
 
 begin_define
@@ -1540,7 +1540,7 @@ value|0x000000f8
 end_define
 
 begin_comment
-comment|/* Poll register adddress */
+comment|/* Poll register address */
 end_comment
 
 begin_define
@@ -1573,7 +1573,7 @@ value|0x00007c00
 end_define
 
 begin_comment
-comment|/* Poll phy adddress */
+comment|/* Poll phy address */
 end_comment
 
 begin_comment
@@ -1782,7 +1782,9 @@ name|i
 parameter_list|,
 name|f
 parameter_list|)
-value|do {				\ 	*((u_int32_t *)HME_XD_FLAGS(b,i)) = ((p) ? htole32(f) : (f));	\ } while(0)
+value|do {				\ 	*((u_int32_t *)HME_XD_FLAGS(b,i)) = ((p) ? htole32((f)) : (f));	\ } while(
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -1798,7 +1800,9 @@ name|i
 parameter_list|,
 name|a
 parameter_list|)
-value|do {				\ 	*((u_int32_t *)HME_XD_ADDR(b,i)) = ((p) ? htole32(a) : (a));	\ } while(0)
+value|do {				\ 	*((u_int32_t *)HME_XD_ADDR(b,i)) = ((p) ? htole32((a)) : (a));	\ } while(
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_comment

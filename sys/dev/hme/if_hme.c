@@ -765,7 +765,7 @@ name|tdesc
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* 	 * HME common initialization. 	 * 	 * hme_softc fields that must be initialized by the front-end: 	 * 	 * the dma bus tag: 	 *	sc_dmatag 	 * 	 * the bus handles, tags and offsets (splitted for SBus compatability): 	 *	sc_seb{t,h,o}	(Shared Ethernet Block registers) 	 *	sc_erx{t,h,o}	(Receiver Unit registers) 	 *	sc_etx{t,h,o}	(Transmitter Unit registers) 	 *	sc_mac{t,h,o}	(MAC registers) 	 *	sc_mif{t,h,o}	(Managment Interface registers) 	 * 	 * the maximum bus burst size: 	 *	sc_burst 	 * 	 */
+comment|/* 	 * HME common initialization. 	 * 	 * hme_softc fields that must be initialized by the front-end: 	 * 	 * the DMA bus tag: 	 *	sc_dmatag 	 * 	 * the bus handles, tags and offsets (splitted for SBus compatability): 	 *	sc_seb{t,h,o}	(Shared Ethernet Block registers) 	 *	sc_erx{t,h,o}	(Receiver Unit registers) 	 *	sc_etx{t,h,o}	(Transmitter Unit registers) 	 *	sc_mac{t,h,o}	(MAC registers) 	 *	sc_mif{t,h,o}	(Management Interface registers) 	 * 	 * the maximum bus burst size: 	 *	sc_burst 	 * 	 */
 comment|/* Make sure the chip is stopped. */
 name|hme_stop
 argument_list|(
@@ -1448,7 +1448,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"cannot accomodate "
+literal|"cannot accommodate "
 literal|"MII device %s at phy %d, instance %d\n"
 argument_list|,
 name|device_get_name
