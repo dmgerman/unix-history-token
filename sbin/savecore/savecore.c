@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: savecore.c,v 1.21 1998/07/28 06:38:57 charnier Exp $"
+literal|"$Id: savecore.c,v 1.22 1999/03/12 14:46:00 gallatin Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -221,16 +227,8 @@ block|{
 comment|/* Namelist for currently running system. */
 define|#
 directive|define
-name|X_DUMPDEV
-value|0
-block|{
-literal|"_dumpdev"
-block|}
-block|,
-define|#
-directive|define
 name|X_DUMPLO
-value|1
+value|0
 block|{
 literal|"_dumplo"
 block|}
@@ -238,7 +236,7 @@ block|,
 define|#
 directive|define
 name|X_TIME
-value|2
+value|1
 block|{
 literal|"_time_second"
 block|}
@@ -246,7 +244,7 @@ block|,
 define|#
 directive|define
 name|X_DUMPSIZE
-value|3
+value|2
 block|{
 literal|"_dumpsize"
 block|}
@@ -254,7 +252,7 @@ block|,
 define|#
 directive|define
 name|X_VERSION
-value|4
+value|3
 block|{
 literal|"_version"
 block|}
@@ -262,7 +260,7 @@ block|,
 define|#
 directive|define
 name|X_PANICSTR
-value|5
+value|4
 block|{
 literal|"_panicstr"
 block|}
@@ -270,7 +268,7 @@ block|,
 define|#
 directive|define
 name|X_DUMPMAG
-value|6
+value|5
 block|{
 literal|"_dumpmag"
 block|}
@@ -288,8 +286,6 @@ name|cursyms
 index|[]
 init|=
 block|{
-name|X_DUMPDEV
-block|,
 name|X_DUMPLO
 block|,
 name|X_VERSION
@@ -333,19 +329,15 @@ init|=
 block|{
 comment|/* Name list for dumped system. */
 block|{
-literal|"_dumpdev"
+literal|"_dumplo"
 block|}
 block|,
 comment|/* Entries MUST be the same as */
 block|{
-literal|"_dumplo"
-block|}
-block|,
-comment|/*	those in current_nl[].  */
-block|{
 literal|"_time_second"
 block|}
 block|,
+comment|/*	those in current_nl[].  */
 block|{
 literal|"_dumpsize"
 block|}
@@ -1011,6 +1003,15 @@ name|char
 modifier|*
 name|dump_sys
 decl_stmt|;
+name|int
+name|mib
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 comment|/* 	 * Some names we need for the currently running system, others for 	 * the system that was running when the dump was made.  The values 	 * obtained from the current system are used to look for things in 	 * /dev/kmem that cannot be found in the dump_sys namelist, but are 	 * presumed to be the same (since the disk partitions are probably 	 * the same!) 	 */
 if|if
 condition|(
@@ -1194,48 +1195,61 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|kmem
-operator|=
-name|Open
-argument_list|(
-name|_PATH_KMEM
-argument_list|,
-name|O_RDONLY
-argument_list|)
-expr_stmt|;
-name|Lseek
-argument_list|(
-name|kmem
-argument_list|,
-operator|(
-name|off_t
-operator|)
-name|current_nl
+name|mib
 index|[
-name|X_DUMPDEV
+literal|0
 index|]
-operator|.
-name|n_value
-argument_list|,
-name|L_SET
-argument_list|)
+operator|=
+name|CTL_KERN
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|Read
+name|mib
+index|[
+literal|1
+index|]
+operator|=
+name|KERN_DUMPDEV
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+name|dumpdev
+expr_stmt|;
+if|if
+condition|(
+name|sysctl
 argument_list|(
-name|kmem
+name|mib
+argument_list|,
+literal|2
 argument_list|,
 operator|&
 name|dumpdev
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dumpdev
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"sysctl: kern.dumpdev: %m"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dumpdev
@@ -1256,6 +1270,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|kmem
+operator|=
+name|Open
+argument_list|(
+name|_PATH_KMEM
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
 name|Lseek
 argument_list|(
 name|kmem
