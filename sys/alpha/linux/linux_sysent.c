@@ -329,10 +329,10 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_getpid
+name|getpid
 block|}
 block|,
-comment|/* 20 = linux_getpid */
+comment|/* 20 = getpid */
 block|{
 literal|0
 block|,
@@ -379,10 +379,10 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_getuid
+name|getuid
 block|}
 block|,
-comment|/* 24 = linux_getuid */
+comment|/* 24 = getuid */
 block|{
 literal|0
 block|,
@@ -647,10 +647,10 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_getgid
+name|getgid
 block|}
 block|,
-comment|/* 47 = linux_getgid */
+comment|/* 47 = getgid */
 block|{
 name|AS
 argument_list|(

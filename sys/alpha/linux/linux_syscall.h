@@ -111,7 +111,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_getpid
+name|LINUX_SYS_getpid
 value|20
 end_define
 
@@ -132,7 +132,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_getuid
+name|LINUX_SYS_getuid
 value|24
 end_define
 
@@ -195,7 +195,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_getgid
+name|LINUX_SYS_getgid
 value|47
 end_define
 
