@@ -175,7 +175,7 @@ begin_define
 define|#
 directive|define
 name|REG_ENOSYS
-value|-1
+value|(-1)
 end_define
 
 begin_define

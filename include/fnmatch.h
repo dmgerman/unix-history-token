@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|FNM_NOSYS
-value|-1
+value|(-1)
 end_define
 
 begin_comment
