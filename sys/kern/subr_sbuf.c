@@ -427,6 +427,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* don't care if it's finished or not */
 name|SBUF_CLEARFLAG
 argument_list|(
 name|s
@@ -1116,13 +1117,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|assert_sbuf_state
-argument_list|(
-name|s
-argument_list|,
-name|SBUF_FINISHED
-argument_list|)
-expr_stmt|;
+comment|/* don't care if it's finished or not */
 if|if
 condition|(
 name|SBUF_HASOVERFLOWED
