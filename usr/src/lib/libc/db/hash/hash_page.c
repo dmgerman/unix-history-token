@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.2 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -817,6 +817,15 @@ name|char
 modifier|*
 name|np
 decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|int
+name|ndx
+decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
 name|char
 modifier|*
 name|op
@@ -832,6 +841,9 @@ operator|->
 name|BSIZE
 decl_stmt|;
 name|u_short
+name|diff
+decl_stmt|;
+name|u_short
 name|off
 init|=
 operator|(
@@ -841,17 +853,8 @@ name|hashp
 operator|->
 name|BSIZE
 decl_stmt|;
-name|int
-name|n
-decl_stmt|;
-name|u_short
-name|diff
-decl_stmt|;
 name|u_short
 name|moved
-decl_stmt|;
-name|int
-name|ndx
 decl_stmt|;
 name|old_bufp
 operator|=
@@ -879,13 +882,21 @@ name|old_bufp
 operator|->
 name|flags
 operator||=
+operator|(
 name|BUF_MOD
+operator||
+name|BUF_PIN
+operator|)
 expr_stmt|;
 name|new_bufp
 operator|->
 name|flags
 operator||=
+operator|(
 name|BUF_MOD
+operator||
+name|BUF_PIN
+operator|)
 expr_stmt|;
 name|ino
 operator|=
@@ -945,8 +956,8 @@ operator|<
 name|REAL_KEY
 condition|)
 block|{
-return|return
-operator|(
+name|retval
+operator|=
 name|ugly_split
 argument_list|(
 name|obucket
@@ -959,6 +970,24 @@ name|copyto
 argument_list|,
 name|moved
 argument_list|)
+expr_stmt|;
+name|old_bufp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|BUF_PIN
+expr_stmt|;
+name|new_bufp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|BUF_PIN
+expr_stmt|;
+return|return
+operator|(
+name|retval
 operator|)
 return|;
 block|}
@@ -1224,6 +1253,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* unpin both pages */
+name|old_bufp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|BUF_PIN
+expr_stmt|;
+name|new_bufp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|BUF_PIN
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1233,7 +1277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     0 ==> success     -1 ==> failure      Called when we encounter an overflow page during split handling.     this is special cased since we have to begin checking whether     the key/data pairs fit on their respective pages and because     we may need overflow pages for both the old and new pages */
+comment|/*     0 ==> success     -1 ==> failure      Called when we encounter an overflow or big key/data page during      split handling.     This is special cased since we have to begin checking whether     the key/data pairs fit on their respective pages and because     we may need overflow pages for both the old and new pages      The first page might be a page with regular key/data pairs     in which case we have a regular overflow condition and just     need to go on to the next page or it might be a big key/data      pair in which case we need to fix the big key/data pair. */
 end_comment
 
 begin_function
@@ -1637,6 +1681,7 @@ operator|.
 name|nextp
 expr_stmt|;
 block|}
+comment|/* Move regular sized pairs of there are any */
 name|off
 operator|=
 name|hashp
@@ -2599,8 +2644,12 @@ name|BSIZE
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
 name|fd
+operator|==
+operator|-
+literal|1
+operator|)
 operator|||
 operator|(
 name|hashp
@@ -2913,10 +2962,14 @@ name|BSIZE
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
 name|hashp
 operator|->
 name|fp
+operator|==
+operator|-
+literal|1
+operator|)
 operator|&&
 name|open_temp
 argument_list|()
