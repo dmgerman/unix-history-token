@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2134,9 +2134,9 @@ name|soreserve
 argument_list|(
 name|so
 argument_list|,
-name|tp_sendsize
+name|tp_sendspace
 argument_list|,
-name|tp_recvsize
+name|tp_recvspace
 argument_list|)
 expr_stmt|;
 end_if
