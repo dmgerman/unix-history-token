@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.2 (Berkeley) 83/01/15"
+literal|"@(#)ftpd.c	4.3 (Berkeley) 83/01/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -528,6 +528,8 @@ condition|(
 name|s
 operator|!=
 literal|2
+operator|&&
+name|debug
 condition|)
 comment|/* don't screw stderr */
 operator|(
