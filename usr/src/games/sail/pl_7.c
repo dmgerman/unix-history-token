@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_7.c	2.7 84/02/23"
+literal|"@(#)pl_7.c	2.8 84/02/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,9 +203,6 @@ expr_stmt|;
 name|crmode
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_block
 

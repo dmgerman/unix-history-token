@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)misc.c	2.2 84/02/23"
+literal|"@(#)misc.c	2.3 84/02/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -1053,6 +1053,8 @@ return|return;
 ifdef|#
 directive|ifdef
 name|LOCK_EX
+if|if
+condition|(
 name|flock
 argument_list|(
 name|fileno
@@ -1062,7 +1064,10 @@ argument_list|)
 argument_list|,
 name|LOCK_EX
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return;
 endif|#
 directive|endif
 name|net
@@ -1398,6 +1403,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|LOCK_EX
+operator|(
+name|void
+operator|)
 name|flock
 argument_list|(
 name|fileno
