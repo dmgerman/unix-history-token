@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.14 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * User telnet program.  */
+comment|/*  * User telnet program.  *  * Many of the FUNCTIONAL changes in this newest version of telnet  * were suggested by Dave Borman of Cray Research, Inc.  */
 end_comment
 
 begin_include
