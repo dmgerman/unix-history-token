@@ -6970,12 +6970,26 @@ argument|p
 argument_list|,
 argument|kg2
 argument_list|)
+block|{
+if|if
+condition|(
+name|kg2
+operator|->
+name|kg_numupcalls
+operator|==
+literal|0
+condition|)
+name|upcalls
+operator|++
+expr_stmt|;
+else|else
 name|upcalls
 operator|+=
 name|kg2
 operator|->
 name|kg_numupcalls
 expr_stmt|;
+block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -7032,7 +7046,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 		 * Things are going to be so screwed we should just kill the process. 		 * how do we do that? 		 */
+comment|/* 		 * Things are going to be so screwed we should just kill 		 * the process. 		 * how do we do that? 		 */
 name|PROC_LOCK
 argument_list|(
 name|td
