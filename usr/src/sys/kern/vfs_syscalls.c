@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -959,28 +959,6 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
-comment|/* 	 * Must be super user 	 */
-if|if
-condition|(
-name|error
-operator|=
-name|suser
-argument_list|(
-name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
-argument_list|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -1022,6 +1000,51 @@ name|nd
 operator|.
 name|ni_vp
 expr_stmt|;
+comment|/* 	 * Unless this is a user mount, then must 	 * have suser privilege. 	 */
+if|if
+condition|(
+operator|(
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_USER
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|error
+operator|=
+name|suser
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_acflag
+argument_list|)
+operator|)
+condition|)
+block|{
+name|vput
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* 	 * Must be the root of the filesystem 	 */
 if|if
 condition|(
