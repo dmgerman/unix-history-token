@@ -79,6 +79,14 @@ name|pcpup
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+name|__pcpu
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -86,7 +94,7 @@ name|PCPU_GET
 parameter_list|(
 name|member
 parameter_list|)
-value|(pcpup->pc_ ## member)
+value|(__pcpu.pc_ ## member)
 end_define
 
 begin_define
@@ -96,7 +104,7 @@ name|PCPU_PTR
 parameter_list|(
 name|member
 parameter_list|)
-value|(&pcpup->pc_ ## member)
+value|(&__pcpu.pc_ ## member)
 end_define
 
 begin_define
@@ -108,7 +116,7 @@ name|member
 parameter_list|,
 name|value
 parameter_list|)
-value|(pcpup->pc_ ## member = (value))
+value|(__pcpu.pc_ ## member = (value))
 end_define
 
 begin_endif
