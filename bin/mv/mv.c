@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mv.c,v 1.18 1998/05/15 06:25:17 charnier Exp $"
+literal|"$Id: mv.c,v 1.19 1998/05/25 22:44:16 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,8 +261,6 @@ name|char
 name|path
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 while|while
@@ -386,6 +384,35 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* It's a directory, move each file into it. */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+argument_list|)
+operator|>
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: destination pathname too long"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
