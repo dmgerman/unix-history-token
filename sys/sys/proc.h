@@ -1492,17 +1492,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* flags for suser_xxx() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRISON_ROOT
-value|1
-end_define
-
-begin_comment
 comment|/* Handy macro to determine of p1 can mangle p2 */
 end_comment
 
@@ -2198,46 +2187,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|suser
-name|__P
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|proc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|suser_xxx
-name|__P
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|,
-specifier|const
-expr|struct
-name|proc
-operator|*
-name|proc
-operator|,
-name|int
-name|flag
 operator|)
 argument_list|)
 decl_stmt|;
