@@ -388,6 +388,9 @@ if|#
 directive|if
 name|defined
 name|__i386__
+operator|||
+name|defined
+name|__amd64__
 end_if
 
 begin_define
