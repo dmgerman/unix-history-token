@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)savecore.c	4.14 (Berkeley) 84/07/17"
+literal|"@(#)savecore.c	4.15 (Berkeley) 85/06/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,6 +468,9 @@ condition|)
 block|{
 case|case
 literal|'v'
+case|:
+case|case
+literal|'d'
 case|:
 name|Verbose
 operator|=
@@ -1688,15 +1691,6 @@ name|time_t
 operator|)
 literal|0
 block|;
-if|if
-condition|(
-name|system
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 name|Lseek
 argument_list|(
 name|dumpfd
@@ -1720,10 +1714,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|Read
 argument_list|(
 name|dumpfd
@@ -1738,18 +1729,12 @@ argument_list|,
 sizeof|sizeof
 name|dumptime
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|close
 argument_list|(
 name|dumpfd
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
+block|;
 if|if
 condition|(
 name|dumptime
@@ -1772,9 +1757,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"System went down at %s"
