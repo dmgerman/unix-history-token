@@ -1467,6 +1467,8 @@ else|else
 name|fatal
 argument_list|(
 literal|"%s: unknown optimization preference: use `space' or `time'"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 block|}
