@@ -4385,7 +4385,16 @@ name|child
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|ivar
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|device_set_ivars
 argument_list|(
 name|child
