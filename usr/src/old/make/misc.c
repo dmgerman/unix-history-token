@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)misc.c	4.3 (Berkeley) 85/08/30"
+literal|"@(#)misc.c	4.4 (Berkeley) 87/05/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -1070,6 +1070,8 @@ name|s
 decl_stmt|,
 modifier|*
 name|t
+decl_stmt|,
+name|c
 decl_stmt|;
 while|while
 condition|(
@@ -1133,6 +1135,11 @@ operator|++
 name|t
 control|)
 empty_stmt|;
+name|c
+operator|=
+operator|*
+name|t
+expr_stmt|;
 operator|*
 name|t
 operator|=
@@ -1166,6 +1173,11 @@ argument_list|(
 name|s
 argument_list|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|t
+operator|=
+name|c
 expr_stmt|;
 return|return
 operator|(

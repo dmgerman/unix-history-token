@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.8 (Berkeley) 86/01/09"
+literal|"@(#)main.c	4.9 (Berkeley) 87/05/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -16,7 +16,7 @@ file|"defs"
 end_include
 
 begin_comment
-comment|/* command make to update programs. Flags:	'd'  print out debugging comments 	'p'  print out a version of the input graph 	's'  silent mode--don't print out commands 	'f'  the next argument is the name of the description file; 	     "makefile" is the default 	'i'  ignore error codes from the shell 	'S'  stop after any command fails (normally do parallel work) 	'n'   don't issue, just print, commands 	't'   touch (update time of) files but don't issue command 	'q'   don't do anything, but check if object is up to date; 	      returns exit code 0 if up to date, -1 if not */
+comment|/* command make to update programs. Flags:	'd'  print out debugging comments 	'p'  print out a version of the input graph 	's'  silent mode--don't print out commands 	'f'  the next argument is the name of the description file; 	     "makefile" is the default 	'i'  ignore error codes from the shell 	'S'  stop after any command fails (normally do parallel work) 	'n'   don't issue, just print, commands 	't'   touch (update time of) files but don't issue command 	'q'   don't do anything, but check if object is up to date; 	      returns exit code 0 if up to date, -1 if not 	'e'  environment variables have precedence over makefiles */
 end_comment
 
 begin_decl_stmt
@@ -198,6 +198,14 @@ name|int
 name|okdel
 init|=
 name|YES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|doenvlast
+init|=
+name|NO
 decl_stmt|;
 end_decl_stmt
 
@@ -689,6 +697,14 @@ operator|++
 name|descset
 expr_stmt|;
 break|break;
+case|case
+literal|'e'
+case|:
+name|doenvlast
+operator|=
+name|YES
+expr_stmt|;
+break|break;
 default|default:
 name|onechar
 index|[
@@ -745,6 +761,13 @@ name|options
 argument_list|)
 expr_stmt|;
 comment|/* MFLAGS=options to make */
+name|setvar
+argument_list|(
+literal|"MACHINE"
+argument_list|,
+name|MACHINE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -777,6 +800,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|doenvlast
+operator|==
+name|YES
+condition|)
+name|readenv
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|prtrflag
@@ -1355,6 +1387,15 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|doenvlast
+operator|==
+name|NO
+condition|)
+name|readenv
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|pwb
@@ -1895,6 +1936,85 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|readenv
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|ep
+decl_stmt|,
+modifier|*
+name|p
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+for|for
+control|(
+name|ep
+operator|=
+name|environ
+init|;
+operator|*
+name|ep
+condition|;
+operator|++
+name|ep
+control|)
+block|{
+for|for
+control|(
+name|p
+operator|=
+operator|*
+name|ep
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|isalnum
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'='
+condition|)
+block|{
+name|eqsign
+argument_list|(
+operator|*
+name|ep
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
+block|}
 block|}
 end_block
 
