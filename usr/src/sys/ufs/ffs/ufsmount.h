@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -47,26 +47,9 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|radix_node_head
+name|netexport
 struct_decl|;
 end_struct_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AF_MAX
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* This structure describes the UFS specific mount structure data. */
@@ -170,21 +153,10 @@ index|]
 decl_stmt|;
 comment|/* quota specific flags */
 name|struct
-name|netcred
-name|um_defexported
+name|netexport
+name|um_export
 decl_stmt|;
-comment|/* Default export */
-name|struct
-name|radix_node_head
-modifier|*
-name|um_rtable
-index|[
-name|AF_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* Individual exports */
+comment|/* export information */
 block|}
 struct|;
 end_struct
