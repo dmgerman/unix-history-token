@@ -3114,8 +3114,8 @@ operator|(
 name|gp
 operator|)
 return|;
-comment|/* 	 * ...else push the "self-destruct" button, by spoiling our own 	 * consumer.  This triggers a call to g_std_spoiled which will 	 * dismantle what was setup. 	 */
-name|g_std_spoiled
+comment|/* 	 * ...else push the "self-destruct" button, by spoiling our own 	 * consumer.  This triggers a call to g_slice_spoiled which will 	 * dismantle what was setup. 	 */
+name|g_slice_spoiled
 argument_list|(
 name|cp
 argument_list|)
