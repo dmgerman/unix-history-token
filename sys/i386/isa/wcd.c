@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.60 1998/10/30 10:57:09 luigi Exp $  */
+comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.61 1998/12/13 23:30:15 steve Exp $  */
 end_comment
 
 begin_include
@@ -3673,6 +3673,13 @@ name|t
 operator|->
 name|lun
 argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|flags
+operator|&=
+operator|~
+name|F_LOCKED
 expr_stmt|;
 return|return;
 block|}
