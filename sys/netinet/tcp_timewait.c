@@ -7600,7 +7600,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Figure out the bandwidth.  Due to the tick granularity this 	 * is a very rough number and it MUST be averaged over a fairly 	 * long period of time.  XXX we need to take into account a link 	 * that is not using all available bandwidth, but for now our 	 * slop will ramp us up if this case occurs and the bandwidth later 	 * increases. 	 */
+comment|/* 	 * Figure out the bandwidth.  Due to the tick granularity this 	 * is a very rough number and it MUST be averaged over a fairly 	 * long period of time.  XXX we need to take into account a link 	 * that is not using all available bandwidth, but for now our 	 * slop will ramp us up if this case occurs and the bandwidth later 	 * increases. 	 * 	 * Note: if ticks rollover 'bw' may wind up negative.  We must 	 * effectively reset t_bw_rtttime for this case. 	 */
 name|save_ticks
 operator|=
 name|ticks
@@ -7663,6 +7663,13 @@ operator|->
 name|t_bw_rtttime
 operator|==
 literal|0
+operator|||
+operator|(
+name|int
+operator|)
+name|bw
+operator|<
+literal|0
 condition|)
 return|return;
 name|bw
@@ -7714,6 +7721,9 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
+undef|#
+directive|undef
+name|USERTT
 if|if
 condition|(
 name|tcp_inflight_debug
