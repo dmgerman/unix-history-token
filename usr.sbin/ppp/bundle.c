@@ -1890,7 +1890,7 @@ if|if
 condition|(
 name|queued
 operator|<
-literal|20
+literal|30
 condition|)
 block|{
 comment|/* Not enough - select() for more */
@@ -4115,6 +4115,16 @@ operator|=
 name|datalink_Destroy
 argument_list|(
 name|dl
+argument_list|)
+expr_stmt|;
+name|ipcp_Destroy
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|ipcp
 argument_list|)
 expr_stmt|;
 name|close

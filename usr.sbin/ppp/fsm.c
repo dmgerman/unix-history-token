@@ -1301,7 +1301,14 @@ name|fp
 operator|->
 name|bundle
 argument_list|,
-name|PRI_LINK
+name|LINK_QUEUES
+argument_list|(
+name|fp
+operator|->
+name|link
+argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|fp
 operator|->
@@ -5211,7 +5218,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/*    * All sendable compressed packets are queued in the PRI_NORMAL modem    * output queue.... dump 'em to the priority queue so that they arrive    * at the peer before our ResetAck.    */
+comment|/*    * All sendable compressed packets are queued in the first (lowest    * priority) modem output queue.... dump 'em to the priority queue    * so that they arrive at the peer before our ResetAck.    */
 name|link_SequenceQueue
 argument_list|(
 name|fp

@@ -3414,7 +3414,12 @@ name|mo
 argument_list|,
 name|bundle
 argument_list|,
-name|PRI_NORMAL
+name|LINK_QUEUES
+argument_list|(
+name|l
+argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|PROTO_MP
 argument_list|)

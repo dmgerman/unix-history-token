@@ -737,7 +737,16 @@ name|fsm
 operator|.
 name|bundle
 argument_list|,
-name|PRI_LINK
+name|LINK_QUEUES
+argument_list|(
+name|lcp
+operator|->
+name|fsm
+operator|.
+name|link
+argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|PROTO_LQR
 argument_list|)

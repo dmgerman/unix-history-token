@@ -126,54 +126,6 @@ name|MIN_MTU
 value|296
 end_define
 
-begin_comment
-comment|/*  *  Output priority  */
-end_comment
-
-begin_comment
-comment|/* PRI_NORMAL and PRI_FAST have meaning only on the IP queue.  * All IP frames have the same priority once they are compressed.  * IP frames stay on the IP queue till they can be sent on the  * link. They are compressed at that time. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRI_NORMAL
-value|0
-end_define
-
-begin_comment
-comment|/* Normal priority */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRI_FAST
-value|1
-end_define
-
-begin_comment
-comment|/* Fast (interractive) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRI_LINK
-value|1
-end_define
-
-begin_comment
-comment|/* Urgent (LQR packets) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRI_MAX
-value|1
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|physical

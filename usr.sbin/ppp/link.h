@@ -20,13 +20,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINK_QUEUES
-value|(PRI_MAX + 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NPROTOSTAT
 value|13
 end_define
@@ -76,7 +69,7 @@ name|struct
 name|mqueue
 name|Queue
 index|[
-name|LINK_QUEUES
+literal|2
 index|]
 decl_stmt|;
 comment|/* Our output queue of mbufs */
@@ -120,6 +113,26 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|LINK_QUEUES
+parameter_list|(
+name|link
+parameter_list|)
+value|(sizeof (link)->Queue / sizeof (link)->Queue[0])
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_HIGHQ
+parameter_list|(
+name|link
+parameter_list|)
+value|((link)->Queue + LINK_QUEUES(link) - 1)
+end_define
 
 begin_function_decl
 specifier|extern
