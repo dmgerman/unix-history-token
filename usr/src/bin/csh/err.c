@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.11 (Berkeley) %G%"
+literal|"@(#)err.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -613,7 +613,7 @@ define|#
 directive|define
 name|ERR_SPDOLLT
 value|79
-literal|"$ or< not allowed with $# or $?"
+literal|"$, ! or< not allowed with $# or $?"
 block|,
 define|#
 directive|define
