@@ -1720,6 +1720,14 @@ operator|.
 name|state
 operator|==
 name|ST_OPENED
+operator|&&
+name|ccp
+operator|->
+name|out
+operator|.
+name|algorithm
+operator|>=
+literal|0
 condition|)
 return|return
 name|algorithm
