@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.10 (Berkeley) 4/1/94  * $Id: ufs_vnops.c,v 1.32 1995/11/05 23:35:58 dyson Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.10 (Berkeley) 4/1/94  * $Id: ufs_vnops.c,v 1.33 1995/11/09 08:14:37 bde Exp $  */
 end_comment
 
 begin_include
@@ -193,11 +193,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EXT2FS
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -3030,8 +3030,8 @@ goto|goto
 name|out
 goto|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -3363,8 +3363,8 @@ operator|!
 name|error
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -4153,8 +4153,8 @@ argument_list|(
 name|tvp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -4363,8 +4363,8 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -4569,8 +4569,8 @@ operator|==
 name|IFDIR
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -4658,8 +4658,8 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -5037,8 +5037,8 @@ name|dotdot_namlen
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -5168,8 +5168,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -5776,8 +5776,8 @@ operator|->
 name|mnt_maxsymlinklen
 operator|>
 literal|0
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 comment|/* omastertemplate is want we want for EXT2 */
 operator|&&
@@ -5827,8 +5827,8 @@ name|dp
 operator|->
 name|i_number
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 comment|/* note that in ext2 DIRBLKSIZ == blocksize, not DEV_BSIZE  	 * so let's just redefine it - for this function only 	 */
 undef|#
@@ -5963,8 +5963,8 @@ name|IN_CHANGE
 expr_stmt|;
 block|}
 comment|/* Directory set up, now install it's entry in the parent directory. */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -6088,8 +6088,8 @@ operator|(
 name|error
 operator|)
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 undef|#
 directive|undef
@@ -6210,8 +6210,8 @@ name|i_nlink
 operator|!=
 literal|2
 operator|||
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 operator|!
 operator|(
@@ -6300,8 +6300,8 @@ name|out
 goto|;
 block|}
 comment|/* 	 * Delete reference to directory before purging 	 * inode.  If we crash in between, the directory 	 * will be reattached to lost+found, 	 */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
@@ -9492,8 +9492,8 @@ condition|)
 goto|goto
 name|bad
 goto|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|EXT2FS
 if|if
 condition|(
