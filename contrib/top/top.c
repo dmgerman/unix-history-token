@@ -2001,6 +2001,17 @@ operator|&
 name|curr_time
 argument_list|)
 expr_stmt|;
+name|i_uptime
+argument_list|(
+operator|&
+name|system_info
+operator|.
+name|boottime
+argument_list|,
+operator|&
+name|curr_time
+argument_list|)
+expr_stmt|;
 name|i_timeofday
 argument_list|(
 operator|&
