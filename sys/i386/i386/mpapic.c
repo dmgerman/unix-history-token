@@ -1589,7 +1589,7 @@ literal|0
 init|;
 name|x
 operator|<
-name|APIC_IMEN_BITS
+name|NHWI
 condition|;
 operator|++
 name|x
