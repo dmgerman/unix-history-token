@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.127 1998/05/06 22:14:46 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.128 1998/05/07 02:05:21 julian Exp $  */
 end_comment
 
 begin_include
@@ -444,7 +444,7 @@ comment|/* Number of cylinders */
 name|u_char
 name|sectors
 decl_stmt|;
-comment|/*dubious */
+comment|/*XXX*/
 comment|/* Number of sectors/track */
 name|u_int16_t
 name|secsiz
@@ -524,6 +524,12 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SLICE
+end_ifndef
 
 begin_function
 specifier|static
@@ -637,7 +643,7 @@ name|dev_t
 name|dev
 operator|,
 name|int
-name|fflag
+name|flag
 operator|,
 name|int
 name|fmt
@@ -730,12 +736,6 @@ name|BDEV_MAJOR
 value|4
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SLICE
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -786,6 +786,19 @@ begin_comment
 comment|/* ! SLICE */
 end_comment
 
+begin_function_decl
+specifier|static
+name|errval
+name|sdattach
+parameter_list|(
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|sl_h_IO_req_t
@@ -819,9 +832,12 @@ begin_comment
 comment|/* downwards travelling open */
 end_comment
 
-begin_comment
-comment|/*static sl_h_close_t	sdsclose; */
-end_comment
+begin_decl_stmt
+specifier|static
+name|sl_h_close_t
+name|sdsclose
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* downwards travelling close */
@@ -877,9 +893,9 @@ block|,
 operator|&
 name|sdsopen
 block|,
-comment|/*&sdsclose*/
 name|NULL
 block|,
+comment|/* was close, now free */
 name|NULL
 block|,
 comment|/* revoke */
@@ -902,6 +918,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SLICE
+end_ifndef
 
 begin_macro
 name|SCSI_DEVICE_ENTRIES
@@ -965,20 +987,108 @@ name|sd_ioctl
 block|,
 name|sd_close
 block|,
-ifndef|#
-directive|ifndef
-name|SLICE
 name|sd_strategy
-block|,
-else|#
-directive|else
-name|NULL
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SLICE */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|scsi_device
+name|sd_switch
+init|=
+block|{
+name|sd_sense_handler
+block|,
+name|sdstart
+block|,
+comment|/* have a queue, served by this */
+name|NULL
+block|,
+comment|/* have no async handler */
+name|NULL
+block|,
+comment|/* Use default 'done' routine */
+literal|"sd"
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+literal|0
+block|,
+comment|/* Link flags */
+name|sdattach
+block|,
+literal|"Direct-Access"
+block|,
+name|NULL
+block|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|scsi_data
+argument_list|)
+block|,
+name|T_DIRECT
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* this should be called by the SYSINIT (?!) */
+end_comment
+
+begin_function
+name|void
+name|sdinit
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|scsi_device_register
+argument_list|(
+operator|&
+name|sd_switch
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SLICE */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1605,41 +1715,157 @@ begin_comment
 comment|/*  * open the device. Make sure the partition info is a up-to-date as can be.  */
 end_comment
 
-begin_function
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SLICE
+end_ifdef
+
+begin_decl_stmt
 specifier|static
+name|int
+name|sdsopen
+argument_list|(
+name|void
+operator|*
+name|private
+argument_list|,
+name|int
+name|flags
+argument_list|,
+name|int
+name|mode
+argument_list|,
+expr|struct
+name|proc
+operator|*
+name|p
+argument_list|)
+else|#
+directive|else
+comment|/* !SLICE */
+decl|static
 name|errval
 name|sd_open
-parameter_list|(
-name|dev
-parameter_list|,
-name|mode
-parameter_list|,
-name|fmt
-parameter_list|,
-name|p
-parameter_list|,
-name|sc_link
-parameter_list|)
+argument_list|(
 name|dev_t
 name|dev
-decl_stmt|;
+argument_list|,
 name|int
 name|mode
-decl_stmt|;
+argument_list|,
 name|int
 name|fmt
+argument_list|,
+expr|struct
+name|proc
+operator|*
+name|p
+argument_list|,
+expr|struct
+name|scsi_link
+operator|*
+name|sc_link
+argument_list|)
+endif|#
+directive|endif
+block|{
+ifdef|#
+directive|ifdef
+name|SLICE
+name|errval
+name|errcode
+init|=
+literal|0
 decl_stmt|;
 name|struct
-name|proc
+name|scsi_data
 modifier|*
-name|p
+name|sd
+init|=
+name|private
 decl_stmt|;
 name|struct
 name|scsi_link
 modifier|*
 name|sc_link
+init|=
+name|sd
+operator|->
+name|sc_link
 decl_stmt|;
+name|u_int32_t
+name|unit
+init|=
+name|sd
+operator|->
+name|unit
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|FREAD
+operator||
+name|FWRITE
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
 block|{
+comment|/* Mode chenge to mode 0 (closed) */
+name|errcode
+operator|=
+name|scsi_device_lock
+argument_list|(
+name|sc_link
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errcode
+condition|)
+block|{
+return|return
+name|errcode
+return|;
+comment|/* how can close fail? */
+block|}
+name|scsi_prevent
+argument_list|(
+name|sc_link
+argument_list|,
+name|PR_ALLOW
+argument_list|,
+name|SCSI_SILENT
+operator||
+name|SCSI_ERR_OK
+argument_list|)
+expr_stmt|;
+name|sc_link
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SDEV_OPEN
+expr_stmt|;
+name|scsi_device_unlock
+argument_list|(
+name|sc_link
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+else|#
+directive|else
+comment|/* !SLICE */
 name|errval
 name|errcode
 init|=
@@ -1670,6 +1896,9 @@ name|sc_link
 operator|->
 name|sd
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !SLICE */
 comment|/* 	 * Make sure the disk has been initialised 	 * At some point in the future, get the scsi driver 	 * to look for a new device if we are not initted 	 */
 if|if
 condition|(
@@ -1696,6 +1925,25 @@ name|ENXIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SLICE
+name|SC_DEBUG
+argument_list|(
+name|sc_link
+argument_list|,
+name|SDEV_DB1
+argument_list|,
+operator|(
+literal|"sdsopen: (unit %ld)\n"
+operator|,
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* !SLICE */
 name|SC_DEBUG
 argument_list|(
 name|sc_link
@@ -1716,6 +1964,9 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !SLICE */
 comment|/* 	 * "unit attention" errors should occur here if the 	 * drive has been restarted or the pack changed. 	 * just ingnore the result, it's a decoy instruction 	 * The error handlers will act on the error though 	 * and invalidate any media information we had. 	 */
 name|scsi_test_unit_ready
 argument_list|(
@@ -1783,7 +2034,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 goto|goto
-name|bad
+name|close
 goto|;
 block|}
 name|dsgone
@@ -1825,7 +2076,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 goto|goto
-name|bad
+name|close
 goto|;
 block|}
 name|SC_DEBUG
@@ -1853,7 +2104,7 @@ argument_list|)
 condition|)
 comment|/* sets SDEV_MEDIA_LOADED */
 goto|goto
-name|bad
+name|close
 goto|;
 name|SC_DEBUG
 argument_list|(
@@ -1878,6 +2129,9 @@ operator||
 name|SCSI_SILENT
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SLICE
 comment|/* Build label for whole disk. */
 name|bzero
 argument_list|(
@@ -1969,9 +2223,6 @@ name|params
 operator|.
 name|disksize
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SLICE
 comment|/* Initialize slice tables. */
 name|errcode
 operator|=
@@ -2013,7 +2264,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|bad
+name|close
 goto|;
 endif|#
 directive|endif
@@ -2052,8 +2303,11 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-name|bad
+name|close
 label|:
+ifndef|#
+directive|ifndef
+name|SLICE
 if|if
 condition|(
 operator|!
@@ -2064,6 +2318,24 @@ operator|->
 name|dk_slices
 argument_list|)
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+name|sd
+operator|->
+name|slice
+operator|->
+name|flags
+operator|&
+name|SLF_OPEN_STATE
+operator|)
+operator|==
+name|SLF_CLOSED
+condition|)
+endif|#
+directive|endif
 block|{
 name|scsi_prevent
 argument_list|(
@@ -2093,7 +2365,13 @@ return|return
 name|errcode
 return|;
 block|}
-end_function
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SLICE
+end_ifndef
 
 begin_comment
 comment|/*  * close the device.. only called if we are the LAST occurence of an open  * device.  Convenient now but usually a pain.  */
@@ -2104,35 +2382,25 @@ specifier|static
 name|errval
 name|sd_close
 parameter_list|(
-name|dev
-parameter_list|,
-name|fflag
-parameter_list|,
-name|fmt
-parameter_list|,
-name|p
-parameter_list|,
-name|sc_link
-parameter_list|)
 name|dev_t
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
-name|fflag
-decl_stmt|;
+name|mode
+parameter_list|,
 name|int
 name|fmt
-decl_stmt|;
+parameter_list|,
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|scsi_link
 modifier|*
 name|sc_link
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|scsi_data
@@ -2162,9 +2430,6 @@ condition|)
 return|return
 name|errcode
 return|;
-ifndef|#
-directive|ifndef
-name|SLICE
 name|dsclose
 argument_list|(
 name|dev
@@ -2206,9 +2471,6 @@ operator|~
 name|SDEV_OPEN
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* ! SLICE */
 name|scsi_device_unlock
 argument_list|(
 name|sc_link
@@ -2221,12 +2483,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SLICE
-end_ifndef
 
 begin_comment
 comment|/*  * Actually translate the requested transfer into one the physical driver  * can understand.  The transfer is described by a buf and will include  * only one physical transfer.  */
@@ -5334,116 +5590,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_function
-specifier|static
-name|int
-name|sdsopen
-parameter_list|(
-name|void
-modifier|*
-name|private
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|int
-name|mode
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|struct
-name|scsi_data
-modifier|*
-name|sd
-decl_stmt|;
-name|sd
-operator|=
-name|private
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-operator|(
-name|FREAD
-operator||
-name|FWRITE
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|sdclose
-argument_list|(
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-name|sd
-operator|->
-name|mynor
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|p
-argument_list|)
-operator|)
-return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
-name|sdopen
-argument_list|(
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-name|sd
-operator|->
-name|mynor
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|p
-argument_list|)
-operator|)
-return|;
-block|}
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void sdsclose(void *private, int flags, int mode, struct proc *p) { 	struct scsi_data *sd;  	sd = private;  	sdclose(makedev(0,sd->mynor), 0 , 0, p); 	return; }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_endif
 endif|#
