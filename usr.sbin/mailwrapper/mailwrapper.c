@@ -865,18 +865,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|warn
+argument_list|(
+literal|"execing %s"
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
-name|err
+name|exit
 argument_list|(
 literal|1
-argument_list|,
-literal|"execing %s"
-argument_list|,
-name|to
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
