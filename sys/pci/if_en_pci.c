@@ -186,10 +186,6 @@ modifier|*
 name|sc_ih
 decl_stmt|;
 comment|/* interrupt handle */
-name|pci_chipset_tag_t
-name|en_pc
-decl_stmt|;
-comment|/* for PCI calls */
 name|pcici_t
 name|en_confid
 decl_stmt|;

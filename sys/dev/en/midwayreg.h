@@ -4,7 +4,7 @@ comment|/*	$NetBSD: midwayreg.h,v 1.6 1997/03/20 21:34:47 chuck Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * m i d w a y r e g . h  *  * this file contains the description of the ENI ATM midway chip  * data structures.   see midway.c for more details.  *  */
+comment|/*  * m i d w a y r e g . h  *  * this file contains the description of the ENI ATM midway chip  * data structures.   see midway.c for more details.  *  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -13,11 +13,6 @@ directive|if
 name|defined
 argument_list|(
 name|sparc
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
 argument_list|)
 end_if
 
