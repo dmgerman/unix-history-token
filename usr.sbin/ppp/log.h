@@ -70,60 +70,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LogHDLC
+name|LogDNS
 value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogID0
+name|LogHDLC
 value|(9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogIPCP
+name|LogID0
 value|(10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogLCP
+name|LogIPCP
 value|(11)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogLQM
+name|LogLCP
 value|(12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogPHASE
+name|LogLQM
 value|(13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogPHYSICAL
+name|LogPHASE
 value|(14)
 end_define
-
-begin_comment
-comment|/* syslog(LOG_INFO, ....)	 */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|LogSYNC
+name|LogPHYSICAL
 value|(15)
 end_define
 
@@ -134,15 +130,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LogTCPIP
+name|LogSYNC
 value|(16)
+end_define
+
+begin_comment
+comment|/* syslog(LOG_INFO, ....)	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LogTCPIP
+value|(17)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogTIMER
-value|(17)
+value|(18)
 end_define
 
 begin_comment
@@ -153,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|LogTUN
-value|(18)
+value|(19)
 end_define
 
 begin_comment
@@ -163,15 +170,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LogMAXCONF
-value|(18)
-end_define
-
-begin_define
-define|#
-directive|define
 name|LogWARN
-value|(19)
+value|(20)
 end_define
 
 begin_comment
@@ -182,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|LogERROR
-value|(20)
+value|(21)
 end_define
 
 begin_comment
@@ -193,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|LogALERT
-value|(21)
+value|(22)
 end_define
 
 begin_comment
@@ -203,8 +203,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LogMAXCONF
+value|(19)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LogMAX
-value|(21)
+value|(22)
 end_define
 
 begin_struct_decl
