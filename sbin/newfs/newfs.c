@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs.c,v 1.26 1998/10/17 04:19:29 jkh Exp $"
+literal|"$Id: newfs.c,v 1.27 1998/10/17 08:03:52 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,6 +419,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* run as the memory based filesystem */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|mfs_mtpt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mount point for mfs		*/
+end_comment
+
+begin_decl_stmt
+name|struct
+name|stat
+name|mfs_mtstat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* stat prior to mount		*/
 end_comment
 
 begin_decl_stmt
@@ -2909,6 +2931,48 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|mfs
+condition|)
+block|{
+name|mfs_mtpt
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|mfs_mtpt
+argument_list|,
+operator|&
+name|mfs_mtstat
+argument_list|)
+operator|<
+literal|0
+operator|||
+operator|!
+name|S_ISDIR
+argument_list|(
+name|mfs_mtstat
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"mount point not dir: %s"
+argument_list|,
+name|mfs_mtpt
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|mkfs
 argument_list|(
 name|pp

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkfs.c,v 1.25 1998/08/12 06:07:43 charnier Exp $"
+literal|"$Id: mkfs.c,v 1.26 1998/08/27 07:38:33 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -286,6 +292,30 @@ end_decl_stmt
 
 begin_comment
 comment|/* run as the memory based filesystem */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|mfs_mtpt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mount point for mfs          */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|stat
+name|mfs_mtstat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* stat prior to mount          */
 end_comment
 
 begin_decl_stmt
@@ -961,6 +991,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|mfs_ppid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|mkfs
@@ -1034,10 +1072,6 @@ decl_stmt|,
 name|totalsbsize
 decl_stmt|;
 name|int
-name|ppid
-init|=
-literal|0
-decl_stmt|,
 name|status
 decl_stmt|,
 name|fd
@@ -1097,7 +1131,7 @@ condition|(
 name|mfs
 condition|)
 block|{
-name|ppid
+name|mfs_ppid
 operator|=
 name|getpid
 argument_list|()
@@ -4615,7 +4649,7 @@ condition|)
 block|{
 name|kill
 argument_list|(
-name|ppid
+name|mfs_ppid
 argument_list|,
 name|SIGUSR1
 argument_list|)
@@ -7587,7 +7621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Notify parent process that the filesystem has created itself successfully.  */
+comment|/*  * Notify parent process that the filesystem has created itself successfully.  *  * We have to wait until the mount has actually completed!  */
 end_comment
 
 begin_function
@@ -7595,6 +7629,70 @@ name|void
 name|started
 parameter_list|()
 block|{
+name|int
+name|retry
+init|=
+literal|100
+decl_stmt|;
+comment|/* 10 seconds, 100ms */
+while|while
+condition|(
+name|mfs_ppid
+operator|&&
+name|retry
+condition|)
+block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|mfs_mtpt
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|st
+operator|.
+name|st_dev
+operator|!=
+name|mfs_mtstat
+operator|.
+name|st_dev
+condition|)
+block|{
+break|break;
+block|}
+name|usleep
+argument_list|(
+literal|100
+operator|*
+literal|1000
+argument_list|)
+expr_stmt|;
+operator|--
+name|retry
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|retry
+operator|==
+literal|0
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"mfs mount failed waiting for mount to go active"
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
