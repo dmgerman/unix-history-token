@@ -224,11 +224,7 @@ argument_list|(
 name|msr
 operator|&
 operator|~
-operator|(
 name|PSL_EE
-operator||
-name|PSL_RI
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
