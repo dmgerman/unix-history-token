@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: clock.c,v 8.52.18.14 2001/05/17 18:12:28 gshapiro Exp $"
+literal|"@(#)$Id: clock.c,v 8.52.18.17 2001/07/31 23:04:59 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|SIGFUNC_DECL
-name|tick
+name|sm_tick
 name|__P
 argument_list|(
 operator|(
@@ -400,7 +400,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		**  This shouldn't happen.  If called from setevent(), 		**  we have just malloced a FreeEventList entry.  If 		**  called from a signal handler, it should have been 		**  from an existing event which tick() just added to the 		**  FreeEventList. 		*/
+comment|/* 		**  This shouldn't happen.  If called from setevent(), 		**  we have just malloced a FreeEventList entry.  If 		**  called from a signal handler, it should have been 		**  from an existing event which sm_tick() just added to the 		**  FreeEventList. 		*/
 name|LEAVE_CRITICAL
 argument_list|()
 expr_stmt|;
@@ -477,7 +477,7 @@ name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|tick
+name|sm_tick
 argument_list|)
 expr_stmt|;
 name|intvl
@@ -830,7 +830,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  TICK -- take a clock tick ** **	Called by the alarm clock.  This routine runs events as needed. **	Always called as a signal handler, so we assume that SIGALRM **	has been blocked. ** **	Parameters: **		One that is ignored; for compatibility with signal handlers. ** **	Returns: **		none. ** **	Side Effects: **		calls the next function in EventQueue. ** **	NOTE:	THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD **		ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE **		DOING. */
+comment|/* **  SM_TICK -- take a clock sm_tick ** **	Called by the alarm clock.  This routine runs events as needed. **	Always called as a signal handler, so we assume that SIGALRM **	has been blocked. ** **	Parameters: **		One that is ignored; for compatibility with signal handlers. ** **	Returns: **		none. ** **	Side Effects: **		calls the next function in EventQueue. ** **	NOTE:	THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD **		ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE **		DOING. */
 end_comment
 
 begin_comment
@@ -838,8 +838,9 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|SIGFUNC_DECL
-name|tick
+name|sm_tick
 parameter_list|(
 name|sig
 parameter_list|)
@@ -876,7 +877,7 @@ name|FIX_SYSV_SIGNAL
 argument_list|(
 name|sig
 argument_list|,
-name|tick
+name|sm_tick
 argument_list|)
 expr_stmt|;
 name|errno
@@ -902,9 +903,13 @@ condition|)
 block|{
 name|int
 name|sigbit
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|sig
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1021,7 +1026,7 @@ argument_list|)
 condition|)
 name|dprintf
 argument_list|(
-literal|"tick: now=%ld\n"
+literal|"sm_tick: now=%ld\n"
 argument_list|,
 operator|(
 name|long
@@ -1095,7 +1100,7 @@ argument_list|)
 condition|)
 name|dprintf
 argument_list|(
-literal|"tick: ev=%lx, func=%lx, arg=%d, pid=%d\n"
+literal|"sm_tick: ev=%lx, func=%lx, arg=%d, pid=%d\n"
 argument_list|,
 operator|(
 name|u_long
@@ -1359,7 +1364,7 @@ name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|tick
+name|sm_tick
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1374,6 +1379,49 @@ name|errno
 operator|=
 name|save_errno
 expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SM_SIGNAL_NOOP -- A signal no-op function ** **	Parameters: **		sig -- signal received ** **	Returns: **		SIGFUNC_RETURN */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|SIGFUNC_DECL
+name|sm_signal_noop
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+name|FIX_SYSV_SIGNAL
+argument_list|(
+name|sig
+argument_list|,
+name|sm_signal_noop
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+name|SIGFUNC_RETURN
+return|;
 block|}
 end_function
 

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: map.c,v 8.414.4.53 2001/05/04 01:29:00 gshapiro Exp $"
+literal|"@(#)$Id: map.c,v 8.414.4.54 2001/06/01 08:23:24 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -684,28 +684,6 @@ end_endif
 
 begin_comment
 comment|/* O_EXLOCK&& HASFLOCK&& !BOGUS_O_EXCL */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|O_ACCMODE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|O_ACCMODE
-value|(O_RDONLY|O_WRONLY|O_RDWR)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! O_ACCMODE */
 end_comment
 
 begin_escape

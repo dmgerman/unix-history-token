@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.33 2001/05/23 18:53:09 ca Exp $ (with SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.34 2001/06/26 21:55:23 gshapiro Exp $ (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.33 2001/05/23 18:53:09 ca Exp $ (without SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.34 2001/06/26 21:55:23 gshapiro Exp $ (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -7814,6 +7814,19 @@ condition|)
 name|nmessage
 argument_list|(
 literal|">>> ."
+argument_list|)
+expr_stmt|;
+name|sm_syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"%.100s: SMTP DATA-1 protocol error: remote server returned response before final dot"
+argument_list|,
+name|CurHostName
 argument_list|)
 expr_stmt|;
 name|mci
