@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.58
+literal|3.59
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.58
+literal|3.59
 operator|%
 name|G
 operator|%
@@ -400,6 +400,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* output creation time */
+end_comment
+
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"T%ld\n"
+argument_list|,
+name|e
+operator|->
+name|e_ctime
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* output name of data file */
 end_comment
 
@@ -433,24 +451,6 @@ operator|->
 name|e_from
 operator|.
 name|q_paddr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* output creation time */
-end_comment
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|tfp
-argument_list|,
-literal|"T%ld\n"
-argument_list|,
-name|e
-operator|->
-name|e_ctime
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1960,6 +1960,8 @@ comment|/* read the queue control file */
 name|readqf
 argument_list|(
 name|CurEnv
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|CurEnv
@@ -2065,13 +2067,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. ** **	Returns: **		none. ** **	Side Effects: **		cf is read and created as the current job, as though **		we had been invoked by argument. */
+comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. **		full -- if set, read in all information.  Otherwise just **			read in info needed for a queue print. ** **	Returns: **		none. ** **	Side Effects: **		cf is read and created as the current job, as though **		we had been invoked by argument. */
 end_comment
 
 begin_expr_stmt
 name|readqf
 argument_list|(
 name|e
+argument_list|,
+name|full
 argument_list|)
 specifier|register
 name|ENVELOPE
@@ -2079,6 +2083,12 @@ operator|*
 name|e
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|full
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2157,6 +2167,8 @@ comment|/* 	**  Read and process the file. 	*/
 if|if
 condition|(
 name|Verbose
+operator|&&
+name|full
 condition|)
 name|printf
 argument_list|(
@@ -2221,6 +2233,10 @@ case|case
 literal|'H'
 case|:
 comment|/* header */
+if|if
+condition|(
+name|full
+condition|)
 operator|(
 name|void
 operator|)
@@ -2257,6 +2273,12 @@ case|case
 literal|'D'
 case|:
 comment|/* data file name */
+if|if
+condition|(
+operator|!
+name|full
+condition|)
+break|break;
 name|e
 operator|->
 name|e_df
@@ -2360,6 +2382,10 @@ case|case
 literal|'M'
 case|:
 comment|/* define macro */
+if|if
+condition|(
+name|full
+condition|)
 name|define
 argument_list|(
 name|buf
@@ -2512,6 +2538,257 @@ name|e_flags
 operator||=
 name|EF_CLRQUEUE
 expr_stmt|;
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  PRINTQUEUE -- print out a representation of the mail queue ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Prints a listing of the mail queue on the standard output. */
+end_comment
+
+begin_macro
+name|printqueue
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|WORK
+modifier|*
+name|w
+decl_stmt|;
+name|FILE
+modifier|*
+name|f
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+comment|/* 	**  Read and order the queue. 	*/
+name|orderq
+argument_list|()
+expr_stmt|;
+comment|/* 	**  Print the work list that we have read. 	*/
+comment|/* first see if there is anything */
+if|if
+condition|(
+name|WorkQ
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nMail queue is empty\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|"\n\t\tMail Queue\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"--QID-- --Size-- -----Q Time----- --Sender/Recipient--\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|w
+operator|=
+name|WorkQ
+init|;
+name|w
+operator|!=
+name|NULL
+condition|;
+name|w
+operator|=
+name|w
+operator|->
+name|w_next
+control|)
+block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"%7s"
+argument_list|,
+name|w
+operator|->
+name|w_name
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|f
+operator|=
+name|fopen
+argument_list|(
+name|w
+operator|->
+name|w_name
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" (finished)\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+operator|(
+name|void
+operator|)
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %8ld"
+argument_list|,
+name|st
+operator|.
+name|st_size
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|fgets
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+name|f
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+specifier|auto
+name|long
+name|ti
+decl_stmt|;
+name|fixcrlf
+argument_list|(
+name|buf
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'S'
+case|:
+comment|/* sender name */
+name|printf
+argument_list|(
+literal|" %.20s"
+argument_list|,
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+comment|/* recipient name */
+name|printf
+argument_list|(
+literal|"\n\t\t\t\t  %.20s"
+argument_list|,
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+comment|/* creation time */
+name|sscanf
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"%ld"
+argument_list|,
+operator|&
+name|ti
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %.16s"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|ti
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 

@@ -33,7 +33,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.144
+literal|3.145
 operator|%
 name|G
 operator|%
@@ -1231,17 +1231,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
-case|case
-name|MD_PRINT
-case|:
-name|usrerr
-argument_list|(
-literal|"mailq mode not yet implemented"
-argument_list|)
-expr_stmt|;
-name|finis
-argument_list|()
-expr_stmt|;
 block|}
 end_switch
 
@@ -1413,6 +1402,34 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|EX_SOFTWARE
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_comment
+comment|/* 	**  If printing the queue, go off and do that. 	*/
+end_comment
+
+begin_if
+if|if
+condition|(
+name|OpMode
+operator|==
+name|MD_PRINT
+condition|)
+block|{
+name|dropenvelope
+argument_list|(
+name|CurEnv
+argument_list|)
+expr_stmt|;
+name|printqueue
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
