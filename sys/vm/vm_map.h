@@ -31,51 +31,6 @@ directive|include
 file|<sys/lockmgr.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAP_LOCK_DIAGNOSTIC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|vm_map_printf
-parameter_list|(
-name|str
-parameter_list|,
-name|arg
-parameter_list|)
-value|printf(str,arg)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|vm_map_printf
-parameter_list|(
-name|str
-parameter_list|,
-name|arg
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  *	Types defined:  *  *	vm_map_t		the high-level address map data structure.  *	vm_map_entry_t		an entry in an address map.  */
 end_comment
@@ -542,32 +497,6 @@ end_function_decl
 begin_comment
 comment|/*  *	Macros:		vm_map_lock, etc.  *	Function:  *		Perform locking on the data portion of a map.  Note that  *		these macros mimic procedure calls returning void.  The  *		semicolon is supplied by the user of these macros, not  *		by the macros themselves.  The macros can safely be used  *		as unbraced elements in a higher level statement.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX This macro is not called anywhere, and (map)->ref_lock doesn't exist. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|vm_map_lock_drain_interlock
-parameter_list|(
-name|map
-parameter_list|)
-define|\
-value|do { \ 		lockmgr(&(map)->lock, LK_DRAIN|LK_INTERLOCK, \&(map)->ref_lock, curthread); \ 		(map)->timestamp++; \ 	} while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void

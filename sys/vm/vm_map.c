@@ -1326,13 +1326,6 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|vm_map_printf
-argument_list|(
-literal|"locking map LK_EXCLUSIVE: %p\n"
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lockmgr
@@ -1380,13 +1373,6 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|vm_map_printf
-argument_list|(
-literal|"locking map LK_RELEASE: %p\n"
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
 name|lockmgr
 argument_list|(
 operator|&
@@ -1422,13 +1408,6 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|vm_map_printf
-argument_list|(
-literal|"locking map LK_SHARED: %p\n"
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
 name|lockmgr
 argument_list|(
 operator|&
@@ -1464,13 +1443,6 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|vm_map_printf
-argument_list|(
-literal|"locking map LK_RELEASE: %p\n"
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
 name|lockmgr
 argument_list|(
 operator|&
@@ -1548,13 +1520,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|vm_map_printf
-argument_list|(
-literal|"locking map LK_EXCLUPGRADE: %p\n"
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|lockmgr
@@ -1633,13 +1598,6 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|vm_map_printf
-argument_list|(
-literal|"locking map LK_DOWNGRADE: %p\n"
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
 name|lockmgr
 argument_list|(
 operator|&
