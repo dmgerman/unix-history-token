@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Ian Dowse.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2001, 2002 Ian Dowse.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -484,7 +484,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Locking order:  *	ufsdirhash_mtx  *	dh_mtx  *  * The dh_mtx mutex should be aquired either via the inode lock, or via  * ufsdirhash_mtx. Only the owner of the inode may free the associated  * dirhash, but anything can steal its memory and set dh_hash to NULL.  */
+comment|/*  * Locking order:  *	ufsdirhash_mtx  *	dh_mtx  *  * The dh_mtx mutex should be acquired either via the inode lock, or via  * ufsdirhash_mtx. Only the owner of the inode may free the associated  * dirhash, but anything can steal its memory and set dh_hash to NULL.  */
 end_comment
 
 begin_comment
@@ -854,12 +854,30 @@ name|dh
 operator|==
 name|NULL
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|ufsdirhash_mtx
+argument_list|)
+expr_stmt|;
+name|ufs_dirhashmem
+operator|-=
+name|memreqd
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ufsdirhash_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|MALLOC
 argument_list|(
 name|dh
@@ -1804,7 +1822,7 @@ operator|(
 name|EJUSTRETURN
 operator|)
 return|;
-comment|/* 	 * Move this dirhash towards the end of the list if it has a 	 * score higher than the next entry, and aquire the dh_mtx. 	 * Optimise the case where it's already the last by performing 	 * an unlocked read of the TAILQ_NEXT pointer. 	 * 	 * In both cases, end up holding just dh_mtx. 	 */
+comment|/* 	 * Move this dirhash towards the end of the list if it has a 	 * score higher than the next entry, and acquire the dh_mtx. 	 * Optimise the case where it's already the last by performing 	 * an unlocked read of the TAILQ_NEXT pointer. 	 * 	 * In both cases, end up holding just dh_mtx. 	 */
 if|if
 condition|(
 name|TAILQ_NEXT
@@ -4370,7 +4388,7 @@ block|{
 name|u_int32_t
 name|hash
 decl_stmt|;
-comment|/* 	 * We hash the name and then some ofther bit of data which is 	 * invarient over the dirhash's lifetime. Otherwise names 	 * differing only in the last byte are placed close to one 	 * another in the table, which is bad for linear probing. 	 */
+comment|/* 	 * We hash the name and then some other bit of data that is 	 * invariant over the dirhash's lifetime. Otherwise names 	 * differing only in the last byte are placed close to one 	 * another in the table, which is bad for linear probing. 	 */
 name|hash
 operator|=
 name|fnv_32_buf
