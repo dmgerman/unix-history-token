@@ -372,6 +372,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ad_enter_MCE
+parameter_list|(
+name|struct
+name|mss_info
+modifier|*
+name|mss
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ad_leave_MCE
+parameter_list|(
+name|struct
+name|mss_info
+modifier|*
+name|mss
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* io primitives */
 end_comment
@@ -2640,6 +2666,11 @@ literal|0x40
 argument_list|)
 expr_stmt|;
 comment|/* mode 2 */
+name|ad_enter_MCE
+argument_list|(
+name|mss
+argument_list|)
+expr_stmt|;
 name|ad_write
 argument_list|(
 name|mss
@@ -2654,6 +2685,11 @@ condition|?
 literal|0
 else|:
 literal|4
+argument_list|)
+expr_stmt|;
+name|ad_leave_MCE
+argument_list|(
+name|mss
 argument_list|)
 expr_stmt|;
 name|ad_write
