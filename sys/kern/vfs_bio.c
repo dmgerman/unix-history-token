@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * this file contains a new buffer I/O scheme implementing a coherent  * VM object and buffer cache scheme.  Pains have been taken to make  * sure that the performance degradation associated with schemes such  * as this is not realized.  *  * Author:  John S. Dyson  * Significant help during the development and debugging phases  * had been provided by David Greenman, also of the FreeBSD core team.  *  * see man buf(9) for more info.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VMIO
-end_define
-
 begin_include
 include|#
 directive|include
