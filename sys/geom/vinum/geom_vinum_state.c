@@ -567,7 +567,7 @@ name|GV_SD_UP
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"FOO: sd %s is %s\n"
+literal|"GEOM_VINUM: subdisk %s is %s\n"
 argument_list|,
 name|s
 operator|->
@@ -731,7 +731,7 @@ name|GV_PLEX_DOWN
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"FOO: plex %s is %s\n"
+literal|"GEOM_VINUM: plex %s is %s\n"
 argument_list|,
 name|p
 operator|->
