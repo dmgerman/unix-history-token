@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.6 1994/05/25 06:27:23 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.7 1994/05/25 18:00:04 asami Exp $ */
 end_comment
 
 begin_comment
@@ -275,6 +275,8 @@ block|,
 name|PLIST_NAME
 block|,
 name|PLIST_UNEXEC
+block|,
+name|PLIST_SRC
 block|}
 enum|;
 end_enum

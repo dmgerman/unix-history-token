@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pl.c,v 1.5 1993/09/04 05:06:34 jkh Exp $"
+literal|"$Id: pl.c,v 1.2 1993/09/03 23:00:57 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,21 @@ operator|=
 name|p
 operator|->
 name|next
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|type
+operator|==
+name|PLIST_SRC
+condition|)
+name|where
+operator|=
+name|p
+operator|->
+name|name
 expr_stmt|;
 elseif|else
 if|if
@@ -331,6 +346,21 @@ operator|->
 name|type
 operator|==
 name|PLIST_CWD
+condition|)
+name|where
+operator|=
+name|p
+operator|->
+name|name
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|type
+operator|==
+name|PLIST_SRC
 condition|)
 name|where
 operator|=

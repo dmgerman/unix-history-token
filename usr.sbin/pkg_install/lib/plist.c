@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.6 1994/05/25 06:27:24 jkh Exp $"
+literal|"$Id: plist.c,v 1.7 1994/07/11 01:11:14 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,6 +691,20 @@ name|strcmp
 argument_list|(
 name|cmd
 argument_list|,
+literal|"srcdir"
+argument_list|)
+condition|)
+return|return
+name|PLIST_SRC
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cmd
+argument_list|,
 literal|"cd"
 argument_list|)
 condition|)
@@ -1020,6 +1034,23 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"%ccwd %s\n"
+argument_list|,
+name|CMD_CHAR
+argument_list|,
+name|plist
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_SRC
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%csrcdir %s\n"
 argument_list|,
 name|CMD_CHAR
 argument_list|,
