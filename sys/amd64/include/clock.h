@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.26 1997/05/04 14:25:00 peter Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.27 1997/05/05 09:34:33 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -84,14 +84,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|I586_CTR_COMULTIPLIER_SHIFT
+name|TSC_COMULTIPLIER_SHIFT
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|I586_CTR_MULTIPLIER_SHIFT
+name|TSC_MULTIPLIER_SHIFT
 value|32
 end_define
 
@@ -142,14 +142,14 @@ end_ifndef
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|i586_ctr_bias
+name|tsc_bias
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|i586_ctr_comultiplier
+name|tsc_comultiplier
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,7 @@ end_endif
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|i586_ctr_freq
+name|tsc_freq
 decl_stmt|;
 end_decl_stmt
 
@@ -174,7 +174,7 @@ end_ifndef
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|i586_ctr_multiplier
+name|tsc_multiplier
 decl_stmt|;
 end_decl_stmt
 
@@ -517,7 +517,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * When we update `time', on i586's we also update `i586_ctr_bias'  * atomically.  `i586_ctr_bias' is the best available approximation to  * the value of the i586 counter (mod 2^32) at the time of the i8254  * counter transition that caused the clock interrupt that caused the  * update.  clock_latency() gives the time between the transition and  * the update to within a few usec provided another such transition  * hasn't occurred.  We don't bother checking for counter overflow as  * in microtime(), since if it occurs then we're close to losing clock  * interrupts.  */
+comment|/*  * When we update `time', on i586's we also update `tsc_bias'  * atomically.  `tsc_bias' is the best available approximation to  * the value of the i586 counter (mod 2^32) at the time of the i8254  * counter transition that caused the clock interrupt that caused the  * update.  clock_latency() gives the time between the transition and  * the update to within a few usec provided another such transition  * hasn't occurred.  We don't bother checking for counter overflow as  * in microtime(), since if it occurs then we're close to losing clock  * interrupts.  */
 end_comment
 
 begin_function
@@ -540,7 +540,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|i586_ctr_freq
+name|tsc_freq
 operator|!=
 literal|0
 condition|)
@@ -565,7 +565,7 @@ operator|=
 name|rdtsc
 argument_list|()
 expr_stmt|;
-name|i586_ctr_bias
+name|tsc_bias
 operator|=
 name|i586_count
 operator|-
@@ -579,12 +579,12 @@ name|unsigned
 name|long
 name|long
 operator|)
-name|i586_ctr_comultiplier
+name|tsc_comultiplier
 operator|*
 name|i8254_count
 operator|)
 operator|>>
-name|I586_CTR_COMULTIPLIER_SHIFT
+name|TSC_COMULTIPLIER_SHIFT
 argument_list|)
 expr_stmt|;
 operator|*

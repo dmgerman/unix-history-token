@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.36 1997/10/28 14:30:46 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.37 1997/11/19 11:35:22 kato Exp $  */
 end_comment
 
 begin_comment
@@ -357,13 +357,13 @@ end_ifndef
 
 begin_decl_stmt
 name|u_int
-name|i586_ctr_bias
+name|tsc_bias
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|i586_ctr_comultiplier
+name|tsc_comultiplier
 decl_stmt|;
 end_decl_stmt
 
@@ -374,7 +374,7 @@ end_endif
 
 begin_decl_stmt
 name|u_int
-name|i586_ctr_freq
+name|tsc_freq
 decl_stmt|;
 end_decl_stmt
 
@@ -386,7 +386,7 @@ end_ifndef
 
 begin_decl_stmt
 name|u_int
-name|i586_ctr_multiplier
+name|tsc_multiplier
 decl_stmt|;
 end_decl_stmt
 
@@ -866,7 +866,7 @@ end_if
 begin_function_decl
 specifier|static
 name|void
-name|set_i586_ctr_freq
+name|set_tsc_freq
 parameter_list|(
 name|u_int
 name|i586_freq
@@ -2881,7 +2881,7 @@ operator|==
 name|CPUCLASS_686
 condition|)
 block|{
-name|set_i586_ctr_freq
+name|set_tsc_freq
 argument_list|(
 operator|(
 name|u_int
@@ -2900,7 +2900,7 @@ name|printf
 argument_list|(
 literal|"i586 clock: %u Hz, "
 argument_list|,
-name|i586_ctr_freq
+name|tsc_freq
 argument_list|)
 expr_stmt|;
 block|}
@@ -3256,7 +3256,7 @@ name|defined
 argument_list|(
 name|SMP
 argument_list|)
-name|i586_ctr_freq
+name|tsc_freq
 operator|=
 literal|0
 expr_stmt|;
@@ -3296,7 +3296,7 @@ directive|ifndef
 name|CLK_USE_I586_CALIBRATION
 if|if
 condition|(
-name|i586_ctr_freq
+name|tsc_freq
 operator|!=
 literal|0
 condition|)
@@ -3310,7 +3310,7 @@ argument_list|(
 literal|"CLK_USE_I586_CALIBRATION not specified - using old calibration method\n"
 argument_list|)
 expr_stmt|;
-name|i586_ctr_freq
+name|tsc_freq
 operator|=
 literal|0
 expr_stmt|;
@@ -3319,7 +3319,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|i586_ctr_freq
+name|tsc_freq
 operator|==
 literal|0
 operator|&&
@@ -3348,7 +3348,7 @@ argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-name|set_i586_ctr_freq
+name|set_tsc_freq
 argument_list|(
 operator|(
 name|u_int
@@ -3370,7 +3370,7 @@ name|printf
 argument_list|(
 literal|"i586 clock: %u Hz\n"
 argument_list|,
-name|i586_ctr_freq
+name|tsc_freq
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5042,11 +5042,11 @@ argument_list|)
 comment|/* 	 * Finish setting up anti-jitter measures. 	 */
 if|if
 condition|(
-name|i586_ctr_freq
+name|tsc_freq
 operator|!=
 literal|0
 condition|)
-name|i586_ctr_bias
+name|tsc_bias
 operator|=
 name|rdtsc
 argument_list|()
@@ -5300,9 +5300,9 @@ name|defined
 argument_list|(
 name|SMP
 argument_list|)
-name|set_i586_ctr_freq
+name|set_tsc_freq
 argument_list|(
-name|i586_ctr_freq
+name|tsc_freq
 argument_list|,
 name|timer_freq
 argument_list|)
@@ -5372,7 +5372,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|set_i586_ctr_freq
+name|set_tsc_freq
 parameter_list|(
 name|u_int
 name|i586_freq
@@ -5396,7 +5396,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|i586_ctr_freq
+name|tsc_freq
 operator|=
 name|i586_freq
 expr_stmt|;
@@ -5412,7 +5412,7 @@ name|long
 operator|)
 name|i586_freq
 operator|<<
-name|I586_CTR_COMULTIPLIER_SHIFT
+name|TSC_COMULTIPLIER_SHIFT
 operator|)
 operator|/
 name|i8254_freq
@@ -5422,7 +5422,7 @@ operator|=
 operator|(
 literal|1000000LL
 operator|<<
-name|I586_CTR_MULTIPLIER_SHIFT
+name|TSC_MULTIPLIER_SHIFT
 operator|)
 operator|/
 name|i586_freq
@@ -5435,15 +5435,15 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|i586_ctr_freq
+name|tsc_freq
 operator|=
 name|i586_freq
 expr_stmt|;
-name|i586_ctr_comultiplier
+name|tsc_comultiplier
 operator|=
 name|comultiplier
 expr_stmt|;
-name|i586_ctr_multiplier
+name|tsc_multiplier
 operator|=
 name|multiplier
 expr_stmt|;
@@ -5487,7 +5487,7 @@ operator|)
 return|;
 name|freq
 operator|=
-name|i586_ctr_freq
+name|tsc_freq
 expr_stmt|;
 name|error
 operator|=
@@ -5516,7 +5516,7 @@ name|newptr
 operator|!=
 name|NULL
 condition|)
-name|set_i586_ctr_freq
+name|set_tsc_freq
 argument_list|(
 name|freq
 argument_list|,
