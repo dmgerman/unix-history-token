@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sprint.c	5.1 (Berkeley) %G%"
+literal|"@(#)sprint.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,11 @@ modifier|*
 name|pn
 decl_stmt|;
 specifier|register
+name|WHERE
+modifier|*
+name|w
+decl_stmt|;
+specifier|register
 name|int
 name|cnt
 decl_stmt|;
@@ -134,7 +139,7 @@ name|MAXREALNAME
 argument_list|,
 literal|"Name"
 argument_list|,
-literal|"Tty  Idle Login        Office      Office Phone"
+literal|"Tty  Idle  Login        Office      Office Phone"
 argument_list|)
 expr_stmt|;
 for|for
@@ -158,6 +163,25 @@ index|[
 name|cnt
 index|]
 expr_stmt|;
+for|for
+control|(
+name|w
+operator|=
+name|pn
+operator|->
+name|whead
+init|;
+name|w
+operator|!=
+name|NULL
+condition|;
+name|w
+operator|=
+name|w
+operator|->
+name|next
+control|)
+block|{
 operator|(
 name|void
 operator|)
@@ -191,7 +215,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pn
+name|w
 operator|->
 name|loginat
 condition|)
@@ -201,36 +225,38 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"          Never logged in\n"
+literal|"  *     *  No logins   "
 argument_list|)
 expr_stmt|;
-continue|continue;
+goto|goto
+name|office
+goto|;
 block|}
 operator|(
 name|void
 operator|)
-name|printf
+name|putchar
 argument_list|(
-name|pn
+name|w
 operator|->
 name|info
 operator|==
 name|LOGGEDIN
 operator|&&
 operator|!
-name|pn
+name|w
 operator|->
 name|writable
 condition|?
-literal|"*"
+literal|'*'
 else|:
-literal|" "
+literal|' '
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|*
-name|pn
+name|w
 operator|->
 name|tty
 condition|)
@@ -241,7 +267,7 @@ name|printf
 argument_list|(
 literal|"%-2.2s "
 argument_list|,
-name|pn
+name|w
 operator|->
 name|tty
 index|[
@@ -250,7 +276,7 @@ index|]
 operator|!=
 literal|'t'
 operator|||
-name|pn
+name|w
 operator|->
 name|tty
 index|[
@@ -259,7 +285,7 @@ index|]
 operator|!=
 literal|'t'
 operator|||
-name|pn
+name|w
 operator|->
 name|tty
 index|[
@@ -268,11 +294,11 @@ index|]
 operator|!=
 literal|'y'
 condition|?
-name|pn
+name|w
 operator|->
 name|tty
 else|:
-name|pn
+name|w
 operator|->
 name|tty
 operator|+
@@ -288,9 +314,36 @@ argument_list|(
 literal|"   "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|info
+operator|==
+name|LOGGEDIN
+condition|)
+block|{
 name|stimeprint
 argument_list|(
-name|pn
+name|w
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"  "
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"    *  "
 argument_list|)
 expr_stmt|;
 name|p
@@ -298,7 +351,7 @@ operator|=
 name|ctime
 argument_list|(
 operator|&
-name|pn
+name|w
 operator|->
 name|loginat
 argument_list|)
@@ -308,7 +361,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %.6s"
+literal|"%.6s"
 argument_list|,
 name|p
 operator|+
@@ -319,7 +372,7 @@ if|if
 condition|(
 name|now
 operator|-
-name|pn
+name|w
 operator|->
 name|loginat
 operator|>=
@@ -334,7 +387,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %.4s "
+literal|"  %.4s"
 argument_list|,
 name|p
 operator|+
@@ -354,6 +407,8 @@ operator|+
 literal|11
 argument_list|)
 expr_stmt|;
+name|office
+label|:
 if|if
 condition|(
 name|pn
@@ -414,6 +469,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_block
 
 begin_function
@@ -423,19 +479,14 @@ modifier|*
 name|sort
 parameter_list|()
 block|{
-specifier|extern
-name|PERSON
-modifier|*
-name|head
-decl_stmt|;
 specifier|register
 name|PERSON
 modifier|*
 name|pn
-decl_stmt|;
-specifier|register
-name|int
-name|cnt
+decl_stmt|,
+modifier|*
+modifier|*
+name|lp
 decl_stmt|;
 name|PERSON
 modifier|*
@@ -498,17 +549,17 @@ expr_stmt|;
 block|}
 for|for
 control|(
+name|lp
+operator|=
+name|list
+operator|,
 name|pn
 operator|=
-name|head
-operator|,
-name|cnt
-operator|=
-literal|0
+name|phead
 init|;
-name|cnt
-operator|<
-name|entries
+name|pn
+operator|!=
+name|NULL
 condition|;
 name|pn
 operator|=
@@ -516,11 +567,9 @@ name|pn
 operator|->
 name|next
 control|)
-name|list
-index|[
-name|cnt
+operator|*
+name|lp
 operator|++
-index|]
 operator|=
 name|pn
 expr_stmt|;
@@ -599,14 +648,14 @@ end_block
 begin_macro
 name|stimeprint
 argument_list|(
-argument|pn
+argument|w
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|PERSON
+name|WHERE
 modifier|*
-name|pn
+name|w
 decl_stmt|;
 end_decl_stmt
 
@@ -618,31 +667,12 @@ name|tm
 modifier|*
 name|delta
 decl_stmt|;
-if|if
-condition|(
-name|pn
-operator|->
-name|info
-operator|!=
-name|LOGGEDIN
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"     "
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|delta
 operator|=
 name|gmtime
 argument_list|(
 operator|&
-name|pn
+name|w
 operator|->
 name|idletime
 argument_list|)
