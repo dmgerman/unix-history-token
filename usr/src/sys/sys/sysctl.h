@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,6 +16,82 @@ end_define
 
 begin_comment
 comment|/* largest number of components supported */
+end_comment
+
+begin_comment
+comment|/*  * Each subsystem defined by sysctl defines a list of variables  * for that subsystem. Each name is either a node with further   * levels defined below it, or it is a leaf of some particular  * type given below. Each sysctl level defines a set of name/type  * pairs to be used by sysctl(1) in manipulating the subsystem.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctlname
+block|{
+name|char
+modifier|*
+name|ctl_name
+decl_stmt|;
+comment|/* subsystem name */
+name|int
+name|ctl_type
+decl_stmt|;
+comment|/* type of name */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CTLTYPE_NODE
+value|1
+end_define
+
+begin_comment
+comment|/* name is a node */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLTYPE_INT
+value|2
+end_define
+
+begin_comment
+comment|/* name describes an integer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLTYPE_STRING
+value|3
+end_define
+
+begin_comment
+comment|/* name describes a string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLTYPE_QUAD
+value|4
+end_define
+
+begin_comment
+comment|/* name describes a 64-bit number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLTYPE_STRUCT
+value|5
+end_define
+
+begin_comment
+comment|/* name describes a structure */
 end_comment
 
 begin_comment
@@ -125,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|CTL_NAMES
-value|{ \ 	"unspec", \ 	"kern", \ 	"vm", \ 	"fs", \ 	"net", \ 	"debug", \ 	"hw", \ 	"machdep", \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "kern", CTLTYPE_NODE }, \ 	{ "vm", CTLTYPE_NODE }, \ 	{ "fs", CTLTYPE_NODE }, \ 	{ "net", CTLTYPE_NODE }, \ 	{ "debug", CTLTYPE_NODE }, \ 	{ "hw", CTLTYPE_NODE }, \ 	{ "machdep", CTLTYPE_NODE }, \ }
 end_define
 
 begin_comment
@@ -312,7 +388,7 @@ begin_define
 define|#
 directive|define
 name|CTL_KERN_NAMES
-value|{ \ 	"unspec", \ 	"ostype", \ 	"osrelease", \ 	"osrevision", \ 	"version", \ 	"posix1version", \ 	"maxproc", \ 	"maxfiles", \ 	"argmax", \ 	"securelevel", \ 	"hostname", \ 	"hostid", \ 	"clockrate", \ 	"vnode", \ 	"proc", \ 	"file", \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ }
 end_define
 
 begin_comment
@@ -514,7 +590,7 @@ begin_define
 define|#
 directive|define
 name|CTL_HW_NAMES
-value|{ \ 	"unspec", \ 	"machine", \ 	"model", \ 	"ncpu", \ 	"cpuspeed", \ 	"physmem", \ 	"usermem", \ 	"pagesize", \ 	"disknames", \ 	"diskstats", \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "machine", CTLTYPE_STRING }, \ 	{ "model", CTLTYPE_STRING }, \ 	{ "ncpu", CTLTYPE_INT }, \ 	{ "cpuspeed", CTLTYPE_INT }, \ 	{ "physmem", CTLTYPE_INT }, \ 	{ "usermem", CTLTYPE_INT }, \ 	{ "pagesize", CTLTYPE_INT }, \ 	{ "disknames", CTLTYPE_STRUCT }, \ 	{ "diskstats", CTLTYPE_STRUCT }, \ }
 end_define
 
 begin_ifdef
