@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ecvt.c	5.3 (Berkeley) %G%"
+literal|"@(#)ecvt.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,7 @@ comment|/*  *	ecvt converts to decimal  *	the number of digits is specified by n
 end_comment
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|cvt
