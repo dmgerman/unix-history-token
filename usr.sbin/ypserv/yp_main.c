@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_main.c,v 1.2 1995/12/23 21:35:32 wpaul Exp $  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_main.c,v 1.1 1996/02/25 19:29:34 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -181,7 +181,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_main.c,v 1.2 1995/12/23 21:35:32 wpaul Exp $"
+literal|"$Id: yp_main.c,v 1.1 1996/02/25 19:29:34 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,6 +239,23 @@ directive|define
 name|_SERVING
 value|2
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ypprog_1
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|svc_req
+operator|,
+specifier|register
+name|SVCXPRT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -310,14 +327,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|do_dns
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sunos_4_kludge
 init|=
 literal|0
 decl_stmt|;
@@ -517,10 +526,6 @@ argument_list|,
 name|YPVERS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sunos_4_kludge
-condition|)
 operator|(
 name|void
 operator|)
@@ -528,7 +533,7 @@ name|pmap_unset
 argument_list|(
 name|YPPROG
 argument_list|,
-literal|1
+name|YPOLDVERS
 argument_list|)
 expr_stmt|;
 block|}
@@ -609,7 +614,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-h] [-d] [-n] [-k] [-p path]\n"
+literal|"Usage: %s [-h] [-d] [-n] [-p path]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -824,7 +829,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hdnkp:"
+literal|"hdnp:"
 argument_list|)
 operator|)
 operator|!=
@@ -850,14 +855,6 @@ case|case
 literal|'n'
 case|:
 name|do_dns
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'k'
-case|:
-name|sunos_4_kludge
 operator|=
 literal|1
 expr_stmt|;
@@ -1028,10 +1025,6 @@ argument_list|,
 name|YPVERS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sunos_4_kludge
-condition|)
 operator|(
 name|void
 operator|)
@@ -1045,9 +1038,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|sunos_4_kludge
-operator|&&
-operator|(
 operator|(
 name|_rpcfdtype
 operator|==
@@ -1058,7 +1048,6 @@ operator|(
 name|_rpcfdtype
 operator|==
 name|SOCK_DGRAM
-operator|)
 operator|)
 condition|)
 block|{
@@ -1105,9 +1094,9 @@ name|transp
 argument_list|,
 name|YPPROG
 argument_list|,
-literal|1
+name|YPOLDVERS
 argument_list|,
-name|ypprog_2
+name|ypprog_1
 argument_list|,
 name|proto
 argument_list|)
@@ -1115,7 +1104,7 @@ condition|)
 block|{
 name|_msgout
 argument_list|(
-literal|"unable to register (YPPROG, OLDYPVERS, udp)."
+literal|"unable to register (YPPROG, YPOLDVERS, udp)."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1124,56 +1113,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-operator|(
-name|_rpcfdtype
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-name|_rpcfdtype
-operator|==
-name|SOCK_DGRAM
-operator|)
-condition|)
-block|{
-name|transp
-operator|=
-name|svcudp_create
-argument_list|(
-name|sock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|transp
-operator|==
-name|NULL
-condition|)
-block|{
-name|_msgout
-argument_list|(
-literal|"cannot create udp service."
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|_rpcpmstart
-condition|)
-name|proto
-operator|=
-name|IPPROTO_UDP
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1256,6 +1195,34 @@ name|proto
 operator|=
 name|IPPROTO_TCP
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|svc_register
+argument_list|(
+name|transp
+argument_list|,
+name|YPPROG
+argument_list|,
+name|YPOLDVERS
+argument_list|,
+name|ypprog_1
+argument_list|,
+name|proto
+argument_list|)
+condition|)
+block|{
+name|_msgout
+argument_list|(
+literal|"unable to register (YPPROG, YPOLDVERS, tcp)."
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

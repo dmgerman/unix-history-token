@@ -111,7 +111,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_access.c,v 1.3 1996/02/24 22:01:41 wpaul Exp $"
+literal|"$Id: yp_access.c,v 1.1 1996/02/25 19:27:59 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,10 @@ name|debug
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* NIS v1 */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -134,6 +138,34 @@ name|yp_procs
 index|[]
 init|=
 block|{
+literal|"ypoldproc_null"
+block|,
+literal|"ypoldproc_domain"
+block|,
+literal|"ypoldproc_domain_nonack"
+block|,
+literal|"ypoldproc_match"
+block|,
+literal|"ypoldproc_first"
+block|,
+literal|"ypoldproc_next"
+block|,
+literal|"ypoldproc_poll"
+block|,
+literal|"ypoldproc_push"
+block|,
+literal|"ypoldproc_get"
+block|,
+literal|"badproc1"
+block|,
+comment|/* placeholder */
+literal|"badproc2"
+block|,
+comment|/* placeholder */
+literal|"badproc3"
+block|,
+comment|/* placeholder */
+comment|/* NIS v2 */
 literal|"ypproc_null"
 block|,
 literal|"ypproc_domain"
@@ -600,6 +632,41 @@ name|tmp
 decl_stmt|;
 endif|#
 directive|endif
+name|char
+modifier|*
+name|yp_procedure
+init|=
+name|NULL
+decl_stmt|;
+name|yp_procedure
+operator|=
+name|rqstp
+operator|->
+name|rq_prog
+operator|==
+name|YPPASSWDPROG
+condition|?
+literal|"yppasswdprog_update"
+else|:
+name|yp_procs
+index|[
+name|rqstp
+operator|->
+name|rq_proc
+operator|+
+operator|(
+literal|12
+operator|*
+operator|(
+name|rqstp
+operator|->
+name|rq_vers
+operator|-
+literal|1
+operator|)
+operator|)
+index|]
+expr_stmt|;
 name|rqhost
 operator|=
 name|svc_getcaller
@@ -618,21 +685,7 @@ name|yp_error
 argument_list|(
 literal|"Procedure %s called from %s:%d"
 argument_list|,
-comment|/* Hack to allow rpc.yppasswdd to use this routine */
-name|rqstp
-operator|->
-name|rq_prog
-operator|==
-name|YPPASSWDPROG
-condition|?
-literal|"yppasswdproc_update"
-else|:
-name|yp_procs
-index|[
-name|rqstp
-operator|->
-name|rq_proc
-index|]
+name|yp_procedure
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -826,20 +879,7 @@ operator|->
 name|sin_port
 argument_list|)
 argument_list|,
-name|rqstp
-operator|->
-name|rq_prog
-operator|==
-name|YPPASSWDPROG
-condition|?
-literal|"yppasswdproc_update"
-else|:
-name|yp_procs
-index|[
-name|rqstp
-operator|->
-name|rq_proc
-index|]
+name|yp_procedure
 argument_list|)
 expr_stmt|;
 name|oldaddr
