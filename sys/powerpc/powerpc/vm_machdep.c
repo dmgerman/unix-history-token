@@ -278,7 +278,11 @@ name|p_md
 operator|.
 name|md_flags
 operator|&
+operator|(
 name|MDP_FPUSED
+operator||
+name|MDP_UAC_MASK
+operator|)
 expr_stmt|;
 comment|/* 	 * Cache the physical address of the pcb, so we can 	 * swap to it easily. 	 */
 name|p2

@@ -3722,6 +3722,8 @@ modifier|*
 name|regptr
 decl_stmt|,
 name|longdata
+decl_stmt|,
+name|uac
 decl_stmt|;
 name|int
 name|intdata
@@ -3884,18 +3886,57 @@ block|,
 comment|/* can't fix */
 block|}
 struct|;
-comment|/* 	 * Figure out what actions to take. 	 * 	 * XXX In the future, this should have a per-process component 	 * as well. 	 */
+comment|/* 	 * Figure out what actions to take. 	 * 	 */
+if|if
+condition|(
+name|p
+condition|)
+name|uac
+operator|=
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_flags
+operator|&
+name|MDP_UAC_MASK
+expr_stmt|;
+else|else
+name|uac
+operator|=
+literal|0
+expr_stmt|;
 name|doprint
 operator|=
 name|alpha_unaligned_print
+operator|&&
+operator|!
+operator|(
+name|uac
+operator|&
+name|MDP_UAC_NOPRINT
+operator|)
 expr_stmt|;
 name|dofix
 operator|=
 name|alpha_unaligned_fix
+operator|&&
+operator|!
+operator|(
+name|uac
+operator|&
+name|MDP_UAC_NOFIX
+operator|)
 expr_stmt|;
 name|dosigbus
 operator|=
 name|alpha_unaligned_sigbus
+operator||
+operator|(
+name|uac
+operator|&
+name|MDP_UAC_SIGBUS
+operator|)
 expr_stmt|;
 comment|/* 	 * Find out which opcode it is.  Arrange to have the opcode 	 * printed if it's an unknown opcode. 	 */
 if|if

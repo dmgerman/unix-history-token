@@ -113,5 +113,45 @@ begin_comment
 comment|/* Process used the HAE */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MDP_UAC_NOPRINT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Don't print unaligned traps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDP_UAC_NOFIX
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Don't fixup unaligned traps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDP_UAC_SIGBUS
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Deliver SIGBUS upon 					   unalinged access */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDP_UAC_MASK
+value|(MDP_UAC_NOPRINT | MDP_UAC_NOFIX | MDP_UAC_SIGBUS)
+end_define
+
 end_unit
 

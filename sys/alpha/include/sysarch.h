@@ -40,6 +40,20 @@ name|ALPHA_SET_FPMASK
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ALPHA_GET_UAC
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALPHA_SET_UAC
+value|4
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
