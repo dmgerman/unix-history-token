@@ -653,6 +653,9 @@ name|ipsd_disk
 operator|.
 name|d_mediasize
 operator|=
+operator|(
+name|off_t
+operator|)
 name|totalsectors
 operator|*
 name|IPS_BLKSIZE
