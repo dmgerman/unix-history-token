@@ -1611,6 +1611,22 @@ name|fs_cstotal
 operator|.
 name|cs_ndir
 expr_stmt|;
+if|if
+condition|(
+name|numdirs
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"numdirs is zero, try using an alternate superblock\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|badsb
+goto|;
+block|}
 name|inplast
 operator|=
 literal|0
