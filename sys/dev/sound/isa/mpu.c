@@ -1365,6 +1365,18 @@ literal|"mpu: attaching.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|scp
+operator|->
+name|mtx
+argument_list|,
+literal|"mpumid"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* Allocate the resources, switch to uart mode. */
 if|if
 condition|(
@@ -1401,18 +1413,6 @@ operator|->
 name|dev
 operator|=
 name|dev
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|scp
-operator|->
-name|mtx
-argument_list|,
-literal|"mpumid"
-argument_list|,
-name|MTX_DEF
-argument_list|)
 expr_stmt|;
 name|scp
 operator|->
@@ -3278,6 +3278,14 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|mtx_destroy
+argument_list|(
+operator|&
+name|scp
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
