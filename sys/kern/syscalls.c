@@ -1018,6 +1018,9 @@ comment|/* 334 = sched_rr_get_interval */
 literal|"utrace"
 block|,
 comment|/* 335 = utrace */
+literal|"sendfile"
+block|,
+comment|/* 336 = sendfile */
 block|}
 decl_stmt|;
 end_decl_stmt

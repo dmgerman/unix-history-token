@@ -1619,8 +1619,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_MAXSYSCALL
+name|SYS_sendfile
 value|336
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_MAXSYSCALL
+value|337
 end_define
 
 end_unit

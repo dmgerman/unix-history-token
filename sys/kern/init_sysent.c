@@ -3742,6 +3742,17 @@ name|utrace
 block|}
 block|,
 comment|/* 335 = utrace */
+block|{
+literal|8
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sendfile
+block|}
+block|,
+comment|/* 336 = sendfile */
 block|}
 decl_stmt|;
 end_decl_stmt
