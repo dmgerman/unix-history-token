@@ -1347,7 +1347,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Async ops that require communcation with the controller */
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -1366,7 +1366,7 @@ name|cm
 argument_list|)
 condition|)
 block|{
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -1933,7 +1933,7 @@ operator|->
 name|cm_sc
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -2303,7 +2303,7 @@ argument_list|(
 name|cm
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -2328,7 +2328,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc

@@ -585,7 +585,7 @@ return|return;
 block|}
 comment|/* perform accounting */
 comment|/* pass the bio to the controller - it can work out who we are */
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -600,7 +600,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc

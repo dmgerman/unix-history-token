@@ -1301,7 +1301,7 @@ name|error
 operator|)
 return|;
 comment|/* 	 * Initialize locks 	 */
-name|AAC_LOCK_INIT
+name|mtx_init
 argument_list|(
 operator|&
 name|sc
@@ -1309,9 +1309,13 @@ operator|->
 name|aac_aifq_lock
 argument_list|,
 literal|"AAC AIF lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_INIT
+name|mtx_init
 argument_list|(
 operator|&
 name|sc
@@ -1319,9 +1323,13 @@ operator|->
 name|aac_io_lock
 argument_list|,
 literal|"AAC I/O lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_INIT
+name|mtx_init
 argument_list|(
 operator|&
 name|sc
@@ -1329,6 +1337,10 @@ operator|->
 name|aac_container_lock
 argument_list|,
 literal|"AAC container lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -2059,7 +2071,7 @@ name|aac_mntobj
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -2079,7 +2091,7 @@ argument_list|,
 name|co_link
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -3167,7 +3179,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -3246,7 +3258,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -3259,7 +3271,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -3481,7 +3493,7 @@ operator|&=
 operator|~
 name|AAC_AIFFLAGS_RUNNING
 expr_stmt|;
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -3553,7 +3565,7 @@ operator|*
 operator|)
 name|context
 expr_stmt|;
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -3672,7 +3684,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -5075,7 +5087,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* initialise constant fields in the command structure */
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -5233,7 +5245,7 @@ operator|->
 name|total_fibs
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -5247,7 +5259,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -10635,7 +10647,7 @@ name|revents
 operator|=
 literal|0
 expr_stmt|;
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -10679,7 +10691,7 @@ name|POLLRDNORM
 operator|)
 expr_stmt|;
 block|}
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -10761,7 +10773,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Get a command 	 */
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -11012,7 +11024,7 @@ name|cm
 argument_list|)
 expr_stmt|;
 block|}
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -11429,7 +11441,7 @@ argument_list|,
 name|co_link
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -11449,7 +11461,7 @@ argument_list|,
 name|co_link
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -11508,7 +11520,7 @@ default|default:
 break|break;
 block|}
 comment|/* Copy the AIF data to the AIF queue for ioctl retrieval */
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -11590,7 +11602,7 @@ name|PRIBIO
 argument_list|)
 expr_stmt|;
 block|}
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -11937,7 +11949,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -11956,7 +11968,7 @@ operator|->
 name|aac_aifq_head
 condition|)
 block|{
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -12025,7 +12037,7 @@ name|aac_aifq_tail
 operator|=
 name|next
 expr_stmt|;
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
@@ -12133,7 +12145,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -12285,7 +12297,7 @@ name|d_unit
 argument_list|)
 expr_stmt|;
 block|}
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc

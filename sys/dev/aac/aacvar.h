@@ -818,50 +818,6 @@ value|bus_space_read_1 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
 
 begin_comment
-comment|/* Define the OS version specific locks */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|mtx
-name|aac_lock_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|AAC_LOCK_INIT
-parameter_list|(
-name|l
-parameter_list|,
-name|s
-parameter_list|)
-value|mtx_init(l, s, NULL, MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AAC_LOCK_ACQUIRE
-parameter_list|(
-name|l
-parameter_list|)
-value|mtx_lock(l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AAC_LOCK_RELEASE
-parameter_list|(
-name|l
-parameter_list|)
-value|mtx_unlock(l)
-end_define
-
-begin_comment
 comment|/*  * Per-controller structure.  */
 end_comment
 
@@ -1057,11 +1013,13 @@ argument|aac_container
 argument_list|)
 name|aac_container_tqh
 expr_stmt|;
-name|aac_lock_t
+name|struct
+name|mtx
 name|aac_container_lock
 decl_stmt|;
 comment|/* 	 * The general I/O lock.  This protects the sync fib, the lists, the 	 * queues, and the registers. 	 */
-name|aac_lock_t
+name|struct
+name|mtx
 name|aac_io_lock
 decl_stmt|;
 comment|/* delayed activity infrastructure */
@@ -1080,7 +1038,8 @@ name|cdev
 modifier|*
 name|aac_dev_t
 decl_stmt|;
-name|aac_lock_t
+name|struct
+name|mtx
 name|aac_aifq_lock
 decl_stmt|;
 name|struct
@@ -1882,7 +1841,7 @@ modifier|*
 name|fib
 parameter_list|)
 block|{
-name|AAC_LOCK_ACQUIRE
+name|mtx_lock
 argument_list|(
 operator|&
 name|sc
@@ -1920,7 +1879,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|AAC_LOCK_RELEASE
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
