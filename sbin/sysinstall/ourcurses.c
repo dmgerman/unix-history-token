@@ -881,7 +881,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Odd, I thought I had a file called %s around here somewhere,\nbut I can't seem to find it now that I need it.  Sorry about that!"
+literal|"The %s file is not provided on the 1.2MB floppy image."
 argument_list|,
 name|filename
 argument_list|)
