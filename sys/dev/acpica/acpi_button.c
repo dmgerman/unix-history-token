@@ -40,7 +40,7 @@ file|<dev/acpica/acpivar.h>
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure */
 end_comment
 
 begin_define
@@ -67,6 +67,10 @@ decl_stmt|;
 name|ACPI_HANDLE
 name|button_handle
 decl_stmt|;
+name|boolean_t
+name|button_type
+decl_stmt|;
+comment|/* Power or Sleep Button */
 define|#
 directive|define
 name|ACPI_POWER_BUTTON
@@ -75,13 +79,23 @@ define|#
 directive|define
 name|ACPI_SLEEP_BUTTON
 value|1
-name|boolean_t
-name|button_type
-decl_stmt|;
-comment|/* Power or Sleep Button */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_BUTTON_PRESSED_FOR_SLEEP
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_BUTTON_PRESSED_FOR_WAKEUP
+value|0x02
+end_define
 
 begin_function_decl
 specifier|static
@@ -424,10 +438,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiInstallNotifyHandler
@@ -442,6 +452,12 @@ name|acpi_button_notify_handler
 argument_list|,
 name|sc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -591,10 +607,8 @@ name|acpi_sc
 operator|==
 name|NULL
 condition|)
-block|{
 name|return_VOID
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|sc
@@ -654,8 +668,6 @@ default|default:
 break|break;
 comment|/* unknown button type */
 block|}
-name|return_VOID
-expr_stmt|;
 block|}
 end_function
 
@@ -715,10 +727,8 @@ name|acpi_sc
 operator|==
 name|NULL
 condition|)
-block|{
 name|return_VOID
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|sc
@@ -778,28 +788,8 @@ default|default:
 break|break;
 comment|/* unknown button type */
 block|}
-name|return_VOID
-expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* XXX maybe not here */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_NOTIFY_BUTTON_PRESSED_FOR_SLEEP
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NOTIFY_BUTTON_PRESSED_FOR_WAKEUP
-value|0x02
-end_define
 
 begin_function
 specifier|static
@@ -878,8 +868,6 @@ default|default:
 break|break;
 comment|/* unknown notification value */
 block|}
-name|return_VOID
-expr_stmt|;
 block|}
 end_function
 
