@@ -1263,11 +1263,6 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
-name|SLOT_RELEASE
-argument_list|(
-name|kg
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * Add the thread to the ksegrp's run queue at 	 * the appropriate place. 	 */
 name|TAILQ_FOREACH
