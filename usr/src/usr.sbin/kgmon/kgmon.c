@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	5.1 (Berkeley) %G%"
+literal|"@(#)kgmon.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -230,6 +236,30 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|clear
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)&~ 0x80000000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|pte
@@ -307,7 +337,7 @@ name|disp
 decl_stmt|,
 name|openmode
 init|=
-literal|0
+name|O_RDONLY
 decl_stmt|;
 name|argc
 operator|--
@@ -351,7 +381,7 @@ operator|++
 expr_stmt|;
 name|openmode
 operator|=
-literal|2
+name|O_RDWR
 expr_stmt|;
 break|break;
 case|case
@@ -362,7 +392,7 @@ operator|++
 expr_stmt|;
 name|openmode
 operator|=
-literal|2
+name|O_RDWR
 expr_stmt|;
 break|break;
 case|case
@@ -373,7 +403,7 @@ operator|++
 expr_stmt|;
 name|openmode
 operator|=
-literal|2
+name|O_RDWR
 expr_stmt|;
 break|break;
 case|case
@@ -384,7 +414,7 @@ operator|++
 expr_stmt|;
 name|openmode
 operator|=
-literal|2
+name|O_RDWR
 expr_stmt|;
 break|break;
 default|default:
@@ -493,7 +523,7 @@ condition|)
 block|{
 name|openmode
 operator|=
-literal|0
+name|O_RDONLY
 expr_stmt|;
 name|kmem
 operator|=
@@ -594,14 +624,15 @@ name|off
 decl_stmt|;
 name|off
 operator|=
+name|clear
+argument_list|(
 name|nl
 index|[
 name|N_SYSMAP
 index|]
 operator|.
 name|n_value
-operator|&
-literal|0x7fffffff
+argument_list|)
 expr_stmt|;
 name|lseek
 argument_list|(
@@ -609,7 +640,7 @@ name|kmem
 argument_list|,
 name|off
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|nl
@@ -709,7 +740,7 @@ if|if
 condition|(
 name|openmode
 operator|==
-literal|0
+name|O_RDONLY
 operator|&&
 name|mode
 operator|==
@@ -848,7 +879,7 @@ name|off_t
 operator|)
 name|sbuf
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 for|for
@@ -934,7 +965,7 @@ name|kmem
 argument_list|,
 name|kfroms
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|i
@@ -1026,7 +1057,7 @@ name|kmem
 argument_list|,
 name|ktos
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|i
@@ -1337,7 +1368,7 @@ name|off_t
 operator|)
 name|sbuf
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 for|for
@@ -1411,7 +1442,7 @@ name|kmem
 argument_list|,
 name|kfroms
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 for|for
@@ -1488,7 +1519,7 @@ name|kmem
 argument_list|,
 name|ktos
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 for|for
@@ -1590,7 +1621,7 @@ name|kmem
 argument_list|,
 name|off
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|write
@@ -1676,7 +1707,7 @@ name|kmem
 argument_list|,
 name|off
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 operator|==
 operator|-
@@ -1767,15 +1798,13 @@ name|kflag
 condition|)
 block|{
 comment|/* get kernel pte */
-if|#
-directive|if
-name|vax
 name|base
-operator|&=
-literal|0x7fffffff
+operator|=
+name|clear
+argument_list|(
+name|base
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|base
 operator|=
 operator|(
