@@ -645,6 +645,7 @@ name|addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|addr
 argument_list|)
 operator|-
