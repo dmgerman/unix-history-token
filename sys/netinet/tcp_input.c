@@ -553,7 +553,7 @@ specifier|static
 name|int
 name|tcp_do_rfc3042
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -583,7 +583,7 @@ specifier|static
 name|int
 name|tcp_do_rfc3390
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
