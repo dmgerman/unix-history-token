@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.10 (Berkeley) %G%"
+literal|"@(#)tape.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1915,6 +1915,16 @@ name|stdout
 argument_list|,
 literal|"Dumped from: %s"
 argument_list|,
+operator|(
+name|spcl
+operator|.
+name|c_ddate
+operator|==
+literal|0
+operator|)
+condition|?
+literal|"the epoch\n"
+else|:
 name|ctime
 argument_list|(
 operator|&
