@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -22,33 +22,28 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * The header for buffers in the buffer pool and otherwise used  * to describe a block i/o request is given here.  *  * Each buffer in the pool is usually doubly linked into 2 lists:  * hashed into a chain by<dev,blkno> so it can be located in the cache,  * and (usually) on (one of several) queues.  These lists are circular and  * doubly linked for easy removal.  *  * There are currently three queues for buffers:  *	one for buffers which must be kept permanently (super blocks)  * 	one for buffers containing ``useful'' information (the cache)  *	one for buffers containing ``non-useful'' information  *		(and empty buffers, pushed onto the front)  * The latter two queues contain the buffers which are available for  * reallocation, are kept in lru order.  When not on one of these queues,  * the buffers are ``checked out'' to drivers which use the available list  * pointers to keep track of them in their i/o active queues.  */
+comment|/*  * The buffer header describes an I/O operation in the kernel.  */
 end_comment
 
 begin_struct
 struct|struct
 name|buf
 block|{
-specifier|volatile
-name|long
-name|b_flags
-decl_stmt|;
-comment|/* too much goes here to describe */
 name|struct
 name|queue_entry
 name|b_hash
 decl_stmt|;
-comment|/* hash chain */
+comment|/* Hash chain. */
 name|struct
 name|queue_entry
 name|b_vnbufs
 decl_stmt|;
-comment|/* associated vnode */
+comment|/* Buffer's associated vnode. */
 name|struct
 name|queue_entry
 name|b_freelist
 decl_stmt|;
-comment|/* position on free list if not BUSY */
+comment|/* Free list position if not active. */
 name|struct
 name|buf
 modifier|*
@@ -58,156 +53,426 @@ modifier|*
 modifier|*
 name|b_actb
 decl_stmt|;
-comment|/* device driver I/O queue when BUSY */
-name|long
-name|b_bcount
-decl_stmt|;
-comment|/* transfer count */
-name|long
-name|b_bufsize
-decl_stmt|;
-comment|/* size of allocated buffer */
-name|short
-name|b_error
-decl_stmt|;
-comment|/* returned after I/O */
-name|dev_t
-name|b_dev
-decl_stmt|;
-comment|/* major+minor device name */
-union|union
-block|{
-name|caddr_t
-name|b_addr
-decl_stmt|;
-comment|/* low order core address */
-name|int
-modifier|*
-name|b_words
-decl_stmt|;
-comment|/* words for clearing */
-name|struct
-name|fs
-modifier|*
-name|b_fs
-decl_stmt|;
-comment|/* UFS superblocks */
-name|struct
-name|lfs
-modifier|*
-name|b_lfs
-decl_stmt|;
-comment|/* LFS superblocks */
-name|struct
-name|csum
-modifier|*
-name|b_cs
-decl_stmt|;
-comment|/* superblock summary information */
-name|struct
-name|cg
-modifier|*
-name|b_cg
-decl_stmt|;
-comment|/* cylinder group block */
-name|struct
-name|dinode
-modifier|*
-name|b_dino
-decl_stmt|;
-comment|/* ilist */
-name|daddr_t
-modifier|*
-name|b_daddr
-decl_stmt|;
-comment|/* indirect block */
-block|}
-name|b_un
-union|;
-name|daddr_t
-name|b_lblkno
-decl_stmt|;
-comment|/* logical block number */
-name|daddr_t
-name|b_blkno
-decl_stmt|;
-comment|/* block # on device */
-ifdef|#
-directive|ifdef
-name|SECSIZE
-name|long
-name|b_blksize
-decl_stmt|;
-comment|/* size of device blocks */
-endif|#
-directive|endif
-endif|SECSIZE
-name|long
-name|b_resid
-decl_stmt|;
-comment|/* words not transferred after error */
+comment|/* Device driver queue when active. */
 name|struct
 name|proc
 modifier|*
 name|b_proc
 decl_stmt|;
-comment|/* proc doing physical or swap I/O */
+comment|/* Associated proc; NULL if kernel. */
+specifier|volatile
+name|long
+name|b_flags
+decl_stmt|;
+comment|/* B_* flags. */
+name|int
+name|b_error
+decl_stmt|;
+comment|/* Errno value. */
+name|long
+name|b_bufsize
+decl_stmt|;
+comment|/* Allocated buffer size. */
+name|long
+name|b_bcount
+decl_stmt|;
+comment|/* Valid bytes in buffer. */
+name|long
+name|b_resid
+decl_stmt|;
+comment|/* Remaining I/O. */
+name|dev_t
+name|b_dev
+decl_stmt|;
+comment|/* Device associated with buffer. */
+struct|struct
+block|{
+name|caddr_t
+name|b_addr
+decl_stmt|;
+comment|/* Memory, superblocks, indirect etc. */
+block|}
+name|b_un
+struct|;
 name|void
-function_decl|(
 modifier|*
-name|b_iodone
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* function called by iodone */
+name|b_saveaddr
+decl_stmt|;
+comment|/* Original b_addr for physio. */
+name|daddr_t
+name|b_lblkno
+decl_stmt|;
+comment|/* Logical block number. */
+name|daddr_t
+name|b_blkno
+decl_stmt|;
+comment|/* Underlying physical block number. */
+comment|/* Function to call upon completion. */
+name|void
+argument_list|(
+argument|*b_iodone
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|struct
 name|vnode
 modifier|*
 name|b_vp
 decl_stmt|;
-comment|/* vnode for dev */
+comment|/* Device vnode. */
 name|int
 name|b_pfcent
 decl_stmt|;
-comment|/* center page when swapping cluster */
+comment|/* Center page when swapping cluster. */
+name|int
+name|b_dirtyoff
+decl_stmt|;
+comment|/* Offset in buffer of dirty region. */
+name|int
+name|b_dirtyend
+decl_stmt|;
+comment|/* Offset of end of dirty region. */
 name|struct
 name|ucred
 modifier|*
 name|b_rcred
 decl_stmt|;
-comment|/* ref to read credentials */
+comment|/* Read credentials reference. */
 name|struct
 name|ucred
 modifier|*
 name|b_wcred
 decl_stmt|;
-comment|/* ref to write credendtials */
-name|int
-name|b_dirtyoff
-decl_stmt|;
-comment|/* offset in buffer of dirty region */
-name|int
-name|b_dirtyend
-decl_stmt|;
-comment|/* offset of end of dirty region */
-name|caddr_t
-name|b_saveaddr
-decl_stmt|;
-comment|/* original b_addr for PHYSIO */
+comment|/* Write credentials reference. */
 name|int
 name|b_validoff
 decl_stmt|;
-comment|/* offset in buffer of valid region */
+comment|/* Offset in buffer of valid region. */
 name|int
 name|b_validend
 decl_stmt|;
-comment|/* offset of end of valid region */
+comment|/* Offset of end of valid region. */
 block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|b_data
+value|b_un.b_addr
+end_define
+
 begin_comment
-comment|/*  * Defines for device drivers.  */
+comment|/*  * These flags are kept in b_flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_AGE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Move to age queue when I/O done. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_APPENDWRITE
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Append-write in progress. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_ASYNC
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Start I/O, do not wait. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_BAD
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Bad block revectoring in progress. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_BUSY
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* I/O in progress. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_CACHE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Bread found us in the cache. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_CALL
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Call b_iodone from biodone. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_DELWRI
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Delay I/O until buffer reused. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_DIRTY
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Dirty page to be pushed out async. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_DONE
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* I/O completed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_EINTR
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* I/O was interrupted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_ERROR
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* I/O error occurred. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_GATHERED
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* LFS: already in a segment. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_INVAL
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Does not contain valid info. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_LOCKED
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Locked in core (not reusable). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_NOCACHE
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Do not cache block after use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_PAGET
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Page in/out of page table space. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_PGIN
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Pagein op, so swap() can count it. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_PHYS
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* I/O to user memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_RAW
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Set by physio for raw transfers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_READ
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Read buffer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_TAPE
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Magnetic tape I/O. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_UAREA
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Buffer describes Uarea I/O. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_WANTED
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Process wants this buffer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_WRITE
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Write buffer (pseudo flag). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_WRITEINPROG
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Write in progress. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_XXX
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Debugging flag. */
+end_comment
+
+begin_comment
+comment|/* Device driver compatibility definitions. */
 end_comment
 
 begin_define
@@ -218,7 +483,7 @@ value|b_bcount
 end_define
 
 begin_comment
-comment|/* driver queue head: drive active */
+comment|/* Driver queue head: drive active. */
 end_comment
 
 begin_define
@@ -229,11 +494,33 @@ value|b_resid
 end_define
 
 begin_comment
-comment|/* while i/o in progress: # retries */
+comment|/* Retry count while I/O in progress. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|iodone
+value|biodone
+end_define
+
+begin_comment
+comment|/* Old name for biodone. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|iowait
+value|biowait
+end_define
+
+begin_comment
+comment|/* Old name for biowait. */
 end_comment
 
 begin_comment
-comment|/*  * This structure describes a clustered I/O.  It is  * stored in the b_saveaddr field of the buffer on  * which I/O is performed.  At I/O completion, cluster  * callback uses the structure to parcel I/Os to  * individual buffers, and then frees this structure.  */
+comment|/*  * This structure describes a clustered I/O.  It is stored in the b_saveaddr  * field of the buffer on which I/O is done.  At I/O completion, cluster  * callback uses the structure to parcel I/O's to individual buffers, and  * then free's this structure.  */
 end_comment
 
 begin_struct
@@ -243,30 +530,86 @@ block|{
 name|long
 name|bs_bcount
 decl_stmt|;
+comment|/* Saved b_bcount. */
 name|long
 name|bs_bufsize
 decl_stmt|;
-name|caddr_t
+comment|/* Saved b_bufsize. */
+name|void
+modifier|*
 name|bs_saveaddr
 decl_stmt|;
+comment|/* Saved b_addr. */
 name|int
 name|bs_nchildren
 decl_stmt|;
+comment|/* Number of associated buffers. */
 name|struct
 name|buf
 modifier|*
 modifier|*
 name|bs_children
 decl_stmt|;
+comment|/* List of associated buffers. */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Zero out the buffer's data area.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|clrbuf
+parameter_list|(
+name|bp
+parameter_list|)
+value|{							\ 	blkclr((bp)->b_data, (u_int)(bp)->b_bcount);			\ 	(bp)->b_resid = 0;						\ }
+end_define
+
+begin_comment
+comment|/* Flags to low-level allocation routines. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_CLRBUF
+value|0x01
+end_define
+
+begin_comment
+comment|/* Request allocated buffer be cleared. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_SYNC
+value|0x02
+end_define
+
+begin_comment
+comment|/* Do all allocations synchronously. */
+end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_decl_stmt
+name|int
+name|nbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The number of buffer headers */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -277,7 +620,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the buffer pool itself */
+comment|/* The buffer headers. */
 end_comment
 
 begin_decl_stmt
@@ -287,14 +630,8 @@ name|buffers
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|nbuf
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* number of buffer headers */
+comment|/* The buffer contents. */
 end_comment
 
 begin_decl_stmt
@@ -304,7 +641,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of memory pages in the buffer pool */
+comment|/* Number of memory pages in the buffer pool. */
 end_comment
 
 begin_decl_stmt
@@ -316,7 +653,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* swap I/O headers */
+comment|/* Swap I/O buffer headers. */
 end_comment
 
 begin_decl_stmt
@@ -324,6 +661,10 @@ name|int
 name|nswbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Number of swap I/O buffer headers. */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -333,7 +674,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* head of free swap header list */
+comment|/* Head of swap I/O buffer headers free list. */
 end_comment
 
 begin_decl_stmt
@@ -345,7 +686,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* head of cleaned page list */
+comment|/* Head of cleaned page list. */
 end_comment
 
 begin_decl_stmt
@@ -679,368 +1020,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * These flags are kept in b_flags.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_WRITE
-value|0x00000000
-end_define
-
-begin_comment
-comment|/* non-read pseudo-flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_READ
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* read when I/O occurs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_DONE
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* transaction finished */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_ERROR
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* transaction aborted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_BUSY
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* not on av_forw/back list */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_PHYS
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* physical IO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_XXX
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* was B_MAP, alloc UNIBUS on pdp-11 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_WANTED
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* issue wakeup when BUSY goes off */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_AGE
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* delayed write for correct aging */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_ASYNC
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* don't wait for I/O completion */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_DELWRI
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* write at exit of avail list */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_TAPE
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* this is a magtape (no bdwrite) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_UAREA
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* add u-area to a swap operation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_PAGET
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* page in/out of page table space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_DIRTY
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* dirty page to be pushed out async */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_PGIN
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* pagein op, so swap() can count it */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_CACHE
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* did bread find us in the cache ? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_INVAL
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* does not contain valid info  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_LOCKED
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* locked in core (not reusable) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_HEAD
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* a buffer header, not a buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_GATHERED
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* LFS: already in a segment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_BAD
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* bad block revectoring in progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_CALL
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* call b_iodone from iodone */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_RAW
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* set by physio for raw transfers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_NOCACHE
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* do not cache block after use */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_WRITEINPROG
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* write in progress on buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_APPENDWRITE
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* append-write in progress on buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_EINTR
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* I/O was interrupted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|iodone
-value|biodone
-end_define
-
-begin_define
-define|#
-directive|define
-name|iowait
-value|biowait
-end_define
-
-begin_comment
-comment|/*  * Zero out a buffer's data portion.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|clrbuf
-parameter_list|(
-name|bp
-parameter_list|)
-value|{ \ 	blkclr((bp)->b_un.b_addr, (unsigned)(bp)->b_bcount); \ 	(bp)->b_resid = 0; \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_CLRBUF
-value|0x1
-end_define
-
-begin_comment
-comment|/* request allocated buffer be cleared */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_SYNC
-value|0x2
-end_define
-
-begin_comment
-comment|/* do all allocations synchronously */
-end_comment
 
 begin_endif
 endif|#

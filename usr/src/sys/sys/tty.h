@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.h	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -58,45 +58,56 @@ name|clist
 name|t_rawq
 decl_stmt|;
 comment|/* Device raw input queue. */
+name|long
+name|t_rawcc
+decl_stmt|;
+comment|/* Raw input queue statistics. */
 name|struct
 name|clist
 name|t_canq
 decl_stmt|;
 comment|/* Device canonical queue. */
+name|long
+name|t_cancc
+decl_stmt|;
+comment|/* Canonical queue statistics. */
 name|struct
 name|clist
 name|t_outq
 decl_stmt|;
 comment|/* Device output queue. */
-name|void
-function_decl|(
-modifier|*
-name|t_oproc
-function_decl|)
-parameter_list|()
-function_decl|;
+name|long
+name|t_outcc
+decl_stmt|;
+comment|/* Output queue statistics. */
+name|char
+name|t_line
+decl_stmt|;
+comment|/* Interface to device drivers. */
+name|dev_t
+name|t_dev
+decl_stmt|;
 comment|/* Device. */
-ifdef|#
-directive|ifdef
-name|sun4c
-name|void
-function_decl|(
-modifier|*
-name|t_stop
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Device. */
-endif|#
-directive|endif
 name|int
-function_decl|(
+name|t_state
+decl_stmt|;
+comment|/* Device and driver (TS*) state. */
+name|int
+name|t_flags
+decl_stmt|;
+comment|/* Tty flags. */
+name|struct
+name|pgrp
 modifier|*
-name|t_param
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Device. */
+name|t_pgrp
+decl_stmt|;
+comment|/* Foreground process group. */
+name|struct
+name|session
+modifier|*
+name|t_session
+decl_stmt|;
+comment|/* Enclosing session. */
 name|struct
 name|selinfo
 name|t_rsel
@@ -107,46 +118,78 @@ name|selinfo
 name|t_wsel
 decl_stmt|;
 comment|/* Tty write select. */
-name|caddr_t
-name|T_LINEP
-decl_stmt|;
-comment|/* XXX */
-name|caddr_t
-name|t_addr
-decl_stmt|;
-comment|/* XXX */
-name|dev_t
-name|t_dev
-decl_stmt|;
-comment|/* Device. */
-name|int
-name|t_flags
-decl_stmt|;
-comment|/* (compat) some of both */
-name|int
-name|t_state
-decl_stmt|;
-comment|/* Device and driver internal state. */
 name|struct
-name|session
-modifier|*
-name|t_session
+name|termios
+name|t_termios
 decl_stmt|;
-comment|/* tty */
+comment|/* Termios state. */
 name|struct
-name|pgrp
+name|winsize
+name|t_winsize
+decl_stmt|;
+comment|/* Window size. */
+comment|/* Start output. */
+name|void
+argument_list|(
+argument|*t_oproc
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun4c
+comment|/* Stop output. */
+name|void
+argument_list|(
+argument|*t_stop
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Set hardware state. */
+name|int
+argument_list|(
+argument|*t_param
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|,
+expr|struct
+name|termios
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
 modifier|*
-name|t_pgrp
+name|t_sc
 decl_stmt|;
-comment|/* Foreground process group. */
-name|char
-name|t_line
-decl_stmt|;
-comment|/* Glue. */
+comment|/* XXX: net/if_sl.c:sl_softc. */
 name|short
-name|t_col
+name|t_column
 decl_stmt|;
-comment|/* Tty. */
+comment|/* Tty output column. */
 name|short
 name|t_rocount
 decl_stmt|,
@@ -161,62 +204,6 @@ name|short
 name|t_lowat
 decl_stmt|;
 comment|/* Low water mark. */
-name|struct
-name|winsize
-name|t_winsize
-decl_stmt|;
-comment|/* Window size. */
-name|struct
-name|termios
-name|t_termios
-decl_stmt|;
-comment|/* Termios state. */
-define|#
-directive|define
-name|t_iflag
-value|t_termios.c_iflag
-define|#
-directive|define
-name|t_oflag
-value|t_termios.c_oflag
-define|#
-directive|define
-name|t_cflag
-value|t_termios.c_cflag
-define|#
-directive|define
-name|t_lflag
-value|t_termios.c_lflag
-define|#
-directive|define
-name|t_min
-value|t_termios.c_min
-define|#
-directive|define
-name|t_time
-value|t_termios.c_time
-define|#
-directive|define
-name|t_cc
-value|t_termios.c_cc
-define|#
-directive|define
-name|t_ispeed
-value|t_termios.c_ispeed
-define|#
-directive|define
-name|t_ospeed
-value|t_termios.c_ospeed
-name|long
-name|t_cancc
-decl_stmt|;
-comment|/* Statistics. */
-name|long
-name|t_rawcc
-decl_stmt|;
-name|long
-name|t_outcc
-decl_stmt|;
 name|short
 name|t_gen
 decl_stmt|;
@@ -224,6 +211,69 @@ comment|/* Generation number. */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|t_cc
+value|t_termios.c_cc
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_cflag
+value|t_termios.c_cflag
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_iflag
+value|t_termios.c_iflag
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_ispeed
+value|t_termios.c_ispeed
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_lflag
+value|t_termios.c_lflag
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_min
+value|t_termios.c_min
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_oflag
+value|t_termios.c_oflag
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_ospeed
+value|t_termios.c_ospeed
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_time
+value|t_termios.c_time
+end_define
 
 begin_define
 define|#
@@ -308,51 +358,58 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
-end_comment
-
-begin_comment
-comment|/* Internal state bits. */
+comment|/* These flags are kept in t_state. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TS_TIMEOUT
-value|0x000001
+name|TS_ASLEEP
+value|0x00001
 end_define
 
 begin_comment
-comment|/* Delay timeout in progress. */
+comment|/* Process waiting for tty. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TS_WOPEN
-value|0x000002
+name|TS_ASYNC
+value|0x00002
 end_define
 
 begin_comment
-comment|/* Waiting for open to complete. */
+comment|/* Tty in async I/O mode. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TS_ISOPEN
-value|0x000004
+name|TS_BUSY
+value|0x00004
 end_define
 
 begin_comment
-comment|/* Indicates the device is open. */
+comment|/* Draining output. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_CARR_ON
+value|0x00008
+end_define
+
+begin_comment
+comment|/* Carrier is present. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TS_FLUSH
-value|0x000008
+value|0x00010
 end_define
 
 begin_comment
@@ -362,82 +419,67 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TS_CARR_ON
-value|0x000010
+name|TS_ISOPEN
+value|0x00020
 end_define
 
 begin_comment
-comment|/* Software image of carrier-present. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_BUSY
-value|0x000020
-end_define
-
-begin_comment
-comment|/* Indicates output is in progress. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_ASLEEP
-value|0x000040
-end_define
-
-begin_comment
-comment|/* Wakeup when output done. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_XCLUDE
-value|0x000080
-end_define
-
-begin_comment
-comment|/* Exclusive-use flag against open. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_TTSTOP
-value|0x000100
-end_define
-
-begin_comment
-comment|/* Output stopped by ctl-s. */
-end_comment
-
-begin_comment
-comment|/* was	TS_HUPCLS	0x000200 	 * Hang up upon last close. */
+comment|/* Open has completed. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TS_TBLOCK
-value|0x000400
+value|0x00040
 end_define
 
 begin_comment
-comment|/* Tandem queue blocked. */
+comment|/* Further input blocked. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TS_ASYNC
-value|0x004000
+name|TS_TIMEOUT
+value|0x00080
 end_define
 
 begin_comment
-comment|/* Tty in async i/o mode. */
+comment|/* Wait for output char processing. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_TTSTOP
+value|0x00100
+end_define
+
+begin_comment
+comment|/* Output paused. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_WOPEN
+value|0x00200
+end_define
+
+begin_comment
+comment|/* Open in progress. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_XCLUDE
+value|0x00400
+end_define
+
+begin_comment
+comment|/* Tty requires exclusivity. */
 end_comment
 
 begin_comment
@@ -448,7 +490,7 @@ begin_define
 define|#
 directive|define
 name|TS_BKSL
-value|0x010000
+value|0x00800
 end_define
 
 begin_comment
@@ -458,8 +500,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TS_CNTTB
+value|0x01000
+end_define
+
+begin_comment
+comment|/* Counting tab width, ignore FLUSHO. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TS_ERASE
-value|0x040000
+value|0x02000
 end_define
 
 begin_comment
@@ -470,7 +523,7 @@ begin_define
 define|#
 directive|define
 name|TS_LNCH
-value|0x080000
+value|0x04000
 end_define
 
 begin_comment
@@ -481,7 +534,7 @@ begin_define
 define|#
 directive|define
 name|TS_TYPEN
-value|0x100000
+value|0x08000
 end_define
 
 begin_comment
@@ -491,19 +544,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TS_CNTTB
-value|0x200000
-end_define
-
-begin_comment
-comment|/* Counting tab width, ignore FLUSHO. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TS_LOCAL
-value|(TS_BKSL|TS_ERASE|TS_LNCH|TS_TYPEN|TS_CNTTB)
+value|(TS_BKSL | TS_CNTTB | TS_ERASE | TS_LNCH | TS_TYPEN)
 end_define
 
 begin_comment
@@ -574,6 +616,38 @@ comment|/* Code. */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Modem control commands (driver). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMBIS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMBIC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMGET
+value|3
+end_define
 
 begin_comment
 comment|/* Flags on a character passed to ttyinput. */
@@ -648,7 +722,7 @@ parameter_list|,
 name|tp
 parameter_list|)
 define|\
-value|((p)->p_session == (tp)->t_session&& (p)->p_flag&SCTTY)
+value|((p)->p_session == (tp)->t_session&& (p)->p_flag& SCTTY)
 end_define
 
 begin_comment
@@ -666,38 +740,6 @@ name|tp
 parameter_list|)
 define|\
 value|(isctty((p), (tp))&& (p)->p_pgrp != (tp)->t_pgrp)
-end_define
-
-begin_comment
-comment|/* Modem control commands (driver). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMSET
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMBIS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMBIC
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMGET
-value|3
 end_define
 
 begin_ifdef
