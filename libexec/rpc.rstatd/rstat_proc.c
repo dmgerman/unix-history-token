@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rstat_proc.c,v 1.2 1993/09/23 18:48:55 jtc Exp $"
+literal|"$Id: rstat_proc.c,v 1.1.1.1 1994/08/28 14:49:04 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1385,7 +1385,7 @@ name|v_pgpgin
 operator|=
 name|cnt
 operator|.
-name|v_pgpgin
+name|v_vnodepgsin
 expr_stmt|;
 name|stats_all
 operator|.
@@ -1395,7 +1395,7 @@ name|v_pgpgout
 operator|=
 name|cnt
 operator|.
-name|v_pgpgout
+name|v_vnodepgsout
 expr_stmt|;
 name|stats_all
 operator|.
@@ -1405,7 +1405,7 @@ name|v_pswpin
 operator|=
 name|cnt
 operator|.
-name|v_pswpin
+name|v_swappgsin
 expr_stmt|;
 name|stats_all
 operator|.
@@ -1415,7 +1415,7 @@ name|v_pswpout
 operator|=
 name|cnt
 operator|.
-name|v_pswpout
+name|v_swappgsout
 expr_stmt|;
 name|stats_all
 operator|.
