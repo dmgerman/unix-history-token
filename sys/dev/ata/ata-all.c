@@ -1137,6 +1137,8 @@ name|device
 index|[
 name|MASTER
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1156,6 +1158,8 @@ name|device
 index|[
 name|SLAVE
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1180,6 +1184,8 @@ name|device
 index|[
 name|MASTER
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1199,6 +1205,8 @@ name|device
 index|[
 name|SLAVE
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3580,6 +3588,8 @@ name|device
 index|[
 name|MASTER
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3599,6 +3609,8 @@ name|device
 index|[
 name|SLAVE
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3660,6 +3672,8 @@ name|device
 index|[
 name|MASTER
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3679,6 +3693,8 @@ name|device
 index|[
 name|SLAVE
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|#
@@ -5688,6 +5704,8 @@ name|device
 index|[
 name|MASTER
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5759,6 +5777,8 @@ name|device
 index|[
 name|SLAVE
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5837,6 +5857,8 @@ name|device
 index|[
 name|MASTER
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5910,6 +5932,8 @@ name|device
 index|[
 name|SLAVE
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 elseif|else

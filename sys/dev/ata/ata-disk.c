@@ -479,6 +479,9 @@ name|struct
 name|ata_device
 modifier|*
 name|atadev
+parameter_list|,
+name|int
+name|alreadylocked
 parameter_list|)
 block|{
 name|struct
@@ -722,6 +725,11 @@ name|param
 operator|->
 name|lba_size48
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|alreadylocked
+condition|)
 name|ATA_SLEEPLOCK_CH
 argument_list|(
 name|atadev

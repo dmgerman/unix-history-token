@@ -278,6 +278,9 @@ name|struct
 name|ata_device
 modifier|*
 name|atadev
+parameter_list|,
+name|int
+name|alreadylocked
 parameter_list|)
 block|{
 if|if
@@ -318,6 +321,11 @@ operator|->
 name|support_dma
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|alreadylocked
+condition|)
 name|ATA_SLEEPLOCK_CH
 argument_list|(
 name|atadev
