@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)kadb.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)kadb.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3448,6 +3448,8 @@ name|a3
 decl_stmt|;
 name|unsigned
 name|instr
+decl_stmt|,
+name|mask
 decl_stmt|;
 name|InstFmt
 name|i
@@ -3843,6 +3845,13 @@ literal|3
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|mask
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_for
 for|for
 control|(
@@ -4018,6 +4027,32 @@ operator|!=
 literal|29
 condition|)
 break|break;
+comment|/* only restore the first one */
+if|if
+condition|(
+name|mask
+operator|&
+operator|(
+literal|1
+operator|<<
+name|i
+operator|.
+name|IType
+operator|.
+name|rt
+operator|)
+condition|)
+break|break;
+name|mask
+operator||=
+literal|1
+operator|<<
+name|i
+operator|.
+name|IType
+operator|.
+name|rt
+expr_stmt|;
 switch|switch
 condition|(
 name|i
