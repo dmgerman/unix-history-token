@@ -595,6 +595,7 @@ condition|(
 name|verbose
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s

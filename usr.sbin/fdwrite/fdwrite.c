@@ -58,6 +58,7 @@ file|<sys/fdcio.h>
 end_include
 
 begin_function
+specifier|static
 name|int
 name|format_track
 parameter_list|(
@@ -292,7 +293,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -360,12 +363,14 @@ literal|1
 decl_stmt|,
 name|fdopts
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|device
 init|=
 literal|"/dev/fd0"
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|trackbuf
 init|=
