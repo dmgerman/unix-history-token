@@ -289,7 +289,7 @@ literal|""
 block|,
 literal|"yyloop:"
 block|,
-literal|"    if (yyn = yydefred[yystate]) goto yyreduce;"
+literal|"    if ((yyn = yydefred[yystate])) goto yyreduce;"
 block|,
 literal|"    if (yychar< 0)"
 block|,
