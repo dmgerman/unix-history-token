@@ -228,6 +228,17 @@ parameter_list|)
 value|((pa)& (TD_PA_MASK<< TD_PA_SHIFT))
 end_define
 
+begin_comment
+comment|/* NOTE: bit 6 of TD_SOFT will be sign-extended if used as an immediate. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TD_FAKE
+value|((1UL<< 5)<< TD_SOFT_SHIFT)
+end_define
+
 begin_define
 define|#
 directive|define
