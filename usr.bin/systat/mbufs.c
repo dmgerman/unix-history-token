@@ -427,7 +427,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 while|while
 condition|(
 name|max
@@ -445,7 +444,6 @@ argument_list|(
 name|wnd
 argument_list|)
 expr_stmt|;
-block|}
 name|mb
 operator|->
 name|m_mtypes
