@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Luigi Rizzo  *  * Supported by: the Xorp Project (www.xorp.org)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001-2002 Luigi Rizzo  *  * Supported by: the Xorp Project (www.xorp.org)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -206,7 +206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -236,7 +236,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -270,7 +270,7 @@ comment|/* good for 100Mbit net and HZ=1000 */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -304,7 +304,7 @@ comment|/* do we poll in idle loop ? */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -335,7 +335,7 @@ comment|/* used in trap.c */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -365,7 +365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -395,7 +395,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -423,7 +423,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -451,7 +451,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -479,7 +479,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -541,7 +541,7 @@ comment|/* next free entry in pr[]. */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -575,7 +575,7 @@ comment|/* global polling enable */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -604,7 +604,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -632,7 +632,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -661,7 +661,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -1052,7 +1052,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * netisr_pollmore is called after other netisr's, possibly scheduling  * another NETISR_POLL call, or adapting the burst size for the next cycle.  *  * It is very bad to fetch large bursts of packets from a single card at once,  * because the burst could take a long time to be completely processed, or  * could saturate the intermediate queue (ipintrq or similar) leading to  * losses or unfairness. To reduce the problem, and also to account better for  * time spent in network-related processnig, we split the burst in smaller  * chunks of fixed size, giving control to the other netisr's between chunks.  * This helps in improving the fairness, reducing livelock (because we  * emulate more closely the "process to completion" that we have with  * fastforwarding) and accounting for the work performed in low level  * handling and forwarding.  */
+comment|/*  * netisr_pollmore is called after other netisr's, possibly scheduling  * another NETISR_POLL call, or adapting the burst size for the next cycle.  *  * It is very bad to fetch large bursts of packets from a single card at once,  * because the burst could take a long time to be completely processed, or  * could saturate the intermediate queue (ipintrq or similar) leading to  * losses or unfairness. To reduce the problem, and also to account better for  * time spent in network-related processing, we split the burst in smaller  * chunks of fixed size, giving control to the other netisr's between chunks.  * This helps in improving the fairness, reducing livelock (because we  * emulate more closely the "process to completion" that we have with  * fastforwarding) and accounting for the work performed in low level  * handling and forwarding.  */
 end_comment
 
 begin_decl_stmt
@@ -1237,7 +1237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * netisr_poll scheduled by schednetisr when appropriate, typically once  * per tick. It is called at splnet() so first thing to do is to upgrade to  * splimp(), and call all registered handlers.  */
+comment|/*  * netisr_poll is scheduled by schednetisr when appropriate, typically once  * per tick. It is called at splnet() so first thing to do is to upgrade to  * splimp(), and call all registered handlers.  */
 end_comment
 
 begin_function
