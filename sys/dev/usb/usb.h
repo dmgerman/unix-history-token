@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.66 2002/07/11 21:14:34 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.67 2002/08/22 10:08:34 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1688,28 +1688,28 @@ begin_define
 define|#
 directive|define
 name|UDSUBCLASS_HUB
-value|0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|UDPROTO_FSHUB
-value|0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|UDPROTO_HSHUBSTT
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|UDPROTO_HSHUBMTT
-value|2
+value|0x02
 end_define
 
 begin_define
@@ -1717,6 +1717,27 @@ define|#
 directive|define
 name|UDCLASS_MASS
 value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDCLASS_WIRELESS
+value|0xe0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDSUBCLASS_RF
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDPROTO_BLUETOOTH
+value|0x01
 end_define
 
 begin_comment
@@ -2174,6 +2195,27 @@ define|#
 directive|define
 name|UICLASS_FIRM_UPD
 value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|UICLASS_WIRELESS
+value|0xe0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UISUBCLASS_RF
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIPROTO_BLUETOOTH
+value|0x01
 end_define
 
 begin_define
