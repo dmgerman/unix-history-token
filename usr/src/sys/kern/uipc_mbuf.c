@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.19	81/12/09	*/
+comment|/*	uipc_mbuf.c	1.20	81/12/09	*/
 end_comment
 
 begin_include
@@ -399,6 +399,7 @@ name|m_clusters
 operator|+=
 name|ncl
 expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
