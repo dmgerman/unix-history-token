@@ -181,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|DKBAD_MAGIC
-value|0
+value|0x4321
 end_define
 
 begin_decl_stmt
