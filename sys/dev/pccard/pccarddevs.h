@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.64 2003/08/21 16:40:20 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.65 2003/08/21 16:43:10 imp Exp   */
 end_comment
 
 begin_comment
@@ -4982,7 +4982,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_VENDOR_INTERSIL
+name|PCMCIA_VENDOR_INTERSIL2
 value|0xffffffff
 end_define
 
@@ -6088,21 +6088,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_INTERSIL_PRISM2
+name|PCMCIA_CIS_INTERSIL2_PRISM2
 value|{ "INTERSIL", "HFA384x/IEEE", "Version 01.02", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_INTERSIL_PRISM2
+name|PCMCIA_PRODUCT_INTERSIL2_PRISM2
 value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_INTERSIL_PRISM2
+name|PCMCIA_STR_INTERSIL2_PRISM2
 value|"Intersil Prism II"
 end_define
 
