@@ -6057,12 +6057,13 @@ sizeof|sizeof
 name|ut
 argument_list|)
 expr_stmt|;
-name|time
-argument_list|(
-operator|&
 name|ut
 operator|.
 name|ut_time
+operator|=
+name|time
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 name|strncpy

@@ -156,6 +156,9 @@ name|struct
 name|lastlog
 name|ll
 decl_stmt|;
+name|time_t
+name|t
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -421,6 +424,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|t
+operator|=
+name|ll
+operator|.
+name|ll_time
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -443,9 +452,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|ll
-operator|.
-name|ll_time
+name|t
 argument_list|)
 argument_list|,
 operator|(
@@ -477,9 +484,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|ll
-operator|.
-name|ll_time
+name|t
 argument_list|)
 argument_list|,
 operator|(
@@ -526,12 +531,13 @@ name|ll
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|time
-argument_list|(
-operator|&
 name|ll
 operator|.
 name|ll_time
+operator|=
+name|time
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* note: does not need to be NUL-terminated */
@@ -627,12 +633,13 @@ name|utmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|time
-argument_list|(
-operator|&
 name|utmp
 operator|.
 name|ut_time
+operator|=
+name|time
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* note: does not need to be NUL-terminated */
