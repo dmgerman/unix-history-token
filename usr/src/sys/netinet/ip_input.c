@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.3 81/10/16 */
+comment|/* ip_input.c 1.4 81/10/18 */
 end_comment
 
 begin_include
@@ -33,9 +33,11 @@ directive|include
 file|"../bbnnet/ucb.h"
 end_include
 
-begin_comment
-comment|/***************************************************************************** *                                                                            * *         ip level input routine: called from 1822 level upon receipt        * *         of an internet datagram or fragment.  this routine does            * *         fragment reassembly, if necessary, and passes completed            * *         datagrams to higher level protocol processing routines on          * *         the basis of the ip header protocol field.  it is passed a         * *         pointer to an mbuf chain containing the datagram/fragment.         * *         the mbuf offset/length are set to point at the ip header.          * *                                                                            * *****************************************************************************/
-end_comment
+begin_include
+include|#
+directive|include
+file|"../h/systm.h"
+end_include
 
 begin_decl_stmt
 name|int
@@ -219,22 +221,20 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-comment|/* byte-swap header */
-name|netcb
-operator|.
-name|n_ip_lock
-operator|++
-expr_stmt|;
-comment|/* lock frag reass.q */
 name|fp
 operator|=
+name|netcb
+operator|.
+name|n_ip_head
+condition|?
 name|ip_findf
 argument_list|(
 name|ip
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
-comment|/* look for chain on reass.q with this hdr */
-comment|/* adjust message length to remove any padding */
+comment|/* 	 * adjust message length to remove any padding 	 */
 for|for
 control|(
 name|i
@@ -338,19 +338,17 @@ literal|3
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ip
 operator|->
 name|ip_mff
-operator|&&
+operator|||
 name|ip
 operator|->
 name|ip_off
-operator|==
-literal|0
 condition|)
-block|{
-comment|/* not fragmented */
+goto|goto
+name|fragged
+goto|;
 if|if
 condition|(
 name|fp
@@ -358,7 +356,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* free existing reass.q chain */
 name|q
 operator|=
 name|fp
@@ -367,7 +364,6 @@ name|iqx
 operator|.
 name|ip_next
 expr_stmt|;
-comment|/* free mbufs assoc. w/chain */
 while|while
 condition|(
 name|q
@@ -402,12 +398,16 @@ argument_list|)
 expr_stmt|;
 comment|/* free header */
 block|}
-name|netcb
-operator|.
-name|n_ip_lock
-operator|=
-literal|0
-expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|>
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+condition|)
 name|ip_opt
 argument_list|(
 name|ip
@@ -415,39 +415,39 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-comment|/* option processing */
-name|i
-operator|=
+switch|switch
+condition|(
 name|ip
 operator|->
 name|ip_p
-expr_stmt|;
-comment|/* pass to next level */
-if|if
-condition|(
-name|i
-operator|==
-name|TCPROTO
 condition|)
+block|{
+case|case
+name|TCPROTO
+case|:
 name|tcp_input
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+default|default:
 name|raw_input
 argument_list|(
 name|mp
 argument_list|,
-name|i
+name|ip
+operator|->
+name|ip_p
 argument_list|,
 name|UIP
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
-comment|/* fragmented */
+return|return;
+name|fragged
+label|:
 comment|/* -> msg buf beyond ip hdr if not first fragment */
 if|if
 condition|(
@@ -479,7 +479,7 @@ name|NULL
 condition|)
 block|{
 comment|/* first fragment of datagram in */
-comment|/* set up reass.q header: enq it, set up as head of frag 		   chain, set a timer value, and move in ip header */
+comment|/* set up reass.q header: enq it, set up as head of frag 	   chain, set a timer value, and move in ip header */
 if|if
 condition|(
 operator|(
@@ -608,7 +608,7 @@ operator|=
 name|fp
 expr_stmt|;
 block|}
-comment|/***********************************************************                 *                                                          *                 *              merge fragment into reass.q                 *                 *    algorithm:   match  start  and  end  bytes  of new    *                 *    fragment  with  fragments  on  the  queue.   if   no  *                 *    overlaps  are  found,  add  new  frag. to the queue.  *                 *    otherwise, adjust start and end of new frag.  so  no  *                 *    overlap   and   add  remainder  to  queue.   if  any  *                 *    fragments are completely covered by the new one,  or  *                 *    if  the  new  one is completely duplicated, free the  *                 *    fragments.                                            *                 *                                                          *                 ***********************************************************/
+comment|/*********************************************************** 	*                                                          * 	*              merge fragment into reass.q                 * 	*    algorithm:   match  start  and  end  bytes  of new    * 	*    fragment  with  fragments  on  the  queue.   if   no  * 	*    overlaps  are  found,  add  new  frag. to the queue.  * 	*    otherwise, adjust start and end of new frag.  so  no  * 	*    overlap   and   add  remainder  to  queue.   if  any  * 	*    fragments are completely covered by the new one,  or  * 	*    if  the  new  one is completely duplicated, free the  * 	*    fragments.                                            * 	*                                                          * 	***********************************************************/
 name|q
 operator|=
 name|fp
@@ -1032,10 +1032,10 @@ argument_list|(
 name|fp
 argument_list|)
 operator|)
-operator|>
+operator|==
 literal|0
 condition|)
-block|{
+return|return;
 name|p
 operator|=
 name|fp
@@ -1107,13 +1107,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 comment|/* dequeue header */
-name|netcb
-operator|.
-name|n_ip_lock
-operator|=
-literal|0
-expr_stmt|;
-comment|/* call next level with completed datagram */
 name|i
 operator|=
 name|p
@@ -1142,15 +1135,6 @@ name|UIP
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|netcb
-operator|.
-name|n_ip_lock
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
 end_block
 
 begin_expr_stmt
@@ -1158,7 +1142,6 @@ name|ip_done
 argument_list|(
 name|p
 argument_list|)
-comment|/* check to see if fragment reassembly is complete */
 specifier|register
 expr|struct
 name|ip
@@ -1683,7 +1666,7 @@ literal|0
 condition|)
 block|{
 comment|/* any options */
-comment|/*      *** IP OPTION PROCESSING ***  		while (i> 0)    			switch (*q++) { 			case 0:                  			case 1:                  				i--; 				break;  			default: 				i -= *q; 				q += *q; 			} */
+comment|/*      *** IP OPTION PROCESSING ***  		while (i> 0)    			switch (*q++) { 			case 0: 			case 1: 				i--; 				break;  			default: 				i -= *q; 				q += *q; 			} */
 name|q
 operator|+=
 name|i
@@ -1886,25 +1869,10 @@ name|ip_timeo
 argument_list|,
 literal|0
 argument_list|,
-literal|60
+name|hz
 argument_list|)
 expr_stmt|;
 comment|/* reschedule every second */
-if|if
-condition|(
-name|netcb
-operator|.
-name|n_ip_lock
-condition|)
-block|{
-comment|/* reass.q must not be in use */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* search through reass.q */
 for|for
 control|(
