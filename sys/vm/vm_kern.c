@@ -22,6 +22,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_comment
+comment|/* for ticks and hz */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -840,6 +850,30 @@ operator|!=
 name|kmem_map
 condition|)
 block|{
+specifier|static
+name|int
+name|last_report
+decl_stmt|;
+comment|/* when we did it (in ticks) */
+if|if
+condition|(
+name|ticks
+operator|<
+name|last_report
+operator|||
+operator|(
+name|ticks
+operator|-
+name|last_report
+operator|)
+operator|>=
+name|hz
+condition|)
+block|{
+name|last_report
+operator|=
+name|ticks
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Out of mbuf address space!\n"
@@ -850,6 +884,7 @@ argument_list|(
 literal|"Consider increasing NMBCLUSTERS\n"
 argument_list|)
 expr_stmt|;
+block|}
 goto|goto
 name|bad
 goto|;

@@ -2766,12 +2766,46 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+comment|/* 					 * no way to indent this code decently 					 * with 8-space tabs. 					 */
+specifier|static
+name|int
+name|last_report
+decl_stmt|;
 comment|/* XXX: No consistency. */
 name|mbstat
 operator|.
 name|m_drops
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|ticks
+operator|<
+name|last_report
+operator|||
+operator|(
+name|ticks
+operator|-
+name|last_report
+operator|)
+operator|>=
+name|hz
+condition|)
+block|{
+name|last_report
+operator|=
+name|ticks
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"mb_alloc for type %d failed, consider increase mbuf value.\n"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 block|}
 block|}
