@@ -619,12 +619,7 @@ name|pccard_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pccard_softc
-operator|*
-operator|)
-name|device_get_softc
+name|PCCARD_SOFTC
 argument_list|(
 name|dev
 argument_list|)

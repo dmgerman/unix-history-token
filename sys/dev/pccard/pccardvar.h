@@ -789,6 +789,10 @@ parameter_list|)
 value|(STAILQ_FIRST(&(sc)->card.pf_head)&&		\ 		 STAILQ_NEXT(STAILQ_FIRST(&(sc)->card.pf_head),pf_list))
 end_define
 
+begin_comment
+comment|/* The following is the vestages of the NetBSD driver api */
+end_comment
+
 begin_function_decl
 name|void
 name|pccard_function_init
@@ -1022,6 +1026,16 @@ literal|0x1
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|PCCARD_SOFTC
+parameter_list|(
+name|d
+parameter_list|)
+value|(struct pccard_softc *) device_get_softc(d)
+end_define
 
 end_unit
 

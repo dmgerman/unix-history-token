@@ -333,12 +333,7 @@ name|pccard_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pccard_softc
-operator|*
-operator|)
-name|device_get_softc
+name|PCCARD_SOFTC
 argument_list|(
 name|dev
 argument_list|)
@@ -405,25 +400,6 @@ expr_stmt|;
 name|pccard_read_cis
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|DEVPRINTF
-argument_list|(
-operator|(
-name|dev
-operator|,
-literal|"chip_socket_disable\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|POWER_DISABLE_SOCKET
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
 argument_list|)
 expr_stmt|;
 name|DEVPRINTF
@@ -515,7 +491,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"pf %x sc %x\n"
+literal|"pf %p sc %p\n"
 argument_list|,
 name|pf
 argument_list|,
@@ -547,6 +523,25 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|DEVPRINTF
+argument_list|(
+operator|(
+name|dev
+operator|,
+literal|"chip_socket_disable\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|POWER_DISABLE_SOCKET
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|pf
@@ -610,7 +605,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"pf %x pf->sc %x\n"
+literal|"pf %p pf->sc %p\n"
 argument_list|,
 name|pf
 argument_list|,
@@ -744,12 +739,7 @@ name|pccard_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pccard_softc
-operator|*
-operator|)
-name|device_get_softc
+name|PCCARD_SOFTC
 argument_list|(
 name|dev
 argument_list|)
@@ -822,12 +812,7 @@ name|pccard_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pccard_softc
-operator|*
-operator|)
-name|device_get_softc
+name|PCCARD_SOFTC
 argument_list|(
 name|dev
 argument_list|)
@@ -1963,19 +1948,12 @@ name|struct
 name|pccard_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|sc
-operator|=
-operator|(
-expr|struct
-name|pccard_softc
-operator|*
-operator|)
-name|device_get_softc
+init|=
+name|PCCARD_SOFTC
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|sc
 operator|->
 name|dev
@@ -1987,6 +1965,17 @@ operator|->
 name|sc_enabled_count
 operator|=
 literal|0
+expr_stmt|;
+name|DEVPRINTF
+argument_list|(
+operator|(
+name|dev
+operator|,
+literal|"pccard_attach %p\n"
+operator|,
+name|dev
+operator|)
+argument_list|)
 expr_stmt|;
 return|return
 name|bus_generic_attach
@@ -2870,9 +2859,11 @@ literal|"pccard"
 block|,
 name|pccard_methods
 block|,
-literal|1
-block|,
-comment|/* no softc */
+expr|sizeof
+operator|(
+expr|struct
+name|pccard_softc
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
