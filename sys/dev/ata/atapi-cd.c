@@ -1873,7 +1873,7 @@ name|dev
 operator|->
 name|si_iosize_max
 operator|=
-literal|252
+literal|126
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
