@@ -1247,12 +1247,12 @@ case|case
 literal|'C'
 case|:
 comment|/* GNU tar */
-comment|/* Defer first -C until after -f is opened. */
+name|set_chdir
+argument_list|(
 name|bsdtar
-operator|->
-name|start_dir
-operator|=
+argument_list|,
 name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

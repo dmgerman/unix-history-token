@@ -43,10 +43,9 @@ modifier|*
 name|create_format
 decl_stmt|;
 comment|/* -F format */
-specifier|const
 name|char
 modifier|*
-name|start_dir
+name|pending_chdir
 decl_stmt|;
 comment|/* -C dir */
 specifier|const
@@ -292,6 +291,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|do_chdir
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|exclude
 parameter_list|(
@@ -416,6 +426,22 @@ modifier|*
 name|fmt
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|set_chdir
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|newdir
 parameter_list|)
 function_decl|;
 end_function_decl
