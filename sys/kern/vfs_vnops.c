@@ -401,6 +401,9 @@ name|cn_flags
 operator||=
 name|FOLLOW
 expr_stmt|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|namei

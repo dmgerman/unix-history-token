@@ -5765,6 +5765,9 @@ operator|(
 name|error
 operator|)
 return|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -6155,6 +6158,9 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -6426,6 +6432,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -6779,6 +6788,9 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -7031,6 +7043,9 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -7279,6 +7294,9 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -13393,6 +13411,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -13993,6 +14014,9 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -14284,6 +14308,9 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
