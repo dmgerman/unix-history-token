@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	6.3	84/08/29	*/
+comment|/*	uipc_mbuf.c	6.4	85/05/27	*/
 end_comment
 
 begin_include
@@ -70,6 +70,14 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|m_clalloc
@@ -79,6 +87,8 @@ operator|/
 name|CLBYTES
 argument_list|,
 name|MPG_MBUFS
+argument_list|,
+name|M_DONTWAIT
 argument_list|)
 operator|==
 literal|0
@@ -97,6 +107,8 @@ operator|/
 name|CLBYTES
 argument_list|,
 name|MPG_CLUSTERS
+argument_list|,
+name|M_DONTWAIT
 argument_list|)
 operator|==
 literal|0
@@ -104,6 +116,11 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
 name|bad
 label|:
@@ -115,6 +132,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Must be called at splimp.  */
+end_comment
+
 begin_function
 name|caddr_t
 name|m_clalloc
@@ -122,6 +143,8 @@ parameter_list|(
 name|ncl
 parameter_list|,
 name|how
+parameter_list|,
+name|canwait
 parameter_list|)
 specifier|register
 name|int
@@ -146,21 +169,12 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|npg
 operator|=
 name|ncl
 operator|*
 name|CLSIZE
 expr_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-comment|/* careful: rmalloc isn't reentrant */
 name|mbx
 operator|=
 name|rmalloc
@@ -173,22 +187,30 @@ operator|)
 name|npg
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mbx
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|canwait
+operator|==
+name|M_WAIT
+condition|)
+name|panic
+argument_list|(
+literal|"out of mbuf map"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|m
 operator|=
 name|cltom
@@ -218,11 +240,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|rmfree
 argument_list|(
 name|mbmap
@@ -236,11 +253,6 @@ operator|(
 name|long
 operator|)
 name|mbx
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -273,11 +285,6 @@ block|{
 case|case
 name|MPG_CLUSTERS
 case|:
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -329,11 +336,6 @@ operator|.
 name|m_clusters
 operator|+=
 name|ncl
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -450,10 +452,22 @@ directive|endif
 block|}
 end_block
 
+begin_comment
+comment|/*  * Must be called at splimp.  */
+end_comment
+
 begin_macro
 name|m_expand
-argument_list|()
+argument_list|(
+argument|canwait
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|canwait
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -464,6 +478,8 @@ argument_list|(
 literal|1
 argument_list|,
 name|MPG_MBUFS
+argument_list|,
+name|canwait
 argument_list|)
 operator|==
 literal|0
@@ -556,10 +572,10 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|m
-operator|=
-name|m_get
+name|MGET
 argument_list|(
+name|m
+argument_list|,
 name|canwait
 argument_list|,
 name|type
@@ -632,6 +648,10 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Get more mbufs; called from MGET macro if mfree list is empty.  * Must be called at splimp.  */
+end_comment
+
+begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
@@ -657,12 +677,40 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+while|while
+condition|(
+name|m_expand
+argument_list|(
+name|canwait
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
-operator|!
-name|m_expand
-argument_list|()
+name|canwait
+operator|==
+name|M_WAIT
 condition|)
+block|{
+name|m_want
+operator|++
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|mfree
+argument_list|,
+name|PZERO
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|mbstat
 operator|.
@@ -674,6 +722,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 define|#
 directive|define
@@ -768,6 +817,10 @@ end_block
 
 begin_comment
 comment|/*  * Mbuffer utility routines.  */
+end_comment
+
+begin_comment
+comment|/*  * Make a copy of an mbuf chain starting "off" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * Should get M_WAIT/M_DONTWAIT from caller.  */
 end_comment
 
 begin_function
@@ -920,7 +973,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_WAIT
+name|M_DONTWAIT
 argument_list|,
 name|m
 operator|->
