@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ppc-opc.c -- PowerPC opcode list    Copyright 1994, 1995, 1996, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ppc-opc.c -- PowerPC opcode list    Copyright 1994, 1995, 1996, 1997, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -2720,7 +2720,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The BD field in a B form instruction when the - modifier is used.    This modifier means that the branch is not expected to be taken.    For 32 bit targets we set the y bit of the BO field to 1 if the    offset is negative.  When extracting, we require that the y bit be    1 and that the offset be positive, since if the y bit is 0 we just    want to print the normal form of the instruction.    64 bit targets use two bits, "a", and "t", instead of the "y" bit.    at == 10 => not taken, at == 11 => taken.  The t bit is 00001 in    BO field, the a bit is 00010 for branch on CR(BI) and 01000 for    branch on CTR.  */
+comment|/* The BD field in a B form instruction when the - modifier is used.    This modifier means that the branch is not expected to be taken.    For chips built to versions of the architecture prior to version 2    (ie. not Power4 compatible), we set the y bit of the BO field to 1    if the offset is negative.  When extracting, we require that the y    bit be 1 and that the offset be positive, since if the y bit is 0    we just want to print the normal form of the instruction.    Power4 compatible targets use two bits, "a", and "t", instead of    the "y" bit.  "at" == 00 => no hint, "at" == 01 => unpredictable,    "at" == 10 => not taken, "at" == 11 => taken.  The "t" bit is 00001    in BO field, the "a" bit is 00010 for branch on CR(BI) and 01000    for branch on CTR.  We only handle the taken/not-taken hint here.  */
 end_comment
 
 begin_comment
@@ -2764,14 +2764,10 @@ condition|(
 operator|(
 name|dialect
 operator|&
-operator|(
-name|PPC_OPCODE_BOOKE
-operator||
-name|PPC_OPCODE_64
+name|PPC_OPCODE_POWER4
 operator|)
-operator|)
-operator|!=
-name|PPC_OPCODE_64
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -2894,14 +2890,10 @@ condition|(
 operator|(
 name|dialect
 operator|&
-operator|(
-name|PPC_OPCODE_BOOKE
-operator||
-name|PPC_OPCODE_64
+name|PPC_OPCODE_POWER4
 operator|)
-operator|)
-operator|!=
-name|PPC_OPCODE_64
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -3044,14 +3036,10 @@ condition|(
 operator|(
 name|dialect
 operator|&
-operator|(
-name|PPC_OPCODE_BOOKE
-operator||
-name|PPC_OPCODE_64
+name|PPC_OPCODE_POWER4
 operator|)
-operator|)
-operator|!=
-name|PPC_OPCODE_64
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -3174,14 +3162,10 @@ condition|(
 operator|(
 name|dialect
 operator|&
-operator|(
-name|PPC_OPCODE_BOOKE
-operator||
-name|PPC_OPCODE_64
+name|PPC_OPCODE_POWER4
 operator|)
-operator|)
-operator|!=
-name|PPC_OPCODE_64
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -3304,14 +3288,10 @@ condition|(
 operator|(
 name|dialect
 operator|&
-operator|(
-name|PPC_OPCODE_BOOKE
-operator||
-name|PPC_OPCODE_64
+name|PPC_OPCODE_POWER4
 operator|)
-operator|)
-operator|!=
-name|PPC_OPCODE_64
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Certain encodings have bits that are required to be zero. 	 These are (z must be zero, y may be anything): 	     001zy 	     011zy 	     1z00y 	     1z01y 	     1z1zz       */
@@ -5959,7 +5939,7 @@ value|BBO (0x3f, 0x1f, 1, 1)
 end_define
 
 begin_comment
-comment|/* A BBO_MASK with the y bit of the BO field removed.  This permits    matching a conditional branch regardless of the setting of the y    bit.  Similarly for the 'at' bits used for 64 bit branch hints.  */
+comment|/* A BBO_MASK with the y bit of the BO field removed.  This permits    matching a conditional branch regardless of the setting of the y    bit.  Similarly for the 'at' bits used for power4 branch hints.  */
 end_comment
 
 begin_define
@@ -7057,14 +7037,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|BOFM64
+name|BOFM4
 value|(0x6)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BOFP64
+name|BOFP4
 value|(0x7)
 end_define
 
@@ -7085,14 +7065,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|BOTM64
+name|BOTM4
 value|(0xe)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BOTP64
+name|BOTP4
 value|(0xf)
 end_define
 
@@ -7127,28 +7107,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|BODNZM64
+name|BODNZM4
 value|(0x18)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BODNZP64
+name|BODNZP4
 value|(0x19)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BODZM64
+name|BODZM4
 value|(0x1a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BODZP64
+name|BODZP4
 value|(0x1b)
 end_define
 
@@ -7330,15 +7310,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PPCCOM32
-value|PPC_OPCODE_32 | PPCCOM
+name|NOPOWER4
+value|PPC_OPCODE_NOPOWER4 | PPCCOM
 end_define
 
 begin_define
 define|#
 directive|define
-name|PPCCOM64
-value|PPC_OPCODE_64 | PPCCOM
+name|POWER4
+value|PPC_OPCODE_POWER4 | PPCCOM
 end_define
 
 begin_define
@@ -19616,7 +19596,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19641,7 +19621,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19691,7 +19671,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19716,7 +19696,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19766,7 +19746,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19791,7 +19771,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19841,7 +19821,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19866,7 +19846,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19916,7 +19896,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19941,7 +19921,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -19991,7 +19971,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -20016,7 +19996,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -20066,7 +20046,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -20091,7 +20071,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -20141,7 +20121,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -20166,7 +20146,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21016,7 +20996,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21041,7 +21021,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21091,7 +21071,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21116,7 +21096,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21166,7 +21146,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21191,7 +21171,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21241,7 +21221,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21266,7 +21246,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21316,7 +21296,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21341,7 +21321,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21391,7 +21371,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21416,7 +21396,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21466,7 +21446,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21491,7 +21471,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21541,7 +21521,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -21566,7 +21546,7 @@ argument_list|)
 block|,
 name|BBOY_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -22261,7 +22241,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 literal|0
@@ -22284,7 +22264,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 literal|0
@@ -22298,7 +22278,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BODNZM64
+name|BODNZM4
 argument_list|,
 literal|16
 argument_list|,
@@ -22307,7 +22287,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 literal|0
@@ -22321,7 +22301,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BODNZP64
+name|BODNZP4
 argument_list|,
 literal|16
 argument_list|,
@@ -22330,7 +22310,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 literal|0
@@ -22376,7 +22356,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 literal|0
@@ -22399,7 +22379,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 literal|0
@@ -22413,7 +22393,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BODNZM64
+name|BODNZM4
 argument_list|,
 literal|16
 argument_list|,
@@ -22422,7 +22402,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 literal|0
@@ -22436,7 +22416,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BODNZP64
+name|BODNZP4
 argument_list|,
 literal|16
 argument_list|,
@@ -22445,7 +22425,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 literal|0
@@ -22491,7 +22471,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 literal|0
@@ -22514,7 +22494,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 literal|0
@@ -22528,7 +22508,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BODZM64
+name|BODZM4
 argument_list|,
 literal|16
 argument_list|,
@@ -22537,7 +22517,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 literal|0
@@ -22551,7 +22531,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BODZP64
+name|BODZP4
 argument_list|,
 literal|16
 argument_list|,
@@ -22560,7 +22540,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 literal|0
@@ -22606,7 +22586,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 literal|0
@@ -22629,7 +22609,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 literal|0
@@ -22643,7 +22623,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BODZM64
+name|BODZM4
 argument_list|,
 literal|16
 argument_list|,
@@ -22652,7 +22632,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 literal|0
@@ -22666,7 +22646,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BODZP64
+name|BODZP4
 argument_list|,
 literal|16
 argument_list|,
@@ -22675,7 +22655,7 @@ argument_list|)
 block|,
 name|XLBOBIBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 literal|0
@@ -22725,7 +22705,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -22750,7 +22730,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -22764,7 +22744,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -22775,7 +22755,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -22789,7 +22769,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -22800,7 +22780,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -22875,7 +22855,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -22900,7 +22880,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -22914,7 +22894,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -22925,7 +22905,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -22939,7 +22919,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -22950,7 +22930,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23025,7 +23005,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23050,7 +23030,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23064,7 +23044,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -23075,7 +23055,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23089,7 +23069,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -23100,7 +23080,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23175,7 +23155,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23200,7 +23180,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23214,7 +23194,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -23225,7 +23205,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23239,7 +23219,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -23250,7 +23230,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23325,7 +23305,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23350,7 +23330,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23364,7 +23344,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -23375,7 +23355,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23389,7 +23369,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -23400,7 +23380,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23475,7 +23455,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23500,7 +23480,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23514,7 +23494,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -23525,7 +23505,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23539,7 +23519,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -23550,7 +23530,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23625,7 +23605,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23650,7 +23630,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23664,7 +23644,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -23675,7 +23655,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23689,7 +23669,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -23700,7 +23680,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23775,7 +23755,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23800,7 +23780,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23814,7 +23794,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -23825,7 +23805,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23839,7 +23819,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -23850,7 +23830,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23925,7 +23905,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23950,7 +23930,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -23964,7 +23944,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -23975,7 +23955,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -23989,7 +23969,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -24000,7 +23980,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24050,7 +24030,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24075,7 +24055,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24089,7 +24069,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -24100,7 +24080,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24114,7 +24094,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -24125,7 +24105,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24175,7 +24155,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24200,7 +24180,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24214,7 +24194,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -24225,7 +24205,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24239,7 +24219,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -24250,7 +24230,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24325,7 +24305,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24350,7 +24330,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24364,7 +24344,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -24375,7 +24355,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24389,7 +24369,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -24400,7 +24380,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24475,7 +24455,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24500,7 +24480,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24514,7 +24494,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -24525,7 +24505,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24539,7 +24519,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -24550,7 +24530,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24625,7 +24605,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24650,7 +24630,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24664,7 +24644,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -24675,7 +24655,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24689,7 +24669,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -24700,7 +24680,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24775,7 +24755,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24800,7 +24780,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24814,7 +24794,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -24825,7 +24805,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24839,7 +24819,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -24850,7 +24830,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24925,7 +24905,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24950,7 +24930,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -24964,7 +24944,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -24975,7 +24955,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -24989,7 +24969,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -25000,7 +24980,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25075,7 +25055,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25100,7 +25080,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25114,7 +25094,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -25125,7 +25105,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25139,7 +25119,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -25150,7 +25130,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25225,7 +25205,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25250,7 +25230,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25264,7 +25244,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -25275,7 +25255,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25289,7 +25269,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -25300,7 +25280,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25375,7 +25355,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25400,7 +25380,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25414,7 +25394,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -25425,7 +25405,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25439,7 +25419,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -25450,7 +25430,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25525,7 +25505,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25550,7 +25530,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25564,7 +25544,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -25575,7 +25555,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25589,7 +25569,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -25600,7 +25580,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25675,7 +25655,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25700,7 +25680,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25714,7 +25694,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -25725,7 +25705,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25739,7 +25719,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -25750,7 +25730,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25825,7 +25805,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25850,7 +25830,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -25864,7 +25844,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -25875,7 +25855,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25889,7 +25869,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -25900,7 +25880,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -25975,7 +25955,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -26000,7 +25980,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -26014,7 +25994,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -26025,7 +26005,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -26039,7 +26019,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -26050,7 +26030,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -26100,7 +26080,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -26125,7 +26105,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -26139,7 +26119,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -26150,7 +26130,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -26164,7 +26144,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -26175,7 +26155,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -26221,7 +26201,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26244,7 +26224,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26258,7 +26238,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 literal|16
 argument_list|,
@@ -26267,7 +26247,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -26281,7 +26261,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 literal|16
 argument_list|,
@@ -26290,7 +26270,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -26359,7 +26339,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26382,7 +26362,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26396,7 +26376,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 literal|16
 argument_list|,
@@ -26405,7 +26385,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -26419,7 +26399,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 literal|16
 argument_list|,
@@ -26428,7 +26408,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -26497,7 +26477,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26520,7 +26500,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26534,7 +26514,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 literal|16
 argument_list|,
@@ -26543,7 +26523,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -26557,7 +26537,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 literal|16
 argument_list|,
@@ -26566,7 +26546,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -26635,7 +26615,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26658,7 +26638,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26672,7 +26652,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 literal|16
 argument_list|,
@@ -26681,7 +26661,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -26695,7 +26675,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 literal|16
 argument_list|,
@@ -26704,7 +26684,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -26773,7 +26753,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26796,7 +26776,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26842,7 +26822,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26865,7 +26845,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26911,7 +26891,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26934,7 +26914,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -26980,7 +26960,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -27003,7 +26983,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -27049,7 +27029,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -27072,7 +27052,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -27118,7 +27098,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -27141,7 +27121,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -27187,7 +27167,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -27210,7 +27190,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -27256,7 +27236,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -27279,7 +27259,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -28022,7 +28002,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28047,7 +28027,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28061,7 +28041,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -28072,7 +28052,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28086,7 +28066,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -28097,7 +28077,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28147,7 +28127,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28172,7 +28152,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28186,7 +28166,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -28197,7 +28177,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28211,7 +28191,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -28222,7 +28202,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28272,7 +28252,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28297,7 +28277,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28311,7 +28291,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -28322,7 +28302,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28336,7 +28316,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -28347,7 +28327,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28397,7 +28377,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28422,7 +28402,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28436,7 +28416,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -28447,7 +28427,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28461,7 +28441,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -28472,7 +28452,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28522,7 +28502,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28547,7 +28527,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28561,7 +28541,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -28572,7 +28552,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28586,7 +28566,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -28597,7 +28577,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28647,7 +28627,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28672,7 +28652,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28686,7 +28666,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -28697,7 +28677,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28711,7 +28691,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -28722,7 +28702,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28772,7 +28752,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28797,7 +28777,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28811,7 +28791,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -28822,7 +28802,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28836,7 +28816,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -28847,7 +28827,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28897,7 +28877,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28922,7 +28902,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -28936,7 +28916,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -28947,7 +28927,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -28961,7 +28941,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -28972,7 +28952,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29022,7 +29002,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29047,7 +29027,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29061,7 +29041,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -29072,7 +29052,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29086,7 +29066,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -29097,7 +29077,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29147,7 +29127,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29172,7 +29152,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29186,7 +29166,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -29197,7 +29177,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29211,7 +29191,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -29222,7 +29202,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29272,7 +29252,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29297,7 +29277,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29311,7 +29291,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -29322,7 +29302,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29336,7 +29316,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -29347,7 +29327,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29397,7 +29377,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29422,7 +29402,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29436,7 +29416,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -29447,7 +29427,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29461,7 +29441,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -29472,7 +29452,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29522,7 +29502,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29547,7 +29527,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29561,7 +29541,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -29572,7 +29552,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29586,7 +29566,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -29597,7 +29577,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29647,7 +29627,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29672,7 +29652,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29686,7 +29666,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -29697,7 +29677,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29711,7 +29691,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBLT
 argument_list|,
@@ -29722,7 +29702,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29772,7 +29752,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29797,7 +29777,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29811,7 +29791,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -29822,7 +29802,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29836,7 +29816,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -29847,7 +29827,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29897,7 +29877,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29922,7 +29902,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -29936,7 +29916,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -29947,7 +29927,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -29961,7 +29941,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -29972,7 +29952,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30022,7 +30002,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30047,7 +30027,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30061,7 +30041,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -30072,7 +30052,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30086,7 +30066,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -30097,7 +30077,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30147,7 +30127,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30172,7 +30152,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30186,7 +30166,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -30197,7 +30177,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30211,7 +30191,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBGT
 argument_list|,
@@ -30222,7 +30202,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30272,7 +30252,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30297,7 +30277,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30311,7 +30291,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -30322,7 +30302,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30336,7 +30316,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -30347,7 +30327,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30397,7 +30377,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30422,7 +30402,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30436,7 +30416,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -30447,7 +30427,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30461,7 +30441,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBEQ
 argument_list|,
@@ -30472,7 +30452,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30522,7 +30502,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30547,7 +30527,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30561,7 +30541,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -30572,7 +30552,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30586,7 +30566,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -30597,7 +30577,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30647,7 +30627,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30672,7 +30652,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30686,7 +30666,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -30697,7 +30677,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30711,7 +30691,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -30722,7 +30702,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30772,7 +30752,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30797,7 +30777,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30811,7 +30791,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -30822,7 +30802,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30836,7 +30816,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -30847,7 +30827,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30897,7 +30877,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30922,7 +30902,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|CR
@@ -30936,7 +30916,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -30947,7 +30927,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -30961,7 +30941,7 @@ name|XLOCB
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 name|CBSO
 argument_list|,
@@ -30972,7 +30952,7 @@ argument_list|)
 block|,
 name|XLBOCBBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|CR
@@ -31018,7 +30998,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -31041,7 +31021,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -31055,7 +31035,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 literal|528
 argument_list|,
@@ -31064,7 +31044,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -31078,7 +31058,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 literal|528
 argument_list|,
@@ -31087,7 +31067,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -31133,7 +31113,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -31156,7 +31136,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -31170,7 +31150,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOTM64
+name|BOTM4
 argument_list|,
 literal|528
 argument_list|,
@@ -31179,7 +31159,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -31193,7 +31173,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOTP64
+name|BOTP4
 argument_list|,
 literal|528
 argument_list|,
@@ -31202,7 +31182,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -31248,7 +31228,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -31271,7 +31251,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -31285,7 +31265,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 literal|528
 argument_list|,
@@ -31294,7 +31274,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -31308,7 +31288,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 literal|528
 argument_list|,
@@ -31317,7 +31297,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -31363,7 +31343,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -31386,7 +31366,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM32
+name|NOPOWER4
 block|,
 block|{
 name|BI
@@ -31400,7 +31380,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOFM64
+name|BOFM4
 argument_list|,
 literal|528
 argument_list|,
@@ -31409,7 +31389,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI
@@ -31423,7 +31403,7 @@ name|XLO
 argument_list|(
 literal|19
 argument_list|,
-name|BOFP64
+name|BOFP4
 argument_list|,
 literal|528
 argument_list|,
@@ -31432,7 +31412,7 @@ argument_list|)
 block|,
 name|XLBOBB_MASK
 block|,
-name|PPCCOM64
+name|POWER4
 block|,
 block|{
 name|BI

@@ -76,9 +76,9 @@ name|bfd_arch_i386
 block|,
 name|bfd_mach_x86_64_intel_syntax
 block|,
-literal|"x86-64:intel"
+literal|"i386:intel"
 block|,
-literal|"x86-64:intel"
+literal|"i386:x86-64:intel"
 block|,
 literal|3
 block|,
@@ -151,9 +151,9 @@ name|bfd_arch_i386
 block|,
 name|bfd_mach_x86_64
 block|,
-literal|"x86-64"
+literal|"i386"
 block|,
-literal|"x86-64"
+literal|"i386:x86-64"
 block|,
 literal|3
 block|,

@@ -628,7 +628,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|_bfd_xcoff_generic_stat_arch_elt
+name|_bfd_xcoff_stat_arch_elt
 name|PARAMS
 argument_list|(
 operator|(
@@ -11705,9 +11705,9 @@ comment|/* _openr_next_archived_file */
 name|_bfd_generic_get_elt_at_index
 block|,
 comment|/* _get_elt_at_index */
-name|_bfd_xcoff_generic_stat_arch_elt
+name|_bfd_xcoff_stat_arch_elt
 block|,
-comment|/* _generic_dtat_arch_elt */
+comment|/* _generic_stat_arch_elt */
 comment|/* XCOFF archives do not have      a timestamp.  */
 name|bfd_true
 block|,

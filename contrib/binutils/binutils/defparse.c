@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  A Bison parser, made from defparse.y     by GNU Bison version 1.28  */
+comment|/* A Bison parser, made from defparse.y    by GNU bison 1.33.  */
 end_comment
 
 begin_define
@@ -243,6 +243,12 @@ number|26
 file|"defparse.y"
 end_line
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YYSTYPE
+end_ifndef
+
 begin_typedef
 typedef|typedef
 union|union
@@ -255,38 +261,34 @@ name|int
 name|number
 decl_stmt|;
 block|}
-name|YYSTYPE
+name|yystype
 typedef|;
 end_typedef
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__cplusplus
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|const
+name|YYSTYPE
+value|yystype
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YYDEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|YYDEBUG
+value|0
+end_define
 
 begin_endif
 endif|#
@@ -297,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|YYFINAL
-value|94
+value|96
 end_define
 
 begin_define
@@ -314,6 +316,10 @@ name|YYNTBASE
 value|34
 end_define
 
+begin_comment
+comment|/* YYTRANSLATE(YYLEX) -- Bison token number corresponding to YYLEX. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -323,6 +329,10 @@ name|x
 parameter_list|)
 value|((unsigned)(x)<= 283 ? yytranslate[x] : 55)
 end_define
+
+begin_comment
+comment|/* YYTRANSLATE[YYLEX] -- Bison token number corresponding to YYLEX. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -907,8 +917,6 @@ begin_if
 if|#
 directive|if
 name|YYDEBUG
-operator|!=
-literal|0
 end_if
 
 begin_decl_stmt
@@ -1033,21 +1041,23 @@ literal|167
 block|,
 literal|170
 block|,
-literal|171
-block|,
 literal|175
 block|,
 literal|176
 block|,
-literal|177
+literal|180
 block|,
 literal|181
 block|,
-literal|183
+literal|182
 block|,
-literal|185
+literal|186
 block|,
-literal|187
+literal|188
+block|,
+literal|190
+block|,
+literal|192
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1400,6 +1410,16 @@ literal|28
 block|,
 literal|0
 block|,
+literal|31
+block|,
+literal|28
+block|,
+literal|30
+block|,
+literal|28
+block|,
+literal|0
+block|,
 literal|0
 block|,
 literal|14
@@ -1450,9 +1470,11 @@ begin_if
 if|#
 directive|if
 name|YYDEBUG
-operator|!=
-literal|0
 end_if
+
+begin_comment
+comment|/* YYRLINE[YYN] -- source line where rule number YYN was defined. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1576,21 +1598,23 @@ literal|150
 block|,
 literal|152
 block|,
-literal|155
-block|,
-literal|156
-block|,
-literal|159
+literal|158
 block|,
 literal|161
 block|,
-literal|164
+literal|162
 block|,
-literal|166
+literal|165
 block|,
 literal|167
 block|,
-literal|168
+literal|170
+block|,
+literal|172
+block|,
+literal|173
+block|,
+literal|174
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1603,15 +1627,17 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|YYDEBUG
-operator|!=
-literal|0
+operator|)
 operator|||
 name|defined
-argument_list|(
 name|YYERROR_VERBOSE
-argument_list|)
 end_if
+
+begin_comment
+comment|/* YYTNAME[TOKEN_NUM] -- String name of the token TOKEN_NUM. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1743,6 +1769,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* YYR1[YYN] -- Symbol number of symbol that rule YYN derives. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1865,6 +1895,8 @@ literal|51
 block|,
 literal|51
 block|,
+literal|51
+block|,
 literal|52
 block|,
 literal|52
@@ -1883,6 +1915,10 @@ literal|54
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2004,6 +2040,8 @@ literal|0
 block|,
 literal|2
 block|,
+literal|4
+block|,
 literal|0
 block|,
 literal|3
@@ -2024,6 +2062,10 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* YYDEFACT[S] -- default rule to reduce with in state S when YYTABLE    doesn't specify something else to do.  Zero means the default is an    error. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2063,9 +2105,9 @@ literal|2
 block|,
 literal|50
 block|,
-literal|58
+literal|59
 block|,
-literal|58
+literal|59
 block|,
 literal|6
 block|,
@@ -2117,7 +2159,7 @@ literal|0
 block|,
 literal|3
 block|,
-literal|59
+literal|60
 block|,
 literal|0
 block|,
@@ -2133,7 +2175,7 @@ literal|30
 block|,
 literal|28
 block|,
-literal|56
+literal|57
 block|,
 literal|16
 block|,
@@ -2167,7 +2209,7 @@ literal|0
 block|,
 literal|14
 block|,
-literal|57
+literal|58
 block|,
 literal|0
 block|,
@@ -2181,15 +2223,17 @@ literal|0
 block|,
 literal|0
 block|,
-literal|61
-block|,
 literal|62
 block|,
 literal|63
 block|,
 literal|64
 block|,
-literal|60
+literal|65
+block|,
+literal|61
+block|,
+literal|0
 block|,
 literal|53
 block|,
@@ -2204,6 +2248,8 @@ block|,
 literal|22
 block|,
 literal|23
+block|,
+literal|56
 block|,
 literal|44
 block|,
@@ -2258,11 +2304,11 @@ literal|44
 block|,
 literal|28
 block|,
-literal|87
+literal|89
 block|,
-literal|81
+literal|82
 block|,
-literal|90
+literal|92
 block|,
 literal|15
 block|,
@@ -2465,12 +2511,11 @@ literal|32768
 block|,
 literal|31
 block|,
-operator|-
-literal|32768
-block|,
 literal|53
 block|,
-literal|62
+literal|55
+block|,
+literal|61
 block|,
 literal|33
 block|,
@@ -2491,13 +2536,7 @@ block|,
 operator|-
 literal|32768
 block|,
-operator|-
-literal|32768
-block|,
-operator|-
-literal|32768
-block|,
-literal|69
+literal|57
 block|,
 operator|-
 literal|32768
@@ -2505,7 +2544,7 @@ block|,
 operator|-
 literal|32768
 block|,
-literal|55
+literal|71
 block|,
 operator|-
 literal|32768
@@ -2513,7 +2552,18 @@ block|,
 operator|-
 literal|32768
 block|,
-literal|77
+literal|58
+block|,
+operator|-
+literal|32768
+block|,
+operator|-
+literal|32768
+block|,
+operator|-
+literal|32768
+block|,
+literal|78
 block|,
 literal|37
 block|,
@@ -2529,7 +2579,7 @@ block|,
 operator|-
 literal|32768
 block|,
-literal|87
+literal|89
 block|,
 operator|-
 literal|32768
@@ -2548,18 +2598,13 @@ block|{
 operator|-
 literal|32768
 block|,
-literal|76
+literal|79
 block|,
 operator|-
 literal|32768
 block|,
 operator|-
 literal|32768
-block|,
-operator|-
-literal|32768
-block|,
-literal|54
 block|,
 operator|-
 literal|32768
@@ -2567,16 +2612,18 @@ block|,
 literal|59
 block|,
 operator|-
+literal|32768
+block|,
+literal|62
+block|,
+operator|-
 literal|7
 block|,
 literal|34
 block|,
-literal|72
+literal|76
 block|,
-literal|56
-block|,
-operator|-
-literal|32768
+literal|54
 block|,
 operator|-
 literal|32768
@@ -2584,7 +2631,10 @@ block|,
 operator|-
 literal|32768
 block|,
-literal|91
+operator|-
+literal|32768
+block|,
+literal|88
 block|,
 operator|-
 literal|32768
@@ -2592,7 +2642,7 @@ block|,
 operator|-
 literal|32768
 block|,
-literal|78
+literal|80
 block|,
 operator|-
 literal|32768
@@ -2607,7 +2657,7 @@ begin_define
 define|#
 directive|define
 name|YYLAST
-value|103
+value|101
 end_define
 
 begin_decl_stmt
@@ -2671,7 +2721,7 @@ literal|63
 block|,
 literal|64
 block|,
-literal|93
+literal|95
 block|,
 literal|30
 block|,
@@ -2751,17 +2801,17 @@ literal|39
 block|,
 literal|40
 block|,
-literal|82
-block|,
 literal|83
 block|,
 literal|84
 block|,
 literal|85
 block|,
-literal|91
+literal|86
 block|,
-literal|92
+literal|93
+block|,
+literal|94
 block|,
 literal|37
 block|,
@@ -2793,39 +2843,35 @@ literal|69
 block|,
 literal|73
 block|,
+literal|81
+block|,
 literal|79
 block|,
 literal|80
 block|,
-literal|86
+literal|87
 block|,
 literal|88
 block|,
-literal|89
+literal|91
 block|,
-literal|94
+literal|90
 block|,
-literal|38
-block|,
-literal|54
-block|,
-literal|49
-block|,
-literal|45
-block|,
-literal|68
+literal|96
 block|,
 literal|16
 block|,
+literal|38
+block|,
+literal|68
+block|,
+literal|49
+block|,
+literal|54
+block|,
+literal|45
+block|,
 literal|42
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|,
 literal|0
 block|,
@@ -3012,43 +3058,35 @@ literal|28
 block|,
 literal|30
 block|,
-literal|29
-block|,
 literal|21
-block|,
-literal|15
 block|,
 literal|30
 block|,
+literal|29
+block|,
+literal|28
+block|,
+literal|15
+block|,
 literal|9
+block|,
+literal|30
 block|,
 literal|0
 block|,
+literal|2
+block|,
 literal|12
-block|,
-literal|35
-block|,
-literal|31
-block|,
-literal|19
 block|,
 literal|58
 block|,
-literal|2
+literal|31
+block|,
+literal|35
+block|,
+literal|19
 block|,
 literal|16
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
 block|,
 operator|-
 literal|1
@@ -3079,11 +3117,7 @@ file|"/usr/share/bison/bison.simple"
 end_line
 
 begin_comment
-comment|/* This file comes from bison-1.28.  */
-end_comment
-
-begin_comment
-comment|/* Skeleton output parser for bison,    Copyright (C) 1984, 1989, 1990 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Skeleton output parser for bison,     Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -3091,25 +3125,27 @@ comment|/* As a special exception, when this file is copied by Bison into a    B
 end_comment
 
 begin_comment
-comment|/* This is the parser code that is written into each bison parser   when the %semantic_parser declaration is not specified in the grammar.   It was written by Richard Stallman by simplifying the hairy parser   used when %semantic_parser is specified.  */
+comment|/* This is the parser code that is written into each bison parser when    the %semantic_parser declaration is not specified in the grammar.    It was written by Richard Stallman by simplifying the hairy parser    used when %semantic_parser is specified.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|YYSTACK_USE_ALLOCA
-end_ifndef
+begin_comment
+comment|/* All symbols defined below should begin with yy or YY, to avoid    infringing on user name space.  This should be done even for local    variables, as they might otherwise be expanded by user macros.    There are some unavoidable exceptions within include files to    define necessary library symbols; they are noted "INFRINGES ON    USER NAME SPACE" below.  */
+end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|alloca
+name|__cplusplus
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|YYSTACK_USE_ALLOCA
+name|YYSTD
+parameter_list|(
+name|x
+parameter_list|)
+value|std::x
 end_define
 
 begin_else
@@ -3117,303 +3153,45 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* alloca not defined */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|YYSTACK_USE_ALLOCA
+name|YYSTD
+parameter_list|(
+name|x
+parameter_list|)
+value|x
 end_define
 
-begin_define
-define|#
-directive|define
-name|alloca
-value|__builtin_alloca
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not GNU C.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|sparc
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc__
+name|yyoverflow
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__sparc
+name|YYERROR_VERBOSE
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__sun
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__i386
-argument_list|)
-operator|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|YYSTACK_USE_ALLOCA
-end_define
-
-begin_include
-include|#
-directive|include
-file|<alloca.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
-comment|/* not sparc */
-end_comment
-
-begin_comment
-comment|/* We think this test detects Watcom and Microsoft C.  */
-end_comment
-
-begin_comment
-comment|/* This used to test MSDOS, but that is a bad idea    since that symbol is in the user namespace.  */
+comment|/* The parser invokes alloca or malloc; define the necessary symbols.  */
 end_comment
 
 begin_if
 if|#
 directive|if
-operator|(
-name|defined
-argument_list|(
-name|_MSDOS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_MSDOS_
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__TURBOC__
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* No need for malloc.h, which pollutes the namespace; 	 instead, just don't use alloca.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<malloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not MSDOS, or __TURBOC__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_AIX
-argument_list|)
-end_if
-
-begin_comment
-comment|/* I don't know what this was needed for, but it pollutes the namespace.    So I turned it off.   rms, 2 May 1997.  */
-end_comment
-
-begin_comment
-comment|/* #include<malloc.h>  */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|alloca
-end_pragma
-
-begin_define
-define|#
-directive|define
 name|YYSTACK_USE_ALLOCA
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not MSDOS, or __TURBOC__, or _AIX */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__hpux
-end_ifdef
-
-begin_comment
-comment|/* haible@ilog.fr says this works for HPUX 9.05 and up, 		 and on HPUX 10.  Eventually we can turn this on.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|YYSTACK_USE_ALLOCA
-end_define
-
-begin_define
-define|#
-directive|define
-name|alloca
-value|__builtin_alloca
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __hpux */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not _AIX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not MSDOS, or __TURBOC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not sparc */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not GNU C */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* alloca not defined */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* YYSTACK_USE_ALLOCA not defined */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|YYSTACK_USE_ALLOCA
-end_ifdef
 
 begin_define
 define|#
@@ -3427,11 +3205,171 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YYSTACK_USE_ALLOCA
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|alloca
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_ALLOCA_H
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|YYSTACK_ALLOC
-value|malloc
+value|alloca
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|YYSTACK_ALLOC
+value|__builtin_alloca
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YYSTACK_ALLOC
+end_ifdef
+
+begin_comment
+comment|/* Pacify GCC's `empty if-body' warning. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYSTACK_FREE
+parameter_list|(
+name|Ptr
+parameter_list|)
+value|do {
+comment|/* empty */
+value|; } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<cstdlib>
+end_include
+
+begin_comment
+comment|/* INFRINGES ON USER NAME SPACE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYSIZE_T
+value|std::size_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_comment
+comment|/* INFRINGES ON USER NAME SPACE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYSIZE_T
+value|size_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|YYSTACK_ALLOC
+value|YYSTD (malloc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|YYSTACK_FREE
+value|YYSTD (free)
 end_define
 
 begin_endif
@@ -3440,8 +3378,261 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Note: there must be only one dollar sign in this file.    It is replaced by the list of actions, each action    as one case of the switch.  */
+comment|/* A type that is properly aligned for any stack member.  */
 end_comment
+
+begin_union
+union|union
+name|yyalloc
+block|{
+name|short
+name|yyss
+decl_stmt|;
+name|YYSTYPE
+name|yyvs
+decl_stmt|;
+if|#
+directive|if
+name|YYLSP_NEEDED
+name|YYLTYPE
+name|yyls
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/* The size of the maximum gap between one aligned stack and the next.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYSTACK_GAP_MAX
+value|(sizeof (union yyalloc) - 1)
+end_define
+
+begin_comment
+comment|/* The size of an array large to enough to hold all stacks, each with    N elements.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|YYLSP_NEEDED
+end_if
+
+begin_define
+define|#
+directive|define
+name|YYSTACK_BYTES
+parameter_list|(
+name|N
+parameter_list|)
+define|\
+value|((N) * (sizeof (short) + sizeof (YYSTYPE) + sizeof (YYLTYPE))	\       + 2 * YYSTACK_GAP_MAX)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|YYSTACK_BYTES
+parameter_list|(
+name|N
+parameter_list|)
+define|\
+value|((N) * (sizeof (short) + sizeof (YYSTYPE))				\       + YYSTACK_GAP_MAX)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Relocate the TYPE STACK from its old location to the new one.  The    local variables YYSIZE and YYSTACKSIZE give the old and new number of    elements in the stack, and YYPTR gives the new location of the    stack.  Advance YYPTR to a properly aligned location for the next    stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYSTACK_RELOCATE
+parameter_list|(
+name|Type
+parameter_list|,
+name|Stack
+parameter_list|)
+define|\
+value|do									\       {									\ 	YYSIZE_T yynewbytes;						\ 	yymemcpy ((char *) yyptr, (char *) (Stack),			\ 		  yysize * (YYSIZE_T) sizeof (Type));			\ 	Stack =&yyptr->Stack;						\ 	yynewbytes = yystacksize * sizeof (Type) + YYSTACK_GAP_MAX;	\ 	yyptr += yynewbytes / sizeof (*yyptr);				\       }									\     while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! defined (yyoverflow) || defined (YYERROR_VERBOSE) */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|YYSIZE_T
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__SIZE_TYPE__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|YYSIZE_T
+value|__SIZE_TYPE__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|YYSIZE_T
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|size_t
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|YYSIZE_T
+value|size_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|YYSIZE_T
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_comment
+comment|/* INFRINGES ON USER NAME SPACE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYSIZE_T
+value|std::size_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|/* INFRINGES ON USER NAME SPACE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYSIZE_T
+value|size_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|YYSIZE_T
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|YYSIZE_T
+value|unsigned int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3493,7 +3684,7 @@ value|goto yyerrlab1
 end_define
 
 begin_comment
-comment|/* Like YYERROR except do call yyerror.    This remains here temporarily to ease the    transition to the new meaning of YYERROR, for GCC.    Once GCC version 2 has supplanted version 1, this can go.  */
+comment|/* Like YYERROR except do call yyerror.  This remains here temporarily    to ease the transition to the new meaning of YYERROR, for GCC.    Once GCC version 2 has supplanted version 1, this can go.  */
 end_comment
 
 begin_define
@@ -3516,12 +3707,12 @@ define|#
 directive|define
 name|YYBACKUP
 parameter_list|(
-name|token
+name|Token
 parameter_list|,
-name|value
+name|Value
 parameter_list|)
 define|\
-value|do								\   if (yychar == YYEMPTY&& yylen == 1)				\     { yychar = (token), yylval = (value);			\       yychar1 = YYTRANSLATE (yychar);				\       YYPOPSTACK;						\       goto yybackup;						\     }								\   else								\     { yyerror ("syntax error: cannot back up"); YYERROR; }	\ while (0)
+value|do								\   if (yychar == YYEMPTY&& yylen == 1)				\     {								\       yychar = (Token);						\       yylval = (Value);						\       yychar1 = YYTRANSLATE (yychar);				\       YYPOPSTACK;						\       goto yybackup;						\     }								\   else								\     { 								\       yyerror ("syntax error: cannot back up");			\       YYERROR;							\     }								\ while (0)
 end_define
 
 begin_define
@@ -3538,17 +3729,29 @@ name|YYERRCODE
 value|256
 end_define
 
+begin_comment
+comment|/* YYLLOC_DEFAULT -- Compute the default location (before the actions    are run).     When YYLLOC_DEFAULT is run, CURRENT is set the location of the    first token.  By default, to implement support for ranges, extend    its range to the last symbol.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|YYPURE
+name|YYLLOC_DEFAULT
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|YYLEX
-value|yylex()
+name|YYLLOC_DEFAULT
+parameter_list|(
+name|Current
+parameter_list|,
+name|Rhs
+parameter_list|,
+name|N
+parameter_list|)
+define|\
+value|Current.last_line   = Rhs[N].last_line;	\    Current.last_column = Rhs[N].last_column;
 end_define
 
 begin_endif
@@ -3556,17 +3759,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|YYPURE
-end_ifdef
+begin_comment
+comment|/* YYLEX -- calling `yylex' with the right arguments.  */
+end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|YYPURE
+end_if
+
+begin_if
+if|#
+directive|if
 name|YYLSP_NEEDED
-end_ifdef
+end_if
 
 begin_ifdef
 ifdef|#
@@ -3578,7 +3785,7 @@ begin_define
 define|#
 directive|define
 name|YYLEX
-value|yylex(&yylval,&yylloc, YYLEX_PARAM)
+value|yylex (&yylval,&yylloc, YYLEX_PARAM)
 end_define
 
 begin_else
@@ -3590,7 +3797,7 @@ begin_define
 define|#
 directive|define
 name|YYLEX
-value|yylex(&yylval,&yylloc)
+value|yylex (&yylval,&yylloc)
 end_define
 
 begin_endif
@@ -3604,7 +3811,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not YYLSP_NEEDED */
+comment|/* !YYLSP_NEEDED */
 end_comment
 
 begin_ifdef
@@ -3617,7 +3824,7 @@ begin_define
 define|#
 directive|define
 name|YYLEX
-value|yylex(&yylval, YYLEX_PARAM)
+value|yylex (&yylval, YYLEX_PARAM)
 end_define
 
 begin_else
@@ -3629,7 +3836,7 @@ begin_define
 define|#
 directive|define
 name|YYLEX
-value|yylex(&yylval)
+value|yylex (&yylval)
 end_define
 
 begin_endif
@@ -3643,8 +3850,24 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not YYLSP_NEEDED */
+comment|/* !YYLSP_NEEDED */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !YYPURE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYLEX
+value|yylex ()
+end_define
 
 begin_endif
 endif|#
@@ -3652,90 +3875,87 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If nonreentrant, generate the variables here */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|YYPURE
-end_ifndef
-
-begin_decl_stmt
-name|int
-name|yychar
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  the lookahead symbol		*/
-end_comment
-
-begin_decl_stmt
-name|YYSTYPE
-name|yylval
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  the semantic value of the		*/
+comment|/* !YYPURE */
 end_comment
 
 begin_comment
-comment|/*  lookahead symbol			*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|YYLSP_NEEDED
-end_ifdef
-
-begin_decl_stmt
-name|YYLTYPE
-name|yylloc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  location data for the lookahead	*/
-end_comment
-
-begin_comment
-comment|/*  symbol				*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|int
-name|yynerrs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  number of parse errors so far       */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not YYPURE */
+comment|/* Enable debugging if requested.  */
 end_comment
 
 begin_if
 if|#
 directive|if
 name|YYDEBUG
-operator|!=
-literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YYFPRINTF
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<cstdio>
+end_include
+
+begin_comment
+comment|/* INFRINGES ON USER NAME SPACE */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* INFRINGES ON USER NAME SPACE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|YYFPRINTF
+value|YYSTD (fprintf)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|YYDPRINTF
+parameter_list|(
+name|Args
+parameter_list|)
+define|\
+value|do {						\   if (yydebug)					\     YYFPRINTF Args;				\ } while (0)
+end_define
+
+begin_comment
+comment|/* Nonzero means print parse trace. [The following comment makes no    sense to me.  Could someone clarify it?  --akim] Since this is    uninitialized, it does not stop multiple parsers from coexisting.    */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -3743,13 +3963,23 @@ name|yydebug
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  nonzero means print parse trace	*/
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
-comment|/* Since this is uninitialized, it does not stop multiple parsers    from coexisting.  */
+comment|/* !YYDEBUG */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|YYDPRINTF
+parameter_list|(
+name|Args
+parameter_list|)
+end_define
 
 begin_endif
 endif|#
@@ -3757,7 +3987,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  YYINITDEPTH indicates the initial size of the parser's stacks	*/
+comment|/* !YYDEBUG */
+end_comment
+
+begin_comment
+comment|/* YYINITDEPTH -- initial size of the parser's stacks.  */
 end_comment
 
 begin_ifndef
@@ -3779,7 +4013,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  YYMAXDEPTH is the maximum size the stacks can grow to     (effective only if the built-in stack extension method is used).  */
+comment|/* YYMAXDEPTH -- maximum size the stacks can grow to (effective only    if the built-in stack extension method is used).     Do not make this value too large; the results are undefined if    SIZE_MAX< YYSTACK_BYTES (YYMAXDEPTH)    evaluated with infinite-precision integer arithmetic.  */
 end_comment
 
 begin_if
@@ -3822,9 +4056,21 @@ end_endif
 begin_escape
 end_escape
 
-begin_comment
-comment|/* Define __yy_memcpy.  Note that the size argument    should be passed with type unsigned int, because that is what the non-GCC    definitions require.  With GCC, __builtin_memcpy takes an arg    of type size_t, but it can handle unsigned int.  */
-end_comment
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|yyoverflow
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|yymemcpy
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -3841,15 +4087,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__yy_memcpy
-parameter_list|(
-name|TO
-parameter_list|,
-name|FROM
-parameter_list|,
-name|COUNT
-parameter_list|)
-value|__builtin_memcpy(TO,FROM,COUNT)
+name|yymemcpy
+value|__builtin_memcpy
 end_define
 
 begin_else
@@ -3861,12 +4100,6 @@ begin_comment
 comment|/* not GNU C or C++ */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__cplusplus
-end_ifndef
-
 begin_comment
 comment|/* This is the most reliable way to avoid incompatibilities    in available built-in functions on various systems.  */
 end_comment
@@ -3874,64 +4107,137 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|__yy_memcpy
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+name|yymemcpy
 parameter_list|(
-name|to
+name|char
+modifier|*
+name|yyto
 parameter_list|,
-name|from
+specifier|const
+name|char
+modifier|*
+name|yyfrom
 parameter_list|,
-name|count
+name|YYSIZE_T
+name|yycount
+parameter_list|)
+else|#
+directive|else
+function|yymemcpy
+parameter_list|(
+name|yyto
+parameter_list|,
+name|yyfrom
+parameter_list|,
+name|yycount
 parameter_list|)
 name|char
 modifier|*
-name|to
+name|yyto
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|from
+name|yyfrom
 decl_stmt|;
-name|unsigned
-name|int
-name|count
+name|YYSIZE_T
+name|yycount
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
-name|f
+name|yyf
 init|=
-name|from
+name|yyfrom
 decl_stmt|;
 specifier|register
 name|char
 modifier|*
-name|t
+name|yyt
 init|=
-name|to
+name|yyto
 decl_stmt|;
 specifier|register
-name|int
-name|i
+name|YYSIZE_T
+name|yyi
 init|=
-name|count
+name|yycount
 decl_stmt|;
 while|while
 condition|(
-name|i
+name|yyi
 operator|--
-operator|>
+operator|!=
 literal|0
 condition|)
 operator|*
-name|t
+name|yyt
 operator|++
 operator|=
 operator|*
-name|f
+name|yyf
 operator|++
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YYERROR_VERBOSE
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|yystrlen
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_STRING_H
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|yystrlen
+value|strlen
+end_define
 
 begin_else
 else|#
@@ -3939,68 +4245,210 @@ directive|else
 end_else
 
 begin_comment
-comment|/* __cplusplus */
-end_comment
-
-begin_comment
-comment|/* This is the most reliable way to avoid incompatibilities    in available built-in functions on various systems.  */
+comment|/* Return the length of YYSTR.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
-name|__yy_memcpy
+name|YYSIZE_T
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+name|yystrlen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|yystr
+parameter_list|)
+else|#
+directive|else
+function|yystrlen
+parameter_list|(
+name|yystr
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|yystr
+decl_stmt|;
+endif|#
+directive|endif
+block|{
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|yys
+init|=
+name|yystr
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|yys
+operator|++
+operator|!=
+literal|'\0'
+condition|)
+continue|continue;
+return|return
+name|yys
+operator|-
+name|yystr
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|yystpcpy
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_STRING_H
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_GNU_SOURCE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|yystpcpy
+value|stpcpy
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Copy YYSRC to YYDEST, returning the address of the terminating '\0' in    YYDEST.  */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+name|yystpcpy
 parameter_list|(
 name|char
 modifier|*
-name|to
+name|yydest
 parameter_list|,
+specifier|const
 name|char
 modifier|*
-name|from
-parameter_list|,
-name|unsigned
-name|int
-name|count
+name|yysrc
 parameter_list|)
+else|#
+directive|else
+function|yystpcpy
+parameter_list|(
+name|yydest
+parameter_list|,
+name|yysrc
+parameter_list|)
+name|char
+modifier|*
+name|yydest
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|yysrc
+decl_stmt|;
+endif|#
+directive|endif
 block|{
 specifier|register
 name|char
 modifier|*
-name|t
+name|yyd
 init|=
-name|to
+name|yydest
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
-name|f
+name|yys
 init|=
-name|from
-decl_stmt|;
-specifier|register
-name|int
-name|i
-init|=
-name|count
+name|yysrc
 decl_stmt|;
 while|while
 condition|(
-name|i
-operator|--
-operator|>
-literal|0
-condition|)
+operator|(
 operator|*
-name|t
+name|yyd
 operator|++
 operator|=
 operator|*
-name|f
+name|yys
 operator|++
-expr_stmt|;
+operator|)
+operator|!=
+literal|'\0'
+condition|)
+continue|continue;
+return|return
+name|yyd
+operator|-
+literal|1
+return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4018,7 +4466,7 @@ end_escape
 begin_line
 line|#
 directive|line
-number|217
+number|341
 file|"/usr/share/bison/bison.simple"
 end_line
 
@@ -4057,7 +4505,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not __cplusplus */
+comment|/* !__cplusplus */
 end_comment
 
 begin_define
@@ -4080,7 +4528,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not __cplusplus */
+comment|/* !__cplusplus */
 end_comment
 
 begin_else
@@ -4089,7 +4537,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not YYPARSE_PARAM */
+comment|/* !YYPARSE_PARAM */
 end_comment
 
 begin_define
@@ -4110,7 +4558,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not YYPARSE_PARAM */
+comment|/* !YYPARSE_PARAM */
 end_comment
 
 begin_comment
@@ -4163,7 +4611,74 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* YY_DECL_VARIABLES -- depending whether we use a pure parser,    variables are global, or local to YYPARSE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YY_DECL_NON_LSP_VARIABLES
+define|\
+comment|/* The lookahead symbol.  */
+define|\
+value|int yychar;						\ 							\
+comment|/* The semantic value of the lookahead symbol. */
+value|\ YYSTYPE yylval;						\ 							\
+comment|/* Number of parse errors so far.  */
+value|\ int yynerrs;
+end_define
+
+begin_if
+if|#
+directive|if
+name|YYLSP_NEEDED
+end_if
+
+begin_define
+define|#
+directive|define
+name|YY_DECL_VARIABLES
+define|\
+value|YY_DECL_NON_LSP_VARIABLES			\ 						\
+comment|/* Location data for the lookahead symbol.  */
+value|\ YYLTYPE yylloc;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|YY_DECL_VARIABLES
+define|\
+value|YY_DECL_NON_LSP_VARIABLES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If nonreentrant, generate the variables here. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|YYPURE
+end_if
+
 begin_function
+name|YY_DECL_VARIABLES
+endif|#
+directive|endif
+comment|/* !YYPURE */
 name|int
 name|yyparse
 parameter_list|(
@@ -4171,6 +4686,14 @@ name|YYPARSE_PARAM_ARG
 parameter_list|)
 function|YYPARSE_PARAM_DECL
 block|{
+comment|/* If reentrant, generate the variables here. */
+if|#
+directive|if
+name|YYPURE
+name|YY_DECL_VARIABLES
+endif|#
+directive|endif
+comment|/* !YYPURE */
 specifier|register
 name|int
 name|yystate
@@ -4179,64 +4702,66 @@ specifier|register
 name|int
 name|yyn
 decl_stmt|;
-specifier|register
-name|short
-modifier|*
-name|yyssp
+name|int
+name|yyresult
 decl_stmt|;
-specifier|register
-name|YYSTYPE
-modifier|*
-name|yyvsp
-decl_stmt|;
+comment|/* Number of tokens to shift before error messages enabled.  */
 name|int
 name|yyerrstatus
 decl_stmt|;
-comment|/*  number of tokens to shift before error messages enabled */
+comment|/* Lookahead token as an internal (translated) token number.  */
 name|int
 name|yychar1
 init|=
 literal|0
 decl_stmt|;
-comment|/*  lookahead token as an internal (translated) token number */
+comment|/* Three stacks and their tools:      `yyss': related to states,      `yyvs': related to semantic values,      `yyls': related to locations.       Refer to the stacks thru separate pointers, to allow yyoverflow      to reallocate them elsewhere.  */
+comment|/* The state stack. */
 name|short
 name|yyssa
 index|[
 name|YYINITDEPTH
 index|]
 decl_stmt|;
-comment|/*  the state stack			*/
-name|YYSTYPE
-name|yyvsa
-index|[
-name|YYINITDEPTH
-index|]
-decl_stmt|;
-comment|/*  the semantic value stack		*/
 name|short
 modifier|*
 name|yyss
 init|=
 name|yyssa
 decl_stmt|;
-comment|/*  refer to the stacks thru separate pointers */
+specifier|register
+name|short
+modifier|*
+name|yyssp
+decl_stmt|;
+comment|/* The semantic value stack.  */
+name|YYSTYPE
+name|yyvsa
+index|[
+name|YYINITDEPTH
+index|]
+decl_stmt|;
 name|YYSTYPE
 modifier|*
 name|yyvs
 init|=
 name|yyvsa
 decl_stmt|;
-comment|/*  to allow yyoverflow to reallocate them elsewhere */
-ifdef|#
-directive|ifdef
+specifier|register
+name|YYSTYPE
+modifier|*
+name|yyvsp
+decl_stmt|;
+if|#
+directive|if
 name|YYLSP_NEEDED
+comment|/* The location stack.  */
 name|YYLTYPE
 name|yylsa
 index|[
 name|YYINITDEPTH
 index|]
 decl_stmt|;
-comment|/*  the location stack			*/
 name|YYLTYPE
 modifier|*
 name|yyls
@@ -4247,6 +4772,11 @@ name|YYLTYPE
 modifier|*
 name|yylsp
 decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|YYLSP_NEEDED
 define|#
 directive|define
 name|YYPOPSTACK
@@ -4259,65 +4789,36 @@ name|YYPOPSTACK
 value|(yyvsp--, yyssp--)
 endif|#
 directive|endif
-name|int
+name|YYSIZE_T
 name|yystacksize
 init|=
 name|YYINITDEPTH
 decl_stmt|;
-name|int
-name|yyfree_stacks
-init|=
-literal|0
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|YYPURE
-name|int
-name|yychar
-decl_stmt|;
-name|YYSTYPE
-name|yylval
-decl_stmt|;
-name|int
-name|yynerrs
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|YYLSP_NEEDED
-name|YYLTYPE
-name|yylloc
-decl_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
+comment|/* The variables used to return semantic value and location from the      action routines.  */
 name|YYSTYPE
 name|yyval
 decl_stmt|;
-comment|/*  the variable used to return		*/
-comment|/*  semantic values from the action	*/
-comment|/*  routines				*/
+if|#
+directive|if
+name|YYLSP_NEEDED
+name|YYLTYPE
+name|yyloc
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* When reducing, the number of symbols on the RHS of the reduced      rule. */
 name|int
 name|yylen
 decl_stmt|;
-if|#
-directive|if
-name|YYDEBUG
-operator|!=
-literal|0
-if|if
-condition|(
-name|yydebug
-condition|)
-name|fprintf
+name|YYDPRINTF
 argument_list|(
+operator|(
 name|stderr
-argument_list|,
+operator|,
 literal|"Starting parse\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|yystate
 operator|=
 literal|0
@@ -4339,15 +4840,13 @@ comment|/* Initialize stack pointers.      Waste one element of value and locati
 name|yyssp
 operator|=
 name|yyss
-operator|-
-literal|1
 expr_stmt|;
 name|yyvsp
 operator|=
 name|yyvs
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|YYLSP_NEEDED
 name|yylsp
 operator|=
@@ -4355,12 +4854,19 @@ name|yyls
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Push a new state, which is found in  yystate  .  */
-comment|/* In all cases, when you get here, the value and location stacks    have just been pushed. so pushing a state here evens the stacks.  */
+goto|goto
+name|yysetstate
+goto|;
+comment|/*------------------------------------------------------------. | yynewstate -- Push a new state, which is found in yystate.  | `------------------------------------------------------------*/
 name|yynewstate
 label|:
-operator|*
+comment|/* In all cases, when you get here, the value and location stacks      have just been pushed. so pushing a state here evens the stacks.      */
+name|yyssp
 operator|++
+expr_stmt|;
+name|yysetstate
+label|:
+operator|*
 name|yyssp
 operator|=
 name|yystate
@@ -4376,8 +4882,21 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* Give user a chance to reallocate the stack */
-comment|/* Use copies of these so that the&'s don't force the real ones into memory. */
+comment|/* Get the current used size of the three stacks, in elements.  */
+name|YYSIZE_T
+name|yysize
+init|=
+name|yyssp
+operator|-
+name|yyss
+operator|+
+literal|1
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|yyoverflow
+block|{
+comment|/* Give user a chance to reallocate the stack. Use copies of 	   these so that the&'s don't force the real ones into 	   memory.  */
 name|YYSTYPE
 modifier|*
 name|yyvs1
@@ -4390,8 +4909,9 @@ name|yyss1
 init|=
 name|yyss
 decl_stmt|;
-ifdef|#
-directive|ifdef
+comment|/* Each stack pointer address is followed by the size of the 	   data in use in that stack, in bytes.  */
+if|#
+directive|if
 name|YYLSP_NEEDED
 name|YYLTYPE
 modifier|*
@@ -4399,26 +4919,7 @@ name|yyls1
 init|=
 name|yyls
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* Get the current used size of the three stacks, in elements.  */
-name|int
-name|size
-init|=
-name|yyssp
-operator|-
-name|yyss
-operator|+
-literal|1
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|yyoverflow
-comment|/* Each stack pointer address is followed by the size of 	 the data in use in that stack, in bytes.  */
-ifdef|#
-directive|ifdef
-name|YYLSP_NEEDED
-comment|/* This used to be a conditional around just the two extra args, 	 but that might be undefined if yyoverflow is a macro.  */
+comment|/* This used to be a conditional around just the two extra args, 	   but that might be undefined if yyoverflow is a macro.  */
 name|yyoverflow
 argument_list|(
 literal|"parser stack overflow"
@@ -4426,7 +4927,7 @@ argument_list|,
 operator|&
 name|yyss1
 argument_list|,
-name|size
+name|yysize
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4437,7 +4938,7 @@ argument_list|,
 operator|&
 name|yyvs1
 argument_list|,
-name|size
+name|yysize
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4448,7 +4949,7 @@ argument_list|,
 operator|&
 name|yyls1
 argument_list|,
-name|size
+name|yysize
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4460,6 +4961,10 @@ operator|&
 name|yystacksize
 argument_list|)
 expr_stmt|;
+name|yyls
+operator|=
+name|yyls1
+expr_stmt|;
 else|#
 directive|else
 name|yyoverflow
@@ -4469,7 +4974,7 @@ argument_list|,
 operator|&
 name|yyss1
 argument_list|,
-name|size
+name|yysize
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4480,7 +4985,7 @@ argument_list|,
 operator|&
 name|yyvs1
 argument_list|,
-name|size
+name|yysize
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4502,15 +5007,7 @@ name|yyvs
 operator|=
 name|yyvs1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|YYLSP_NEEDED
-name|yyls
-operator|=
-name|yyls1
-expr_stmt|;
-endif|#
-directive|endif
+block|}
 else|#
 directive|else
 comment|/* no yyoverflow */
@@ -4521,42 +5018,9 @@ name|yystacksize
 operator|>=
 name|YYMAXDEPTH
 condition|)
-block|{
-name|yyerror
-argument_list|(
-literal|"parser stack overflow"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|yyfree_stacks
-condition|)
-block|{
-name|free
-argument_list|(
-name|yyss
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|yyvs
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|YYLSP_NEEDED
-name|free
-argument_list|(
-name|yyls
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-return|return
-literal|2
-return|;
-block|}
+goto|goto
+name|yyoverflowlab
+goto|;
 name|yystacksize
 operator|*=
 literal|2
@@ -4571,152 +5035,80 @@ name|yystacksize
 operator|=
 name|YYMAXDEPTH
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|YYSTACK_USE_ALLOCA
-name|yyfree_stacks
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-name|yyss
-operator|=
-operator|(
+block|{
 name|short
-operator|*
-operator|)
-name|YYSTACK_ALLOC
-argument_list|(
-name|yystacksize
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|yyssp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|__yy_memcpy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|yyss
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
+modifier|*
 name|yyss1
-argument_list|,
-name|size
-operator|*
+init|=
+name|yyss
+decl_stmt|;
+name|union
+name|yyalloc
+modifier|*
+name|yyptr
+init|=
 operator|(
-name|unsigned
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
+expr|union
+name|yyalloc
 operator|*
-name|yyssp
+operator|)
+name|YYSTACK_ALLOC
+argument_list|(
+name|YYSTACK_BYTES
+argument_list|(
+name|yystacksize
 argument_list|)
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|yyptr
+condition|)
+goto|goto
+name|yyoverflowlab
+goto|;
+name|YYSTACK_RELOCATE
+argument_list|(
+name|short
+argument_list|,
+name|yyss
 argument_list|)
 expr_stmt|;
-name|yyvs
-operator|=
-operator|(
+name|YYSTACK_RELOCATE
+argument_list|(
 name|YYSTYPE
-operator|*
-operator|)
-name|YYSTACK_ALLOC
-argument_list|(
-name|yystacksize
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|yyvsp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|__yy_memcpy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
+argument_list|,
 name|yyvs
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|yyvs1
-argument_list|,
-name|size
-operator|*
-operator|(
-name|unsigned
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-operator|*
-name|yyvsp
-argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|YYLSP_NEEDED
-name|yyls
-operator|=
-operator|(
+name|YYSTACK_RELOCATE
+argument_list|(
 name|YYLTYPE
-operator|*
-operator|)
-name|YYSTACK_ALLOC
-argument_list|(
-name|yystacksize
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|yylsp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|__yy_memcpy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
+argument_list|,
 name|yyls
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|yyls1
-argument_list|,
-name|size
-operator|*
-operator|(
-name|unsigned
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-operator|*
-name|yylsp
-argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+undef|#
+directive|undef
+name|YYSTACK_RELOCATE
+if|if
+condition|(
+name|yyss1
+operator|!=
+name|yyssa
+condition|)
+name|YYSTACK_FREE
+argument_list|(
+name|yyss1
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* no yyoverflow */
@@ -4724,7 +5116,7 @@ name|yyssp
 operator|=
 name|yyss
 operator|+
-name|size
+name|yysize
 operator|-
 literal|1
 expr_stmt|;
@@ -4732,43 +5124,39 @@ name|yyvsp
 operator|=
 name|yyvs
 operator|+
-name|size
+name|yysize
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|YYLSP_NEEDED
 name|yylsp
 operator|=
 name|yyls
 operator|+
-name|size
+name|yysize
 operator|-
 literal|1
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|YYDEBUG
-operator|!=
-literal|0
-if|if
-condition|(
-name|yydebug
-condition|)
-name|fprintf
+name|YYDPRINTF
 argument_list|(
+operator|(
 name|stderr
-argument_list|,
-literal|"Stack size increased to %d\n"
-argument_list|,
+operator|,
+literal|"Stack size increased to %lu\n"
+operator|,
+operator|(
+name|unsigned
+name|long
+name|int
+operator|)
 name|yystacksize
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|yyssp
@@ -4782,29 +5170,21 @@ condition|)
 name|YYABORT
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|YYDEBUG
-operator|!=
-literal|0
-if|if
-condition|(
-name|yydebug
-condition|)
-name|fprintf
+name|YYDPRINTF
 argument_list|(
+operator|(
 name|stderr
-argument_list|,
+operator|,
 literal|"Entering state %d\n"
-argument_list|,
+operator|,
 name|yystate
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|yybackup
 goto|;
+comment|/*-----------. | yybackup.  | `-----------*/
 name|yybackup
 label|:
 comment|/* Do appropriate processing given the current state.  */
@@ -4836,24 +5216,15 @@ operator|==
 name|YYEMPTY
 condition|)
 block|{
-if|#
-directive|if
-name|YYDEBUG
-operator|!=
-literal|0
-if|if
-condition|(
-name|yydebug
-condition|)
-name|fprintf
+name|YYDPRINTF
 argument_list|(
+operator|(
 name|stderr
-argument_list|,
+operator|,
 literal|"Reading a token: "
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|yychar
 operator|=
 name|YYLEX
@@ -4877,24 +5248,15 @@ operator|=
 name|YYEOF
 expr_stmt|;
 comment|/* Don't call YYLEX any more */
-if|#
-directive|if
-name|YYDEBUG
-operator|!=
-literal|0
-if|if
-condition|(
-name|yydebug
-condition|)
-name|fprintf
+name|YYDPRINTF
 argument_list|(
+operator|(
 name|stderr
-argument_list|,
+operator|,
 literal|"Now at end of input.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -4908,14 +5270,13 @@ expr_stmt|;
 if|#
 directive|if
 name|YYDEBUG
-operator|!=
-literal|0
+comment|/* We have to keep this `#if YYDEBUG', since we use variables 	which are defined only if `YYDEBUG' is set.  */
 if|if
 condition|(
 name|yydebug
 condition|)
 block|{
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -4929,7 +5290,7 @@ name|yychar1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Give the individual parser a way to print the precise meaning 	     of a token, for further debugging info.  */
+comment|/* Give the individual parser a way to print the precise 	     meaning of a token, for further debugging info.  */
 ifdef|#
 directive|ifdef
 name|YYPRINT
@@ -4944,7 +5305,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -5031,31 +5392,22 @@ condition|)
 name|YYACCEPT
 expr_stmt|;
 comment|/* Shift the lookahead token.  */
-if|#
-directive|if
-name|YYDEBUG
-operator|!=
-literal|0
-if|if
-condition|(
-name|yydebug
-condition|)
-name|fprintf
+name|YYDPRINTF
 argument_list|(
+operator|(
 name|stderr
-argument_list|,
+operator|,
 literal|"Shifting token %d (%s), "
-argument_list|,
+operator|,
 name|yychar
-argument_list|,
+operator|,
 name|yytname
 index|[
 name|yychar1
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Discard the token being shifted unless it is eof.  */
 if|if
 condition|(
@@ -5073,8 +5425,8 @@ name|yyvsp
 operator|=
 name|yylval
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|YYLSP_NEEDED
 operator|*
 operator|++
@@ -5084,7 +5436,7 @@ name|yylloc
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* count tokens shifted since error; after three, turn off error status.  */
+comment|/* Count tokens shifted since error; after three, turn off error      status.  */
 if|if
 condition|(
 name|yyerrstatus
@@ -5099,7 +5451,7 @@ expr_stmt|;
 goto|goto
 name|yynewstate
 goto|;
-comment|/* Do the default action for the current state.  */
+comment|/*-----------------------------------------------------------. | yydefault -- do the default action for the current state.  | `-----------------------------------------------------------*/
 name|yydefault
 label|:
 name|yyn
@@ -5118,9 +5470,13 @@ condition|)
 goto|goto
 name|yyerrlab
 goto|;
-comment|/* Do a reduction.  yyn is the number of a rule to reduce with.  */
+goto|goto
+name|yyreduce
+goto|;
+comment|/*-----------------------------. | yyreduce -- Do a reduction.  | `-----------------------------*/
 name|yyreduce
 label|:
+comment|/* yyn is the number of a rule to reduce with.  */
 name|yylen
 operator|=
 name|yyr2
@@ -5128,12 +5484,7 @@ index|[
 name|yyn
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|yylen
-operator|>
-literal|0
-condition|)
+comment|/* If YYLEN is nonzero, implement the default value of the action:      `$$ = $1'.       Otherwise, the following line sets YYVAL to the semantic value of      the lookahead token.  This behavior is undocumented and Bison      users should not rely upon it.  Assigning to YYVAL      unconditionally makes the parser a bit smaller, and it avoids a      GCC warning that YYVAL may be used uninitialized.  */
 name|yyval
 operator|=
 name|yyvsp
@@ -5143,21 +5494,47 @@ operator|-
 name|yylen
 index|]
 expr_stmt|;
-comment|/* implement default value of the action */
+if|#
+directive|if
+name|YYLSP_NEEDED
+comment|/* Similarly for the default location.  Let the user run additional      commands if for instance locations are ranges.  */
+name|yyloc
+operator|=
+name|yylsp
+index|[
+literal|1
+operator|-
+name|yylen
+index|]
+expr_stmt|;
+name|YYLLOC_DEFAULT
+argument_list|(
+name|yyloc
+argument_list|,
+operator|(
+name|yylsp
+operator|-
+name|yylen
+operator|)
+argument_list|,
+name|yylen
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|YYDEBUG
-operator|!=
-literal|0
+comment|/* We have to keep this `#if YYDEBUG', since we use variables which      are defined only if `YYDEBUG' is set.  */
 if|if
 condition|(
 name|yydebug
 condition|)
 block|{
 name|int
-name|i
+name|yyi
 decl_stmt|;
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -5174,7 +5551,7 @@ expr_stmt|;
 comment|/* Print the symbols being reduced, and their result.  */
 for|for
 control|(
-name|i
+name|yyi
 operator|=
 name|yyprhs
 index|[
@@ -5183,15 +5560,15 @@ index|]
 init|;
 name|yyrhs
 index|[
-name|i
+name|yyi
 index|]
 operator|>
 literal|0
 condition|;
-name|i
+name|yyi
 operator|++
 control|)
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -5201,12 +5578,12 @@ name|yytname
 index|[
 name|yyrhs
 index|[
-name|i
+name|yyi
 index|]
 index|]
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -5255,9 +5632,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|4
 case|:
@@ -5285,9 +5661,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|6
 case|:
@@ -5306,9 +5681,8 @@ operator|.
 name|id
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|7
 case|:
@@ -5335,9 +5709,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|8
 case|:
@@ -5364,9 +5737,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|9
 case|:
@@ -5385,9 +5757,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|10
 case|:
@@ -5406,9 +5777,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|13
 case|:
@@ -5429,9 +5799,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|14
 case|:
@@ -5458,9 +5827,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|17
 case|:
@@ -5519,9 +5887,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|20
 case|:
@@ -5566,9 +5933,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|21
 case|:
@@ -5613,9 +5979,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|22
 case|:
@@ -5654,9 +6019,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|23
 case|:
@@ -5695,9 +6059,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|24
 case|:
@@ -5736,9 +6099,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|25
 case|:
@@ -5777,9 +6139,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|26
 case|:
@@ -5812,9 +6173,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|27
 case|:
@@ -5847,9 +6207,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|30
 case|:
@@ -5876,9 +6235,8 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|35
 case|:
@@ -5898,9 +6256,8 @@ index|]
 operator|.
 name|number
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|36
 case|:
@@ -5916,9 +6273,8 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|37
 case|:
@@ -5933,9 +6289,8 @@ name|number
 operator|=
 literal|1
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|38
 case|:
@@ -5950,9 +6305,8 @@ name|number
 operator|=
 literal|2
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|39
 case|:
@@ -5967,9 +6321,8 @@ name|number
 operator|=
 literal|4
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|40
 case|:
@@ -5984,9 +6337,8 @@ name|number
 operator|=
 literal|8
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|41
 case|:
@@ -6001,9 +6353,8 @@ name|number
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|42
 case|:
@@ -6018,9 +6369,8 @@ name|number
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|43
 case|:
@@ -6035,9 +6385,8 @@ name|number
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|44
 case|:
@@ -6052,9 +6401,8 @@ name|number
 operator|=
 literal|1
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|45
 case|:
@@ -6069,9 +6417,8 @@ name|number
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|46
 case|:
@@ -6086,9 +6433,8 @@ name|number
 operator|=
 literal|1
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|47
 case|:
@@ -6103,9 +6449,8 @@ name|number
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|48
 case|:
@@ -6120,9 +6465,8 @@ name|number
 operator|=
 literal|1
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|49
 case|:
@@ -6137,9 +6481,8 @@ name|number
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|50
 case|:
@@ -6159,9 +6502,8 @@ index|]
 operator|.
 name|id
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|51
 case|:
@@ -6230,9 +6572,8 @@ name|id
 operator|=
 name|name
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|52
 case|:
@@ -6247,9 +6588,8 @@ name|id
 operator|=
 literal|""
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|53
 case|:
@@ -6269,9 +6609,8 @@ index|]
 operator|.
 name|number
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|54
 case|:
@@ -6287,9 +6626,8 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|55
 case|:
@@ -6309,15 +6647,84 @@ index|]
 operator|.
 name|id
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 literal|56
 case|:
 line|#
 directive|line
-number|152
+number|153
+file|"defparse.y"
+block|{
+name|char
+modifier|*
+name|name
+init|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|yyvsp
+index|[
+operator|-
+literal|2
+index|]
+operator|.
+name|id
+argument_list|)
+operator|+
+literal|1
+operator|+
+name|strlen
+argument_list|(
+name|yyvsp
+index|[
+literal|0
+index|]
+operator|.
+name|id
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"%s.%s"
+argument_list|,
+name|yyvsp
+index|[
+operator|-
+literal|2
+index|]
+operator|.
+name|id
+argument_list|,
+name|yyvsp
+index|[
+literal|0
+index|]
+operator|.
+name|id
+argument_list|)
+expr_stmt|;
+name|yyval
+operator|.
+name|id
+operator|=
+name|name
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|57
+case|:
+line|#
+directive|line
+number|158
 file|"defparse.y"
 block|{
 name|yyval
@@ -6326,15 +6733,14 @@ name|id
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
-literal|57
+literal|58
 case|:
 line|#
 directive|line
-number|155
+number|161
 file|"defparse.y"
 block|{
 name|yyval
@@ -6348,15 +6754,14 @@ index|]
 operator|.
 name|number
 expr_stmt|;
-empty_stmt|;
-break|break;
 block|}
+break|break;
 case|case
-literal|58
+literal|59
 case|:
 line|#
 directive|line
-number|156
+number|162
 file|"defparse.y"
 block|{
 name|yyval
@@ -6366,14 +6771,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-empty_stmt|;
+block|}
 break|break;
 block|}
-block|}
-comment|/* the action file gets copied in in place of this dollarsign */
 line|#
 directive|line
-number|543
+number|727
 file|"/usr/share/bison/bison.simple"
 name|yyvsp
 operator|-=
@@ -6383,8 +6786,8 @@ name|yyssp
 operator|-=
 name|yylen
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|YYLSP_NEEDED
 name|yylsp
 operator|-=
@@ -6395,8 +6798,6 @@ directive|endif
 if|#
 directive|if
 name|YYDEBUG
-operator|!=
-literal|0
 if|if
 condition|(
 name|yydebug
@@ -6404,13 +6805,13 @@ condition|)
 block|{
 name|short
 modifier|*
-name|ssp1
+name|yyssp1
 init|=
 name|yyss
 operator|-
 literal|1
 decl_stmt|;
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -6419,11 +6820,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|ssp1
+name|yyssp1
 operator|!=
 name|yyssp
 condition|)
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -6431,10 +6832,10 @@ literal|" %d"
 argument_list|,
 operator|*
 operator|++
-name|ssp1
+name|yyssp1
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -6450,100 +6851,18 @@ name|yyvsp
 operator|=
 name|yyval
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|YYLSP_NEEDED
-name|yylsp
+operator|*
 operator|++
-expr_stmt|;
-if|if
-condition|(
-name|yylen
-operator|==
-literal|0
-condition|)
-block|{
 name|yylsp
-operator|->
-name|first_line
 operator|=
-name|yylloc
-operator|.
-name|first_line
+name|yyloc
 expr_stmt|;
-name|yylsp
-operator|->
-name|first_column
-operator|=
-name|yylloc
-operator|.
-name|first_column
-expr_stmt|;
-name|yylsp
-operator|->
-name|last_line
-operator|=
-operator|(
-name|yylsp
-operator|-
-literal|1
-operator|)
-operator|->
-name|last_line
-expr_stmt|;
-name|yylsp
-operator|->
-name|last_column
-operator|=
-operator|(
-name|yylsp
-operator|-
-literal|1
-operator|)
-operator|->
-name|last_column
-expr_stmt|;
-name|yylsp
-operator|->
-name|text
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|yylsp
-operator|->
-name|last_line
-operator|=
-operator|(
-name|yylsp
-operator|+
-name|yylen
-operator|-
-literal|1
-operator|)
-operator|->
-name|last_line
-expr_stmt|;
-name|yylsp
-operator|->
-name|last_column
-operator|=
-operator|(
-name|yylsp
-operator|+
-name|yylen
-operator|-
-literal|1
-operator|)
-operator|->
-name|last_column
-expr_stmt|;
-block|}
 endif|#
 directive|endif
-comment|/* Now "shift" the result of the reduction.      Determine what state that goes to,      based on the state we popped back to      and the rule number reduced by.  */
+comment|/* Now `shift' the result of the reduction.  Determine what state      that goes to, based on the state we popped back to and the rule      number reduced by.  */
 name|yyn
 operator|=
 name|yyr1
@@ -6601,15 +6920,15 @@ expr_stmt|;
 goto|goto
 name|yynewstate
 goto|;
+comment|/*------------------------------------. | yyerrlab -- here on detecting error | `------------------------------------*/
 name|yyerrlab
 label|:
-comment|/* here on detecting error */
+comment|/* If not already recovering from an error, report this error.  */
 if|if
 condition|(
 operator|!
 name|yyerrstatus
 condition|)
-comment|/* If not already recovering from an error, report this error.  */
 block|{
 operator|++
 name|yynerrs
@@ -6635,30 +6954,29 @@ operator|<
 name|YYLAST
 condition|)
 block|{
-name|int
-name|size
+name|YYSIZE_T
+name|yysize
 init|=
 literal|0
 decl_stmt|;
 name|char
 modifier|*
-name|msg
+name|yymsg
 decl_stmt|;
 name|int
-name|x
+name|yyx
 decl_stmt|,
-name|count
+name|yycount
 decl_stmt|;
-name|count
+name|yycount
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Start X at -yyn if nec to avoid negative indexes in yycheck.  */
+comment|/* Start YYX at -YYN if negative to avoid negative indexes in 	     YYCHECK.  */
 for|for
 control|(
-name|x
+name|yyx
 operator|=
-operator|(
 name|yyn
 operator|<
 literal|0
@@ -6667,11 +6985,13 @@ operator|-
 name|yyn
 else|:
 literal|0
-operator|)
 init|;
-name|x
+name|yyx
 operator|<
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|yytname
@@ -6682,80 +7002,118 @@ argument_list|(
 name|char
 operator|*
 argument_list|)
-operator|)
+argument_list|)
 condition|;
-name|x
+name|yyx
 operator|++
 control|)
 if|if
 condition|(
 name|yycheck
 index|[
-name|x
+name|yyx
 operator|+
 name|yyn
 index|]
 operator|==
-name|x
+name|yyx
 condition|)
-name|size
+name|yysize
 operator|+=
-name|strlen
+name|yystrlen
 argument_list|(
 name|yytname
 index|[
-name|x
+name|yyx
 index|]
 argument_list|)
 operator|+
 literal|15
 operator|,
-name|count
+name|yycount
 operator|++
 expr_stmt|;
-name|msg
+name|yysize
+operator|+=
+name|yystrlen
+argument_list|(
+literal|"parse error, unexpected "
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|yysize
+operator|+=
+name|yystrlen
+argument_list|(
+name|yytname
+index|[
+name|YYTRANSLATE
+argument_list|(
+name|yychar
+argument_list|)
+index|]
+argument_list|)
+expr_stmt|;
+name|yymsg
 operator|=
 operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|YYSTACK_ALLOC
 argument_list|(
-name|size
-operator|+
-literal|15
+name|yysize
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|msg
+name|yymsg
 operator|!=
 literal|0
 condition|)
 block|{
-name|strcpy
+name|char
+modifier|*
+name|yyp
+init|=
+name|yystpcpy
 argument_list|(
-name|msg
+name|yymsg
 argument_list|,
-literal|"parse error"
+literal|"parse error, unexpected "
+argument_list|)
+decl_stmt|;
+name|yyp
+operator|=
+name|yystpcpy
+argument_list|(
+name|yyp
+argument_list|,
+name|yytname
+index|[
+name|YYTRANSLATE
+argument_list|(
+name|yychar
+argument_list|)
+index|]
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|count
+name|yycount
 operator|<
 literal|5
 condition|)
 block|{
-name|count
+name|yycount
 operator|=
 literal|0
 expr_stmt|;
 for|for
 control|(
-name|x
+name|yyx
 operator|=
-operator|(
 name|yyn
 operator|<
 literal|0
@@ -6764,11 +7122,13 @@ operator|-
 name|yyn
 else|:
 literal|0
-operator|)
 init|;
-name|x
+name|yyx
 operator|<
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|yytname
@@ -6779,80 +7139,83 @@ argument_list|(
 name|char
 operator|*
 argument_list|)
-operator|)
+argument_list|)
 condition|;
-name|x
+name|yyx
 operator|++
 control|)
 if|if
 condition|(
 name|yycheck
 index|[
-name|x
+name|yyx
 operator|+
 name|yyn
 index|]
 operator|==
-name|x
+name|yyx
 condition|)
 block|{
-name|strcat
-argument_list|(
-name|msg
-argument_list|,
-name|count
-operator|==
-literal|0
+specifier|const
+name|char
+modifier|*
+name|yyq
+init|=
+operator|!
+name|yycount
 condition|?
-literal|", expecting `"
+literal|", expecting "
 else|:
-literal|" or `"
+literal|" or "
+decl_stmt|;
+name|yyp
+operator|=
+name|yystpcpy
+argument_list|(
+name|yyp
+argument_list|,
+name|yyq
 argument_list|)
 expr_stmt|;
-name|strcat
+name|yyp
+operator|=
+name|yystpcpy
 argument_list|(
-name|msg
+name|yyp
 argument_list|,
 name|yytname
 index|[
-name|x
+name|yyx
 index|]
 argument_list|)
 expr_stmt|;
-name|strcat
-argument_list|(
-name|msg
-argument_list|,
-literal|"'"
-argument_list|)
-expr_stmt|;
-name|count
+name|yycount
 operator|++
 expr_stmt|;
 block|}
 block|}
 name|yyerror
 argument_list|(
-name|msg
+name|yymsg
 argument_list|)
 expr_stmt|;
-name|free
+name|YYSTACK_FREE
 argument_list|(
-name|msg
+name|yymsg
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|yyerror
 argument_list|(
-literal|"parse error; also virtual memory exceeded"
+literal|"parse error; also virtual memory exhausted"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 endif|#
 directive|endif
-comment|/* YYERROR_VERBOSE */
+comment|/* defined (YYERROR_VERBOSE) */
 name|yyerror
 argument_list|(
 literal|"parse error"
@@ -6862,9 +7225,9 @@ block|}
 goto|goto
 name|yyerrlab1
 goto|;
+comment|/*--------------------------------------------------. | yyerrlab1 -- error raised explicitly by an action | `--------------------------------------------------*/
 name|yyerrlab1
 label|:
-comment|/* here on error raised explicitly by an action */
 if|if
 condition|(
 name|yyerrstatus
@@ -6872,7 +7235,7 @@ operator|==
 literal|3
 condition|)
 block|{
-comment|/* if just tried and failed to reuse lookahead token after an error, discard it.  */
+comment|/* If just tried and failed to reuse lookahead token after an 	 error, discard it.  */
 comment|/* return failure if at end of input */
 if|if
 condition|(
@@ -6882,37 +7245,28 @@ name|YYEOF
 condition|)
 name|YYABORT
 expr_stmt|;
-if|#
-directive|if
-name|YYDEBUG
-operator|!=
-literal|0
-if|if
-condition|(
-name|yydebug
-condition|)
-name|fprintf
+name|YYDPRINTF
 argument_list|(
+operator|(
 name|stderr
-argument_list|,
+operator|,
 literal|"Discarding token %d (%s).\n"
-argument_list|,
+operator|,
 name|yychar
-argument_list|,
+operator|,
 name|yytname
 index|[
 name|yychar1
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|yychar
 operator|=
 name|YYEMPTY
 expr_stmt|;
 block|}
-comment|/* Else will try to reuse lookahead token      after shifting the error token.  */
+comment|/* Else will try to reuse lookahead token after shifting the error      token.  */
 name|yyerrstatus
 operator|=
 literal|3
@@ -6921,21 +7275,20 @@ comment|/* Each real token shifted decrements this */
 goto|goto
 name|yyerrhandle
 goto|;
+comment|/*-------------------------------------------------------------------. | yyerrdefault -- current state does not do anything special for the | | error token.                                                       | `-------------------------------------------------------------------*/
 name|yyerrdefault
 label|:
-comment|/* current state does not do anything special for the error token. */
 if|#
 directive|if
 literal|0
 comment|/* This is wrong; only states that explicitly want error tokens      should shift them.  */
-block|yyn = yydefact[yystate];
-comment|/* If its default is to accept any token, ok.  Otherwise pop it.*/
-block|if (yyn) goto yydefault;
+comment|/* If its default is to accept any token, ok.  Otherwise pop it.  */
+block|yyn = yydefact[yystate];   if (yyn)     goto yydefault;
 endif|#
 directive|endif
+comment|/*---------------------------------------------------------------. | yyerrpop -- pop the current state because it cannot handle the | | error token                                                    | `---------------------------------------------------------------*/
 name|yyerrpop
 label|:
-comment|/* pop the current state because it cannot handle the error token */
 if|if
 condition|(
 name|yyssp
@@ -6953,8 +7306,8 @@ operator|*
 operator|--
 name|yyssp
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|YYLSP_NEEDED
 name|yylsp
 operator|--
@@ -6964,8 +7317,6 @@ directive|endif
 if|#
 directive|if
 name|YYDEBUG
-operator|!=
-literal|0
 if|if
 condition|(
 name|yydebug
@@ -6973,13 +7324,13 @@ condition|)
 block|{
 name|short
 modifier|*
-name|ssp1
+name|yyssp1
 init|=
 name|yyss
 operator|-
 literal|1
 decl_stmt|;
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -6988,11 +7339,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|ssp1
+name|yyssp1
 operator|!=
 name|yyssp
 condition|)
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -7000,10 +7351,10 @@ literal|" %d"
 argument_list|,
 operator|*
 operator|++
-name|ssp1
+name|yyssp1
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|YYFPRINTF
 argument_list|(
 name|stderr
 argument_list|,
@@ -7013,6 +7364,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/*--------------. | yyerrhandle.  | `--------------*/
 name|yyerrhandle
 label|:
 name|yyn
@@ -7105,32 +7457,23 @@ name|YYFINAL
 condition|)
 name|YYACCEPT
 expr_stmt|;
-if|#
-directive|if
-name|YYDEBUG
-operator|!=
-literal|0
-if|if
-condition|(
-name|yydebug
-condition|)
-name|fprintf
+name|YYDPRINTF
 argument_list|(
+operator|(
 name|stderr
-argument_list|,
+operator|,
 literal|"Shifting error token, "
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 operator|++
 name|yyvsp
 operator|=
 name|yylval
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|YYLSP_NEEDED
 operator|*
 operator|++
@@ -7147,69 +7490,59 @@ expr_stmt|;
 goto|goto
 name|yynewstate
 goto|;
+comment|/*-------------------------------------. | yyacceptlab -- YYACCEPT comes here.  | `-------------------------------------*/
 name|yyacceptlab
 label|:
-comment|/* YYACCEPT comes here.  */
-if|if
-condition|(
-name|yyfree_stacks
-condition|)
-block|{
-name|free
-argument_list|(
-name|yyss
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|yyvs
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|YYLSP_NEEDED
-name|free
-argument_list|(
-name|yyls
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-return|return
+name|yyresult
+operator|=
 literal|0
-return|;
+expr_stmt|;
+goto|goto
+name|yyreturn
+goto|;
+comment|/*-----------------------------------. | yyabortlab -- YYABORT comes here.  | `-----------------------------------*/
 name|yyabortlab
 label|:
-comment|/* YYABORT comes here.  */
+name|yyresult
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|yyreturn
+goto|;
+comment|/*---------------------------------------------. | yyoverflowab -- parser overflow comes here.  | `---------------------------------------------*/
+name|yyoverflowlab
+label|:
+name|yyerror
+argument_list|(
+literal|"parser stack overflow"
+argument_list|)
+expr_stmt|;
+name|yyresult
+operator|=
+literal|2
+expr_stmt|;
+comment|/* Fall through.  */
+name|yyreturn
+label|:
+ifndef|#
+directive|ifndef
+name|yyoverflow
 if|if
 condition|(
-name|yyfree_stacks
+name|yyss
+operator|!=
+name|yyssa
 condition|)
-block|{
-name|free
+name|YYSTACK_FREE
 argument_list|(
 name|yyss
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|yyvs
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|YYLSP_NEEDED
-name|free
-argument_list|(
-name|yyls
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
-block|}
 return|return
-literal|1
+name|yyresult
 return|;
 block|}
 end_function
@@ -7217,7 +7550,7 @@ end_function
 begin_line
 line|#
 directive|line
-number|170
+number|176
 file|"defparse.y"
 end_line
 
