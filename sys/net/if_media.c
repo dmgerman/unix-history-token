@@ -845,6 +845,10 @@ name|kptr
 decl_stmt|,
 name|count
 decl_stmt|;
+name|int
+name|usermax
+decl_stmt|;
+comment|/* user requested max */
 name|kptr
 operator|=
 name|NULL
@@ -900,15 +904,36 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|ep
+name|usermax
 operator|=
-name|LIST_FIRST
+literal|0
+expr_stmt|;
+comment|/* 		 * If there are more interfaces on the list, count 		 * them.  This allows the caller to set ifmr->ifm_count 		 * to 0 on the first call to know how much space to 		 * callocate. 		 */
+name|LIST_FOREACH
 argument_list|(
-operator|&
-name|ifm
-operator|->
-name|ifm_list
+argument|ep
+argument_list|,
+argument|&ifm->ifm_list
+argument_list|,
+argument|ifm_list
 argument_list|)
+name|usermax
+operator|++
+expr_stmt|;
+comment|/* 		 * Don't allow the user to ask for too many 		 */
+if|if
+condition|(
+name|ifmr
+operator|->
+name|ifm_count
+operator|>
+name|usermax
+condition|)
+name|ifmr
+operator|->
+name|ifm_count
+operator|=
+name|usermax
 expr_stmt|;
 if|if
 condition|(
@@ -942,6 +967,16 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Get the media words from the interface's list. 			 */
+name|ep
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|ifm
+operator|->
+name|ifm_list
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -988,26 +1023,13 @@ name|E2BIG
 expr_stmt|;
 comment|/* oops! */
 block|}
-comment|/* 		 * If there are more interfaces on the list, count 		 * them.  This allows the caller to set ifmr->ifm_count 		 * to 0 on the first call to know how much space to 		 * callocate. 		 */
-for|for
-control|(
-init|;
-name|ep
-operator|!=
-name|NULL
-condition|;
-name|ep
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|ep
-argument_list|,
-name|ifm_list
-argument_list|)
-control|)
+else|else
+block|{
 name|count
-operator|++
+operator|=
+name|usermax
 expr_stmt|;
+block|}
 comment|/* 		 * We do the copyout on E2BIG, because that's 		 * just our way of telling userland that there 		 * are more.  This is the behavior I've observed 		 * under BSD/OS 3.0 		 */
 name|sticky
 operator|=
