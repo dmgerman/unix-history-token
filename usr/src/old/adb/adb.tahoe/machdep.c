@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	5.2 (Berkeley) %G%"
+literal|"@(#)machdep.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1420,6 +1420,16 @@ name|checkerr
 argument_list|()
 expr_stmt|;
 comment|/* arguments */
+if|if
+condition|(
+name|narg
+operator|>
+literal|20
+condition|)
+name|narg
+operator|=
+literal|20
+expr_stmt|;
 name|adbprintf
 argument_list|(
 literal|"%s("
