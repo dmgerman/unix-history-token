@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.3 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,6 +150,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_comment
@@ -282,14 +288,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|hostent
-modifier|*
-name|hp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|data
 decl_stmt|;
@@ -326,8 +324,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|timeout
+init|=
+literal|900
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* timeout after 15 minutes of inactivity */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -487,13 +491,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|reapchild
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|myoob
 parameter_list|()
 function_decl|;
@@ -528,10 +525,6 @@ index|[]
 decl_stmt|;
 block|{
 name|int
-name|options
-init|=
-literal|0
-decl_stmt|,
 name|addrlen
 decl_stmt|;
 name|long
@@ -564,21 +557,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"%s: "
+literal|"getpeername (%s): %m"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"getpeername"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -600,6 +588,10 @@ name|getsockname
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ctrl_addr
 argument_list|,
@@ -610,21 +602,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"%s: "
+literal|"getsockname (%s): %m"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"getsockname"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -652,6 +639,15 @@ expr_stmt|;
 name|debug
 operator|=
 literal|0
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"ftpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
 expr_stmt|;
 name|argc
 operator|--
@@ -714,10 +710,6 @@ name|debug
 operator|=
 literal|1
 expr_stmt|;
-name|options
-operator||=
-name|SO_DEBUG
-expr_stmt|;
 break|break;
 case|case
 literal|'l'
@@ -725,18 +717,6 @@ case|:
 name|logging
 operator|=
 literal|1
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|freopen
-argument_list|(
-literal|"/tmp/ftplog"
-argument_list|,
-literal|"a"
-argument_list|,
-name|stderr
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -776,6 +756,9 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -783,6 +766,9 @@ argument_list|,
 name|lostconn
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGCHLD
@@ -802,9 +788,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"signal"
+name|LOG_ERR
+argument_list|,
+literal|"signal: %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -822,6 +810,9 @@ argument_list|(
 name|stdin
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|SIOCSPGRP
 argument_list|,
 operator|(
@@ -835,9 +826,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"ioctl"
+name|LOG_ERR
+argument_list|,
+literal|"ioctl: %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -881,6 +874,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gethostname
 argument_list|(
 name|hostname
@@ -908,11 +904,17 @@ init|;
 condition|;
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|setjmp
 argument_list|(
 name|errcatch
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|yyparse
 argument_list|()
 expr_stmt|;
@@ -920,34 +922,9 @@ block|}
 block|}
 end_function
 
-begin_macro
-name|reapchild
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|union
-name|wait
-name|status
-decl_stmt|;
-while|while
-condition|(
-name|wait3
-argument_list|(
-operator|&
-name|status
-argument_list|,
-name|WNOHANG
-argument_list|,
-literal|0
-argument_list|)
-operator|>
-literal|0
-condition|)
-empty_stmt|;
-block|}
-end_block
+begin_comment
+comment|/* reapchild() { 	union wait status;  	while (wait3(&status, WNOHANG, 0)> 0) 		; } */
+end_comment
 
 begin_macro
 name|lostconn
@@ -960,11 +937,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_DEBUG
 argument_list|,
-literal|"Lost connection.\n"
+literal|"lost connection"
 argument_list|)
 expr_stmt|;
 name|dologout
@@ -1268,11 +1245,6 @@ argument_list|(
 name|pw
 operator|->
 name|pw_gecos
-argument_list|,
-operator|&
-name|save
-operator|.
-name|pw_gecos
 argument_list|)
 expr_stmt|;
 name|save
@@ -1347,6 +1319,9 @@ name|new
 init|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|s
@@ -1361,6 +1336,9 @@ name|new
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|new
@@ -1475,6 +1453,9 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -1655,6 +1636,9 @@ literal|"Transfer complete."
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|dout
@@ -1955,6 +1939,9 @@ name|local
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|din
@@ -2074,6 +2061,10 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_REUSEADDR
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|on
 argument_list|,
@@ -2116,8 +2107,6 @@ sizeof|sizeof
 argument_list|(
 name|data_source
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -2151,6 +2140,9 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|s
@@ -2208,6 +2200,9 @@ name|size
 operator|>=
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|sizebuf
@@ -2260,8 +2255,6 @@ name|from
 argument_list|,
 operator|&
 name|fromlen
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2322,8 +2315,6 @@ argument_list|(
 name|from
 operator|.
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|,
 name|ntohs
@@ -2451,8 +2442,6 @@ argument_list|(
 name|data_dest
 operator|.
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|,
 name|ntohs
@@ -2503,6 +2492,9 @@ condition|)
 block|{
 name|sleep
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|swaitint
 argument_list|)
 expr_stmt|;
@@ -3111,6 +3103,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*VARARGS2*/
+end_comment
+
 begin_macro
 name|reply
 argument_list|(
@@ -3159,6 +3155,9 @@ argument_list|(
 literal|"\r\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -3169,40 +3168,32 @@ condition|(
 name|debug
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_DEBUG
 argument_list|,
 literal|"<--- %d "
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|_doprnt
+name|syslog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 name|s
 argument_list|,
 operator|&
 name|args
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*VARARGS2*/
+end_comment
 
 begin_macro
 name|lreply
@@ -3252,6 +3243,9 @@ argument_list|(
 literal|"\r\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -3262,79 +3256,32 @@ condition|(
 name|debug
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_DEBUG
 argument_list|,
-literal|"<--- %d-"
+literal|"<--- %d- "
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|_doprnt
+name|syslog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 name|s
 argument_list|,
 operator|&
 name|args
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 end_block
 
-begin_macro
-name|replystr
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|printf
-argument_list|(
-literal|"%s\r\n"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"<--- %s\n"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+begin_comment
+comment|/*  NOT CALLED ANYWHERE replystr(s) 	char *s; { 	printf("%s\r\n", s); 	(void) fflush(stdout); 	if (debug) 		fprintf(stderr, "<--- %s\n", s); } */
+end_comment
 
 begin_macro
 name|ack
@@ -3394,8 +3341,17 @@ end_block
 
 begin_macro
 name|yyerror
-argument_list|()
+argument_list|(
+argument|s
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3957,11 +3913,20 @@ decl_stmt|;
 name|time_t
 name|t
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|hp
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|remotehost
@@ -3981,6 +3946,9 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|remotehost
@@ -4008,12 +3976,16 @@ name|t
 operator|=
 name|time
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_INFO
 argument_list|,
 literal|"FTPD: connection from %s at %s"
 argument_list|,
@@ -4024,11 +3996,6 @@ argument_list|(
 operator|&
 name|t
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
 argument_list|)
 expr_stmt|;
 block|}
@@ -4049,7 +4016,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|strncpy(a, b, sizeof (a))
+value|(void) strncpy(a, b, sizeof (a))
 end_define
 
 begin_decl_stmt
@@ -4094,6 +4061,9 @@ literal|0
 condition|)
 block|{
 comment|/* hack, but must be unique and no tty line */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -4137,8 +4107,15 @@ name|utmp
 operator|.
 name|ut_time
 operator|=
+operator|(
+name|long
+operator|)
 name|time
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -4265,8 +4242,15 @@ name|utmp
 operator|.
 name|ut_time
 operator|=
+operator|(
+name|long
+operator|)
 name|time
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -4763,11 +4747,17 @@ literal|0
 condition|)
 block|{
 comment|/* myside and hisside reverse roles in child */
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|myside
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dup2
 argument_list|(
 name|hisside
@@ -4780,6 +4770,9 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|hisside
@@ -4849,6 +4842,9 @@ index|]
 operator|=
 name|pid
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|hisside
@@ -4916,6 +4912,9 @@ argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|ptr
@@ -4983,6 +4982,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -4990,6 +4992,9 @@ argument_list|,
 name|istat
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -4997,6 +5002,9 @@ argument_list|,
 name|qstat
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -5125,6 +5133,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fd
@@ -5148,14 +5159,6 @@ begin_block
 block|{
 name|int
 name|aflag
-init|=
-literal|0
-decl_stmt|,
-name|count
-init|=
-literal|0
-decl_stmt|,
-name|iacflag
 init|=
 literal|0
 decl_stmt|,
@@ -5188,8 +5191,15 @@ argument_list|(
 name|stdin
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|SIOCATMARK
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|atmark
 argument_list|)
@@ -5197,9 +5207,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"ioctl"
+name|LOG_ERR
+argument_list|,
+literal|"ioctl: %m"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5209,6 +5221,9 @@ condition|(
 name|atmark
 condition|)
 break|break;
+operator|(
+name|void
+operator|)
 name|read
 argument_list|(
 name|fileno
@@ -5223,6 +5238,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|recv
 argument_list|(
 name|fileno
@@ -5238,6 +5256,9 @@ argument_list|,
 name|MSG_OOB
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|read
 argument_list|(
 name|fileno
@@ -5268,8 +5289,15 @@ argument_list|(
 name|stdin
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|SIOCATMARK
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|atmark
 argument_list|)
@@ -5277,9 +5305,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"ioctl"
+name|LOG_ERR
+argument_list|,
+literal|"ioctl: %m"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5289,6 +5319,9 @@ condition|(
 name|atmark
 condition|)
 break|break;
+operator|(
+name|void
+operator|)
 name|read
 argument_list|(
 name|fileno
@@ -5316,6 +5349,9 @@ name|aflag
 operator|++
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|recv
 argument_list|(
 name|fileno
@@ -5340,6 +5376,9 @@ condition|)
 name|aflag
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|read
 argument_list|(
 name|fileno
@@ -5502,7 +5541,8 @@ argument_list|(
 name|pdata
 argument_list|,
 operator|(
-name|char
+expr|struct
+name|sockaddr
 operator|*
 operator|)
 operator|&
@@ -5512,8 +5552,6 @@ sizeof|sizeof
 argument_list|(
 name|tmp
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -5809,8 +5847,12 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
+argument_list|,
 name|local
 argument_list|)
 expr_stmt|;
