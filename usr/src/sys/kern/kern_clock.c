@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.27	81/11/20	*/
+comment|/*	kern_clock.c	4.28	81/12/12	*/
 end_comment
 
 begin_include
@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/protosw.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bk.h"
 end_include
 
@@ -146,6 +152,22 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Protoslow is like lbolt, but for slow protocol timeouts, counting  * up to (hz/PR_SLOWHZ), then causing a pfslowtimo().  * Protofast is like lbolt, but for fast protocol timeouts, counting  * up to (hz/PR_FASTHZ), then causing a pffasttimo().  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|protoslow
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|protofast
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -557,6 +579,13 @@ comment|/* 	 * Time moves on. 	 */
 operator|++
 name|lbolt
 expr_stmt|;
+comment|/* 	 * Time moves on for protocols. 	 */
+operator|++
+name|protoslow
+expr_stmt|;
+operator|++
+name|protofast
+expr_stmt|;
 if|#
 directive|if
 name|VAX780
@@ -890,6 +919,29 @@ name|aston
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 	 * Run network slow and fast timeouts. 	 */
+if|if
+condition|(
+name|protofast
+operator|>=
+name|hz
+operator|/
+name|PR_FASTHZ
+condition|)
+name|pffasttimo
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|protofast
+operator|>=
+name|hz
+operator|/
+name|PR_SLOWHZ
+condition|)
+name|pfslowtimo
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Lightning bolt every second: 	 *	sleep timeouts 	 *	process priority recomputation 	 *	process %cpu averaging 	 *	virtual memory metering 	 *	kick swapper if processes want in 	 */
 if|if
 condition|(

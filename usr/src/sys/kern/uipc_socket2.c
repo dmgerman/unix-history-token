@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.13	81/12/03	*/
+comment|/*	uipc_socket2.c	4.14	81/12/12	*/
 end_comment
 
 begin_include
@@ -112,6 +112,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|printf
+argument_list|(
+literal|"soisconnecting %x\n"
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -160,6 +167,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|printf
+argument_list|(
+literal|"soisconnected %x\n"
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -208,16 +222,19 @@ end_decl_stmt
 
 begin_block
 block|{
+name|printf
+argument_list|(
+literal|"soisdisconnecting %x\n"
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_state
 operator|&=
 operator|~
-operator|(
-name|SS_ISCONNECTED
-operator||
 name|SS_ISCONNECTING
-operator|)
 expr_stmt|;
 name|so
 operator|->
@@ -272,6 +289,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|printf
+argument_list|(
+literal|"soisdisconnected %x\n"
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_state

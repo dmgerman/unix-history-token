@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.20	81/12/09	*/
+comment|/*	uipc_mbuf.c	1.21	81/12/12	*/
 end_comment
 
 begin_include
@@ -74,15 +74,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-specifier|register
-name|i
-expr_stmt|;
 name|COUNT
 argument_list|(
 name|MBINIT
