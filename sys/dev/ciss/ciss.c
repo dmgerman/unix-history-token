@@ -3388,11 +3388,7 @@ name|sc
 operator|->
 name|ciss_command
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ciss_command
-argument_list|)
+name|CISS_COMMAND_ALLOC_SIZE
 operator|*
 name|sc
 operator|->
