@@ -14608,6 +14608,11 @@ name|prodidx
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|count
+init|=
+literal|0
+decl_stmt|;
 name|sc
 operator|=
 name|ifp
@@ -14760,6 +14765,9 @@ name|IFF_OACTIVE
 expr_stmt|;
 break|break;
 block|}
+operator|++
+name|count
+expr_stmt|;
 comment|/* 		 * If there's a BPF listener, bounce a copy of this frame 		 * to him. 		 */
 name|BPF_MTAP
 argument_list|(
@@ -14768,6 +14776,16 @@ argument_list|,
 name|m_head
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* no packets were dequeued */
+return|return;
 block|}
 comment|/* Transmit */
 name|CSR_WRITE_4
