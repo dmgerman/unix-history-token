@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -2294,7 +2294,7 @@ condition|)
 goto|goto
 name|drop
 goto|;
-comment|/* RFC1122 4.2.3.10, p. 104: discard bcast/mcast SYN */
+comment|/* 		 * RFC1122 4.2.3.10, p. 104: discard bcast/mcast SYN 		 * in_broadcast() should never return true on a received 		 * packet with M_BCAST not set. 		 */
 if|if
 condition|(
 name|m
@@ -2306,13 +2306,6 @@ name|M_BCAST
 operator||
 name|M_MCAST
 operator|)
-operator|||
-name|in_broadcast
-argument_list|(
-name|ti
-operator|->
-name|ti_dst
-argument_list|)
 operator|||
 name|IN_MULTICAST
 argument_list|(
@@ -5228,13 +5221,6 @@ name|M_BCAST
 operator||
 name|M_MCAST
 operator|)
-operator|||
-name|in_broadcast
-argument_list|(
-name|ti
-operator|->
-name|ti_dst
-argument_list|)
 operator|||
 name|IN_MULTICAST
 argument_list|(

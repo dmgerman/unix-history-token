@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_var.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_var.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -126,6 +126,19 @@ parameter_list|)
 value|(&(((struct in_ifaddr *)(ia))->ia_addr))
 end_define
 
+begin_define
+define|#
+directive|define
+name|IN_LNAOF
+parameter_list|(
+name|in
+parameter_list|,
+name|ifa
+parameter_list|)
+define|\
+value|((ntohl((in).s_addr)& ~((struct in_ifaddr *)(ifa)->ia_subnetmask))
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -133,6 +146,7 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|in_ifaddr
 modifier|*
@@ -140,16 +154,8 @@ name|in_ifaddr
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|struct
-name|in_ifaddr
-modifier|*
-name|in_iaonnetof
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ifqueue
 name|ipintrq
@@ -160,16 +166,19 @@ begin_comment
 comment|/* ip packet input queue */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
+begin_decl_stmt
+name|void
+name|in_socktrim
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Macro for finding the interface (ifnet structure) corresponding to one  * of our IP addresses.  */

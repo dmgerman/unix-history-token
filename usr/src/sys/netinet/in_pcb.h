@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -169,14 +169,33 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 name|struct
 name|inpcb
 modifier|*
 name|in_pcblookup
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|,
+expr|struct
+name|in_addr
+operator|,
+name|int
+operator|,
+expr|struct
+name|in_addr
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
