@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.9 (Berkeley) %G%"
+literal|"@(#)main.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,7 +382,7 @@ name|void
 operator|)
 name|symlink
 argument_list|(
-literal|"../h"
+literal|"../sys"
 argument_list|,
 name|path
 argument_list|(
