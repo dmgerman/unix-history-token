@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mdXhl.c /*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  *  */
+comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -31,6 +31,24 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_function
@@ -161,11 +179,6 @@ parameter_list|)
 block|{
 name|unsigned
 name|char
-name|digest
-index|[
-literal|16
-index|]
-decl_stmt|,
 name|buffer
 index|[
 name|BUFSIZ
@@ -173,10 +186,6 @@ index|]
 decl_stmt|;
 name|MDX_CTX
 name|ctx
-decl_stmt|;
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|int
 name|f
@@ -287,13 +296,6 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|unsigned
-name|char
-name|digest
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|MDX_CTX
 name|ctx
 decl_stmt|;
