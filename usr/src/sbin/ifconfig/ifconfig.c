@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	5.7 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +322,9 @@ argument_list|()
 decl_stmt|,
 name|setnsellength
 argument_list|()
+decl_stmt|,
+name|notrailers
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -377,17 +380,17 @@ block|{
 literal|"trailers"
 block|,
 operator|-
-name|IFF_NOTRAILERS
+literal|1
 block|,
-name|setifflags
+name|notrailers
 block|}
 block|,
 block|{
 literal|"-trailers"
 block|,
-name|IFF_NOTRAILERS
+literal|1
 block|,
-name|setifflags
+name|notrailers
 block|}
 block|,
 block|{
@@ -816,15 +819,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ifconfig interface\n%s%s%s%s%s%s"
+literal|"usage: ifconfig interface\n%s%s%s%s%s"
 argument_list|,
 literal|"\t[ af [ address [ dest_addr ] ] [ up ] [ down ]"
 argument_list|,
 literal|"[ netmask mask ] ]\n"
 argument_list|,
 literal|"\t[ metric n ]\n"
-argument_list|,
-literal|"\t[ trailers | -trailers ]\n"
 argument_list|,
 literal|"\t[ arp | -arp ]\n"
 argument_list|,
@@ -1664,6 +1665,42 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
+name|notrailers
+argument_list|(
+argument|vname
+argument_list|,
+argument|value
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|vname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|value
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"Note: trailers are no longer sent, but always received\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_macro
 name|setifdstaddr
 argument_list|(
 argument|addr
@@ -1930,7 +1967,7 @@ define|#
 directive|define
 name|IFFBITS
 define|\
-value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6NOTRAILERS\7RUNNING\10NOARP\ \11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX\15LINK0\16LINK1\17LINK2"
+value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6NOTRAILERS\7RUNNING\10NOARP\ \11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX\15LINK0\16LINK1\17LINK2\20MULTICAST"
 end_define
 
 begin_comment
