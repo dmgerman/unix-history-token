@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights res
 end_comment
 
 begin_comment
-comment|/*  * The base64 code in this file is based on code from MIT fetch, which  * has the following copyright and license:  *  *-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE. */
+comment|/*  * The base64 code in this file is based on code from MIT fetch, which  * has the following copyright and license:  *  *-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.	 M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE. */
 end_comment
 
 begin_include
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -1298,10 +1304,8 @@ argument_list|(
 literal|1
 argument_list|,
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|cookie
-argument_list|)
+expr|*
+name|c
 argument_list|)
 operator|)
 operator|==
@@ -1318,13 +1322,46 @@ name|URL
 operator|->
 name|port
 condition|)
+block|{
+name|struct
+name|servent
+modifier|*
+name|se
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|se
+operator|=
+name|getservbyname
+argument_list|(
+literal|"http"
+argument_list|,
+literal|"tcp"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|URL
+operator|->
+name|port
+operator|=
+name|ntohs
+argument_list|(
+name|se
+operator|->
+name|s_port
+argument_list|)
+expr_stmt|;
+else|else
 name|URL
 operator|->
 name|port
 operator|=
 literal|80
 expr_stmt|;
-comment|/* default HTTP port */
+block|}
 comment|/* attempt to connect to proxy server */
 if|if
 condition|(
@@ -1352,9 +1389,8 @@ decl_stmt|;
 name|int
 name|port
 init|=
-literal|3128
+literal|0
 decl_stmt|;
-comment|/* XXX I think 3128 is default... check? */
 comment|/* measure length */
 name|len
 operator|=
@@ -1375,6 +1411,43 @@ index|]
 operator|==
 literal|':'
 condition|)
+block|{
+if|if
+condition|(
+name|strspn
+argument_list|(
+name|px
+operator|+
+name|len
+operator|+
+literal|1
+argument_list|,
+literal|"0123456789"
+argument_list|)
+operator|!=
+name|strlen
+argument_list|(
+name|px
+operator|+
+name|len
+operator|+
+literal|1
+argument_list|)
+operator|||
+name|strlen
+argument_list|(
+name|px
+operator|+
+name|len
+operator|+
+literal|1
+argument_list|)
+operator|>
+literal|5
+condition|)
+block|{
+comment|/* XXX we should emit some kind of warning */
+block|}
 name|port
 operator|=
 name|atoi
@@ -1386,6 +1459,38 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|port
+operator|<
+literal|1
+operator|||
+name|port
+operator|>
+literal|65535
+condition|)
+block|{
+comment|/* XXX we should emit some kind of warning */
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|port
+condition|)
+block|{
+if|#
+directive|if
+literal|0
+comment|/* 	     * commented out, since there is currently no service name 	     * for HTTP proxies 	     */
+block|struct servent *se; 	     	    if ((se = getservbyname("xxxx", "tcp")) != NULL) 		port = ntohs(se->s_port); 	    else
+endif|#
+directive|endif
+name|port
+operator|=
+literal|3128
+expr_stmt|;
+block|}
 comment|/* get host name */
 if|if
 condition|(
@@ -1812,7 +1917,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"header:   [\033[1m%*.*s\033[m]\n"
+literal|"header:	 [\033[1m%*.*s\033[m]\n"
 argument_list|,
 operator|(
 name|int
@@ -1845,9 +1950,7 @@ argument_list|,
 name|XFERENC
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|XFERENC
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -1860,9 +1963,7 @@ operator|=
 name|ln
 operator|+
 sizeof|sizeof
-argument_list|(
 name|XFERENC
-argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -1961,9 +2062,7 @@ argument_list|,
 name|CONTTYPE
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|CONTTYPE
-argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -1976,9 +2075,7 @@ operator|=
 name|ln
 operator|+
 sizeof|sizeof
-argument_list|(
 name|CONTTYPE
-argument_list|)
 operator|-
 literal|1
 expr_stmt|;
