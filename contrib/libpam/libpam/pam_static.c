@@ -113,7 +113,7 @@ name|clpath
 operator|=
 name|strrchr
 argument_list|(
-name|lpath
+name|clpath
 argument_list|,
 literal|'/'
 argument_list|)
