@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"resourcevar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -4179,6 +4185,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 operator|||
 name|vattr
@@ -4219,6 +4227,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|p
@@ -4295,7 +4305,9 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|u
+name|p
+operator|->
+name|p_addr
 argument_list|,
 name|ctob
 argument_list|(
@@ -4317,6 +4329,13 @@ name|cred
 argument_list|,
 operator|(
 name|int
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|proc
 operator|*
 operator|)
 literal|0
@@ -4371,6 +4390,8 @@ name|int
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -4437,6 +4458,8 @@ name|int
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
