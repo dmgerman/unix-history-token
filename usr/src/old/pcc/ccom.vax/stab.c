@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.9 (Berkeley) %G%"
+literal|"@(#)stab.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2100,6 +2100,11 @@ name|i
 operator|++
 expr_stmt|;
 block|}
+name|putchar
+argument_list|(
+literal|';'
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|cerror
