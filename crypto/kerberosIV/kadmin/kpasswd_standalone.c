@@ -241,6 +241,10 @@ function_decl|;
 ifdef|#
 directive|ifdef
 name|NOENCRYPTION
+name|int
+name|placebo_long_pw_string
+parameter_list|()
+function_decl|;
 define|#
 directive|define
 name|read_long_pw_string
@@ -253,10 +257,6 @@ name|read_long_pw_string
 value|des_read_pw_string
 endif|#
 directive|endif
-name|int
-name|read_long_pw_string
-parameter_list|()
-function_decl|;
 name|bzero
 argument_list|(
 name|name
