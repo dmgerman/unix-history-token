@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)life.c	5.1 (Berkeley) %G%"
+literal|"@(#)life.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,8 @@ begin_comment
 comment|/*  *	Run a life game.  This is a demonstration program for  * the Screen Updating section of the -lcurses cursor package.  */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|lst_st
 block|{
@@ -62,13 +63,6 @@ name|last
 decl_stmt|;
 comment|/* doubly linked */
 block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|lst_st
 name|LIST
 typedef|;
 end_typedef
@@ -83,6 +77,13 @@ end_decl_stmt
 begin_comment
 comment|/* head of linked list */
 end_comment
+
+begin_function_decl
+name|int
+name|die
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -100,10 +101,6 @@ name|av
 index|[]
 decl_stmt|;
 block|{
-name|int
-name|die
-parameter_list|()
-function_decl|;
 name|evalargs
 argument_list|(
 name|ac
@@ -124,7 +121,7 @@ name|die
 argument_list|)
 expr_stmt|;
 comment|/* set to restore tty stats */
-name|crmode
+name|cbreak
 argument_list|()
 expr_stmt|;
 comment|/* set for char-by-char */
@@ -196,7 +193,7 @@ comment|/* go to bottom of screen */
 name|endwin
 argument_list|()
 expr_stmt|;
-comment|/* set terminal to initial state */
+comment|/* set terminal to good state */
 name|exit
 argument_list|(
 literal|0
@@ -226,6 +223,13 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
+specifier|auto
+name|char
+name|buf
+index|[
+literal|100
+index|]
+decl_stmt|;
 name|box
 argument_list|(
 name|stdscr
@@ -244,7 +248,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* move to upper left corner */
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|refresh
 argument_list|()
@@ -340,23 +348,18 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-do|if (Head != NULL
-block|)
-end_block
-
-begin_comment
+if|if
+condition|(
+name|Head
+operator|!=
+name|NULL
+condition|)
 comment|/* start new list */
-end_comment
-
-begin_expr_stmt
 name|dellist
 argument_list|(
 name|Head
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Head
 operator|=
 name|malloc
@@ -367,13 +370,7 @@ name|LIST
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * loop through the screen looking for 'x's, and add a list 	 * element for each one 	 */
-end_comment
-
-begin_for
 for|for
 control|(
 name|y
@@ -427,26 +424,28 @@ name|x
 argument_list|)
 expr_stmt|;
 block|}
-end_for
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Print out the current board position from the linked list  */
 end_comment
 
-begin_expr_stmt
-unit|prboard
-operator|(
-operator|)
+begin_macro
+name|prboard
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|reg
 name|LIST
-operator|*
+modifier|*
 name|hp
-block|;
+decl_stmt|;
 name|erase
 argument_list|()
-block|;
+expr_stmt|;
 comment|/* clear out last position */
 name|box
 argument_list|(
@@ -456,7 +455,7 @@ literal|'|'
 argument_list|,
 literal|'_'
 argument_list|)
-block|;
+expr_stmt|;
 comment|/* box in the screen */
 comment|/* 	 * go through the list adding each piece to the newly 	 * blank board 	 */
 for|for
@@ -489,8 +488,8 @@ expr_stmt|;
 name|refresh
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
-unit|}
 end_unit
 
