@@ -1149,6 +1149,14 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|id
+operator|==
+operator|-
+literal|1
+condition|)
+continue|continue;
 name|class
 operator|=
 name|nexus_pcib_read_config
