@@ -3472,7 +3472,7 @@ condition|)
 name|memset
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 name|ptr
@@ -3635,7 +3635,7 @@ condition|)
 name|memset
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 name|ptr
