@@ -37,7 +37,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|isnormal
+name|isfinite
 argument_list|(
 name|x
 argument_list|)
