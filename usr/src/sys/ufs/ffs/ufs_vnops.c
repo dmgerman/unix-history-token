@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.95 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.96 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -136,6 +136,7 @@ file|<ufs/ufs/ufs_extern.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ufs_chmod
 name|__P
@@ -160,6 +161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ufs_chown
 name|__P
