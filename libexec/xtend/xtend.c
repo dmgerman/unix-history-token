@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xtend.c,v 1.7 1999/08/08 07:05:46 stark Exp $"
+literal|"$Id: xtend.c,v 1.6.2.1 1999/08/08 07:12:28 stark Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1407,13 +1407,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|User
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
 name|user_command
 argument_list|()
 condition|)
@@ -1437,11 +1430,6 @@ name|User
 operator|=
 name|NULL
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* "Can't" happen */
 block|}
 block|}
 elseif|else
