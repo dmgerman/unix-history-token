@@ -298,6 +298,14 @@ parameter_list|()
 value|mtx_assert(&unp_mtx, MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|UNP_UNLOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&unp_mtx, MA_NOTOWNED)
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -576,7 +584,9 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-comment|/* NB: unlocks */
+name|UNP_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so
@@ -1073,7 +1083,9 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-comment|/* NB: unlocks unp */
+name|UNP_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4743,6 +4755,9 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
+name|UNP_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -5611,6 +5626,9 @@ decl_stmt|;
 name|u_int
 name|newlen
 decl_stmt|;
+name|UNP_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -6258,6 +6276,9 @@ decl_stmt|;
 name|u_int
 name|newlen
 decl_stmt|;
+name|UNP_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 literal|0
