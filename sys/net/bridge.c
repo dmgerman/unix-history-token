@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998-2000 Luigi Rizzo  *  * Redistribution and use i
 end_comment
 
 begin_comment
-comment|/*  * This code implements bridging in FreeBSD. It only acts on ethernet  * type of interfaces (others are still usable for routing).  * A bridging table holds the source MAC address/dest. interface for each  * known node. The table is indexed using an hash of the source address.  *  * Input packets are tapped near the end of the input routine in each  * driver (near the call to bpf_mtap, or before the call to ether_input)  * and analysed calling bridge_in(). Depending on the result, the packet  * can be forwarded to one or more output interfaces using bdg_forward(),  * and/or sent to the upper layer (e.g. in case of multicast).  *  * Output packets are intercepted near the end of ether_output(),  * the correct destination is selected calling bdg_dst_lookup(),  * and then forwarding is done using bdg_forward().  * Bridging is controlled by the sysctl variable net.link.ether.bridge  *  * The arp code is also modified to let a machine answer to requests  * irrespective of the port the request came from.  *  * In case of loops in the bridging topology, the bridge detects this  * event and temporarily mutes output bridging on one of the ports.  * Periodically, interfaces are unmuted by bdg_timeout().  * Muting is only implemented as a safety measure, and also as  * a mechanism to support a user-space implementation of the spanning  * tree algorithm. In the final release, unmuting will only occur  * because of explicit action of the user-level daemon.  *  * To build a bridging kernel, use the following option  *    option BRIDGE  * and then at runtime set the sysctl variable to enable bridging.  *  * Only one interface is supposed to have addresses set (but  * there are no problems in practice if you set addresses for more  * than one interface).  * Bridging will act before routing, but nothing prevents a machine  * from doing both (modulo bugs in the implementation...).  *  * THINGS TO REMEMBER  *  - bridging requires some (small) modifications to the interface  *    driver. Not all of them have been changed, see the "ed" and "de"  *    drivers as examples on how to operate.  *  - bridging is incompatible with multicast routing on the same  *    machine. There is not an easy fix to this.  *  - loop detection is still not very robust.  *  - the interface of bdg_forward() could be improved.  */
+comment|/*  * This code implements bridging in FreeBSD. It only acts on ethernet  * type of interfaces (others are still usable for routing).  * A bridging table holds the source MAC address/dest. interface for each  * known node. The table is indexed using an hash of the source address.  *  * Input packets are tapped near the beginning of ether_input(), and  * analysed by calling bridge_in(). Depending on the result, the packet  * can be forwarded to one or more output interfaces using bdg_forward(),  * and/or sent to the upper layer (e.g. in case of multicast).  *  * Output packets are intercepted near the end of ether_output(),  * the correct destination is selected calling bdg_dst_lookup(),  * and then forwarding is done using bdg_forward().  * Bridging is controlled by the sysctl variable net.link.ether.bridge  *  * The arp code is also modified to let a machine answer to requests  * irrespective of the port the request came from.  *  * In case of loops in the bridging topology, the bridge detects this  * event and temporarily mutes output bridging on one of the ports.  * Periodically, interfaces are unmuted by bdg_timeout().  * Muting is only implemented as a safety measure, and also as  * a mechanism to support a user-space implementation of the spanning  * tree algorithm. In the final release, unmuting will only occur  * because of explicit action of the user-level daemon.  *  * To build a bridging kernel, use the following option  *    option BRIDGE  * and then at runtime set the sysctl variable to enable bridging.  *  * Only one interface is supposed to have addresses set (but  * there are no problems in practice if you set addresses for more  * than one interface).  * Bridging will act before routing, but nothing prevents a machine  * from doing both (modulo bugs in the implementation...).  *  * THINGS TO REMEMBER  *  - bridging requires some (small) modifications to the interface  *    driver. Not all of them have been changed, see the "ed" and "de"  *    drivers as examples on how to operate.  *  - bridging is incompatible with multicast routing on the same  *    machine. There is not an easy fix to this.  *  - loop detection is still not very robust.  *  - the interface of bdg_forward() could be improved.  */
 end_comment
 
 begin_include
@@ -413,8 +413,6 @@ parameter_list|(
 name|ifp
 parameter_list|,
 name|src
-parameter_list|,
-name|eh
 parameter_list|)
 define|\
 value|(src == NULL || CLUSTER(ifp) == CLUSTER(src) )
@@ -2033,7 +2031,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * bridge_in() is invoked to perform bridging decision on input packets.  * On Input:  *   m		packet to be bridged. The mbuf need not to hold the  *		whole packet, only the first 14 bytes suffice. We  *		assume them to be contiguous. No alignment assumptions  *		because they are not a problem on i386 class machines.  *  * On Return: destination of packet, one of  *   BDG_BCAST	broadcast  *   BDG_MCAST  multicast  *   BDG_LOCAL  is only for a local address (do not forward)  *   BDG_DROP   drop the packet  *   ifp	ifp of the destination interface.  *  * Forwarding is not done directly to give a chance to some drivers  * to fetch more of the packet, or simply drop it completely.  */
+comment|/*  * bridge_in() is invoked to perform bridging decision on input packets.  *  * On Input:  *   eh		Ethernet header of the incoming packet.  *  * On Return: destination of packet, one of  *   BDG_BCAST	broadcast  *   BDG_MCAST  multicast  *   BDG_LOCAL  is only for a local address (do not forward)  *   BDG_DROP   drop the packet  *   ifp	ifp of the destination interface.  *  * Forwarding is not done directly to give a chance to some drivers  * to fetch more of the packet, or simply drop it completely.  */
 end_comment
 
 begin_function
@@ -2043,9 +2041,14 @@ modifier|*
 name|bridge_in
 parameter_list|(
 name|struct
-name|mbuf
+name|ifnet
 modifier|*
-name|m
+name|ifp
+parameter_list|,
+name|struct
+name|ether_header
+modifier|*
+name|eh
 parameter_list|)
 block|{
 name|int
@@ -2053,15 +2056,6 @@ name|index
 decl_stmt|;
 name|struct
 name|ifnet
-modifier|*
-name|ifp
-init|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-decl_stmt|,
 modifier|*
 name|dst
 decl_stmt|,
@@ -2076,22 +2070,6 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
-name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
-name|eh
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-expr_stmt|;
 comment|/*      * hash the source address      */
 name|index
 operator|=
@@ -2303,7 +2281,7 @@ name|dst
 operator|=
 name|bridge_dst_lookup
 argument_list|(
-name|m
+name|eh
 argument_list|)
 expr_stmt|;
 comment|/* Return values:      *   BDG_BCAST, BDG_MCAST, BDG_LOCAL, BDG_UNKNOWN, BDG_DROP, ifp.      * For muted interfaces, the first 3 are changed in BDG_LOCAL,      * and others to BDG_DROP. Also, for incoming packets, ifp is changed      * to BDG_DROP in case ifp == src . These mods are not necessary      * for outgoing packets from ether_output().      */
@@ -2445,6 +2423,12 @@ modifier|*
 name|m0
 parameter_list|,
 name|struct
+name|ether_header
+modifier|*
+specifier|const
+name|eh
+parameter_list|,
+name|struct
 name|ifnet
 modifier|*
 name|dst
@@ -2499,22 +2483,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|struct
-name|ether_header
-modifier|*
-name|eh
-init|=
-name|mtod
-argument_list|(
-operator|*
-name|m0
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-decl_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|dst
@@ -2637,11 +2605,6 @@ condition|(
 name|ip_fw_chk_ptr
 condition|)
 block|{
-name|u_int16_t
-name|dummy
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|ip_fw_chain
 modifier|*
@@ -2708,18 +2671,6 @@ operator|.
 name|rcvif
 expr_stmt|;
 comment|/* could be NULL in output */
-name|eh
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|canfree
 operator|=
 literal|1
@@ -2768,8 +2719,6 @@ name|min
 argument_list|(
 name|MHLEN
 argument_list|,
-literal|14
-operator|+
 name|max_protohdr
 argument_list|)
 decl_stmt|;
@@ -2815,6 +2764,15 @@ return|return
 name|ENOBUFS
 return|;
 block|}
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|<
+name|needed
+operator|&&
+operator|(
 name|m
 operator|=
 name|m_pullup
@@ -2823,10 +2781,7 @@ name|m
 argument_list|,
 name|needed
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -2842,29 +2797,16 @@ return|;
 block|}
 block|}
 comment|/* 	 * before calling the firewall, swap fields the same as IP does. 	 * here we assume the pkt is an IP one and the header is contiguous 	 */
-name|eh
+name|ip
 operator|=
 name|mtod
 argument_list|(
 name|m
 argument_list|,
 expr|struct
-name|ether_header
+name|ip
 operator|*
 argument_list|)
-expr_stmt|;
-name|ip
-operator|=
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-operator|(
-name|eh
-operator|+
-literal|1
-operator|)
 expr_stmt|;
 name|NTOHS
 argument_list|(
@@ -2895,14 +2837,14 @@ modifier|*
 name|ip_fw_chk_ptr
 call|)
 argument_list|(
-name|NULL
+operator|&
+name|ip
 argument_list|,
 literal|0
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
-name|dummy
+name|NULL
 argument_list|,
 operator|&
 name|m
@@ -2935,31 +2877,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * If we get here, the firewall has passed the pkt, but the 	 * mbuf pointer might have changed. Restore eh, ip, and the 	 * fields NTOHS()'d. Then, if canfree==1, also restore *m0. 	 */
-name|eh
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-expr_stmt|;
-name|ip
-operator|=
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-operator|(
-name|eh
-operator|+
-literal|1
-operator|)
-expr_stmt|;
+comment|/* 	 * If we get here, the firewall has passed the pkt, but the 	 * mbuf pointer might have changed. Restore the fields NTOHS()'d. 	 * Then, if canfree==1, also restore *m0. 	 */
 name|HTONS
 argument_list|(
 name|ip
@@ -3117,8 +3035,6 @@ name|min
 argument_list|(
 name|MHLEN
 argument_list|,
-literal|14
-operator|+
 name|max_protohdr
 argument_list|)
 decl_stmt|;
@@ -3136,6 +3052,18 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|m0
+operator|)
+operator|->
+name|m_len
+operator|<
+name|needed
+operator|&&
+operator|(
 operator|*
 name|m0
 operator|=
@@ -3146,11 +3074,7 @@ name|m0
 argument_list|,
 name|needed
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|m0
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -3226,7 +3150,41 @@ name|ENOBUFS
 return|;
 comment|/* the original is still there... */
 block|}
-comment|/* 	     * Last part of ether_output: queue pkt and start 	     * output if interface not yet active. 	     */
+comment|/* 	     * Last part of ether_output: add header, queue pkt and start 	     * output if interface not yet active. 	     */
+name|M_PREPEND
+argument_list|(
+name|m
+argument_list|,
+name|ETHER_HDR_LEN
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOBUFS
+return|;
+name|bcopy
+argument_list|(
+name|eh
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+argument_list|,
+name|ETHER_HDR_LEN
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splimp
@@ -3406,8 +3364,6 @@ argument_list|(
 name|ifp
 argument_list|,
 name|src
-argument_list|,
-name|eh
 argument_list|)
 operator|&&
 operator|!

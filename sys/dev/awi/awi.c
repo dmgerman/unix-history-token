@@ -7363,6 +7363,9 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|AWI_BPF_MTAP
 argument_list|(
 name|sc
@@ -7372,6 +7375,8 @@ argument_list|,
 name|AWI_BPF_NORM
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__NetBSD__

@@ -3928,7 +3928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retreive packet from NIC memory and send to the next level up via  * ether_input().  If there is a BPF listener, give a copy to BPF,  * too.  */
+comment|/*  * Retreive packet from NIC memory and send to the next level up via  * ether_input().  */
 end_comment
 
 begin_function
@@ -4181,76 +4181,6 @@ argument_list|,
 name|CMR1_RDPAC
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if there's a BPF listener on this interface. If so, hand off 	 * the raw packet to bpf. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_bpf
-condition|)
-block|{
-name|bpf_mtap
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Note that the interface cannot be in promiscuous mode if 		 * there are no BPF listeners.  And if we are in promiscuous 		 * mode, we have to check if this packet is really ours. 		 */
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_flags
-operator|&
-name|IFF_PROMISC
-operator|)
-operator|&&
-name|bcmp
-argument_list|(
-name|eh
-operator|->
-name|ether_dhost
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|eh
-operator|->
-name|ether_dhost
-argument_list|)
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
 comment|/* 	 * Remove link layer address. 	 */
 name|m
 operator|->
@@ -4294,7 +4224,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

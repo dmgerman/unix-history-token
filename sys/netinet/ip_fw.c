@@ -2055,11 +2055,6 @@ modifier|*
 name|oif
 parameter_list|)
 block|{
-if|if
-condition|(
-name|ip
-condition|)
-block|{
 name|struct
 name|tcphdr
 modifier|*
@@ -3021,7 +3016,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -4069,17 +4063,6 @@ name|struct
 name|ip_fw_chain
 modifier|*
 name|chain
-parameter_list|,
-name|struct
-name|ip
-modifier|*
-modifier|*
-name|pip
-parameter_list|,
-name|struct
-name|ip
-modifier|*
-name|ip
 parameter_list|)
 block|{
 name|struct
@@ -4310,7 +4293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *      bridge_ipfw extension: pip = NULL means a complete ethernet packet  *      including ethernet header in the mbuf. Other fields  *      are ignored/invalid.  *  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
+comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *		Special case: cookie == NULL on input for bridging.  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
 end_comment
 
 begin_function
@@ -4377,7 +4360,8 @@ name|ip
 modifier|*
 name|ip
 init|=
-name|NULL
+operator|*
+name|pip
 decl_stmt|;
 name|struct
 name|ifnet
@@ -4427,6 +4411,8 @@ decl_stmt|;
 comment|/* XXX */
 name|u_int16_t
 name|skipto
+decl_stmt|,
+name|bridgeCookie
 decl_stmt|;
 if|#
 directive|if
@@ -4452,6 +4438,24 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* Special hack for bridging (as usual) */
+if|if
+condition|(
+name|cookie
+operator|==
+name|NULL
+condition|)
+block|{
+name|bridgeCookie
+operator|=
+literal|0
+expr_stmt|;
+name|cookie
+operator|=
+operator|&
+name|bridgeCookie
+expr_stmt|;
+block|}
 comment|/* Grab and reset cookie */
 name|skipto
 operator|=
@@ -4463,25 +4467,14 @@ name|cookie
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  * here, pip==NULL for bridged pkts -- they include the ethernet  * header so i have to adjust lengths accordingly  */
 define|#
 directive|define
 name|PULLUP_TO
 parameter_list|(
-name|l
+name|len
 parameter_list|)
-value|do {						\ 			    int len = (pip ? (l) : (l) + 14 );		\ 			    if ((*m)->m_len< (len) ) {                 \ 				if ( (*m = m_pullup(*m, (len))) == 0)   \ 				    goto bogusfrag;                     \ 				ip = mtod(*m, struct ip *);             \ 				if (pip)                                \ 				    *pip = ip ;                         \ 				else                                    \ 				    ip = (struct ip *)((char *)ip + 14);\ 				offset = (ip->ip_off& IP_OFFMASK);     \ 			    }                                           \ 			} while (0)
-if|if
-condition|(
-name|pip
-condition|)
-block|{
-comment|/* normal ip packet */
-name|ip
-operator|=
-operator|*
-name|pip
-expr_stmt|;
+value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				*pip = ip;				\ 				offset = (ip->ip_off& IP_OFFMASK);	\ 			    }						\ 			} while (0)
+comment|/* 	 * Collect parameters into local variables for faster matching. 	 */
 name|offset
 operator|=
 operator|(
@@ -4492,166 +4485,6 @@ operator|&
 name|IP_OFFMASK
 operator|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* bridged or non-ip packet */
-name|struct
-name|ether_header
-modifier|*
-name|eh
-init|=
-name|mtod
-argument_list|(
-operator|*
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-decl_stmt|;
-switch|switch
-condition|(
-name|ntohs
-argument_list|(
-name|eh
-operator|->
-name|ether_type
-argument_list|)
-condition|)
-block|{
-case|case
-name|ETHERTYPE_IP
-case|:
-if|if
-condition|(
-operator|(
-operator|*
-name|m
-operator|)
-operator|->
-name|m_len
-operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-condition|)
-goto|goto
-name|non_ip
-goto|;
-name|ip
-operator|=
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-operator|(
-name|eh
-operator|+
-literal|1
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_v
-operator|!=
-name|IPVERSION
-condition|)
-goto|goto
-name|non_ip
-goto|;
-name|hlen
-operator|=
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
-expr_stmt|;
-if|if
-condition|(
-name|hlen
-operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-condition|)
-comment|/* minimum header length */
-goto|goto
-name|non_ip
-goto|;
-if|if
-condition|(
-operator|(
-operator|*
-name|m
-operator|)
-operator|->
-name|m_len
-operator|<
-literal|14
-operator|+
-name|hlen
-operator|+
-literal|14
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"-- m_len %d, need more...\n"
-argument_list|,
-operator|(
-operator|*
-name|m
-operator|)
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-goto|goto
-name|non_ip
-goto|;
-block|}
-name|offset
-operator|=
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
-expr_stmt|;
-break|break ;
-default|default :
-name|non_ip
-label|:
-name|ip
-operator|=
-name|NULL
-expr_stmt|;
-break|break ;
-block|}
-block|}
-comment|/* 	 * collect parameters into local variables for faster matching. 	 */
-if|if
-condition|(
-name|ip
-condition|)
 block|{
 name|struct
 name|tcphdr
@@ -5062,10 +4895,6 @@ name|dyn_checked
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|ip
-condition|)
 name|q
 operator|=
 name|lookup_dyn_rule
@@ -5111,10 +4940,6 @@ operator|->
 name|pcnt
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|ip
-condition|)
 name|q
 operator|->
 name|bcnt
@@ -5142,20 +4967,25 @@ block|}
 endif|#
 directive|endif
 comment|/* stateful ipfw */
-comment|/* 		 * Rule only valid for bridged packets, skip if this 		 * is not one of those (pip != NULL) 		 */
+comment|/* Check if rule only valid for bridged packets */
 if|if
 condition|(
-name|pip
-operator|!=
-name|NULL
-operator|&&
+operator|(
 name|f
 operator|->
 name|fw_flg
 operator|&
 name|IP_FW_BRIDGED
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|cookie
+operator|!=
+operator|&
+name|bridgeCookie
 condition|)
-continue|continue ;
+continue|continue;
 if|if
 condition|(
 name|oif
@@ -5190,99 +5020,6 @@ name|IP_FW_F_IN
 operator|)
 condition|)
 continue|continue;
-block|}
-if|if
-condition|(
-name|ip
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 		     * do relevant checks for non-ip packets: 		     * after this, only goto got_match or continue 		     */
-name|struct
-name|ether_header
-modifier|*
-name|eh
-init|=
-name|mtod
-argument_list|(
-operator|*
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-decl_stmt|;
-comment|/* 		     * temporary hack:  		     *   udp from 0.0.0.0 means this rule applies. 		     *   1 src port is match ether type 		     *   2 src ports (interval) is match ether type 		     *   3 src ports is match ether address 		     */
-if|if
-condition|(
-name|f
-operator|->
-name|fw_src
-operator|.
-name|s_addr
-operator|!=
-literal|0
-operator|||
-name|f
-operator|->
-name|fw_prot
-operator|!=
-name|IPPROTO_UDP
-operator|||
-name|f
-operator|->
-name|fw_smsk
-operator|.
-name|s_addr
-operator|!=
-literal|0xffffffff
-condition|)
-continue|continue;
-switch|switch
-condition|(
-name|IP_FW_GETNSRCP
-argument_list|(
-name|f
-argument_list|)
-condition|)
-block|{
-case|case
-literal|1
-case|:
-comment|/* match one type */
-if|if
-condition|(
-comment|/* ( (f->fw_flg& IP_FW_F_INVSRC) != 0) ^ */
-operator|(
-name|f
-operator|->
-name|fw_uar
-operator|.
-name|fw_pts
-index|[
-literal|0
-index|]
-operator|==
-name|ntohs
-argument_list|(
-name|eh
-operator|->
-name|ether_type
-argument_list|)
-operator|)
-condition|)
-block|{
-goto|goto
-name|got_match
-goto|;
-block|}
-break|break ;
-default|default:
-break|break ;
-block|}
-continue|continue ;
 block|}
 comment|/* Fragments */
 if|if
@@ -6147,10 +5884,6 @@ condition|)
 name|install_state
 argument_list|(
 name|chain
-argument_list|,
-name|pip
-argument_list|,
-name|ip
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6168,11 +5901,6 @@ name|fw_pcnt
 operator|+=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|ip
-condition|)
-block|{
 name|f
 operator|->
 name|fw_bcnt
@@ -6181,7 +5909,6 @@ name|ip
 operator|->
 name|ip_len
 expr_stmt|;
-block|}
 name|f
 operator|->
 name|timestamp
@@ -6377,22 +6104,18 @@ name|f
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-comment|/* Rule IPFW_DEFAULT_RULE should always be there and should always match */
-if|if
-condition|(
-operator|!
-name|chain
-condition|)
-name|panic
+comment|/* Rule IPFW_DEFAULT_RULE should always be there and match */
+name|KASSERT
 argument_list|(
-literal|"ip_fw: chain"
+name|chain
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ip_fw: no chain"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * At this point, we're going to drop the packet. 	 * Send a reject notice if all of the following are true: 	 * 	 * - The packet matched a reject rule 	 * - The packet is not an ICMP packet, or is an ICMP query packet 	 * - The packet is not a multicast or broadcast packet 	 */
 if|if
 condition|(
@@ -6405,8 +6128,6 @@ name|IP_FW_F_COMMAND
 operator|)
 operator|==
 name|IP_FW_F_REJECT
-operator|&&
-name|ip
 operator|&&
 operator|(
 name|ip

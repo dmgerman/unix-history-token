@@ -3251,31 +3251,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*      * Check if there's a BPF listener on this interface.      * If so, hand off the raw packet to BPF.      */
-if|if
-condition|(
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_bpf
-condition|)
-block|{
-name|bpf_mtap
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * XXX: Some cards seem to be in promiscous mode all the time.      * we need to make sure we only get our own stuff always.      * bleah!      */
 if|if
 condition|(
@@ -3291,8 +3266,8 @@ literal|1
 operator|)
 operator|==
 literal|0
-operator|&&
 comment|/* !mcast and !bcast */
+operator|&&
 name|bcmp
 argument_list|(
 name|eh
@@ -3305,12 +3280,7 @@ name|arpcom
 operator|.
 name|ac_enaddr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|eh
-operator|->
-name|ether_dhost
-argument_list|)
+name|ETHER_ADDR_LEN
 argument_list|)
 operator|!=
 literal|0
@@ -3323,7 +3293,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* We assume the header fit entirely in one mbuf. */
 name|m_adj
 argument_list|(
 name|m
