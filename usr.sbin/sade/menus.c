@@ -9116,6 +9116,20 @@ literal|"keymap=hr.iso"
 block|}
 block|,
 block|{
+literal|" Czech ISO (accent)"
+block|,
+literal|"Czech ISO keymap (accent keys)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=cs.latin2.qwertz"
+block|}
+block|,
+block|{
 literal|"Danish CP865"
 block|,
 literal|"Danish Code Page 865 keymap"
