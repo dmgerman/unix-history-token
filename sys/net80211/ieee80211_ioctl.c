@@ -7149,6 +7149,28 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * When building the kernel with -O2 on the i386 architecture, gcc  * seems to want to inline this function into ieee80211_ioctl()  * (which is the only routine that calls it). When this happens,  * ieee80211_ioctl() ends up consuming an additional 2K of stack  * space. (Exactly why it needs so much is unclear.) The problem  * is that it's possible for ieee80211_ioctl() to invoke other  * routines (including driver init functions) which could then find  * themselves perilously close to exhausting the stack.  *  * To avoid this, we deliberately prevent gcc from inlining this  * routine. Another way to avoid this is to use less agressive  * optimization when compiling this file (i.e. -O instead of -O2)  * but special-casing the compilation of this one module in the  * build system would be awkward.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(noinline)
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
