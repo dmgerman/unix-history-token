@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.3 kit.  *   * Create Version  *   * "checkout" creates a "version" of an RCS repository.  This version is owned  * totally by the user and is actually an independent copy, to be dealt with  * as seen fit.  Once "checkout" has been called in a given directory, it  * never needs to be called again.  The user can keep up-to-date by calling  * "update" when he feels like it; this will supply him with a merge of his  * own modifications and the changes made in the RCS original.  See "update"  * for details.  *   * "checkout" can be given a list of directories or files to be updated and in  * the case of a directory, will recursivley create any sub-directories that  * exist in the repository.  *   * When the user is satisfied with his own modifications, the present version  * can be committed by "commit"; this keeps the present version in tact,  * usually.  *   * The call is cvs checkout [options]<module-name>...  *   * "checkout" creates a directory ./CVS, in which it keeps its administration,  * in two files, Repository and Entries. The first contains the name of the  * repository.  The second contains one line for each registered file,  * consisting of the version number it derives from, its time stamp at  * derivation time and its name.  Both files are normal files and can be  * edited by the user, if necessary (when the repository is moved, e.g.)  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Create Version  *   * "checkout" creates a "version" of an RCS repository.  This version is owned  * totally by the user and is actually an independent copy, to be dealt with  * as seen fit.  Once "checkout" has been called in a given directory, it  * never needs to be called again.  The user can keep up-to-date by calling  * "update" when he feels like it; this will supply him with a merge of his  * own modifications and the changes made in the RCS original.  See "update"  * for details.  *   * "checkout" can be given a list of directories or files to be updated and in  * the case of a directory, will recursivley create any sub-directories that  * exist in the repository.  *   * When the user is satisfied with his own modifications, the present version  * can be committed by "commit"; this keeps the present version in tact,  * usually.  *   * The call is cvs checkout [options]<module-name>...  *   * "checkout" creates a directory ./CVS, in which it keeps its administration,  * in two files, Repository and Entries. The first contains the name of the  * repository.  The second contains one line for each registered file,  * consisting of the version number it derives from, its time stamp at  * derivation time and its name.  Both files are normal files and can be  * edited by the user, if necessary (when the repository is moved, e.g.)  */
 end_comment
 
 begin_include
@@ -21,142 +21,113 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)checkout.c 1.67 92/04/10"
+literal|"$CVSid: @(#)checkout.c 1.78 94/10/07 $"
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|findslash
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|start
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|p
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|build_dirs_and_chdir
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|dir
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|prepath
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|realdir
-parameter_list|,
+operator|,
 name|int
 name|sticky
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|checkout_proc
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|int
-modifier|*
+operator|*
 name|pargc
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|argv
 index|[]
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|where
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|mwhere
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|mfile
-parameter_list|,
+operator|,
 name|int
 name|shorten
-parameter_list|,
+operator|,
 name|int
 name|local_specified
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|omodule
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|msg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|checkout_proc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|findslash
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|build_dirs_and_chdir
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -196,8 +167,6 @@ literal|"\t-D date\tCheck out revisions as of date. (implies -P)\n"
 block|,
 literal|"\t-d dir\tCheck out into dir instead of module name.\n"
 block|,
-literal|"\t-K key\tUse RCS key -K option on checkout.\n"
-block|,
 literal|"\t-k kopt\tUse RCS kopt -k option on checkout.\n"
 block|,
 literal|"\t-j rev\tMerge in changes made between current revision and rev.\n"
@@ -229,9 +198,9 @@ literal|"\t-n\tDo not run module program (if any).\n"
 block|,
 literal|"\t-q\tSomewhat quiet.\n"
 block|,
-literal|"\t-r rev\tCheck out revision or tag. (implies -P)\n"
+literal|"\t-r rev\tCheck out revision or tag.\n"
 block|,
-literal|"\t-D date\tCheck out revisions as of date. (implies -P)\n"
+literal|"\t-D date\tCheck out revisions as of date.\n"
 block|,
 literal|"\t-d dir\tCheck out into dir instead of module name.\n"
 block|,
@@ -330,16 +299,6 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|K_flag
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|checkout
@@ -357,7 +316,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -437,7 +395,7 @@ else|else
 block|{
 name|valid_options
 operator|=
-literal|"ANnk:d:flRpQqcsr:D:j:PK:"
+literal|"ANnk:d:flRpQqcsr:D:j:P"
 expr_stmt|;
 name|valid_usage
 operator|=
@@ -468,7 +426,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|gnu_getopt
+name|getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -690,14 +648,6 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'K'
-case|:
-name|K_flag
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
 literal|'?'
 case|:
 default|default:
@@ -717,26 +667,6 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FREEBSD_DEVELOPER
-if|if
-condition|(
-operator|!
-name|K_flag
-operator|&&
-name|freebsd
-condition|)
-block|{
-comment|/* XXX Note:  The leading -K is not needed, it gets added later! */
-name|K_flag
-operator|=
-literal|"eAuthor,Date,Header,Id,Locker,Log,RCSfile,Revision,Source,State -KiFreeBSD"
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* FREEBSD_DEVELOPER */
 if|if
 condition|(
 name|shorten
@@ -977,9 +907,11 @@ name|sprintf
 argument_list|(
 name|repository
 argument_list|,
-literal|"%s/%s"
+literal|"%s/%s/%s"
 argument_list|,
 name|CVSroot
+argument_list|,
+name|CVSROOTADM
 argument_list|,
 name|CVSNULLREPOS
 argument_list|)
@@ -1000,6 +932,26 @@ argument_list|(
 name|repository
 argument_list|,
 literal|0777
+argument_list|)
+expr_stmt|;
+comment|/* I'm not sure whether this check is redundant.  */
+if|if
+condition|(
+operator|!
+name|isdir
+argument_list|(
+name|repository
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"there is no repository %s"
+argument_list|,
+name|repository
 argument_list|)
 expr_stmt|;
 name|Create_Admin
@@ -1070,7 +1022,7 @@ name|where
 operator|!=
 name|NULL
 operator|&&
-name|index
+name|strchr
 argument_list|(
 name|where
 argument_list|,
@@ -1086,7 +1038,7 @@ name|slash
 decl_stmt|;
 name|slash
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|where
 argument_list|,
@@ -1363,7 +1315,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|mfile
 argument_list|,
@@ -1457,7 +1409,7 @@ condition|(
 operator|(
 name|slash
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|mfile
 argument_list|,
@@ -1651,7 +1603,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -1786,7 +1738,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|where
 argument_list|,
@@ -1795,7 +1747,7 @@ argument_list|)
 expr_stmt|;
 name|cp2
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|prepath
 argument_list|,
@@ -1931,6 +1883,26 @@ operator|>
 literal|1
 condition|)
 block|{
+comment|/* I'm not sure whether this check is redundant.  */
+if|if
+condition|(
+operator|!
+name|isdir
+argument_list|(
+name|repository
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"there is no repository %s"
+argument_list|,
+name|repository
+argument_list|)
+expr_stmt|;
 name|Create_Admin
 argument_list|(
 literal|"."
@@ -1981,6 +1953,27 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+comment|/* I'm not sure whether this check is redundant.  */
+if|if
+condition|(
+operator|!
+name|isdir
+argument_list|(
+name|repository
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"there is no repository %s"
+argument_list|,
+name|repository
+argument_list|)
+expr_stmt|;
 name|Create_Admin
 argument_list|(
 literal|"."
@@ -1992,6 +1985,7 @@ argument_list|,
 name|date
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2228,8 +2222,6 @@ name|join_rev1
 argument_list|,
 name|join_rev2
 argument_list|,
-name|K_flag
-argument_list|,
 name|preload_update_dir
 argument_list|)
 expr_stmt|;
@@ -2362,6 +2354,12 @@ argument_list|,
 name|vers
 operator|->
 name|vn_rcs
+condition|?
+name|vers
+operator|->
+name|vn_rcs
+else|:
+literal|"0"
 argument_list|,
 name|line
 argument_list|,
@@ -2376,6 +2374,12 @@ argument_list|,
 name|vers
 operator|->
 name|date
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2466,8 +2470,6 @@ name|join_rev1
 argument_list|,
 name|join_rev2
 argument_list|,
-name|K_flag
-argument_list|,
 name|preload_update_dir
 argument_list|)
 expr_stmt|;
@@ -2509,14 +2511,8 @@ decl_stmt|;
 block|{
 while|while
 condition|(
-operator|(
-name|int
-operator|)
 name|p
 operator|>=
-operator|(
-name|int
-operator|)
 name|start
 operator|&&
 operator|*
@@ -2529,14 +2525,8 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|p
 operator|<
-operator|(
-name|int
-operator|)
 name|start
 condition|)
 return|return
@@ -2657,7 +2647,7 @@ init|;
 operator|(
 name|slash
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -2670,7 +2660,7 @@ operator|&&
 operator|(
 name|slash2
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp2
 argument_list|,
@@ -2776,6 +2766,26 @@ argument_list|,
 name|prepath
 argument_list|,
 name|path2
+argument_list|)
+expr_stmt|;
+comment|/* I'm not sure whether this check is redundant.  */
+if|if
+condition|(
+operator|!
+name|isdir
+argument_list|(
+name|repository
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"there is no repository %s"
+argument_list|,
+name|repository
 argument_list|)
 expr_stmt|;
 name|Create_Admin
