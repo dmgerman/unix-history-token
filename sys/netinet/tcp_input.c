@@ -812,6 +812,21 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Indicate whether this ack should be delayed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DELAY_ACK
+parameter_list|(
+name|tp
+parameter_list|)
+define|\
+value|(tcp_delack_enabled&& !callout_pending(tp->tt_delack))
+end_define
+
+begin_comment
 comment|/*  * Insert segment which inludes th into reassembly queue of tcp with  * control block tp.  Return TH_FIN if reassembly now includes  * a segment with FIN.  The macro form does the common case inline  * (segment is the next to be received on an established connection,  * and the queue is empty), avoiding linkage into and removal  * from the queue and repetition of various conversions.  * Set DELACK for segments received in order, but ack immediately  * when segments are out of order (so fast retransmit can work).  */
 end_comment
 
@@ -832,7 +847,7 @@ name|so
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	if ((th)->th_seq == (tp)->rcv_nxt&& \ 	    LIST_EMPTY(&(tp)->t_segq)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		if (tcp_delack_enabled) \ 			callout_reset(tp->tt_delack, tcp_delacktime, \ 			    tcp_timer_delack, tp); \ 		else \ 			tp->t_flags |= TF_ACKNOW; \ 		(tp)->rcv_nxt += *(tlenp); \ 		flags = (th)->th_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += *(tlenp);\ 		ND6_HINT(tp); \ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (th), (tlenp), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
+value|{ \ 	if ((th)->th_seq == (tp)->rcv_nxt&& \ 	    LIST_EMPTY(&(tp)->t_segq)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		if (DELAY_ACK(tp)) \ 			callout_reset(tp->tt_delack, tcp_delacktime, \ 			    tcp_timer_delack, tp); \ 		else \ 			tp->t_flags |= TF_ACKNOW; \ 		(tp)->rcv_nxt += *(tlenp); \ 		flags = (th)->th_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += *(tlenp);\ 		ND6_HINT(tp); \ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (th), (tlenp), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
 end_define
 
 begin_function
@@ -4230,7 +4245,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tcp_delack_enabled
+name|DELAY_ACK
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 block|{
 name|callout_reset
@@ -5032,7 +5050,10 @@ expr_stmt|;
 comment|/* 			 * If there is a FIN, or if there is data and the 			 * connection is local, then delay SYN,ACK(SYN) in 			 * the hope of piggy-backing it on a response 			 * segment.  Otherwise must send ACK now in case 			 * the other side is slow starting. 			 */
 if|if
 condition|(
-name|tcp_delack_enabled
+name|DELAY_ACK
+argument_list|(
+name|tp
+argument_list|)
 operator|&&
 operator|(
 operator|(
@@ -5568,7 +5589,10 @@ comment|/* SYN is acked */
 comment|/* 			 * If there's data, delay ACK; if there's also a FIN 			 * ACKNOW will be turned on later. 			 */
 if|if
 condition|(
-name|tcp_delack_enabled
+name|DELAY_ACK
+argument_list|(
+name|tp
+argument_list|)
 operator|&&
 name|tlen
 operator|!=
@@ -8359,7 +8383,10 @@ expr_stmt|;
 comment|/* 			 *  If connection is half-synchronized 			 *  (ie NEEDSYN flag on) then delay ACK, 			 *  so it may be piggybacked when SYN is sent. 			 *  Otherwise, since we received a FIN then no 			 *  more input can be expected, send ACK now. 			 */
 if|if
 condition|(
-name|tcp_delack_enabled
+name|DELAY_ACK
+argument_list|(
+name|tp
+argument_list|)
 operator|&&
 operator|(
 name|tp
