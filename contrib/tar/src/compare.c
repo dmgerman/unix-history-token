@@ -1358,12 +1358,18 @@ name|errno
 operator|==
 name|ENOENT
 condition|)
-name|stat_warn
+block|{
+name|report_difference
 argument_list|(
-name|file_name
+name|_
+argument_list|(
+literal|"does not exist"
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|stat_error
 argument_list|(
 name|file_name
@@ -1374,6 +1380,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
