@@ -364,6 +364,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|wint_t
+name|nextwctype
+parameter_list|(
+name|wint_t
+parameter_list|,
+name|wctype_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
