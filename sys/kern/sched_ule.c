@@ -198,6 +198,13 @@ argument|NULL
 argument_list|)
 end_macro
 
+begin_define
+define|#
+directive|define
+name|SCHED_STRICT_RESCHED
+value|1
+end_define
+
 begin_comment
 comment|/*  * These datastructures are allocated within their parent datastructure but  * are scheduler specific.  */
 end_comment
