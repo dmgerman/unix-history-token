@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_get.c	5.4 (Berkeley) %G%"
+literal|"@(#)bt_get.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,25 +46,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -418,10 +418,17 @@ name|index
 expr_stmt|;
 block|}
 else|else
+block|{
 name|cpgno
 operator|=
 name|P_INVALID
 expr_stmt|;
+name|cindex
+operator|=
+literal|0
+expr_stmt|;
+comment|/* GCC thinks it's uninitialized. */
+block|}
 comment|/* 	 * Walk backwards, skipping empty pages, as long as the entry matches 	 * and there are keys left in the tree.  Save a copy of each match in 	 * case we go too far.  A special case is that we don't return a match 	 * on records that the cursor references that have already been flagged 	 * for deletion. 	 */
 name|save
 operator|=
