@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2707,8 +2707,6 @@ name|vp
 argument_list|,
 name|uiop
 argument_list|,
-name|offp
-argument_list|,
 name|cred
 argument_list|)
 specifier|register
@@ -2724,13 +2722,6 @@ name|struct
 name|uio
 modifier|*
 name|uiop
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|off_t
-modifier|*
-name|offp
 decl_stmt|;
 end_decl_stmt
 
@@ -2886,8 +2877,9 @@ operator|++
 operator|=
 name|txdr_unsigned
 argument_list|(
-operator|*
-name|offp
+name|uiop
+operator|->
+name|uio_offset
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2942,11 +2934,6 @@ argument_list|(
 name|mrep
 argument_list|)
 expr_stmt|;
-operator|*
-name|offp
-operator|+=
-name|retlen
-expr_stmt|;
 if|if
 condition|(
 name|retlen
@@ -2984,8 +2971,6 @@ name|vp
 argument_list|,
 name|uiop
 argument_list|,
-name|offp
-argument_list|,
 name|cred
 argument_list|)
 specifier|register
@@ -3001,13 +2986,6 @@ name|struct
 name|uio
 modifier|*
 name|uiop
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|off_t
-modifier|*
-name|offp
 decl_stmt|;
 end_decl_stmt
 
@@ -3162,8 +3140,9 @@ operator|)
 operator|=
 name|txdr_unsigned
 argument_list|(
-operator|*
-name|offp
+name|uiop
+operator|->
+name|uio_offset
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3209,11 +3188,6 @@ argument_list|)
 expr_stmt|;
 name|tsiz
 operator|-=
-name|len
-expr_stmt|;
-operator|*
-name|offp
-operator|+=
 name|len
 expr_stmt|;
 block|}
@@ -5322,8 +5296,6 @@ name|vp
 argument_list|,
 name|uiop
 argument_list|,
-name|offp
-argument_list|,
 name|cred
 argument_list|)
 specifier|register
@@ -5339,13 +5311,6 @@ name|struct
 name|uio
 modifier|*
 name|uiop
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|off_t
-modifier|*
-name|offp
 decl_stmt|;
 end_decl_stmt
 
@@ -5438,11 +5403,6 @@ name|direct
 modifier|*
 name|savdp
 decl_stmt|;
-name|nfs_lock
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|nfsstats
 operator|.
 name|rpccnt
@@ -5480,18 +5440,15 @@ operator|*
 name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
-name|off
-operator|=
-operator|*
-name|offp
-expr_stmt|;
 operator|*
 name|p
 operator|++
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|off
+name|uiop
+operator|->
+name|uio_offset
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5783,18 +5740,14 @@ argument_list|,
 name|siz
 argument_list|)
 expr_stmt|;
-operator|*
-name|offp
+name|uiop
+operator|->
+name|uio_offset
 operator|=
 name|off
 expr_stmt|;
 block|}
 name|nfsm_reqdone
-expr_stmt|;
-name|nfs_unlock
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7084,9 +7037,6 @@ decl_stmt|;
 name|int
 name|bcnt
 decl_stmt|;
-name|off_t
-name|off
-decl_stmt|;
 name|struct
 name|uio
 name|uio
@@ -7150,8 +7100,6 @@ name|uiop
 operator|->
 name|uio_offset
 operator|=
-name|off
-operator|=
 name|bp
 operator|->
 name|b_blkno
@@ -7194,8 +7142,6 @@ expr_stmt|;
 name|uiop
 operator|->
 name|uio_offset
-operator|=
-name|off
 operator|=
 operator|(
 name|bp
@@ -7607,9 +7553,6 @@ name|vp
 argument_list|,
 name|uiop
 argument_list|,
-operator|&
-name|off
-argument_list|,
 name|bp
 operator|->
 name|b_rcred
@@ -7635,9 +7578,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|uiop
-argument_list|,
-operator|&
-name|off
 argument_list|,
 name|bp
 operator|->
@@ -7796,6 +7736,8 @@ operator|,
 name|fflags
 operator|,
 name|cred
+operator|,
+name|waitfor
 operator|)
 specifier|register
 expr|struct
@@ -7819,6 +7761,12 @@ name|cred
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|waitfor
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -7835,11 +7783,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|nfs_lock
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|np
@@ -7875,11 +7818,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-name|nfs_unlock
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
