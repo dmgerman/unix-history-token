@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vidcontrol.c,v 1.19 1998/07/14 10:32:27 bde Exp $"
+literal|"$Id: vidcontrol.c,v 1.20 1998/09/15 18:16:39 sos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,9 +176,9 @@ literal|"%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: vidcontrol [-r fg bg] [-b color] [-c appearance] [-d] [-l scrmap]"
 argument_list|,
-literal|"                  [-L] [-m on|off] [-f size file] [-s number] [-t N|off]"
+literal|"                  [-i adapter | mode] [-L] [-m on|off] [-f size file]"
 argument_list|,
-literal|"                  [-x] [mode] [fgcol [bgcol]] [show]"
+literal|"                  [-s number] [-t N|off] [-x] [mode] [fgcol [bgcol]] [show]"
 argument_list|)
 expr_stmt|;
 name|exit
