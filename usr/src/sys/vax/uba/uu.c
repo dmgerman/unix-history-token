@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uu.c	4.7	83/06/16	*/
+comment|/*	uu.c	4.8	83/07/07	*/
 end_comment
 
 begin_include
@@ -3246,6 +3246,9 @@ operator|.
 name|pk_unit
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|printf
 argument_list|(
 literal|"%X %X %X %X %X %X %X\n"
@@ -3279,6 +3282,8 @@ operator|->
 name|tu_count
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|uuc
 operator|->
 name|tu_flag
