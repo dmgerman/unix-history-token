@@ -4650,7 +4650,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|args
+name|uap
 operator|->
 name|itv
 argument_list|,
@@ -4658,7 +4658,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|args
+name|uap
 operator|->
 name|oitv
 argument_list|)
@@ -5091,7 +5091,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|args
+name|uap
 operator|->
 name|itv
 argument_list|)
