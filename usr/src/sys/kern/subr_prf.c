@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	6.5	84/12/27	*/
+comment|/*	subr_prf.c	6.6	85/03/18	*/
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
 end_include
 
 begin_ifdef
@@ -237,6 +243,10 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * tprintf prints on the specified terminal (console if none)  * and logs the message.  It is designed for error messages from  * single-open devices, and may be called from interrupt level.  */
+end_comment
+
+begin_comment
 comment|/*VARARGS2*/
 end_comment
 
@@ -282,6 +292,8 @@ operator|&
 name|x1
 argument_list|,
 name|TOTTY
+operator||
+name|TOLOG
 argument_list|,
 name|ttyp
 argument_list|)
@@ -290,7 +302,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Log writes to the log buffer,  * and guarantees not to sleep (so can be called by interrupt routines).  */
+comment|/*  * Log writes to the log buffer,  * and guarantees not to sleep (so can be called by interrupt routines).  * If there is no process reading the log yet, it writes to the console also.  */
 end_comment
 
 begin_comment
@@ -329,6 +341,10 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
+specifier|extern
+name|int
+name|log_open
+decl_stmt|;
 name|putchar
 argument_list|(
 literal|'<'
@@ -393,6 +409,28 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|log_open
+condition|)
+name|prf
+argument_list|(
+name|fmt
+argument_list|,
+operator|&
+name|x1
+argument_list|,
+name|TOCONS
+argument_list|,
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|logwakeup
@@ -1004,8 +1042,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|printf
+name|log
 argument_list|(
+name|KERN_FAIL
+argument_list|,
 literal|"%s: table is full\n"
 argument_list|,
 name|tab

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_log.c	6.3	84/08/29	*/
+comment|/*	subr_log.c	6.4	85/03/18	*/
 end_comment
 
 begin_comment
@@ -65,13 +65,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOG_OPEN
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOG_NBIO
 value|0x02
 end_define
@@ -112,6 +105,16 @@ block|}
 name|logsoftc
 struct|;
 end_struct
+
+begin_decl_stmt
+name|int
+name|log_open
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* also used in log() */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -201,22 +204,16 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|logsoftc
-operator|.
-name|sc_state
-operator|&
-name|LOG_OPEN
+name|log_open
 condition|)
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
-name|logsoftc
-operator|.
-name|sc_state
-operator||=
-name|LOG_OPEN
+name|log_open
+operator|=
+literal|1
 expr_stmt|;
 name|logsoftc
 operator|.
@@ -330,6 +327,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|log_open
+operator|=
+literal|0
+expr_stmt|;
 name|logsoftc
 operator|.
 name|sc_state
@@ -757,6 +758,12 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+operator|!
+name|log_open
+condition|)
+return|return;
 if|if
 condition|(
 name|logsoftc
