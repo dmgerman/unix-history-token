@@ -805,28 +805,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|prefix
-modifier|*
-name|find_prefix
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|rainfo
-operator|*
-operator|,
-expr|struct
-name|in6_addr
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -1175,6 +1153,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1186,6 +1165,7 @@ argument_list|,
 name|pidfilename
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|fprintf
@@ -1727,9 +1707,9 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"<%s> received data length is larger than"
-literal|"1st routing message len. multiple messages?"
-literal|" read %d bytes, but 1st msg len = %d"
+literal|"<%s> received data length is larger than "
+literal|"1st routing message len. multiple messages? "
+literal|"read %d bytes, but 1st msg len = %d"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -2001,12 +1981,12 @@ name|msg
 argument_list|)
 expr_stmt|;
 comment|/* sanity check for plen */
+comment|/* as RFC2373, prefixlen is at least 4 */
 if|if
 condition|(
 name|plen
 operator|<
 literal|4
-comment|/* as RFC2373, prefixlen is at least 4 */
 operator|||
 name|plen
 operator|>
@@ -2043,6 +2023,21 @@ condition|(
 name|prefix
 condition|)
 block|{
+if|if
+condition|(
+name|prefix
+operator|->
+name|timer
+condition|)
+block|{
+comment|/* 					 * If the prefix has been invalidated, 					 * make it available again. 					 */
+name|update_prefix
+argument_list|(
+name|prefix
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|dflag
@@ -2140,12 +2135,12 @@ name|msg
 argument_list|)
 expr_stmt|;
 comment|/* sanity check for plen */
+comment|/* as RFC2373, prefixlen is at least 4 */
 if|if
 condition|(
 name|plen
 operator|<
 literal|4
-comment|/* as RFC2373, prefixlen is at least 4 */
 operator|||
 name|plen
 operator|>
@@ -2156,8 +2151,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"<%s> deleted interface"
-literal|"route's"
+literal|"<%s> deleted interface route's "
 literal|"plen %d is invalid for a prefix"
 argument_list|,
 name|__FUNCTION__
@@ -2227,10 +2221,8 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-name|delete_prefix
+name|invalidate_prefix
 argument_list|(
-name|rai
-argument_list|,
 name|prefix
 argument_list|)
 expr_stmt|;
@@ -2870,7 +2862,7 @@ block|{
 case|case
 name|ND_ROUTER_SOLICIT
 case|:
-comment|/* 		  * Message verification - RFC-2461 6.1.1 		  * XXX: these checks must be done in the kernel as well, 		  *      but we can't completely rely on them. 		  */
+comment|/* 		 * Message verification - RFC-2461 6.1.1 		 * XXX: these checks must be done in the kernel as well, 		 *      but we can't completely rely on them. 		 */
 if|if
 condition|(
 operator|*
@@ -3032,7 +3024,7 @@ break|break;
 case|case
 name|ND_ROUTER_ADVERT
 case|:
-comment|/* 		  * Message verification - RFC-2461 6.1.2 		  * XXX: there's a same dilemma as above...  		  */
+comment|/* 		 * Message verification - RFC-2461 6.1.2 		 * XXX: there's a same dilemma as above...  		 */
 if|if
 condition|(
 operator|*
@@ -3235,7 +3227,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 		  * Note that this case is POSSIBLE, especially just 		  * after invocation of the daemon. This is because we 		  * could receive message after opening the socket and 		  * before setting ICMP6 type filter(see sock_open()). 		  */
+comment|/* 		 * Note that this case is POSSIBLE, especially just 		 * after invocation of the daemon. This is because we 		 * could receive message after opening the socket and 		 * before setting ICMP6 type filter(see sock_open()). 		 */
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -5460,8 +5452,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"<%s> duplicated ND option"
-literal|" (type = %d)"
+literal|"<%s> duplicated ND option (type = %d)"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -6946,7 +6937,9 @@ comment|/* process RA timer */
 end_comment
 
 begin_function
-name|void
+name|struct
+name|rtadvd_timer
+modifier|*
 name|ra_timeout
 parameter_list|(
 name|void
@@ -6990,6 +6983,13 @@ argument_list|(
 name|rai
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rai
+operator|->
+name|timer
+operator|)
+return|;
 block|}
 end_function
 
