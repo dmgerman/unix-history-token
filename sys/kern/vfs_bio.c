@@ -8881,13 +8881,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_B_MALLOC
-argument_list|)
 if|if
 condition|(
 name|bp
@@ -8901,8 +8894,6 @@ operator|=
 name|mbsize
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|newbsize
 operator|=
 name|round_page
@@ -8919,13 +8910,6 @@ operator|->
 name|b_bufsize
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_B_MALLOC
-argument_list|)
 comment|/* 			 * malloced buffers are not shrunk 			 */
 if|if
 condition|(
@@ -9008,8 +8992,6 @@ return|return
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
 name|vm_hold_free_pages
 argument_list|(
 name|bp
@@ -9046,13 +9028,6 @@ operator|->
 name|b_bufsize
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_B_MALLOC
-argument_list|)
 comment|/* 			 * We only use malloced memory on the first allocation. 			 * and revert to page-allocated memory when the buffer 			 * grows. 			 */
 if|if
 condition|(
@@ -9118,8 +9093,6 @@ return|return
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
 name|origbuf
 operator|=
 name|NULL
@@ -9128,13 +9101,6 @@ name|origbufsize
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_B_MALLOC
-argument_list|)
 comment|/* 			 * If the buffer is growing on its other-than-first allocation, 			 * then we revert to the page-allocation scheme. 			 */
 if|if
 condition|(
@@ -9203,8 +9169,6 @@ name|newbsize
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|vm_hold_load_pages
 argument_list|(
 name|bp
@@ -9230,13 +9194,6 @@ operator|+
 name|newbsize
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_B_MALLOC
-argument_list|)
 if|if
 condition|(
 name|origbuf
@@ -9261,8 +9218,6 @@ name|M_BIOBUF
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 block|}
 else|else
@@ -9313,13 +9268,6 @@ operator|+
 name|newbsize
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_B_MALLOC
-argument_list|)
 if|if
 condition|(
 name|bp
@@ -9333,8 +9281,6 @@ argument_list|(
 literal|"allocbuf: VMIO buffer can't be malloced"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Set B_CACHE initially if buffer is 0 length or will become 		 * 0-length. 		 */
 if|if
 condition|(
