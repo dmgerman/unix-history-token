@@ -110,6 +110,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOGIN_NAME_MAX
+value|17
+end_define
+
+begin_comment
+comment|/* max login name length (incl. NUL) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAX_CANON
 value|255
 end_define
@@ -207,7 +218,7 @@ comment|/* max elements in i/o vector */
 end_comment
 
 begin_comment
-comment|/*  * We leave the following values undefined to force applications to either  * assume conservative values or call sysconf() to get the current value.  *  * HOST_NAME_MAX  * LOGIN_NAME_MAX  *  * (We should do this for most of the values currently defined here,  * but many programs are not prepared to deal with this yet.)  */
+comment|/*  * We leave the following values undefined to force applications to either  * assume conservative values or call sysconf() to get the current value.  *  * HOST_NAME_MAX  *  * (We should do this for most of the values currently defined here,  * but many programs are not prepared to deal with this yet.)  */
 end_comment
 
 begin_endif
