@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.111 (Berkeley) %G%"
+literal|"@(#)conf.c	8.112 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9754,14 +9754,13 @@ name|keyval
 argument_list|)
 operator|+
 literal|2
-block|)
-function|if
-parameter_list|(
-function|keyprop != NULL
-end_function
-
-begin_expr_stmt
-unit|)
+expr_stmt|;
+if|if
+condition|(
+name|keyprop
+operator|!=
+name|NULL
+condition|)
 name|i
 operator|+=
 name|strlen
@@ -9771,9 +9770,6 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|i
@@ -9784,9 +9780,6 @@ condition|)
 return|return
 name|NULL
 return|;
-end_if
-
-begin_expr_stmt
 name|strcpy
 argument_list|(
 name|keybuf
@@ -9794,9 +9787,6 @@ argument_list|,
 name|keydir
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|strcat
 argument_list|(
 name|keybuf
@@ -9804,9 +9794,6 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|keyprop
@@ -9829,9 +9816,6 @@ literal|"="
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|strcat
 argument_list|(
 name|keybuf
@@ -9839,13 +9823,7 @@ argument_list|,
 name|keyval
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	**  If the passed directory and property name are found 	**  in one of netinfo domains we need to search (starting 	**  from the local domain moving all the way back to the 	**  root domain) set propval to the property's value 	**  and return it. 	*/
-end_comment
-
-begin_for
 for|for
 control|(
 name|i
@@ -10082,13 +10060,7 @@ name|ninl
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|/* 	**  Clean up. 	*/
-end_comment
-
-begin_if
 if|if
 condition|(
 name|ni
@@ -10100,9 +10072,6 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|lastni
@@ -10118,16 +10087,13 @@ argument_list|(
 name|lastni
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_return
 return|return
 name|propval
 return|;
-end_return
+block|}
+end_function
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
@@ -10168,20 +10134,23 @@ directive|ifdef
 name|__STDC__
 end_ifdef
 
-begin_expr_stmt
-unit|hard_syslog
-operator|(
-name|int
-name|pri
-operator|,
-name|char
-operator|*
-name|msg
-operator|,
-operator|...
-operator|)
+begin_macro
+name|hard_syslog
+argument_list|(
+argument|int pri
+argument_list|,
+argument|char *msg
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_macro
 name|hard_syslog
 argument_list|(
 argument|pri
@@ -10190,10 +10159,13 @@ argument|msg
 argument_list|,
 argument|va_alist
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|pri
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char

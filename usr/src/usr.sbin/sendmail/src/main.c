@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.68 (Berkeley) %G%"
+literal|"@(#)main.c	8.69 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1181,27 +1181,6 @@ define|#
 directive|define
 name|OPTIONS
 value|"B:b:C:cd:e:F:f:h:IiM:mnO:o:p:q:r:sTtvX:"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NeXT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|OPTIONS
-value|"B:b:C:cd:e:F:f:h:IimnO:o:p:q:r:sTtvX:"
 end_define
 
 begin_endif
@@ -2901,19 +2880,6 @@ case|case
 literal|'x'
 case|:
 comment|/* random flag that OSF/1& AIX mailx passes */
-break|break;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NeXT
-argument_list|)
-case|case
-literal|'O'
-case|:
-comment|/* random flag that NeXT Mail.app passes */
 break|break;
 endif|#
 directive|endif
