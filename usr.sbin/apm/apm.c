@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: apm.c,v 1.14 1998/09/04 16:08:54 imp Exp $"
+literal|"$Id: apm.c,v 1.15 1999/07/20 15:31:23 green Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +251,11 @@ name|retval
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|place
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|bcd
@@ -267,30 +272,22 @@ name|bcd
 condition|)
 block|{
 name|retval
-operator|=
-name|retval
-operator|*
-literal|10
-operator|+
-operator|(
+operator|+=
 operator|(
 name|bcd
 operator|&
-literal|0xf000
+literal|0xf
 operator|)
-operator|>>
-literal|12
-operator|)
+operator|*
+name|place
 expr_stmt|;
 name|bcd
-operator|=
-operator|(
-name|bcd
-operator|&
-literal|0xfff
-operator|)
-operator|<<
+operator|>>=
 literal|4
+expr_stmt|;
+name|place
+operator|*=
+literal|10
 expr_stmt|;
 block|}
 return|return
