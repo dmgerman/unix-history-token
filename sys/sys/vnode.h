@@ -308,12 +308,6 @@ comment|/* fifo (VFIFO) */
 block|}
 name|v_un
 union|;
-name|struct
-name|nqlease
-modifier|*
-name|v_lease
-decl_stmt|;
-comment|/* Soft reference to lease */
 name|daddr_t
 name|v_lastw
 decl_stmt|;
