@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	1.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	1.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1389,6 +1389,10 @@ operator|->
 name|un_uppervp
 argument_list|,
 name|FWRITE
+argument_list|,
+name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|VOP_LOCK
@@ -3450,12 +3454,9 @@ name|vnode
 modifier|*
 name|vp
 init|=
-name|OTHERVP
-argument_list|(
-name|ap
+name|un
 operator|->
-name|a_vp
-argument_list|)
+name|un_uppervp
 decl_stmt|;
 name|VOP_LOCK
 argument_list|(
@@ -3954,6 +3955,11 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -4080,6 +4086,11 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
