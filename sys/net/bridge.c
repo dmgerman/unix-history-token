@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -68,31 +62,6 @@ include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX bridge+ipfilter not yet supported in RELENG_4 */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<net/pfil.h>
-end_include
-
-begin_comment
-comment|/* for ipfilter */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -494,6 +463,38 @@ name|int
 name|bdg_ipfw
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * For IPFilter, declared in ip_input.c  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|fr_checkp
+function_decl|)
+parameter_list|(
+name|struct
+name|ip
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -3020,20 +3021,6 @@ name|struct
 name|ip_fw_args
 name|args
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-name|struct
-name|packet_filter_hook
-modifier|*
-name|pfh
-decl_stmt|;
-name|int
-name|rv
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
 comment|/*      * XXX eh is usually a pointer within the mbuf (some ethernet drivers      * do that), so we better copy it before doing anything with the mbuf,      * or we might corrupt the header.      */
 name|struct
 name|ether_header
@@ -3259,29 +3246,8 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 operator|(
-operator|(
-name|pfh
-operator|=
-name|pfil_hook_get
-argument_list|(
-name|PFIL_IN
-argument_list|,
-operator|&
-name|inetsw
-index|[
-name|ip_protox
-index|[
-name|IPPROTO_IP
-index|]
-index|]
-operator|.
-name|pr_pfh
-argument_list|)
-operator|)
+name|fr_checkp
 operator|!=
 name|NULL
 operator|&&
@@ -3290,8 +3256,6 @@ operator|!=
 literal|0
 operator|)
 operator|||
-endif|#
-directive|endif
 operator|(
 name|IPFW_LOADED
 operator|&&
@@ -3370,12 +3334,15 @@ name|NULL
 return|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-comment|/* 	 * NetBSD-style generic packet filter, pfil(9), hooks. 	 * Enables ipf(8) in bridging. 	 */
+comment|/* 	 * IP Filter hook. 	 */
 if|if
 condition|(
+name|fr_checkp
+operator|!=
+name|NULL
+operator|&&
+name|bdg_ipf
+operator|&&
 name|m0
 operator|->
 name|m_pkthdr
@@ -3435,32 +3402,12 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-name|pfh
-condition|;
-name|pfh
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|pfh
-argument_list|,
-name|pfil_link
-argument_list|)
-control|)
 if|if
 condition|(
-name|pfh
-operator|->
-name|pfil_func
-condition|)
-block|{
-name|rv
-operator|=
-name|pfh
-operator|->
-name|pfil_func
+call|(
+modifier|*
+name|fr_checkp
+call|)
 argument_list|(
 name|ip
 argument_list|,
@@ -3477,12 +3424,6 @@ argument_list|,
 operator|&
 name|m0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rv
-operator|!=
-literal|0
 operator|||
 name|m0
 operator|==
@@ -3491,18 +3432,6 @@ condition|)
 return|return
 name|m0
 return|;
-name|ip
-operator|=
-name|mtod
-argument_list|(
-name|m0
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	     * If we get here, the firewall has passed the pkt, but the mbuf 	     * pointer might have changed. Restore ip and the fields ntohs()'d. 	     */
 name|ip
 operator|=
@@ -3538,9 +3467,6 @@ name|ip_off
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
 comment|/* 	 * Prepare arguments and call the firewall. 	 */
 if|if
 condition|(
