@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: defs.c,v 1.1 1997/10/26 01:02:30 brian Exp $  */
+comment|/*  * $Id: id.c,v 1.1 1997/11/09 06:22:40 brian Exp $  */
 end_comment
 
 begin_include
@@ -167,10 +167,8 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|setreuid
+name|seteuid
 argument_list|(
-name|euid
-argument_list|,
 name|uid
 argument_list|)
 operator|==
@@ -182,7 +180,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ID0setuser: Unable to setreuid!\n"
+literal|"ID0setuser: Unable to seteuid!\n"
 argument_list|)
 expr_stmt|;
 name|Cleanup
@@ -213,10 +211,8 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|setreuid
+name|seteuid
 argument_list|(
-name|uid
-argument_list|,
 name|euid
 argument_list|)
 operator|==
@@ -228,7 +224,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ID0set0: Unable to setreuid!\n"
+literal|"ID0set0: Unable to seteuid!\n"
 argument_list|)
 expr_stmt|;
 name|Cleanup
