@@ -1223,6 +1223,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1551,6 +1556,12 @@ directive|define
 name|AN_HOME_INSTALL_AP
 value|0x0002
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_struct
 struct|struct

@@ -11,14 +11,14 @@ value|65536
 end_define
 
 begin_comment
-comment|/* Default network name: ANY */
+comment|/* Default network name:<empty string> */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AN_DEFAULT_NETNAME
-value|"ANY"
+value|""
 end_define
 
 begin_comment
@@ -3475,6 +3475,10 @@ name|an_mtx
 decl_stmt|;
 name|device_t
 name|an_dev
+decl_stmt|;
+name|struct
+name|ifmedia
+name|an_ifmedia
 decl_stmt|;
 block|}
 struct|;
