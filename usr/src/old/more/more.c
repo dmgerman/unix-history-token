@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.15 (Berkeley) %G%"
+literal|"@(#)more.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2161,7 +2161,7 @@ expr_stmt|;
 comment|/* rewind() not necessary */
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
@@ -6591,6 +6591,12 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|argp
+argument_list|)
+expr_stmt|;
+comment|/* balance {}'s for some UNIX's */
 block|}
 if|if
 condition|(
