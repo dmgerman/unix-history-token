@@ -336,6 +336,32 @@ begin_comment
 comment|/* number distinct rotational positions */
 end_comment
 
+begin_comment
+comment|/*  * About the same time as the above, we knew what went where on the disks.  * no longer so, so kill the code which finds the different platters too...  * We do this by saying one head, with a lot of sectors on it.  * The number of sectors are used to determine the size of a cyl-group.  * Kirk suggested one or two meg per "cylinder" so we say two.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTRACKS
+value|1
+end_define
+
+begin_comment
+comment|/* number of heads */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSECTORS
+value|4096
+end_define
+
+begin_comment
+comment|/* number of sectors */
+end_comment
+
 begin_decl_stmt
 name|int
 name|mfs
@@ -379,6 +405,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|ntracks
+init|=
+name|NTRACKS
 decl_stmt|;
 end_decl_stmt
 
@@ -389,6 +417,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|nsectors
+init|=
+name|NSECTORS
 decl_stmt|;
 end_decl_stmt
 
