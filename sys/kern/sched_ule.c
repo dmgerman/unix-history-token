@@ -722,7 +722,7 @@ parameter_list|,
 name|ke
 parameter_list|)
 define|\
-value|(ke->ke_thread->td_priority< PRI_MIN_TIMESHARE ||			\     SCHED_INTERACTIVE(kg) ||						\     mtx_ownedby(&Giant, (ke)->ke_thread))
+value|(ke->ke_thread->td_priority != kg->kg_user_pri ||			\     SCHED_INTERACTIVE(kg))
 end_define
 
 begin_comment
@@ -4712,16 +4712,12 @@ name|ksegrp
 modifier|*
 name|kg
 decl_stmt|;
-name|struct
-name|kseq
-modifier|*
-name|kseq
-decl_stmt|;
-name|struct
-name|kse
-modifier|*
-name|ke
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct kseq *kseq; 	struct kse *ke;
+endif|#
+directive|endif
 name|kg
 operator|=
 name|td
@@ -4753,65 +4749,23 @@ name|kg
 operator|->
 name|kg_user_pri
 expr_stmt|;
-name|kseq
-operator|=
-name|KSEQ_SELF
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_ksegrp
-operator|->
-name|kg_pri_class
-operator|==
-name|PRI_TIMESHARE
-operator|&&
+comment|/* 		 * This optimization is temporarily disabled because it 		 * breaks priority propagation. 		 */
+if|#
+directive|if
+literal|0
+block|kseq = KSEQ_SELF(); 		if (td->td_ksegrp->kg_pri_class == PRI_TIMESHARE&&
 ifdef|#
 directive|ifdef
 name|SMP
-name|kseq
-operator|->
-name|ksq_load
-operator|>
-name|kseq
-operator|->
-name|ksq_cpus
-operator|&&
+block|kseq->ksq_load> kseq->ksq_cpus&&
 else|#
 directive|else
-name|kseq
-operator|->
-name|ksq_load
-operator|>
-literal|1
-operator|&&
+block|kseq->ksq_load> 1&&
 endif|#
 directive|endif
-operator|(
-name|ke
-operator|=
-name|kseq_choose
-argument_list|(
-name|kseq
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-operator|&&
-name|ke
-operator|->
-name|ke_thread
-operator|->
-name|td_priority
-operator|<
-name|td
-operator|->
-name|td_priority
-condition|)
+block|(ke = kseq_choose(kseq, 0)) != NULL&& 		    ke->ke_thread->td_priority< td->td_priority)
+endif|#
+directive|endif
 name|curthread
 operator|->
 name|td_flags
