@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1878,11 +1878,19 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|COMPAT_43
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Return status information about a file descriptor.  */
@@ -2053,7 +2061,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"fstat"
+literal|"ofstat"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -2110,7 +2118,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_43 */
+comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
 begin_comment

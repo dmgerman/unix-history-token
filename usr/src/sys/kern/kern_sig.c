@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -1431,14 +1431,14 @@ return|;
 ifdef|#
 directive|ifdef
 name|COMPAT_SUNOS
-comment|/* 		 * SunOS uses this bit (SA_NOCLDSTOP) as SV_RESETHAND, 		 * `reset to SIG_DFL on delivery'. We have no such 		 * option now or ever! 		 */
+comment|/* 		 * SunOS uses this bit (4, aka SA_DISABLE) as SV_RESETHAND, 		 * `reset to SIG_DFL on delivery'. We have no such option 		 * now or ever! 		 */
 if|if
 condition|(
 name|sv
 operator|->
 name|sv_flags
 operator|&
-name|SA_NOCLDSTOP
+name|SA_DISABLE
 condition|)
 return|return
 operator|(
@@ -1645,6 +1645,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* COMPAT_43 || COMPAT_SUNOS */
+end_comment
+
+begin_comment
 comment|/*  * Suspend process until signal, providing mask to be set  * in the meantime.  Note nonstandard calling convention:  * libc stub passes mask, not pointer, to save a copyin.  */
 end_comment
 
@@ -1755,11 +1759,19 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|COMPAT_43
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
+end_if
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1978,7 +1990,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_43 */
+comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
 begin_comment
@@ -2556,6 +2568,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* COMPAT_43 || COMPAT_SUNOS */
+end_comment
 
 begin_comment
 comment|/*  * Common code for kill process group/broadcast kill.  * cp is calling process.  */
