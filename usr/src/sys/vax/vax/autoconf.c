@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1319,6 +1319,15 @@ case|:
 case|case
 name|NEX_MEM64LI
 case|:
+case|case
+name|NEX_MEM256I
+case|:
+case|case
+name|NEX_MEM256L
+case|:
+case|case
+name|NEX_MEM256LI
+case|:
 name|printf
 argument_list|(
 literal|"mcr%d (el) at tr%d\n"
@@ -1377,6 +1386,12 @@ operator|.
 name|nex_type
 operator|!=
 name|NEX_MEM64I
+operator|&&
+name|nexcsr
+operator|.
+name|nex_type
+operator|!=
+name|NEX_MEM256I
 condition|)
 break|break;
 comment|/* fall into ... */
@@ -1385,6 +1400,12 @@ name|NEX_MEM64U
 case|:
 case|case
 name|NEX_MEM64UI
+case|:
+case|case
+name|NEX_MEM256U
+case|:
+case|case
+name|NEX_MEM256UI
 case|:
 name|printf
 argument_list|(

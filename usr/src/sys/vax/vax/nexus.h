@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nexus.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nexus.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -614,6 +614,61 @@ end_define
 
 begin_comment
 comment|/* 64K chips, interleaved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM256L
+value|0x70
+end_define
+
+begin_comment
+comment|/* 256K chips, non-interleaved, lower */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM256LI
+value|0x71
+end_define
+
+begin_comment
+comment|/* 256K chips, ext-interleaved, lower */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM256U
+value|0x72
+end_define
+
+begin_comment
+comment|/* 256K chips, non-interleaved, upper */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM256UI
+value|0x73
+end_define
+
+begin_comment
+comment|/* 256K chips, ext-interleaved, upper */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM256I
+value|0x74
+end_define
+
+begin_comment
+comment|/* 256K chips, interleaved */
 end_comment
 
 end_unit
