@@ -2624,6 +2624,36 @@ begin_comment
 comment|/*  * ARP for Internet protocols on 10 Mb/s Ethernet.  * Algorithm is that given in RFC 826.  * In addition, a sanity check is performed on the sender  * protocol address, to catch impersonators.  * We no longer handle negotiations for use of trailer protocol:  * Formerly, ARP replied for protocol type ETHERTYPE_TRAIL sent  * along with IP replies if we wanted trailers sent to us,  * and also sent them in response to IP replies.  * This allowed either end to announce the desire to receive  * trailer packets.  * We no longer reply to requests for ETHERTYPE_TRAIL protocol either,  * but formerly didn't normally send requests.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|log_arp_wrong_iface
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_ether_inet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|log_arp_wrong_iface
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|log_arp_wrong_iface
+argument_list|,
+literal|0
+argument_list|,
+literal|"log arp packets arriving on the wrong interface"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -3061,6 +3091,10 @@ operator|->
 name|ac_if
 condition|)
 block|{
+if|if
+condition|(
+name|log_arp_wrong_iface
+condition|)
 name|log
 argument_list|(
 name|LOG_ERR
