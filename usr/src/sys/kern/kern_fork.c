@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -656,6 +656,46 @@ name|p_startcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|p2
+operator|->
+name|p_spare
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX - should be in zero range */
+name|p2
+operator|->
+name|p_spare
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX - should be in zero range */
+name|p2
+operator|->
+name|p_spare
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX - should be in zero range */
+name|p2
+operator|->
+name|p_spare
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX - should be in zero range */
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats and p_sigacts substructs are set in vm_fork. 	 */
 name|MALLOC
 argument_list|(
