@@ -410,6 +410,8 @@ expr_stmt|;
 else|else
 name|addmsg
 argument_list|(
+literal|"%s"
+argument_list|,
 name|rankname
 index|[
 name|c
@@ -450,6 +452,8 @@ expr_stmt|;
 else|else
 name|addmsg
 argument_list|(
+literal|"%s"
+argument_list|,
 name|suitname
 index|[
 name|c
