@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Sparse Arrays for Objective C dispatch tables    Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Sparse Arrays for Objective C dispatch tables    Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -591,7 +591,7 @@ name|sarray
 modifier|*
 parameter_list|,
 name|sidx
-name|index
+name|indx
 parameter_list|,
 name|void
 modifier|*
@@ -609,7 +609,7 @@ name|sarray
 modifier|*
 parameter_list|,
 name|sidx
-name|index
+name|indx
 parameter_list|,
 name|void
 modifier|*
@@ -665,7 +665,7 @@ name|int
 name|soffset_decode
 parameter_list|(
 name|sidx
-name|index
+name|indx
 parameter_list|)
 block|{
 name|union
@@ -676,7 +676,7 @@ name|x
 operator|.
 name|idx
 operator|=
-name|index
+name|indx
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -827,11 +827,11 @@ name|size_t
 name|soffset_decode
 parameter_list|(
 name|sidx
-name|index
+name|indx
 parameter_list|)
 block|{
 return|return
-name|index
+name|indx
 return|;
 block|}
 end_function
@@ -862,7 +862,7 @@ comment|/* not PRECOMPUTE_SELECTORS */
 end_comment
 
 begin_comment
-comment|/* Get element from the Sparse array `array' at offset `index' */
+comment|/* Get element from the Sparse array `array' at offset `indx' */
 end_comment
 
 begin_function
@@ -878,7 +878,7 @@ modifier|*
 name|array
 parameter_list|,
 name|sidx
-name|index
+name|indx
 parameter_list|)
 block|{
 ifdef|#
@@ -892,7 +892,7 @@ name|x
 operator|.
 name|idx
 operator|=
-name|index
+name|indx
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -965,7 +965,7 @@ name|array
 operator|->
 name|indices
 index|[
-name|index
+name|indx
 operator|/
 name|INDEX_CAPACITY
 index|]
@@ -973,7 +973,7 @@ operator|->
 name|buckets
 index|[
 operator|(
-name|index
+name|indx
 operator|/
 name|BUCKET_SIZE
 operator|)
@@ -983,7 +983,7 @@ index|]
 operator|->
 name|elems
 index|[
-name|index
+name|indx
 operator|%
 name|BUCKET_SIZE
 index|]
@@ -996,14 +996,14 @@ name|array
 operator|->
 name|buckets
 index|[
-name|index
+name|indx
 operator|/
 name|BUCKET_SIZE
 index|]
 operator|->
 name|elems
 index|[
-name|index
+name|indx
 operator|%
 name|BUCKET_SIZE
 index|]
@@ -1030,14 +1030,14 @@ modifier|*
 name|array
 parameter_list|,
 name|sidx
-name|index
+name|indx
 parameter_list|)
 block|{
 if|if
 condition|(
 name|soffset_decode
 argument_list|(
-name|index
+name|indx
 argument_list|)
 operator|<
 name|array
@@ -1049,7 +1049,7 @@ name|sarray_get
 argument_list|(
 name|array
 argument_list|,
-name|index
+name|indx
 argument_list|)
 return|;
 else|else

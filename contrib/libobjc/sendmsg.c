@@ -1,16 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime message lookup     Copyright (C) 1993, 1995, 1996, 1997, 1998,    2001, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime message lookup     Copyright (C) 1993, 1995, 1996, 1997, 1998,    2001, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* As a special exception, if you link this library with files compiled with    GCC to produce an executable, this does not cause the resulting executable    to be covered by the GNU General Public License. This exception does not    however invalidate any other reasons why the executable file might be    covered by the GNU General Public License.  */
 end_comment
 
+begin_comment
+comment|/* FIXME: This file has no business including tm.h.  */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"tconfig.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -445,6 +461,7 @@ name|SEL
 name|sel
 parameter_list|)
 block|{
+comment|/* In a vanilla implementation we would first check if the dispatch      table is installed.  Here instead, to get more speed in the      standard case (that the dispatch table is installed) we first try      to get the imp using brute force.  Only if that fails, we do what      we should have been doing from the very beginning, that is, check      if the dispatch table needs to be installed, install it if it's      not installed, and retrieve the imp from the table if it's      installed.  */
 name|void
 modifier|*
 name|res
@@ -486,11 +503,22 @@ argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
+comment|/* Double-checked locking pattern: Check 	      __objc_uninstalled_dtable again in case another thread 	      installed the dtable while we were waiting for the lock 	      to be released.  */
+if|if
+condition|(
+name|class
+operator|->
+name|dtable
+operator|==
+name|__objc_uninstalled_dtable
+condition|)
+block|{
 name|__objc_install_dispatch_table_for_class
 argument_list|(
 name|class
 argument_list|)
 expr_stmt|;
+block|}
 name|objc_mutex_unlock
 argument_list|(
 name|__objc_runtime_mutex
@@ -509,7 +537,32 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The dispatch table has been installed so the 	     method just doesn't exist for the class. 	     Return the forwarding implementation. */
+comment|/* The dispatch table has been installed.  */
+comment|/* Get the method from the dispatch table (we try to get it 	    again in case another thread has installed the dtable just 	    after we invoked sarray_get_safe, but before we checked 	    class->dtable == __objc_uninstalled_dtable).          */
+name|res
+operator|=
+name|sarray_get_safe
+argument_list|(
+name|class
+operator|->
+name|dtable
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|sel
+operator|->
+name|sel_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* The dispatch table has been installed, and the method 		 is not in the dispatch table.  So the method just 		 doesn't exist for the class.  Return the forwarding 		 implementation. */
 name|res
 operator|=
 name|__objc_get_forward_imp
@@ -517,6 +570,7 @@ argument_list|(
 name|sel
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 return|return
@@ -562,6 +616,17 @@ argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|object
+operator|->
+name|class_pointer
+operator|->
+name|dtable
+operator|==
+name|__objc_uninstalled_dtable
+condition|)
+block|{
 name|__objc_install_dispatch_table_for_class
 argument_list|(
 name|object
@@ -569,6 +634,7 @@ operator|->
 name|class_pointer
 argument_list|)
 expr_stmt|;
+block|}
 name|objc_mutex_unlock
 argument_list|(
 name|__objc_runtime_mutex
@@ -688,7 +754,33 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The dispatch table has been installed so the 		 method just doesn't exist for the class. 		 Attempt to forward the method. */
+comment|/* The dispatch table has been installed.  Check again 		 if the method exists (just in case the dispatch table 		 has been installed by another thread after we did the 		 previous check that the method exists). 	      */
+name|result
+operator|=
+name|sarray_get_safe
+argument_list|(
+name|receiver
+operator|->
+name|class_pointer
+operator|->
+name|dtable
+argument_list|,
+operator|(
+name|sidx
+operator|)
+name|op
+operator|->
+name|sel_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* If the method still just doesn't exist for the 		     class, attempt to forward the method. */
 name|result
 operator|=
 name|__objc_get_forward_imp
@@ -696,6 +788,7 @@ argument_list|(
 name|op
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 return|return
@@ -887,6 +980,11 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 comment|/* This may happen, if the programmer has taken the address of a       method before the dtable was initialized... too bad for him! */
 if|if
 condition|(
@@ -898,12 +996,14 @@ name|dtable
 operator|!=
 name|__objc_uninstalled_dtable
 condition|)
-return|return;
-name|objc_mutex_lock
+block|{
+name|objc_mutex_unlock
 argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|CLS_ISCLASS
