@@ -1,60 +1,60 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	6.6	84/08/21	*/
+comment|/*	udp_usrreq.c	6.7	84/08/29	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socketvar.h"
+file|"socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/stat.h"
+file|"stat.h"
 end_include
 
 begin_include
@@ -72,49 +72,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|"in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_pcb.h"
+file|"in_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_systm.h"
+file|"in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip.h"
+file|"ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip_var.h"
+file|"ip_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip_icmp.h"
+file|"ip_icmp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/udp.h"
+file|"udp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/udp_var.h"
+file|"udp_var.h"
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ether.c	6.5	84/07/08	*/
+comment|/*	if_ether.c	6.6	84/08/29	*/
 end_comment
 
 begin_comment
@@ -10,49 +10,49 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/time.h"
+file|"time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
@@ -64,25 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|"in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_systm.h"
+file|"in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip.h"
+file|"ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/if_ether.h"
+file|"if_ether.h"
 end_include
 
 begin_define
