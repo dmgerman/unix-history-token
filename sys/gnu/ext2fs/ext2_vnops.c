@@ -3704,7 +3704,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|I
-comment|/* 		 * if we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * The new directory also inherits the SUID bit.  		 * If user's UID an ddir UID are the same, 		 * 'give it away' so that the SUID is still forced on. 		 */
+comment|/* 		 * if we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * The new directory also inherits the SUID bit.  		 * If user's UID and dir UID are the same, 		 * 'give it away' so that the SUID is still forced on. 		 */
 if|if
 condition|(
 operator|(
@@ -3747,7 +3747,7 @@ directive|ifdef
 name|QUOTA
 if|if
 condition|(
-name|pdir
+name|dp
 operator|->
 name|i_uid
 operator|!=
@@ -3792,7 +3792,7 @@ name|i_gid
 expr_stmt|;
 name|ucp
 operator|=
-operator|*
+operator|&
 name|ucred
 expr_stmt|;
 block|}
@@ -3843,16 +3843,16 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|free
+name|zfree
 argument_list|(
+name|namei_zone
+argument_list|,
 name|cnp
 operator|->
 name|cn_pnbuf
-argument_list|,
-name|M_NAMEI
 argument_list|)
 expr_stmt|;
-name|VOP_VFREE
+name|UFS_VFREE
 argument_list|(
 name|tvp
 argument_list|,
@@ -5023,7 +5023,7 @@ name|i_gid
 expr_stmt|;
 name|ucp
 operator|=
-operator|*
+operator|&
 name|ucred
 expr_stmt|;
 endif|#
@@ -5073,16 +5073,16 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|free
+name|zfree
 argument_list|(
+name|namei_zone
+argument_list|,
 name|cnp
 operator|->
 name|cn_pnbuf
-argument_list|,
-name|M_NAMEI
 argument_list|)
 expr_stmt|;
-name|VOP_VFREE
+name|UFS_VFREE
 argument_list|(
 name|tvp
 argument_list|,
