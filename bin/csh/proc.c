@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: proc.c,v 1.2.8.1 1997/08/24 21:41:37 jkh Exp $  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: proc.c,v 1.2.8.2 1998/01/31 17:06:15 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -1020,7 +1020,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|neednote
@@ -1134,7 +1134,7 @@ decl_stmt|,
 modifier|*
 name|pp
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 comment|/*      * Here's where dead procs get flushed.      */
@@ -1289,7 +1289,7 @@ name|jobflags
 decl_stmt|,
 name|reason
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 while|while
@@ -1818,7 +1818,7 @@ name|process
 modifier|*
 name|pp
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|pjobs
@@ -1871,9 +1871,6 @@ name|void
 operator|)
 name|sigpause
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -4969,7 +4966,7 @@ name|err1
 init|=
 literal|0
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|Char
@@ -5402,7 +5399,7 @@ name|process
 modifier|*
 name|np
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|long
@@ -6138,7 +6135,7 @@ decl_stmt|;
 name|int
 name|pgrp
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 comment|/*      * A child will be uninterruptible only under very special conditions.      * Remember that the semantics of '&' is implemented by disconnecting the      * process from the tty so signals do not need to ignored just for '&'.      * Thus signals are set to default action for children unless: we have had      * an "onintr -" (then specifically ignored) we are not playing with      * signals (inherit action)      */
@@ -6545,7 +6542,7 @@ decl_stmt|,
 name|pgrp
 decl_stmt|;
 block|{
-name|sigset_t
+name|int
 name|omask
 init|=
 literal|0

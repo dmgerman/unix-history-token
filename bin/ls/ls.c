@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Fischbein.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ls.c,v 1.10 1996/08/27 21:51:48 adam Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Fischbein.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ls.c,v 1.10.2.1 1997/12/03 05:40:06 imp Exp $  */
 end_comment
 
 begin_ifndef
@@ -339,16 +339,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|f_newline
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if precede with newline */
-end_comment
-
-begin_decl_stmt
-name|int
 name|f_nonprint
 decl_stmt|;
 end_decl_stmt
@@ -365,6 +355,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* don't sort output */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_octal
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show unprintables as \xxx */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_octal_escape
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* like f_octal but use C escapes if possible */
 end_comment
 
 begin_decl_stmt
@@ -425,16 +435,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* use time of last mode change */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_dirname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if precede with directory name */
 end_comment
 
 begin_decl_stmt
@@ -639,7 +639,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRTacdfgikloqrstu"
+literal|"1ABCFHLPRTWabcdfgikloqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -663,6 +663,22 @@ expr_stmt|;
 name|f_column
 operator|=
 name|f_longform
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+name|f_nonprint
+operator|=
+literal|0
+expr_stmt|;
+name|f_octal
+operator|=
+literal|1
+expr_stmt|;
+name|f_octal_escape
 operator|=
 literal|0
 expr_stmt|;
@@ -729,6 +745,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'H'
+case|:
+name|fts_options
+operator||=
+name|FTS_COMFOLLOW
+expr_stmt|;
+break|break;
+case|case
 literal|'L'
 case|:
 name|fts_options
@@ -739,6 +763,24 @@ expr_stmt|;
 name|fts_options
 operator||=
 name|FTS_LOGICAL
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|fts_options
+operator|&=
+operator|~
+name|FTS_COMFOLLOW
+expr_stmt|;
+name|fts_options
+operator|&=
+operator|~
+name|FTS_LOGICAL
+expr_stmt|;
+name|fts_options
+operator||=
+name|FTS_PHYSICAL
 expr_stmt|;
 break|break;
 case|case
@@ -822,6 +864,14 @@ name|f_nonprint
 operator|=
 literal|1
 expr_stmt|;
+name|f_octal
+operator|=
+literal|0
+expr_stmt|;
+name|f_octal_escape
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'r'
@@ -851,6 +901,22 @@ case|case
 literal|'t'
 case|:
 name|f_timesort
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|f_nonprint
+operator|=
+literal|0
+expr_stmt|;
+name|f_octal
+operator|=
+literal|0
+expr_stmt|;
+name|f_octal_escape
 operator|=
 literal|1
 expr_stmt|;
@@ -1661,6 +1727,38 @@ name|fts_namelen
 expr_stmt|;
 if|if
 condition|(
+name|f_octal
+operator|||
+name|f_octal_escape
+condition|)
+block|{
+name|int
+name|t
+init|=
+name|len_octal
+argument_list|(
+name|cur
+operator|->
+name|fts_name
+argument_list|,
+name|cur
+operator|->
+name|fts_namelen
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|t
+operator|>
+name|maxlen
+condition|)
+name|maxlen
+operator|=
+name|t
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|needstats
 condition|)
 block|{
@@ -2278,23 +2376,9 @@ return|;
 if|if
 condition|(
 name|a_info
-operator|==
+operator|!=
 name|b_info
-condition|)
-return|return
-operator|(
-name|sortfcn
-argument_list|(
-operator|*
-name|a
-argument_list|,
-operator|*
-name|b
-argument_list|)
-operator|)
-return|;
-if|if
-condition|(
+operator|&&
 operator|(
 operator|*
 name|a
@@ -2303,7 +2387,11 @@ operator|->
 name|fts_level
 operator|==
 name|FTS_ROOTLEVEL
+operator|&&
+operator|!
+name|f_listdir
 condition|)
+block|{
 if|if
 condition|(
 name|a_info
@@ -2315,7 +2403,6 @@ operator|(
 literal|1
 operator|)
 return|;
-elseif|else
 if|if
 condition|(
 name|b_info
@@ -2328,20 +2415,7 @@ operator|-
 literal|1
 operator|)
 return|;
-else|else
-return|return
-operator|(
-name|sortfcn
-argument_list|(
-operator|*
-name|a
-argument_list|,
-operator|*
-name|b
-argument_list|)
-operator|)
-return|;
-else|else
+block|}
 return|return
 operator|(
 name|sortfcn
