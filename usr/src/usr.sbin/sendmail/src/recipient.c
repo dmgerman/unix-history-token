@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.34 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2543,6 +2543,16 @@ operator|==
 literal|0
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SUID_ROOT_FILES_OK
+comment|/* really ought to be passed down -- and not a good idea */
+name|flags
+operator||=
+name|SFF_ROOTOK
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	**  File does exist -- check that it is writable. 	*/
 if|if
 condition|(
@@ -2664,22 +2674,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SUID_ROOT_FILES_OK
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|S_ISUID
-argument_list|,
-name|stb
-operator|.
-name|st_mode
-argument_list|)
-condition|)
-else|#
-directive|else
 if|if
 condition|(
 name|bitset
@@ -2691,19 +2685,22 @@ operator|.
 name|st_mode
 argument_list|)
 operator|&&
+operator|(
 name|stb
 operator|.
 name|st_uid
 operator|!=
 literal|0
-condition|)
-endif|#
-directive|endif
-block|{
-name|flags
-operator||=
+operator|||
+name|bitset
+argument_list|(
 name|SFF_ROOTOK
-expr_stmt|;
+argument_list|,
+name|flags
+argument_list|)
+operator|)
+condition|)
+block|{
 name|euid
 operator|=
 name|stb
@@ -2726,11 +2723,20 @@ operator|.
 name|st_mode
 argument_list|)
 operator|&&
+operator|(
 name|stb
 operator|.
 name|st_gid
 operator|!=
 literal|0
+operator|||
+name|bitset
+argument_list|(
+name|SFF_ROOTOK
+argument_list|,
+name|flags
+argument_list|)
+operator|)
 condition|)
 name|egid
 operator|=
