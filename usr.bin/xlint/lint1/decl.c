@@ -3829,6 +3829,8 @@ case|:
 comment|/* compiler takes size of function */
 name|lerror
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msgs
 index|[
 literal|12
