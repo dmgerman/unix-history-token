@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.70 (Berkeley) %G%"
+literal|"@(#)login.c	5.71 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -615,7 +615,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"login: -h for super-user only.\n"
+literal|"login: -h option: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|EPERM
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
