@@ -140,6 +140,41 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_device_poll
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|hardclock_device_poll
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEVICE_POLLING */
+end_comment
+
 begin_comment
 comment|/*  * Number of timecounters used to implement stable storage  */
 end_comment
@@ -506,6 +541,14 @@ expr_stmt|;
 name|cpu_initclocks
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|init_device_poll
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Compute profhz/stathz, and fix profhz if needed. 	 */
 name|i
 operator|=
@@ -697,6 +740,16 @@ expr_stmt|;
 name|ticks
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|hardclock_device_poll
+argument_list|()
+expr_stmt|;
+comment|/* this is very short and quick */
+endif|#
+directive|endif
+comment|/* DEVICE_POLLING */
 comment|/* 	 * Process callouts at a very low cpu priority, so we don't keep the 	 * relatively high clock interrupt priority any longer than necessary. 	 */
 if|if
 condition|(

@@ -836,6 +836,42 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|poll_in_trap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ether_poll
+name|__P
+argument_list|(
+operator|(
+name|int
+name|count
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEVICE_POLLING */
+end_comment
+
 begin_comment
 comment|/*  * Exception, fault, and trap interface to the FreeBSD kernel.  * This common code is called from assembly language IDT gate entry  * routines that prepare a suitable stack frame, and restore this  * frame after the exception has been processed.  */
 end_comment
@@ -981,6 +1017,21 @@ name|enable_intr
 argument_list|()
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+if|if
+condition|(
+name|poll_in_trap
+condition|)
+name|ether_poll
+argument_list|(
+name|poll_in_trap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVICE_POLLING */
 if|#
 directive|if
 name|defined

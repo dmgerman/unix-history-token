@@ -26,6 +26,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NETISR_POLL
+value|0
+end_define
+
+begin_comment
+comment|/* polling callback */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NETISR_IP
 value|2
 end_define
@@ -126,11 +137,22 @@ begin_define
 define|#
 directive|define
 name|NETISR_NETGRAPH
-value|31
+value|30
 end_define
 
 begin_comment
 comment|/* same as AF_NETGRAPH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_POLLMORE
+value|31
+end_define
+
+begin_comment
+comment|/* check if we need more polling */
 end_comment
 
 begin_ifndef
