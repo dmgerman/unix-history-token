@@ -5810,13 +5810,51 @@ name|state
 operator|==
 name|sd_unallocated
 condition|)
+block|{
 comment|/* haven't finished allocating the sd, */
+if|if
+condition|(
+name|autosize
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* but we might have allocated drive space */
+name|vinum_conf
+operator|.
+name|subdisks_used
+operator|++
+expr_stmt|;
+comment|/* ugly hack needed for free_sd() */
 name|free_sd
 argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
 comment|/* free it to return drive space */
+block|}
+else|else
+block|{
+comment|/* just clear it */
+name|bzero
+argument_list|(
+name|sd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sd
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sd
+operator|->
+name|state
+operator|=
+name|sd_unallocated
+expr_stmt|;
+block|}
+block|}
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
