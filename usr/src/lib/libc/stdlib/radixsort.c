@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	5.1 (Berkeley) %G%"
+literal|"@(#)radixsort.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -75,7 +69,7 @@ value|(UCHAR_MAX + 1)
 end_define
 
 begin_comment
-comment|/*  * shellsort (diminishing increment sort) from Data Structures and  * Algorithms, Aho, Hopcraft and Ullman, 1983 Edition, page 290;  * see also Knuth Vol. 3, page 84.  The increments are selected from  * formula (8), page 95.  Roughly O(N^3/2).  *  * __rspartition is the cutoff point for a further partitioning instead  * of a shellsort.  If it changes check __rsshell_increments.  Both of  * these are exported, as the best values are data dependent.  Unrolling  * this loop has not proven worthwhile.  */
+comment|/*  * Shellsort (diminishing increment sort) from Data Structures and  * Algorithms, Aho, Hopcraft and Ullman, 1983 Edition, page 290;  * see also Knuth Vol. 3, page 84.  The increments are selected from  * formula (8), page 95.  Roughly O(N^3/2).  *  * __rspartition is the cutoff point for a further partitioning instead  * of a shellsort.  If it changes check __rsshell_increments.  Both of  * these are exported, as the best values are data dependent.  Unrolling  * this loop has not proven worthwhile.  */
 end_comment
 
 begin_define
@@ -126,7 +120,7 @@ value|{ \ 	register u_char ch, *s1, *s2; \ 	register int incr, *incrp; \ 	for (i
 end_define
 
 begin_comment
-comment|/*  * stack points to context structures.  Each structure defines a  * scheduled partitioning.  Radixsort exits when the stack is empty.  *  * The stack size is data dependent, and guessing is probably not  * worthwhile.  The initial stack fits in 1K with four bytes left over  * for malloc.  The initial size is exported, as the best value is  * data, and possibly, system, dependent.  */
+comment|/*  * Stackp points to context structures, where each structure schedules a  * partitioning.  Radixsort exits when the stack is empty.  *  * If the buckets are placed on the stack randomly, the worst case is when:  *  *	(nbuckets - 1) contain (npartitions + 1) elements, with the last  *	bucket containing (nelements - ((npartitions + 1) * (nbuckets - 1))  *	keys.  *  * In this case, stack growth is bounded by:  *  *	(nelements / (npartitions + 1)) - 1  *  * Therefore, we force the largest bucket to be pushed on the stack first.  * Then the worst case is when:  *  * 	(nbuckets - 2) buckets contain (npartitions + 1) elements, with  *	the remaining elements split equally between the first bucket  *	pushed and the last bucket pushed.  *  * In this case, stack growth is bounded when:  *	  *	for (partition_cnt = 0; nelements> npartitions; ++partition_cnt)   *		nelements =  *		    (nelements - (npartitions + 1) * (nbuckets - 2)) / 2;  * The bound is:  *  *	limit = partition_cnt * (nbuckets - 1);  */
 end_comment
 
 begin_typedef
@@ -149,28 +143,11 @@ name|CONTEXT
 typedef|;
 end_typedef
 
-begin_decl_stmt
-name|int
-name|__radix_stacksize
-init|=
-operator|(
-literal|1024
-operator|-
-literal|4
-operator|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|CONTEXT
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
 name|STACKPUSH
-value|{ \ 	if (stackp == estack) { \ 		t1 = stackp - stack; \ 		stackp = stack; \ 		if (!(stack = (CONTEXT *)realloc((char *)stack, \ 		    (__radix_stacksize *= 2) * sizeof(CONTEXT)))) { \ 			t1 = errno; \ 			free((char *)l2); \ 			if (stackp) \ 				free((char *)stackp); \ 			errno = t1; \ 			return(-1); \ 		} \ 		stackp = stack + t1; \ 		estack = stack + __radix_stacksize; \ 	} \ 	stackp->bot = p; \ 	stackp->nmemb = nmemb; \ 	stackp->indx = indx; \ 	++stackp; \ }
+value|{ \ 	stackp->bot = p; \ 	stackp->nmemb = nmemb; \ 	stackp->indx = indx; \ 	++stackp; \ }
 end_define
 
 begin_define
@@ -181,7 +158,7 @@ value|{ \ 	if (stackp == stack) \ 		break; \ 	--stackp; \ 	bot = stackp->bot; \ 
 end_define
 
 begin_comment
-comment|/*  * A variant of MSD radix sorting; see Knuth Vol. 3, page 177, and 5.2.5,  * Ex. 10 and 12.  Also, "Three Partition Refinement Algorithms, Paige and  * Tarjan, SIAM J. Comput. Vol. 16, No. 6, December 1987.  *  * This uses a simple sort as soon as a bucket crosses a cutoff point, rather  * than sorting the entire list after partitioning is finished.  *  * This is pure MSD instead of LSD of some number of MSD, switching to the  * simple sort as soon as possible.  Takes linear time relative to the number  * of bytes in the strings.  */
+comment|/*  * A variant of MSD radix sorting; see Knuth Vol. 3, page 177, and 5.2.5,  * Ex. 10 and 12.  Also, "Three Partition Refinement Algorithms, Paige  * and Tarjan, SIAM J. Comput. Vol. 16, No. 6, December 1987.  *  * This uses a simple sort as soon as a bucket crosses a cutoff point,  * rather than sorting the entire list after partitioning is finished.  * This should be an advantage.  *  * This is pure MSD instead of LSD of some number of MSD, switching to  * the simple sort as soon as possible.  Takes linear time relative to  * the number of bytes in the strings.  */
 end_comment
 
 begin_macro
@@ -248,9 +225,6 @@ name|tr
 decl_stmt|;
 name|CONTEXT
 modifier|*
-name|estack
-decl_stmt|,
-modifier|*
 name|stack
 decl_stmt|,
 modifier|*
@@ -263,6 +237,8 @@ name|NCHARS
 operator|+
 literal|1
 index|]
+decl_stmt|,
+name|max
 decl_stmt|;
 name|u_char
 name|ltab
@@ -281,7 +257,99 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * there are two arrays, one provided by the user (l1), and the 	 * temporary one (l2).  The data is sorted to the temporary stack, 	 * and then copied back.  The speedup of using index to determine 	 * which stack the data is on and simply swapping stacks back and 	 * forth, thus avoiding the copy every iteration, turns out to not 	 * be any faster than the current implementation. 	 */
+comment|/*  	 * T1 is the constant part of the equation, the number of elements 	 * represented on the stack between the top and bottom entries. 	 * Don't round as the divide by 2 rounds down (correct for value 	 * being subtracted).  The nelem value has to be rounded up before 	 * each divide because we want an upper bound. 	 */
+name|t1
+operator|=
+operator|(
+operator|(
+name|__rspartition
+operator|+
+literal|1
+operator|)
+operator|*
+operator|(
+name|UCHAR_MAX
+operator|-
+literal|2
+operator|)
+operator|)
+operator|>>
+literal|1
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|t2
+operator|=
+name|nmemb
+init|;
+name|t2
+operator|>
+name|__rspartition
+condition|;
+name|i
+operator|+=
+name|UCHAR_MAX
+operator|-
+literal|1
+control|)
+name|t2
+operator|=
+operator|(
+operator|++
+name|t2
+operator|>>
+literal|1
+operator|)
+operator|-
+name|t1
+expr_stmt|;
+if|if
+condition|(
+name|i
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|stack
+operator|=
+name|stackp
+operator|=
+operator|(
+name|CONTEXT
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|i
+operator|*
+sizeof|sizeof
+argument_list|(
+name|CONTEXT
+argument_list|)
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+else|else
+name|stack
+operator|=
+name|stackp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 	 * There are two arrays, one provided by the user (l1), and the 	 * temporary one (l2).  The data is sorted to the temporary stack, 	 * and then copied back.  The speedup of using index to determine 	 * which stack the data is on and simply swapping stacks back and 	 * forth, thus avoiding the copy every iteration, turns out to not 	 * be any faster than the current implementation. 	 */
 if|if
 condition|(
 operator|!
@@ -311,16 +379,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* initialize stack */
-name|stack
-operator|=
-name|stackp
-operator|=
-name|estack
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* 	 * tr references a table of sort weights; multiple entries may 	 * map to the same weight; EOS char must have the lowest weight. 	 */
+comment|/* 	 * Tr references a table of sort weights; multiple entries may 	 * map to the same weight; EOS char must have the lowest weight. 	 */
 if|if
 condition|(
 name|tab
@@ -391,7 +450,7 @@ operator|=
 name|t1
 expr_stmt|;
 block|}
-comment|/* first sort is entire stack */
+comment|/* First sort is entire stack */
 name|bot
 operator|=
 name|l1
@@ -406,7 +465,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* clear bucket count array */
+comment|/* Clear bucket count array */
 name|bzero
 argument_list|(
 operator|(
@@ -421,7 +480,7 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * compute number of items that sort to the same bucket 		 * for this index. 		 */
+comment|/* 		 * Compute number of items that sort to the same bucket 		 * for this index. 		 */
 for|for
 control|(
 name|p
@@ -452,11 +511,16 @@ index|]
 index|]
 index|]
 expr_stmt|;
-comment|/* 		 * sum the number of characters into c, dividing the temp 		 * stack into the right number of buckets for this bucket, 		 * this index.  C contains the cumulative total of keys 		 * before and included in this bucket, and will later be 		 * used as an index to the bucket.  c[NCHARS] contains 		 * the total number of elements, for determining how many 		 * elements the last bucket contains. 		 */
+comment|/* 		 * Sum the number of characters into c, dividing the temp 		 * stack into the right number of buckets for this bucket, 		 * this index.  C contains the cumulative total of keys 		 * before and included in this bucket, and will later be 		 * used as an index to the bucket.  c[NCHARS] contains 		 * the total number of elements, for determining how many 		 * elements the last bucket contains.  At the same time 		 * find the largest bucket so it gets handled first. 		 */
 for|for
 control|(
 name|i
 operator|=
+literal|1
+operator|,
+name|t2
+operator|=
+operator|-
 literal|1
 init|;
 name|i
@@ -466,19 +530,41 @@ condition|;
 operator|++
 name|i
 control|)
-name|c
-index|[
-name|i
-index|]
-operator|+=
+block|{
+if|if
+condition|(
+operator|(
+name|t1
+operator|=
 name|c
 index|[
 name|i
 operator|-
 literal|1
 index|]
+operator|)
+operator|>
+name|t2
+condition|)
+block|{
+name|t2
+operator|=
+name|t1
 expr_stmt|;
-comment|/* 		 * partition the elements into buckets; c decrements 		 * through the bucket, and ends up pointing to the 		 * first element of the bucket. 		 */
+name|max
+operator|=
+name|i
+expr_stmt|;
+block|}
+name|c
+index|[
+name|i
+index|]
+operator|+=
+name|t1
+expr_stmt|;
+block|}
+comment|/* 		 * Partition the elements into buckets; c decrements 		 * through the bucket, and ends up pointing to the 		 * first element of the bucket. 		 */
 for|for
 control|(
 name|i
@@ -515,7 +601,7 @@ operator|*
 name|p
 expr_stmt|;
 block|}
-comment|/* copy the partitioned elements back to user stack */
+comment|/* Copy the partitioned elements back to user stack */
 name|bcopy
 argument_list|(
 name|l2
@@ -534,19 +620,17 @@ expr_stmt|;
 operator|++
 name|indx
 expr_stmt|;
-comment|/* 		 * sort buckets as necessary; don't sort c[0], it's the 		 * EOS character bucket, and nothing can follow EOS. 		 */
+comment|/* 		 * Sort buckets as necessary; don't sort c[0], it's the 		 * EOS character bucket, and nothing can follow EOS. 		 */
 for|for
 control|(
 name|i
 operator|=
-name|NCHARS
-operator|-
-literal|1
+name|max
 init|;
 name|i
 condition|;
-name|i
 operator|--
+name|i
 control|)
 block|{
 if|if
@@ -590,7 +674,64 @@ name|STACKPUSH
 else|else
 name|SHELLSORT
 block|}
-comment|/* break out when stack is empty */
+for|for
+control|(
+name|i
+operator|=
+name|max
+operator|+
+literal|1
+init|;
+name|i
+operator|<
+name|NCHARS
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|nmemb
+operator|=
+name|c
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|-
+operator|(
+name|t1
+operator|=
+name|c
+index|[
+name|i
+index|]
+operator|)
+operator|)
+operator|<
+literal|2
+condition|)
+continue|continue;
+name|p
+operator|=
+name|bot
+operator|+
+name|t1
+expr_stmt|;
+if|if
+condition|(
+name|nmemb
+operator|>
+name|__rspartition
+condition|)
+name|STACKPUSH
+else|else
+name|SHELLSORT
+block|}
+comment|/* Break out when stack is empty */
 name|STACKPOP
 block|}
 name|free
@@ -611,23 +752,6 @@ operator|)
 name|stack
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STATS
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"max stack %u.\n"
-argument_list|,
-name|__radix_stacksize
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
