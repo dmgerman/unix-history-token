@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cond.c,v 1.9 1999/08/12 13:30:08 hoek Exp $  */
 end_comment
 
 begin_ifndef
@@ -222,7 +222,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|Boolean
+name|char
+modifier|*
 name|CondCvtArg
 name|__P
 argument_list|(
@@ -1311,12 +1312,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondCvtArg --  *	Convert the given number into a double. If the number begins  *	with 0x, it is interpreted as a hexadecimal integer  *	and converted to a double from there. All other strings just have  *	strtod called on them.  *  * Results:  *	Sets 'value' to double value of string.  *	Returns true if the string was a valid number, false o.w.  *  * Side Effects:  *	Can change 'value' even if string is not a valid number.  *  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * CondCvtArg --  *	Convert the given number into a double. If the number begins  *	with 0x, it is interpreted as a hexadecimal integer  *	and converted to a double from there. All other strings just have  *	strtod called on them.  *  * Results:  *	Sets 'value' to double value of string.  *	Returns address of the first character after the last valid  *	character of the converted number.  *  * Side Effects:  *	Can change 'value' even if string is not a valid number.  *  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 specifier|static
-name|Boolean
+name|char
+modifier|*
 name|CondCvtArg
 parameter_list|(
 name|str
@@ -1366,8 +1368,6 @@ name|i
 operator|=
 literal|0
 init|;
-operator|*
-name|str
 condition|;
 name|str
 operator|++
@@ -1430,9 +1430,19 @@ else|:
 literal|'a'
 expr_stmt|;
 else|else
+block|{
+operator|*
+name|value
+operator|=
+operator|(
+name|double
+operator|)
+name|i
+expr_stmt|;
 return|return
-name|FALSE
+name|str
 return|;
+block|}
 name|i
 operator|=
 operator|(
@@ -1444,17 +1454,6 @@ operator|+
 name|x
 expr_stmt|;
 block|}
-operator|*
-name|value
-operator|=
-operator|(
-name|double
-operator|)
-name|i
-expr_stmt|;
-return|return
-name|TRUE
-return|;
 block|}
 else|else
 block|{
@@ -1474,10 +1473,7 @@ name|eptr
 argument_list|)
 expr_stmt|;
 return|return
-operator|*
 name|eptr
-operator|==
-literal|'\0'
 return|;
 block|}
 block|}
@@ -2358,7 +2354,7 @@ name|string
 decl_stmt|;
 if|if
 condition|(
-operator|!
+operator|*
 name|CondCvtArg
 argument_list|(
 name|lhs
@@ -2366,6 +2362,8 @@ argument_list|,
 operator|&
 name|left
 argument_list|)
+operator|!=
+literal|'\0'
 condition|)
 goto|goto
 name|do_string_compare
@@ -2417,7 +2415,7 @@ else|else
 block|{
 if|if
 condition|(
-operator|!
+operator|*
 name|CondCvtArg
 argument_list|(
 name|string
@@ -2425,6 +2423,8 @@ argument_list|,
 operator|&
 name|right
 argument_list|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if
@@ -2463,15 +2463,30 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|!
+name|char
+modifier|*
+name|c
+init|=
 name|CondCvtArg
 argument_list|(
 name|rhs
 argument_list|,
 operator|&
 name|right
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|c
+operator|!=
+literal|'\0'
+operator|&&
+operator|!
+name|isspace
+argument_list|(
+operator|*
+name|c
 argument_list|)
 condition|)
 goto|goto
