@@ -33,13 +33,33 @@ name|ISP_PLATFORM_VERSION_MINOR
 value|4
 end_define
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+name|ISP_PLATFORM_VERSION_MAJOR
+operator|*
+literal|10
+operator|)
+operator|+
+name|ISP_PLATFORM_VERSION_MINOR
+operator|)
+operator|>=
+literal|54
+end_if
+
 begin_define
 define|#
 directive|define
-name|ISP_PVS
-define|\
-value|((ISP_PLATFORM_VERSION_MAJOR * 10)  + ISP_PLATFORM_VERSION_MINOR)
+name|ISP_SMPLOCK
+value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -326,11 +346,9 @@ decl_stmt|;
 name|u_int8_t
 name|intsok
 decl_stmt|;
-if|#
-directive|if
-name|ISP_PVS
-operator|>=
-literal|54
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 name|struct
 name|mtx
 name|lock
@@ -1209,13 +1227,11 @@ begin_comment
 comment|/*  * Locking macros...  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|ISP_PVS
-operator|>=
-literal|54
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+end_ifdef
 
 begin_define
 define|#
@@ -1397,13 +1413,11 @@ begin_comment
 comment|/*  * Platform specific inline functions  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|ISP_PVS
-operator|<
-literal|54
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISP_SMPLOCK
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -1565,11 +1579,9 @@ name|mboxwaiting
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|ISP_PVS
-operator|>=
-literal|54
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 operator|(
 name|void
 operator|)
