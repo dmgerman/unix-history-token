@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.14	%G%"
+literal|"@(#)err.c	3.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,9 +112,9 @@ name|fmtmsg
 argument_list|(
 name|errbuf
 argument_list|,
-name|Arpa_Syserr
-argument_list|,
 name|NULL
+argument_list|,
+name|Arpa_Syserr
 argument_list|,
 name|fmt
 argument_list|,

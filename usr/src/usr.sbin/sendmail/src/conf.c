@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.38	%G%"
+literal|"@(#)conf.c	3.39	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,7 +230,7 @@ name|char
 modifier|*
 name|StatFile
 init|=
-literal|"/usr/lib/mailstats"
+literal|"/usr/lib/sendmail.st"
 decl_stmt|;
 end_decl_stmt
 

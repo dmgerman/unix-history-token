@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)mailstats.c	3.2	%G%"
+literal|"@(#)mailstats.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ name|char
 modifier|*
 name|sfile
 init|=
-literal|"/usr/eric/mailstats"
+literal|"/usr/lib/sendmail.st"
 decl_stmt|;
 specifier|register
 name|int
