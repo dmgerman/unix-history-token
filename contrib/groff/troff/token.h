@@ -172,6 +172,11 @@ parameter_list|()
 function_decl|;
 comment|// is the current token space or tab?
 name|int
+name|special
+parameter_list|()
+function_decl|;
+comment|// is the current token a special character?
+name|int
 name|newline
 parameter_list|()
 function_decl|;
@@ -502,6 +507,22 @@ return|return
 name|type
 operator|==
 name|TOKEN_SPACE
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|int
+name|token
+operator|::
+name|special
+argument_list|()
+block|{
+return|return
+name|type
+operator|==
+name|TOKEN_SPECIAL
 return|;
 block|}
 end_expr_stmt

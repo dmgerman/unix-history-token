@@ -9,6 +9,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<getopt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"nonposix.h"
+end_include
+
 begin_comment
 comment|/* Binary bytes per output line. */
 end_comment
@@ -150,7 +162,7 @@ block|{
 specifier|extern
 name|char
 modifier|*
-name|version_string
+name|Version_string
 decl_stmt|;
 name|fprintf
 argument_list|(
@@ -158,7 +170,7 @@ name|stderr
 argument_list|,
 literal|"pfbtops groff version %s\n"
 argument_list|,
-name|version_string
+name|Version_string
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -221,6 +233,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SET_BINARY
+name|SET_BINARY
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;

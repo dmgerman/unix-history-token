@@ -43,17 +43,7 @@ parameter_list|)
 function_decl|;
 name|simple_output
 modifier|&
-name|html_write_string
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-name|simple_output
-modifier|&
-name|put_translated_char
+name|put_troffps_char
 parameter_list|(
 specifier|const
 name|char
@@ -173,7 +163,7 @@ parameter_list|()
 function_decl|;
 name|simple_output
 modifier|&
-name|put_delimiter
+name|put_raw_char
 parameter_list|(
 name|char
 parameter_list|)
@@ -185,6 +175,13 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+name|simple_output
+modifier|&
+name|put_html_char
+parameter_list|(
+name|char
 parameter_list|)
 function_decl|;
 name|FILE
@@ -199,12 +196,12 @@ modifier|*
 name|fp
 decl_stmt|;
 name|int
-name|col
-decl_stmt|;
-name|int
 name|max_line_length
 decl_stmt|;
 comment|// not including newline
+name|int
+name|col
+decl_stmt|;
 name|int
 name|need_space
 decl_stmt|;

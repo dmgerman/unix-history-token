@@ -15,10 +15,16 @@ block|{
 name|public
 operator|:
 name|list_element
+operator|<
+name|T
+operator|>
 operator|*
 name|right
 block|;
 name|list_element
+operator|<
+name|T
+operator|>
 operator|*
 name|left
 block|;

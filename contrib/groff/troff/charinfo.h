@@ -237,6 +237,11 @@ name|int
 name|numbered
 parameter_list|()
 function_decl|;
+name|symbol
+modifier|*
+name|get_symbol
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -538,6 +543,23 @@ return|;
 block|}
 end_expr_stmt
 
-unit|}
+begin_expr_stmt
+unit|}  inline
+name|symbol
+operator|*
+name|charinfo
+operator|::
+name|get_symbol
+argument_list|()
+block|{
+return|return
+operator|(
+operator|&
+name|nm
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 end_unit
 

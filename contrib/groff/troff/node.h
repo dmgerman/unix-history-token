@@ -2165,16 +2165,6 @@ argument_list|,
 argument|hyphen_list *p
 argument_list|)
 operator|:
-name|hyphenation_code
-argument_list|(
-name|code
-argument_list|)
-operator|,
-name|next
-argument_list|(
-name|p
-argument_list|)
-operator|,
 name|hyphen
 argument_list|(
 literal|0
@@ -2183,6 +2173,16 @@ operator|,
 name|breakable
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|hyphenation_code
+argument_list|(
+name|code
+argument_list|)
+operator|,
+name|next
+argument_list|(
+argument|p
 argument_list|)
 block|{ }
 specifier|extern
@@ -2372,6 +2372,16 @@ name|is_printing
 parameter_list|()
 init|=
 literal|0
+function_decl|;
+name|virtual
+name|void
+name|put_filename
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 ifdef|#
 directive|ifdef

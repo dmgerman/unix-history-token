@@ -37,11 +37,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MATH_H_DECLARES_HYPOT
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_HYPOT
+end_ifdef
 
 begin_extern
 extern|extern
@@ -62,6 +62,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* NEED_DECLARATION_HYPOT */
+end_comment
 
 begin_include
 include|#
