@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.4.2-20000415"
+value|"sym-1.4.3-20000415"
 end_define
 
 begin_include
@@ -5128,18 +5128,18 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|sym_scr
+name|sym_scra
 modifier|*
-name|script_p
+name|scripta_p
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 name|struct
-name|sym_scrh
+name|sym_scrb
 modifier|*
-name|scripth_p
+name|scriptb_p
 typedef|;
 end_typedef
 
@@ -6137,27 +6137,27 @@ decl_stmt|;
 comment|/* IO port address		*/
 comment|/* 	 *  SCRIPTS virtual and physical bus addresses. 	 *  'script'  is loaded in the on-chip RAM if present. 	 *  'scripth' stays in main memory for all chips except the  	 *  53C895A, 53C896 and 53C1010 that provide 8K on-chip RAM. 	 */
 name|struct
-name|sym_scr
+name|sym_scra
 modifier|*
-name|script0
+name|scripta0
 decl_stmt|;
 comment|/* Copies of script and scripth	*/
 name|struct
-name|sym_scrh
+name|sym_scrb
 modifier|*
-name|scripth0
+name|scriptb0
 decl_stmt|;
 comment|/*  relocated for this host.	*/
 name|vm_offset_t
-name|script_ba
+name|scripta_ba
 decl_stmt|;
 comment|/* Actual script and scripth	*/
 name|vm_offset_t
-name|scripth_ba
+name|scriptb_ba
 decl_stmt|;
 comment|/*  bus addresses.		*/
 name|vm_offset_t
-name|scripth0_ba
+name|scriptb0_ba
 decl_stmt|;
 comment|/* 	 *  General controller parameters and configuration. 	 */
 name|u_short
@@ -6370,37 +6370,37 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCRIPT_BA
+name|SCRIPTA_BA
 parameter_list|(
 name|np
 parameter_list|,
 name|lbl
 parameter_list|)
-value|(np->script_ba   + offsetof(struct sym_scr, lbl))
+value|(np->scripta_ba  + offsetof(struct sym_scra, lbl))
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 parameter_list|(
 name|np
 parameter_list|,
 name|lbl
 parameter_list|)
-value|(np->scripth_ba  + offsetof(struct sym_scrh,lbl))
+value|(np->scriptb_ba  + offsetof(struct sym_scrb,lbl))
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCRIPTH0_BA
+name|SCRIPTB0_BA
 parameter_list|(
 name|np
 parameter_list|,
 name|lbl
 parameter_list|)
-value|(np->scripth0_ba + offsetof(struct sym_scrh,lbl))
+value|(np->scriptb0_ba + offsetof(struct sym_scrb,lbl))
 end_define
 
 begin_comment
@@ -6413,7 +6413,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|sym_scr
+name|sym_scra
 block|{
 name|u32
 name|start
@@ -6793,7 +6793,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|sym_scrh
+name|sym_scrb
 block|{
 name|u32
 name|start64
@@ -7111,11 +7111,11 @@ specifier|static
 name|void
 name|sym_fill_scripts
 parameter_list|(
-name|script_p
-name|scr
+name|scripta_p
+name|scra
 parameter_list|,
-name|scripth_p
-name|scrh
+name|scriptb_p
+name|scrb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8498,7 +8498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Scripts for SYMBIOS-Processor  *  *  Use sym_bind_script for binding to physical addresses.  *  *  NADDR generates a reference to a field of the controller data.  *  PADDR generates a reference to another part of the script.  *  RADDR generates a reference to a script processor register.  *  FADDR generates a reference to a script processor register  *        with offset.  *  */
+comment|/*  *  Scripts for SYMBIOS-Processor  *  *  Use sym_bind_script for binding to physical addresses.  *  *  HADDR_1 generates a reference to a field of the controller data.  *  PADDR_A generates a reference to another part of script A.  *  PADDR_B generates a reference to another part of script B.  *  RADDR_1 generates a reference to a script processor register.  *  RADDR_2 generates a reference to a script processor register  *          with offset.  *  */
 end_comment
 
 begin_define
@@ -8511,7 +8511,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RELOC_LABEL
+name|RELOC_LABELA
 value|0x50000000
 end_define
 
@@ -8525,7 +8525,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RELOC_LABELH
+name|RELOC_LABELB
 value|0x80000000
 end_define
 
@@ -8539,7 +8539,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NADDR
+name|HADDR_1
 parameter_list|(
 name|label
 parameter_list|)
@@ -8549,27 +8549,27 @@ end_define
 begin_define
 define|#
 directive|define
-name|PADDR
+name|PADDR_A
 parameter_list|(
 name|label
 parameter_list|)
-value|(RELOC_LABEL  | offsetof(struct sym_scr, label))
+value|(RELOC_LABELA | offsetof(struct sym_scra, label))
 end_define
 
 begin_define
 define|#
 directive|define
-name|PADDRH
+name|PADDR_B
 parameter_list|(
 name|label
 parameter_list|)
-value|(RELOC_LABELH | offsetof(struct sym_scrh, label))
+value|(RELOC_LABELB | offsetof(struct sym_scrb, label))
 end_define
 
 begin_define
 define|#
 directive|define
-name|RADDR
+name|RADDR_1
 parameter_list|(
 name|label
 parameter_list|)
@@ -8579,7 +8579,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FADDR
+name|RADDR_2
 parameter_list|(
 name|label
 parameter_list|,
@@ -8598,8 +8598,8 @@ end_define
 begin_decl_stmt
 specifier|static
 name|struct
-name|sym_scr
-name|script0
+name|sym_scra
+name|scripta0
 init|=
 block|{
 comment|/*--------------------------< START>----------------------------*/
@@ -8640,7 +8640,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|startpos
 argument_list|)
@@ -8667,7 +8667,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|startpos
 argument_list|)
@@ -8691,7 +8691,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|startpos
 argument_list|)
@@ -8743,7 +8743,7 @@ argument_list|,
 name|select
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|ungetjob
 argument_list|)
@@ -8868,7 +8868,7 @@ name|SCR_COMMAND
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|sel_no_cmd
 argument_list|)
@@ -8903,7 +8903,7 @@ name|SCR_MSG_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|msg_in
 argument_list|)
@@ -8918,7 +8918,7 @@ name|SCR_DATA_OUT
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|datao_phase
 argument_list|)
@@ -8933,7 +8933,7 @@ name|SCR_DATA_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|datai_phase
 argument_list|)
@@ -8948,7 +8948,7 @@ name|SCR_STATUS
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|status
 argument_list|)
@@ -8963,7 +8963,7 @@ name|SCR_COMMAND
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|command
 argument_list|)
@@ -8978,7 +8978,7 @@ name|SCR_MSG_OUT
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_out
 argument_list|)
@@ -9003,7 +9003,7 @@ argument_list|)
 operator|^
 name|SCR_ILG_OUT
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|scratch
 argument_list|)
@@ -9040,7 +9040,7 @@ argument_list|)
 operator|^
 name|SCR_ILG_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|scratch
 argument_list|)
@@ -9064,7 +9064,7 @@ name|SIR_BAD_PHASE
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -9083,7 +9083,7 @@ name|SCR_MSG_OUT
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|resend_ident
 argument_list|)
@@ -9099,7 +9099,7 @@ name|SCR_MSG_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -9126,7 +9126,7 @@ block|,
 comment|/* 	 *  Jump to dispatcher. 	 */
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -9159,7 +9159,7 @@ literal|16
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|start
 argument_list|)
@@ -9177,7 +9177,7 @@ literal|0
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -9196,14 +9196,14 @@ name|SCR_STATUS
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|status
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -9222,7 +9222,7 @@ name|SCR_DATA_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -9247,7 +9247,7 @@ name|WSR
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|disp_status
 argument_list|)
@@ -9287,7 +9287,7 @@ name|SCR_MSG_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|disp_status
 argument_list|)
@@ -9300,7 +9300,7 @@ argument_list|)
 operator|^
 name|SCR_MSG_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgin
 index|[
@@ -9330,7 +9330,7 @@ name|M_IGN_RESIDUE
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|msg_in2
 argument_list|)
@@ -9350,7 +9350,7 @@ argument_list|)
 operator|^
 name|SCR_MSG_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgin
 index|[
@@ -9367,7 +9367,7 @@ literal|0
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|disp_status
 argument_list|)
@@ -9386,7 +9386,7 @@ name|SCR_DATA_OUT
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -9411,7 +9411,7 @@ name|WSS
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|disp_status
 argument_list|)
@@ -9435,7 +9435,7 @@ name|SIR_SODL_UNDERRUN
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -9465,7 +9465,7 @@ argument_list|)
 operator|^
 name|SCR_MSG_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgin
 index|[
@@ -9487,7 +9487,7 @@ name|M_COMPLETE
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|complete
 argument_list|)
@@ -9502,7 +9502,7 @@ name|M_DISCONNECT
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|disconnect
 argument_list|)
@@ -9517,7 +9517,7 @@ name|M_SAVE_DP
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|save_dp
 argument_list|)
@@ -9532,7 +9532,7 @@ name|M_RESTORE_DP
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|restore_dp
 argument_list|)
@@ -9540,7 +9540,7 @@ block|,
 comment|/* 	 *  We handle all other messages from the  	 *  C code, so no need to waste on-chip RAM  	 *  for those ones. 	 */
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_in_etc
 argument_list|)
@@ -9556,7 +9556,7 @@ argument_list|)
 operator|^
 name|SCR_STATUS
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|scratch
 argument_list|)
@@ -9619,14 +9619,14 @@ name|SCR_MSG_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|msg_in
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -9737,7 +9737,7 @@ name|S_GOOD
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|bad_status
 argument_list|)
@@ -9778,7 +9778,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|startpos
 argument_list|)
@@ -9798,7 +9798,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|saved_dsa
 argument_list|)
@@ -9810,7 +9810,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|done_pos
 argument_list|)
@@ -9822,7 +9822,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|saved_dsa
 argument_list|)
@@ -9857,7 +9857,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|done_pos
 argument_list|)
@@ -9867,7 +9867,7 @@ block|,
 block|{
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|start
 argument_list|)
@@ -9915,7 +9915,7 @@ argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -9943,7 +9943,7 @@ argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|clrack
 argument_list|)
@@ -10025,7 +10025,7 @@ name|SYM_QUIRK_AUTOSAVE
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|start
 argument_list|)
@@ -10061,7 +10061,7 @@ argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|start
 argument_list|)
@@ -10128,7 +10128,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|startpos
 argument_list|)
@@ -10147,7 +10147,7 @@ block|,
 comment|/* 	 *  Sleep waiting for a reselection. 	 */
 name|SCR_WAIT_RESEL
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|start
 argument_list|)
@@ -10194,7 +10194,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|targtbl
 argument_list|)
@@ -10311,7 +10311,7 @@ argument_list|)
 operator|^
 name|SCR_MSG_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgin
 argument_list|)
@@ -10465,7 +10465,7 @@ argument_list|)
 operator|^
 name|SCR_MSG_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgin
 argument_list|)
@@ -10684,7 +10684,7 @@ block|,
 comment|/* 	 *  Jump to dispatcher. 	 */
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -10745,14 +10745,14 @@ block|,
 block|{
 name|SCR_CALL
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|datai_done
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -10768,14 +10768,14 @@ block|,
 block|{
 name|SCR_CALL
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|datao_done
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -10802,7 +10802,7 @@ name|SCR_DATA_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|pm0_data_out
 argument_list|)
@@ -10820,7 +10820,7 @@ name|HF_DATA_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -10856,7 +10856,7 @@ argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|pm0_data_end
 argument_list|)
@@ -10877,7 +10877,7 @@ name|HF_DATA_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -10975,7 +10975,7 @@ name|SCR_DATA_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|pm1_data_out
 argument_list|)
@@ -10993,7 +10993,7 @@ name|HF_DATA_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -11029,7 +11029,7 @@ argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|pm1_data_end
 argument_list|)
@@ -11050,7 +11050,7 @@ name|HF_DATA_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -11134,8 +11134,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|sym_scrh
-name|scripth0
+name|sym_scrb
+name|scriptb0
 init|=
 block|{
 comment|/*--------------------------< START64>--------------------------*/
@@ -11143,7 +11143,7 @@ block|{
 comment|/* 	 *  SCRIPT entry point for the 895A, 896 and 1010. 	 *  For now, there is no specific stuff for those  	 *  chips at this point, but this may come. 	 */
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|init
 argument_list|)
@@ -11153,7 +11153,7 @@ block|,
 block|{
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -11181,7 +11181,7 @@ argument_list|,
 name|abrt_sel
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|reselect
 argument_list|)
@@ -11253,7 +11253,7 @@ block|{
 comment|/* 	 *  Jump at scheduler. 	 */
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|start
 argument_list|)
@@ -11272,7 +11272,7 @@ name|M_EXTENDED
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_extended
 argument_list|)
@@ -11335,7 +11335,7 @@ argument_list|)
 operator|^
 name|SCR_MSG_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgin
 index|[
@@ -11399,7 +11399,7 @@ argument_list|)
 operator|^
 name|SCR_MSG_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgin
 index|[
@@ -11418,7 +11418,7 @@ literal|0
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_weird_seen
 argument_list|)
@@ -11452,7 +11452,7 @@ argument_list|(
 name|CARRYSET
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_weird_seen
 argument_list|)
@@ -11496,7 +11496,7 @@ argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_received
 argument_list|)
@@ -11518,7 +11518,7 @@ literal|0
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|clrack
 argument_list|)
@@ -11558,7 +11558,7 @@ name|SCR_MSG_IN
 argument_list|)
 argument_list|)
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -11570,14 +11570,14 @@ argument_list|)
 operator|^
 name|SCR_MSG_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|scratch
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_weird1
 argument_list|)
@@ -11610,7 +11610,7 @@ name|SCR_MSG_OUT
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|nego_bad_phase
 argument_list|)
@@ -11626,14 +11626,14 @@ argument_list|)
 operator|^
 name|SCR_MSG_OUT
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgout
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_out_done
 argument_list|)
@@ -11666,7 +11666,7 @@ name|SCR_MSG_OUT
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|nego_bad_phase
 argument_list|)
@@ -11682,14 +11682,14 @@ argument_list|)
 operator|^
 name|SCR_MSG_OUT
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgout
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_out_done
 argument_list|)
@@ -11722,7 +11722,7 @@ name|SCR_MSG_OUT
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|nego_bad_phase
 argument_list|)
@@ -11738,14 +11738,14 @@ argument_list|)
 operator|^
 name|SCR_MSG_OUT
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgout
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_out_done
 argument_list|)
@@ -11759,7 +11759,7 @@ name|SIR_NEGO_PROTO
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -11775,7 +11775,7 @@ argument_list|)
 operator|^
 name|SCR_MSG_OUT
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgout
 argument_list|)
@@ -11791,7 +11791,7 @@ name|SCR_MSG_OUT
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|msg_out
 argument_list|)
@@ -11807,7 +11807,7 @@ block|,
 comment|/* 	 *  ... and process the next phase 	 */
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -11823,7 +11823,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|zero
 argument_list|)
@@ -11851,14 +11851,14 @@ argument_list|)
 operator|^
 name|SCR_DATA_OUT
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|scratch
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun2
 argument_list|)
@@ -11898,7 +11898,7 @@ literal|0
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun2
 argument_list|)
@@ -11922,7 +11922,7 @@ name|SIR_DATA_OVERRUN
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -11934,7 +11934,7 @@ argument_list|)
 operator|^
 name|SCR_DATA_IN
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|scratch
 argument_list|)
@@ -11979,7 +11979,7 @@ block|,
 comment|/* 	 *  .. and repeat as required. 	 */
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun1
 argument_list|)
@@ -12020,7 +12020,7 @@ argument_list|)
 operator|^
 name|SCR_MSG_OUT
 block|,
-name|NADDR
+name|HADDR_1
 argument_list|(
 name|msgout
 argument_list|)
@@ -12044,7 +12044,7 @@ name|SIR_RESEL_ABORTED
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|start
 argument_list|)
@@ -12064,7 +12064,7 @@ block|,
 comment|/* 1rst ACK = 90 ns. Hope the chip isn't too fast */
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|send_ident
 argument_list|)
@@ -12081,7 +12081,7 @@ literal|0
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|select2
 argument_list|)
@@ -12098,7 +12098,7 @@ literal|0
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|select2
 argument_list|)
@@ -12120,14 +12120,14 @@ argument_list|)
 block|,
 name|SCR_CALL
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|datai_done
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|data_ovrun
 argument_list|)
@@ -12142,7 +12142,7 @@ name|SIR_RESEL_BAD_LUN
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|abort_resel
 argument_list|)
@@ -12157,7 +12157,7 @@ name|SIR_RESEL_BAD_I_T_L
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|abort_resel
 argument_list|)
@@ -12172,7 +12172,7 @@ name|SIR_RESEL_BAD_I_T_L_Q
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|abort_resel
 argument_list|)
@@ -12188,7 +12188,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|startpos
 argument_list|)
@@ -12240,7 +12240,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|pm_handle1
 argument_list|)
@@ -12288,7 +12288,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|pm_handle1
 argument_list|)
@@ -12328,7 +12328,7 @@ argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|pm_save
 argument_list|)
@@ -12354,7 +12354,7 @@ argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|pm_save
 argument_list|)
@@ -12422,7 +12422,7 @@ name|HF_ACT_PM
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|pm1_save
 argument_list|)
@@ -12469,7 +12469,7 @@ name|WSR
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|pm_wsr_handle
 argument_list|)
@@ -12525,14 +12525,14 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|pm0_data_addr
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -12579,7 +12579,7 @@ name|WSR
 argument_list|)
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|pm_wsr_handle
 argument_list|)
@@ -12635,14 +12635,14 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|pm1_data_addr
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -12723,7 +12723,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|zero
 argument_list|)
@@ -12867,7 +12867,7 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|scratch
 argument_list|)
@@ -12879,14 +12879,14 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|PADDRH
+name|PADDR_B
 argument_list|(
 name|scratch
 argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -12911,7 +12911,7 @@ argument_list|)
 block|,
 name|SCR_JUMP
 block|,
-name|PADDR
+name|PADDR_A
 argument_list|(
 name|dispatch
 argument_list|)
@@ -13034,11 +13034,11 @@ specifier|static
 name|void
 name|sym_fill_scripts
 parameter_list|(
-name|script_p
-name|scr
+name|scripta_p
+name|scra
 parameter_list|,
-name|scripth_p
-name|scrh
+name|scriptb_p
+name|scrb
 parameter_list|)
 block|{
 name|int
@@ -13050,7 +13050,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|scr
+name|scra
 operator|->
 name|data_in
 expr_stmt|;
@@ -13104,13 +13104,13 @@ operator|(
 name|u_long
 operator|)
 operator|&
-name|scr
+name|scra
 operator|->
 name|data_in
 operator|+
 sizeof|sizeof
 argument_list|(
-name|scr
+name|scra
 operator|->
 name|data_in
 argument_list|)
@@ -13118,7 +13118,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|scr
+name|scra
 operator|->
 name|data_out
 expr_stmt|;
@@ -13172,13 +13172,13 @@ operator|(
 name|u_long
 operator|)
 operator|&
-name|scr
+name|scra
 operator|->
 name|data_out
 operator|+
 sizeof|sizeof
 argument_list|(
-name|scr
+name|scra
 operator|->
 name|data_out
 argument_list|)
@@ -13655,7 +13655,7 @@ name|mmio_ba
 expr_stmt|;
 break|break;
 case|case
-name|RELOC_LABEL
+name|RELOC_LABELA
 case|:
 name|new
 operator|=
@@ -13668,11 +13668,11 @@ operator|)
 operator|+
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 expr_stmt|;
 break|break;
 case|case
-name|RELOC_LABELH
+name|RELOC_LABELB
 case|:
 name|new
 operator|=
@@ -13685,7 +13685,7 @@ operator|)
 operator|+
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 expr_stmt|;
 break|break;
 case|case
@@ -17367,7 +17367,7 @@ literal|0
 expr_stmt|;
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 operator|->
 name|startpos
 index|[
@@ -17457,7 +17457,7 @@ expr_stmt|;
 comment|/* 	 *  Start at first entry. 	 */
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 operator|->
 name|done_pos
 index|[
@@ -17763,7 +17763,7 @@ name|OUTL
 argument_list|(
 name|nc_pmjad1
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -17775,7 +17775,7 @@ name|OUTL
 argument_list|(
 name|nc_pmjad2
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -18054,12 +18054,12 @@ literal|4096
 argument_list|,
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scrh
+name|sym_scrb
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18092,7 +18092,7 @@ argument_list|)
 expr_stmt|;
 name|phys
 operator|=
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -18103,7 +18103,7 @@ block|}
 else|else
 name|phys
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -18118,12 +18118,12 @@ name|ram_va
 argument_list|,
 name|np
 operator|->
-name|script0
+name|scripta0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scr
+name|sym_scra
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18131,7 +18131,7 @@ block|}
 else|else
 name|phys
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -19740,18 +19740,18 @@ name|dsp
 operator|>
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 operator|&&
 name|dsp
 operator|<=
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scr
+name|sym_scra
 argument_list|)
 condition|)
 block|{
@@ -19761,14 +19761,14 @@ name|dsp
 operator|-
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 expr_stmt|;
 name|script_size
 operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scr
+name|sym_scra
 argument_list|)
 expr_stmt|;
 name|script_base
@@ -19779,11 +19779,11 @@ operator|*
 operator|)
 name|np
 operator|->
-name|script0
+name|scripta0
 expr_stmt|;
 name|script_name
 operator|=
-literal|"script"
+literal|"scripta"
 expr_stmt|;
 block|}
 elseif|else
@@ -19791,7 +19791,7 @@ if|if
 condition|(
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 operator|<
 name|dsp
 operator|&&
@@ -19799,12 +19799,12 @@ name|dsp
 operator|<=
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scrh
+name|sym_scrb
 argument_list|)
 condition|)
 block|{
@@ -19814,14 +19814,14 @@ name|dsp
 operator|-
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 expr_stmt|;
 name|script_size
 operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scrh
+name|sym_scrb
 argument_list|)
 expr_stmt|;
 name|script_base
@@ -19832,11 +19832,11 @@ operator|*
 operator|)
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 expr_stmt|;
 name|script_name
 operator|=
-literal|"scripth"
+literal|"scriptb"
 expr_stmt|;
 block|}
 else|else
@@ -20768,7 +20768,7 @@ operator|!
 operator|(
 name|dsp
 operator|>
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20777,7 +20777,7 @@ argument_list|)
 operator|&&
 name|dsp
 operator|<
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20793,7 +20793,7 @@ operator|!
 operator|(
 name|dsp
 operator|>
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20802,7 +20802,7 @@ argument_list|)
 operator|&&
 name|dsp
 operator|<
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20818,7 +20818,7 @@ operator|!
 operator|(
 name|dsp
 operator|>
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20827,7 +20827,7 @@ argument_list|)
 operator|&&
 name|dsp
 operator|<
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20843,7 +20843,7 @@ operator|!
 operator|(
 name|dsp
 operator|>
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20852,7 +20852,7 @@ argument_list|)
 operator|&&
 name|dsp
 operator|<
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20902,7 +20902,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20925,7 +20925,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -20985,7 +20985,7 @@ if|if
 condition|(
 name|dsp
 operator|==
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -21300,7 +21300,7 @@ if|if
 condition|(
 name|dsp
 operator|==
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -21341,7 +21341,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -21356,7 +21356,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -21756,18 +21756,18 @@ name|dsp
 operator|>
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 operator|&&
 name|dsp
 operator|<=
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scr
+name|sym_scra
 argument_list|)
 condition|)
 block|{
@@ -21784,14 +21784,14 @@ operator|*
 operator|)
 name|np
 operator|->
-name|script0
+name|scripta0
 operator|+
 operator|(
 name|dsp
 operator|-
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 operator|-
 literal|8
 operator|)
@@ -21809,18 +21809,18 @@ name|dsp
 operator|>
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 operator|&&
 name|dsp
 operator|<=
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scrh
+name|sym_scrb
 argument_list|)
 condition|)
 block|{
@@ -21837,14 +21837,14 @@ operator|*
 operator|)
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 operator|+
 operator|(
 name|dsp
 operator|-
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 operator|-
 literal|8
 operator|)
@@ -22254,7 +22254,7 @@ name|pm0
 expr_stmt|;
 name|newcmd
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22275,7 +22275,7 @@ name|pm1
 expr_stmt|;
 name|newcmd
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22346,7 +22346,7 @@ expr_stmt|;
 comment|/* 	 *  If we have a SWIDE, 	 *  - prepare the address to write the SWIDE from SCRIPTS, 	 *  - compute the SCRIPTS address to restart from, 	 *  - move current data pointer context by one byte. 	 */
 name|nxtdsp
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22491,7 +22491,7 @@ expr_stmt|;
 comment|/* 		 *  Prepare the address of SCRIPTS that will  		 *  move the residual byte to memory. 		 */
 name|nxtdsp
 operator|=
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22597,7 +22597,7 @@ case|:
 comment|/* COMMAND phase */
 name|nxtdsp
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22610,7 +22610,7 @@ directive|if
 literal|0
 block|case 3:
 comment|/* STATUS  phase */
-block|nxtdsp = SCRIPT_BA (np, dispatch); 		break;
+block|nxtdsp = SCRIPTA_BA (np, dispatch); 		break;
 endif|#
 directive|endif
 case|case
@@ -22622,7 +22622,7 @@ if|if
 condition|(
 name|dsp
 operator|==
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22666,7 +22666,7 @@ name|lun
 expr_stmt|;
 name|nxtdsp
 operator|=
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22677,7 +22677,7 @@ block|}
 else|else
 name|nxtdsp
 operator|=
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22690,7 +22690,7 @@ if|if
 condition|(
 name|dsp
 operator|==
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22699,7 +22699,7 @@ argument_list|)
 operator|||
 name|dsp
 operator|==
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22708,7 +22708,7 @@ argument_list|)
 operator|||
 name|dsp
 operator|==
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22718,7 +22718,7 @@ condition|)
 block|{
 name|nxtdsp
 operator|=
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -22732,7 +22732,7 @@ directive|if
 literal|0
 block|case 7:
 comment|/* MSG IN  phase */
-block|nxtdsp = SCRIPT_BA (np, clrack); 		break;
+block|nxtdsp = SCRIPTA_BA (np, clrack); 		break;
 endif|#
 directive|endif
 block|}
@@ -23334,7 +23334,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -23619,7 +23619,7 @@ expr_stmt|;
 comment|/* 		 *  requeue the command. 		 */
 name|startp
 operator|=
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -23726,7 +23726,7 @@ name|start
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -24246,7 +24246,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -25199,7 +25199,7 @@ if|if
 condition|(
 name|dp_scr
 operator|==
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -25220,7 +25220,7 @@ if|if
 condition|(
 name|dp_scr
 operator|==
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -25719,7 +25719,7 @@ name|pm0
 expr_stmt|;
 name|dp_scr
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -25740,7 +25740,7 @@ name|pm1
 expr_stmt|;
 name|dp_scr
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -25846,7 +25846,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -25861,7 +25861,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -26595,7 +26595,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -26704,7 +26704,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -26734,7 +26734,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -27245,7 +27245,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -27385,7 +27385,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -27419,7 +27419,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -27742,7 +27742,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -27758,7 +27758,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -27853,7 +27853,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -27868,7 +27868,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -28787,7 +28787,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -28845,7 +28845,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -28860,7 +28860,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -29162,7 +29162,7 @@ name|resel_sa
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -29223,7 +29223,7 @@ name|resel_sa
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -29517,7 +29517,7 @@ name|resel_sa
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -29801,7 +29801,7 @@ name|start
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -29819,7 +29819,7 @@ name|restart
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -30332,7 +30332,7 @@ name|resel_sa
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -30726,7 +30726,7 @@ directive|endif
 comment|/* 	 *  init 	 */
 name|pc
 operator|=
-name|SCRIPTH0_BA
+name|SCRIPTB0_BA
 argument_list|(
 name|np
 argument_list|,
@@ -30862,7 +30862,7 @@ if|if
 condition|(
 name|pc
 operator|!=
-name|SCRIPTH0_BA
+name|SCRIPTB0_BA
 argument_list|(
 name|np
 argument_list|,
@@ -30884,7 +30884,7 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|SCRIPTH0_BA
+name|SCRIPTB0_BA
 argument_list|(
 name|np
 argument_list|,
@@ -30899,7 +30899,7 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|SCRIPTH0_BA
+name|SCRIPTB0_BA
 argument_list|(
 name|np
 argument_list|,
@@ -32372,7 +32372,7 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -33647,7 +33647,7 @@ name|start
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -33665,7 +33665,7 @@ name|restart
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -34112,7 +34112,7 @@ name|CAM_DIR_OUT
 case|:
 name|goalp
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -34151,7 +34151,7 @@ name|HF_DATA_IN
 expr_stmt|;
 name|goalp
 operator|=
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -34187,7 +34187,7 @@ name|lastp
 operator|=
 name|goalp
 operator|=
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -39511,11 +39511,11 @@ goto|;
 comment|/* 	 *  Allocate SCRIPTS areas. 	 */
 name|np
 operator|->
-name|script0
+name|scripta0
 operator|=
 operator|(
 expr|struct
-name|sym_scr
+name|sym_scra
 operator|*
 operator|)
 name|sym_calloc_dma
@@ -39523,19 +39523,19 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scr
+name|sym_scra
 argument_list|)
 argument_list|,
-literal|"SCRIPT0"
+literal|"SCRIPTA0"
 argument_list|)
 expr_stmt|;
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 operator|=
 operator|(
 expr|struct
-name|sym_scrh
+name|sym_scrb
 operator|*
 operator|)
 name|sym_calloc_dma
@@ -39543,10 +39543,10 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scrh
+name|sym_scrb
 argument_list|)
 argument_list|,
-literal|"SCRIPTH0"
+literal|"SCRIPTB0"
 argument_list|)
 expr_stmt|;
 if|if
@@ -39554,12 +39554,12 @@ condition|(
 operator|!
 name|np
 operator|->
-name|script0
+name|scripta0
 operator|||
 operator|!
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 condition|)
 goto|goto
 name|attach_failed
@@ -39613,42 +39613,42 @@ comment|/* 	 *  Fill-up variable-size parts of the SCRIPTS. 	 */
 name|sym_fill_scripts
 argument_list|(
 operator|&
-name|script0
+name|scripta0
 argument_list|,
 operator|&
-name|scripth0
+name|scriptb0
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  Calculate BUS addresses where we are going  	 *  to load the SCRIPTS. 	 */
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 operator|=
 name|vtobus
 argument_list|(
 name|np
 operator|->
-name|script0
+name|scripta0
 argument_list|)
 expr_stmt|;
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 operator|=
 name|vtobus
 argument_list|(
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 argument_list|)
 expr_stmt|;
 name|np
 operator|->
-name|scripth0_ba
+name|scriptb0_ba
 operator|=
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 expr_stmt|;
 if|if
 condition|(
@@ -39659,7 +39659,7 @@ condition|)
 block|{
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 operator|=
 name|np
 operator|->
@@ -39682,11 +39682,11 @@ literal|8192
 expr_stmt|;
 name|np
 operator|->
-name|scripth_ba
+name|scriptb_ba
 operator|=
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 operator|+
 literal|4096
 expr_stmt|;
@@ -39703,7 +39703,7 @@ name|cpu_to_scr
 argument_list|(
 name|np
 operator|->
-name|script_ba
+name|scripta_ba
 operator|>>
 literal|32
 argument_list|)
@@ -39729,7 +39729,7 @@ name|u32
 operator|*
 operator|)
 operator|&
-name|script0
+name|scripta0
 argument_list|,
 operator|(
 name|u32
@@ -39737,12 +39737,12 @@ operator|*
 operator|)
 name|np
 operator|->
-name|script0
+name|scripta0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scr
+name|sym_scra
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -39755,7 +39755,7 @@ name|u32
 operator|*
 operator|)
 operator|&
-name|scripth0
+name|scriptb0
 argument_list|,
 operator|(
 name|u32
@@ -39763,19 +39763,19 @@ operator|*
 operator|)
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scrh
+name|sym_scrb
 argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  Patch some variables in SCRIPTS. 	 *  These ones are loaded by the SCRIPTS processor. 	 */
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 operator|->
 name|pm0_data_addr
 index|[
@@ -39784,7 +39784,7 @@ index|]
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -39794,7 +39794,7 @@ argument_list|)
 expr_stmt|;
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 operator|->
 name|pm1_data_addr
 index|[
@@ -39803,7 +39803,7 @@ index|]
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -39826,7 +39826,7 @@ condition|)
 block|{
 name|np
 operator|->
-name|script0
+name|scripta0
 operator|->
 name|idle
 index|[
@@ -39840,7 +39840,7 @@ argument_list|)
 expr_stmt|;
 name|np
 operator|->
-name|script0
+name|scripta0
 operator|->
 name|reselected
 index|[
@@ -39854,7 +39854,7 @@ argument_list|)
 expr_stmt|;
 name|np
 operator|->
-name|script0
+name|scripta0
 operator|->
 name|start
 index|[
@@ -39882,7 +39882,7 @@ condition|)
 block|{
 name|np
 operator|->
-name|script0
+name|scripta0
 operator|->
 name|resel_scntl4
 index|[
@@ -39896,7 +39896,7 @@ argument_list|)
 expr_stmt|;
 name|np
 operator|->
-name|script0
+name|scripta0
 operator|->
 name|resel_scntl4
 index|[
@@ -39920,7 +39920,7 @@ name|SYM_CONF_SET_IARB_ON_ARB_LOST
 condition|)
 name|np
 operator|->
-name|script0
+name|scripta0
 operator|->
 name|ungetjob
 index|[
@@ -39963,7 +39963,7 @@ name|start
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -39979,7 +39979,7 @@ name|restart
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -40007,7 +40007,7 @@ name|start
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -40023,7 +40023,7 @@ name|restart
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -40051,7 +40051,7 @@ name|start
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -40067,7 +40067,7 @@ name|restart
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -40095,7 +40095,7 @@ name|start
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPT_BA
+name|SCRIPTA_BA
 argument_list|(
 name|np
 argument_list|,
@@ -40111,7 +40111,7 @@ name|restart
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -40159,7 +40159,7 @@ name|badlun_sa
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCRIPTH_BA
+name|SCRIPTB_BA
 argument_list|(
 name|np
 argument_list|,
@@ -40202,7 +40202,7 @@ expr_stmt|;
 comment|/* 	 *  Prepare the bus address array that contains the bus  	 *  address of each target control bloc. 	 *  For now, assume all logical unit are wrong. :) 	 */
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 operator|->
 name|targtbl
 index|[
@@ -40509,42 +40509,42 @@ if|if
 condition|(
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 condition|)
 name|sym_mfree_dma
 argument_list|(
 name|np
 operator|->
-name|scripth0
+name|scriptb0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scrh
+name|sym_scrb
 argument_list|)
 argument_list|,
-literal|"SCRIPTH0"
+literal|"SCRIPTB0"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|np
 operator|->
-name|script0
+name|scripta0
 condition|)
 name|sym_mfree_dma
 argument_list|(
 name|np
 operator|->
-name|script0
+name|scripta0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sym_scr
+name|sym_scra
 argument_list|)
 argument_list|,
-literal|"SCRIPT0"
+literal|"SCRIPTA0"
 argument_list|)
 expr_stmt|;
 if|if
