@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.67 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.68 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1598,6 +1598,7 @@ comment|/*  * Change the mode on a file.  * Inode must be locked before calling.
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_chmod
 parameter_list|(
@@ -1788,6 +1789,7 @@ comment|/*  * Perform chown operation on inode ip;  * inode must be locked prior
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_chown
 parameter_list|(
