@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.18 1995/10/31 20:30:18 jkh Exp $"
+literal|"$Id: file.c,v 1.19 1995/11/12 04:55:38 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2007,6 +2007,13 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/*      * Figure out by a crude heuristic whether this or not this is probably      * compressed.      */
+name|args
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|cp
 operator|=
 name|rindex
