@@ -252,14 +252,13 @@ begin_comment
 comment|/* __GNUC__ */
 end_comment
 
-begin_function
-name|void
-function|\
-name|mcount
-parameter_list|()
-function|\
-block|{			\ }
-end_function
+begin_define
+define|#
+directive|define
+name|MCOUNT
+define|\
+value|void			\ mcount()		\ {			\ }
+end_define
 
 begin_endif
 endif|#
