@@ -85,7 +85,7 @@ block|{
 name|int
 name|freq
 decl_stmt|;
-comment|/* Processor clock in Mhz or percent (in 100ths.) */
+comment|/* CPU clock in Mhz or 100ths of a percent. */
 name|int
 name|volts
 decl_stmt|;
@@ -175,8 +175,15 @@ value|(-1)
 end_define
 
 begin_comment
-comment|/*  * Every driver offers a type of CPU control.  Absolute levels are mutually  * exclusive while relative levels modify the current absolute level.  There  * may be multiple absolute and relative drivers available on a given  * system.  *  * For example, consider a system with two absolute drivers that provide  * frequency settings of 100, 200 and 300, 400 and a relative driver that  * provides settings of 50%, 100%.  The cpufreq core would export frequency  * levels of 50, 100, 150, 200, 300, 400.  */
+comment|/*  * Every driver offers a type of CPU control.  Absolute levels are mutually  * exclusive while relative levels modify the current absolute level.  There  * may be multiple absolute and relative drivers available on a given  * system.  *  * For example, consider a system with two absolute drivers that provide  * frequency settings of 100, 200 and 300, 400 and a relative driver that  * provides settings of 50%, 100%.  The cpufreq core would export frequency  * levels of 50, 100, 150, 200, 300, 400.  *  * The "info only" flag signifies that settings returned by  * CPUFREQ_DRV_SETTINGS cannot be passed to the CPUFREQ_DRV_SET method and  * are only informational.  This is for some drivers that can return  * information about settings but rely on another machine-dependent driver  * for actually performing the frequency transition (e.g., ACPI performance  * states of type "functional fixed hardware.")  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUFREQ_TYPE_MASK
+value|0xffff
+end_define
 
 begin_define
 define|#
@@ -190,6 +197,13 @@ define|#
 directive|define
 name|CPUFREQ_TYPE_ABSOLUTE
 value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUFREQ_FLAG_INFO_ONLY
+value|(1<<16)
 end_define
 
 begin_comment
