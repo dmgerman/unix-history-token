@@ -1717,10 +1717,8 @@ name|mbuf
 operator|*
 name|m
 operator|,
-expr|struct
-name|sockaddr
-operator|*
-name|dst
+name|int
+name|af
 operator|,
 name|int
 name|hlen

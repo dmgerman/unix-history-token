@@ -800,6 +800,8 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
+operator|->
+name|sa_family
 argument_list|,
 literal|0
 argument_list|)
@@ -820,7 +822,7 @@ name|ifp
 parameter_list|,
 name|m
 parameter_list|,
-name|dst
+name|af
 parameter_list|,
 name|hlen
 parameter_list|)
@@ -835,10 +837,8 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|struct
-name|sockaddr
-modifier|*
-name|dst
+name|int
+name|af
 decl_stmt|;
 name|int
 name|hlen
@@ -857,8 +857,8 @@ name|ifq
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 operator|(
 name|m
 operator|->
@@ -866,12 +866,12 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 operator|)
-operator|==
+operator|!=
 literal|0
-condition|)
-name|panic
-argument_list|(
+argument_list|,
+operator|(
 literal|"if_simloop: no HDR"
+operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -885,16 +885,28 @@ expr_stmt|;
 comment|/* BPF write needs to be handled specially */
 if|if
 condition|(
-name|dst
-operator|->
-name|sa_family
+name|af
 operator|==
 name|AF_UNSPEC
 condition|)
 block|{
-name|dst
+name|KASSERT
+argument_list|(
+name|m
 operator|->
-name|sa_family
+name|m_len
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|,
+operator|(
+literal|"if_simloop: m_len"
+operator|)
+argument_list|)
+expr_stmt|;
+name|af
 operator|=
 operator|*
 operator|(
@@ -937,6 +949,7 @@ name|int
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Let BPF see incoming packet */
 if|if
 condition|(
 name|ifp
@@ -952,13 +965,6 @@ modifier|*
 name|n
 init|=
 name|m
-decl_stmt|;
-name|u_int
-name|af
-init|=
-name|dst
-operator|->
-name|sa_family
 decl_stmt|;
 comment|/* 		 * We need to prepend the address family as 		 * a four byte field.  Cons up a dummy header 		 * to pacify bpf.  This is safe because bpf 		 * will only read from the mbuf (i.e., it won't 		 * try to free it or keep a pointer a to it). 		 */
 name|m0
@@ -1069,11 +1075,10 @@ name|hlen
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Deliver to upper layer protocol */
 switch|switch
 condition|(
-name|dst
-operator|->
-name|sa_family
+name|af
 condition|)
 block|{
 ifdef|#
@@ -1178,9 +1183,7 @@ name|printf
 argument_list|(
 literal|"if_simloop: can't handle af=%d\n"
 argument_list|,
-name|dst
-operator|->
-name|sa_family
+name|af
 argument_list|)
 expr_stmt|;
 name|m_freem

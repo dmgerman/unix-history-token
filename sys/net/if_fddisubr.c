@@ -1743,6 +1743,8 @@ argument_list|,
 name|n
 argument_list|,
 name|dst
+operator|->
+name|sa_family
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1786,6 +1788,8 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
+operator|->
+name|sa_family
 argument_list|,
 sizeof|sizeof
 argument_list|(

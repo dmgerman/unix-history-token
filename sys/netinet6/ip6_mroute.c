@@ -6680,13 +6680,9 @@ name|m6_ifp
 argument_list|,
 name|m
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
 name|dst
+operator|.
+name|sin6_family
 argument_list|,
 name|NULL
 argument_list|)
