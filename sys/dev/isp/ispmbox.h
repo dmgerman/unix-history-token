@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispmbox.h,v 1.8 1999/03/25 19:53:54 mjacob Exp $ */
+comment|/* $Id: ispmbox.h,v 1.9 1999/04/04 01:32:09 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_4_3_99 */
+comment|/* release_5_11_99 */
 end_comment
 
 begin_comment
@@ -300,9 +300,12 @@ name|MBOX_GET_DEV_QUEUE_PARAMS
 value|0x0029
 end_define
 
-begin_comment
-comment|/*  2a */
-end_comment
+begin_define
+define|#
+directive|define
+name|MBOX_GET_RESET_DELAY_PARAMS
+value|0x002a
+end_define
 
 begin_comment
 comment|/*  2b */
@@ -362,7 +365,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MBOX_SET_ACTIVE_NEG_STATE
+name|MBOX_SET_ACT_NEG_STATE
 value|0x0035
 end_define
 
@@ -401,9 +404,12 @@ name|MBOX_SET_DEV_QUEUE_PARAMS
 value|0x0039
 end_define
 
-begin_comment
-comment|/*  3a */
-end_comment
+begin_define
+define|#
+directive|define
+name|MBOX_SET_RESET_DELAY_PARAMS
+value|0x003a
+end_define
 
 begin_comment
 comment|/*  3b */
