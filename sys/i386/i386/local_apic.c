@@ -1950,7 +1950,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|" LINT%u polarity: active-%s\n"
+literal|" LINT%u polarity: %s\n"
 argument_list|,
 name|pin
 argument_list|,
