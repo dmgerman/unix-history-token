@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.79 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.80 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.79 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.80 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2337,15 +2337,43 @@ argument_list|()
 argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|msg
+init|=
+literal|"Skipping queue run -- load average too high"
+decl_stmt|;
 if|if
 condition|(
 name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Skipping queue run -- load average too high\n"
+literal|"%s\n"
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"runqueue: %s"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|forkflag
