@@ -711,6 +711,14 @@ literal|"Intel 443MX"
 block|}
 block|,
 block|{
+literal|0x24138086
+block|,
+literal|0
+block|,
+literal|"Intel 82801AA (ICH)"
+block|}
+block|,
+block|{
 literal|0x24158086
 block|,
 literal|0
