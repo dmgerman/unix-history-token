@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -105,18 +105,6 @@ directive|include
 file|"tty.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"machine/reg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/psl.h"
-end_include
-
 begin_comment
 comment|/*  * Is p an inferior of the current process?  */
 end_comment
@@ -141,9 +129,7 @@ control|(
 init|;
 name|p
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|curproc
 condition|;
 name|p
 operator|=
@@ -155,7 +141,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_ppid
+name|p_pid
 operator|==
 literal|0
 condition|)
@@ -315,7 +301,7 @@ comment|/*  * Move p to a new or existing process group (and session)  */
 end_comment
 
 begin_expr_stmt
-name|pgmv
+name|enterpgrp
 argument_list|(
 name|p
 argument_list|,
@@ -378,7 +364,7 @@ condition|)
 comment|/* firewalls */
 name|panic
 argument_list|(
-literal|"pgmv: setsid into non-empty pgrp"
+literal|"enterpgrp: setsid into non-empty pgrp"
 argument_list|)
 expr_stmt|;
 if|if
@@ -390,7 +376,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"pgmv: session leader attempted setpgrp"
+literal|"enterpgrp: session leader attempted setpgrp"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -416,7 +402,7 @@ name|pgid
 condition|)
 name|panic
 argument_list|(
-literal|"pgmv: new pgrp and pid != pgid"
+literal|"enterpgrp: new pgrp and pid != pgid"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -515,13 +501,11 @@ if|if
 condition|(
 name|p
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|curproc
 condition|)
 name|panic
 argument_list|(
-literal|"pgmv: mksession and p != u.u_procp"
+literal|"enterpgrp: mksession and p != curproc"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -662,7 +646,7 @@ goto|;
 block|}
 name|panic
 argument_list|(
-literal|"pgmv: can't find p on old pgrp"
+literal|"enterpgrp: can't find p on old pgrp"
 argument_list|)
 expr_stmt|;
 name|done
@@ -714,7 +698,7 @@ comment|/*  * remove process from process group  */
 end_comment
 
 begin_expr_stmt
-name|pgrm
+name|leavepgrp
 argument_list|(
 name|p
 argument_list|)
@@ -779,7 +763,7 @@ goto|;
 block|}
 name|panic
 argument_list|(
-literal|"pgrm: can't find p in pgrp"
+literal|"leavepgrp: can't find p in pgrp"
 argument_list|)
 expr_stmt|;
 name|done
@@ -1201,74 +1185,6 @@ block|}
 return|return;
 block|}
 block|}
-block|}
-end_block
-
-begin_comment
-comment|/*  * init the process queues  */
-end_comment
-
-begin_macro
-name|pqinit
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-comment|/* 	 * most procs are initially on freequeue 	 *	nb: we place them there in their "natural" order. 	 */
-name|freeproc
-operator|=
-name|NULL
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|procNPROC
-init|;
-operator|--
-name|p
-operator|>
-name|proc
-condition|;
-name|freeproc
-operator|=
-name|p
-control|)
-name|p
-operator|->
-name|p_nxt
-operator|=
-name|freeproc
-expr_stmt|;
-comment|/* 	 * but proc[0] is special ... 	 */
-name|allproc
-operator|=
-name|p
-expr_stmt|;
-name|p
-operator|->
-name|p_nxt
-operator|=
-name|NULL
-expr_stmt|;
-name|p
-operator|->
-name|p_prev
-operator|=
-operator|&
-name|allproc
-expr_stmt|;
-name|zombproc
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 end_block
 
