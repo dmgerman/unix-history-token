@@ -5431,6 +5431,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -5501,6 +5505,10 @@ argument_list|)
 expr_stmt|;
 comment|/*XXX???*/
 comment|/* resource_list_init(&dinfo->cfg.resources); */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"pci%d:%d:%d: reprobing on driver added\n"
@@ -7872,7 +7880,10 @@ name|res
 operator|=
 name|res
 expr_stmt|;
-comment|/* if (bootverbose) */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|child
@@ -8188,7 +8199,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* if (bootverbose) */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|child
@@ -8943,6 +8957,10 @@ name|PCI_POWERSTATE_D0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"pci%d:%d:%d: Transition from D%d to D0\n"
@@ -9381,6 +9399,10 @@ operator|!=
 name|PCI_POWERSTATE_D3
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"pci%d:%d:%d: Transition from D%d to D0\n"
@@ -9424,6 +9446,10 @@ operator|!=
 name|PCI_POWERSTATE_D3
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"pci%d:%d:%d: Transition from D0 to D3\n"
