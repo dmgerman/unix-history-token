@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)curses.c	8.1 (Berkeley) %G%"
+literal|"@(#)curses.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,8 +93,6 @@ decl_stmt|,
 name|EO
 decl_stmt|,
 name|HC
-decl_stmt|,
-name|HZ
 decl_stmt|,
 name|IN
 decl_stmt|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	8.1 (Berkeley) %G%"
+literal|"@(#)setterm.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|sflags
 index|[]
 init|=
 block|{
-comment|/*       am   bs   da   eo   hc   hz   in   mi   ms  */
+comment|/*       am   bs   da   eo   hc   in   mi   ms  */
 operator|&
 name|AM
 block|,
@@ -94,9 +94,6 @@ name|EO
 block|,
 operator|&
 name|HC
-block|,
-operator|&
-name|HZ
 block|,
 operator|&
 name|IN
@@ -795,7 +792,7 @@ literal|'\0'
 expr_stmt|;
 name|namp
 operator|=
-literal|"ambsdaeohchzinmimsncnsosulxbxnxtxsxx"
+literal|"ambsdaeohcinmimsncnsosulxbxnxtxsxx"
 expr_stmt|;
 name|fp
 operator|=
