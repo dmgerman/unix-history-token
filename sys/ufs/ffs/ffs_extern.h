@@ -89,12 +89,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|vop_bmap_args
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|vop_fsync_args
 struct_decl|;
 end_struct_decl
@@ -210,20 +204,6 @@ operator|,
 name|int
 operator|,
 name|ufs_daddr_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ffs_bmap
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_bmap_args
 operator|*
 operator|)
 argument_list|)
