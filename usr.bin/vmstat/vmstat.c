@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)vmstat.c	8.2 (Berkeley) 3/1/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -3183,6 +3183,42 @@ argument_list|,
 name|sum
 operator|.
 name|v_page_size
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u target inactive pages\n"
+argument_list|,
+name|sum
+operator|.
+name|v_inactive_target
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u target free pages\n"
+argument_list|,
+name|sum
+operator|.
+name|v_free_target
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u minimum free pages\n"
+argument_list|,
+name|sum
+operator|.
+name|v_free_min
 argument_list|)
 expr_stmt|;
 else|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinit.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)wwinit.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,8 +79,7 @@ name|s
 decl_stmt|;
 name|wwdtablesize
 operator|=
-name|getdtablesize
-argument_list|()
+literal|3
 expr_stmt|;
 name|wwhead
 operator|.

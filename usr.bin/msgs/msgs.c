@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)msgs.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -130,12 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -155,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -522,13 +528,6 @@ name|keep
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|sgttyb
-name|otty
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|char
 modifier|*
@@ -696,17 +695,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|gtty
-argument_list|(
-name|fileno
-argument_list|(
-name|stdout
-argument_list|)
-argument_list|,
-operator|&
-name|otty
-argument_list|)
-expr_stmt|;
 name|time
 argument_list|(
 operator|&
@@ -2797,15 +2785,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* trick to force wait on output */
-name|stty
+name|tcdrain
 argument_list|(
 name|fileno
 argument_list|(
 name|stdout
 argument_list|)
-argument_list|,
-operator|&
-name|otty
 argument_list|)
 expr_stmt|;
 block|}

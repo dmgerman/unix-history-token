@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tput.c	8.2 (Berkeley) 3/19/94"
+literal|"@(#)tput.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -830,7 +830,7 @@ argument_list|,
 name|cap
 argument_list|)
 expr_stmt|;
-name|arg_cols
+name|arg_rows
 operator|=
 name|atoi
 argument_list|(
@@ -865,7 +865,7 @@ argument_list|,
 name|cap
 argument_list|)
 expr_stmt|;
-name|arg_rows
+name|arg_cols
 operator|=
 name|atoi
 argument_list|(

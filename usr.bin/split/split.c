@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)split.c	8.2 (Berkeley) 4/16/94"
+literal|"@(#)split.c	8.3 (Berkeley) 4/25/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,7 +524,7 @@ operator|<=
 literal|0
 operator|||
 operator|*
-name|p
+name|ep
 condition|)
 name|errx
 argument_list|(

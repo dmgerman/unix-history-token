@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	8.3 (Berkeley) 4/2/94"
+literal|"@(#)misc.c	8.4 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,18 +468,17 @@ name|void
 name|badfmt
 parameter_list|()
 block|{
-name|errx
+name|errno
+operator|=
+name|EFTYPE
+expr_stmt|;
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|archive
-argument_list|,
-name|strerror
-argument_list|(
-name|EFTYPE
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -496,7 +495,7 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,

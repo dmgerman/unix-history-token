@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quota.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)quota.c	8.4 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,19 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/quota.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fstab.h>
 end_include
 
 begin_include
@@ -102,7 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fstab.h>
 end_include
 
 begin_include
@@ -114,7 +114,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_decl_stmt
@@ -201,7 +207,8 @@ decl_stmt|;
 block|{
 name|int
 name|ngroups
-decl_stmt|,
+decl_stmt|;
+name|gid_t
 name|gidset
 index|[
 name|NGROUPS
@@ -782,7 +789,8 @@ argument_list|)
 decl_stmt|;
 name|int
 name|ngroups
-decl_stmt|,
+decl_stmt|;
+name|gid_t
 name|gidset
 index|[
 name|NGROUPS
@@ -928,7 +936,8 @@ argument_list|)
 decl_stmt|;
 name|int
 name|ngroups
-decl_stmt|,
+decl_stmt|;
+name|gid_t
 name|gidset
 index|[
 name|NGROUPS
@@ -2063,7 +2072,7 @@ argument_list|(
 name|fd
 argument_list|,
 call|(
-name|long
+name|off_t
 call|)
 argument_list|(
 name|id

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)write.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)write.c	8.2 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -224,23 +230,13 @@ name|stderr
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"write: can't find your tty\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't find your tty"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -253,28 +249,18 @@ name|myttyfd
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"write: can't find your tty's name\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't find your tty's name"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|mytty
 argument_list|,
@@ -312,23 +298,13 @@ condition|(
 operator|!
 name|msgsok
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"write: you have write permission turned off.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"you have write permission turned off"
 argument_list|)
 expr_stmt|;
-block|}
 name|myuid
 operator|=
 name|getuid
@@ -407,15 +383,11 @@ literal|2
 index|]
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"write: %s is not logged in on %s.\n"
+literal|"%s is not logged in on %s"
 argument_list|,
 name|argv
 index|[
@@ -428,12 +400,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|term_chk
@@ -464,15 +430,11 @@ operator|&&
 operator|!
 name|msgsok
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"write: %s has messages disabled on %s\n"
+literal|"%s has messages disabled on %s"
 argument_list|,
 name|argv
 index|[
@@ -485,12 +447,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|do_write
 argument_list|(
 name|argv
@@ -755,18 +711,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"utmp"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
-block|}
 name|nloggedttys
 operator|=
 name|nttys
@@ -935,25 +888,15 @@ name|nloggedttys
 operator|==
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"write: %s is not logged in\n"
+literal|"%s is not logged in"
 argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|nttys
@@ -979,21 +922,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"write: %s has messages disabled\n"
-argument_list|,
-name|user
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s has messages disabled"
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 block|}
@@ -1004,22 +939,15 @@ name|nttys
 operator|>
 literal|1
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"write: %s is logged in more than once; writing to %s\n"
+literal|"%s is logged in more than once; writing to %s"
 argument_list|,
 name|user
 argument_list|,
 name|tty
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -1104,21 +1032,11 @@ if|if
 condition|(
 name|showerror
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"write: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|path
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1296,30 +1214,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"write: %s: %s\n"
-argument_list|,
-name|path
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1569,24 +1472,11 @@ block|}
 return|return;
 name|err
 label|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"write: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 undef|#

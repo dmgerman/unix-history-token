@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nice.c	8.2 (Berkeley) 4/16/94"
+literal|"@(#)nice.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,18 @@ name|argv
 index|[
 literal|1
 index|]
+operator|==
+name|NULL
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
 index|[
 literal|0
 index|]
@@ -205,6 +217,18 @@ expr_stmt|;
 operator|++
 name|argv
 expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 name|errx
@@ -218,18 +242,6 @@ index|[
 literal|1
 index|]
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|argv
-index|[
-literal|1
-index|]
-operator|==
-name|NULL
-condition|)
-name|usage
-argument_list|()
 expr_stmt|;
 name|errno
 operator|=

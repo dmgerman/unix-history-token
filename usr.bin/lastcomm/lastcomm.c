@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lastcomm.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)lastcomm.c	8.2 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -828,15 +828,13 @@ modifier|*
 name|acp
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 do|do
 block|{
-name|p
-operator|=
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
 name|user_from_uid
 argument_list|(
 name|acp
@@ -845,13 +843,6 @@ name|ac_uid
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|p
 argument_list|,
 operator|*
 name|argv
@@ -864,21 +855,15 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
-name|p
-operator|=
+operator|!
+name|strcmp
+argument_list|(
 name|getdev
 argument_list|(
 name|acp
 operator|->
 name|ac_tty
 argument_list|)
-operator|)
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|p
 argument_list|,
 operator|*
 name|argv
@@ -984,6 +969,9 @@ name|lastdev
 operator|=
 name|dev
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|lastname
 operator|=
 name|devname
@@ -992,6 +980,13 @@ name|dev
 argument_list|,
 name|S_IFCHR
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|lastname
+operator|=
+literal|"??"
 expr_stmt|;
 return|return
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)archive.c	8.3 (Berkeley) 4/2/94"
+literal|"@(#)archive.c	8.4 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -931,7 +931,7 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"warning: %s truncated to %.*s\n"
+literal|"warning: %s truncated to %.*s"
 argument_list|,
 name|name
 argument_list|,
@@ -1375,7 +1375,13 @@ name|flags
 operator|&
 name|RPAD
 operator|&&
+operator|(
 name|size
+operator|+
+name|chdr
+operator|.
+name|lname
+operator|)
 operator|&
 literal|1
 operator|&&

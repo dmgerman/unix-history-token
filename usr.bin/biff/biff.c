@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)biff.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)biff.c	8.2 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -95,6 +95,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -108,21 +114,8 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -200,23 +193,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"biff: unknown tty\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"tty"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|stat
@@ -229,7 +212,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-name|name
+literal|2
+argument_list|,
+literal|"stat"
 argument_list|)
 expr_stmt|;
 if|if
@@ -304,6 +289,8 @@ literal|0
 condition|)
 name|err
 argument_list|(
+literal|2
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -328,6 +315,8 @@ literal|0
 condition|)
 name|err
 argument_list|(
+literal|2
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -348,43 +337,6 @@ condition|?
 literal|0
 else|:
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|err
-parameter_list|(
-name|name
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"biff: %s: %s\n"
-argument_list|,
-name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|2
 argument_list|)
 expr_stmt|;
 block|}

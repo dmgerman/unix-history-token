@@ -61,7 +61,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	8.1 (Berkeley) 7/20/93"
+literal|"@(#)printf.c	8.2 (Berkeley) 3/22/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1052,10 +1052,14 @@ name|store
 operator|=
 name|fmt
 init|;
+operator|(
 name|c
 operator|=
 operator|*
 name|fmt
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|fmt

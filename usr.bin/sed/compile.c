@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compile.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)compile.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -916,16 +916,6 @@ name|naddr
 operator|=
 literal|0
 expr_stmt|;
-name|cmd
-operator|->
-name|a1
-operator|=
-name|cmd
-operator|->
-name|a2
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Valid characters to start an address */
 define|#
 directive|define
@@ -982,9 +972,6 @@ operator|==
 literal|','
 condition|)
 block|{
-name|naddr
-operator|++
-expr_stmt|;
 name|p
 operator|++
 expr_stmt|;
@@ -992,6 +979,9 @@ name|EATSPACE
 argument_list|()
 expr_stmt|;
 comment|/* EXTENSION */
+name|naddr
+operator|++
+expr_stmt|;
 name|cmd
 operator|->
 name|a2
@@ -1016,14 +1006,32 @@ operator|->
 name|a2
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-name|nonsel
-label|:
-comment|/* Now parse the command */
 name|EATSPACE
 argument_list|()
 expr_stmt|;
+block|}
+else|else
+name|cmd
+operator|->
+name|a2
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|cmd
+operator|->
+name|a1
+operator|=
+name|cmd
+operator|->
+name|a2
+operator|=
+literal|0
+expr_stmt|;
+name|nonsel
+label|:
+comment|/* Now parse the command */
 if|if
 condition|(
 operator|!
@@ -1119,6 +1127,12 @@ case|case
 name|NONSEL
 case|:
 comment|/* ! */
+name|p
+operator|++
+expr_stmt|;
+name|EATSPACE
+argument_list|()
+expr_stmt|;
 name|cmd
 operator|->
 name|nonsel
@@ -1127,9 +1141,6 @@ operator|!
 name|cmd
 operator|->
 name|nonsel
-expr_stmt|;
-name|p
-operator|++
 expr_stmt|;
 goto|goto
 name|nonsel
@@ -1200,6 +1211,23 @@ operator|&
 name|cmd2
 operator|->
 name|next
+expr_stmt|;
+comment|/* 			 * Short-circuit command processing, since end of 			 * group is really just a noop. 			 */
+name|cmd2
+operator|->
+name|nonsel
+operator|=
+literal|1
+expr_stmt|;
+name|cmd2
+operator|->
+name|a1
+operator|=
+name|cmd2
+operator|->
+name|a2
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case

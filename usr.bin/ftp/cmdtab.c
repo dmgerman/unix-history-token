@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	8.3 (Berkeley) 4/2/94"
+literal|"@(#)cmdtab.c	8.4 (Berkeley) 10/9/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -509,6 +509,15 @@ name|sendhelp
 index|[]
 init|=
 literal|"send one file"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|passivehelp
+index|[]
+init|=
+literal|"enter passive transfer mode"
 decl_stmt|;
 end_decl_stmt
 
@@ -1208,6 +1217,20 @@ block|,
 literal|1
 block|,
 name|setpeer
+block|}
+block|,
+block|{
+literal|"passive"
+block|,
+name|passivehelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|setpassive
 block|}
 block|,
 block|{

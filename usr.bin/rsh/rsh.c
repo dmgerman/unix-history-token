@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	8.3 (Berkeley) 4/6/94"
+literal|"@(#)rsh.c	8.4 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -714,6 +714,56 @@ argument_list|,
 literal|"unknown user id"
 argument_list|)
 expr_stmt|;
+comment|/* Accept user1@host format, though "-l user2" overrides user1 */
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|host
+argument_list|,
+literal|'@'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+condition|)
+block|{
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|user
+operator|&&
+name|p
+operator|>
+name|host
+condition|)
+name|user
+operator|=
+name|host
+expr_stmt|;
+name|host
+operator|=
+name|p
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|host
+operator|==
+literal|'\0'
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2185,7 +2235,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rsh [-nd%s]%s[-l login] host [command]\n"
+literal|"usage: rsh [-nd%s]%s[-l login] [login@]host [command]\n"
 argument_list|,
 ifdef|#
 directive|ifdef

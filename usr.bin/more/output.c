@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)output.c	8.2 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -565,6 +565,13 @@ name|any_display
 condition|)
 block|{
 comment|/* 		 * Nothing has been displayed yet.  Output this message on 		 * error output (file descriptor 2) and don't wait for a 		 * keystroke to continue. 		 * 		 * This has the desirable effect of producing all error 		 * messages on error output if standard output is directed 		 * to a file.  It also does the same if we never produce 		 * any real output; for example, if the input file(s) cannot 		 * be opened.  If we do eventually produce output, code in 		 * edit() makes sure these messages can be seen before they 		 * are overwritten or scrolled away. 		 */
+if|if
+condition|(
+name|s
+operator|!=
+name|NULL
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -592,6 +599,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 name|lower_left
@@ -606,6 +614,8 @@ expr_stmt|;
 if|if
 condition|(
 name|s
+operator|!=
+name|NULL
 condition|)
 block|{
 name|putstr
@@ -658,10 +668,18 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|s
+operator|!=
+name|NULL
+condition|?
 name|strlen
 argument_list|(
 name|s
 argument_list|)
+else|:
+literal|0
+operator|)
 operator|+
 sizeof|sizeof
 argument_list|(
