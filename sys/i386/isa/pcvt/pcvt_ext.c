@@ -11667,6 +11667,7 @@ case|case
 name|KDENABIO
 case|:
 comment|/* grant the process IO access; only allowed if euid == 0 */
+comment|/* and insecure */
 block|{
 if|#
 directive|if
@@ -11736,8 +11737,8 @@ name|p_regs
 decl_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
+name|error
+operator|=
 name|suser
 argument_list|(
 name|p
@@ -11749,7 +11750,22 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|securelevel
+operator|>
 literal|0
 condition|)
 return|return

@@ -51,12 +51,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -237,6 +231,12 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/pcvt/pcvt_conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/kbdio.h>
 end_include
 
 begin_if
@@ -492,36 +492,6 @@ end_endif
 begin_comment
 comment|/* PCVT_NETBSD<= 9 */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>=
-literal|200
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"machine/stdarg.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -1100,6 +1070,12 @@ begin_comment
 comment|/*---------------------------------------------------------------------------*  *	Keyboard and Keyboard Controller  *---------------------------------------------------------------------------*/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1444,6 +1420,15 @@ end_define
 
 begin_comment
 comment|/* set/reset numlock,capslock& scroll lock */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _I386_ISA_KBDIO_H_ */
 end_comment
 
 begin_comment
@@ -4377,7 +4362,7 @@ begin_define
 define|#
 directive|define
 name|UPDATE_START
-value|0
+value|((void *)0)
 end_define
 
 begin_comment
@@ -4388,7 +4373,7 @@ begin_define
 define|#
 directive|define
 name|UPDATE_STOP
-value|1
+value|((void *)1)
 end_define
 
 begin_comment
@@ -4399,7 +4384,7 @@ begin_define
 define|#
 directive|define
 name|UPDATE_KERN
-value|2
+value|((void *)2)
 end_define
 
 begin_comment
@@ -5964,6 +5949,45 @@ begin_comment
 comment|/* keyboard is being polled */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+end_ifdef
+
+begin_decl_stmt
+name|u_char
+name|reset_keyboard
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* OK to reset keyboard */
+end_comment
+
+begin_decl_stmt
+name|KBDC
+name|kbdc
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* keyboard controller */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _I386_ISA_KBDIO_H_ */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -6900,6 +6924,35 @@ name|kbd_polling
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|reset_keyboard
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|KBDC
+name|kbdc
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _I386_ISA_KBDIO_H_ */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -7115,42 +7168,6 @@ define|#
 directive|define
 name|Dev_t
 value|dev_t
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* in FreeBSD> 102 arguments for timeout()/untimeout() are a special type */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|102
-end_if
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT_FUNC_T
-value|timeout_func_t
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT_FUNC_T
-value|void *
 end_define
 
 begin_endif
@@ -7589,7 +7606,8 @@ begin_function_decl
 name|void
 name|async_update
 parameter_list|(
-name|int
+name|void
+modifier|*
 name|arg
 parameter_list|)
 function_decl|;
@@ -7711,6 +7729,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
+end_ifndef
+
 begin_function_decl
 name|int
 name|kbd_cmd
@@ -7720,6 +7744,24 @@ name|val
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|kbd_response
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _I386_ISA_KBDIO_H_ */
+end_comment
 
 begin_function_decl
 name|void

@@ -95,6 +95,36 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|PCVT_FREEBSD
+operator|>=
+literal|200
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"machine/stdarg.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -142,10 +172,6 @@ end_decl_stmt
 begin_comment
 comment|/*0xffe */
 end_comment
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_expr_stmt
 specifier|static
@@ -413,6 +439,24 @@ endif|#
 directive|endif
 comment|/* PCVT_NETBSD> 100 */
 block|{
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+name|kbdc
+operator|=
+name|kbdc_open
+argument_list|(
+name|IO_KBD
+argument_list|)
+expr_stmt|;
+name|reset_keyboard
+operator|=
+literal|1
+expr_stmt|;
+comment|/* it's now safe to do kbd reset */
+endif|#
+directive|endif
+comment|/* _I386_ISA_KBDIO_H_ */
 name|kbd_code_init
 argument_list|()
 expr_stmt|;
@@ -3038,6 +3082,14 @@ name|s
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+name|int
+name|c
+decl_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* !PCVT_KBD_FIFO */
@@ -3072,6 +3124,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
 while|while
 condition|(
 name|inb
@@ -3100,6 +3155,35 @@ name|CONTROLLER_DATA
 argument_list|)
 expr_stmt|;
 comment|/* get it 8042 data */
+else|#
+directive|else
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|read_kbd_data_no_wait
+argument_list|(
+name|kbdc
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+comment|/* got something */
+name|dt
+operator|=
+name|c
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _I386_ISA_KBDIO_H_ */
 if|if
 condition|(
 name|pcvt_kbd_count
@@ -3176,17 +3260,13 @@ expr_stmt|;
 comment|/* flag active */
 name|timeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|pcvt_timeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
+name|NULL
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
 comment|/* fire off */
@@ -3883,6 +3963,49 @@ name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+name|kbdc
+operator|=
+name|kbdc_open
+argument_list|(
+name|IO_KBD
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Don't reset the keyboard via `kbdio' just yet. 	 * The system clock has not been calibrated... 	 */
+name|reset_keyboard
+operator|=
+literal|0
+expr_stmt|;
+if|#
+directive|if
+name|PCVT_SCANSET
+operator|==
+literal|2
+comment|/* 	 * Turn off scancode translation early so that UserConfig  	 * and DDB can read the keyboard. 	 */
+name|empty_both_buffers
+argument_list|(
+name|kbdc
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|set_controller_command_byte
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBD_TRANSLATION
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_SCANSET == 2 */
+endif|#
+directive|endif
+comment|/* _I386_ISA_KBDIO_H_ */
 comment|/* 	 * Take control if we are the highest priority enabled display device. 	 */
 name|dvp
 operator|=
@@ -4845,7 +4968,7 @@ name|XSERVER
 operator|&&
 operator|!
 name|PCVT_USL_VT_COMPAT
-comment|/*----------------------------------------------------------------------*  *	initialize for X mode  *	i.e.: grant current process (the X server) all IO priviledges,  *	and mark in static variable so other hooks can test for it,  *	save all loaded fonts and screen pages to pageable buffers;  *	if parameter `on' is false, the same procedure is done reverse.  *----------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------*  *	initialize for X mode  *	i.e.: grant current process (the X server) all IO privileges,  *	and mark in static variable so other hooks can test for it,  *	save all loaded fonts and screen pages to pageable buffers;  *	if parameter `on' is false, the same procedure is done reverse.  *----------------------------------------------------------------------*/
 specifier|static
 name|int
 name|pcvt_xmode_set
@@ -4909,6 +5032,8 @@ endif|#
 directive|endif
 comment|/* PCVT_NETBSD> 9 */
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* X will only run on VGA and Hercules adaptors */
@@ -4964,9 +5089,9 @@ condition|(
 name|on
 condition|)
 block|{
-comment|/* 		 * Test whether the calling process has super-user priviledges. 		 * This prevents us from granting the potential security hole 		 * `IO priv' to any process (effective uid is checked). 		 */
-if|if
-condition|(
+comment|/* 		 * Test whether the calling process has super-user privileges 		 * and we're in insecure mode. 		 * This prevents us from granting the potential security hole 		 * `IO priv' to insufficiently privileged processes. 		 */
+name|error
+operator|=
 name|suser
 argument_list|(
 name|p
@@ -4978,7 +5103,22 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|securelevel
+operator|>
 literal|0
 condition|)
 return|return
@@ -5148,6 +5288,9 @@ operator|->
 name|Memory
 expr_stmt|;
 comment|/* operate in memory now */
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
 if|#
 directive|if
 name|PCVT_SCANSET
@@ -5200,6 +5343,30 @@ comment|/* PCVT_USEKBDSEC */
 endif|#
 directive|endif
 comment|/* PCVT_SCANSET == 2 */
+else|#
+directive|else
+comment|/* _I386_ISA_KBDIO_H_ */
+if|#
+directive|if
+name|PCVT_SCANSET
+operator|==
+literal|2
+comment|/* put keyboard to return ancient PC scan codes */
+name|set_controller_command_byte
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBD_TRANSLATION
+argument_list|,
+name|KBD_TRANSLATION
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_SCANSET == 2 */
+endif|#
+directive|endif
+comment|/* !_I386_ISA_KBDIO_H_ */
 if|#
 directive|if
 name|PCVT_NETBSD
@@ -5332,6 +5499,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PCVT_SCREENSAVER */
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
 if|#
 directive|if
 name|PCVT_SCANSET
@@ -5379,6 +5549,29 @@ comment|/* PCVT_USEKBDSEC */
 endif|#
 directive|endif
 comment|/* PCVT_SCANSET == 2 */
+else|#
+directive|else
+comment|/* _I386_ISA_KBDIO_H_ */
+if|#
+directive|if
+name|PCVT_SCANSET
+operator|==
+literal|2
+name|set_controller_command_byte
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBD_TRANSLATION
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_SCANSET == 2 */
+endif|#
+directive|endif
+comment|/* !_I386_ISA_KBDIO_H_ */
 if|if
 condition|(
 name|adaptor_type
