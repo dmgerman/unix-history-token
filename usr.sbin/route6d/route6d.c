@@ -3427,6 +3427,12 @@ name|SOCK_DGRAM
 expr_stmt|;
 name|hints
 operator|.
+name|ai_protocol
+operator|=
+name|IPPROTO_UDP
+expr_stmt|;
+name|hints
+operator|.
 name|ai_flags
 operator|=
 name|AI_PASSIVE
@@ -3715,6 +3721,12 @@ operator|.
 name|ai_socktype
 operator|=
 name|SOCK_DGRAM
+expr_stmt|;
+name|hints
+operator|.
+name|ai_protocol
+operator|=
+name|IPPROTO_UDP
 expr_stmt|;
 name|error
 operator|=
