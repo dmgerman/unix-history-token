@@ -1895,6 +1895,12 @@ argument_list|()
 operator|||
 name|buf_dirty_count_severe
 argument_list|()
+operator|||
+operator|(
+name|ioflag
+operator|&
+name|IO_ASYNC
+operator|)
 condition|)
 block|{
 name|bp

@@ -861,6 +861,17 @@ begin_comment
 comment|/* invalidate after I/O */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IO_ASYNC
+value|0x80
+end_define
+
+begin_comment
+comment|/* bawrite rather then bdwrite */
+end_comment
+
 begin_comment
 comment|/*  *  Modes.  Some values same as Ixxx entries from inode.h for now.  */
 end_comment

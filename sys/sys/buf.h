@@ -280,6 +280,10 @@ name|long
 name|b_bufsize
 decl_stmt|;
 comment|/* Allocated buffer size. */
+name|long
+name|b_runningbufspace
+decl_stmt|;
+comment|/* when I/O is running, pipelining */
 name|caddr_t
 name|b_kvabase
 decl_stmt|;
@@ -2134,6 +2138,13 @@ end_decl_stmt
 begin_comment
 comment|/* The number of buffer headers */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|runningbufspace
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
