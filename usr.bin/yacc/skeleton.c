@@ -107,10 +107,26 @@ literal|"#define yyerrok (yyerrflag=0)"
 block|,
 literal|"#define YYRECOVERING (yyerrflag!=0)"
 block|,
-literal|"extern int yylex();"
+literal|"#if defined(c_plusplus) || defined(__cplusplus)"
 block|,
-literal|"extern int yyparse();"
+comment|/* Declaring standard functions is too painful for C++. */
+literal|"#include<stdlib.h>"
 block|,
+literal|"#else"
+block|,
+comment|/* Declare standard functions to avoid depending on<stdlib.h>. */
+literal|"extern char *getenv();"
+block|,
+literal|"extern void *realloc();"
+block|,
+literal|"#endif"
+block|,
+if|#
+directive|if
+literal|0
+block|"extern int yylex();",     "extern int yyparse();",
+endif|#
+directive|endif
 literal|"static int yygrowstack();"
 block|,
 literal|0
