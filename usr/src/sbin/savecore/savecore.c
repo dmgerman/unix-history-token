@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.5 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,13 +159,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|SHUTDOWNLOG
-value|"/usr/adm/shutdownlog"
-end_define
 
 begin_decl_stmt
 name|struct
@@ -594,7 +587,7 @@ literal|"savecore"
 argument_list|,
 name|LOG_ODELAY
 argument_list|,
-name|LOG_USER
+name|LOG_AUTH
 argument_list|)
 expr_stmt|;
 if|if
