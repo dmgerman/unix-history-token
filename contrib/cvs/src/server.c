@@ -17891,12 +17891,12 @@ name|username
 expr_stmt|;
 if|if
 condition|(
-name|found_passwd
+name|found_password
 operator|==
 name|NULL
 operator|||
 operator|*
-name|found_passwd
+name|found_password
 operator|==
 literal|'\0'
 operator|||
