@@ -1694,6 +1694,10 @@ name|bp
 operator|->
 name|bio_flags
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|bio_blkno
