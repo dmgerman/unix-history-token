@@ -1524,6 +1524,46 @@ init|=
 name|environ
 decl_stmt|;
 comment|/* pointer to an environment setting */
+if|if
+condition|(
+name|shell
+operator|==
+name|CSHELL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+operator|*
+name|spoolfile
+argument_list|,
+literal|"if ($?histchars) then\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+operator|*
+name|spoolfile
+argument_list|,
+literal|"set xxhist=$histchars\nendif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+operator|*
+name|spoolfile
+argument_list|,
+literal|"set histchars=''\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+operator|*
+name|spoolfile
+argument_list|,
+literal|"set noglob\n"
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|*
@@ -1739,6 +1779,46 @@ argument_list|)
 expr_stmt|;
 operator|++
 name|environptr
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|shell
+operator|==
+name|CSHELL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+operator|*
+name|spoolfile
+argument_list|,
+literal|"unset noglob\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+operator|*
+name|spoolfile
+argument_list|,
+literal|"if ($?xxhist) then\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+operator|*
+name|spoolfile
+argument_list|,
+literal|"set histchars=$xxhist\nelse\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+operator|*
+name|spoolfile
+argument_list|,
+literal|"unset histchars\nendif\n"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * My god, it worked! (I hope) 	 */
