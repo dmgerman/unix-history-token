@@ -88,19 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ktr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/reboot.h>
 end_include
 
 begin_include
@@ -9022,7 +9010,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-empty_stmt|;
+continue|continue;
 name|splx
 argument_list|(
 name|s
@@ -9498,9 +9486,6 @@ block|}
 block|}
 else|else
 block|{
-name|vm_page_t
-name|m
-decl_stmt|;
 name|int
 name|desiredpages
 decl_stmt|;
@@ -9595,6 +9580,9 @@ operator|->
 name|b_npages
 condition|)
 block|{
+name|vm_page_t
+name|m
+decl_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
