@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.19		%G%"
+literal|"@(#)sendmail.h	5.20		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2967,12 +2967,12 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|WildcardMX
+name|NoWildcardMX
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* we have wildcard MX records */
+comment|/* we don't have wildcard MX records */
 end_comment
 
 begin_decl_stmt

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.27 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.28 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.27 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.28 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -914,7 +914,7 @@ literal|0
 expr_stmt|;
 name|loop
 label|:
-comment|/* 	 * Use query type of ANY if possible (NO_WILDCARD_MX), which will 	 * find types CNAME, A, and MX, and will cause all existing records 	 * to be cached by our local server.  If there is (might be) a 	 * wildcard MX record in the local domain or its parents that are 	 * searched, we can't use ANY; it would cause fully-qualified names 	 * to match as names in a local domain. 	 */
+comment|/* 	 * Use query type of ANY if possible (NoWildcardMX), which will 	 * find types CNAME, A, and MX, and will cause all existing records 	 * to be cached by our local server.  If there is (might be) a 	 * wildcard MX record in the local domain or its parents that are 	 * searched, we can't use ANY; it would cause fully-qualified names 	 * to match as names in a local domain. 	 */
 name|n
 operator|=
 name|res_search
@@ -923,11 +923,11 @@ name|host
 argument_list|,
 name|C_IN
 argument_list|,
-name|WildcardMX
+name|NoWildcardMX
 condition|?
-name|T_CNAME
-else|:
 name|T_ANY
+else|:
+name|T_CNAME
 argument_list|,
 operator|(
 name|char

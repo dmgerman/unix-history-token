@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.25 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2988,8 +2988,8 @@ break|break;
 case|case
 literal|'w'
 case|:
-comment|/* we have wildcard MX records */
-name|WildcardMX
+comment|/* we don't have wildcard MX records */
+name|NoWildcardMX
 operator|=
 name|atobool
 argument_list|(
