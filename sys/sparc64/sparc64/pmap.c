@@ -4169,6 +4169,9 @@ index|]
 operator|=
 name|m
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|m
@@ -4186,6 +4189,9 @@ operator|->
 name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * Enter the page into the kernel address space. 	 */
@@ -4929,6 +4935,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
 name|m
@@ -4949,6 +4958,9 @@ operator|.
 name|pmap
 operator|=
 name|pm
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|ma
 index|[
