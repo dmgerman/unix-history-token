@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.34 (Berkeley) %G%"
+literal|"@(#)main.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -602,7 +602,11 @@ end_comment
 
 begin_expr_stmt
 name|init_md
-argument_list|()
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

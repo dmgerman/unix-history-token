@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.43 (Berkeley) %G%"
+literal|"@(#)conf.c	8.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1694,8 +1694,26 @@ end_endif
 
 begin_macro
 name|init_md
-argument_list|()
+argument_list|(
+argument|argc
+argument_list|,
+argument|argv
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
