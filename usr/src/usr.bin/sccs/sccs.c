@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.19 %G%"
+literal|"@(#)sccs.c	1.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1016,7 +1016,7 @@ case|:
 comment|/* fix a delta */
 if|if
 condition|(
-name|strcmpn
+name|strncmp
 argument_list|(
 name|argv
 index|[
@@ -1623,7 +1623,7 @@ function_decl|;
 comment|/* 	**  See if this filename should be used as-is. 	**	There are three conditions where this can occur. 	**	1. The name already begins with "s.". 	**	2. The name has a "/" in it somewhere. 	**	3. The name references a directory. 	*/
 if|if
 condition|(
-name|strcmpn
+name|strncmp
 argument_list|(
 name|name
 argument_list|,
@@ -1881,7 +1881,7 @@ name|d_ino
 operator|==
 literal|0
 operator|||
-name|strcmpn
+name|strncmp
 argument_list|(
 name|dir
 operator|.
@@ -1921,7 +1921,7 @@ name|buf
 argument_list|)
 index|]
 expr_stmt|;
-name|strcpyn
+name|strncpy
 argument_list|(
 name|basefile
 argument_list|,
@@ -2009,7 +2009,7 @@ condition|(
 name|really
 condition|)
 block|{
-name|strcpyn
+name|strncpy
 argument_list|(
 name|buf
 argument_list|,
