@@ -1,25 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ether.h	6.3	84/03/20	*/
+comment|/*	if_ether.h	6.4	85/04/16	*/
 end_comment
-
-begin_comment
-comment|/*  * Ethernet address - 6 octets  */
-end_comment
-
-begin_struct
-struct|struct
-name|ether_addr
-block|{
-name|u_char
-name|ether_addr_octet
-index|[
-literal|6
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Structure of a 10Mb/s Ethernet header.  */
@@ -29,13 +11,17 @@ begin_struct
 struct|struct
 name|ether_header
 block|{
-name|struct
-name|ether_addr
+name|u_char
 name|ether_dhost
+index|[
+literal|6
+index|]
 decl_stmt|;
-name|struct
-name|ether_addr
+name|u_char
 name|ether_shost
+index|[
+literal|6
+index|]
 decl_stmt|;
 name|u_short
 name|ether_type
@@ -47,7 +33,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ETHERPUP_PUPTYPE
+name|ETHERTYPE_PUP
 value|0x0200
 end_define
 
@@ -58,7 +44,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETHERPUP_IPTYPE
+name|ETHERTYPE_IP
 value|0x0800
 end_define
 
@@ -69,7 +55,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETHERPUP_ARPTYPE
+name|ETHERTYPE_ARP
 value|0x0806
 end_define
 
@@ -78,24 +64,24 @@ comment|/* Addr. resolution protocol */
 end_comment
 
 begin_comment
-comment|/*  * The ETHERPUP_NTRAILER packet types starting at ETHERPUP_TRAIL have  * (type-ETHERPUP_TRAIL)*512 bytes of data followed  * by a PUP type (as given above) and then the (variable-length) header.  */
+comment|/*  * The ETHERTYPE_NTRAILER packet types starting at ETHERTYPE_TRAIL have  * (type-ETHERPUP_TRAIL)*512 bytes of data followed  * by a PUP type (as given above) and then the (variable-length) header.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ETHERPUP_TRAIL
+name|ETHERTYPE_TRAIL
 value|0x1000
 end_define
 
 begin_comment
-comment|/* Trailer PUP */
+comment|/* Trailer packet */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ETHERPUP_NTRAILER
+name|ETHERTYPE_NTRAILER
 value|16
 end_define
 
@@ -156,28 +142,28 @@ name|ARPOP_REPLY
 value|2
 comment|/* response to previous request */
 name|u_char
-name|arp_xsha
+name|arp_sha
 index|[
 literal|6
 index|]
 decl_stmt|;
 comment|/* sender hardware address */
 name|u_char
-name|arp_xspa
+name|arp_spa
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* sender protocol address */
 name|u_char
-name|arp_xtha
+name|arp_tha
 index|[
 literal|6
 index|]
 decl_stmt|;
 comment|/* target hardware address */
 name|u_char
-name|arp_xtpa
+name|arp_tpa
 index|[
 literal|4
 index|]
@@ -186,46 +172,6 @@ comment|/* target protocol address */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|arp_sha
-parameter_list|(
-name|ea
-parameter_list|)
-value|(*(struct ether_addr *)(ea)->arp_xsha)
-end_define
-
-begin_define
-define|#
-directive|define
-name|arp_spa
-parameter_list|(
-name|ea
-parameter_list|)
-value|(*(struct in_addr *)(ea)->arp_xspa)
-end_define
-
-begin_define
-define|#
-directive|define
-name|arp_tha
-parameter_list|(
-name|ea
-parameter_list|)
-value|(*(struct ether_addr *)(ea)->arp_xtha)
-end_define
-
-begin_define
-define|#
-directive|define
-name|arp_tpa
-parameter_list|(
-name|ea
-parameter_list|)
-value|(*(struct in_addr *)(ea)->arp_xtpa)
-end_define
 
 begin_comment
 comment|/*  * Structure shared between the ethernet driver modules and  * the address resolution code.  For example, each ec_softc or il_softc  * begins with this structure.  */
@@ -240,11 +186,18 @@ name|ifnet
 name|ac_if
 decl_stmt|;
 comment|/* network-visible interface */
-name|struct
-name|ether_addr
+name|u_char
 name|ac_enaddr
+index|[
+literal|6
+index|]
 decl_stmt|;
 comment|/* ethernet hardware address */
+name|struct
+name|in_addr
+name|ac_ipaddr
+decl_stmt|;
+comment|/* copy of ip address- XXX */
 block|}
 struct|;
 end_struct
@@ -262,9 +215,11 @@ name|in_addr
 name|at_iaddr
 decl_stmt|;
 comment|/* internet address */
-name|struct
-name|ether_addr
+name|u_char
 name|at_enaddr
+index|[
+literal|6
+index|]
 decl_stmt|;
 comment|/* ethernet address */
 name|struct
@@ -292,9 +247,11 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|struct
-name|ether_addr
+name|u_char
 name|etherbroadcastaddr
+index|[
+literal|6
+index|]
 decl_stmt|;
 end_decl_stmt
 
