@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)vcrt.c	3.13	*/
+comment|/*	@(#)ul.c	4.4	%G%	*/
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)ul.c	4.3	(Berkeley)	%G%"
+literal|"@(#)ul.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -828,6 +828,7 @@ case|:
 name|flushln
 argument_list|()
 expr_stmt|;
+continue|continue;
 default|default:
 if|if
 condition|(
@@ -902,7 +903,18 @@ operator||
 name|mode
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|obuf
+index|[
+name|col
+index|]
+operator|.
+name|c_char
+operator|==
+name|c
+condition|)
 name|obuf
 index|[
 name|col
@@ -914,6 +926,27 @@ name|BOLD
 operator||
 name|mode
 expr_stmt|;
+else|else
+block|{
+name|obuf
+index|[
+name|col
+index|]
+operator|.
+name|c_mode
+operator|=
+name|c
+expr_stmt|;
+name|obuf
+index|[
+name|col
+index|]
+operator|.
+name|c_mode
+operator|=
+name|mode
+expr_stmt|;
+block|}
 name|col
 operator|++
 expr_stmt|;
@@ -929,6 +962,10 @@ name|col
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|maxcol
+condition|)
 name|flushln
 argument_list|()
 expr_stmt|;
