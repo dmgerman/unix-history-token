@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: err.c,v 1.16 2001/12/13 23:56:00 augustss Exp $	*/
+comment|/*	$NetBSD: err.c,v 1.17 2002/01/31 19:36:54 tv Exp $	*/
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: err.c,v 1.16 2001/12/13 23:56:00 augustss Exp $"
+literal|"$NetBSD: err.c,v 1.17 2002/01/31 19:36:54 tv Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -98,7 +98,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|basename
+name|lbasename
 parameter_list|(
 specifier|const
 name|char
@@ -1136,7 +1136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If Fflag is not set basename() returns a pointer to the last  * component of the path, otherwise it returns the argument.  */
+comment|/*  * If Fflag is not set lbasename() returns a pointer to the last  * component of the path, otherwise it returns the argument.  */
 end_comment
 
 begin_function
@@ -1144,7 +1144,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|basename
+name|lbasename
 parameter_list|(
 specifier|const
 name|char
@@ -1252,7 +1252,7 @@ condition|)
 return|return;
 name|fn
 operator|=
-name|basename
+name|lbasename
 argument_list|(
 name|curr_pos
 operator|.
@@ -1264,7 +1264,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s:%d: "
+literal|"%s(%d): "
 argument_list|,
 name|fn
 argument_list|,
@@ -1338,7 +1338,7 @@ comment|/* this warning is suppressed by a LINTED comment */
 return|return;
 name|fn
 operator|=
-name|basename
+name|lbasename
 argument_list|(
 name|curr_pos
 operator|.
@@ -1350,7 +1350,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s:%d: warning: "
+literal|"%s(%d): warning: "
 argument_list|,
 name|fn
 argument_list|,
@@ -1456,7 +1456,7 @@ argument_list|)
 expr_stmt|;
 name|fn
 operator|=
-name|basename
+name|lbasename
 argument_list|(
 name|curr_pos
 operator|.
@@ -1470,7 +1470,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:%d: lint error: "
+literal|"%s(%d): lint error: "
 argument_list|,
 name|fn
 argument_list|,
@@ -1587,7 +1587,7 @@ argument_list|)
 expr_stmt|;
 name|fn
 operator|=
-name|basename
+name|lbasename
 argument_list|(
 name|curr_pos
 operator|.
@@ -1599,7 +1599,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s:%d: "
+literal|"%s(%d): "
 argument_list|,
 name|fn
 argument_list|,
