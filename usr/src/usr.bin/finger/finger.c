@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.3 (Berkeley) %G%"
+literal|"@(#)finger.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5872,6 +5872,14 @@ condition|)
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|f
 argument_list|)
 expr_stmt|;
 return|return
