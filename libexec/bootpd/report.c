@@ -348,9 +348,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|vsprintf
+name|vsnprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|fmt
 argument_list|,

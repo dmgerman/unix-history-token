@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hwaddr.c - routines that deal with hardware addresses.  * (i.e. Ethernet)  *  *	$Id$  */
+comment|/*  * hwaddr.c - routines that deal with hardware addresses.  * (i.e. Ethernet)  *  *	$Id: hwaddr.c,v 1.3 1996/09/22 21:52:16 wosch Exp $  */
 end_comment
 
 begin_include
@@ -835,9 +835,14 @@ operator|*
 name|ia
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"arp -d %s; arp -s %s %s temp"
 argument_list|,
