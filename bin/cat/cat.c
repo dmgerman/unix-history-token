@@ -212,8 +212,8 @@ name|scanfiles
 parameter_list|(
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 parameter_list|,
 name|int
 name|cooked
@@ -469,13 +469,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|scanfiles
 parameter_list|(
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 parameter_list|,
 name|int
 name|cooked
