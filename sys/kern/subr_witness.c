@@ -1253,6 +1253,13 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|"uart_hwmtx"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"sabtty"
 block|,
 operator|&
