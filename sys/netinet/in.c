@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/igmp_var.h>
 end_include
 
@@ -239,6 +245,22 @@ end_decl_stmt
 begin_comment
 comment|/* XXX BSS initialization */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inpcbinfo
+name|ripcbinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inpcbinfo
+name|udbinfo
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection).  If subnetsarelocal  * is true, this includes other subnets of the local net.  * Otherwise, it includes only the directly-connected (sub)nets.  */
@@ -2055,6 +2077,45 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX horrible hack to detect that we are being called 		 * from if_detach() 		 */
+if|if
+condition|(
+operator|!
+name|ifnet_addrs
+index|[
+name|ifp
+operator|->
+name|if_index
+operator|-
+literal|1
+index|]
+condition|)
+block|{
+name|in_pcbpurgeif0
+argument_list|(
+name|LIST_FIRST
+argument_list|(
+name|ripcbinfo
+operator|.
+name|listhead
+argument_list|)
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+name|in_pcbpurgeif0
+argument_list|(
+name|LIST_FIRST
+argument_list|(
+name|udbinfo
+operator|.
+name|listhead
+argument_list|)
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Protect from ipintr() traversing address list 		 * while we're modifying it. 		 */
 name|s
 operator|=

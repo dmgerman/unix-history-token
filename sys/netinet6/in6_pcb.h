@@ -65,6 +65,24 @@ end_define
 
 begin_decl_stmt
 name|void
+name|in6_pcbpurgeif0
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in6pcb
+operator|*
+operator|,
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|in6_losing
 name|__P
 argument_list|(

@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip6.h>
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_pcb.h>
 end_include
 
 begin_include
@@ -236,6 +248,22 @@ begin_decl_stmt
 name|struct
 name|callout
 name|in6_tmpaddrtimer_ch
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inpcbinfo
+name|udbinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inpcbinfo
+name|ripcbinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -4162,6 +4190,30 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* leave from all multicast groups joined */
+name|in6_pcbpurgeif0
+argument_list|(
+name|LIST_FIRST
+argument_list|(
+name|udbinfo
+operator|.
+name|listhead
+argument_list|)
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+name|in6_pcbpurgeif0
+argument_list|(
+name|LIST_FIRST
+argument_list|(
+name|ripcbinfo
+operator|.
+name|listhead
+argument_list|)
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|in6m
