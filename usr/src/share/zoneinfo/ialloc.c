@@ -46,19 +46,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"string.h"
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"stdlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"nonstd.h"
+file|<stdlib.h>
 end_include
 
 begin_ifdef
@@ -119,7 +113,7 @@ begin_decl_stmt
 name|char
 modifier|*
 name|icalloc
-name|P
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -136,7 +130,7 @@ begin_decl_stmt
 name|char
 modifier|*
 name|icatalloc
-name|P
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -156,7 +150,7 @@ begin_decl_stmt
 name|char
 modifier|*
 name|icpyalloc
-name|P
+name|__P
 argument_list|(
 operator|(
 specifier|const
@@ -172,7 +166,7 @@ begin_decl_stmt
 name|char
 modifier|*
 name|imalloc
-name|P
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -186,7 +180,7 @@ begin_decl_stmt
 name|char
 modifier|*
 name|irealloc
-name|P
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -203,7 +197,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ifree
-name|P
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -239,7 +233,7 @@ operator|=
 name|malloc
 argument_list|(
 operator|(
-name|alloc_size_t
+name|size_t
 operator|)
 name|nonzero
 argument_list|(
@@ -264,7 +258,7 @@ return|return
 name|malloc
 argument_list|(
 operator|(
-name|alloc_size_t
+name|size_t
 operator|)
 name|nonzero
 argument_list|(
@@ -314,12 +308,12 @@ return|return
 name|calloc
 argument_list|(
 operator|(
-name|alloc_size_t
+name|size_t
 operator|)
 name|nelem
 argument_list|,
 operator|(
-name|alloc_size_t
+name|size_t
 operator|)
 name|elsize
 argument_list|)
@@ -363,12 +357,13 @@ return|return
 name|realloc
 argument_list|(
 operator|(
-name|genericptr_t
+name|void
+operator|*
 operator|)
 name|pointer
 argument_list|,
 operator|(
-name|alloc_size_t
+name|size_t
 operator|)
 name|nonzero
 argument_list|(
