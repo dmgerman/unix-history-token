@@ -265,6 +265,13 @@ operator|-
 literal|'0'
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|u
+operator|>
+name|DKMAXUNIT
+condition|)
+continue|continue;
 name|p
 operator|=
 name|RAW_PART
