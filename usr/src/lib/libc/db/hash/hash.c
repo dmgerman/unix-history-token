@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.17 (Berkeley) %G%"
+literal|"@(#)hash.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,7 +498,7 @@ begin_function
 specifier|extern
 name|DB
 modifier|*
-name|hash_open
+name|__hash_open
 parameter_list|(
 name|file
 parameter_list|,
@@ -2364,7 +2364,6 @@ index|]
 condition|)
 if|if
 condition|(
-operator|!
 name|__put_page
 argument_list|(
 operator|(
@@ -3297,6 +3296,7 @@ index|]
 operator|<
 name|REAL_KEY
 condition|)
+block|{
 if|if
 condition|(
 name|__big_return
@@ -3315,6 +3315,7 @@ operator|(
 name|ERROR
 operator|)
 return|;
+block|}
 else|else
 block|{
 name|val
