@@ -214,27 +214,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|file
-modifier|*
-name|getfp
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|filedesc
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|dofileread
 name|__P
@@ -295,7 +274,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|struct
 name|file
 modifier|*
