@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)displayq.c	5.6 (Berkeley) %G%"
+literal|"@(#)displayq.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1658,7 +1658,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%D bytes\n"
+literal|"%ld bytes\n"
 argument_list|,
 name|totsize
 argument_list|)
@@ -2152,7 +2152,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" %D bytes"
+literal|" %ld bytes"
 argument_list|,
 name|lbuf
 operator|.
