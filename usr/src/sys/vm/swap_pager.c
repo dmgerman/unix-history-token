@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3338,7 +3338,7 @@ name|spc_kva
 operator|=
 name|kva
 expr_stmt|;
-comment|/* 		 * Record the first page.  This allows swap_pager_finish 		 * to efficiently handle the common case of a single page. 		 * For clusters, it allows us to locate the object easily 		 * and we then reconstruct the rest of the mlist from spc_kva. 		 * 		 * XXX 		 * swap_pager_finish no longer exists. 		 */
+comment|/* 		 * Record the first page.  This allows swap_pager_clean 		 * to efficiently handle the common case of a single page. 		 * For clusters, it allows us to locate the object easily 		 * and we then reconstruct the rest of the mlist from spc_kva. 		 */
 name|spc
 operator|->
 name|spc_m
