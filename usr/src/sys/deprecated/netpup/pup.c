@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pup.c	4.4	82/10/17	*/
+comment|/*	pup.c	4.5	83/05/30	*/
 end_comment
 
 begin_include
@@ -84,9 +84,7 @@ name|afh_nethash
 operator|=
 name|spup
 operator|->
-name|spup_addr
-operator|.
-name|pp_net
+name|spup_net
 expr_stmt|;
 name|hp
 operator|->
@@ -94,9 +92,7 @@ name|afh_hosthash
 operator|=
 name|spup
 operator|->
-name|spup_addr
-operator|.
-name|pp_host
+name|spup_host
 expr_stmt|;
 block|}
 end_block
@@ -127,15 +123,11 @@ return|return
 operator|(
 name|spup1
 operator|->
-name|spup_addr
-operator|.
-name|pp_net
+name|spup_net
 operator|==
 name|spup2
 operator|->
-name|spup_addr
-operator|.
-name|pp_net
+name|spup_net
 operator|)
 return|;
 block|}
