@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"%{g:-lg} %{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p} "
+value|"%{g:-lgnulib} %{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p}"
 end_define
 
 begin_comment
@@ -57,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|STRUCTURE_SIZE_BOUNDARY
-value|16
+value|8
 end_define
 
 begin_comment
@@ -100,6 +100,30 @@ begin_define
 define|#
 directive|define
 name|DBX_NO_XREFS
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ATEXIT
+end_define
+
+begin_comment
+comment|/* Don't attempt to use mcrt0.o for 'cc -p'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+value|"%{pg:gcrt0.o%s}%{!pg:%{p:gcrt0.o%s}%{!p:crt0.o%s}}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZE_TYPE
+value|"unsigned int"
 end_define
 
 end_unit

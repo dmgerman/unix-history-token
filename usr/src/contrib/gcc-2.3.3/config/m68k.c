@@ -5972,7 +5972,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* A C compound statement to output to stdio stream STREAM the    assembler syntax for an instruction operand X.  X is an RTL    expression.     CODE is a value that can be used to specify one of several ways    of printing the operand.  It is used when identical operands    must be printed differently depending on the context.  CODE    comes from the `%' specification that was used to request    printing of the operand.  If the specification was just `%DIGIT'    then CODE is 0; if the specification was `%LTR DIGIT' then CODE    is the ASCII code for LTR.     If X is a register, this macro should print the register's name.    The names can be found in an array `reg_names' whose type is    `char *[]'.  `reg_names' is initialized from `REGISTER_NAMES'.     When the machine description has a specification `%PUNCT' (a `%'    followed by a punctuation character), this macro is called with    a null pointer for X and the punctuation character for CODE.     The m68k specific codes are:     '.' for dot needed in Motorola-style opcode names.    '-' for an operand pushing on the stack:        sp@-, -(sp) or -(%sp) depending on the style of syntax.    '+' for an operand pushing on the stack:        sp@+, (sp)+ or (%sp)+ depending on the style of syntax.    '@' for a reference to the top word on the stack:        sp@, (sp) or (%sp) depending on the style of syntax.    '#' for an immediate operand prefix (# in MIT and Motorola syntax        but& in SGS syntax).    '!' for the cc register (used in an `and to cc' insn).    '$' for the letter `s' in an op code, but only on the 68040.    '&' for the letter `d' in an op code, but only on the 68040.     'b' for byte insn (no effect, on the Sun; this is for the ISI).    'd' to force memory addressing to be absolute, not relative.    'f' for float insn (print a CONST_DOUBLE as a float rather than in hex)    'w' for FPA insn (print a CONST_DOUBLE as a SunFPA constant rather        than directly).  Second part of 'y' below.    'x' for float insn (print a CONST_DOUBLE as a float rather than in hex),        or print pair of registers as rx:ry.    'y' for a FPA insn (print pair of registers as rx:ry).  This also outputs        CONST_DOUBLE's as SunFPA constant RAM registers if        possible, so it should not be used except for the SunFPA.     */
+comment|/* A C compound statement to output to stdio stream STREAM the    assembler syntax for an instruction operand X.  X is an RTL    expression.     CODE is a value that can be used to specify one of several ways    of printing the operand.  It is used when identical operands    must be printed differently depending on the context.  CODE    comes from the `%' specification that was used to request    printing of the operand.  If the specification was just `%DIGIT'    then CODE is 0; if the specification was `%LTR DIGIT' then CODE    is the ASCII code for LTR.     If X is a register, this macro should print the register's name.    The names can be found in an array `reg_names' whose type is    `char *[]'.  `reg_names' is initialized from `REGISTER_NAMES'.     When the machine description has a specification `%PUNCT' (a `%'    followed by a punctuation character), this macro is called with    a null pointer for X and the punctuation character for CODE.     The m68k specific codes are:     '.' for dot needed in Motorola-style opcode names.    '-' for an operand pushing on the stack:        sp@-, -(sp) or -(%sp) depending on the style of syntax.    '+' for an operand pushing on the stack:        sp@+, (sp)+ or (%sp)+ depending on the style of syntax.    '@' for a reference to the top word on the stack:        sp@, (sp) or (%sp) depending on the style of syntax.    '#' for an immediate operand prefix (# in MIT and Motorola syntax        but& in SGS syntax).    '!' for the cc register (used in an `and to cc' insn).    '$' for the letter `s' in an op code, but only on the 68040.    '&' for the letter `d' in an op code, but only on the 68040.    '/' for register prefix needed by longlong.h.     'b' for byte insn (no effect, on the Sun; this is for the ISI).    'd' to force memory addressing to be absolute, not relative.    'f' for float insn (print a CONST_DOUBLE as a float rather than in hex)    'w' for FPA insn (print a CONST_DOUBLE as a SunFPA constant rather        than directly).  Second part of 'y' below.    'x' for float insn (print a CONST_DOUBLE as a float rather than in hex),        or print pair of registers as rx:ry.    'y' for a FPA insn (print pair of registers as rx:ry).  This also outputs        CONST_DOUBLE's as SunFPA constant RAM registers if        possible, so it should not be used except for the SunFPA.     */
 end_comment
 
 begin_function
@@ -6187,6 +6187,22 @@ literal|"d"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|letter
+operator|==
+literal|'/'
+condition|)
+block|{
+name|asm_fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"%R"
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
