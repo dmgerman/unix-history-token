@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.7	81/04/13	*/
+comment|/*	proc.h	4.8	81/04/23	*/
 end_comment
 
 begin_comment
@@ -557,12 +557,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SANOM
+name|SSEQL
 value|0x010000
 end_define
 
 begin_comment
-comment|/* system detected anomalous vm behavior */
+comment|/* user warned of sequential vm behavior */
 end_comment
 
 begin_define
@@ -573,7 +573,7 @@ value|0x020000
 end_define
 
 begin_comment
-comment|/* user warned of anomalous vm behavior */
+comment|/* user warned of random vm behavior */
 end_comment
 
 begin_define
