@@ -1165,7 +1165,7 @@ name|int
 name|acpi_sleep
 parameter_list|(
 name|u_int32_t
-name|micro
+name|milli
 parameter_list|)
 function_decl|;
 end_function_decl

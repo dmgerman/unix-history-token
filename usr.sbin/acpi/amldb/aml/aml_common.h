@@ -80,7 +80,7 @@ name|AML_STALL
 parameter_list|(
 name|micro
 parameter_list|)
-value|DELAY(micro)
+value|OsdSleepUsec(micro)
 end_define
 
 begin_define
