@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errno[] = "@(#)f_errno.h	1.5";  *  * f77 I/O error definitions  */
+comment|/* char id_f_errno[] = "@(#)f_errno.h	1.6";  *  * f77 I/O error definitions  */
 end_comment
 
 begin_include
@@ -202,12 +202,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|F_ERRDCHR
+name|F_ERRICHR
 value|115
 end_define
 
 begin_comment
-comment|/* read unexpected character */
+comment|/* invalid data for integer format term */
 end_comment
 
 begin_define
@@ -296,6 +296,17 @@ end_define
 
 begin_comment
 comment|/* illegal operation for channel or device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_ERRFCHR
+value|124
+end_define
+
+begin_comment
+comment|/* invalid data for d,e,f, or g format term */
 end_comment
 
 begin_define

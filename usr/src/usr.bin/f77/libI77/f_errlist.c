@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.3";  *  * f77 I/O error messages  */
+comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.4";  *  * f77 I/O error messages  */
 end_comment
 
 begin_decl_stmt
@@ -56,7 +56,7 @@ comment|/* 114 */
 literal|"unit not connected"
 block|,
 comment|/* 115 */
-literal|"read unexpected character"
+literal|"invalid data for integer format term"
 block|,
 comment|/* 116 */
 literal|"blank logical input field"
@@ -81,6 +81,9 @@ literal|"negative repeat count"
 block|,
 comment|/* 123 */
 literal|"illegal operation for unit"
+block|,
+comment|/* 124 */
+literal|"invalid data for d,e,f, or g format term"
 block|, }
 decl_stmt|;
 end_decl_stmt
