@@ -605,12 +605,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_LOCKED
+name|B_00004000
 value|0x00004000
 end_define
 
 begin_comment
-comment|/* Locked in core (not reusable). */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -837,33 +837,11 @@ begin_define
 define|#
 directive|define
 name|BX_BKGRDWRITE
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Do writes in background */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BX_BKGRDINPROG
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* Background write in progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BX_BKGRDWAIT
 value|0x00000010
 end_define
 
 begin_comment
-comment|/* Background write waiting */
+comment|/* Do writes in background */
 end_comment
 
 begin_define
@@ -899,15 +877,41 @@ begin_comment
 comment|/* No buffer offset calculated yet */
 end_comment
 
+begin_comment
+comment|/*  * These flags are kept in b_vflags.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BV_SCANNED
-value|0x00001000
+value|0x00000001
 end_define
 
 begin_comment
 comment|/* VOP_FSYNC funcs mark written bufs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BV_BKGRDINPROG
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Background write in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BV_BKGRDWAIT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Background write waiting */
 end_comment
 
 begin_ifdef
