@@ -1641,11 +1641,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|ia64_pte
+name|pt_entry_t
 name|pte
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|psr
 decl_stmt|;
 if|if
@@ -1655,60 +1654,25 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|bzero
-argument_list|(
-operator|&
 name|pte
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pte
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|pte
-operator|.
-name|pte_p
 operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ma
-operator|=
+name|PTE_PRESENT
+operator||
 name|PTE_MA_WB
-expr_stmt|;
-name|pte
-operator|.
-name|pte_a
-operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_d
-operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_pl
-operator|=
+operator||
+name|PTE_ACCESSED
+operator||
+name|PTE_DIRTY
+operator||
 name|PTE_PL_KERN
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ar
-operator|=
+operator||
 name|PTE_AR_RWX
 expr_stmt|;
 name|pte
-operator|.
-name|pte_ppn
-operator|=
+operator||=
 name|ia64_pal_base
-operator|>>
-literal|12
+operator|&
+name|PTE_PPN_MASK
 expr_stmt|;
 asm|__asm __volatile("ptr.d %0,%1; ptr.i %0,%1" ::
 literal|"r"
@@ -1765,7 +1729,7 @@ asm|__asm __volatile("mov	cr.itir=%0" :: "r"(IA64_ID_PAGE_SHIFT<< 2));
 end_asm
 
 begin_asm
-asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(1), "r"(*(u_int64_t*)&pte));
+asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(1), "r"(pte));
 end_asm
 
 begin_asm
@@ -1777,7 +1741,7 @@ comment|/* XXX not needed. */
 end_comment
 
 begin_asm
-asm|__asm __volatile("itr.i	itr[%0]=%1" :: "r"(1), "r"(*(u_int64_t*)&pte));
+asm|__asm __volatile("itr.i	itr[%0]=%1" :: "r"(1), "r"(pte));
 end_asm
 
 begin_asm
@@ -1798,73 +1762,34 @@ end_macro
 
 begin_block
 block|{
-name|struct
-name|ia64_pte
+name|pt_entry_t
 name|pte
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|psr
 decl_stmt|;
-name|bzero
-argument_list|(
-operator|&
 name|pte
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pte
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|pte
-operator|.
-name|pte_p
 operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ma
-operator|=
+name|PTE_PRESENT
+operator||
 name|PTE_MA_WB
-expr_stmt|;
-name|pte
-operator|.
-name|pte_a
-operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_d
-operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_pl
-operator|=
+operator||
+name|PTE_ACCESSED
+operator||
+name|PTE_DIRTY
+operator||
 name|PTE_PL_KERN
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ar
-operator|=
+operator||
 name|PTE_AR_X_RX
 expr_stmt|;
 name|pte
-operator|.
-name|pte_ppn
-operator|=
-name|IA64_RR_MASK
-argument_list|(
+operator||=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|ia64_gateway_page
-argument_list|)
-operator|>>
-literal|12
+operator|&
+name|PTE_PPN_MASK
 expr_stmt|;
 asm|__asm __volatile("ptr.d %0,%1; ptr.i %0,%1" ::
 literal|"r"
@@ -1906,7 +1831,7 @@ asm|__asm __volatile("mov	cr.itir=%0" :: "r"(PAGE_SHIFT<< 2));
 end_asm
 
 begin_asm
-asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(3), "r"(*(u_int64_t*)&pte));
+asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(3), "r"(pte));
 end_asm
 
 begin_asm
@@ -1918,7 +1843,7 @@ comment|/* XXX not needed. */
 end_comment
 
 begin_asm
-asm|__asm __volatile("itr.i	itr[%0]=%1" :: "r"(3), "r"(*(u_int64_t*)&pte));
+asm|__asm __volatile("itr.i	itr[%0]=%1" :: "r"(3), "r"(pte));
 end_asm
 
 begin_asm
