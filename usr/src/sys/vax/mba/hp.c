@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.43	82/01/17	*/
+comment|/*	hp.c	4.44	82/02/03	*/
 end_comment
 
 begin_ifdef
@@ -320,7 +320,7 @@ block|,
 comment|/* G=cyl 562 thru 822 */
 else|#
 directive|else
-literal|86636
+literal|86336
 block|,
 literal|681
 block|,
