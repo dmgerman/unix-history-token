@@ -4,7 +4,7 @@ comment|/*  * This code is based on  *  (1) FreeBSD implementation on ISA/EISA E
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_zp.c,v 1.16 1996/02/06 18:50:51 wollman Exp $  */
+comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_zp.c,v 1.17 1996/02/28 16:23:36 nate Exp $  */
 end_comment
 
 begin_comment
@@ -4569,9 +4569,6 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 comment|/* before arpwhohas */
-if|#
-directive|if
-literal|1
 name|arp_ifinit
 argument_list|(
 operator|(
@@ -4584,46 +4581,6 @@ argument_list|,
 name|ifa
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
-name|ifp
-operator|)
-operator|->
-name|ac_ipaddr
-operator|=
-name|IA_SIN
-argument_list|(
-name|ifa
-argument_list|)
-operator|->
-name|sin_addr
-expr_stmt|;
-name|arpwhohas
-argument_list|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
-name|ifp
-argument_list|,
-operator|&
-name|IA_SIN
-argument_list|(
-name|ifa
-argument_list|)
-operator|->
-name|sin_addr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 endif|#
 directive|endif
