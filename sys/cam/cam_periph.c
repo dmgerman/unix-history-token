@@ -5573,8 +5573,29 @@ block|}
 case|case
 name|SCSI_STATUS_BUSY
 case|:
-comment|/* 			 * Restart the queue after either another 			 * command completes or a 1 second timeout. 			 */
-comment|/*  			 * XXX KDM ask JTG about this again, do we need to 			 * be looking at the retry count here? 			 */
+comment|/* 			 * Restart the queue after either another 			 * command completes or a 1 second timeout. 			 * If we have any retries left, that is. 			 */
+name|retry
+operator|=
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|retry_count
+operator|>
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|retry
+condition|)
+block|{
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|retry_count
+operator|--
+expr_stmt|;
 name|error
 operator|=
 name|ERESTART
@@ -5589,6 +5610,14 @@ name|timeout
 operator|=
 literal|1000
 expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|SCSI_STATUS_RESERV_CONFLICT
