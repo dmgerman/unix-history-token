@@ -36,7 +36,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"platform/acenv.h"
+file|"acenv.h"
 end_include
 
 begin_comment

@@ -85,27 +85,12 @@ parameter_list|()
 value|__sti()
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
-begin_comment
-comment|/* XXX conflicts with inline in cpufunc.h */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|wbinvd
 parameter_list|()
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*! [Begin] no source code translation */
