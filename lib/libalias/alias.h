@@ -207,7 +207,7 @@ specifier|extern
 name|struct
 name|alias_link
 modifier|*
-name|PacketAliasRedirectPptp
+name|PacketAliasRedirectProto
 parameter_list|(
 name|struct
 name|in_addr
@@ -217,6 +217,8 @@ name|in_addr
 parameter_list|,
 name|struct
 name|in_addr
+parameter_list|,
+name|u_char
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -461,17 +463,6 @@ define|#
 directive|define
 name|PKT_ALIAS_REVERSE
 value|0x80
-end_define
-
-begin_comment
-comment|/* If PKT_ALIAS_DENY_PPTP is set, then PPTP sessions will be 	prevented by the aliasing engine.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PKT_ALIAS_DENY_PPTP
-value|0x200
 end_define
 
 begin_comment

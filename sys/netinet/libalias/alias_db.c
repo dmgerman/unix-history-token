@@ -156,7 +156,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PPTP_EXPIRE_TIME
+name|PROTO_EXPIRE_TIME
 value|60
 end_define
 
@@ -432,36 +432,32 @@ decl_stmt|;
 name|int
 name|link_type
 decl_stmt|;
-comment|/* Type of link: TCP, UDP, ICMP, PPTP, frag */
+comment|/* Type of link: TCP, UDP, ICMP, proto, frag */
 comment|/* values for link_type */
 define|#
 directive|define
 name|LINK_ICMP
-value|1
+value|IPPROTO_ICMP
 define|#
 directive|define
 name|LINK_UDP
-value|2
+value|IPPROTO_UDP
 define|#
 directive|define
 name|LINK_TCP
-value|3
+value|IPPROTO_TCP
 define|#
 directive|define
 name|LINK_FRAGMENT_ID
-value|4
+value|(IPPROTO_MAX + 1)
 define|#
 directive|define
 name|LINK_FRAGMENT_PTR
-value|5
+value|(IPPROTO_MAX + 2)
 define|#
 directive|define
 name|LINK_ADDR
-value|6
-define|#
-directive|define
-name|LINK_PPTP
-value|7
+value|(IPPROTO_MAX + 3)
 name|int
 name|flags
 decl_stmt|;
@@ -693,7 +689,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|pptpLinkCount
+name|protoLinkCount
 decl_stmt|;
 end_decl_stmt
 
@@ -1153,7 +1149,7 @@ name|fprintf
 argument_list|(
 name|monitorFile
 argument_list|,
-literal|"icmp=%d, udp=%d, tcp=%d, pptp=%d, frag_id=%d frag_ptr=%d"
+literal|"icmp=%d, udp=%d, tcp=%d, proto=%d, frag_id=%d frag_ptr=%d"
 argument_list|,
 name|icmpLinkCount
 argument_list|,
@@ -1161,7 +1157,7 @@ name|udpLinkCount
 argument_list|,
 name|tcpLinkCount
 argument_list|,
-name|pptpLinkCount
+name|protoLinkCount
 argument_list|,
 name|fragmentIdLinkCount
 argument_list|,
@@ -1180,7 +1176,7 @@ name|udpLinkCount
 operator|+
 name|tcpLinkCount
 operator|+
-name|pptpLinkCount
+name|protoLinkCount
 operator|+
 name|fragmentIdLinkCount
 operator|+
@@ -2102,40 +2098,6 @@ name|link_type
 condition|)
 block|{
 case|case
-name|LINK_ICMP
-case|:
-case|case
-name|LINK_UDP
-case|:
-case|case
-name|LINK_FRAGMENT_ID
-case|:
-case|case
-name|LINK_FRAGMENT_PTR
-case|:
-case|case
-name|LINK_PPTP
-case|:
-if|if
-condition|(
-name|idelta
-operator|>
-name|link
-operator|->
-name|expire_time
-condition|)
-block|{
-name|DeleteLink
-argument_list|(
-name|link
-argument_list|)
-expr_stmt|;
-name|icount
-operator|++
-expr_stmt|;
-block|}
-break|break;
-case|case
 name|LINK_TCP
 case|:
 if|if
@@ -2188,6 +2150,26 @@ name|icount
 operator|++
 expr_stmt|;
 block|}
+block|}
+break|break;
+default|default:
+if|if
+condition|(
+name|idelta
+operator|>
+name|link
+operator|->
+name|expire_time
+condition|)
+block|{
+name|DeleteLink
+argument_list|(
+name|link
+argument_list|)
+expr_stmt|;
+name|icount
+operator|++
+expr_stmt|;
 block|}
 break|break;
 block|}
@@ -2474,13 +2456,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|LINK_PPTP
-case|:
-name|pptpLinkCount
-operator|--
-expr_stmt|;
-break|break;
-case|case
 name|LINK_FRAGMENT_ID
 case|:
 name|fragmentIdLinkCount
@@ -2511,6 +2486,15 @@ name|data
 operator|.
 name|frag_ptr
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LINK_ADDR
+case|:
+break|break;
+default|default:
+name|protoLinkCount
+operator|--
 expr_stmt|;
 break|break;
 block|}
@@ -2715,16 +2699,6 @@ name|TCP_EXPIRE_INITIAL
 expr_stmt|;
 break|break;
 case|case
-name|LINK_PPTP
-case|:
-name|link
-operator|->
-name|expire_time
-operator|=
-name|PPTP_EXPIRE_TIME
-expr_stmt|;
-break|break;
-case|case
 name|LINK_FRAGMENT_ID
 case|:
 name|link
@@ -2742,6 +2716,18 @@ operator|->
 name|expire_time
 operator|=
 name|FRAGMENT_PTR_EXPIRE_TIME
+expr_stmt|;
+break|break;
+case|case
+name|LINK_ADDR
+case|:
+break|break;
+default|default:
+name|link
+operator|->
+name|expire_time
+operator|=
+name|PROTO_EXPIRE_TIME
 expr_stmt|;
 break|break;
 block|}
@@ -3062,13 +3048,6 @@ directive|endif
 block|}
 break|break;
 case|case
-name|LINK_PPTP
-case|:
-name|pptpLinkCount
-operator|++
-expr_stmt|;
-break|break;
-case|case
 name|LINK_FRAGMENT_ID
 case|:
 name|fragmentIdLinkCount
@@ -3079,6 +3058,15 @@ case|case
 name|LINK_FRAGMENT_PTR
 case|:
 name|fragmentPtrLinkCount
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|LINK_ADDR
+case|:
+break|break;
+default|default:
+name|protoLinkCount
 operator|++
 expr_stmt|;
 break|break;
@@ -4245,7 +4233,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* External routines for finding/adding links  -- "external" means outside alias_db.c, but within alias*.c --      FindIcmpIn(), FindIcmpOut()     FindFragmentIn1(), FindFragmentIn2()     AddFragmentPtrLink(), FindFragmentPtr()     FindPptpIn(), FindPptpOut()     FindUdpTcpIn(), FindUdpTcpOut()     FindOriginalAddress(), FindAliasAddress()  (prototypes in alias_local.h) */
+comment|/* External routines for finding/adding links  -- "external" means outside alias_db.c, but within alias*.c --      FindIcmpIn(), FindIcmpOut()     FindFragmentIn1(), FindFragmentIn2()     AddFragmentPtrLink(), FindFragmentPtr()     FindProtoIn(), FindProtoOut()     FindUdpTcpIn(), FindUdpTcpOut()     FindOriginalAddress(), FindAliasAddress()  (prototypes in alias_local.h) */
 end_comment
 
 begin_function
@@ -4557,7 +4545,7 @@ begin_function
 name|struct
 name|alias_link
 modifier|*
-name|FindPptpIn
+name|FindProtoIn
 parameter_list|(
 name|struct
 name|in_addr
@@ -4566,6 +4554,9 @@ parameter_list|,
 name|struct
 name|in_addr
 name|alias_addr
+parameter_list|,
+name|u_char
+name|proto
 parameter_list|)
 block|{
 name|struct
@@ -4585,7 +4576,7 @@ name|NO_DEST_PORT
 argument_list|,
 literal|0
 argument_list|,
-name|LINK_PPTP
+name|proto
 argument_list|,
 literal|1
 argument_list|)
@@ -4631,7 +4622,7 @@ name|NO_DEST_PORT
 argument_list|,
 literal|0
 argument_list|,
-name|LINK_PPTP
+name|proto
 argument_list|)
 expr_stmt|;
 block|}
@@ -4647,7 +4638,7 @@ begin_function
 name|struct
 name|alias_link
 modifier|*
-name|FindPptpOut
+name|FindProtoOut
 parameter_list|(
 name|struct
 name|in_addr
@@ -4656,6 +4647,9 @@ parameter_list|,
 name|struct
 name|in_addr
 name|dst_addr
+parameter_list|,
+name|u_char
+name|proto
 parameter_list|)
 block|{
 name|struct
@@ -4675,7 +4669,7 @@ name|NO_SRC_PORT
 argument_list|,
 name|NO_DEST_PORT
 argument_list|,
-name|LINK_PPTP
+name|proto
 argument_list|,
 literal|1
 argument_list|)
@@ -4714,7 +4708,7 @@ name|NO_DEST_PORT
 argument_list|,
 literal|0
 argument_list|,
-name|LINK_PPTP
+name|proto
 argument_list|)
 expr_stmt|;
 block|}
@@ -6786,7 +6780,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Outside world interfaces  -- "outside world" means other than alias*.c routines --      PacketAliasRedirectPort()     PacketAliasAddServer()     PacketAliasRedirectPptp()     PacketAliasRedirectAddr()     PacketAliasRedirectDelete()     PacketAliasSetAddress()     PacketAliasInit()     PacketAliasUninit()     PacketAliasSetMode()  (prototypes in alias.h) */
+comment|/* Outside world interfaces  -- "outside world" means other than alias*.c routines --      PacketAliasRedirectPort()     PacketAliasAddServer()     PacketAliasRedirectProto()     PacketAliasRedirectAddr()     PacketAliasRedirectDelete()     PacketAliasSetAddress()     PacketAliasInit()     PacketAliasUninit()     PacketAliasSetMode()  (prototypes in alias.h) */
 end_comment
 
 begin_comment
@@ -7073,7 +7067,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate PPTP packets to a machine on the inside  * XXX This function is made obsolete by PacketAliasRedirectPptp().  */
+comment|/* Translate PPTP packets to a machine on the inside  * XXX This function is made obsolete by PacketAliasRedirectProto().  */
 end_comment
 
 begin_function
@@ -7090,24 +7084,21 @@ condition|(
 name|src_addr
 operator|.
 name|s_addr
-operator|==
+operator|!=
 name|INADDR_NONE
 condition|)
-name|packetAliasMode
-operator||=
-name|PKT_ALIAS_DENY_PPTP
-expr_stmt|;
-else|else
 operator|(
 name|void
 operator|)
-name|PacketAliasRedirectPptp
+name|PacketAliasRedirectProto
 argument_list|(
 name|src_addr
 argument_list|,
 name|nullAddress
 argument_list|,
 name|nullAddress
+argument_list|,
+name|IPPROTO_GRE
 argument_list|)
 expr_stmt|;
 return|return
@@ -7117,14 +7108,14 @@ block|}
 end_function
 
 begin_comment
-comment|/* Redirect PPTP packets from a specific    public address to a private address */
+comment|/* Redirect packets of a given IP protocol from a specific    public address to a private address */
 end_comment
 
 begin_function
 name|struct
 name|alias_link
 modifier|*
-name|PacketAliasRedirectPptp
+name|PacketAliasRedirectProto
 parameter_list|(
 name|struct
 name|in_addr
@@ -7137,6 +7128,9 @@ parameter_list|,
 name|struct
 name|in_addr
 name|alias_addr
+parameter_list|,
+name|u_char
+name|proto
 parameter_list|)
 block|{
 name|struct
@@ -7160,7 +7154,7 @@ name|NO_DEST_PORT
 argument_list|,
 literal|0
 argument_list|,
-name|LINK_PPTP
+name|proto
 argument_list|)
 expr_stmt|;
 if|if
@@ -7186,7 +7180,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PacketAliasRedirectPptp(): "
+literal|"PacketAliasRedirectProto(): "
 literal|"call to AddLink() failed\n"
 argument_list|)
 expr_stmt|;
@@ -7498,7 +7492,7 @@ name|tcpLinkCount
 operator|=
 literal|0
 expr_stmt|;
-name|pptpLinkCount
+name|protoLinkCount
 operator|=
 literal|0
 expr_stmt|;

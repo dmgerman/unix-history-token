@@ -404,7 +404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Protocol Specific Packet Aliasing Routines       IcmpAliasIn(), IcmpAliasIn1(), IcmpAliasIn2(), IcmpAliasIn3()     IcmpAliasOut(), IcmpAliasOut1(), IcmpAliasOut2(), IcmpAliasOut3()     UdpAliasIn(), UdpAliasOut()     TcpAliasIn(), TcpAliasOut()  These routines handle protocol specific details of packet aliasing. One may observe a certain amount of repetitive arithmetic in these functions, the purpose of which is to compute a revised checksum without actually summing over the entire data packet, which could be unnecessarily time consuming.  The purpose of the packet aliasing routines is to replace the source address of the outgoing packet and then correctly put it back for any incoming packets.  For TCP and UDP, ports are also re-mapped.  For ICMP echo/timestamp requests and replies, the following scheme is used: the ID number is replaced by an alias for the outgoing packet.  ICMP error messages are handled by looking at the IP fragment in the data section of the message.  For TCP and UDP protocols, a port number is chosen for an outgoing packet, and then incoming packets are identified by IP address and port numbers.  For TCP packets, there is additional logic in the event that sequence and ACK numbers have been altered (as in the case for FTP data port commands).  The port numbers used by the packet aliasing module are not true ports in the Unix sense.  No sockets are actually bound to ports. They are more correctly thought of as placeholders.  All packets go through the aliasing mechanism, whether they come from the gateway machine or other machines on a local area network. */
+comment|/* Protocol Specific Packet Aliasing Routines       IcmpAliasIn(), IcmpAliasIn1(), IcmpAliasIn2(), IcmpAliasIn3()     IcmpAliasOut(), IcmpAliasOut1(), IcmpAliasOut2(), IcmpAliasOut3()     ProtoAliasIn(), ProtoAliasOut()     UdpAliasIn(), UdpAliasOut()     TcpAliasIn(), TcpAliasOut()  These routines handle protocol specific details of packet aliasing. One may observe a certain amount of repetitive arithmetic in these functions, the purpose of which is to compute a revised checksum without actually summing over the entire data packet, which could be unnecessarily time consuming.  The purpose of the packet aliasing routines is to replace the source address of the outgoing packet and then correctly put it back for any incoming packets.  For TCP and UDP, ports are also re-mapped.  For ICMP echo/timestamp requests and replies, the following scheme is used: the ID number is replaced by an alias for the outgoing packet.  ICMP error messages are handled by looking at the IP fragment in the data section of the message.  For TCP and UDP protocols, a port number is chosen for an outgoing packet, and then incoming packets are identified by IP address and port numbers.  For TCP packets, there is additional logic in the event that sequence and ACK numbers have been altered (as in the case for FTP data port commands).  The port numbers used by the packet aliasing module are not true ports in the Unix sense.  No sockets are actually bound to ports. They are more correctly thought of as placeholders.  All packets go through the aliasing mechanism, whether they come from the gateway machine or other machines on a local area network. */
 end_comment
 
 begin_comment
@@ -499,6 +499,30 @@ begin_function_decl
 specifier|static
 name|int
 name|IcmpAliasOut
+parameter_list|(
+name|struct
+name|ip
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ProtoAliasIn
+parameter_list|(
+name|struct
+name|ip
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ProtoAliasOut
 parameter_list|(
 name|struct
 name|ip
@@ -2374,7 +2398,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|PptpAliasIn
+name|ProtoAliasIn
 parameter_list|(
 name|struct
 name|ip
@@ -2382,7 +2406,7 @@ modifier|*
 name|pip
 parameter_list|)
 block|{
-comment|/*   Handle incoming PPTP packets. The   only thing which is done in this case is to alias   the dest IP address of the packet to our inside   machine. */
+comment|/*   Handle incoming IP packets. The   only thing which is done in this case is to alias   the dest IP address of the packet to our inside   machine. */
 name|struct
 name|alias_link
 modifier|*
@@ -2398,18 +2422,9 @@ condition|)
 return|return
 name|PKT_ALIAS_OK
 return|;
-if|if
-condition|(
-name|packetAliasMode
-operator|&
-name|PKT_ALIAS_DENY_PPTP
-condition|)
-return|return
-name|PKT_ALIAS_IGNORED
-return|;
 name|link
 operator|=
-name|FindPptpIn
+name|FindProtoIn
 argument_list|(
 name|pip
 operator|->
@@ -2418,6 +2433,10 @@ argument_list|,
 name|pip
 operator|->
 name|ip_dst
+argument_list|,
+name|pip
+operator|->
+name|ip_p
 argument_list|)
 expr_stmt|;
 if|if
@@ -2488,7 +2507,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|PptpAliasOut
+name|ProtoAliasOut
 parameter_list|(
 name|struct
 name|ip
@@ -2496,7 +2515,7 @@ modifier|*
 name|pip
 parameter_list|)
 block|{
-comment|/*   Handle outgoing PPTP packets. The   only thing which is done in this case is to alias   the source IP address of the packet. */
+comment|/*   Handle outgoing IP packets. The   only thing which is done in this case is to alias   the source IP address of the packet. */
 name|struct
 name|alias_link
 modifier|*
@@ -2512,18 +2531,9 @@ condition|)
 return|return
 name|PKT_ALIAS_OK
 return|;
-if|if
-condition|(
-name|packetAliasMode
-operator|&
-name|PKT_ALIAS_DENY_PPTP
-condition|)
-return|return
-name|PKT_ALIAS_IGNORED
-return|;
 name|link
 operator|=
-name|FindPptpOut
+name|FindProtoOut
 argument_list|(
 name|pip
 operator|->
@@ -2532,6 +2542,10 @@ argument_list|,
 name|pip
 operator|->
 name|ip_dst
+argument_list|,
+name|pip
+operator|->
+name|ip_p
 argument_list|)
 expr_stmt|;
 if|if
@@ -5068,18 +5082,10 @@ name|pip
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|IPPROTO_GRE
-case|:
-case|case
-name|IPPROTO_ESP
-case|:
-case|case
-name|IPPROTO_AH
-case|:
+default|default:
 name|iresult
 operator|=
-name|PptpAliasIn
+name|ProtoAliasIn
 argument_list|(
 name|pip
 argument_list|)
@@ -5474,18 +5480,10 @@ name|maxpacketsize
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|IPPROTO_GRE
-case|:
-case|case
-name|IPPROTO_ESP
-case|:
-case|case
-name|IPPROTO_AH
-case|:
+default|default:
 name|iresult
 operator|=
-name|PptpAliasOut
+name|ProtoAliasOut
 argument_list|(
 name|pip
 argument_list|)
