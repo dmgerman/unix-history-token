@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * Program to test new [sg]etsockopts and ioctls for manipulating IP and  * Ethernet multicast address filters.  *  * Written by Steve Deering, Stanford University, February 1989.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MULTICAST
-end_define
-
 begin_include
 include|#
 directive|include
@@ -25,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
