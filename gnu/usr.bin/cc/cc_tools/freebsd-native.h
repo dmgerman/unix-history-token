@@ -164,6 +164,17 @@ value|PREFIX"/lib/"
 end_define
 
 begin_comment
+comment|/* For the native system compiler, we actually build libgcc in a profiled    version.  So we should use it with -pg.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBGCC_SPEC
+value|"%{!pg: -lgcc} %{pg: -lgcc_p}"
+end_define
+
+begin_comment
 comment|/* FreeBSD is 4.4BSD derived */
 end_comment
 
