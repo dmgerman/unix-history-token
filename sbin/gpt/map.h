@@ -71,6 +71,10 @@ define|#
 directive|define
 name|MAP_TYPE_GPT_PART
 value|7
+define|#
+directive|define
+name|MAP_TYPE_PMBR
+value|8
 name|void
 modifier|*
 name|map_data
