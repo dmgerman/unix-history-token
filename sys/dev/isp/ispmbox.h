@@ -1137,7 +1137,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|ISP_WRITE(isp, INMAILBOX4, value)
+value|ISP_WRITE(isp, isp->isp_rqstinrp, value)
 end_define
 
 begin_define
@@ -1148,31 +1148,31 @@ parameter_list|(
 name|isp
 parameter_list|)
 define|\
-value|ISP_READ(isp, OUTMAILBOX4)
+value|ISP_READ(isp, isp->isp_rqstoutrp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WRITE_RESPONSE_QUEUE_IN_POINTER
+name|READ_RESPONSE_QUEUE_IN_POINTER
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|ISP_READ(isp, isp->isp_respinrp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_RESPONSE_QUEUE_OUT_POINTER
 parameter_list|(
 name|isp
 parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|ISP_WRITE(isp, INMAILBOX5, value)
-end_define
-
-begin_define
-define|#
-directive|define
-name|READ_RESPONSE_QUEUE_OUT_POINTER
-parameter_list|(
-name|isp
-parameter_list|)
-define|\
-value|ISP_READ(isp, OUTMAILBOX5)
+value|ISP_WRITE(isp, isp->isp_respoutrp, value)
 end_define
 
 begin_comment
@@ -1198,8 +1198,11 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int64_t
+name|u_int32_t
 name|ds_base
+decl_stmt|;
+name|u_int32_t
+name|ds_basehi
 decl_stmt|;
 name|u_int32_t
 name|ds_count
@@ -1788,6 +1791,64 @@ name|ispreqt2_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ISP_RQDSEG_T3
+value|2
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|isphdr_t
+name|req_header
+decl_stmt|;
+name|u_int32_t
+name|req_handle
+decl_stmt|;
+name|u_int8_t
+name|req_lun_trn
+decl_stmt|;
+name|u_int8_t
+name|req_target
+decl_stmt|;
+name|u_int16_t
+name|req_scclun
+decl_stmt|;
+name|u_int16_t
+name|req_flags
+decl_stmt|;
+name|u_int16_t
+name|_res2
+decl_stmt|;
+name|u_int16_t
+name|req_time
+decl_stmt|;
+name|u_int16_t
+name|req_seg_count
+decl_stmt|;
+name|u_int32_t
+name|req_cdb
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|req_totalcnt
+decl_stmt|;
+name|ispds64_t
+name|req_dataseg
+index|[
+name|ISP_RQDSEG_T3
+index|]
+decl_stmt|;
+block|}
+name|ispreqt3_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* req_flag values */
 end_comment
@@ -1978,6 +2039,31 @@ index|]
 decl_stmt|;
 block|}
 name|ispcontreq_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ISP_CDSEG64
+value|5
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|isphdr_t
+name|req_header
+decl_stmt|;
+name|ispds64_t
+name|req_dataseg
+index|[
+name|ISP_CDSEG64
+index|]
+decl_stmt|;
+block|}
+name|ispcontreq64_t
 typedef|;
 end_typedef
 
@@ -2974,6 +3060,31 @@ define|#
 directive|define
 name|ICBXOPT_RIO_32BIT_DELAY
 value|4
+end_define
+
+begin_comment
+comment|/* These 3 only apply to the 2300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICBXOPT_RATE_ONEGB
+value|(0<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICBXOPT_RATE_TWOGB
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICBXOPT_RATE_AUTO
+value|(2<< 14)
 end_define
 
 begin_define
