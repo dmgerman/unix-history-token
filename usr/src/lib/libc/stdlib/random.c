@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	5.5 (Berkeley) %G%"
+literal|"@(#)random.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -669,12 +669,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"initstate: not enough state (%d bytes) with which to do jack; ignored.\n"
+literal|"initstate: not enough state (%d bytes); ignored.\n"
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|rand_type
 operator|=
