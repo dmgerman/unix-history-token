@@ -1301,6 +1301,12 @@ name|td_flags
 operator||=
 name|TDF_TIMEOUT
 expr_stmt|;
+name|td
+operator|->
+name|td_wmesg
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1448,6 +1454,12 @@ name|TD_CLR_ON_SLEEPQ
 argument_list|(
 name|td
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_wmesg
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|mtx_unlock_spin

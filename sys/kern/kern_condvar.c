@@ -1932,6 +1932,12 @@ operator|&=
 operator|~
 name|TDF_CVWAITQ
 expr_stmt|;
+name|td
+operator|->
+name|td_wmesg
+operator|=
+name|NULL
+expr_stmt|;
 name|TD_CLR_ON_SLEEPQ
 argument_list|(
 name|td
