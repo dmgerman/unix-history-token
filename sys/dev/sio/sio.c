@@ -1321,9 +1321,6 @@ name|com
 operator|,
 name|speed_t
 name|speed
-operator|,
-name|int
-name|locked
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5035,6 +5032,9 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|int
+name|intrstate
+decl_stmt|;
 name|rid
 operator|=
 name|xrid
@@ -5427,6 +5427,11 @@ name|c_ospeed
 operator|=
 name|TTYDEF_SPEED
 expr_stmt|;
+name|intrstate
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|siosetwater
@@ -5438,13 +5443,19 @@ operator|->
 name|it_in
 operator|.
 name|c_ispeed
-argument_list|,
-literal|0
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrstate
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Leave i/o resources allocated if this is a `cn'-level 		 * console, so that other devices can't snarf them. 		 */
 if|if
 condition|(
@@ -5469,6 +5480,14 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrstate
+argument_list|)
+expr_stmt|;
 name|termioschars
 argument_list|(
 operator|&
@@ -11341,15 +11360,10 @@ name|fifo_image
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * This returns with interrupts disabled so that we can complete 	 * the speed change atomically.  Keeping interrupts disabled is 	 * especially important while com_data is hidden. 	 */
 name|intrsave
 operator|=
 name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
-argument_list|()
-expr_stmt|;
-name|COM_LOCK
 argument_list|()
 expr_stmt|;
 operator|(
@@ -11362,8 +11376,6 @@ argument_list|,
 name|t
 operator|->
 name|c_ispeed
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -11791,6 +11803,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This function must be called with interrupts enabled and the com_lock  * unlocked.  It will return with interrupts disabled and the com_lock locked.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -11799,8 +11815,6 @@ parameter_list|(
 name|com
 parameter_list|,
 name|speed
-parameter_list|,
-name|locked
 parameter_list|)
 name|struct
 name|com_s
@@ -11809,9 +11823,6 @@ name|com
 decl_stmt|;
 name|speed_t
 name|speed
-decl_stmt|;
-name|int
-name|locked
 decl_stmt|;
 block|{
 name|int
@@ -11828,9 +11839,6 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|int
-name|intrsave
 decl_stmt|;
 comment|/* 	 * Make the buffer size large enough to handle a softtty interrupt 	 * latency of about 2 ticks without loss of throughput or data 	 * (about 3 ticks if input flow control is not used or not honoured, 	 * but a bit less for CS5-CS7 modes). 	 */
 name|cp4ticks
@@ -11866,11 +11874,19 @@ name|com
 operator|->
 name|ibufsize
 condition|)
+block|{
+name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* 	 * Allocate input buffer.  The extra factor of 2 in the size is 	 * to allow for an error byte for each input byte. 	 */
 name|ibuf
 operator|=
@@ -11891,11 +11907,19 @@ name|ibuf
 operator|==
 name|NULL
 condition|)
+block|{
+name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 comment|/* Initialize non-critical variables. */
 name|com
 operator|->
@@ -11954,19 +11978,9 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Read current input buffer, if any.  Continue with interrupts 	 * disabled. 	 */
-name|intrsave
-operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|locked
-condition|)
 name|COM_LOCK
 argument_list|()
 expr_stmt|;
@@ -12021,19 +12035,6 @@ operator|*
 name|ibufsize
 operator|/
 literal|4
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|locked
-condition|)
-name|COM_UNLOCK
-argument_list|()
-expr_stmt|;
-name|restore_intr
-argument_list|(
-name|intrsave
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
