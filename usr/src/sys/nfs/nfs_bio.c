@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_bio.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_bio.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -259,10 +259,6 @@ name|NMODIFIED
 expr_stmt|;
 if|if
 condition|(
-name|vp
-operator|->
-name|v_blockh
-operator|&&
 name|vinvalbuf
 argument_list|(
 name|vp
@@ -307,7 +303,11 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_blockh
+name|v_cleanblkhd
+operator|||
+name|vp
+operator|->
+name|v_dirtyblkhd
 condition|)
 block|{
 if|if
@@ -1122,6 +1122,13 @@ operator|.
 name|u_ru
 operator|.
 name|ru_oublock
+operator|++
+expr_stmt|;
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_numoutput
 operator|++
 expr_stmt|;
 name|VOP_STRATEGY
