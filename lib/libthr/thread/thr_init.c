@@ -668,6 +668,20 @@ literal|"Cannot allocate memory for initial thread"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Zero the initial thread structure: */
+name|memset
+argument_list|(
+name|pthread
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pthread
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|_thread_initial
 operator|=
 name|pthread
@@ -681,20 +695,6 @@ argument_list|(
 name|NULL
 argument_list|,
 name|pthread
-argument_list|)
-expr_stmt|;
-comment|/* Zero the initial thread structure: */
-name|memset
-argument_list|(
-name|pthread
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pthread
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Get our thread id. */
