@@ -850,6 +850,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* We just left the scheduler via longjmp: */
+name|_thread_kern_in_sched
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Run the current thread's start routine with argument: */
 name|pthread_exit
 argument_list|(
