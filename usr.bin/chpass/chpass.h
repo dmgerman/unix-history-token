@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|E_SHELL
-value|12
+value|13
 end_define
 
 begin_decl_stmt
