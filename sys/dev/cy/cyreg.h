@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cyreg.h,v 1.1 1995/07/05 12:15:51 bde Exp $  */
+comment|/*-  * Copyright (c) 1995 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cyreg.h,v 1.2 1996/10/04 10:33:13 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -31,22 +31,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|CY_CD1400_MEMSIZE
-value|0x400
-end_define
-
-begin_define
-define|#
-directive|define
 name|CY16_RESET
-value|0x1400
+value|0x0a00
 end_define
 
 begin_define
 define|#
 directive|define
 name|CY_CLEAR_INTR
-value|0x1800
+value|0x0c00
 end_define
 
 begin_comment
@@ -89,8 +82,10 @@ parameter_list|(
 name|iobase
 parameter_list|,
 name|reg
+parameter_list|,
+name|cy_align
 parameter_list|)
-value|(++cd_inbs, *((iobase) + 2 * (reg)))
+value|(++cd_inbs, *((iobase) + ((reg)*2<< (cy_align))))
 end_define
 
 begin_define
@@ -114,9 +109,11 @@ name|iobase
 parameter_list|,
 name|reg
 parameter_list|,
+name|cy_align
+parameter_list|,
 name|val
 parameter_list|)
-value|(++cd_outbs, (void)(*((iobase) + 2 * (reg)) = (val)))
+value|(++cd_outbs, (void)(*((iobase) + ((reg)*2<< (cy_align))) = (val)))
 end_define
 
 begin_define
@@ -146,8 +143,10 @@ parameter_list|(
 name|iobase
 parameter_list|,
 name|reg
+parameter_list|,
+name|cy_align
 parameter_list|)
-value|(*((iobase) + 2 * (reg)))
+value|(*((iobase) + ((reg)*2<< (cy_align))))
 end_define
 
 begin_define
@@ -171,9 +170,11 @@ name|iobase
 parameter_list|,
 name|reg
 parameter_list|,
+name|cy_align
+parameter_list|,
 name|val
 parameter_list|)
-value|((void)(*((iobase) + 2 * (reg)) = (val)))
+value|((void)(*((iobase) + ((reg)*2<< (cy_align))) = (val)))
 end_define
 
 begin_define
