@@ -121,6 +121,10 @@ name|ip_fw_chk_ptr
 function_decl|)
 parameter_list|(
 name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|,
@@ -169,6 +173,10 @@ modifier|*
 name|ip_fw_chk_ptr
 function_decl|)
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|struct
 name|ip
 modifier|*
