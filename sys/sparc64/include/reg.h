@@ -77,9 +77,11 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+comment|/* our view is 64 32-bit registers */
 name|u_long
 name|fr_fsr
 decl_stmt|;
+comment|/* %fsr */
 name|u_long
 name|fr_fprs
 decl_stmt|;
