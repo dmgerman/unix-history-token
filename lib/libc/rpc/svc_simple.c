@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_simple.c,v 1.3 1995/10/22 14:51:37 phk Exp $"
+literal|"$Id: svc_simple.c,v 1.4 1996/06/10 20:13:08 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,17 +80,6 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
-
-begin_function_decl
-name|bool_t
-name|pmap_unset
-parameter_list|(
-name|u_long
-parameter_list|,
-name|u_long
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_struct
 specifier|static
@@ -167,6 +156,13 @@ name|inproc
 parameter_list|,
 name|outproc
 parameter_list|)
+name|int
+name|prognum
+decl_stmt|,
+name|versnum
+decl_stmt|,
+name|procnum
+decl_stmt|;
 function|char *
 parameter_list|(
 function|*progname
@@ -178,16 +174,6 @@ operator|(
 operator|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|prognum
-decl_stmt|,
-name|versnum
-decl_stmt|,
-name|procnum
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|xdrproc_t
@@ -469,10 +455,6 @@ name|transp
 argument_list|,
 name|xdr_void
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 operator|==
@@ -541,9 +523,11 @@ name|proc
 condition|)
 block|{
 comment|/* decode arguments into a CLEAN buffer */
-name|bzero
+name|memset
 argument_list|(
 name|xdrbuf
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
