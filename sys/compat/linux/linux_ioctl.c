@@ -3041,9 +3041,9 @@ init|=
 block|{
 name|IOC_VOID
 block|,
-name|IOC_OUT
-block|,
 name|IOC_IN
+block|,
+name|IOC_OUT
 block|,
 name|IOC_INOUT
 block|}
