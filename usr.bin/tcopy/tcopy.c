@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tcopy.c,v 1.4 1997/08/14 06:41:00 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,7 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_int64_t
 name|lastrec
 decl_stmt|,
 name|record
@@ -260,6 +260,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|rewind_tape
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -682,7 +691,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read error, file %d, record %ld"
+literal|"read error, file %d, record %qu"
 argument_list|,
 name|filen
 argument_list|,
@@ -723,7 +732,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"%ld records\n"
+literal|"%qu records\n"
 argument_list|,
 name|record
 argument_list|)
@@ -741,7 +750,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"records %ld to %ld\n"
+literal|"records %qu to %qu\n"
 argument_list|,
 name|lastrec
 argument_list|,
@@ -753,7 +762,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"record %ld\n"
+literal|"record %qu\n"
 argument_list|,
 name|lastrec
 argument_list|)
@@ -858,7 +867,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"write error, file %d, record %ld"
+literal|"write error, file %d, record %qu"
 argument_list|,
 name|filen
 argument_list|,
@@ -870,7 +879,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"write error, file %d, record %ld"
+literal|"write error, file %d, record %qu"
 argument_list|,
 name|filen
 argument_list|,
@@ -930,7 +939,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"file %d: eof after %lu records: %lu bytes\n"
+literal|"file %d: eof after %qu records: %qu bytes\n"
 argument_list|,
 name|filen
 argument_list|,
@@ -972,7 +981,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"total length: %lu bytes\n"
+literal|"total length: %qu bytes\n"
 argument_list|,
 name|tsize
 argument_list|)
@@ -1019,18 +1028,14 @@ operator|==
 name|COPYVERIFY
 condition|)
 block|{
-name|writeop
+name|rewind_tape
 argument_list|(
 name|outp
-argument_list|,
-name|MTREW
 argument_list|)
 expr_stmt|;
-name|writeop
+name|rewind_tape
 argument_list|(
 name|inp
-argument_list|,
-name|MTREW
 argument_list|)
 expr_stmt|;
 name|verify
@@ -1355,7 +1360,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"records %ld to %ld\n"
+literal|"records %qu to %qu\n"
 argument_list|,
 name|lastrec
 argument_list|,
@@ -1367,7 +1372,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"record %ld\n"
+literal|"record %qu\n"
 argument_list|,
 name|lastrec
 argument_list|)
@@ -1376,7 +1381,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"interrupt at file %d: record %ld\n"
+literal|"interrupt at file %d: record %qu\n"
 argument_list|,
 name|filen
 argument_list|,
@@ -1525,6 +1530,80 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|rewind_tape
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+block|{
+name|struct
+name|stat
+name|sp
+decl_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|sp
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|12
+argument_list|,
+literal|"fstat in rewind"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * don't want to do tape ioctl on regular files: 	 */
+if|if
+condition|(
+name|S_ISREG
+argument_list|(
+name|sp
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|fd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|13
+argument_list|,
+literal|"lseek"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+comment|/*  assume its a tape	*/
+name|writeop
+argument_list|(
+name|fd
+argument_list|,
+name|MTREW
 argument_list|)
 expr_stmt|;
 block|}
