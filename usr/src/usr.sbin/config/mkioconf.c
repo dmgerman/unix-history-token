@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.14 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,13 +160,6 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"#include \"../sys/map.h\"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"#include \"../sys/vm.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2672,13 +2665,6 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"#include \"../sys/map.h\"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"#include \"../sys/vm.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
