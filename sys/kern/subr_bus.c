@@ -1524,8 +1524,6 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
-operator||
-name|CTLFLAG_PRISON
 argument_list|,
 literal|0
 argument_list|,
