@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.54 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.55 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.54 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.55 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4371,7 +4371,7 @@ break|break;
 default|default:
 name|syserr
 argument_list|(
-literal|"readqf(%s:%d): bad line \"%s\""
+literal|"readqf: bad line \"%s\""
 argument_list|,
 name|e
 operator|->
@@ -5258,7 +5258,7 @@ name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-name|char
+name|int
 name|type
 decl_stmt|;
 block|{
