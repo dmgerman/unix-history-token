@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.21 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2093,17 +2093,30 @@ operator|->
 name|d_ino
 index|]
 operator|==
-name|DCLEAR
+name|FCLEAR
+condition|)
+name|errmsg
+operator|=
+literal|"DUP/BAD"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|preen
 condition|)
 name|errmsg
 operator|=
 literal|"ZERO LENGTH DIRECTORY"
 expr_stmt|;
 else|else
-name|errmsg
+block|{
+name|n
 operator|=
-literal|"DUP/BAD"
+literal|1
 expr_stmt|;
+break|break;
+block|}
 name|fileerror
 argument_list|(
 name|idesc
