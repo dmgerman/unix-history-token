@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.2 1998/09/17 23:52:08 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.3 1998/09/18 01:12:46 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -73,11 +73,14 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|D
+name|DEBUG
 parameter_list|(
-name|x
+name|fmt
+parameter_list|,
+name|args
+modifier|...
 parameter_list|)
-value|x
+value|printf("%s: " fmt "\n" , __FUNCTION__ , ## args)
 end_define
 
 begin_else
@@ -88,9 +91,12 @@ end_else
 begin_define
 define|#
 directive|define
-name|D
+name|DEBUG
 parameter_list|(
-name|x
+name|fmt
+parameter_list|,
+name|args
+modifier|...
 parameter_list|)
 end_define
 
@@ -730,12 +736,9 @@ operator|>=
 name|nbdinfo
 condition|)
 block|{
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"bd_open: attempt to open nonexistent disk\n"
-argument_list|)
+literal|"attempt to open nonexistent disk"
 argument_list|)
 expr_stmt|;
 return|return
@@ -766,12 +769,9 @@ operator|!
 name|od
 condition|)
 block|{
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"bd_open: no memory\n"
-argument_list|)
+literal|"no memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -829,12 +829,42 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|D(printf("bd_open: open '%s' - unit 0x%x slice %d partition %c\n", 	     i386_fmtdev(dev), dev->d_kind.biosdisk.unit,  	     dev->d_kind.biosdisk.slice, dev->d_kind.biosdisk.partition + 'a'));
-endif|#
-directive|endif
+name|DEBUG
+argument_list|(
+literal|"open '%s', unit 0x%x slice %d partition %c"
+argument_list|,
+name|i386_fmtdev
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+operator|->
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|unit
+argument_list|,
+name|dev
+operator|->
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|slice
+argument_list|,
+name|dev
+operator|->
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|partition
+operator|+
+literal|'a'
+argument_list|)
+expr_stmt|;
 comment|/* Get geometry for this open (removable device may have changed) */
 if|if
 condition|(
@@ -844,12 +874,9 @@ name|od
 argument_list|)
 condition|)
 block|{
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"bd_open: can't get geometry\n"
-argument_list|)
+literal|"can't get geometry"
 argument_list|)
 expr_stmt|;
 name|error
@@ -878,12 +905,9 @@ name|od_buf
 argument_list|)
 condition|)
 block|{
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"bd_open: error reading MBR\n"
-argument_list|)
+literal|"error reading MBR"
 argument_list|)
 expr_stmt|;
 name|error
@@ -934,12 +958,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"bd_open: no slice table/MBR (no magic)\n"
-argument_list|)
+literal|"no slice table/MBR (no magic)"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1122,12 +1143,9 @@ operator|=
 name|sector
 expr_stmt|;
 comment|/* no partition, must be after the slice */
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"bd_open: opening raw slice\n"
-argument_list|)
+literal|"opening raw slice"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1151,12 +1169,9 @@ name|od_buf
 argument_list|)
 condition|)
 block|{
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"bd_open: error reading disklabel\n"
-argument_list|)
+literal|"error reading disklabel"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1191,12 +1206,9 @@ operator|!=
 name|DISKMAGIC
 condition|)
 block|{
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"bd_open: no disklabel\n"
-argument_list|)
+literal|"no disklabel"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1224,11 +1236,9 @@ name|d_npartitions
 condition|)
 block|{
 comment|/* 	     * The partition supplied is out of bounds; this is fatal. 	     */
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"partition '%c' exceeds partitions in table (a-'%c')\n"
+literal|"partition '%c' exceeds partitions in table (a-'%c')"
 argument_list|,
 literal|'a'
 operator|+
@@ -1246,7 +1256,6 @@ name|lp
 operator|->
 name|d_npartitions
 argument_list|)
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -1259,15 +1268,42 @@ block|}
 else|else
 block|{
 comment|/* 	     * Complain if the partition type is wrong and it shouldn't be, but 	     * regardless accept this partition. 	     */
-name|D
-argument_list|(
-argument|if ((lp->d_partitions[dev->d_kind.biosdisk.partition].p_fstype == FS_UNUSED)&& 		  !(od->od_flags& BD_FLOPPY))
+if|if
+condition|(
+operator|(
+name|lp
+operator|->
+name|d_partitions
+index|[
+name|dev
+operator|->
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|partition
+index|]
+operator|.
+name|p_fstype
+operator|==
+name|FS_UNUSED
+operator|)
+operator|&&
+operator|!
+operator|(
+name|od
+operator|->
+name|od_flags
+operator|&
+name|BD_FLOPPY
+operator|)
+condition|)
 comment|/* Floppies often have bogus fstype */
-argument|printf(
-literal|"bd_open: warning, partition marked as unused\n"
-argument|);
+name|DEBUG
+argument_list|(
+literal|"warning, partition marked as unused"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|od
 operator|->
 name|od_boff
@@ -1311,12 +1347,17 @@ name|data
 operator|=
 name|od
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|D(printf("bd_open: open_disk %p\n", od));
-endif|#
-directive|endif
+name|DEBUG
+argument_list|(
+literal|"open_disk %p, partition at 0x%x"
+argument_list|,
+name|od
+argument_list|,
+name|od
+operator|->
+name|od_boff
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 if|if
@@ -1381,7 +1422,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|D(printf("bd_close: open_disk %p\n", od));
+block|DEBUG("open_disk %p", od);
 endif|#
 directive|endif
 if|#
@@ -1499,7 +1540,7 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|D(printf("bd_strategy: open_disk %p\n", od));
+block|DEBUG("open_disk %p", od);
 endif|#
 directive|endif
 if|if
@@ -1522,7 +1563,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|D(printf("bd_strategy: read %d from %d+%d to %p\n", blks, od->od_boff, dblk, buf));
+block|DEBUG("read %d from %d+%d to %p", blks, od->od_boff, dblk, buf);
 endif|#
 directive|endif
 if|if
@@ -1554,12 +1595,9 @@ name|buf
 argument_list|)
 condition|)
 block|{
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"read error\n"
-argument_list|)
+literal|"read error"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1574,35 +1612,9 @@ name|BD_SUPPORT_FRAGS
 if|#
 directive|if
 literal|0
-block|D(printf("bd_strategy: frag read %d from %d+%d+d to %p\n",
+block|D(printf("bd_strategy: frag read %d from %d+%d+d to %p\n",  	     fragsize, od->od_boff, dblk, blks, buf + (blks * BIOSDISK_SECSIZE)));
 endif|#
 directive|endif
-name|fragsize
-operator|,
-name|od
-operator|->
-name|od_boff
-operator|,
-name|dblk
-operator|,
-name|blks
-operator|,
-name|buf
-operator|+
-operator|(
-name|blks
-operator|*
-name|BIOSDISK_SECSIZE
-operator|)
-block|)
-end_function
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_if
 if|if
 condition|(
 name|fragsize
@@ -1625,12 +1637,9 @@ name|fragsize
 argument_list|)
 condition|)
 block|{
-name|D
+name|DEBUG
 argument_list|(
-name|printf
-argument_list|(
-literal|"frag read error\n"
-argument_list|)
+literal|"frag read error"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1639,9 +1648,6 @@ name|EIO
 operator|)
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 name|bcopy
 argument_list|(
 name|fragbuf
@@ -1657,14 +1663,8 @@ argument_list|,
 name|fragsize
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|if
 condition|(
 name|rsize
@@ -1674,18 +1674,16 @@ name|rsize
 operator|=
 name|size
 expr_stmt|;
-end_if
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|bd_read
 parameter_list|(
@@ -1852,7 +1850,7 @@ name|v86
 operator|.
 name|es
 operator|=
-name|V86SEG
+name|VTOPSEG
 argument_list|(
 name|dest
 argument_list|)
@@ -1861,7 +1859,7 @@ name|v86
 operator|.
 name|ebx
 operator|=
-name|V86OFS
+name|VTOPOFF
 argument_list|(
 name|dest
 argument_list|)
