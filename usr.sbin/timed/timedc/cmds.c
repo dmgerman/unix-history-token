@@ -821,7 +821,7 @@ name|NONSTDTIME
 case|:
 name|printf
 argument_list|(
-literal|"%s transmitts a non-standard time format\n"
+literal|"%s transmits a non-standard time format\n"
 argument_list|,
 name|hp
 operator|->
