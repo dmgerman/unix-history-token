@@ -2586,6 +2586,13 @@ operator|>=
 literal|605
 operator|)
 operator|)
+operator|||
+expr|\
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500042
+operator|)
 name|error
 operator|=
 name|ip_output

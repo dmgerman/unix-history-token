@@ -4302,7 +4302,7 @@ name|m
 parameter_list|,
 name|type
 parameter_list|)
-value|do {					\ 	(m)->m_type = (type);						\ 	(m)->m_next = NULL;						\ 	(m)->m_nextpkt = NULL;						\ 	(m)->m_data = (m)->m_pktdat;					\ 	(m)->m_flags = M_PKTHDR;					\ 	(m)->m_pkthdr.rcvif = NULL;					\ 	(m)->m_pkthdr.csum_flags = 0;					\ 	(m)->m_pkthdr.aux = NULL;					\ } while (0)
+value|do {					\ 	(m)->m_type = (type);						\ 	(m)->m_next = NULL;						\ 	(m)->m_nextpkt = NULL;						\ 	(m)->m_data = (m)->m_pktdat;					\ 	(m)->m_flags = M_PKTHDR;					\ 	(m)->m_pkthdr.rcvif = NULL;					\ 	(m)->m_pkthdr.csum_flags = 0;					\ 	SLIST_INIT(&(m)->m_pkthdr.tags);				\ } while (0)
 end_define
 
 begin_define
@@ -5420,7 +5420,6 @@ name|persist
 init|=
 literal|0
 decl_stmt|;
-comment|/* XXX: This check is bogus... please fix (see KAME). */
 if|if
 condition|(
 operator|(
@@ -5432,32 +5431,14 @@ name|M_PKTHDR
 operator|)
 operator|!=
 literal|0
-operator|&&
-name|mb
-operator|->
-name|m_pkthdr
-operator|.
-name|aux
 condition|)
-block|{
-name|m_freem
+name|m_tag_delete_chain
 argument_list|(
 name|mb
-operator|->
-name|m_pkthdr
-operator|.
-name|aux
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|mb
-operator|->
-name|m_pkthdr
-operator|.
-name|aux
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -5632,7 +5613,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free an entire chain of mbufs and associated external buffers, if  * applicable.  Right now, we only optimize a little so that the cache  * lock may be held across a single mbuf+cluster free.  Hopefully,  * we'll eventually be holding the lock across more than merely two  * consecutive frees but right now this is hard to implement because of  * things like _mext_dealloc_ref (may do a free()) and atomic ops in the  * loop, as well as the fact that we may recurse on m_freem() in  * m_pkthdr.aux != NULL cases.  *  *  - mb: the mbuf chain to free.  */
+comment|/*  * Free an entire chain of mbufs and associated external buffers, if  * applicable.  Right now, we only optimize a little so that the cache  * lock may be held across a single mbuf+cluster free.  Hopefully,  * we'll eventually be holding the lock across more than merely two  * consecutive frees but right now this is hard to implement because of  * things like _mext_dealloc_ref (may do a free()) and atomic ops in the  * loop.  *  *  - mb: the mbuf chain to free.  */
 end_comment
 
 begin_function
@@ -5663,7 +5644,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* XXX: This check is bogus... please fix (see KAME). */
 if|if
 condition|(
 operator|(
@@ -5675,32 +5655,14 @@ name|M_PKTHDR
 operator|)
 operator|!=
 literal|0
-operator|&&
-name|mb
-operator|->
-name|m_pkthdr
-operator|.
-name|aux
 condition|)
-block|{
-name|m_freem
+name|m_tag_delete_chain
 argument_list|(
 name|mb
-operator|->
-name|m_pkthdr
-operator|.
-name|aux
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|mb
-operator|->
-name|m_pkthdr
-operator|.
-name|aux
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -5988,13 +5950,15 @@ name|csum_flags
 operator|=
 literal|0
 expr_stmt|;
+name|SLIST_INIT
+argument_list|(
+operator|&
 name|mb
 operator|->
 name|m_pkthdr
 operator|.
-name|aux
-operator|=
-name|NULL
+name|tags
+argument_list|)
 expr_stmt|;
 block|}
 name|mb

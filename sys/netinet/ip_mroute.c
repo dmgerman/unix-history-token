@@ -8761,6 +8761,8 @@ name|ip_moptions
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -8825,6 +8827,8 @@ name|IP_FORWARDING
 argument_list|,
 operator|&
 name|imo
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

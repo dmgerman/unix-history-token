@@ -1105,6 +1105,8 @@ argument_list|,
 name|inp
 operator|->
 name|inp_moptions
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
