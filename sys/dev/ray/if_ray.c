@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.25 2000/05/07 15:00:06 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.27 2000/05/07 16:03:36 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*  *  * Card configuration  * ==================  *  * This card is unu
 end_comment
 
 begin_comment
-comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  * add the start_join_net - done  *	i needed it anyway  * remove startccs and startcmd - done  *	as those were used for the NetBSD start timeout  * multicast - done but UNTESTED  *	I don't have the ability/facilty to test this  * rxlevel - done  *	stats reported via raycontrol  * getparams ioctl - done  *	reported via raycontrol  * start_join_done needs a restart in download_done - done  *	now use netbsd style start up  * ioctls - done  *	use raycontrol  *	translation, BSS_ID, countrycode, changing mode  * ifp->if_hdr length - done  * rx level and antenna cache - done  *	antenna not used yet  * antenna tx side - done  *	not tested!  * shutdown - done  *	the driver seems to do the right thing for plugging and unplugging  *	cards  * apm/resume - ignore  *	apm+pccard is borken for 3.x - no one knows how to do it anymore  * fix the XXX code in start_join_done - n/a  *	i've removed this as the error handling should be consistent for  *	all ECF commands and none of the other commands bother!  * ray_update_params_done needs work - done  *	as part of scheduler/promisc re-write  * raycontrol to be firmware version aware - done  *	also report and update parameters IOCTLs are version aware  * make RAY_DPRINTFN RAY_DPRINTF - done  * make all printfs RAY_PRINTF - done  * faster TX routine - done  *	see comments but OACTIVE is gone  * __P to die - done  *	the rest is ansi anyway  *  * ***stop/unload needs to drain comq  * ***stop/unload checks in more routines  * ***reset in ray_init_user?  * ***IFF_RUNNING checks are they really needed?  * ***PCATCH tsleeps and have something that will clean the runq  * ***watchdog to catch screwed up removals?  * ***check and rationalise CM mappings  * ***should the desired nw parameters move into the comq entry to maintain  *    correct sequencing?  * why can't download use sc_promisc?  * macro for gone and check is at head of all externally called routines  * for ALLMULTI must go into PROMISC and filter unicast packets  * mcast code resurrection  * softc and ifp in variable definition block  * UPDATE_PARAMS seems to return an interrupt - maybe the timeout  *     is needed for wrong values?  *	remember it must be serialised as it uses the HCF-ECF area  * check all RECERRs and make sure that some are RAY_PRINTF not RAY_DPRINTF  * havenet needs checking again  * error handling of ECF command completions  * probably function/macro to test unload at top of commands  * proper setting of mib_hop_seq_len with country code for v4 firmware  * _reset - check where needed  * splimp or splnet?  * more translations  * tidy #includes - we cant need all of these  * infrastructure mode  *	needs handling of basic rate set  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *	need to consider WEP  * acting as ap - should be able to get working from the manual  * differeniate between parameters set in attach and init  * spinning in ray_cmd_issue  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  * callout handles need rationalising. can probably remove sj_timerh  * fragmentation when rx level drops?  * proper handling of the basic rate set - see the manual  */
+comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  * add the start_join_net - done  *	i needed it anyway  * remove startccs and startcmd - done  *	as those were used for the NetBSD start timeout  * multicast - done but UNTESTED  *	I don't have the ability/facilty to test this  * rxlevel - done  *	stats reported via raycontrol  * getparams ioctl - done  *	reported via raycontrol  * start_join_done needs a restart in download_done - done  *	now use netbsd style start up  * ioctls - done  *	use raycontrol  *	translation, BSS_ID, countrycode, changing mode  * ifp->if_hdr length - done  * rx level and antenna cache - done  *	antenna not used yet  * antenna tx side - done  *	not tested!  * shutdown - done  *	the driver seems to do the right thing for plugging and unplugging  *	cards  * apm/resume - ignore  *	apm+pccard is borken for 3.x - no one knows how to do it anymore  * fix the XXX code in start_join_done - n/a  *	i've removed this as the error handling should be consistent for  *	all ECF commands and none of the other commands bother!  * ray_update_params_done needs work - done  *	as part of scheduler/promisc re-write  * raycontrol to be firmware version aware - done  *	also report and update parameters IOCTLs are version aware  * make RAY_DPRINTFN RAY_DPRINTF - done  * make all printfs RAY_PRINTF - done  * faster TX routine - done  *	see comments but OACTIVE is gone  * __P to die - done  *	the rest is ansi anyway  * macroize the attribute read/write and 3.x driver - done  *	like the SRAM macros?  *  * ***stop/unload needs to drain comq  * ***stop/unload checks in more routines  * ***reset in ray_init_user?  * ***IFF_RUNNING checks are they really needed?  * ***PCATCH tsleeps and have something that will clean the runq  * ***watchdog to catch screwed up removals?  * ***check and rationalise CM mappings  * ***should the desired nw parameters move into the comq entry to maintain  *    correct sequencing?  * why can't download use sc_promisc?  * macro for gone and check is at head of all externally called routines  * for ALLMULTI must go into PROMISC and filter unicast packets  * mcast code resurrection  * softc and ifp in variable definition block  * UPDATE_PARAMS seems to return an interrupt - maybe the timeout  *     is needed for wrong values?  *	remember it must be serialised as it uses the HCF-ECF area  * check all RECERRs and make sure that some are RAY_PRINTF not RAY_DPRINTF  * havenet needs checking again  * error handling of ECF command completions  * probably function/macro to test unload at top of commands  * proper setting of mib_hop_seq_len with country code for v4 firmware  * _reset - check where needed  * splimp or splnet?  * more translations  * tidy #includes - we cant need all of these  * infrastructure mode  *	needs handling of basic rate set  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *	need to consider WEP  * acting as ap - should be able to get working from the manual  * differeniate between parameters set in attach and init  * spinning in ray_cmd_issue  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  * callout handles need rationalising. can probably remove sj_timerh  * fragmentation when rx level drops?  * proper handling of the basic rate set - see the manual  *  * ray_nw_param- promisc in here too?  * ray_nw_param- sc_station_addr in here too (for changing mac address)  * ray_nw_param- move desired into the command structure?  */
 end_comment
 
 begin_define
@@ -69,9 +69,7 @@ value|(				\
 comment|/* RAY_DBG_RECERR	| */
 value|\
 comment|/* RAY_DBG_SUBR		| */
-value|\
-comment|/* RAY_DBG_BOOTPARAM	| */
-value|\
+value|\ 			   RAY_DBG_BOOTPARAM	|    	\
 comment|/* RAY_DBG_STARTJOIN	| */
 value|\
 comment|/* RAY_DBG_CCS		| */
@@ -85,22 +83,13 @@ value|\
 comment|/* RAY_DBG_CM		| */
 value|\
 comment|/* RAY_DBG_COM		| */
+value|\
+comment|/* RAY_DBG_STOP		| */
 value|\ 			0				\ 			)
 end_define
 
 begin_comment
 comment|/*  * XXX build options - move to LINT  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAY_NEED_CM_FIXUP
-value|1
-end_define
-
-begin_comment
-comment|/* Needed until pccardd hacks for ed drivers are removed (pccardd forces 16bit memory and 0x4000 size) THIS IS A DANGEROUS THING TO USE IF YOU USE OTHER MEMORY MAPPED PCCARDS */
 end_comment
 
 begin_define
@@ -440,31 +429,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_ieee80211.h>
+file|<dev/ray/if_ieee80211.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_rayreg.h>
+file|<dev/ray/if_rayreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_raymib.h>
+file|<dev/ray/if_raymib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_raydbg.h>
+file|<dev/ray/if_raydbg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_rayvar.h>
+file|<dev/ray/if_rayvar.h>
 end_include
 
 begin_comment
@@ -480,48 +469,6 @@ name|struct
 name|isa_device
 modifier|*
 name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ray_attr_read
-parameter_list|(
-name|struct
-name|ray_softc
-modifier|*
-name|sc
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|,
-name|u_int8_t
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ray_attr_write
-parameter_list|(
-name|struct
-name|ray_softc
-modifier|*
-name|sc
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|,
-name|u_int8_t
-name|byte
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1039,22 +986,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int8_t
-name|ray_read_reg
-parameter_list|(
-name|struct
-name|ray_softc
-modifier|*
-name|sc
-parameter_list|,
-name|off_t
-name|reg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|ray_repparams
 parameter_list|(
@@ -1144,6 +1075,58 @@ parameter_list|(
 name|void
 modifier|*
 name|xsc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ray_res_alloc_am
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ray_res_alloc_cm
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ray_res_alloc_irq
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ray_res_release
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1423,17 +1406,13 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|RAY_NEED_CM_REMAPPING
-operator||
-name|RAY_NEED_CM_FIXUP
-operator|)
 end_if
 
 begin_function_decl
 specifier|static
 name|void
-name|ray_attr_getmap
+name|ray_attr_mapam
 parameter_list|(
 name|struct
 name|ray_softc
@@ -1456,13 +1435,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|u_int8_t
+name|ray_attr_read_1
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ray_attr_write_1
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|,
+name|u_int8_t
+name|byte
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* (RAY_NEED_CM_REMAPPING | RAY_NEED_CM_FIXUP) */
+comment|/* RAY_NEED_CM_REMAPPING */
 end_comment
 
 begin_comment
@@ -1560,11 +1574,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-operator|(
 name|RAY_NEED_CM_REMAPPING
-operator||
-name|RAY_NEED_CM_FIXUP
-operator|)
 name|sc
 operator|->
 name|slotnum
@@ -1575,7 +1585,7 @@ name|slt
 operator|->
 name|slotnum
 expr_stmt|;
-name|ray_attr_getmap
+name|ray_res_alloc_am
 argument_list|(
 name|sc
 argument_list|)
@@ -1584,7 +1594,7 @@ name|RAY_DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|RAY_DBG_RECERR
+name|RAY_DBG_CM
 argument_list|,
 literal|"Memory window flags 0x%02x, start %p, "
 literal|"size 0x%x, card address 0x%lx"
@@ -1614,12 +1624,6 @@ operator|.
 name|card
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* (RAY_NEED_CM_REMAPPING | RAY_NEED_CM_FIXUP) */
-if|#
-directive|if
-name|RAY_NEED_CM_FIXUP
 name|doRemap
 operator|=
 literal|0
@@ -1782,13 +1786,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* RAY_NEED_CM_FIXUP */
-name|sc
-operator|->
-name|gone
-operator|=
-literal|0
-expr_stmt|;
+comment|/* RAY_NEED_CM_REMAPPING */
 name|sc
 operator|->
 name|unit
@@ -1819,47 +1817,13 @@ name|isahd
 operator|.
 name|id_flags
 expr_stmt|;
-name|printf
+comment|/* 	 * Read startup results, check the card is okay and work out what 	 * version we are using. 	 */
+name|RAY_MAP_CM
 argument_list|(
-literal|"ray%d:<Raylink/IEEE 802.11>"
-literal|"maddr %p msize 0x%x irq %d flags 0x%x on isa (PC-Card slot %d)\n"
-argument_list|,
 name|sc
-operator|->
-name|unit
-argument_list|,
-name|sc
-operator|->
-name|maddr
-argument_list|,
-name|dev_p
-operator|->
-name|isahd
-operator|.
-name|id_msize
-argument_list|,
-name|ffs
-argument_list|(
-name|dev_p
-operator|->
-name|isahd
-operator|.
-name|id_irq
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-name|sc
-operator|->
-name|flags
-argument_list|,
-name|sc
-operator|->
-name|slotnum
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read startup results, check the card is okay and work out what 	 * version we are using. 	 */
-name|ray_read_region
+name|SRAM_READ_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -1935,6 +1899,57 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|printf
+argument_list|(
+literal|"ray%d:<Raylink/IEEE 802.11>"
+literal|"maddr %p msize 0x%x irq %d flags 0x%x on isa (PC-Card slot %d)\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|,
+name|sc
+operator|->
+name|maddr
+argument_list|,
+name|dev_p
+operator|->
+name|isahd
+operator|.
+name|id_msize
+argument_list|,
+name|ffs
+argument_list|(
+name|dev_p
+operator|->
+name|isahd
+operator|.
+name|id_irq
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+name|sc
+operator|->
+name|flags
+argument_list|,
+name|sc
+operator|->
+name|slotnum
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|gone
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Reset any pending interrupts 	 */
+name|RAY_HCS_CLEAR_INTR
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Fixup tib size to be correct - on build 4 it is garbage 	 */
 if|if
 condition|(
@@ -1975,7 +1990,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PCCard attach.  */
+comment|/*  * Attach the card into the kernel  */
 end_comment
 
 begin_function
@@ -2107,12 +2122,6 @@ argument_list|(
 expr|struct
 name|ray_nw_param
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Reset any pending interrupts */
-name|RAY_HCS_CLEAR_INTR
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 if|#
@@ -4614,7 +4623,7 @@ name|sc_version
 operator|==
 name|RAY_ECFS_BUILD_4
 condition|)
-name|ray_write_region
+name|SRAM_WRITE_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -4630,7 +4639,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|ray_write_region
+name|SRAM_WRITE_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -4993,7 +5002,7 @@ name|sc_d
 operator|.
 name|np_priv_join
 expr_stmt|;
-name|ray_write_region
+name|SRAM_WRITE_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -5104,7 +5113,7 @@ name|ccs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Read back network parameters that the ECF sets 	 */
-name|ray_read_region
+name|SRAM_READ_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -5188,7 +5197,7 @@ argument_list|,
 literal|"updated parameters"
 argument_list|)
 expr_stmt|;
-name|ray_read_region
+name|SRAM_READ_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -5453,7 +5462,7 @@ name|sc
 argument_list|,
 name|RAY_DBG_STOP
 argument_list|,
-literal|"HCS_intr %d RCSI 0x%0x\n"
+literal|"HCS_intr %d RCSI 0x%0x"
 argument_list|,
 name|RAY_HCS_INTR
 argument_list|(
@@ -5474,7 +5483,7 @@ name|sc
 argument_list|,
 name|RAY_DBG_STOP
 argument_list|,
-literal|"ECF ready %d\n"
+literal|"ECF ready %d"
 argument_list|,
 name|RAY_ECF_READY
 argument_list|(
@@ -5667,22 +5676,18 @@ argument_list|,
 literal|"resetting ECF"
 argument_list|)
 expr_stmt|;
-name|ray_attr_write
+name|ATTR_WRITE_1
 argument_list|(
-operator|(
 name|sc
-operator|)
 argument_list|,
 name|RAY_COR
 argument_list|,
 name|RAY_COR_RESET
 argument_list|)
 expr_stmt|;
-name|ray_attr_write
+name|ATTR_WRITE_1
 argument_list|(
-operator|(
 name|sc
-operator|)
 argument_list|,
 name|RAY_COR
 argument_list|,
@@ -6578,7 +6583,7 @@ operator|)
 operator|<
 name|RAY_TX_END
 condition|)
-name|ray_write_region
+name|SRAM_WRITE_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -7009,7 +7014,7 @@ literal|"can't be an AP yet"
 argument_list|)
 expr_stmt|;
 block|}
-name|ray_write_region
+name|SRAM_WRITE_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -7714,7 +7719,7 @@ name|sc
 argument_list|,
 name|RAY_DBG_RX
 argument_list|,
-literal|"frag index %d len %d bufp 0x%x ni %d\n"
+literal|"frag index %d len %d bufp 0x%x ni %d"
 argument_list|,
 name|i
 argument_list|,
@@ -7743,7 +7748,7 @@ name|sc
 argument_list|,
 name|RAY_DBG_RECERR
 argument_list|,
-literal|"bad length current 0x%x pktlen 0x%x\n"
+literal|"bad length current 0x%x pktlen 0x%x"
 argument_list|,
 name|fraglen
 operator|+
@@ -7824,7 +7829,7 @@ name|ebufp
 operator|<=
 name|RAY_RX_END
 condition|)
-name|ray_read_region
+name|SRAM_READ_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -7837,7 +7842,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|ray_read_region
+name|SRAM_READ_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -7854,7 +7859,7 @@ name|bufp
 operator|)
 argument_list|)
 expr_stmt|;
-name|ray_read_region
+name|SRAM_READ_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -7985,7 +7990,7 @@ name|sc
 argument_list|,
 name|RAY_DBG_RECERR
 argument_list|,
-literal|"header not version 0 fc 0x%x\n"
+literal|"header not version 0 fc 0x%x"
 argument_list|,
 name|fc
 argument_list|)
@@ -8163,6 +8168,8 @@ name|IEEE80211_FC1_AP_TO_STA
 case|:
 name|RAY_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
 name|RAY_DBG_RX
 argument_list|,
 literal|"packet from ap %6D"
@@ -8188,6 +8195,8 @@ name|IEEE80211_FC1_AP_TO_AP
 case|:
 name|RAY_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
 name|RAY_DBG_RX
 argument_list|,
 literal|"packet between aps %6D %6D"
@@ -8819,7 +8828,7 @@ name|RAY_PRINTF
 argument_list|(
 name|sc
 argument_list|,
-literal|"bad ccs index 0x%x\n"
+literal|"bad ccs index 0x%x"
 argument_list|,
 name|ccsi
 argument_list|)
@@ -10083,7 +10092,7 @@ operator|.
 name|le_next
 control|)
 block|{
-name|ray_write_region
+name|SRAM_WRITE_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -11258,7 +11267,7 @@ argument_list|,
 name|c_len
 argument_list|)
 expr_stmt|;
-name|ray_read_region
+name|SRAM_READ_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -12037,7 +12046,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|ray_write_region
+name|SRAM_WRITE_REGION
 argument_list|(
 name|sc
 argument_list|,
@@ -13801,27 +13810,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Routines to read from/write to the attribute memory.  *  * Taken from if_xe.c.  *  * Until there is a real way of accessing the attribute memory from a driver  * these have to stay.  *  * The hack to use the crdread/crdwrite device functions causes the attribute  * memory to be remapped into the controller and looses the mapping of  * the common memory.  *  * We cheat by using PIOCSMEM and assume that the common memory window  * is in window 0 of the card structure.  *  * Also  *	pccard/pcic.c/crdread does mark the unmapped window as inactive  *	pccard/pccard.c/map_mem toggles the mapping of a window on  *	successive calls  *  */
+comment|/*  * Routines to obtain resources for the card  */
 end_comment
 
 begin_comment
-comment|/*  * Furtle around to get the initial map from pccardd */
+comment|/*  * Allocate the attribute memory on the card  */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|RAY_NEED_CM_REMAPPING
-operator||
-name|RAY_NEED_CM_FIXUP
-operator|)
-end_if
 
 begin_function
 specifier|static
-name|void
-name|ray_attr_getmap
+name|int
+name|ray_res_alloc_am
 parameter_list|(
 name|struct
 name|ray_softc
@@ -13829,6 +13828,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+if|#
+directive|if
+name|RAY_NEED_CM_REMAPPING
 name|struct
 name|ucred
 name|uc
@@ -13841,13 +13843,12 @@ name|struct
 name|proc
 name|p
 decl_stmt|;
-name|int
-name|result
-decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
 name|sc
 argument_list|,
+name|RAY_DBG_SUBR
+operator||
 name|RAY_DBG_CM
 argument_list|,
 literal|""
@@ -13887,8 +13888,6 @@ name|cr_uid
 operator|=
 literal|0
 expr_stmt|;
-name|result
-operator|=
 name|cdevsw
 index|[
 name|CARD_MAJOR
@@ -13921,7 +13920,89 @@ operator|&
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* RAY_NEED_CM_REMAPPING */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|ray_res_alloc_cm
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|ray_res_alloc_irq
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ray_res_release
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/*  * Hacks for working around the PCCard layer problems.  *  * For OLDCARD  *  * Taken from if_xe.c.  *  * Until there is a real way of accessing the attribute memory from a driver  * these have to stay.  *  * The hack to use the crdread/crdwrite device functions causes the attribute  * memory to be remapped into the controller and looses the mapping of  * the common memory.  *  * We cheat by using PIOCSMEM and assume that the common memory window  * is in window 0 of the card structure.  *  * Also  *	pccard/pcic.c/crdread does mark the unmapped window as inactive  *	pccard/pccard.c/map_mem toggles the mapping of a window on  *	successive calls  *  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|RAY_NEED_CM_REMAPPING
+end_if
+
+begin_function
+specifier|static
+name|void
+name|ray_attr_mapam
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{ }
 end_function
 
 begin_function
@@ -14017,23 +14098,129 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* (RAY_NEED_CM_REMAPPING | RAY_NEED_CM_FIXUP) */
-end_comment
-
-begin_comment
-comment|/******************************************************************************  * XXX NOT KNF FROM HERE DOWN  ******************************************************************************/
-end_comment
+begin_function
+specifier|static
+name|u_int8_t
+name|ray_attr_read_1
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|)
+block|{
+name|struct
+name|iovec
+name|iov
+decl_stmt|;
+name|struct
+name|uio
+name|uios
+decl_stmt|;
+name|u_int8_t
+name|byte
+decl_stmt|;
+name|iov
+operator|.
+name|iov_base
+operator|=
+operator|&
+name|byte
+expr_stmt|;
+name|iov
+operator|.
+name|iov_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|byte
+argument_list|)
+expr_stmt|;
+name|uios
+operator|.
+name|uio_iov
+operator|=
+operator|&
+name|iov
+expr_stmt|;
+name|uios
+operator|.
+name|uio_iovcnt
+operator|=
+literal|1
+expr_stmt|;
+name|uios
+operator|.
+name|uio_offset
+operator|=
+name|offset
+expr_stmt|;
+name|uios
+operator|.
+name|uio_resid
+operator|=
+literal|1
+expr_stmt|;
+name|uios
+operator|.
+name|uio_segflg
+operator|=
+name|UIO_SYSSPACE
+expr_stmt|;
+name|uios
+operator|.
+name|uio_rw
+operator|=
+name|UIO_READ
+expr_stmt|;
+name|uios
+operator|.
+name|uio_procp
+operator|=
+literal|0
+expr_stmt|;
+name|cdevsw
+index|[
+name|CARD_MAJOR
+index|]
+operator|->
+name|d_read
+argument_list|(
+name|makedev
+argument_list|(
+name|CARD_MAJOR
+argument_list|,
+name|sc
+operator|->
+name|slotnum
+argument_list|)
+argument_list|,
+operator|&
+name|uios
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ray_attr_mapcm
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|byte
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
-name|int
-name|ray_attr_write
+name|void
+name|ray_attr_write_1
 parameter_list|(
 name|struct
 name|ray_softc
@@ -14054,9 +14241,6 @@ decl_stmt|;
 name|struct
 name|uio
 name|uios
-decl_stmt|;
-name|int
-name|err
 decl_stmt|;
 name|iov
 operator|.
@@ -14120,8 +14304,6 @@ name|uio_procp
 operator|=
 literal|0
 expr_stmt|;
-name|err
-operator|=
 name|cdevsw
 index|[
 name|CARD_MAJOR
@@ -14144,195 +14326,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|RAY_NEED_CM_REMAPPING
 name|ray_attr_mapcm
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RAY_NEED_CM_REMAPPING */
-return|return
-operator|(
-name|err
-operator|)
-return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|ray_attr_read
-parameter_list|(
-name|struct
-name|ray_softc
-modifier|*
-name|sc
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|,
-name|u_int8_t
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-block|{
-name|struct
-name|iovec
-name|iov
-decl_stmt|;
-name|struct
-name|uio
-name|uios
-decl_stmt|;
-name|int
-name|err
-decl_stmt|;
-name|iov
-operator|.
-name|iov_base
-operator|=
-name|buf
-expr_stmt|;
-name|iov
-operator|.
-name|iov_len
-operator|=
-name|size
-expr_stmt|;
-name|uios
-operator|.
-name|uio_iov
-operator|=
-operator|&
-name|iov
-expr_stmt|;
-name|uios
-operator|.
-name|uio_iovcnt
-operator|=
-literal|1
-expr_stmt|;
-name|uios
-operator|.
-name|uio_offset
-operator|=
-name|offset
-expr_stmt|;
-name|uios
-operator|.
-name|uio_resid
-operator|=
-name|size
-expr_stmt|;
-name|uios
-operator|.
-name|uio_segflg
-operator|=
-name|UIO_SYSSPACE
-expr_stmt|;
-name|uios
-operator|.
-name|uio_rw
-operator|=
-name|UIO_READ
-expr_stmt|;
-name|uios
-operator|.
-name|uio_procp
-operator|=
-literal|0
-expr_stmt|;
-name|err
-operator|=
-name|cdevsw
-index|[
-name|CARD_MAJOR
-index|]
-operator|->
-name|d_read
-argument_list|(
-name|makedev
-argument_list|(
-name|CARD_MAJOR
-argument_list|,
-name|sc
-operator|->
-name|slotnum
-argument_list|)
-argument_list|,
-operator|&
-name|uios
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|RAY_NEED_CM_REMAPPING
-name|ray_attr_mapcm
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+begin_endif
 endif|#
 directive|endif
-comment|/* RAY_NEED_CM_REMAPPING */
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
-end_function
+end_endif
 
-begin_function
-specifier|static
-name|u_int8_t
-name|ray_read_reg
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-name|struct
-name|ray_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|off_t
-name|reg
-decl_stmt|;
-block|{
-name|u_int8_t
-name|byte
-decl_stmt|;
-name|ray_attr_read
-argument_list|(
-name|sc
-argument_list|,
-name|reg
-argument_list|,
-operator|&
-name|byte
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|byte
-operator|)
-return|;
-block|}
-end_function
+begin_comment
+comment|/* RAY_NEED_CM_REMAPPING */
+end_comment
+
+begin_comment
+comment|/*  * mbuf dump  */
+end_comment
 
 begin_if
 if|#
@@ -14347,26 +14360,20 @@ specifier|static
 name|void
 name|ray_dump_mbuf
 parameter_list|(
-name|sc
-parameter_list|,
-name|m
-parameter_list|,
-name|s
-parameter_list|)
 name|struct
 name|ray_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int8_t
 modifier|*
