@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diskpart.c	8.1 (Berkeley) %G%"
+literal|"@(#)diskpart.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2149,16 +2149,19 @@ index|]
 operator|==
 literal|0
 condition|)
+block|{
 name|dp
 operator|->
 name|d_type
 operator|=
 literal|1
 expr_stmt|;
-else|else
-name|dp
-operator|->
-name|d_type
+break|break;
+block|}
+if|if
+condition|(
+operator|(
+name|i
 operator|=
 name|gettype
 argument_list|(
@@ -2166,16 +2169,19 @@ name|buf
 argument_list|,
 name|dktypenames
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|->
-name|d_type
+operator|)
 operator|>=
 literal|0
 condition|)
+block|{
+name|dp
+operator|->
+name|d_type
+operator|=
+name|i
+expr_stmt|;
 break|break;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
