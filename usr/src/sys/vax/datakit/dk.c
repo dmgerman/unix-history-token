@@ -1867,6 +1867,22 @@ name|u
 operator|.
 name|u_nd
 decl_stmt|;
+comment|/* XXX */
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -1874,6 +1890,8 @@ name|fp
 decl_stmt|;
 name|int
 name|m
+decl_stmt|,
+name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2046,11 +2064,12 @@ name|u
 operator|.
 name|u_ofile
 index|[
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+operator|-
+literal|1
+operator|-
+name|p
+operator|->
+name|p_dupfd
 index|]
 expr_stmt|;
 name|dksnamer
