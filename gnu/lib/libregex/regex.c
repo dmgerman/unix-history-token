@@ -15567,6 +15567,13 @@ directive|ifndef
 name|emacs
 end_ifndef
 
+begin_if
+if|#
+directive|if
+operator|!
+name|NO_POSIX_COMPAT
+end_if
+
 begin_comment
 comment|/* regcomp takes a regular expression as a string and compiles it.     PREG is a regex_t *.  We do not expect any fields to be initialized,    since POSIX says we shouldn't.  Thus, we set       `buffer' to the compiled pattern;      `used' to the length of the compiled pattern;      `syntax' to RE_SYNTAX_POSIX_EXTENDED if the        REG_EXTENDED bit in CFLAGS is set; otherwise, to        RE_SYNTAX_POSIX_BASIC;      `newline_anchor' to REG_NEWLINE being set in CFLAGS;      `fastmap' and `fastmap_accurate' to zero;      `re_nsub' to the number of subexpressions in PATTERN.     PATTERN is the address of the pattern string.     CFLAGS is a series of bits which affect compilation.       If REG_EXTENDED is set, we use POSIX extended syntax; otherwise, we      use POSIX basic syntax.       If REG_NEWLINE is set, then . and [^...] don't match newline.      Also, regexec will try a match beginning after every newline.       If REG_ICASE is set, then we considers upper- and lowercase      versions of letters to be equivalent when matching.       If REG_NOSUB is set, then when PREG is passed to regexec, that      routine will report only success or failure, and nothing about the      registers.     It returns 0 if it succeeds, nonzero if it doesn't.  (See regex.h for    the return codes and their meanings.)  */
 end_comment
@@ -16323,6 +16330,15 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !NO_POSIX_COMPAT */
+end_comment
 
 begin_endif
 endif|#
