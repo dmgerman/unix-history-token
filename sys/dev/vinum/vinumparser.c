@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mount.h>
 end_include
 

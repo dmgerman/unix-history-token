@@ -1106,6 +1106,12 @@ end_function_decl
 
 begin_struct_decl
 struct_decl|struct
+name|disklabel
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|request
 struct_decl|;
 end_struct_decl
