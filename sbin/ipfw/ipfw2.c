@@ -7877,7 +7877,7 @@ literal|"disable"
 init|;
 name|i
 operator|<
-literal|31
+name|RESVD_SET
 condition|;
 name|i
 operator|++
@@ -7927,7 +7927,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|31
+name|RESVD_SET
 condition|;
 name|i
 operator|++
@@ -8040,7 +8040,7 @@ argument_list|)
 operator|||
 name|rulenum
 operator|>
-literal|30
+name|RESVD_SET
 condition|)
 name|errx
 argument_list|(
@@ -8070,7 +8070,7 @@ argument_list|)
 operator|||
 name|new_set
 operator|>
-literal|30
+name|RESVD_SET
 condition|)
 name|errx
 argument_list|(
@@ -8251,7 +8251,7 @@ literal|3
 operator|&&
 name|rulenum
 operator|>
-literal|30
+name|RESVD_SET
 operator|)
 operator|||
 operator|(
@@ -8292,7 +8292,7 @@ argument_list|)
 operator|||
 name|new_set
 operator|>
-literal|30
+name|RESVD_SET
 condition|)
 name|errx
 argument_list|(
@@ -8447,7 +8447,7 @@ literal|0
 operator|||
 name|i
 operator|>
-literal|30
+name|RESVD_SET
 condition|)
 name|errx
 argument_list|(
@@ -14670,7 +14670,7 @@ name|ac
 operator|--
 expr_stmt|;
 block|}
-comment|/* [set N]	-- set number (0..30), optional */
+comment|/* [set N]	-- set number (0..RESVD_SET), optional */
 if|if
 condition|(
 name|ac
@@ -14716,7 +14716,7 @@ literal|0
 operator|||
 name|set
 operator|>
-literal|30
+name|RESVD_SET
 condition|)
 name|errx
 argument_list|(
