@@ -592,7 +592,7 @@ operator|(
 expr|struct
 name|timespec
 operator|*
-name|tv
+name|tsp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -607,7 +607,7 @@ operator|(
 expr|struct
 name|timespec
 operator|*
-name|tv
+name|tsp
 operator|)
 argument_list|)
 decl_stmt|;
