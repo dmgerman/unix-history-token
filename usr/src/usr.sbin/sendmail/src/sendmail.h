@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.12		%G%"
+literal|"@(#)sendmail.h	4.13		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,7 +101,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<sys/syslog.h>
 end_include
 
 begin_endif
