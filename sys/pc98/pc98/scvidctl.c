@@ -800,7 +800,7 @@ name|scp
 operator|->
 name|font_size
 operator|=
-name|FONT_NONE
+literal|0
 expr_stmt|;
 comment|/* move the mouse cursor at the center of the screen */
 name|sc_move_mouse
@@ -1012,17 +1012,9 @@ directive|endif
 comment|/* adjust argument values */
 if|if
 condition|(
-operator|(
 name|fontsize
 operator|<=
 literal|0
-operator|)
-operator|||
-operator|(
-name|fontsize
-operator|==
-name|FONT_NONE
-operator|)
 condition|)
 name|fontsize
 operator|=
