@@ -10,6 +10,12 @@ end_comment
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|LIBC_SCCS
@@ -22,17 +28,8 @@ name|lint
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)getgrent.c 8.2 (Berkeley) 3/21/94"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char sccsid[] = "@(#)getgrent.c	8.2 (Berkeley) 3/21/94";
 endif|#
 directive|endif
 end_endif
@@ -40,6 +37,17 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_expr_stmt
 name|__FBSDID
