@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.h	6.1	83/07/29	*/
+comment|/*	tcp_timer.h	6.2	85/04/17	*/
 end_comment
 
 begin_comment
@@ -92,11 +92,11 @@ begin_define
 define|#
 directive|define
 name|TCPTV_SRTTBASE
-value|(  1*PR_SLOWHZ)
+value|0
 end_define
 
 begin_comment
-comment|/* base roundtrip time */
+comment|/* base roundtrip time; 						   if 0, no idea yet */
 end_comment
 
 begin_define
