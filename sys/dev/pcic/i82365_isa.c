@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pccard/pccardchip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pcic/i82365reg.h>
 end_include
 
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"power_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"card_if.h"
 end_include
 
 begin_comment
@@ -1388,13 +1388,21 @@ argument_list|,
 name|pcic_teardown_intr
 argument_list|)
 block|,
-if|#
-directive|if
-literal|0
 comment|/* pccard/cardbus interface */
-block|DEVMETHOD(card_set_resource_attribute, pcic_set_resource_attribute), 	DEVMETHOD(card_get_resource_attribute, pcic_get_resource_attribute),
-endif|#
-directive|endif
+name|DEVMETHOD
+argument_list|(
+name|card_set_res_flags
+argument_list|,
+name|pcic_set_res_flags
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|card_set_memory_offset
+argument_list|,
+name|pcic_set_memory_offset
+argument_list|)
+block|,
 comment|/* Power Interface */
 name|DEVMETHOD
 argument_list|(

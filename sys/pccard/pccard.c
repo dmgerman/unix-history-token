@@ -491,7 +491,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/*  	 * The following will generate an interrupt.  So, to hold off 	 * the interrupt unitl after disable runs so that we can get rid 	 * rid of the interrupt before it becomes unsafe to touch the  	 * device. 	 */
+comment|/* 	 * The following will generate an interrupt.  So, to hold off 	 * the interrupt unitl after disable runs so that we can get rid 	 * rid of the interrupt before it becomes unsafe to touch the 	 * device. 	 */
 name|s
 operator|=
 name|splhigh

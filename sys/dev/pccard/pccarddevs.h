@@ -8,11 +8,7 @@ comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated f
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.60 1999/11/29 02:28:19 jun Exp $ */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Christos Zoulas.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* $NetBSD: pcmciadevs,v 1.85 2000/03/22 21:39:57 mycroft Exp $  /*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Christos Zoulas.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -28,6 +24,17 @@ end_define
 
 begin_comment
 comment|/* Fujitsu Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_PANASONIC
+value|0x0032
+end_define
+
+begin_comment
+comment|/* Matsushita Electric Industrial Co. */
 end_comment
 
 begin_define
@@ -132,6 +139,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_XIRCOM
+value|0x0105
+end_define
+
+begin_comment
+comment|/* Xircom */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_SMC
 value|0x0108
 end_define
@@ -176,12 +194,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_COMPAQ1
+name|PCCARD_VENDOR_COMPAQ
 value|0x0138
 end_define
 
 begin_comment
-comment|/* Compaq Corporation (1) */
+comment|/* Compaq */
 end_comment
 
 begin_define
@@ -220,12 +238,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_AIRONET
+value|0x015f
+end_define
+
+begin_comment
+comment|/* Aironet Wireless Communications */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_COMPAQ2
 value|0x0183
 end_define
 
 begin_comment
-comment|/* Compaq Corporation (2) */
+comment|/* Compaq */
 end_comment
 
 begin_define
@@ -237,6 +266,17 @@ end_define
 
 begin_comment
 comment|/* Dayna Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_RAYTHEON
+value|0x01a6
+end_define
+
+begin_comment
+comment|/* Raytheon */
 end_comment
 
 begin_define
@@ -264,12 +304,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_NOKIA
+value|0x023d
+end_define
+
+begin_comment
+comment|/* Nokia Communications */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_LASAT
+value|0x3401
+end_define
+
+begin_comment
+comment|/* Lasat Communications A/S */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_LEXARMEDIA
+value|0x4e01
+end_define
+
+begin_comment
+comment|/* Lexar Media */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_COMPEX
 value|0x8a01
 end_define
 
 begin_comment
 comment|/* Compex Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_MELCO
+value|0x8a01
+end_define
+
+begin_comment
+comment|/* Melco Corporation */
 end_comment
 
 begin_define
@@ -380,6 +464,27 @@ end_define
 begin_comment
 comment|/* 3COM Products */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_3COM_3C1
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_3COM_3C1
+value|0x0cf1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_3COM_3C1
+value|"3Com Megahertz 3C1 10Mbps LAN CF+ Card"
+end_define
 
 begin_define
 define|#
@@ -964,8 +1069,54 @@ value|"I-O DATA PCLA/TE"
 end_define
 
 begin_comment
+comment|/* Lexar Media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_LEXARMEDIA_COMPATFLASH
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_LEXARMEDIA_COMPATFLASH
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_LEXARMEDIA_COMPATFLASH
+value|"Lexar Media CompactFlash"
+end_define
+
+begin_comment
 comment|/* Linksys corporation */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_LINKSYS_ETHERFAST
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_LINKSYS_ETHERFAST
+value|0x0230
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_LINKSYS_ETHERFAST
+value|"Linksys Etherfast 10/100 Ethernet"
+end_define
 
 begin_define
 define|#
@@ -1137,6 +1288,81 @@ define|#
 directive|define
 name|PCCARD_STR_MEGAHERTZ_XJEM3336
 value|"Megahertz X-JACK Ethernet Modem"
+end_define
+
+begin_comment
+comment|/* Melco Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_MELCO_LPC3_TX
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_MELCO_LPC3_TX
+value|0xc1ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_MELCO_LPC3_TX
+value|"Melco LPC3-TX"
+end_define
+
+begin_comment
+comment|/* Nokia Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_NOKIA_C020_WLAN
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_NOKIA_C020_WLAN
+value|0x20c0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_NOKIA_C020_WLAN
+value|"Nokia C020 WLAN Card"
+end_define
+
+begin_comment
+comment|/* Panasonic Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_PANASONIC_KXLC002
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_PANASONIC_KXLC002
+value|0x0304
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_PANASONIC_KXLC002
+value|"Panasonic 4X CD-ROM Interface Card"
 end_define
 
 begin_comment
@@ -1482,25 +1708,50 @@ name|PCCARD_STR_TDK_XIR_CE3_10_100
 value|"Xircom CreditCard CE3 10/100 Ethernet"
 end_define
 
+begin_comment
+comment|/* conflicts with above  * product TDK XIR_CFE_10	0x010a Xircom CompactCard CFE-10  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_XIR_CNW
+name|PCCARD_CIS_TDK_XIR_CNW_801
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_XIR_CNW
+name|PCCARD_PRODUCT_TDK_XIR_CNW_801
+value|0x0801
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_TDK_XIR_CNW_801
+value|"Xircom CreditCard Netwave (Canada)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_TDK_XIR_CNW_802
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_TDK_XIR_CNW_802
 value|0x0802
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_XIR_CNW
-value|"Xircom CreditCard Netwave"
+name|PCCARD_STR_TDK_XIR_CNW_802
+value|"Xircom CreditCard Netwave (US)"
 end_define
 
 begin_comment
@@ -1592,7 +1843,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_SMC_EZCARD
-value|"SMC EXCard 10 PCMCIA"
+value|"SMC EZCard 10 PCMCIA"
 end_define
 
 begin_comment
@@ -1695,6 +1946,56 @@ name|PCCARD_STR_LUCENT_WAVELAN_IEEE
 value|"WaveLAN/IEEE"
 end_define
 
+begin_comment
+comment|/* Aironet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_AIRONET_PC4500
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_AIRONET_PC4500
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_AIRONET_PC4500
+value|"Aironet PC4500 Wireless LAN Adapter"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_AIRONET_PC4800
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_AIRONET_PC4800
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_AIRONET_PC4800
+value|"Aironet PC4800 Wireless LAN Adapter"
+end_define
+
+begin_comment
+comment|/* Bay Networks */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1706,7 +2007,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_PRODUCT_BAY_STACK_650
-value|0x804
+value|0x0804
 end_define
 
 begin_define
@@ -1714,6 +2015,73 @@ define|#
 directive|define
 name|PCCARD_STR_BAY_STACK_650
 value|"BayStack 650 Wireless LAN"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_BAY_SURFER_PRO
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_BAY_SURFER_PRO
+value|0x0806
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_BAY_SURFER_PRO
+value|"AirSurfer Pro Wireless LAN"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_BAY_STACK_660
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_BAY_STACK_660
+value|0x0807
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_BAY_STACK_660
+value|"BayStack 660 Wireless LAN"
+end_define
+
+begin_comment
+comment|/* Raylink/WebGear */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_RAYTHEON_WLAN
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_RAYTHEON_WLAN
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_RAYTHEON_WLAN
+value|"WLAN Adapter"
 end_define
 
 begin_comment
@@ -1855,6 +2223,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_EPSON
+value|-1
+end_define
+
+begin_comment
+comment|/* Seiko Epson Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_EXP
+value|-1
+end_define
+
+begin_comment
+comment|/* EXP Computer Inc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_ICOM
+value|-1
+end_define
+
+begin_comment
+comment|/* ICOM Inc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_BILLIONTON
+value|-1
+end_define
+
+begin_comment
+comment|/* Billionton Systems Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_AMD
+value|-1
+end_define
+
+begin_comment
+comment|/* AMD */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_CIS_MEGAHERTZ_XJ2288
 value|{ "MEGAHERTZ", "MODEM XJ2288", NULL, NULL }
 end_define
@@ -1916,14 +2339,14 @@ value|"Planet SmartCOM 2000"
 end_define
 
 begin_comment
-comment|/*  * vendor ID of FNW-3600-T is LINKSYS(0x0149) and product ID is 0xc1ab, but  * it conflicts with LINKSYS Combo EhternetCard.  */
+comment|/*  * vendor ID of both FNW-3600-T and FNW-3700-T is LINKSYS (0x0149) and  * product ID is 0xc1ab, but it conflicts with LINKSYS Combo EthernetCard.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PCCARD_CIS_PLANEX_FNW3600T
-value|{ "Fast Ethernet", "Adapter", "1.0", NULL }
+value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
@@ -1938,6 +2361,27 @@ define|#
 directive|define
 name|PCCARD_STR_PLANEX_FNW3600T
 value|"Planex FNW-3600-T"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_PLANEX_FNW3700T
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_PLANEX_FNW3700T
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_PLANEX_FNW3700T
+value|"Planex FNW-3700-T"
 end_define
 
 begin_define
@@ -1980,6 +2424,27 @@ define|#
 directive|define
 name|PCCARD_STR_DLINK_DE660
 value|"D-Link DE-660"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_RPTI_EP400
+value|{ "RPTI LTD.", "EP400", "CISV100", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_RPTI_EP400
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_RPTI_EP400
+value|"RPTI EP400"
 end_define
 
 begin_define
@@ -2126,7 +2591,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_COREGA_ETHER_PCC_T
-value|"Corega"
+value|"Corega Ether PCC-T"
 end_define
 
 begin_define
@@ -2147,7 +2612,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_COREGA_ETHER_II_PCC_T
-value|"Corega"
+value|"Corega EtherII PCC-T"
 end_define
 
 begin_define
@@ -2168,7 +2633,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_COREGA_FAST_ETHER_PCC_TX
-value|"Corega"
+value|"Corega FastEther PCC-TX"
 end_define
 
 begin_define
@@ -2213,6 +2678,31 @@ name|PCCARD_STR_SVEC_LANCARD
 value|"SVEC PCMCIA Lan Card"
 end_define
 
+begin_comment
+comment|/*  * vendor ID of PN650TX is LINKSYS (0x0149) and product ID is 0xc1ab, but  * it conflicts with LINKSYS Combo EthernetCard.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_SVEC_PN650TX
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SVEC_PN650TX
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SVEC_PN650TX
+value|"SVEC PN650TX 10/100 Dual Speed Fast Ethernet PC Card"
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2232,6 +2722,132 @@ define|#
 directive|define
 name|PCCARD_STR_NAKAGAWAMETAL_LNT10TN
 value|"NAKAGAWA METAL LNT-10TN NE2000 Compatible Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_EPSON_EEN10B
+value|{ "Seiko Epson Corp.", "Ethernet", "P/N: EEN10B Rev. 00", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_EPSON_EEN10B
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_EPSON_EEN10B
+value|"Epson EEN10B"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_EXP_EXPMULTIMEDIA
+value|{ "EXP   ", "PnPIDE", "F1", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_EXP_EXPMULTIMEDIA
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_EXP_EXPMULTIMEDIA
+value|"EXP IDE/ATAPI DVD Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_AMD_AM79C930
+value|{ "AMD", "Am79C930", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_AMD_AM79C930
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_AMD_AM79C930
+value|"AMD Am79C930"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_ICOM_SL200
+value|{ "Icom", "SL-200", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_ICOM_SL200
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_ICOM_SL200
+value|"Icom SL-200"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_XIRCOM_CFE_10
+value|{ "Xircom", "CompactCard Ethernet", "CFE-10", "1.00" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_XIRCOM_CFE_10
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_XIRCOM_CFE_10
+value|"Xircom CompactCard CFE-10"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_BILLIONTON_LNT10TN
+value|{ "PCMCIA", "LNT-10TN", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_BILLIONTON_LNT10TN
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_BILLIONTON_LNT10TN
+value|"Billionton Systems Inc. LNT-10TN NE2000 Compatible Card"
 end_define
 
 begin_define

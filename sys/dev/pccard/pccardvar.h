@@ -29,12 +29,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/pccard/pccardchip.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -112,10 +106,6 @@ name|bus_size_t
 name|size
 decl_stmt|;
 comment|/* size of mem space */
-name|pccard_mem_handle_t
-name|mhandle
-decl_stmt|;
-comment|/* opaque memory handle */
 name|bus_size_t
 name|realsize
 decl_stmt|;
@@ -338,11 +328,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|device
-modifier|*
-name|child
-decl_stmt|;
-name|struct
 name|pccard_config_entry
 modifier|*
 name|cfe
@@ -359,10 +344,6 @@ define|#
 directive|define
 name|pf_ccrh
 value|pf_pcmh.memh
-define|#
-directive|define
-name|pf_ccr_mhandle
-value|pf_pcmh.mhandle
 define|#
 directive|define
 name|pf_ccr_realsize
@@ -474,6 +455,41 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PCCARD_MEM_ATTR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_MEM_COMMON
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_WIDTH_AUTO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_WIDTH_IO8
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_WIDTH_IO16
+value|2
+end_define
 
 begin_comment
 comment|/* More later? */
@@ -622,10 +638,7 @@ begin_function_decl
 name|int
 name|pccard_scan_cis
 parameter_list|(
-name|struct
-name|device
-modifier|*
-name|dev
+name|device_t
 parameter_list|,
 name|int
 function_decl|(
@@ -1003,6 +1016,16 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_enum
+enum|enum
+block|{
+name|PCCARD_A_MEM_ATTR
+init|=
+literal|0x1
+block|}
+enum|;
+end_enum
 
 end_unit
 
