@@ -2514,7 +2514,7 @@ operator|!
 name|error
 operator|&&
 operator|!
-name|strncmp
+name|bcmp
 argument_list|(
 name|ms
 operator|->
