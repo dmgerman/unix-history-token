@@ -16,7 +16,7 @@ block|,
 comment|/* present but unused.  Must be 0 */
 name|volume_uninit
 block|,
-comment|/* mentioned elsewhere but not defined */
+comment|/* mentioned elsewhere but not known to the configuration */
 name|volume_down
 block|,
 comment|/* The volume is up and functional, but not all plexes may be available */
@@ -137,7 +137,7 @@ block|{
 name|drive_unallocated
 block|,
 comment|/* present but unused.  Must be 0 */
-name|drive_uninit
+name|drive_referenced
 block|,
 comment|/* just mentioned in some other config entry */
 name|drive_down
