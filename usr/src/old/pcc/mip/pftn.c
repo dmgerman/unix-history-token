@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.27 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3549,9 +3549,9 @@ argument|){ 		return( fldal( ty ) ); 		}  	for( i=
 literal|0
 argument|; i<=(SZINT-BTSHIFT-
 literal|1
-argument|); i+=TSHIFT ){ 		switch( (ty>>i)&TMASK ){  		case FTN: 			cerror(
-literal|"compiler takes alignment of function"
-argument|); 		case PTR: 			return( ALPOINT ); 		case ARY: 			continue; 		case
+argument|); i+=TSHIFT ){ 		switch( (ty>>i)&TMASK ){  		case FTN: 			uerror(
+literal|"can't assign to function"
+argument|); 			return( ALCHAR ); 		case PTR: 			return( ALPOINT ); 		case ARY: 			continue; 		case
 literal|0
 argument|: 			break; 			} 		}  	switch( BTYPE(ty) ){  	case UNIONTY: 	case ENUMTY: 	case STRTY: 		return( (unsigned int) dimtab[ s+
 literal|2
