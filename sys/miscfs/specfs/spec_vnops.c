@@ -2398,6 +2398,11 @@ name|ap
 operator|->
 name|a_length
 expr_stmt|;
+name|BUF_KERNPROC
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|DEV_STRATEGY
 argument_list|(
 name|bp
