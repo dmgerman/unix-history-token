@@ -563,6 +563,9 @@ argument_list|,
 name|catch_pipe
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Adding %s%s\nfrom %s"

@@ -3307,6 +3307,13 @@ name|who
 operator|->
 name|data
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|id
@@ -3535,6 +3542,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|status
 return|;
@@ -3770,6 +3782,9 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Attempting to fetch %s file from selected media."
@@ -3823,6 +3838,9 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Located INDEX, now reading package data from it..."
