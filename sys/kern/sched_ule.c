@@ -7330,6 +7330,8 @@ condition|(
 name|KSE_CAN_MIGRATE
 argument_list|(
 name|ke
+argument_list|,
+name|class
 argument_list|)
 operator|||
 name|ke
