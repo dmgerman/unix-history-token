@@ -71,20 +71,17 @@ name|usbd_no_quirk
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|struct
 name|usbd_quirks
 modifier|*
 name|usbd_find_quirk
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|usb_device_descriptor_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

@@ -92,39 +92,33 @@ parameter_list|)
 value|((void *)((dma)->block->kaddr + (dma)->offs) + (offset))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|usbd_status
 name|usb_allocmem
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|usbd_bus_handle
-operator|,
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|usb_dma_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|usb_freemem
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|usbd_bus_handle
-operator|,
+parameter_list|,
 name|usb_dma_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_elif
 elif|#

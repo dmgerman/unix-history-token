@@ -210,7 +210,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|int __CONCAT(dname,_match) __P((struct device *, struct cfdata *, void *)); \ void __CONCAT(dname,_attach) __P((struct device *, struct device *, void *)); \ int __CONCAT(dname,_detach) __P((struct device *, int)); \ int __CONCAT(dname,_activate) __P((struct device *, enum devact)); \ \ extern struct cfdriver __CONCAT(dname,_cd); \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
+value|int __CONCAT(dname,_match)(struct device *, struct cfdata *, void *); \ void __CONCAT(dname,_attach)(struct device *, struct device *, void *); \ int __CONCAT(dname,_detach)(struct device *, int); \ int __CONCAT(dname,_activate)(struct device *, enum devact); \ \ extern struct cfdriver __CONCAT(dname,_cd); \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
 end_define
 
 begin_define
@@ -624,7 +624,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|int __CONCAT(dname,_match) __P((struct device *, void *, void *)); \ void __CONCAT(dname,_attach) __P((struct device *, struct device *, void *)); \ int __CONCAT(dname,_detach) __P((struct device *, int)); \ int __CONCAT(dname,_activate) __P((struct device *, enum devact)); \ \ struct cfdriver __CONCAT(dname,_cd) = { \ 	NULL, #dname, DV_DULL \ }; \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
+value|int __CONCAT(dname,_match)(struct device *, void *, void *); \ void __CONCAT(dname,_attach)(struct device *, struct device *, void *); \ int __CONCAT(dname,_detach)(struct device *, int); \ int __CONCAT(dname,_activate)(struct device *, enum devact); \ \ struct cfdriver __CONCAT(dname,_cd) = { \ 	NULL, #dname, DV_DULL \ }; \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
 end_define
 
 begin_define
