@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.76 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.77 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -426,17 +426,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -463,6 +452,17 @@ directive|define
 name|LA_TYPE
 value|LA_FLOAT
 end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
 
 begin_define
 define|#
@@ -602,17 +602,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASUNAME
 value|1
 end_define
@@ -651,6 +640,17 @@ end_undef
 
 begin_comment
 comment|/* setproctitle confuses AIX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_STATFS
+end_define
+
+begin_comment
+comment|/* use<sys/statfs.h> statfs() impl */
 end_comment
 
 begin_endif
@@ -694,17 +694,6 @@ end_define
 
 begin_comment
 comment|/* has initgroups(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
 end_comment
 
 begin_define
@@ -754,6 +743,17 @@ name|GIDSET_T
 value|gid_t
 end_define
 
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -777,13 +777,6 @@ argument_list|(
 name|BSD
 argument_list|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|LA_TYPE
-value|LA_INT
-end_define
 
 begin_define
 define|#
@@ -817,6 +810,13 @@ end_define
 begin_comment
 comment|/* DOES have getusershell(3) call in libc */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_INT
+end_define
 
 begin_ifdef
 ifdef|#
@@ -978,23 +978,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASFLOCK
 value|1
 end_define
 
 begin_comment
 comment|/* has flock(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
 end_comment
 
 begin_include
@@ -1124,17 +1124,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -1204,6 +1193,17 @@ directive|undef
 name|SETPROCTITLE
 end_undef
 
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
+end_comment
+
 begin_comment
 comment|/* these include files must be included early on DG/UX */
 end_comment
@@ -1249,17 +1249,6 @@ ifdef|#
 directive|ifdef
 name|ultrix
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
 
 begin_define
 define|#
@@ -1353,6 +1342,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1389,17 +1389,6 @@ ifdef|#
 directive|ifdef
 name|__osf__
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
 
 begin_define
 define|#
@@ -1451,6 +1440,17 @@ directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1521,17 +1521,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|WAITUNION
 value|1
 end_define
@@ -1571,6 +1560,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1664,17 +1664,6 @@ begin_comment
 comment|/* has unsetenv(3) call */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -1708,6 +1697,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
 
 begin_endif
 endif|#
@@ -1759,17 +1759,6 @@ begin_comment
 comment|/* has the setsid(2) POSIX syscall */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -1803,6 +1792,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
 
 begin_endif
 endif|#
@@ -1870,17 +1870,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NEEDGETOPT
 value|1
 end_define
@@ -1924,6 +1913,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
 
 begin_undef
 undef|#
@@ -2229,17 +2229,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASGETUSERSHELL
 value|0
 end_define
@@ -2268,6 +2257,17 @@ directive|define
 name|LA_TYPE
 value|LA_SHORT
 end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_STATFS
+end_define
+
+begin_comment
+comment|/* use<sys/statfs.h> statfs() impl */
+end_comment
 
 begin_undef
 undef|#
@@ -2319,17 +2319,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETSID
 value|1
 end_define
@@ -2355,6 +2344,17 @@ directive|define
 name|LA_TYPE
 value|LA_FLOAT
 end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -2667,34 +2667,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASUNAME
 value|1
 end_define
 
 begin_comment
 comment|/* use System V uname(2) system call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASUSTAT
-value|1
-end_define
-
-begin_comment
-comment|/* use System V ustat(2) syscall */
 end_comment
 
 begin_define
@@ -2783,6 +2761,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -2825,17 +2814,6 @@ end_define
 
 begin_comment
 comment|/* use System V uname(2) system call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
 end_comment
 
 begin_define
@@ -2902,6 +2880,17 @@ end_define
 
 begin_comment
 comment|/* no vfork(2) primitive available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
 end_comment
 
 begin_define
@@ -3215,17 +3204,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MAXPATHLEN
 value|PATHSIZE
 end_define
@@ -3236,6 +3214,17 @@ directive|define
 name|LA_TYPE
 value|LA_ZERO
 end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
+end_comment
 
 begin_endif
 endif|#
@@ -3478,17 +3467,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASUSTAT
-value|1
-end_define
-
-begin_comment
-comment|/* use System V ustat(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SYS5SETPGRP
 value|1
 end_define
@@ -3520,6 +3498,32 @@ directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
+
+begin_comment
+comment|/* assume integer load average */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SFS_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_USTAT
+end_define
+
+begin_comment
+comment|/* use System V ustat(2) syscall */
+end_comment
 
 begin_endif
 endif|#
