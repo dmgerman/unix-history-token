@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* @(#) $Header: /usr/fsys/odin/a/vern/flex/RCS/flexdef.h,v 2.10 90/08/03 14:09:52 vern Exp $ (LBL) */
+comment|/* @(#) $Header: /home/cvs/386BSD/src/usr.bin/lex/flexdef.h,v 1.2 1993/06/29 03:27:08 nate Exp $ (LBL) */
 end_comment
 
 begin_ifndef
@@ -233,6 +233,12 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__386BSD__
+end_ifndef
+
 begin_function_decl
 name|char
 modifier|*
@@ -240,6 +246,11 @@ name|memset
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
