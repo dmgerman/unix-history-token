@@ -3235,7 +3235,7 @@ block|}
 if|if
 condition|(
 call|(
-name|u_int
+name|uintptr_t
 call|)
 argument_list|(
 name|ifp
