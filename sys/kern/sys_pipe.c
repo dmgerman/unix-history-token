@@ -1425,7 +1425,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"kern.maxpipekva exceeded, please see tuning(7).\n"
+literal|"kern.ipc.maxpipekva exceeded; see tuning(7)\n"
 argument_list|)
 expr_stmt|;
 return|return
