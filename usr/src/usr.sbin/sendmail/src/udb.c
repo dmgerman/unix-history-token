@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.1 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.2 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.1 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.2 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1741,6 +1741,9 @@ operator|==
 literal|'*'
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 name|nmx
 operator|=
 name|getmxrr
@@ -1757,6 +1760,27 @@ operator|&
 name|rcode
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|mxhosts
+index|[
+literal|0
+index|]
+operator|=
+name|spec
+operator|+
+literal|1
+expr_stmt|;
+name|nmx
+operator|=
+literal|1
+expr_stmt|;
+name|rcode
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|tTd
