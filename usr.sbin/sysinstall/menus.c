@@ -611,8 +611,8 @@ block|,
 literal|"Glossary of functions"
 block|,
 literal|"This menu contains an alphabetized index of the top level functions in\n"
-literal|"this program (sysinstall).  Invoke an option by pressing [ENTER] or\n"
-literal|"[SPACE].  To exit, use [TAB] to move to the Cancel button."
+literal|"this program (sysinstall).  Invoke an option by pressing [SPACE] or\n"
+literal|"[ENTER].  To exit, use [TAB] to move to the Cancel button."
 block|,
 literal|"Use PageUp or PageDown to move through this menu faster!"
 block|,
@@ -1554,7 +1554,7 @@ literal|"Welcome to the FreeBSD installation and configuration tool.  Please\n"
 comment|/* prompt */
 literal|"select one of the options below by using the arrow keys or typing the\n"
 literal|"first character of the option name you're interested in.  Invoke an\n"
-literal|"option with [ENTER] or [SPACE].  To exit, use [TAB] to move to Exit."
+literal|"option with [SPACE] or [ENTER].  To exit, use [TAB] to move to Exit."
 block|,
 literal|"Press F1 for Installation Guide"
 block|,
