@@ -609,18 +609,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|wlwatchdog
-parameter_list|(
-name|struct
-name|wl_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -2478,9 +2472,6 @@ literal|0
 expr_stmt|;
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|wlwatchdog
 argument_list|,
 name|sc
@@ -3313,9 +3304,6 @@ literal|0
 expr_stmt|;
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|wlwatchdog
 argument_list|,
 name|sc
@@ -3479,9 +3467,6 @@ comment|/* set the watchdog timer so that if the board 	 * fails to interrupt we
 comment|/* try 10 ticks, not very long */
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|wlwatchdog
 argument_list|,
 name|sc
@@ -5473,12 +5458,18 @@ specifier|static
 name|void
 name|wlwatchdog
 parameter_list|(
+name|void
+modifier|*
+name|vsc
+parameter_list|)
+block|{
 name|struct
 name|wl_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+name|vsc
+decl_stmt|;
 name|int
 name|unit
 init|=
@@ -6060,9 +6051,6 @@ literal|0
 expr_stmt|;
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|wlwatchdog
 argument_list|,
 name|sc
