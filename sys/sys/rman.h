@@ -28,6 +28,23 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
