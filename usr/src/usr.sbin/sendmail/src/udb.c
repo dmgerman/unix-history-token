@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.8 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.9 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.8 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.9 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,6 +371,9 @@ decl_stmt|;
 name|int
 name|keylen
 decl_stmt|;
+name|int
+name|naddrs
+decl_stmt|;
 name|char
 name|keybuf
 index|[
@@ -626,6 +629,17 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|naddrs
+operator|=
+literal|0
+expr_stmt|;
+name|a
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QSELFREF
+expr_stmt|;
 while|while
 condition|(
 name|i
@@ -743,6 +757,8 @@ directive|endif
 name|AliasLevel
 operator|++
 expr_stmt|;
+name|naddrs
+operator|+=
 name|sendtolist
 argument_list|(
 name|user
@@ -796,6 +812,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|naddrs
+operator|>
+literal|0
+operator|&&
 operator|!
 name|bitset
 argument_list|(
@@ -938,9 +958,18 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+name|a
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QSELFREF
+expr_stmt|;
 name|AliasLevel
 operator|++
 expr_stmt|;
+name|naddrs
+operator|=
 name|sendtolist
 argument_list|(
 name|user
@@ -957,6 +986,10 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
+name|naddrs
+operator|>
+literal|0
+operator|&&
 operator|!
 name|bitset
 argument_list|(

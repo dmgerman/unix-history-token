@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.13 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.14 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.13 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.14 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3671,6 +3671,9 @@ case|case
 literal|'E'
 case|:
 comment|/* specify error recipient */
+operator|(
+name|void
+operator|)
 name|sendtolist
 argument_list|(
 operator|&

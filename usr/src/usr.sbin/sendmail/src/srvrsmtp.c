@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.10 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.11 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.10 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.11 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,6 +527,10 @@ name|sendinghost
 operator|=
 name|NULL
 expr_stmt|;
+name|gothello
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -942,6 +946,28 @@ expr_stmt|;
 comment|/* check for validity of this command */
 if|if
 condition|(
+operator|!
+name|gothello
+operator|&&
+name|bitset
+argument_list|(
+name|PRIV_NEEDMAILHELO
+argument_list|,
+name|PrivacyFlags
+argument_list|)
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"503"
+argument_list|,
+literal|"Polite people say HELO first"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
 name|hasmail
 condition|)
 block|{
@@ -973,6 +999,22 @@ expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|enoughspace
+argument_list|()
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"452"
+argument_list|,
+literal|"Insufficient disk space; try again later"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 comment|/* fork a subprocess to process this command */
 if|if
@@ -1479,6 +1521,52 @@ case|case
 name|CMDVRFY
 case|:
 comment|/* vrfy -- verify address */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|PRIV_NOVRFY
+operator||
+name|PRIV_NOEXPN
+argument_list|,
+name|PrivacyFlags
+argument_list|)
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"502"
+argument_list|,
+literal|"That's none of your business"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|gothello
+operator|&&
+name|bitset
+argument_list|(
+name|PRIV_NEEDVRFYHELO
+operator||
+name|PRIV_NEEDEXPNHELO
+argument_list|,
+name|PrivacyFlags
+argument_list|)
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"503"
+argument_list|,
+literal|"I demand that you introduce yourself first"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|runinchild

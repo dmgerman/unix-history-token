@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	6.3 (Berkeley) %G%"
+literal|"@(#)mci.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,8 @@ condition|)
 name|mci_uncache
 argument_list|(
 name|mcislot
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 operator|*
@@ -313,6 +315,8 @@ expr_stmt|;
 name|mci_uncache
 argument_list|(
 name|bestmci
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -357,13 +361,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_UNCACHE -- remove a connection from a slot. ** **	May close a connection. ** **	Parameters: **		mcislot -- the slot to empty. ** **	Returns: **		none. */
+comment|/* **  MCI_UNCACHE -- remove a connection from a slot. ** **	May close a connection. ** **	Parameters: **		mcislot -- the slot to empty. **		doquit -- if TRUE, send QUIT protocol on this connection. **			  if FALSE, we are assumed to be in a forked child; **				all we want to do is close the file(s). ** **	Returns: **		none. */
 end_comment
 
 begin_expr_stmt
 name|mci_uncache
 argument_list|(
 name|mcislot
+argument_list|,
+name|doquit
 argument_list|)
 specifier|register
 name|MCI
@@ -372,6 +378,12 @@ operator|*
 name|mcislot
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|doquit
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -401,13 +413,11 @@ name|mcislot
 operator|=
 name|NULL
 expr_stmt|;
-name|mci
-operator|->
-name|mci_flags
-operator|&=
-operator|~
-name|MCIF_CACHED
-expr_stmt|;
+if|if
+condition|(
+name|doquit
+condition|)
+block|{
 name|message
 argument_list|(
 name|Arpa_Info
@@ -418,6 +428,13 @@ name|mci
 operator|->
 name|mci_host
 argument_list|)
+expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_CACHED
 expr_stmt|;
 comment|/* only uses the envelope to flush the transcript file */
 if|if
@@ -441,19 +458,104 @@ name|BlankEnvelope
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_in
+operator|!=
+name|NULL
+condition|)
+name|fclose
+argument_list|(
+name|mci
+operator|->
+name|mci_in
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_out
+operator|!=
+name|NULL
+condition|)
+name|fclose
+argument_list|(
+name|mci
+operator|->
+name|mci_out
+argument_list|)
+expr_stmt|;
+name|mci
+operator|->
+name|mci_in
+operator|=
+name|mci
+operator|->
+name|mci_out
+operator|=
+name|NULL
+expr_stmt|;
+name|mci
+operator|->
+name|mci_state
+operator|=
+name|MCIS_CLOSED
+expr_stmt|;
+name|mci
+operator|->
+name|mci_exitstat
+operator|=
+name|EX_OK
+expr_stmt|;
+name|mci
+operator|->
+name|mci_errno
+operator|=
+literal|0
+expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 end_block
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_FLUSH -- flush the entire cache */
+comment|/* **  MCI_FLUSH -- flush the entire cache ** **	Parameters: **		doquit -- if TRUE, send QUIT protocol. **			  if FALSE, just close the connection. **		allbut -- but leave this one open. ** **	Returns: **		none. */
 end_comment
 
 begin_macro
 name|mci_flush
-argument_list|()
+argument_list|(
+argument|doquit
+argument_list|,
+argument|allbut
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|bool
+name|doquit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|MCI
+modifier|*
+name|allbut
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -481,6 +583,15 @@ condition|;
 name|i
 operator|++
 control|)
+if|if
+condition|(
+name|allbut
+operator|!=
+name|MciCache
+index|[
+name|i
+index|]
+condition|)
 name|mci_uncache
 argument_list|(
 operator|&
@@ -488,6 +599,8 @@ name|MciCache
 index|[
 name|i
 index|]
+argument_list|,
+name|doquit
 argument_list|)
 expr_stmt|;
 block|}

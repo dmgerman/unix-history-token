@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.18 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3310,6 +3310,14 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+comment|/* close any other cached connections */
+name|mci_flush
+argument_list|(
+name|FALSE
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
 comment|/* arrange to filter std& diag output of command */
 if|if
 condition|(
@@ -5992,6 +6000,14 @@ block|}
 endif|#
 directive|endif
 comment|/* LOCKF */
+comment|/* 		**  Close any cached connections. 		** 		**	We don't send the QUIT protocol because the parent 		**	still knows about the connection. 		** 		**	This should only happen when delivering an error 		**	message. 		*/
+name|mci_flush
+argument_list|(
+name|FALSE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* 	**  Run through the list and send everything. 	*/
@@ -6331,6 +6347,9 @@ name|obuf
 argument_list|)
 expr_stmt|;
 comment|/* owner list exists -- add it to the error queue */
+operator|(
+name|void
+operator|)
 name|sendtolist
 argument_list|(
 name|obuf
@@ -6381,6 +6400,9 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|sendtolist
 argument_list|(
 name|e

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.13		%G%"
+literal|"@(#)sendmail.h	6.14		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2690,7 +2690,7 @@ comment|/* don't print messages (stat only) */
 end_comment
 
 begin_comment
-comment|/* offset used to issure that the error messages for name server error  * codes are unique.  */
+comment|/* Offset used to ensure that name server error * codes are unique */
 end_comment
 
 begin_define
@@ -2699,6 +2699,108 @@ directive|define
 name|MAX_ERRNO
 value|100
 end_define
+
+begin_comment
+comment|/* privacy flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_PUBLIC
+value|0
+end_define
+
+begin_comment
+comment|/* what have I got to hide? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NEEDMAILHELO
+value|00001
+end_define
+
+begin_comment
+comment|/* insist on HELO for MAIL, at least */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NEEDEXPNHELO
+value|00002
+end_define
+
+begin_comment
+comment|/* insist on HELO for EXPN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NEEDVRFYHELO
+value|00004
+end_define
+
+begin_comment
+comment|/* insist on HELO for VRFY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NOEXPN
+value|00010
+end_define
+
+begin_comment
+comment|/* disallow EXPN command entirely */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NOVRFY
+value|00020
+end_define
+
+begin_comment
+comment|/* disallow VRFY command entirely */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_GOAWAY
+value|0xffff
+end_define
+
+begin_comment
+comment|/* don't give no info, anyway, anyhow */
+end_comment
+
+begin_comment
+comment|/* struct defining such things */
+end_comment
+
+begin_struct
+struct|struct
+name|prival
+block|{
+name|char
+modifier|*
+name|pv_name
+decl_stmt|;
+comment|/* name of privacy flag */
+name|int
+name|pv_flag
+decl_stmt|;
+comment|/* numeric level */
+block|}
+struct|;
+end_struct
 
 begin_escape
 end_escape
@@ -3065,17 +3167,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|MotherPid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* proc id of parent process */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
 name|LineNumber
 decl_stmt|;
 end_decl_stmt
@@ -3338,6 +3429,17 @@ comment|/* syslog user errors (e.g., SMTP RCPT cmd) */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
+name|int
+name|PrivacyFlags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* privacy flags */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -3359,6 +3461,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* location of frozen memory image [conf.c] */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|PidFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location of proc id file [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -3557,6 +3671,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* path to search for .forward files */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|MinBlocksFree
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minimum number of blocks free on queue fs */
 end_comment
 
 begin_escape

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.7 (Berkeley) %G%"
+literal|"@(#)headers.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1293,6 +1293,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sendtolist
 argument_list|(
 name|h
@@ -1410,6 +1413,9 @@ operator|->
 name|h_flags
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|sendtolist
 argument_list|(
 name|h

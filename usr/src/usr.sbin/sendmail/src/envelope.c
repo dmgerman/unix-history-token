@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.9 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -466,6 +466,9 @@ name|rlist
 init|=
 name|NULL
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sendtolist
 argument_list|(
 name|e
@@ -2216,6 +2219,8 @@ name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
+argument_list|,
+literal|'\0'
 argument_list|)
 expr_stmt|;
 name|e

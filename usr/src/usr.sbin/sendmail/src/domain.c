@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.5 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.6 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.5 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.6 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1430,7 +1430,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\tNO: h_errno=%d\n"
+literal|"\tNO: errno=%d, h_errno=%d\n"
+argument_list|,
+name|errno
 argument_list|,
 name|h_errno
 argument_list|)
@@ -1440,6 +1442,10 @@ condition|(
 name|errno
 operator|==
 name|ECONNREFUSED
+operator|||
+name|h_errno
+operator|==
+name|TRY_AGAIN
 condition|)
 block|{
 comment|/* the name server seems to be down */

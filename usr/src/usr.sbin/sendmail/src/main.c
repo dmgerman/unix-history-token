@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.20 (Berkeley) %G%"
+literal|"@(#)main.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1257,14 +1257,6 @@ begin_expr_stmt
 name|OpMode
 operator|=
 name|MD_DELIVER
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MotherPid
-operator|=
-name|getpid
-argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -3371,6 +3363,10 @@ literal|1
 argument_list|)
 condition|)
 block|{
+name|FILE
+modifier|*
+name|pidf
+decl_stmt|;
 comment|/* put us in background */
 name|i
 operator|=
@@ -3399,12 +3395,46 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* get our pid right */
-name|MotherPid
+if|if
+condition|(
+name|OpMode
+operator|==
+name|MD_DAEMON
+condition|)
+block|{
+name|pidf
 operator|=
+name|fopen
+argument_list|(
+name|PidFile
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pidf
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|pidf
+argument_list|,
+literal|"%d\n"
+argument_list|,
 name|getpid
 argument_list|()
+argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|pidf
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* disconnect from our controlling tty */
 name|disconnect
 argument_list|(
@@ -3832,7 +3862,11 @@ end_comment
 
 begin_expr_stmt
 name|mci_flush
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.13 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.14 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.13 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.14 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.13 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.14 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.13 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.14 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,6 +354,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|naliases
+decl_stmt|;
 specifier|extern
 name|ADDRESS
 modifier|*
@@ -497,6 +500,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|a
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QSELFREF
+expr_stmt|;
 name|AliasLevel
 operator|++
 expr_stmt|;
@@ -520,6 +530,10 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
+name|naliases
+operator|>
+literal|0
+operator|&&
 operator|!
 name|bitset
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.16 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4327,6 +4327,8 @@ name|pvpbuf
 index|]
 operator|-
 name|replac
+argument_list|,
+literal|'\0'
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4406,6 +4408,8 @@ name|pvpbuf
 index|]
 operator|-
 name|replac
+argument_list|,
+literal|'\0'
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5251,101 +5255,23 @@ argument_list|(
 literal|"buildaddr: error: no user"
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|*
+name|cataddr
+argument_list|(
 operator|++
 name|tv
-operator|!=
-name|NULL
-condition|)
-block|{
-name|int
-name|i
-init|=
-name|strlen
-argument_list|(
-operator|*
-name|tv
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|i
-operator|>
-name|spaceleft
-condition|)
-block|{
-comment|/* out of space for this address */
-if|if
-condition|(
-name|spaceleft
-operator|>=
-literal|0
-condition|)
-name|syserr
-argument_list|(
-literal|"buildaddr: error message too long (%.40s...)"
 argument_list|,
 name|buf
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|spaceleft
-expr_stmt|;
-name|spaceleft
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|i
-operator|<=
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-name|bp
-operator|!=
+argument_list|,
+sizeof|sizeof
 name|buf
-condition|)
-block|{
-operator|*
-name|bp
-operator|++
-operator|=
+argument_list|,
 literal|' '
-expr_stmt|;
-name|spaceleft
-operator|--
-expr_stmt|;
-block|}
-name|bcopy
-argument_list|(
-operator|*
-name|tv
-argument_list|,
-name|bp
-argument_list|,
-name|i
 argument_list|)
 expr_stmt|;
-name|bp
-operator|+=
-name|i
-expr_stmt|;
-name|spaceleft
-operator|-=
-name|i
-expr_stmt|;
-block|}
-operator|*
-name|bp
-operator|=
-literal|'\0'
+name|stripquotes
+argument_list|(
+name|buf
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5645,6 +5571,8 @@ name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
+argument_list|,
+literal|'\0'
 argument_list|)
 expr_stmt|;
 name|stripquotes
@@ -5766,6 +5694,8 @@ name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
+argument_list|,
+literal|'\0'
 argument_list|)
 expr_stmt|;
 name|a
@@ -5786,7 +5716,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CATADDR -- concatenate pieces of addresses (putting in<LWSP> subs) ** **	Parameters: **		pvp -- parameter vector to rebuild. **		buf -- buffer to build the string into. **		sz -- size of buf. ** **	Returns: **		none. ** **	Side Effects: **		Destroys buf. */
+comment|/* **  CATADDR -- concatenate pieces of addresses (putting in<LWSP> subs) ** **	Parameters: **		pvp -- parameter vector to rebuild. **		buf -- buffer to build the string into. **		sz -- size of buf. **		spacesub -- the space separator character; if null, **			use SpaceSub. ** **	Returns: **		none. ** **	Side Effects: **		Destroys buf. */
 end_comment
 
 begin_function
@@ -5798,6 +5728,8 @@ parameter_list|,
 name|buf
 parameter_list|,
 name|sz
+parameter_list|,
+name|spacesub
 parameter_list|)
 name|char
 modifier|*
@@ -5811,6 +5743,9 @@ decl_stmt|;
 specifier|register
 name|int
 name|sz
+decl_stmt|;
+name|char
+name|spacesub
 decl_stmt|;
 block|{
 name|bool
@@ -5830,6 +5765,16 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|spacesub
+operator|==
+literal|'\0'
+condition|)
+name|spacesub
+operator|=
+name|SpaceSub
+expr_stmt|;
 if|if
 condition|(
 name|pvp
@@ -5900,7 +5845,7 @@ operator|*
 name|p
 operator|++
 operator|=
-name|SpaceSub
+name|spacesub
 expr_stmt|;
 operator|(
 name|void
@@ -6577,6 +6522,8 @@ name|lbuf
 argument_list|,
 sizeof|sizeof
 name|lbuf
+argument_list|,
+literal|'\0'
 argument_list|)
 expr_stmt|;
 name|define

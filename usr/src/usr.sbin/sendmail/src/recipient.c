@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.12 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,9 @@ name|char
 name|delimiter
 decl_stmt|;
 comment|/* the address delimiter */
+name|int
+name|naddrs
+decl_stmt|;
 name|ADDRESS
 modifier|*
 name|sibl
@@ -241,6 +244,10 @@ expr_stmt|;
 name|al
 operator|=
 name|NULL
+expr_stmt|;
+name|naddrs
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -534,6 +541,11 @@ name|e_to
 operator|=
 name|NULL
 expr_stmt|;
+return|return
+operator|(
+name|naddrs
+operator|)
+return|;
 if|if
 condition|(
 name|ctladdr
@@ -2440,6 +2452,9 @@ name|ev
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|nincludes
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2686,6 +2701,17 @@ name|LineNumber
 operator|=
 literal|0
 expr_stmt|;
+name|ctladdr
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QSELFREF
+expr_stmt|;
+name|nincludes
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -2813,6 +2839,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|nincludes
+operator|>
+literal|0
+operator|&&
 operator|!
 name|bitset
 argument_list|(

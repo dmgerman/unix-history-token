@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.4 (Berkeley) %G%"
+literal|"@(#)collect.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -873,6 +873,11 @@ operator|&&
 name|LogLevel
 operator|>
 literal|0
+operator|&&
+name|feof
+argument_list|(
+name|InChannel
+argument_list|)
 condition|)
 name|syslog
 argument_list|(
@@ -902,7 +907,7 @@ else|:
 name|syserr
 operator|)
 operator|(
-literal|"collect: unexpected close, from=%s"
+literal|"collect: unexpected close on connection, from=%s"
 operator|,
 name|e
 operator|->
