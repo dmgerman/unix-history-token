@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setbuffer.c	5.3 (Berkeley) %G%"
+literal|"@(#)ferror.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,62 +43,18 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_function
-name|void
-name|setbuffer
-parameter_list|(
-name|fp
-parameter_list|,
-name|buf
-parameter_list|,
-name|size
-parameter_list|)
-specifier|register
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|int
-name|size
-decl_stmt|;
-block|{
-operator|(
-name|void
-operator|)
-name|setvbuf
-argument_list|(
-name|fp
-argument_list|,
-name|buf
-argument_list|,
-name|buf
-condition|?
-name|_IONBF
-else|:
-name|_IOFBF
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
-comment|/*  * set line buffering  */
+comment|/*  * A subroutine version of the macro ferror.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ferror
+end_undef
+
 begin_macro
-name|setlinebuf
+name|ferror
 argument_list|(
 argument|fp
 argument_list|)
@@ -113,33 +69,14 @@ end_decl_stmt
 
 begin_block
 block|{
-operator|(
-name|void
-operator|)
-name|setvbuf
-argument_list|(
-name|fp
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|_IOLBF
-argument_list|,
-operator|(
-name|size_t
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|__sferror
+argument_list|(
+name|fp
+argument_list|)
 operator|)
 return|;
-comment|/* ??? */
 block|}
 end_block
 

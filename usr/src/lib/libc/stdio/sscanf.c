@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sprintf.c	5.7 (Berkeley) %G%"
+literal|"@(#)sscanf.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_if
@@ -74,14 +80,43 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"local.h"
 end_include
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|eofread
+parameter_list|(
+name|cookie
+parameter_list|,
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
+name|void
+modifier|*
+name|cookie
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_if
 if|#
@@ -90,7 +125,7 @@ name|__STDC__
 end_if
 
 begin_macro
-name|sprintf
+name|sscanf
 argument_list|(
 argument|char *str
 argument_list|,
@@ -106,7 +141,7 @@ directive|else
 end_else
 
 begin_macro
-name|sprintf
+name|sscanf
 argument_list|(
 argument|str
 argument_list|,
@@ -154,9 +189,7 @@ name|f
 operator|.
 name|_flags
 operator|=
-name|__SWR
-operator||
-name|__SSTR
+name|__SRD
 expr_stmt|;
 name|f
 operator|.
@@ -183,9 +216,34 @@ name|_size
 operator|=
 name|f
 operator|.
-name|_w
+name|_r
 operator|=
-name|INT_MAX
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+name|f
+operator|.
+name|_read
+operator|=
+name|eofread
+expr_stmt|;
+name|f
+operator|.
+name|_ub
+operator|.
+name|_base
+operator|=
+name|NULL
+expr_stmt|;
+name|f
+operator|.
+name|_lb
+operator|.
+name|_base
+operator|=
+name|NULL
 expr_stmt|;
 if|#
 directive|if
@@ -208,7 +266,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|vfprintf
+name|__svfscanf
 argument_list|(
 operator|&
 name|f
@@ -222,13 +280,6 @@ name|va_end
 argument_list|(
 name|ap
 argument_list|)
-expr_stmt|;
-operator|*
-name|f
-operator|.
-name|_p
-operator|=
-literal|0
 expr_stmt|;
 return|return
 operator|(

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vprintf.c	5.4 (Berkeley) %G%"
+literal|"@(#)remove.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,35 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/stdc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
 begin_macro
-name|vprintf
+name|remove
 argument_list|(
-argument|fmt
-argument_list|,
-argument|ap
+argument|file
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
-specifier|const
 modifier|*
-name|fmt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|_VA_LIST_
-name|ap
+name|file
 decl_stmt|;
 end_decl_stmt
 
@@ -76,13 +61,9 @@ begin_block
 block|{
 return|return
 operator|(
-name|vfprintf
+name|unlink
 argument_list|(
-name|stdout
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
+name|file
 argument_list|)
 operator|)
 return|;

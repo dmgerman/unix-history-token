@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vprintf.c	5.4 (Berkeley) %G%"
+literal|"@(#)getc.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,49 +40,38 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/stdc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
-begin_macro
-name|vprintf
+begin_comment
+comment|/*  * A subroutine version of the macro getc.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|getc
+end_undef
+
+begin_expr_stmt
+name|getc
 argument_list|(
-argument|fmt
-argument_list|,
-argument|ap
+name|fp
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-specifier|const
-modifier|*
-name|fmt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|_VA_LIST_
-name|ap
-decl_stmt|;
-end_decl_stmt
+specifier|register
+name|FILE
+operator|*
+name|fp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
 return|return
 operator|(
-name|vfprintf
+name|__sgetc
 argument_list|(
-name|stdout
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
+name|fp
 argument_list|)
 operator|)
 return|;

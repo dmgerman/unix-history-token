@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sprintf.c	5.7 (Berkeley) %G%"
+literal|"@(#)snprintf.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,18 +71,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"local.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -90,9 +78,11 @@ name|__STDC__
 end_if
 
 begin_macro
-name|sprintf
+name|snprintf
 argument_list|(
 argument|char *str
+argument_list|,
+argument|size_t n
 argument_list|,
 argument|char const *fmt
 argument_list|,
@@ -106,9 +96,11 @@ directive|else
 end_else
 
 begin_macro
-name|sprintf
+name|snprintf
 argument_list|(
 argument|str
+argument_list|,
+argument|n
 argument_list|,
 argument|fmt
 argument_list|,
@@ -120,6 +112,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|str
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|n
 decl_stmt|;
 end_decl_stmt
 
@@ -150,6 +148,39 @@ decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|n
+operator|<
+literal|1
+condition|)
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
+if|#
+directive|if
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|f
 operator|.
 name|_flags
@@ -185,27 +216,10 @@ name|f
 operator|.
 name|_w
 operator|=
-name|INT_MAX
+name|n
+operator|-
+literal|1
 expr_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ret
 operator|=
 name|vfprintf
@@ -218,17 +232,17 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 operator|*
 name|f
 operator|.
 name|_p
 operator|=
 literal|0
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
