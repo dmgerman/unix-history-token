@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reverse.c	5.6 (Berkeley) %G%"
+literal|"@(#)reverse.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -292,6 +298,29 @@ condition|)
 return|return;
 if|if
 condition|(
+name|size
+operator|>
+name|SIZE_T_MAX
+condition|)
+block|{
+name|err
+argument_list|(
+literal|0
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|fname
+argument_list|,
+name|strerror
+argument_list|(
+name|EFBIG
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|p
 operator|=
@@ -306,7 +335,7 @@ name|size
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_FILE
+literal|0
 argument_list|,
 name|fileno
 argument_list|(
@@ -331,11 +360,13 @@ name|err
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s"
+literal|"%s: %s"
+argument_list|,
+name|fname
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|EFBIG
 argument_list|)
 argument_list|)
 expr_stmt|;
