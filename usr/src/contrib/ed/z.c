@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)z.c	5.3 (Berkeley) %G%"
+literal|"@(#)z.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,7 +202,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|start
+name|top
 operator|==
 name|NULL
 condition|)
@@ -280,6 +280,35 @@ name|start
 operator|=
 name|End
 expr_stmt|;
+if|if
+condition|(
+name|start
+operator|==
+name|NULL
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|help_msg
+argument_list|,
+literal|"bad address"
+argument_list|)
+expr_stmt|;
+operator|*
+name|errnum
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|ungetc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|inputt
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|start_default
 operator|=
 name|End_default
