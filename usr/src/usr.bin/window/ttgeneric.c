@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttgeneric.c	3.31 %G%"
+literal|"@(#)ttgeneric.c	3.32 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1135,7 +1135,7 @@ argument_list|,
 name|col
 argument_list|)
 specifier|register
-name|char
+name|int
 name|row
 operator|,
 name|col
