@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)sys_machdep.c	5.5 (Berkeley) 1/19/91  *	$Id: sys_machdep.c,v 1.13 1995/12/10 13:36:31 phk Exp $  *  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)sys_machdep.c	5.5 (Berkeley) 1/19/91  *	$Id: sys_machdep.c,v 1.14 1996/01/03 21:41:32 wollman Exp $  *  */
 end_comment
 
 begin_include
@@ -102,6 +102,40 @@ end_include
 begin_comment
 comment|/* for kernel_map */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_LD
+value|8192
+end_define
+
+begin_define
+define|#
+directive|define
+name|LD_PER_PAGE
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEW_MAX_LD
+parameter_list|(
+name|num
+parameter_list|)
+value|((num + LD_PER_PAGE)& ~(LD_PER_PAGE-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZE_FROM_LARGEST_LD
+parameter_list|(
+name|num
+parameter_list|)
+value|(NEW_MAX_LD(num)<< 3)
+end_define
 
 begin_decl_stmt
 name|void
@@ -284,6 +318,10 @@ directive|ifdef
 name|USER_LDT
 end_ifdef
 
+begin_comment
+comment|/*  * Update the GDT entry pointing to the LDT to point to the LDT of the  * current process.  */
+end_comment
+
 begin_function
 name|void
 name|set_user_ldt
@@ -445,9 +483,14 @@ decl_stmt|;
 name|struct
 name|i386_get_ldt_args
 name|ua
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|i386_get_ldt_args
 modifier|*
 name|uap
+init|=
+operator|&
+name|ua
 decl_stmt|;
 if|if
 condition|(
@@ -458,8 +501,7 @@ name|copyin
 argument_list|(
 name|args
 argument_list|,
-operator|&
-name|ua
+name|uap
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -476,11 +518,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|uap
-operator|=
-operator|&
-name|ua
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -503,19 +540,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* verify range of LDTs exist */
 if|if
 condition|(
+operator|(
 name|uap
 operator|->
 name|start
 operator|<
 literal|0
+operator|)
 operator|||
+operator|(
 name|uap
 operator|->
 name|num
-operator|<
+operator|<=
 literal|0
+operator|)
 condition|)
 return|return
 operator|(
@@ -727,6 +769,9 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
+name|int
+name|largest_ld
+decl_stmt|;
 name|struct
 name|pcb
 modifier|*
@@ -738,6 +783,10 @@ operator|->
 name|p_addr
 operator|->
 name|u_pcb
+decl_stmt|;
+name|union
+name|descriptor
+name|desc
 decl_stmt|;
 name|union
 name|descriptor
@@ -808,35 +857,50 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* verify range of descriptors to modify */
 if|if
 condition|(
+operator|(
 name|uap
 operator|->
 name|start
 operator|<
-literal|0
+name|NLDT
+operator|)
 operator|||
+operator|(
+name|uap
+operator|->
+name|start
+operator|>=
+name|MAX_LD
+operator|)
+operator|||
+operator|(
 name|uap
 operator|->
 name|num
 operator|<
 literal|0
+operator|)
+operator|||
+operator|(
+name|uap
+operator|->
+name|num
+operator|>
+name|MAX_LD
+operator|)
 condition|)
+block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* XXX Should be 8192 ! */
-if|if
-condition|(
-name|uap
-operator|->
-name|start
-operator|>
-literal|512
-operator|||
-operator|(
+block|}
+name|largest_ld
+operator|=
 name|uap
 operator|->
 name|start
@@ -844,9 +908,14 @@ operator|+
 name|uap
 operator|->
 name|num
-operator|)
-operator|>
-literal|512
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|largest_ld
+operator|>=
+name|MAX_LD
 condition|)
 return|return
 operator|(
@@ -860,6 +929,14 @@ operator|!
 name|pcb
 operator|->
 name|pcb_ldt
+operator|||
+operator|(
+name|largest_ld
+operator|>=
+name|pcb
+operator|->
+name|pcb_ldt_len
+operator|)
 condition|)
 block|{
 name|union
@@ -876,7 +953,41 @@ name|kmem_alloc
 argument_list|(
 name|kernel_map
 argument_list|,
-literal|512
+name|SIZE_FROM_LARGEST_LD
+argument_list|(
+name|largest_ld
+argument_list|)
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|new_ldt
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|ENOMEM
+return|;
+block|}
+if|if
+condition|(
+name|pcb
+operator|->
+name|pcb_ldt
+condition|)
+block|{
+name|bcopy
+argument_list|(
+name|pcb
+operator|->
+name|pcb_ldt
+argument_list|,
+name|new_ldt
+argument_list|,
+name|pcb
+operator|->
+name|pcb_ldt_len
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -884,7 +995,32 @@ expr|union
 name|descriptor
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|kmem_free
+argument_list|(
+name|kernel_map
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|pcb
+operator|->
+name|pcb_ldt
+argument_list|,
+name|pcb
+operator|->
+name|pcb_ldt_len
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|union
+name|descriptor
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|bcopy
 argument_list|(
 name|ldt
@@ -897,6 +1033,7 @@ name|ldt
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|pcb
 operator|->
 name|pcb_ldt
@@ -910,25 +1047,22 @@ name|pcb
 operator|->
 name|pcb_ldt_len
 operator|=
-literal|512
-expr_stmt|;
-comment|/* XXX need to grow */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|NEW_MAX_LD
 argument_list|(
-literal|"i386_set_ldt(%d): new_ldt=%x\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|new_ldt
+name|largest_ld
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+if|if
+condition|(
+name|pcb
+operator|==
+name|curpcb
+condition|)
+name|set_user_ldt
+argument_list|(
+name|pcb
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Check descriptors for access violations */
 for|for
@@ -998,23 +1132,110 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* Only user (ring-3) descriptors */
-if|if
+switch|switch
 condition|(
 name|desc
 operator|.
 name|sd
 operator|.
-name|sd_dpl
-operator|!=
-name|SEL_UPL
+name|sd_type
 condition|)
+block|{
+case|case
+name|SDT_SYSNULL
+case|:
+comment|/* system null */
+name|desc
+operator|.
+name|sd
+operator|.
+name|sd_p
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|SDT_SYS286TSS
+case|:
+comment|/* system 286 TSS available */
+case|case
+name|SDT_SYSLDT
+case|:
+comment|/* system local descriptor table */
+case|case
+name|SDT_SYS286BSY
+case|:
+comment|/* system 286 TSS busy */
+case|case
+name|SDT_SYSTASKGT
+case|:
+comment|/* system task gate */
+case|case
+name|SDT_SYS286IGT
+case|:
+comment|/* system 286 interrupt gate */
+case|case
+name|SDT_SYS286TGT
+case|:
+comment|/* system 286 trap gate */
+case|case
+name|SDT_SYSNULL2
+case|:
+comment|/* undefined by Intel */
+case|case
+name|SDT_SYS386TSS
+case|:
+comment|/* system 386 TSS available */
+case|case
+name|SDT_SYSNULL3
+case|:
+comment|/* undefined by Intel */
+case|case
+name|SDT_SYS386BSY
+case|:
+comment|/* system 386 TSS busy */
+case|case
+name|SDT_SYSNULL4
+case|:
+comment|/* undefined by Intel */
+case|case
+name|SDT_SYS386IGT
+case|:
+comment|/* system 386 interrupt gate */
+case|case
+name|SDT_SYS386TGT
+case|:
+comment|/* system 386 trap gate */
+case|case
+name|SDT_SYS286CGT
+case|:
+comment|/* system 286 call gate */
+case|case
+name|SDT_SYS386CGT
+case|:
+comment|/* system 386 call gate */
+comment|/* I can't think of any reason to allow a user proc  			 * to create a segment of these types.  They are  			 * for OS use only.  			 */
 return|return
-operator|(
 name|EACCES
-operator|)
 return|;
-comment|/* Must be "present" */
+comment|/* memory segment types */
+case|case
+name|SDT_MEMEC
+case|:
+comment|/* memory execute only conforming */
+case|case
+name|SDT_MEMEAC
+case|:
+comment|/* memory execute only accessed conforming */
+case|case
+name|SDT_MEMERC
+case|:
+comment|/* memory execute read conforming */
+case|case
+name|SDT_MEMERAC
+case|:
+comment|/* memory execute read accessed conforming */
+comment|/* Must be "present" if executable and conforming. */
 if|if
 condition|(
 name|desc
@@ -1030,84 +1251,92 @@ operator|(
 name|EACCES
 operator|)
 return|;
-switch|switch
-condition|(
-name|desc
-operator|.
-name|sd
-operator|.
-name|sd_type
-condition|)
-block|{
-case|case
-name|SDT_SYSNULL
-case|:
-case|case
-name|SDT_SYS286CGT
-case|:
-case|case
-name|SDT_SYS386CGT
-case|:
 break|break;
 case|case
 name|SDT_MEMRO
 case|:
+comment|/* memory read only */
 case|case
 name|SDT_MEMROA
 case|:
+comment|/* memory read only accessed */
 case|case
 name|SDT_MEMRW
 case|:
+comment|/* memory read write */
 case|case
 name|SDT_MEMRWA
 case|:
+comment|/* memory read write accessed */
 case|case
 name|SDT_MEMROD
 case|:
+comment|/* memory read only expand dwn limit */
 case|case
 name|SDT_MEMRODA
 case|:
+comment|/* memory read only expand dwn lim accessed */
+case|case
+name|SDT_MEMRWD
+case|:
+comment|/* memory read write expand dwn limit */
+case|case
+name|SDT_MEMRWDA
+case|:
+comment|/* memory read write expand dwn lim acessed */
 case|case
 name|SDT_MEME
 case|:
+comment|/* memory execute only */
 case|case
 name|SDT_MEMEA
 case|:
+comment|/* memory execute only accessed */
 case|case
 name|SDT_MEMER
 case|:
+comment|/* memory execute read */
 case|case
 name|SDT_MEMERA
 case|:
-case|case
-name|SDT_MEMEC
-case|:
-case|case
-name|SDT_MEMEAC
-case|:
-case|case
-name|SDT_MEMERC
-case|:
-case|case
-name|SDT_MEMERAC
-case|:
-block|{
-if|#
-directive|if
-literal|0
-block|unsigned long base = (desc.sd.sd_hibase<< 24)&0xFF000000; 			base |= (desc.sd.sd_lobase&0x00FFFFFF); 			if (base>= KERNBASE) 				return(EACCES);
-endif|#
-directive|endif
+comment|/* memory execute read accessed */
 break|break;
-block|}
 default|default:
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|/*NOTREACHED*/
+block|}
+comment|/* Only user (ring-3) descriptors may be present. */
+if|if
+condition|(
+operator|(
+name|desc
+operator|.
+name|sd
+operator|.
+name|sd_p
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|desc
+operator|.
+name|sd
+operator|.
+name|sd_dpl
+operator|!=
+name|SEL_UPL
+operator|)
+condition|)
 return|return
 operator|(
 name|EACCES
 operator|)
 return|;
-comment|/*NOTREACHED*/
-block|}
 block|}
 name|s
 operator|=
@@ -1115,51 +1344,14 @@ name|splhigh
 argument_list|()
 expr_stmt|;
 comment|/* Fill in range */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|n
-operator|=
-name|uap
-operator|->
-name|start
-init|;
-name|i
-operator|<
-name|uap
-operator|->
-name|num
-operator|&&
-operator|!
 name|error
-condition|;
-name|i
-operator|++
-operator|,
-name|n
-operator|++
-control|)
-block|{
-name|union
-name|descriptor
-modifier|*
-name|dp
-decl_stmt|;
-name|dp
 operator|=
-operator|&
+name|copyin
+argument_list|(
 name|uap
 operator|->
 name|desc
-index|[
-name|i
-index|]
-expr_stmt|;
-name|lp
-operator|=
+argument_list|,
 operator|&
 operator|(
 operator|(
@@ -1174,33 +1366,15 @@ name|pcb_ldt
 operator|)
 operator|)
 index|[
-name|n
-index|]
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"i386_set_ldt(%d): ldtp=%x\n"
-argument_list|,
-name|p
+name|uap
 operator|->
-name|p_pid
+name|start
+index|]
 argument_list|,
-name|lp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|error
-operator|=
-name|copyin
-argument_list|(
-name|dp
-argument_list|,
-name|lp
-argument_list|,
+name|uap
+operator|->
+name|num
+operator|*
 sizeof|sizeof
 argument_list|(
 expr|union
@@ -1208,13 +1382,11 @@ name|descriptor
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|error
 condition|)
-block|{
 operator|*
 name|retval
 operator|=
@@ -1222,8 +1394,6 @@ name|uap
 operator|->
 name|start
 expr_stmt|;
-comment|/*		need_resched(); */
-block|}
 name|splx
 argument_list|(
 name|s
