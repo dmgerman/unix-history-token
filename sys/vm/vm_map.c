@@ -2668,8 +2668,6 @@ decl_stmt|;
 name|vm_eflags_t
 name|protoeflags
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Check that the start and end points are not bogus. 	 */
 if|if
 condition|(
@@ -2815,6 +2813,8 @@ condition|(
 name|object
 condition|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 		 * When object is non-NULL, it could be shared with another 		 * process.  We have to set or clear OBJ_ONEMAPPING  		 * appropriately. 		 */
 if|if
 condition|(
@@ -3164,6 +3164,8 @@ name|MAP_PREFAULT_PARTIAL
 operator|)
 condition|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 name|pmap_object_init_pt
 argument_list|(
 name|map
