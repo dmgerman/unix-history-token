@@ -505,7 +505,7 @@ name|a_op
 operator|==
 name|F_GETLK
 expr_stmt|;
-comment|/* 	 * XXX  -- I think this is wrong for anything other AF_INET. 	 */
+comment|/* 	 * XXX  -- I think this is wrong for anything other AF_INET. 	 * 	 * XXX: the lm_cred assignment below directly exports a ucred 	 * structure to userland.  This is probably wrong, and should at 	 * least be xucred. 	 */
 name|msg
 operator|.
 name|lm_addr
