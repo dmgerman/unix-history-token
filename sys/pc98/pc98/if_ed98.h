@@ -1143,6 +1143,13 @@ begin_comment
 comment|/* 0xaaef i/o address set */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ED_CNET98_IO_PORTS
+value|32
+end_define
+
 begin_comment
 comment|/* offset NIC address */
 end_comment
@@ -1321,6 +1328,72 @@ directive|define
 name|ED_CNET98_RESERVE3
 value|(0x400 + 15)
 end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_IRQ3
+value|0x01
+end_define
+
+begin_comment
+comment|/* INT 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_IRQ5
+value|0x02
+end_define
+
+begin_comment
+comment|/* INT 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_IRQ6
+value|0x04
+end_define
+
+begin_comment
+comment|/* INT 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_IRQ9
+value|0x08
+end_define
+
+begin_comment
+comment|/* INT 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_IRQ12
+value|0x20
+end_define
+
+begin_comment
+comment|/* INT 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CNET98_INT_IRQ13
+value|0x40
+end_define
+
+begin_comment
+comment|/* INT 6 */
+end_comment
 
 begin_comment
 comment|/*  * C-NET(98)E/L  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.11 1996/10/30 22:39:52 asami Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.11.2.1 1996/12/04 16:01:01 phk Exp $  */
 end_comment
 
 begin_comment
@@ -8122,33 +8122,52 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
-name|u_int
+name|int
 name|i
 decl_stmt|;
+name|u_long
+name|j
+decl_stmt|;
 name|u_char
+name|cmd
+decl_stmt|,
 name|sum
 decl_stmt|;
-comment|/* 	 * Setup card RAM area and i/o addresses 	 * Kernel Virtual to segment C0000-DFFFF????? 	 */
-name|sc
-operator|->
-name|isa16bit
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 16bit mode off = 0 */
-name|sc
-operator|->
-name|cr_proto
-operator|=
-name|ED_CR_RD2
-expr_stmt|;
+name|u_char
+name|tmp
+decl_stmt|,
+name|tmp_s
+decl_stmt|,
+name|tmp_e
+decl_stmt|;
 name|sc
 operator|->
 name|vendor
 operator|=
 name|ED_VENDOR_MISC
 expr_stmt|;
-comment|/* vendor name */
+comment|/* vendor name          */
+name|sc
+operator|->
+name|type_str
+operator|=
+literal|"CNET98"
+expr_stmt|;
+comment|/* board name           */
+name|sc
+operator|->
+name|isa16bit
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 16bit mode off = 0   */
+name|sc
+operator|->
+name|cr_proto
+operator|=
+name|ED_CR_RD2
+expr_stmt|;
+comment|/*                      */
 name|sc
 operator|->
 name|asic_addr
@@ -8157,22 +8176,23 @@ name|isa_dev
 operator|->
 name|id_iobase
 expr_stmt|;
+comment|/* 0xa3d0,0xb3d0,0xc3d0 */
 name|sc
 operator|->
 name|nic_addr
 operator|=
-name|sc
+name|isa_dev
 operator|->
-name|asic_addr
+name|id_iobase
 expr_stmt|;
-comment|/* 0xa3d0      */
+comment|/* 0xd3d0,0xe3d0,0xf3d0 */
 name|sc
 operator|->
 name|is790
 operator|=
 literal|0
 expr_stmt|;
-comment|/* special chip */
+comment|/* special chip         */
 name|sc
 operator|->
 name|mem_start
@@ -8218,14 +8238,13 @@ name|isa_dev
 operator|->
 name|id_msize
 expr_stmt|;
-comment|/*  16kbyte */
 name|sc
 operator|->
 name|mem_shared
 operator|=
 literal|1
 expr_stmt|;
-comment|/* sharedmemory on=1,off=0 */
+comment|/* shared memory on    */
 name|sc
 operator|->
 name|txb_cnt
@@ -8239,14 +8258,14 @@ name|tx_page_start
 operator|=
 literal|0
 expr_stmt|;
-comment|/* page offset 0 */
+comment|/* page offset 0       */
 name|sc
 operator|->
 name|rec_page_start
 operator|=
 name|ED_TXBUF_SIZE
 expr_stmt|;
-comment|/* page offset 6 */
+comment|/* page offset 6       */
 name|sc
 operator|->
 name|rec_page_stop
@@ -8257,17 +8276,166 @@ name|id_msize
 operator|/
 name|ED_PAGE_SIZE
 expr_stmt|;
-comment|/* page offset 40 */
+comment|/* page offset 40      */
+comment|/* 	 * Check i/o address. 	 * 0xa3d0, 0xb3d0, 0xc3d0, 0xd3d0, 0xe3d0, 0xf3d0 	 */
 if|if
 condition|(
+operator|(
+operator|(
 name|sc
 operator|->
 name|asic_addr
-operator|==
-literal|0xa3d0
+operator|&
+operator|(
+name|u_short
+operator|)
+literal|0x0fff
+operator|)
+operator|!=
+literal|0x03d0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|sc
+operator|->
+name|asic_addr
+operator|&
+operator|(
+name|u_short
+operator|)
+literal|0xf000
+operator|)
+operator|>=
+literal|0xa000
+operator|)
 condition|)
 block|{
-comment|/* 		 * reset card to force it into a known state. 		 */
+name|printf
+argument_list|(
+literal|"ed%d: Invalid i/o port configuration (0x%x) must be "
+literal|"0x?3d0 for CNET98\n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
+argument_list|,
+name|sc
+operator|->
+name|asic_addr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * Check window area address. 	 */
+name|tmp_s
+operator|=
+name|kvtop
+argument_list|(
+name|sc
+operator|->
+name|mem_start
+argument_list|)
+operator|>>
+literal|12
+expr_stmt|;
+if|if
+condition|(
+name|tmp_s
+operator|<
+literal|0x80
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ed%d: Please change window address(0x%x) \n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
+argument_list|,
+name|sc
+operator|->
+name|mem_start
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|tmp
+operator|=
+name|sc
+operator|->
+name|asic_addr
+operator|>>
+literal|12
+expr_stmt|;
+name|tmp_s
+operator|=
+operator|(
+name|tmp_s
+operator|&
+operator|(
+name|u_char
+operator|)
+literal|0x0f
+operator|)
+expr_stmt|;
+name|tmp_e
+operator|=
+name|tmp_s
+operator|+
+literal|4
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tmp_s
+operator|<=
+name|tmp
+operator|)
+operator|&&
+operator|(
+name|tmp
+operator|<
+name|tmp_e
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ed%d: Please change iobase address(0x%x) or window address(0x%x) \n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
+argument_list|,
+name|isa_dev
+operator|->
+name|id_iobase
+argument_list|,
+name|kvtop
+argument_list|(
+name|sc
+operator|->
+name|mem_start
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * Reset card to force it into a known state. 	 */
 name|outb
 argument_list|(
 name|ED_CNET98_INIT_ADDR
@@ -8294,42 +8462,46 @@ argument_list|(
 literal|5000
 argument_list|)
 expr_stmt|;
-comment|/* 		 * set i/o address and cpu type 		 */
-name|sc
-operator|->
-name|asic_addr
+comment|/* 	 * Set i/o address and cpu type 	 * 	 *   AAAAIXXC(8bit) 	 *   AAAA: A15-A12,  I: I/O enable, XX: reserved, C: CPU type 	 */
+name|tmp
 operator|=
 operator|(
-literal|0xf000
-operator|&
 name|sc
 operator|->
 name|asic_addr
+operator|&
+operator|(
+name|u_short
+operator|)
+literal|0xf000
 operator|)
 operator|>>
 literal|8
 expr_stmt|;
-name|sc
-operator|->
-name|asic_addr
-operator|=
-name|sc
-operator|->
-name|asic_addr
-operator|&
-literal|0xf0
-expr_stmt|;
-name|sc
-operator|->
-name|asic_addr
-operator|=
-name|sc
-operator|->
-name|asic_addr
+name|tmp
+operator||=
+operator|(
+literal|0x08
 operator||
-literal|0x09
+literal|0x01
+operator|)
 expr_stmt|;
-comment|/* debug printf(" Board status %x \n",sc->asic_addr); */
+ifdef|#
+directive|ifdef
+name|ED_DEBUG
+name|printf
+argument_list|(
+literal|"ed%d: Board status %x \n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 operator|(
@@ -8338,9 +8510,7 @@ operator|+
 literal|2
 operator|)
 argument_list|,
-name|sc
-operator|->
-name|asic_addr
+name|tmp
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -8348,15 +8518,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|asic_addr
-operator|=
-name|sc
-operator|->
-name|nic_addr
-expr_stmt|;
-comment|/* 		 *  set window ethernet address area 		 *    board memory base 0x480000  data 256byte  		 *    window   base     0xc40000 		 * 		 *    FreeBSD address 0xf00c4000 		 */
+comment|/* 	 *  Set window ethernet address area 	 *    board memory base 0x480000  data 256byte  	 *    FreeBSD address 0xf00xxxxx 	 */
 name|outb
 argument_list|(
 operator|(
@@ -8501,6 +8663,36 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Enable window memory(16Kbyte) 	 *    bit7:0 disable , 1 enable 	 */
+name|cmd
+operator|=
+operator|(
+name|kvtop
+argument_list|(
+name|sc
+operator|->
+name|mem_start
+argument_list|)
+operator|>>
+literal|12
+operator|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ED_DEBUG
+name|printf
+argument_list|(
+literal|"ed%d: Set window start address %x \n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 operator|(
@@ -8511,7 +8703,7 @@ operator|+
 name|ED_CNET98_WIN_REG
 operator|)
 argument_list|,
-literal|0xc4
+name|cmd
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -8519,8 +8711,8 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* 		 * CNET98 checksum code 		 * 		 * for (sum = 0, i = 0; i< ETHER_ADDR_LEN; ++i) 		 *   sum ^= *((caddr_t)(isa_dev -> id_maddr + i)); 		 * printf(" checkusum = %x \n",sum); 		 */
-comment|/* 		 * Get station address from on-board ROM 		 */
+comment|/* 	 * CNET98 checksum code 	 * 	 * for (sum = 0, i = 0; i< ETHER_ADDR_LEN; ++i) 	 *   sum ^= *((caddr_t)(isa_dev -> id_maddr + i)); 	 * printf(" checkusum = %x \n",sum); 	 */
+comment|/* 	 * Get station address from on-board ROM 	 */
 for|for
 control|(
 name|i
@@ -8557,6 +8749,13 @@ name|i
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* 	 * Disable window memory 	 *   bit7:1 enable , 0 disable 	 */
+name|cmd
+operator|=
+name|cmd
+operator|&
+literal|0x7f
+expr_stmt|;
 name|outb
 argument_list|(
 operator|(
@@ -8567,7 +8766,7 @@ operator|+
 name|ED_CNET98_WIN_REG
 operator|)
 argument_list|,
-literal|0x44
+name|cmd
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -8575,7 +8774,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  set window buffer memory area 		 *    board memory base 0x400000  data 16kbyte  		 *    window   base     0xc40000 		 * 		 *    FreeBSD address 0xf00c4000 		 */
+comment|/* 	 * Set window buffer memory area 	 *    board memory base 0x400000  data 16kbyte  	 *    FreeBSD address 0xf00xxxxx 	 */
 name|outb
 argument_list|(
 operator|(
@@ -8720,6 +8919,13 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Enable window memory 	 *   bit7:1 enable , 0 disable 	 */
+name|cmd
+operator|=
+name|cmd
+operator||
+literal|0x80
+expr_stmt|;
 name|outb
 argument_list|(
 operator|(
@@ -8730,7 +8936,7 @@ operator|+
 name|ED_CNET98_WIN_REG
 operator|)
 argument_list|,
-literal|0xc4
+name|cmd
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -8738,27 +8944,27 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* 		 * clear interface memory, then sum to make sure its valid 		 */
+comment|/* 	 *   Clear interface memory, then sum to make sure its valid 	 */
 for|for
 control|(
-name|i
+name|j
 operator|=
 literal|0
 init|;
-name|i
+name|j
 operator|<
 name|sc
 operator|->
 name|mem_size
 condition|;
 operator|++
-name|i
+name|j
 control|)
 name|sc
 operator|->
 name|mem_start
 index|[
-name|i
+name|j
 index|]
 operator|=
 literal|0x0
@@ -8769,18 +8975,18 @@ name|sum
 operator|=
 literal|0
 operator|,
-name|i
+name|j
 operator|=
 literal|0
 init|;
-name|i
+name|j
 operator|<
 name|sc
 operator|->
 name|mem_size
 condition|;
 operator|++
-name|i
+name|j
 control|)
 name|sum
 operator||=
@@ -8788,7 +8994,7 @@ name|sc
 operator|->
 name|mem_start
 index|[
-name|i
+name|j
 index|]
 expr_stmt|;
 if|if
@@ -8813,8 +9019,155 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 *   interrupt set 		 *   irq 12 set 		 */
-comment|/* int 5 set */
+comment|/* 	 *   Set interrupt level 	 */
+switch|switch
+condition|(
+name|isa_dev
+operator|->
+name|id_irq
+condition|)
+block|{
+case|case
+name|IRQ12
+case|:
+name|outb
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_CNET98_INT_LEV
+operator|)
+argument_list|,
+name|ED_CNET98_INT_IRQ12
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IRQ3
+case|:
+name|outb
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_CNET98_INT_LEV
+operator|)
+argument_list|,
+name|ED_CNET98_INT_IRQ3
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IRQ5
+case|:
+name|outb
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_CNET98_INT_LEV
+operator|)
+argument_list|,
+name|ED_CNET98_INT_IRQ5
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IRQ6
+case|:
+name|outb
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_CNET98_INT_LEV
+operator|)
+argument_list|,
+name|ED_CNET98_INT_IRQ6
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IRQ9
+case|:
+name|outb
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_CNET98_INT_LEV
+operator|)
+argument_list|,
+name|ED_CNET98_INT_IRQ9
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IRQ13
+case|:
+name|outb
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_CNET98_INT_LEV
+operator|)
+argument_list|,
+name|ED_CNET98_INT_IRQ13
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"ed%d: Change Interrupt level default value from %d to %d.\n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_irq
+argument_list|,
+name|IRQ5
+argument_list|)
+expr_stmt|;
+name|isa_dev
+operator|->
+name|id_irq
+operator|=
+name|IRQ5
+expr_stmt|;
+name|outb
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_CNET98_INT_LEV
+operator|)
+argument_list|,
+name|ED_CNET98_INT_IRQ5
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* 	 *   Set interrupt mask. 	 *     bit7:1 all interrupt mask 	 *     bit1:1 timer interrupt mask 	 *     bit0:0 NS controler interrupt enable 	 */
 name|outb
 argument_list|(
 operator|(
@@ -8833,40 +9186,11 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|outb
-argument_list|(
-operator|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_CNET98_INT_LEV
-operator|)
-argument_list|,
-literal|0x20
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-literal|32
+name|ED_CNET98_IO_PORTS
 operator|)
 return|;
-comment|/* 0xa3d0 -- 0xa3df , 0xa7d0 -- 0xa7df */
-block|}
-else|else
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* error no board */
-block|}
 block|}
 end_function
 
