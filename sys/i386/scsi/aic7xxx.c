@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.19 1995/04/01 19:53:04 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.20 1995/04/09 06:39:01 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -1686,6 +1686,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SEND_REJ
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|HA_SIGSTATE
 value|0xc4bul
 end_define
@@ -2532,7 +2539,7 @@ comment|/* AHC_DEBUG */
 return|return;
 block|}
 block|}
-comment|/* Default to asyncronous transfer */
+comment|/* Default to asyncronous transfers.  Also reject this SDTR request. */
 operator|*
 name|scsirate
 operator|=
@@ -3234,7 +3241,7 @@ argument_list|)
 operator|<<
 literal|2
 expr_stmt|;
-comment|/* The bottom half of SCSIXFER*/
+comment|/* The bottom half of SCSIXFER */
 name|offset
 operator|=
 name|inb
@@ -3323,7 +3330,30 @@ argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rate
+operator|&
+literal|0x7f
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 					 * The requested rate was so low 					 * that asyncronous transfers are 					 * faster (not to mention the  					 * controller won't support them), 					 * so we issue a message reject to 					 * ensure we go to asyncronous 					 * transfers. 					 */
+name|outb
+argument_list|(
+name|HA_RETURN_1
+operator|+
+name|iobase
+argument_list|,
+name|SEND_REJ
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* See if we initiated Sync Negotiation */
+elseif|else
 if|if
 condition|(
 name|ahc
@@ -5386,18 +5416,9 @@ name|ahc
 operator|->
 name|pause
 operator|=
-operator|(
-name|inb
-argument_list|(
-name|HCNTRL
-operator|+
-name|iobase
-argument_list|)
-operator|&
-name|IRQMS
-operator|)
-operator||
-name|INTEN
+name|ahc
+operator|->
+name|unpause
 operator||
 name|PAUSE
 expr_stmt|;
@@ -5408,6 +5429,10 @@ operator|+
 name|iobase
 argument_list|,
 name|CHIPRST
+operator||
+name|ahc
+operator|->
+name|pause
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ensure that the reset has finished 	 */
@@ -5451,16 +5476,24 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ahc%d: Failed chip reset - probe failed!\n"
+literal|"ahc%d: WARNING - Failed chip reset!  "
+literal|"Trying to initialize anyway.\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+comment|/* Forcibly clear CHIPRST */
+name|outb
+argument_list|(
+name|HCNTRL
+operator|+
+name|iobase
+argument_list|,
+name|ahc
+operator|->
+name|pause
+argument_list|)
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -5553,7 +5586,7 @@ operator|<<
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/* XXX Hard coded SCSI ID for now */
+comment|/*  		 * XXX Hard coded SCSI ID until we can read it from the 		 * SEEPROM or NVRAM. 		 */
 name|outb
 argument_list|(
 name|HA_SCSICONF
@@ -5979,7 +6012,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Set the SCSI Id, SXFRCTL1, and SIMODE1, for both channes */
+comment|/* Set the SCSI Id, SXFRCTL1, and SIMODE1, for both channels */
 if|if
 condition|(
 name|ahc
@@ -8620,17 +8653,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AHC_DEBUG
-ifdef|#
-directive|ifdef
 name|SCSIDEBUG
-if|if
-condition|(
-name|ahc_debug
-operator|&
-name|AHC_SHOWCMDS
-condition|)
-block|{
 name|show_scsi_cmd
 argument_list|(
 name|scb
@@ -8638,9 +8661,11 @@ operator|->
 name|xs
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
 if|if
 condition|(
 name|ahc_debug
