@@ -4642,7 +4642,7 @@ block|,
 block|{
 literal|" src"
 block|,
-literal|"Sources for everything but encryption"
+literal|"Sources for everything"
 block|,
 name|srcFlagCheck
 block|,
