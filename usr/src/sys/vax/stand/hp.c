@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.12	83/02/17	*/
+comment|/*	hp.c	4.13	83/02/17	*/
 end_comment
 
 begin_comment
@@ -1350,7 +1350,7 @@ return|;
 comment|/* 43 sector Eagle */
 name|printf
 argument_list|(
-literal|"RM02 with %d tracks?\n"
+literal|"RM02 with %d sectors/track?\n"
 argument_list|,
 name|ntracks
 argument_list|)
