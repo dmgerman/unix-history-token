@@ -29,6 +29,24 @@ name|ip_gif_ttl
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|rtentry
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|void
 name|in_gif_input

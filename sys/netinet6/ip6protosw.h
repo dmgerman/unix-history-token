@@ -47,6 +47,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|sockopt
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|domain
 struct_decl|;
 end_struct_decl
