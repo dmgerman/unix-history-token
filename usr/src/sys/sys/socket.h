@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.15	82/05/04	*/
+comment|/*	socket.h	4.16	82/06/08	*/
 end_comment
 
 begin_comment
@@ -101,6 +101,17 @@ end_define
 
 begin_comment
 comment|/* keep connections alive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_DONTROUTE
+value|0x10
+end_define
+
+begin_comment
+comment|/* just use interface addresses */
 end_comment
 
 begin_comment
