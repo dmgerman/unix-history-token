@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.6	81/11/20	*/
+comment|/*	uipc_proto.c	4.7	81/11/21	*/
 end_comment
 
 begin_include
@@ -425,6 +425,8 @@ block|,
 name|IPPROTO_TCP
 block|,
 name|PR_CONNREQUIRED
+operator||
+name|PR_WANTRCVD
 block|,
 name|tcp_input
 block|,
@@ -614,7 +616,7 @@ operator|=
 name|protosw
 init|;
 name|pr
-operator|<
+operator|<=
 name|protoswLAST
 condition|;
 name|pr
@@ -696,7 +698,7 @@ operator|=
 name|protosw
 init|;
 name|pr
-operator|<
+operator|<=
 name|protoswLAST
 condition|;
 name|pr
