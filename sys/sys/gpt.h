@@ -174,18 +174,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|GPT_ENT_TYPE_FREEBSD_UFS2
-define|\
-value|{0x516e7cb7,0x6ecf,0x11d6,0x8f,0xf8,{0x00,0x02,0x2d,0x09,0x71,0x2b}}
-end_define
-
-begin_define
-define|#
-directive|define
 name|GPT_ENT_TYPE_FREEBSD_VINUM
 define|\
 value|{0x516e7cb8,0x6ecf,0x11d6,0x8f,0xf8,{0x00,0x02,0x2d,0x09,0x71,0x2b}}
 end_define
+
+begin_comment
+comment|/*  * The following are unused but documented here to avoid reuse.  *  * GPT_ENT_TYPE_FREEBSD_UFS2	\  *	{0x516e7cb7,0x6ecf,0x11d6,0x8f,0xf8,{0x00,0x02,0x2d,0x09,0x71,0x2b}}  */
+end_comment
 
 begin_comment
 comment|/*  * Foreign partition types that we're likely to encounter. Note that Linux  * apparently choose to share data partitions with MS. I don't what the  * advantage might be. I can see how sharing swap partitions is advantaous  * though.  */
