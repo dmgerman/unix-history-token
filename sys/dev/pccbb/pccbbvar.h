@@ -205,9 +205,6 @@ expr_stmt|;
 name|device_t
 name|cbdev
 decl_stmt|;
-name|device_t
-name|pccarddev
-decl_stmt|;
 name|struct
 name|proc
 modifier|*
