@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	8.1 (Berkeley) %G%"
+literal|"@(#)send.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,41 +52,34 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stddef.h>
 end_include
 
-begin_macro
+begin_function
+name|ssize_t
 name|send
-argument_list|(
-argument|s
-argument_list|,
-argument|msg
-argument_list|,
-argument|len
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|,
+name|msg
+parameter_list|,
+name|len
+parameter_list|,
+name|flags
+parameter_list|)
 name|int
 name|s
 decl_stmt|,
-name|len
-decl_stmt|,
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|size_t
+name|len
+decl_stmt|;
 specifier|const
 name|void
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -100,11 +93,6 @@ name|len
 argument_list|,
 name|flags
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|0
@@ -112,7 +100,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
