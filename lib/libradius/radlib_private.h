@@ -286,10 +286,8 @@ name|int
 name|pass_pos
 decl_stmt|;
 comment|/* Position of scrambled password */
-name|unsigned
+name|char
 name|chap_pass
-range|:
-literal|1
 decl_stmt|;
 comment|/* Have we got a CHAP_PASSWORD ? */
 name|unsigned
@@ -308,6 +306,18 @@ name|int
 name|resp_pos
 decl_stmt|;
 comment|/* Current position scanning attrs */
+name|int
+name|total_tries
+decl_stmt|;
+comment|/* How many requests we'll send */
+name|int
+name|try
+decl_stmt|;
+comment|/* How many requests we've sent */
+name|int
+name|srv
+decl_stmt|;
+comment|/* Server number we did last */
 block|}
 struct|;
 end_struct
