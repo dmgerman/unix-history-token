@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)mailstats.c	5.2 (Berkeley) %G%"
+literal|"@(#)mailstats.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,26 +49,14 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|"../src/sendmail.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|mailstats
-operator|.
-name|c
-literal|5.2
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|"../src/mailstats.h"
+end_include
 
 begin_comment
 comment|/* **  MAILSTATS -- print mail statistics. ** **	Flags: **		-Ffile		Name of statistics file. ** **	Exit Status: **		zero. */
