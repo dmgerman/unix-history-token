@@ -575,8 +575,10 @@ literal|1
 operator|)
 return|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%d: old priority %d, new priority %d\n"
 argument_list|,
 name|who
