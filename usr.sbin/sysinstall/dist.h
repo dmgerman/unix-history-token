@@ -168,26 +168,6 @@ value|0x3FFFF
 end_define
 
 begin_comment
-comment|/* Canned distribution sets */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_DIST_USER
-define|\
-value|( DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_CRYPTO )
-end_define
-
-begin_define
-define|#
-directive|define
-name|_DIST_DEVELOPER
-define|\
-value|( _DIST_USER | DIST_PROFLIBS | DIST_INFO | DIST_SRC )
-end_define
-
-begin_comment
 comment|/* Subtypes for CRYPTO distribution */
 end_comment
 
@@ -785,6 +765,34 @@ define|#
 directive|define
 name|DIST_XF86_ALL
 value|0x1FFFF
+end_define
+
+begin_comment
+comment|/* Canned distribution sets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_DIST_USER
+define|\
+value|( DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_CRYPTO )
+end_define
+
+begin_define
+define|#
+directive|define
+name|_DIST_DEVELOPER
+define|\
+value|( _DIST_USER | DIST_PROFLIBS | DIST_INFO | DIST_SRC )
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_CRYPTO_BIN
+define|\
+value|( DIST_CRYPTO_CRYPTO | DIST_CRYPTO_KERBEROS4 | DIST_CRYPTO_KERBEROS5 )
 end_define
 
 begin_endif
