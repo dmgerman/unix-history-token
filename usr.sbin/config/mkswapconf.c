@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkswapconf.c,v 1.16 1999/04/15 14:52:22 bde Exp $"
+literal|"$Id: mkswapconf.c,v 1.17 1999/04/17 14:41:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -91,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"config.h"
 end_include
 
 begin_define

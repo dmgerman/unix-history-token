@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.29 1999/04/11 03:40:10 grog Exp $"
+literal|"$Id: main.c,v 1.30 1999/04/17 14:41:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,22 +576,18 @@ case|:
 case|case
 name|MACHINE_PC98
 case|:
-name|i386_ioconf
+case|case
+name|MACHINE_ALPHA
+case|:
+name|newbus_ioconf
 argument_list|()
 expr_stmt|;
 comment|/* Print ioconf.c */
 break|break;
-case|case
-name|MACHINE_ALPHA
-case|:
-name|alpha_ioconf
-argument_list|()
-expr_stmt|;
-break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Specify machine type, e.g. ``machine vax''\n"
+literal|"Specify machine type, e.g. ``machine i386''\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -795,6 +791,7 @@ name|ch
 operator|==
 literal|'\n'
 condition|)
+block|{
 if|if
 condition|(
 name|escaped_nl
@@ -814,6 +811,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
 name|cp
 operator|=
 name|line
@@ -991,6 +989,7 @@ name|ch
 operator|==
 literal|'\n'
 condition|)
+block|{
 if|if
 condition|(
 name|escaped_nl
@@ -1010,6 +1009,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
 name|cp
 operator|=
 name|line

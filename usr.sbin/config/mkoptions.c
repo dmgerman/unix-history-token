@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkoptions.c,v 1.8 1998/07/12 08:10:33 bde Exp $"
+literal|"$Id: mkoptions.c,v 1.9 1999/04/17 14:41:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,7 +318,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"maxusers config info isn't present, using vax\n"
+literal|"maxusers config info isn't present, using i386\n"
 argument_list|)
 expr_stmt|;
 name|up

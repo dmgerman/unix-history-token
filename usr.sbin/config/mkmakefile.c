@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.37 1999/04/13 18:22:57 peter Exp $"
+literal|"$Id: mkmakefile.c,v 1.38 1999/04/17 14:41:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,13 +129,6 @@ name|struct
 name|file_list
 modifier|*
 name|fcur
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|old_config_present
 decl_stmt|;
 end_decl_stmt
 
@@ -326,18 +319,6 @@ begin_decl_stmt
 specifier|static
 name|void
 name|read_files
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|makefile
 name|__P
 argument_list|(
 operator|(
@@ -1323,6 +1304,10 @@ decl_stmt|;
 name|ftab
 operator|=
 literal|0
+expr_stmt|;
+name|save_dp
+operator|=
+name|NULL
 expr_stmt|;
 operator|(
 name|void
@@ -2385,8 +2370,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|save
-label|:
 if|if
 condition|(
 name|wd
@@ -3907,6 +3890,8 @@ block|{
 name|char
 modifier|*
 name|ftype
+init|=
+name|NULL
 decl_stmt|;
 specifier|static
 name|char
