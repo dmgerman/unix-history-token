@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.3 (Berkeley) %G%"
+literal|"@(#)cico.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -642,6 +642,20 @@ literal|2
 index|]
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|TCPNET
+case|case
+literal|'v'
+case|:
+name|Unet
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+endif|TCPNET
 ifdef|#
 directive|ifdef
 name|PROTODEBUG

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gename.c	5.2 (Berkeley) %G%"
+literal|"@(#)gename.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,9 @@ specifier|static
 name|char
 name|sqnum
 index|[
-literal|5
+name|SEQLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|getseq

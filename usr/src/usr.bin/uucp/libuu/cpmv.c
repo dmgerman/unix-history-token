@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpmv.c	5.1 (Berkeley) %G%"
+literal|"@(#)cpmv.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,7 +89,7 @@ function_decl|;
 name|char
 name|full
 index|[
-literal|100
+name|MAXFULLNAME
 index|]
 decl_stmt|;
 name|struct

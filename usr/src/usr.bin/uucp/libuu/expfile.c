@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expfile.c	5.1 (Berkeley) %G%"
+literal|"@(#)expfile.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,7 +78,7 @@ decl_stmt|;
 name|char
 name|full
 index|[
-literal|100
+name|MAXFULLNAME
 index|]
 decl_stmt|;
 name|int
@@ -124,6 +124,17 @@ operator|*
 name|fpart
 operator|!=
 literal|'/'
+operator|&&
+name|up
+operator|<
+name|user
+operator|+
+sizeof|sizeof
+argument_list|(
+name|user
+argument_list|)
+operator|-
+literal|1
 condition|;
 name|fpart
 operator|++
@@ -197,23 +208,13 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|sprintf
 argument_list|(
 name|full
+argument_list|,
+literal|"%s/%s"
 argument_list|,
 name|Wrkdir
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|full
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|full
 argument_list|,
 name|file
 argument_list|)

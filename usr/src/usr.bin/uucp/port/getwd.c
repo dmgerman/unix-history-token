@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getwd.c	5.1 (Berkeley) %G%"
+literal|"@(#)getwd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,7 @@ name|fgets
 argument_list|(
 name|wkdir
 argument_list|,
-literal|100
+name|MAXFULLNAME
 argument_list|,
 name|fp
 argument_list|)
