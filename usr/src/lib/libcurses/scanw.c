@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanw.c	5.13 (Berkeley) %G%"
+literal|"@(#)scanw.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,7 +489,6 @@ comment|/*  * vwscanw --  *	This routine actually executes the scanf from the wi
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|vwscanw
 parameter_list|(

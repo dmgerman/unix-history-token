@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printw.c	5.14 (Berkeley) %G%"
+literal|"@(#)printw.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -592,7 +592,6 @@ comment|/*  * vwprintw --  *	This routine actually executes the printf and adds 
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|vwprintw
 parameter_list|(

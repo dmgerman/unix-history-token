@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	5.12 (Berkeley) %G%"
+literal|"@(#)newwin.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,20 +67,6 @@ operator|,
 name|int
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|__swflags
-name|__P
-argument_list|(
-operator|(
-name|WINDOW
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
