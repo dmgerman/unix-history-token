@@ -4033,7 +4033,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Andrew Pam<avatar@aus.xanadu.com> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[12/14/94 @ 11:38:41 PM (Wednesday)] **	sendmail 8.7.a.5	named 4.9.3-beta12-p1	db-1.85 **	gcc 2.6.2		libc.so.4.6.20 **	slackware 2.1.0		linux 1.1.70 */
+comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Andrew Pam<avatar@aus.xanadu.com> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[05/25/95 @ 11:39:31 AM (Thursday)] **	sendmail 8.7.b.0	named 4.9.3-beta17	db-1.85 **	gcc 2.6.4-950518	libc-5.0.9		linux 1.2.8 */
 end_comment
 
 begin_ifdef
@@ -4116,6 +4116,17 @@ end_define
 
 begin_comment
 comment|/* getusershell(3) broken in Slackware 2.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|0
+end_define
+
+begin_comment
+comment|/* linux<= 1.2.8 doesn't support IP_OPTIONS */
 end_comment
 
 begin_ifndef
