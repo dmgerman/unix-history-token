@@ -209,6 +209,9 @@ literal|4
 operator|||
 literal|4
 operator|*
+operator|(
+name|size_t
+operator|)
 name|arg_max
 operator|+
 literal|1
