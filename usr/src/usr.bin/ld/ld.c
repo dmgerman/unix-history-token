@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ld.c	6.4 (Berkeley) %G%  Modified for Berkeley Unix by Donn Seeley, donn@okeeffe.berkeley.edu  */
+comment|/*	@(#)ld.c	6.5 (Berkeley) %G%  Modified for Berkeley Unix by Donn Seeley, donn@okeeffe.berkeley.edu  */
 end_comment
 
 begin_comment
@@ -18538,9 +18538,16 @@ end_endif
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+operator|(
 name|TARGET
 operator|==
 name|SUN4
+operator|)
 end_if
 
 begin_comment
