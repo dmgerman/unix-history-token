@@ -524,6 +524,11 @@ operator|>=
 name|spcleft
 condition|)
 block|{
+name|free
+argument_list|(
+name|base
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|ENAMETOOLONG
@@ -572,6 +577,11 @@ operator|>=
 name|spcleft
 condition|)
 block|{
+name|free
+argument_list|(
+name|base
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|ENAMETOOLONG
