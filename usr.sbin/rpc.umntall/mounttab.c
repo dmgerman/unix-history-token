@@ -891,7 +891,7 @@ name|mtabp
 operator|->
 name|mtab_host
 argument_list|,
-name|hostp
+name|host
 argument_list|)
 operator|!=
 literal|0
