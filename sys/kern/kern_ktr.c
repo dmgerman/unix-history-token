@@ -828,6 +828,12 @@ name|ktr_parm5
 operator|=
 name|arg5
 expr_stmt|;
+name|entry
+operator|->
+name|ktr_parm6
+operator|=
+name|arg6
+expr_stmt|;
 endif|#
 directive|endif
 block|}
