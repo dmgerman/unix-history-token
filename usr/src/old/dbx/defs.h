@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	1.2	84/06/23	*/
+comment|/*	defs.h	1.3	84/08/12	*/
 end_comment
 
 begin_comment
@@ -246,6 +246,20 @@ parameter_list|,
 name|s2
 parameter_list|)
 value|(strcmp(s1, s2) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|strneq
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|,
+name|n
+parameter_list|)
+value|(strncmp(s1, s2, n) == 0)
 end_define
 
 begin_typedef
