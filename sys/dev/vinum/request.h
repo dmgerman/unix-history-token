@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: request.h,v 1.14 1999/03/16 03:37:50 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: request.h,v 1.15 1999/07/05 02:39:00 grog Exp grog $  */
 end_comment
 
 begin_comment
@@ -154,7 +154,7 @@ name|int
 name|useroffset
 decl_stmt|;
 comment|/* offset in user buffer of normal data */
-comment|/*      * dataoffset and datalen refer to      * "individual" data transfers which involve      * only this drive (normal read, parityless      * write) and also degraded write.      *      * groupoffset and grouplen refer to the other      * "group" operations (normal write, recovery      * read) which involve more than one drive.      * Both the offsets are relative to the start      * of the local buffer.      */
+comment|/*      * dataoffset and datalen refer to "individual" data      * transfers which involve only this drive (normal read,      * parityless write) and also degraded write.      *      * groupoffset and grouplen refer to the other "group"      * operations (normal write, recovery read) which involve      * more than one drive.  Both the offsets are relative to      * the start of the local buffer.      */
 name|int
 name|dataoffset
 decl_stmt|;
@@ -193,7 +193,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A group of requests built to satisfy a certain  * component of a user request.  */
+comment|/*  * A group of requests built to satisfy an I/O  * transfer on a single plex.  */
 end_comment
 
 begin_struct
@@ -346,7 +346,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Values returned by rqe and friends.  * Be careful with these: they are in order of increasing  * seriousness.  Some routines check for> REQUEST_RECOVERED  * to indicate a completely failed request.  */
+comment|/*  * Values returned by rqe and friends.  Be careful  * with these: they are in order of increasing  * seriousness.  Some routines check for  *> REQUEST_RECOVERED to indicate a failed request. XXX  */
 end_comment
 
 begin_enum
@@ -359,14 +359,17 @@ comment|/* request built OK */
 name|REQUEST_RECOVERED
 block|,
 comment|/* request OK, but involves RAID5 recovery */
+name|REQUEST_DEGRADED
+block|,
+comment|/* parts of request failed */
 name|REQUEST_EOF
 block|,
-comment|/* request failed: outside plex */
+comment|/* parts of request failed: outside plex */
 name|REQUEST_DOWN
 block|,
-comment|/* request failed: subdisk down  */
+comment|/* all of request failed: subdisk(s) down */
 name|REQUEST_ENOMEM
-comment|/* ran out of memory */
+comment|/* all of request failed: ran out of memory */
 block|}
 enum|;
 end_enum
@@ -449,6 +452,13 @@ modifier|*
 name|bp
 decl_stmt|;
 comment|/* point to user buffer */
+name|int
+name|devmajor
+decl_stmt|;
+comment|/* major and minor device info */
+name|int
+name|devminor
+decl_stmt|;
 union|union
 block|{
 name|struct
