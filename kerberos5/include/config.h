@@ -4205,7 +4205,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"Heimdal 0.4f"
+value|"Heimdal 0.5.1"
 end_define
 
 begin_comment
@@ -4227,7 +4227,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.4f"
+value|"0.5.1"
 end_define
 
 begin_comment
