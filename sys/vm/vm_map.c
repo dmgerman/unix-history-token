@@ -7638,6 +7638,21 @@ operator|&=
 operator|~
 name|MAP_ENTRY_NEEDS_COPY
 expr_stmt|;
+comment|/* Transfer the second reference too. */
+name|vm_object_reference
+argument_list|(
+name|old_entry
+operator|->
+name|object
+operator|.
+name|vm_object
+argument_list|)
+expr_stmt|;
+name|vm_object_deallocate
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|object
 operator|=
 name|old_entry
