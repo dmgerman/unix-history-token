@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2001 Charles Mott<cm@linktel.net>  * All rights res
 end_comment
 
 begin_comment
-comment|/*-  * Alias.h defines the outside world interfaces for the packet aliasing  * software.  *   * This software is placed into the public domain with no restrictions on its  * distribution.  */
+comment|/*-  * Alias.h defines the outside world interfaces for the packet aliasing  * software.  *  * This software is placed into the public domain with no restrictions on its  * distribution.  */
 end_comment
 
 begin_ifndef
