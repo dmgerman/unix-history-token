@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kexdh.c,v 1.3 2001/04/04 09:48:34 markus Exp $"
+literal|"$OpenBSD: kexdh.c,v 1.17 2002/02/28 15:46:33 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,6 +84,7 @@ file|"ssh2.h"
 end_include
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|kex_dh_hash
@@ -110,7 +111,7 @@ parameter_list|,
 name|int
 name|skexinitlen
 parameter_list|,
-name|char
+name|u_char
 modifier|*
 name|serverhostkeyblob
 parameter_list|,
@@ -140,6 +141,7 @@ index|[
 name|EVP_MAX_MD_SIZE
 index|]
 decl_stmt|;
+specifier|const
 name|EVP_MD
 modifier|*
 name|evp_md
@@ -156,30 +158,20 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|buffer_put_string
+name|buffer_put_cstring
 argument_list|(
 operator|&
 name|b
 argument_list|,
 name|client_version_string
-argument_list|,
-name|strlen
-argument_list|(
-name|client_version_string
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|buffer_put_string
+name|buffer_put_cstring
 argument_list|(
 operator|&
 name|b
 argument_list|,
 name|server_version_string
-argument_list|,
-name|strlen
-argument_list|(
-name|server_version_string
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* kexinit messages: fake header: len+SSH2_MSG_KEXINIT */
@@ -335,9 +327,10 @@ literal|"hash"
 argument_list|,
 name|digest
 argument_list|,
+name|EVP_MD_size
+argument_list|(
 name|evp_md
-operator|->
-name|md_size
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -353,6 +346,7 @@ comment|/* client */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|kexdh_client
 parameter_list|(
@@ -380,7 +374,7 @@ name|Key
 modifier|*
 name|server_host_key
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|server_host_key_blob
 init|=
@@ -406,11 +400,6 @@ decl_stmt|,
 name|slen
 decl_stmt|,
 name|sbloblen
-decl_stmt|;
-name|int
-name|dlen
-decl_stmt|,
-name|plen
 decl_stmt|;
 comment|/* generate and send 'e', client DH public key */
 name|dh
@@ -491,9 +480,6 @@ argument_list|)
 expr_stmt|;
 name|packet_read_expect
 argument_list|(
-operator|&
-name|plen
-argument_list|,
 name|SSH2_MSG_KEXDH_REPLY
 argument_list|)
 expr_stmt|;
@@ -528,33 +514,58 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|server_host_key
+operator|->
+name|type
+operator|!=
 name|kex
 operator|->
-name|check_host_key
+name|hostkey_type
+condition|)
+name|fatal
+argument_list|(
+literal|"type mismatch for decoded server_host_key_blob"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kex
+operator|->
+name|verify_host_key
 operator|==
 name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"cannot check server_host_key"
+literal|"cannot verify server_host_key"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|kex
 operator|->
-name|check_host_key
+name|verify_host_key
 argument_list|(
 name|server_host_key
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"server_host_key verification failed"
+argument_list|)
 expr_stmt|;
 comment|/* DH paramter f, server public DH key */
+if|if
+condition|(
+operator|(
 name|dh_server_pub
 operator|=
 name|BN_new
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|dh_server_pub
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -566,9 +577,6 @@ expr_stmt|;
 name|packet_get_bignum2
 argument_list|(
 name|dh_server_pub
-argument_list|,
-operator|&
-name|dlen
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -616,7 +624,7 @@ operator|&
 name|slen
 argument_list|)
 expr_stmt|;
-name|packet_done
+name|packet_check_eom
 argument_list|()
 expr_stmt|;
 if|if
@@ -673,10 +681,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
 name|shared_secret
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"kexdh_client: BN_new failed"
+argument_list|)
 expr_stmt|;
 name|BN_bin2bn
 argument_list|(
@@ -764,7 +783,7 @@ argument_list|(
 name|server_host_key_blob
 argument_list|)
 expr_stmt|;
-name|BN_free
+name|BN_clear_free
 argument_list|(
 name|dh_server_pub
 argument_list|)
@@ -780,10 +799,6 @@ name|key_verify
 argument_list|(
 name|server_host_key
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|signature
 argument_list|,
 name|slen
@@ -878,6 +893,7 @@ comment|/* server */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|kexdh_server
 parameter_list|(
@@ -929,12 +945,8 @@ name|klen
 decl_stmt|,
 name|kout
 decl_stmt|;
-name|int
-name|dlen
-decl_stmt|,
+name|u_int
 name|slen
-decl_stmt|,
-name|plen
 decl_stmt|;
 comment|/* generate server DH public key */
 name|dh
@@ -960,9 +972,6 @@ argument_list|)
 expr_stmt|;
 name|packet_read_expect
 argument_list|(
-operator|&
-name|plen
-argument_list|,
 name|SSH2_MSG_KEXDH_INIT
 argument_list|)
 expr_stmt|;
@@ -1006,14 +1015,14 @@ name|hostkey_type
 argument_list|)
 expr_stmt|;
 comment|/* key, cert */
+if|if
+condition|(
+operator|(
 name|dh_client_pub
 operator|=
 name|BN_new
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|dh_client_pub
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -1025,10 +1034,10 @@ expr_stmt|;
 name|packet_get_bignum2
 argument_list|(
 name|dh_client_pub
-argument_list|,
-operator|&
-name|dlen
 argument_list|)
+expr_stmt|;
+name|packet_check_eom
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1155,10 +1164,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
 name|shared_secret
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"kexdh_server: BN_new failed"
+argument_list|)
 expr_stmt|;
 name|BN_bin2bn
 argument_list|(
@@ -1239,10 +1259,6 @@ operator|->
 name|my
 argument_list|)
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|server_host_key_blob
 argument_list|,
 name|sbloblen
@@ -1256,7 +1272,7 @@ argument_list|,
 name|shared_secret
 argument_list|)
 expr_stmt|;
-name|BN_free
+name|BN_clear_free
 argument_list|(
 name|dh_client_pub
 argument_list|)
@@ -1329,10 +1345,6 @@ argument_list|)
 expr_stmt|;
 name|packet_put_string
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|server_host_key_blob
 argument_list|,
 name|sbloblen
@@ -1348,10 +1360,6 @@ expr_stmt|;
 comment|/* f */
 name|packet_put_string
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|signature
 argument_list|,
 name|slen

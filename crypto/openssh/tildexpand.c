@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: tildexpand.c,v 1.11 2001/02/08 19:30:53 itojun Exp $"
+literal|"$OpenBSD: tildexpand.c,v 1.12 2001/08/11 22:51:27 jakob Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -266,11 +266,24 @@ name|expanded
 argument_list|,
 name|len
 argument_list|,
-literal|"%s/%s"
+literal|"%s%s%s"
 argument_list|,
 name|pw
 operator|->
 name|pw_dir
+argument_list|,
+name|strcmp
+argument_list|(
+name|pw
+operator|->
+name|pw_dir
+argument_list|,
+literal|"/"
+argument_list|)
+condition|?
+literal|"/"
+else|:
+literal|""
 argument_list|,
 name|cp
 operator|+

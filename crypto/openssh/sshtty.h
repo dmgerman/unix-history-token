@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshtty.h,v 1.1 2001/04/14 16:33:20 stevesk Exp $ */
+comment|/* $OpenBSD: sshtty.h,v 1.2 2001/06/26 17:27:25 markus Exp $ */
 end_comment
 
 begin_comment
@@ -29,10 +29,6 @@ directive|include
 file|<termios.h>
 end_include
 
-begin_comment
-comment|/*  * Accessor function indicating whether we are in raw mode.  Set by  * enter_raw_mode() and leave_raw_mode().  */
-end_comment
-
 begin_function_decl
 name|int
 name|in_raw_mode
@@ -41,10 +37,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Return terminal modes, as saved by enter_raw_mode().  */
-end_comment
 
 begin_function_decl
 name|struct
@@ -56,10 +48,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Returns the user's terminal to normal mode if it had been  * put in raw mode.  */
-end_comment
-
 begin_function_decl
 name|void
 name|leave_raw_mode
@@ -68,10 +56,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Puts the user's terminal in raw mode.  */
-end_comment
 
 begin_function_decl
 name|void

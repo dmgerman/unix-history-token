@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kex.c,v 1.33 2001/04/05 10:42:50 markus Exp $"
+literal|"$OpenBSD: kex.c,v 1.47 2002/02/28 15:46:33 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -108,24 +108,28 @@ name|KEX_COOKIE_LEN
 value|16
 end_define
 
+begin_comment
+comment|/* prototype */
+end_comment
+
 begin_function_decl
+specifier|static
 name|void
 name|kex_kexinit_finish
 parameter_list|(
 name|Kex
 modifier|*
-name|kex
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|kex_choose_conf
 parameter_list|(
 name|Kex
 modifier|*
-name|k
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -135,6 +139,7 @@ comment|/* put algorithm proposal into buffer */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|kex_prop2buf
 parameter_list|(
@@ -251,6 +256,7 @@ comment|/* parse buffer and return algorithm proposal */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -410,6 +416,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|kex_prop_free
 parameter_list|(
@@ -452,14 +459,15 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|kex_protocol_error
 parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|int
-name|plen
+name|u_int32_t
+name|seq
 parameter_list|,
 name|void
 modifier|*
@@ -468,46 +476,40 @@ parameter_list|)
 block|{
 name|error
 argument_list|(
-literal|"Hm, kex protocol error: type %d plen %d"
+literal|"Hm, kex protocol error: type %d seq %u"
 argument_list|,
 name|type
 argument_list|,
-name|plen
+name|seq
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|kex_clear_dispatch
+name|kex_reset_dispatch
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-comment|/* Numbers 30-49 are used for kex packets */
-for|for
-control|(
-name|i
-operator|=
-literal|30
-init|;
-name|i
-operator|<=
-literal|49
-condition|;
-name|i
-operator|++
-control|)
-name|dispatch_set
+name|dispatch_range
 argument_list|(
-name|i
+name|SSH2_MSG_TRANSPORT_MIN
+argument_list|,
+name|SSH2_MSG_TRANSPORT_MAX
 argument_list|,
 operator|&
 name|kex_protocol_error
+argument_list|)
+expr_stmt|;
+name|dispatch_set
+argument_list|(
+name|SSH2_MSG_KEXINIT
+argument_list|,
+operator|&
+name|kex_input_kexinit
 argument_list|)
 expr_stmt|;
 block|}
@@ -522,10 +524,7 @@ modifier|*
 name|kex
 parameter_list|)
 block|{
-name|int
-name|plen
-decl_stmt|;
-name|kex_clear_dispatch
+name|kex_reset_dispatch
 argument_list|()
 expr_stmt|;
 name|packet_start
@@ -549,11 +548,11 @@ argument_list|)
 expr_stmt|;
 name|packet_read_expect
 argument_list|(
-operator|&
-name|plen
-argument_list|,
 name|SSH2_MSG_NEWKEYS
 argument_list|)
+expr_stmt|;
+name|packet_check_eom
+argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
@@ -691,8 +690,8 @@ parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|int
-name|plen
+name|u_int32_t
+name|seq
 parameter_list|,
 name|void
 modifier|*
@@ -799,7 +798,7 @@ expr_stmt|;
 name|packet_get_int
 argument_list|()
 expr_stmt|;
-name|packet_done
+name|packet_check_eom
 argument_list|()
 expr_stmt|;
 name|kex_kexinit_finish
@@ -889,16 +888,8 @@ name|kex
 argument_list|)
 expr_stmt|;
 comment|/* we start */
-name|kex_clear_dispatch
+name|kex_reset_dispatch
 argument_list|()
-expr_stmt|;
-name|dispatch_set
-argument_list|(
-name|SSH2_MSG_KEXINIT
-argument_list|,
-operator|&
-name|kex_input_kexinit
-argument_list|)
 expr_stmt|;
 return|return
 name|kex
@@ -907,6 +898,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|kex_kexinit_finish
 parameter_list|(
@@ -976,6 +968,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|choose_enc
 parameter_list|(
@@ -1020,6 +1013,9 @@ argument_list|,
 name|server
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|enc
 operator|->
 name|cipher
@@ -1028,12 +1024,7 @@ name|cipher_by_name
 argument_list|(
 name|name
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|enc
-operator|->
-name|cipher
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -1068,10 +1059,33 @@ name|key
 operator|=
 name|NULL
 expr_stmt|;
+name|enc
+operator|->
+name|key_len
+operator|=
+name|cipher_keylen
+argument_list|(
+name|enc
+operator|->
+name|cipher
+argument_list|)
+expr_stmt|;
+name|enc
+operator|->
+name|block_size
+operator|=
+name|cipher_blocksize
+argument_list|(
+name|enc
+operator|->
+name|cipher
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|choose_mac
 parameter_list|(
@@ -1169,6 +1183,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|choose_comp
 parameter_list|(
@@ -1272,6 +1287,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|choose_kex
 parameter_list|(
@@ -1371,6 +1387,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|choose_hostkeyalg
 parameter_list|(
@@ -1444,6 +1461,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|kex_choose_conf
 parameter_list|(
@@ -1782,8 +1800,6 @@ name|newkeys
 operator|->
 name|enc
 operator|.
-name|cipher
-operator|->
 name|key_len
 condition|)
 name|need
@@ -1792,8 +1808,6 @@ name|newkeys
 operator|->
 name|enc
 operator|.
-name|cipher
-operator|->
 name|key_len
 expr_stmt|;
 if|if
@@ -1804,8 +1818,6 @@ name|newkeys
 operator|->
 name|enc
 operator|.
-name|cipher
-operator|->
 name|block_size
 condition|)
 name|need
@@ -1814,8 +1826,6 @@ name|newkeys
 operator|->
 name|enc
 operator|.
-name|cipher
-operator|->
 name|block_size
 expr_stmt|;
 if|if
@@ -1858,6 +1868,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|derive_key
@@ -1884,6 +1895,7 @@ block|{
 name|Buffer
 name|b
 decl_stmt|;
+specifier|const
 name|EVP_MD
 modifier|*
 name|evp_md
@@ -1905,9 +1917,10 @@ decl_stmt|;
 name|int
 name|mdsz
 init|=
+name|EVP_MD_size
+argument_list|(
 name|evp_md
-operator|->
-name|md_size
+argument_list|)
 decl_stmt|;
 name|u_char
 modifier|*
@@ -1946,6 +1959,15 @@ argument_list|,
 name|evp_md
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_DERIVEKEY
+operator|)
+condition|)
 name|EVP_DigestUpdate
 argument_list|(
 operator|&
@@ -2033,6 +2055,15 @@ argument_list|,
 name|evp_md
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_DERIVEKEY
+operator|)
+condition|)
 name|EVP_DigestUpdate
 argument_list|(
 operator|&

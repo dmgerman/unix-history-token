@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: compress.c,v 1.14 2001/04/05 10:39:01 markus Exp $"
+literal|"$OpenBSD: compress.c,v 1.17 2001/12/29 21:56:01 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -94,7 +94,7 @@ condition|)
 name|deflateEnd
 argument_list|(
 operator|&
-name|incoming_stream
+name|outgoing_stream
 argument_list|)
 expr_stmt|;
 name|compress_init_send_called
@@ -287,7 +287,7 @@ modifier|*
 name|output_buffer
 parameter_list|)
 block|{
-name|char
+name|u_char
 name|buf
 index|[
 literal|4096
@@ -312,10 +312,6 @@ name|outgoing_stream
 operator|.
 name|next_in
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_ptr
 argument_list|(
 name|input_buffer
@@ -338,10 +334,6 @@ name|outgoing_stream
 operator|.
 name|next_out
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buf
 expr_stmt|;
 name|outgoing_stream
@@ -430,7 +422,7 @@ modifier|*
 name|output_buffer
 parameter_list|)
 block|{
-name|char
+name|u_char
 name|buf
 index|[
 literal|4096
@@ -443,10 +435,6 @@ name|incoming_stream
 operator|.
 name|next_in
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_ptr
 argument_list|(
 name|input_buffer
@@ -472,10 +460,6 @@ name|incoming_stream
 operator|.
 name|next_out
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buf
 expr_stmt|;
 name|incoming_stream

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: atomicio.h,v 1.3 2001/03/02 18:54:30 deraadt Exp $	*/
+comment|/*	$OpenBSD: atomicio.h,v 1.4 2001/06/26 06:32:46 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -18,19 +18,15 @@ parameter_list|(
 name|ssize_t
 function_decl|(
 modifier|*
-name|f
 function_decl|)
 parameter_list|()
 parameter_list|,
 name|int
-name|fd
 parameter_list|,
 name|void
 modifier|*
-name|s
 parameter_list|,
 name|size_t
-name|n
 parameter_list|)
 function_decl|;
 end_function_decl

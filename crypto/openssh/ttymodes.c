@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ttymodes.c,v 1.13 2001/04/15 01:35:22 stevesk Exp $"
+literal|"$OpenBSD: ttymodes.c,v 1.16 2001/12/27 20:39:58 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -745,7 +745,7 @@ name|tio
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|debug2
+name|debug3
 argument_list|(
 literal|"tty_make_modes: ospeed %d"
 argument_list|,
@@ -779,7 +779,7 @@ name|tio
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|debug2
+name|debug3
 argument_list|(
 literal|"tty_make_modes: ispeed %d"
 argument_list|,
@@ -812,7 +812,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|debug2("tty_make_modes: %d %d", OP, tio.c_cc[NAME]); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, tio.c_cc[NAME]);
+value|debug3("tty_make_modes: %d %d", OP, tio.c_cc[NAME]); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, tio.c_cc[NAME]);
 define|#
 directive|define
 name|TTYMODE
@@ -824,7 +824,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|debug2("tty_make_modes: %d %d", OP, ((tio.FIELD& NAME) != 0)); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, ((tio.FIELD& NAME) != 0));
+value|debug3("tty_make_modes: %d %d", OP, ((tio.FIELD& NAME) != 0)); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, ((tio.FIELD& NAME) != 0));
 include|#
 directive|include
 file|"ttymodes.h"
@@ -950,7 +950,7 @@ operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
-name|debug2
+name|debug3
 argument_list|(
 literal|"tty_parse_modes: SSH2 n_bytes %d"
 argument_list|,
@@ -1059,7 +1059,7 @@ operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
-name|debug2
+name|debug3
 argument_list|(
 literal|"tty_parse_modes: ispeed %d"
 argument_list|,
@@ -1111,7 +1111,7 @@ operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
-name|debug2
+name|debug3
 argument_list|(
 literal|"tty_parse_modes: ospeed %d"
 argument_list|,
@@ -1156,7 +1156,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|case OP: \ 	  n_bytes += arg_size; \ 	  tio.c_cc[NAME] = get_arg(); \ 	  debug2("tty_parse_modes: %d %d", OP, tio.c_cc[NAME]); \ 	  break;
+value|case OP: \ 	  n_bytes += arg_size; \ 	  tio.c_cc[NAME] = get_arg(); \ 	  debug3("tty_parse_modes: %d %d", OP, tio.c_cc[NAME]); \ 	  break;
 define|#
 directive|define
 name|TTYMODE
@@ -1168,7 +1168,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|case OP: \ 	  n_bytes += arg_size; \ 	  if ((arg = get_arg())) \ 	    tio.FIELD |= NAME; \ 	  else \ 	    tio.FIELD&= ~NAME;	\ 	  debug2("tty_parse_modes: %d %d", OP, arg); \ 	  break;
+value|case OP: \ 	  n_bytes += arg_size; \ 	  if ((arg = get_arg())) \ 	    tio.FIELD |= NAME; \ 	  else \ 	    tio.FIELD&= ~NAME;	\ 	  debug3("tty_parse_modes: %d %d", OP, arg); \ 	  break;
 include|#
 directive|include
 file|"ttymodes.h"
@@ -1250,15 +1250,6 @@ argument_list|(
 literal|"parse_tty_modes: unknown opcode %d"
 argument_list|,
 name|opcode
-argument_list|)
-expr_stmt|;
-name|packet_integrity_check
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-name|SSH_CMSG_REQUEST_PTY
 argument_list|)
 expr_stmt|;
 goto|goto

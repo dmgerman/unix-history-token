@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh1.h,v 1.2 2001/01/29 01:58:18 niklas Exp $	*/
+comment|/*	$OpenBSD: ssh1.h,v 1.3 2001/05/30 12:55:13 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -521,6 +521,24 @@ end_define
 begin_comment
 comment|/* token (s) */
 end_comment
+
+begin_comment
+comment|/* protocol version 1.5 overloads some version 1.3 message types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_MSG_CHANNEL_INPUT_EOF
+value|SSH_MSG_CHANNEL_CLOSE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_MSG_CHANNEL_OUTPUT_CLOSE
+value|SSH_MSG_CHANNEL_CLOSE_CONFIRMATION
+end_define
 
 begin_comment
 comment|/*  * Authentication methods.  New types can be added, but old types should not  * be removed for compatibility.  The maximum allowed value is 31.  */

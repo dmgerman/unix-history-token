@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-common.c,v 1.2 2001/02/06 23:50:10 markus Exp $"
+literal|"$OpenBSD: sftp-common.c,v 1.5 2001/12/02 02:08:32 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -27,12 +27,6 @@ begin_include
 include|#
 directive|include
 file|"bufaux.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"getput.h"
 end_include
 
 begin_include
@@ -58,6 +52,10 @@ include|#
 directive|include
 file|"sftp-common.h"
 end_include
+
+begin_comment
+comment|/* Clear contents of attributes structure */
+end_comment
 
 begin_function
 name|void
@@ -112,6 +110,10 @@ literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Convert from struct stat to filexfer attribs */
+end_comment
 
 begin_function
 name|void
@@ -212,6 +214,10 @@ name|st_mtime
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Decode attributes in buffer */
+end_comment
 
 begin_function
 name|Attrib
@@ -419,6 +425,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Encode attributes to buffer */
+end_comment
+
 begin_function
 name|void
 name|encode_attrib
@@ -534,6 +544,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Convert from SSH2_FX_ status to text error message */
+end_comment
+
 begin_function
 specifier|const
 name|char
@@ -628,7 +642,6 @@ literal|"Unknown status"
 operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* NOTREACHED */
 block|}
 end_function

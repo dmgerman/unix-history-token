@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rhosts.c,v 1.23 2001/04/12 19:15:24 markus Exp $"
+literal|"$OpenBSD: auth-rhosts.c,v 1.27 2002/03/04 12:43:06 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -21,12 +21,6 @@ begin_include
 include|#
 directive|include
 file|"packet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
 end_include
 
 begin_include
@@ -81,6 +75,7 @@ comment|/*  * This function processes an rhosts-style file (.rhosts, .shosts, or
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|check_rhosts_file
 parameter_list|(
@@ -584,7 +579,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|reverse_mapping_check
+name|verify_reverse_mapping
 argument_list|)
 expr_stmt|;
 name|ipaddr
