@@ -2208,6 +2208,17 @@ break|break;
 case|case
 name|ETHERTYPE_ARP
 case|:
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_NOARP
+condition|)
+goto|goto
+name|dropanyway
+goto|;
 name|schednetisr
 argument_list|(
 name|NETISR_ARP
