@@ -105,6 +105,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -280,22 +286,22 @@ begin_struct
 struct|struct
 name|maxwidths
 block|{
-name|int
+name|size_t
 name|mntfrom
 decl_stmt|;
-name|int
+name|size_t
 name|total
 decl_stmt|;
-name|int
+name|size_t
 name|used
 decl_stmt|;
-name|int
+name|size_t
 name|avail
 decl_stmt|;
-name|int
+name|size_t
 name|iused
 decl_stmt|;
-name|int
+name|size_t
 name|ifree
 decl_stmt|;
 block|}
@@ -303,9 +309,8 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|unsigned
-name|long
-name|long
+specifier|static
+name|uintmax_t
 name|vals_si
 index|[]
 init|=
@@ -326,9 +331,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
-name|long
+specifier|static
+name|uintmax_t
 name|vals_base2
 index|[]
 init|=
@@ -349,9 +353,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
-name|long
+specifier|static
+name|uintmax_t
 modifier|*
 name|valp
 decl_stmt|;
@@ -380,6 +383,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|unit_t
 name|unitp
 index|[]
@@ -406,6 +410,7 @@ name|char
 modifier|*
 name|getmntpt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -414,7 +419,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|size_t
 name|longwidth
 parameter_list|(
 name|long
@@ -438,6 +443,7 @@ specifier|static
 name|void
 name|prthuman
 parameter_list|(
+specifier|const
 name|struct
 name|statfs
 modifier|*
@@ -513,6 +519,7 @@ name|struct
 name|maxwidths
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|statfs
 modifier|*
@@ -533,24 +540,25 @@ end_function_decl
 begin_function
 specifier|static
 name|__inline
-name|int
-name|imax
+name|u_int
+name|max
 parameter_list|(
-name|int
+name|u_int
 name|a
 parameter_list|,
-name|int
+name|u_int
 name|b
 parameter_list|)
 block|{
 return|return
 operator|(
-name|MAX
-argument_list|(
 name|a
-argument_list|,
+operator|>
 name|b
-argument_list|)
+condition|?
+name|a
+else|:
+name|b
 operator|)
 return|;
 block|}
@@ -1341,6 +1349,7 @@ name|char
 modifier|*
 name|getmntpt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1580,7 +1589,6 @@ decl_stmt|;
 name|unit_t
 name|unit
 decl_stmt|;
-name|unsigned
 name|int
 name|unit_sz
 decl_stmt|;
@@ -1609,6 +1617,9 @@ if|if
 condition|(
 name|unit_sz
 operator|>=
+operator|(
+name|int
+operator|)
 name|UNIT_MAX
 condition|)
 block|{
@@ -1651,6 +1662,7 @@ specifier|static
 name|void
 name|prthuman
 parameter_list|(
+specifier|const
 name|struct
 name|statfs
 modifier|*
@@ -1835,6 +1847,8 @@ name|int
 name|headerlen
 decl_stmt|,
 name|timesthrough
+init|=
+literal|0
 decl_stmt|;
 specifier|static
 specifier|const
@@ -1861,7 +1875,7 @@ name|mwp
 operator|->
 name|mntfrom
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -1917,12 +1931,15 @@ name|mwp
 operator|->
 name|total
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
 name|total
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|headerlen
 argument_list|)
 expr_stmt|;
@@ -1931,7 +1948,7 @@ name|mwp
 operator|->
 name|used
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -1947,7 +1964,7 @@ name|mwp
 operator|->
 name|avail
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -2000,7 +2017,7 @@ name|mwp
 operator|->
 name|iused
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -2016,7 +2033,7 @@ name|mwp
 operator|->
 name|ifree
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -2291,6 +2308,7 @@ name|maxwidths
 modifier|*
 name|mwp
 parameter_list|,
+specifier|const
 name|struct
 name|statfs
 modifier|*
@@ -2300,6 +2318,8 @@ block|{
 specifier|static
 name|long
 name|blocksize
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|dummy
@@ -2323,7 +2343,7 @@ name|mwp
 operator|->
 name|mntfrom
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -2341,7 +2361,7 @@ name|mwp
 operator|->
 name|total
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -2368,7 +2388,7 @@ name|mwp
 operator|->
 name|used
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -2399,7 +2419,7 @@ name|mwp
 operator|->
 name|avail
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -2426,7 +2446,7 @@ name|mwp
 operator|->
 name|iused
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -2448,7 +2468,7 @@ name|mwp
 operator|->
 name|ifree
 operator|=
-name|imax
+name|max
 argument_list|(
 name|mwp
 operator|->
@@ -2471,14 +2491,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|size_t
 name|longwidth
 parameter_list|(
 name|long
 name|val
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|len
@@ -2575,6 +2595,9 @@ name|struct
 name|xvfsconf
 modifier|*
 name|xvfsp
+decl_stmt|,
+modifier|*
+name|keep_xvfsp
 decl_stmt|;
 name|size_t
 name|buflen
@@ -2641,6 +2664,10 @@ name|NULL
 operator|)
 return|;
 block|}
+name|keep_xvfsp
+operator|=
+name|xvfsp
+expr_stmt|;
 if|if
 condition|(
 name|sysctlbyname
@@ -2663,6 +2690,11 @@ block|{
 name|warn
 argument_list|(
 literal|"sysctl(vfs.conflist)"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|keep_xvfsp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2704,6 +2736,11 @@ block|{
 name|warnx
 argument_list|(
 literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|keep_xvfsp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2769,6 +2806,16 @@ argument_list|(
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|listptr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|keep_xvfsp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2825,6 +2872,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|listptr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|keep_xvfsp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2913,6 +2965,11 @@ name|strptr
 operator|)
 operator|=
 name|NULL
+expr_stmt|;
+name|free
+argument_list|(
+name|keep_xvfsp
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
