@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/namei.h>
 end_include
 
@@ -1839,6 +1845,25 @@ operator|->
 name|va_size
 operator|=
 literal|0
+expr_stmt|;
+name|vap
+operator|->
+name|va_fsid
+operator|=
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_stat
+operator|.
+name|f_fsid
+operator|.
+name|val
+index|[
+literal|0
+index|]
 expr_stmt|;
 comment|/* 	 * Make all times be current TOD. 	 * It would be possible to get the process start 	 * time from the p_stat structure, but there's 	 * no "file creation" time stamp anyway, and the 	 * p_stat structure is not addressible if u. gets 	 * swapped out for that process. 	 */
 name|nanotime
