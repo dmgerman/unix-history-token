@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vfscanf.c,v 1.3 1996/06/22 10:34:06 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"collate.h"
+end_include
 
 begin_include
 include|#
@@ -2744,6 +2756,8 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|v
+decl_stmt|,
+name|i
 decl_stmt|;
 comment|/* first `clear' the whole table */
 name|c
@@ -2779,26 +2793,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* default => reject */
-comment|/* should probably use memset here */
-for|for
-control|(
-name|n
-operator|=
-literal|0
-init|;
-name|n
-operator|<
-literal|256
-condition|;
-name|n
-operator|++
-control|)
+operator|(
+name|void
+operator|)
+name|memset
+argument_list|(
 name|tab
-index|[
-name|n
-index|]
-operator|=
+argument_list|,
 name|v
+argument_list|,
+literal|256
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2875,9 +2880,14 @@ name|n
 operator|==
 literal|']'
 operator|||
+name|__collate_range_cmp
+argument_list|(
 name|n
-operator|<
+argument_list|,
 name|c
+argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 name|c
@@ -2890,29 +2900,55 @@ block|}
 name|fmt
 operator|++
 expr_stmt|;
-do|do
-block|{
 comment|/* fill in the range */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|256
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|__collate_range_cmp
+argument_list|(
+name|c
+argument_list|,
+name|i
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|__collate_range_cmp
+argument_list|(
+name|i
+argument_list|,
+name|n
+argument_list|)
+operator|<=
+literal|0
+condition|)
 name|tab
 index|[
-operator|++
-name|c
+name|i
 index|]
 operator|=
 name|v
 expr_stmt|;
-block|}
-do|while
-condition|(
-name|c
-operator|<
-name|n
-condition|)
-do|;
 if|#
 directive|if
 literal|1
 comment|/* XXX another disgusting compatibility hack */
+name|c
+operator|=
+name|n
+expr_stmt|;
 comment|/* 			 * Alas, the V7 Unix scanf also treats formats 			 * such as [a-c-e] as `the letters a through e'. 			 * This too is permitted by the standard.... 			 */
 goto|goto
 name|doswitch
