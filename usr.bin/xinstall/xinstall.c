@@ -215,6 +215,13 @@ end_endif
 begin_define
 define|#
 directive|define
+name|MAX_CMP_SIZE
+value|(16 * 1024 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIRECTORY
 value|0x01
 end_define
@@ -2581,11 +2588,7 @@ if|if
 condition|(
 name|from_len
 operator|<=
-literal|8
-operator|*
-literal|1024
-operator|*
-literal|1024
+name|MAX_CMP_SIZE
 condition|)
 block|{
 name|done_compare
