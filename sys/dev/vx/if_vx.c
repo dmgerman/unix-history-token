@@ -1695,6 +1695,15 @@ name|if_snd
 operator|.
 name|ifq_head
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
 comment|/* We need to use m->m_pkthdr.len, so require the header */
 name|M_ASSERTPKTHDR
 argument_list|(
