@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tempnam.c,v 1.5 1997/02/22 15:02:37 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,31 @@ include|#
 directive|include
 file|<paths.h>
 end_include
+
+begin_expr_stmt
+name|__warn_references
+argument_list|(
+name|tempnam
+argument_list|,
+literal|"warning: tempnam() possibly used unsafely; consider using mkstemp()"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|_mktemp
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|char
@@ -151,6 +176,11 @@ literal|"tmp."
 expr_stmt|;
 if|if
 condition|(
+name|issetugid
+argument_list|()
+operator|==
+literal|0
+operator|&&
 operator|(
 name|f
 operator|=
@@ -200,7 +230,7 @@ condition|(
 operator|(
 name|f
 operator|=
-name|mktemp
+name|_mktemp
 argument_list|(
 name|name
 argument_list|)

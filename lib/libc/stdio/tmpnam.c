@@ -55,6 +55,31 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_expr_stmt
+name|__warn_references
+argument_list|(
+name|tmpnam
+argument_list|,
+literal|"warning: tmpnam() possibly used unsafely; consider using mkstemp()"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|_mktemp
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|char
 modifier|*
