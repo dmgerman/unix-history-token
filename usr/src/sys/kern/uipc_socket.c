@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.51	82/10/05	*/
+comment|/*	uipc_socket.c	4.52	82/10/09	*/
 end_comment
 
 begin_include
@@ -90,25 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/in_systm.h"
+file|"../h/uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"../net/route.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/uio.h"
 end_include
 
 begin_comment
