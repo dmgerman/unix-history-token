@@ -820,7 +820,7 @@ literal|0
 operator|&&
 name|sysctlbyname
 argument_list|(
-literal|"smp.smp_active"
+literal|"kern.smp.active"
 argument_list|,
 operator|&
 name|smpmode
