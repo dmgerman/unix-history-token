@@ -107,6 +107,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VM_PROT_RW
+value|(VM_PROT_READ|VM_PROT_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_PROT_ALL
 value|(VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE)
 end_define
