@@ -610,7 +610,7 @@ name|isocean
 condition|?
 literal|"Select an island or group"
 else|:
-literal|"Select a country"
+literal|"Select a country or region"
 operator|)
 argument_list|,
 operator|-
