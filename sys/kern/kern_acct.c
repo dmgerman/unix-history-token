@@ -338,7 +338,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If accounting is to be started to a file, open that file for 	 * writing and make sure it's a 'normal'. 	 */
+comment|/* 	 * If accounting is to be started to a file, open that file for 	 * appending and make sure it's a 'normal'. 	 */
 if|if
 condition|(
 name|SCARG
@@ -380,6 +380,8 @@ operator|&
 name|nd
 argument_list|,
 name|FWRITE
+operator||
+name|O_APPEND
 argument_list|,
 literal|0
 argument_list|)
@@ -430,6 +432,8 @@ operator|.
 name|ni_vp
 argument_list|,
 name|FWRITE
+operator||
+name|O_APPEND
 argument_list|,
 name|p
 operator|->
@@ -481,6 +485,8 @@ name|savacctp
 operator|)
 argument_list|,
 name|FWRITE
+operator||
+name|O_APPEND
 argument_list|,
 name|p
 operator|->
@@ -1171,6 +1177,8 @@ argument_list|(
 name|savacctp
 argument_list|,
 name|FWRITE
+operator||
+name|O_APPEND
 argument_list|,
 name|NOCRED
 argument_list|,
@@ -1261,6 +1269,8 @@ argument_list|(
 name|acctp
 argument_list|,
 name|FWRITE
+operator||
+name|O_APPEND
 argument_list|,
 name|NOCRED
 argument_list|,
