@@ -186,7 +186,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|char
+name|int
 name|first
 decl_stmt|;
 name|long
@@ -198,6 +198,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|Infile
@@ -224,6 +225,7 @@ comment|/* delimiting character */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Cflag
 init|=
@@ -236,6 +238,7 @@ comment|/* embedded comments */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Sflag
 init|=
@@ -248,6 +251,7 @@ comment|/* silent run flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Oflag
 init|=
@@ -260,6 +264,7 @@ comment|/* ordering flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Iflag
 init|=
@@ -272,6 +277,7 @@ comment|/* ignore case flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Rflag
 init|=
@@ -284,6 +290,7 @@ comment|/* randomize order flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Xflag
 init|=
@@ -296,6 +303,7 @@ comment|/* set rotated bit */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|Num_pts
 init|=
@@ -308,6 +316,7 @@ comment|/* number of pointers/strings */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 modifier|*
 name|Seekpts
@@ -315,6 +324,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|Sort_1
@@ -329,6 +339,7 @@ comment|/* pointers for sorting */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|STRFILE
 name|Tbl
 decl_stmt|;
@@ -339,6 +350,7 @@ comment|/* statistics table */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|STR
 modifier|*
 name|Firstch
@@ -350,6 +362,7 @@ comment|/* first chars of each string */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|add_offset
 parameter_list|(
@@ -362,6 +375,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|cmp_str
 parameter_list|(
@@ -389,6 +403,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|do_order
 parameter_list|(
@@ -398,6 +413,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getargs
 parameter_list|(
@@ -411,6 +427,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|randomize
 parameter_list|(
@@ -420,6 +437,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
