@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -194,11 +194,36 @@ begin_comment
 comment|/* min value for a long */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_ANSI_SOURCE
-end_ifndef
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SSIZE_MAX
+value|INT_MAX
+end_define
+
+begin_comment
+comment|/* max value for a ssize_t */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -209,17 +234,6 @@ end_define
 
 begin_comment
 comment|/* max value for a size_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSIZE_T_MAX
-value|INT_MAX
-end_define
-
-begin_comment
-comment|/* max value for a ssize_t */
 end_comment
 
 begin_comment
@@ -263,6 +277,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_ANSI_SOURCE */
+end_comment
 
 end_unit
 
