@@ -1035,7 +1035,7 @@ begin_define
 define|#
 directive|define
 name|has_sa_sigaction
-value|0
+value|1
 end_define
 
 begin_comment
