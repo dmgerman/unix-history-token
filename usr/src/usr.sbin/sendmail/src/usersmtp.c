@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.25 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.26 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.25 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.26 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -832,7 +832,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ESMTP_CHECK -- check to see if this implementation likes ESMTP protocol ** ** **	Parameters: **		line -- the response line. **		m -- the mailer. **		mci -- the mailer connection info. **		e -- the envelope. ** **	Returns: **		none. */
+comment|/* **  ESMTP_CHECK -- check to see if this implementation likes ESMTP protocol ** ** **	Parameters: **		line -- the response line. **		firstline -- set if this is the first line of the reply. **		m -- the mailer. **		mci -- the mailer connection info. **		e -- the envelope. ** **	Returns: **		none. */
 end_comment
 
 begin_function
@@ -840,6 +840,8 @@ name|void
 name|esmtp_check
 parameter_list|(
 name|line
+parameter_list|,
+name|firstline
 parameter_list|,
 name|m
 parameter_list|,
@@ -850,6 +852,9 @@ parameter_list|)
 name|char
 modifier|*
 name|line
+decl_stmt|;
+name|bool
+name|firstline
 decl_stmt|;
 name|MAILER
 modifier|*
@@ -865,20 +870,23 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-if|if
+while|while
 condition|(
-name|strlen
+operator|(
+name|line
+operator|=
+name|strchr
 argument_list|(
+operator|++
 name|line
+argument_list|,
+literal|'E'
 argument_list|)
-operator|<
-literal|5
+operator|)
+operator|!=
+name|NULL
 condition|)
-return|return;
-name|line
-operator|+=
-literal|4
-expr_stmt|;
+block|{
 if|if
 condition|(
 name|strncmp
@@ -892,12 +900,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mci
 operator|->
 name|mci_flags
 operator||=
 name|MCIF_ESMTP
 expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 end_function
 
@@ -905,7 +917,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  HELO_OPTIONS -- process the options on a HELO line. ** **	Parameters: **		line -- the response line. **		m -- the mailer. **		mci -- the mailer connection info. **		e -- the envelope. ** **	Returns: **		none. */
+comment|/* **  HELO_OPTIONS -- process the options on a HELO line. ** **	Parameters: **		line -- the response line. **		firstline -- set if this is the first line of the reply. **		m -- the mailer. **		mci -- the mailer connection info. **		e -- the envelope. ** **	Returns: **		none. */
 end_comment
 
 begin_function
@@ -913,6 +925,8 @@ name|void
 name|helo_options
 parameter_list|(
 name|line
+parameter_list|,
+name|firstline
 parameter_list|,
 name|m
 parameter_list|,
@@ -923,6 +937,9 @@ parameter_list|)
 name|char
 modifier|*
 name|line
+decl_stmt|;
+name|bool
+name|firstline
 decl_stmt|;
 name|MAILER
 modifier|*
@@ -943,6 +960,12 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|firstline
+condition|)
+return|return;
 if|if
 condition|(
 name|strlen
@@ -3626,9 +3649,6 @@ condition|(
 name|pfunc
 operator|!=
 name|NULL
-operator|&&
-operator|!
-name|firstline
 condition|)
 call|(
 modifier|*
@@ -3636,6 +3656,8 @@ name|pfunc
 call|)
 argument_list|(
 name|bufp
+argument_list|,
+name|firstline
 argument_list|,
 name|m
 argument_list|,
