@@ -3347,7 +3347,45 @@ begin_comment
 comment|/*===========================================================================*  *	variables  *===========================================================================*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAIN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EXTERN
+end_define
+
+begin_comment
+comment|/* actually define variables when included from pcvt_drv.c */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EXTERN
+value|extern
+end_define
+
+begin_comment
+comment|/* declare them only */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
+name|EXTERN
 name|u_char
 modifier|*
 name|more_chars
@@ -3359,6 +3397,7 @@ comment|/* response buffer via kbd */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
 name|u_char
 name|color
 decl_stmt|;
@@ -3369,6 +3408,7 @@ comment|/* color or mono display */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
 name|u_short
 name|kern_attr
 decl_stmt|;
@@ -3379,6 +3419,7 @@ comment|/* kernel messages char attributes */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
 name|u_short
 name|user_attr
 decl_stmt|;
@@ -3389,6 +3430,7 @@ comment|/* character attributes */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
 name|struct
 name|tty
 name|pcvt_tty
@@ -4018,6 +4060,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+name|EXTERN
 name|video_state
 name|vs
 index|[
@@ -4060,6 +4103,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+name|EXTERN
 name|struct
 name|vga_char_state
 name|vgacs
@@ -4074,6 +4118,7 @@ comment|/* Character set states */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
 name|u_short
 modifier|*
 name|Crtat
