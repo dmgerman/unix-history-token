@@ -45,7 +45,7 @@ operator|(
 operator|~
 name|fpsr
 operator|&
-literal|0x3f
+literal|0x3d
 operator|)
 return|;
 block|}

@@ -49,7 +49,7 @@ operator|=
 operator|~
 name|fpsr
 operator|&
-literal|0x3f
+literal|0x3d
 expr_stmt|;
 name|fpsr
 operator|=
@@ -57,14 +57,14 @@ operator|(
 name|fpsr
 operator|&
 operator|~
-literal|0x3f
+literal|0x3d
 operator|)
 operator||
 operator|(
 operator|~
 name|mask
 operator|&
-literal|0x3f
+literal|0x3d
 operator|)
 expr_stmt|;
 asm|__asm __volatile("mov ar.fpsr=%0" :: "r" (fpsr));
