@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.12 1995/12/15 05:00:30 peter Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.13 1995/12/27 15:24:19 joerg Exp $ */
 end_comment
 
 begin_comment
@@ -4451,7 +4451,6 @@ comment|/*  * Go through the undo structures for this process and apply the adju
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|semexit
 parameter_list|(
