@@ -2692,7 +2692,7 @@ modifier|*
 name|ch
 parameter_list|)
 block|{
-name|u_int
+name|bus_addr_t
 name|wpwa
 init|=
 name|APU_USE_SYSMEM
@@ -2723,7 +2723,7 @@ name|ch
 operator|->
 name|speed
 decl_stmt|;
-name|u_int
+name|bus_addr_t
 name|offset
 init|=
 name|ch
@@ -3585,8 +3585,12 @@ name|ess
 operator|->
 name|dev
 argument_list|,
-literal|"offset %#x exceeds limit. "
+literal|"offset %#llx exceeds limit. "
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ch
 operator|->
 name|offset
@@ -3640,12 +3644,16 @@ name|ess
 operator|->
 name|dev
 argument_list|,
-literal|"pch[%d].offset = %#x\n"
+literal|"pch[%d].offset = %#llx\n"
 argument_list|,
 name|ch
 operator|->
 name|num
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ch
 operator|->
 name|offset
@@ -3663,8 +3671,12 @@ name|ess
 operator|->
 name|dev
 argument_list|,
-literal|"rch.offset = %#x\n"
+literal|"rch.offset = %#llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ch
 operator|->
 name|offset
