@@ -1178,23 +1178,36 @@ name|s_addr
 argument_list|)
 argument_list|)
 operator|&&
-operator|(
 name|imo
 operator|!=
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|imo
 operator|->
 name|imo_multicast_ifp
 operator|!=
 name|NULL
-operator|)
 condition|)
 block|{
-comment|/* 		 * bypass the normal routing lookup for 		 * multicast packets if the interface is 		 * specified 		 */
-comment|/* No Operation */
+comment|/* 		 * Bypass the normal routing lookup for multicast 		 * packets if the interface is specified. 		 */
+name|ifp
+operator|=
+name|imo
+operator|->
+name|imo_multicast_ifp
+expr_stmt|;
+name|IFP_TO_IA
+argument_list|(
+name|ifp
+argument_list|,
+name|ia
+argument_list|)
+expr_stmt|;
+name|isbroadcast
+operator|=
+literal|0
+expr_stmt|;
+comment|/* fool gcc */
 block|}
 else|else
 block|{
@@ -1379,20 +1392,6 @@ if|if
 condition|(
 name|imo
 operator|->
-name|imo_multicast_ifp
-operator|!=
-name|NULL
-condition|)
-name|ifp
-operator|=
-name|imo
-operator|->
-name|imo_multicast_ifp
-expr_stmt|;
-if|if
-condition|(
-name|imo
-operator|->
 name|imo_multicast_vif
 operator|!=
 operator|-
@@ -1477,42 +1476,24 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
-specifier|register
-name|struct
-name|in_ifaddr
-modifier|*
-name|ia1
-decl_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|ia1
-argument_list|,
-argument|&in_ifaddrhead
-argument_list|,
-argument|ia_link
-argument_list|)
+comment|/* Interface may have no addresses. */
 if|if
 condition|(
-name|ia1
-operator|->
-name|ia_ifp
-operator|==
-name|ifp
+name|ia
+operator|!=
+name|NULL
 condition|)
-block|{
 name|ip
 operator|->
 name|ip_src
 operator|=
 name|IA_SIN
 argument_list|(
-name|ia1
+name|ia
 argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
-break|break;
-block|}
 block|}
 name|IN_LOOKUP_MULTI
 argument_list|(
@@ -1652,6 +1633,14 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
+comment|/* Interface may have no addresses. */
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ip
 operator|->
 name|ip_src
@@ -1666,13 +1655,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
-comment|/* Keep note that we did this - if the firewall changes 		 * the next-hop, our interface may change, changing the 		 * default source IP. It's a shame so much effort happens 		 * twice. Oh well.  		 */
+comment|/* Keep note that we did this - if the firewall changes 		 	* the next-hop, our interface may change, changing the 		 	* default source IP. It's a shame so much effort happens 		 	* twice. Oh well.  		 	*/
 name|fwd_rewrite_src
 operator|++
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* IPFIREWALL_FORWARD */
+block|}
 block|}
 endif|#
 directive|endif
@@ -3215,6 +3205,8 @@ name|flags
 operator|&
 name|IP_FORWARDING
 operator|)
+operator|&&
+name|ia
 condition|)
 block|{
 name|ia
@@ -3987,6 +3979,8 @@ condition|(
 name|error
 operator|==
 literal|0
+operator|&&
+name|ia
 condition|)
 block|{
 comment|/* Record statistics for this interface address. */
