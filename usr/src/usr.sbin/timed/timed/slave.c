@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.5 (Berkeley) %G%"
+literal|"@(#)slave.c	2.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -685,7 +685,7 @@ name|tsp_type
 condition|)
 block|{
 case|case
-name|TSP_DATE
+name|TSP_SETDATE
 case|:
 ifdef|#
 directive|ifdef
@@ -1254,7 +1254,7 @@ name|delay2
 expr_stmt|;
 break|break;
 case|case
-name|TSP_DATE
+name|TSP_SETDATE
 case|:
 name|saveaddr
 operator|=
@@ -1272,7 +1272,7 @@ name|msg
 operator|->
 name|tsp_type
 operator|=
-name|TSP_DATEREQ
+name|TSP_SETDATEREQ
 expr_stmt|;
 name|msg
 operator|->
@@ -1423,7 +1423,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|TSP_DATEREQ
+name|TSP_SETDATEREQ
 case|:
 name|saveaddr
 operator|=
@@ -1469,6 +1469,51 @@ name|SLAVE
 condition|)
 break|break;
 block|}
+name|ind
+operator|=
+name|findhost
+argument_list|(
+name|msg
+operator|->
+name|tsp_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ind
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"DATEREQ from uncontrolled machine"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"forwarding date change request for %s"
+argument_list|,
+name|msg
+operator|->
+name|tsp_name
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|msg
+operator|->
+name|tsp_name
+argument_list|,
+name|hostname
+argument_list|)
+expr_stmt|;
 name|answer
 operator|=
 name|acksend
