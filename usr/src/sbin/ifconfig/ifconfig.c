@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.18 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2173,7 +2173,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EAFNOSUPPORT
+name|EPROTONOSUPPORT
 condition|)
 return|return;
 name|perror
