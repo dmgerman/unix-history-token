@@ -277,11 +277,30 @@ begin_comment
 comment|/* post GCC 2.95 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
 name|__GNUC__
-end_ifdef
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNUC_VA_LIST
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NO_GNUC_VA_LIST
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__GNUC_VA_LIST
+end_define
 
 begin_typedef
 typedef|typedef
