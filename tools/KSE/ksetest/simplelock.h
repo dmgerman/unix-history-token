@@ -73,6 +73,7 @@ parameter_list|)
 block|{
 while|while
 condition|(
+operator|!
 name|atomic_cmpset_int
 argument_list|(
 operator|&
