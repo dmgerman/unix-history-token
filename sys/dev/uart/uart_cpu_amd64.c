@@ -371,5 +371,19 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|uart_cpu_identify
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|device_t
+name|parent
+parameter_list|)
+block|{   }
+end_function
+
 end_unit
 

@@ -287,6 +287,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|uart_cpu_identify
+parameter_list|(
+name|driver_t
+modifier|*
+parameter_list|,
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Operations for low-level access to the UART. Primarily for use  * by console and debug port logic.  */
 end_comment
