@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	6.2	84/04/12	*/
+comment|/*	if_en.c	6.3	84/05/18	*/
 end_comment
 
 begin_include
@@ -1730,6 +1730,8 @@ name|inq
 decl_stmt|;
 name|int
 name|off
+decl_stmt|,
+name|s
 decl_stmt|;
 name|es
 operator|->
@@ -2207,6 +2209,11 @@ goto|goto
 name|setup
 goto|;
 block|}
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|IF_QFULL
@@ -2232,6 +2239,11 @@ argument_list|(
 name|inq
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|setup
