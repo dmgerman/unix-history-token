@@ -21,15 +21,16 @@ modifier|*
 name|dbp
 decl_stmt|;
 comment|/* current buffer I/O address */
-name|u_long
+comment|/* XXX ssize_t? */
+name|size_t
 name|dbcnt
 decl_stmt|;
 comment|/* current buffer byte count */
-name|int
+name|size_t
 name|dbrcnt
 decl_stmt|;
 comment|/* last read byte count */
-name|u_long
+name|size_t
 name|dbsz
 decl_stmt|;
 comment|/* buffer size */
@@ -42,16 +43,21 @@ define|#
 directive|define
 name|ISPIPE
 value|0x02
-comment|/* pipe (not truncatable) */
+comment|/* pipe-like (not truncatable) */
 define|#
 directive|define
 name|ISTAPE
 value|0x04
-comment|/* tape (not seekable) */
+comment|/* tape */
+define|#
+directive|define
+name|ISSEEK
+value|0x08
+comment|/* valid to seek on */
 define|#
 directive|define
 name|NOREAD
-value|0x08
+value|0x10
 comment|/* not readable */
 name|u_int
 name|flags
@@ -65,23 +71,23 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* file descriptor */
-name|u_long
+name|off_t
 name|offset
 decl_stmt|;
 comment|/* # of blocks to skip */
-name|u_long
+name|u_quad_t
 name|f_stats
 decl_stmt|;
 comment|/* # of full blocks processed */
-name|u_long
+name|u_quad_t
 name|p_stats
 decl_stmt|;
 comment|/* # of partial blocks processed */
-name|u_long
+name|u_quad_t
 name|s_stats
 decl_stmt|;
 comment|/* # of odd swab blocks */
-name|u_long
+name|u_quad_t
 name|t_stats
 decl_stmt|;
 comment|/* # of truncations */
@@ -94,31 +100,31 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_long
+name|u_quad_t
 name|in_full
 decl_stmt|;
 comment|/* # of full input blocks */
-name|u_long
+name|u_quad_t
 name|in_part
 decl_stmt|;
 comment|/* # of partial input blocks */
-name|u_long
+name|u_quad_t
 name|out_full
 decl_stmt|;
 comment|/* # of full output blocks */
-name|u_long
+name|u_quad_t
 name|out_part
 decl_stmt|;
 comment|/* # of partial output blocks */
-name|u_long
+name|u_quad_t
 name|trunc
 decl_stmt|;
 comment|/* # of truncated records */
-name|u_long
+name|u_quad_t
 name|swab
 decl_stmt|;
 comment|/* # of odd-length swab blocks */
-name|u_int64_t
+name|u_quad_t
 name|bytes
 decl_stmt|;
 comment|/* # of bytes written */

@@ -48,29 +48,12 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*  * There are currently eight tables:  *  *	lower-case	-> upper-case			conv=upper  *	upper-case	-> lower-case			conv=lower  *  *	ebcdic		-> ascii	32V		conv=oldascii  *	ascii		-> ebcdic	32V		conv=oldebcdic  *	ascii		-> ibm ebcdic	32V		conv=oldibm  *  *	ebcdic		-> ascii	POSIX/S5	conv=ascii  *	ascii		-> ebcdic	POSIX/S5	conv=ebcdic  *	ascii		-> ibm ebcdic	POSIX/S5	conv=ibm  *  * Other tables are built from these if multiple conversions are being  * done.  *  * Tables used for conversions to/from IBM and EBCDIC to support an extension  * to POSIX P1003.2/D11. The tables referencing POSIX contain data extracted  * from tables 4-3 and 4-4 in P1003.2/Draft 11.  The historic tables were  * constructed by running against a file with all possible byte values.  *  * More information can be obtained in "Correspondences of 8-Bit and Hollerith  * Codes for Computer Environments-A USASI Tutorial", Communications of the  * ACM, Volume 11, Number 11, November 1968, pp. 783-789.  */
-end_comment
-
-begin_comment
-comment|/* Lower-case to upper-case */
+comment|/*  * There are currently six tables:  *  *	ebcdic		-> ascii	32V		conv=oldascii  *	ascii		-> ebcdic	32V		conv=oldebcdic  *	ascii		-> ibm ebcdic	32V		conv=oldibm  *  *	ebcdic		-> ascii	POSIX/S5	conv=ascii  *	ascii		-> ebcdic	POSIX/S5	conv=ebcdic  *	ascii		-> ibm ebcdic	POSIX/S5	conv=ibm  *  * Other tables are built from these if multiple conversions are being  * done.  *  * Tables used for conversions to/from IBM and EBCDIC to support an extension  * to POSIX P1003.2/D11. The tables referencing POSIX contain data extracted  * from tables 4-3 and 4-4 in P1003.2/Draft 11.  The historic tables were  * constructed by running against a file with all possible byte values.  *  * More information can be obtained in "Correspondences of 8-Bit and Hollerith  * Codes for Computer Environments-A USASI Tutorial", Communications of the  * ACM, Volume 11, Number 11, November 1968, pp. 783-789.  */
 end_comment
 
 begin_decl_stmt
 name|u_char
-name|l2u
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Upper-case to lower-case */
-end_comment
-
-begin_decl_stmt
-name|u_char
-name|u2l
+name|casetab
 index|[
 literal|256
 index|]
@@ -82,6 +65,7 @@ comment|/* EBCDIC to ASCII -- 32V compatible. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|u_char
 name|e2a_32V
 index|[]
@@ -640,6 +624,7 @@ comment|/* ASCII to EBCDIC -- 32V compatible. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|u_char
 name|a2e_32V
 index|[]
@@ -1198,6 +1183,7 @@ comment|/* ASCII to IBM EBCDIC -- 32V compatible. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|u_char
 name|a2ibm_32V
 index|[]
@@ -1756,6 +1742,7 @@ comment|/* EBCDIC to ASCII -- POSIX and System V compatible. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|u_char
 name|e2a_POSIX
 index|[]
@@ -2314,6 +2301,7 @@ comment|/* ASCII to EBCDIC -- POSIX and System V compatible. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|u_char
 name|a2e_POSIX
 index|[]
@@ -2872,6 +2860,7 @@ comment|/* ASCII to IBM EBCDIC -- POSIX and System V compatible. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|u_char
 name|a2ibm_POSIX
 index|[]

@@ -156,7 +156,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%lu+%lu records in\n%lu+%lu records out\n"
+literal|"%qu+%qu records in\n%qu+%qu records out\n"
 argument_list|,
 name|st
 operator|.
@@ -209,7 +209,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%lu odd length swab %s\n"
+literal|"%qu odd length swab %s\n"
 argument_list|,
 name|st
 operator|.
@@ -263,7 +263,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%lu truncated %s\n"
+literal|"%qu truncated %s\n"
 argument_list|,
 name|st
 operator|.
