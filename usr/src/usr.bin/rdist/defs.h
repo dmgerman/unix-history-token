@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.2	83/09/27	*/
+comment|/*	defs.h	4.3	83/10/10	*/
 end_comment
 
 begin_include
@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|MAILCMD
-value|"/usr/lib/sendmail -i -t"
+value|"/usr/lib/sendmail -oi -t"
 end_define
 
 begin_comment
@@ -132,21 +132,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|VERIFY
+name|NOTIFY
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOTIFY
+name|EXCEPT
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCEPT
+name|OPTION
 value|10
 end_define
 
@@ -222,6 +222,38 @@ name|NSTAMPS
 value|15
 end_define
 
+begin_comment
+comment|/* option flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERIFY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WHOLE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|YOUNGER
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRIP
+value|8
+end_define
+
 begin_define
 define|#
 directive|define
@@ -236,8 +268,11 @@ begin_struct
 struct|struct
 name|block
 block|{
-name|int
+name|short
 name|b_type
+decl_stmt|;
+name|short
+name|b_options
 decl_stmt|;
 name|char
 modifier|*
@@ -473,6 +508,14 @@ name|struct
 name|block
 modifier|*
 name|expand
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.2 (Berkeley) 83/09/27"
+literal|"@(#)main.c	4.3 (Berkeley) 83/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,10 +746,6 @@ name|prev
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|firsttime
-init|=
-literal|1
 decl_stmt|;
 name|char
 modifier|*

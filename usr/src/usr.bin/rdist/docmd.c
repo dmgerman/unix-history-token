@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.2 (Berkeley) 83/09/27"
+literal|"@(#)docmd.c	4.3 (Berkeley) 83/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,9 +82,6 @@ name|c
 decl_stmt|;
 specifier|register
 name|char
-modifier|*
-name|cp
-decl_stmt|,
 modifier|*
 modifier|*
 name|cpp
@@ -349,36 +346,9 @@ name|b_name
 argument_list|,
 name|ddir
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 name|c
 operator|->
-name|b_type
-operator|==
-name|VERIFY
-condition|)
-block|{
-name|install
-argument_list|(
-name|f
-operator|->
-name|b_name
-argument_list|,
-name|c
-operator|->
-name|b_name
-argument_list|,
-name|ddir
-argument_list|,
-literal|1
+name|b_options
 argument_list|)
 expr_stmt|;
 name|n
@@ -691,17 +661,6 @@ return|;
 block|}
 end_block
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|target
-index|[]
-decl_stmt|,
-modifier|*
-name|tp
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Update the file(s) if they are different.  * destdir = 1 if destination should be a directory  * (i.e., more than one source is being copied to the same destination).  */
 end_comment
@@ -715,7 +674,7 @@ argument|dest
 argument_list|,
 argument|destdir
 argument_list|,
-argument|verify
+argument|options
 argument_list|)
 end_macro
 
@@ -733,12 +692,17 @@ begin_decl_stmt
 name|int
 name|destdir
 decl_stmt|,
-name|verify
+name|options
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 if|if
 condition|(
 name|exclude
@@ -750,23 +714,39 @@ return|return;
 if|if
 condition|(
 name|nflag
+operator|||
+name|debug
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s %s %s\n"
+literal|"%s%s %s %s\n"
 argument_list|,
-name|verify
+name|options
+operator|&
+name|VERIFY
 condition|?
 literal|"verify"
 else|:
 literal|"install"
+argument_list|,
+name|options
+operator|&
+name|WHOLE
+condition|?
+literal|" -w"
+else|:
+literal|""
 argument_list|,
 name|src
 argument_list|,
 name|dest
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nflag
+condition|)
 return|return;
 block|}
 comment|/* 	 * Pass the destination file/directory name to remote. 	 */
@@ -814,15 +794,28 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|tp
-operator|=
-name|NULL
+if|if
+condition|(
+operator|!
+name|destdir
+operator|&&
+operator|(
+name|options
+operator|&
+name|WHOLE
+operator|)
+condition|)
+name|options
+operator||=
+name|STRIP
 expr_stmt|;
 name|sendf
 argument_list|(
 name|src
 argument_list|,
-name|verify
+name|NULL
+argument_list|,
+name|options
 argument_list|)
 expr_stmt|;
 block|}
@@ -850,6 +843,17 @@ end_struct
 begin_decl_stmt
 name|int
 name|nstamps
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|target
+index|[]
+decl_stmt|,
+modifier|*
+name|tp
 decl_stmt|;
 end_decl_stmt
 
@@ -910,9 +914,6 @@ specifier|extern
 name|char
 modifier|*
 name|tmpinc
-decl_stmt|;
-name|int
-name|n
 decl_stmt|;
 if|if
 condition|(
@@ -1203,7 +1204,7 @@ operator|<
 operator|&
 name|ts
 index|[
-name|n
+name|nstamps
 index|]
 condition|;
 name|t
@@ -1234,7 +1235,7 @@ literal|'A'
 expr_stmt|;
 while|while
 condition|(
-name|n
+name|nstamps
 operator|--
 condition|)
 block|{
@@ -1706,7 +1707,7 @@ name|notify
 argument_list|(
 argument|file
 argument_list|,
-argument|host
+argument|rhost
 argument_list|,
 argument|to
 argument_list|)
@@ -1718,7 +1719,7 @@ modifier|*
 name|file
 decl_stmt|,
 modifier|*
-name|host
+name|rhost
 decl_stmt|;
 end_decl_stmt
 
@@ -1769,13 +1770,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|host
+name|rhost
 condition|)
 name|printf
 argument_list|(
 literal|"@%s "
 argument_list|,
-name|host
+name|rhost
 argument_list|)
 expr_stmt|;
 name|prnames
@@ -1889,13 +1890,24 @@ name|pf
 operator|==
 name|NULL
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"notify: \"%s\" failed\n"
 argument_list|,
 name|MAILCMD
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Output the proper header information. 	 */
 name|fprintf
 argument_list|(
@@ -1929,6 +1941,10 @@ name|to
 operator|->
 name|b_name
 argument_list|)
+operator|&&
+name|host
+operator|!=
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -1940,7 +1956,7 @@ name|to
 operator|->
 name|b_name
 argument_list|,
-name|host
+name|rhost
 argument_list|)
 expr_stmt|;
 else|else
@@ -1973,7 +1989,11 @@ name|fprintf
 argument_list|(
 name|pf
 argument_list|,
-literal|"Subject: files updated by rdist\n"
+literal|"Subject: files updated by rdist from %s to %s\n"
+argument_list|,
+name|host
+argument_list|,
+name|rhost
 argument_list|)
 expr_stmt|;
 name|putc
