@@ -3787,7 +3787,6 @@ else|else
 name|lead
 operator|=
 name|expt
-comment|/*(expt< ndig) ? expt : ndig*/
 expr_stmt|;
 block|}
 break|break;
