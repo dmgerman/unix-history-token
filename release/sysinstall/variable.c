@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: variable.c,v 1.23 1998/03/15 17:10:17 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: variable.c,v 1.24 1998/07/18 09:42:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -25,6 +25,9 @@ parameter_list|,
 name|char
 modifier|*
 name|value
+parameter_list|,
+name|int
+name|dirty
 parameter_list|)
 block|{
 name|Variable
@@ -52,16 +55,6 @@ operator|*
 name|var
 condition|)
 return|return;
-comment|/* Put it in the environment in any case */
-name|setenv
-argument_list|(
-name|var
-argument_list|,
-name|value
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* Now search to see if it's already in the list */
 for|for
 control|(
@@ -93,22 +86,21 @@ condition|)
 block|{
 if|if
 condition|(
-name|isDebug
-argument_list|()
+name|vp
+operator|->
+name|dirty
+operator|&&
+operator|!
+name|dirty
 condition|)
-name|msgDebug
+return|return;
+name|setenv
 argument_list|(
-literal|"variable %s was %s, now %s\n"
-argument_list|,
-name|vp
-operator|->
-name|name
-argument_list|,
-name|vp
-operator|->
-name|value
+name|var
 argument_list|,
 name|value
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|free
@@ -127,9 +119,24 @@ argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
+name|vp
+operator|->
+name|dirty
+operator|=
+name|dirty
+expr_stmt|;
 return|return;
 block|}
 block|}
+name|setenv
+argument_list|(
+name|var
+argument_list|,
+name|value
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* No?  Create a new one */
 name|vp
 operator|=
@@ -165,6 +172,12 @@ argument_list|)
 expr_stmt|;
 name|vp
 operator|->
+name|dirty
+operator|=
+name|dirty
+expr_stmt|;
+name|vp
+operator|->
 name|next
 operator|=
 name|VarHead
@@ -172,24 +185,6 @@ expr_stmt|;
 name|VarHead
 operator|=
 name|vp
-expr_stmt|;
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Setting variable %s to %s\n"
-argument_list|,
-name|vp
-operator|->
-name|name
-argument_list|,
-name|vp
-operator|->
-name|value
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -201,6 +196,9 @@ parameter_list|(
 name|char
 modifier|*
 name|var
+parameter_list|,
+name|int
+name|dirty
 parameter_list|)
 block|{
 name|char
@@ -279,6 +277,8 @@ name|string_skipwhite
 argument_list|(
 name|cp
 argument_list|)
+argument_list|,
+name|dirty
 argument_list|)
 expr_stmt|;
 block|}
@@ -295,6 +295,9 @@ parameter_list|,
 name|char
 modifier|*
 name|value
+parameter_list|,
+name|int
+name|dirty
 parameter_list|)
 block|{
 if|if
@@ -331,6 +334,8 @@ argument_list|(
 name|var
 argument_list|,
 name|value
+argument_list|,
+name|dirty
 argument_list|)
 expr_stmt|;
 block|}
@@ -595,6 +600,9 @@ parameter_list|,
 name|char
 modifier|*
 name|prompt
+parameter_list|,
+name|int
+name|dirty
 parameter_list|)
 block|{
 name|char
@@ -641,6 +649,8 @@ argument_list|(
 name|var
 argument_list|,
 name|cp
+argument_list|,
+name|dirty
 argument_list|)
 expr_stmt|;
 else|else
@@ -900,7 +910,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s=\"%s\"\n"
+literal|"%s=\"%s\" (%d)\n"
 argument_list|,
 name|vp
 operator|->
@@ -909,6 +919,10 @@ argument_list|,
 name|vp
 operator|->
 name|value
+argument_list|,
+name|vp
+operator|->
+name|dirty
 argument_list|)
 expr_stmt|;
 name|fclose
