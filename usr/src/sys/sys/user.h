@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.22	82/11/13	*/
+comment|/*	user.h	4.23	82/12/09	*/
 end_comment
 
 begin_ifdef
@@ -266,17 +266,17 @@ decl_stmt|;
 comment|/* per-process flags of open files */
 define|#
 directive|define
-name|EXCLOSE
+name|UF_EXCLOSE
 value|0x1
 comment|/* auto-close on exec */
 define|#
 directive|define
-name|SHLOCK
+name|UF_SHLOCK
 value|0x2
 comment|/* shared lock present */
 define|#
 directive|define
-name|EXLOCK
+name|UF_EXLOCK
 value|0x4
 comment|/* exclusive lock present */
 define|#
@@ -471,6 +471,30 @@ name|u_pdir
 decl_stmt|;
 comment|/* inode of parent directory of dirp */
 comment|/* END TRASH */
+struct|struct
+name|uprof
+block|{
+comment|/* profile arguments */
+name|short
+modifier|*
+name|pr_base
+decl_stmt|;
+comment|/* buffer base */
+name|unsigned
+name|pr_size
+decl_stmt|;
+comment|/* buffer size */
+name|unsigned
+name|pr_off
+decl_stmt|;
+comment|/* pc offset */
+name|unsigned
+name|pr_scale
+decl_stmt|;
+comment|/* pc scaling */
+block|}
+name|u_prof
+struct|;
 name|int
 name|u_stack
 index|[
