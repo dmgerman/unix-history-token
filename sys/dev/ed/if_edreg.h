@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.19 1995/09/26 08:57:45 phk Exp $  */
+comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.20 1996/01/30 22:55:38 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -1419,6 +1419,17 @@ end_define
 
 begin_comment
 comment|/* PCMCIA/PCCARD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_VENDOR_HP
+value|0x04
+end_define
+
+begin_comment
+comment|/* Hewlett Packard */
 end_comment
 
 begin_comment
@@ -3172,6 +3183,468 @@ define|#
 directive|define
 name|ZE_RESET
 value|0x1F
+end_define
+
+begin_comment
+comment|/*  * Definitions for HP PC LAN Adapter Plus; based on the CRYNWR packet  * driver for the card.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_ASIC_OFFSET
+value|0x00
+end_define
+
+begin_comment
+comment|/* Offset to ASIC registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_NIC_OFFSET
+value|0x10
+end_define
+
+begin_comment
+comment|/* Offset to 8390 registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_ID
+value|0x00
+end_define
+
+begin_comment
+comment|/* ID register, always 0x4850 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGING
+value|0x02
+end_define
+
+begin_comment
+comment|/* Page select register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION
+value|0x04
+end_define
+
+begin_comment
+comment|/* Bitmask of supported options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGE_0
+value|0x08
+end_define
+
+begin_comment
+comment|/* Page 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGE_2
+value|0x0A
+end_define
+
+begin_comment
+comment|/* Page 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGE_4
+value|0x0C
+end_define
+
+begin_comment
+comment|/* Page 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGE_6
+value|0x0E
+end_define
+
+begin_comment
+comment|/* Page 6 */
+end_comment
+
+begin_comment
+comment|/* PERF PAGE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OUT_ADDR
+value|ED_HPP_PAGE_0
+end_define
+
+begin_comment
+comment|/* I/O output location */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_IN_ADDR
+value|ED_HPP_PAGE_2
+end_define
+
+begin_comment
+comment|/* I/O input location */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_DATAPORT
+value|ED_HPP_PAGE_4
+end_define
+
+begin_comment
+comment|/* I/O data transfer */
+end_comment
+
+begin_comment
+comment|/* MAC PAGE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_MAC_ADDR
+value|0x08
+end_define
+
+begin_comment
+comment|/* Offset of MAC address in MAC page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_IO_PORTS
+value|32
+end_define
+
+begin_comment
+comment|/* Number of IO ports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_TX_PAGE_OFFSET
+value|0x00
+end_define
+
+begin_comment
+comment|/* first page of TX buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_RX_PAGE_START
+value|0x06
+end_define
+
+begin_comment
+comment|/* start at page 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_RX_PAGE_STOP
+value|0x80
+end_define
+
+begin_comment
+comment|/* end at page 128 */
+end_comment
+
+begin_comment
+comment|/*  * Register pages supported.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGE_PERF
+value|0
+end_define
+
+begin_comment
+comment|/* Normal operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGE_MAC
+value|1
+end_define
+
+begin_comment
+comment|/* The ethernet address and checksum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGE_HW
+value|2
+end_define
+
+begin_comment
+comment|/* Hardware parameters in EEPROM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGE_LAN
+value|4
+end_define
+
+begin_comment
+comment|/* Transciever selection etc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_PAGE_ID
+value|6
+end_define
+
+begin_comment
+comment|/* ID */
+end_comment
+
+begin_comment
+comment|/*  * Options supported.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION_NIC_RESET
+value|0x0001
+end_define
+
+begin_comment
+comment|/* active low */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION_CHIP_RESET
+value|0x0002
+end_define
+
+begin_comment
+comment|/* active low */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION_ENABLE_IRQ
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION_FAKE_INTR
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION_BOOT_ROM_ENB
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION_IO_ENB
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION_MEM_ENABLE
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION_ZERO_WAIT
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_OPTION_MEM_DISABLE
+value|0x1000
+end_define
+
+begin_comment
+comment|/*  * Page ID configuration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_ID_REVISION_MASK
+value|0x0300
+end_define
+
+begin_comment
+comment|/* revision id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_ID_SOFT_MODEL_MASK
+value|0xFC00
+end_define
+
+begin_comment
+comment|/* soft model number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_ID_16_BIT_ACCESS
+value|0x0010
+end_define
+
+begin_comment
+comment|/* if set use 16 bit accesses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_ID_TWISTED_PAIR
+value|0x0040
+end_define
+
+begin_comment
+comment|/*  * Hardware configuration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_HW_MEM_MAP
+value|0x09
+end_define
+
+begin_comment
+comment|/* low mem map location in HW page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_HW_ID
+value|0x0C
+end_define
+
+begin_comment
+comment|/* revision number, capabilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_HW_IRQ
+value|0x0D
+end_define
+
+begin_comment
+comment|/* IRQ channel register in HW page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_HW_WRAP
+value|0x0E
+end_define
+
+begin_comment
+comment|/* mem wrap page for rcv */
+end_comment
+
+begin_comment
+comment|/*  * Lan configuration  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_LAN_AUI
+value|0x01
+end_define
+
+begin_comment
+comment|/* Use AUI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_HPP_LAN_TL
+value|0x40
+end_define
+
+begin_comment
+comment|/* Don't use AUI */
+end_comment
+
+begin_comment
+comment|/*  * Card types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE_HP_PCLANPLUS
+value|0x00
 end_define
 
 end_unit
