@@ -5569,7 +5569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A driver for some SB16pnp and compatibles...  *  * Avance Asound 100 -- 0x01009305  * Avance Logic ALS100+ -- 0x10019305  * xxx               -- 0x2b008c0e  *  */
+comment|/*  * A driver for some SB16pnp and compatibles...  *  * Avance Asound 100               -- 0x01009305  * Avance Logic ALS100+            -- 0x10019305  * Avance Logic ASound Gold ALS120 -- 0x20019305  * xxx                             -- 0x2b008c0e  *  */
 end_comment
 
 begin_function_decl
@@ -5714,6 +5714,18 @@ condition|)
 name|s
 operator|=
 literal|"Avance Logic 100+"
+expr_stmt|;
+comment|/* Vibra16X-class */
+elseif|else
+if|if
+condition|(
+name|vend_id
+operator|==
+literal|0x20019305
+condition|)
+name|s
+operator|=
+literal|"Avance Logic ALS120"
 expr_stmt|;
 comment|/* Vibra16X-class */
 if|if
@@ -5931,6 +5943,10 @@ operator|||
 name|vend_id
 operator|==
 literal|0xf0008c0e
+operator|||
+name|vend_id
+operator|==
+literal|0x20019305
 condition|)
 block|{
 comment|/* 	 * XXX please add here the vend_id for other vibra16X cards... 	 * And remember, must change tmp_d, not  	 */
