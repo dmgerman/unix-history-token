@@ -256,7 +256,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|_LKM
+name|KLD_MODULE
 argument_list|)
 end_if
 
