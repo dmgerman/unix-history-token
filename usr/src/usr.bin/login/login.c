@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.73 (Berkeley) %G%"
+literal|"@(#)login.c	5.74 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1767,7 +1767,7 @@ argument_list|(
 operator|&
 name|pwd
 operator|->
-name|pw_expire
+name|pw_change
 argument_list|)
 argument_list|)
 expr_stmt|;
