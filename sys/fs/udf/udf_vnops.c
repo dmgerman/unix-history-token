@@ -580,7 +580,7 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|INVALID_BMAP
+name|UDF_INVALID_BMAP
 value|-1
 end_define
 
@@ -2856,7 +2856,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* XXX Is this the right place for this? */
+comment|/* 	 * Clean up from a previous fragmented FID. 	 * XXX Is this the right place for this? 	 */
 if|if
 condition|(
 name|ds
@@ -3203,7 +3203,7 @@ operator|+
 name|UDF_FID_SIZE
 expr_stmt|;
 block|}
-comment|/* 	 * Update the offset. Align on a 4 byte boundary because the 	 * UDF spec says so.  If it was a fragmented entry, clean up. 	 */
+comment|/* 	 * Update the offset. Align on a 4 byte boundary because the 	 * UDF spec says so. 	 */
 name|ds
 operator|->
 name|this_off
@@ -3538,7 +3538,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Iterate through the file id descriptors.  Give the parent dir 	 * entry special attention.  size will be the size of the extent 	 * returned in data.  If there is more than one extent, things get 	 * ugly. 	 */
+comment|/* 	 * Iterate through the file id descriptors.  Give the parent dir 	 * entry special attention. 	 */
 name|ds
 operator|=
 name|udf_opendir
@@ -4467,7 +4467,6 @@ name|ncs_2passes
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * The name lookup algorithm is quite similar to what is in readdir. 	 * Can this be broken out and shared? 	 */
 name|lookloop
 label|:
 name|ds
@@ -5062,7 +5061,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|INVALID_BMAP
+name|UDF_INVALID_BMAP
 condition|)
 block|{
 comment|/* 		 * This error means that the file *data* is stored in the 		 * allocation descriptor field of the file entry. 		 */
@@ -5589,7 +5588,7 @@ name|part_start
 expr_stmt|;
 return|return
 operator|(
-name|INVALID_BMAP
+name|UDF_INVALID_BMAP
 operator|)
 return|;
 case|case
