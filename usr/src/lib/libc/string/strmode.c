@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strmode.c	5.2 (Berkeley) %G%"
+literal|"@(#)strmode.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,14 +170,6 @@ name|p
 operator|++
 operator|=
 literal|'?'
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|putchar
-argument_list|(
-literal|'?'
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
