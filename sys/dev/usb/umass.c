@@ -2469,8 +2469,6 @@ name|idVendor
 argument_list|)
 operator|==
 name|USB_VENDOR_ASAHIOPTICAL
-condition|)
-block|{
 operator|&&
 name|UGETW
 argument_list|(
@@ -2480,7 +2478,7 @@ name|idProduct
 argument_list|)
 operator|==
 name|USB_PRODUCT_ASAHIOPTICAL_OPTIO230
-block|)
+condition|)
 block|{
 name|sc
 operator|->
