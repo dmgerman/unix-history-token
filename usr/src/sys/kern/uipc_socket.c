@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.23	82/01/13	*/
+comment|/*	uipc_socket.c	4.24	82/01/14	*/
 end_comment
 
 begin_include
@@ -2681,7 +2681,7 @@ call|)
 argument_list|(
 name|so
 argument_list|,
-name|PRU_DISCONNECT
+name|PRU_SHUTDOWN
 argument_list|,
 operator|(
 expr|struct
