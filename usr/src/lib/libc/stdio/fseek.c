@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fseek.c	8.1 (Berkeley) %G%"
+literal|"@(#)fseek.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,66 +90,45 @@ begin_comment
 comment|/*  * Seek the given file to the given offset.  * `Whence' must be one of the three SEEK_* macros.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|fseek
-argument_list|(
+parameter_list|(
 name|fp
-argument_list|,
+parameter_list|,
 name|offset
-argument_list|,
+parameter_list|,
 name|whence
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|long
 name|offset
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|whence
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-if|#
-directive|if
-name|__STDC__
 specifier|register
 name|fpos_t
-function_decl|(
-modifier|*
-name|seekfn
-function_decl|)
-parameter_list|(
+argument_list|(
+argument|*seekfn
+argument_list|)
+name|__P
+argument_list|(
+operator|(
 name|void
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|fpos_t
-parameter_list|,
+operator|,
 name|int
-parameter_list|)
-function_decl|;
-else|#
-directive|else
-specifier|register
-name|fpos_t
-function_decl|(
-modifier|*
-name|seekfn
-function_decl|)
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
+operator|)
+argument_list|)
+expr_stmt|;
 name|fpos_t
 name|target
 decl_stmt|,
@@ -576,6 +555,13 @@ name|fp
 argument_list|)
 condition|)
 block|{
+name|curoff
+operator|+=
+name|fp
+operator|->
+name|_r
+expr_stmt|;
+comment|/* kill off ungetc */
 name|n
 operator|=
 name|fp
@@ -886,7 +872,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
