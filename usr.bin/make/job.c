@@ -4571,6 +4571,10 @@ if|if
 condition|(
 name|errno
 operator|!=
+name|EINTR
+operator|&&
+name|errno
+operator|!=
 name|EBADF
 operator|&&
 name|errno
@@ -8112,6 +8116,12 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
+condition|)
 name|Punt
 argument_list|(
 literal|"kevent: %s"
