@@ -34,6 +34,12 @@ begin_comment
 comment|/* LIBC_RCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 specifier|const
