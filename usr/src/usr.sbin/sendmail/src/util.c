@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.55 (Berkeley) %G%"
+literal|"@(#)util.c	8.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -798,10 +798,6 @@ name|c
 condition|)
 block|{
 case|case
-literal|'\0'
-case|:
-continue|continue;
-case|case
 literal|'\n'
 case|:
 name|c
@@ -846,6 +842,22 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+literal|'\\'
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 block|}
 operator|(
 name|void
