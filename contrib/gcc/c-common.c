@@ -7596,6 +7596,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 operator|*
 name|format_chars
 operator|==
@@ -7605,6 +7606,10 @@ operator|*
 name|format_chars
 operator|==
 literal|'L'
+operator|)
+operator|&&
+operator|!
+name|flag_format_extensions
 condition|)
 block|{
 name|length_char
