@@ -1678,10 +1678,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Handle dev_clone events, so that acd can be used as root device.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -1707,6 +1703,8 @@ name|struct
 name|acd_softc
 modifier|*
 name|cdp
+init|=
+name|arg
 decl_stmt|;
 name|char
 modifier|*
@@ -1715,10 +1713,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-name|cdp
-operator|=
-name|arg
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1744,7 +1738,6 @@ name|unit
 argument_list|)
 condition|)
 return|return;
-comment|/* Handle compatability slices. */
 if|if
 condition|(
 operator|*

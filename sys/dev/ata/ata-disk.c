@@ -625,7 +625,7 @@ name|atadev
 operator|->
 name|param
 operator|->
-name|lba_size_lo
+name|lba_size_1
 operator||
 operator|(
 operator|(
@@ -635,7 +635,7 @@ name|atadev
 operator|->
 name|param
 operator|->
-name|lba_size_hi
+name|lba_size_2
 operator|<<
 literal|16
 operator|)
@@ -699,6 +699,7 @@ expr_stmt|;
 name|lbasize48
 operator|=
 operator|(
+operator|(
 name|u_int64_t
 operator|)
 name|atadev
@@ -706,6 +707,7 @@ operator|->
 name|param
 operator|->
 name|lba_size48_1
+operator|)
 operator||
 operator|(
 operator|(
