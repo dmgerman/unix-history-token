@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.12	(Berkeley)	83/04/19"
+literal|"@(#)restore.c	3.13	(Berkeley)	83/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,17 +235,6 @@ operator|)
 return|;
 block|}
 block|}
-if|if
-condition|(
-name|ino
-operator|==
-name|ROOTINO
-condition|)
-return|return
-operator|(
-name|descend
-operator|)
-return|;
 name|ep
 operator|=
 name|lookupino
@@ -993,6 +982,8 @@ argument_list|(
 name|key
 argument_list|)
 argument_list|,
+name|name
+argument_list|,
 name|flagvalues
 argument_list|(
 name|ip
@@ -1560,7 +1551,6 @@ name|e_type
 operator|==
 name|LEAF
 operator|||
-operator|!
 name|BIT
 argument_list|(
 name|i
