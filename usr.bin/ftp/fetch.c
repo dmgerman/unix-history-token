@@ -1218,6 +1218,10 @@ argument_list|(
 name|res0
 argument_list|)
 expr_stmt|;
+name|res0
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Construct and send the request.  We're expecting a return 	 * status of "200". Proxy requests don't want leading /. 	 */
 if|if
 condition|(
