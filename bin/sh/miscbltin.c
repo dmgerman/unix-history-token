@@ -1656,7 +1656,7 @@ name|name
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: internal error (%c)"
+literal|"internal error (%c)"
 argument_list|,
 name|what
 argument_list|)
@@ -1693,7 +1693,7 @@ index|]
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: too many arguments"
+literal|"too many arguments"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1771,7 +1771,7 @@ name|c
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: bad number"
+literal|"bad number"
 argument_list|)
 expr_stmt|;
 name|val
@@ -1823,7 +1823,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: can't get limit: %s"
+literal|"can't get limit: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1961,7 +1961,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: can't get limit: %s"
+literal|"can't get limit: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2014,7 +2014,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: bad limit: %s"
+literal|"bad limit: %s"
 argument_list|,
 name|strerror
 argument_list|(
