@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.17 1997/03/01 20:19:18 wollman Exp $"
+literal|"$Id: ping.c,v 1.18 1997/03/02 06:32:40 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,6 +522,16 @@ begin_comment
 comment|/* process id to identify our packets */
 end_comment
 
+begin_decl_stmt
+name|int
+name|uid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cached uid for micro-optimization */
+end_comment
+
 begin_comment
 comment|/* counters */
 end_comment
@@ -942,6 +952,11 @@ argument_list|(
 name|getuid
 argument_list|()
 argument_list|)
+expr_stmt|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
 expr_stmt|;
 name|preload
 operator|=
@@ -3350,8 +3365,7 @@ operator|&
 name|F_VERBOSE
 operator|)
 operator|&&
-name|getuid
-argument_list|()
+name|uid
 operator|==
 literal|0
 operator|)
@@ -5870,7 +5884,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-QRadfnqrv] [-c count] [-i wait] [-l preload] "
-literal|"[-p pattern]\n\t\t[-s packetsize] "
+literal|"[-p pattern]\n       [-s packetsize] "
 literal|"[host | [-L] [-I iface] [-T ttl] mcast-group]\n"
 argument_list|,
 name|argv0
