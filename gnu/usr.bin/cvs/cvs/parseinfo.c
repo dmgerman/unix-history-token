@@ -17,6 +17,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +26,13 @@ literal|"$CVSid: @(#)parseinfo.c 1.18 94/09/23 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -38,51 +40,35 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Parse the INFOFILE file for the specified REPOSITORY.  Invoke CALLPROC for  * each line in the file that matches the REPOSITORY.    * Return 0 for success, -1 if there was not an INFOFILE, and>0 for failure.  */
+comment|/*  * Parse the INFOFILE file for the specified REPOSITORY.  Invoke CALLPROC for  * the first line in the file that matches the REPOSITORY, or if ALL != 0, any lines  * matching "ALL", or if no lines match, the last line matching "DEFAULT".  *  * Return 0 for success, -1 if there was not an INFOFILE, and>0 for failure.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
 name|Parse_Info
-argument_list|(
+parameter_list|(
 name|infofile
-argument_list|,
+parameter_list|,
 name|repository
-argument_list|,
+parameter_list|,
 name|callproc
-argument_list|,
+parameter_list|,
 name|all
-argument_list|)
+parameter_list|)
 name|char
 modifier|*
 name|infofile
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|repository
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+name|CALLPROC
 name|callproc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|all
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|err
@@ -111,6 +97,12 @@ name|default_value
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|expanded_value
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|callback_done
 decl_stmt|,
@@ -129,7 +121,7 @@ decl_stmt|,
 modifier|*
 name|srepos
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|regex_err
@@ -201,6 +193,30 @@ operator|=
 name|Short_Repository
 argument_list|(
 name|repository
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|trace
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-> ParseInfo(%s, %s, %s)\n"
+argument_list|,
+name|infopath
+argument_list|,
+name|srepos
+argument_list|,
+name|all
+condition|?
+literal|"ALL"
+else|:
+literal|"not ALL"
 argument_list|)
 expr_stmt|;
 comment|/* search the info file for lines that match */
@@ -368,6 +384,34 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+name|expanded_value
+operator|=
+name|expand_path
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|expanded_value
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"Invalid environmental variable at line %d in file %s"
+argument_list|,
+name|line_number
+argument_list|,
+name|infofile
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 	 * At this point, exp points to the regular expression, and value 	 * points to the value to call the callback routine with.  Evaluate 	 * the regular expression against srepos and callback with the value 	 * if it matches. 	 */
 comment|/* save the default value so we have it later if we need it */
 if|if
@@ -386,12 +430,12 @@ name|default_value
 operator|=
 name|xstrdup
 argument_list|(
-name|value
+name|expanded_value
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 	 * For a regular expression of "ALL", do the callback always We may 	 * execute lots of ALL callbacks in addition to one regular matching 	 * callback or default 	 */
+comment|/* 	 * For a regular expression of "ALL", do the callback always We may 	 * execute lots of ALL callbacks in addition to *one* regular matching 	 * callback or default 	 */
 if|if
 condition|(
 name|strcmp
@@ -414,7 +458,7 @@ name|callproc
 argument_list|(
 name|repository
 argument_list|,
-name|value
+name|expanded_value
 argument_list|)
 expr_stmt|;
 else|else
@@ -433,6 +477,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|callback_done
+condition|)
+comment|/* only first matching, plus "ALL"'s */
+continue|continue;
 comment|/* see if the repository matched this regular expression */
 if|if
 condition|(
@@ -483,7 +533,7 @@ name|callproc
 argument_list|(
 name|repository
 argument_list|,
-name|value
+name|expanded_value
 argument_list|)
 expr_stmt|;
 name|callback_done
@@ -531,13 +581,24 @@ argument_list|(
 name|default_value
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|expanded_value
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|expanded_value
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

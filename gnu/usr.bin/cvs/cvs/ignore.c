@@ -17,6 +17,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +26,13 @@ literal|"$CVSid: @(#)ignore.c 1.16 94/09/24 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -108,6 +110,7 @@ comment|/* Index where first "temporary" item 					 * is held */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ign_default
@@ -136,12 +139,6 @@ name|void
 name|ign_setup
 parameter_list|()
 block|{
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
 name|struct
 name|passwd
 modifier|*
@@ -177,6 +174,18 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+comment|/* Chances are we should have some way to provide this feature        client/server, but I'm not sure how (surely not by introducing        another network turnaround to each operation--perhaps by        putting a file in the CVS directory on checkout, or with some        sort of "slave cvsroot" on the client).  */
+if|if
+condition|(
+operator|!
+name|client_active
+condition|)
+endif|#
+directive|endif
+block|{
 comment|/* Then add entries found in repository, if it exists */
 operator|(
 name|void
@@ -194,13 +203,6 @@ argument_list|,
 name|CVSROOTADM_IGNORE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isfile
-argument_list|(
-name|file
-argument_list|)
-condition|)
 name|ign_add_file
 argument_list|(
 name|file
@@ -208,6 +210,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Then add entries found in home dir, (if user has one) and file exists */
 if|if
 condition|(
@@ -247,13 +250,6 @@ argument_list|,
 name|CVSDOTIGNORE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isfile
-argument_list|(
-name|file
-argument_list|)
-condition|)
 name|ign_add_file
 argument_list|(
 name|file
@@ -423,10 +419,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* load the file */
-if|if
-condition|(
-operator|!
-operator|(
 name|fp
 operator|=
 name|fopen
@@ -435,9 +427,35 @@ name|file
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|existence_error
+argument_list|(
+name|errno
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot open %s"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 while|while
 condition|(
 name|fgets
@@ -459,12 +477,24 @@ argument_list|,
 name|hold
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 block|}

@@ -17,6 +17,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +26,13 @@ literal|"$CVSid: @(#)no_diff.c 1.39 94/10/07 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -98,6 +100,10 @@ name|int
 name|retcode
 init|=
 literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|tocvsPath
 decl_stmt|;
 if|if
 condition|(
@@ -204,20 +210,20 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|iswritable
-argument_list|(
-name|file
-argument_list|)
-condition|)
+if|#
+directive|if
+literal|0
+comment|/* Why would we want to munge the modes?  And only if the timestamps 	   are different?  And even for commands like "cvs status"????  */
+block|if (!iswritable (file))
 comment|/* fix the modes as a side effect */
-name|xchmod
+block|xchmod (file, 1);
+endif|#
+directive|endif
+name|tocvsPath
+operator|=
+name|wrap_tocvs_process_file
 argument_list|(
 name|file
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* do the byte by byte compare */
@@ -225,7 +231,13 @@ if|if
 condition|(
 name|xcmp
 argument_list|(
+name|tocvsPath
+operator|==
+name|NULL
+condition|?
 name|file
+else|:
+name|tocvsPath
 argument_list|,
 name|tmp
 argument_list|)
@@ -233,20 +245,15 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|cvswrite
-operator|==
-name|FALSE
-condition|)
-comment|/* fix the modes as a side effect */
-name|xchmod
-argument_list|(
-name|file
-argument_list|,
+if|#
+directive|if
 literal|0
-argument_list|)
-expr_stmt|;
+comment|/* Why would we want to munge the modes?  And only if the 	       timestamps are different?  And even for commands like 	       "cvs status"????  */
+block|if (cvswrite == FALSE)
+comment|/* fix the modes as a side effect */
+block|xchmod (file, 0);
+endif|#
+directive|endif
 comment|/* no difference was found, so fix the entries file */
 name|ts
 operator|=
@@ -292,6 +299,29 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+name|server_active
+condition|)
+block|{
+comment|/* We need to update the entries line on the client side.  */
+name|server_update_entries
+argument_list|(
+name|file
+argument_list|,
+name|update_dir
+argument_list|,
+name|repository
+argument_list|,
+name|SERVER_UPDATED
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|ts
@@ -330,6 +360,66 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* files were really different */
+if|if
+condition|(
+name|tocvsPath
+condition|)
+block|{
+comment|/* Need to call unlink myself because the noexec variable 	     * has been set to 1.  */
+if|if
+condition|(
+name|trace
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%c-> unlink (%s)\n"
+argument_list|,
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+operator|(
+name|server_active
+operator|)
+condition|?
+literal|'S'
+else|:
+literal|' '
+argument_list|,
+else|#
+directive|else
+literal|' '
+argument_list|,
+endif|#
+directive|endif
+name|tocvsPath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|tocvsPath
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"could not remove %s"
+argument_list|,
+name|tocvsPath
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -400,6 +490,9 @@ if|if
 condition|(
 name|trace
 condition|)
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -407,11 +500,35 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-> unlink(%s)\n"
+literal|"%c-> unlink2 (%s)\n"
+argument_list|,
+operator|(
+name|server_active
+operator|)
+condition|?
+literal|'S'
+else|:
+literal|' '
 argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-> unlink (%s)\n"
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|unlink

@@ -27,6 +27,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -81,7 +87,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Temporary index in OPTLIST. */
-name|int
+name|size_t
 name|arglen
 decl_stmt|;
 comment|/* Length of ARG. */

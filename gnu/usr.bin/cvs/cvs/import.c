@@ -9,6 +9,12 @@ directive|include
 file|"cvs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"save-cwd.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -17,6 +23,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +32,13 @@ literal|"$CVSid: @(#)import.c 1.63 94/09/30 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -319,41 +327,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|str2expmode
-name|PROTO
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-name|expstring
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|strn2expmode
-name|PROTO
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-name|expstring
-operator|,
-name|size_t
-name|n
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|repos_len
 decl_stmt|;
 end_decl_stmt
@@ -422,19 +395,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|import_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-Qq] [-d] [-k subst] [-I ign] [-m msg] [-b branch]\n"
+literal|"Usage: %s %s [-d] [-k subst] [-I ign] [-m msg] [-b branch]\n"
 block|,
-literal|"    repository vendor-tag release-tags...\n"
-block|,
-literal|"\t-Q\tReally quiet.\n"
-block|,
-literal|"\t-q\tSomewhat quiet.\n"
+literal|"    [-W spec] repository vendor-tag release-tags...\n"
 block|,
 literal|"\t-d\tUse the file's modification time as the time of import.\n"
 block|,
@@ -446,35 +417,10 @@ literal|"\t-b bra\tVendor branch id.\n"
 block|,
 literal|"\t-m msg\tLog message.\n"
 block|,
+literal|"\t-W spec\tWrappers specification line.\n"
+block|,
 name|NULL
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|keyword_usage
-index|[]
-init|=
-block|{
-literal|"%s %s: invalid RCS keyword expansion mode\n"
-block|,
-literal|"Valid expansion modes include:\n"
-block|,
-literal|"   -kkv\tGenerate keywords using the default form.\n"
-block|,
-literal|"   -kkvl\tLike -kkv, except locker's name inserted.\n"
-block|,
-literal|"   -kk\tGenerate only keyword names in keyword strings.\n"
-block|,
-literal|"   -kv\tGenerate only keyword values in keyword strings.\n"
-block|,
-literal|"   -ko\tGenerate the old keyword string (no changes from checked in file).\n"
-block|,
-name|NULL
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -491,8 +437,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 name|char
@@ -545,6 +491,9 @@ expr_stmt|;
 name|ign_setup
 argument_list|()
 expr_stmt|;
+name|wrap_setup
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -570,7 +519,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Qqdb:m:I:k:"
+literal|"Qqdb:m:I:k:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -586,17 +535,30 @@ block|{
 case|case
 literal|'Q'
 case|:
-name|really_quiet
-operator|=
-literal|1
-expr_stmt|;
-comment|/* FALL THROUGH */
 case|case
 literal|'q'
 case|:
-name|quiet
-operator|=
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+comment|/* The CVS 1.5 client sends these options (in addition to 		   Global_option requests), so we must ignore them.  */
+if|if
+condition|(
+operator|!
+name|server_active
+condition|)
+endif|#
+directive|endif
+name|error
+argument_list|(
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"-q or -Q must be specified before \"%s\""
+argument_list|,
+name|command_name
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -661,24 +623,28 @@ break|break;
 case|case
 literal|'k'
 case|:
-if|if
-condition|(
-name|str2expmode
+comment|/* RCS_check_kflag returns strings of the form -kxx.  We 		   only use it for validation, so we can free the value 		   as soon as it is returned. */
+name|free
+argument_list|(
+name|RCS_check_kflag
 argument_list|(
 name|optarg
 argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
+argument_list|)
+expr_stmt|;
 name|keyword_opt
 operator|=
 name|optarg
 expr_stmt|;
-else|else
-name|usage
+break|break;
+case|case
+literal|'W'
+case|:
+name|wrap_add
 argument_list|(
-name|keyword_usage
+name|optarg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -738,15 +704,14 @@ expr_stmt|;
 comment|/* XXX - this should be a module, not just a pathname */
 if|if
 condition|(
+operator|!
+name|isabsolute
+argument_list|(
 name|argv
 index|[
 literal|0
 index|]
-index|[
-literal|0
-index|]
-operator|!=
-literal|'/'
+argument_list|)
 condition|)
 block|{
 if|if
@@ -906,6 +871,21 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+if|if
+condition|(
+name|client_active
+condition|)
+block|{
+comment|/* Do this now; don't ask for a log message if we can't talk to the 	   server.  But if there is a syntax error in the options, give 	   an error message without connecting.  */
+name|start_server
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|use_editor
@@ -1012,13 +992,165 @@ operator|=
 name|nm
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+if|if
+condition|(
+name|client_active
+condition|)
+block|{
+name|int
+name|err
+decl_stmt|;
+name|ign_setup
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|use_file_modtime
+condition|)
+name|send_arg
+argument_list|(
+literal|"-d"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vbranch
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|option_with_arg
+argument_list|(
+literal|"-b"
+argument_list|,
+name|vbranch
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|message
+condition|)
+name|option_with_arg
+argument_list|(
+literal|"-m"
+argument_list|,
+name|message
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|keyword_opt
+operator|!=
+name|NULL
+condition|)
+name|option_with_arg
+argument_list|(
+literal|"-k"
+argument_list|,
+name|keyword_opt
+argument_list|)
+expr_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+operator|++
+name|i
+control|)
+name|send_arg
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|logfp
+operator|=
+name|stdin
+expr_stmt|;
+name|client_import_setup
+argument_list|(
+name|repository
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|import_descend
+argument_list|(
+name|message
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|argc
+operator|-
+literal|2
+argument_list|,
+name|argv
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|client_import_done
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|to_server
+argument_list|,
+literal|"import\n"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"writing to server"
+argument_list|)
+expr_stmt|;
+name|err
+operator|+=
+name|get_responses_and_close
+argument_list|()
+expr_stmt|;
+return|return
+name|err
+return|;
+block|}
+endif|#
+directive|endif
 comment|/*      * Make all newly created directories writable.  Should really use a more      * sophisticated security mechanism here.      */
 operator|(
 name|void
 operator|)
 name|umask
 argument_list|(
-literal|2
+name|cvsumask
 argument_list|)
 expr_stmt|;
 name|make_directories
@@ -1359,6 +1491,12 @@ argument_list|(
 name|logfp
 argument_list|)
 expr_stmt|;
+comment|/* Make sure the temporary file goes away, even on systems that don't let        you delete a file that's in use.  */
+name|unlink
+argument_list|(
+name|tmpfile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|message
@@ -1424,15 +1562,23 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|has_dirs
+name|List
+modifier|*
+name|dirlist
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 comment|/* first, load up any per-directory ignore lists */
 name|ign_add_file
 argument_list|(
 name|CVSDOTIGNORE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|wrap_add_file
+argument_list|(
+name|CVSDOTWRAPPER
 argument_list|,
 literal|1
 argument_list|)
@@ -1506,6 +1652,28 @@ name|d_name
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+comment|/* CVS directories are created by server.c because it doesn't 		   special-case import.  So don't print a message about them. 		   Do print a message about other ignored files (although 		   most of these will get ignored on the client side).  */
+if|if
+condition|(
+name|server_active
+operator|&&
+name|strcmp
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|CVSADM
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+endif|#
+directive|endif
 name|add_log
 argument_list|(
 literal|'I'
@@ -1519,23 +1687,112 @@ continue|continue;
 block|}
 if|if
 condition|(
+ifdef|#
+directive|ifdef
+name|DT_DIR
+operator|(
+name|dp
+operator|->
+name|d_type
+operator|==
+name|DT_DIR
+operator|||
+operator|(
+name|dp
+operator|->
+name|d_type
+operator|==
+name|DT_UNKNOWN
+operator|&&
 name|isdir
 argument_list|(
 name|dp
 operator|->
 name|d_name
 argument_list|)
+operator|)
+operator|)
+else|#
+directive|else
+name|isdir
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|)
+endif|#
+directive|endif
+operator|&&
+operator|!
+name|wrap_name_has
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|WRAP_TOCVS
+argument_list|)
 condition|)
 block|{
-name|has_dirs
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
+name|Node
+modifier|*
+name|n
+decl_stmt|;
 if|if
 condition|(
+name|dirlist
+operator|==
+name|NULL
+condition|)
+name|dirlist
+operator|=
+name|getlist
+argument_list|()
+expr_stmt|;
+name|n
+operator|=
+name|getnode
+argument_list|()
+expr_stmt|;
+name|n
+operator|->
+name|key
+operator|=
+name|xstrdup
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+name|addnode
+argument_list|(
+name|dirlist
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+ifdef|#
+directive|ifdef
+name|DT_DIR
+name|dp
+operator|->
+name|d_type
+operator|==
+name|DT_LNK
+operator|||
+name|dp
+operator|->
+name|d_type
+operator|==
+name|DT_UNKNOWN
+operator|&&
+endif|#
+directive|endif
 name|islink
 argument_list|(
 name|dp
@@ -1559,6 +1816,35 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+if|if
+condition|(
+name|client_active
+condition|)
+name|err
+operator|+=
+name|client_process_import_file
+argument_list|(
+name|message
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|vtag
+argument_list|,
+name|targc
+argument_list|,
+name|targv
+argument_list|,
+name|repository
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|err
 operator|+=
 name|process_import_file
@@ -1578,7 +1864,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 operator|(
 name|void
 operator|)
@@ -1590,91 +1875,52 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|has_dirs
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|dirp
-operator|=
-name|opendir
-argument_list|(
-literal|"."
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|err
-operator|++
-expr_stmt|;
-else|else
-block|{
-while|while
-condition|(
-operator|(
-name|dp
-operator|=
-name|readdir
-argument_list|(
-name|dirp
-argument_list|)
-operator|)
+name|dirlist
 operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-literal|"."
-argument_list|,
-name|dp
+name|Node
+modifier|*
+name|head
+decl_stmt|,
+modifier|*
+name|p
+decl_stmt|;
+name|head
+operator|=
+name|dirlist
 operator|->
-name|d_name
-argument_list|)
-operator|||
-operator|!
-name|strcmp
-argument_list|(
-literal|".."
-argument_list|,
-name|dp
+name|list
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|head
 operator|->
-name|d_name
-argument_list|)
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|!
-name|isdir
-argument_list|(
-name|dp
+name|next
+init|;
+name|p
+operator|!=
+name|head
+condition|;
+name|p
+operator|=
+name|p
 operator|->
-name|d_name
-argument_list|)
-operator|||
-name|ign_name
-argument_list|(
-name|dp
-operator|->
-name|d_name
-argument_list|)
-condition|)
-continue|continue;
+name|next
+control|)
+block|{
 name|err
 operator|+=
 name|import_descend_dir
 argument_list|(
 name|message
 argument_list|,
-name|dp
+name|p
 operator|->
-name|d_name
+name|key
 argument_list|,
 name|vtag
 argument_list|,
@@ -1683,24 +1929,13 @@ argument_list|,
 name|targv
 argument_list|)
 expr_stmt|;
-comment|/* need to re-load .cvsignore after each dir traversal */
-name|ign_add_file
+block|}
+name|dellist
 argument_list|(
-name|CVSDOTIGNORE
-argument_list|,
-literal|1
+operator|&
+name|dirlist
 argument_list|)
 expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|closedir
-argument_list|(
-name|dirp
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -1932,6 +2167,10 @@ name|char
 modifier|*
 name|tmpdir
 decl_stmt|;
+name|char
+modifier|*
+name|tocvsPath
+decl_stmt|;
 name|vers
 operator|=
 name|Version_TS
@@ -1971,6 +2210,31 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+if|if
+condition|(
+name|vers
+operator|->
+name|vn_rcs
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|RCS_isdead
+argument_list|(
+name|vers
+operator|->
+name|srcfile
+argument_list|,
+name|vers
+operator|->
+name|vn_rcs
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|vers
@@ -1979,6 +2243,8 @@ name|vn_rcs
 operator|!=
 name|NULL
 condition|)
+endif|#
+directive|endif
 block|{
 name|char
 name|xtmpfile
@@ -2170,6 +2436,13 @@ literal|1
 operator|)
 return|;
 block|}
+name|tocvsPath
+operator|=
+name|wrap_tocvs_process_file
+argument_list|(
+name|vfile
+argument_list|)
+expr_stmt|;
 name|different
 operator|=
 name|xcmp
@@ -2177,6 +2450,30 @@ argument_list|(
 name|xtmpfile
 argument_list|,
 name|vfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tocvsPath
+condition|)
+if|if
+condition|(
+name|unlink_file_dir
+argument_list|(
+name|tocvsPath
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
+name|tocvsPath
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2399,10 +2696,13 @@ name|status
 decl_stmt|,
 name|ierrno
 decl_stmt|;
-name|int
-name|retcode
-init|=
-literal|0
+name|char
+modifier|*
+name|tocvsPath
+decl_stmt|;
+name|struct
+name|stat
+name|vfile_stat
 decl_stmt|;
 if|if
 condition|(
@@ -2424,52 +2724,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|run_setup
-argument_list|(
-literal|"%s%s -q -l%s"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
-argument_list|,
-name|vbranch
-argument_list|)
-expr_stmt|;
-name|run_arg
+comment|/* Before RCS_lock existed, we were directing stdout, as well as 	   stderr, from the RCS command, to DEVNULL.  I wouldn't guess that 	   was necessary, but I don't know for sure.  */
+if|if
+condition|(
+name|RCS_lock
 argument_list|(
 name|rcs
+argument_list|,
+name|vbranch
+argument_list|,
+literal|1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|retcode
-operator|=
-name|run_exec
-argument_list|(
-name|RUN_TTY
-argument_list|,
-name|DEVNULL
-argument_list|,
-name|DEVNULL
-argument_list|,
-name|RUN_NORMAL
-argument_list|)
-operator|)
-operator|==
+operator|!=
 literal|0
-condition|)
-name|locked
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|retcode
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 name|error
@@ -2487,89 +2754,47 @@ literal|1
 operator|)
 return|;
 block|}
-block|}
-if|if
-condition|(
-name|link_file
-argument_list|(
-name|vfile
-argument_list|,
-name|FILE_HOLDER
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|==
-name|EEXIST
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|unlink_file
-argument_list|(
-name|FILE_HOLDER
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|link_file
-argument_list|(
-name|vfile
-argument_list|,
-name|FILE_HOLDER
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ierrno
+name|locked
 operator|=
-name|errno
-expr_stmt|;
-name|fperror
-argument_list|(
-name|logfp
-argument_list|,
-literal|0
-argument_list|,
-name|ierrno
-argument_list|,
-literal|"ERROR: cannot create link to %s"
-argument_list|,
-name|vfile
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-name|ierrno
-argument_list|,
-literal|"ERROR: cannot create link to %s"
-argument_list|,
-name|vfile
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
 literal|1
-operator|)
-return|;
+expr_stmt|;
 block|}
-block|}
+name|tocvsPath
+operator|=
+name|wrap_tocvs_process_file
+argument_list|(
+name|vfile
+argument_list|)
+expr_stmt|;
+comment|/* We used to deposit the revision with -r; RCS would delete the        working file, but we'd keep a hard link to it, and rename it        back after running RCS (ooh, atomicity).  However, that        strategy doesn't work on operating systems without hard links        (like Windows NT).  Instead, let's deposit it using -u, and        restore its permission bits afterwards.  This also means the        file always exists under its own name.  */
+if|if
+condition|(
+operator|!
+name|tocvsPath
+condition|)
+name|stat
+argument_list|(
+name|vfile
+argument_list|,
+operator|&
+name|vfile_stat
+argument_list|)
+expr_stmt|;
 name|run_setup
 argument_list|(
-literal|"%s%s -q -f -r%s"
+literal|"%s%s -q -f %s%s"
 argument_list|,
 name|Rcsbin
 argument_list|,
 name|RCS_CI
+argument_list|,
+operator|(
+name|tocvsPath
+condition|?
+literal|"-r"
+else|:
+literal|"-u"
+operator|)
 argument_list|,
 name|vbranch
 argument_list|)
@@ -2578,7 +2803,10 @@ name|run_args
 argument_list|(
 literal|"-m%s"
 argument_list|,
+name|make_message_rcslegal
+argument_list|(
 name|message
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2588,6 +2816,17 @@ condition|)
 name|run_arg
 argument_list|(
 literal|"-d"
+argument_list|)
+expr_stmt|;
+name|run_arg
+argument_list|(
+name|tocvsPath
+operator|==
+name|NULL
+condition|?
+name|vfile
+else|:
+name|tocvsPath
 argument_list|)
 expr_stmt|;
 name|run_arg
@@ -2612,11 +2851,19 @@ name|ierrno
 operator|=
 name|errno
 expr_stmt|;
-name|rename_file
+comment|/* Restore the permissions on vfile.  */
+if|if
+condition|(
+operator|!
+name|tocvsPath
+condition|)
+name|chmod
 argument_list|(
-name|FILE_HOLDER
-argument_list|,
 name|vfile
+argument_list|,
+name|vfile_stat
+operator|.
+name|st_mode
 argument_list|)
 expr_stmt|;
 if|if
@@ -2674,34 +2921,16 @@ condition|(
 name|locked
 condition|)
 block|{
-name|run_setup
-argument_list|(
-literal|"%s%s -q -u%s"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
-argument_list|,
-name|vbranch
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|run_exec
+name|RCS_unlock
 argument_list|(
-name|RUN_TTY
+name|rcs
 argument_list|,
-name|RUN_TTY
+name|vbranch
 argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_NORMAL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2782,38 +3011,18 @@ operator|(
 literal|0
 operator|)
 return|;
-name|run_setup
-argument_list|(
-literal|"%s%s -q -N%s:%s"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
-argument_list|,
-name|vtag
-argument_list|,
-name|vbranch
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
 name|retcode
 operator|=
-name|run_exec
+name|RCS_settag
 argument_list|(
-name|RUN_TTY
+name|rcs
 argument_list|,
-name|RUN_TTY
+name|vtag
 argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_NORMAL
+name|vbranch
 argument_list|)
 operator|)
 operator|!=
@@ -2925,13 +3134,14 @@ name|i
 operator|++
 control|)
 block|{
-name|run_setup
+if|if
+condition|(
+operator|(
+name|retcode
+operator|=
+name|RCS_settag
 argument_list|(
-literal|"%s%s -q -N%s:%s"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
+name|rcs
 argument_list|,
 name|targv
 index|[
@@ -2941,27 +3151,6 @@ argument_list|,
 name|vers
 operator|->
 name|vn_rcs
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|retcode
-operator|=
-name|run_exec
-argument_list|(
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_NORMAL
 argument_list|)
 operator|)
 operator|!=
@@ -3056,6 +3245,8 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|compair
 name|comtable
@@ -3063,245 +3254,368 @@ index|[]
 init|=
 block|{
 comment|/*  * comtable pairs each filename suffix with a comment leader. The comment  * leader is placed before each line generated by the $Log keyword. This  * table is used to guess the proper comment leader from the working file's  * suffix during initial ci (see InitAdmin()). Comment leaders are needed for  * languages without multiline comments; for others they are optional.  */
+block|{
 literal|"a"
 block|,
 literal|"-- "
+block|}
 block|,
 comment|/* Ada		 */
+block|{
 literal|"ada"
 block|,
 literal|"-- "
+block|}
 block|,
+block|{
 literal|"adb"
 block|,
 literal|"-- "
+block|}
 block|,
+block|{
 literal|"asm"
 block|,
 literal|";; "
+block|}
 block|,
 comment|/* assembler (MS-DOS) */
+block|{
 literal|"ads"
 block|,
 literal|"-- "
+block|}
 block|,
 comment|/* Ada		 */
+block|{
 literal|"bat"
 block|,
 literal|":: "
+block|}
 block|,
 comment|/* batch (MS-DOS) */
+block|{
 literal|"body"
 block|,
 literal|"-- "
+block|}
 block|,
 comment|/* Ada		 */
+block|{
 literal|"c"
 block|,
 literal|" * "
+block|}
 block|,
 comment|/* C		 */
+block|{
 literal|"c++"
 block|,
 literal|"// "
+block|}
 block|,
 comment|/* C++ in all its infinite guises */
+block|{
 literal|"cc"
 block|,
 literal|"// "
+block|}
 block|,
+block|{
 literal|"cpp"
 block|,
 literal|"// "
+block|}
 block|,
+block|{
 literal|"cxx"
 block|,
 literal|"// "
+block|}
 block|,
+block|{
+literal|"m"
+block|,
+literal|"// "
+block|}
+block|,
+comment|/* Objective-C */
+block|{
 literal|"cl"
 block|,
 literal|";;; "
+block|}
 block|,
 comment|/* Common Lisp	 */
+block|{
 literal|"cmd"
 block|,
 literal|":: "
+block|}
 block|,
 comment|/* command (OS/2) */
+block|{
 literal|"cmf"
 block|,
 literal|"c "
+block|}
 block|,
 comment|/* CM Fortran	 */
+block|{
 literal|"cs"
 block|,
 literal|" * "
+block|}
 block|,
 comment|/* C*		 */
+block|{
 literal|"csh"
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* shell	 */
+block|{
 literal|"e"
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* efl		 */
+block|{
 literal|"epsf"
 block|,
 literal|"% "
+block|}
 block|,
 comment|/* encapsulated postscript */
+block|{
 literal|"epsi"
 block|,
 literal|"% "
+block|}
 block|,
 comment|/* encapsulated postscript */
+block|{
 literal|"el"
 block|,
 literal|"; "
+block|}
 block|,
 comment|/* Emacs Lisp	 */
+block|{
 literal|"f"
 block|,
 literal|"c "
+block|}
 block|,
 comment|/* Fortran	 */
+block|{
 literal|"for"
 block|,
 literal|"c "
+block|}
 block|,
+block|{
 literal|"h"
 block|,
 literal|" * "
+block|}
 block|,
 comment|/* C-header	 */
+block|{
 literal|"hh"
 block|,
 literal|"// "
+block|}
 block|,
 comment|/* C++ header	 */
+block|{
 literal|"hpp"
 block|,
 literal|"// "
+block|}
 block|,
+block|{
 literal|"hxx"
 block|,
 literal|"// "
+block|}
 block|,
+block|{
 literal|"in"
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* for Makefile.in */
+block|{
 literal|"l"
 block|,
 literal|" * "
+block|}
 block|,
 comment|/* lex (conflict between lex and 					 * franzlisp) */
+block|{
 literal|"mac"
 block|,
 literal|";; "
+block|}
 block|,
 comment|/* macro (DEC-10, MS-DOS, PDP-11, 					 * VMS, etc) */
+block|{
 literal|"me"
 block|,
 literal|".\\\" "
+block|}
 block|,
 comment|/* me-macros	t/nroff	 */
+block|{
 literal|"ml"
 block|,
 literal|"; "
+block|}
 block|,
 comment|/* mocklisp	 */
+block|{
 literal|"mm"
 block|,
 literal|".\\\" "
+block|}
 block|,
 comment|/* mm-macros	t/nroff	 */
+block|{
 literal|"ms"
 block|,
 literal|".\\\" "
+block|}
 block|,
 comment|/* ms-macros	t/nroff	 */
+block|{
 literal|"man"
 block|,
 literal|".\\\" "
+block|}
 block|,
 comment|/* man-macros	t/nroff	 */
+block|{
 literal|"1"
 block|,
 literal|".\\\" "
+block|}
 block|,
 comment|/* feeble attempt at man pages... */
+block|{
 literal|"2"
 block|,
 literal|".\\\" "
+block|}
 block|,
+block|{
 literal|"3"
 block|,
 literal|".\\\" "
+block|}
 block|,
+block|{
 literal|"4"
 block|,
 literal|".\\\" "
+block|}
 block|,
+block|{
 literal|"5"
 block|,
 literal|".\\\" "
+block|}
 block|,
+block|{
 literal|"6"
 block|,
 literal|".\\\" "
+block|}
 block|,
+block|{
 literal|"7"
 block|,
 literal|".\\\" "
+block|}
 block|,
+block|{
 literal|"8"
 block|,
 literal|".\\\" "
+block|}
 block|,
+block|{
 literal|"9"
 block|,
 literal|".\\\" "
+block|}
 block|,
+block|{
 literal|"p"
 block|,
 literal|" * "
+block|}
 block|,
 comment|/* pascal	 */
+block|{
 literal|"pas"
 block|,
 literal|" * "
+block|}
 block|,
+block|{
 literal|"pl"
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* perl	(conflict with Prolog) */
+block|{
 literal|"ps"
 block|,
 literal|"% "
+block|}
 block|,
 comment|/* postscript	 */
+block|{
+literal|"psw"
+block|,
+literal|"% "
+block|}
+block|,
+comment|/* postscript wrap */
+block|{
+literal|"pswm"
+block|,
+literal|"% "
+block|}
+block|,
+comment|/* postscript wrap */
+block|{
 literal|"r"
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* ratfor	 */
+block|{
 literal|"red"
 block|,
 literal|"% "
+block|}
 block|,
 comment|/* psl/rlisp	 */
 ifdef|#
 directive|ifdef
 name|sparc
+block|{
 literal|"s"
 block|,
 literal|"! "
+block|}
 block|,
 comment|/* assembler	 */
 endif|#
@@ -3309,9 +3623,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|mc68000
+block|{
 literal|"s"
 block|,
 literal|"| "
+block|}
 block|,
 comment|/* assembler	 */
 endif|#
@@ -3319,9 +3635,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|pdp11
+block|{
 literal|"s"
 block|,
 literal|"/ "
+block|}
 block|,
 comment|/* assembler	 */
 endif|#
@@ -3329,9 +3647,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|vax
+block|{
 literal|"s"
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* assembler	 */
 endif|#
@@ -3339,61 +3659,89 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|__ksr__
+block|{
 literal|"s"
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* assembler	 */
+block|{
 literal|"S"
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* Macro assembler */
 endif|#
 directive|endif
+block|{
 literal|"sh"
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* shell	 */
+block|{
 literal|"sl"
 block|,
 literal|"% "
+block|}
 block|,
 comment|/* psl		 */
+block|{
 literal|"spec"
 block|,
 literal|"-- "
+block|}
 block|,
 comment|/* Ada		 */
+block|{
 literal|"tex"
 block|,
 literal|"% "
+block|}
 block|,
 comment|/* tex		 */
+block|{
 literal|"y"
 block|,
 literal|" * "
+block|}
 block|,
 comment|/* yacc		 */
+block|{
 literal|"ye"
 block|,
 literal|" * "
+block|}
 block|,
 comment|/* yacc-efl	 */
+block|{
 literal|"yr"
 block|,
 literal|" * "
+block|}
 block|,
 comment|/* yacc-ratfor	 */
+ifdef|#
+directive|ifdef
+name|SYSTEM_COMMENT_TABLE
+name|SYSTEM_COMMENT_TABLE
+endif|#
+directive|endif
+block|{
 literal|""
 block|,
 literal|"# "
+block|}
 block|,
 comment|/* default for empty suffix	 */
+block|{
 name|NULL
 block|,
 literal|"# "
+block|}
 comment|/* default for unknown suffix;	 */
 comment|/* must always be last		 */
 block|}
@@ -3650,13 +3998,22 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|mode
-decl_stmt|,
 name|ierrno
 decl_stmt|,
 name|err
 init|=
 literal|0
+decl_stmt|;
+name|mode_t
+name|mode
+decl_stmt|;
+name|char
+modifier|*
+name|tocvsPath
+decl_stmt|;
+name|char
+modifier|*
+name|userfile
 decl_stmt|;
 if|if
 condition|(
@@ -3667,12 +4024,39 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* open the user file first, before we change the RCS files... */
+ifdef|#
+directive|ifdef
+name|LINES_CRLF_TERMINATED
+comment|/* There exits a port of RCS to such a system that stores files with        straight newlines.  If we ever reach this point on such a system,        we'll need to decide what to do with the open_file call below.  */
+name|abort
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|tocvsPath
+operator|=
+name|wrap_tocvs_process_file
+argument_list|(
+name|user
+argument_list|)
+expr_stmt|;
+name|userfile
+operator|=
+operator|(
+name|tocvsPath
+operator|==
+name|NULL
+condition|?
+name|user
+else|:
+name|tocvsPath
+operator|)
+expr_stmt|;
 name|fpuser
 operator|=
 name|fopen
 argument_list|(
-name|user
+name|userfile
 argument_list|,
 literal|"r"
 argument_list|)
@@ -3684,7 +4068,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* not fatal, continue the import */
+comment|/* not fatal, continue import */
 name|fperror
 argument_list|(
 name|logfp
@@ -3695,7 +4079,7 @@ name|errno
 argument_list|,
 literal|"ERROR: cannot read file %s"
 argument_list|,
-name|user
+name|userfile
 argument_list|)
 expr_stmt|;
 name|error
@@ -3706,7 +4090,7 @@ name|errno
 argument_list|,
 literal|"ERROR: cannot read file %s"
 argument_list|,
-name|user
+name|userfile
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3748,8 +4132,8 @@ literal|"head     %s;\n"
 argument_list|,
 name|vhead
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -3759,8 +4143,8 @@ literal|"branch   %s;\n"
 argument_list|,
 name|vbranch
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -3768,8 +4152,8 @@ name|fprcs
 argument_list|,
 literal|"access   ;\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -3777,8 +4161,8 @@ name|fprcs
 argument_list|,
 literal|"symbols  "
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 block|{
 goto|goto
@@ -3816,8 +4200,8 @@ index|]
 argument_list|,
 name|vbranch
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 goto|goto
 name|write_error
@@ -3834,8 +4218,8 @@ name|vtag
 argument_list|,
 name|vbranch
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -3843,8 +4227,8 @@ name|fprcs
 argument_list|,
 literal|"locks    ; strict;\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 comment|/* XXX - make sure @@ processing works in the RCS file */
 name|fprintf
@@ -3858,8 +4242,8 @@ argument_list|(
 name|user
 argument_list|)
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 block|{
 goto|goto
@@ -3882,8 +4266,8 @@ literal|"expand   @%s@;\n"
 argument_list|,
 name|keyword_opt
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 block|{
 goto|goto
@@ -3898,8 +4282,8 @@ name|fprcs
 argument_list|,
 literal|"\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 goto|goto
 name|write_error
@@ -4108,8 +4492,8 @@ literal|"\n%s\n"
 argument_list|,
 name|vhead
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4121,8 +4505,8 @@ name|altdate1
 argument_list|,
 name|author
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4132,8 +4516,8 @@ literal|"branches %s.1;\n"
 argument_list|,
 name|vbranch
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4141,8 +4525,8 @@ name|fprcs
 argument_list|,
 literal|"next     ;\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4152,8 +4536,8 @@ literal|"\n%s.1\n"
 argument_list|,
 name|vbranch
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4165,8 +4549,8 @@ name|altdate2
 argument_list|,
 name|author
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4174,8 +4558,8 @@ name|fprcs
 argument_list|,
 literal|"branches ;\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4183,8 +4567,8 @@ name|fprcs
 argument_list|,
 literal|"next     ;\n\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 comment|/* 	 * putdesc() 	 */
 name|fprintf
@@ -4193,8 +4577,8 @@ name|fprcs
 argument_list|,
 literal|"\ndesc\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4202,8 +4586,8 @@ name|fprcs
 argument_list|,
 literal|"@@\n\n\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 comment|/* 	 * putdelta() 	 */
 name|fprintf
@@ -4214,8 +4598,8 @@ literal|"\n%s\n"
 argument_list|,
 name|vhead
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4223,8 +4607,8 @@ name|fprcs
 argument_list|,
 literal|"log\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4232,8 +4616,8 @@ name|fprcs
 argument_list|,
 literal|"@Initial revision\n@\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4241,8 +4625,8 @@ name|fprcs
 argument_list|,
 literal|"text\n@"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 block|{
 goto|goto
@@ -4316,8 +4700,8 @@ name|size
 argument_list|,
 name|fprcs
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 block|{
 name|free
@@ -4343,8 +4727,8 @@ name|fprcs
 argument_list|,
 literal|"@\n\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4354,8 +4738,8 @@ literal|"\n%s.1\n"
 argument_list|,
 name|vbranch
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4363,8 +4747,8 @@ name|fprcs
 argument_list|,
 literal|"log\n@"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|expand_at_signs
 argument_list|(
@@ -4380,8 +4764,8 @@ argument_list|)
 argument_list|,
 name|fprcs
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4389,8 +4773,8 @@ name|fprcs
 argument_list|,
 literal|"@\ntext\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 operator|||
 name|fprintf
 argument_list|(
@@ -4398,8 +4782,8 @@ name|fprcs
 argument_list|,
 literal|"@@\n"
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 block|{
 goto|goto
@@ -4432,12 +4816,37 @@ argument_list|(
 name|fpuser
 argument_list|)
 expr_stmt|;
-comment|/*      * Fix the modes on the RCS files.  They must maintain the same modes as      * the original user file, except that all write permissions must be      * turned off.      */
+comment|/*      * Fix the modes on the RCS files.  The user modes of the original      * user file are propagated to the group and other modes as allowed      * by the repository umask, except that all write permissions are      * turned off.      */
 name|mode
 operator|=
+operator|(
 name|sb
 operator|.
 name|st_mode
+operator||
+operator|(
+name|sb
+operator|.
+name|st_mode
+operator|&
+name|S_IRWXU
+operator|)
+operator|>>
+literal|3
+operator||
+operator|(
+name|sb
+operator|.
+name|st_mode
+operator|&
+name|S_IRWXU
+operator|)
+operator|>>
+literal|6
+operator|)
+operator|&
+operator|~
+name|cvsumask
 operator|&
 operator|~
 operator|(
@@ -4492,6 +4901,30 @@ name|err
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tocvsPath
+condition|)
+if|if
+condition|(
+name|unlink_file_dir
+argument_list|(
+name|tocvsPath
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
+name|tocvsPath
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
@@ -4583,6 +5016,30 @@ expr_stmt|;
 block|}
 name|read_error
 label|:
+if|if
+condition|(
+name|tocvsPath
+condition|)
+if|if
+condition|(
+name|unlink_file_dir
+argument_list|(
+name|tocvsPath
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
+name|tocvsPath
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
@@ -4594,7 +5051,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sigh..  need to expand @ signs into double @ signs  */
+comment|/*  * Write SIZE bytes at BUF to FP, expanding @ signs into double @  * signs.  If an error occurs, return a negative value and set errno  * to indicate the error.  If not, return a nonnegative value.  */
 end_comment
 
 begin_function
@@ -4627,6 +5084,10 @@ decl_stmt|,
 modifier|*
 name|end
 decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|cp
@@ -4654,16 +5115,26 @@ name|cp
 operator|==
 literal|'@'
 condition|)
-operator|(
-name|void
-operator|)
+block|{
+if|if
+condition|(
 name|putc
 argument_list|(
 literal|'@'
 argument_list|,
 name|fp
 argument_list|)
-expr_stmt|;
+operator|==
+name|EOF
+operator|&&
+name|errno
+operator|!=
+literal|0
+condition|)
+return|return
+name|EOF
+return|;
+block|}
 if|if
 condition|(
 name|putc
@@ -4675,6 +5146,10 @@ name|fp
 argument_list|)
 operator|==
 name|EOF
+operator|&&
+name|errno
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4883,11 +5358,9 @@ name|targv
 index|[]
 decl_stmt|;
 block|{
-name|char
+name|struct
+name|saved_cwd
 name|cwd
-index|[
-name|PATH_MAX
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -4912,12 +5385,11 @@ operator|)
 return|;
 if|if
 condition|(
-name|getwd
+name|save_cwd
 argument_list|(
+operator|&
 name|cwd
 argument_list|)
-operator|==
-name|NULL
 condition|)
 block|{
 name|fperror
@@ -4928,20 +5400,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"ERROR: cannot get working directory: %s"
-argument_list|,
-name|cwd
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"ERROR: cannot get working directory: %s"
-argument_list|,
-name|cwd
+literal|"ERROR: cannot get working directory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4992,11 +5451,43 @@ name|dir
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+if|if
+condition|(
+operator|!
+name|quiet
+operator|&&
+operator|!
+name|client_active
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 operator|!
 name|quiet
 condition|)
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+comment|/* Needs to go on stdout, not stderr, to avoid being interspersed 	   with the add_log messages.  */
+name|printf
+argument_list|(
+literal|"%s %s: Importing %s\n"
+argument_list|,
+name|program_name
+argument_list|,
+name|command_name
+argument_list|,
+name|repository
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|error
 argument_list|(
 literal|0
@@ -5008,6 +5499,8 @@ argument_list|,
 name|repository
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|chdir
@@ -5054,6 +5547,22 @@ goto|goto
 name|out
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+if|if
+condition|(
+operator|!
+name|client_active
+operator|&&
+operator|!
+name|isdir
+argument_list|(
+name|repository
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 operator|!
@@ -5062,6 +5571,8 @@ argument_list|(
 name|repository
 argument_list|)
 condition|)
+endif|#
+directive|endif
 block|{
 if|if
 condition|(
@@ -5109,7 +5620,7 @@ name|noexec
 operator|==
 literal|0
 operator|&&
-name|mkdir
+name|CVS_MKDIR
 argument_list|(
 name|repository
 argument_list|,
@@ -5201,21 +5712,22 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|chdir
+name|restore_cwd
 argument_list|(
+operator|&
 name|cwd
+argument_list|,
+name|NULL
 argument_list|)
-operator|<
-literal|0
 condition|)
-name|error
+name|exit
 argument_list|(
 literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"cannot chdir to %s"
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|free_cwd
+argument_list|(
+operator|&
 name|cwd
 argument_list|)
 expr_stmt|;
@@ -5223,135 +5735,6 @@ return|return
 operator|(
 name|err
 operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* the following code is taken from code in rcs/src/rcssyn.c, and returns a  * positive value if 'expstring' contains a valid RCS expansion token for  * the -k option.  If an invalid expansion is named, then return -1.  */
-end_comment
-
-begin_decl_stmt
-name|char
-specifier|const
-modifier|*
-specifier|const
-name|expand_names
-index|[]
-init|=
-block|{
-comment|/* These must agree with *_EXPAND in rcs/src/rcsbase.h.  */
-literal|"kv"
-block|,
-literal|"kvl"
-block|,
-literal|"k"
-block|,
-literal|"v"
-block|,
-literal|"o"
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|int
-name|str2expmode
-parameter_list|(
-name|s
-parameter_list|)
-name|char
-specifier|const
-modifier|*
-name|s
-decl_stmt|;
-comment|/* Yield expand mode corresponding to S, or -1 if bad.  */
-block|{
-return|return
-name|strn2expmode
-argument_list|(
-name|s
-argument_list|,
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|strn2expmode
-parameter_list|(
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-name|char
-specifier|const
-modifier|*
-name|s
-decl_stmt|;
-name|size_t
-name|n
-decl_stmt|;
-block|{
-name|char
-specifier|const
-modifier|*
-specifier|const
-modifier|*
-name|p
-decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|expand_names
-init|;
-operator|*
-name|p
-condition|;
-operator|++
-name|p
-control|)
-if|if
-condition|(
-name|memcmp
-argument_list|(
-operator|*
-name|p
-argument_list|,
-name|s
-argument_list|,
-name|n
-argument_list|)
-operator|==
-literal|0
-operator|&&
-operator|!
-operator|(
-operator|*
-name|p
-operator|)
-index|[
-name|n
-index|]
-condition|)
-return|return
-name|p
-operator|-
-name|expand_names
-return|;
-return|return
-operator|-
-literal|1
 return|;
 block|}
 end_function

@@ -119,6 +119,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|RCSEXPAND
+value|"expand"
+end_define
+
+begin_comment
+comment|/* Used by the version of death support which results if you define    DEATH_SUPPORT and not DEATH_STATE.  Requires a hacked up RCS.  Considered    obsolete.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RCSDEAD
+value|"dead"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DATEFORM
 value|"%02d.%02d.%02d.%02d.%02d.%02d"
 end_define
@@ -156,6 +174,17 @@ begin_comment
 comment|/* RCS file is located in the Attic */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PARTIAL
+value|0x4
+end_define
+
+begin_comment
+comment|/* RCS file not completly parsed */
+end_comment
+
 begin_struct
 struct|struct
 name|rcsnode
@@ -181,6 +210,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|symbols_data
+decl_stmt|;
+name|char
+modifier|*
+name|expand
 decl_stmt|;
 name|List
 modifier|*
@@ -221,6 +254,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|next
+decl_stmt|;
+name|int
+name|dead
 decl_stmt|;
 name|List
 modifier|*
@@ -279,10 +315,12 @@ name|RCS_parse
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|file
 operator|,
+specifier|const
 name|char
 operator|*
 name|repos
@@ -313,6 +351,7 @@ name|RCS_check_kflag
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|arg
@@ -356,10 +395,13 @@ name|rcs
 operator|,
 name|char
 operator|*
-name|tag
+name|symtag
 operator|,
 name|int
 name|force_tag_match
+operator|,
+name|int
+name|return_both
 operator|)
 argument_list|)
 decl_stmt|;
@@ -386,6 +428,9 @@ name|date
 operator|,
 name|int
 name|force_tag_match
+operator|,
+name|int
+name|return_both
 operator|)
 argument_list|)
 decl_stmt|;
@@ -552,6 +597,7 @@ name|RCS_check_tag
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|tag
@@ -581,6 +627,7 @@ name|RCS_addnode
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|file
@@ -618,6 +665,34 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|RCS_isdead
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
