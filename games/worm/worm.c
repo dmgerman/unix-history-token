@@ -139,6 +139,12 @@ parameter_list|)
 value|(p-'A'+1)
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -152,6 +158,11 @@ name|baudrate
 parameter_list|()
 value|_tty.sg_ospeed
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
