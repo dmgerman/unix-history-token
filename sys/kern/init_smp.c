@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, Peter Wemm<peter@freebsd.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: init_smp.c,v 1.13 1997/07/22 16:49:54 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, Peter Wemm<peter@freebsd.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: init_smp.c,v 1.10 1997/08/15 02:13:31 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -112,7 +112,7 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** IGNORE_IDLEPROCS, TEST_TEST1 */
+comment|/** IGNORE_IDLEPROCS */
 end_comment
 
 begin_include
@@ -156,33 +156,6 @@ include|#
 directive|include
 file|<sys/user.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_TEST1
-argument_list|)
-end_if
-
-begin_function_decl
-name|void
-name|ipi_test1
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/** TEST_TEST1 */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -511,9 +484,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+specifier|volatile
 name|int
-name|idle_loops
+name|smp_idle_loops
 init|=
 literal|0
 decl_stmt|;
@@ -754,34 +727,7 @@ argument_list|,
 name|cpuid
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_TEST1
-argument_list|)
-comment|/* XXX this would be dangerous for> 2 CPUs! */
-if|if
-condition|(
-name|cpuid
-operator|==
-name|IPI_TARGET_TEST1
-condition|)
-block|{
-name|lapic
-operator|.
-name|tpr
-operator|=
-literal|0xff
-expr_stmt|;
-name|ipi_test1
-argument_list|()
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/** TEST_TEST1 */
-comment|/* Setup the FPU. */
+comment|/* XXX FIXME: i386 specific, and redundant: Setup the FPU. */
 name|load_cr0
 argument_list|(
 operator|(
@@ -842,18 +788,11 @@ decl_stmt|;
 name|int
 name|apic_id
 decl_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* 	 * XXX FIXME: cheap fix for "trap 9 on boot" problem. 	 * this is temporary, but seems to be the most benign of our choices. 	 * expected to be fixed properly "real soon now". 	 */
-asm|asm("pushl %ds; popl %es");
-endif|#
-directive|endif
 comment|/* 	 * This code is executed only on startup of the idleprocs 	 * The fact that this is executed is an indication that the 	 * idle procs are online and it's safe to kick off the first 	 * AP cpu. 	 */
 if|if
 condition|(
 operator|++
-name|idle_loops
+name|smp_idle_loops
 operator|==
 name|mp_ncpus
 condition|)
@@ -861,6 +800,17 @@ block|{
 name|printf
 argument_list|(
 literal|"SMP: All idle procs online.\n"
+argument_list|)
+expr_stmt|;
+comment|/* let the init process finish */
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|*
+operator|)
+operator|&
+name|smp_idle_loops
 argument_list|)
 expr_stmt|;
 ifndef|#
