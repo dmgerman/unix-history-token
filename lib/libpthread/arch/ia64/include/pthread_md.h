@@ -88,7 +88,7 @@ comment|/* We don't know what this is yet? */
 end_comment
 
 begin_comment
-comment|/*  * tp points to one of these.  */
+comment|/*  * tp points to one of these. We define the static TLS as an array  * of long double to enforce 16-byte alignment of the TLS memory,  * struct ia64_tp, struct tcb and also struct kcb. Both static and  * dynamic allocation of any of these structures will result in a  * valid, well-aligned thread pointer.  */
 end_comment
 
 begin_struct
@@ -106,7 +106,8 @@ name|tcb
 modifier|*
 name|tp_self
 decl_stmt|;
-name|char
+name|long
+name|double
 name|tp_tls
 index|[
 literal|0
