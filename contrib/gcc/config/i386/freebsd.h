@@ -258,7 +258,7 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|do {									\     if (flag_pic)							\       fprintf ((FILE), "\tcall *.mcount%s@GOT(%%ebx)\n");		\     else								\       fprintf ((FILE), "\tcall .mcount\n");				\   } while (0)
+value|do {									\     if (flag_pic)							\       fprintf ((FILE), "\tcall *.mcount@GOT(%%ebx)\n");			\     else								\       fprintf ((FILE), "\tcall .mcount\n");				\   } while (0)
 end_define
 
 begin_comment
