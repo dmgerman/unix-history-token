@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_socket.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_socket.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -68,25 +68,6 @@ include|#
 directive|include
 file|"net/route.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|soo_read
-argument_list|()
-decl_stmt|,
-name|soo_write
-argument_list|()
-decl_stmt|,
-name|soo_ioctl
-argument_list|()
-decl_stmt|,
-name|soo_select
-argument_list|()
-decl_stmt|,
-name|soo_close
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -880,10 +861,16 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|soo_close
 argument_list|(
 argument|fp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -892,6 +879,14 @@ name|struct
 name|file
 modifier|*
 name|fp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
