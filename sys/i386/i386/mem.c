@@ -428,6 +428,8 @@ name|o
 decl_stmt|;
 name|u_int
 name|c
+init|=
+literal|0
 decl_stmt|,
 name|v
 decl_stmt|;
@@ -859,6 +861,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+default|default:
+return|return
+operator|-
+literal|1
+return|;
 block|}
 end_function
 
