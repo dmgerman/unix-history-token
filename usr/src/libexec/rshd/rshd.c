@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.17.1.1 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1753,6 +1753,14 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|pv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1769,14 +1777,7 @@ name|pw_shell
 operator|=
 literal|"/bin/sh"
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
+comment|/* (void) close(f); */
 operator|(
 name|void
 operator|)
