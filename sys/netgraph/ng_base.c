@@ -7213,7 +7213,7 @@ argument_list|,
 name|add_arg
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ngq
@@ -7226,7 +7226,7 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ngq
