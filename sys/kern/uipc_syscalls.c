@@ -7670,6 +7670,9 @@ name|sf
 operator|->
 name|m
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
@@ -7696,6 +7699,9 @@ name|vm_page_free
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|sf
 operator|->
@@ -8455,10 +8461,16 @@ name|retry_lookup
 goto|;
 block|}
 comment|/* 		 * Wire the page so it does not get ripped out from under 		 * us.  		 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|pg
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 comment|/* 		 * If page is not valid for what we need, initiate I/O 		 */
 if|if
@@ -8580,6 +8592,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|pg
@@ -8635,6 +8650,9 @@ name|pg
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|sbunlock
 argument_list|(
 operator|&
@@ -8661,6 +8679,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|pg
@@ -8686,6 +8707,9 @@ name|vm_page_free
 argument_list|(
 name|pg
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|sbunlock
 argument_list|(
