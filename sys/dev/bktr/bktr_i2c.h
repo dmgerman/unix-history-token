@@ -22,7 +22,10 @@ name|bt848_i2c_attach
 parameter_list|(
 name|int
 parameter_list|,
-name|bt848_ptr_t
+name|struct
+name|bktr_softc
+modifier|*
+name|bktr
 parameter_list|,
 name|struct
 name|bktr_i2c_softc

@@ -17,6 +17,10 @@ directive|include
 file|"opt_bktr.h"
 end_include
 
+begin_comment
+comment|/* Include any kernel config options */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -35,6 +39,12 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -51,11 +61,84 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300000
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/bus_memio.h>
+end_include
+
+begin_comment
+comment|/* for bus space */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ic/ioctl_meteor.h>
+end_include
+
+begin_comment
+comment|/* NetBSD location for .h files */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<dev/ic/ioctl_bt848.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<machine/ioctl_meteor.h>
 end_include
+
+begin_comment
+comment|/* Traditional location for .h files */
+end_comment
 
 begin_include
 include|#
@@ -66,6 +149,11 @@ end_include
 begin_comment
 comment|/* extensions to ioctl_meteor.h */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -96,6 +184,26 @@ include|#
 directive|include
 file|<dev/bktr/bktr_audio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bootverbose
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Various defines */
@@ -988,6 +1096,47 @@ literal|0xfff000
 block|}
 block|,
 comment|/* GPIO mask */
+block|{
+name|CARD_TERRATVPLUS
+block|,
+comment|/* the card id */
+literal|"TerraTVplus"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm type */
+literal|0
+block|,
+comment|/* EEProm size */
+block|{
+literal|0x20000
+block|,
+literal|0x00000
+block|,
+literal|0x30000
+block|,
+literal|0x40000
+block|,
+literal|1
+block|}
+block|,
+comment|/* audio MUX values*/
+literal|0x70000
+block|}
+block|,
+comment|/* GPIO mask */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1675,9 +1824,6 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|bt848_ptr_t
-name|bt848
-decl_stmt|;
 name|u_char
 name|probe_signature
 index|[
@@ -1713,18 +1859,15 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|bt848
-operator|=
-name|bktr
-operator|->
-name|base
-expr_stmt|;
 comment|/* Select all GPIO bits as inputs */
-name|bt848
-operator|->
-name|gpio_out_en
-operator|=
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_OUT_EN
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1734,42 +1877,57 @@ name|printf
 argument_list|(
 literal|"bktr: GPIO is 0x%08x\n"
 argument_list|,
-name|bt848
-operator|->
-name|gpio_data
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAUPPAUGE_MSP_RESET
 comment|/* Reset the MSP34xx audio chip. This resolves bootup card 	 * detection problems with old Bt848 based Hauppauge cards with 	 * MSP34xx stereo audio chips. This must be user enabled because 	 * at this point the probe function does not know the card type. */
-name|bt848
-operator|->
-name|gpio_out_en
-operator|=
-name|bt848
-operator|->
-name|gpio_out_en
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_OUT_EN
+argument_list|,
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_OUT_EN
+argument_list|)
 operator||
 operator|(
 literal|1
 operator|<<
 literal|5
 operator|)
+argument_list|)
 expr_stmt|;
-name|bt848
-operator|->
-name|gpio_data
-operator|=
-name|bt848
-operator|->
-name|gpio_data
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|)
 operator||
 operator|(
 literal|1
 operator|<<
 literal|5
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* write '1' */
 name|DELAY
@@ -1778,13 +1936,18 @@ literal|2500
 argument_list|)
 expr_stmt|;
 comment|/* wait 2.5ms */
-name|bt848
-operator|->
-name|gpio_data
-operator|=
-name|bt848
-operator|->
-name|gpio_data
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|)
 operator|&
 operator|~
 operator|(
@@ -1792,6 +1955,7 @@ literal|1
 operator|<<
 literal|5
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* write '0' */
 name|DELAY
@@ -1800,19 +1964,25 @@ literal|2500
 argument_list|)
 expr_stmt|;
 comment|/* wait 2.5ms */
-name|bt848
-operator|->
-name|gpio_data
-operator|=
-name|bt848
-operator|->
-name|gpio_data
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|)
 operator||
 operator|(
 literal|1
 operator|<<
 literal|5
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* write '1' */
 name|DELAY
@@ -2070,7 +2240,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"subsytem 0x%04x 0x%04x\n"
+literal|"subsystem 0x%04x 0x%04x\n"
 argument_list|,
 name|subsystem_vendor_id
 argument_list|,
@@ -3166,9 +3336,12 @@ switch|switch
 condition|(
 operator|(
 operator|(
-name|bt848
-operator|->
-name|gpio_data
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|)
 operator|>>
 literal|10
 operator|)
@@ -4039,33 +4212,45 @@ operator|==
 name|CARD_HAUPPAUGE
 condition|)
 block|{
-name|bt848
-operator|->
-name|gpio_out_en
-operator|=
-name|bt848
-operator|->
-name|gpio_out_en
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_OUT_EN
+argument_list|,
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_OUT_EN
+argument_list|)
 operator||
 operator|(
 literal|1
 operator|<<
 literal|5
 operator|)
+argument_list|)
 expr_stmt|;
-name|bt848
-operator|->
-name|gpio_data
-operator|=
-name|bt848
-operator|->
-name|gpio_data
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|)
 operator||
 operator|(
 literal|1
 operator|<<
 literal|5
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* write '1' */
 name|DELAY
@@ -4074,13 +4259,18 @@ literal|2500
 argument_list|)
 expr_stmt|;
 comment|/* wait 2.5ms */
-name|bt848
-operator|->
-name|gpio_data
-operator|=
-name|bt848
-operator|->
-name|gpio_data
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|)
 operator|&
 operator|~
 operator|(
@@ -4088,6 +4278,7 @@ literal|1
 operator|<<
 literal|5
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* write '0' */
 name|DELAY
@@ -4096,19 +4287,25 @@ literal|2500
 argument_list|)
 expr_stmt|;
 comment|/* wait 2.5ms */
-name|bt848
-operator|->
-name|gpio_data
-operator|=
-name|bt848
-operator|->
-name|gpio_data
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|)
 operator||
 operator|(
 literal|1
 operator|<<
 literal|5
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* write '1' */
 name|DELAY
@@ -4246,7 +4443,26 @@ name|dpl_addr
 operator|=
 name|DPL3518A_WADDR
 expr_stmt|;
-comment|/*		dpl_read_id( bktr ); 		printf("bktr%d: Detected a DPL%s at 0x%x\n", unit, 				bktr->dpl_version_string, 				bktr->dpl_addr); */
+name|dpl_read_id
+argument_list|(
+name|bktr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"bktr%d: Detected a DPL%s at 0x%x\n"
+argument_list|,
+name|unit
+argument_list|,
+name|bktr
+operator|->
+name|dpl_version_string
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Start of Check Remote */
 comment|/* Check for the Hauppauge IR Remote Control */

@@ -210,7 +210,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|ioctl_cmd_t
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -254,7 +254,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|ioctl_cmd_t
 name|cmd
 parameter_list|,
 name|caddr_t
