@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.35 (Berkeley) %G%"
+literal|"@(#)conf.c	8.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,19 +232,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* **  Location of system files/databases/etc. */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|ConfFile
-init|=
-name|_PATH_SENDMAILCF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* runtime configuration */
 end_comment
 
 begin_decl_stmt
@@ -6026,6 +6013,34 @@ argument_list|)
 expr_stmt|;
 return|return
 name|FALSE
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  GETCFNAME -- return the name of the .cf file. ** **	Some systems (e.g., NeXT) determine this dynamically. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|getcfname
+parameter_list|()
+block|{
+if|if
+condition|(
+name|ConfFile
+operator|!=
+name|NULL
+condition|)
+return|return
+name|ConfFile
+return|;
+return|return
+name|_PATH_SENDMAILCF
 return|;
 block|}
 end_function

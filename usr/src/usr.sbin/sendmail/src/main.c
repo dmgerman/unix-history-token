@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.26 (Berkeley) %G%"
+literal|"@(#)main.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -501,6 +501,15 @@ specifier|extern
 name|char
 modifier|*
 name|getauthinfo
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getcfname
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -2695,7 +2704,8 @@ end_comment
 begin_expr_stmt
 name|readcf
 argument_list|(
-name|ConfFile
+name|getcfname
+argument_list|()
 argument_list|,
 name|safecf
 argument_list|,
