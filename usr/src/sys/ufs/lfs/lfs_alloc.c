@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -260,13 +260,6 @@ operator|->
 name|i_size
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Extending ifile: blkno = %d\n"
-argument_list|,
-name|blkno
-argument_list|)
-expr_stmt|;
 name|bp
 operator|=
 name|getblk
@@ -336,13 +329,6 @@ name|fs
 operator|->
 name|lfs_ifpb
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Extending ifile: first inum = %d\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 name|fs
 operator|->
 name|lfs_free
@@ -356,13 +342,6 @@ operator|+
 name|fs
 operator|->
 name|lfs_ifpb
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Extending ifile: max inum = %d\n"
-argument_list|,
-name|max
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -445,19 +424,6 @@ operator|+=
 name|fs
 operator|->
 name|lfs_bsize
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Extending ifile: blocks = %d size = %d\n"
-argument_list|,
-name|ip
-operator|->
-name|i_blocks
-argument_list|,
-name|ip
-operator|->
-name|i_size
-argument_list|)
 expr_stmt|;
 name|vnode_pager_setsize
 argument_list|(
