@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: keysock.h,v 1.8 2000/03/27 05:11:06 sumikawa Exp $	*/
+comment|/*	$KAME: keysock.h,v 1.9 2002/03/21 14:00:14 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ begin_struct
 struct|struct
 name|pfkeystat
 block|{
-comment|/* kernel -> userland */
+comment|/* userland -> kernel */
 name|u_quad_t
 name|out_total
 decl_stmt|;
@@ -83,7 +83,7 @@ name|u_quad_t
 name|out_invaddr
 decl_stmt|;
 comment|/* invalid address extension */
-comment|/* userland -> kernel */
+comment|/* kernel -> userland */
 name|u_quad_t
 name|in_total
 decl_stmt|;
@@ -211,26 +211,6 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|key_sendup
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-parameter_list|,
-name|struct
-name|sadb_msg
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
