@@ -10256,13 +10256,11 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"error code %d"
+literal|"Sense Error Code 0x%x"
 argument_list|,
 name|sense
 operator|->
 name|error_code
-operator|&
-name|SSD_ERRCODE
 argument_list|)
 expr_stmt|;
 if|if
