@@ -600,7 +600,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * game:  *	Play one game up to glimit points  */
+comment|/*  * game:  *	Play one game up to glimit points.  Actually, we only ASK the  *	player what card to turn.  We do a random one, anyway.  */
 end_comment
 
 begin_macro
@@ -647,9 +647,24 @@ do|do
 block|{
 if|if
 condition|(
+operator|!
 name|rflag
 condition|)
+block|{
 comment|/* player cuts deck */
+name|msg
+argument_list|(
+name|quiet
+condition|?
+literal|"Cut for crib? "
+else|:
+literal|"Cut to see whose crib it is -- low card wins? "
+argument_list|)
+expr_stmt|;
+name|getline
+argument_list|()
+expr_stmt|;
+block|}
 name|i
 operator|=
 operator|(
@@ -662,29 +677,6 @@ operator|%
 name|CARDS
 expr_stmt|;
 comment|/* random cut */
-else|else
-block|{
-name|msg
-argument_list|(
-name|quiet
-condition|?
-literal|"Cut for crib? "
-else|:
-literal|"Cut to see whose crib it is -- low card wins? "
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|number
-argument_list|(
-literal|0
-argument_list|,
-name|CARDS
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 do|do
 block|{
 comment|/* comp cuts deck */
@@ -1471,7 +1463,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * cut:  *	Cut the deck and set turnover  */
+comment|/*  * cut:  *	Cut the deck and set turnover.  Actually, we only ASK the  *	player what card to turn.  We do a random one, anyway.  */
 end_comment
 
 begin_macro
@@ -1515,9 +1507,24 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|rflag
 condition|)
+block|{
 comment|/* random cut */
+name|msg
+argument_list|(
+name|quiet
+condition|?
+literal|"Cut the deck? "
+else|:
+literal|"How many cards down do you wish to cut the deck? "
+argument_list|)
+expr_stmt|;
+name|getline
+argument_list|()
+expr_stmt|;
+block|}
 name|i
 operator|=
 operator|(
@@ -1533,31 +1540,6 @@ operator|-
 name|pos
 operator|)
 expr_stmt|;
-else|else
-block|{
-name|msg
-argument_list|(
-name|quiet
-condition|?
-literal|"Cut the deck? "
-else|:
-literal|"How many cards down do you wish to cut the deck? "
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|number
-argument_list|(
-literal|0
-argument_list|,
-name|CARDS
-operator|-
-name|pos
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|turnover
 operator|=
 name|deck

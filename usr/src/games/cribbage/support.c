@@ -565,6 +565,13 @@ decl_stmt|;
 name|BOOLEAN
 name|win
 decl_stmt|;
+specifier|static
+name|char
+name|prompt
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 name|prhand
 argument_list|(
 name|hand
@@ -574,8 +581,10 @@ argument_list|,
 name|Playwin
 argument_list|)
 expr_stmt|;
-name|msg
+name|sprintf
 argument_list|(
+name|prompt
+argument_list|,
 literal|"Your %s scores "
 argument_list|,
 name|s
@@ -605,6 +614,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|29
+argument_list|,
+name|prompt
 argument_list|)
 operator|)
 operator|==

@@ -1485,7 +1485,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * number reads in a decimal number and makes sure it is between  * lo and hi inclusive  * a cr counts as lo  */
+comment|/*  * number:  *	Reads in a decimal number and makes sure it is between "lo" and  *	"hi" inclusive.  */
 end_comment
 
 begin_macro
@@ -1494,6 +1494,8 @@ argument_list|(
 argument|lo
 argument_list|,
 argument|hi
+argument_list|,
+argument|prompt
 argument_list|)
 end_macro
 
@@ -1502,6 +1504,13 @@ name|int
 name|lo
 decl_stmt|,
 name|hi
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|prompt
 decl_stmt|;
 end_decl_stmt
 
@@ -1525,8 +1534,17 @@ name|sum
 operator|=
 literal|0
 expr_stmt|;
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
+name|msg
+argument_list|(
+name|prompt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1536,67 +1554,52 @@ operator|=
 name|getline
 argument_list|()
 operator|)
-condition|)
-return|return
-operator|(
-name|lo
-operator|)
-return|;
-comment|/* no line = lo */
-if|if
-condition|(
+operator|||
 operator|*
 name|p
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|lo
-operator|)
-return|;
+block|{
+name|msg
+argument_list|(
+name|quiet
+condition|?
+literal|"Not a number"
+else|:
+literal|"That doesn't look like a number"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|sum
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-operator|==
-literal|' '
-operator|||
-operator|*
-name|p
-operator|==
-literal|'\t'
-condition|)
-operator|++
-name|p
-expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isdigit
+argument_list|(
 operator|*
 name|p
-operator|<
-literal|'0'
-operator|||
-operator|*
-name|p
-operator|>
-literal|'9'
+argument_list|)
 condition|)
-block|{
 name|sum
 operator|=
 name|lo
 operator|-
 literal|1
 expr_stmt|;
-block|}
 else|else
-block|{
-do|do
+while|while
+condition|(
+name|isdigit
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
 block|{
 name|sum
 operator|=
@@ -1614,20 +1617,6 @@ expr_stmt|;
 operator|++
 name|p
 expr_stmt|;
-block|}
-do|while
-condition|(
-literal|'0'
-operator|<=
-operator|*
-name|p
-operator|&&
-operator|*
-name|p
-operator|<=
-literal|'9'
-condition|)
-do|;
 block|}
 if|if
 condition|(
@@ -1662,7 +1651,9 @@ name|sum
 operator|<=
 name|hi
 condition|)
-break|break;
+return|return
+name|sum
+return|;
 if|if
 condition|(
 name|sum
@@ -1671,16 +1662,13 @@ name|lo
 operator|-
 literal|1
 condition|)
-block|{
-name|printf
+name|msg
 argument_list|(
 literal|"that doesn't look like a number, try again --> "
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-name|printf
+name|msg
 argument_list|(
 literal|"%d is not between %d and %d inclusive, try again --> "
 argument_list|,
@@ -1692,17 +1680,6 @@ name|hi
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-do|while
-condition|(
-name|TRUE
-condition|)
-do|;
-return|return
-operator|(
-name|sum
-operator|)
-return|;
 block|}
 end_block
 
