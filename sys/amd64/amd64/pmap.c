@@ -3513,10 +3513,8 @@ else|else
 block|{
 name|pde
 operator|=
-name|pmap_pde
+name|vtopde
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
