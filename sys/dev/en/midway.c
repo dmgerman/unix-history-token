@@ -2937,7 +2937,7 @@ argument_list|,
 operator|&
 name|tx
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10489,7 +10489,7 @@ argument_list|,
 operator|&
 name|rx
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -12415,10 +12415,9 @@ name|MIDDMA_MAXBURST
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|tag
@@ -12484,7 +12483,7 @@ argument_list|,
 operator|&
 name|phys
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -13517,10 +13516,9 @@ literal|1024
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
