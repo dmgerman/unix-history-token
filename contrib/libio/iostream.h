@@ -1343,6 +1343,9 @@ operator|::
 name|eofbit
 argument_list|)
 expr_stmt|;
+name|isfx
+argument_list|()
+expr_stmt|;
 return|return
 name|ch
 return|;
