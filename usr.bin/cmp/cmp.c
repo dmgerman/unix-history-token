@@ -375,7 +375,7 @@ expr_stmt|;
 else|else
 name|exit
 argument_list|(
-literal|1
+name|ERR_EXIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -456,7 +456,7 @@ expr_stmt|;
 else|else
 name|exit
 argument_list|(
-literal|1
+name|ERR_EXIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -534,7 +534,7 @@ expr_stmt|;
 else|else
 name|exit
 argument_list|(
-literal|1
+name|ERR_EXIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -582,7 +582,7 @@ expr_stmt|;
 else|else
 name|exit
 argument_list|(
-literal|1
+name|ERR_EXIT
 argument_list|)
 expr_stmt|;
 block|}
