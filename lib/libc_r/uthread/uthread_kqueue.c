@@ -39,16 +39,6 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_kqueue
-argument_list|,
-name|kqueue
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|int
 name|_kqueue
@@ -72,7 +62,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* Error creating socket. */
+comment|/* Error creating kqueue. */
 comment|/* Initialise the entry in the file descriptor table: */
 block|}
 elseif|else
@@ -104,6 +94,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|_kqueue
+argument_list|,
+name|kqueue
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
