@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.27 1996/03/13 00:41:38 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.28 1996/03/18 21:58:22 nate Exp $  */
 end_comment
 
 begin_include
@@ -257,6 +257,56 @@ end_struct
 begin_decl_stmt
 specifier|static
 name|struct
+name|kern_devconf
+name|kdc_apm
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"apm"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_ISA
+block|,
+literal|0
+block|}
+block|,
+name|isa_generic_externalize
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_UNCONFIGURED
+block|,
+comment|/* state */
+literal|"APM BIOS"
+block|,
+name|DC_CLS_MISC
+comment|/* class */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
 name|apm_softc
 name|apm_softc
 decl_stmt|;
@@ -379,6 +429,57 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|apm_registerdev
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|id
+parameter_list|)
+block|{
+if|if
+condition|(
+name|kdc_apm
+operator|.
+name|kdc_isa
+condition|)
+return|return;
+name|kdc_apm
+operator|.
+name|kdc_state
+operator|=
+name|DC_UNCONFIGURED
+expr_stmt|;
+name|kdc_apm
+operator|.
+name|kdc_description
+operator|=
+literal|"APM BIOS"
+expr_stmt|;
+name|kdc_apm
+operator|.
+name|kdc_unit
+operator|=
+literal|0
+expr_stmt|;
+name|kdc_apm
+operator|.
+name|kdc_isa
+operator|=
+name|id
+expr_stmt|;
+name|dev_attach
+argument_list|(
+operator|&
+name|kdc_apm
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* setup APM GDT discriptors */
@@ -2420,6 +2521,11 @@ return|return
 literal|0
 return|;
 block|}
+name|apm_registerdev
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|apm_version
@@ -2635,7 +2741,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach APM:  *  * Initialize APM driver (APM BIOS itself has been initialized in locore.s)  *  * Now, unless I'm mad, (not quite ruled out yet), the APM-1.1 spec is bogus:  *  * Appendix C says under the header "APM 1.0/APM 1.1 Modal BIOS Behavior"  * that "When an APM Driver connects with an APM 1.1 BIOS, the APM 1.1 BIOS  * will default to an APM 1.0 connection.  After an APM Driver calls the APM  * Driver Version function, specifying that it supports APM 1.1, and [sic!]  * APM BIOS will change its behavior to an APM 1.1 connection.  If the APM  * BIOS is an APM 1.0 BIOS, the APM Driver Version function call will fail,  * and the connection will remain an APM 1.0 connection."  *  * OK so I can establish a 1.0 connection, and then tell that I'm a 1.1  * and maybe then the BIOS will tell that it too is a 1.1.  * Fine.  * Now how will I ever get the segment-limits for instance ?  There is no  * way I can see that I can get a 1.1 response back from an "APM Protected  * Mode 32-bit Interface Connect" function ???  *  * Who made this,  Intel and Microsoft ?  -- How did you guess !  *  * /phk  */
+comment|/*  * Attach APM:  *  * Initialize APM driver (APM BIOS itself has been initialized in locore.s)  */
 end_comment
 
 begin_function
@@ -2667,17 +2773,12 @@ name|initialized
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Must be externally enabled */
 name|sc
 operator|->
 name|active
 operator|=
 literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|halt_cpu
-operator|=
-literal|1
 expr_stmt|;
 comment|/* setup APM parameters */
 name|sc
@@ -2733,6 +2834,12 @@ operator|->
 name|cs_entry
 operator|=
 name|apm_cs_entry
+expr_stmt|;
+name|sc
+operator|->
+name|halt_cpu
+operator|=
+literal|1
 expr_stmt|;
 name|sc
 operator|->
@@ -3257,28 +3364,17 @@ name|dev
 argument_list|)
 operator|!=
 literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-if|if
-condition|(
+operator|||
 operator|!
 name|sc
 operator|->
 name|initialized
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 return|return
 literal|0
 return|;
@@ -3347,6 +3443,25 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+literal|0
+operator|||
+operator|!
+name|sc
+operator|->
+name|initialized
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|APM_DEBUG
@@ -3359,32 +3474,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-return|return
-name|ENXIO
-return|;
-block|}
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|initialized
-condition|)
-block|{
-return|return
-name|ENXIO
-return|;
-block|}
 switch|switch
 condition|(
 name|cmd
@@ -3422,6 +3511,12 @@ break|break;
 case|case
 name|APMIO_ENABLE
 case|:
+name|kdc_apm
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
+expr_stmt|;
 name|apm_event_enable
 argument_list|(
 name|sc
@@ -3431,6 +3526,12 @@ break|break;
 case|case
 name|APMIO_DISABLE
 case|:
+name|kdc_apm
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
+expr_stmt|;
 name|apm_event_disable
 argument_list|(
 name|sc
