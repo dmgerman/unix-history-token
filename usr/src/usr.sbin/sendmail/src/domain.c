@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.33 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.34 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.33 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.34 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -738,10 +738,12 @@ index|[
 name|j
 index|]
 operator|&&
+operator|(
 name|rand
 argument_list|()
-operator|%
-literal|1
+operator|&
+literal|0100
+operator|)
 operator|==
 literal|0
 operator|)
