@@ -9481,6 +9481,9 @@ operator|->
 name|b_npages
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -9520,7 +9523,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|m
 argument_list|,
@@ -9529,7 +9532,9 @@ argument_list|,
 literal|"biodep"
 argument_list|)
 condition|)
-empty_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|bp
 operator|->
 name|b_pages
@@ -9539,9 +9544,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
@@ -9549,10 +9551,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-block|}
 name|pmap_qremove
 argument_list|(
 operator|(
@@ -9745,9 +9747,12 @@ block|}
 continue|continue;
 block|}
 comment|/* 				 * We found a page.  If we have to sleep on it, 				 * retry because it might have gotten freed out 				 * from under us. 				 * 				 * We can only test PG_BUSY here.  Blocking on 				 * m->busy might lead to a deadlock: 				 * 				 *  vm_fault->getpages->cluster_read->allocbuf 				 * 				 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|m
 argument_list|,
@@ -9807,9 +9812,6 @@ name|pagedaemon_wakeup
 argument_list|()
 expr_stmt|;
 block|}
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
 name|m
