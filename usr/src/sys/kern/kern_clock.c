@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -138,6 +138,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|profprocs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ticks
 decl_stmt|;
 end_decl_stmt
 
@@ -408,6 +414,12 @@ end_if
 begin_comment
 comment|/* 	 * Increment the time-of-day.  The increment is just ``tick'' unless 	 * we are still adjusting the clock; see adjtime(). 	 */
 end_comment
+
+begin_expr_stmt
+name|ticks
+operator|++
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
