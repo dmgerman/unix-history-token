@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.7	%G%	*/
+comment|/*	fs.h	1.8	%G%	*/
 end_comment
 
 begin_comment
@@ -414,7 +414,7 @@ name|x
 parameter_list|,
 name|fs
 parameter_list|)
-value|(cgimin(itog(x,fs),fs)+FRAG*((x)%(fs)->fs_ipg/INOPB))
+value|((daddr_t)(cgimin(itog(x,fs),fs)+FRAG*((x)%(fs)->fs_ipg/INOPB)))
 end_define
 
 begin_comment
