@@ -519,7 +519,7 @@ specifier|static
 name|int
 name|debug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +538,15 @@ name|int
 name|max_speed
 init|=
 literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sbp_cold
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -3328,11 +3337,13 @@ name|alive
 decl_stmt|;
 name|SBP_DEBUG
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 name|printf
 argument_list|(
-literal|"sbp_post_explore\n"
+literal|"sbp_post_explore (sbp_cold=%d)\n"
+argument_list|,
+name|sbp_cold
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
@@ -3344,6 +3355,15 @@ comment|/*count*/
 block|1);
 endif|#
 directive|endif
+if|if
+condition|(
+name|sbp_cold
+operator|>
+literal|0
+condition|)
+name|sbp_cold
+operator|--
+expr_stmt|;
 comment|/* Gabage Collection */
 for|for
 control|(
@@ -4445,6 +4465,22 @@ operator|->
 name|lun_id
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Let CAM scan the bus if we are in the boot process. 	 * XXX xpt_scan_bus cannot detect LUN larger than 0 	 * if LUN 0 doesn't exists. 	 */
+if|if
+condition|(
+name|sbp_cold
+operator|>
+literal|0
+condition|)
+block|{
+name|sdev
+operator|->
+name|status
+operator|=
+name|SBP_DEV_PROBE
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|sdev
@@ -8310,12 +8346,21 @@ literal|0
 argument_list|)
 name|printf
 argument_list|(
-literal|"sbp_attach\n"
+literal|"sbp_attach (cold=%d)\n"
+argument_list|,
+name|cold
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
+if|if
+condition|(
+name|cold
+condition|)
+name|sbp_cold
+operator|++
+expr_stmt|;
 name|sbp
-init|=
+operator|=
 operator|(
 operator|(
 expr|struct
@@ -8327,7 +8372,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|bzero
 argument_list|(
 name|sbp
@@ -8791,6 +8836,20 @@ name|post_explore
 operator|=
 name|sbp_post_explore
 expr_stmt|;
+if|if
+condition|(
+name|sbp
+operator|->
+name|fd
+operator|.
+name|fc
+operator|->
+name|status
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|s
 operator|=
 name|splfw
@@ -8810,6 +8869,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -10660,7 +10720,7 @@ name|cpi
 operator|->
 name|hba_misc
 operator|=
-literal|0
+name|PIM_NOBUSRESET
 expr_stmt|;
 name|cpi
 operator|->
