@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.38 %G%"
+literal|"@(#)sccs.c	1.39 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,18 +189,6 @@ end_comment
 begin_escape
 end_escape
 
-begin_define
-define|#
-directive|define
-name|bitset
-parameter_list|(
-name|bit
-parameter_list|,
-name|word
-parameter_list|)
-value|((bit)& (word))
-end_define
-
 begin_typedef
 typedef|typedef
 name|char
@@ -220,6 +208,18 @@ define|#
 directive|define
 name|FALSE
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|bitset
+parameter_list|(
+name|bit
+parameter_list|,
+name|word
+parameter_list|)
+value|((bool) ((bit)& (word)))
 end_define
 
 begin_ifdef
@@ -1191,7 +1191,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	**  Copy arguments. 	**	Phase one -- from arg0& if necessary argv[0]. 	*/
+comment|/* 	**  Copy arguments. 	**	Copy from arg0& if necessary at most one arg 	**	from argv[0]. 	*/
 name|np
 operator|=
 name|ap
@@ -1494,6 +1494,7 @@ case|case
 name|CMACRO
 case|:
 comment|/* command macro */
+comment|/* step through& execute each part of the macro */
 for|for
 control|(
 name|p
@@ -1591,6 +1592,7 @@ name|EX_USAGE
 expr_stmt|;
 break|break;
 block|}
+comment|/* get the version with all changes */
 name|rval
 operator|=
 name|command
@@ -1608,6 +1610,7 @@ argument_list|,
 literal|"get -k"
 argument_list|)
 expr_stmt|;
+comment|/* now remove that version from the s-file */
 if|if
 condition|(
 name|rval
@@ -1631,6 +1634,7 @@ argument_list|,
 literal|"rmdel"
 argument_list|)
 expr_stmt|;
+comment|/* and edit the old version (but don't clobber new vers) */
 if|if
 condition|(
 name|rval
@@ -1716,6 +1720,7 @@ name|np
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* get all the files that we unedited successfully */
 if|if
 condition|(
 name|i
@@ -1783,6 +1788,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* messy, but we need a null terminated argv */
 operator|*
 name|argv
 operator|=
@@ -2375,6 +2381,7 @@ operator|)
 return|;
 block|}
 comment|/* 	**  Create the actual pathname. 	*/
+comment|/* first the directory part */
 if|if
 condition|(
 name|name
@@ -2408,6 +2415,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+comment|/* then the head of the pathname */
 name|strncat
 argument_list|(
 name|buf
@@ -2457,6 +2465,7 @@ name|buf
 argument_list|)
 condition|)
 block|{
+comment|/* sorry, no; copy the SCCS pathname& the "s." */
 name|strcpy
 argument_list|(
 name|q
@@ -2471,6 +2480,7 @@ argument_list|,
 literal|"/s."
 argument_list|)
 expr_stmt|;
+comment|/* and now the end of the name */
 name|strcat
 argument_list|(
 name|buf
@@ -2479,6 +2489,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* if i haven't changed it, why did I do all this? */
 if|if
 condition|(
 name|strcmp
@@ -2721,6 +2732,7 @@ name|FILE
 modifier|*
 name|pfp
 decl_stmt|;
+comment|/* 	**  Find and open the SCCS directory. 	*/
 name|strcpy
 argument_list|(
 name|buf
@@ -2780,7 +2792,7 @@ name|EX_NOINPUT
 operator|)
 return|;
 block|}
-comment|/* 	**  Scan the SCCS directory looking for s. files. 	*/
+comment|/* 	**  Scan the SCCS directory looking for s. files. 	**	gotedit tells whether we have tried to clean any 	**		files that are being edited. 	*/
 name|gotedit
 operator|=
 name|FALSE
@@ -2922,6 +2934,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* the file exists -- report it's contents */
 while|while
 condition|(
 name|fgets
@@ -3003,6 +3016,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* cleanup& report results */
 name|fclose
 argument_list|(
 name|dirfd
@@ -3224,7 +3238,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* turn "s." into "p." */
+comment|/* turn "s." into "p."& try to open it */
 operator|*
 operator|++
 name|q
@@ -3260,7 +3274,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* 	**  Copy p-file to temp file, doing deletions as needed. 	*/
+comment|/* create temp file for editing p-file */
 name|mktemp
 argument_list|(
 name|tfn
@@ -3295,6 +3309,7 @@ name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* figure out who I am */
 ifdef|#
 directive|ifdef
 name|UIDUSER
@@ -3343,6 +3358,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|UIDUSER
+comment|/* 	**  Copy p-file to temp file, doing deletions as needed. 	*/
 while|while
 condition|(
 operator|(
@@ -3378,6 +3394,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* output it again */
 name|fprintf
 argument_list|(
 name|tfp
@@ -3416,6 +3433,7 @@ condition|(
 name|others
 condition|)
 block|{
+comment|/* copy it back (perhaps it should be linked?) */
 if|if
 condition|(
 name|freopen
@@ -3494,6 +3512,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* it's empty -- remove it */
 name|unlink
 argument_list|(
 name|pfn
@@ -3515,6 +3534,7 @@ argument_list|(
 name|tfn
 argument_list|)
 expr_stmt|;
+comment|/* actually remove the g-file */
 if|if
 condition|(
 name|delete
@@ -3627,6 +3647,7 @@ name|osig
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* create context for diff to run in */
 if|if
 condition|(
 name|pipe
