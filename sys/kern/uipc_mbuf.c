@@ -361,7 +361,28 @@ name|nmbclusters
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum number of mbuf clusters avaliable"
+literal|"Maximum number of mbuf clusters available"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nmbufs
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nmbufs
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of mbufs available"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -409,10 +430,6 @@ name|nmbufs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* XXX fixup? */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -610,6 +627,24 @@ decl_stmt|;
 name|int
 name|nbytes
 decl_stmt|;
+comment|/* 	 * If we've hit the mbuf limit, stop allocating from mb_map, 	 * (or trying to) in order to avoid dipping into the section of 	 * mb_map which we've "reserved" for clusters. 	 */
+if|if
+condition|(
+operator|(
+name|nmb
+operator|+
+name|mbstat
+operator|.
+name|m_mbufs
+operator|)
+operator|>
+name|nmbufs
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Once we run out of map space, it will be impossible to get 	 * any more (nothing is ever freed back to the map) 	 * -- however you are not dead as m_reclaim might 	 * still be able to free a substantial amount of space. 	 * 	 * XXX Furthermore, we can also work with "recycled" mbufs (when 	 * we're calling with M_WAIT the sleep procedure will be woken 	 * up when an mbuf is freed. See m_mballoc_wait()). 	 */
 if|if
 condition|(
@@ -1039,6 +1074,31 @@ decl_stmt|;
 name|int
 name|npg
 decl_stmt|;
+comment|/* 	 * If we've hit the mcluster number limit, stop allocating from 	 * mb_map, (or trying to) in order to avoid dipping into the section 	 * of mb_map which we've "reserved" for mbufs. 	 */
+if|if
+condition|(
+operator|(
+name|ncl
+operator|+
+name|mbstat
+operator|.
+name|m_clusters
+operator|)
+operator|>
+name|nmbclusters
+condition|)
+block|{
+name|mbstat
+operator|.
+name|m_drops
+operator|++
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 	 * Once we run out of map space, it will be impossible 	 * to get any more (nothing is ever freed back to the 	 * map). From this point on, we solely rely on freed  	 * mclusters. 	 */
 if|if
 condition|(
