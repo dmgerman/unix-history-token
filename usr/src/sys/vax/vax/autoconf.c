@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.33	82/02/08	*/
+comment|/*	autoconf.c	4.34	82/03/31	*/
 end_comment
 
 begin_comment
@@ -985,6 +985,19 @@ name|dn
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|mbd
+operator|->
+name|mbd_ds
+operator|&
+name|MBDS_DPR
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|dt
 operator|=
 name|mbd
