@@ -15,6 +15,27 @@ directive|define
 name|_SAFE_SAFEVAR_H_
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|SAFE_DMAWAR
+end_define
+
+begin_comment
+comment|/* Enable ER-1 workaround */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Maximum queue length */
 end_comment
@@ -37,6 +58,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SAFE_DMAWAR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SAFE_MAX_PART
+value|128
+end_define
+
+begin_comment
+comment|/* Maximum scatter/gather depth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAFE_DMA_BOUNDARY
+value|256
+end_define
+
+begin_comment
+comment|/* Limit DMA to avoid chip lockup */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -58,6 +112,11 @@ end_define
 begin_comment
 comment|/* No boundary for source DMA ops */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -568,11 +627,6 @@ name|int
 name|sc_nqchip
 decl_stmt|;
 comment|/* # passed to chip */
-name|struct
-name|mtx
-name|sc_ringmtx
-decl_stmt|;
-comment|/* PE ring lock */
 name|struct
 name|safe_pdesc
 modifier|*

@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Sam Leffler, Errno Consulting  * Copyright (c) 2003 Global Technology Associates, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003 Sam Leffler, Errno Consulting  * Copyright (c) 2003 Global Technology Associates, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * SafeNet SafeXcel-1141 hardware crypto accelerator  */
@@ -67,18 +53,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -1199,19 +1173,31 @@ name|u_int
 name|count
 parameter_list|)
 block|{
-name|random_harvest
-argument_list|(
+name|u_int32_t
+modifier|*
+name|p
+init|=
 name|buf
-argument_list|,
+decl_stmt|;
+for|for
+control|(
 name|count
-argument_list|,
+operator|/=
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+init|;
 name|count
+condition|;
+name|count
+operator|--
+control|)
+name|add_true_randomness
+argument_list|(
 operator|*
-name|NBBY
-argument_list|,
-literal|0
-argument_list|,
-name|RANDOM_PURE
+name|p
+operator|++
 argument_list|)
 expr_stmt|;
 block|}
@@ -1489,8 +1475,6 @@ operator|->
 name|sc_irq
 argument_list|,
 name|INTR_TYPE_NET
-operator||
-name|INTR_MPSAFE
 argument_list|,
 name|safe_intr
 argument_list|,
@@ -1597,11 +1581,6 @@ comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* locking */
 operator|&
 name|sc
 operator|->
@@ -1659,11 +1638,6 @@ comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* locking */
 operator|&
 name|sc
 operator|->
@@ -1857,23 +1831,6 @@ name|safe_ringentry
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"packet engine ring"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate scatter and gather particle descriptors. 	 */
 if|if
 condition|(
@@ -1904,14 +1861,6 @@ name|dev
 argument_list|,
 literal|"cannot allocate source particle "
 literal|"descriptor ring\n"
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
 argument_list|)
 expr_stmt|;
 name|safe_dma_free
@@ -2012,14 +1961,6 @@ name|dev
 argument_list|,
 literal|"cannot allocate destination particle "
 literal|"descriptor ring\n"
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
 argument_list|)
 expr_stmt|;
 name|safe_dma_free
@@ -2443,15 +2384,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* NB: 1 means the callout runs w/o Giant locked */
 name|callout_init
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_rngto
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -2643,14 +2581,6 @@ operator|&
 name|sc
 operator|->
 name|sc_spalloc
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
 argument_list|)
 expr_stmt|;
 name|safe_dma_free
@@ -2902,14 +2832,6 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Descriptor(s) done; scan the ring and 		 * process completed operations. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|sc
@@ -3030,14 +2952,6 @@ operator|->
 name|sc_ring
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * Check to see if we got any DMA Error 	 */
 if|if
@@ -4340,8 +4254,6 @@ name|arg
 decl_stmt|;
 name|int
 name|session
-decl_stmt|,
-name|ret
 decl_stmt|;
 name|u_int32_t
 name|sid
@@ -4376,12 +4288,16 @@ expr_stmt|;
 if|if
 condition|(
 name|session
-operator|<
+operator|>=
 name|sc
 operator|->
 name|sc_nsessions
 condition|)
-block|{
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|bzero
 argument_list|(
 operator|&
@@ -4403,19 +4319,9 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
 return|return
 operator|(
-name|ret
+literal|0
 operator|)
 return|;
 block|}
@@ -4600,6 +4506,9 @@ name|cmd1
 decl_stmt|,
 name|staterec
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|crp
@@ -4653,13 +4562,10 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
-argument_list|)
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4689,12 +4595,9 @@ name|sc_needwakeup
 operator||=
 name|CRYPTO_SYMQ
 expr_stmt|;
-name|mtx_unlock
+name|splx
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -7457,12 +7360,9 @@ argument_list|,
 name|re
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|splx
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -7571,12 +7471,9 @@ name|re_src_map
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|splx
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -9145,11 +9042,6 @@ comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* locking */
 operator|&
 name|dma
 operator|->
@@ -9860,7 +9752,16 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
-block|{ }
+block|{
+if|#
+directive|if
+literal|0
+block|u_int32_t misc;  	misc = pci_conf_read(pc, pa->pa_tag, BS_RTY_TOUT); 	misc = (misc& ~(SAFE_PCI_RTY_MASK<< SAFE_PCI_RTY_SHIFT)) 	    | ((SAFE_DEF_RTY& 0xff)<< SAFE_PCI_RTY_SHIFT); 	misc = (misc& ~(SAFE_PCI_TOUT_MASK<< SAFE_PCI_TOUT_SHIFT)) 	    | ((SAFE_DEF_TOUT& 0xff)<< SAFE_PCI_TOUT_SHIFT); 	pci_conf_write(pc, pa->pa_tag, BS_RTY_TOUT, misc);
+comment|/* 	 * This will set the cache line size to 1, this will 	 * force the chip just to do burst read/writes. 	 * Cache line read/writes are to slow 	 */
+block|pci_write_config(dev, PCIR_CACHELNSZ, SAFE_DEF_CACHELINE, 1);
+endif|#
+directive|endif
+block|}
 end_function
 
 begin_comment
@@ -10411,7 +10312,6 @@ argument_list|,
 name|SAFE_PE_ERNGSTAT
 argument_list|)
 decl_stmt|;
-comment|/* NB: assume caller has lock on ring */
 name|printf
 argument_list|(
 literal|"%s: ERNGSTAT %x (next %u) back %u front %u\n"
@@ -10633,6 +10533,29 @@ argument_list|(
 literal|" (zero!)"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SAFE_DMAWAR
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_spring
+index|[
+name|ix
+index|]
+operator|.
+name|pd_size
+operator|>
+name|SAFE_DMA_BOUNDARY
+condition|)
+name|printf
+argument_list|(
+literal|" (bogus size)!"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\n"
@@ -11065,14 +10988,12 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
-argument_list|)
-expr_stmt|;
+name|int
+name|s
+init|=
+name|splimp
+argument_list|()
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"\nSafeNet Ring State:\n"
@@ -11152,12 +11073,9 @@ name|sc_front
 condition|)
 do|;
 block|}
-name|mtx_unlock
+name|splx
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ringmtx
+name|s
 argument_list|)
 expr_stmt|;
 block|}
