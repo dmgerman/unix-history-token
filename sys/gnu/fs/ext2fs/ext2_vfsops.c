@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ufs/extattr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/quota.h>
 end_include
 
