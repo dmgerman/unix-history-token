@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.71 2003/09/20 17:54:30 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.72 2003/09/22 05:27:03 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.184 2003/07/26 10:39:32 martin Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.186 2003/09/16 08:26:37 onoe Exp $ */
 end_comment
 
 begin_comment
@@ -2298,6 +2298,27 @@ name|PCMCIA_STR_FUJITSU_LA501
 value|"Fujitsu Towa LA501 Ethernet"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_FUJITSU_WL110
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUJITSU_WL110
+value|0x2003
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUJITSU_WL110
+value|"PEGA-WL110 Wireless LAN"
+end_define
+
 begin_comment
 comment|/* Gemplus */
 end_comment
@@ -3891,6 +3912,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_QUATECH_SPP_100
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_QUATECH_SPP_100
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_QUATECH_SPP_100
+value|"Quatech Enhanced Parallel Port"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_QUATECH_DSP_225
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -4986,6 +5028,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_FUJITSU2
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* Fujitsu */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_FUTUREDOMAIN
 value|0xffffffff
 end_define
@@ -5989,84 +6042,84 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_FUJITSU_FMV_J181
+name|PCMCIA_CIS_FUJITSU2_FMV_J181
 value|{ "PCMCIA MBH10302", "01", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_FUJITSU_FMV_J181
+name|PCMCIA_PRODUCT_FUJITSU2_FMV_J181
 value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_FUJITSU_FMV_J181
+name|PCMCIA_STR_FUJITSU2_FMV_J181
 value|"FUJITSU FMV-J181 PCMCIA Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_FUJITSU_FMV_J182
+name|PCMCIA_CIS_FUJITSU2_FMV_J182
 value|{ "FUJITSU", "LAN Card(FMV-J182)", "Ver.01", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_FUJITSU_FMV_J182
+name|PCMCIA_PRODUCT_FUJITSU2_FMV_J182
 value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_FUJITSU_FMV_J182
+name|PCMCIA_STR_FUJITSU2_FMV_J182
 value|"FUJITSU FMV-J182 PCMCIA Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_FUJITSU_FMV_J182A
+name|PCMCIA_CIS_FUJITSU2_FMV_J182A
 value|{ "FUJITSU", "LAN Card(FMV-J182)", "Ver.02", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_FUJITSU_FMV_J182A
+name|PCMCIA_PRODUCT_FUJITSU2_FMV_J182A
 value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_FUJITSU_FMV_J182A
+name|PCMCIA_STR_FUJITSU2_FMV_J182A
 value|"FUJITSU FMV-J182A PCMCIA Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_FUJITSU_ITCFJ182A
+name|PCMCIA_CIS_FUJITSU2_ITCFJ182A
 value|{ "FUJITSU", "LAN Card(ITCFJ182)", "Ver.01", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_FUJITSU_ITCFJ182A
+name|PCMCIA_PRODUCT_FUJITSU2_ITCFJ182A
 value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_FUJITSU_ITCFJ182A
+name|PCMCIA_STR_FUJITSU2_ITCFJ182A
 value|"FUJITSU ITCFJ182A CompactCard"
 end_define
 
