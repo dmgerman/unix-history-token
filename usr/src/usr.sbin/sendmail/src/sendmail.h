@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.93		%G%"
+literal|"@(#)sendmail.h	3.94		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,17 +219,6 @@ end_define
 
 begin_comment
 comment|/* maximum number of trusted users */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPACESUB
-value|('.'|0200)
-end_define
-
-begin_comment
-comment|/* substitution for<lwsp> */
 end_comment
 
 begin_escape
@@ -2364,6 +2353,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* the reply code for Arpanet info [conf.c] */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|SpaceSub
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* substitution for<lwsp> [conf.c] */
 end_comment
 
 begin_escape

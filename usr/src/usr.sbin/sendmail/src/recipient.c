@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -1572,7 +1572,7 @@ operator|*
 name|p
 operator|==
 operator|(
-name|SPACESUB
+name|SpaceSub
 operator|&
 literal|0177
 operator|)
