@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sccs.c	5.10 (Berkeley) %G%"
+literal|"@(#)sccs.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
@@ -79,12 +79,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -97,7 +91,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -423,12 +429,7 @@ name|PROG
 block|,
 name|REALUSER
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"admin"
-argument_list|)
+name|_PATH_SCCSADMIN
 block|,
 literal|"cdc"
 block|,
@@ -436,12 +437,7 @@ name|PROG
 block|,
 literal|0
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"rmdel"
-argument_list|)
+name|_PATH_SCCSRMDEL
 block|,
 literal|"comb"
 block|,
@@ -449,12 +445,7 @@ name|PROG
 block|,
 literal|0
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"comb"
-argument_list|)
+name|_PATH_SCCSCOMB
 block|,
 literal|"delta"
 block|,
@@ -462,12 +453,7 @@ name|PROG
 block|,
 literal|0
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"delta"
-argument_list|)
+name|_PATH_SCCSDELTA
 block|,
 literal|"get"
 block|,
@@ -475,12 +461,7 @@ name|PROG
 block|,
 literal|0
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"get"
-argument_list|)
+name|_PATH_SCCSGET
 block|,
 literal|"help"
 block|,
@@ -488,12 +469,7 @@ name|PROG
 block|,
 name|NO_SDOT
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"help"
-argument_list|)
+name|_PATH_SCCSHELP
 block|,
 literal|"prs"
 block|,
@@ -501,12 +477,7 @@ name|PROG
 block|,
 literal|0
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"prs"
-argument_list|)
+name|_PATH_SCCSPRS
 block|,
 literal|"prt"
 block|,
@@ -514,12 +485,7 @@ name|PROG
 block|,
 literal|0
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"prt"
-argument_list|)
+name|_PATH_SCCSPRT
 block|,
 literal|"rmdel"
 block|,
@@ -527,12 +493,7 @@ name|PROG
 block|,
 name|REALUSER
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"rmdel"
-argument_list|)
+name|_PATH_SCCSRMDEL
 block|,
 literal|"val"
 block|,
@@ -540,12 +501,7 @@ name|PROG
 block|,
 literal|0
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"val"
-argument_list|)
+name|_PATH_SCCSVAL
 block|,
 literal|"what"
 block|,
@@ -553,12 +509,7 @@ name|PROG
 block|,
 name|NO_SDOT
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"what"
-argument_list|)
+name|_PATH_SCCSWHAT
 block|,
 literal|"sccsdiff"
 block|,
@@ -566,12 +517,7 @@ name|SHELL
 block|,
 name|REALUSER
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"sccsdiff"
-argument_list|)
+name|_PATH_SCCSDIFF
 block|,
 literal|"edit"
 block|,
@@ -687,12 +633,7 @@ name|NO_SDOT
 operator||
 name|REALUSER
 block|,
-name|__CONCAT
-argument_list|(
-name|_SCCSPATH
-argument_list|,
-literal|"bdiff"
-argument_list|)
+name|_PATH_SCCSBDIFF
 block|,
 literal|"print"
 block|,
