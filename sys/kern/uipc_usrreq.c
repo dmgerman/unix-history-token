@@ -3075,7 +3075,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* MAC */
 if|if
 condition|(
 name|error

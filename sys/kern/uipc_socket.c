@@ -6221,7 +6221,6 @@ name|extmac
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* MAC */
 name|error
 operator|=
 literal|0
@@ -6782,14 +6781,12 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* MAC */
 name|error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* MAC */
 break|break;
 default|default:
 name|error
@@ -7001,7 +6998,6 @@ name|extmac
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* MAC */
 name|error
 operator|=
 literal|0
@@ -7468,14 +7464,12 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* MAC */
 name|error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* MAC */
 break|break;
 case|case
 name|SO_PEERLABEL
@@ -7523,14 +7517,12 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* MAC */
 name|error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* MAC */
 break|break;
 default|default:
 name|error
