@@ -3554,17 +3554,6 @@ argument_list|)
 index|]
 decl_stmt|;
 name|fd_mask
-name|s_heldbits
-index|[
-name|howmany
-argument_list|(
-literal|2048
-argument_list|,
-name|NFDBITS
-argument_list|)
-index|]
-decl_stmt|;
-name|fd_mask
 modifier|*
 name|ibits
 index|[
@@ -3597,8 +3586,6 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|timo
-decl_stmt|,
-name|i
 decl_stmt|;
 name|u_int
 name|nbufbytes
