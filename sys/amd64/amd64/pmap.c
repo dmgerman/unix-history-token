@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00063  * --------------------         -----   ----------------------  *  * 28 Nov 1991	Poul-Henning Kamp	Speedup processing.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id$  */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/pmap.c,v 1.2 1993/07/27 10:52:19 davidg Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -709,6 +709,10 @@ decl_stmt|;
 name|avail_start
 operator|=
 name|firstaddr
+operator|+
+literal|8
+operator|*
+name|NBPG
 expr_stmt|;
 name|avail_end
 operator|=
@@ -772,7 +776,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
-comment|/* 	 * Create Kernel page directory table and page maps. 	 * [ currently done in locore. i have wild and crazy ideas -wfj ] 	 */
+comment|/* 	 * Create Kernel page directory table and page maps. 	 * [ currently done in locore. i have wild and crazy ideas -wfj ] 	 * XXX IF THIS IS EVER USED, IT MUST BE MOVED TO THE TOP 	 *	OF THIS ROUTINE -- cgd 	 */
 name|bzero
 argument_list|(
 name|firstaddr
@@ -966,7 +970,7 @@ name|va
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * reserve special hunk of memory for use by bus dma as a bounce 	 * buffer (contiguous virtual *and* physical memory). for now, 	 * assume vm does not use memory beneath hole, and we know that 	 * the bootstrap uses top 32k of base memory. -wfj 	 */
+comment|/* 	 * reserve special hunk of memory for use by bus dma as a bounce 	 * buffer (contiguous virtual *and* physical memory). 	 * do it from firstaddr -> firstaddr+8 pages.  note that 	 * avail_start was bumped up 8 pages, above, to accomodate this. 	 */
 block|{
 specifier|extern
 name|vm_offset_t
@@ -982,13 +986,13 @@ name|pmap_map
 argument_list|(
 name|va
 argument_list|,
-literal|0xa0000
-operator|-
-literal|32
-operator|*
-literal|1024
+name|firstaddr
 argument_list|,
-literal|0xa0000
+name|firstaddr
+operator|+
+literal|8
+operator|*
+name|NBPG
 argument_list|,
 name|VM_PROT_ALL
 argument_list|)
