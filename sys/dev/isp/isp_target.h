@@ -2127,7 +2127,7 @@ name|level
 parameter_list|,
 name|msg
 parameter_list|)
-value|if (level> isp_tdebug) PRINTF msg
+value|if (isp_tdebug>= level) PRINTF msg
 end_define
 
 begin_comment
