@@ -1438,6 +1438,8 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
+literal|"%s"
+argument_list|,
 name|pccardd_cmd
 argument_list|)
 expr_stmt|;

@@ -323,6 +323,8 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
+literal|"%s"
+argument_list|,
 name|attach
 argument_list|)
 condition|)

@@ -743,6 +743,8 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
+literal|"%s"
+argument_list|,
 name|tmp
 argument_list|)
 operator|==
@@ -1875,6 +1877,8 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
+literal|"%s"
+argument_list|,
 name|tmp
 argument_list|)
 operator|==

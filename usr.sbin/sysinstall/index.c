@@ -2666,6 +2666,8 @@ condition|)
 return|return;
 name|msgInfo
 argument_list|(
+literal|"%s"
+argument_list|,
 name|kp
 operator|->
 name|desc
