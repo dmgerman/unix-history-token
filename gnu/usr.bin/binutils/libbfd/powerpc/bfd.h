@@ -8,7 +8,7 @@ comment|/* DO NOT EDIT!  -*- buffer-read-only: t -*-  This file is automatically
 end_comment
 
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -81,9 +81,9 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* #define BFD_VERSION 212000000 */
-comment|/* #define BFD_VERSION_DATE 20020309 */
-comment|/* #define BFD_VERSION_STRING "2.12" */
+comment|/* #define BFD_VERSION 213010000 */
+comment|/* #define BFD_VERSION_DATE 20021127 */
+comment|/* #define BFD_VERSION_STRING "2.13.2 20021127" */
 comment|/* The word size used by BFD on the host.  This may be 64 with a 32    bit target if the host is 64 bit, or if other 64 bit targets have    been selected with --enable-targets, or if --enable-64-bit-bfd.  */
 define|#
 directive|define
@@ -765,7 +765,7 @@ parameter_list|,
 name|align
 parameter_list|)
 define|\
-value|( ((addr) + ((1<<(align))-1))& (-1<< (align)))
+value|(((addr) + ((bfd_vma) 1<< (align)) - 1)& ((bfd_vma) -1<< (align)))
 typedef|typedef
 name|struct
 name|sec
@@ -790,6 +790,15 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->vma + 0)
+define|#
+directive|define
+name|bfd_get_section_lma
+parameter_list|(
+name|bfd
+parameter_list|,
+name|ptr
+parameter_list|)
+value|((ptr)->lma + 0)
 define|#
 directive|define
 name|bfd_get_section_alignment
@@ -879,7 +888,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|(((ptr)->vma = (ptr)->lma= (val)), ((ptr)->user_set_vma = (boolean)true), true)
+value|(((ptr)->vma = (ptr)->lma = (val)), ((ptr)->user_set_vma = (unsigned int)true), true)
 define|#
 directive|define
 name|bfd_set_section_alignment
@@ -1566,6 +1575,13 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->section_count)
+define|#
+directive|define
+name|bfd_get_dynamic_symcount
+parameter_list|(
+name|abfd
+parameter_list|)
+value|((abfd)->dynsymcount)
 define|#
 directive|define
 name|bfd_get_symbol_leading_char
@@ -3021,6 +3037,8 @@ expr|struct
 name|sec
 operator|*
 operator|*
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3038,6 +3056,23 @@ name|char
 operator|*
 operator|,
 specifier|const
+name|char
+operator|*
+operator|,
+name|boolean
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* XCOFF support routines for ar.  */
+specifier|extern
+name|boolean
+name|bfd_xcoff_ar_archive_set_magic
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
 name|char
 operator|*
 operator|)
@@ -3283,6 +3318,21 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_elf32_arm_add_glue_sections_to_bfd
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* TI COFF load page support.  */
 specifier|extern
 name|void
@@ -3310,7 +3360,7 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* And more from the source.  */
+comment|/* Extracted from init.c.  */
 name|void
 name|bfd_init
 name|PARAMS
@@ -3320,6 +3370,7 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Extracted from opncls.c.  */
 name|bfd
 modifier|*
 name|bfd_openr
@@ -3455,6 +3506,7 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Extracted from libbfd.c.  */
 comment|/* Byte swapping macros for user section data.  */
 define|#
 directive|define
@@ -3935,6 +3987,7 @@ define|#
 directive|define
 name|H_GET_S8
 value|bfd_h_get_signed_8
+comment|/* Extracted from section.c.  */
 comment|/* This structure is used for a comdat section, as in PE.  A comdat    section is associated with a particular symbol.  When the linker    sees a comdat section, it keeps only one of the sections with a    given name and associated with a given symbol.  */
 struct|struct
 name|bfd_comdat_info
@@ -4028,19 +4081,6 @@ define|#
 directive|define
 name|SEC_CONSTRUCTOR
 value|0x100
-comment|/* The section is a constructor, and should be placed at the      end of the text, data, or bss section(?).  */
-define|#
-directive|define
-name|SEC_CONSTRUCTOR_TEXT
-value|0x1100
-define|#
-directive|define
-name|SEC_CONSTRUCTOR_DATA
-value|0x2100
-define|#
-directive|define
-name|SEC_CONSTRUCTOR_BSS
-value|0x3100
 comment|/* The section has contents - a data section could be<<SEC_ALLOC>> |<<SEC_HAS_CONTENTS>>; a debug section could be<<SEC_HAS_CONTENTS>>  */
 define|#
 directive|define
@@ -4056,6 +4096,11 @@ define|#
 directive|define
 name|SEC_COFF_SHARED_LIBRARY
 value|0x800
+comment|/* The section contains thread local data.  */
+define|#
+directive|define
+name|SEC_THREAD_LOCAL
+value|0x1000
 comment|/* The section has GOT references.  This flag is only for the      linker, and is currently only used by the elf32-hppa back end.      It will be set if global offset table references were detected      in this section, which indicate to the linker that the section      contains PIC code, and must be handled specially when doing a      static link.  */
 define|#
 directive|define
@@ -4768,6 +4813,22 @@ name|section
 operator|)
 argument_list|)
 decl_stmt|;
+name|boolean
+name|bfd_generic_discard_group
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|,
+name|asection
+operator|*
+name|group
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Extracted from archures.c.  */
 enum|enum
 name|bfd_architecture
 block|{
@@ -5197,6 +5258,9 @@ value|3
 name|bfd_arch_d30v
 block|,
 comment|/* Mitsubishi D30V */
+name|bfd_arch_dlx
+block|,
+comment|/* DLX */
 name|bfd_arch_m68hc11
 block|,
 comment|/* Motorola 68HC11 */
@@ -5391,6 +5455,33 @@ define|#
 directive|define
 name|bfd_mach_fr30
 value|0x46523330
+name|bfd_arch_frv
+block|,
+define|#
+directive|define
+name|bfd_mach_frv
+value|0
+define|#
+directive|define
+name|bfd_mach_frvsimple
+value|1
+define|#
+directive|define
+name|bfd_mach_fr300
+value|300
+define|#
+directive|define
+name|bfd_mach_fr400
+value|400
+define|#
+directive|define
+name|bfd_mach_frvtomcat
+value|499
+comment|/* fr500 prototype */
+define|#
+directive|define
+name|bfd_mach_fr500
+value|500
 name|bfd_arch_mcore
 block|,
 name|bfd_arch_ia64
@@ -5437,11 +5528,11 @@ block|,
 comment|/* IBM s390 */
 define|#
 directive|define
-name|bfd_mach_s390_esa
+name|bfd_mach_s390_31
 value|0
 define|#
 directive|define
-name|bfd_mach_s390_esame
+name|bfd_mach_s390_64
 value|1
 name|bfd_arch_openrisc
 block|,
@@ -5493,7 +5584,7 @@ name|unsigned
 name|int
 name|section_align_power
 decl_stmt|;
-comment|/* True if this is the default machine for the architecture.  */
+comment|/* True if this is the default machine for the architecture.      The default arch should be the first entry for an arch so that      all the entries for that arch can be accessed via<<next>>.  */
 name|boolean
 name|the_default
 decl_stmt|;
@@ -5746,6 +5837,7 @@ name|machine
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Extracted from reloc.c.  */
 typedef|typedef
 enum|enum
 name|bfd_reloc_status
@@ -6339,6 +6431,33 @@ block|,
 comment|/* Like BFD_RELOC_23_PCREL_S2, except that the source and target must share a common GP, and the target address is adjusted for  STO_ALPHA_STD_GPLOAD.  */
 name|BFD_RELOC_ALPHA_BRSGP
 block|,
+comment|/* Alpha thread-local storage relocations.  */
+name|BFD_RELOC_ALPHA_TLSGD
+block|,
+name|BFD_RELOC_ALPHA_TLSLDM
+block|,
+name|BFD_RELOC_ALPHA_DTPMOD64
+block|,
+name|BFD_RELOC_ALPHA_GOTDTPREL16
+block|,
+name|BFD_RELOC_ALPHA_DTPREL64
+block|,
+name|BFD_RELOC_ALPHA_DTPREL_HI16
+block|,
+name|BFD_RELOC_ALPHA_DTPREL_LO16
+block|,
+name|BFD_RELOC_ALPHA_DTPREL16
+block|,
+name|BFD_RELOC_ALPHA_GOTTPREL16
+block|,
+name|BFD_RELOC_ALPHA_TPREL64
+block|,
+name|BFD_RELOC_ALPHA_TPREL_HI16
+block|,
+name|BFD_RELOC_ALPHA_TPREL_LO16
+block|,
+name|BFD_RELOC_ALPHA_TPREL16
+block|,
 comment|/* Bits 27..2 of the relocation address shifted right 2 bits; simple reloc otherwise.  */
 name|BFD_RELOC_MIPS_JMP
 block|,
@@ -6409,103 +6528,24 @@ name|BFD_RELOC_MIPS_RELGOT
 block|,
 name|BFD_RELOC_MIPS_JALR
 block|,
-name|BFD_RELOC_SH_GOT_LOW16
+comment|/* Fujitsu Frv Relocations.  */
+name|BFD_RELOC_FRV_LABEL16
 block|,
-name|BFD_RELOC_SH_GOT_MEDLOW16
+name|BFD_RELOC_FRV_LABEL24
 block|,
-name|BFD_RELOC_SH_GOT_MEDHI16
+name|BFD_RELOC_FRV_LO16
 block|,
-name|BFD_RELOC_SH_GOT_HI16
+name|BFD_RELOC_FRV_HI16
 block|,
-name|BFD_RELOC_SH_GOTPLT_LOW16
+name|BFD_RELOC_FRV_GPREL12
 block|,
-name|BFD_RELOC_SH_GOTPLT_MEDLOW16
+name|BFD_RELOC_FRV_GPRELU12
 block|,
-name|BFD_RELOC_SH_GOTPLT_MEDHI16
+name|BFD_RELOC_FRV_GPREL32
 block|,
-name|BFD_RELOC_SH_GOTPLT_HI16
+name|BFD_RELOC_FRV_GPRELHI
 block|,
-name|BFD_RELOC_SH_PLT_LOW16
-block|,
-name|BFD_RELOC_SH_PLT_MEDLOW16
-block|,
-name|BFD_RELOC_SH_PLT_MEDHI16
-block|,
-name|BFD_RELOC_SH_PLT_HI16
-block|,
-name|BFD_RELOC_SH_GOTOFF_LOW16
-block|,
-name|BFD_RELOC_SH_GOTOFF_MEDLOW16
-block|,
-name|BFD_RELOC_SH_GOTOFF_MEDHI16
-block|,
-name|BFD_RELOC_SH_GOTOFF_HI16
-block|,
-name|BFD_RELOC_SH_GOTPC_LOW16
-block|,
-name|BFD_RELOC_SH_GOTPC_MEDLOW16
-block|,
-name|BFD_RELOC_SH_GOTPC_MEDHI16
-block|,
-name|BFD_RELOC_SH_GOTPC_HI16
-block|,
-name|BFD_RELOC_SH_COPY64
-block|,
-name|BFD_RELOC_SH_GLOB_DAT64
-block|,
-name|BFD_RELOC_SH_JMP_SLOT64
-block|,
-name|BFD_RELOC_SH_RELATIVE64
-block|,
-name|BFD_RELOC_SH_GOT10BY4
-block|,
-name|BFD_RELOC_SH_GOT10BY8
-block|,
-name|BFD_RELOC_SH_GOTPLT10BY4
-block|,
-name|BFD_RELOC_SH_GOTPLT10BY8
-block|,
-name|BFD_RELOC_SH_GOTPLT32
-block|,
-name|BFD_RELOC_SH_SHMEDIA_CODE
-block|,
-name|BFD_RELOC_SH_IMMU5
-block|,
-name|BFD_RELOC_SH_IMMS6
-block|,
-name|BFD_RELOC_SH_IMMS6BY32
-block|,
-name|BFD_RELOC_SH_IMMU6
-block|,
-name|BFD_RELOC_SH_IMMS10
-block|,
-name|BFD_RELOC_SH_IMMS10BY2
-block|,
-name|BFD_RELOC_SH_IMMS10BY4
-block|,
-name|BFD_RELOC_SH_IMMS10BY8
-block|,
-name|BFD_RELOC_SH_IMMS16
-block|,
-name|BFD_RELOC_SH_IMMU16
-block|,
-name|BFD_RELOC_SH_IMM_LOW16
-block|,
-name|BFD_RELOC_SH_IMM_LOW16_PCREL
-block|,
-name|BFD_RELOC_SH_IMM_MEDLOW16
-block|,
-name|BFD_RELOC_SH_IMM_MEDLOW16_PCREL
-block|,
-name|BFD_RELOC_SH_IMM_MEDHI16
-block|,
-name|BFD_RELOC_SH_IMM_MEDHI16_PCREL
-block|,
-name|BFD_RELOC_SH_IMM_HI16
-block|,
-name|BFD_RELOC_SH_IMM_HI16_PCREL
-block|,
-name|BFD_RELOC_SH_PT_16
+name|BFD_RELOC_FRV_GPRELLO
 block|,
 comment|/* i386/elf relocations  */
 name|BFD_RELOC_386_GOT32
@@ -6523,6 +6563,30 @@ block|,
 name|BFD_RELOC_386_GOTOFF
 block|,
 name|BFD_RELOC_386_GOTPC
+block|,
+name|BFD_RELOC_386_TLS_TPOFF
+block|,
+name|BFD_RELOC_386_TLS_IE
+block|,
+name|BFD_RELOC_386_TLS_GOTIE
+block|,
+name|BFD_RELOC_386_TLS_LE
+block|,
+name|BFD_RELOC_386_TLS_GD
+block|,
+name|BFD_RELOC_386_TLS_LDM
+block|,
+name|BFD_RELOC_386_TLS_LDO_32
+block|,
+name|BFD_RELOC_386_TLS_IE_32
+block|,
+name|BFD_RELOC_386_TLS_LE_32
+block|,
+name|BFD_RELOC_386_TLS_DTPMOD32
+block|,
+name|BFD_RELOC_386_TLS_DTPOFF32
+block|,
+name|BFD_RELOC_386_TLS_TPOFF32
 block|,
 comment|/* x86-64/elf relocations  */
 name|BFD_RELOC_X86_64_GOT32
@@ -6810,6 +6874,104 @@ name|BFD_RELOC_SH_RELATIVE
 block|,
 name|BFD_RELOC_SH_GOTPC
 block|,
+name|BFD_RELOC_SH_GOT_LOW16
+block|,
+name|BFD_RELOC_SH_GOT_MEDLOW16
+block|,
+name|BFD_RELOC_SH_GOT_MEDHI16
+block|,
+name|BFD_RELOC_SH_GOT_HI16
+block|,
+name|BFD_RELOC_SH_GOTPLT_LOW16
+block|,
+name|BFD_RELOC_SH_GOTPLT_MEDLOW16
+block|,
+name|BFD_RELOC_SH_GOTPLT_MEDHI16
+block|,
+name|BFD_RELOC_SH_GOTPLT_HI16
+block|,
+name|BFD_RELOC_SH_PLT_LOW16
+block|,
+name|BFD_RELOC_SH_PLT_MEDLOW16
+block|,
+name|BFD_RELOC_SH_PLT_MEDHI16
+block|,
+name|BFD_RELOC_SH_PLT_HI16
+block|,
+name|BFD_RELOC_SH_GOTOFF_LOW16
+block|,
+name|BFD_RELOC_SH_GOTOFF_MEDLOW16
+block|,
+name|BFD_RELOC_SH_GOTOFF_MEDHI16
+block|,
+name|BFD_RELOC_SH_GOTOFF_HI16
+block|,
+name|BFD_RELOC_SH_GOTPC_LOW16
+block|,
+name|BFD_RELOC_SH_GOTPC_MEDLOW16
+block|,
+name|BFD_RELOC_SH_GOTPC_MEDHI16
+block|,
+name|BFD_RELOC_SH_GOTPC_HI16
+block|,
+name|BFD_RELOC_SH_COPY64
+block|,
+name|BFD_RELOC_SH_GLOB_DAT64
+block|,
+name|BFD_RELOC_SH_JMP_SLOT64
+block|,
+name|BFD_RELOC_SH_RELATIVE64
+block|,
+name|BFD_RELOC_SH_GOT10BY4
+block|,
+name|BFD_RELOC_SH_GOT10BY8
+block|,
+name|BFD_RELOC_SH_GOTPLT10BY4
+block|,
+name|BFD_RELOC_SH_GOTPLT10BY8
+block|,
+name|BFD_RELOC_SH_GOTPLT32
+block|,
+name|BFD_RELOC_SH_SHMEDIA_CODE
+block|,
+name|BFD_RELOC_SH_IMMU5
+block|,
+name|BFD_RELOC_SH_IMMS6
+block|,
+name|BFD_RELOC_SH_IMMS6BY32
+block|,
+name|BFD_RELOC_SH_IMMU6
+block|,
+name|BFD_RELOC_SH_IMMS10
+block|,
+name|BFD_RELOC_SH_IMMS10BY2
+block|,
+name|BFD_RELOC_SH_IMMS10BY4
+block|,
+name|BFD_RELOC_SH_IMMS10BY8
+block|,
+name|BFD_RELOC_SH_IMMS16
+block|,
+name|BFD_RELOC_SH_IMMU16
+block|,
+name|BFD_RELOC_SH_IMM_LOW16
+block|,
+name|BFD_RELOC_SH_IMM_LOW16_PCREL
+block|,
+name|BFD_RELOC_SH_IMM_MEDLOW16
+block|,
+name|BFD_RELOC_SH_IMM_MEDLOW16_PCREL
+block|,
+name|BFD_RELOC_SH_IMM_MEDHI16
+block|,
+name|BFD_RELOC_SH_IMM_MEDHI16_PCREL
+block|,
+name|BFD_RELOC_SH_IMM_HI16
+block|,
+name|BFD_RELOC_SH_IMM_HI16_PCREL
+block|,
+name|BFD_RELOC_SH_PT_16
+block|,
 comment|/* Thumb 23-, 12- and 9-bit pc-relative branches.  The lowest bit must be zero and is not stored in the instruction.  */
 name|BFD_RELOC_THUMB_PCREL_BRANCH9
 block|,
@@ -6867,6 +7029,15 @@ name|BFD_RELOC_D30V_32
 block|,
 comment|/* This is a 32-bit pc-relative reloc.  */
 name|BFD_RELOC_D30V_32_PCREL
+block|,
+comment|/* DLX relocs  */
+name|BFD_RELOC_DLX_HI16_S
+block|,
+comment|/* DLX relocs  */
+name|BFD_RELOC_DLX_LO16
+block|,
+comment|/* DLX relocs  */
+name|BFD_RELOC_DLX_JMP26
 block|,
 comment|/* Mitsubishi M32R relocs. This is a 24 bit absolute address.  */
 name|BFD_RELOC_M32R_24
@@ -7282,17 +7453,43 @@ name|BFD_RELOC_IA64_IPLTLSB
 block|,
 name|BFD_RELOC_IA64_COPY
 block|,
+name|BFD_RELOC_IA64_LTOFF22X
+block|,
+name|BFD_RELOC_IA64_LDXMOV
+block|,
+name|BFD_RELOC_IA64_TPREL14
+block|,
 name|BFD_RELOC_IA64_TPREL22
+block|,
+name|BFD_RELOC_IA64_TPREL64I
 block|,
 name|BFD_RELOC_IA64_TPREL64MSB
 block|,
 name|BFD_RELOC_IA64_TPREL64LSB
 block|,
-name|BFD_RELOC_IA64_LTOFF_TP22
+name|BFD_RELOC_IA64_LTOFF_TPREL22
 block|,
-name|BFD_RELOC_IA64_LTOFF22X
+name|BFD_RELOC_IA64_DTPMOD64MSB
 block|,
-name|BFD_RELOC_IA64_LDXMOV
+name|BFD_RELOC_IA64_DTPMOD64LSB
+block|,
+name|BFD_RELOC_IA64_LTOFF_DTPMOD22
+block|,
+name|BFD_RELOC_IA64_DTPREL14
+block|,
+name|BFD_RELOC_IA64_DTPREL22
+block|,
+name|BFD_RELOC_IA64_DTPREL64I
+block|,
+name|BFD_RELOC_IA64_DTPREL32MSB
+block|,
+name|BFD_RELOC_IA64_DTPREL32LSB
+block|,
+name|BFD_RELOC_IA64_DTPREL64MSB
+block|,
+name|BFD_RELOC_IA64_DTPREL64LSB
+block|,
+name|BFD_RELOC_IA64_LTOFF_DTPREL22
 block|,
 comment|/* Motorola 68HC11 reloc. This is the 8 bits high part of an absolute address.  */
 name|BFD_RELOC_M68HC11_HI8
@@ -7432,6 +7629,13 @@ name|BFD_RELOC_XSTORMY16_24
 block|,
 name|BFD_RELOC_XSTORMY16_FPTR16
 block|,
+comment|/* Relocations used by VAX ELF.  */
+name|BFD_RELOC_VAX_GLOB_DAT
+block|,
+name|BFD_RELOC_VAX_JMP_SLOT
+block|,
+name|BFD_RELOC_VAX_RELATIVE
+block|,
 name|BFD_RELOC_UNUSED
 block|}
 enum|;
@@ -7467,6 +7671,7 @@ name|code
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Extracted from syms.c.  */
 typedef|typedef
 struct|struct
 name|symbol_cache_entry
@@ -7589,6 +7794,11 @@ define|#
 directive|define
 name|BSF_DEBUGGING_RELOC
 value|0x20000
+comment|/* This symbol is thread local.  Used in ELF.  */
+define|#
+directive|define
+name|BSF_THREAD_LOCAL
+value|0x40000
 name|flagword
 name|flags
 decl_stmt|;
@@ -7814,6 +8024,7 @@ name|osymbol
 parameter_list|)
 define|\
 value|BFD_SEND (obfd, _bfd_copy_private_symbol_data, \                (ibfd, isymbol, obfd, osymbol))
+comment|/* Extracted from bfd.c.  */
 struct|struct
 name|_bfd
 block|{
@@ -7947,6 +8158,11 @@ name|symbol_cache_entry
 modifier|*
 modifier|*
 name|outsymbols
+decl_stmt|;
+comment|/* Used for slurped dynamic symbol tables.  */
+name|unsigned
+name|int
+name|dynsymcount
 decl_stmt|;
 comment|/* Pointer to structure which contains architecture information.  */
 specifier|const
@@ -8683,12 +8899,32 @@ define|\
 value|BFD_SEND (abfd, _bfd_merge_sections, (abfd, link_info))
 define|#
 directive|define
+name|bfd_discard_group
+parameter_list|(
+name|abfd
+parameter_list|,
+name|sec
+parameter_list|)
+define|\
+value|BFD_SEND (abfd, _bfd_discard_group, (abfd, sec))
+define|#
+directive|define
 name|bfd_link_hash_table_create
 parameter_list|(
 name|abfd
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_link_hash_table_create, (abfd))
+define|#
+directive|define
+name|bfd_link_hash_table_free
+parameter_list|(
+name|abfd
+parameter_list|,
+name|hash
+parameter_list|)
+define|\
+value|BFD_SEND (abfd, _bfd_link_hash_table_free, (hash))
 define|#
 directive|define
 name|bfd_link_add_symbols
@@ -8699,6 +8935,16 @@ name|info
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_link_add_symbols, (abfd, info))
+define|#
+directive|define
+name|bfd_link_just_syms
+parameter_list|(
+name|sec
+parameter_list|,
+name|info
+parameter_list|)
+define|\
+value|BFD_SEND (abfd, _bfd_link_just_syms, (sec, info))
 define|#
 directive|define
 name|bfd_final_link
@@ -8804,10 +9050,11 @@ operator|*
 name|abfd
 operator|,
 name|int
-name|_index
+name|alternative
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Extracted from archive.c.  */
 name|symindex
 name|bfd_get_next_mapent
 name|PARAMS
@@ -8858,6 +9105,7 @@ name|previous
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Extracted from corefile.c.  */
 specifier|const
 name|char
 modifier|*
@@ -8897,6 +9145,7 @@ name|exec_bfd
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Extracted from targets.c.  */
 define|#
 directive|define
 name|BFD_SEND
@@ -10189,7 +10438,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|CONCAT2 (NAME,_sizeof_headers), \ CONCAT2 (NAME,_bfd_get_relocated_section_contents), \ CONCAT2 (NAME,_bfd_relax_section), \ CONCAT2 (NAME,_bfd_link_hash_table_create), \ CONCAT2 (NAME,_bfd_link_add_symbols), \ CONCAT2 (NAME,_bfd_final_link), \ CONCAT2 (NAME,_bfd_link_split_section), \ CONCAT2 (NAME,_bfd_gc_sections), \ CONCAT2 (NAME,_bfd_merge_sections)
+value|CONCAT2 (NAME,_sizeof_headers), \ CONCAT2 (NAME,_bfd_get_relocated_section_contents), \ CONCAT2 (NAME,_bfd_relax_section), \ CONCAT2 (NAME,_bfd_link_hash_table_create), \ CONCAT2 (NAME,_bfd_link_hash_table_free), \ CONCAT2 (NAME,_bfd_link_add_symbols), \ CONCAT2 (NAME,_bfd_link_just_syms), \ CONCAT2 (NAME,_bfd_final_link), \ CONCAT2 (NAME,_bfd_link_split_section), \ CONCAT2 (NAME,_bfd_gc_sections), \ CONCAT2 (NAME,_bfd_merge_sections), \ CONCAT2 (NAME,_bfd_discard_group)
 name|int
 argument_list|(
 argument|*_bfd_sizeof_headers
@@ -10275,6 +10524,20 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Release the memory associated with the linker hash table.  */
+name|void
+argument_list|(
+argument|*_bfd_link_hash_table_free
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_link_hash_table
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Add symbols from this object file into the hash table.  */
 name|boolean
 argument_list|(
@@ -10284,6 +10547,23 @@ name|PARAMS
 argument_list|(
 operator|(
 name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Indicate that we are only retrieving symbol values from this section.  */
+name|void
+argument_list|(
+argument|*_bfd_link_just_syms
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|asection
 operator|*
 operator|,
 expr|struct
@@ -10356,6 +10636,23 @@ operator|*
 operator|,
 expr|struct
 name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Discard members of a group.  */
+name|boolean
+argument_list|(
+argument|*_bfd_discard_group
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|sec
 operator|*
 operator|)
 argument_list|)
@@ -10517,6 +10814,7 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Extracted from format.c.  */
 name|boolean
 name|bfd_check_format
 name|PARAMS
