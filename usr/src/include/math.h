@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)math.h	5.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)math.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -113,11 +113,6 @@ directive|define
 name|HUGE
 value|HUGE_VAL
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -265,6 +260,15 @@ end_define
 
 begin_comment
 comment|/* 1/sqrt(2) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_ANSI_SOURCE&& !_POSIX_SOURCE */
 end_comment
 
 begin_include
