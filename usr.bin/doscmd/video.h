@@ -1514,7 +1514,6 @@ comment|/* External functions in 'video.c'. */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_mode
 parameter_list|(
@@ -1524,7 +1523,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|find_vmode
 parameter_list|(
@@ -1534,7 +1532,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|u_int8_t
+name|vga_read
+parameter_list|(
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vga_write
 parameter_list|(
@@ -1546,7 +1552,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|video_bios_init
 parameter_list|(
@@ -1556,7 +1561,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|video_init
 parameter_list|(
@@ -1566,7 +1570,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|vmem_pageflt
 parameter_list|(
