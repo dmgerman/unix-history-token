@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vadj.c	7.5	%G%"
+literal|"@(#)ex_vadj.c	7.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3198,7 +3198,7 @@ name|i
 operator|++
 control|)
 comment|/* .. and scroll cnt times */
-name|putchar
+name|putch
 argument_list|(
 literal|'\n'
 argument_list|)
