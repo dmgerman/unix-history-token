@@ -3767,6 +3767,9 @@ name|u_int8_t
 name|dc_cachesize
 decl_stmt|;
 name|int
+name|dc_romwidth
+decl_stmt|;
+name|int
 name|dc_pnic_rx_bug_save
 decl_stmt|;
 name|unsigned
@@ -3787,10 +3790,8 @@ name|u_int32_t
 name|dc_txthresh
 decl_stmt|;
 name|u_int8_t
+modifier|*
 name|dc_srom
-index|[
-literal|1024
-index|]
 decl_stmt|;
 name|struct
 name|dc_mediainfo
