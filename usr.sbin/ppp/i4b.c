@@ -92,27 +92,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_comment
-comment|/* for `errno' ?!? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
