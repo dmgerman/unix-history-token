@@ -722,7 +722,7 @@ name|irq_rman
 operator|.
 name|rm_end
 operator|=
-literal|63
+literal|255
 expr_stmt|;
 if|if
 condition|(
