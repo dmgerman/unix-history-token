@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.12 83/08/23"
+literal|"@(#)ttgeneric.c	3.13 83/08/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,12 +94,16 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|gen_modes
+decl_stmt|,
+name|gen_nmodes
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 name|gen_insert
+decl_stmt|,
+name|gen_ninsert
 decl_stmt|;
 end_decl_stmt
 
@@ -191,6 +195,20 @@ begin_decl_stmt
 name|char
 modifier|*
 name|gen_VE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|gen_TI
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|gen_TE
 decl_stmt|;
 end_decl_stmt
 
@@ -345,6 +363,22 @@ argument|new
 argument_list|)
 end_macro
 
+begin_block
+block|{
+name|gen_ninsert
+operator|=
+name|new
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|gen_setinsert1
+argument_list|(
+argument|new
+argument_list|)
+end_macro
+
 begin_decl_stmt
 name|char
 name|new
@@ -392,8 +426,34 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|gen_setmodes
+argument_list|(
+argument|new
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+name|new
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|gen_nmodes
+operator|=
+name|new
+operator|&
+name|tt
+operator|.
+name|tt_availmodes
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+name|gen_setmodes1
 argument_list|(
 name|new
 argument_list|)
@@ -406,12 +466,6 @@ begin_block
 block|{
 specifier|register
 name|diff
-expr_stmt|;
-name|new
-operator|&=
-name|tt
-operator|.
-name|tt_availmodes
 expr_stmt|;
 if|if
 condition|(
@@ -512,6 +566,16 @@ begin_block
 block|{
 if|if
 condition|(
+name|gen_modes
+condition|)
+comment|/* for concept 100 */
+name|gen_setmodes1
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|gen_AL
 condition|)
 name|tt_tputs
@@ -533,6 +597,16 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|gen_modes
+condition|)
+comment|/* for concept 100 */
+name|gen_setmodes1
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gen_DL
@@ -562,6 +636,16 @@ end_expr_stmt
 
 begin_block
 block|{
+name|gen_setinsert1
+argument_list|(
+name|gen_ninsert
+argument_list|)
+expr_stmt|;
+name|gen_setmodes1
+argument_list|(
+name|gen_nmodes
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gen_insert
@@ -649,6 +733,16 @@ end_expr_stmt
 
 begin_block
 block|{
+name|gen_setinsert1
+argument_list|(
+name|gen_ninsert
+argument_list|)
+expr_stmt|;
+name|gen_setmodes1
+argument_list|(
+name|gen_nmodes
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gen_insert
@@ -766,6 +860,16 @@ operator|<=
 literal|0
 condition|)
 return|return;
+name|gen_setinsert1
+argument_list|(
+name|gen_ninsert
+argument_list|)
+expr_stmt|;
+name|gen_setmodes1
+argument_list|(
+name|gen_nmodes
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gen_insert
@@ -893,13 +997,9 @@ name|gen_MI
 operator|&&
 name|gen_insert
 condition|)
-if|if
-condition|(
-name|gen_EI
-condition|)
-name|ps
+name|gen_setinsert
 argument_list|(
-name|gen_EI
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -908,16 +1008,10 @@ operator|!
 name|gen_MS
 operator|&&
 name|gen_modes
-operator|&
-name|WWM_REV
 condition|)
-if|if
-condition|(
-name|gen_SE
-condition|)
-name|ps
+name|gen_setmodes
 argument_list|(
-name|gen_SE
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1085,40 +1179,6 @@ name|gen_row
 operator|=
 name|row
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|gen_MI
-operator|&&
-name|gen_insert
-condition|)
-if|if
-condition|(
-name|gen_IM
-condition|)
-name|ps
-argument_list|(
-name|gen_IM
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|gen_MS
-operator|&&
-name|gen_modes
-operator|&
-name|WWM_REV
-condition|)
-if|if
-condition|(
-name|gen_SO
-condition|)
-name|ps
-argument_list|(
-name|gen_SO
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1140,6 +1200,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|gen_TI
+condition|)
+name|ps
+argument_list|(
+name|gen_TI
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|gen_CL
 condition|)
 name|ps
@@ -1153,10 +1222,14 @@ name|gen_row
 operator|=
 literal|0
 expr_stmt|;
+name|gen_ninsert
+operator|=
 name|gen_insert
 operator|=
 literal|0
 expr_stmt|;
+name|gen_nmodes
+operator|=
 name|gen_modes
 operator|=
 literal|0
@@ -1171,14 +1244,23 @@ end_macro
 
 begin_block
 block|{
-name|gen_setmodes
+name|gen_setmodes1
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|gen_setinsert
+name|gen_setinsert1
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gen_TE
+condition|)
+name|ps
+argument_list|(
+name|gen_TE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1200,6 +1282,16 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|gen_modes
+condition|)
+comment|/* for concept 100 */
+name|gen_setmodes1
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gen_CE
@@ -1225,6 +1317,16 @@ begin_block
 block|{
 if|if
 condition|(
+name|gen_modes
+condition|)
+comment|/* for concept 100 */
+name|gen_setmodes1
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|gen_CD
 condition|)
 name|tt_tputs
@@ -1246,6 +1348,16 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|gen_modes
+condition|)
+comment|/* for concept 100 */
+name|gen_setmodes1
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gen_CL
@@ -1378,6 +1490,20 @@ operator|=
 name|tt_xgetstr
 argument_list|(
 literal|"ve"
+argument_list|)
+expr_stmt|;
+name|gen_TI
+operator|=
+name|tt_xgetstr
+argument_list|(
+literal|"ti"
+argument_list|)
+expr_stmt|;
+name|gen_TE
+operator|=
+name|tt_xgetstr
+argument_list|(
+literal|"te"
 argument_list|)
 expr_stmt|;
 name|gen_SO
