@@ -253,9 +253,13 @@ name|heads
 decl_stmt|;
 comment|/* number of heads	     */
 name|int
-name|intleave
+name|f_gap
 decl_stmt|;
-comment|/* interleave factor         */
+comment|/* format gap len            */
+name|int
+name|f_inter
+decl_stmt|;
+comment|/* format interleave factor  */
 block|}
 struct|;
 end_struct
