@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c 4.1 %G%"
+literal|"@(#)lex.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5203,7 +5203,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|short
+name|int
 name|ctpgrp
 decl_stmt|;
 if|if

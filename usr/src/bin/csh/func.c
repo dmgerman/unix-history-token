@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c 4.7 82/12/30"
+literal|"@(#)func.c 4.8 83/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -4763,7 +4763,7 @@ name|old
 decl_stmt|,
 name|ldisc
 decl_stmt|;
-name|short
+name|int
 name|ctpgrp
 decl_stmt|;
 if|if

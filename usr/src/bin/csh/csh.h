@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* csh.h 4.6 83/02/03 */
+comment|/* csh.h 4.7 83/02/09 */
 end_comment
 
 begin_include
@@ -376,7 +376,7 @@ comment|/* Time mail last checked */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|shpgrp
 decl_stmt|;
 end_decl_stmt
@@ -386,7 +386,7 @@ comment|/* Pgrp of shell */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|tpgrp
 decl_stmt|;
 end_decl_stmt
@@ -400,7 +400,7 @@ comment|/* If tpgrp is -1, leave tty alone! */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|opgrp
 decl_stmt|;
 end_decl_stmt

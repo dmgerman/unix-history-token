@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* proc.h 4.3 %G% */
+comment|/* proc.h 4.4 %G% */
 end_comment
 
 begin_comment
@@ -46,10 +46,10 @@ name|char
 name|p_index
 decl_stmt|;
 comment|/* shorthand job index */
-name|short
+name|int
 name|p_pid
 decl_stmt|;
-name|short
+name|int
 name|p_jobid
 decl_stmt|;
 comment|/* pid of job leader */

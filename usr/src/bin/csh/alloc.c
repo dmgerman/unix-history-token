@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)alloc.c 4.1 %G%"
+literal|"@(#)alloc.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1311,7 +1311,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%d used, %d free, %l end\n"
+literal|"%d used, %d free, %ld end\n"
 argument_list|,
 name|used
 argument_list|,
