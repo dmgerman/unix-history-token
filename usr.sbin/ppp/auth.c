@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP Secret Key Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: auth.c,v 1.18 1997/10/26 01:02:07 brian Exp $  *  *	TODO:  *		o Implement check against with registered IP addresses.  */
+comment|/*  *			PPP Secret Key Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: auth.c,v 1.19 1997/11/09 14:18:32 brian Exp $  *  *	TODO:  *		o Implement check against with registered IP addresses.  */
 end_comment
 
 begin_include
@@ -184,8 +184,8 @@ operator|=
 name|LOCAL_AUTH
 expr_stmt|;
 else|else
-name|VarLocalAuth
-operator|=
+switch|switch
+condition|(
 name|LocalAuthValidate
 argument_list|(
 name|SECRETFILE
@@ -194,13 +194,33 @@ name|VarShortHost
 argument_list|,
 literal|""
 argument_list|)
-operator|==
+condition|)
+block|{
+case|case
 name|NOT_FOUND
-condition|?
+case|:
+name|VarLocalAuth
+operator|=
 name|LOCAL_DENY
-else|:
+expr_stmt|;
+break|break;
+case|case
+name|VALID
+case|:
+name|VarLocalAuth
+operator|=
+name|LOCAL_AUTH
+expr_stmt|;
+break|break;
+case|case
+name|INVALID
+case|:
+name|VarLocalAuth
+operator|=
 name|LOCAL_NO_AUTH
 expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
