@@ -1898,10 +1898,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_function
+specifier|static
+name|int
+else|#
+directive|else
 specifier|static
 name|__inline
 name|int
+endif|#
+directive|endif
 name|pf_state_compare
 parameter_list|(
 name|struct
