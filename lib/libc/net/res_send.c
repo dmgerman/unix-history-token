@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.23 1998/06/11 09:03:01 peter Exp $"
+literal|"$Id: res_send.c,v 1.24 1998/06/14 11:25:46 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3800,6 +3800,42 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<resolv.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|res_close
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__res_close
+argument_list|,
+name|_res_close
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|res_send
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__res_send
+argument_list|,
+name|res_send
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

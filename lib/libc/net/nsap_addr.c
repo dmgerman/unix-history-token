@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsap_addr.c,v 1.4 1997/02/22 15:00:27 peter Exp $"
+literal|"$Id: nsap_addr.c,v 1.5 1998/06/11 09:02:45 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,6 +486,42 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_nsap_addr
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_nsap_addr
+argument_list|,
+name|inet_nsap_addr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|inet_nsap_ntoa
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_nsap_ntoa
+argument_list|,
+name|inet_nsap_ntoa
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_comp.c,v 1.13 1998/05/02 13:10:56 peter Exp $"
+literal|"$Id: res_comp.c,v 1.14 1998/06/11 09:02:46 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -917,6 +917,42 @@ end_endif
 begin_comment
 comment|/*BIND_4_COMPAT*/
 end_comment
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<resolv.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|dn_comp
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__dn_comp
+argument_list|,
+name|dn_comp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|dn_expand
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__dn_expand
+argument_list|,
+name|dn_expand
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

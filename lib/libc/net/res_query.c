@@ -51,7 +51,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_query.c,v 1.15 1997/09/01 01:19:21 brian Exp $"
+literal|"$Id: res_query.c,v 1.16 1998/06/11 09:03:00 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1570,6 +1570,58 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<resolv.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|res_query
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__res_query
+argument_list|,
+name|res_query
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|res_search
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__res_search
+argument_list|,
+name|res_search
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|res_querydomain
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__res_querydomain
+argument_list|,
+name|res_querydomain
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

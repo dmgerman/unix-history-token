@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: inet_addr.c,v 1.5 1997/02/22 15:00:16 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,6 +551,42 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_addr
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_addr
+argument_list|,
+name|inet_addr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|inet_aton
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_aton
+argument_list|,
+name|inet_aton
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -332,5 +332,25 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_network
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_network
+argument_list|,
+name|inet_network
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

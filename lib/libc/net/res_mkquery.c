@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkquery.c,v 1.12 1997/02/22 15:00:33 peter Exp $"
+literal|"$Id: res_mkquery.c,v 1.13 1998/06/11 09:02:55 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -708,6 +708,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<resolv.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|res_mkquery
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__res_mkquery
+argument_list|,
+name|res_mkquery
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
