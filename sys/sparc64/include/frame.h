@@ -39,6 +39,9 @@ literal|8
 index|]
 decl_stmt|;
 name|u_long
+name|tf_pil
+decl_stmt|;
+name|u_long
 name|tf_tnpc
 decl_stmt|;
 name|u_long
