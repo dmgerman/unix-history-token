@@ -92,33 +92,6 @@ directive|include
 file|"../general/general.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|ScreenImage
-name|Terminal
-index|[
-name|MAXSCREENSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(SLOWSCREEN) */
-end_comment
-
 begin_comment
 comment|/*  * init_system()  *  * Initialize the global values in case of a restart.  */
 end_comment
