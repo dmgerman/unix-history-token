@@ -149,13 +149,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|mac_enforce_sysv
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|mac_enforce_vm
 decl_stmt|;
 end_decl_stmt
