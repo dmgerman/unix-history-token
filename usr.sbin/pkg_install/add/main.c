@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.20 1999/01/18 03:54:17 billf Exp $"
+literal|"$Id: main.c,v 1.21 1999/01/25 21:08:13 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -858,7 +858,7 @@ return|;
 elseif|else
 if|if
 condition|(
-literal|30004
+literal|300004
 operator|>
 name|reldate
 operator|&&
@@ -872,7 +872,7 @@ return|;
 elseif|else
 if|if
 condition|(
-literal|30004
+literal|300004
 operator|<
 name|reldate
 condition|)
