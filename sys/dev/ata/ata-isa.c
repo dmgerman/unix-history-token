@@ -195,8 +195,10 @@ name|atadev
 operator|->
 name|mode
 operator|=
-name|min
+name|ata_limit_mode
 argument_list|(
+name|atadev
+argument_list|,
 name|mode
 argument_list|,
 name|ATA_PIO_MAX
