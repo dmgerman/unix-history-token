@@ -77,6 +77,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<db.h>
 end_include
 
@@ -176,6 +188,14 @@ decl_stmt|,
 name|oflag
 decl_stmt|,
 name|Tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|sa_family_t
+name|family
+init|=
+name|PF_UNSPEC
 decl_stmt|;
 end_decl_stmt
 
@@ -282,7 +302,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"glmpshoT"
+literal|"46glmpshoT"
 argument_list|)
 operator|)
 operator|!=
@@ -294,6 +314,22 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'4'
+case|:
+name|family
+operator|=
+name|AF_INET
+expr_stmt|;
+break|break;
+case|case
+literal|'6'
+case|:
+name|family
+operator|=
+name|AF_INET6
+expr_stmt|;
+break|break;
 case|case
 literal|'g'
 case|:
@@ -392,7 +428,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: finger [-lmpshoT] [login ...]\n"
+literal|"usage: finger [-46lmpshoT] [login ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
