@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fstab.h	5.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fstab.h	5.12 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FSTAB_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_FSTAB_H_
+end_define
 
 begin_comment
 comment|/*  * File system table, see fstab(5).  *  * Used by dump, mount, umount, swapon, fsck, df, ...  *  * For ufs fs_spec field is the block special name.  Programs that want to  * use the character special name must create that name by prepending a 'r'  * after the right most slash.  Quota files are always named "quotas", so  * if type is "rq", then use concatenation of fs_file and "quotas" to locate  * quota file.  */
@@ -201,6 +213,15 @@ end_decl_stmt
 begin_macro
 name|__END_DECLS
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_FSTAB_H_ */
+end_comment
 
 end_unit
 

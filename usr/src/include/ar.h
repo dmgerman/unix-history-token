@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)ar.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)ar.h	5.4 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_AR_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_AR_H_
+end_define
 
 begin_comment
 comment|/* Pre-4BSD archives had these magic numbers in them. */
@@ -114,6 +126,15 @@ comment|/* consistency check */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_AR_H_ */
+end_comment
 
 end_unit
 

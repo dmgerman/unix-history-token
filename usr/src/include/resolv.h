@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resolv.h	5.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resolv.h	5.15 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_RESOLV_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_RESOLV_H_
+end_define
 
 begin_comment
 comment|/*  * Resolver configuration file.  * Normally not present, but may contain the address of the  * inital name server(s) to query and the domain search list.  */
@@ -588,6 +600,15 @@ end_decl_stmt
 begin_macro
 name|__END_DECLS
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_RESOLV_H_ */
+end_comment
 
 end_unit
 

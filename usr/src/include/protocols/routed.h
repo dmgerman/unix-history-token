@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)routed.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1983, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)routed.h	5.3 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ROUTED_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ROUTED_H_
+end_define
 
 begin_comment
 comment|/*  * Routing Information Protocol  *  * Derived from Xerox NS Routing Information Protocol  * by changing 32-bit net numbers to sockaddr's and  * padding stuff to 32-bit boundaries.  */
@@ -260,6 +272,15 @@ end_define
 
 begin_comment
 comment|/* time to garbage collect */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_ROUTED_H_ */
 end_comment
 
 end_unit

@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dumprestore.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dumprestore.h	5.6 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DUMPRESTORE_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DUMPRESTORE_H_
+end_define
 
 begin_comment
 comment|/*  * TP_BSIZE is the size of file blocks on the dump tapes.  * Note that TP_BSIZE must be a multiple of DEV_BSIZE.  *  * NTREC is the number of TP_BSIZE blocks that are written  * in each tape record. HIGHDENSITYTREC is the number of  * TP_BSIZE blocks that are written in each tape record on  * 6250 BPI or higher density tapes.  *  * TP_NINDIR is the number of indirect pointers in a TS_INODE  * or TS_ADDR record. Note that it must be a power of two.  */
@@ -291,6 +303,15 @@ end_define
 
 begin_comment
 comment|/* inverse for scanf */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_DUMPRESTORE_H_ */
 end_comment
 
 end_unit

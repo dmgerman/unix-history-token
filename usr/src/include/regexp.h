@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 by University of Toronto.  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Henry Spencer.  *  * %sccs.include.redist.c%  *  *	@(#)regexp.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 by University of Toronto.  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Henry Spencer.  *  * %sccs.include.redist.c%  *  *	@(#)regexp.h	5.2 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_REGEXP_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_REGEXP_H_
+end_define
 
 begin_comment
 comment|/*  * Definitions etc. for regexp(3) routines.  *  * Caveat:  this is V8 regexp(3) [actually, a reimplementation thereof],  * not the System V one.  */
@@ -140,6 +152,15 @@ end_decl_stmt
 begin_macro
 name|__END_DECLS
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_REGEXP_H_ */
+end_comment
 
 end_unit
 
