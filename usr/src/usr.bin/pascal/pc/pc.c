@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.5 %G%"
+literal|"@(#)pc.c 3.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|pc0
 init|=
-literal|"/usr/new/pc0"
+literal|"/usr/lib/pc0"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,7 +45,7 @@ name|char
 modifier|*
 name|pc1
 init|=
-literal|"/usr/new/pc1"
+literal|"/lib/f1"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 modifier|*
 name|pc2
 init|=
-literal|"/usr/new/pc2"
+literal|"/usr/lib/pc2"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ name|char
 modifier|*
 name|c2
 init|=
-literal|"/usr/new/c2"
+literal|"/lib/c2"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,7 @@ name|char
 modifier|*
 name|pc3
 init|=
-literal|"/usr/new/pc3"
+literal|"/usr/lib/pc3"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +81,7 @@ name|char
 modifier|*
 name|ld
 init|=
-literal|"/usr/new/ld"
+literal|"/bin/ld"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,7 +90,7 @@ name|char
 modifier|*
 name|as
 init|=
-literal|"/usr/new/as"
+literal|"/bin/as"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,7 +108,7 @@ name|char
 modifier|*
 name|crt0
 init|=
-literal|"/usr/new/crt0.o"
+literal|"/lib/crt0.o"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,7 +117,7 @@ name|char
 modifier|*
 name|mcrt0
 init|=
-literal|"/usr/new/mcrt0.o"
+literal|"/lib/mcrt0.o"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|Jflag
+decl_stmt|,
 name|Sflag
 decl_stmt|,
 name|Oflag
@@ -301,15 +303,21 @@ comment|/* char	*pc3args[NARGS] =	{ "pc3", 0 }; */
 end_comment
 
 begin_comment
-comment|/* char	*ldargs[NARGS] =	{ "ld", "-X", "/usr/new/crt0.o", 0, }; */
+comment|/* char	*ldargs[NARGS] =	{ "ld", "-X", "/lib/crt0.o", 0, }; */
 end_comment
+
+begin_decl_stmt
+name|int
+name|asargx
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
 name|asargs
 index|[
-literal|5
+literal|6
 index|]
 init|=
 block|{
@@ -670,6 +678,14 @@ literal|1
 expr_stmt|;
 continue|continue;
 case|case
+literal|'J'
+case|:
+name|Jflag
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+case|case
 literal|'T'
 case|:
 switch|switch
@@ -685,7 +701,7 @@ literal|'0'
 case|:
 name|pc0
 operator|=
-literal|"/usr/src/new/pc0/a.out"
+literal|"/usr/src/cmd/pc0/a.out"
 expr_stmt|;
 continue|continue;
 case|case
@@ -693,7 +709,7 @@ literal|'1'
 case|:
 name|pc1
 operator|=
-literal|"/usr/src/new/pcc/pc1"
+literal|"/usr/src/cmd/pcc/pc1"
 expr_stmt|;
 continue|continue;
 case|case
@@ -701,7 +717,7 @@ literal|'2'
 case|:
 name|pc2
 operator|=
-literal|"/usr/new/pc2"
+literal|"/usr/src/cmd/pc2/a.out"
 expr_stmt|;
 continue|continue;
 case|case
@@ -709,7 +725,7 @@ literal|'3'
 case|:
 name|pc3
 operator|=
-literal|"/usr/src/new/pc3/a.out"
+literal|"/usr/src/cmd/pc3/a.out"
 expr_stmt|;
 continue|continue;
 case|case
@@ -1157,9 +1173,26 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
+name|asargx
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|Jflag
+condition|)
 name|asargs
 index|[
-literal|1
+name|asargx
+operator|++
+index|]
+operator|=
+literal|"-J"
+expr_stmt|;
+name|asargs
+index|[
+name|asargx
+operator|++
 index|]
 operator|=
 name|tfile
@@ -1169,7 +1202,8 @@ index|]
 expr_stmt|;
 name|asargs
 index|[
-literal|2
+name|asargx
+operator|++
 index|]
 operator|=
 literal|"-o"
@@ -1188,13 +1222,21 @@ argument_list|)
 expr_stmt|;
 name|asargs
 index|[
-literal|3
+name|asargx
+operator|++
 index|]
 operator|=
 name|tfile
 index|[
 literal|1
 index|]
+expr_stmt|;
+name|asargs
+index|[
+name|asargx
+index|]
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1293,10 +1335,6 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|'d'
-case|:
-continue|continue;
-case|case
 literal|'o'
 case|:
 name|pc3args
@@ -1361,7 +1399,7 @@ condition|)
 name|done
 argument_list|()
 expr_stmt|;
-comment|/* char	*ldargs[NARGS] =	{ "ld", "-X", "/usr/new/crt0.o", 0, }; */
+comment|/* char	*ldargs[NARGS] =	{ "ld", "-X", "/lib/crt0.o", 0, }; */
 name|ldargs
 index|[
 literal|0
@@ -1630,6 +1668,9 @@ literal|'p'
 case|:
 case|case
 literal|'S'
+case|:
+case|case
+literal|'J'
 case|:
 case|case
 literal|'T'
