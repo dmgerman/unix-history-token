@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.16	81/02/27	*/
+comment|/*	autoconf.c	4.17	81/02/27	*/
 end_comment
 
 begin_comment
@@ -832,7 +832,7 @@ name|ubawatch
 argument_list|,
 literal|0
 argument_list|,
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 block|}
