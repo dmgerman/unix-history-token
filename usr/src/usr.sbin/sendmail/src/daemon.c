@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -220,12 +220,9 @@ name|SendmailAddress
 operator|.
 name|sin_port
 operator|=
-name|htons
-argument_list|(
 name|sp
 operator|->
 name|s_port
-argument_list|)
 expr_stmt|;
 comment|/* 	**  Try to actually open the connection. 	*/
 ifdef|#
