@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* findterm.c  *  * By Ross Ridge  * Public Domain  * 92/02/01 07:29:56  *  */
+comment|/* findterm.c  *  * By Ross Ridge  * Public Domain  * 92/02/01 07:29:56  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1192,6 +1192,14 @@ operator|*
 name|s
 operator|!=
 literal|':'
+operator|&&
+name|d
+operator|-
+name|buf
+operator|<
+name|MAX_LINE
+operator|-
+literal|1
 condition|)
 operator|*
 name|d
@@ -1293,6 +1301,14 @@ operator|*
 name|s
 operator|!=
 literal|','
+operator|&&
+name|d
+operator|-
+name|buf
+operator|<
+name|MAX_LINE
+operator|-
+literal|1
 condition|)
 operator|*
 name|d
