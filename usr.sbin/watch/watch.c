@@ -376,6 +376,10 @@ name|struct
 name|sgttyb
 name|sgn
 decl_stmt|;
+name|struct
+name|tchars
+name|tc
+decl_stmt|;
 name|ioctl
 argument_list|(
 name|std_in
@@ -384,6 +388,16 @@ name|TIOCGETP
 argument_list|,
 operator|&
 name|sgo
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|std_in
+argument_list|,
+name|TIOCGETC
+argument_list|,
+operator|&
+name|tc
 argument_list|)
 expr_stmt|;
 comment|/* bcopy(&sgn,&sgo, sizeof(struct sgttyb)); */
@@ -410,6 +424,20 @@ name|sgo
 operator|.
 name|sg_ospeed
 expr_stmt|;
+name|tc
+operator|.
+name|t_intrc
+operator|=
+literal|17
+expr_stmt|;
+comment|/* ^Q */
+name|tc
+operator|.
+name|t_quitc
+operator|=
+literal|17
+expr_stmt|;
+comment|/* ^Q */
 name|ioctl
 argument_list|(
 name|std_in
@@ -418,6 +446,16 @@ name|TIOCSETP
 argument_list|,
 operator|&
 name|sgn
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|std_in
+argument_list|,
+name|TIOCSETC
+argument_list|,
+operator|&
+name|tc
 argument_list|)
 expr_stmt|;
 block|}
