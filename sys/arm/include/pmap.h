@@ -308,6 +308,14 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statictics */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pv_entry
+argument_list|)
+name|pm_pvlist
+expr_stmt|;
+comment|/* list of mappings in pmap */
 name|LIST_ENTRY
 argument_list|(
 argument|pmap
@@ -376,6 +384,12 @@ argument_list|(
 argument|pv_entry
 argument_list|)
 name|pv_list
+expr_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|pv_entry
+argument_list|)
+name|pv_plist
 expr_stmt|;
 name|int
 name|pv_flags
