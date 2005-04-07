@@ -234,6 +234,10 @@ modifier|*
 name|de_lockf
 decl_stmt|;
 comment|/* lockf */
+name|u_int64_t
+name|de_inode
+decl_stmt|;
+comment|/* Inode number (really byte offset of direntry) */
 block|}
 struct|;
 end_struct
