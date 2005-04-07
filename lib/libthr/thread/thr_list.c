@@ -175,7 +175,7 @@ name|THREAD_HASH
 parameter_list|(
 name|thrd
 parameter_list|)
-value|(((unsigned long)thrd>> 12) % HASH_QUEUES)
+value|(((unsigned long)thrd>> 8) % HASH_QUEUES)
 end_define
 
 begin_function_decl
