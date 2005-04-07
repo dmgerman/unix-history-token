@@ -900,6 +900,12 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|CURFILE
+operator|!=
+name|NULL
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -6130,7 +6136,12 @@ name|line
 operator|==
 name|NULL
 condition|)
-break|break;
+block|{
+comment|/* try to pop input stack */
+goto|goto
+name|again
+goto|;
+block|}
 comment|/*FALLTHRU*/
 case|case
 name|COND_PARSE
