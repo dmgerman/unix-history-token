@@ -1346,7 +1346,13 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-comment|/* No valid Px state found. */
+name|sc
+operator|->
+name|px_count
+operator|=
+name|count
+expr_stmt|;
+comment|/* No valid Px state found so give up. */
 if|if
 condition|(
 name|count
@@ -1362,12 +1368,6 @@ name|buf
 operator|.
 name|Pointer
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|px_count
-operator|=
-name|count
 expr_stmt|;
 comment|/* Get the control and status registers (one of each). */
 name|buf
