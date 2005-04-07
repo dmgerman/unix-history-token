@@ -417,7 +417,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctlbyname(\"vfs.nfs.iodmin\")"
+literal|"sysctlbyname(\"vfs.nfs.iodmax\")"
 argument_list|)
 expr_stmt|;
 comment|/* Catch the case where we're lowering num_servers below iodmin */
