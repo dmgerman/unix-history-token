@@ -55,15 +55,8 @@ name|sysarch
 argument_list|(
 name|_AMD64_GET_GSBASE
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|(
 operator|&
 name|addr64
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
