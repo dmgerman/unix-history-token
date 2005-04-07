@@ -5599,6 +5599,8 @@ name|int
 name|lineno
 decl_stmt|;
 comment|/* Saved line # */
+name|again
+label|:
 name|semiNL
 operator|=
 name|FALSE
@@ -5611,7 +5613,11 @@ name|ignComment
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 	 * Handle special-characters at the beginning of the line. Either a 	 * leading tab (shell command) or pound-sign (possible conditional) 	 * forces us to ignore comments and dependency operators and treat 	 * semi-colons as semi-colons (by leaving semiNL FALSE). This also 	 * discards completely blank lines. 	 */
+name|lastc
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* 	 * Handle tab at the beginning of the line. A leading tab (shell 	 * command) forces us to ignore comments and dependency operators and 	 * treat semi-colons as semi-colons (by leaving semiNL FALSE). 	 * This also discards completely blank lines. 	 */
 for|for
 control|(
 init|;
@@ -5627,6 +5633,30 @@ if|if
 condition|(
 name|c
 operator|==
+name|EOF
+condition|)
+block|{
+if|if
+condition|(
+name|ParsePopInput
+argument_list|()
+operator|==
+name|DONE
+condition|)
+block|{
+comment|/* End of all inputs - return NULL */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+continue|continue;
+block|}
+if|if
+condition|(
+name|c
+operator|==
 literal|'\t'
 condition|)
 block|{
@@ -5636,28 +5666,17 @@ name|ignDepOp
 operator|=
 name|TRUE
 expr_stmt|;
+name|lastc
+operator|=
+name|c
+expr_stmt|;
 break|break;
 block|}
-elseif|else
 if|if
 condition|(
 name|c
-operator|==
+operator|!=
 literal|'\n'
-condition|)
-block|{
-name|CURFILE
-operator|->
-name|lineno
-operator|++
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|c
-operator|==
-literal|'#'
 condition|)
 block|{
 name|ParseUnreadc
@@ -5667,23 +5686,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
-comment|/* 			 * Anything else breaks out without doing anything 			 */
-break|break;
-block|}
-block|}
-if|if
-condition|(
-name|c
-operator|!=
-name|EOF
-condition|)
-block|{
-name|lastc
-operator|=
-name|c
+name|CURFILE
+operator|->
+name|lineno
+operator|++
 expr_stmt|;
+block|}
 name|buf
 operator|=
 name|Buf_Init
@@ -5723,7 +5731,7 @@ block|{
 case|case
 literal|'\n'
 case|:
-comment|/* 				 * Escaped newline: read characters until a 				 * non-space or an unescaped newline and 				 * replace them all by a single space. This is 				 * done by storing the space over the backslash 				 * and dropping through with the next nonspace. 				 * If it is a semi-colon and semiNL is TRUE, 				 * it will be recognized as a newline in the 				 * code below this... 				 */
+comment|/* 			 * Escaped newline: read characters until a 			 * non-space or an unescaped newline and 			 * replace them all by a single space. This is 			 * done by storing the space over the backslash 			 * and dropping through with the next nonspace. 			 * If it is a semi-colon and semiNL is TRUE, 			 * it will be recognized as a newline in the 			 * code below this... 			 */
 name|CURFILE
 operator|->
 name|lineno
@@ -5768,7 +5776,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 					 * Check for comments, semiNL's, etc. -- 					 * easier than ParseUnreadc(c); 					 * continue; 					 */
+comment|/* 				 * Check for comments, semiNL's, etc. -- 				 * easier than ParseUnreadc(c); 				 * continue; 				 */
 goto|goto
 name|test_char
 goto|;
@@ -5778,13 +5786,13 @@ break|break;
 case|case
 literal|';'
 case|:
-comment|/* 				 * Semi-colon: Need to see if it should be 				 * interpreted as a newline 				 */
+comment|/* 			 * Semi-colon: Need to see if it should be 			 * interpreted as a newline 			 */
 if|if
 condition|(
 name|semiNL
 condition|)
 block|{
-comment|/* 					 * To make sure the command that may 					 * be following this semi-colon begins 					 * with a tab, we push one back into the 					 * input stream. This will overwrite the 					 * semi-colon in the buffer. If there is 					 * no command following, this does no 					 * harm, since the newline remains in 					 * the buffer and the 					 * whole line is ignored. 					 */
+comment|/* 				 * To make sure the command that may 				 * be following this semi-colon begins 				 * with a tab, we push one back into the 				 * input stream. This will overwrite the 				 * semi-colon in the buffer. If there is 				 * no command following, this does no 				 * harm, since the newline remains in 				 * the buffer and the 				 * whole line is ignored. 				 */
 name|ParseUnreadc
 argument_list|(
 literal|'\t'
@@ -5804,7 +5812,7 @@ operator|!
 name|semiNL
 condition|)
 block|{
-comment|/* 					 * Haven't seen a dependency operator 					 * before this, so this must be a 					 * variable assignment -- don't pay 					 * attention to dependency operators 					 * after this. 					 */
+comment|/* 				 * Haven't seen a dependency operator 				 * before this, so this must be a 				 * variable assignment -- don't pay 				 * attention to dependency operators 				 * after this. 				 */
 name|ignDepOp
 operator|=
 name|TRUE
@@ -5822,7 +5830,7 @@ operator|==
 literal|'!'
 condition|)
 block|{
-comment|/* 					 * Well, we've seen a dependency 					 * operator already, but it was the 					 * previous character, so this is really 					 * just an expanded variable assignment. 					 * Revert semi-colons to being just 					 * semi-colons again and ignore any more 					 * dependency operators. 					 * 					 * XXX: Note that a line like 					 * "foo : a:=b" will blow up, but who'd 					 * write a line like that anyway? 					 */
+comment|/* 				 * Well, we've seen a dependency 				 * operator already, but it was the 				 * previous character, so this is really 				 * just an expanded variable assignment. 				 * Revert semi-colons to being just 				 * semi-colons again and ignore any more 				 * dependency operators. 				 * 				 * XXX: Note that a line like 				 * "foo : a:=b" will blow up, but who'd 				 * write a line like that anyway? 				 */
 name|ignDepOp
 operator|=
 name|TRUE
@@ -5849,7 +5857,7 @@ operator|!=
 literal|'\\'
 condition|)
 block|{
-comment|/* 						 * If the character is a hash 						 * mark and it isn't escaped 						 * (or we're being compatible), 						 * the thing is a comment. 						 * Skip to the end of the line. 						 */
+comment|/* 					 * If the character is a hash 					 * mark and it isn't escaped 					 * (or we're being compatible), 					 * the thing is a comment. 					 * Skip to the end of the line. 					 */
 do|do
 block|{
 name|c
@@ -5875,7 +5883,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 						 * Don't add the backslash. 						 * Just let the # get copied 						 * over. 						 */
+comment|/* 					 * Don't add the backslash. 					 * Just let the # get copied 					 * over. 					 */
 name|lastc
 operator|=
 name|c
@@ -5894,19 +5902,9 @@ if|if
 condition|(
 operator|!
 name|ignDepOp
-operator|&&
-operator|(
-name|c
-operator|==
-literal|':'
-operator|||
-name|c
-operator|==
-literal|'!'
-operator|)
 condition|)
 block|{
-comment|/* 					 * A semi-colon is recognized as a 					 * newline only on dependency lines. 					 * Dependency lines are lines with a 					 * colon or an exclamation point. 					 * Ergo... 					 */
+comment|/* 				 * A semi-colon is recognized as a 				 * newline only on dependency lines. 				 * Dependency lines are lines with a 				 * colon or an exclamation point. 				 * Ergo... 				 */
 name|semiNL
 operator|=
 name|TRUE
@@ -5916,7 +5914,13 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* 			 * Copy in the previous character and save this one in 			 * lastc. 			 */
+comment|/* 		 * Copy in the previous character (there may be none if this 		 * was the first character) and save this one in 		 * lastc. 		 */
+if|if
+condition|(
+name|lastc
+operator|!=
+literal|'\0'
+condition|)
 name|Buf_AddByte
 argument_list|(
 name|buf
@@ -5974,7 +5978,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Strip trailing blanks and tabs from the line. 		 * Do not strip a blank or tab that is preceded by 		 * a '\' 		 */
+comment|/* 	 * Strip trailing blanks and tabs from the line. 	 * Do not strip a blank or tab that is preceded by 	 * a '\' 	 */
 name|ep
 operator|=
 name|line
@@ -6047,10 +6051,30 @@ index|[
 literal|0
 index|]
 operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* empty line - just ignore */
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
+if|if
+condition|(
+name|line
+index|[
+literal|0
+index|]
+operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* 			 * The line might be a conditional. Ask the 			 * conditional module about it and act accordingly 			 */
+comment|/* 		 * The line might be a conditional. Ask the 		 * conditional module about it and act accordingly 		 */
 switch|switch
 condition|(
 name|Cond_Eval
@@ -6066,7 +6090,7 @@ block|{
 case|case
 name|COND_SKIP
 case|:
-comment|/* 				 * Skip to next conditional that evaluates to 				 * COND_PARSE. 				 */
+comment|/* 			 * Skip to next conditional that evaluates to 			 * COND_PARSE. 			 */
 do|do
 block|{
 name|free
@@ -6116,12 +6140,9 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
-name|line
-operator|=
-name|ParseReadLine
-argument_list|()
-expr_stmt|;
-break|break;
+goto|goto
+name|again
+goto|;
 case|case
 name|COND_INVALID
 case|:
@@ -6149,7 +6170,7 @@ name|lineno
 expr_stmt|;
 do|do
 block|{
-comment|/* 						 * Skip after the matching end 						 */
+comment|/* 					 * Skip after the matching end 					 */
 name|line
 operator|=
 name|ParseSkipLine
@@ -6171,8 +6192,7 @@ argument_list|(
 name|PARSE_FATAL
 argument_list|,
 literal|"Unexpected end of"
-literal|" file in for "
-literal|"loop.\n"
+literal|" file in for loop.\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6206,11 +6226,9 @@ argument_list|(
 name|lineno
 argument_list|)
 expr_stmt|;
-name|line
-operator|=
-name|ParseReadLine
-argument_list|()
-expr_stmt|;
+goto|goto
+name|again
+goto|;
 block|}
 break|break;
 default|default:
@@ -6222,16 +6240,6 @@ operator|(
 name|line
 operator|)
 return|;
-block|}
-else|else
-block|{
-comment|/* 		 * Hit end-of-file, so return a NULL line to indicate this. 		 */
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 block|}
 end_function
 
@@ -6361,8 +6369,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-do|do
-block|{
 while|while
 condition|(
 operator|(
@@ -6383,7 +6389,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* 				 * Lines that begin with the special character 				 * are either include or undef directives. 				 */
+comment|/* 			 * Lines that begin with the special character 			 * are either include or undef directives. 			 */
 for|for
 control|(
 name|cp
@@ -6599,7 +6605,7 @@ operator|==
 literal|'#'
 condition|)
 block|{
-comment|/* 				 * If we're this far, the line must be 				 * a comment. 				 */
+comment|/* 			 * If we're this far, the line must be 			 * a comment. 			 */
 goto|goto
 name|nextLine
 goto|;
@@ -6612,7 +6618,7 @@ operator|==
 literal|'\t'
 condition|)
 block|{
-comment|/* 				 * If a line starts with a tab, it can only 				 * hope to be a creation command. 				 */
+comment|/* 			 * If a line starts with a tab, it can only 			 * hope to be a creation command. 			 */
 for|for
 control|(
 name|cp
@@ -6656,7 +6662,7 @@ name|GNode
 modifier|*
 name|gn
 decl_stmt|;
-comment|/* 						 * So long as it's not a blank 						 * line and we're actually in a 						 * dependency spec, add the 						 * command to the list of 						 * commands of all targets in 						 * the dependency spec. 						 */
+comment|/* 					 * So long as it's not a blank 					 * line and we're actually in a 					 * dependency spec, add the 					 * command to the list of 					 * commands of all targets in 					 * the dependency spec. 					 */
 name|LST_FOREACH
 argument_list|(
 argument|ln
@@ -6671,7 +6677,7 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-comment|/* 							 * if target already 							 * supplied, ignore 							 * commands 							 */
+comment|/* 						 * if target already 						 * supplied, ignore 						 * commands 						 */
 if|if
 condition|(
 operator|!
@@ -6762,7 +6768,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 				 * It's an S3/S5-style "include". 				 */
+comment|/* 			 * It's an S3/S5-style "include". 			 */
 name|ParseTraditionalInclude
 argument_list|(
 name|line
@@ -6798,7 +6804,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * We now know it's a dependency line so it 				 * needs to have all variables expanded before 				 * being parsed. Tell the variable module to 				 * complain if some variable is undefined... 				 * To make life easier on novices, if the line 				 * is indented we first make sure the line has 				 * a dependency operator in it. If it doesn't 				 * have an operator and we're in a dependency 				 * line's script, we assume it's actually a 				 * shell command and add it to the current 				 * list of targets. 				 */
+comment|/* 			 * We now know it's a dependency line so it 			 * needs to have all variables expanded before 			 * being parsed. Tell the variable module to 			 * complain if some variable is undefined... 			 * To make life easier on novices, if the line 			 * is indented we first make sure the line has 			 * a dependency operator in it. If it doesn't 			 * have an operator and we're in a dependency 			 * line's script, we assume it's actually a 			 * shell command and add it to the current 			 * list of targets. 			 */
 name|cp
 operator|=
 name|line
@@ -6885,7 +6891,7 @@ name|line
 operator|=
 name|cp
 expr_stmt|;
-comment|/* 				 * Need a non-circular list for the target nodes 				 */
+comment|/* 			 * Need a non-circular list for the target nodes 			 */
 name|Lst_Destroy
 argument_list|(
 operator|&
@@ -6912,16 +6918,6 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Reached EOF, but it may be just EOF of an include file... 		 */
-block|}
-do|while
-condition|(
-name|ParsePopInput
-argument_list|()
-operator|==
-name|CONTINUE
-condition|)
-do|;
 name|ParseFinishLine
 argument_list|()
 expr_stmt|;
