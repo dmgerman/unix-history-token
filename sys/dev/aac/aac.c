@@ -7865,6 +7865,12 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * To avoid a race with its completion interrupt, place this command on 	 * the busy queue prior to advertising it to the controller. 	 */
+name|aac_enqueue_busy
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
 comment|/* populate queue entry */
 operator|(
 name|sc
@@ -7912,12 +7918,6 @@ operator|=
 name|pi
 operator|+
 literal|1
-expr_stmt|;
-comment|/* 	 * To avoid a race with its completion interrupt, place this command on 	 * the busy queue prior to advertising it to the controller. 	 */
-name|aac_enqueue_busy
-argument_list|(
-name|cm
-argument_list|)
 expr_stmt|;
 comment|/* notify the adapter if we know how */
 if|if
@@ -8516,6 +8516,11 @@ decl_stmt|;
 name|time_t
 name|deadline
 decl_stmt|;
+name|int
+name|timedout
+decl_stmt|,
+name|code
+decl_stmt|;
 if|#
 directive|if
 literal|0
@@ -8527,6 +8532,10 @@ block|aac_startio(sc);
 endif|#
 directive|endif
 comment|/* 	 * traverse the busy command list, bitch about late commands once 	 * only. 	 */
+name|timedout
+operator|=
+literal|0
+expr_stmt|;
 name|deadline
 operator|=
 name|time_second
@@ -8594,6 +8603,42 @@ argument_list|,
 name|cm
 operator|->
 name|cm_fib
+argument_list|)
+expr_stmt|;
+name|timedout
+operator|++
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|timedout
+condition|)
+block|{
+name|code
+operator|=
+name|AAC_GET_FWSTATUS
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|code
+operator|!=
+name|AAC_UP_AND_RUNNING
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"WARNING! Controller is no "
+literal|"longer running! code= 0x%x\n"
+argument_list|,
+name|code
 argument_list|)
 expr_stmt|;
 block|}
