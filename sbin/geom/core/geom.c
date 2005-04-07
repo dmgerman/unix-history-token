@@ -2213,6 +2213,13 @@ condition|(
 name|errstr
 operator|!=
 name|NULL
+operator|&&
+name|errstr
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|fprintf
