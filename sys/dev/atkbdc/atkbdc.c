@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -4271,6 +4277,30 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Provide a way to disable using Keyboard Interface Test command, which may  * cause problems with some non-compliant hardware, resulting in machine  * being powered down early in the boot process.  *  * Particularly it's known that HP ZV5000 and Compaq R3000Z notebooks are  * affected.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|broken_kit_cmd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.atkbdc.broken_kit_cmd"
+argument_list|,
+operator|&
+name|broken_kit_cmd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|test_kbd_port
@@ -4295,6 +4325,15 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|broken_kit_cmd
+operator|!=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 name|retry
