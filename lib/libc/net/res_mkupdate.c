@@ -185,9 +185,6 @@ modifier|*
 name|cp
 decl_stmt|,
 modifier|*
-name|sp1
-decl_stmt|,
-modifier|*
 name|sp2
 decl_stmt|,
 modifier|*
@@ -348,15 +345,6 @@ name|rcode
 operator|=
 name|NOERROR
 expr_stmt|;
-name|sp1
-operator|=
-name|buf
-operator|+
-literal|2
-operator|*
-name|INT16SZ
-expr_stmt|;
-comment|/* save pointer to zocount */
 name|cp
 operator|=
 name|buf

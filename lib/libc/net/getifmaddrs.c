@@ -152,11 +152,6 @@ name|ntry
 init|=
 literal|0
 decl_stmt|;
-name|u_short
-name|idx
-init|=
-literal|0
-decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
@@ -179,10 +174,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|data
-decl_stmt|;
-name|char
-modifier|*
-name|names
 decl_stmt|;
 name|char
 modifier|*
@@ -584,12 +575,6 @@ argument_list|)
 operator|*
 name|icnt
 expr_stmt|;
-name|names
-operator|=
-name|data
-operator|+
-name|dcnt
-expr_stmt|;
 name|memset
 argument_list|(
 name|ifa
@@ -608,10 +593,6 @@ expr_stmt|;
 name|ift
 operator|=
 name|ifa
-expr_stmt|;
-name|idx
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(

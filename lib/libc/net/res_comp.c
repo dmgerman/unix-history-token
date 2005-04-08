@@ -445,10 +445,6 @@ name|dn
 decl_stmt|;
 block|{
 name|int
-name|ppch
-init|=
-literal|'\0'
-decl_stmt|,
 name|pch
 init|=
 name|PERIOD
@@ -553,10 +549,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|ppch
-operator|=
-name|pch
-operator|,
 name|pch
 operator|=
 name|ch

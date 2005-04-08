@@ -1141,9 +1141,6 @@ name|FNM_PATHNAME
 operator|)
 condition|)
 block|{
-name|pattern
-operator|++
-expr_stmt|;
 return|return
 operator|(
 name|RANGE_NOMATCH
