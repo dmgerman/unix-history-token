@@ -3400,13 +3400,13 @@ name|curthread
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"td crit %x\n"
+literal|"td msr %x\n"
 argument_list|,
 name|td
 operator|->
 name|td_md
 operator|.
-name|md_savecrit
+name|md_saved_msr
 argument_list|)
 expr_stmt|;
 name|panic
