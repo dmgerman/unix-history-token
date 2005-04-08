@@ -112,6 +112,7 @@ modifier|*
 name|c_func2
 decl_stmt|;
 block|}
+name|c_u
 union|;
 name|struct
 name|cmd

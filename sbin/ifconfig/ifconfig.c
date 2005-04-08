@@ -2454,10 +2454,14 @@ if|if
 condition|(
 name|p
 operator|->
+name|c_u
+operator|.
 name|c_func
 operator|||
 name|p
 operator|->
+name|c_u
+operator|.
 name|c_func2
 condition|)
 block|{
@@ -2492,6 +2496,8 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
+name|c_u
+operator|.
 name|c_func
 argument_list|(
 name|argv
@@ -2525,6 +2531,8 @@ condition|)
 block|{
 name|p
 operator|->
+name|c_u
+operator|.
 name|c_func
 argument_list|(
 name|argv
@@ -2584,6 +2592,8 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
+name|c_u
+operator|.
 name|c_func2
 argument_list|(
 name|argv
@@ -2613,6 +2623,8 @@ block|}
 else|else
 name|p
 operator|->
+name|c_u
+operator|.
 name|c_func
 argument_list|(
 operator|*
