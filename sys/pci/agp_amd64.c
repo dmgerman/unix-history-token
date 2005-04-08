@@ -299,6 +299,14 @@ literal|"NVIDIA nForce3 AGP Controller"
 operator|)
 return|;
 case|case
+literal|0x00e110de
+case|:
+return|return
+operator|(
+literal|"NVIDIA nForce3-250 AGP Controller"
+operator|)
+return|;
+case|case
 literal|0x02041106
 case|:
 return|return
