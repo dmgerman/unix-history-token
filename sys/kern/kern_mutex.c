@@ -817,7 +817,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%6s %12s %11s %5s %12s %12s %s\n"
+literal|"\n%6s %12s %11s %5s %12s %12s %s\n"
 argument_list|,
 literal|"max"
 argument_list|,
