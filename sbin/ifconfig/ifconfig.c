@@ -2213,7 +2213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* specially-handled comamnds */
+comment|/* specially-handled commands */
 end_comment
 
 begin_function_decl
