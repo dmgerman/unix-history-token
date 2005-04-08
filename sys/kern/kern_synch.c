@@ -1080,12 +1080,8 @@ operator|&&
 operator|(
 name|td
 operator|->
-name|td_pflags
-operator|&
-name|TDP_OWEPREEMPT
+name|td_owepreempt
 operator|)
-operator|!=
-literal|0
 operator|&&
 operator|(
 name|flags

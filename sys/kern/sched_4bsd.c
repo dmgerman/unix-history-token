@@ -3277,10 +3277,9 @@ name|TDF_NEEDRESCHED
 expr_stmt|;
 name|td
 operator|->
-name|td_pflags
-operator|&=
-operator|~
-name|TDP_OWEPREEMPT
+name|td_owepreempt
+operator|=
+literal|0
 expr_stmt|;
 name|td
 operator|->

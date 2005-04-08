@@ -5851,10 +5851,9 @@ name|TDF_NEEDRESCHED
 expr_stmt|;
 name|td
 operator|->
-name|td_pflags
-operator|&=
-operator|~
-name|TDP_OWEPREEMPT
+name|td_owepreempt
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * If the KSE has been assigned it may be in the process of switching 	 * to the new cpu.  This is the case in sched_bind(). 	 */
 if|if
