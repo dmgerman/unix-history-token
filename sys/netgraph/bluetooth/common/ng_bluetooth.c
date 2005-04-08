@@ -841,7 +841,7 @@ name|moduledata_t
 name|bluetooth_mod
 init|=
 block|{
-literal|"bluetooth"
+literal|"ng_bluetooth"
 block|,
 name|bluetooth_modevent
 block|,
