@@ -58,7 +58,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"s_lrint.c"
+file|"s_lround.c"
 end_include
 
 end_unit
