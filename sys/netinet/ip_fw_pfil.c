@@ -555,10 +555,18 @@ return|;
 comment|/* packet consumed */
 block|}
 else|else
+block|{
+name|args
+operator|.
+name|rule
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|again
 goto|;
 comment|/* continue with packet */
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -993,10 +1001,18 @@ return|;
 comment|/* packet consumed */
 block|}
 else|else
+block|{
+name|args
+operator|.
+name|rule
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|again
 goto|;
 comment|/* continue with packet */
+block|}
 block|}
 ifdef|#
 directive|ifdef
