@@ -1555,6 +1555,13 @@ name|ATA_VIA6420
 value|0x31491106
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATA_VIA6421
+value|0x32491106
+end_define
+
 begin_comment
 comment|/* chipset setup related defines */
 end_comment
@@ -1877,15 +1884,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|VIACLK
+name|NV4OFF
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|VIABUG
+name|VIACLK
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIABUG
+value|0x20
 end_define
 
 begin_comment
