@@ -616,11 +616,6 @@ modifier|*
 name|wcp
 decl_stmt|;
 comment|/* handy wide character pointer */
-name|wchar_t
-modifier|*
-name|wcp0
-decl_stmt|;
-comment|/* saves original value of wcp */
 name|size_t
 name|nconv
 decl_stmt|;
@@ -1865,8 +1860,6 @@ literal|0
 condition|)
 name|wcp
 operator|=
-name|wcp0
-operator|=
 name|va_arg
 argument_list|(
 name|ap
@@ -1877,8 +1870,6 @@ argument_list|)
 expr_stmt|;
 else|else
 name|wcp
-operator|=
-name|wcp0
 operator|=
 operator|&
 name|twc
