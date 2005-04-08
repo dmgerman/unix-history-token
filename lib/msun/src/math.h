@@ -2770,8 +2770,53 @@ directive|if
 literal|0
 end_if
 
+begin_endif
+unit|long double	lgammal(long double); long long	llrintl(long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|long
+name|llroundl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double); long double	logbl(long double); long double	logl(long double); long		lrintl(long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|lroundl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
-unit|long double	lgammal(long double); long long	llrintl(long double); long long	llroundl(long double); long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double); long double	logbl(long double); long double	logl(long double); long		lrintl(long double); long		lroundl(long double); long double	modfl(long double, long double *);
+unit|long double	modfl(long double, long double *);
 comment|/* fundamentally !__pure2 */
 end_comment
 
@@ -2840,10 +2885,21 @@ literal|0
 end_if
 
 begin_endif
-unit|long double	powl(long double, long double); long double	remainderl(long double, long double); long double	remquol(long double, long double, int *); long double	rintl(long double); long double	roundl(long double);
+unit|long double	powl(long double, long double); long double	remainderl(long double, long double); long double	remquol(long double, long double, int *); long double	rintl(long double);
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|long
+name|double
+name|roundl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|long
