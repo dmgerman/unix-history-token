@@ -3344,10 +3344,14 @@ decl_stmt|;
 name|u_short
 name|hash
 decl_stmt|;
-comment|/* If maxnipq is 0, never accept fragments. */
+comment|/* If maxnipq or maxfragsperpacket are 0, never accept fragments. */
 if|if
 condition|(
 name|maxnipq
+operator|==
+literal|0
+operator|||
+name|maxfragsperpacket
 operator|==
 literal|0
 condition|)
@@ -3838,7 +3842,7 @@ operator|=
 name|NULL
 expr_stmt|;
 goto|goto
-name|inserted
+name|done
 goto|;
 block|}
 else|else
@@ -4202,8 +4206,6 @@ name|q
 argument_list|)
 expr_stmt|;
 block|}
-name|inserted
-label|:
 comment|/* 	 * Check for complete reassembly and perform frag per packet 	 * limiting. 	 * 	 * Frag limiting is performed here so that the nth frag has 	 * a chance to complete the packet before we drop the packet. 	 * As a result, n+1 frags are actually allowed per packet, but 	 * only n will ever be stored. (n = maxfragsperpacket.) 	 * 	 */
 name|next
 operator|=
