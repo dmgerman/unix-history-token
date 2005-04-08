@@ -4,14 +4,8 @@ comment|/*-  * This file is in the public domain.  */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $FreeBSD$  #include<i386/ioctl_meteor.h>
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/pvct_ioctl.h>
-end_include
 
 end_unit
 
