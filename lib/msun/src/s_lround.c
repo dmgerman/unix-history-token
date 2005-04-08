@@ -89,13 +89,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * If type has more precision than dtype, the endpoints dtype_(min|max) are  * of the form xxx.5; they are "out of range" because lround() rounds away  * from 0.  On the other hand, if type has less precision than dtype, then  * all values that are out of range are integral, so we might as well assume  * that everything is in range.  (The correct condition in this case is  * harder to express.)  At compile time, INRANGE(x) should reduce to two  * floating-point comparisons in the former case, or TRUE otherwise.  */
+comment|/*  * If type has more precision than dtype, the endpoints dtype_(min|max) are  * of the form xxx.5; they are "out of range" because lround() rounds away  * from 0.  On the other hand, if type has less precision than dtype, then  * all values that are out of range are integral, so we might as well assume  * that everything is in range.  At compile time, INRANGE(x) should reduce to  * two floating-point comparisons in the former case, or TRUE otherwise.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 specifier|const
-name|double
+name|type
 name|dtype_min
 init|=
 name|DTYPE_MIN
@@ -107,7 +107,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|double
+name|type
 name|dtype_max
 init|=
 name|DTYPE_MAX
