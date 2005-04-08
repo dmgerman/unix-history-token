@@ -34,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/bus.h>
+file|<machine/bus.h>
 end_include
 
 begin_include
@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/resource.h>
+file|<machine/resource.h>
 end_include
 
 begin_include
