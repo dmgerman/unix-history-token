@@ -1073,10 +1073,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* reset timeout and put on the proper taskqueue for completition */
 if|if
 condition|(
 operator|!
 name|dumping
+operator|&&
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_TIMEOUT
+operator|)
 condition|)
 name|callout_reset
 argument_list|(
