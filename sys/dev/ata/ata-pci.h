@@ -620,6 +620,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_I82801FBM
+value|0x26538086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ITE_ID
 value|0x1283
 end_define
@@ -2029,12 +2036,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|driver_t
-name|ata_channel_driver
-decl_stmt|;
-end_decl_stmt
+begin_function_decl
+name|int
+name|ata_pci_allocate
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* global prototypes ata-chipset.c */

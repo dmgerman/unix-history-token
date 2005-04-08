@@ -356,6 +356,12 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+comment|/* wait a bit to let slow devices settle */
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 comment|/* disable interrupt */
 name|ATA_IDX_OUTB
 argument_list|(
@@ -3024,52 +3030,7 @@ literal|0
 decl_stmt|,
 name|timeout
 decl_stmt|;
-comment|/* if DMA functionality present stop it  */
-if|if
-condition|(
-name|ch
-operator|->
-name|dma
-condition|)
-block|{
-if|if
-condition|(
-name|ch
-operator|->
-name|dma
-operator|->
-name|stop
-condition|)
-name|ch
-operator|->
-name|dma
-operator|->
-name|stop
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|->
-name|dma
-operator|->
-name|flags
-operator|&
-name|ATA_DMA_LOADED
-condition|)
-name|ch
-operator|->
-name|dma
-operator|->
-name|unload
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* reset host end of channel (if supported) */
+comment|/* reset controller (host) */
 name|ATA_RESET
 argument_list|(
 name|ch
@@ -3885,12 +3846,12 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* wait 5 seconds for device to get !BUSY */
+comment|/* wait at max 1 second for device to get !BUSY */
 while|while
 condition|(
 name|timeout
 operator|<
-literal|5000000
+literal|1000000
 condition|)
 block|{
 name|status
@@ -3979,7 +3940,7 @@ if|if
 condition|(
 name|timeout
 operator|>=
-literal|5000000
+literal|1000000
 condition|)
 return|return
 operator|-

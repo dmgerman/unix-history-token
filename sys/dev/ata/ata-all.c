@@ -598,7 +598,7 @@ operator|->
 name|ata_queue
 argument_list|)
 expr_stmt|;
-comment|/* initialise device(s) on this channel */
+comment|/* reset the controller HW, the channel and device(s) */
 while|while
 condition|(
 name|ATA_LOCKING
@@ -1000,7 +1000,7 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
-comment|/* reset the channel and devices */
+comment|/* reset the controller HW, the channel and device(s) */
 name|ch
 operator|->
 name|hw
