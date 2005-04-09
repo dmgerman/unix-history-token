@@ -1900,8 +1900,6 @@ decl_stmt|;
 name|struct
 name|termios
 name|tios
-decl_stmt|,
-name|otios
 decl_stmt|;
 name|char
 name|logincmd
@@ -1913,11 +1911,6 @@ operator|+
 literal|32
 index|]
 decl_stmt|;
-specifier|extern
-name|uid_t
-name|getuid
-parameter_list|()
-function_decl|;
 name|FILE
 modifier|*
 name|pidfile
@@ -2280,10 +2273,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|otios
-operator|=
-name|tios
-expr_stmt|;
 name|cfmakeraw
 argument_list|(
 operator|&
