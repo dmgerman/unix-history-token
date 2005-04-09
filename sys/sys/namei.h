@@ -281,17 +281,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NOOBJ
-value|0x0080
-end_define
-
-begin_comment
-comment|/* don't create object */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LOCKSHARED
 value|0x0100
 end_define

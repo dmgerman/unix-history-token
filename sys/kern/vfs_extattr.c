@@ -7034,8 +7034,6 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
-name|NOOBJ
-operator||
 name|MPSAFE
 argument_list|,
 name|segflg
@@ -7157,8 +7155,6 @@ argument_list|,
 name|CREATE
 argument_list|,
 name|LOCKPARENT
-operator||
-name|NOOBJ
 operator||
 name|SAVENAME
 argument_list|,
@@ -7602,8 +7598,6 @@ argument_list|,
 name|CREATE
 argument_list|,
 name|LOCKPARENT
-operator||
-name|NOOBJ
 operator||
 name|SAVENAME
 operator||
@@ -9538,8 +9532,6 @@ name|FOLLOW
 operator||
 name|LOCKLEAF
 operator||
-name|NOOBJ
-operator||
 name|MPSAFE
 argument_list|,
 name|pathseg
@@ -9708,8 +9700,6 @@ argument_list|,
 name|FOLLOW
 operator||
 name|LOCKLEAF
-operator||
-name|NOOBJ
 operator||
 name|MPSAFE
 argument_list|,
@@ -10385,8 +10375,6 @@ name|LOCKSHARED
 operator||
 name|LOCKLEAF
 operator||
-name|NOOBJ
-operator||
 name|MPSAFE
 argument_list|,
 name|pathseg
@@ -10645,8 +10633,6 @@ operator||
 name|LOCKLEAF
 operator||
 name|LOCKSHARED
-operator||
-name|NOOBJ
 operator||
 name|MPSAFE
 argument_list|,
@@ -11266,8 +11252,6 @@ name|FOLLOW
 operator||
 name|LOCKLEAF
 operator||
-name|NOOBJ
-operator||
 name|MPSAFE
 argument_list|,
 name|pathseg
@@ -11509,8 +11493,6 @@ argument_list|,
 name|NOFOLLOW
 operator||
 name|LOCKLEAF
-operator||
-name|NOOBJ
 operator||
 name|MPSAFE
 argument_list|,
@@ -16284,8 +16266,6 @@ operator||
 name|NOCACHE
 operator||
 name|SAVESTART
-operator||
-name|NOOBJ
 operator||
 name|MPSAFE
 argument_list|,
