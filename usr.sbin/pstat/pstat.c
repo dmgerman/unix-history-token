@@ -1511,9 +1511,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|pid_t
-name|pgid
-decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -1721,10 +1718,6 @@ name|xt
 operator|->
 name|xt_sid
 argument_list|)
-expr_stmt|;
-name|pgid
-operator|=
-literal|0
 expr_stmt|;
 operator|(
 name|void

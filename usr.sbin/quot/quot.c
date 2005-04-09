@@ -2696,8 +2696,6 @@ name|c
 decl_stmt|;
 name|ino_t
 name|inode
-decl_stmt|,
-name|inode1
 decl_stmt|;
 name|ino_t
 name|maxino
@@ -2763,11 +2761,6 @@ name|c
 argument_list|,
 name|stdin
 argument_list|)
-expr_stmt|;
-name|inode1
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -2889,10 +2882,6 @@ name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
-expr_stmt|;
-name|inode1
-operator|=
-name|inode
 expr_stmt|;
 block|}
 else|else

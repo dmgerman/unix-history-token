@@ -3148,11 +3148,6 @@ name|struct
 name|statfs
 name|fsb
 decl_stmt|;
-name|struct
-name|addrinfo
-modifier|*
-name|ai
-decl_stmt|;
 name|char
 name|host
 index|[
@@ -3323,10 +3318,6 @@ literal|0
 argument_list|,
 name|NI_NUMERICHOST
 argument_list|)
-expr_stmt|;
-name|ai
-operator|=
-name|NULL
 expr_stmt|;
 switch|switch
 condition|(
