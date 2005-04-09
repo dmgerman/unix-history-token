@@ -1447,6 +1447,7 @@ specifier|static
 name|void
 name|get_arg
 parameter_list|(
+name|int
 name|c
 parameter_list|)
 block|{
