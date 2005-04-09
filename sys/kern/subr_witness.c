@@ -1477,6 +1477,27 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * CDEV 	 */
+block|{
+literal|"cdev"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"system map"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * spin locks 	 */
 ifdef|#
 directive|ifdef
