@@ -478,8 +478,6 @@ decl_stmt|;
 block|{
 name|int
 name|c
-decl_stmt|,
-name|n
 decl_stmt|;
 name|long
 name|val

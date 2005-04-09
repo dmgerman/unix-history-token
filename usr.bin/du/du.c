@@ -1197,8 +1197,6 @@ decl_stmt|,
 name|new_size
 decl_stmt|;
 name|int
-name|count
-decl_stmt|,
 name|hash
 decl_stmt|;
 name|st
@@ -1300,10 +1298,6 @@ name|links_entry
 operator|*
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|count
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Try releasing the free list to see if that helps. */
 if|if

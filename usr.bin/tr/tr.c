@@ -286,8 +286,6 @@ name|ch
 decl_stmt|,
 name|cnt
 decl_stmt|,
-name|i
-decl_stmt|,
 name|lastch
 decl_stmt|;
 operator|(

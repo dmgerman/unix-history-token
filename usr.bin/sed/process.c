@@ -400,8 +400,6 @@ name|SPACE
 name|tspace
 decl_stmt|;
 name|size_t
-name|len
-decl_stmt|,
 name|oldpsl
 init|=
 literal|0
@@ -409,9 +407,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
-name|nc
 decl_stmt|;
 name|p
 operator|=

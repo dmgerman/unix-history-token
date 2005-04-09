@@ -680,9 +680,6 @@ name|int
 name|initmbufs
 parameter_list|()
 block|{
-name|int
-name|i
-decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;

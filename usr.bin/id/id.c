@@ -1970,9 +1970,6 @@ modifier|*
 name|pw
 parameter_list|)
 block|{
-name|u_int
-name|rid
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1986,8 +1983,6 @@ name|pw
 operator|=
 name|getpwuid
 argument_list|(
-name|rid
-operator|=
 name|getuid
 argument_list|()
 argument_list|)
