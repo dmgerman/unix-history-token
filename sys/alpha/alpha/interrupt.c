@@ -1749,10 +1749,9 @@ expr_stmt|;
 comment|/* XXX */
 name|curthread
 operator|->
-name|td_pflags
-operator|&=
-operator|~
-name|TDP_OWEPREEMPT
+name|td_owepreempt
+operator|=
+literal|0
 expr_stmt|;
 name|critical_exit
 argument_list|()
