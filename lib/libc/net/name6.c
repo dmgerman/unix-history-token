@@ -35,11 +35,30 @@ directive|include
 file|"namespace.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ICMPNL
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|"reentrant.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -940,6 +959,20 @@ begin_comment
 comment|/*  * XXX: Many dependencies are not thread-safe.  Still, we cannot use  * getipnodeby*() in conjunction with other functions which call them.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ICMPNL
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|mutex_t
@@ -964,6 +997,11 @@ name|THREAD_UNLOCK
 parameter_list|()
 value|mutex_unlock(&_getipnodeby_thread_lock);
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Host lookup order if nsswitch.conf is broken or nonexistant */
