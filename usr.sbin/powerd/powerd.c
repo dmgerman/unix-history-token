@@ -98,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_ACTIVE_PERCENT
-value|80
+value|65
 end_define
 
 begin_define
@@ -114,6 +114,10 @@ directive|define
 name|DEFAULT_POLL_INTERVAL
 value|500
 end_define
+
+begin_comment
+comment|/* Poll interval in milliseconds */
+end_comment
 
 begin_enum
 enum|enum
