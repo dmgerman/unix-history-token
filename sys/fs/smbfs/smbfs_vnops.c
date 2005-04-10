@@ -5170,6 +5170,11 @@ name|killit
 operator|=
 literal|0
 expr_stmt|;
+name|vp
+operator|=
+operator|*
+name|vpp
+expr_stmt|;
 name|error
 operator|=
 name|VOP_GETATTR
