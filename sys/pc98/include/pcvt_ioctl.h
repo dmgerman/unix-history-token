@@ -4,8 +4,14 @@ comment|/*-  * This file is in the public domain.  */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$  #include<i386/pcvt_ioctl.h>
+comment|/* $FreeBSD$ */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<i386/pcvt_ioctl.h>
+end_include
 
 end_unit
 
