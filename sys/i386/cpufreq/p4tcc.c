@@ -75,6 +75,24 @@ directive|include
 file|"cpufreq_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/acpi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpica/acpivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acpi_if.h"
+end_include
+
 begin_struct
 struct|struct
 name|p4tcc_softc
@@ -125,6 +143,22 @@ name|x
 parameter_list|)
 value|((10000 * (x)) / TCC_NUM_SETTINGS)
 end_define
+
+begin_function_decl
+specifier|static
+name|int
+name|p4tcc_features
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|u_int
+modifier|*
+name|features
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -289,6 +323,14 @@ argument_list|,
 name|p4tcc_settings
 argument_list|)
 block|,
+comment|/* ACPI interface */
+name|DEVMETHOD
+argument_list|(
+name|acpi_get_features
+argument_list|,
+name|p4tcc_features
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -341,6 +383,34 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+specifier|static
+name|int
+name|p4tcc_features
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|u_int
+modifier|*
+name|features
+parameter_list|)
+block|{
+comment|/* Notify the ACPI CPU that we support direct access to MSRs */
+operator|*
+name|features
+operator|=
+name|ACPI_CAP_THR_MSRS
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
