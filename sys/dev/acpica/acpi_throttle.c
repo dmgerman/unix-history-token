@@ -738,6 +738,14 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+operator|&&
+operator|!
+name|resource_disabled
+argument_list|(
+literal|"p4tcc"
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -772,6 +780,10 @@ name|struct
 name|acpi_throttle_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|struct
+name|cf_setting
+name|set
 decl_stmt|;
 name|ACPI_BUFFER
 name|buf
@@ -929,6 +941,21 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * Set our initial frequency to the highest since some systems 	 * seem to boot with this at the lowest setting. 	 */
+name|set
+operator|.
+name|freq
+operator|=
+literal|10000
+expr_stmt|;
+name|acpi_thr_set
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|set
+argument_list|)
+expr_stmt|;
 comment|/* Everything went ok, register with cpufreq(4). */
 name|cpufreq_register
 argument_list|(
