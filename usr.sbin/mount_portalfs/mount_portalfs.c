@@ -425,6 +425,33 @@ index|[
 name|optind
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|conf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"The configuration file must be specified"
+literal|"through an absolute file path.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* resolve the mountpoint with realpath(3) */
 operator|(
 name|void
