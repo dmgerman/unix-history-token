@@ -469,7 +469,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Various features and capabilities for the acpi_get_features() method.  * In particular, these are used for the ACPI 3.0 _PDC and _OSC methods.  */
+comment|/*  * Various features and capabilities for the acpi_get_features() method.  * In particular, these are used for the ACPI 3.0 _PDC and _OSC methods.  * See the Intel document titled "Processor Driver Capabilities Bit  * Definitions", number 302223-002.  */
 end_comment
 
 begin_define
