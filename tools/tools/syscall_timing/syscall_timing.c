@@ -334,6 +334,38 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"syscall_timing [iterations] [test]\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"supported tests: getuid getppid clock_gettime "
+literal|"pipe socket\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -363,21 +395,9 @@ name|argc
 operator|!=
 literal|3
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"syscall_timing [iterations] [test]\n"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|count
 operator|=
 name|atoi
@@ -654,21 +674,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"syscal [iterations] [test]\n"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|timespecsub
 argument_list|(
 operator|&
@@ -676,6 +684,16 @@ name|ts_end
 argument_list|,
 operator|&
 name|ts_start
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"test: %s\n"
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
 argument_list|)
 expr_stmt|;
 name|printf
