@@ -704,6 +704,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_NFORCE2_MCP_S1
+value|0x008e10de
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_NFORCE3
 value|0x00d510de
 end_define

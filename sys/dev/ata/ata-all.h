@@ -976,7 +976,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_SC_DET_NO_DEVICE
+name|ATA_SC_DET_IDLE
 value|0x00000000
 end_define
 
