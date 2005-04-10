@@ -251,6 +251,17 @@ parameter_list|)
 value|sx_assert((x), SX_XLOCKED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CF_DEBUG
+parameter_list|(
+name|msg
+modifier|...
+parameter_list|)
+value|do {		\ 	if (cf_verbose)				\ 		printf("cpufreq: " msg);	\ 	} while (0)
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -551,6 +562,13 @@ name|cf_lowest_freq
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|cf_verbose
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
@@ -558,6 +576,17 @@ literal|"debug.cpufreq.lowest"
 argument_list|,
 operator|&
 name|cf_lowest_freq
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.cpufreq.verbose"
+argument_list|,
+operator|&
+name|cf_verbose
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -601,6 +630,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_cpufreq
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|verbose
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|cf_verbose
+argument_list|,
+literal|1
+argument_list|,
+literal|"Print verbose debugging messages"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -621,6 +671,16 @@ decl_stmt|;
 name|int
 name|numdevs
 decl_stmt|;
+name|CF_DEBUG
+argument_list|(
+literal|"initializing %s\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -710,6 +770,16 @@ operator|(
 literal|0
 operator|)
 return|;
+name|CF_DEBUG
+argument_list|(
+literal|"initializing one-time data for %s\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&
@@ -816,6 +886,16 @@ decl_stmt|;
 name|int
 name|numdevs
 decl_stmt|;
+name|CF_DEBUG
+argument_list|(
+literal|"shutdown %s\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -845,6 +925,17 @@ name|numdevs
 operator|==
 literal|1
 condition|)
+block|{
+name|CF_DEBUG
+argument_list|(
+literal|"final shutdown for %s\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|cpufreq_changed
@@ -852,6 +943,7 @@ argument_list|,
 name|cf_ev_tag
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -991,9 +1083,27 @@ name|sc
 operator|->
 name|saved_priority
 expr_stmt|;
+name|CF_DEBUG
+argument_list|(
+literal|"restoring saved level, freq %d prio %d\n"
+argument_list|,
+name|level
+operator|->
+name|total_set
+operator|.
+name|freq
+argument_list|,
+name|priority
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"NULL level, no saved level\n"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ENXIO
@@ -1013,6 +1123,17 @@ operator|->
 name|curr_priority
 condition|)
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"ignoring, curr prio %d less than %d\n"
+argument_list|,
+name|priority
+argument_list|,
+name|sc
+operator|->
+name|curr_priority
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EPERM
@@ -1033,6 +1154,19 @@ operator|<=
 name|cf_lowest_freq
 condition|)
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"rejecting freq %d, less than %d limit\n"
+argument_list|,
+name|level
+operator|->
+name|total_set
+operator|.
+name|freq
+argument_list|,
+name|cf_lowest_freq
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -1061,9 +1195,30 @@ operator|.
 name|freq
 argument_list|)
 condition|)
+block|{
+name|CF_DEBUG
+argument_list|(
+literal|"skipping freq %d, same as current level %d\n"
+argument_list|,
+name|level
+operator|->
+name|total_set
+operator|.
+name|freq
+argument_list|,
+name|sc
+operator|->
+name|curr_level
+operator|.
+name|total_set
+operator|.
+name|freq
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* First, set the absolute frequency via its driver. */
 name|set
 operator|=
@@ -1146,6 +1301,27 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|CF_DEBUG
+argument_list|(
+literal|"setting abs freq %d on %s (cpu %d)\n"
+argument_list|,
+name|set
+operator|->
+name|freq
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|set
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|CPUFREQ_DRV_SET
@@ -1288,6 +1464,27 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|CF_DEBUG
+argument_list|(
+literal|"setting rel freq %d on %s (cpu %d)\n"
+argument_list|,
+name|set
+operator|->
+name|freq
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|set
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|CPUFREQ_DRV_SET
@@ -1348,6 +1545,11 @@ operator|->
 name|saved_level
 condition|)
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"resetting saved level\n"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|saved_level
@@ -1395,6 +1597,23 @@ operator|->
 name|curr_priority
 condition|)
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"saving level, freq %d prio %d\n"
+argument_list|,
+name|sc
+operator|->
+name|curr_level
+operator|.
+name|total_set
+operator|.
+name|freq
+argument_list|,
+name|sc
+operator|->
+name|curr_priority
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|saved_level
@@ -1557,9 +1776,20 @@ name|freq
 operator|!=
 name|CPUFREQ_VAL_UNKNOWN
 condition|)
+block|{
+name|CF_DEBUG
+argument_list|(
+literal|"get returning known freq %d\n"
+argument_list|,
+name|curr_set
+operator|->
+name|freq
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 name|CF_MTX_UNLOCK
 argument_list|(
 operator|&
@@ -1798,9 +2028,20 @@ name|freq
 operator|!=
 name|CPUFREQ_VAL_UNKNOWN
 condition|)
+block|{
+name|CF_DEBUG
+argument_list|(
+literal|"get matched freq %d from drivers\n"
+argument_list|,
+name|curr_set
+operator|->
+name|freq
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* 	 * We couldn't find an exact match, so attempt to estimate and then 	 * match against a level. 	 */
 name|pc
 operator|=
@@ -1877,6 +2118,15 @@ name|levels
 index|[
 name|i
 index|]
+expr_stmt|;
+name|CF_DEBUG
+argument_list|(
+literal|"get estimated freq %d\n"
+argument_list|,
+name|curr_set
+operator|->
+name|freq
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -2138,7 +2388,30 @@ operator|&
 name|CPUFREQ_FLAG_INFO_ONLY
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|CF_DEBUG
+argument_list|(
+literal|"skipping info-only driver %s\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|devs
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 continue|continue;
+block|}
 name|set_count
 operator|=
 name|MAX_SETTINGS
@@ -2193,6 +2466,13 @@ break|break;
 case|case
 name|CPUFREQ_TYPE_RELATIVE
 case|:
+name|CF_DEBUG
+argument_list|(
+literal|"adding %d relative settings\n"
+argument_list|,
+name|set_count
+argument_list|)
+expr_stmt|;
 name|set_arr
 operator|=
 name|malloc
@@ -2262,7 +2542,6 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -2717,6 +2996,18 @@ name|list
 argument_list|)
 condition|)
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"adding abs setting %d at head\n"
+argument_list|,
+name|sets
+index|[
+name|i
+index|]
+operator|.
+name|freq
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 name|list
@@ -2755,6 +3046,24 @@ operator|.
 name|freq
 condition|)
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"adding abs setting %d after %d\n"
+argument_list|,
+name|sets
+index|[
+name|i
+index|]
+operator|.
+name|freq
+argument_list|,
+name|search
+operator|->
+name|total_set
+operator|.
+name|freq
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_AFTER
 argument_list|(
 name|list
@@ -2878,7 +3187,32 @@ name|search
 operator|->
 name|rel_count
 condition|)
+block|{
+name|CF_DEBUG
+argument_list|(
+literal|"skipping modified level, freq %d (dev %s)\n"
+argument_list|,
+name|search
+operator|->
+name|total_set
+operator|.
+name|freq
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|search
+operator|->
+name|rel_set
+index|[
+name|i
+index|]
+operator|.
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* Add each setting to the level, duplicating if necessary. */
 for|for
 control|(
@@ -2970,6 +3304,23 @@ name|fill
 operator|->
 name|rel_count
 operator|++
+expr_stmt|;
+name|CF_DEBUG
+argument_list|(
+literal|"expand set added rel setting %d%% to %d level\n"
+argument_list|,
+name|set
+operator|->
+name|freq
+operator|/
+literal|100
+argument_list|,
+name|fill
+operator|->
+name|total_set
+operator|.
+name|freq
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3159,6 +3510,15 @@ operator|->
 name|lat
 expr_stmt|;
 block|}
+name|CF_DEBUG
+argument_list|(
+literal|"dup set considering derived setting %d\n"
+argument_list|,
+name|fill_set
+operator|->
+name|freq
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we copied an old level that we already modified (say, at 100%), 	 * we need to remove that setting before adding this one.  Since we 	 * process each setting array in order, we know any settings for this 	 * driver will be found at the end. 	 */
 for|for
 control|(
@@ -3194,6 +3554,18 @@ operator|->
 name|dev
 condition|)
 break|break;
+name|CF_DEBUG
+argument_list|(
+literal|"removed last relative driver: %s\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|set
+operator|->
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fill
 operator|->
 name|rel_count
@@ -3216,6 +3588,15 @@ name|list
 argument_list|)
 condition|)
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"dup done, inserted %d at head\n"
+argument_list|,
+name|fill_set
+operator|->
+name|freq
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 name|list
@@ -3260,6 +3641,19 @@ name|freq
 argument_list|)
 condition|)
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"dup done, freeing new level %d, matches %d\n"
+argument_list|,
+name|fill_set
+operator|->
+name|freq
+argument_list|,
+name|itr_set
+operator|->
+name|freq
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|fill
@@ -3285,6 +3679,19 @@ operator|->
 name|freq
 condition|)
 block|{
+name|CF_DEBUG
+argument_list|(
+literal|"dup done, inserting new level %d after %d\n"
+argument_list|,
+name|fill_set
+operator|->
+name|freq
+argument_list|,
+name|itr_set
+operator|->
+name|freq
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_AFTER
 argument_list|(
 name|list
