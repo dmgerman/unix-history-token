@@ -1514,12 +1514,14 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/*      * Before calling any CPU methods, collect child driver feature hints      * and notify ACPI of them.      */
+comment|/*      * Before calling any CPU methods, collect child driver feature hints      * and notify ACPI of them.  We support unified SMP power control      * so advertise this ourselves.  Note this is not the same as independent      * SMP control where each CPU can have different settings.      */
 name|sc
 operator|->
 name|cpu_features
 operator|=
-literal|0
+name|ACPI_CAP_SMP_SAME
+operator||
+name|ACPI_CAP_SMP_SAME_C3
 expr_stmt|;
 if|if
 condition|(
