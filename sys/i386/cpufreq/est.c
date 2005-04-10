@@ -4710,7 +4710,11 @@ name|table
 operator|=
 name|malloc
 argument_list|(
+operator|(
 name|count
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4751,7 +4755,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * XXX Figure out validity checks for id16.  At least some 		 * systems support both SMM access via SystemIO and the 		 * direct MSR access but only report the SystemIO values 		 * via _PSS.  However, since we don't know what should be 		 * valid for this processor, it's hard to know what to check. 		 */
+comment|/* 		 * TODO: Figure out validity checks for id16.  Linux checks 		 * that the control and status values match. 		 */
 name|table
 index|[
 name|i
@@ -4812,6 +4816,21 @@ operator|.
 name|power
 expr_stmt|;
 block|}
+comment|/* Mark end of table with a terminator. */
+name|bzero
+argument_list|(
+operator|&
+name|table
+index|[
+name|i
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|freq_info
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|acpi_settings
