@@ -2990,14 +2990,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_suspend
 argument_list|,
-name|bus_generic_suspend
+name|ata_suspend
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bus_generic_resume
+name|ata_resume
 argument_list|)
 block|,
 comment|/* ATA methods */
