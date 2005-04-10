@@ -101,15 +101,11 @@ parameter_list|)
 value|.asmsym
 end_define
 
-begin_comment
-comment|/* XXX should use .p2align 4,0x90 for -m486. */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|_START_ENTRY
-value|.text; .p2align 2,0x90
+value|.text; .p2align 4,0x90
 end_define
 
 begin_define
