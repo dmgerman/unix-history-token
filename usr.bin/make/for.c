@@ -146,12 +146,12 @@ comment|/* List of items */
 end_comment
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * For_Eval --  *	Evaluate the for loop in the passed line. The line  *	looks like this:  *	    .for<variable> in<varlist>  *  * Results:  *	TRUE: We found a for loop, or we are inside a for loop  *	FALSE: We did not find a for loop, or we found the end of the for  *	       for loop.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * For_For  *	Evaluate the for loop in the passed line. The line  *	looks like this:  *	    .for<variable> in<varlist>  *	The line pointer points just behind the for.  *  * Results:  *	TRUE: Syntax ok.  *	FALSE: Syntax error.  */
 end_comment
 
 begin_function
-name|int
-name|For_Eval
+name|Boolean
+name|For_For
 parameter_list|(
 name|char
 modifier|*
@@ -164,32 +164,12 @@ name|ptr
 decl_stmt|;
 name|char
 modifier|*
-name|sub
+name|wrd
 decl_stmt|;
 name|char
 modifier|*
-name|wrd
+name|sub
 decl_stmt|;
-name|int
-name|level
-decl_stmt|;
-comment|/* Level at which to report errors. */
-name|ptr
-operator|=
-name|line
-expr_stmt|;
-name|level
-operator|=
-name|PARSE_FATAL
-expr_stmt|;
-if|if
-condition|(
-name|forLevel
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 		 * maybe start of a for loop 		 */
 name|Buffer
 modifier|*
 name|buf
@@ -197,6 +177,11 @@ decl_stmt|;
 name|size_t
 name|varlen
 decl_stmt|;
+name|ptr
+operator|=
+name|line
+expr_stmt|;
+comment|/* 	 * Skip space between for and the variable. 	 */
 for|for
 control|(
 name|ptr
@@ -208,8 +193,7 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 operator|*
 name|ptr
@@ -219,79 +203,7 @@ name|ptr
 operator|++
 control|)
 empty_stmt|;
-comment|/* 		 * If we are not in a for loop quickly determine if 		 * the statement is a for. 		 */
-if|if
-condition|(
-name|ptr
-index|[
-literal|0
-index|]
-operator|!=
-literal|'f'
-operator|||
-name|ptr
-index|[
-literal|1
-index|]
-operator|!=
-literal|'o'
-operator|||
-name|ptr
-index|[
-literal|2
-index|]
-operator|!=
-literal|'r'
-operator|||
-operator|!
-name|isspace
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|ptr
-index|[
-literal|3
-index|]
-argument_list|)
-condition|)
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-name|ptr
-operator|+=
-literal|3
-expr_stmt|;
-comment|/* 		 * we found a for loop, and now we are going to parse it. 		 */
-while|while
-condition|(
-operator|*
-name|ptr
-operator|&&
-name|isspace
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|ptr
-argument_list|)
-condition|)
-name|ptr
-operator|++
-expr_stmt|;
-comment|/* 		 * Grab the variable 		 */
-name|buf
-operator|=
-name|Buf_Init
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Grab the variable 	 */
 for|for
 control|(
 name|wrd
@@ -305,8 +217,7 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 operator|*
 name|ptr
@@ -316,6 +227,13 @@ name|ptr
 operator|++
 control|)
 empty_stmt|;
+name|buf
+operator|=
+name|Buf_Init
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|Buf_AppendRange
 argument_list|(
 name|buf
@@ -327,10 +245,6 @@ argument_list|)
 expr_stmt|;
 name|forVar
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|Buf_GetAll
 argument_list|(
 name|buf
@@ -346,17 +260,23 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* XXXHB Buf_Destroy(buf, TRUE) */
+name|Buf_Destroy
+argument_list|(
+name|buf
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 name|Parse_Error
 argument_list|(
-name|level
+name|PARSE_FATAL
 argument_list|,
 literal|"missing variable in for"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
 block|}
@@ -367,6 +287,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Skip to 'in'. 	 */
 while|while
 condition|(
 operator|*
@@ -375,8 +296,7 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 operator|*
 name|ptr
@@ -385,7 +305,7 @@ condition|)
 name|ptr
 operator|++
 expr_stmt|;
-comment|/* 		 * Grab the `in' 		 */
+comment|/* 	 * Grab the `in' 	 */
 if|if
 condition|(
 name|ptr
@@ -406,8 +326,7 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|ptr
 index|[
@@ -416,16 +335,22 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* XXXHB free(forVar) */
+name|free
+argument_list|(
+name|forVar
+argument_list|)
+expr_stmt|;
 name|Parse_Error
 argument_list|(
-name|level
+name|PARSE_FATAL
 argument_list|,
 literal|"missing `in' in for"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s\n"
 argument_list|,
 name|ptr
@@ -433,7 +358,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
 block|}
@@ -441,6 +366,7 @@ name|ptr
 operator|+=
 literal|3
 expr_stmt|;
+comment|/* 	 * Skip to values 	 */
 while|while
 condition|(
 operator|*
@@ -449,8 +375,7 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 operator|*
 name|ptr
@@ -459,7 +384,7 @@ condition|)
 name|ptr
 operator|++
 expr_stmt|;
-comment|/* 		 * Make a list with the remaining words 		 */
+comment|/* 	 * Make a list with the remaining words 	 * XXX should use brk_string here. 	 */
 name|sub
 operator|=
 name|Buf_Peel
@@ -484,12 +409,13 @@ name|sub
 init|;
 operator|*
 name|ptr
+operator|!=
+literal|'\0'
 operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 operator|*
 name|ptr
@@ -532,8 +458,7 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 operator|*
 name|ptr
@@ -571,12 +496,13 @@ while|while
 condition|(
 operator|*
 name|ptr
+operator|!=
+literal|'\0'
 operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 operator|*
 name|ptr
@@ -662,10 +588,33 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|TRUE
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/**  * For_Eval  *	Eat a line of the .for body looking for embedded .for loops  *	and the .endfor  */
+end_comment
+
+begin_function
+name|Boolean
+name|For_Eval
+parameter_list|(
+name|char
+modifier|*
+name|line
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+name|ptr
+operator|=
+name|line
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -682,12 +631,13 @@ operator|++
 init|;
 operator|*
 name|ptr
+operator|!=
+literal|'\0'
 operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 operator|*
 name|ptr
@@ -697,6 +647,7 @@ name|ptr
 operator|++
 control|)
 empty_stmt|;
+comment|/* XXX the isspace is wrong */
 if|if
 condition|(
 name|strncmp
@@ -714,8 +665,7 @@ operator|(
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|ptr
 index|[
@@ -723,11 +673,12 @@ literal|6
 index|]
 argument_list|)
 operator|||
-operator|!
 name|ptr
 index|[
 literal|6
 index|]
+operator|==
+literal|'\0'
 operator|)
 condition|)
 block|{
@@ -744,25 +695,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|--
 name|forLevel
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
-name|Parse_Error
-argument_list|(
-name|level
-argument_list|,
-literal|"for-less endfor"
-argument_list|)
+comment|/* should not be here */
+name|abort
+argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
+name|forLevel
+operator|--
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -781,8 +726,7 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|ptr
 index|[
@@ -834,13 +778,13 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|TRUE
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
 block|}

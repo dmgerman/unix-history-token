@@ -113,15 +113,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|Parse_Init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|Parse_FromString
 parameter_list|(
 name|char

@@ -15,8 +15,24 @@ directive|define
 name|for_h_9d770f33
 end_define
 
+begin_include
+include|#
+directive|include
+file|"sprite.h"
+end_include
+
 begin_function_decl
-name|int
+name|Boolean
+name|For_For
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Boolean
 name|For_Eval
 parameter_list|(
 name|char
