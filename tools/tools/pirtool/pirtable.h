@@ -60,6 +60,24 @@ parameter_list|)
 value|((x)& 0x7)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__packed
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__packed
+value|__attribute__ ((packed))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
