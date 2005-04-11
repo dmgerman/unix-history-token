@@ -2233,10 +2233,6 @@ name|Dir_Init
 argument_list|()
 expr_stmt|;
 comment|/* Initialize directory structures so -I flags 				 * can be processed correctly */
-name|Parse_Init
-argument_list|()
-expr_stmt|;
-comment|/* Need to initialize the paths of #include 				 * directories */
 name|Var_Init
 argument_list|()
 expr_stmt|;
