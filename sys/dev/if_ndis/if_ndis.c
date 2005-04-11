@@ -331,7 +331,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__stdcall
 name|void
 name|ndis_txeof
 parameter_list|(
@@ -347,7 +346,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__stdcall
 name|void
 name|ndis_rxeof
 parameter_list|(
@@ -364,7 +362,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__stdcall
 name|void
 name|ndis_linksts
 parameter_list|(
@@ -382,7 +379,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__stdcall
 name|void
 name|ndis_linksts_done
 parameter_list|(
@@ -791,6 +787,8 @@ operator|>
 literal|1
 condition|)
 break|break;
+if|if
+condition|(
 name|windrv_load
 argument_list|(
 name|mod
@@ -802,7 +800,12 @@ name|drv_data
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|windrv_wrap
 argument_list|(
 operator|(
@@ -812,6 +815,10 @@ name|ndis_rxeof
 argument_list|,
 operator|&
 name|ndis_rxeof_wrap
+argument_list|,
+literal|3
+argument_list|,
+name|WINDRV_WRAP_STDCALL
 argument_list|)
 expr_stmt|;
 name|windrv_wrap
@@ -823,6 +830,10 @@ name|ndis_txeof
 argument_list|,
 operator|&
 name|ndis_txeof_wrap
+argument_list|,
+literal|3
+argument_list|,
+name|WINDRV_WRAP_STDCALL
 argument_list|)
 expr_stmt|;
 name|windrv_wrap
@@ -834,6 +845,10 @@ name|ndis_linksts
 argument_list|,
 operator|&
 name|ndis_linksts_wrap
+argument_list|,
+literal|4
+argument_list|,
+name|WINDRV_WRAP_STDCALL
 argument_list|)
 expr_stmt|;
 name|windrv_wrap
@@ -845,6 +860,10 @@ name|ndis_linksts_done
 argument_list|,
 operator|&
 name|ndis_linksts_done_wrap
+argument_list|,
+literal|1
+argument_list|,
+name|WINDRV_WRAP_STDCALL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2314,6 +2333,28 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drv
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"failed to find driver_object!\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 if|if
 condition|(
 name|NdisAddDevice
@@ -4398,7 +4439,6 @@ comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * 
 end_comment
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|ndis_rxeof
@@ -4745,7 +4785,6 @@ comment|/*  * A frame was downloaded to the chip. It's safe for us to clean up  
 end_comment
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|ndis_txeof
@@ -4927,7 +4966,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|ndis_linksts
@@ -4989,7 +5027,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|ndis_linksts_done
@@ -5336,7 +5373,6 @@ name|ndis_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|__stdcall
 name|ndis_checkforhang_handler
 name|hangfunc
 decl_stmt|;

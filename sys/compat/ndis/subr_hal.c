@@ -138,7 +138,6 @@ file|<compat/ndis/hal_var.h>
 end_include
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|KeStallExecutionProcessor
@@ -149,7 +148,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_BUFFER_ULONG
@@ -166,7 +164,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_BUFFER_USHORT
@@ -183,7 +180,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_BUFFER_UCHAR
@@ -200,7 +196,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_ULONG
@@ -214,7 +209,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_USHORT
@@ -228,7 +222,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_UCHAR
@@ -242,7 +235,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|READ_PORT_ULONG
@@ -254,7 +246,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint16_t
 name|READ_PORT_USHORT
@@ -266,7 +257,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint8_t
 name|READ_PORT_UCHAR
@@ -278,7 +268,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|READ_PORT_BUFFER_ULONG
@@ -295,7 +284,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|READ_PORT_BUFFER_USHORT
@@ -312,7 +300,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|READ_PORT_BUFFER_UCHAR
@@ -329,7 +316,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint64_t
 name|KeQueryPerformanceCounter
@@ -341,7 +327,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|dummy
@@ -399,6 +384,14 @@ operator|&
 name|patch
 operator|->
 name|ipt_wrap
+argument_list|,
+name|patch
+operator|->
+name|ipt_argcnt
+argument_list|,
+name|patch
+operator|->
+name|ipt_ftype
 argument_list|)
 expr_stmt|;
 name|patch
@@ -455,7 +448,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|KeStallExecutionProcessor
@@ -476,7 +468,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_ULONG
@@ -512,7 +503,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_USHORT
@@ -548,7 +538,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_UCHAR
@@ -584,7 +573,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_BUFFER_ULONG
@@ -628,7 +616,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_BUFFER_USHORT
@@ -672,7 +659,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_PORT_BUFFER_UCHAR
@@ -716,7 +702,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint16_t
 name|READ_PORT_USHORT
@@ -747,7 +732,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint32_t
 name|READ_PORT_ULONG
@@ -778,7 +762,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint8_t
 name|READ_PORT_UCHAR
@@ -809,7 +792,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|READ_PORT_BUFFER_ULONG
@@ -853,7 +835,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|READ_PORT_BUFFER_USHORT
@@ -897,7 +878,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|READ_PORT_BUFFER_UCHAR
@@ -944,18 +924,16 @@ begin_comment
 comment|/*  * The spinlock implementation in Windows differs from that of FreeBSD.  * The basic operation of spinlocks involves two steps: 1) spin in a  * tight loop while trying to acquire a lock, 2) after obtaining the  * lock, disable preemption. (Note that on uniprocessor systems, you're  * allowed to skip the first step and just lock out pre-emption, since  * it's not possible for you to be in contention with another running  * thread.) Later, you release the lock then re-enable preemption.  * The difference between Windows and FreeBSD lies in how preemption  * is disabled. In FreeBSD, it's done using critical_enter(), which on  * the x86 arch translates to a cli instruction. This masks off all  * interrupts, and effectively stops the scheduler from ever running  * so _nothing_ can execute except the current thread. In Windows,  * preemption is disabled by raising the processor IRQL to DISPATCH_LEVEL.  * This stops other threads from running, but does _not_ block device  * interrupts. This means ISRs can still run, and they can make other  * threads runable, but those other threads won't be able to execute  * until the current thread lowers the IRQL to something less than  * DISPATCH_LEVEL.  *  * There's another commonly used IRQL in Windows, which is APC_LEVEL.  * An APC is an Asynchronous Procedure Call, which differs from a DPC  * (Defered Procedure Call) in that a DPC is queued up to run in  * another thread, while an APC runs in the thread that scheduled  * it (similar to a signal handler in a UNIX process). We don't  * actually support the notion of APCs in FreeBSD, so for now, the  * only IRQLs we're interested in are DISPATCH_LEVEL and PASSIVE_LEVEL.  *  * To simulate DISPATCH_LEVEL, we raise the current thread's priority  * to PI_REALTIME, which is the highest we can give it. This should,  * if I understand things correctly, prevent anything except for an  * interrupt thread from preempting us. PASSIVE_LEVEL is basically  * everything else.  *  * Be aware that, at least on the x86 arch, the Windows spinlock  * functions are divided up in peculiar ways. The actual spinlock  * functions are KfAcquireSpinLock() and KfReleaseSpinLock(), and  * they live in HAL.dll. Meanwhile, KeInitializeSpinLock(),  * KefAcquireSpinLockAtDpcLevel() and KefReleaseSpinLockFromDpcLevel()  * live in ntoskrnl.exe. Most Windows source code will call  * KeAcquireSpinLock() and KeReleaseSpinLock(), but these are just  * macros that call KfAcquireSpinLock() and KfReleaseSpinLock().  * KefAcquireSpinLockAtDpcLevel() and KefReleaseSpinLockFromDpcLevel()  * perform the lock aquisition/release functions without doing the  * IRQL manipulation, and are used when one is already running at  * DISPATCH_LEVEL. Make sense? Good.  *  * According to the Microsoft documentation, any thread that calls  * KeAcquireSpinLock() must be running at IRQL<= DISPATCH_LEVEL. If  * we detect someone trying to acquire a spinlock from DEVICE_LEVEL  * or HIGH_LEVEL, we panic.  */
 end_comment
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 name|uint8_t
 name|KfAcquireSpinLock
-argument_list|(
-name|REGARGS1
-argument_list|(
-name|kspin_lock
-operator|*
+parameter_list|(
 name|lock
-argument_list|)
-argument_list|)
+parameter_list|)
+name|kspin_lock
+modifier|*
+name|lock
+decl_stmt|;
 block|{
 name|uint8_t
 name|oldirql
@@ -991,20 +969,23 @@ name|oldirql
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 name|void
 name|KfReleaseSpinLock
-argument_list|(
-name|REGARGS2
-argument_list|(
-argument|kspin_lock *lock
-argument_list|,
-argument|uint8_t newirql
-argument_list|)
-argument_list|)
+parameter_list|(
+name|lock
+parameter_list|,
+name|newirql
+parameter_list|)
+name|kspin_lock
+modifier|*
+name|lock
+decl_stmt|;
+name|uint8_t
+name|newirql
+decl_stmt|;
 block|{
 name|KeReleaseSpinLockFromDpcLevel
 argument_list|(
@@ -1018,15 +999,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
-name|__stdcall
 name|uint8_t
 name|KeGetCurrentIrql
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1049,7 +1027,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint64_t
 name|KeQueryPerformanceCounter
@@ -1083,16 +1060,15 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 name|uint8_t
 name|KfRaiseIrql
-argument_list|(
-name|REGARGS1
-argument_list|(
-argument|uint8_t irql
-argument_list|)
-argument_list|)
+parameter_list|(
+name|irql
+parameter_list|)
+name|uint8_t
+name|irql
+decl_stmt|;
 block|{
 name|uint8_t
 name|oldirql
@@ -1165,18 +1141,17 @@ name|oldirql
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 name|void
 name|KfLowerIrql
-argument_list|(
-name|REGARGS1
-argument_list|(
-argument|uint8_t oldirql
-argument_list|)
-argument_list|)
+parameter_list|(
+name|oldirql
+parameter_list|)
+name|uint8_t
+name|oldirql
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1231,10 +1206,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|dummy
@@ -1255,99 +1229,137 @@ name|hal_functbl
 index|[]
 init|=
 block|{
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeStallExecutionProcessor
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|WRITE_PORT_ULONG
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|WRITE_PORT_USHORT
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|WRITE_PORT_UCHAR
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|WRITE_PORT_BUFFER_ULONG
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|WRITE_PORT_BUFFER_USHORT
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|WRITE_PORT_BUFFER_UCHAR
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|READ_PORT_ULONG
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|READ_PORT_USHORT
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|READ_PORT_UCHAR
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|READ_PORT_BUFFER_ULONG
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|READ_PORT_BUFFER_USHORT
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|READ_PORT_BUFFER_UCHAR
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|KfAcquireSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|KfReleaseSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeGetCurrentIrql
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeQueryPerformanceCounter
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|KfLowerIrql
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|KfRaiseIrql
+argument_list|,
+literal|1
 argument_list|)
 block|,
 comment|/* 	 * This last entry is a catch-all for any function we haven't 	 * implemented yet. The PE import list patching routine will 	 * use it for any function that doesn't have an explicit match 	 * in this table. 	 */
@@ -1360,6 +1372,10 @@ operator|)
 name|dummy
 block|,
 name|NULL
+block|,
+literal|0
+block|,
+name|WINDRV_WRAP_CDECL
 block|}
 block|,
 comment|/* End of list. */

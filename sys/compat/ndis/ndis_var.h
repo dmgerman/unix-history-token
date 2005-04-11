@@ -3871,7 +3871,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|void
 function_decl|(
 modifier|*
@@ -6121,7 +6120,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|ndis_status
 function_decl|(
 modifier|*
@@ -6715,7 +6713,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|NdisAddDevice
@@ -6730,7 +6727,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisAllocatePacketPool
@@ -6749,7 +6745,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisAllocatePacketPoolEx
@@ -6770,7 +6765,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|NdisPacketPoolUsage
@@ -6781,7 +6775,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisFreePacketPool
@@ -6792,7 +6785,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisAllocatePacket
@@ -6810,7 +6802,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisFreePacket

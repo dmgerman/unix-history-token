@@ -145,7 +145,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|usbd_iodispatch
@@ -160,7 +159,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|USBD_GetUSBDIVersion
@@ -172,7 +170,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|dummy
@@ -223,6 +220,14 @@ operator|&
 name|patch
 operator|->
 name|ipt_wrap
+argument_list|,
+name|patch
+operator|->
+name|ipt_argcnt
+argument_list|,
+name|patch
+operator|->
+name|ipt_ftype
 argument_list|)
 expr_stmt|;
 name|patch
@@ -314,7 +319,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint32_t
 name|usbd_iodispatch
@@ -341,7 +345,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|USBD_GetUSBDIVersion
@@ -371,7 +374,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|dummy
@@ -394,9 +396,18 @@ name|usbd_functbl
 index|[]
 init|=
 block|{
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|USBD_GetUSBDIVersion
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|IMPORT_SFUNC
+argument_list|(
+name|usbd_iodispatch
+argument_list|,
+literal|2
 argument_list|)
 block|,
 ifdef|#
@@ -432,6 +443,10 @@ operator|)
 name|dummy
 block|,
 name|NULL
+block|,
+literal|0
+block|,
+name|WINDRV_WRAP_CDECL
 block|}
 block|,
 comment|/* End of list. */

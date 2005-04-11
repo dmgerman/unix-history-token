@@ -230,7 +230,6 @@ value|__attribute__((regparm(3)))
 end_define
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint8_t
 name|RtlEqualUnicodeString
@@ -247,7 +246,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|RtlCopyUnicodeString
@@ -262,7 +260,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|RtlUnicodeStringToAnsiString
@@ -279,7 +276,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|RtlAnsiStringToUnicodeString
@@ -296,7 +292,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -325,7 +320,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -351,7 +345,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -384,7 +377,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -398,7 +390,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|IoReuseIrp
@@ -412,7 +403,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|IoFreeIrp
@@ -424,7 +414,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|IoInitializeIrp
@@ -440,7 +429,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -455,7 +443,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|KeWaitForMultipleObjects
@@ -517,7 +504,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_REGISTER_USHORT
@@ -531,7 +517,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint16_t
 name|READ_REGISTER_USHORT
@@ -543,7 +528,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_REGISTER_ULONG
@@ -557,7 +541,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|READ_REGISTER_ULONG
@@ -569,7 +552,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_REGISTER_UCHAR
@@ -583,7 +565,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint8_t
 name|READ_REGISTER_UCHAR
@@ -595,7 +576,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|int64_t
 name|_allmul
@@ -608,7 +588,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|int64_t
 name|_alldiv
@@ -621,7 +600,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|int64_t
 name|_allrem
@@ -634,7 +612,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__regparm
 specifier|static
 name|int64_t
 name|_allshr
@@ -647,7 +624,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__regparm
 specifier|static
 name|int64_t
 name|_allshl
@@ -660,7 +636,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint64_t
 name|_aullmul
@@ -673,7 +648,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint64_t
 name|_aulldiv
@@ -686,7 +660,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint64_t
 name|_aullrem
@@ -699,7 +672,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__regparm
 specifier|static
 name|uint64_t
 name|_aullshr
@@ -712,7 +684,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__regparm
 specifier|static
 name|uint64_t
 name|_aullshl
@@ -752,7 +723,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|ExInitializePagedLookasideList
@@ -778,7 +748,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|ExDeletePagedLookasideList
@@ -790,7 +759,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|ExInitializeNPagedLookasideList
@@ -816,7 +784,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|ExDeleteNPagedLookasideList
@@ -827,92 +794,67 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|static
 name|slist_entry
 modifier|*
 name|InterlockedPushEntrySList
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 name|slist_header
-operator|*
-name|head
-argument_list|,
+modifier|*
+parameter_list|,
 name|slist_entry
-operator|*
-name|entry
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|static
 name|slist_entry
 modifier|*
 name|InterlockedPopEntrySList
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
 name|slist_header
-operator|*
-name|head
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|static
 name|slist_entry
 modifier|*
 name|ExInterlockedPushEntrySList
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 name|slist_header
-operator|*
-name|head
-argument_list|,
+modifier|*
+parameter_list|,
 name|slist_entry
-operator|*
-name|entry
-argument_list|)
-argument_list|,
+modifier|*
+parameter_list|,
 name|kspin_lock
-operator|*
-name|lock
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|static
 name|slist_entry
 modifier|*
 name|ExInterlockedPopEntrySList
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 name|slist_header
-operator|*
-name|head
-argument_list|,
+modifier|*
+parameter_list|,
 name|kspin_lock
-operator|*
-name|lock
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint16_t
 name|ExQueryDepthSList
@@ -923,60 +865,44 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|static
 name|uint32_t
 name|InterlockedIncrement
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
 specifier|volatile
 name|uint32_t
-operator|*
-name|addend
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|static
 name|uint32_t
 name|InterlockedDecrement
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
 specifier|volatile
 name|uint32_t
-operator|*
-name|addend
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|static
 name|void
 name|ExInterlockedAddLargeStatistic
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 name|uint64_t
-operator|*
-name|addend
-argument_list|,
+modifier|*
+parameter_list|,
 name|uint32_t
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|MmSizeOfMdl
@@ -990,7 +916,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|MmBuildMdlForNonPagedPool
@@ -1002,7 +927,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 modifier|*
@@ -1017,7 +941,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 modifier|*
@@ -1041,7 +964,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|MmUnmapLockedPages
@@ -1056,7 +978,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|size_t
 name|RtlCompareMemory
@@ -1075,7 +996,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|RtlInitAnsiString
@@ -1090,7 +1010,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|RtlInitUnicodeString
@@ -1105,7 +1024,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|RtlFreeUnicodeString
@@ -1117,7 +1035,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|RtlFreeAnsiString
@@ -1129,7 +1046,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|RtlUnicodeStringToInteger
@@ -1202,7 +1118,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint8_t
 name|IoIsWdmVersionAvailable
@@ -1226,7 +1141,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|PsCreateSystemThread
@@ -1254,7 +1168,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|PsTerminateSystemThread
@@ -1265,7 +1178,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|IoGetDeviceProperty
@@ -1287,7 +1199,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|KeInitializeMutex
@@ -1301,7 +1212,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|KeReleaseMutex
@@ -1315,7 +1225,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|KeReadStateMutex
@@ -1327,7 +1236,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|ObReferenceObjectByHandle
@@ -1352,24 +1260,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|static
 name|void
 name|ObfDereferenceObject
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
 name|void
-operator|*
-name|object
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|ZwClose
@@ -1419,7 +1321,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|DbgBreakPoint
@@ -1430,7 +1331,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|dummy
@@ -1555,13 +1455,21 @@ operator|&
 name|patch
 operator|->
 name|ipt_wrap
+argument_list|,
+name|patch
+operator|->
+name|ipt_argcnt
+argument_list|,
+name|patch
+operator|->
+name|ipt_ftype
 argument_list|)
 expr_stmt|;
 name|patch
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * MDLs are supposed to be variable size (they describe 	 * buffers containing some number of pages, but we don't 	 * know ahead of time how many pages that will be). But 	 * always allocating them off the heap is very slow. As 	 * a compromize, we create an MDL UMA zone big enough to 	 * handle any buffer requiring up to 16 pages, and we 	 * use those for any MDLs for buffers of 16 pages or less 	 * in size. For buffers larger than that (which we assume 	 * will be few and far between, we allocate the MDLs off 	 * the heap. 	 */
+comment|/* 	 * MDLs are supposed to be variable size (they describe 	 * buffers containing some number of pages, but we don't 	 * know ahead of time how many pages that will be). But 	 * always allocating them off the heap is very slow. As 	 * a compromise, we create an MDL UMA zone big enough to 	 * handle any buffer requiring up to 16 pages, and we 	 * use those for any MDLs for buffers of 16 pages or less 	 * in size. For buffers larger than that (which we assume 	 * will be few and far between, we allocate the MDLs off 	 * the heap. 	 */
 name|mdl_zone
 operator|=
 name|uma_zcreate
@@ -1686,7 +1594,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint8_t
 name|RtlEqualUnicodeString
@@ -1826,7 +1733,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|RtlCopyUnicodeString
@@ -1891,7 +1797,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|RtlUnicodeStringToAnsiString
@@ -2042,7 +1947,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|RtlAnsiStringToUnicodeString
@@ -2187,7 +2091,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 modifier|*
 name|ExAllocatePoolWithTag
@@ -2243,7 +2146,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|ExFreePool
 parameter_list|(
@@ -2266,7 +2168,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint32_t
 name|IoAllocateDriverObjectExtension
 parameter_list|(
@@ -2373,7 +2274,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 modifier|*
 name|IoGetDriverObjectExtension
@@ -2399,6 +2299,20 @@ name|custom_extension
 modifier|*
 name|ce
 decl_stmt|;
+comment|/* 	 * Sanity check. Our dummy bus drivers don't have 	 * any driver extentions. 	 */
+if|if
+condition|(
+name|drv
+operator|->
+name|dro_driverext
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|e
 operator|=
 name|drv
@@ -2466,7 +2380,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint32_t
 name|IoCreateDevice
 parameter_list|(
@@ -2828,7 +2741,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|IoDeleteDevice
 parameter_list|(
@@ -2940,7 +2852,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|device_object
 modifier|*
 name|IoGetAttachedDevice
@@ -2994,7 +2905,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -3088,7 +2998,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -3471,7 +3380,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -3926,7 +3834,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -3993,7 +3900,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|irp
 modifier|*
@@ -4086,7 +3992,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|IoFreeIrp
@@ -4108,7 +4013,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|IoInitializeIrp
@@ -4195,7 +4099,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|IoReuseIrp
@@ -4253,7 +4156,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|IoAcquireCancelSpinLock
 parameter_list|(
@@ -4277,7 +4179,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|IoReleaseCancelSpinLock
 parameter_list|(
@@ -4300,7 +4201,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint8_t
 name|IoCancelIrp
 parameter_list|(
@@ -4379,22 +4279,22 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 name|uint32_t
 name|IofCallDriver
-argument_list|(
-name|REGARGS2
-argument_list|(
-name|device_object
-operator|*
+parameter_list|(
 name|dobj
-argument_list|,
-name|irp
-operator|*
+parameter_list|,
 name|ip
-argument_list|)
-argument_list|)
+parameter_list|)
+name|device_object
+modifier|*
+name|dobj
+decl_stmt|;
+name|irp
+modifier|*
+name|ip
+decl_stmt|;
 block|{
 name|driver_object
 modifier|*
@@ -4475,20 +4375,23 @@ name|status
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 name|void
 name|IofCompleteRequest
-argument_list|(
-name|REGARGS2
-argument_list|(
-argument|irp *ip
-argument_list|,
-argument|uint8_t prioboost
-argument_list|)
-argument_list|)
+parameter_list|(
+name|ip
+parameter_list|,
+name|prioboost
+parameter_list|)
+name|irp
+modifier|*
+name|ip
+decl_stmt|;
+name|uint8_t
+name|prioboost
+decl_stmt|;
 block|{
 name|uint32_t
 name|i
@@ -4724,10 +4627,8 @@ name|irp_master
 expr_stmt|;
 name|masterirpcnt
 operator|=
-name|FASTCALL1
-argument_list|(
 name|InterlockedDecrement
-argument_list|,
+argument_list|(
 operator|&
 name|masterirp
 operator|->
@@ -4866,10 +4767,9 @@ block|}
 block|}
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
-name|__stdcall
 name|device_object
 modifier|*
 name|IoAttachDeviceToDeviceStack
@@ -4941,7 +4841,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|IoDetachDevice
 parameter_list|(
@@ -5190,7 +5089,6 @@ comment|/*  * KeWaitForSingleObject() is a tricky beast, because it can be used 
 end_comment
 
 begin_function
-name|__stdcall
 name|uint32_t
 name|KeWaitForSingleObject
 parameter_list|(
@@ -5651,7 +5549,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint32_t
 name|KeWaitForMultipleObjects
@@ -6440,7 +6337,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_REGISTER_USHORT
@@ -6476,7 +6372,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint16_t
 name|READ_REGISTER_USHORT
@@ -6507,7 +6402,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_REGISTER_ULONG
@@ -6543,7 +6437,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint32_t
 name|READ_REGISTER_ULONG
@@ -6574,7 +6467,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint8_t
 name|READ_REGISTER_UCHAR
@@ -6605,7 +6497,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|WRITE_REGISTER_UCHAR
@@ -6641,7 +6532,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|int64_t
 name|_allmul
@@ -6668,7 +6558,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|int64_t
 name|_alldiv
@@ -6695,7 +6584,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|int64_t
 name|_allrem
@@ -6722,7 +6610,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint64_t
 name|_aullmul
@@ -6749,7 +6636,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint64_t
 name|_aulldiv
@@ -6776,7 +6662,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint64_t
 name|_aullrem
@@ -6803,7 +6688,6 @@ block|}
 end_function
 
 begin_function
-name|__regparm
 specifier|static
 name|int64_t
 name|_allshl
@@ -6830,7 +6714,6 @@ block|}
 end_function
 
 begin_function
-name|__regparm
 specifier|static
 name|uint64_t
 name|_aullshl
@@ -6857,7 +6740,6 @@ block|}
 end_function
 
 begin_function
-name|__regparm
 specifier|static
 name|int64_t
 name|_allshr
@@ -6884,7 +6766,6 @@ block|}
 end_function
 
 begin_function
-name|__regparm
 specifier|static
 name|uint64_t
 name|_aullshr
@@ -7112,7 +6993,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|ExInitializePagedLookasideList
@@ -7307,7 +7187,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|ExDeletePagedLookasideList
@@ -7323,17 +7202,16 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|__stdcall
 name|void
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|freefunc
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-decl_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|freefunc
 operator|=
 name|lookaside
@@ -7372,7 +7250,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|ExInitializeNPagedLookasideList
@@ -7567,7 +7444,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|ExDeleteNPagedLookasideList
@@ -7583,17 +7459,16 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|__stdcall
 name|void
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|freefunc
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-decl_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|freefunc
 operator|=
 name|lookaside
@@ -7631,28 +7506,24 @@ return|return;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Note: the interlocked slist push and pop routines are  * declared to be _fastcall in Windows. gcc 3.4 is supposed  * to have support for this calling convention, however we  * don't have that version available yet, so we kludge things  * up using __regparm__(3) and some argument shuffling.  */
-end_comment
-
-begin_decl_stmt
-name|__fastcall
+begin_function
 specifier|static
 name|slist_entry
 modifier|*
 name|InterlockedPushEntrySList
-argument_list|(
-name|REGARGS2
-argument_list|(
-name|slist_header
-operator|*
+parameter_list|(
 name|head
-argument_list|,
-name|slist_entry
-operator|*
+parameter_list|,
 name|entry
-argument_list|)
-argument_list|)
+parameter_list|)
+name|slist_header
+modifier|*
+name|head
+decl_stmt|;
+name|slist_entry
+modifier|*
+name|entry
+decl_stmt|;
 block|{
 name|slist_entry
 modifier|*
@@ -7660,14 +7531,8 @@ name|oldhead
 decl_stmt|;
 name|oldhead
 operator|=
-operator|(
-name|slist_entry
-operator|*
-operator|)
-name|FASTCALL3
-argument_list|(
 name|ExInterlockedPushEntrySList
-argument_list|,
+argument_list|(
 name|head
 argument_list|,
 name|entry
@@ -7682,22 +7547,20 @@ name|oldhead
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 specifier|static
 name|slist_entry
 modifier|*
 name|InterlockedPopEntrySList
-argument_list|(
-name|REGARGS1
-argument_list|(
-name|slist_header
-operator|*
+parameter_list|(
 name|head
-argument_list|)
-argument_list|)
+parameter_list|)
+name|slist_header
+modifier|*
+name|head
+decl_stmt|;
 block|{
 name|slist_entry
 modifier|*
@@ -7705,14 +7568,8 @@ name|first
 decl_stmt|;
 name|first
 operator|=
-operator|(
-name|slist_entry
-operator|*
-operator|)
-name|FASTCALL2
-argument_list|(
 name|ExInterlockedPopEntrySList
-argument_list|,
+argument_list|(
 name|head
 argument_list|,
 operator|&
@@ -7725,30 +7582,32 @@ name|first
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 specifier|static
 name|slist_entry
 modifier|*
 name|ExInterlockedPushEntrySList
-argument_list|(
-name|REGARGS2
-argument_list|(
-name|slist_header
-operator|*
+parameter_list|(
 name|head
-argument_list|,
-name|slist_entry
-operator|*
+parameter_list|,
 name|entry
-argument_list|)
-argument_list|,
-name|kspin_lock
-operator|*
+parameter_list|,
 name|lock
-argument_list|)
+parameter_list|)
+name|slist_header
+modifier|*
+name|head
+decl_stmt|;
+name|slist_entry
+modifier|*
+name|entry
+decl_stmt|;
+name|kspin_lock
+modifier|*
+name|lock
+decl_stmt|;
 block|{
 name|slist_entry
 modifier|*
@@ -7787,26 +7646,26 @@ name|oldhead
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 specifier|static
 name|slist_entry
 modifier|*
 name|ExInterlockedPopEntrySList
-argument_list|(
-name|REGARGS2
-argument_list|(
-name|slist_header
-operator|*
+parameter_list|(
 name|head
-argument_list|,
-name|kspin_lock
-operator|*
+parameter_list|,
 name|lock
-argument_list|)
-argument_list|)
+parameter_list|)
+name|slist_header
+modifier|*
+name|head
+decl_stmt|;
+name|kspin_lock
+modifier|*
+name|lock
+decl_stmt|;
 block|{
 name|slist_entry
 modifier|*
@@ -7843,10 +7702,9 @@ name|first
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint16_t
 name|ExQueryDepthSList
@@ -7902,7 +7760,6 @@ comment|/*  * The KeInitializeSpinLock(), KefAcquireSpinLockAtDpcLevel()  * and 
 end_comment
 
 begin_function
-name|__stdcall
 name|void
 name|KeInitializeSpinLock
 parameter_list|(
@@ -7928,18 +7785,16 @@ directive|ifdef
 name|__i386__
 end_ifdef
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 name|void
 name|KefAcquireSpinLockAtDpcLevel
-argument_list|(
-name|REGARGS1
-argument_list|(
-name|kspin_lock
-operator|*
+parameter_list|(
 name|lock
-argument_list|)
-argument_list|)
+parameter_list|)
+name|kspin_lock
+modifier|*
+name|lock
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -7963,20 +7818,18 @@ comment|/* sit and spin */
 empty_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 name|void
 name|KefReleaseSpinLockFromDpcLevel
-argument_list|(
-name|REGARGS1
-argument_list|(
-name|kspin_lock
-operator|*
+parameter_list|(
 name|lock
-argument_list|)
-argument_list|)
+parameter_list|)
+name|kspin_lock
+modifier|*
+name|lock
+decl_stmt|;
 block|{
 name|atomic_store_rel_int
 argument_list|(
@@ -7992,10 +7845,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
-name|__stdcall
 name|uint8_t
 name|KeAcquireSpinLockRaiseToDpc
 parameter_list|(
@@ -8045,7 +7897,6 @@ directive|else
 end_else
 
 begin_function
-name|__stdcall
 name|void
 name|KeAcquireSpinLockAtDpcLevel
 parameter_list|(
@@ -8079,7 +7930,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|KeReleaseSpinLockFromDpcLevel
 parameter_list|(
@@ -8113,18 +7963,22 @@ begin_comment
 comment|/* __i386__ */
 end_comment
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 name|uintptr_t
 name|InterlockedExchange
-argument_list|(
-name|REGARGS2
-argument_list|(
-argument|volatile uint32_t *dst
-argument_list|,
-argument|uintptr_t val
-argument_list|)
-argument_list|)
+parameter_list|(
+name|dst
+parameter_list|,
+name|val
+parameter_list|)
+specifier|volatile
+name|uint32_t
+modifier|*
+name|dst
+decl_stmt|;
+name|uintptr_t
+name|val
+decl_stmt|;
 block|{
 name|uint8_t
 name|irql
@@ -8165,22 +8019,20 @@ name|r
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 specifier|static
 name|uint32_t
 name|InterlockedIncrement
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
+name|addend
+parameter_list|)
 specifier|volatile
 name|uint32_t
-operator|*
+modifier|*
 name|addend
-argument_list|)
-argument_list|)
+decl_stmt|;
 block|{
 name|atomic_add_long
 argument_list|(
@@ -8201,22 +8053,20 @@ name|addend
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 specifier|static
 name|uint32_t
 name|InterlockedDecrement
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
+name|addend
+parameter_list|)
 specifier|volatile
 name|uint32_t
-operator|*
+modifier|*
 name|addend
-argument_list|)
-argument_list|)
+decl_stmt|;
 block|{
 name|atomic_subtract_long
 argument_list|(
@@ -8237,21 +8087,24 @@ name|addend
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 specifier|static
 name|void
 name|ExInterlockedAddLargeStatistic
-argument_list|(
-name|REGARGS2
-argument_list|(
-argument|uint64_t *addend
-argument_list|,
-argument|uint32_t inc
-argument_list|)
-argument_list|)
+parameter_list|(
+name|addend
+parameter_list|,
+name|inc
+parameter_list|)
+name|uint64_t
+modifier|*
+name|addend
+decl_stmt|;
+name|uint32_t
+name|inc
+decl_stmt|;
 block|{
 name|uint8_t
 name|irql
@@ -8280,14 +8133,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
 begin_function
-name|__stdcall
 name|mdl
 modifier|*
 name|IoAllocateMdl
@@ -8481,7 +8333,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|IoFreeMdl
 parameter_list|(
@@ -8525,7 +8376,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint32_t
 name|MmSizeOfMdl
@@ -8581,7 +8431,6 @@ comment|/*  * The Microsoft documentation says this routine fills in the  * page
 end_comment
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|MmBuildMdlForNonPagedPool
@@ -8697,7 +8546,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 modifier|*
@@ -8733,7 +8581,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 modifier|*
@@ -8786,7 +8633,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|MmUnmapLockedPages
@@ -8816,7 +8662,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|size_t
 name|RtlCompareMemory
@@ -8914,7 +8759,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|RtlInitAnsiString
@@ -8998,7 +8842,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|RtlInitUnicodeString
@@ -9100,7 +8943,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|ndis_status
 name|RtlUnicodeStringToInteger
 parameter_list|(
@@ -9377,7 +9219,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|RtlFreeUnicodeString
@@ -9418,7 +9259,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|RtlFreeAnsiString
@@ -9582,7 +9422,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint8_t
 name|IoIsWdmVersionAvailable
@@ -9622,7 +9461,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|IoGetDeviceProperty
@@ -9719,7 +9557,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|KeInitializeMutex
@@ -9801,7 +9638,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint32_t
 name|KeReleaseMutex
@@ -9893,7 +9729,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint32_t
 name|KeReadStateMutex
@@ -9918,7 +9753,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|KeInitializeEvent
 parameter_list|(
@@ -9980,7 +9814,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint32_t
 name|KeResetEvent
 parameter_list|(
@@ -10031,7 +9864,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint32_t
 name|KeSetEvent
 parameter_list|(
@@ -10092,7 +9924,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|KeClearEvent
 parameter_list|(
@@ -10116,7 +9947,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint32_t
 name|KeReadStateEvent
 parameter_list|(
@@ -10140,7 +9970,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|ObReferenceObjectByHandle
@@ -10261,19 +10090,17 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|__fastcall
+begin_function
 specifier|static
 name|void
 name|ObfDereferenceObject
-argument_list|(
-name|REGARGS1
-argument_list|(
-name|void
-operator|*
+parameter_list|(
 name|object
-argument_list|)
-argument_list|)
+parameter_list|)
+name|void
+modifier|*
+name|object
+decl_stmt|;
 block|{
 name|nt_objref
 modifier|*
@@ -10302,10 +10129,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|uint32_t
 name|ZwClose
@@ -10344,17 +10170,16 @@ name|thread_context
 modifier|*
 name|thrctx
 decl_stmt|;
-name|__stdcall
 name|uint32_t
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|tfunc
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-decl_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
 name|tctx
@@ -10405,7 +10230,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|PsCreateSystemThread
@@ -10554,7 +10378,6 @@ comment|/*  * In Windows, the exit of a thread is an event that you're allowed  
 end_comment
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|PsTerminateSystemThread
@@ -10686,7 +10509,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|DbgBreakPoint
@@ -10854,7 +10676,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|KeInitializeTimer
 parameter_list|(
@@ -10884,7 +10705,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|KeInitializeTimerEx
 parameter_list|(
@@ -10979,7 +10799,6 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-name|__stdcall
 name|kdpc_func
 name|dpcfunc
 decl_stmt|;
@@ -11036,7 +10855,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|void
 name|KeInitializeDpc
 parameter_list|(
@@ -11083,7 +10901,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint8_t
 name|KeInsertQueueDpc
 parameter_list|(
@@ -11143,7 +10960,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint8_t
 name|KeRemoveQueueDpc
 parameter_list|(
@@ -11179,7 +10995,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint8_t
 name|KeSetTimerEx
 parameter_list|(
@@ -11443,7 +11258,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint8_t
 name|KeSetTimer
 parameter_list|(
@@ -11483,7 +11297,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint8_t
 name|KeCancelTimer
 parameter_list|(
@@ -11566,7 +11379,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 name|uint8_t
 name|KeReadStateTimer
 parameter_list|(
@@ -11590,7 +11402,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|dummy
@@ -11611,640 +11422,891 @@ name|ntoskrnl_functbl
 index|[]
 init|=
 block|{
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlCompareMemory
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlEqualUnicodeString
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlCopyUnicodeString
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlUnicodeStringToAnsiString
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlAnsiStringToUnicodeString
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlInitAnsiString
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_SFUNC_MAP
 argument_list|(
 name|RtlInitString
 argument_list|,
 name|RtlInitAnsiString
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlInitUnicodeString
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlFreeAnsiString
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlFreeUnicodeString
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|RtlUnicodeStringToInteger
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|sprintf
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|vsprintf
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_CFUNC_MAP
 argument_list|(
 name|_snprintf
 argument_list|,
 name|snprintf
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_CFUNC_MAP
 argument_list|(
 name|_vsnprintf
 argument_list|,
 name|vsnprintf
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|DbgPrint
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|DbgBreakPoint
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|strncmp
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|strcmp
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|strncpy
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|strcpy
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|strlen
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|memcpy
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_CFUNC_MAP
 argument_list|(
 name|memmove
 argument_list|,
 name|ntoskrnl_memset
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_CFUNC_MAP
 argument_list|(
 name|memset
 argument_list|,
 name|ntoskrnl_memset
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoAllocateDriverObjectExtension
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoGetDriverObjectExtension
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|IofCallDriver
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|IofCompleteRequest
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoAcquireCancelSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoReleaseCancelSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoCancelIrp
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoCreateDevice
+argument_list|,
+literal|7
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoDeleteDevice
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoGetAttachedDevice
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoAttachDeviceToDeviceStack
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoDetachDevice
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoBuildSynchronousFsdRequest
+argument_list|,
+literal|7
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoBuildAsynchronousFsdRequest
+argument_list|,
+literal|6
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoBuildDeviceIoControlRequest
+argument_list|,
+literal|9
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoAllocateIrp
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoReuseIrp
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoMakeAssociatedIrp
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoFreeIrp
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoInitializeIrp
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeWaitForSingleObject
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeWaitForMultipleObjects
+argument_list|,
+literal|8
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|_allmul
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|_alldiv
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|_allrem
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_RFUNC
 argument_list|(
 name|_allshr
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_RFUNC
 argument_list|(
 name|_allshl
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|_aullmul
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|_aulldiv
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|_aullrem
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_RFUNC
 argument_list|(
 name|_aullshr
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_RFUNC
 argument_list|(
 name|_aullshl
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|atoi
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|atol
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|rand
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|srand
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|WRITE_REGISTER_USHORT
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|READ_REGISTER_USHORT
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|WRITE_REGISTER_ULONG
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|READ_REGISTER_ULONG
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|READ_REGISTER_UCHAR
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|WRITE_REGISTER_UCHAR
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ExInitializePagedLookasideList
+argument_list|,
+literal|7
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ExDeletePagedLookasideList
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ExInitializeNPagedLookasideList
+argument_list|,
+literal|7
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ExDeleteNPagedLookasideList
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|InterlockedPopEntrySList
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|InterlockedPushEntrySList
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ExQueryDepthSList
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_FFUNC_MAP
 argument_list|(
 name|ExpInterlockedPopEntrySList
 argument_list|,
 name|InterlockedPopEntrySList
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_FFUNC_MAP
 argument_list|(
 name|ExpInterlockedPushEntrySList
 argument_list|,
 name|InterlockedPushEntrySList
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|ExInterlockedPopEntrySList
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|ExInterlockedPushEntrySList
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ExAllocatePoolWithTag
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ExFreePool
+argument_list|,
+literal|1
 argument_list|)
 block|,
 ifdef|#
 directive|ifdef
 name|__i386__
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|KefAcquireSpinLockAtDpcLevel
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|KefReleaseSpinLockFromDpcLevel
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|KeAcquireSpinLockRaiseToDpc
+argument_list|,
+literal|1
 argument_list|)
 block|,
 else|#
 directive|else
 comment|/* 	 * For AMD64, we can get away with just mapping 	 * KeAcquireSpinLockRaiseToDpc() directly to KfAcquireSpinLock() 	 * because the calling conventions end up being the same. 	 * On i386, we have to be careful because KfAcquireSpinLock() 	 * is _fastcall but KeAcquireSpinLockRaiseToDpc() isn't. 	 */
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeAcquireSpinLockAtDpcLevel
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeReleaseSpinLockFromDpcLevel
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_SFUNC_MAP
 argument_list|(
 name|KeAcquireSpinLockRaiseToDpc
 argument_list|,
 name|KfAcquireSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
 endif|#
 directive|endif
-name|IMPORT_FUNC_MAP
+name|IMPORT_SFUNC_MAP
 argument_list|(
 name|KeReleaseSpinLock
 argument_list|,
 name|KfReleaseSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|InterlockedIncrement
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|InterlockedDecrement
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
+argument_list|(
+name|InterlockedExchange
+argument_list|,
+literal|2
+argument_list|)
+block|,
+name|IMPORT_FFUNC
 argument_list|(
 name|ExInterlockedAddLargeStatistic
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoAllocateMdl
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoFreeMdl
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|MmSizeOfMdl
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|MmMapLockedPages
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|MmMapLockedPagesSpecifyCache
+argument_list|,
+literal|6
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|MmUnmapLockedPages
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|MmBuildMdlForNonPagedPool
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeInitializeSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoIsWdmVersionAvailable
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|IoGetDeviceProperty
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeInitializeMutex
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeReleaseMutex
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeReadStateMutex
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeInitializeEvent
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeSetEvent
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeResetEvent
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeClearEvent
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeReadStateEvent
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeInitializeTimer
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeInitializeTimerEx
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeSetTimer
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeSetTimerEx
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeCancelTimer
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeReadStateTimer
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeInitializeDpc
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeInsertQueueDpc
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|KeRemoveQueueDpc
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ObReferenceObjectByHandle
+argument_list|,
+literal|6
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_FFUNC
 argument_list|(
 name|ObfDereferenceObject
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ZwClose
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|PsCreateSystemThread
+argument_list|,
+literal|7
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|PsTerminateSystemThread
+argument_list|,
+literal|1
 argument_list|)
 block|,
 comment|/* 	 * This last entry is a catch-all for any function we haven't 	 * implemented yet. The PE import list patching routine will 	 * use it for any function that doesn't have an explicit match 	 * in this table. 	 */
@@ -12257,6 +12319,10 @@ operator|)
 name|dummy
 block|,
 name|NULL
+block|,
+literal|0
+block|,
+name|WINDRV_WRAP_CDECL
 block|}
 block|,
 comment|/* End of list. */

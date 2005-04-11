@@ -933,7 +933,6 @@ end_struct_decl
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|void
 function_decl|(
 modifier|*
@@ -2882,7 +2881,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|uint32_t
 function_decl|(
 modifier|*
@@ -2904,7 +2902,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|uint32_t
 function_decl|(
 modifier|*
@@ -3283,7 +3280,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|(void *)FASTCALL2(InterlockedExchange, (uint32_t *)(dst),	\ 	(uintptr_t)(val))
+value|(void *)InterlockedExchange((uint32_t *)(dst), (uintptr_t)(val))
 end_define
 
 begin_define
@@ -3427,7 +3424,6 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|uint32_t
 function_decl|(
 modifier|*
@@ -4312,6 +4308,45 @@ name|NDIS_KSTACK_PAGES
 value|8
 end_define
 
+begin_comment
+comment|/*  * Different kinds of function wrapping we can do.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_STDCALL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_FASTCALL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_REGPARM
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_CDECL
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_AMD64
+value|5
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|image_patch_table
@@ -4459,6 +4494,10 @@ name|funcptr
 parameter_list|,
 name|funcptr
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4469,6 +4508,26 @@ name|int
 name|windrv_unwrap
 parameter_list|(
 name|funcptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ctxsw_utow
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ctxsw_wtou
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4494,7 +4553,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeInitializeDpc
@@ -4512,7 +4570,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeInsertQueueDpc
@@ -4530,7 +4587,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeRemoveQueueDpc
@@ -4542,7 +4598,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeInitializeTimer
@@ -4554,7 +4609,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeInitializeTimerEx
@@ -4568,7 +4622,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeSetTimer
@@ -4585,7 +4638,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeSetTimerEx
@@ -4604,7 +4656,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeCancelTimer
@@ -4616,7 +4667,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeReadStateTimer
@@ -4628,7 +4678,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|KeWaitForSingleObject
@@ -4649,7 +4698,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeInitializeEvent
@@ -4665,7 +4713,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeClearEvent
@@ -4677,7 +4724,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|KeReadStateEvent
@@ -4689,7 +4735,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|KeSetEvent
@@ -4705,7 +4750,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|KeResetEvent
@@ -4722,38 +4766,29 @@ directive|ifdef
 name|__i386__
 end_ifdef
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|void
 name|KefAcquireSpinLockAtDpcLevel
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
 name|kspin_lock
-operator|*
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|void
 name|KefReleaseSpinLockFromDpcLevel
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
 name|kspin_lock
-operator|*
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeAcquireSpinLockRaiseToDpc
@@ -4770,7 +4805,6 @@ directive|else
 end_else
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeAcquireSpinLockAtDpcLevel
@@ -4782,7 +4816,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeReleaseSpinLockFromDpcLevel
@@ -4799,7 +4832,6 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeInitializeSpinLock
@@ -4810,26 +4842,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|uintptr_t
 name|InterlockedExchange
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 specifier|volatile
 name|uint32_t
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|uintptr_t
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 modifier|*
@@ -4845,7 +4872,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|ExFreePool
@@ -4857,7 +4883,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|IoAllocateDriverObjectExtension
@@ -4878,7 +4903,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 modifier|*
@@ -4894,7 +4918,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|IoCreateDevice
@@ -4921,7 +4944,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|IoDeleteDevice
@@ -4933,7 +4955,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|device_object
 modifier|*
@@ -4945,43 +4966,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|uint32_t
 name|IofCallDriver
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 name|device_object
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|irp
-operator|*
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|void
 name|IofCompleteRequest
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 name|irp
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|uint8_t
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|IoAcquireCancelSpinLock
@@ -4993,7 +5005,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|IoReleaseCancelSpinLock
@@ -5004,7 +5015,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|IoCancelIrp
@@ -5016,7 +5026,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|IoDetachDevice
@@ -5028,7 +5037,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|device_object
 modifier|*
@@ -5044,7 +5052,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 name|mdl
 modifier|*
 name|IoAllocateMdl
@@ -5065,7 +5072,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 name|void
 name|IoFreeMdl
 parameter_list|(
@@ -5084,7 +5090,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|FASTCALL2(IofCallDriver, a, b)
+value|IofCallDriver(a, b)
 end_define
 
 begin_define
@@ -5096,7 +5102,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|FASTCALL2(IofCompleteRequest, a, b)
+value|IofCompleteRequest(a, b)
 end_define
 
 begin_comment
@@ -5118,7 +5124,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|*(b) = FASTCALL1(KfAcquireSpinLock, a)
+value|*(b) = KfAcquireSpinLock(a)
 end_define
 
 begin_define
@@ -5130,7 +5136,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|FASTCALL2(KfReleaseSpinLock, a, b)
+value|KfReleaseSpinLock(a, b)
 end_define
 
 begin_define
@@ -5140,7 +5146,7 @@ name|KeRaiseIrql
 parameter_list|(
 name|a
 parameter_list|)
-value|FASTCALL1(KfRaiseIrql, a)
+value|KfRaiseIrql(a)
 end_define
 
 begin_define
@@ -5150,7 +5156,7 @@ name|KeLowerIrql
 parameter_list|(
 name|a
 parameter_list|)
-value|FASTCALL1(KfLowerIrql, a)
+value|KfLowerIrql(a)
 end_define
 
 begin_define
@@ -5160,8 +5166,7 @@ name|KeAcquireSpinLockAtDpcLevel
 parameter_list|(
 name|a
 parameter_list|)
-define|\
-value|FASTCALL1(KefAcquireSpinLockAtDpcLevel, a)
+value|KefAcquireSpinLockAtDpcLevel(a)
 end_define
 
 begin_define
@@ -5171,8 +5176,7 @@ name|KeReleaseSpinLockFromDpcLevel
 parameter_list|(
 name|a
 parameter_list|)
-define|\
-value|FASTCALL1(KefReleaseSpinLockFromDpcLevel, a)
+value|KefReleaseSpinLockFromDpcLevel(a)
 end_define
 
 begin_endif
