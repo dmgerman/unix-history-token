@@ -14056,6 +14056,52 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|assert_vop_elocked
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vp
+operator|&&
+operator|!
+name|IGNORE_LOCK
+argument_list|(
+name|vp
+argument_list|)
+operator|&&
+name|VOP_ISLOCKED
+argument_list|(
+name|vp
+argument_list|,
+name|curthread
+argument_list|)
+operator|!=
+name|LK_EXCLUSIVE
+condition|)
+name|vfs_badlock
+argument_list|(
+literal|"is not exclusive locked but should be"
+argument_list|,
+name|str
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_if
 if|#
 directive|if
@@ -14063,7 +14109,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void assert_vop_elocked(struct vnode *vp, const char *str) {  	if (vp&& !IGNORE_LOCK(vp)&& 	    VOP_ISLOCKED(vp, curthread) != LK_EXCLUSIVE) 		vfs_badlock("is not exclusive locked but should be", str, vp); }  void assert_vop_elocked_other(struct vnode *vp, const char *str) {  	if (vp&& !IGNORE_LOCK(vp)&& 	    VOP_ISLOCKED(vp, curthread) != LK_EXCLOTHER) 		vfs_badlock("is not exclusive locked by another thread", 		    str, vp); }  void assert_vop_slocked(struct vnode *vp, const char *str) {  	if (vp&& !IGNORE_LOCK(vp)&& 	    VOP_ISLOCKED(vp, curthread) != LK_SHARED) 		vfs_badlock("is not locked shared but should be", str, vp); }
+unit|void assert_vop_elocked_other(struct vnode *vp, const char *str) {  	if (vp&& !IGNORE_LOCK(vp)&& 	    VOP_ISLOCKED(vp, curthread) != LK_EXCLOTHER) 		vfs_badlock("is not exclusive locked by another thread", 		    str, vp); }  void assert_vop_slocked(struct vnode *vp, const char *str) {  	if (vp&& !IGNORE_LOCK(vp)&& 	    VOP_ISLOCKED(vp, curthread) != LK_SHARED) 		vfs_badlock("is not locked shared but should be", str, vp); }
 endif|#
 directive|endif
 end_endif

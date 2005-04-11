@@ -1842,6 +1842,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|assert_vop_elocked
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -1849,7 +1866,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void	assert_vop_elocked(struct vnode *vp, const char *str); void	assert_vop_elocked_other(struct vnode *vp, const char *str);
+unit|void	assert_vop_elocked_other(struct vnode *vp, const char *str);
 endif|#
 directive|endif
 end_endif
@@ -2025,12 +2042,6 @@ parameter_list|)
 value|assert_vi_unlocked((vp), (str))
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
@@ -2042,6 +2053,12 @@ name|str
 parameter_list|)
 value|assert_vop_elocked((vp), (str))
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
