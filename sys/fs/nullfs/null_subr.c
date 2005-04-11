@@ -420,6 +420,14 @@ goto|goto
 name|loop
 goto|;
 block|}
+comment|/* 			 * We need to clear the OWEINACT flag here as this 			 * may lead vget() to try to lock our vnode which 			 * is already locked via lowervp. 			 */
+name|vp
+operator|->
+name|v_iflag
+operator|&=
+operator|~
+name|VI_OWEINACT
+expr_stmt|;
 name|vget
 argument_list|(
 name|vp
@@ -601,6 +609,14 @@ goto|goto
 name|loop
 goto|;
 block|}
+name|ovp
+operator|->
+name|v_iflag
+operator|&=
+operator|~
+name|VI_OWEINACT
+expr_stmt|;
+comment|/* see hashget comment */
 name|vget
 argument_list|(
 name|ovp
