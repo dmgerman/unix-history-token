@@ -9561,7 +9561,10 @@ name|r_res2
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
+name|device_get_parent
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|ctlr
 operator|->
@@ -21566,7 +21569,10 @@ name|r_res2
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
+name|device_get_parent
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|ctlr
 operator|->
