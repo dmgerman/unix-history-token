@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|PTHREAD_STACK_MIN
-value|1024
+value|MINSIGSTKSZ
 end_define
 
 begin_define
