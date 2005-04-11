@@ -535,20 +535,6 @@ comment|/* TRUE if the jobs might be running */
 end_comment
 
 begin_function_decl
-specifier|static
-name|void
-name|MainParseArgs
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|chdir_verify_path
@@ -732,17 +718,21 @@ block|{
 name|int
 name|c
 decl_stmt|;
+name|rearg
+label|:
 name|optind
 operator|=
 literal|1
 expr_stmt|;
 comment|/* since we're called more than once */
+name|optreset
+operator|=
+literal|1
+expr_stmt|;
 define|#
 directive|define
 name|OPTFLAGS
 value|"ABC:D:E:I:PSV:Xd:ef:ij:km:nqrstv"
-name|rearg
-label|:
 while|while
 condition|(
 operator|(
@@ -1356,23 +1346,26 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
 name|oldVars
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 	 * See if the rest of the arguments are variable assignments and 	 * perform them if so. Else take them to be targets and stuff them 	 * on the end of the "create" list. 	 */
+comment|/* 	 * Parse the rest of the arguments. 	 *	o Check for variable assignments and perform them if so. 	 *	o Check for more flags and restart getopt if so. 	 *      o Anything else is taken to be a target and added 	 *	  to the end of the "create" list. 	 */
 for|for
 control|(
-name|argv
-operator|+=
-name|optind
-operator|,
-name|argc
-operator|-=
-name|optind
 init|;
 operator|*
 name|argv
+operator|!=
+name|NULL
 condition|;
 operator|++
 name|argv
@@ -1380,6 +1373,7 @@ operator|,
 operator|--
 name|argc
 control|)
+block|{
 if|if
 condition|(
 name|Parse_IsVar
@@ -1408,11 +1402,6 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
 name|Parse_DoVar
 argument_list|(
 operator|*
@@ -1421,26 +1410,22 @@ argument_list|,
 name|VAR_CMD
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|!
-operator|*
-operator|*
-name|argv
-condition|)
-name|Punt
+name|free
 argument_list|(
-literal|"illegal (null) argument."
+name|ptr
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
-operator|*
+operator|(
 operator|*
 name|argv
+operator|)
+index|[
+literal|0
+index|]
 operator|==
 literal|'-'
 condition|)
@@ -1454,22 +1439,48 @@ operator|)
 index|[
 literal|1
 index|]
+operator|==
+literal|'\0'
 condition|)
-name|optind
-operator|=
-literal|0
-expr_stmt|;
-comment|/* -flag... */
+block|{
+comment|/* 				 * (*argv) is a single dash, so we 				 * just ignore it. 				 */
+block|}
 else|else
-name|optind
-operator|=
-literal|1
+block|{
+comment|/* 				 * (*argv) is a -flag, so backup argv 				 *  and argc, since getopt() expects 				 * options to start in the 2nd position. 				 */
+name|argc
+operator|++
 expr_stmt|;
-comment|/* - */
+name|argv
+operator|--
+expr_stmt|;
 goto|goto
 name|rearg
 goto|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+operator|*
+name|argv
+operator|)
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|Punt
+argument_list|(
+literal|"illegal (null) argument."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|Lst_AtEnd
 argument_list|(
 operator|&
@@ -1482,6 +1493,7 @@ name|argv
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -2312,7 +2324,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * First snag any flags out of the MAKE environment variable. 	 * (Note this is *not* MAKEFLAGS since /bin/make uses that and it's 	 * in a different format). 	 */
+comment|/* 	 * First snag things out of the MAKEFLAGS environment 	 * variable.  Then parse the command line arguments. 	 */
 name|Main_ParseArgLine
 argument_list|(
 name|getenv
@@ -2330,7 +2342,7 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Find where we are... 	 * All this code is so that we know where we are when we start up 	 * on a different machine with pmake. 	 */
+comment|/* 	 * Find where we are... 	 */
 name|curdir
 operator|=
 name|cdpath
