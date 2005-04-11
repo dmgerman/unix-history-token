@@ -8303,11 +8303,15 @@ operator|!=
 name|SYS_RES_MEMORY
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"failed: rid %#x is memory, requested %d\n"
+literal|"rid %#x is memory, requested %d\n"
 argument_list|,
 operator|*
 name|rid
@@ -8329,11 +8333,15 @@ operator|!=
 name|SYS_RES_IOPORT
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"failed: rid %#x is ioport, requested %d\n"
+literal|"rid %#x is ioport, requested %d\n"
 argument_list|,
 operator|*
 name|rid
