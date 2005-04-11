@@ -1974,6 +1974,7 @@ expr_stmt|;
 comment|/* 	 * XXX NOTE: only first fragment of fragmented TCP, UDP and 	 * ICMP packet will be recorded with proper s_port and d_port. 	 * Following fragments will be recorded simply as IP packet with 	 * ip_proto = ip->ip_p and s_port, d_port set to zero. 	 * I know, it looks like bug. But I don't want to re-implement 	 * ip packet assebmling here. Anyway, (in)famous trafd works this way - 	 * and nobody complains yet :) 	 */
 if|if
 condition|(
+operator|(
 name|ip
 operator|->
 name|ip_off
@@ -1982,10 +1983,10 @@ name|htons
 argument_list|(
 name|IP_OFFMASK
 argument_list|)
+operator|)
+operator|==
+literal|0
 condition|)
-goto|goto
-name|flow_rec_done
-goto|;
 switch|switch
 condition|(
 name|r
@@ -2066,8 +2067,6 @@ operator|)
 expr_stmt|;
 break|break;
 block|}
-name|flow_rec_done
-label|:
 name|slot
 operator|=
 name|ip_hash
