@@ -875,7 +875,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
 operator||
 name|LK_RETRY
 argument_list|,
