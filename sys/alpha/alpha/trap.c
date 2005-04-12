@@ -1272,10 +1272,12 @@ block|}
 endif|#
 directive|endif
 comment|/* 	GIANT_REQUIRED; 	 * Giant hasn't been acquired yet. 	 */
+name|PCPU_LAZY_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_trap
-operator|++
+argument_list|)
 expr_stmt|;
 name|ucode
 operator|=
@@ -2481,10 +2483,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|PCPU_LAZY_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_syscall
-operator|++
+argument_list|)
 expr_stmt|;
 name|td
 operator|->

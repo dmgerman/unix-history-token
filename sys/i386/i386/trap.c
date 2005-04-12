@@ -693,14 +693,11 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-name|atomic_add_int
+name|PCPU_LAZY_INC
 argument_list|(
-operator|&
 name|cnt
 operator|.
 name|v_trap
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|type

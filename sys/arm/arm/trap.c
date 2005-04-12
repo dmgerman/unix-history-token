@@ -857,14 +857,11 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|atomic_add_int
+name|PCPU_LAZY_INC
 argument_list|(
-operator|&
 name|cnt
 operator|.
 name|v_trap
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Data abort came from user mode? */
@@ -2518,14 +2515,11 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|atomic_add_int
+name|PCPU_LAZY_INC
 argument_list|(
-operator|&
 name|cnt
 operator|.
 name|v_trap
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3234,14 +3228,11 @@ name|sticks
 init|=
 literal|0
 decl_stmt|;
-name|atomic_add_int
+name|PCPU_LAZY_INC
 argument_list|(
-operator|&
 name|cnt
 operator|.
 name|v_syscall
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|sticks

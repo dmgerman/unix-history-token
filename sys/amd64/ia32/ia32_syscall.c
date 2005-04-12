@@ -332,10 +332,12 @@ name|u_int
 name|code
 decl_stmt|;
 comment|/* 	 * note: PCPU_LAZY_INC() can only be used if we can afford 	 * occassional inaccuracy in the count. 	 */
+name|PCPU_LAZY_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_syscall
-operator|++
+argument_list|)
 expr_stmt|;
 name|sticks
 operator|=

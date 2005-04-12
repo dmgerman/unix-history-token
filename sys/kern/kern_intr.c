@@ -2297,17 +2297,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|atomic_add_int
+name|PCPU_LAZY_INC
 argument_list|(
-operator|&
 name|cnt
 operator|.
 name|v_intr
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-comment|/* one more global interrupt */
 name|CTR3
 argument_list|(
 name|KTR_INTR

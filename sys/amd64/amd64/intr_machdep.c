@@ -650,10 +650,12 @@ name|is_count
 operator|)
 operator|++
 expr_stmt|;
+name|PCPU_LAZY_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_intr
-operator|++
+argument_list|)
 expr_stmt|;
 name|it
 operator|=

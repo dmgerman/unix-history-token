@@ -525,10 +525,12 @@ case|case
 name|ALPHA_INTR_DEVICE
 case|:
 comment|/* I/O device interrupt */
+name|PCPU_LAZY_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_intr
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1825,10 +1827,12 @@ modifier|*
 name|framep
 parameter_list|)
 block|{
+name|PCPU_LAZY_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_intr
-operator|++
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

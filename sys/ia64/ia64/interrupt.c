@@ -710,10 +710,12 @@ condition|)
 block|{
 comment|/* clock interrupt */
 comment|/* CTR0(KTR_INTR, "clock interrupt"); */
+name|PCPU_LAZY_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_intr
-operator|++
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
