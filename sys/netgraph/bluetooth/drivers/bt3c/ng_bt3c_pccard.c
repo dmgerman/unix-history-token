@@ -4469,9 +4469,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|m
-operator|->
-name|m_len
+name|len
 condition|;
 name|i
 operator|++
