@@ -788,9 +788,9 @@ operator|==
 name|SIGABRT
 condition|)
 block|{
-name|yppush_jobs
+name|yppush_joblist
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|yppush_exit
 argument_list|(
