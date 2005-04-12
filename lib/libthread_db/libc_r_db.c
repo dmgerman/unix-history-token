@@ -142,7 +142,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}
@@ -686,7 +686,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}
@@ -880,7 +880,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}
@@ -902,7 +902,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}
@@ -1431,7 +1431,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}

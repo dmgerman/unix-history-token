@@ -2230,7 +2230,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|TD_NOEVENT
+name|TD_ERR
 operator|)
 return|;
 block|}
@@ -2256,7 +2256,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}
@@ -2282,7 +2282,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}
@@ -4687,7 +4687,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}
@@ -4713,7 +4713,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}
@@ -4739,7 +4739,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|TD_ERR
+literal|0
 operator|)
 return|;
 block|}
