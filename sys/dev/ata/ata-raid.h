@@ -177,8 +177,12 @@ name|AR_F_SII_RAID
 value|0x0200
 define|#
 directive|define
+name|AR_F_VIA_RAID
+value|0x0400
+define|#
+directive|define
 name|AR_F_FORMAT_MASK
-value|0x03ff
+value|0x07ff
 name|u_int
 name|generation
 decl_stmt|;
@@ -316,7 +320,6 @@ block|{
 name|u_int32_t
 name|magic_0
 decl_stmt|;
-comment|/* 0x0000 */
 define|#
 directive|define
 name|ADP_MAGIC_0
@@ -339,7 +342,6 @@ decl_stmt|;
 name|u_int32_t
 name|dummy_2
 decl_stmt|;
-comment|/* 0x0010 */
 name|u_int32_t
 name|dummy_3
 decl_stmt|;
@@ -355,17 +357,14 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* 0x0020 */
 name|u_int32_t
 name|dummy_5
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* 0x0030 */
 struct|struct
 block|{
-comment|/* 0x0040 */
 name|u_int16_t
 name|total_disks
 decl_stmt|;
@@ -440,14 +439,12 @@ index|[
 literal|127
 index|]
 struct|;
-comment|/* x 0x40 bytes */
 name|u_int32_t
 name|dummy_6
 index|[
 literal|13
 index|]
 decl_stmt|;
-comment|/* 0x2000 */
 name|u_int32_t
 name|magic_1
 decl_stmt|;
@@ -1140,7 +1137,6 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* BCD coded y:Y:M:D:m:h:f:s */
 name|u_int32_t
 name|dummy_1
 decl_stmt|;
@@ -1159,7 +1155,6 @@ index|[
 literal|40
 index|]
 decl_stmt|;
-comment|/* byte swapped */
 define|#
 directive|define
 name|ITE_MAGIC
@@ -1207,7 +1202,6 @@ decl_stmt|;
 name|u_int16_t
 name|filler_9
 decl_stmt|;
-comment|/* 0x100 */
 name|u_int8_t
 name|type
 decl_stmt|;
@@ -1257,14 +1251,12 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* 0x200 */
 name|u_int8_t
 name|timestamp_1
 index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* same as timestamp_0 */
 name|u_int32_t
 name|filler_13
 index|[
@@ -1777,18 +1769,6 @@ define|\
 value|(((struct ad_softc *)device_get_ivars(dev))->total_secs - 63)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|(((((struct ad_softc *)device_get_ivars(dev))->total_secs / (((struct ad_softc *)device_get_ivars(dev))->heads * ((struct ad_softc *)device_get_ivars(dev))->sectors)) * ((struct ad_softc *)device_get_ivars(dev))->heads * ((struct ad_softc *)device_get_ivars(dev))->sectors) - ((struct ad_softc *)device_get_ivars(dev))->sectors)
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|promise_raid_conf
@@ -1815,7 +1795,7 @@ name|PR_MAGIC0
 parameter_list|(
 name|x
 parameter_list|)
-value|(((u_int64_t)(x.channel)<< 48) | \ 			((u_int64_t)(x.device != 0)<< 56))
+value|(((u_int64_t)(x.channel)<< 48) | \ 				((u_int64_t)(x.device != 0)<< 56))
 name|u_int16_t
 name|magic_1
 decl_stmt|;
@@ -2079,7 +2059,6 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* BCD coded s:m:h:D:M:Y */
 name|u_int16_t
 name|stripe_sectors
 decl_stmt|;
@@ -2163,7 +2142,90 @@ decl_stmt|;
 name|u_int16_t
 name|checksum_1
 decl_stmt|;
-comment|/* sum of all 128 shorts == 0 */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* VIA Tech Metadata */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIA_LBA
+parameter_list|(
+name|dev
+parameter_list|)
+define|\
+value|( ((struct ad_softc *)device_get_ivars(dev))->total_secs - 1)
+end_define
+
+begin_struct
+struct|struct
+name|via_raid_conf
+block|{
+name|u_int16_t
+name|magic
+decl_stmt|;
+define|#
+directive|define
+name|VIA_MAGIC
+value|0xaa55
+name|u_int8_t
+name|dummy_0
+decl_stmt|;
+name|u_int8_t
+name|type
+decl_stmt|;
+define|#
+directive|define
+name|VIA_T_RAID0
+value|0x04
+define|#
+directive|define
+name|VIA_T_RAID1
+value|0x0c
+define|#
+directive|define
+name|VIA_T_SPAN
+value|0x44
+name|u_int8_t
+name|disk_index
+decl_stmt|;
+name|u_int8_t
+name|stripe_layout
+decl_stmt|;
+define|#
+directive|define
+name|VIA_L_MASK
+value|0x07
+define|#
+directive|define
+name|VIA_L_SHIFT
+value|4
+name|u_int64_t
+name|total_sectors
+decl_stmt|;
+name|u_int32_t
+name|disk_id
+decl_stmt|;
+name|u_int32_t
+name|disks
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_int8_t
+name|checksum
+decl_stmt|;
+name|u_int8_t
+name|filler_1
+index|[
+literal|461
+index|]
+decl_stmt|;
 block|}
 name|__packed
 struct|;
