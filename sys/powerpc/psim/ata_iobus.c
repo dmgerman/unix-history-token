@@ -615,7 +615,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ATA_ALTADDR_RID
+name|ATA_CTLADDR_RID
 case|:
 name|myrid
 operator|=
@@ -632,13 +632,13 @@ name|end
 operator|=
 name|start
 operator|+
-name|ATA_ALTIOSIZE
+name|ATA_CTLIOSIZE
 operator|-
 literal|1
 expr_stmt|;
 name|count
 operator|=
-name|ATA_ALTIOSIZE
+name|ATA_CTLIOSIZE
 expr_stmt|;
 name|res
 operator|=
