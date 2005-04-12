@@ -5476,22 +5476,22 @@ define|#
 directive|define
 name|r_reg
 parameter_list|(
-specifier|register
+name|reg
 parameter_list|,
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, register))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, reg))
 define|#
 directive|define
 name|w_reg
 parameter_list|(
-specifier|register
+name|reg
 parameter_list|,
 name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, register, byte))
+value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, reg, byte))
 define|#
 directive|define
 name|INCR_PC
