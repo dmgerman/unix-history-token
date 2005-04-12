@@ -22894,6 +22894,11 @@ name|printf
 argument_list|(
 literal|"total_sectors       %llu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|meta
 operator|->
 name|total_sectors
