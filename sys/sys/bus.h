@@ -629,6 +629,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|resource_list_purge
+parameter_list|(
+name|struct
+name|resource_list
+modifier|*
+name|rl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|resource_list_print_type
 parameter_list|(
