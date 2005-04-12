@@ -37,25 +37,15 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_struct_decl
-struct_decl|struct
-name|ifnet
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
+begin_define
+define|#
+directive|define
 name|if_name
 parameter_list|(
-name|struct
-name|ifnet
-modifier|*
+name|ifp
 parameter_list|)
-function_decl|;
-end_function_decl
+value|((ifp)->if_xname)
+end_define
 
 begin_define
 define|#
