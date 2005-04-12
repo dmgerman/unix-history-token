@@ -378,6 +378,20 @@ name|clock_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|RTC_LOCK
+value|mtx_lock_spin(&clock_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTC_UNLOCK
+value|mtx_unlock_spin(&clock_lock)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1472,16 +1486,10 @@ name|int
 name|reg
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 name|u_char
 name|val
 decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
+name|RTC_LOCK
 expr_stmt|;
 name|outb
 argument_list|(
@@ -1509,10 +1517,7 @@ argument_list|(
 literal|0x84
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|RTC_UNLOCK
 expr_stmt|;
 return|return
 operator|(
@@ -1535,13 +1540,7 @@ name|u_char
 name|val
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
+name|RTC_LOCK
 expr_stmt|;
 name|inb
 argument_list|(
@@ -1575,10 +1574,7 @@ literal|0x84
 argument_list|)
 expr_stmt|;
 comment|/* XXX work around wrong order in rtcin() */
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|RTC_UNLOCK
 expr_stmt|;
 block|}
 end_function
