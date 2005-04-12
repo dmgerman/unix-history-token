@@ -1258,7 +1258,7 @@ name|pcb
 operator|->
 name|pcb_ext
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* XXXKSE  XXXSMP  not SMP SAFE.. what locks do we have? */
@@ -1287,7 +1287,7 @@ name|pcb
 operator|->
 name|pcb_ext
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
