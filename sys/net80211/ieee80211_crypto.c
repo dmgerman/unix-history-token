@@ -433,7 +433,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|i
+name|IEEE80211_KEYIX_NONE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the driver key support routines to noop entries. 	 * This is useful especially for the cipher test modules. 	 */
@@ -724,7 +724,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Establish a relationship between the specified key and cipher  * and, if not a global key, allocate a hardware index from the  * driver.  Note that we may be called for global keys but they  * should have a key index already setup so the only work done  * is to setup the cipher reference.  *  * This must be the first call applied to a key; all the other key  * routines assume wk_cipher is setup.  *  * Locking must be handled by the caller using:  *	ieee80211_key_update_begin(ic);  *	ieee80211_key_update_end(ic);  */
+comment|/*  * Establish a relationship between the specified key and cipher  * and, if necessary, allocate a hardware index from the driver.  * Note that when a fixed key index is required it must be specified  * and we blindly assign it w/o consulting the driver (XXX).  *  * This must be the first call applied to a key; all the other key  * routines assume wk_cipher is setup.  *  * Locking must be handled by the caller using:  *	ieee80211_key_update_begin(ic);  *	ieee80211_key_update_end(ic);  */
 end_comment
 
 begin_function
@@ -738,6 +738,9 @@ name|ic
 parameter_list|,
 name|int
 name|cipher
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|ieee80211_key
@@ -909,18 +912,11 @@ name|key
 operator|->
 name|wk_flags
 expr_stmt|;
-comment|/* 	 * If the hardware does not support the cipher then 	 * fallback to a host-based implementation. 	 */
-name|key
-operator|->
-name|wk_flags
+name|flags
 operator|&=
-operator|~
-operator|(
-name|IEEE80211_KEY_SWCRYPT
-operator||
-name|IEEE80211_KEY_SWMIC
-operator|)
+name|IEEE80211_KEY_COMMON
 expr_stmt|;
+comment|/* 	 * If the hardware does not support the cipher then 	 * fallback to a host-based implementation. 	 */
 if|if
 condition|(
 operator|(
@@ -953,9 +949,7 @@ operator|->
 name|ic_name
 argument_list|)
 expr_stmt|;
-name|key
-operator|->
-name|wk_flags
+name|flags
 operator||=
 name|IEEE80211_KEY_SWCRYPT
 expr_stmt|;
@@ -989,9 +983,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|key
-operator|->
-name|wk_flags
+name|flags
 operator||=
 name|IEEE80211_KEY_SWMIC
 expr_stmt|;
@@ -1009,11 +1001,18 @@ name|key
 operator|->
 name|wk_flags
 operator|!=
-name|oflags
+name|flags
 condition|)
 block|{
 name|again
 label|:
+comment|/* 		 * Fillin the flags so cipher modules can see s/w 		 * crypto requirements and potentially allocate 		 * different state and/or attach different method 		 * pointers. 		 * 		 * XXX this is not right when s/w crypto fallback 		 *     fails and we try to restore previous state. 		 */
+name|key
+operator|->
+name|wk_flags
+operator|=
+name|flags
+expr_stmt|;
 name|keyctx
 operator|=
 name|cip
@@ -1084,6 +1083,13 @@ operator|=
 name|keyctx
 expr_stmt|;
 block|}
+comment|/* 	 * Commit to requested usage so driver can see the flags. 	 */
+name|key
+operator|->
+name|wk_flags
+operator|=
+name|flags
+expr_stmt|;
 comment|/* 	 * Ask the driver for a key index if we don't have one. 	 * Note that entries in the global key table always have 	 * an index; this means it's safe to call this routine 	 * for these entries just to setup the reference to the 	 * cipher template.  Note also that when using software 	 * crypto we also call the driver to give us a key index. 	 */
 if|if
 condition|(
@@ -1157,9 +1163,7 @@ name|key
 operator|->
 name|wk_flags
 expr_stmt|;
-name|key
-operator|->
-name|wk_flags
+name|flags
 operator||=
 name|IEEE80211_KEY_SWCRYPT
 expr_stmt|;
@@ -1169,9 +1173,7 @@ name|cipher
 operator|==
 name|IEEE80211_CIPHER_TKIP
 condition|)
-name|key
-operator|->
-name|wk_flags
+name|flags
 operator||=
 name|IEEE80211_KEY_SWMIC
 expr_stmt|;
@@ -1355,60 +1357,14 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|key
-operator|->
-name|wk_cipher
-operator|=
-operator|&
-name|ieee80211_cipher_none
-expr_stmt|;
-name|key
-operator|->
-name|wk_private
-operator|=
-name|cipher_attach
+name|ieee80211_crypto_resetkey
 argument_list|(
 name|ic
 argument_list|,
 name|key
-argument_list|)
-expr_stmt|;
-comment|/* NB: cannot depend on key index to decide this */
-if|if
-condition|(
-operator|&
-name|ic
-operator|->
-name|ic_nw_keys
-index|[
-literal|0
-index|]
-operator|<=
-name|key
-operator|&&
-name|key
-operator|<
-operator|&
-name|ic
-operator|->
-name|ic_nw_keys
-index|[
-name|IEEE80211_WEP_NKID
-index|]
-condition|)
-name|key
-operator|->
-name|wk_keyix
-operator|=
-name|keyix
-expr_stmt|;
-comment|/* preserve shared key state */
-else|else
-name|key
-operator|->
-name|wk_keyix
-operator|=
+argument_list|,
 name|IEEE80211_KEYIX_NONE
+argument_list|)
 expr_stmt|;
 return|return
 literal|1
@@ -1747,7 +1703,7 @@ modifier|*
 name|cip
 decl_stmt|;
 name|u_int8_t
-name|keyix
+name|keyid
 decl_stmt|;
 comment|/* 	 * Multicast traffic always uses the multicast key. 	 * Otherwise if a unicast key is set we use that and 	 * it is always key index 0.  When no unicast key is 	 * set we fall back to the default transmit key. 	 */
 name|wh
@@ -1822,7 +1778,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|keyix
+name|keyid
 operator|=
 name|ic
 operator|->
@@ -1843,7 +1799,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|keyix
+name|keyid
 operator|=
 literal|0
 expr_stmt|;
@@ -1871,7 +1827,7 @@ name|k
 argument_list|,
 name|m
 argument_list|,
-name|keyix
+name|keyid
 operator|<<
 literal|6
 argument_list|)

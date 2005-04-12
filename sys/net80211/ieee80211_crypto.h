@@ -104,13 +104,18 @@ value|0x02
 comment|/* key used for recv */
 define|#
 directive|define
-name|IEEE80211_KEY_SWCRYPT
+name|IEEE80211_KEY_GROUP
 value|0x04
+comment|/* key used for WPA group operation */
+define|#
+directive|define
+name|IEEE80211_KEY_SWCRYPT
+value|0x10
 comment|/* host-based encrypt/decrypt */
 define|#
 directive|define
 name|IEEE80211_KEY_SWMIC
-value|0x08
+value|0x20
 comment|/* host-based enmic/demic */
 name|u_int16_t
 name|wk_keyix
@@ -156,6 +161,15 @@ comment|/* private cipher state */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_KEY_COMMON
+comment|/* common flags passed in by apps */
+define|\
+value|(IEEE80211_KEY_XMIT | IEEE80211_KEY_RECV | IEEE80211_KEY_GROUP)
+end_define
 
 begin_comment
 comment|/*  * NB: these values are ordered carefully; there are lots of  * of implications in any reordering.  In particular beware  * that 4 is not used to avoid conflicting with IEEE80211_F_PRIVACY.  */
@@ -385,6 +399,9 @@ modifier|*
 parameter_list|,
 name|int
 name|cipher
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|ieee80211_key

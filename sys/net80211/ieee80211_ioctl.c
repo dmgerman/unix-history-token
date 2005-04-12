@@ -8558,6 +8558,27 @@ name|ni
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* XXX auto-add group key flag until applications are updated */
+if|if
+condition|(
+operator|(
+name|ik
+operator|.
+name|ik_flags
+operator|&
+name|IEEE80211_KEY_XMIT
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* XXX */
+name|ik
+operator|.
+name|ik_flags
+operator||=
+name|IEEE80211_KEY_GROUP
+expr_stmt|;
+comment|/* XXX */
 block|}
 name|error
 operator|=
@@ -8577,6 +8598,10 @@ argument_list|,
 name|ik
 operator|.
 name|ik_type
+argument_list|,
+name|ik
+operator|.
+name|ik_flags
 argument_list|,
 name|wk
 argument_list|)
@@ -8620,20 +8645,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* new key, reset */
-name|wk
-operator|->
-name|wk_flags
-operator||=
-name|ik
-operator|.
-name|ik_flags
-operator|&
-operator|(
-name|IEEE80211_KEY_XMIT
-operator||
-name|IEEE80211_KEY_RECV
-operator|)
-expr_stmt|;
 name|memset
 argument_list|(
 name|wk
@@ -10827,6 +10838,13 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|k
+operator|->
+name|wk_keyix
+operator|=
+name|kid
+expr_stmt|;
+comment|/* NB: force fixed key id */
 if|if
 condition|(
 name|ieee80211_crypto_newkey
@@ -10834,6 +10852,10 @@ argument_list|(
 name|ic
 argument_list|,
 name|IEEE80211_CIPHER_WEP
+argument_list|,
+name|IEEE80211_KEY_XMIT
+operator||
+name|IEEE80211_KEY_RECV
 argument_list|,
 name|k
 argument_list|)
@@ -10846,14 +10868,6 @@ operator|=
 name|ireq
 operator|->
 name|i_len
-expr_stmt|;
-name|k
-operator|->
-name|wk_flags
-operator||=
-name|IEEE80211_KEY_XMIT
-operator||
-name|IEEE80211_KEY_RECV
 expr_stmt|;
 name|memcpy
 argument_list|(
