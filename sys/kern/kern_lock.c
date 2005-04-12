@@ -1049,25 +1049,28 @@ case|:
 comment|/* 		 * Upgrade a shared lock to an exclusive one. If another 		 * shared lock has already requested an upgrade to an 		 * exclusive lock, our shared lock is released and an 		 * exclusive lock is requested (which will be granted 		 * after the upgrade). If we return an error, the file 		 * will always be unlocked. 		 */
 if|if
 condition|(
-operator|(
 name|lkp
 operator|->
 name|lk_lockholder
 operator|==
 name|thr
-operator|)
-operator|||
-operator|(
+condition|)
+name|panic
+argument_list|(
+literal|"lockmgr: upgrade exclusive lock"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|lkp
 operator|->
 name|lk_sharecount
 operator|<=
 literal|0
-operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"lockmgr: upgrade exclusive lock"
+literal|"lockmgr: upgrade without shared"
 argument_list|)
 expr_stmt|;
 name|shareunlock
