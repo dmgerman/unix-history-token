@@ -664,8 +664,13 @@ comment|/* LED on/off state */
 name|sc_blinking
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* LED blink operation active */
+name|sc_mcastkey
+range|:
+literal|1
+decl_stmt|;
+comment|/* mcast key cache search */
 comment|/* rate tables */
 specifier|const
 name|HAL_RATE_TABLE
