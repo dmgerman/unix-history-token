@@ -121,6 +121,12 @@ directive|include
 file|"thr_umtx.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"thread_db.h"
+end_include
+
 begin_comment
 comment|/*  * Evaluate the storage class specifier.  */
 end_comment
@@ -931,14 +937,14 @@ comment|/* 	 * Lock for accesses to this thread structure. 	 */
 name|umtx_t
 name|lock
 decl_stmt|;
-comment|/* Thread is terminated in kernel, written by kernel. */
-name|long
-name|terminated
-decl_stmt|;
 comment|/* Kernel thread id. */
 name|long
 name|tid
 decl_stmt|;
+define|#
+directive|define
+name|TID_TERMINATED
+value|1
 comment|/* Internal condition variable cycle number. */
 name|umtx_t
 name|cycle
@@ -1176,6 +1182,18 @@ name|pthread_cleanup
 modifier|*
 name|cleanup
 decl_stmt|;
+comment|/* Enable event reporting */
+name|int
+name|report_events
+decl_stmt|;
+comment|/* Event mask */
+name|int
+name|event_mask
+decl_stmt|;
+comment|/* Event */
+name|td_event_msg_t
+name|event_buf
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1388,6 +1406,19 @@ parameter_list|)
 value|(((thrd)->sflags& THR_FLAGS_IN_SYNCQ) != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHOULD_REPORT_EVENT
+parameter_list|(
+name|curthr
+parameter_list|,
+name|e
+parameter_list|)
+define|\
+value|(curthr->report_events&& 			\ 	 (((curthr)->event_mask | _thread_event_mask )& e) != 0)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1424,6 +1455,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_thr_scope_system
+name|SCLASS_PRESET
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* For debugger */
 end_comment
@@ -1442,11 +1484,20 @@ end_decl_stmt
 begin_decl_stmt
 name|SCLASS
 name|int
-name|_thr_scope_system
+name|_thread_event_mask
 name|SCLASS_PRESET
 argument_list|(
 literal|0
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|struct
+name|pthread
+modifier|*
+name|_thread_last_event
 decl_stmt|;
 end_decl_stmt
 
@@ -1758,6 +1809,13 @@ begin_decl_stmt
 name|SCLASS
 name|umtx_t
 name|_thr_list_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|umtx_t
+name|_thr_event_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -2585,6 +2643,53 @@ argument_list|()
 name|__dead2
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|void
+name|_thr_report_creation
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+name|curthread
+parameter_list|,
+name|struct
+name|pthread
+modifier|*
+name|newthread
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thr_report_death
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+name|curthread
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_bp_create
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_bp_death
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* #include<sys/aio.h> */

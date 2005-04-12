@@ -344,9 +344,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|terminated
-operator|==
-literal|0
+name|tid
+operator|!=
+name|TID_TERMINATED
 condition|)
 block|{
 comment|/* make sure we are not still in userland */

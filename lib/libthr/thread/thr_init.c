@@ -1124,6 +1124,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|_thr_report_creation
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1346,6 +1353,12 @@ name|_thr_umtx_init
 argument_list|(
 operator|&
 name|_thr_atfork_lock
+argument_list|)
+expr_stmt|;
+name|_thr_umtx_init
+argument_list|(
+operator|&
+name|_thr_event_lock
 argument_list|)
 expr_stmt|;
 name|_thr_spinlock_init
