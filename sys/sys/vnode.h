@@ -2155,12 +2155,6 @@ name|str
 parameter_list|)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
@@ -2171,6 +2165,12 @@ parameter_list|,
 name|str
 parameter_list|)
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
