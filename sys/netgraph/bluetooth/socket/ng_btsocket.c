@@ -624,8 +624,6 @@ comment|/* backpointer to domain */
 name|BLUETOOTH_PROTO_RFCOMM
 block|,
 comment|/* protocol */
-name|PR_ATOMIC
-operator||
 name|PR_CONNREQUIRED
 block|,
 comment|/* flags */
