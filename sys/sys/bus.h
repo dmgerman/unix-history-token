@@ -470,7 +470,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|resource_list_entry
+modifier|*
 name|resource_list_add
 parameter_list|(
 name|struct

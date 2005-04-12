@@ -9225,11 +9225,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Add or modify a resource entry.  *  * If an existing entry exists with the same type and rid, it will be  * modified using the given values of @p start, @p end and @p  * count. If no entry exists, a new one will be created using the  * given values.  *  * @param rl		the resource list to edit  * @param type		the resource entry type (e.g. SYS_RES_MEMORY)  * @param rid		the resource identifier  * @param start		the start address of the resource  * @param end		the end address of the resource  * @param count		XXX end-start+1  */
+comment|/**  * @brief Add or modify a resource entry.  *  * If an existing entry exists with the same type and rid, it will be  * modified using the given values of @p start, @p end and @p  * count. If no entry exists, a new one will be created using the  * given values.  The resource list entry that matches is then returned.  *  * @param rl		the resource list to edit  * @param type		the resource entry type (e.g. SYS_RES_MEMORY)  * @param rid		the resource identifier  * @param start		the start address of the resource  * @param end		the end address of the resource  * @param count		XXX end-start+1  */
 end_comment
 
 begin_function
-name|void
+name|struct
+name|resource_list_entry
+modifier|*
 name|resource_list_add
 parameter_list|(
 name|struct
@@ -9357,6 +9359,11 @@ name|count
 operator|=
 name|count
 expr_stmt|;
+return|return
+operator|(
+name|rle
+operator|)
+return|;
 block|}
 end_function
 
