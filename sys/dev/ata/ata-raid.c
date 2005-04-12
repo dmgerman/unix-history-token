@@ -16630,7 +16630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* VIA Tech Metadata */
+comment|/* VIA Tech V-RAID Metadata */
 end_comment
 
 begin_function
@@ -18479,7 +18479,7 @@ case|case
 name|AR_F_VIA_RAID
 case|:
 return|return
-literal|"VIA Tech"
+literal|"VIA Tech V-RAID"
 return|;
 default|default:
 return|return

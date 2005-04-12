@@ -2148,7 +2148,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* VIA Tech Metadata */
+comment|/* VIA Tech V-RAID Metadata */
 end_comment
 
 begin_define
