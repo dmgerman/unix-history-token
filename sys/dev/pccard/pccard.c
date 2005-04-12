@@ -2629,6 +2629,8 @@ condition|)
 goto|goto
 name|not_this_one
 goto|;
+name|rle
+operator|=
 name|resource_list_add
 argument_list|(
 name|rl
@@ -2662,13 +2664,15 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|rle
-operator|=
-name|resource_list_find
+operator|==
+name|NULL
+condition|)
+name|panic
 argument_list|(
-name|rl
-argument_list|,
-name|SYS_RES_IOPORT
+literal|"Cannot add resource rid %d IOPORT"
 argument_list|,
 name|cfe
 operator|->
@@ -2772,6 +2776,8 @@ condition|)
 goto|goto
 name|not_this_one
 goto|;
+name|rle
+operator|=
 name|resource_list_add
 argument_list|(
 name|rl
@@ -2795,13 +2801,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|rle
-operator|=
-name|resource_list_find
+operator|==
+name|NULL
+condition|)
+name|panic
 argument_list|(
-name|rl
-argument_list|,
-name|SYS_RES_IRQ
+literal|"Cannot add resource rid %d IRQ"
 argument_list|,
 name|cfe
 operator|->
@@ -4074,6 +4082,17 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|rle
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"Can't disable an interrupt with no IRQ res\n"
+argument_list|)
+expr_stmt|;
 name|BUS_TEARDOWN_INTR
 argument_list|(
 name|dev
