@@ -486,7 +486,7 @@ name|__fldcw
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm __volatile("fldcw %0" : "=m" (*(addr)))
+value|__asm __volatile("fldcw %0" : : "m" (*(addr)))
 end_define
 
 begin_define
@@ -516,7 +516,7 @@ name|__ldmxcsr
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm __volatile("ldmxcsr %0" : "=m" (*(addr)))
+value|__asm __volatile("ldmxcsr %0" : : "m" (*(addr)))
 end_define
 
 begin_define
