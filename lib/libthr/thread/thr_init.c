@@ -1124,6 +1124,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|_thread_event_mask
+operator|&
+name|TD_CREATE
+condition|)
 name|_thr_report_creation
 argument_list|(
 name|curthread
