@@ -754,6 +754,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|rman_set_device
+parameter_list|(
+name|struct
+name|resource
+modifier|*
+name|_r
+parameter_list|,
+name|struct
+name|device
+modifier|*
+name|_dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|rman_set_end
 parameter_list|(
 name|struct

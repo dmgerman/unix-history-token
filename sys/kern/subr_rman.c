@@ -3132,6 +3132,30 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|rman_set_device
+parameter_list|(
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|,
+name|struct
+name|device
+modifier|*
+name|dev
+parameter_list|)
+block|{
+name|r
+operator|->
+name|r_dev
+operator|=
+name|dev
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Sysctl interface for scanning the resource lists.  *  * We take two input parameters; the index into the list of resource  * managers, and the resource offset into the list.  */
 end_comment
