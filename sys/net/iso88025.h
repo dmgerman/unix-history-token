@@ -197,6 +197,232 @@ value|((foo)>= ISO88025_MIN_LEN&& (foo)<= ISO88025_MAX_LEN)
 end_define
 
 begin_comment
+comment|/* Access Control field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC_PRI_MASK
+value|0xe0
+end_define
+
+begin_comment
+comment|/* Priority bits 		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC_TOKEN
+value|0x10
+end_define
+
+begin_comment
+comment|/* Token bit: 0=Token, 1=Frame	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC_MONITOR
+value|0x08
+end_define
+
+begin_comment
+comment|/* Monitor			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC_RESV_MASK
+value|0x07
+end_define
+
+begin_comment
+comment|/* Reservation bits		*/
+end_comment
+
+begin_comment
+comment|/* Frame Control field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_FT_MASK
+value|0xc0
+end_define
+
+begin_comment
+comment|/* Frame Type			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_FT_MAC
+value|0x00
+end_define
+
+begin_comment
+comment|/* MAC frame			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_FT_LLC
+value|0x40
+end_define
+
+begin_comment
+comment|/* LLC frame			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_ATTN_MASK
+value|0x0f
+end_define
+
+begin_comment
+comment|/* Attention bits		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_ATTN_EB
+value|0x01
+end_define
+
+begin_comment
+comment|/* Express buffer		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_ATTN_BE
+value|0x02
+end_define
+
+begin_comment
+comment|/* Beacon			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_ATTN_CT
+value|0x03
+end_define
+
+begin_comment
+comment|/* Claim token			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_ATTN_RP
+value|0x04
+end_define
+
+begin_comment
+comment|/* Ring purge			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_ATTN_AMP
+value|0x05
+end_define
+
+begin_comment
+comment|/* Active monitor present	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_ATTN_SMP
+value|0x06
+end_define
+
+begin_comment
+comment|/* Standby monitor present	*/
+end_comment
+
+begin_comment
+comment|/* Token Ring destination address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DA_IG
+value|0x80
+end_define
+
+begin_comment
+comment|/* Individual/group address.	*/
+end_comment
+
+begin_comment
+comment|/* 0=Individual, 1=Group	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DA_UL
+value|0x40
+end_define
+
+begin_comment
+comment|/* Universal/local address.	*/
+end_comment
+
+begin_comment
+comment|/* 0=Universal, 1=Local		*/
+end_comment
+
+begin_comment
+comment|/* Token Ring source address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SA_RII
+value|0x80
+end_define
+
+begin_comment
+comment|/* Routing information indicator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SA_IG
+value|0x40
+end_define
+
+begin_comment
+comment|/* Individual/group address	*/
+end_comment
+
+begin_comment
+comment|/* 0=Group, 1=Individual	*/
+end_comment
+
+begin_comment
 comment|/*  * ISO 802.5 physical header  */
 end_comment
 
