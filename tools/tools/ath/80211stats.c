@@ -85,6 +85,14 @@ directive|include
 file|"../../../sys/net80211/ieee80211_ioctl.h"
 end_include
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1200,6 +1208,13 @@ name|allnodes
 init|=
 literal|0
 decl_stmt|;
+name|progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|s
 operator|=
 name|socket
@@ -1296,6 +1311,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"usage: %s [-a] [-i device] [mac...]\n"
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
