@@ -1350,7 +1350,7 @@ comment|/*nsegments*/
 literal|1
 argument_list|,
 comment|/*maxsegz*/
-literal|0x3fff
+literal|0x4000
 argument_list|,
 comment|/*flags*/
 literal|0
