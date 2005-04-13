@@ -97,7 +97,29 @@ value|0x001
 end_define
 
 begin_comment
-comment|/* retrieve peer credentails */
+comment|/* retrieve peer credentials */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCAL_CREDS
+value|0x002
+end_define
+
+begin_comment
+comment|/* pass credentials to receiver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCAL_CONNWAIT
+value|0x004
+end_define
+
+begin_comment
+comment|/* connects block until accepted */
 end_comment
 
 begin_ifdef

@@ -2001,6 +2001,60 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Socket credentials.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sockcred
+block|{
+name|uid_t
+name|sc_uid
+decl_stmt|;
+comment|/* real user id */
+name|uid_t
+name|sc_euid
+decl_stmt|;
+comment|/* effective user id */
+name|gid_t
+name|sc_gid
+decl_stmt|;
+comment|/* real group id */
+name|gid_t
+name|sc_egid
+decl_stmt|;
+comment|/* effective group id */
+name|int
+name|sc_ngroups
+decl_stmt|;
+comment|/* number of supplemental groups */
+name|gid_t
+name|sc_groups
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* variable length */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Compute size of a sockcred structure with groups.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKCREDSIZE
+parameter_list|(
+name|ngrps
+parameter_list|)
+define|\
+value|(sizeof(struct sockcred) + (sizeof(gid_t) * ((ngrps) - 1)))
+end_define
+
 begin_endif
 endif|#
 directive|endif

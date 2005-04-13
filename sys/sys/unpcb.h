@@ -145,6 +145,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|UNP_WANTCRED
+value|0x004
+end_define
+
+begin_comment
+comment|/* credentials wanted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNP_CONNWAIT
+value|0x008
+end_define
+
+begin_comment
+comment|/* connect blocks until accepted */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|sotounpcb
 parameter_list|(
 name|so
