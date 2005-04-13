@@ -346,6 +346,20 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
+name|isa_set_configattr
+argument_list|(
+name|child
+argument_list|,
+operator|(
+name|isa_get_configattr
+argument_list|(
+name|child
+argument_list|)
+operator||
+name|ISACFGATTR_HINTS
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

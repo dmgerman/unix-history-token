@@ -390,6 +390,17 @@ begin_comment
 comment|/* multiple configurations */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISACFGATTR_HINTS
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* source of config is hints */
+end_comment
+
 begin_comment
 comment|/*  * Simplified accessors for isa devices  */
 end_comment
