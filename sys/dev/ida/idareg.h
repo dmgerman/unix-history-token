@@ -392,6 +392,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CMD_DIAG_PASS_THRU
+value|0x41
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CMD_GET_CONFIG
 value|0x50
 end_define
@@ -414,6 +425,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CMD_BYPASS_VOL_STATE
+value|0x52
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_SS_CREATE_VOL
+value|0x53
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_CHANGE_CONFIG
+value|0x54
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_SENSE_ORIG_CONF
+value|0x55
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_REORDER_LOG_DRV
+value|0x56
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CMD_LABEL_LOG_DRV
 value|0x57
 end_define
@@ -425,12 +491,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CMD_SS_TO_VOL
+value|0x58
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CMD_SET_SURFACE_DELAY
 value|0x60
 end_define
 
 begin_comment
 comment|/* Set surface delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_SET_OVERHEAT_DELAY
+value|0x61
+end_define
+
+begin_comment
+comment|/* ??? */
 end_comment
 
 begin_define
@@ -475,6 +563,17 @@ end_define
 
 begin_comment
 comment|/* Pass-through operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_PASSTHROUGH_A
+value|0x91
+end_define
+
+begin_comment
+comment|/* ??? */
 end_comment
 
 begin_define
@@ -579,12 +678,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CMD_COLLECT_BUFFER
+value|0xd2
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CMD_ACCEPT_MEDIA_EXCH
 value|0xe0
 end_define
 
 begin_comment
 comment|/* Accept Media Exchange */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_FLASH_READ
+value|0xf6
+end_define
+
+begin_comment
+comment|/* Read FLASH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_FLASH_WRITE
+value|0xf7
+end_define
+
+begin_comment
+comment|/* Write FLASH */
 end_comment
 
 begin_comment
