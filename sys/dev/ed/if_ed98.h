@@ -7,23 +7,6 @@ begin_comment
 comment|/*  * PC-9801 specific definitions for DP8390/SMC8216 NICs.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|Why you include if_ed98.h?
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Vendor types  */
 end_comment
