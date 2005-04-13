@@ -1854,7 +1854,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46Aa:b:cdf:kl:m:nop:P:suv"
+literal|"46Aa:b:cdf:kl:m:nop:P:sS:uv"
 argument_list|)
 operator|)
 operator|!=
@@ -2266,6 +2266,40 @@ case|:
 comment|/* no network mode */
 name|SecureMode
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* path for privileged originator */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|sunx
+operator|.
+name|sun_path
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s path too long, exiting"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|funix_secure
+operator|.
+name|name
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
