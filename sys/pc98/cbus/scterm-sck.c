@@ -5452,9 +5452,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|PC98
 case|case
 literal|0x0e
 case|:
@@ -5501,9 +5498,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* PC98 */
 case|case
 literal|0x1b
 case|:
