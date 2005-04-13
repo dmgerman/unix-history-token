@@ -128,9 +128,9 @@ name|n
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"usage: mixer [-f device] [-s] [dev [+|-][voll[:[+|-]volr]] ...\n"
-literal|"       mixer [-f device] [-s] recsrc ...\n"
-literal|"       mixer [-f device] [-s] {^|+|-|=}rec rdev ... \n"
+literal|"usage: mixer [-f device] [-s | -S] [dev [+|-][voll[:[+|-]volr]] ...\n"
+literal|"       mixer [-f device] [-s | -S] recsrc ...\n"
+literal|"       mixer [-f device] [-s | -S] {^|+|-|=}rec rdev ... \n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -457,6 +457,10 @@ decl_stmt|,
 name|shortflag
 init|=
 literal|0
+decl_stmt|,
+name|Shortflag
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|l
@@ -561,7 +565,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:s"
+literal|"f:sS"
 argument_list|)
 operator|)
 operator|!=
@@ -588,6 +592,14 @@ case|case
 literal|'s'
 case|:
 name|shortflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|Shortflag
 operator|=
 literal|1
 expr_stmt|;
@@ -782,6 +794,33 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|Shortflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s:%d:%d "
+argument_list|,
+name|names
+index|[
+name|foo
+index|]
+argument_list|,
+name|bar
+operator|&
+literal|0x7f
+argument_list|,
+operator|(
+name|bar
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0x7f
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|shortflag
@@ -1282,6 +1321,33 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|Shortflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s:%d:%d "
+argument_list|,
+name|names
+index|[
+name|dev
+index|]
+argument_list|,
+name|bar
+operator|&
+literal|0x7f
+argument_list|,
+operator|(
+name|bar
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0x7f
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|shortflag
 condition|)
 name|printf
@@ -1452,6 +1518,11 @@ name|r
 operator|=
 literal|100
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Shortflag
+condition|)
 name|printf
 argument_list|(
 literal|"Setting the mixer %s from %d:%d to %d:%d.\n"
