@@ -3487,11 +3487,6 @@ name|RENAME
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"this is it?\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dvp
