@@ -410,7 +410,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * flags for the controller   */
+comment|/*  * flags for the controller  */
 end_comment
 
 begin_define

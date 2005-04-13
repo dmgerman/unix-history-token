@@ -254,7 +254,7 @@ value|0x14
 end_define
 
 begin_comment
-comment|/*  * command types   */
+comment|/*  * command types  */
 end_comment
 
 begin_define
@@ -921,7 +921,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * CMD_SENSE_DRV_STATUS (0x12)  * Sense logical drive status  */
+comment|/*  * CMD_SENSE_DRV_STATUS (0x12)  * Sense logical drive status  */
 end_comment
 
 begin_struct

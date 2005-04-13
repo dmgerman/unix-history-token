@@ -1473,7 +1473,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * before detaching, we must make sure that the system is  	 * quiescent; nothing mounted, no pending activity. 	 */
+comment|/* 	 * XXX 	 * before detaching, we must make sure that the system is 	 * quiescent; nothing mounted, no pending activity. 	 */
 comment|/* 	 * XXX 	 * now, how are we supposed to maintain a list of our drives? 	 * iterate over our "child devices"? 	 */
 name|destroy_dev
 argument_list|(
