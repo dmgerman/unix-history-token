@@ -2958,6 +2958,7 @@ operator|&
 name|TXS_SUCCES_INTR_REQ
 condition|)
 empty_stmt|;
+comment|/* nothing */
 elseif|else
 if|if
 condition|(

@@ -2815,6 +2815,7 @@ operator|&
 name|STAT_DAC1
 condition|)
 empty_stmt|;
+comment|/* nothing */
 if|if
 condition|(
 name|intsrc
