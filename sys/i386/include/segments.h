@@ -1043,7 +1043,7 @@ comment|/* System Call Interrupt Vector */
 end_comment
 
 begin_comment
-comment|/*  * Entries in the Global Descriptor Table (GDT)  */
+comment|/*  * Entries in the Global Descriptor Table (GDT)  * Note that each 4 entries share a single 32 byte L1 cache line.  * Some of the fast syscall instructions require a specific order here.  */
 end_comment
 
 begin_define
@@ -1060,30 +1060,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GCODE_SEL
-value|1
-end_define
-
-begin_comment
-comment|/* Kernel Code Descriptor */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GDATA_SEL
-value|2
-end_define
-
-begin_comment
-comment|/* Kernel Data Descriptor */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|GPRIV_SEL
-value|3
+value|1
 end_define
 
 begin_comment
@@ -1093,45 +1071,67 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GPROC0_SEL
+name|GUFS_SEL
+value|2
+end_define
+
+begin_comment
+comment|/* User %fs Descriptor (order critical: 1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GUGS_SEL
+value|3
+end_define
+
+begin_comment
+comment|/* User %gs Descriptor (order critical: 2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCODE_SEL
 value|4
 end_define
 
 begin_comment
-comment|/* Task state process slot zero and up */
+comment|/* Kernel Code Descriptor (order critical: 1) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GLDT_SEL
+name|GDATA_SEL
 value|5
 end_define
 
 begin_comment
-comment|/* LDT - eventually one per process */
+comment|/* Kernel Data Descriptor (order critical: 2) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GUSERLDT_SEL
+name|GUCODE_SEL
 value|6
 end_define
 
 begin_comment
-comment|/* User LDT */
+comment|/* User Code Descriptor (order critical: 3) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GTGATE_SEL
+name|GUDATA_SEL
 value|7
 end_define
 
 begin_comment
-comment|/* Process task switch gate */
+comment|/* User Data Descriptor (order critical: 4) */
 end_comment
 
 begin_define
@@ -1148,8 +1148,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GPANIC_SEL
+name|GPROC0_SEL
 value|9
+end_define
+
+begin_comment
+comment|/* Task state process slot zero and up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLDT_SEL
+value|10
+end_define
+
+begin_comment
+comment|/* Default User LDT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GUSERLDT_SEL
+value|11
+end_define
+
+begin_comment
+comment|/* User LDT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPANIC_SEL
+value|12
 end_define
 
 begin_comment
@@ -1160,7 +1193,7 @@ begin_define
 define|#
 directive|define
 name|GBIOSCODE32_SEL
-value|10
+value|13
 end_define
 
 begin_comment
@@ -1171,7 +1204,7 @@ begin_define
 define|#
 directive|define
 name|GBIOSCODE16_SEL
-value|11
+value|14
 end_define
 
 begin_comment
@@ -1182,7 +1215,7 @@ begin_define
 define|#
 directive|define
 name|GBIOSDATA_SEL
-value|12
+value|15
 end_define
 
 begin_comment
@@ -1193,7 +1226,7 @@ begin_define
 define|#
 directive|define
 name|GBIOSUTIL_SEL
-value|13
+value|16
 end_define
 
 begin_comment
@@ -1204,7 +1237,7 @@ begin_define
 define|#
 directive|define
 name|GBIOSARGS_SEL
-value|14
+value|17
 end_define
 
 begin_comment
@@ -1214,8 +1247,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GNDIS_SEL
+value|18
+end_define
+
+begin_comment
+comment|/* For the NDIS layer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NGDT
-value|15
+value|19
 end_define
 
 begin_comment

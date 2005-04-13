@@ -1952,6 +1952,23 @@ argument_list|(
 name|gsel_tss
 argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|fsgs_gdt
+argument_list|,
+operator|&
+name|gdt
+index|[
+name|myid
+operator|*
+name|NGDT
+operator|+
+name|GUFS_SEL
+index|]
+operator|.
+name|sd
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set to a known state: 	 * Set by mpboot.s: CR0_PG, CR0_PE 	 * Set by cpu_setregs: CR0_NE, CR0_MP, CR0_TS, CR0_WP, CR0_AM 	 */
 name|cr0
 operator|=

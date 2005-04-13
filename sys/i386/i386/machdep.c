@@ -6223,7 +6223,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* software prototypes -- in more palatable form */
+comment|/*  * software prototypes -- in more palatable form.  *  * GCODE_SEL through GUDATA_SEL must be in this order for syscall/sysret  * GUFS_SEL and GUGS_SEL must be in this order (swtch.s knows it)  */
 end_comment
 
 begin_decl_stmt
@@ -6261,7 +6261,91 @@ literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GCODE_SEL	1 Code Descriptor for kernel */
+comment|/* GPRIV_SEL	1 SMP Per-Processor Private Data Descriptor */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0xfffff
+block|,
+comment|/* length - all address space */
+name|SDT_MEMRWA
+block|,
+comment|/* segment type */
+literal|0
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GUFS_SEL	2 %fs Descriptor for user */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0xfffff
+block|,
+comment|/* length - all address space */
+name|SDT_MEMRWA
+block|,
+comment|/* segment type */
+name|SEL_UPL
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GUGS_SEL	3 %gs Descriptor for user */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0xfffff
+block|,
+comment|/* length - all address space */
+name|SDT_MEMRWA
+block|,
+comment|/* segment type */
+name|SEL_UPL
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GCODE_SEL	4 Code Descriptor for kernel */
 block|{
 literal|0x0
 block|,
@@ -6289,7 +6373,7 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GDATA_SEL	2 Data Descriptor for kernel */
+comment|/* GDATA_SEL	5 Data Descriptor for kernel */
 block|{
 literal|0x0
 block|,
@@ -6317,7 +6401,7 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GPRIV_SEL	3 SMP Per-Processor Private Data Descriptor */
+comment|/* GUCODE_SEL	6 Code Descriptor for user */
 block|{
 literal|0x0
 block|,
@@ -6325,6 +6409,62 @@ comment|/* segment base address  */
 literal|0xfffff
 block|,
 comment|/* length - all address space */
+name|SDT_MEMERA
+block|,
+comment|/* segment type */
+name|SEL_UPL
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GUDATA_SEL	7 Data Descriptor for user */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0xfffff
+block|,
+comment|/* length - all address space */
+name|SDT_MEMRWA
+block|,
+comment|/* segment type */
+name|SEL_UPL
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GBIOSLOWMEM_SEL 8 BIOS access to realmode segment 0x40, must be #8 in GDT */
+block|{
+literal|0x400
+block|,
+comment|/* segment base address */
+literal|0xfffff
+block|,
+comment|/* length */
 name|SDT_MEMRWA
 block|,
 comment|/* segment type */
@@ -6345,7 +6485,7 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GPROC0_SEL	4 Proc 0 Tss Descriptor */
+comment|/* GPROC0_SEL	9 Proc 0 Tss Descriptor */
 block|{
 literal|0x0
 block|,
@@ -6379,7 +6519,7 @@ literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GLDT_SEL	5 LDT Descriptor */
+comment|/* GLDT_SEL	10 LDT Descriptor */
 block|{
 operator|(
 name|int
@@ -6415,7 +6555,7 @@ literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GUSERLDT_SEL	6 User LDT Descriptor per process */
+comment|/* GUSERLDT_SEL	11 User LDT Descriptor per process */
 block|{
 operator|(
 name|int
@@ -6456,63 +6596,7 @@ literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GTGATE_SEL	7 Null Descriptor - Placeholder */
-block|{
-literal|0x0
-block|,
-comment|/* segment base address  */
-literal|0x0
-block|,
-comment|/* length - all address space */
-literal|0
-block|,
-comment|/* segment type */
-literal|0
-block|,
-comment|/* segment descriptor priority level */
-literal|0
-block|,
-comment|/* segment descriptor present */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* default 32 vs 16 bit size */
-literal|0
-comment|/* limit granularity (byte/page units)*/
-block|}
-block|,
-comment|/* GBIOSLOWMEM_SEL 8 BIOS access to realmode segment 0x40, must be #8 in GDT */
-block|{
-literal|0x400
-block|,
-comment|/* segment base address */
-literal|0xfffff
-block|,
-comment|/* length */
-name|SDT_MEMRWA
-block|,
-comment|/* segment type */
-literal|0
-block|,
-comment|/* segment descriptor priority level */
-literal|1
-block|,
-comment|/* segment descriptor present */
-literal|0
-block|,
-literal|0
-block|,
-literal|1
-block|,
-comment|/* default 32 vs 16 bit size */
-literal|1
-comment|/* limit granularity (byte/page units)*/
-block|}
-block|,
-comment|/* GPANIC_SEL	9 Panic Tss Descriptor */
+comment|/* GPANIC_SEL	12 Panic Tss Descriptor */
 block|{
 operator|(
 name|int
@@ -6550,7 +6634,7 @@ literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GBIOSCODE32_SEL 10 BIOS 32-bit interface (32bit Code) */
+comment|/* GBIOSCODE32_SEL 13 BIOS 32-bit interface (32bit Code) */
 block|{
 literal|0
 block|,
@@ -6578,7 +6662,7 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GBIOSCODE16_SEL 11 BIOS 32-bit interface (16bit Code) */
+comment|/* GBIOSCODE16_SEL 14 BIOS 32-bit interface (16bit Code) */
 block|{
 literal|0
 block|,
@@ -6606,7 +6690,7 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GBIOSDATA_SEL 12 BIOS 32-bit interface (Data) */
+comment|/* GBIOSDATA_SEL 15 BIOS 32-bit interface (Data) */
 block|{
 literal|0
 block|,
@@ -6634,7 +6718,7 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GBIOSUTIL_SEL 13 BIOS 16-bit interface (Utility) */
+comment|/* GBIOSUTIL_SEL 16 BIOS 16-bit interface (Utility) */
 block|{
 literal|0
 block|,
@@ -6662,7 +6746,7 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GBIOSARGS_SEL 14 BIOS 16-bit interface (Arguments) */
+comment|/* GBIOSARGS_SEL 17 BIOS 16-bit interface (Arguments) */
 block|{
 literal|0
 block|,
@@ -6687,6 +6771,34 @@ literal|0
 block|,
 comment|/* default 32 vs 16 bit size */
 literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GNDIS_SEL	18 NDIS Descriptor */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0x0
+block|,
+comment|/* length */
+literal|0
+block|,
+comment|/* segment type */
+literal|0
+block|,
+comment|/* segment descriptor priority level */
+literal|0
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|, }
@@ -8919,8 +9031,7 @@ comment|/* Init basic tunables, hz etc */
 name|init_param1
 argument_list|()
 expr_stmt|;
-comment|/* 	 * make gdt memory segments, the code segment goes up to end of the 	 * page with etext in it, the data segment goes to the end of 	 * the address space 	 */
-comment|/* 	 * XXX text protection is temporarily (?) disabled.  The limit was 	 * i386_btop(round_page(etext)) - 1. 	 */
+comment|/* 	 * Make gdt memory segments.  All segments cover the full 4GB 	 * of address space and permissions are enforced at page level. 	 */
 name|gdt_segs
 index|[
 name|GCODE_SEL
@@ -8949,6 +9060,62 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|gdt_segs
+index|[
+name|GUCODE_SEL
+index|]
+operator|.
+name|ssd_limit
+operator|=
+name|atop
+argument_list|(
+literal|0
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|gdt_segs
+index|[
+name|GUDATA_SEL
+index|]
+operator|.
+name|ssd_limit
+operator|=
+name|atop
+argument_list|(
+literal|0
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|gdt_segs
+index|[
+name|GUFS_SEL
+index|]
+operator|.
+name|ssd_limit
+operator|=
+name|atop
+argument_list|(
+literal|0
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|gdt_segs
+index|[
+name|GUGS_SEL
+index|]
+operator|.
+name|ssd_limit
+operator|=
+name|atop
+argument_list|(
+literal|0
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -8962,24 +9129,6 @@ index|]
 operator|.
 name|pcpu
 expr_stmt|;
-name|gdt_segs
-index|[
-name|GPRIV_SEL
-index|]
-operator|.
-name|ssd_limit
-operator|=
-name|atop
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|privatespace
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
 name|pc
@@ -8987,6 +9136,8 @@ operator|=
 operator|&
 name|__pcpu
 expr_stmt|;
+endif|#
+directive|endif
 name|gdt_segs
 index|[
 name|GPRIV_SEL
@@ -8996,17 +9147,11 @@ name|ssd_limit
 operator|=
 name|atop
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pcpu
-argument_list|)
+literal|0
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|gdt_segs
 index|[
 name|GPRIV_SEL
@@ -9163,7 +9308,6 @@ name|MTX_NOWITNESS
 argument_list|)
 expr_stmt|;
 comment|/* make ldt memory segments */
-comment|/* 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  And it 	 * should be spelled ...MAX_USER... 	 */
 name|ldt_segs
 index|[
 name|LUCODE_SEL
@@ -9173,7 +9317,7 @@ name|ssd_limit
 operator|=
 name|atop
 argument_list|(
-name|VM_MAXUSER_ADDRESS
+literal|0
 operator|-
 literal|1
 argument_list|)
@@ -9187,7 +9331,7 @@ name|ssd_limit
 operator|=
 name|atop
 argument_list|(
-name|VM_MAXUSER_ADDRESS
+literal|0
 operator|-
 literal|1
 argument_list|)
@@ -9958,6 +10102,20 @@ argument_list|(
 name|gsel_tss
 argument_list|)
 expr_stmt|;
+comment|/* pointer to selector slot for %fs/%gs */
+name|PCPU_SET
+argument_list|(
+name|fsgs_gdt
+argument_list|,
+operator|&
+name|gdt
+index|[
+name|GUFS_SEL
+index|]
+operator|.
+name|sd
+argument_list|)
+expr_stmt|;
 name|dblfault_tss
 operator|.
 name|tss_esp
@@ -10226,6 +10384,7 @@ operator|>>
 literal|16
 expr_stmt|;
 comment|/* XXX does this work? */
+comment|/* XXX yes! */
 name|ldt
 index|[
 name|LBSDICALLS_SEL
@@ -10249,18 +10408,18 @@ expr_stmt|;
 comment|/* transfer to user mode */
 name|_ucodesel
 operator|=
-name|LSEL
+name|GSEL
 argument_list|(
-name|LUCODE_SEL
+name|GUCODE_SEL
 argument_list|,
 name|SEL_UPL
 argument_list|)
 expr_stmt|;
 name|_udatasel
 operator|=
-name|LSEL
+name|GSEL
 argument_list|(
-name|LUDATA_SEL
+name|GUDATA_SEL
 argument_list|,
 name|SEL_UPL
 argument_list|)

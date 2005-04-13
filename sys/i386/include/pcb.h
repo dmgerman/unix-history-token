@@ -108,6 +108,14 @@ name|int
 name|pcb_gs
 decl_stmt|;
 name|struct
+name|segment_descriptor
+name|pcb_fsd
+decl_stmt|;
+name|struct
+name|segment_descriptor
+name|pcb_gsd
+decl_stmt|;
+name|struct
 name|pcb_ext
 modifier|*
 name|pcb_ext
