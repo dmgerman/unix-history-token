@@ -2810,6 +2810,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|KASSERT
+argument_list|(
+name|qcb
+operator|->
+name|buf
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ida_done(): qcb->buf is NULL!"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
