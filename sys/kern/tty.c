@@ -15575,6 +15575,14 @@ name|t_termios
 operator|.
 name|c_cflag
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_modem
+operator|!=
+name|NULL
+condition|)
 name|tp
 operator|->
 name|t_modem
@@ -15655,6 +15663,13 @@ operator|(
 name|tp
 operator|->
 name|t_modem
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_modem
 argument_list|(
 name|tp
 argument_list|,
@@ -15664,6 +15679,7 @@ literal|0
 argument_list|)
 operator|&
 name|SER_DCD
+operator|)
 operator|)
 condition|)
 name|ttyld_modem
