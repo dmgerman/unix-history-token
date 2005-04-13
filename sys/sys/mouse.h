@@ -865,6 +865,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MOUSE_PROTO_GTCO_DIGIPAD
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
 name|MOUSE_RES_UNKNOWN
 value|(-1)
 end_define
