@@ -911,7 +911,6 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * The parent directory will have been unlocked, unless this is a 	 * dotdot lookup or if dvp == tdvp (tdvp must be locked). 	 * 	 * We want our dvp to remain locked and ref'd.  We also want tdvp 	 * to remain locked and ref'd. 	 */
 name|UDEBUG
 argument_list|(
 operator|(
@@ -925,31 +924,6 @@ name|cnp
 operator|->
 name|cn_flags
 operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dvp
-operator|!=
-name|tdvp
-operator|&&
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|ISDOTDOT
-operator|)
-condition|)
-name|vn_lock
-argument_list|(
-name|dvp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Lastly check if the current node is a mount point in 	 * which case walk up the mount hierarchy making sure not to 	 * bump into the root of the mount tree (ie. dvp != udvp). 	 * 	 * We use dvp as a temporary variable here, it is no longer related 	 * to the dvp above.  However, we have to ensure that both *pdvp and 	 * tdvp are locked on return. 	 */

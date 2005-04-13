@@ -565,7 +565,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|vrele
+name|vput
 argument_list|(
 name|lvp
 argument_list|)
@@ -935,7 +935,7 @@ name|ENOENT
 expr_stmt|;
 name|out
 label|:
-name|vrele
+name|vput
 argument_list|(
 name|lvp
 argument_list|)

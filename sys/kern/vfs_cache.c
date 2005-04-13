@@ -1662,6 +1662,9 @@ decl_stmt|;
 name|u_int32_t
 name|hash
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2106,8 +2109,8 @@ expr_stmt|;
 name|CACHE_UNLOCK
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|vget
 argument_list|(
 operator|*
@@ -2123,8 +2126,7 @@ name|cnp
 operator|->
 name|cn_thread
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 name|cnp
@@ -2146,6 +2148,11 @@ operator|->
 name|cn_thread
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
 operator|*
 name|vpp
 operator|=

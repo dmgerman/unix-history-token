@@ -2356,9 +2356,6 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* race to get the inode */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|VFS_VGET
@@ -2376,11 +2373,7 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|vn_lock
 argument_list|(
 name|pdp
@@ -2392,12 +2385,17 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 operator|*
 name|vpp
 operator|=

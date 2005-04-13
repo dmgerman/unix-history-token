@@ -2898,10 +2898,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 name|vn_lock
 argument_list|(
 name|dvp
