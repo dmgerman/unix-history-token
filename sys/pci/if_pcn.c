@@ -4387,10 +4387,10 @@ condition|(
 name|m
 operator|->
 name|m_len
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -4496,7 +4496,6 @@ expr_stmt|;
 name|cnt
 operator|++
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
