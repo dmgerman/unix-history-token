@@ -564,11 +564,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|dpt_free
-argument_list|(
-name|dpt
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ENXIO
