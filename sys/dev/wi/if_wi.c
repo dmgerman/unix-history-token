@@ -1817,6 +1817,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
 name|isset
 argument_list|(
 operator|(
@@ -1829,7 +1830,7 @@ argument_list|,
 name|i
 argument_list|)
 condition|)
-block|{
+continue|continue;
 name|ic
 operator|->
 name|ic_channels
@@ -1857,7 +1858,6 @@ name|ic_flags
 operator|=
 name|IEEE80211_CHAN_B
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Read the default channel from the NIC. This may vary 	 * depending on the country where the NIC was purchased, so 	 * we can't hard-code a default and expect it to work for 	 * everyone. 	 * 	 * If no channel is specified, let the 802.11 code select. 	 */
 name|buflen
