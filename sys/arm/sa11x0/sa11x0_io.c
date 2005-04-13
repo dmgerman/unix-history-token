@@ -378,12 +378,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|pmap_update
-argument_list|(
-name|pmap_kernel
-argument_list|()
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
