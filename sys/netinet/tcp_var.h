@@ -2565,6 +2565,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|tcp_sacked_bytes
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|,
+name|int
+modifier|*
+name|lost_not_rexmitted
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|tcp_sack_partialack
 parameter_list|(
