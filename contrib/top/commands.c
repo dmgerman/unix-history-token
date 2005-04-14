@@ -174,7 +174,7 @@ name|DISP_CPU
 condition|)
 name|fputs
 argument_list|(
-literal|"\ o       - specify sort order (pri, size, res, cpu, time)\n"
+literal|"\ o       - specify sort order (pri, size, res, cpu, time, threads)\n"
 argument_list|,
 name|stdout
 argument_list|)

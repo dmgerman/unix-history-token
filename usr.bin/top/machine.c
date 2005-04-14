@@ -181,6 +181,14 @@ parameter_list|)
 value|getsysctl(name,&(var), sizeof(var))
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|process_select
+name|ps
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|char
@@ -379,10 +387,21 @@ end_define
 begin_decl_stmt
 specifier|static
 name|char
+name|smp_header_thr
+index|[]
+init|=
+literal|"  PID %-*.*s   THR PRI NICE   SIZE    RES STATE  C   TIME   WCPU    CPU COMMAND"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|smp_header
 index|[]
 init|=
-literal|"  PID %-*.*s PRI NICE   SIZE    RES STATE  C   TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s "
+literal|"PRI NICE   SIZE    RES STATE  C   TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,8 +410,18 @@ define|#
 directive|define
 name|smp_Proc_format
 define|\
-value|"%5d %-*.*s %3d %4d%7s %6s %-6.6s %1x%7s %5.2f%% %5.2f%% %.*s"
+value|"%5d %-*.*s %s%3d %4d%7s %6s %-6.6s %1x%7s %5.2f%% %5.2f%% %.*s"
 end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+name|up_header_thr
+index|[]
+init|=
+literal|"  PID %-*.*s   THR PRI NICE   SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -400,7 +429,8 @@ name|char
 name|up_header
 index|[]
 init|=
-literal|"  PID %-*.*s PRI NICE   SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s "
+literal|"PRI NICE   SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -409,7 +439,7 @@ define|#
 directive|define
 name|up_Proc_format
 define|\
-value|"%5d %-*.*s %3d %4d%7s %6s %-6.6s%.0d%7s %5.2f%% %5.2f%% %.*s"
+value|"%5d %-*.*s %s%3d %4d%7s %6s %-6.6s%.0d%7s %5.2f%% %5.2f%% %.*s"
 end_define
 
 begin_comment
@@ -825,7 +855,7 @@ name|ORDER
 end_ifdef
 
 begin_comment
-comment|/*  * Sorting orders.  One vector per display mode.  * The first element is the default for each mode.  */
+comment|/*  * Sorting orders.  The first element is the default.  */
 end_comment
 
 begin_decl_stmt
@@ -844,6 +874,8 @@ block|,
 literal|"time"
 block|,
 literal|"pri"
+block|,
+literal|"threads"
 block|,
 literal|"total"
 block|,
@@ -1177,13 +1209,30 @@ block|{
 case|case
 name|DISP_CPU
 case|:
+comment|/* 		 * The logic of picking the right header format seems reverse 		 * here because we only want to display a THR column when 		 * "thread mode" is off (and threads are not listed as 		 * separate lines). 		 */
 name|prehead
 operator|=
 name|smpmode
 condition|?
+operator|(
+name|ps
+operator|.
+name|thread
+condition|?
 name|smp_header
 else|:
+name|smp_header_thr
+operator|)
+else|:
+operator|(
+name|ps
+operator|.
+name|thread
+condition|?
 name|up_header
+else|:
+name|up_header_thr
+operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -2988,6 +3037,15 @@ name|p_tot
 decl_stmt|,
 name|s_tot
 decl_stmt|;
+name|char
+modifier|*
+name|proc_fmt
+decl_stmt|,
+name|thr_buf
+index|[
+literal|7
+index|]
+decl_stmt|;
 comment|/* find and remember the next proc structure */
 name|hp
 operator|=
@@ -3505,15 +3563,58 @@ operator|)
 return|;
 block|}
 comment|/* format this entry */
-name|sprintf
-argument_list|(
-name|fmt
-argument_list|,
+name|proc_fmt
+operator|=
 name|smpmode
 condition|?
 name|smp_Proc_format
 else|:
 name|up_Proc_format
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|thread
+operator|!=
+literal|0
+condition|)
+name|thr_buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|thr_buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|thr_buf
+argument_list|)
+argument_list|,
+literal|"%*d "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|thr_buf
+argument_list|)
+operator|-
+literal|2
+argument_list|,
+name|pp
+operator|->
+name|ki_numthreads
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|proc_fmt
 argument_list|,
 name|pp
 operator|->
@@ -3532,6 +3633,8 @@ name|pp
 operator|->
 name|ki_ruid
 argument_list|)
+argument_list|,
+name|thr_buf
 argument_list|,
 name|pp
 operator|->
@@ -3939,6 +4042,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|ORDERKEY_THREADS
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|do { \ 	int diff = (int)(b)->ki_numthreads - (int)(a)->ki_numthreads; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ORDERKEY_RSSIZE
 parameter_list|(
 name|a
@@ -4095,6 +4210,9 @@ argument_list|()
 decl_stmt|,
 name|compare_prio
 argument_list|()
+decl_stmt|,
+name|compare_threads
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -4143,6 +4261,8 @@ operator|,
 function_decl|compare_time
 operator|,
 function_decl|compare_prio
+operator|,
+function_decl|compare_threads
 operator|,
 function_decl|compare_iototal
 operator|,
@@ -4512,6 +4632,108 @@ name|p2
 argument_list|)
 expr_stmt|;
 name|ORDERKEY_STATE
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_RSSIZE
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_MEM
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* compare_threads - the comparison function for sorting by threads */
+end_comment
+
+begin_function
+name|int
+name|compare_threads
+parameter_list|(
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|)
+block|{
+name|struct
+name|kinfo_proc
+modifier|*
+name|p1
+init|=
+operator|*
+operator|(
+expr|struct
+name|kinfo_proc
+operator|*
+operator|*
+operator|)
+name|arg1
+decl_stmt|;
+name|struct
+name|kinfo_proc
+modifier|*
+name|p2
+init|=
+operator|*
+operator|(
+expr|struct
+name|kinfo_proc
+operator|*
+operator|*
+operator|)
+name|arg2
+decl_stmt|;
+name|ORDERKEY_THREADS
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_PCTCPU
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_CPTICKS
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_STATE
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_PRIO
 argument_list|(
 name|p1
 argument_list|,

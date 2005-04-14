@@ -277,6 +277,13 @@ comment|/* miscellaneous things */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|process_select
+name|ps
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|myname
@@ -795,10 +802,6 @@ decl_stmt|;
 name|struct
 name|timeval
 name|timeout
-decl_stmt|;
-name|struct
-name|process_select
-name|ps
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3577,16 +3580,26 @@ name|MT_standout
 operator||
 name|MT_delayed
 argument_list|,
-literal|" %sisplaying threads."
+literal|"Displaying threads %s"
 argument_list|,
 name|ps
 operator|.
 name|thread
 condition|?
-literal|"D"
+literal|"separately"
 else|:
-literal|"Not d"
+literal|"as a count"
 argument_list|)
+expr_stmt|;
+name|header_text
+operator|=
+name|format_header
+argument_list|(
+name|uname_field
+argument_list|)
+expr_stmt|;
+name|reset_display
+argument_list|()
 expr_stmt|;
 name|putchar
 argument_list|(
