@@ -11056,6 +11056,20 @@ decl_stmt|;
 name|int
 name|num_syncrates
 decl_stmt|;
+comment|/* 	 * It's a bug if period is zero, but if it is anyway, don't 	 * die with a divide fault- instead return something which 	 * 'approximates' async 	 */
+if|if
+condition|(
+name|period_factor
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+literal|3300
+operator|)
+return|;
+block|}
 name|num_syncrates
 operator|=
 sizeof|sizeof
