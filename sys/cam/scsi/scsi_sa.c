@@ -3310,8 +3310,29 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|MTIOCSETEOTMODEL
+name|MTIOCTOP
 case|:
+block|{
+name|struct
+name|mtop
+modifier|*
+name|mt
+init|=
+operator|(
+expr|struct
+name|mtop
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+comment|/* 			 * Check to make sure it's an OP we can perform 			 * with no media inserted. 			 */
+switch|switch
+condition|(
+name|mt
+operator|->
+name|mt_op
+condition|)
+block|{
 case|case
 name|MTSETBSIZ
 case|:
@@ -3320,6 +3341,28 @@ name|MTSETDNSTY
 case|:
 case|case
 name|MTCOMP
+case|:
+name|mt
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* FALLTHROUGH */
+default|default:
+break|break;
+block|}
+if|if
+condition|(
+name|mt
+operator|!=
+name|NULL
+condition|)
+block|{
+break|break;
+block|}
+comment|/* FALLTHROUGH */
+block|}
+case|case
+name|MTIOCSETEOTMODEL
 case|:
 comment|/* 			 * We need to acquire the peripheral here rather 			 * than at open time because we are sharing writable 			 * access to data structures. 			 */
 name|s
