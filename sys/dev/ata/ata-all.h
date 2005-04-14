@@ -1559,7 +1559,7 @@ name|u_int8_t
 name|command
 decl_stmt|;
 comment|/* command reg */
-name|u_int8_t
+name|u_int16_t
 name|feature
 decl_stmt|;
 comment|/* feature reg */
