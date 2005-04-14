@@ -2130,6 +2130,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|devclass_get_drivers
+parameter_list|(
+name|devclass_t
+name|dc
+parameter_list|,
+name|driver_t
+modifier|*
+modifier|*
+modifier|*
+name|listp
+parameter_list|,
+name|int
+modifier|*
+name|countp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|devclass_get_count
 parameter_list|(
 name|devclass_t
