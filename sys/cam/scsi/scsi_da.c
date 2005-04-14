@@ -595,7 +595,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Doesn't like the synchronize cache command. 		 */
+comment|/* 		 * Doesn't like the synchronize cache command. 		 * Reported by: Blaz Zupan<blaz@gold.amis.net> 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -631,7 +631,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Doesn't like the synchronize cache command. 		 */
+comment|/* 		 * Doesn't like the synchronize cache command. 		 * Reported by: walter@pelissero.de 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -685,6 +685,7 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
+comment|/* 		 * Doesn't like the synchronize cache command. 		 * Reported by: walter@pelissero.de 		 */
 block|{
 name|T_DIRECT
 block|,
