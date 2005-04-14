@@ -490,15 +490,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ioapic_enable_mixed_mode
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|ioapic_get_vector
 parameter_list|(

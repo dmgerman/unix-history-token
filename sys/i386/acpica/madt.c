@@ -1697,22 +1697,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* First, we run through adding I/O APIC's. */
-if|if
-condition|(
-name|madt
-operator|->
-name|PCATCompat
-operator|&&
-operator|!
-operator|(
-name|acpi_quirks
-operator|&
-name|ACPI_Q_MADT_IRQ0
-operator|)
-condition|)
-name|ioapic_enable_mixed_mode
-argument_list|()
-expr_stmt|;
 name|madt_walk_table
 argument_list|(
 name|madt_parse_apics

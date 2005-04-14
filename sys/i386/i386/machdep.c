@@ -13590,15 +13590,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|ioapic_enable_mixed_mode
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
 name|int
 name|ioapic_get_vector
 parameter_list|(
