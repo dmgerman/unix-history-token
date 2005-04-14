@@ -6907,7 +6907,7 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-comment|/*      * 1. I/O port and memory system resource holders      * 2. Embedded controllers (to handle early accesses)      */
+comment|/*      * 1. I/O port and memory system resource holders      * 2. Embedded controllers (to handle early accesses)      * 3. PCI Link Devices      */
 name|ret
 operator|=
 literal|0
@@ -6954,6 +6954,27 @@ operator|*
 name|order
 operator|=
 literal|2
+expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|acpi_MatchHid
+argument_list|(
+name|handle
+argument_list|,
+literal|"PNP0C0F"
+argument_list|)
+condition|)
+block|{
+operator|*
+name|order
+operator|=
+literal|3
 expr_stmt|;
 name|ret
 operator|=
