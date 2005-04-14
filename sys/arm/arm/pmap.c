@@ -7699,6 +7699,11 @@ name|pm
 operator|->
 name|pm_domain
 argument_list|)
+operator||
+name|L1_C_DOM
+argument_list|(
+name|PMAP_DOMAIN_KERNEL
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -9453,7 +9458,7 @@ name|l1_kva
 index|[
 name|L1_IDX
 argument_list|(
-name|pmap_curmaxkvaddr
+name|va
 argument_list|)
 index|]
 expr_stmt|;
@@ -10146,6 +10151,12 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|l2b
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 name|l2b
