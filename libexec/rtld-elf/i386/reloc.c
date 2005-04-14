@@ -1366,6 +1366,8 @@ name|descriptor
 name|ldt
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|sel
 decl_stmt|;
 endif|#
@@ -1401,6 +1403,18 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|COMPAT_32BIT
+name|error
+operator|=
+name|i386_set_gsbase
+argument_list|(
+name|tls
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|memset
 argument_list|(
 operator|&
@@ -1522,6 +1536,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("movl %0,%%gs" : : "rm" ((sel<< 3) | 7));
+block|}
 else|#
 directive|else
 name|_amd64_set_gsbase
