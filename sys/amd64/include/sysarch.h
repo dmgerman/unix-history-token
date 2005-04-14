@@ -19,6 +19,34 @@ directive|define
 name|_MACHINE_SYSARCH_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|I386_GET_FSBASE
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|I386_SET_FSBASE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|I386_GET_GSBASE
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|I386_SET_GSBASE
+value|10
+end_define
+
 begin_comment
 comment|/* Leave space for 0-127 for to avoid translating syscalls */
 end_comment
