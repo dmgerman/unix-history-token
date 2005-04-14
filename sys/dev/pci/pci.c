@@ -5245,6 +5245,11 @@ argument_list|,
 name|dinfo
 argument_list|)
 expr_stmt|;
+name|pci_print_verbose
+argument_list|(
+name|dinfo
+argument_list|)
+expr_stmt|;
 name|pci_add_resources
 argument_list|(
 name|pcib
@@ -5256,11 +5261,6 @@ operator|->
 name|cfg
 operator|.
 name|dev
-argument_list|)
-expr_stmt|;
-name|pci_print_verbose
-argument_list|(
-name|dinfo
 argument_list|)
 expr_stmt|;
 block|}
