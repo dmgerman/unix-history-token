@@ -1449,18 +1449,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* If we've only got one CPU, then use the RTC and ISA timer instead. */
-if|if
-condition|(
-name|mp_ncpus
-operator|==
-literal|1
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* Start off with a divisor of 2 (power on reset default). */
 name|lapic_timer_divisor
 operator|=
