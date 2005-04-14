@@ -1115,6 +1115,9 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|register_t
+name|pil
+decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -1130,11 +1133,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_saved_pil
+name|pil
 operator|=
 name|rdpr
 argument_list|(
@@ -1149,6 +1148,14 @@ literal|0
 argument_list|,
 literal|14
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_saved_pil
+operator|=
+name|pil
 expr_stmt|;
 block|}
 name|td
