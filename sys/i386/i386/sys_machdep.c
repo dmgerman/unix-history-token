@@ -2747,12 +2747,6 @@ if|if
 condition|(
 name|uap
 operator|->
-name|start
-operator|<=
-name|LUDATA_SEL
-operator|||
-name|uap
-operator|->
 name|num
 operator|<=
 literal|0
