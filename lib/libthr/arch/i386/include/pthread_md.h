@@ -44,6 +44,13 @@ name|DTV_OFFSET
 value|offsetof(struct tcb, tcb_dtv)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_thr_using_setbase
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Variant II tcb, first two members are required by rtld,  * %gs points to the structure.  */
 end_comment
@@ -170,6 +177,21 @@ name|COMPAT_32BIT
 name|int
 name|val
 decl_stmt|;
+if|if
+condition|(
+name|_thr_using_setbase
+operator|==
+literal|1
+condition|)
+block|{
+name|i386_set_gsbase
+argument_list|(
+name|tcb
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|val
 operator|=
 operator|(
@@ -183,6 +205,7 @@ operator||
 literal|7
 expr_stmt|;
 asm|__asm __volatile("movl %0, %%gs" : : "r" (val));
+block|}
 else|#
 directive|else
 name|_amd64_set_gsbase

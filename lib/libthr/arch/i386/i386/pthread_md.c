@@ -39,6 +39,12 @@ directive|include
 file|"pthread_md.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|_thr_using_setbase
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|struct
 name|tcb
@@ -61,6 +67,10 @@ name|union
 name|descriptor
 name|ldt
 decl_stmt|;
+name|void
+modifier|*
+name|base
+decl_stmt|;
 endif|#
 directive|endif
 name|struct
@@ -71,6 +81,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|oldtls
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -111,6 +124,57 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|COMPAT_32BIT
+name|tcb
+operator|->
+name|tcb_ldt
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+switch|switch
+condition|(
+name|_thr_using_setbase
+condition|)
+block|{
+case|case
+literal|1
+case|:
+comment|/* use i386_set_gsbase() in _kcb_set */
+break|break;
+case|case
+literal|0
+case|:
+comment|/* Untested, try the get/set_gsbase routines once */
+name|error
+operator|=
+name|i386_get_gsbase
+argument_list|(
+operator|&
+name|base
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|_thr_using_setbase
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* fall through */
+case|case
+literal|2
+case|:
+comment|/* Use the user_ldt code, we must have an old kernel */
+name|_thr_using_setbase
+operator|=
+literal|2
+expr_stmt|;
 name|ldt
 operator|.
 name|sd
@@ -260,6 +324,8 @@ name|tcb
 operator|=
 name|NULL
 expr_stmt|;
+block|}
+break|break;
 block|}
 endif|#
 directive|endif
