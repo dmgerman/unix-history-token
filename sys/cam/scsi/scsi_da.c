@@ -862,7 +862,7 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"FL"
 block|,
-literal|"NexIA+*"
+literal|"Nex*"
 block|,
 literal|"*"
 block|}
