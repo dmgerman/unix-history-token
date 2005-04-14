@@ -1604,7 +1604,7 @@ comment|/* bell/alert */
 operator|*
 name|store
 operator|=
-literal|'\7'
+literal|'\a'
 expr_stmt|;
 break|break;
 case|case
@@ -1677,7 +1677,7 @@ comment|/* vertical tab */
 operator|*
 name|store
 operator|=
-literal|'\13'
+literal|'\v'
 expr_stmt|;
 break|break;
 comment|/* octal constant */
