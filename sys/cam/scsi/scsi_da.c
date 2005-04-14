@@ -631,6 +631,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Doesn't like the synchronize cache command. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+name|quantum
+block|,
+literal|"LPS540S"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * Doesn't work correctly with 6 byte reads/writes. 		 * Returns illegal request, and points to byte 9 of the 		 * 6-byte CDB. 		 * Reported by:  Adam McDougall<bsdx@spawnet.com> 		 */
 block|{
 name|T_DIRECT
