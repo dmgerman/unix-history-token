@@ -2118,6 +2118,9 @@ condition|)
 block|{
 name|pmap_unmapdev
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|apic
 argument_list|,
 name|IOAPIC_MEM_REGION
