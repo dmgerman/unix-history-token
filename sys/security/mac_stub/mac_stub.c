@@ -3821,6 +3821,9 @@ name|label
 parameter_list|,
 name|int
 name|prot
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 return|return
