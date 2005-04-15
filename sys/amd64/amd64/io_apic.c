@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_no_mixed_mode.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -191,13 +185,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEST_EXTINT
-value|-2
-end_define
-
-begin_define
-define|#
-directive|define
 name|TODO
 value|printf("%s: not implemented!\n", __func__)
 end_define
@@ -217,10 +204,6 @@ end_expr_stmt
 
 begin_comment
 comment|/*  * New interrupt support code..  *  * XXX: we really should have the interrupt cookie passed up from new-bus  * just be a int pin, and not map 1:1 to interrupt vector number but should  * use INTR_TYPE_FOO to set priority bands for device classes and do all the  * magic remapping of intpin to vector in here.  For now we just cheat as on  * ia64 and map intpin X to vector NRSVIDT + X.  Note that we assume that the  * first IO APIC has ISA interrupts on pins 1-15.  Not sure how you are  * really supposed to figure out which IO APIC in a system with multiple IO  * APIC's actually has the ISA interrupts routed to it.  As far as interrupt  * pin numbers, we use the ACPI System Interrupt number model where each  * IO APIC has a contiguous chunk of the System Interrupt address space.  */
-end_comment
-
-begin_comment
-comment|/*  * Direct the ExtINT pin on the first I/O APIC to a logical cluster of  * CPUs rather than a physical destination of just the BSP.  *  * Note: This is disabled by default as test systems seem to croak with it  * enabled. #define ENABLE_EXTINT_LOGICAL_DESTINATION  */
 end_comment
 
 begin_struct
@@ -538,19 +521,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|ioapic_setup_mixed_mode
-parameter_list|(
-name|struct
-name|ioapic_intsrc
-modifier|*
-name|intpin
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 specifier|static
 name|STAILQ_HEAD
@@ -610,67 +580,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_int
-name|mixed_mode_enabled
-decl_stmt|,
 name|next_id
 decl_stmt|,
 name|program_logical_dest
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NO_MIXED_MODE
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|DEV_ATPIC
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-name|int
-name|mixed_mode_active
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|int
-name|mixed_mode_active
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.apic.mixed_mode"
-argument_list|,
-operator|&
-name|mixed_mode_active
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -1183,15 +1097,9 @@ name|high
 decl_stmt|,
 name|value
 decl_stmt|;
-comment|/* 	 * For pins routed via mixed mode or disabled, just ensure that 	 * they are masked. 	 */
+comment|/* For disabled pins, just ensure that they are masked. */
 if|if
 condition|(
-name|intpin
-operator|->
-name|io_dest
-operator|==
-name|DEST_EXTINT
-operator|||
 name|intpin
 operator|->
 name|io_vector
@@ -1522,19 +1430,6 @@ literal|"intpin not assigned to a cluster"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|intpin
-operator|->
-name|io_dest
-operator|!=
-name|DEST_EXTINT
-argument_list|,
-operator|(
-literal|"intpin routed via ExtINT"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -1642,19 +1537,6 @@ operator|*
 operator|)
 name|isrc
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|intpin
-operator|->
-name|io_dest
-operator|!=
-name|DEST_EXTINT
-argument_list|,
-operator|(
-literal|"ExtINT pin trying to use ioapic enable_intr method"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|intpin
@@ -1998,24 +1880,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * APIC enumerators call this function to indicate that the 8259A AT PICs  * are available and that mixed mode can be used.  */
-end_comment
-
-begin_function
-name|void
-name|ioapic_enable_mixed_mode
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|mixed_mode_enabled
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Allocate and return a logical cluster ID.  Note that the first time  * this is called, it returns cluster 0.  ioapic_enable_intr() treats  * the two cases of logical_clusters == 0 and logical_clusters == 1 the  * same: one cluster of ID 0 exists.  The logical_clusters == 0 case is  * for UP kernels, which should never call this function.  */
 end_comment
 
@@ -2088,6 +1952,7 @@ decl_stmt|;
 name|uint32_t
 name|value
 decl_stmt|;
+comment|/* Map the register window so we can access the device. */
 name|apic
 operator|=
 operator|(
@@ -2107,16 +1972,51 @@ operator|&
 name|icu_lock
 argument_list|)
 expr_stmt|;
-name|numintr
+name|value
 operator|=
-operator|(
-operator|(
 name|ioapic_read
 argument_list|(
 name|apic
 argument_list|,
 name|IOAPIC_VER
 argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
+comment|/* If it's version register doesn't seem to work, punt. */
+if|if
+condition|(
+name|value
+operator|==
+literal|0xffffff
+condition|)
+block|{
+name|pmap_unmapdev
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|apic
+argument_list|,
+name|IOAPIC_MEM_REGION
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/* Determine the number of vectors and set the APIC ID. */
+name|numintr
+operator|=
+operator|(
+operator|(
+name|value
 operator|&
 name|IOART_VER_MAXREDIR
 operator|)
@@ -2125,12 +2025,6 @@ name|MAXREDIRSHIFT
 operator|)
 operator|+
 literal|1
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|icu_lock
-argument_list|)
 expr_stmt|;
 name|io
 operator|=
@@ -2383,7 +2277,7 @@ name|intbase
 operator|+
 name|i
 expr_stmt|;
-comment|/* 		 * Assume that pin 0 on the first I/O APIC is an ExtINT pin 		 * if mixed mode is enabled and an ISA interrupt if not. 		 * Assume that pins 1-15 are ISA interrupts and that all 		 * other pins are PCI interrupts. 		 */
+comment|/* 		 * Assume that pin 0 on the first I/O APIC is an ExtINT pin. 		 * Assume that pins 1-15 are ISA interrupts and that all 		 * other pins are PCI interrupts. 		 */
 if|if
 condition|(
 name|intpin
@@ -2391,8 +2285,6 @@ operator|->
 name|io_vector
 operator|==
 literal|0
-operator|&&
-name|mixed_mode_enabled
 condition|)
 name|ioapic_set_extint
 argument_list|(
@@ -3323,25 +3215,6 @@ name|io_vector
 operator|=
 name|VECTOR_EXTINT
 expr_stmt|;
-comment|/* Enable this pin if mixed mode is available and active. */
-if|if
-condition|(
-name|mixed_mode_enabled
-operator|&&
-name|mixed_mode_active
-condition|)
-name|io
-operator|->
-name|io_pins
-index|[
-name|pin
-index|]
-operator|.
-name|io_masked
-operator|=
-literal|0
-expr_stmt|;
-else|else
 name|io
 operator|->
 name|io_pins
@@ -3789,25 +3662,6 @@ operator|>=
 name|NUM_IO_INTS
 condition|)
 continue|continue;
-comment|/* 		 * Route IRQ0 via the 8259A using mixed mode if mixed mode 		 * is available and turned on. 		 */
-if|if
-condition|(
-name|pin
-operator|->
-name|io_vector
-operator|==
-literal|0
-operator|&&
-name|mixed_mode_active
-operator|&&
-name|mixed_mode_enabled
-condition|)
-name|ioapic_setup_mixed_mode
-argument_list|(
-name|pin
-argument_list|)
-expr_stmt|;
-else|else
 name|intr_register_source
 argument_list|(
 operator|&
@@ -3882,17 +3736,6 @@ operator|.
 name|io_dest
 operator|!=
 name|DEST_NONE
-operator|&&
-name|io
-operator|->
-name|io_pins
-index|[
-name|i
-index|]
-operator|.
-name|io_dest
-operator|!=
-name|DEST_EXTINT
 condition|)
 name|ioapic_program_destination
 argument_list|(
@@ -3922,95 +3765,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_comment
-comment|/*  * Support for mixed-mode interrupt sources.  These sources route an ISA  * IRQ through the 8259A's via the ExtINT on pin 0 of the I/O APIC that  * routes the ISA interrupts.  We just ignore the intpins that use this  * mode and allow the atpic driver to register its interrupt source for  * that IRQ instead.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ioapic_setup_mixed_mode
-parameter_list|(
-name|struct
-name|ioapic_intsrc
-modifier|*
-name|intpin
-parameter_list|)
-block|{
-name|struct
-name|ioapic_intsrc
-modifier|*
-name|extint
-decl_stmt|;
-name|struct
-name|ioapic
-modifier|*
-name|io
-decl_stmt|;
-comment|/* 	 * Mark the associated I/O APIC intpin as being delivered via 	 * ExtINT and enable the ExtINT pin on the I/O APIC if needed. 	 */
-name|intpin
-operator|->
-name|io_dest
-operator|=
-name|DEST_EXTINT
-expr_stmt|;
-name|io
-operator|=
-operator|(
-expr|struct
-name|ioapic
-operator|*
-operator|)
-name|intpin
-operator|->
-name|io_intsrc
-operator|.
-name|is_pic
-expr_stmt|;
-name|extint
-operator|=
-operator|&
-name|io
-operator|->
-name|io_pins
-index|[
-literal|0
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|extint
-operator|->
-name|io_vector
-operator|!=
-name|VECTOR_EXTINT
-condition|)
-name|panic
-argument_list|(
-literal|"Can't find ExtINT pin to route through!"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ENABLE_EXTINT_LOGICAL_DESTINATION
-if|if
-condition|(
-name|extint
-operator|->
-name|io_dest
-operator|==
-name|DEST_NONE
-condition|)
-name|ioapic_assign_cluster
-argument_list|(
-name|extint
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
 
 end_unit
 

@@ -1767,9 +1767,6 @@ operator|=
 name|NOBUS
 expr_stmt|;
 comment|/* Second, we run through adding I/O APIC's and busses. */
-name|ioapic_enable_mixed_mode
-argument_list|()
-expr_stmt|;
 name|mptable_parse_apics_and_busses
 argument_list|()
 expr_stmt|;
