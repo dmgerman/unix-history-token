@@ -84,13 +84,13 @@ name|__packed
 decl_stmt|;
 comment|/* Interrupt stack table 7 */
 name|u_int32_t
-name|tss_rsvd4
+name|tss_rsvd3
 decl_stmt|;
 name|u_int32_t
-name|tss_rsvd5
+name|tss_rsvd4
 decl_stmt|;
 name|u_int16_t
-name|tss_rsvd6
+name|tss_rsvd5
 decl_stmt|;
 name|u_int16_t
 name|tss_iobase
