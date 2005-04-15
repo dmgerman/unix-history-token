@@ -40,8 +40,8 @@ name|ATA_PROTO_MASK
 value|0x8003
 define|#
 directive|define
-name|ATA_PROTO_ATA
-value|0x0000
+name|ATA_PROTO_ATAPI
+value|0x8000
 define|#
 directive|define
 name|ATA_PROTO_ATAPI_12
