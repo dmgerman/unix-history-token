@@ -1056,7 +1056,7 @@ decl_stmt|;
 name|uint16_t
 name|l_iu
 decl_stmt|;
-comment|/* Length of implementaion use area */
+comment|/* Length of implementation use area */
 name|uint8_t
 name|data
 index|[
