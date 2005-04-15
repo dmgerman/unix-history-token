@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"reentrant.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -1559,35 +1553,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * XXX: Many dependencies are not thread-safe.  Still, we cannot use  * getaddrinfo() in conjunction with other functions which call them.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|mutex_t
-name|_getaddrinfo_thread_lock
-init|=
-name|MUTEX_INITIALIZER
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|THREAD_LOCK
-parameter_list|()
-value|mutex_lock(&_getaddrinfo_thread_lock);
-end_define
-
-begin_define
-define|#
-directive|define
-name|THREAD_UNLOCK
-parameter_list|()
-value|mutex_unlock(&_getaddrinfo_thread_lock);
-end_define
 
 begin_comment
 comment|/* XXX macros that make external reference is BAD. */
@@ -6961,9 +6926,6 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6979,22 +6941,14 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|THREAD_UNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 name|EAI_SERVICE
 return|;
-block|}
 name|port
 operator|=
 name|sp
 operator|->
 name|s_port
-expr_stmt|;
-name|THREAD_UNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 if|if
