@@ -3453,7 +3453,7 @@ operator|=
 operator|(
 name|device_get_unit
 argument_list|(
-name|parent
+name|dev
 argument_list|)
 operator|<<
 literal|1
@@ -3512,7 +3512,7 @@ operator|=
 operator|(
 name|device_get_unit
 argument_list|(
-name|parent
+name|dev
 argument_list|)
 operator|<<
 literal|1
