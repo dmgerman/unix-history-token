@@ -244,8 +244,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|NG_FWD_ITEM_HOOK
 argument_list|(
@@ -258,7 +256,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
