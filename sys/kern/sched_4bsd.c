@@ -2203,7 +2203,7 @@ comment|/* External interfaces start here */
 end_comment
 
 begin_comment
-comment|/*  * Very early in the boot some setup of scheduler-specific  * parts of proc0 and of soem scheduler resources needs to be done.  * Called from:  *  proc0_init()  */
+comment|/*  * Very early in the boot some setup of scheduler-specific  * parts of proc0 and of some scheduler resources needs to be done.  * Called from:  *  proc0_init()  */
 end_comment
 
 begin_function
