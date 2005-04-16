@@ -486,7 +486,7 @@ if|if
 condition|(
 name|error
 operator|!=
-name|EOVERFLOW
+name|ERESTART
 condition|)
 continue|continue;
 if|if
@@ -567,9 +567,18 @@ operator|&
 name|rs
 argument_list|)
 expr_stmt|;
+comment|/* 	 * EJUSTRETURN and ERESTART signal the end of a trace and 	 * are not really errors. 	 */
 return|return
 operator|(
+operator|(
 name|error
+operator|>
+literal|0
+operator|)
+condition|?
+name|error
+else|:
+literal|0
 operator|)
 return|;
 block|}
