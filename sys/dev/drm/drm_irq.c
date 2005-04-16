@@ -1,18 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* drm_dma.c -- DMA IOCTL and function support  * Created: Fri Oct 18 2003 by anholt@FreeBSD.org */
+comment|/* drm_dma.c -- DMA IOCTL and function support  * Created: Fri Oct 18 2003 by anholt@FreeBSD.org  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 2003 Eric Anholt  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Eric Anholt<anholt@FreeBSD.org>  *  * $FreeBSD$  */
+comment|/*-  * Copyright 2003 Eric Anholt  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * ERIC ANHOLT BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Eric Anholt<anholt@FreeBSD.org>  *  * $FreeBSD$  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/drmP.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/drm.h"
+end_include
 
 begin_function
 name|int
-name|DRM
-function|(
-name|irq_by_busid
-function|)
+name|drm_irq_by_busid
 parameter_list|(
 name|DRM_IOCTL_ARGS
 parameter_list|)
@@ -150,10 +159,7 @@ end_if
 begin_function
 specifier|static
 name|irqreturn_t
-name|DRM
-function|(
-name|irq_handler_wrap
-function|)
+name|drm_irq_handler_wrap
 parameter_list|(
 name|DRM_IRQ_ARGS
 parameter_list|)
@@ -176,14 +182,13 @@ operator|->
 name|irq_lock
 argument_list|)
 expr_stmt|;
-name|DRM
-function_decl|(
+name|dev
+operator|->
 name|irq_handler
-function_decl|)
-parameter_list|(
+argument_list|(
 name|arg
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 name|DRM_SPINUNLOCK
 argument_list|(
 operator|&
@@ -202,10 +207,7 @@ end_endif
 
 begin_function
 name|int
-name|DRM
-function|(
-name|irq_install
-function|)
+name|drm_irq_install
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -235,6 +237,17 @@ argument_list|(
 name|EINVAL
 argument_list|)
 return|;
+name|DRM_DEBUG
+argument_list|(
+literal|"%s: irq=%d\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|dev
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
 name|DRM_LOCK
 argument_list|()
 expr_stmt|;
@@ -261,64 +274,12 @@ name|irq_enabled
 operator|=
 literal|1
 expr_stmt|;
-name|DRM_UNLOCK
-argument_list|()
-expr_stmt|;
-name|DRM_DEBUG
-argument_list|(
-literal|"%s: irq=%d\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|dev
-operator|->
-name|irq
-argument_list|)
-expr_stmt|;
 name|dev
 operator|->
 name|context_flag
 operator|=
 literal|0
 expr_stmt|;
-name|dev
-operator|->
-name|dma
-operator|->
-name|next_buffer
-operator|=
-name|NULL
-expr_stmt|;
-name|dev
-operator|->
-name|dma
-operator|->
-name|this_buffer
-operator|=
-name|NULL
-expr_stmt|;
-if|#
-directive|if
-name|__HAVE_IRQ_BH
-name|TASK_INIT
-argument_list|(
-operator|&
-name|dev
-operator|->
-name|task
-argument_list|,
-literal|0
-argument_list|,
-name|DRM
-argument_list|(
-name|dma_immediate_bh
-argument_list|)
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|DRM_SPININIT
 argument_list|(
 name|dev
@@ -329,14 +290,16 @@ literal|"DRM IRQ lock"
 argument_list|)
 expr_stmt|;
 comment|/* Before installing handler */
-name|DRM
-function_decl|(
-name|driver_irq_preinstall
-function_decl|)
-parameter_list|(
 name|dev
-parameter_list|)
-function_decl|;
+operator|->
+name|irq_preinstall
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* Install handler */
 ifdef|#
 directive|ifdef
@@ -402,10 +365,9 @@ name|irqr
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
-name|DRM
-argument_list|(
+name|dev
+operator|->
 name|irq_handler
-argument_list|)
 argument_list|,
 name|dev
 argument_list|,
@@ -433,10 +395,7 @@ name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
 argument_list|,
-name|DRM
-argument_list|(
-name|irq_handler_wrap
-argument_list|)
+name|drm_irq_handler_wrap
 argument_list|,
 name|dev
 argument_list|,
@@ -462,6 +421,11 @@ directive|elif
 name|defined
 argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
 argument_list|)
 if|if
 condition|(
@@ -517,10 +481,9 @@ argument_list|(
 name|DRM_IRQ_ARGS
 argument_list|)
 operator|)
-name|DRM
-argument_list|(
+name|dev
+operator|->
 name|irq_handler
-argument_list|)
 argument_list|,
 name|dev
 argument_list|)
@@ -544,14 +507,19 @@ block|}
 endif|#
 directive|endif
 comment|/* After installing handler */
-name|DRM
-function_decl|(
-name|driver_irq_postinstall
-function_decl|)
-parameter_list|(
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
 name|dev
-parameter_list|)
-function_decl|;
+operator|->
+name|irq_postinstall
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -620,16 +588,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX: This function needs to be called with the device lock held.  In some  * cases it isn't, so far.  */
-end_comment
-
 begin_function
 name|int
-name|DRM
-function|(
-name|irq_uninstall
-function|)
+name|drm_irq_uninstall
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -681,17 +642,19 @@ operator|->
 name|irq
 argument_list|)
 expr_stmt|;
-name|DRM
-function_decl|(
-name|driver_irq_uninstall
-function_decl|)
-parameter_list|(
 name|dev
-parameter_list|)
-function_decl|;
+operator|->
+name|irq_uninstall
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|bus_teardown_intr
 argument_list|(
 name|dev
@@ -722,11 +685,19 @@ operator|->
 name|irqr
 argument_list|)
 expr_stmt|;
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
 elif|#
 directive|elif
 name|defined
 argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
 argument_list|)
 name|pci_intr_disestablish
 argument_list|(
@@ -759,10 +730,7 @@ end_function
 
 begin_function
 name|int
-name|DRM
-function|(
-name|control
-function|)
+name|drm_control
 parameter_list|(
 name|DRM_IOCTL_ARGS
 parameter_list|)
@@ -801,6 +769,17 @@ block|{
 case|case
 name|DRM_INST_HANDLER
 case|:
+comment|/* Handle drivers whose DRM used to require IRQ setup but the 		 * no longer does. 		 */
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|use_irq
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|dev
@@ -829,10 +808,7 @@ name|EINVAL
 argument_list|)
 return|;
 return|return
-name|DRM
-argument_list|(
-name|irq_install
-argument_list|)
+name|drm_irq_install
 argument_list|(
 name|dev
 argument_list|)
@@ -840,15 +816,22 @@ return|;
 case|case
 name|DRM_UNINST_HANDLER
 case|:
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|use_irq
+condition|)
+return|return
+literal|0
+return|;
 name|DRM_LOCK
 argument_list|()
 expr_stmt|;
 name|err
 operator|=
-name|DRM
-argument_list|(
-name|irq_uninstall
-argument_list|)
+name|drm_irq_uninstall
 argument_list|(
 name|dev
 argument_list|)
@@ -870,18 +853,9 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|__HAVE_VBL_IRQ
-end_if
-
 begin_function
 name|int
-name|DRM
-function|(
-name|wait_vblank
-function|)
+name|drm_wait_vblank
 parameter_list|(
 name|DRM_IOCTL_ARGS
 parameter_list|)
@@ -983,7 +957,7 @@ if|#
 directive|if
 literal|0
 comment|/* disabled */
-block|drm_vbl_sig_t *vbl_sig = DRM_MALLOC(sizeof(drm_vbl_sig_t)); 		if (vbl_sig == NULL) 			return ENOMEM; 		bzero(vbl_sig, sizeof(*vbl_sig)); 		 		vbl_sig->sequence = vblwait.request.sequence; 		vbl_sig->signo = vblwait.request.signal; 		vbl_sig->pid = DRM_CURRENTPID;  		vblwait.reply.sequence = atomic_read(&dev->vbl_received); 		 		DRM_SPINLOCK(&dev->irq_lock); 		TAILQ_INSERT_HEAD(&dev->vbl_sig_list, vbl_sig, link); 		DRM_SPINUNLOCK(&dev->irq_lock); 		ret = 0;
+block|drm_vbl_sig_t *vbl_sig = malloc(sizeof(drm_vbl_sig_t), M_DRM, 		    M_NOWAIT | M_ZERO); 		if (vbl_sig == NULL) 			return ENOMEM;  		vbl_sig->sequence = vblwait.request.sequence; 		vbl_sig->signo = vblwait.request.signal; 		vbl_sig->pid = DRM_CURRENTPID;  		vblwait.reply.sequence = atomic_read(&dev->vbl_received); 		 		DRM_SPINLOCK(&dev->irq_lock); 		TAILQ_INSERT_HEAD(&dev->vbl_sig_list, vbl_sig, link); 		DRM_SPINUNLOCK(&dev->irq_lock); 		ret = 0;
 endif|#
 directive|endif
 name|ret
@@ -993,12 +967,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
 name|ret
 operator|=
-name|DRM
-argument_list|(
+name|dev
+operator|->
 name|vblank_wait
-argument_list|)
 argument_list|(
 name|dev
 argument_list|,
@@ -1009,6 +985,9 @@ name|request
 operator|.
 name|sequence
 argument_list|)
+expr_stmt|;
+name|DRM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|microtime
 argument_list|(
@@ -1061,10 +1040,7 @@ end_function
 
 begin_function
 name|void
-name|DRM
-function|(
-name|vbl_send_signals
-function|)
+name|drm_vbl_send_signals
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -1084,19 +1060,10 @@ comment|/* disabled */
 end_comment
 
 begin_endif
-unit|void DRM(vbl_send_signals)( drm_device_t *dev ) { 	drm_vbl_sig_t *vbl_sig; 	unsigned int vbl_seq = atomic_read(&dev->vbl_received ); 	struct proc *p;  	vbl_sig = TAILQ_FIRST(&dev->vbl_sig_list); 	while (vbl_sig != NULL) { 		drm_vbl_sig_t *next = TAILQ_NEXT(vbl_sig, link);  		if ( ( vbl_seq - vbl_sig->sequence )<= (1<<23) ) { 			p = pfind(vbl_sig->pid); 			if (p != NULL) 				psignal(p, vbl_sig->signo);  			TAILQ_REMOVE(&dev->vbl_sig_list, vbl_sig, link); 			DRM_FREE(vbl_sig,sizeof(*vbl_sig)); 		} 		vbl_sig = next; 	} }
+unit|void drm_vbl_send_signals( drm_device_t *dev ) { 	drm_vbl_sig_t *vbl_sig; 	unsigned int vbl_seq = atomic_read(&dev->vbl_received ); 	struct proc *p;  	vbl_sig = TAILQ_FIRST(&dev->vbl_sig_list); 	while (vbl_sig != NULL) { 		drm_vbl_sig_t *next = TAILQ_NEXT(vbl_sig, link);  		if ( ( vbl_seq - vbl_sig->sequence )<= (1<<23) ) { 			p = pfind(vbl_sig->pid); 			if (p != NULL) 				psignal(p, vbl_sig->signo);  			TAILQ_REMOVE(&dev->vbl_sig_list, vbl_sig, link); 			DRM_FREE(vbl_sig,sizeof(*vbl_sig)); 		} 		vbl_sig = next; 	} }
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  __HAVE_VBL_IRQ */
-end_comment
 
 end_unit
 

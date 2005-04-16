@@ -1154,20 +1154,24 @@ name|int
 name|n
 decl_stmt|;
 name|int
+name|__user
 modifier|*
 name|x
 decl_stmt|;
 name|int
+name|__user
 modifier|*
 name|y
 decl_stmt|;
 name|unsigned
 name|int
+name|__user
 modifier|*
 name|buffer
 decl_stmt|;
 name|unsigned
 name|char
+name|__user
 modifier|*
 name|mask
 decl_stmt|;
@@ -1183,6 +1187,7 @@ name|drm_r128_stipple
 block|{
 name|unsigned
 name|int
+name|__user
 modifier|*
 name|mask
 decl_stmt|;
@@ -1236,7 +1241,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 2.3: An ioctl to get parameters that aren't available to the 3d  * client any other way.    */
+comment|/* 2.3: An ioctl to get parameters that aren't available to the 3d  * client any other way.  */
 end_comment
 
 begin_define
@@ -1255,6 +1260,7 @@ name|int
 name|param
 decl_stmt|;
 name|void
+name|__user
 modifier|*
 name|value
 decl_stmt|;

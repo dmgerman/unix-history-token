@@ -363,7 +363,7 @@ value|0x200
 end_define
 
 begin_comment
-comment|/* set when someone gets the lock 					 quiescent */
+comment|/* set when someone gets the lock 					   quiescent */
 end_comment
 
 begin_endif
@@ -1205,7 +1205,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 3.1: An ioctl to get parameters that aren't available to the 3d  * client any other way.    */
+comment|/* 3.1: An ioctl to get parameters that aren't available to the 3d  * client any other way.  */
 end_comment
 
 begin_define
@@ -1224,6 +1224,7 @@ name|int
 name|param
 decl_stmt|;
 name|void
+name|__user
 modifier|*
 name|value
 decl_stmt|;

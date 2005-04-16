@@ -1,40 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mga_drv.c -- Matrox G200/G400 driver -*- linux-c -*-  * Created: Mon Dec 13 01:56:22 1999 by jhartmann@precisioninsight.com  */
+comment|/* i915_drv.c -- ATI Radeon driver -*- linux-c -*-  * Created: Wed Feb 14 17:10:04 2001 by gareth@valinux.com  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
+comment|/*-  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"dev/drm/drmP.h"
+file|"drmP.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dev/drm/drm.h"
+file|"drm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dev/drm/mga_drm.h"
+file|"i915_drm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dev/drm/mga_drv.h"
+file|"i915_drv.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dev/drm/drm_pciids.h"
+file|"drm_pciids.h"
 end_include
 
 begin_comment
@@ -44,11 +44,11 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|drm_pci_id_list_t
-name|mga_pciidlist
+name|i915_pciidlist
 index|[]
 init|=
 block|{
-name|mga_PCI_IDS
+name|i915_PCI_IDS
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -56,7 +56,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|drm_ioctl_desc_t
-name|mga_ioctls
+name|i915_ioctls
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -64,14 +64,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|mga_max_ioctl
+name|i915_max_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 specifier|static
 name|void
-name|mga_configure
+name|i915_configure
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -82,71 +82,56 @@ name|dev
 operator|->
 name|dev_priv_size
 operator|=
-sizeof|sizeof
-argument_list|(
-name|drm_mga_buf_priv_t
-argument_list|)
+literal|1
 expr_stmt|;
-comment|/* XXX dev->prerelease = mga_driver_prerelease; */
+comment|/* No dev_priv */
+name|dev
+operator|->
+name|prerelease
+operator|=
+name|i915_driver_prerelease
+expr_stmt|;
 name|dev
 operator|->
 name|pretakedown
 operator|=
-name|mga_driver_pretakedown
-expr_stmt|;
-name|dev
-operator|->
-name|vblank_wait
-operator|=
-name|mga_driver_vblank_wait
+name|i915_driver_pretakedown
 expr_stmt|;
 name|dev
 operator|->
 name|irq_preinstall
 operator|=
-name|mga_driver_irq_preinstall
+name|i915_driver_irq_preinstall
 expr_stmt|;
 name|dev
 operator|->
 name|irq_postinstall
 operator|=
-name|mga_driver_irq_postinstall
+name|i915_driver_irq_postinstall
 expr_stmt|;
 name|dev
 operator|->
 name|irq_uninstall
 operator|=
-name|mga_driver_irq_uninstall
+name|i915_driver_irq_uninstall
 expr_stmt|;
 name|dev
 operator|->
 name|irq_handler
 operator|=
-name|mga_driver_irq_handler
-expr_stmt|;
-name|dev
-operator|->
-name|dma_ioctl
-operator|=
-name|mga_dma_buffers
-expr_stmt|;
-name|dev
-operator|->
-name|dma_quiescent
-operator|=
-name|mga_driver_dma_quiescent
+name|i915_driver_irq_handler
 expr_stmt|;
 name|dev
 operator|->
 name|driver_ioctls
 operator|=
-name|mga_ioctls
+name|i915_ioctls
 expr_stmt|;
 name|dev
 operator|->
 name|max_driver_ioctl
 operator|=
-name|mga_max_ioctl
+name|i915_max_ioctl
 expr_stmt|;
 name|dev
 operator|->
@@ -204,19 +189,7 @@ literal|1
 expr_stmt|;
 name|dev
 operator|->
-name|use_dma
-operator|=
-literal|1
-expr_stmt|;
-name|dev
-operator|->
 name|use_irq
-operator|=
-literal|1
-expr_stmt|;
-name|dev
-operator|->
-name|use_vbl_irq
 operator|=
 literal|1
 expr_stmt|;
@@ -232,7 +205,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|mga_probe
+name|i915_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -243,7 +216,7 @@ name|drm_probe
 argument_list|(
 name|dev
 argument_list|,
-name|mga_pciidlist
+name|i915_pciidlist
 argument_list|)
 return|;
 block|}
@@ -252,7 +225,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mga_attach
+name|i915_attach
 parameter_list|(
 name|device_t
 name|nbdev
@@ -277,7 +250,7 @@ name|drm_device_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mga_configure
+name|i915_configure
 argument_list|(
 name|dev
 argument_list|)
@@ -287,7 +260,7 @@ name|drm_attach
 argument_list|(
 name|nbdev
 argument_list|,
-name|mga_pciidlist
+name|i915_pciidlist
 argument_list|)
 return|;
 block|}
@@ -296,7 +269,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|mga_methods
+name|i915_methods
 index|[]
 init|=
 block|{
@@ -305,14 +278,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|mga_probe
+name|i915_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|mga_attach
+name|i915_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -334,12 +307,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|mga_driver
+name|i915_driver
 init|=
 block|{
-literal|"drm"
+literal|"drmsub"
 block|,
-name|mga_methods
+name|i915_methods
 block|,
 expr|sizeof
 operator|(
@@ -359,11 +332,11 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|mga
+name|i915
 argument_list|,
 name|pci
 argument_list|,
-name|mga_driver
+name|i915_driver
 argument_list|,
 name|drm_devclass
 argument_list|,
@@ -377,7 +350,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|mga
+name|i915
 argument_list|,
 name|drm
 argument_list|,
@@ -407,7 +380,7 @@ end_elif
 begin_expr_stmt
 name|CFDRIVER_DECL
 argument_list|(
-name|mga
+name|i915
 argument_list|,
 name|DV_TTY
 argument_list|,

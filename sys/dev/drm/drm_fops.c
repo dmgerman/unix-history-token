@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* drm_fops.h -- File operations for DRM -*- linux-c -*-  * Created: Mon Jan  4 08:58:31 1999 by faith@valinux.com */
+comment|/* drm_fops.h -- File operations for DRM -*- linux-c -*-  * Created: Mon Jan  4 08:58:31 1999 by faith@valinux.com  */
 end_comment
 
 begin_comment
@@ -16,10 +16,7 @@ end_include
 begin_function
 name|drm_file_t
 modifier|*
-name|DRM
-function|(
-name|find_file_by_proc
-function|)
+name|drm_find_file_by_proc
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -117,15 +114,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* DRM(open_helper) is called whenever a process opens /dev/drm. */
+comment|/* drm_open_helper is called whenever a process opens /dev/drm. */
 end_comment
 
 begin_function
 name|int
-name|DRM
-function|(
-name|open_helper
-function|)
+name|drm_open_helper
 parameter_list|(
 name|struct
 name|cdev
@@ -159,6 +153,9 @@ name|drm_file_t
 modifier|*
 name|priv
 decl_stmt|;
+name|int
+name|retcode
+decl_stmt|;
 if|if
 condition|(
 name|flags
@@ -189,10 +186,7 @@ argument_list|()
 expr_stmt|;
 name|priv
 operator|=
-name|DRM
-argument_list|(
-name|find_file_by_proc
-argument_list|)
+name|drm_find_file_by_proc
 argument_list|(
 name|dev
 argument_list|,
@@ -214,14 +208,7 @@ else|else
 block|{
 name|priv
 operator|=
-operator|(
-name|drm_file_t
-operator|*
-operator|)
-name|DRM
-argument_list|(
-name|alloc
-argument_list|)
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -229,7 +216,11 @@ operator|*
 name|priv
 argument_list|)
 argument_list|,
-name|DRM_MEM_FILES
+name|M_DRM
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -249,17 +240,6 @@ name|ENOMEM
 argument_list|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|priv
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|priv
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -321,12 +301,6 @@ name|m
 expr_stmt|;
 name|priv
 operator|->
-name|devXX
-operator|=
-name|dev
-expr_stmt|;
-name|priv
-operator|->
 name|ioctl_count
 operator|=
 literal|0
@@ -341,13 +315,46 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|DRIVER_OPEN_HELPER
+if|if
+condition|(
+name|dev
+operator|->
+name|open_helper
+condition|)
+block|{
+name|retcode
+operator|=
+name|dev
+operator|->
+name|open_helper
+argument_list|(
+name|dev
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retcode
+operator|!=
+literal|0
+condition|)
+block|{
+name|free
 argument_list|(
 name|priv
 argument_list|,
-name|dev
+name|M_DRM
 argument_list|)
 expr_stmt|;
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
+return|return
+name|retcode
+return|;
+block|}
+block|}
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -382,15 +389,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* The DRM(read) and DRM(poll) are stubs to prevent spurious errors  * on older X Servers (4.3.0 and earlier) */
+comment|/* The drm_read and drm_poll are stubs to prevent spurious errors  * on older X Servers (4.3.0 and earlier) */
 end_comment
 
 begin_function
 name|int
-name|DRM
-function|(
-name|read
-function|)
+name|drm_read
 parameter_list|(
 name|struct
 name|cdev
@@ -414,10 +418,7 @@ end_function
 
 begin_function
 name|int
-name|DRM
-function|(
-name|poll
-function|)
+name|drm_poll
 parameter_list|(
 name|struct
 name|cdev

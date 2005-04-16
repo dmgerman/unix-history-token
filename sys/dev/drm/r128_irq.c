@@ -4,14 +4,8 @@ comment|/* r128_irq.c -- IRQ handling for radeon -*- linux-c -*- */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (C) The Weather Channel, Inc.  2002.  All Rights Reserved.  *   * The Weather Channel (TM) funded Tungsten Graphics to develop the  * initial release of the Radeon 8500 driver under the XFree86 license.  * This notice must be preserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Keith Whitwell<keith@tungstengraphics.com>  *    Eric Anholt<anholt@FreeBSD.org>  *  * $FreeBSD$  */
+comment|/*-  * Copyright (C) The Weather Channel, Inc.  2002.  All Rights Reserved.  *  * The Weather Channel (TM) funded Tungsten Graphics to develop the  * initial release of the Radeon 8500 driver under the XFree86 license.  * This notice must be preserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Keith Whitwell<keith@tungstengraphics.com>  *    Eric Anholt<anholt@FreeBSD.org>  *  * $FreeBSD$  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"dev/drm/r128.h"
-end_include
 
 begin_include
 include|#
@@ -39,7 +33,7 @@ end_include
 
 begin_function
 name|irqreturn_t
-name|r128_irq_handler
+name|r128_driver_irq_handler
 parameter_list|(
 name|DRM_IRQ_ARGS
 parameter_list|)
@@ -107,14 +101,11 @@ operator|->
 name|vbl_queue
 argument_list|)
 expr_stmt|;
-name|DRM
-function_decl|(
-name|vbl_send_signals
-function_decl|)
-parameter_list|(
+name|drm_vbl_send_signals
+argument_list|(
 name|dev
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 return|return
 name|IRQ_HANDLED
 return|;
@@ -127,10 +118,7 @@ end_function
 
 begin_function
 name|int
-name|DRM
-function|(
-name|vblank_wait
-function|)
+name|r128_driver_vblank_wait
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -151,7 +139,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-comment|/* Assume that the user has missed the current sequence number 	 * by about a day rather than she wants to wait for years 	 * using vertical blanks...  	 */
+comment|/* Assume that the user has missed the current sequence number 	 * by about a day rather than she wants to wait for years 	 * using vertical blanks... 	 */
 name|DRM_WAIT_ON
 argument_list|(
 name|ret

@@ -1,41 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sis_mm.c -- Private header for Direct Rendering Manager -*- linux-c -*-  * Created: Mon Jan  4 10:05:05 1999 by sclin@sis.com.tw *  */
+comment|/* sis_mm.c -- Private header for Direct Rendering Manager -*- linux-c -*-  * Created: Mon Jan  4 10:05:05 1999 by sclin@sis.com.tw */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 2000 Silicon Integrated Systems Corp, Inc., HsinChu, Taiwan.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *   * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *   * Authors:  *    Sung-Ching Lin<sclin@sis.com.tw>  *   * $FreeBSD$  */
+comment|/*-  * Copyright 2000 Silicon Integrated Systems Corp, Inc., HsinChu, Taiwan.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Sung-Ching Lin<sclin@sis.com.tw>  *  * $FreeBSD$  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"dev/drm/sis.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dev/drm/drmP.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dev/drm/sis_drm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dev/drm/sis_drv.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dev/drm/sis_ds.h"
-end_include
 
 begin_if
 if|#
@@ -92,6 +62,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/drmP.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/sis_drm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/sis_drv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/sis_ds.h"
+end_include
 
 begin_define
 define|#
@@ -330,6 +324,7 @@ argument_list|)
 end_if
 
 begin_function
+specifier|static
 name|int
 name|sis_fb_init
 parameter_list|(
@@ -343,6 +338,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sis_fb_alloc
 parameter_list|(
@@ -356,6 +352,18 @@ name|struct
 name|sis_memreq
 name|req
 decl_stmt|;
+name|drm_sis_mem_t
+name|__user
+modifier|*
+name|argp
+init|=
+operator|(
+name|void
+name|__user
+operator|*
+operator|)
+name|data
+decl_stmt|;
 name|int
 name|retval
 init|=
@@ -365,11 +373,7 @@ name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|fb
 argument_list|,
-operator|(
-name|drm_sis_mem_t
-operator|*
-operator|)
-name|data
+name|argp
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -476,11 +480,7 @@ expr_stmt|;
 block|}
 name|DRM_COPY_TO_USER_IOCTL
 argument_list|(
-operator|(
-name|drm_sis_mem_t
-operator|*
-operator|)
-name|data
+name|argp
 argument_list|,
 name|fb
 argument_list|,
@@ -510,6 +510,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sis_fb_free
 parameter_list|(
@@ -530,6 +531,7 @@ name|fb
 argument_list|,
 operator|(
 name|drm_sis_mem_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -608,6 +610,7 @@ comment|/* Called by the X Server to initialize the FB heap.  Allocations will f
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sis_fb_init
 parameter_list|(
@@ -633,6 +636,7 @@ name|fb
 argument_list|,
 operator|(
 name|drm_sis_fb_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -654,10 +658,7 @@ name|dev
 operator|->
 name|dev_private
 operator|=
-name|DRM
-argument_list|(
-name|calloc
-argument_list|)
+name|drm_calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -734,6 +735,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sis_fb_alloc
 parameter_list|(
@@ -749,6 +751,18 @@ init|=
 name|dev
 operator|->
 name|dev_private
+decl_stmt|;
+name|drm_sis_mem_t
+name|__user
+modifier|*
+name|argp
+init|=
+operator|(
+name|void
+name|__user
+operator|*
+operator|)
+name|data
 decl_stmt|;
 name|drm_sis_mem_t
 name|fb
@@ -783,11 +797,7 @@ name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|fb
 argument_list|,
-operator|(
-name|drm_sis_mem_t
-operator|*
-operator|)
-name|data
+name|argp
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -900,11 +910,7 @@ expr_stmt|;
 block|}
 name|DRM_COPY_TO_USER_IOCTL
 argument_list|(
-operator|(
-name|drm_sis_mem_t
-operator|*
-operator|)
-name|data
+name|argp
 argument_list|,
 name|fb
 argument_list|,
@@ -934,6 +940,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sis_fb_free
 parameter_list|(
@@ -977,6 +984,7 @@ name|fb
 argument_list|,
 operator|(
 name|drm_sis_mem_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -1067,6 +1075,7 @@ comment|/* agp memory management */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sis_ioctl_agp_init
 parameter_list|(
@@ -1097,10 +1106,7 @@ name|dev
 operator|->
 name|dev_private
 operator|=
-name|DRM
-argument_list|(
-name|calloc
-argument_list|)
+name|drm_calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -1148,6 +1154,7 @@ name|agp
 argument_list|,
 operator|(
 name|drm_sis_agp_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -1193,6 +1200,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sis_ioctl_agp_alloc
 parameter_list|(
@@ -1208,6 +1216,18 @@ init|=
 name|dev
 operator|->
 name|dev_private
+decl_stmt|;
+name|drm_sis_mem_t
+name|__user
+modifier|*
+name|argp
+init|=
+operator|(
+name|drm_sis_mem_t
+name|__user
+operator|*
+operator|)
+name|data
 decl_stmt|;
 name|drm_sis_mem_t
 name|agp
@@ -1242,11 +1262,7 @@ name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|agp
 argument_list|,
-operator|(
-name|drm_sis_mem_t
-operator|*
-operator|)
-name|data
+name|argp
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1357,11 +1373,7 @@ expr_stmt|;
 block|}
 name|DRM_COPY_TO_USER_IOCTL
 argument_list|(
-operator|(
-name|drm_sis_mem_t
-operator|*
-operator|)
-name|data
+name|argp
 argument_list|,
 name|agp
 argument_list|,
@@ -1391,6 +1403,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sis_ioctl_agp_free
 parameter_list|(
@@ -1434,6 +1447,7 @@ name|agp
 argument_list|,
 operator|(
 name|drm_sis_mem_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -1518,6 +1532,11 @@ begin_function
 name|int
 name|sis_init_context
 parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
 name|int
 name|context
 parameter_list|)
@@ -1702,6 +1721,11 @@ begin_function
 name|int
 name|sis_final_context
 parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
 name|int
 name|context
 parameter_list|)
@@ -1924,6 +1948,116 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|drm_ioctl_desc_t
+name|sis_ioctls
+index|[]
+init|=
+block|{
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_SIS_FB_ALLOC
+argument_list|)
+index|]
+operator|=
+block|{
+name|sis_fb_alloc
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_SIS_FB_FREE
+argument_list|)
+index|]
+operator|=
+block|{
+name|sis_fb_free
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_SIS_AGP_INIT
+argument_list|)
+index|]
+operator|=
+block|{
+name|sis_ioctl_agp_init
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_SIS_AGP_ALLOC
+argument_list|)
+index|]
+operator|=
+block|{
+name|sis_ioctl_agp_alloc
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_SIS_AGP_FREE
+argument_list|)
+index|]
+operator|=
+block|{
+name|sis_ioctl_agp_free
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_SIS_FB_INIT
+argument_list|)
+index|]
+operator|=
+block|{
+name|sis_fb_init
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sis_max_ioctl
+init|=
+name|DRM_ARRAY_SIZE
+argument_list|(
+name|sis_ioctls
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

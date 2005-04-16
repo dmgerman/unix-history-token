@@ -977,8 +977,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|RADEON_MAX_STATE_PACKETS
+name|R200_EMIT_TCL_POINT_SPRITE_CNTL
 value|77
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_EMIT_PP_CUBIC_FACES_0
+value|78
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_EMIT_PP_CUBIC_OFFSETS_T0
+value|79
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_EMIT_PP_CUBIC_FACES_1
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_EMIT_PP_CUBIC_OFFSETS_T1
+value|81
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_EMIT_PP_CUBIC_FACES_2
+value|82
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_EMIT_PP_CUBIC_OFFSETS_T2
+value|83
+end_define
+
+begin_define
+define|#
+directive|define
+name|R200_EMIT_PP_TRI_PERF_CNTL
+value|84
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_MAX_STATE_PACKETS
+value|85
 end_define
 
 begin_comment
@@ -1070,7 +1126,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* emit hw wait commands -- note: 				   *  doesn't make the cpu wait, just 				   *  the graphics hardware */
+comment|/* emit hw wait commands -- note: 					 *  doesn't make the cpu wait, just 					 *  the graphics hardware */
 end_comment
 
 begin_typedef
@@ -1217,6 +1273,27 @@ name|RADEON_STENCIL
 value|0x8
 end_define
 
+begin_define
+define|#
+directive|define
+name|RADEON_CLEAR_FASTZ
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_USE_HIERZ
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_USE_COMP_ZBUF
+value|0x20000000
+end_define
+
 begin_comment
 comment|/* Primitive types  */
 end_comment
@@ -1350,6 +1427,13 @@ define|#
 directive|define
 name|RADEON_MAX_TEXTURE_UNITS
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_MAX_SURFACES
+value|8
 end_define
 
 begin_comment
@@ -1776,6 +1860,10 @@ name|int
 name|crtc2_base
 decl_stmt|;
 comment|/* CRTC2 frame offset */
+name|int
+name|tiling_enabled
+decl_stmt|;
+comment|/* set by drm, read by 2d + 3d clients */
 block|}
 name|drm_radeon_sarea_t
 typedef|;
@@ -1973,6 +2061,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_RADEON_SURF_ALLOC
+value|0x1a
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_SURF_FREE
+value|0x1b
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_IOCTL_RADEON_CP_INIT
 value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_CP_INIT, drm_radeon_init_t)
 end_define
@@ -2145,6 +2247,20 @@ name|DRM_IOCTL_RADEON_SETPARAM
 value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_SETPARAM, drm_radeon_setparam_t)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_SURF_ALLOC
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_SURF_ALLOC, drm_radeon_surface_alloc_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_SURF_FREE
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_SURF_FREE, drm_radeon_surface_free_t)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2163,6 +2279,10 @@ block|,
 name|RADEON_INIT_R200_CP
 init|=
 literal|0x03
+block|,
+name|RADEON_INIT_R300_CP
+init|=
+literal|0x04
 block|}
 name|func
 enum|;
@@ -2173,6 +2293,7 @@ decl_stmt|;
 name|int
 name|is_pci
 decl_stmt|;
+comment|/* not used, driver asks hardware */
 name|int
 name|cp_mode
 decl_stmt|;
@@ -2363,6 +2484,7 @@ name|depth_mask
 decl_stmt|;
 comment|/* misnamed field:  should be stencil */
 name|drm_radeon_clear_rect_t
+name|__user
 modifier|*
 name|depth_boxes
 decl_stmt|;
@@ -2443,6 +2565,7 @@ name|int
 name|nr_states
 decl_stmt|;
 name|drm_radeon_state_t
+name|__user
 modifier|*
 name|state
 decl_stmt|;
@@ -2450,6 +2573,7 @@ name|int
 name|nr_prims
 decl_stmt|;
 name|drm_radeon_prim_t
+name|__user
 modifier|*
 name|prim
 decl_stmt|;
@@ -2459,7 +2583,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* v1.3 - obsoletes drm_radeon_vertex2  *      - allows arbitarily large cliprect list   *      - allows updating of tcl packet, vector and scalar state  *      - allows memory-efficient description of state updates  *      - allows state to be emitted without a primitive   *           (for clears, ctx switches)  *      - allows more than one dma buffer to be referenced per ioctl  *      - supports tcl driver  *      - may be extended in future versions with new cmd types, packets  */
+comment|/* v1.3 - obsoletes drm_radeon_vertex2  *      - allows arbitarily large cliprect list  *      - allows updating of tcl packet, vector and scalar state  *      - allows memory-efficient description of state updates  *      - allows state to be emitted without a primitive  *           (for clears, ctx switches)  *      - allows more than one dma buffer to be referenced per ioctl  *      - supports tcl driver  *      - may be extended in future versions with new cmd types, packets  */
 end_comment
 
 begin_typedef
@@ -2471,6 +2595,7 @@ name|int
 name|bufsz
 decl_stmt|;
 name|char
+name|__user
 modifier|*
 name|buf
 decl_stmt|;
@@ -2478,6 +2603,7 @@ name|int
 name|nbox
 decl_stmt|;
 name|drm_clip_rect_t
+name|__user
 modifier|*
 name|boxes
 decl_stmt|;
@@ -2506,6 +2632,7 @@ name|height
 decl_stmt|;
 specifier|const
 name|void
+name|__user
 modifier|*
 name|data
 decl_stmt|;
@@ -2537,6 +2664,7 @@ name|int
 name|height
 decl_stmt|;
 name|drm_radeon_tex_image_t
+name|__user
 modifier|*
 name|image
 decl_stmt|;
@@ -2552,6 +2680,7 @@ name|drm_radeon_stipple
 block|{
 name|unsigned
 name|int
+name|__user
 modifier|*
 name|mask
 decl_stmt|;
@@ -2583,7 +2712,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 1.3: An ioctl to get parameters that aren't available to the 3d  * client any other way.    */
+comment|/* 1.3: An ioctl to get parameters that aren't available to the 3d  * client any other way.  */
 end_comment
 
 begin_define
@@ -2692,6 +2821,7 @@ name|int
 name|param
 decl_stmt|;
 name|void
+name|__user
 modifier|*
 name|value
 decl_stmt|;
@@ -2733,6 +2863,7 @@ name|int
 name|size
 decl_stmt|;
 name|int
+name|__user
 modifier|*
 name|region_offset
 decl_stmt|;
@@ -2787,6 +2918,7 @@ struct|struct
 name|drm_radeon_irq_emit
 block|{
 name|int
+name|__user
 modifier|*
 name|irq_seq
 decl_stmt|;
@@ -2839,6 +2971,57 @@ end_define
 begin_comment
 comment|/* determined framebuffer location */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_SETPARAM_SWITCH_TILING
+value|2
+end_define
+
+begin_comment
+comment|/* enable/disable color tiling */
+end_comment
+
+begin_comment
+comment|/* 1.14: Clients can allocate/free a surface  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_radeon_surface_alloc
+block|{
+name|unsigned
+name|int
+name|address
+decl_stmt|;
+name|unsigned
+name|int
+name|size
+decl_stmt|;
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+block|}
+name|drm_radeon_surface_alloc_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_radeon_surface_free
+block|{
+name|unsigned
+name|int
+name|address
+decl_stmt|;
+block|}
+name|drm_radeon_surface_free_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#

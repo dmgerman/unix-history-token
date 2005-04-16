@@ -22,43 +22,97 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NOT_USED_0_3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SIS_FB_ALLOC
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SIS_FB_FREE
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOT_USED_6_12
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SIS_AGP_INIT
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SIS_AGP_ALLOC
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SIS_AGP_FREE
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SIS_FB_INIT
+value|0x16
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_IOCTL_SIS_FB_ALLOC
-value|DRM_IOWR(0x44, drm_sis_mem_t)
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_SIS_FB_ALLOC, drm_sis_mem_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_SIS_FB_FREE
-value|DRM_IOW( 0x45, drm_sis_mem_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_SIS_FB_FREE, drm_sis_mem_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_SIS_AGP_INIT
-value|DRM_IOWR(0x53, drm_sis_agp_t)
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_SIS_AGP_INIT, drm_sis_agp_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_SIS_AGP_ALLOC
-value|DRM_IOWR(0x54, drm_sis_mem_t)
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_SIS_AGP_ALLOC, drm_sis_mem_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_SIS_AGP_FREE
-value|DRM_IOW( 0x55, drm_sis_mem_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_SIS_AGP_FREE, drm_sis_mem_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_SIS_FB_INIT
-value|DRM_IOW( 0x56, drm_sis_fb_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_SIS_FB_INIT, drm_sis_fb_t)
 end_define
 
 begin_comment

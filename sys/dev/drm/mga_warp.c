@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"dev/drm/mga.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"dev/drm/drmP.h"
 end_include
 

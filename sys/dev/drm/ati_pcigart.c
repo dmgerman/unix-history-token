@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ati_pcigart.h -- ATI PCI GART support -*- linux-c -*-  * Created: Wed Dec 13 21:52:19 2000 by gareth@valinux.com */
+comment|/* ati_pcigart.h -- ATI PCI GART support -*- linux-c -*-  * Created: Wed Dec 13 21:52:19 2000 by gareth@valinux.com  */
 end_comment
 
 begin_comment
@@ -97,10 +97,7 @@ end_comment
 
 begin_function
 name|int
-name|DRM
-function|(
-name|ati_pcigart_init
-function|)
+name|drm_ati_pcigart_init
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -185,10 +182,7 @@ operator|)
 operator|*
 name|PAGE_SIZE
 argument_list|,
-name|DRM
-argument_list|(
 name|M_DRM
-argument_list|)
 argument_list|,
 name|M_NOWAIT
 argument_list|,
@@ -366,10 +360,7 @@ end_function
 
 begin_function
 name|int
-name|DRM
-function|(
-name|ati_pcigart_cleanup
-function|)
+name|drm_ati_pcigart_cleanup
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -412,6 +403,7 @@ directive|if
 name|__FreeBSD_version
 operator|>
 literal|500000
+comment|/* Not available on 4.x */
 name|contigfree
 argument_list|(
 operator|(
@@ -428,13 +420,9 @@ operator|)
 operator|*
 name|PAGE_SIZE
 argument_list|,
-name|DRM
-argument_list|(
 name|M_DRM
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* Not available on 4.x */
 endif|#
 directive|endif
 return|return

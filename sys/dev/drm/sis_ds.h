@@ -4,7 +4,7 @@ comment|/* sis_ds.h -- Private header for Direct Rendering Manager -*- linux-c -
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 2000 Silicon Integrated Systems Corp, Inc., HsinChu, Taiwan.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *   * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *   * Authors:  *    Sung-Ching Lin<sclin@sis.com.tw>  *   * $FreeBSD$  */
+comment|/*-  * Copyright 2000 Silicon Integrated Systems Corp, Inc., HsinChu, Taiwan.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Sung-Ching Lin<sclin@sis.com.tw>  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -159,7 +159,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * GLX Hardware Device Driver common code  * Copyright (C) 1999 Keith Whitwell  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included  * in all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * KEITH WHITWELL, OR ANY OTHER CONTRIBUTORS BE LIABLE FOR ANY CLAIM,   * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR   * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE   * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  */
+comment|/*  * GLX Hardware Device Driver common code  * Copyright (C) 1999 Wittawat Yamwong  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included  * in all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * KEITH WHITWELL, OR ANY OTHER CONTRIBUTORS BE LIABLE FOR ANY CLAIM,  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  */
 end_comment
 
 begin_struct
@@ -184,11 +184,13 @@ decl_stmt|;
 name|int
 name|align
 decl_stmt|;
+name|unsigned
 name|int
 name|free
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
 name|int
 name|reserved
 range|:
@@ -283,7 +285,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * input: total size in bytes  * return: a heap pointer if OK, NULL if error  */
+comment|/*  * input: total size in bytes  * return: a heap pointer if OK, NULL if error  */
 end_comment
 
 begin_function_decl
@@ -291,24 +293,6 @@ name|memHeap_t
 modifier|*
 name|mmInit
 parameter_list|(
-name|int
-name|ofs
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|memHeap_t
-modifier|*
-name|mmAddRange
-parameter_list|(
-name|memHeap_t
-modifier|*
-name|heap
-parameter_list|,
 name|int
 name|ofs
 parameter_list|,
@@ -369,56 +353,6 @@ name|mmFreeMem
 parameter_list|(
 name|PMemBlock
 name|b
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Reserve 'size' bytes block start at offset  * This is used to prevent allocation of memory already used  * by the X server for the front buffer, pixmaps, and cursor  * input: size, offset  * output: 0 if OK, -1 if error  */
-end_comment
-
-begin_function_decl
-name|int
-name|mmReserveMem
-parameter_list|(
-name|memHeap_t
-modifier|*
-name|heap
-parameter_list|,
-name|int
-name|offset
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mmFreeReserved
-parameter_list|(
-name|memHeap_t
-modifier|*
-name|heap
-parameter_list|,
-name|int
-name|offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * destroy MM  */
-end_comment
-
-begin_function_decl
-name|void
-name|mmDestroy
-parameter_list|(
-name|memHeap_t
-modifier|*
-name|mmInit
 parameter_list|)
 function_decl|;
 end_function_decl

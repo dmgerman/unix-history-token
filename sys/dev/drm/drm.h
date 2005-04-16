@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file drm.h   * Header for the Direct Rendering Manager  *   * \author Rickard E. (Rik) Faith<faith@valinux.com>  *  * \par Acknowledgments:  * Dec 1999, Richard Henderson<rth@twiddle.net>, move to generic \c cmpxchg.  */
+comment|/**  * \file drm.h  * Header for the Direct Rendering Manager  *  * \author Rickard E. (Rik) Faith<faith@valinux.com>  *  * \par Acknowledgments:  * Dec 1999, Richard Henderson<rth@twiddle.net>, move to generic \c cmpxchg.  */
 end_comment
 
 begin_comment
 comment|/*-  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * $FreeBSD$  */
+end_comment
+
+begin_comment
+comment|/**  * \mainpage  *  * The Direct Rendering Manager (DRM) is a device-independent kernel-level  * device driver that provides support for the XFree86 Direct Rendering  * Infrastructure (DRI).  *  * The DRM supports the Direct Rendering Infrastructure (DRI) in four major  * ways:  *     -# The DRM provides synchronized access to the graphics hardware via  *        the use of an optimized two-tiered lock.  *     -# The DRM enforces the DRI security policy for access to the graphics  *        hardware by only allowing authenticated X11 clients access to  *        restricted regions of memory.  *     -# The DRM provides a generic DMA engine, complete with multiple  *        queues and the ability to detect the need for an OpenGL context  *        switch.  *     -# The DRM is extensible via the use of small device-specific modules  *        that rely extensively on the API exported by the DRM module.  *  */
 end_comment
 
 begin_ifndef
@@ -18,6 +22,23 @@ define|#
 directive|define
 name|_DRM_H_
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__user
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__user
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -411,7 +432,7 @@ begin_define
 define|#
 directive|define
 name|DRM_MAX_MINOR
-value|15
+value|255
 end_define
 
 begin_endif
@@ -467,7 +488,7 @@ begin_define
 define|#
 directive|define
 name|_DRM_LOCK_HELD
-value|0x80000000
+value|0x80000000U
 end_define
 
 begin_comment
@@ -478,7 +499,7 @@ begin_define
 define|#
 directive|define
 name|_DRM_LOCK_CONT
-value|0x40000000
+value|0x40000000U
 end_define
 
 begin_comment
@@ -523,6 +544,10 @@ name|drm_handle_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/**< To mapped regions */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -530,6 +555,10 @@ name|int
 name|drm_context_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/**< GLXContext handle */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -548,7 +577,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * Cliprect.  *   * \warning: If you change this structure, make sure you change  * XF86DRIClipRectRec in the server as well  *  * \note KW: Actually it's illegal to change either for  * backwards-compatibility reasons.  */
+comment|/**< Magic for authentication */
+end_comment
+
+begin_comment
+comment|/**  * Cliprect.  *  * \warning If you change this structure, make sure you change  * XF86DRIClipRectRec in the server as well  *  * \note KW: Actually it's illegal to change either for  * backwards-compatibility reasons.  */
 end_comment
 
 begin_typedef
@@ -639,7 +672,47 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * DRM_IOCTL_VERSION ioctl argument type.  *   * \sa drmGetVersion().  */
+comment|/* This is beyond ugly, and only works on GCC.  However, it allows me to use  * drm.h in places (i.e., in the X-server) where I can't use size_t.  The real  * fix is to use uint32_t instead of size_t, but that fix will break existing  * LP64 (i.e., PowerPC64, SPARC64, IA-64, Alpha, etc.) systems.  That *will*  * eventually happen, though.  I chose 'unsigned long' to be the fallback type  * because that works on all the platforms I know about.  Hopefully, the  * real fix will happen before that bites us.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SIZE_TYPE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DRM_SIZE_T
+value|__SIZE_TYPE__
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_warning
+warning|#
+directive|warning
+literal|"__SIZE_TYPE__ not defined.  Assuming sizeof(size_t) == sizeof(unsigned long)!"
+end_warning
+
+begin_define
+define|#
+directive|define
+name|DRM_SIZE_T
+value|unsigned long
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/**  * DRM_IOCTL_VERSION ioctl argument type.  *  * \sa drmGetVersion().  */
 end_comment
 
 begin_typedef
@@ -659,29 +732,32 @@ name|int
 name|version_patchlevel
 decl_stmt|;
 comment|/**< Patch level */
-name|size_t
+name|DRM_SIZE_T
 name|name_len
 decl_stmt|;
 comment|/**< Length of name buffer */
 name|char
+name|__user
 modifier|*
 name|name
 decl_stmt|;
 comment|/**< Name of driver */
-name|size_t
+name|DRM_SIZE_T
 name|date_len
 decl_stmt|;
 comment|/**< Length of date buffer */
 name|char
+name|__user
 modifier|*
 name|date
 decl_stmt|;
 comment|/**< User-space buffer to hold date */
-name|size_t
+name|DRM_SIZE_T
 name|desc_len
 decl_stmt|;
 comment|/**< Length of desc buffer */
 name|char
+name|__user
 modifier|*
 name|desc
 decl_stmt|;
@@ -700,11 +776,12 @@ typedef|typedef
 struct|struct
 name|drm_unique
 block|{
-name|size_t
+name|DRM_SIZE_T
 name|unique_len
 decl_stmt|;
 comment|/**< Length of unique */
 name|char
+name|__user
 modifier|*
 name|unique
 decl_stmt|;
@@ -713,6 +790,12 @@ block|}
 name|drm_unique_t
 typedef|;
 end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|DRM_SIZE_T
+end_undef
 
 begin_typedef
 typedef|typedef
@@ -724,6 +807,7 @@ name|count
 decl_stmt|;
 comment|/**< Length of user-space structures */
 name|drm_version_t
+name|__user
 modifier|*
 name|version
 decl_stmt|;
@@ -806,7 +890,12 @@ comment|/**< AGP/GART */
 name|_DRM_SCATTER_GATHER
 init|=
 literal|4
+block|,
 comment|/**< Scatter/gather memory for PCI DMA */
+name|_DRM_CONSISTENT
+init|=
+literal|5
+comment|/**< Consistent memory for PCI DMA */
 block|}
 name|drm_map_type_t
 typedef|;
@@ -1074,7 +1163,7 @@ init|=
 literal|0x08
 block|,
 comment|/**< Flush all DMA queues first */
-comment|/* These *HALT* flags aren't supported yet 				   -- they will be used to support the 				   full-screen DGA-like mode. */
+comment|/* These *HALT* flags aren't supported yet 	   -- they will be used to support the 	   full-screen DGA-like mode. */
 name|_DRM_HALT_ALL_QUEUES
 init|=
 literal|0x10
@@ -1090,7 +1179,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * DRM_IOCTL_LOCK, DRM_IOCTL_UNLOCK and DRM_IOCTL_FINISH ioctl argument type.  *   * \sa drmGetLock() and drmUnlock().  */
+comment|/**  * DRM_IOCTL_LOCK, DRM_IOCTL_UNLOCK and DRM_IOCTL_FINISH ioctl argument type.  *  * \sa drmGetLock() and drmUnlock().  */
 end_comment
 
 begin_typedef
@@ -1110,7 +1199,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * DMA flags  *  * \warning   * These values \e must match xf86drm.h.  *  * \sa drm_dma.  */
+comment|/**  * DMA flags  *  * \warning  * These values \e must match xf86drm.h.  *  * \sa drm_dma.  */
 end_comment
 
 begin_typedef
@@ -1123,7 +1212,7 @@ name|_DRM_DMA_BLOCK
 init|=
 literal|0x01
 block|,
-comment|/**< 				       * Block until buffer dispatched. 				       *  				       * \note The buffer may not yet have 				       * been processed by the hardware -- 				       * getting a hardware lock with the 				       * hardware quiescent will ensure 				       * that the buffer has been 				       * processed. 				       */
+comment|/**< 				       * Block until buffer dispatched. 				       * 				       * \note The buffer may not yet have 				       * been processed by the hardware -- 				       * getting a hardware lock with the 				       * hardware quiescent will ensure 				       * that the buffer has been 				       * processed. 				       */
 name|_DRM_DMA_WHILE_LOCKED
 init|=
 literal|0x02
@@ -1194,7 +1283,12 @@ comment|/**< Buffer is in AGP space */
 name|_DRM_SG_BUFFER
 init|=
 literal|0x04
+block|,
 comment|/**< Scatter/gather memory buffer */
+name|_DRM_FB_BUFFER
+init|=
+literal|0x08
+comment|/**< Buffer is in frame buffer */
 block|}
 name|flags
 enum|;
@@ -1202,7 +1296,7 @@ name|unsigned
 name|long
 name|agp_start
 decl_stmt|;
-comment|/**<  				  * Start address of where the AGP buffers are 				  * in the AGP aperture 				  */
+comment|/**< 				  * Start address of where the AGP buffers are 				  * in the AGP aperture 				  */
 block|}
 name|drm_buf_desc_t
 typedef|;
@@ -1220,11 +1314,13 @@ block|{
 name|int
 name|count
 decl_stmt|;
-comment|/**< Entries in list */
+comment|/**< Number of buffers described in list */
 name|drm_buf_desc_t
+name|__user
 modifier|*
 name|list
 decl_stmt|;
+comment|/**< List of buffer descriptions */
 block|}
 name|drm_buf_info_t
 typedef|;
@@ -1243,6 +1339,7 @@ name|int
 name|count
 decl_stmt|;
 name|int
+name|__user
 modifier|*
 name|list
 decl_stmt|;
@@ -1273,6 +1370,7 @@ name|used
 decl_stmt|;
 comment|/**< Amount of buffer in use (for DMA) */
 name|void
+name|__user
 modifier|*
 name|address
 decl_stmt|;
@@ -1296,11 +1394,13 @@ name|count
 decl_stmt|;
 comment|/**< Length of the buffer list */
 name|void
+name|__user
 modifier|*
 name|virtual
 decl_stmt|;
 comment|/**< Mmap'd area in user-virtual */
 name|drm_buf_pub_t
+name|__user
 modifier|*
 name|list
 decl_stmt|;
@@ -1328,11 +1428,13 @@ name|send_count
 decl_stmt|;
 comment|/**< Number of buffers to send */
 name|int
+name|__user
 modifier|*
 name|send_indices
 decl_stmt|;
 comment|/**< List of handles to buffers */
 name|int
+name|__user
 modifier|*
 name|send_sizes
 decl_stmt|;
@@ -1350,11 +1452,13 @@ name|request_size
 decl_stmt|;
 comment|/**< Desired size for buffers */
 name|int
+name|__user
 modifier|*
 name|request_indices
 decl_stmt|;
 comment|/**< Buffer information */
 name|int
+name|__user
 modifier|*
 name|request_sizes
 decl_stmt|;
@@ -1416,6 +1520,7 @@ name|int
 name|count
 decl_stmt|;
 name|drm_ctx_t
+name|__user
 modifier|*
 name|contexts
 decl_stmt|;
@@ -1680,22 +1785,23 @@ name|unsigned
 name|long
 name|aperture_base
 decl_stmt|;
-comment|/* physical address */
+comment|/**< physical address */
 name|unsigned
 name|long
 name|aperture_size
 decl_stmt|;
-comment|/* bytes */
+comment|/**< bytes */
 name|unsigned
 name|long
 name|memory_allowed
 decl_stmt|;
-comment|/* bytes */
+comment|/**< bytes */
 name|unsigned
 name|long
 name|memory_used
 decl_stmt|;
-comment|/* PCI information */
+comment|/** \name PCI information */
+comment|/*@{ */
 name|unsigned
 name|short
 name|id_vendor
@@ -1704,6 +1810,7 @@ name|unsigned
 name|short
 name|id_device
 decl_stmt|;
+comment|/*@} */
 block|}
 name|drm_agp_info_t
 typedef|;
@@ -1758,6 +1865,14 @@ block|}
 name|drm_set_version_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/**  * \name Ioctls Definitions  */
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
 
 begin_define
 define|#
@@ -2133,6 +2248,10 @@ directive|define
 name|DRM_IOCTL_WAIT_VBLANK
 value|DRM_IOWR(0x3a, drm_wait_vblank_t)
 end_define
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 begin_comment
 comment|/**  * Device specific ioctls should only be in their respective headers  * The device specific ioctl range is from 0x40 to 0x79.  *  * \sa drmCommandNone(), drmCommandRead(), drmCommandWrite(), and  * drmCommandReadWrite().  */

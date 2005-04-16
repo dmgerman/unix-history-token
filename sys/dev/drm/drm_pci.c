@@ -32,10 +32,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|DRM
-function|(
-name|pci_alloc
-function|)
+name|drm_pci_alloc
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -65,10 +62,7 @@ name|contigmalloc
 argument_list|(
 name|size
 argument_list|,
-name|DRM
-argument_list|(
 name|M_DRM
-argument_list|)
 argument_list|,
 name|M_NOWAIT
 argument_list|,
@@ -101,10 +95,7 @@ end_comment
 
 begin_function
 name|void
-name|DRM
-function|(
-name|pci_free
-function|)
+name|drm_pci_free
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -126,16 +117,20 @@ directive|if
 name|__FreeBSD_version
 operator|>
 literal|500000
+if|if
+condition|(
+name|vaddr
+operator|==
+name|NULL
+condition|)
+return|return;
 name|contigfree
 argument_list|(
 name|vaddr
 argument_list|,
 name|size
 argument_list|,
-name|DRM
-argument_list|(
 name|M_DRM
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Not available on 4.x */

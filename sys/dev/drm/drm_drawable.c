@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* drm_drawable.h -- IOCTLs for drawables -*- linux-c -*-  * Created: Tue Feb  2 08:37:54 1999 by faith@valinux.com */
+comment|/* drm_drawable.h -- IOCTLs for drawables -*- linux-c -*-  * Created: Tue Feb  2 08:37:54 1999 by faith@valinux.com  */
 end_comment
 
 begin_comment
@@ -15,10 +15,7 @@ end_include
 
 begin_function
 name|int
-name|DRM
-function|(
-name|adddraw
-function|)
+name|drm_adddraw
 parameter_list|(
 name|DRM_IOCTL_ARGS
 parameter_list|)
@@ -66,10 +63,7 @@ end_function
 
 begin_function
 name|int
-name|DRM
-function|(
-name|rmdraw
-function|)
+name|drm_rmdraw
 parameter_list|(
 name|DRM_IOCTL_ARGS
 parameter_list|)

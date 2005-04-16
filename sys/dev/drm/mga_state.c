@@ -4,28 +4,8 @@ comment|/* mga_state.c -- State support for MGA G200/G400 -*- linux-c -*-  * Cre
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Jeff Hartmann<jhartmann@valinux.com>  *    Keith Whitwell<keith@tungstengraphics.com>  *  * Rewritten by:  *    Gareth Hughes<gareth@valinux.com>  *  */
+comment|/*-  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Jeff Hartmann<jhartmann@valinux.com>  *    Keith Whitwell<keith@tungstengraphics.com>  *  * Rewritten by:  *    Gareth Hughes<gareth@valinux.com>  * $FreeBSD$  *  * $FreeBSD$  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|"dev/drm/mga.h"
-end_include
 
 begin_include
 include|#
@@ -148,9 +128,13 @@ argument_list|,
 name|MGA_CXBNDRY
 argument_list|,
 operator|(
+operator|(
 name|box
 operator|->
 name|x2
+operator|-
+literal|1
+operator|)
 operator|<<
 literal|16
 operator|)
@@ -169,9 +153,13 @@ name|pitch
 argument_list|,
 name|MGA_YBOT
 argument_list|,
+operator|(
 name|box
 operator|->
 name|y2
+operator|-
+literal|1
+operator|)
 operator|*
 name|pitch
 argument_list|)
@@ -591,7 +579,7 @@ end_function
 
 begin_function
 specifier|static
-comment|/*__inline__*/
+name|__inline__
 name|void
 name|mga_g400_emit_tex0
 parameter_list|(
@@ -1073,7 +1061,7 @@ end_function
 
 begin_function
 specifier|static
-comment|/*__inline__*/
+name|__inline__
 name|void
 name|mga_g400_emit_pipe
 parameter_list|(
@@ -3898,6 +3886,7 @@ comment|/* ================================================================  *  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mga_dma_clear
 parameter_list|(
@@ -3938,6 +3927,7 @@ name|clear
 argument_list|,
 operator|(
 name|drm_mga_clear_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -3991,6 +3981,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mga_dma_swap
 parameter_list|(
@@ -4062,6 +4053,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mga_dma_vertex
 parameter_list|(
@@ -4110,6 +4102,7 @@ name|vertex
 argument_list|,
 operator|(
 name|drm_mga_vertex_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -4244,6 +4237,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mga_dma_indices
 parameter_list|(
@@ -4292,6 +4286,7 @@ name|indices
 argument_list|,
 operator|(
 name|drm_mga_indices_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -4426,6 +4421,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mga_dma_iload
 parameter_list|(
@@ -4479,6 +4475,7 @@ name|iload
 argument_list|,
 operator|(
 name|drm_mga_iload_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -4492,7 +4489,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if ( mga_do_wait_for_idle( dev_priv )< 0 ) { 		if ( MGA_DMA_DEBUG ) 			DRM_INFO( "%s: -EBUSY\n", __FUNCTION__ ); 		return DRM_ERR(EBUSY); 	}
+block|if (mga_do_wait_for_idle(dev_priv)< 0) { 		if (MGA_DMA_DEBUG) 			DRM_INFO("%s: -EBUSY\n", __FUNCTION__); 		return DRM_ERR(EBUSY); 	}
 endif|#
 directive|endif
 if|if
@@ -4600,6 +4597,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mga_dma_blit
 parameter_list|(
@@ -4645,6 +4643,7 @@ name|blit
 argument_list|,
 operator|(
 name|drm_mga_blit_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -4719,6 +4718,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mga_getparam
 parameter_list|(
@@ -4767,6 +4767,7 @@ name|param
 argument_list|,
 operator|(
 name|drm_mga_getparam_t
+name|__user
 operator|*
 operator|)
 name|data
@@ -4844,6 +4845,176 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|drm_ioctl_desc_t
+name|mga_ioctls
+index|[]
+init|=
+block|{
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_INIT
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_dma_init
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_FLUSH
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_dma_flush
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_RESET
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_dma_reset
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_SWAP
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_dma_swap
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_CLEAR
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_dma_clear
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_VERTEX
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_dma_vertex
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_INDICES
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_dma_indices
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_ILOAD
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_dma_iload
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_BLIT
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_dma_blit
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|DRM_IOCTL_NR
+argument_list|(
+name|DRM_MGA_GETPARAM
+argument_list|)
+index|]
+operator|=
+block|{
+name|mga_getparam
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mga_max_ioctl
+init|=
+name|DRM_ARRAY_SIZE
+argument_list|(
+name|mga_ioctls
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
