@@ -95,7 +95,18 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/*  * alq_open:  Creates a new queue  *  * Arguments:  *	alq	Storage for a pointer to the newly created queue.  *	file	The filename to open for logging.  *	size	The size of each entry in the queue.  *	count	The number of items in the buffer, this should be large enough  *		to store items over the period of a disk write.  * Returns:  *	error from open or 0 on success  */
+comment|/* Suggested mode for file creation. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALQ_DEFAULT_CMODE
+value|0600
+end_define
+
+begin_comment
+comment|/*  * alq_open:  Creates a new queue  *  * Arguments:  *	alq	Storage for a pointer to the newly created queue.  *	file	The filename to open for logging.  *	cred	Credential to authorize open and I/O with.  *	cmode	Creation mode for file, if new.  *	size	The size of each entry in the queue.  *	count	The number of items in the buffer, this should be large enough  *		to store items over the period of a disk write.  * Returns:  *	error from open or 0 on success  */
 end_comment
 
 begin_struct_decl
@@ -122,6 +133,9 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+parameter_list|,
+name|int
+name|cmode
 parameter_list|,
 name|int
 name|size

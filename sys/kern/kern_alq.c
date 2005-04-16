@@ -1447,6 +1447,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|int
+name|cmode
+parameter_list|,
+name|int
 name|size
 parameter_list|,
 name|int
@@ -1533,7 +1536,7 @@ argument_list|,
 operator|&
 name|flags
 argument_list|,
-literal|0
+name|cmode
 argument_list|,
 name|cred
 argument_list|,

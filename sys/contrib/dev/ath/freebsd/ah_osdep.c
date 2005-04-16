@@ -857,6 +857,8 @@ name|curthread
 operator|->
 name|td_ucred
 argument_list|,
+name|ALQ_DEFAULT_CMODE
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
