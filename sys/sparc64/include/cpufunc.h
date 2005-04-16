@@ -657,7 +657,7 @@ name|asi
 parameter_list|,
 name|val
 parameter_list|)
-value|do {					\ 	u_long s = intr_disable();					\ 	__asm __volatile("stxa %0, [%1] %2; membar #Sync"		\ 	    : : "r" (val), "r" (va), "n" (asi));			\ 	intr_restore(s);						\ } while (0)
+value|do {					\ 	u_long s;							\ 	s = intr_disable();						\ 	__asm __volatile("stxa %0, [%1] %2; membar #Sync"		\ 	    : : "r" (val), "r" (va), "n" (asi));			\ 	intr_restore(s);						\ } while (0)
 end_define
 
 begin_function_decl
