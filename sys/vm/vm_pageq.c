@@ -500,8 +500,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Skipping page with pa 0x%x\n"
+literal|"Skipping page with pa 0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pa
 argument_list|)
 expr_stmt|;
