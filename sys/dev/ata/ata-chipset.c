@@ -9220,7 +9220,7 @@ literal|"nVidia nForce4"
 block|}
 block|,
 block|{
-name|ATA_NFORCE4_S1
+name|ATA_NFORCE4_S2
 block|,
 literal|0
 block|,
