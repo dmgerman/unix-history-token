@@ -516,6 +516,28 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* Print an error if a non-root user attemps to run the tests. */
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Error!  Only root may run this utility\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EXIT_FAILURE
+operator|)
+return|;
+block|}
 comment|/* 	 * We can test some parts of the library without the MAC Framework 	 * and policy loaded, so run those tests before calling 	 * mac_is_present(). 	 */
 name|test_libugidfw_strings
 argument_list|()
