@@ -4341,7 +4341,7 @@ operator|&=
 operator|~
 name|ZEROPAD
 expr_stmt|;
-comment|/*- 			 * ``The result of converting a zero value with an 			 * explicit precision of zero is no characters.'' 			 *	-- ANSI X3J11 			 */
+comment|/*- 			 * ``The result of converting a zero value with an 			 * explicit precision of zero is no characters.'' 			 *	-- ANSI X3J11 			 * 			 * ``The C Standard is clear enough as is.  The call 			 * printf("%#.0o", 0) should print 0.'' 			 *	-- Defect Report #151 			 */
 name|cp
 operator|=
 name|buf
@@ -4364,6 +4364,16 @@ operator|||
 name|prec
 operator|!=
 literal|0
+operator|||
+operator|(
+name|flags
+operator|&
+name|ALT
+operator|&&
+name|base
+operator|==
+literal|8
+operator|)
 condition|)
 name|cp
 operator|=
@@ -4402,6 +4412,16 @@ operator|||
 name|prec
 operator|!=
 literal|0
+operator|||
+operator|(
+name|flags
+operator|&
+name|ALT
+operator|&&
+name|base
+operator|==
+literal|8
+operator|)
 condition|)
 name|cp
 operator|=
