@@ -3080,6 +3080,14 @@ name|struct
 name|mtx
 name|xl_mtx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|int
+name|rxcycles
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
