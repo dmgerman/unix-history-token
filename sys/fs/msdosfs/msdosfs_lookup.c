@@ -1105,31 +1105,13 @@ name|EJUSTRETURN
 operator|)
 return|;
 block|}
-comment|/* 	 * Insert name into cache (as non-existent) if appropriate. 	 */
-if|if
-condition|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|MAKEENTRY
-operator|)
-operator|&&
-name|nameiop
-operator|!=
-name|CREATE
-condition|)
-name|cache_enter
-argument_list|(
-name|vdp
-argument_list|,
-operator|*
-name|vpp
-argument_list|,
-name|cnp
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * Insert name into cache (as non-existent) if appropriate. 	 * 	 * XXX Negative caching is broken for msdosfs because the name 	 * cache doesn't understand peculiarities such as case insensitivity 	 * and 8.3 filenames.  Hence, it may not invalidate all negative 	 * entries if a file with this name is later created. 	 */
+block|if ((cnp->cn_flags& MAKEENTRY)&& nameiop != CREATE) 		cache_enter(vdp, *vpp, cnp);
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOENT
