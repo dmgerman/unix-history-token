@@ -1126,7 +1126,7 @@ parameter_list|(
 name|component
 parameter_list|)
 define|\
-value|SYSINIT(__net_warn_not_mpsafe_ ## __FILE__,			\ 	    SI_SUB_SETTINGS, SI_ORDER_SECOND, net_warn_not_mpsafe, component);
+value|SYSINIT(__CONCAT(__net_warn_not_mpsafe_, __LINE__),		\ 	    SI_SUB_SETTINGS, SI_ORDER_SECOND, net_warn_not_mpsafe, component);
 end_define
 
 begin_struct
