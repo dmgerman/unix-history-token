@@ -390,7 +390,7 @@ name|char
 name|smp_header_thr
 index|[]
 init|=
-literal|"  PID %-*.*s   THR PRI NICE   SIZE    RES STATE  C   TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s  THR PRI NICE   SIZE    RES STATE  C   TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,7 +419,7 @@ name|char
 name|up_header_thr
 index|[]
 init|=
-literal|"  PID %-*.*s   THR PRI NICE   SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s  THR PRI NICE   SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -3043,7 +3043,7 @@ name|proc_fmt
 decl_stmt|,
 name|thr_buf
 index|[
-literal|7
+literal|6
 index|]
 decl_stmt|;
 comment|/* find and remember the next proc structure */
