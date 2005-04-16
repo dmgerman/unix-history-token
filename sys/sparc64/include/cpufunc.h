@@ -580,6 +580,22 @@ parameter_list|)
 value|do {					\ 	__asm __volatile("wrpr %0, %1, %%" #name			\ 	    : : "r" (val), "rI" (xor));					\ } while (0)
 end_define
 
+begin_comment
+comment|/*  * Macro intended to be used instead of wr(asr23, val, xor) for writing to  * the TICK_CMPR register in order to avoid a bug in BlackBird CPUs that  * can cause these writes to fail under certain condidtions which in turn  * causes the hardclock to stop. The workaround is to perform the write  * at the beginning of an I-Cache line directly followed by a dummy read.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wrtickcmpr
+parameter_list|(
+name|val
+parameter_list|,
+name|xor
+parameter_list|)
+value|({						\ 	__asm __volatile(						\ 	"	ba,pt	%%xcc, 1f ;		"			\ 	"	 nop	 ;			"			\ 	"	.align	64 ;			"			\ 	"1:	wr	%0, %1, %%asr23 ;	"			\ 	"	rd	%%asr23, %%g0 ;		"			\ 	: : "r" (val), "rI" (xor));					\ })
+end_define
+
 begin_function
 specifier|static
 name|__inline

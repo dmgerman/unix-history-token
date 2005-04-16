@@ -15,18 +15,6 @@ directive|define
 name|_MACHINE_TICK_H_
 end_define
 
-begin_typedef
-typedef|typedef
-name|void
-name|tick_func_t
-parameter_list|(
-name|struct
-name|clockframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_function_decl
 name|void
 name|tick_init
@@ -41,32 +29,10 @@ begin_function_decl
 name|void
 name|tick_start
 parameter_list|(
-name|tick_func_t
-modifier|*
-name|func
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_function_decl
-name|void
-name|tick_start_ap
-parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -76,12 +42,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|tick_func_t
-name|tick_hardclock
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
