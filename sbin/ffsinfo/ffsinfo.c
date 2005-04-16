@@ -429,26 +429,8 @@ literal|2
 expr_stmt|;
 name|out_file
 operator|=
-name|strdup
-argument_list|(
-literal|"/var/tmp/ffsinfo"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|out_file
-operator|==
 name|NULL
-condition|)
-block|{
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"strdup failed"
-argument_list|)
 expr_stmt|;
-block|}
 while|while
 condition|(
 operator|(
@@ -608,6 +590,19 @@ name|device
 operator|=
 operator|*
 name|argv
+expr_stmt|;
+if|if
+condition|(
+name|out_file
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"out_file not specified"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now we try to guess the (raw)device name. 	 */
 if|if
