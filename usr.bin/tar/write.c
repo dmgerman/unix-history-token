@@ -662,7 +662,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|write_heirarchy
+name|write_hierarchy
 parameter_list|(
 name|struct
 name|bsdtar
@@ -1878,7 +1878,7 @@ condition|)
 break|break;
 block|}
 else|else
-name|write_heirarchy
+name|write_hierarchy
 argument_list|(
 name|bsdtar
 argument_list|,
@@ -2045,7 +2045,7 @@ name|bsdtar
 argument_list|)
 expr_stmt|;
 comment|/* Handle a deferred -C */
-name|write_heirarchy
+name|write_hierarchy
 argument_list|(
 name|bsdtar
 argument_list|,
@@ -2432,13 +2432,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add the file or dir heirarchy named by 'path' to the archive  */
+comment|/*  * Add the file or dir hierarchy named by 'path' to the archive  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|write_heirarchy
+name|write_hierarchy
 parameter_list|(
 name|struct
 name|bsdtar
@@ -3131,7 +3131,7 @@ name|bsdtar
 argument_list|,
 literal|0
 argument_list|,
-literal|"%s: Heirarchy traversal error %d\n"
+literal|"%s: Hierarchy traversal error %d\n"
 argument_list|,
 name|ftsent
 operator|->
@@ -3274,92 +3274,6 @@ operator|=
 name|archive_entry_new
 argument_list|()
 expr_stmt|;
-comment|/* Strip redundant "./" from start of filename. */
-if|if
-condition|(
-name|pathname
-operator|!=
-name|NULL
-operator|&&
-name|pathname
-index|[
-literal|0
-index|]
-operator|==
-literal|'.'
-operator|&&
-name|pathname
-index|[
-literal|1
-index|]
-operator|==
-literal|'/'
-condition|)
-block|{
-name|pathname
-operator|+=
-literal|2
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|pathname
-operator|==
-literal|'\0'
-condition|)
-comment|/* This is the "./" directory. */
-goto|goto
-name|cleanup
-goto|;
-comment|/* Don't archive it ever. */
-block|}
-comment|/* Strip leading '/' unless user has asked us not to. */
-if|if
-condition|(
-name|pathname
-operator|&&
-name|pathname
-index|[
-literal|0
-index|]
-operator|==
-literal|'/'
-operator|&&
-operator|!
-name|bsdtar
-operator|->
-name|option_absolute_paths
-condition|)
-block|{
-comment|/* Generate a warning the first time this happens. */
-if|if
-condition|(
-operator|!
-name|bsdtar
-operator|->
-name|warned_lead_slash
-condition|)
-block|{
-name|bsdtar_warnc
-argument_list|(
-name|bsdtar
-argument_list|,
-literal|0
-argument_list|,
-literal|"Removing leading '/' from member names"
-argument_list|)
-expr_stmt|;
-name|bsdtar
-operator|->
-name|warned_lead_slash
-operator|=
-literal|1
-expr_stmt|;
-block|}
-name|pathname
-operator|++
-expr_stmt|;
-block|}
 name|archive_entry_set_pathname
 argument_list|(
 name|entry
@@ -3367,6 +3281,19 @@ argument_list|,
 name|pathname
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Rewrite the pathname to be archived.  If rewrite 	 * fails, skip the entry. 	 */
+if|if
+condition|(
+name|edit_pathname
+argument_list|(
+name|bsdtar
+argument_list|,
+name|entry
+argument_list|)
+condition|)
+goto|goto
+name|abort
+goto|;
 if|if
 condition|(
 operator|!
@@ -3820,6 +3747,21 @@ name|cleanup
 label|:
 if|if
 condition|(
+name|bsdtar
+operator|->
+name|verbose
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|abort
+label|:
+if|if
+condition|(
 name|fd
 operator|>=
 literal|0
@@ -3838,19 +3780,6 @@ condition|)
 name|archive_entry_free
 argument_list|(
 name|entry
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bsdtar
-operator|->
-name|verbose
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

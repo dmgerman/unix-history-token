@@ -323,6 +323,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|edit_pathname
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|exclude
 parameter_list|(
 name|struct
