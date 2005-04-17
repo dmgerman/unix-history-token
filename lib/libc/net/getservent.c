@@ -211,6 +211,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|YP
 if|if
 condition|(
 name|sed
@@ -232,6 +235,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1047,6 +1052,9 @@ name|stayopen
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|YP
 name|sed
 operator|->
 name|stepping_yp
@@ -1059,6 +1067,8 @@ name|yp_domain
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
