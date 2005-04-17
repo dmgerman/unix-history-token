@@ -1949,6 +1949,26 @@ name|name
 operator|+=
 literal|2
 expr_stmt|;
+comment|/* Strip redundant leading '/' characters. */
+while|while
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+operator|&&
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+name|name
+operator|++
+expr_stmt|;
 comment|/* Strip leading '/' unless user has asked us not to. */
 if|if
 condition|(
@@ -1993,6 +2013,7 @@ block|}
 name|name
 operator|++
 expr_stmt|;
+comment|/* Special case: Stripping leading '/' from "/" yields ".". */
 if|if
 condition|(
 operator|*
@@ -2000,7 +2021,6 @@ name|name
 operator|==
 literal|'\0'
 condition|)
-comment|/* Strip '/' from "/" yields "." */
 name|name
 operator|=
 literal|"."
