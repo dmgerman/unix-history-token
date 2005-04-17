@@ -1113,19 +1113,6 @@ define|\
 value|((o)->nd_eoff>= (n)->nd_off&& \ 		 !bcmp((caddr_t)&(o)->nd_fh, (caddr_t)&(n)->nd_fh, NFSX_V3FH))
 end_define
 
-begin_define
-define|#
-directive|define
-name|NFSW_SAMECRED
-parameter_list|(
-name|o
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|(!bcmp((caddr_t)&(o)->nd_cr, (caddr_t)&(n)->nd_cr, \ 		sizeof (struct ucred)))
-end_define
-
 begin_comment
 comment|/*  * Defines for WebNFS  */
 end_comment
