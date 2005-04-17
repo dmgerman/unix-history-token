@@ -283,7 +283,7 @@ condition|(
 operator|(
 name|sd
 operator|=
-name|_servdata_init
+name|__servdata_init
 argument_list|()
 operator|)
 operator|==

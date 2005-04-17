@@ -304,7 +304,7 @@ begin_function
 name|struct
 name|servdata
 modifier|*
-name|_servdata_init
+name|__servdata_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1539,7 +1539,7 @@ condition|(
 operator|(
 name|sd
 operator|=
-name|_servdata_init
+name|__servdata_init
 argument_list|()
 operator|)
 operator|==
@@ -1576,7 +1576,7 @@ condition|(
 operator|(
 name|sd
 operator|=
-name|_servdata_init
+name|__servdata_init
 argument_list|()
 operator|)
 operator|==
@@ -1613,7 +1613,7 @@ condition|(
 operator|(
 name|sd
 operator|=
-name|_servdata_init
+name|__servdata_init
 argument_list|()
 operator|)
 operator|==

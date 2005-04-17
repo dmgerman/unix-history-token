@@ -112,42 +112,42 @@ begin_define
 define|#
 directive|define
 name|endservent_r
-value|_endservent_r
+value|__endservent_r
 end_define
 
 begin_define
 define|#
 directive|define
 name|getservbyname_r
-value|_getservbyname_r
+value|__getservbyname_r
 end_define
 
 begin_define
 define|#
 directive|define
 name|getservbyport_r
-value|_getservbyport_r
+value|__getservbyport_r
 end_define
 
 begin_define
 define|#
 directive|define
 name|getservent_r
-value|_getservent_r
+value|__getservent_r
 end_define
 
 begin_define
 define|#
 directive|define
 name|setservent_r
-value|_setservent_r
+value|__setservent_r
 end_define
 
 begin_function_decl
 name|struct
 name|servdata
 modifier|*
-name|_servdata_init
+name|__servdata_init
 parameter_list|(
 name|void
 parameter_list|)
