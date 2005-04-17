@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2004 Scott Long  * All rights reserved.  *  * Redis
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: ncr53c9x.c,v 1.106 2003/04/16 18:53:50 petrov Exp $	*/
+comment|/*	$NetBSD: ncr53c9x.c,v 1.110 2003/11/02 11:07:45 wiz Exp $	*/
 end_comment
 
 begin_comment
@@ -535,7 +535,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Names for the NCR53c9x variants, correspnding to the variant tags  * in ncr53c9xvar.h.  */
+comment|/*  * Names for the NCR53c9x variants, corresponding to the variant tags  * in ncr53c9xvar.h.  */
 end_comment
 
 begin_decl_stmt
@@ -1138,7 +1138,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"Cannot allocate ecb array!\n"
+literal|"cannot allocate ECB array\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4542,7 +4542,7 @@ comment|/*  * LOW LEVEL SCSI UTILITIES  */
 end_comment
 
 begin_comment
-comment|/*  * Schedule a scsi operation.  This has now been pulled out of the interrupt  * handler so that we may call it from ncr53c9x_scsipi_request and  * ncr53c9x_done.  This may save us an unecessary interrupt just to get  * things going.  Should only be called when state == NCR_IDLE and at bio pl.  */
+comment|/*  * Schedule a scsi operation.  This has now been pulled out of the interrupt  * handler so that we may call it from ncr53c9x_scsipi_request and  * ncr53c9x_done.  This may save us an unnecessary interrupt just to get  * things going.  Should only be called when state == NCR_IDLE and at bio pl.  */
 end_comment
 
 begin_function
@@ -8990,7 +8990,7 @@ operator|==
 name|NCR_VARIANT_FAS366
 condition|)
 block|{
-comment|/*	 		 * XXX fifo size 		 */
+comment|/* 		 * XXX fifo size 		 */
 name|ncr53c9x_flushfifo
 argument_list|(
 name|sc
@@ -10235,7 +10235,7 @@ operator|&
 name|NCRFIFO_FF
 operator|)
 decl_stmt|;
-comment|/* 			 * Things are seriously fucked up. 			 * Pull the brakes, i.e. reset 			 */
+comment|/* 			 * Things are seriously screwed up. 			 * Pull the brakes, i.e. reset 			 */
 name|device_printf
 argument_list|(
 name|sc
@@ -10283,7 +10283,6 @@ else|else
 goto|goto
 name|msgin
 goto|;
-break|break;
 case|case
 name|NCR_IDLE
 case|:
@@ -10406,7 +10405,7 @@ operator|!=
 name|MESSAGE_IN_PHASE
 condition|)
 block|{
-comment|/* 				 * Things are seriously fucked up. 				 * Pull the brakes, i.e. reset 				 */
+comment|/* 				 * Things are seriously screwed up. 				 * Pull the brakes, i.e. reset 				 */
 name|device_printf
 argument_list|(
 name|sc
@@ -11639,7 +11638,6 @@ goto|goto
 name|shortcut
 goto|;
 comment|/* i.e. expect data to be ready */
-break|break;
 case|case
 name|COMMAND_PHASE
 case|:
@@ -12028,7 +12026,6 @@ goto|goto
 name|shortcut
 goto|;
 comment|/* i.e. expect status results soon */
-break|break;
 case|case
 name|INVALID_PHASE
 case|:

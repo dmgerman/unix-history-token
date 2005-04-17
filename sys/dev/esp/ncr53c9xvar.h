@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ncr53c9xvar.h,v 1.41 2003/02/04 20:05:11 pk Exp $	*/
+comment|/*	$NetBSD: ncr53c9xvar.h,v 1.46 2005/02/04 02:10:36 perry Exp $	*/
 end_comment
 
 begin_comment
@@ -993,6 +993,7 @@ name|callout
 name|sc_watchdog
 decl_stmt|;
 comment|/* periodic timer */
+specifier|const
 name|struct
 name|ncr53c9x_glue
 modifier|*
@@ -1799,7 +1800,7 @@ value|(*(sc)->sc_glue->gl_dma_isactive)((sc))
 end_define
 
 begin_comment
-comment|/*  * Macro to convert the chip register Clock Per Byte value to  * Sunchronous Transfer Period.  */
+comment|/*  * Macro to convert the chip register Clock Per Byte value to  * Synchronous Transfer Period.  */
 end_comment
 
 begin_define

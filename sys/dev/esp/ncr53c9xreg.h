@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ncr53c9xreg.h,v 1.11 2003/02/21 17:14:05 tsutsui Exp $	*/
+comment|/*	$NetBSD: ncr53c9xreg.h,v 1.14 2005/02/27 00:27:02 perry Exp $	*/
 end_comment
 
 begin_comment
@@ -1408,7 +1408,7 @@ comment|/*	Active negation		*/
 end_comment
 
 begin_comment
-comment|/*    The following registers are only on the ESP406/FAS408.  The    documentation refers to them as "Control Register Set #1".    These are the registers that are visible when bit 7 of     register 0x0d is set.  This bit is common to both register sets. */
+comment|/*    The following registers are only on the ESP406/FAS408.  The    documentation refers to them as "Control Register Set #1".    These are the registers that are visible when bit 7 of    register 0x0d is set.  This bit is common to both register sets. */
 end_comment
 
 begin_define
@@ -1760,7 +1760,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/*	SCSI Interupt Enable	*/
+comment|/*	SCSI Interrupt Enable	*/
 end_comment
 
 begin_define
@@ -1782,7 +1782,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*	ATA Interupt Enable	*/
+comment|/*	ATA Interrupt Enable	*/
 end_comment
 
 begin_define
