@@ -10871,6 +10871,20 @@ literal|"Promise PDC40518"
 block|}
 block|,
 block|{
+name|ATA_PDC40519
+block|,
+literal|0
+block|,
+name|PRMIO
+block|,
+name|PRSATA2
+block|,
+name|ATA_SA150
+block|,
+literal|"Promise PDC40519"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0

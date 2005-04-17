@@ -963,6 +963,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_PDC40519
+value|0x3519105a
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_PDC20617
 value|0x6617105a
 end_define
