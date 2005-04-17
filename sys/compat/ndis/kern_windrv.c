@@ -113,6 +113,23 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/segments.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -2136,12 +2153,43 @@ parameter_list|)
 value|(((x)<< 3))
 end_define
 
+begin_comment
+comment|/*  * FreeBSD 6.0 and later has a special GDT segment reserved  * specifically for us, so if GNDIS_SEL is defined, use that.  * If not, use GTGATE_SEL, which is uninitialized and infrequently  * used.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNDIS_SEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|FREEBSD_EMPTYSEL
-value|7
+value|GNDIS_SEL
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FREEBSD_EMPTYSEL
+value|GTGATE_SEL
+end_define
+
+begin_comment
+comment|/* slot 7 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The meanings of various bits in a descriptor vary a little  * depending on whether the descriptor will be used as a  * code, data or system descriptor. (And that in turn depends  * on which segment register selects the descriptor.)  * We're only trying to create a data segment, so the definitions  * below are the ones that apply to a data descriptor.  */
