@@ -8,11 +8,25 @@ comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of Cali
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1999 Eduardo Horvath  * Copyright (c) 2002 by Thomas Moestl<tmm@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)sbus.c	8.1 (Berkeley) 6/11/93  *	from: NetBSD: sbus.c,v 1.46 2001/10/07 20:30:41 eeh Exp  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999 Eduardo Horvath  * Copyright (c) 2002 by Thomas Moestl<tmm@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)sbus.c	8.1 (Berkeley) 6/11/93  *	from: NetBSD: sbus.c,v 1.46 2001/10/07 20:30:41 eeh Exp  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * Sbus support.  */
+comment|/*  * SBus support.  */
 end_comment
 
 begin_include
@@ -102,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr_machdep.h>
 end_include
 
@@ -158,67 +166,6 @@ include|#
 directive|include
 file|<sparc64/sbus/sbusvar.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SDB_DVMA
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDB_INTR
-value|0x2
-end_define
-
-begin_decl_stmt
-name|int
-name|sbus_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|l
-parameter_list|,
-name|s
-parameter_list|)
-value|do { if (sbus_debug& l) printf s; } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|l
-parameter_list|,
-name|s
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -343,12 +290,7 @@ decl_stmt|;
 name|int
 name|sc_burst
 decl_stmt|;
-comment|/* burst transfer sizes supported */
-name|int
-modifier|*
-name|sc_intr_compat
-decl_stmt|;
-comment|/* `intr' property to sbus compat */
+comment|/* burst transfer sizes supp. */
 name|struct
 name|resource
 modifier|*
@@ -357,12 +299,12 @@ decl_stmt|;
 name|int
 name|sc_ign
 decl_stmt|;
-comment|/* Interrupt group number for this sysio */
+comment|/* IGN for this sysio */
 name|struct
 name|iommu_state
 name|sc_is
 decl_stmt|;
-comment|/* IOMMU state, see iommureg.h */
+comment|/* IOMMU state (iommuvar.h) */
 name|struct
 name|resource
 modifier|*
@@ -412,7 +354,7 @@ name|void
 modifier|*
 name|scl_cookie
 decl_stmt|;
-comment|/* interrupt cookie of parent bus */
+comment|/* parent bus int. cookie */
 block|}
 struct|;
 end_struct
@@ -445,211 +387,82 @@ define|\
 value|bus_space_write_8((sc)->sc_bustag, (sc)->sc_bushandle, (off), (v))
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_probe_t
 name|sbus_probe
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|bus_print_child_t
 name|sbus_print_child
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|bus_probe_nomatch_t
 name|sbus_probe_nomatch
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|bus_read_ivar_t
 name|sbus_read_ivar
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|u_long
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|struct
-name|resource_list
-modifier|*
+name|bus_get_resource_list_t
 name|sbus_get_resource_list
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|bus_setup_intr_t
 name|sbus_setup_intr
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|struct
-name|resource
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|driver_intr_t
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|bus_teardown_intr_t
 name|sbus_teardown_intr
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|struct
-name|resource
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|struct
-name|resource
-modifier|*
+name|bus_alloc_resource_t
 name|sbus_alloc_resource
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-name|sbus_activate_resource
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|resource
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|sbus_deactivate_resource
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|resource
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
+name|bus_release_resource_t
 name|sbus_release_resource
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|resource
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bus_activate_resource_t
+name|sbus_activate_resource
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bus_deactivate_resource_t
+name|sbus_deactivate_resource
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -982,11 +795,6 @@ name|struct
 name|sbus_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|struct
 name|sbus_devinfo
@@ -1026,11 +834,6 @@ name|phandle_t
 name|child
 decl_stmt|,
 name|node
-init|=
-name|nexus_get_node
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|u_int64_t
 name|mr
@@ -1096,6 +899,20 @@ argument_list|,
 literal|"U2S UPA-SBus bridge"
 argument_list|)
 expr_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|node
+operator|=
+name|nexus_get_node
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1135,7 +952,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"sbus_probe: error getting reg property"
+literal|"%s: error getting reg property"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1149,7 +968,9 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: bogus properties"
+literal|"%s: bogus properties"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|phys
@@ -1227,7 +1048,9 @@ name|phys
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: can't allocate device memory"
+literal|"%s: cannot allocate device memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1274,7 +1097,9 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: cannot get IGN"
+literal|"%s: cannot get IGN"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1383,10 +1208,7 @@ name|panic
 argument_list|(
 literal|"%s: error getting ranges property"
 argument_list|,
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1428,7 +1250,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: could not allocate rmans"
+literal|"%s: cannot allocate rmans"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Preallocate all space that the SBus bridge decodes, so that nothing 	 * else gets in the way; set up rmans etc. 	 */
@@ -1568,7 +1392,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: could not allocate decoded range"
+literal|"%s: cannot allocate decoded range"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1649,7 +1475,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: failed to set up memory rman"
+literal|"%s: failed to set up memory rman"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1844,11 +1672,13 @@ if|if
 condition|(
 name|name
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: couldn't malloc iommu name"
+literal|"%s: cannot malloc iommu name"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -1935,7 +1765,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"bus_dma_tag_create failed"
+literal|"%s: bus_dma_tag_create failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Customize the tag. */
@@ -1966,7 +1798,7 @@ name|sc
 operator|->
 name|sc_cdmatag
 expr_stmt|;
-comment|/* Enable the over-temperature and power-fail intrrupts. */
+comment|/* Enable the over-temperature and power-fail interrupts. */
 name|rid
 operator|=
 literal|0
@@ -2017,7 +1849,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: failed to get temperature interrupt"
+literal|"%s: failed to get temperature interrupt"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bus_setup_intr
@@ -2109,7 +1943,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: failed to get power fail interrupt"
+literal|"%s: failed to get power fail interrupt"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bus_setup_intr
@@ -2268,7 +2104,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_probe: device_add_child failed"
+literal|"%s: device_add_child failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|device_set_ivars
@@ -2580,7 +2418,9 @@ name|rslot
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_setup_dinfo: multiple slots"
+literal|"%s: multiple slots"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|slot
@@ -2632,7 +2472,7 @@ name|sdi_slot
 operator|=
 name|slot
 expr_stmt|;
-comment|/* 	 * The `interrupts' property contains the Sbus interrupt level. 	 */
+comment|/* 	 * The `interrupts' property contains the SBus interrupt level. 	 */
 name|nintr
 operator|=
 name|OF_getprop_alloc
@@ -2685,7 +2525,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 			 * Sbus card devices need the slot number encoded into 			 * the vector as this is generally not done. 			 */
+comment|/* 			 * SBus card devices need the slot number encoded into 			 * the vector as this is generally not done. 			 */
 if|if
 condition|(
 operator|(
@@ -3034,17 +2874,19 @@ name|struct
 name|sbus_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|struct
 name|sbus_devinfo
 modifier|*
 name|dinfo
 decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3277,11 +3119,6 @@ argument_list|)
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|sbus_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -3348,7 +3185,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * We're in an SBUS slot, register the map and clear 		 * intr registers. 		 */
+comment|/* 		 * We're in an SBus slot, register the map and clear 		 * intr registers. 		 */
 name|slot
 operator|=
 name|INTSLOT
@@ -3474,7 +3311,9 @@ block|}
 else|else
 name|panic
 argument_list|(
-literal|"sbus_setup_intr: IRQ not found!"
+literal|"%s: IRQ not found!"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -3658,7 +3497,7 @@ operator|->
 name|scl_cookie
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't disable the interrupt for now, so that stray interupts get 	 * detected... 	 */
+comment|/* 	 * Don't disable the interrupt for now, so that stray interrupts get 	 * detected... 	 */
 if|if
 condition|(
 name|error
@@ -3761,7 +3600,11 @@ name|i
 decl_stmt|;
 name|int
 name|isdefault
-init|=
+decl_stmt|,
+name|needactivate
+decl_stmt|;
+name|isdefault
+operator|=
 operator|(
 name|start
 operator|==
@@ -3772,14 +3615,13 @@ operator|==
 operator|~
 literal|0UL
 operator|)
-decl_stmt|;
-name|int
+expr_stmt|;
 name|needactivate
-init|=
+operator|=
 name|flags
 operator|&
 name|RF_ACTIVE
-decl_stmt|;
+expr_stmt|;
 name|sc
 operator|=
 operator|(
@@ -3839,7 +3681,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_alloc_resource: resource entry is busy"
+literal|"%s: resource entry is busy"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -4453,7 +4297,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_release_resource: can't find resource"
+literal|"%s: cannot find resource"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -4466,7 +4312,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_release_resource: resource entry is not busy"
+literal|"%s: resource entry is not busy"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|rle
@@ -4579,16 +4427,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sbus_alloc_bustag: out of memory"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sbt
+literal|"%s: out of memory"
 argument_list|,
-sizeof|sizeof
-expr|*
-name|sbt
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sbt
@@ -4620,6 +4461,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -4655,6 +4497,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -4690,6 +4533,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -4759,6 +4603,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
