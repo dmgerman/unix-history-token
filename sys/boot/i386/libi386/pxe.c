@@ -1541,6 +1541,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|setenv
+argument_list|(
+literal|"dhcp.host-name"
+argument_list|,
+name|hostname
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|pxe_opens
