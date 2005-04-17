@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: lsi64854var.h,v 1.4 2001/03/29 02:58:39 petrov Exp $ */
+comment|/*	$NetBSD: lsi64854var.h,v 1.6 2005/02/04 02:10:36 perry Exp $ */
 end_comment
 
 begin_comment
@@ -17,11 +17,6 @@ name|lsi64854_softc
 block|{
 name|device_t
 name|sc_dev
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|dv_name
 decl_stmt|;
 name|int
 name|sc_rid

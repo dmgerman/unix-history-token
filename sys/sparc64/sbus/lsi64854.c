@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2004 Scott Long  * All rights reserved.  *  * Redis
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: lsi64854.c,v 1.22 2002/10/01 07:07:03 petrov Exp $ */
+comment|/*	$NetBSD: lsi64854.c,v 1.25 2005/02/27 00:27:02 perry Exp $ */
 end_comment
 
 begin_comment
@@ -269,17 +269,6 @@ block|{
 name|uint32_t
 name|csr
 decl_stmt|;
-name|sc
-operator|->
-name|dv_name
-operator|=
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-expr_stmt|;
 comment|/* Indirect functions */
 switch|switch
 condition|(
@@ -325,13 +314,13 @@ name|lsi64854_setup_pp
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unknown channel\n"
-argument_list|,
 name|sc
 operator|->
-name|dv_name
+name|sc_dev
+argument_list|,
+literal|"unknown channel\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -355,7 +344,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* algnment, boundary */
+comment|/* alignment, boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
@@ -391,13 +380,13 @@ name|sc_buffer_dmat
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: can't allocate buffer DMA tag\n"
-argument_list|,
 name|sc
 operator|->
-name|dv_name
+name|sc_dev
+argument_list|,
+literal|"cannot allocate buffer DMA tag\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -421,13 +410,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: DMA map create failed\n"
-argument_list|,
 name|sc
 operator|->
-name|dv_name
+name|sc_dev
+argument_list|,
+literal|"DMA map create failed\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -455,12 +444,14 @@ name|sc_rev
 operator|==
 name|DMAREV_HME
 condition|)
-block|{
 return|return;
-block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|": DMA rev "
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"DMA rev. "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -637,7 +628,9 @@ argument_list|(
 name|LDB_ANY
 argument_list|,
 operator|(
-literal|"lsi64854_reset: csr 0x%x\n"
+literal|"%s: csr 0x%x\n"
+operator|,
+name|__func__
 operator|,
 name|csr
 operator|)
@@ -778,12 +771,10 @@ name|sc_burst
 operator|==
 literal|32
 condition|)
-block|{
 name|csr
 operator||=
 name|L64854_BURST_32
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -793,19 +784,15 @@ name|sc_burst
 operator|==
 literal|16
 condition|)
-block|{
 name|csr
 operator||=
 name|L64854_BURST_16
 expr_stmt|;
-block|}
 else|else
-block|{
 name|csr
 operator||=
 name|L64854_BURST_0
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|DMAREV_ESC
@@ -823,13 +810,11 @@ name|sc_burst
 operator|==
 literal|32
 condition|)
-block|{
 name|csr
 operator|&=
 operator|~
 name|D_ESC_BURST
 expr_stmt|;
-block|}
 else|else
 name|csr
 operator||=
@@ -888,7 +873,9 @@ argument_list|(
 name|LDB_ANY
 argument_list|,
 operator|(
-literal|"lsi64854_reset: done, csr 0x%x\n"
+literal|"%s: done, csr 0x%x\n"
+operator|,
+name|__func__
 operator|,
 name|csr
 operator|)
@@ -941,9 +928,7 @@ name|panic
 argument_list|(
 literal|"%s: cannot map %d segments\n"
 argument_list|,
-name|sc
-operator|->
-name|dv_name
+name|__func__
 argument_list|,
 name|nseg
 argument_list|)
@@ -1071,7 +1056,7 @@ name|sc
 operator|->
 name|sc_dmasize
 operator|=
-name|min
+name|ulmin
 argument_list|(
 operator|*
 name|dmasize
@@ -1093,7 +1078,9 @@ argument_list|(
 name|LDB_ANY
 argument_list|,
 operator|(
-literal|"dma_setup: dmasize = %ld\n"
+literal|"%s: dmasize=%ld\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|long
@@ -1104,7 +1091,7 @@ name|sc_dmasize
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX what length?  	 */
+comment|/* 	 * XXX what length? 	 */
 if|if
 condition|(
 name|sc
@@ -1158,7 +1145,6 @@ name|sc
 operator|->
 name|sc_dmasize
 condition|)
-block|{
 if|if
 condition|(
 name|bus_dmamap_load
@@ -1186,19 +1172,14 @@ name|sc
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
-literal|0
 condition|)
 name|panic
 argument_list|(
 literal|"%s: cannot allocate DVMA address"
 argument_list|,
-name|sc
-operator|->
-name|dv_name
+name|__func__
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
@@ -1298,7 +1279,6 @@ name|sc_rev
 operator|==
 name|DMAREV_HME
 condition|)
-block|{
 name|csr
 operator||=
 operator|(
@@ -1307,7 +1287,6 @@ operator||
 name|D_EN_DMA
 operator|)
 expr_stmt|;
-block|}
 name|L64854_SCSR
 argument_list|(
 name|sc
@@ -1372,11 +1351,9 @@ argument_list|(
 name|LDB_SCSI
 argument_list|,
 operator|(
-literal|"%s: dmaintr: addr 0x%x, csr %b\n"
+literal|"%s: addr 0x%x, csr %b\n"
 operator|,
-name|sc
-operator|->
-name|dv_name
+name|__func__
 operator|,
 name|bus_space_read_4
 argument_list|(
@@ -1408,13 +1385,13 @@ name|D_SLAVE_ERR
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: error: csr=%b\n"
-argument_list|,
 name|sc
 operator|->
-name|dv_name
+name|sc_dev
+argument_list|,
+literal|"error: csr=%b\n"
 argument_list|,
 name|csr
 argument_list|,
@@ -1459,7 +1436,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"dmaintr: DMA wasn't active"
+literal|"%s: DMA wasn't active"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|DMA_DRAIN
@@ -1503,7 +1482,9 @@ argument_list|(
 name|LDB_SCSI
 argument_list|,
 operator|(
-literal|"dmaintr: discarded %d bytes (tcl=%d, tcm=%d)\n"
+literal|"%s: discarded %d bytes (tcl=%d, tcm=%d)\n"
+operator|,
+name|__func__
 operator|,
 name|NCR_READ_REG
 argument_list|(
@@ -1540,7 +1521,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|resid
@@ -1580,7 +1563,9 @@ argument_list|(
 name|LDB_SCSI
 argument_list|,
 operator|(
-literal|"dmaintr: empty esp FIFO of %d "
+literal|"%s: empty esp FIFO of %d "
+operator|,
+name|__func__
 operator|,
 name|resid
 operator|)
@@ -1717,7 +1702,7 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * This situation can happen in perfectly normal operation 		 * if the ESP is reselected while using DMA to select 		 * another target.  As such, don't print the warning. 		 */
-block|printf("%s: xfer (%d)> req (%d)\n", sc->dv_name, trans, 		       sc->sc_dmasize);
+block|device_printf(sc->sc_dev, "xfer (%d)> req (%d)\n", trans, 		    sc->sc_dmasize);
 endif|#
 directive|endif
 name|trans
@@ -1732,7 +1717,9 @@ argument_list|(
 name|LDB_SCSI
 argument_list|,
 operator|(
-literal|"dmaintr: tcl=%d, tcm=%d, tch=%d; trans=%d, resid=%d\n"
+literal|"%s: tcl=%d, tcm=%d, tch=%d; trans=%d, resid=%d\n"
+operator|,
+name|__func__
 operator|,
 name|NCR_READ_REG
 argument_list|(
@@ -1775,7 +1762,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX */
-block|if (sc->sc_dmamap->dm_nsegs> 0) { 		bus_dmamap_sync(sc->sc_buffer_dmat, sc->sc_dmamap, 				(csr& D_WRITE) != 0 					? BUS_DMASYNC_POSTREAD 					: BUS_DMASYNC_POSTWRITE); 		bus_dmamap_unload(sc->sc_buffer_dmat, sc->sc_dmamap); 	}
+block|if (sc->sc_dmamap->dm_nsegs> 0) { 		bus_dmamap_sync(sc->sc_buffer_dmat, sc->sc_dmamap, 		    (csr& D_WRITE) != 0 ? BUS_DMASYNC_POSTREAD : 		    BUS_DMASYNC_POSTWRITE); 		bus_dmamap_unload(sc->sc_buffer_dmat, sc->sc_dmamap); 	}
 endif|#
 directive|endif
 operator|*
@@ -1796,13 +1783,15 @@ if|#
 directive|if
 literal|0
 comment|/* this is not normal operation just yet */
-block|if (*sc->sc_dmalen == 0 || 	    nsc->sc_phase != nsc->sc_prevphase) 		return 0;
+block|if (*sc->sc_dmalen == 0 || nsc->sc_phase != nsc->sc_prevphase) 		return (0);
 comment|/* and again */
-block|dma_start(sc, sc->sc_dmaaddr, sc->sc_dmalen, DMACSR(sc)& D_WRITE); 	return 1;
+block|dma_start(sc, sc->sc_dmaaddr, sc->sc_dmalen, DMACSR(sc)& D_WRITE); 	return (1);
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1874,13 +1863,13 @@ name|E_SLAVE_ERR
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: error: csr=%b\n"
-argument_list|,
 name|sc
 operator|->
-name|dv_name
+name|sc_dev
+argument_list|,
+literal|"error: csr=%b\n"
 argument_list|,
 name|csr
 argument_list|,
@@ -2030,9 +2019,7 @@ name|panic
 argument_list|(
 literal|"%s: cannot map %d segments\n"
 argument_list|,
-name|sc
-operator|->
-name|dv_name
+name|__func__
 argument_list|,
 name|nsegs
 argument_list|)
@@ -2160,9 +2147,7 @@ argument_list|,
 operator|(
 literal|"%s: pp start %ld@%p,%d\n"
 operator|,
-name|sc
-operator|->
-name|dv_name
+name|__func__
 operator|,
 operator|(
 name|long
@@ -2193,7 +2178,7 @@ name|sc
 operator|->
 name|sc_dmasize
 operator|=
-name|min
+name|ulmin
 argument_list|(
 operator|*
 name|dmasize
@@ -2215,7 +2200,9 @@ argument_list|(
 name|LDB_PP
 argument_list|,
 operator|(
-literal|"dma_setup_pp: dmasize = %ld\n"
+literal|"%s: dmasize=%ld\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|long
@@ -2233,7 +2220,6 @@ name|sc
 operator|->
 name|sc_dmasize
 condition|)
-block|{
 if|if
 condition|(
 name|bus_dmamap_load
@@ -2261,19 +2247,14 @@ name|sc
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
-literal|0
 condition|)
 name|panic
 argument_list|(
 literal|"%s: pp cannot allocate DVMA address"
 argument_list|,
-name|sc
-operator|->
-name|dv_name
+name|__func__
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Setup DMA control register */
 name|csr
 operator|=
@@ -2295,12 +2276,10 @@ name|sc_burst
 operator|==
 literal|32
 condition|)
-block|{
 name|csr
 operator||=
 name|L64854_BURST_32
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2310,19 +2289,15 @@ name|sc_burst
 operator|==
 literal|16
 condition|)
-block|{
 name|csr
 operator||=
 name|L64854_BURST_16
 expr_stmt|;
-block|}
 else|else
-block|{
 name|csr
 operator||=
 name|L64854_BURST_0
 expr_stmt|;
-block|}
 name|csr
 operator||=
 name|P_EN_DMA
@@ -2397,11 +2372,9 @@ argument_list|(
 name|LDB_PP
 argument_list|,
 operator|(
-literal|"%s: pp intr: addr 0x%x, csr %b\n"
+literal|"%s: addr 0x%x, csr %b\n"
 operator|,
-name|sc
-operator|->
-name|dv_name
+name|__func__
 operator|,
 name|bus_space_read_4
 argument_list|(
@@ -2415,6 +2388,8 @@ name|sc_regh
 argument_list|,
 name|L64854_REG_ADDR
 argument_list|)
+operator|,
+name|csr
 operator|,
 name|csr
 operator|,
@@ -2448,13 +2423,13 @@ argument_list|,
 name|L64854_REG_CNT
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: pp error: resid %d csr=%b\n"
-argument_list|,
 name|sc
 operator|->
-name|dv_name
+name|sc_dev
+argument_list|,
+literal|"error: resid %d csr=%b\n"
 argument_list|,
 name|resid
 argument_list|,
@@ -2564,15 +2539,13 @@ name|trans
 operator|<
 literal|0
 condition|)
-block|{
-comment|/* transferred< 0 ? */
+comment|/* transfered< 0? */
 name|trans
 operator|=
 name|sc
 operator|->
 name|sc_dmasize
 expr_stmt|;
-block|}
 operator|*
 name|sc
 operator|->
@@ -2591,7 +2564,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX */
-block|if (sc->sc_dmamap->dm_nsegs> 0) { 		bus_dmamap_sync(sc->sc_buffer_dmat, sc->sc_dmamap, 				(csr& D_WRITE) != 0 					? BUS_DMASYNC_POSTREAD 					: BUS_DMASYNC_POSTWRITE); 		bus_dmamap_unload(sc->sc_buffer_dmat, sc->sc_dmamap); 	}
+block|if (sc->sc_dmamap->dm_nsegs> 0) { 		bus_dmamap_sync(sc->sc_buffer_dmat, sc->sc_dmamap, 		    (csr& D_WRITE) != 0 ? BUS_DMASYNC_POSTREAD : 		    BUS_DMASYNC_POSTWRITE); 		bus_dmamap_unload(sc->sc_buffer_dmat, sc->sc_dmamap); 	}
 endif|#
 directive|endif
 return|return
