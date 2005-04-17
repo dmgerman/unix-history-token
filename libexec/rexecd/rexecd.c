@@ -278,7 +278,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 specifier|const
 name|char
@@ -496,7 +496,7 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|size_t
 name|maxcmdlen
 decl_stmt|;
 name|char
@@ -562,9 +562,6 @@ literal|1
 decl_stmt|;
 name|maxcmdlen
 operator|=
-operator|(
-name|int
-operator|)
 name|sysconf
 argument_list|(
 name|_SC_ARG_MAX
@@ -1844,7 +1841,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|size_t
 name|cnt
 parameter_list|,
 specifier|const
