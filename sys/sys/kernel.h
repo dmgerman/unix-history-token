@@ -791,37 +791,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|_TUNABLE_INT((path), (var), __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_TUNABLE_INT
-parameter_list|(
-name|path
-parameter_list|,
-name|var
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|__TUNABLE_INT((path), (var), line)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__TUNABLE_INT
-parameter_list|(
-name|path
-parameter_list|,
-name|var
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|static struct tunable_int __tunable_int_ ## line = {	\ 		path,						\ 		var,						\ 	};							\ 	SYSINIT(__Tunable_init_ ## line, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, \ 	     tunable_int_init,&__tunable_int_ ## line)
+value|static struct tunable_int __CONCAT(__tunable_int_, __LINE__) = { \ 		(path),						\ 		(var),						\ 	};							\ 	SYSINIT(__CONCAT(__Tunable_init_, __LINE__),		\ 	    SI_SUB_TUNABLES, SI_ORDER_MIDDLE, tunable_int_init,	\&__CONCAT(__tunable_int_, __LINE__))
 end_define
 
 begin_define
@@ -878,37 +848,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|_TUNABLE_LONG((path), (var), __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_TUNABLE_LONG
-parameter_list|(
-name|path
-parameter_list|,
-name|var
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|__TUNABLE_LONG((path), (var), line)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__TUNABLE_LONG
-parameter_list|(
-name|path
-parameter_list|,
-name|var
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|static struct tunable_long __tunable_long_ ## line = {	\ 		path,						\ 		var,						\ 	};							\ 	SYSINIT(__Tunable_init_ ## line, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, \ 	     tunable_long_init,&__tunable_long_ ## line)
+value|static struct tunable_long __CONCAT(__tunable_long_, __LINE__) = { \ 		(path),						\ 		(var),						\ 	};							\ 	SYSINIT(__CONCAT(__Tunable_init_, __LINE__),		\ 	    SI_SUB_TUNABLES, SI_ORDER_MIDDLE, tunable_long_init,\&__CONCAT(__tunable_long_, __LINE__))
 end_define
 
 begin_define
@@ -966,37 +906,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|_TUNABLE_ULONG((path), (var), __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_TUNABLE_ULONG
-parameter_list|(
-name|path
-parameter_list|,
-name|var
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|__TUNABLE_ULONG((path), (var), line)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__TUNABLE_ULONG
-parameter_list|(
-name|path
-parameter_list|,
-name|var
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|static struct tunable_ulong __tunable_ulong_ ## line = {\ 		path,						\ 		var,						\ 	};							\ 	SYSINIT(__Tunable_init_ ## line, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, \ 	     tunable_ulong_init,&__tunable_ulong_ ## line)
+value|static struct tunable_ulong __CONCAT(__tunable_ulong_, __LINE__) = { \ 		(path),						\ 		(var),						\ 	};							\ 	SYSINIT(__CONCAT(__Tunable_init_, __LINE__),		\ 	    SI_SUB_TUNABLES, SI_ORDER_MIDDLE, tunable_ulong_init, \&__CONCAT(__tunable_ulong_, __LINE__))
 end_define
 
 begin_define
@@ -1054,41 +964,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|_TUNABLE_STR((path), (var), (size), __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_TUNABLE_STR
-parameter_list|(
-name|path
-parameter_list|,
-name|var
-parameter_list|,
-name|size
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|__TUNABLE_STR((path), (var), (size), line)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__TUNABLE_STR
-parameter_list|(
-name|path
-parameter_list|,
-name|var
-parameter_list|,
-name|size
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|static struct tunable_str __tunable_str_ ## line = {	\ 		path,						\ 		var,						\ 		size,						\ 	};							\ 	SYSINIT(__Tunable_init_ ## line, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, \ 	     tunable_str_init,&__tunable_str_ ## line)
+value|static struct tunable_str __CONCAT(__tunable_str_, __LINE__) = { \ 		(path),						\ 		(var),						\ 		(size),						\ 	};							\ 	SYSINIT(__CONCAT(__Tunable_init_, __LINE__),		\ 	    SI_SUB_TUNABLES, SI_ORDER_MIDDLE, tunable_str_init,	\&__CONCAT(__tunable_str_, __LINE__))
 end_define
 
 begin_define
