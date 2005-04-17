@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2004 Scott Long  * All rights reserved.  *  * Redis
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: esp_sbus.c,v 1.27 2002/12/10 13:44:47 pk Exp $	*/
+comment|/*	$NetBSD: esp_sbus.c,v 1.31 2005/02/27 00:27:48 perry Exp $	*/
 end_comment
 
 begin_comment
@@ -64,18 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -89,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ofw_machdep.h>
 end_include
 
 begin_include
@@ -207,10 +189,6 @@ modifier|*
 name|sc_dma
 decl_stmt|;
 comment|/* pointer to my DMA */
-name|int
-name|sc_pri
-decl_stmt|;
-comment|/* SBUS priority */
 block|}
 struct|;
 end_struct
@@ -579,8 +557,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|10
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -605,21 +582,11 @@ name|struct
 name|esp_softc
 modifier|*
 name|esc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|struct
 name|ncr53c9x_softc
 modifier|*
 name|sc
-init|=
-operator|&
-name|esc
-operator|->
-name|sc_ncr53c9x
 decl_stmt|;
 name|struct
 name|lsi64854_softc
@@ -632,6 +599,31 @@ decl_stmt|;
 name|int
 name|burst
 decl_stmt|;
+name|esc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|esc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|esp_softc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+operator|&
+name|esc
+operator|->
+name|sc_ncr53c9x
+expr_stmt|;
 name|esc
 operator|->
 name|sc_dev
@@ -722,7 +714,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"espattach_sbus: sc_id %d, freq %d\n"
+literal|"%s: sc_id %d, freq %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sc
 operator|->
@@ -735,7 +729,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * allocate space for dma, in SUNW,fas there are no separate 	 * dma devices 	 */
+comment|/* 	 * allocate space for DMA, in SUNW,fas there are no separate 	 * DMA devices 	 */
 name|lsc
 operator|=
 name|malloc
@@ -749,6 +743,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -777,8 +773,8 @@ name|sc_dma
 operator|=
 name|lsc
 expr_stmt|;
-comment|/* 	 * fas has 2 register spaces: dma(lsi64854) and SCSI core (ncr53c9x) 	 */
-comment|/* Map dma registers */
+comment|/* 	 * fas has 2 register spaces: DMA (lsi64854) and SCSI core (ncr53c9x) 	 */
+comment|/* allocate DMA registers */
 name|lsc
 operator|->
 name|sc_rid
@@ -814,7 +810,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot map dma registers\n"
+literal|"cannot allocate DMA registers\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -864,7 +860,7 @@ name|PAGE_SIZE
 argument_list|,
 literal|0
 argument_list|,
-comment|/* algnmnt, boundary */
+comment|/* alignment, boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
@@ -892,7 +888,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* No locking */
+comment|/* no locking */
 operator|&
 name|lsc
 operator|->
@@ -932,7 +928,9 @@ directive|ifdef
 name|ESP_SBUS_DEBUG
 name|printf
 argument_list|(
-literal|"espattach_sbus: burst 0x%x\n"
+literal|"%s: burst 0x%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|burst
 argument_list|)
@@ -984,7 +982,7 @@ argument_list|(
 name|lsc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * map SCSI core registers 	 */
+comment|/* 	 * allocate SCSI core registers 	 */
 name|esc
 operator|->
 name|sc_rid
@@ -1020,7 +1018,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot map scsi core registers\n"
+literal|"cannot allocate SCSI core registers\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -1058,14 +1056,6 @@ operator|->
 name|sc_res
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|esc->sc_pri = sa->sa_pri;
-comment|/* add me to the sbus structures */
-block|esc->sc_sd.sd_reset = (void *) ncr53c9x_reset; 	sbus_establish(&esc->sc_sd,&sc->sc_dev);
-endif|#
-directive|endif
 name|espattach
 argument_list|(
 name|esc
@@ -1167,6 +1157,7 @@ comment|/*  * Attach this instance, and then all the sub-devices  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|espattach
 parameter_list|(
@@ -1388,7 +1379,7 @@ name|sc_rev
 operator|=
 name|NCR_VARIANT_ESP200
 expr_stmt|;
-comment|/* XXX spec says it's valid after power up or chip reset */
+comment|/* 			 * XXX spec says it's valid after power up or chip 			 * reset. 			 */
 name|uid
 operator|=
 name|NCR_READ_REG
@@ -1426,7 +1417,9 @@ directive|ifdef
 name|ESP_SBUS_DEBUG
 name|printf
 argument_list|(
-literal|"espattach: revision %d, uid 0x%x\n"
+literal|"%s: revision %d, uid 0x%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sc
 operator|->
@@ -1470,7 +1463,7 @@ name|sc_extended_geom
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Alas, we must now modify the value a bit, because it's 	 * only valid when can switch on FASTCLK and FASTSCSI bits   	 * in config register 3...  	 */
+comment|/* 	 * Alas, we must now modify the value a bit, because it's 	 * only valid when can switch on FASTCLK and FASTSCSI bits 	 * in config register 3... 	 */
 switch|switch
 condition|(
 name|sc
@@ -1643,7 +1636,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Turn on target selection using the `dma' method */
+comment|/* Turn on target selection using the `DMA' method */
 if|if
 condition|(
 name|sc
@@ -1963,6 +1956,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|u_char
 name|esp_read_reg
 parameter_list|(
@@ -2065,6 +2059,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|esp_write_reg
 parameter_list|(
@@ -2164,6 +2159,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|esp_dma_isintr
 parameter_list|(
@@ -2199,6 +2195,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|esp_dma_reset
 parameter_list|(
@@ -2231,6 +2228,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|esp_dma_intr
 parameter_list|(
@@ -2266,6 +2264,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|esp_dma_setup
 parameter_list|(
@@ -2324,6 +2323,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|esp_dma_go
 parameter_list|(
@@ -2356,6 +2356,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|esp_dma_stop
 parameter_list|(
@@ -2407,6 +2408,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|esp_dma_isactive
 parameter_list|(
