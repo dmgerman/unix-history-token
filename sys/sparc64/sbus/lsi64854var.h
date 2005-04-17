@@ -244,7 +244,7 @@ name|DMA_ENINTR
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {			\ 	u_int32_t csr = L64854_GCSR(sc);	\ 	csr |= L64854_INT_EN;			\ 	L64854_SCSR(sc, csr);			\ } while (0)
+value|do {			\ 	uint32_t csr = L64854_GCSR(sc);		\ 	csr |= L64854_INT_EN;			\ 	L64854_SCSR(sc, csr);			\ } while (0)
 end_define
 
 begin_define
@@ -264,7 +264,7 @@ name|DMA_GO
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {				\ 	u_int32_t csr = L64854_GCSR(sc);	\ 	csr |= D_EN_DMA;			\ 	L64854_SCSR(sc, csr);			\ 	sc->sc_active = 1;			\ } while (0)
+value|do {				\ 	uint32_t csr = L64854_GCSR(sc);		\ 	csr |= D_EN_DMA;			\ 	L64854_SCSR(sc, csr);			\ 	sc->sc_active = 1;			\ } while (0)
 end_define
 
 begin_function_decl

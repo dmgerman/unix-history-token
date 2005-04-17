@@ -266,7 +266,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|csr
 decl_stmt|;
 name|sc
@@ -578,12 +578,12 @@ name|sc
 parameter_list|,
 name|dontpanic
 parameter_list|)
-value|do {					\ 	u_int32_t csr;							\
+value|do {					\ 	uint32_t csr;							\
 comment|/*								\ 	 * DMA rev0& rev1: we are not allowed to touch the DMA "flush"	\ 	 *     and "drain" bits while it is still thinking about a	\ 	 *     request.							\ 	 * other revs: D_ESC_R_PEND bit reads as 0			\ 	 */
 value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& D_ESC_R_PEND, "R_PEND", dontpanic);\ 	if (sc->sc_rev != DMAREV_HME) {                                 \
 comment|/*							\ 	         * Select drain bit based on revision			\ 	         * also clears errors and D_TC flag			\ 	         */
 value|\ 	        csr = L64854_GCSR(sc);					\ 	        if (sc->sc_rev == DMAREV_1 || sc->sc_rev == DMAREV_0)	\ 		        csr |= D_ESC_DRAIN;				\ 	        else							\ 		        csr |= L64854_INVALIDATE;			\ 									\ 	        L64854_SCSR(sc,csr);					\ 	}								\
-comment|/*								\ 	 * Wait for draining to finish					\ 	 *  rev0& rev1 call this PACKCNT				\ 	 */
+comment|/*								\ 	 * Wait for draining to finish					\ 	 * rev0& rev1 call this PACKCNT				\ 	 */
 value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& L64854_DRAINING, "DRAINING", dontpanic);\ } while(0)
 end_define
 
@@ -596,7 +596,7 @@ name|sc
 parameter_list|,
 name|dontpanic
 parameter_list|)
-value|do {					\ 	u_int32_t csr;							\
+value|do {					\ 	uint32_t csr;							\
 comment|/*								\ 	 * DMA rev0& rev1: we are not allowed to touch the DMA "flush"	\ 	 *     and "drain" bits while it is still thinking about a	\ 	 *     request.							\ 	 * other revs: D_ESC_R_PEND bit reads as 0			\ 	 */
 value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& D_ESC_R_PEND, "R_PEND", dontpanic);\ 	csr = L64854_GCSR(sc);					\ 	csr&= ~(L64854_WRITE|L64854_EN_DMA);
 comment|/* no-ops on ENET */
@@ -615,7 +615,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|csr
 decl_stmt|;
 name|DMA_FLUSH
@@ -1029,7 +1029,7 @@ modifier|*
 name|dmasize
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|csr
 decl_stmt|;
 name|DMA_FLUSH
@@ -1063,7 +1063,7 @@ name|sc_datain
 operator|=
 name|datain
 expr_stmt|;
-comment|/* 	 * the rules say we cannot transfer more than the limit 	 * of this DMA chip (64k for old and 16Mb for new), 	 * and we cannot cross a 16Mb boundary. 	 */
+comment|/* 	 * The rules say we cannot transfer more than the limit 	 * of this DMA chip (64k for old and 16Mb for new), 	 * and we cannot cross a 16Mb boundary. 	 */
 operator|*
 name|dmasize
 operator|=
@@ -1357,7 +1357,7 @@ name|trans
 decl_stmt|,
 name|resid
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|csr
 decl_stmt|;
 name|csr
@@ -1827,7 +1827,7 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|csr
 decl_stmt|;
 specifier|static
@@ -2125,7 +2125,7 @@ modifier|*
 name|dmasize
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|csr
 decl_stmt|;
 name|DMA_FLUSH
@@ -2382,7 +2382,7 @@ name|resid
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|csr
 decl_stmt|;
 name|csr
