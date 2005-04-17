@@ -349,6 +349,9 @@ condition|)
 return|return
 name|EAI_FAIL
 return|;
+ifdef|#
+directive|ifdef
+name|BSD4_4
 if|if
 condition|(
 name|sa
@@ -360,6 +363,8 @@ condition|)
 return|return
 name|EAI_FAIL
 return|;
+endif|#
+directive|endif
 name|family
 operator|=
 name|sa
