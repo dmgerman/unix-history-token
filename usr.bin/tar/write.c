@@ -5214,9 +5214,10 @@ name|ae_perm
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 			 * acl_get_perm() is spelled differently on different 			 * platforms; see bsdtar_platform.h for details. 			 */
 if|if
 condition|(
-name|acl_get_perm_np
+name|ACL_GET_PERM
 argument_list|(
 name|acl_permset
 argument_list|,
@@ -5229,7 +5230,7 @@ name|ARCHIVE_ENTRY_ACL_EXECUTE
 expr_stmt|;
 if|if
 condition|(
-name|acl_get_perm_np
+name|ACL_GET_PERM
 argument_list|(
 name|acl_permset
 argument_list|,
@@ -5242,7 +5243,7 @@ name|ARCHIVE_ENTRY_ACL_READ
 expr_stmt|;
 if|if
 condition|(
-name|acl_get_perm_np
+name|ACL_GET_PERM
 argument_list|(
 name|acl_permset
 argument_list|,

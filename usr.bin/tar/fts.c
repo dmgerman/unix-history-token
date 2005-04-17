@@ -121,11 +121,13 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dirent.h>
-end_include
+begin_comment
+comment|/* #include<dirent.h> */
+end_comment
+
+begin_comment
+comment|/* bsdtar: see bsdtar_platform.h */
+end_comment
 
 begin_include
 include|#
@@ -3029,28 +3031,15 @@ operator|)
 condition|;
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|HAVE_STRUCT_DIRENT_D_NAMLEN
-comment|/* bsdtar: Not everyone has d_namlen. */
-define|#
-directive|define
-name|dnamlen
-value|dp->d_namlen
-else|#
-directive|else
+comment|/* See bsdtar_platform.h for DIRENT_NAMLEN. */
 name|int
 name|dnamlen
 init|=
-name|strlen
+name|DIRENT_NAMLEN
 argument_list|(
 name|dp
-operator|->
-name|d_name
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!

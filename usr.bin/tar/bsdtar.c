@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
