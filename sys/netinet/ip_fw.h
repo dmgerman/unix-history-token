@@ -224,6 +224,32 @@ comment|/* arg1=bitmap (1:loop, 2:out)	*/
 name|O_TCPDATALEN
 block|,
 comment|/* arg1 = tcp data len		*/
+name|O_IP6_SRC
+block|,
+comment|/* address without mask		*/
+name|O_IP6_SRC_ME
+block|,
+comment|/* my addresses			*/
+name|O_IP6_SRC_MASK
+block|,
+comment|/* address with the mask	*/
+name|O_IP6_DST
+block|,
+name|O_IP6_DST_ME
+block|,
+name|O_IP6_DST_MASK
+block|,
+name|O_FLOW6ID
+block|,
+comment|/* for flow id tag in the ipv6 pkt */
+name|O_ICMP6TYPE
+block|,
+comment|/* icmp6 packet type filtering	*/
+name|O_EXT_HDR
+block|,
+comment|/* filtering for ipv6 extension header */
+name|O_IP6
+block|,
 comment|/* 	 * actions for ng_ipfw 	 */
 name|O_NETGRAPH
 block|,
@@ -236,6 +262,45 @@ comment|/* not an opcode!		*/
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/*  * The extension header are filtered only for presence using a bit  * vector with a flag for each header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FRAGMENT
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT_HOPOPTS
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT_ROUTING
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT_AH
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT_ESP
+value|0x10
+end_define
 
 begin_comment
 comment|/*  * Template for instructions.  *  * ipfw_insn is used for all instructions which require no operands,  * a single 16-bit value (arg1), or a couple of 8-bit values.  *  * For other instructions which require different/larger arguments  * we have derived structures, ipfw_insn_*.  *  * The size of the instruction (in 32-bit words) is in the low  * 6 bits of "len". The 2 remaining bits are used to implement  * NOT and OR on individual instructions. Given a type, you can  * compute the length to be put in "len" using F_INSN_SIZE(t)  *  * F_NOT	negates the match result of the instruction.  *  * F_OR		is used to build or blocks. By default, instructions  *		are evaluated as part of a logical AND. An "or" block  *		{ X or Y or Z } contains F_OR set in all but the last  *		instruction of the block. A match will cause the code  *		to skip past the last instruction of the block.  *  * NOTA BENE: in a couple of places we assume that  *	sizeof(ipfw_insn) == sizeof(u_int32_t)  * this needs to be fixed.  *  */
@@ -569,6 +634,72 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Apply ipv6 mask on ipv6 addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APPLY_MASK
+parameter_list|(
+name|addr
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|(addr)->__u6_addr.__u6_addr32[0]&= (mask)->__u6_addr.__u6_addr32[0]; \     (addr)->__u6_addr.__u6_addr32[1]&= (mask)->__u6_addr.__u6_addr32[1]; \     (addr)->__u6_addr.__u6_addr32[2]&= (mask)->__u6_addr.__u6_addr32[2]; \     (addr)->__u6_addr.__u6_addr32[3]&= (mask)->__u6_addr.__u6_addr32[3];
+end_define
+
+begin_comment
+comment|/* Structure for ipv6 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_insn_ip6
+block|{
+name|ipfw_insn
+name|o
+decl_stmt|;
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+name|struct
+name|in6_addr
+name|mask6
+decl_stmt|;
+block|}
+name|ipfw_insn_ip6
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Used to support icmp6 types */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_insn_icmp6
+block|{
+name|ipfw_insn
+name|o
+decl_stmt|;
+name|uint32_t
+name|d
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|/* XXX This number si related to the netinet/icmp6.h                        *     define ICMP6_MAXTYPE                        *     as follows: n = ICMP6_MAXTYPE/32 + 1                         *     Actually is 203                         */
+block|}
+name|ipfw_insn_icmp6
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Here we have the structure representing an ipfw rule.  *  * It starts with a general area (with link fields and counters)  * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values.  *  * Given a rule pointer  r:  *  *  r->cmd		is the start of the first instruction.  *  ACTION_PTR(r)	is the start of the first action (things to do  *			once a rule matched).  *  * When assembling instruction, remember the following:  *  *  + if a rule has a "keep-state" (or "limit") option, then the  *	first instruction (at r->cmd) MUST BE an O_PROBE_STATE  *  + if a rule has a "log" option, then the first action  *	(at ACTION_PTR(r)) MUST be O_LOG  *  + if a rule has an "altq" option, it comes after "log"  *  * NOTE: we use a simple linked list of rules because we never need  * 	to delete a rule without scanning the list. We do not use  *	queue(3) macros for portability and readability.  */
 end_comment
 
@@ -686,9 +817,35 @@ name|u_int8_t
 name|flags
 decl_stmt|;
 comment|/* protocol-specific flags */
+name|uint8_t
+name|addr_type
+decl_stmt|;
+comment|/* 4 = ipv4, 6 = ipv6, 1=ether ? */
+name|struct
+name|in6_addr
+name|dst_ip6
+decl_stmt|;
+comment|/* could also store MAC addr! */
+name|struct
+name|in6_addr
+name|src_ip6
+decl_stmt|;
+name|u_int32_t
+name|flow_id6
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IS_IP6_FLOW_ID
+parameter_list|(
+name|id
+parameter_list|)
+value|((id)->addr_type == 6)
+end_define
 
 begin_comment
 comment|/*  * Dynamic ipfw rule.  */
@@ -965,6 +1122,56 @@ value|0x00100000
 end_define
 
 begin_comment
+comment|/*  * Structure for collecting parameters to dummynet for ip6_output forwarding  */
+end_comment
+
+begin_struct
+struct|struct
+name|_ip6dn_args
+block|{
+name|struct
+name|ip6_pktopts
+modifier|*
+name|opt_or
+decl_stmt|;
+name|struct
+name|route_in6
+name|ro_or
+decl_stmt|;
+name|int
+name|flags_or
+decl_stmt|;
+name|struct
+name|ip6_moptions
+modifier|*
+name|im6o_or
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|origifp_or
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp_or
+decl_stmt|;
+name|struct
+name|sockaddr_in6
+name|dst_or
+decl_stmt|;
+name|u_long
+name|mtu_or
+decl_stmt|;
+name|struct
+name|route_in6
+name|ro_pmtu_or
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Arguments for calling ipfw_chk() and dummynet_io(). We put them  * all into a structure because this way it is easier and more  * efficient to pass variables around and extend the interface.  */
 end_comment
 
@@ -1020,6 +1227,11 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
+name|struct
+name|_ip6dn_args
+name|dummypar
+decl_stmt|;
+comment|/* dummynet->ip6_output */
 block|}
 struct|;
 end_struct

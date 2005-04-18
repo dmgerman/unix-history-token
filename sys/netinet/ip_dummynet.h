@@ -225,6 +225,14 @@ define|#
 directive|define
 name|DN_TO_ETH_OUT
 value|5
+define|#
+directive|define
+name|DN_TO_IP6_IN
+value|6
+define|#
+directive|define
+name|DN_TO_IP6_OUT
+value|7
 name|dn_key
 name|output_time
 decl_stmt|;
@@ -239,6 +247,11 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* flags, for ip_output (IPv6 ?)	*/
+name|struct
+name|_ip6dn_args
+name|ip6opt
+decl_stmt|;
+comment|/* XXX ipv6 options			*/
 block|}
 struct|;
 end_struct
