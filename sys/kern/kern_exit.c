@@ -2285,6 +2285,23 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|p_canwait
+argument_list|(
+name|td
+argument_list|,
+name|p
+argument_list|)
+condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * This special case handles a kthread spawned by linux_clone 		 * (see linux_misc.c).  The linux_wait4 and linux_waitpid 		 * functions need to be able to distinguish between waiting 		 * on a process and waiting on a thread.  It is a thread if 		 * p_sigparent is not SIGCHLD, and the WLINUXCLONE option 		 * signifies we want to wait for threads and not processes. 		 */
 if|if
 condition|(

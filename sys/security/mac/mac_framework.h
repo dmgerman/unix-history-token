@@ -2811,6 +2811,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|mac_check_proc_wait
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|proc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|mac_check_socket_accept
 parameter_list|(
 name|struct
