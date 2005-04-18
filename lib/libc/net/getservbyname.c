@@ -107,7 +107,7 @@ directive|ifdef
 name|YP
 name|sed
 operator|->
-name|getservbyname_yp
+name|yp_name
 operator|=
 operator|(
 name|char
@@ -117,7 +117,7 @@ name|name
 expr_stmt|;
 name|sed
 operator|->
-name|getservbyproto_yp
+name|yp_proto
 operator|=
 operator|(
 name|char
@@ -236,13 +236,13 @@ directive|ifdef
 name|YP
 name|sed
 operator|->
-name|getservbyname_yp
+name|yp_name
 operator|=
 name|NULL
 expr_stmt|;
 name|sed
 operator|->
-name|getservbyproto_yp
+name|yp_proto
 operator|=
 name|NULL
 expr_stmt|;
