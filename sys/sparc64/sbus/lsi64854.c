@@ -2391,8 +2391,6 @@ argument_list|)
 operator|,
 name|csr
 operator|,
-name|csr
-operator|,
 name|PDMACSR_BITS
 operator|)
 argument_list|)
