@@ -957,14 +957,14 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|PCB_SPARE
+name|PCB_VM86
 argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
 name|pcb
 argument_list|,
-name|__pcb_spare
+name|pcb_vm86
 argument_list|)
 argument_list|)
 expr_stmt|;

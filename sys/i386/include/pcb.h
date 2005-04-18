@@ -128,12 +128,12 @@ parameter_list|)
 function_decl|;
 comment|/* Special switchout function. */
 name|u_long
-name|__pcb_spare
+name|pcb_vm86
 index|[
-literal|1
+literal|2
 index|]
 decl_stmt|;
-comment|/* adjust to avoid core dump size changes */
+comment|/* vm86bios scratch space */
 block|}
 struct|;
 end_struct
