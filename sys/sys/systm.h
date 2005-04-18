@@ -2678,6 +2678,42 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Root mount holdback API */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|root_hold_token
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|struct
+name|root_hold_token
+modifier|*
+name|root_mount_hold
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|identifier
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|root_mount_rel
+parameter_list|(
+name|struct
+name|root_hold_token
+modifier|*
+name|h
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Unit number allocation API. (kern/subr_unit.c)  */
 end_comment
 

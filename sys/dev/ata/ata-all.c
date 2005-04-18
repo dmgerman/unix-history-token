@@ -344,6 +344,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|root_hold_token
+modifier|*
+name|ata_root_hold_token
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|ata_dma
 init|=
@@ -3029,6 +3038,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|root_mount_rel
+argument_list|(
+name|ata_root_hold_token
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4475,6 +4489,13 @@ name|void
 operator|*
 operator|)
 name|ata_boot_attach
+expr_stmt|;
+name|ata_root_hold_token
+operator|=
+name|root_mount_hold
+argument_list|(
+literal|"ATA"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
