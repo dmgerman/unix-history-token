@@ -2023,6 +2023,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KERN_PROC_PATHNAME
+value|12
+end_define
+
+begin_comment
+comment|/* path to executable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KERN_PROC_INC_THREAD
 value|0x10
 end_define
