@@ -809,7 +809,7 @@ modifier|*
 name|rdp
 parameter_list|,
 name|int
-name|update
+name|writeback
 parameter_list|)
 block|{
 name|int
@@ -833,7 +833,7 @@ name|ata_raid_config_changed
 argument_list|(
 name|rdp
 argument_list|,
-name|update
+name|writeback
 argument_list|)
 expr_stmt|;
 comment|/* sanitize arrays total_size % (width * interleave) == 0 */
@@ -5263,12 +5263,41 @@ name|dev
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ATA_VIA_ID
+case|:
+name|ctlr
+operator|=
+name|AR_F_VIA_RAID
+expr_stmt|;
+name|rdp
+operator|->
+name|disks
+index|[
+name|disk
+index|]
+operator|.
+name|sectors
+operator|=
+name|VIA_LBA
+argument_list|(
+name|rdp
+operator|->
+name|disks
+index|[
+name|disk
+index|]
+operator|.
+name|dev
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 comment|/* XXX SOS 		 * right, so here we are, we have an ATA chip and we want 		 * to create a RAID and store the metadata. 		 * we need to find a way to tell what kind of metadata this 		 * hardware's BIOS might be using (good ideas are welcomed) 		 * for now we just use our own native FreeBSD format. 		 * the only way to get support for the BIOS format is to 		 * setup the RAID from there, in that case we pickup the 		 * metadata format from the disks (if we support it). 		 */
 name|printf
 argument_list|(
-literal|"WARNING!! - using FreeBSD PsuedoRAID metadata "
-literal|"since BIOS format is unknown on this hardware.\n"
+literal|"WARNING!! - not able to determine metadata format\n"
+literal|"WARNING!! - Using FreeBSD PsuedoRAID metadata\n"
 literal|"If that is not what you want, use the BIOS to "
 literal|"create the array\n"
 argument_list|)
@@ -6950,7 +6979,7 @@ return|;
 if|#
 directive|if
 literal|0
-block|case AR_F_HPTV3_RAID: 	return ata_raid_hptv3_write_meta(rdp);      case AR_F_ADAPTEC_RAID: 	return ata_raid_adaptec_write_meta(rdp);      case AR_F_INTEL_RAID: 	return ata_raid_intel_write_meta(rdp);      case AR_F_ITE_RAID: 	return ata_raid_ite_write_meta(rdp);      case AR_F_LSIV2_RAID: 	return ata_raid_lsiv2_write_meta(rdp);      case AR_F_LSIV3_RAID: 	return ata_raid_lsiv3_write_meta(rdp);      case AR_F_SII_RAID: 	return ata_raid_sii_write_meta(rdp);      case AR_F_VIA_RAID: 	return ata_raid_sii_write_meta(rdp);
+block|case AR_F_HPTV3_RAID: 	return ata_raid_hptv3_write_meta(rdp);      case AR_F_ADAPTEC_RAID: 	return ata_raid_adaptec_write_meta(rdp);      case AR_F_INTEL_RAID: 	return ata_raid_intel_write_meta(rdp);      case AR_F_ITE_RAID: 	return ata_raid_ite_write_meta(rdp);      case AR_F_LSIV2_RAID: 	return ata_raid_lsiv2_write_meta(rdp);      case AR_F_LSIV3_RAID: 	return ata_raid_lsiv3_write_meta(rdp);      case AR_F_SII_RAID: 	return ata_raid_sii_write_meta(rdp);      case AR_F_VIA_RAID: 	return ata_raid_via_write_meta(rdp);
 endif|#
 directive|endif
 default|default:
@@ -16980,6 +17009,8 @@ condition|(
 name|meta
 operator|->
 name|type
+operator|&
+name|VIA_T_MASK
 condition|)
 block|{
 case|case
@@ -22854,7 +22885,20 @@ argument_list|(
 name|meta
 operator|->
 name|type
+operator|&
+name|VIA_T_MASK
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"bootable            %d\n"
+argument_list|,
+name|meta
+operator|->
+name|type
+operator|&
+name|VIA_T_BOOTABLE
 argument_list|)
 expr_stmt|;
 name|printf
@@ -22881,6 +22925,8 @@ name|printf
 argument_list|(
 literal|"stripe_sectors      %d\n"
 argument_list|,
+literal|0x08
+operator|<<
 operator|(
 name|meta
 operator|->

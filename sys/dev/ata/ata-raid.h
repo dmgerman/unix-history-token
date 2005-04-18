@@ -2181,6 +2181,14 @@ name|type
 decl_stmt|;
 define|#
 directive|define
+name|VIA_T_MASK
+value|0xfe
+define|#
+directive|define
+name|VIA_T_BOOTABLE
+value|0x01
+define|#
+directive|define
 name|VIA_T_RAID0
 value|0x04
 define|#
