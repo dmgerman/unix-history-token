@@ -1848,7 +1848,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * Clear the FORCE_RECONNECT flag only after the connect   	 * succeeds. To prevent races between multiple processes   	 * waiting on the mountpoint where the connection is being  	 * torn down. The first one to acquire the sndlock will   	 * retry the connection. The others block on the sndlock  	 * until the connection is established successfully, and   	 * the re-transmit the request.  	 */
+comment|/*  	 * Clear the FORCE_RECONNECT flag only after the connect   	 * succeeds. To prevent races between multiple processes   	 * waiting on the mountpoint where the connection is being  	 * torn down. The first one to acquire the sndlock will   	 * retry the connection. The others block on the sndlock  	 * until the connection is established successfully, and   	 * then re-transmit the request.  	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3670,7 +3670,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"nfs/tcp clnt: Peer closed connection, tearing down TCP connection\n"
 argument_list|)
@@ -3904,7 +3904,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"nfs/tcp clnt: Peer closed connection, tearing down TCP connection\n"
 argument_list|)
