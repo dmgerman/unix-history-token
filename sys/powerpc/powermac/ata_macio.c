@@ -382,7 +382,7 @@ name|ATA_DATA
 init|;
 name|i
 operator|<=
-name|ATA_STATUS
+name|ATA_COMMAND
 condition|;
 name|i
 operator|++
@@ -413,6 +413,11 @@ operator|*
 name|ATA_MACIO_REGGAP
 expr_stmt|;
 block|}
+name|ata_default_registers
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 name|ch
 operator|->
 name|r_io
