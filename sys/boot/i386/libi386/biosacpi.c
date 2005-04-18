@@ -117,7 +117,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 name|int
