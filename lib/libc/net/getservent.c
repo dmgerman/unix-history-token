@@ -214,13 +214,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|YP
-if|if
-condition|(
-name|sed
-operator|->
-name|key
-condition|)
-block|{
 name|free
 argument_list|(
 name|sed
@@ -234,7 +227,6 @@ name|key
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -818,12 +810,6 @@ operator|->
 name|stepping_yp
 condition|)
 block|{
-if|if
-condition|(
-name|sed
-operator|->
-name|key
-condition|)
 name|free
 argument_list|(
 name|sed
