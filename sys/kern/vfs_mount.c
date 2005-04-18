@@ -404,6 +404,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|mountlist
+argument_list|,
+operator|&
+name|mountlist_mtx
+argument_list|,
+literal|"mountlist"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
 name|vfsoptlist
