@@ -30,6 +30,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -95,47 +101,6 @@ end_define
 begin_comment
 comment|/* space is mem space */
 end_comment
-
-begin_comment
-comment|/*  * Bus address and size types  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|uint64_t
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|bus_size_t
-typedef|;
-end_typedef
 
 begin_define
 define|#
@@ -208,24 +173,6 @@ directive|define
 name|BUS_SPACE_UNRESTRICTED
 value|(~0)
 end_define
-
-begin_comment
-comment|/*  * Access methods for bus resources and address space.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|bus_space_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int
-name|bus_space_handle_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * Map a region of device bus space into CPU virtual address space.  */

@@ -39,6 +39,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<machine/_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -116,38 +122,6 @@ directive|define
 name|__BUS_SPACE_HAS_STREAM_METHODS
 value|1
 end_define
-
-begin_comment
-comment|/*  * Bus address and size types  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|bus_space_handle_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|bus_type_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|bus_size_t
-typedef|;
-end_typedef
 
 begin_define
 define|#

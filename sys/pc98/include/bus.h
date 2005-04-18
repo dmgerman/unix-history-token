@@ -40,26 +40,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
+file|<machine/_bus.h>
 end_include
 
-begin_comment
-comment|/*  * Bus address and size types  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int
-name|bus_size_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
 
 begin_define
 define|#
@@ -218,52 +206,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|bus_space_tag
-block|{
-define|#
-directive|define
-name|BUS_SPACE_IO
-value|0
-define|#
-directive|define
-name|BUS_SPACE_MEM
-value|1
-name|u_int
-name|bs_tag
-decl_stmt|;
-comment|/* bus space flags */
-name|struct
-name|bus_space_access_methods
-name|bs_da
-decl_stmt|;
-comment|/* direct access */
-name|struct
-name|bus_space_access_methods
-name|bs_ra
-decl_stmt|;
-comment|/* relocate access */
-if|#
-directive|if
-literal|0
-block|struct bus_space_access_methods bs_ida;
-comment|/* indexed direct access */
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|bus_space_tag
-modifier|*
-name|bus_space_tag_t
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  * Values for the i386 bus space tag, not to be used directly by MI code.  */
 end_comment
@@ -297,58 +239,6 @@ directive|define
 name|I386_BUS_SPACE_MEM
 value|(&SBUS_mem_space_tag)
 end_define
-
-begin_comment
-comment|/*  * bus space handle  */
-end_comment
-
-begin_struct
-struct|struct
-name|bus_space_handle
-block|{
-name|bus_addr_t
-name|bsh_base
-decl_stmt|;
-name|size_t
-name|bsh_sz
-decl_stmt|;
-name|bus_addr_t
-name|bsh_iat
-index|[
-name|BUS_SPACE_IAT_MAXSIZE
-index|]
-decl_stmt|;
-name|size_t
-name|bsh_maxiatsz
-decl_stmt|;
-name|size_t
-name|bsh_iatsz
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-modifier|*
-name|bsh_res
-decl_stmt|;
-name|size_t
-name|bsh_ressz
-decl_stmt|;
-name|struct
-name|bus_space_access_methods
-name|bsh_bam
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|bus_space_handle
-modifier|*
-name|bus_space_handle_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * Allocate/Free bus_space_handle  */

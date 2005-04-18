@@ -23,43 +23,11 @@ directive|define
 name|_MACHINE_BUS_H_
 end_define
 
-begin_comment
-comment|/*  * Addresses (in bus space).  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|bus_size_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Access methods for bus space.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|bus_space
-modifier|*
-name|bus_space_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|bus_space_handle_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<machine/_bus.h>
+end_include
 
 begin_comment
 comment|/*  *	int bus_space_map  (bus_space_tag_t t, bus_addr_t addr,  *	    bus_size_t size, int flags, bus_space_handle_t *bshp);  *  * Map a region of bus space.  */

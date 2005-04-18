@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pio.h>
 end_include
 
@@ -86,24 +92,6 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Bus address and size types  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|bus_size_t
-typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * Define the PPC tag values  */
 end_comment
 
@@ -128,24 +116,6 @@ end_define
 begin_comment
 comment|/* space is io space */
 end_comment
-
-begin_comment
-comment|/*  * Access methods for bus resources and address space.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|bus_space_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|bus_space_handle_t
-typedef|;
-end_typedef
 
 begin_function
 specifier|static
