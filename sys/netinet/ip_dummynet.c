@@ -9,6 +9,34 @@ directive|define
 name|DUMMYNET_DEBUG
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IPFW2
+value|1
+end_define
+
 begin_comment
 comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by the "dummynet lock".  *  * Most important Changes:  *  * 011004: KLDable  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
 end_comment
@@ -1960,6 +1988,9 @@ name|m
 argument_list|)
 expr_stmt|;
 break|break ;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|DN_TO_IP6_IN
 case|:
@@ -1995,6 +2026,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 break|break ;
+endif|#
+directive|endif
 case|case
 name|DN_TO_BDG_FWD
 case|:
