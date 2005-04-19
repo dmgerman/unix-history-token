@@ -287,26 +287,6 @@ directive|include
 file|<netinet/tcp_debug.h>
 end_include
 
-begin_decl_stmt
-name|u_char
-name|tcp_saveipgen
-index|[
-literal|40
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the size must be of max ip header, now IPv6 */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|tcphdr
-name|tcp_savetcp
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
