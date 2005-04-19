@@ -5709,6 +5709,15 @@ decl_stmt|;
 name|root_mount_wait
 argument_list|()
 expr_stmt|;
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
+name|g_waitidle
+argument_list|()
+expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
+expr_stmt|;
 name|mp
 operator|=
 name|devfs_first
