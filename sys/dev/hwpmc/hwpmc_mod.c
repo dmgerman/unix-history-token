@@ -1486,6 +1486,15 @@ name|p
 operator|=
 name|newstr
 expr_stmt|;
+name|e
+operator|=
+name|newstr
+operator|+
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -6830,6 +6839,10 @@ name|pm_mode
 argument_list|)
 expr_stmt|;
 comment|/* 	 * First, we take the PMC off hardware. 	 */
+name|cpu
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|PMC_IS_SYSTEM_MODE
@@ -10636,6 +10649,10 @@ operator|!=
 literal|0
 condition|)
 break|break;
+name|ri
+operator|=
+literal|0
+expr_stmt|;
 name|PMCDBG
 argument_list|(
 name|PMC
