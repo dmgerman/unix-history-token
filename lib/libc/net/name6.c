@@ -2014,47 +2014,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX: should be deprecated */
-end_comment
-
-begin_ifdef
-unit|struct hostent * getnodebyname(const char *name, int af, int flags) { 	return getipnodebyname(name, af, flags,&h_errno); }
-ifdef|#
-directive|ifdef
-name|__warn_references
-end_ifdef
-
-begin_endif
-unit|__warn_references(getnodebyname, 	"warning: getnodebyname() deprecated, " 	"should use getaddrinfo() or getipnodebyname()");
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-unit|struct hostent * getnodebyaddr(const void *src, size_t len, int af) { 	return getipnodebyaddr(src, len, af,&h_errno); }
-ifdef|#
-directive|ifdef
-name|__warn_references
-end_ifdef
-
-begin_endif
-unit|__warn_references(getnodebyaddr, 	"warning: getnodebyaddr() deprecated, " 	"should use getnameinfo() or getipnodebyaddr()");
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Private utility functions  */
 end_comment
@@ -9341,9 +9300,6 @@ name|struct
 name|hostent
 name|hbuf
 decl_stmt|;
-name|int
-name|na
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -9570,10 +9526,6 @@ operator|.
 name|h_length
 operator|=
 name|addrlen
-expr_stmt|;
-name|na
-operator|=
-literal|0
 expr_stmt|;
 name|buf
 operator|=
