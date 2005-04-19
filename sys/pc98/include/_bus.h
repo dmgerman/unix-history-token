@@ -33,6 +33,104 @@ name|bus_size_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_IAT_MAXSIZE
+value|33
+end_define
+
+begin_comment
+comment|/*  * bus space tag  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PASCAL_CALL
+value|(void)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BUS_SPACE_CALL_FUNCS_TAB
+parameter_list|(
+name|NAME
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|BWN
+parameter_list|)
+define|\
+value|NAME##_space_read_##BWN, 				\ 	NAME##_space_read_multi_##BWN, 				\ 	NAME##_space_read_region_##BWN,				\ 	NAME##_space_write_##BWN, 				\ 	NAME##_space_write_multi_##BWN, 			\ 	NAME##_space_write_region_##BWN,			\ 	NAME##_space_set_multi_##BWN,				\ 	NAME##_space_set_region_##BWN,				\ 	NAME##_space_copy_region_##BWN
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BUS_SPACE_CALL_FUNCS_PROTO
+parameter_list|(
+name|NAME
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|BWN
+parameter_list|)
+define|\
+value|TYPE NAME##_space_read_##BWN _PASCAL_CALL;		\ 	void NAME##_space_read_multi_##BWN _PASCAL_CALL;	\ 	void NAME##_space_read_region_##BWN _PASCAL_CALL;	\ 	void NAME##_space_write_##BWN _PASCAL_CALL;		\ 	void NAME##_space_write_multi_##BWN _PASCAL_CALL;	\ 	void NAME##_space_write_region_##BWN _PASCAL_CALL;	\ 	void NAME##_space_set_multi_##BWN _PASCAL_CALL;		\ 	void NAME##_space_set_region_##BWN _PASCAL_CALL;	\ 	void NAME##_space_copy_region_##BWN _PASCAL_CALL;
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BUS_SPACE_CALL_FUNCS
+parameter_list|(
+name|NAME
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|BWN
+parameter_list|)
+define|\
+value|TYPE (* NAME##_read_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_read_multi_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_read_region_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_write_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_write_multi_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_write_region_##BWN) _PASCAL_CALL;	\ 	void (* NAME##_set_multi_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_set_region_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_copy_region_##BWN) _PASCAL_CALL;
+end_define
+
+begin_struct
+struct|struct
+name|bus_space_access_methods
+block|{
+comment|/* 8 bits access methods */
+name|_BUS_SPACE_CALL_FUNCS
+argument_list|(
+argument|bs
+argument_list|,
+argument|u_int8_t
+argument_list|,
+literal|1
+argument_list|)
+comment|/* 16 bits access methods */
+name|_BUS_SPACE_CALL_FUNCS
+argument_list|(
+argument|bs
+argument_list|,
+argument|u_int16_t
+argument_list|,
+literal|2
+argument_list|)
+comment|/* 32 bits access methods */
+name|_BUS_SPACE_CALL_FUNCS
+argument_list|(
+argument|bs
+argument_list|,
+argument|u_int32_t
+argument_list|,
+literal|4
+argument_list|)
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Access methods for bus resources and address space.  */
 end_comment
