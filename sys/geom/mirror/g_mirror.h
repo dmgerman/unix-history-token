@@ -598,6 +598,11 @@ name|struct
 name|callout
 name|sc_callout
 decl_stmt|;
+name|struct
+name|root_hold_token
+modifier|*
+name|sc_rootmount
+decl_stmt|;
 block|}
 struct|;
 end_struct
