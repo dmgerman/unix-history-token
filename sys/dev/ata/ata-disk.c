@@ -276,6 +276,16 @@ name|config
 operator|&
 name|ATA_PROTO_ATAPI
 operator|)
+operator|||
+operator|(
+name|atadev
+operator|->
+name|param
+operator|.
+name|config
+operator|==
+name|ATA_CFA_MAGIC
+operator|)
 condition|)
 return|return
 literal|0
