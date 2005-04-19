@@ -1550,6 +1550,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CISS_BMIC_SOFT_RESET
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|CISS_BMIC_FLUSH_CACHE
 value|0xc2
 end_define
