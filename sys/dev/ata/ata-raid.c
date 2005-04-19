@@ -3059,8 +3059,6 @@ index|]
 operator|=
 name|mirror
 expr_stmt|;
-name|request
-operator|->
 name|composite
 operator|=
 name|composite
