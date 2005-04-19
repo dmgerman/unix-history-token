@@ -57,6 +57,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ipsec.h"
 end_include
 
@@ -2387,6 +2393,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_comment
 comment|/*  * ipv6 specific rules here...  */
 end_comment
@@ -2854,6 +2866,15 @@ end_function
 
 begin_comment
 comment|/* end of ipv6 opcodes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET6 */
 end_comment
 
 begin_decl_stmt
@@ -4041,18 +4062,29 @@ block|{
 name|u_int32_t
 name|i
 decl_stmt|;
-name|i
-operator|=
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
 name|IS_IP6_FLOW_ID
 argument_list|(
 name|id
 argument_list|)
-condition|?
+condition|)
+name|i
+operator|=
 name|hash_packet6
 argument_list|(
 name|id
 argument_list|)
-else|:
+operator|:
+else|else
+endif|#
+directive|endif
+comment|/* INET6 */
+name|i
+operator|=
 operator|(
 name|id
 operator|->
@@ -10947,6 +10979,9 @@ argument_list|)
 operator|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|O_ICMP6TYPE
 case|:
@@ -10979,6 +11014,9 @@ name|cmd
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* INET6 */
 case|case
 name|O_IPOPT
 case|:
@@ -11745,6 +11783,9 @@ name|NULL
 operator|)
 operator|||
 operator|(
+ifdef|#
+directive|ifdef
+name|INET6
 name|is_ipv6
 condition|?
 name|verify_rev_path6
@@ -11765,6 +11806,8 @@ operator|.
 name|rcvif
 argument_list|)
 else|:
+endif|#
+directive|endif
 name|verify_path
 argument_list|(
 name|src_ip
@@ -12052,6 +12095,9 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|O_IP6_SRC_ME
 case|:
@@ -12141,6 +12187,8 @@ operator|=
 name|is_ipv6
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 comment|/* 			 * The second set of opcodes represents 'actions', 			 * i.e. the terminal part of a rule once the packet 			 * matches all previous patterns. 			 * Typically there is only one action for each rule, 			 * and the opcode is stored at the end of the rule 			 * (but there are exceptions -- see below). 			 * 			 * In general, here we set retval and terminate the 			 * outer loop (would be a 'break 3' in some language, 			 * but we need to do a 'goto done'). 			 * 			 * Exceptions: 			 * O_COUNT and O_SKIPTO actions: 			 *   instead of terminating, we jump to the next rule 			 *   ('goto next_rule', equivalent to a 'break 2'), 			 *   or to the SKIPTO target ('goto again' after 			 *   having set f, cmd and l), respectively. 			 * 			 * O_LOG and O_ALTQ action parameters: 			 *   perform some action and set match = 1; 			 * 			 * O_LIMIT and O_KEEP_STATE: these opcodes are 			 *   not real 'actions', and are stored right 			 *   before the 'action' part of the rule. 			 *   These opcodes try to install an entry in the 			 *   state tables; if successful, we continue with 			 *   the next opcode (match=1; break;), otherwise 			 *   the packet *   must be dropped 			 *   ('goto done' after setting retval); 			 * 			 * O_PROBE_STATE and O_CHECK_STATE: these opcodes 			 *   cause a lookup of the state table, and a jump 			 *   to the 'action' part of the parent rule 			 *   ('goto check_body') if an entry is found, or 			 *   (CHECK_STATE only) a jump to the next rule if 			 *   the entry is not found ('goto next_rule'). 			 *   The result of the lookup is cached to make 			 *   further instances of these opcodes are 			 *   effectively NOPs. 			 */
 case|case
 name|O_LIMIT
