@@ -4045,14 +4045,6 @@ name|p4pmc_descr
 modifier|*
 name|pd
 decl_stmt|;
-if|#
-directive|if
-name|DEBUG
-name|pmc_value_t
-name|tmp
-decl_stmt|;
-endif|#
-directive|endif
 name|KASSERT
 argument_list|(
 name|cpu
@@ -4752,7 +4744,7 @@ argument_list|,
 literal|2
 argument_list|,
 literal|"p4-start/2 cpu=%d rc=%d ri=%d escr=%d"
-literal|"escrmsr=0x%x escrvalue=0x%x cccr_config=0x%x pmc=0x%jx"
+literal|"escrmsr=0x%x escrvalue=0x%x cccr_config=0x%x"
 argument_list|,
 name|cpu
 argument_list|,
@@ -4773,8 +4765,6 @@ argument_list|,
 name|escrvalue
 argument_list|,
 name|cccrvalue
-argument_list|,
-name|tmp
 argument_list|)
 expr_stmt|;
 block|}
