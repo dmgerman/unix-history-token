@@ -1191,6 +1191,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+operator|*
+name|tlenp
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1223,6 +1228,11 @@ name|m_freem
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+operator|*
+name|tlenp
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -9431,6 +9441,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|tlen
+operator|>
+literal|0
+operator|&&
 name|tp
 operator|->
 name|sack_enable

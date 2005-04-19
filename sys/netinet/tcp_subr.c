@@ -3859,6 +3859,11 @@ name|tcp_reass_qsize
 operator|--
 expr_stmt|;
 block|}
+name|tcp_clean_sackreport
+argument_list|(
+name|tcpb
+argument_list|)
+expr_stmt|;
 block|}
 name|INP_UNLOCK
 argument_list|(
