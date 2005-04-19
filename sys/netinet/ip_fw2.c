@@ -4078,7 +4078,7 @@ name|hash_packet6
 argument_list|(
 name|id
 argument_list|)
-operator|:
+expr_stmt|;
 else|else
 endif|#
 directive|endif
