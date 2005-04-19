@@ -827,6 +827,9 @@ index|]
 operator|=
 name|sd
 expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
 name|td
 operator|->
 name|td_frame
@@ -839,9 +842,6 @@ name|GUFS_SEL
 argument_list|,
 name|SEL_UPL
 argument_list|)
-expr_stmt|;
-name|critical_exit
-argument_list|()
 expr_stmt|;
 block|}
 break|break;
