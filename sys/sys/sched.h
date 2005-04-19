@@ -399,6 +399,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|sched_is_bound
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * These procedures tell the process data structure allocation code how  * many bytes to actually allocate.  */
 end_comment

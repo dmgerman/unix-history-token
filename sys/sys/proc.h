@@ -2544,6 +2544,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_HWPMC
+value|0x800000
+end_define
+
+begin_comment
+comment|/* Process is using HWPMCs */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_JAILED
 value|0x1000000
 end_define
