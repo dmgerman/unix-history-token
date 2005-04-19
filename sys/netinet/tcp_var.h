@@ -1575,6 +1575,10 @@ name|u_long
 name|tcps_sack_send_blocks
 decl_stmt|;
 comment|/* SACK blocks (options) sent     */
+name|u_long
+name|tcps_sack_sboverflow
+decl_stmt|;
+comment|/* times scoreboard overflowed */
 block|}
 struct|;
 end_struct
