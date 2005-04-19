@@ -98,6 +98,13 @@ name|BUS_SPACE_UNRESTRICTED
 value|(~0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_IAT_MAXSIZE
+value|33
+end_define
+
 begin_comment
 comment|/*  * Access methods for bus resources and address space.  */
 end_comment
@@ -109,7 +116,182 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Values for the i386 bus space tag, not to be used directly by MI code.  */
+comment|/*  * bus space tag  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PASCAL_CALL
+value|(void)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BUS_SPACE_CALL_FUNCS_TAB
+parameter_list|(
+name|NAME
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|BWN
+parameter_list|)
+define|\
+value|NAME##_space_read_##BWN, 				\ 	NAME##_space_read_multi_##BWN, 				\ 	NAME##_space_read_region_##BWN,				\ 	NAME##_space_write_##BWN, 				\ 	NAME##_space_write_multi_##BWN, 			\ 	NAME##_space_write_region_##BWN,			\ 	NAME##_space_set_multi_##BWN,				\ 	NAME##_space_set_region_##BWN,				\ 	NAME##_space_copy_region_##BWN
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BUS_SPACE_CALL_FUNCS_PROTO
+parameter_list|(
+name|NAME
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|BWN
+parameter_list|)
+define|\
+value|TYPE NAME##_space_read_##BWN _PASCAL_CALL;		\ 	void NAME##_space_read_multi_##BWN _PASCAL_CALL;	\ 	void NAME##_space_read_region_##BWN _PASCAL_CALL;	\ 	void NAME##_space_write_##BWN _PASCAL_CALL;		\ 	void NAME##_space_write_multi_##BWN _PASCAL_CALL;	\ 	void NAME##_space_write_region_##BWN _PASCAL_CALL;	\ 	void NAME##_space_set_multi_##BWN _PASCAL_CALL;		\ 	void NAME##_space_set_region_##BWN _PASCAL_CALL;	\ 	void NAME##_space_copy_region_##BWN _PASCAL_CALL;
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BUS_SPACE_CALL_FUNCS
+parameter_list|(
+name|NAME
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|BWN
+parameter_list|)
+define|\
+value|TYPE (* NAME##_read_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_read_multi_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_read_region_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_write_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_write_multi_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_write_region_##BWN) _PASCAL_CALL;	\ 	void (* NAME##_set_multi_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_set_region_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_copy_region_##BWN) _PASCAL_CALL;
+end_define
+
+begin_struct
+struct|struct
+name|bus_space_access_methods
+block|{
+comment|/* 8 bits access methods */
+name|_BUS_SPACE_CALL_FUNCS
+argument_list|(
+argument|bs
+argument_list|,
+argument|u_int8_t
+argument_list|,
+literal|1
+argument_list|)
+comment|/* 16 bits access methods */
+name|_BUS_SPACE_CALL_FUNCS
+argument_list|(
+argument|bs
+argument_list|,
+argument|u_int16_t
+argument_list|,
+literal|2
+argument_list|)
+comment|/* 32 bits access methods */
+name|_BUS_SPACE_CALL_FUNCS
+argument_list|(
+argument|bs
+argument_list|,
+argument|u_int32_t
+argument_list|,
+literal|4
+argument_list|)
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Access methods for bus resources and address space.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bus_space_tag
+block|{
+define|#
+directive|define
+name|BUS_SPACE_IO
+value|0
+define|#
+directive|define
+name|BUS_SPACE_MEM
+value|1
+name|u_int
+name|bs_tag
+decl_stmt|;
+comment|/* bus space flags */
+name|struct
+name|bus_space_access_methods
+name|bs_da
+decl_stmt|;
+comment|/* direct access */
+name|struct
+name|bus_space_access_methods
+name|bs_ra
+decl_stmt|;
+comment|/* relocate access */
+if|#
+directive|if
+literal|0
+block|struct bus_space_access_methods bs_ida;
+comment|/* indexed direct access */
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * bus space handle  */
+end_comment
+
+begin_struct
+struct|struct
+name|bus_space_handle
+block|{
+name|bus_addr_t
+name|bsh_base
+decl_stmt|;
+name|size_t
+name|bsh_sz
+decl_stmt|;
+name|bus_addr_t
+name|bsh_iat
+index|[
+name|BUS_SPACE_IAT_MAXSIZE
+index|]
+decl_stmt|;
+name|size_t
+name|bsh_maxiatsz
+decl_stmt|;
+name|size_t
+name|bsh_iatsz
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+modifier|*
+name|bsh_res
+decl_stmt|;
+name|size_t
+name|bsh_ressz
+decl_stmt|;
+name|struct
+name|bus_space_access_methods
+name|bsh_bam
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Values for the pc98 bus space tag, not to be used directly by MI code.  */
 end_comment
 
 begin_decl_stmt
