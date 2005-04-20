@@ -543,6 +543,11 @@ name|task
 name|if_starttask
 decl_stmt|;
 comment|/* task for IFF_NEEDSGIANT */
+name|struct
+name|task
+name|if_linktask
+decl_stmt|;
+comment|/* task for link change events */
 block|}
 struct|;
 end_struct

@@ -613,6 +613,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|do_link_state_change
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1967,6 +1980,20 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+name|TASK_INIT
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_linktask
+argument_list|,
+literal|0
+argument_list|,
+name|do_link_state_change
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 name|IF_AFDATA_LOCK_INIT
 argument_list|(
 name|ifp
@@ -2769,6 +2796,17 @@ decl_stmt|;
 name|int
 name|found
 decl_stmt|;
+comment|/* 	 * Remove/wait for pending events. 	 */
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_swi
+argument_list|,
+operator|&
+name|ifp
+operator|->
+name|if_linktask
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|ifnet_departure_event
@@ -4707,7 +4745,7 @@ comment|/* XXX: private from if_vlan */
 end_comment
 
 begin_comment
-comment|/*  * Handle a change in the interface link state.  */
+comment|/*  * Handle a change in the interface link state. To avoid LORs  * between driver lock and upper layer locks, as well as possible  * recursions, we post event to taskqueue, and all job  * is done in static do_link_state_change().  */
 end_comment
 
 begin_function
@@ -4723,9 +4761,6 @@ name|int
 name|link_state
 parameter_list|)
 block|{
-name|int
-name|link
-decl_stmt|;
 comment|/* Return if state hasn't changed. */
 if|if
 condition|(
@@ -4742,6 +4777,54 @@ name|if_link_state
 operator|=
 name|link_state
 expr_stmt|;
+name|taskqueue_enqueue
+argument_list|(
+name|taskqueue_swi
+argument_list|,
+operator|&
+name|ifp
+operator|->
+name|if_linktask
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|do_link_state_change
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|pending
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+name|int
+name|link_state
+init|=
+name|ifp
+operator|->
+name|if_link_state
+decl_stmt|;
+name|int
+name|link
+decl_stmt|;
 comment|/* Notify that the link state has changed. */
 name|rt_ifmsg
 argument_list|(
@@ -4855,6 +4938,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|pending
+operator|>
+literal|1
+condition|)
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"%d link states coalesced\n"
+argument_list|,
+name|pending
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|log_link_state_change
