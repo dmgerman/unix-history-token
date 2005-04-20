@@ -1831,6 +1831,14 @@ name|td
 operator|->
 name|td_sigstk
 expr_stmt|;
+name|td2
+operator|->
+name|td_sigmask
+operator|=
+name|td
+operator|->
+name|td_sigmask
+expr_stmt|;
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 */
 name|p2
 operator|->
