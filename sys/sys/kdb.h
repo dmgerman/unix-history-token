@@ -129,6 +129,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|debugger_on_panic
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enter the debugger on panic. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|kdb_dbbe
 modifier|*

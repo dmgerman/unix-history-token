@@ -396,17 +396,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|debugger_on_panic
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_struct
 struct|struct
 name|powerpc_exception

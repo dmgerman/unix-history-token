@@ -138,13 +138,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|debugger_on_panic
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|db_store_count
 decl_stmt|;
 end_decl_stmt

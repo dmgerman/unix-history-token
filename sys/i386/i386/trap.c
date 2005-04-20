@@ -2881,6 +2881,12 @@ directive|ifdef
 name|KDB
 if|if
 condition|(
+operator|(
+name|debugger_on_panic
+operator|||
+name|kdb_active
+operator|)
+operator|&&
 name|kdb_trap
 argument_list|(
 name|type
