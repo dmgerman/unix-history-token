@@ -121,12 +121,6 @@ directive|include
 file|<net/if_vlan_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1015,7 +1009,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* For MII eyes only... */
+comment|/* For if_link_state_change() eyes only... */
 end_comment
 
 begin_function_decl
@@ -3543,40 +3537,20 @@ name|ifv_p
 operator|==
 name|ifp
 condition|)
-block|{
+name|if_link_state_change
+argument_list|(
+operator|&
 name|ifv
 operator|->
 name|ifv_if
-operator|.
-name|if_link_state
-operator|=
+argument_list|,
 name|ifv
 operator|->
 name|ifv_p
 operator|->
 name|if_link_state
-expr_stmt|;
-name|rt_ifmsg
-argument_list|(
-operator|&
-operator|(
-name|ifv
-operator|->
-name|ifv_if
-operator|)
 argument_list|)
 expr_stmt|;
-name|KNOTE_UNLOCKED
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_klist
-argument_list|,
-name|link
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|VLAN_UNLOCK
 argument_list|()
