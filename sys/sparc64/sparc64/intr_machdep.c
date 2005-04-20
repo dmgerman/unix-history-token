@@ -963,13 +963,17 @@ name|iv
 operator|->
 name|iv_ithd
 expr_stmt|;
-name|MPASS
-argument_list|(
+if|if
+condition|(
 name|ithd
-operator|!=
+operator|==
 name|NULL
-argument_list|)
+condition|)
+name|ih
+operator|=
+name|NULL
 expr_stmt|;
+else|else
 name|ih
 operator|=
 name|TAILQ_FIRST
@@ -983,6 +987,10 @@ expr_stmt|;
 if|if
 condition|(
 name|ih
+operator|!=
+name|NULL
+operator|&&
+name|ih
 operator|->
 name|ih_flags
 operator|&
@@ -990,9 +998,6 @@ name|IH_FAST
 condition|)
 block|{
 comment|/* Execute fast interrupt handlers directly. */
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ih
@@ -1044,9 +1049,6 @@ name|ih_argument
 argument_list|)
 expr_stmt|;
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return;
 block|}
 comment|/* Schedule a heavyweight interrupt process. */
@@ -1054,9 +1056,7 @@ name|error
 operator|=
 name|ithread_schedule
 argument_list|(
-name|iv
-operator|->
-name|iv_ithd
+name|ithd
 argument_list|)
 expr_stmt|;
 if|if
