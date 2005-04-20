@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmc_mdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -108,7 +102,10 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
 end_if
 
 begin_function_decl
@@ -198,7 +195,10 @@ end_function_decl
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 end_elif
 
 begin_function_decl
@@ -581,6 +581,20 @@ name|NULLMASK
 value|PMCMASK(NULL,0)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -726,6 +740,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -765,7 +784,10 @@ end_define
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
 end_if
 
 begin_comment
@@ -5886,7 +5908,10 @@ end_function
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 end_elif
 
 begin_comment
@@ -7853,7 +7878,10 @@ condition|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
 case|case
 name|PMC_CPU_AMD_K7
 case|:
@@ -7915,7 +7943,10 @@ expr_stmt|;
 break|break;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 case|case
 name|PMC_CPU_AMD_K8
 case|:
@@ -9629,9 +9660,15 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 end_if
 
 begin_function
