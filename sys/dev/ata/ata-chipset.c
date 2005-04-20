@@ -1905,14 +1905,7 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-name|bus_generic_probe
-argument_list|(
-name|tp
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
-name|bus_generic_attach
+name|ata_identify
 argument_list|(
 name|tp
 operator|->
