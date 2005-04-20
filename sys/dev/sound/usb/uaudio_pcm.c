@@ -302,6 +302,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dir
+operator|==
+name|PCMDIR_PLAY
+condition|)
+block|{
+if|if
+condition|(
 name|ua_playfmt
 index|[
 literal|0
@@ -312,20 +319,35 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s channel supported format list invalid\n"
-argument_list|,
-name|dir
-operator|==
-name|PCMDIR_PLAY
-condition|?
-literal|"play"
-else|:
-literal|"record"
+literal|"play channel supported format list invalid\n"
 argument_list|)
 expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|ua_recfmt
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"record channel supported format list invalid\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 block|}
 comment|/* allocate PCM side DMA buffer */
 if|if
