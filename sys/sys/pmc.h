@@ -15,6 +15,12 @@ directive|define
 name|_SYS_PMC_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/pmc_mdep.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1471,11 +1477,6 @@ struct|;
 block|}
 name|pm_md
 union|;
-else|#
-directive|else
-error|#
-directive|error
-error|Unsupported PMC architecture.
 endif|#
 directive|endif
 block|}
