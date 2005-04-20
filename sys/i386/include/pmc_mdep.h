@@ -23,7 +23,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/pmc.h>
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/specialreg.h>
 end_include
 
 begin_comment
