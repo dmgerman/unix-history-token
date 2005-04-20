@@ -184,12 +184,10 @@ name|arpcom
 name|arpcom
 decl_stmt|;
 comment|/* per-interface network data */
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-comment|/* This interface */
+define|#
+directive|define
+name|sc_ifp
+value|arpcom.ac_if
 name|int
 name|unit
 decl_stmt|;
@@ -685,9 +683,10 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
+operator|&
 name|sc
 operator|->
-name|ifp
+name|sc_ifp
 decl_stmt|;
 name|int
 name|s
@@ -1131,12 +1130,6 @@ name|if_softc
 operator|=
 name|priv
 expr_stmt|;
-name|priv
-operator|->
-name|ifp
-operator|=
-name|ifp
-expr_stmt|;
 comment|/* Get an interface unit number */
 name|priv
 operator|->
@@ -1365,9 +1358,10 @@ modifier|*
 specifier|const
 name|ifp
 init|=
+operator|&
 name|priv
 operator|->
-name|ifp
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ng_mesg
@@ -1828,9 +1822,10 @@ modifier|*
 specifier|const
 name|ifp
 init|=
+operator|&
 name|priv
 operator|->
-name|ifp
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|mbuf
@@ -1975,9 +1970,10 @@ modifier|*
 specifier|const
 name|ifp
 init|=
+operator|&
 name|priv
 operator|->
-name|ifp
+name|sc_ifp
 decl_stmt|;
 name|ether_ifdetach
 argument_list|(
