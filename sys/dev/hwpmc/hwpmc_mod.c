@@ -1451,9 +1451,6 @@ name|char
 name|c
 decl_stmt|,
 modifier|*
-name|e
-decl_stmt|,
-modifier|*
 name|p
 decl_stmt|,
 modifier|*
@@ -1485,15 +1482,6 @@ comment|/* max verbosity */
 name|p
 operator|=
 name|newstr
-expr_stmt|;
-name|e
-operator|=
-name|newstr
-operator|+
-name|strlen
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1569,7 +1557,7 @@ define|\
 value|else if (strncmp(tmpbuf, S, 3) == 0)		\ 			tmpflags |= __PMCDFMIN(F)
 if|if
 condition|(
-name|e
+name|fence
 operator|-
 name|p
 operator|>
