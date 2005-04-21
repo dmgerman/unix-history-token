@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -442,8 +448,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"warning: interval less than resolution (%d.%09lu)\n"
+literal|"warning: interval less than resolution (%jd.%09ld)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tmptime
 operator|.
 name|tv_sec
@@ -686,8 +695,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"start:             %d.%09lu\n"
+literal|"start:             %jd.%09ld\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|starttime
 operator|.
 name|tv_sec
@@ -699,8 +711,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"finish:            %d.%09lu\n"
+literal|"finish:            %jd.%09ld\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tmptime
 operator|.
 name|tv_sec
@@ -759,18 +774,30 @@ name|printf
 argument_list|(
 literal|"approx waits/sec:  %lld\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|waited
 operator|/
 name|duration
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"approx wait rate:  %lld\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|waited
 operator|/
 name|send_calls
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1162,11 +1189,14 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Sending packet of payload size %ld every %d.%09lu for %ld "
+literal|"Sending packet of payload size %ld every %jd.%09ld for %ld "
 literal|"seconds\n"
 argument_list|,
 name|payloadsize
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|interval
 operator|.
 name|tv_sec
