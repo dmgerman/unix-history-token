@@ -5719,6 +5719,23 @@ name|ifnlen
 decl_stmt|,
 name|addrs
 decl_stmt|;
+comment|/* 		 * Zero the ifr_name buffer to make sure we don't 		 * disclose the contents of the stack. 		 */
+name|memset
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|space
