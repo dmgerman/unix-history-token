@@ -200,7 +200,7 @@ name|d_flags
 operator|=
 name|D_NEEDGIANT
 block|,
-comment|/* we need this as newbus isn't safe */
+comment|/* we need this as newbus isn't mpsafe */
 operator|.
 name|d_ioctl
 operator|=
@@ -240,6 +240,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|device_t
 name|ata_add_child
 parameter_list|(
@@ -328,15 +329,6 @@ modifier|*
 name|ata_delayed_attach
 init|=
 name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|root_hold_token
-modifier|*
-name|ata_root_hold_token
 decl_stmt|;
 end_decl_stmt
 
@@ -726,15 +718,12 @@ return|return
 name|error
 return|;
 block|}
-comment|/* do not attach devices if we are in early boot */
+comment|/* probe and attach devices on this channel unless we are in early boot */
 if|if
 condition|(
+operator|!
 name|ata_delayed_attach
 condition|)
-return|return
-literal|0
-return|;
-comment|/* probe and attach devices on this channel */
 name|ata_identify
 argument_list|(
 name|dev
@@ -920,6 +909,7 @@ name|nchildren
 decl_stmt|,
 name|i
 decl_stmt|;
+comment|/* check that we have a vaild channel to reinit */
 if|if
 condition|(
 operator|!
@@ -970,7 +960,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* grap the channel lock */
+comment|/* unconditionally grap the channel lock */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1066,8 +1056,13 @@ index|]
 argument_list|)
 condition|)
 block|{
+comment|/* 		     * if we have a running request and its device matches 		     * this child we need to inform the request that the  		     * device is gone and remove it from ch->running 		     */
 if|if
 condition|(
+name|ch
+operator|->
+name|running
+operator|&&
 name|ch
 operator|->
 name|running
@@ -1133,7 +1128,7 @@ argument_list|)
 expr_stmt|;
 comment|/* newbus suckage dealt with, release Giant */
 block|}
-comment|/* catch running request if any */
+comment|/* catch request in ch->running if we havn't already */
 name|ata_catch_inflight
 argument_list|(
 name|ch
@@ -1205,6 +1200,7 @@ name|ata_channel
 modifier|*
 name|ch
 decl_stmt|;
+comment|/* check for valid device */
 if|if
 condition|(
 operator|!
@@ -1223,7 +1219,7 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* wait for the channel to be IDLE before when enter suspend mode */
+comment|/* wait for the channel to be IDLE before entering suspend mode */
 while|while
 condition|(
 literal|1
@@ -1313,6 +1309,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* check for valid device */
 if|if
 condition|(
 operator|!
@@ -1331,7 +1328,7 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* reinit the devices, we dont know what mode/state they have */
+comment|/* reinit the devices, we dont know what mode/state they are in */
 name|error
 operator|=
 name|ata_reinit
@@ -1451,24 +1448,15 @@ condition|(
 name|ch
 operator|->
 name|state
-operator|==
+operator|!=
 name|ATA_ACTIVE
-operator|||
+operator|&&
 name|ch
 operator|->
 name|state
-operator|==
+operator|!=
 name|ATA_STALL_QUEUE
 condition|)
-block|{
-name|request
-operator|->
-name|flags
-operator||=
-name|ATA_R_INTR_SEEN
-expr_stmt|;
-block|}
-else|else
 block|{
 name|device_printf
 argument_list|(
@@ -1485,7 +1473,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * we have the HW locks, so start the tranaction for this request 	 * if it finishes immediately we dont need to wait for interrupt 	 */
+comment|/* 	 * we have the HW locks, so end the tranaction for this request 	 * if it finishes immediately otherwise wait for next interrupt 	 */
 if|if
 condition|(
 name|ch
@@ -1543,16 +1531,6 @@ name|request
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
-else|else
-block|{
-name|request
-operator|->
-name|flags
-operator|&=
-operator|~
-name|ATA_R_INTR_SEEN
-expr_stmt|;
 block|}
 block|}
 do|while
@@ -3027,11 +3005,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|root_mount_rel
-argument_list|(
-name|ata_root_hold_token
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3040,6 +3013,7 @@ comment|/*  * misc support functions  */
 end_comment
 
 begin_function
+specifier|static
 name|device_t
 name|ata_add_child
 parameter_list|(
@@ -4477,13 +4451,6 @@ name|void
 operator|*
 operator|)
 name|ata_boot_attach
-expr_stmt|;
-name|ata_root_hold_token
-operator|=
-name|root_mount_hold
-argument_list|(
-literal|"ATA"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

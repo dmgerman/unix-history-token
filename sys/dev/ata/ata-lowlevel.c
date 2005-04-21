@@ -923,7 +923,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* must be called with ATA channel locked */
+comment|/* must be called with ATA channel locked and state_mtx held */
 end_comment
 
 begin_function
@@ -1106,7 +1106,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 comment|/* device reset doesn't interrupt */
 if|if
@@ -1177,7 +1179,9 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 comment|/* if write command output the data */
 if|if
@@ -1220,7 +1224,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 name|ata_pio_write
 argument_list|(
@@ -1233,9 +1239,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|begin_continue
+goto|;
 comment|/* ATA DMA data transfer commands */
 case|case
 name|ATA_R_DMA
@@ -1282,7 +1288,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 comment|/* issue command */
 if|if
@@ -1349,7 +1357,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 comment|/* start DMA engine */
 if|if
@@ -1379,11 +1389,13 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|begin_continue
+goto|;
 comment|/* ATAPI PIO commands */
 case|case
 name|ATA_R_ATAPI
@@ -1443,7 +1455,9 @@ name|result
 operator|=
 name|EBUSY
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 comment|/* start ATAPI operation */
 if|if
@@ -1485,7 +1499,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 comment|/* command interrupt device ? just return and wait for interrupt */
 if|if
@@ -1502,9 +1518,9 @@ operator|)
 operator|==
 name|ATA_DRQ_INTR
 condition|)
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|begin_continue
+goto|;
 comment|/* wait for ready to write ATAPI command block */
 block|{
 name|int
@@ -1594,7 +1610,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 block|}
 comment|/* this seems to be needed for some (slow) devices */
@@ -1639,9 +1657,9 @@ else|:
 literal|8
 argument_list|)
 expr_stmt|;
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|begin_continue
+goto|;
 case|case
 name|ATA_R_ATAPI
 operator||
@@ -1702,7 +1720,9 @@ name|result
 operator|=
 name|EBUSY
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 comment|/* check sanity, setup SG list and DMA engine */
 if|if
@@ -1746,7 +1766,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 comment|/* start ATAPI operation */
 if|if
@@ -1784,7 +1806,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 comment|/* wait for ready to write ATAPI command block */
 block|{
@@ -1875,7 +1899,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
 block|}
 comment|/* this seems to be needed for some (slow) devices */
@@ -1939,13 +1965,22 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
+goto|goto
+name|begin_finished
+goto|;
 block|}
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|begin_continue
+goto|;
 block|}
-comment|/* request finish here */
+comment|/* NOT REACHED */
+name|printf
+argument_list|(
+literal|"ata_begin_transaction OOPS!!!\n"
+argument_list|)
+expr_stmt|;
+name|begin_finished
+label|:
 if|if
 condition|(
 name|ch
@@ -1972,8 +2007,39 @@ expr_stmt|;
 return|return
 name|ATA_OP_FINISHED
 return|;
+name|begin_continue
+label|:
+name|callout_reset
+argument_list|(
+operator|&
+name|request
+operator|->
+name|callout
+argument_list|,
+name|request
+operator|->
+name|timeout
+operator|*
+name|hz
+argument_list|,
+operator|(
+name|timeout_t
+operator|*
+operator|)
+name|ata_timeout
+argument_list|,
+name|request
+argument_list|)
+expr_stmt|;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 block|}
 end_function
+
+begin_comment
+comment|/* must be called with ATA channel locked and state_mtx held */
+end_comment
 
 begin_function
 specifier|static
@@ -2061,8 +2127,9 @@ name|flags
 operator|&
 name|ATA_R_TIMEOUT
 condition|)
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 comment|/* on control commands read back registers to the request struct */
 if|if
 condition|(
@@ -2324,8 +2391,9 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 block|}
 comment|/* are we moving data ? */
 if|if
@@ -2386,8 +2454,9 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 block|}
 name|ata_pio_read
 argument_list|(
@@ -2493,8 +2562,9 @@ argument_list|,
 name|ATA_STATUS
 argument_list|)
 expr_stmt|;
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 block|}
 comment|/* output data and return waiting for new interrupt */
 name|ata_pio_write
@@ -2506,9 +2576,9 @@ operator|->
 name|transfersize
 argument_list|)
 expr_stmt|;
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|end_continue
+goto|;
 block|}
 comment|/* if data read command, return& wait for interrupt */
 if|if
@@ -2519,14 +2589,15 @@ name|flags
 operator|&
 name|ATA_R_READ
 condition|)
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|end_continue
+goto|;
 block|}
 block|}
 comment|/* done with HW */
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 comment|/* ATA DMA data transfer commands */
 case|case
 name|ATA_R_DMA
@@ -2619,8 +2690,9 @@ name|ch
 argument_list|)
 expr_stmt|;
 comment|/* done with HW */
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 comment|/* ATAPI PIO commands */
 case|case
 name|ATA_R_ATAPI
@@ -2654,8 +2726,9 @@ name|flags
 operator|&
 name|ATA_R_TIMEOUT
 condition|)
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 switch|switch
 condition|(
 operator|(
@@ -2718,8 +2791,9 @@ name|status
 operator|=
 name|ATA_S_ERROR
 expr_stmt|;
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 block|}
 name|ATA_IDX_OUTSW_STRM
 argument_list|(
@@ -2757,9 +2831,9 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* return wait for interrupt */
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|end_continue
+goto|;
 case|case
 name|ATAPI_P_WRITE
 case|:
@@ -2792,7 +2866,9 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//return ATA_OP_FINISHED;
+goto|goto
+name|end_finished
+goto|;
 break|break;
 block|}
 name|ata_pio_write
@@ -2831,9 +2907,9 @@ name|transfersize
 argument_list|)
 expr_stmt|;
 comment|/* return wait for interrupt */
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|end_continue
+goto|;
 case|case
 name|ATAPI_P_READ
 case|:
@@ -2866,8 +2942,9 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 block|}
 name|ata_pio_read
 argument_list|(
@@ -2905,9 +2982,9 @@ name|transfersize
 argument_list|)
 expr_stmt|;
 comment|/* return wait for interrupt */
-return|return
-name|ATA_OP_CONTINUES
-return|;
+goto|goto
+name|end_continue
+goto|;
 case|case
 name|ATAPI_P_DONEDRQ
 case|:
@@ -3009,8 +3086,9 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 default|default:
 name|device_printf
 argument_list|(
@@ -3029,8 +3107,9 @@ name|ATA_S_ERROR
 expr_stmt|;
 block|}
 comment|/* done with HW */
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 comment|/* ATAPI DMA commands */
 case|case
 name|ATA_R_ATAPI
@@ -3129,13 +3208,33 @@ name|ch
 argument_list|)
 expr_stmt|;
 comment|/* done with HW */
-comment|//return ATA_OP_FINISHED;
-break|break;
+goto|goto
+name|end_finished
+goto|;
 block|}
-comment|/* disable interrupt */
-comment|//ATA_IDX_OUTB(ch, ATA_CONTROL, ATA_A_4BIT | ATA_A_IDS);
+comment|/* NOT REACHED */
+name|printf
+argument_list|(
+literal|"ata_end_transaction OOPS!!\n"
+argument_list|)
+expr_stmt|;
+name|end_finished
+label|:
+name|callout_stop
+argument_list|(
+operator|&
+name|request
+operator|->
+name|callout
+argument_list|)
+expr_stmt|;
 return|return
 name|ATA_OP_FINISHED
+return|;
+name|end_continue
+label|:
+return|return
+name|ATA_OP_CONTINUES
 return|;
 block|}
 end_function
@@ -3337,7 +3436,7 @@ name|ostat1
 argument_list|)
 expr_stmt|;
 comment|/* if nothing showed up there is no need to get any further */
-comment|/* SOS is that too strong?, we just might loose devices here XXX */
+comment|/* XXX SOS is that too strong?, we just might loose devices here */
 name|ch
 operator|->
 name|devices
@@ -3525,7 +3624,15 @@ name|err
 operator|&&
 name|timeout
 operator|>
+operator|(
+name|stat0
+operator|&
+name|ATA_S_BUSY
+condition|?
+literal|100
+else|:
 literal|10
+operator|)
 condition|)
 name|mask
 operator|&=
@@ -3731,7 +3838,15 @@ name|err
 operator|&&
 name|timeout
 operator|>
+operator|(
+name|stat1
+operator|&
+name|ATA_S_BUSY
+condition|?
+literal|100
+else|:
 literal|10
+operator|)
 condition|)
 name|mask
 operator|&=
