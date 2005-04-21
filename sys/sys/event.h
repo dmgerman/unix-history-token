@@ -1163,7 +1163,6 @@ parameter_list|(
 name|int
 name|kq
 parameter_list|,
-specifier|const
 name|struct
 name|kevent
 modifier|*
