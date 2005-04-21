@@ -4255,19 +4255,19 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
-comment|/* 	 * If listening socket requested TCP digests, flag this in the  	 * syncache so that syncache_respond() will do the right thing  	 * with the SYN+ACK. 	 * 	 * RFC 2395, Section 2.0, says 	 * "Unlike other TCP extensions (e.g., the Window Scale option 	 * [RFC1323]), the absence of the option in the SYN,ACK segment must not 	 * cause the sender to disable its sending of signatures". 	 */
+comment|/* 	 * If listening socket requested TCP digests, and received SYN 	 * contains the option, flag this in the syncache so that 	 * syncache_respond() will do the right thing with the SYN+ACK. 	 * XXX Currently we always record the option by default and will 	 * attempt to use it in syncache_respond(). 	 */
 if|if
 condition|(
-name|tp
+name|to
 operator|->
-name|t_flags
+name|to_flags
 operator|&
-name|TF_SIGNATURE
+name|TOF_SIGNATURE
 condition|)
 name|sc
 operator|->
 name|sc_flags
-operator||=
+operator|=
 name|SCF_SIGNATURE
 expr_stmt|;
 endif|#
