@@ -4256,25 +4256,6 @@ ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
 comment|/* 	 * If listening socket requested TCP digests, and received SYN 	 * contains the option, flag this in the syncache so that 	 * syncache_respond() will do the right thing with the SYN+ACK. 	 * XXX Currently we always record the option by default and will 	 * attempt to use it in syncache_respond(). 	 */
-if|#
-directive|if
-literal|1
-if|if
-condition|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TF_SIGNATURE
-condition|)
-name|sc
-operator|->
-name|sc_flags
-operator||=
-name|SCF_SIGNATURE
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|to
@@ -4289,8 +4270,6 @@ name|sc_flags
 operator|=
 name|SCF_SIGNATURE
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 if|if
