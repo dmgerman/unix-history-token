@@ -124,12 +124,13 @@ name|tcp_seq
 name|rxmit
 decl_stmt|;
 comment|/* next seq. no in hole to be retransmitted */
-name|struct
-name|sackhole
-modifier|*
-name|next
-decl_stmt|;
-comment|/* next in list */
+name|TAILQ_ENTRY
+argument_list|(
+argument|sackhole
+argument_list|)
+name|scblink
+expr_stmt|;
+comment|/* scoreboard linkage */
 block|}
 struct|;
 end_struct
@@ -559,12 +560,14 @@ name|int
 name|snd_numholes
 decl_stmt|;
 comment|/* number of holes seen by sender */
-name|struct
-name|sackhole
-modifier|*
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|sackhole
+argument_list|)
 name|snd_holes
-decl_stmt|;
-comment|/* linked list of holes (sorted) */
+expr_stmt|;
+comment|/* SACK scoreboard (sorted) */
 name|tcp_seq
 name|rcv_lastsack
 decl_stmt|;
@@ -2617,33 +2620,6 @@ name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_SACK_DEBUG
-end_ifdef
-
-begin_function_decl
-name|void
-name|tcp_print_holes
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-name|tp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TCP_SACK_DEBUG */
-end_comment
 
 begin_endif
 endif|#
