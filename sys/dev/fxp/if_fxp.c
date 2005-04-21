@@ -2952,14 +2952,8 @@ condition|(
 name|sc
 operator|->
 name|revision
-operator|==
+operator|>=
 name|FXP_REV_82550
-operator|||
-name|sc
-operator|->
-name|revision
-operator|==
-name|FXP_REV_82550_C
 condition|)
 block|{
 name|sc
