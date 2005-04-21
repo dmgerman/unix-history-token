@@ -532,23 +532,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|kern_setrlimit
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|struct
-name|rlimit
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_else
 else|#
 directive|else
