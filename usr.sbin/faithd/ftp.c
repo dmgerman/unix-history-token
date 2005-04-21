@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: ftp.c,v 1.23 2003/08/19 21:20:33 itojun Exp $	*/
+comment|/*	$KAME: ftp.c,v 1.24 2005/03/16 05:05:48 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -5151,10 +5151,20 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 return|return
 name|n
 return|;
 block|}
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
