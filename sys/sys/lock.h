@@ -266,6 +266,17 @@ begin_comment
 comment|/* Exclusive lock. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOP_DUPOK
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Don't check for duplicate acquires */
+end_comment
+
 begin_comment
 comment|/* Flags passed to witness_assert. */
 end_comment

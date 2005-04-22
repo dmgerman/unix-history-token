@@ -94,7 +94,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Mutex types and options passed to mtx_init().  MTX_QUIET can also be  * passed in.  */
+comment|/*  * Mutex types and options passed to mtx_init().  MTX_QUIET and MTX_DUPOK  * can also be passed in.  */
 end_comment
 
 begin_define
@@ -141,17 +141,6 @@ begin_comment
 comment|/* Don't do any witness checking. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MTX_DUPOK
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* Don't log a duplicate acquire */
-end_comment
-
 begin_comment
 comment|/*  * Option flags passed to certain lock/unlock routines, through the use  * of corresponding mtx_{lock,unlock}_flags() interface macros.  */
 end_comment
@@ -165,6 +154,17 @@ end_define
 
 begin_comment
 comment|/* Don't log a mutex event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTX_DUPOK
+value|LOP_DUPOK
+end_define
+
+begin_comment
+comment|/* Don't log a duplicate acquire */
 end_comment
 
 begin_comment
