@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uaudioreg.h,v 1.7 2000/12/28 00:29:58 augustss Exp $	*/
+comment|/*	$NetBSD: uaudioreg.h,v 1.12 2004/11/05 19:08:29 kent Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_define
@@ -16,13 +16,6 @@ define|#
 directive|define
 name|UAUDIO_VERSION
 value|0x100
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDESC_CS_DEVICE
-value|0x21
 end_define
 
 begin_define
@@ -135,7 +128,7 @@ decl_stmt|;
 name|uByte
 name|bInterval
 decl_stmt|;
-comment|/*  	 * The following two entries are only used by the Audio Class. 	 * And according to the specs the Audio Class is the only one 	 * allowed to extend the endpoint descriptor. 	 * Who knows what goes on in the minds of the people in the USB 	 * standardization?  :-( 	 */
+comment|/* 	 * The following two entries are only used by the Audio Class. 	 * And according to the specs the Audio Class is the only one 	 * allowed to extend the endpoint descriptor. 	 * Who knows what goes on in the minds of the people in the USB 	 * standardization?  :-( 	 */
 name|uByte
 name|bRefresh
 decl_stmt|;
@@ -224,6 +217,18 @@ decl_stmt|;
 name|uByte
 name|bmAttributes
 decl_stmt|;
+define|#
+directive|define
+name|UA_SED_FREQ_CONTROL
+value|0x01
+define|#
+directive|define
+name|UA_SED_PITCH_CONTROL
+value|0x02
+define|#
+directive|define
+name|UA_SED_MAXPACKETSONLY
+value|0x80
 name|uByte
 name|bLockDelayUnits
 decl_stmt|;
@@ -314,11 +319,83 @@ decl_stmt|;
 name|uWord
 name|wChannelConfig
 decl_stmt|;
+define|#
+directive|define
+name|UA_CHANNEL_LEFT
+value|0x0001
+define|#
+directive|define
+name|UA_CHANNEL_RIGHT
+value|0x0002
+define|#
+directive|define
+name|UA_CHANNEL_CENTER
+value|0x0004
+define|#
+directive|define
+name|UA_CHANNEL_LFE
+value|0x0008
+define|#
+directive|define
+name|UA_CHANNEL_L_SURROUND
+value|0x0010
+define|#
+directive|define
+name|UA_CHANNEL_R_SURROUND
+value|0x0020
+define|#
+directive|define
+name|UA_CHANNEL_L_CENTER
+value|0x0040
+define|#
+directive|define
+name|UA_CHANNEL_R_CENTER
+value|0x0080
+define|#
+directive|define
+name|UA_CHANNEL_SURROUND
+value|0x0100
+define|#
+directive|define
+name|UA_CHANNEL_L_SIDE
+value|0x0200
+define|#
+directive|define
+name|UA_CHANNEL_R_SIDE
+value|0x0400
+define|#
+directive|define
+name|UA_CHANNEL_TOP
+value|0x0800
 name|uByte
 name|iChannelNames
 decl_stmt|;
 block|}
 name|UPACKED
+struct|;
+end_struct
+
+begin_comment
+comment|/* Shared by all units and terminals */
+end_comment
+
+begin_struct
+struct|struct
+name|usb_audio_unit
+block|{
+name|uByte
+name|bLength
+decl_stmt|;
+name|uByte
+name|bDescriptorType
+decl_stmt|;
+name|uByte
+name|bDescriptorSubtype
+decl_stmt|;
+name|uByte
+name|bUnitId
+decl_stmt|;
+block|}
 struct|;
 end_struct
 
@@ -1351,8 +1428,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|UA_FMT_MPEG
+value|0x1001
+end_define
+
+begin_define
+define|#
+directive|define
+name|UA_FMT_AC3
+value|0x1002
+end_define
+
+begin_define
+define|#
+directive|define
 name|SAMPLING_FREQ_CONTROL
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PITCH_CONTROL
+value|0x02
 end_define
 
 begin_define
