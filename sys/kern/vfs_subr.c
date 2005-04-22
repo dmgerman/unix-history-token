@@ -3564,25 +3564,13 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|numvnodes
-operator|>
-name|desiredvnodes
-condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vnode_free_list_mtx
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENFILE
-operator|)
-return|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX Not all VFS_VGET/ffs_vget callers check returns. */
+block|if (numvnodes> desiredvnodes) { 			mtx_unlock(&vnode_free_list_mtx); 			return (ENFILE); 		}
+endif|#
+directive|endif
 block|}
 name|numvnodes
 operator|++
