@@ -305,9 +305,11 @@ operator|)
 argument_list|)
 condition|)
 comment|/* special case since strtoul ignores leading white space */
-name|entry_version
+name|q
 operator|=
-literal|0
+name|linebuf
+operator|+
+literal|1
 expr_stmt|;
 else|else
 name|entry_version
