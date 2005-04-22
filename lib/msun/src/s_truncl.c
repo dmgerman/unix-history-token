@@ -82,6 +82,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|long
+name|double
+name|huge
+init|=
+literal|1.0e300
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|long
 name|double
@@ -133,6 +144,14 @@ literal|0
 condition|)
 block|{
 comment|/* raise inexact if x != 0 */
+if|if
+condition|(
+name|huge
+operator|+
+name|x
+operator|>
+literal|0.0
+condition|)
 name|u
 operator|.
 name|e
@@ -189,6 +208,16 @@ name|x
 operator|)
 return|;
 comment|/* x is integral */
+if|if
+condition|(
+name|huge
+operator|+
+name|x
+operator|>
+literal|0.0
+condition|)
+block|{
+comment|/* raise inexact flag */
 name|u
 operator|.
 name|bits
@@ -206,6 +235,7 @@ name|manl
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
@@ -257,6 +287,15 @@ name|x
 operator|)
 return|;
 comment|/* x is integral */
+if|if
+condition|(
+name|huge
+operator|+
+name|x
+operator|>
+literal|0.0
+condition|)
+comment|/* raise inexact flag */
 name|u
 operator|.
 name|bits
