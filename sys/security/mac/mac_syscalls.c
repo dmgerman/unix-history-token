@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001
 end_comment
 
 begin_comment
-comment|/*-  * Framework for extensible kernel access control.  This file contains  * Kernel and userland interface to the framework, policy registration  * and composition.  Per-object interfaces, controls, and labeling may be  * found in src/sys/mac/.  Sample policies may be found in src/sys/mac*.  */
+comment|/*-  * Framework for extensible kernel access control.  This file contains  * Kernel and userland interface to the framework, policy registration  * and composition.  Per-object interfaces, controls, and labeling may be  * found in src/sys/security/mac/.  Sample policies may be found in  * src/sys/security/mac_*.  */
 end_comment
 
 begin_include
