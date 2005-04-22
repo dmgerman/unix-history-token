@@ -1479,14 +1479,28 @@ block|}
 block|,
 comment|/* 	 * CDEV 	 */
 block|{
-literal|"cdev"
+literal|"system map"
 block|,
 operator|&
 name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"system map"
+literal|"vm page queue mutex"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"vnode interlock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"cdev"
 block|,
 operator|&
 name|lock_class_mtx_sleep
