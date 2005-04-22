@@ -2229,6 +2229,17 @@ name|dorandom
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * It makes no sense to do random port allocation if 		 * we have the only port available. 		 */
+if|if
+condition|(
+name|first
+operator|==
+name|last
+condition|)
+name|dorandom
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Make sure to not include UDP packets in the count. */
 if|if
 condition|(
