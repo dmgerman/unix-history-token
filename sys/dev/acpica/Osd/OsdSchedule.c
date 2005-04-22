@@ -100,6 +100,30 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/*  * Allow the user to tune the number of task threads we start.  It seems  * some systems have problems with increased parallelism.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_max_threads
+init|=
+name|ACPI_MAX_THREADS
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.max_threads"
+argument_list|,
+operator|&
+name|acpi_max_threads
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * This is a little complicated due to the fact that we need to build and then  * free a 'struct task' for each task we enqueue.  */
 end_comment
 
@@ -441,7 +465,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ACPI_MAX_THREADS
+name|acpi_max_threads
 condition|;
 name|i
 operator|++
