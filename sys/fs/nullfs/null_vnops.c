@@ -1487,9 +1487,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VI_LOCK
+name|VI_LOCK_FLAGS
 argument_list|(
 name|lvp
+argument_list|,
+name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
 name|VI_UNLOCK
