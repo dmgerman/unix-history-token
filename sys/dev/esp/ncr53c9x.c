@@ -9637,7 +9637,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * The DMA operation was started for 				 * a DATA transfer. Print a diagnostic 				 * if the DMA counter and TC bit 				 * appear to be out of sync. 				 */
+comment|/* 				 * The DMA operation was started for 				 * a DATA transfer. Print a diagnostic 				 * if the DMA counter and TC bit 				 * appear to be out of sync. 				 * 				 * XXX This is fatal and usually means that 				 *     the DMA engine is hopelessly out of 				 *     sync with reality.  A disk is likely 				 *     getting spammed at this point. 				 */
 name|device_printf
 argument_list|(
 name|sc
@@ -9672,6 +9672,11 @@ name|dleft
 else|:
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"esp: unrecoverable DMA error"
 argument_list|)
 expr_stmt|;
 block|}
