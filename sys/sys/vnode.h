@@ -1560,6 +1560,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|VI_LOCK_FLAGS
+parameter_list|(
+name|vp
+parameter_list|,
+name|flags
+parameter_list|)
+value|mtx_lock_flags(&(vp)->v_interlock, (flags))
+end_define
+
+begin_define
+define|#
+directive|define
 name|VI_TRYLOCK
 parameter_list|(
 name|vp
