@@ -4058,6 +4058,43 @@ block|, 	    }
 block|, 	}
 block|,
 comment|/* 	 * Boards with an Oxford Semiconductor chip. 	 * 	 * Oxford Semiconductor provides documentation for their chip at: 	 *<URL:http://www.oxsemi.com/products/uarts/index.html> 	 * 	 * As sold by Kouwell<URL:http://www.kouwell.com/>. 	 * I/O Flex PCI I/O Card Model-223 with 4 serial and 1 parallel ports. 	 */
+comment|/* Oxford Semiconductor OX12PCI840 PCI Parallel port */
+block|{
+literal|"Oxford Semiconductor OX12PCI840 Parallel port"
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x8403
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_LPT
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|, 	    }
+block|, 	}
+block|,
 comment|/* Oxford Semiconductor OX16PCI954 PCI UARTs */
 block|{
 literal|"Oxford Semiconductor OX16PCI954 UARTs"
@@ -4192,14 +4229,14 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
-comment|/* Oxford Semiconductor OX16PCI954 PCI Parallel port */
+comment|/* Oxford Semiconductor OXCB950 PCI/CardBus UARTs */
 block|{
-literal|"Oxford Semiconductor OX16PCI954 Parallel port"
+literal|"Oxford Semiconductor OXCB950 UART"
 block|,
 block|{
 literal|0x1415
 block|,
-literal|0x9513
+literal|0x950b
 block|,
 literal|0
 block|,
@@ -4218,50 +4255,13 @@ block|}
 block|,
 block|{
 block|{
-name|PUC_PORT_TYPE_LPT
+name|PUC_PORT_TYPE_COM
 block|,
 literal|0x10
 block|,
 literal|0x00
 block|,
-literal|0x00
-block|}
-block|, 	    }
-block|, 	}
-block|,
-comment|/* Oxford Semiconductor OX12PCI840 PCI Parallel port */
-block|{
-literal|"Oxford Semiconductor OX12PCI840 Parallel port"
-block|,
-block|{
-literal|0x1415
-block|,
-literal|0x8403
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|0xffff
-block|,
-literal|0xffff
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-block|{
-name|PUC_PORT_TYPE_LPT
-block|,
-literal|0x10
-block|,
-literal|0x00
-block|,
-literal|0x00
+name|COM_FREQ
 block|}
 block|, 	    }
 block|, 	}
@@ -4329,6 +4329,43 @@ block|,
 literal|0x18
 block|,
 name|COM_FREQ
+block|}
+block|, 	    }
+block|, 	}
+block|,
+comment|/* Oxford Semiconductor OX16PCI954 PCI Parallel port */
+block|{
+literal|"Oxford Semiconductor OX16PCI954 Parallel port"
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x9513
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_LPT
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+literal|0x00
 block|}
 block|, 	    }
 block|, 	}
