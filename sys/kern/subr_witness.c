@@ -3592,6 +3592,12 @@ name|lo_flags
 operator|&
 name|LO_DUPOK
 operator|)
+operator|||
+operator|(
+name|flags
+operator|&
+name|LOP_DUPOK
+operator|)
 condition|)
 return|return;
 name|w
