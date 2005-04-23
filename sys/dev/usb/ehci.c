@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ehci.c,v 1.89 2004/12/03 08:51:31 augustss Exp $ */
+comment|/*	$NetBSD: ehci.c,v 1.91 2005/02/27 00:27:51 perry Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2004 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) and by Charles M. Hannum.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2004 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) and by Charles M. Hannum.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * USB Enhanced Host Controller Driver, a.k.a. USB 2.0 controller.  *
 end_comment
 
 begin_comment
-comment|/*  * TODO:  * 1) hold off explorations by companion controllers until ehci has started.  *  * 2) The EHCI driver lacks support for interrupt isochronous transfers, so  *    devices using them don't work.  *    Interrupt transfers are not difficult, it's just not done.   *  * 3) The meaty part to implement is the support for USB 2.0 hubs.  *    They are quite complicated since the need to be able to do  *    "transaction translation", i.e., converting to/from USB 2 and USB 1.  *    So the hub driver needs to handle and schedule these things, to  *    assign place in frame where different devices get to go. See chapter  *    on hubs in USB 2.0 for details.   *  * 4) command failures are not recovered correctly */
+comment|/*  * TODO:  * 1) The EHCI driver lacks support for isochronous transfers, so  *    devices using them don't work.  *  * 2) Interrupt transfer scheduling does not manage the time available  *    in each frame, so it is possible for the transfers to overrun  *    the end of the frame.  *  * 3) Command failures are not recovered correctly.  */
 end_comment
 
 begin_include
@@ -1579,6 +1579,9 @@ decl_stmt|;
 name|u_int
 name|ncomp
 decl_stmt|;
+name|int
+name|lev
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -2171,7 +2174,7 @@ name|sc_eintrs
 operator|=
 name|EHCI_NORMAL_INTRS
 expr_stmt|;
-comment|/* 	 * Allocate the interrupt dummy QHs. These are arranged to give 	 * poll intervals that are powers of 2 times 1ms. 	 * XXX this probably isn't the most sensible arrangement, and it 	 * would be better if we didn't leave all the QHs in the periodic 	 * schedule all the time. 	 */
+comment|/* 	 * Allocate the interrupt dummy QHs. These are arranged to give 	 * poll intervals that are powers of 2 times 1ms. 	 */
 for|for
 control|(
 name|i
@@ -2220,6 +2223,10 @@ operator|=
 name|sqh
 expr_stmt|;
 block|}
+name|lev
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2234,6 +2241,22 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|i
+operator|==
+name|EHCI_IQHIDX
+argument_list|(
+name|lev
+operator|+
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|lev
+operator|++
+expr_stmt|;
 name|sqh
 operator|=
 name|sc
@@ -2279,15 +2302,16 @@ name|sc
 operator|->
 name|sc_islots
 index|[
-operator|(
+name|EHCI_IQHIDX
+argument_list|(
+name|lev
+operator|-
+literal|1
+argument_list|,
 name|i
 operator|+
 literal|1
-operator|)
-operator|/
-literal|2
-operator|-
-literal|1
+argument_list|)
 index|]
 operator|.
 name|sqh
@@ -2328,9 +2352,15 @@ name|sqh
 operator|->
 name|qh
 operator|.
-name|qh_link
+name|qh_endphub
 operator|=
-name|EHCI_NULL
+name|htole32
+argument_list|(
+name|EHCI_QH_SET_MULT
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|sqh
 operator|->
@@ -2339,12 +2369,6 @@ operator|.
 name|qh_curqtd
 operator|=
 name|EHCI_NULL
-expr_stmt|;
-name|sqh
-operator|->
-name|next
-operator|=
-name|NULL
 expr_stmt|;
 name|sqh
 operator|->
@@ -3847,6 +3871,8 @@ literal|0
 decl_stmt|;
 name|int
 name|actlen
+decl_stmt|,
+name|cerr
 decl_stmt|;
 name|u_int
 name|pkts_left
@@ -4081,7 +4107,7 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * If there are left over TDs we need to update the toggle. 	 * The default pipe doesn't need it since control transfers 	 * start the toggle at 0 every time. 	 */
+comment|/* 	 * If there are left over TDs we need to update the toggle. 	 * The default pipe doesn't need it since control transfers 	 * start the toggle at 0 every time. 	 */
 if|if
 condition|(
 name|sqtd
@@ -4130,7 +4156,7 @@ name|nstatus
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * For a short transfer we need to update the toggle for the missing 	 * packets within the qTD. 	 */
+comment|/* 	 * For a short transfer we need to update the toggle for the missing 	 * packets within the qTD. 	 */
 name|pkts_left
 operator|=
 name|EHCI_QTD_GET_BYTES
@@ -4159,9 +4185,12 @@ name|pkts_left
 operator|%
 literal|2
 expr_stmt|;
+name|cerr
+operator|=
+name|EHCI_QTD_GET_CERR
+argument_list|(
 name|status
-operator|&=
-name|EHCI_QTD_STATERRS
+argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -4169,13 +4198,16 @@ comment|/*10*/
 literal|2
 argument_list|,
 operator|(
-literal|"ehci_idone: len=%d, actlen=%d, status=0x%x\n"
+literal|"ehci_idone: len=%d, actlen=%d, cerr=%d, "
+literal|"status=0x%x\n"
 operator|,
 name|xfer
 operator|->
 name|length
 operator|,
 name|actlen
+operator|,
+name|cerr
 operator|,
 name|status
 operator|)
@@ -4189,7 +4221,11 @@ name|actlen
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|status
+operator|&
+name|EHCI_QTD_HALTED
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -4211,7 +4247,7 @@ operator|)
 name|status
 argument_list|,
 literal|"\20\7HALTED\6BUFERR\5BABBLE\4XACTERR"
-literal|"\3MISSED"
+literal|"\3MISSED\2SPLIT\1PING"
 argument_list|,
 name|sbuf
 argument_list|,
@@ -4223,15 +4259,7 @@ argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-operator|(
-name|status
-operator|==
-name|EHCI_QTD_HALTED
-operator|)
-condition|?
 literal|2
-else|:
-literal|0
 argument_list|,
 operator|(
 literal|"ehci_idone: error, addr=%d, endpt=0x%02x, "
@@ -4285,9 +4313,17 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|status
+operator|&
+name|EHCI_QTD_BABBLE
+operator|)
 operator|==
-name|EHCI_QTD_HALTED
+literal|0
+operator|&&
+name|cerr
+operator|>
+literal|0
 condition|)
 name|xfer
 operator|->
@@ -4579,15 +4615,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TRY_DETATCH_CODE
-argument_list|)
-end_if
-
 begin_function
 name|int
 name|ehci_detach
@@ -4765,11 +4792,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -4870,15 +4892,6 @@ end_endif
 begin_comment
 comment|/*  * Handle suspend/resume.  *  * We need to switch to polling mode here, because this routine is  * called from an interrupt context.  This is all right since we  * are almost suspended anyway.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TRY_DETATCH_CODE
-argument_list|)
-end_if
 
 begin_function
 name|void
@@ -5584,11 +5597,6 @@ directive|endif
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Shut down the controller when the system is going down.  */
 end_comment
@@ -5849,6 +5857,15 @@ name|ehci_timeout_task
 argument_list|,
 name|xfer
 argument_list|)
+expr_stmt|;
+name|EXFER
+argument_list|(
+name|xfer
+argument_list|)
+operator|->
+name|ehci_xfer_flags
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7042,6 +7059,10 @@ condition|(
 name|speed
 operator|!=
 name|EHCI_QH_SPEED_HIGH
+operator|&&
+name|xfertype
+operator|==
+name|UE_ISOCHRONOUS
 condition|)
 block|{
 name|printf
@@ -7072,12 +7093,6 @@ name|hshubport
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xfertype
-operator|!=
-name|UE_CONTROL
-condition|)
 return|return
 name|USBD_INVAL
 return|;
@@ -7189,10 +7204,9 @@ argument_list|)
 operator||
 name|EHCI_QH_SET_CMASK
 argument_list|(
-literal|0xf0
+literal|0x1c
 argument_list|)
 operator||
-comment|/* XXX */
 name|EHCI_QH_SET_SMASK
 argument_list|(
 name|xfertype
@@ -12305,11 +12319,90 @@ argument_list|(
 literal|"ehci_abort_xfer: not in process context"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If an abort is already in progress then just wait for it to 	 * complete and return. 	 */
+if|if
+condition|(
+name|exfer
+operator|->
+name|ehci_xfer_flags
+operator|&
+name|EHCI_XFER_ABORTING
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"ehci_abort_xfer: already aborting\n"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* No need to wait if we're aborting from a timeout. */
+if|if
+condition|(
+name|status
+operator|==
+name|USBD_TIMEOUT
+condition|)
+return|return;
+comment|/* Override the status which might be USBD_TIMEOUT. */
+name|xfer
+operator|->
+name|status
+operator|=
+name|status
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"ehci_abort_xfer: waiting for abort to finish\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|exfer
+operator|->
+name|ehci_xfer_flags
+operator||=
+name|EHCI_XFER_ABORTWAIT
+expr_stmt|;
+while|while
+condition|(
+name|exfer
+operator|->
+name|ehci_xfer_flags
+operator|&
+name|EHCI_XFER_ABORTING
+condition|)
+name|tsleep
+argument_list|(
+operator|&
+name|exfer
+operator|->
+name|ehci_xfer_flags
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"ehciaw"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Step 1: Make interrupt routine and timeouts ignore xfer. 	 */
 name|s
 operator|=
 name|splusb
 argument_list|()
+expr_stmt|;
+name|exfer
+operator|->
+name|ehci_xfer_flags
+operator||=
+name|EHCI_XFER_ABORTING
 expr_stmt|;
 name|xfer
 operator|->
@@ -12410,7 +12503,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USB_USE_SOFTINTR */
-comment|/* 	 * Step 4: Remove any vestiges of the xfer from the hardware. 	 * The complication here is that the hardware may have executed 	 * into or even beyond the xfer we're trying to abort.  	 * So as we're scanning the TDs of this xfer we check if 	 * the hardware points to any of them. 	 * 	 * first we need to see if there are any transfers  	 * on this queue before the xfer we are aborting.. we need 	 * to update any pointers that point to us to point past 	 * the aborting xfer.  (If there is something past us). 	 * Hardware and software. 	 */
+comment|/* 	 * Step 4: Remove any vestiges of the xfer from the hardware. 	 * The complication here is that the hardware may have executed 	 * into or even beyond the xfer we're trying to abort. 	 * So as we're scanning the TDs of this xfer we check if 	 * the hardware points to any of them. 	 * 	 * first we need to see if there are any transfers 	 * on this queue before the xfer we are aborting.. we need 	 * to update any pointers that point to us to point past 	 * the aborting xfer.  (If there is something past us). 	 * Hardware and software. 	 */
 name|cur
 operator|=
 name|EHCI_LINK_ADDR
@@ -12451,14 +12544,14 @@ name|next
 operator|=
 name|snext
 condition|?
+name|htole32
+argument_list|(
 name|snext
 operator|->
 name|physaddr
-else|:
-name|htole32
-argument_list|(
-name|EHCI_NULL
 argument_list|)
+else|:
+name|EHCI_NULL
 expr_stmt|;
 comment|/* 	 * Now loop through any qTDs before us and keep track of the pointer 	 * that points to us for the end. 	 */
 name|psqtd
@@ -12574,7 +12667,7 @@ operator|!
 name|hit
 condition|)
 block|{
-comment|/*  		 * Now reinitialise the QH to point to the next qTD 		 * (if there is one). We only need to do this if 		 * it was previously pointing to us.  		 * XXX Not quite sure what to do about the data toggle. 		 */
+comment|/* 		 * Now reinitialise the QH to point to the next qTD 		 * (if there is one). We only need to do this if 		 * it was previously pointing to us. 		 * XXX Not quite sure what to do about the data toggle. 		 */
 name|sqtd
 operator|=
 name|exfer
@@ -12683,10 +12776,7 @@ name|qh_qtd
 operator|.
 name|qtd_altnext
 operator|=
-name|htole32
-argument_list|(
 name|EHCI_NULL
-argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -12719,6 +12809,39 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Do the wakeup first to avoid touching the xfer after the callback. */
+name|exfer
+operator|->
+name|ehci_xfer_flags
+operator|&=
+operator|~
+name|EHCI_XFER_ABORTING
+expr_stmt|;
+if|if
+condition|(
+name|exfer
+operator|->
+name|ehci_xfer_flags
+operator|&
+name|EHCI_XFER_ABORTWAIT
+condition|)
+block|{
+name|exfer
+operator|->
+name|ehci_xfer_flags
+operator|&=
+operator|~
+name|EHCI_XFER_ABORTWAIT
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|exfer
+operator|->
+name|ehci_xfer_flags
+argument_list|)
+expr_stmt|;
+block|}
 name|usb_transfer_complete
 argument_list|(
 name|xfer
