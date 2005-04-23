@@ -1025,6 +1025,20 @@ name|p_numksegrps
 operator|--
 expr_stmt|;
 comment|/* 	 * Aggregate stats from the KSE 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_procscopegrp
+operator|==
+name|kg
+condition|)
+name|p
+operator|->
+name|p_procscopegrp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -3491,6 +3505,12 @@ expr_stmt|;
 name|p
 operator|->
 name|p_singlethread
+operator|=
+name|NULL
+expr_stmt|;
+name|p
+operator|->
+name|p_procscopegrp
 operator|=
 name|NULL
 expr_stmt|;
