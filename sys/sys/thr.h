@@ -15,6 +15,10 @@ directive|define
 name|_SYS_THR_H_
 end_define
 
+begin_comment
+comment|/* Create the thread in the suspended state. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23,8 +27,79 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* Create the thread in the suspended state. */
+comment|/* Create the system scope thread. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|THR_SYSTEM_SCOPE
+value|0x0002
+end_define
+
+begin_struct
+struct|struct
+name|thr_param
+block|{
+name|void
+function_decl|(
+modifier|*
+name|start_func
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* thread entry function. */
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+comment|/* argument for entry function. */
+name|char
+modifier|*
+name|stack_base
+decl_stmt|;
+comment|/* stack base address. */
+name|size_t
+name|stack_size
+decl_stmt|;
+comment|/* stack size. */
+name|char
+modifier|*
+name|tls_base
+decl_stmt|;
+comment|/* tls base address. */
+name|size_t
+name|tls_size
+decl_stmt|;
+comment|/* tls size. */
+name|long
+modifier|*
+name|child_tid
+decl_stmt|;
+comment|/* address to store new TID. */
+name|long
+modifier|*
+name|parent_tid
+decl_stmt|;
+comment|/* parent accesses the new TID here. */
+name|int
+name|flags
+decl_stmt|;
+comment|/* thread flags. */
+name|void
+modifier|*
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* TODO: cpu affinity mask etc. */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*   * See pthread_*  */
@@ -50,6 +125,21 @@ name|id
 parameter_list|,
 name|int
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thr_new
+parameter_list|(
+name|struct
+name|thr_param
+modifier|*
+name|param
+parameter_list|,
+name|int
+name|param_size
 parameter_list|)
 function_decl|;
 end_function_decl
