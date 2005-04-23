@@ -70,7 +70,7 @@ file|"ugidfw.h"
 end_include
 
 begin_comment
-comment|/*  * Text format for rules: rules contain subjectand object elements, mode.  * Each element takes the form "[not] [uid number] [gid number]".  * The total form is "subject [element] object [element] mode [mode]".  * At least * one of a uid or gid entry must be present; both may also be  * present.  */
+comment|/*  * Text format for rules: rules contain subject and object elements, mode.  * Each element takes the form "[not] [uid number] [gid number]".  * The total form is "subject [element] object [element] mode [mode]".  * At least * one of a uid or gid entry must be present; both may also be  * present.  */
 end_comment
 
 begin_define
@@ -1254,7 +1254,7 @@ name|gid
 operator|=
 literal|0
 expr_stmt|;
-comment|/* First phrase: uid [uid] or gid[gid]. */
+comment|/* First phrase: uid [uid] or gid [gid]. */
 if|if
 condition|(
 name|strcmp
