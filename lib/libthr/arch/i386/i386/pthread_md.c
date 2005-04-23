@@ -63,9 +63,6 @@ name|void
 modifier|*
 name|oldtls
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|initial
