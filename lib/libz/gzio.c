@@ -2681,6 +2681,25 @@ name|Z_ERRNO
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|feof
+argument_list|(
+name|s
+operator|->
+name|file
+argument_list|)
+condition|)
+block|{
+comment|/* avoid error for empty file */
+name|s
+operator|->
+name|z_err
+operator|=
+name|Z_STREAM_END
+expr_stmt|;
+break|break;
+block|}
 block|}
 name|s
 operator|->
