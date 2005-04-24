@@ -8925,7 +8925,7 @@ comment|/* alignment, boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* highaddr */
 name|NULL
