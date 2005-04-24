@@ -331,6 +331,10 @@ decl_stmt|;
 name|interface_type
 name|ndis_iftype
 decl_stmt|;
+name|driver_object
+modifier|*
+name|ndis_dobj
+decl_stmt|;
 name|bus_dma_tag_t
 name|ndis_parent_tag
 decl_stmt|;

@@ -194,6 +194,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/ndis/cfg_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/ndis/resource_var.h>
 end_include
 
@@ -213,12 +219,6 @@ begin_include
 include|#
 directive|include
 file|<compat/ndis/hal_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/ndis/cfg_var.h>
 end_include
 
 begin_include

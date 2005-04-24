@@ -201,6 +201,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/ndis/cfg_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<compat/ndis/resource_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/ndis/ntoskrnl_var.h>
 end_include
 
@@ -213,21 +225,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/ndis/resource_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<compat/ndis/ndis_var.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|__regparm
-value|__attribute__((regparm(3)))
-end_define
 
 begin_function_decl
 specifier|static

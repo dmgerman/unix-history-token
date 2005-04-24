@@ -276,6 +276,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/ndis/cfg_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/ndis/resource_var.h>
 end_include
 
@@ -295,12 +301,6 @@ begin_include
 include|#
 directive|include
 file|<compat/ndis/ndis_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/ndis/cfg_var.h>
 end_include
 
 begin_include
@@ -4705,7 +4705,7 @@ name|drv
 operator|=
 name|block
 operator|->
-name|nmb_physdeviceobj
+name|nmb_deviceobj
 operator|->
 name|do_drvobj
 expr_stmt|;
@@ -9587,18 +9587,9 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|tv
-operator|.
-name|tv_sec
-operator|=
-literal|0
-expr_stmt|;
-name|tv
-operator|.
-name|tv_usec
-operator|=
-name|usecs
-expr_stmt|;
+comment|/* 	 * During system bootstrap, (i.e. cold == 1), we aren't 	 * allowed to msleep(), so calling ndis_thsuspend() here 	 * will return 0, and we won't actually have delayed. This 	 * is a problem because some drivers expect NdisMSleep() 	 * to always wait, and might fail if the expected delay 	 * period does not in fact elapse. As a workaround, if the 	 * attempt to sleep delay fails, we do a hard DELAY() instead. 	 */
+if|if
+condition|(
 name|ndis_thsuspend
 argument_list|(
 name|curthread
@@ -9612,6 +9603,13 @@ argument_list|(
 operator|&
 name|tv
 argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|DELAY
+argument_list|(
+name|usecs
 argument_list|)
 expr_stmt|;
 return|return;
