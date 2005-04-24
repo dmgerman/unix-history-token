@@ -51,14 +51,14 @@ argument_list|)
 name|ta_link
 expr_stmt|;
 comment|/* link for queue */
-name|int
+name|u_short
 name|ta_pending
 decl_stmt|;
 comment|/* count times queued */
-name|int
+name|u_short
 name|ta_priority
 decl_stmt|;
-comment|/* priority of task in queue */
+comment|/* Priority */
 name|task_fn_t
 modifier|*
 name|ta_func
@@ -69,24 +69,9 @@ modifier|*
 name|ta_context
 decl_stmt|;
 comment|/* argument for handler */
-name|int
-name|ta_flags
-decl_stmt|;
-comment|/* Flags */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|TAF_PENDING
-value|0x1
-end_define
-
-begin_comment
-comment|/* Task is being run now */
-end_comment
 
 begin_endif
 endif|#
