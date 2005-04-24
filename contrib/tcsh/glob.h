@@ -371,6 +371,12 @@ begin_comment
 comment|/* #endif */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"tc.nls.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|glob
@@ -421,9 +427,9 @@ name|globcharcoll
 name|__P
 argument_list|(
 operator|(
-name|int
+name|NLSChar
 operator|,
-name|int
+name|NLSChar
 operator|,
 name|int
 operator|)

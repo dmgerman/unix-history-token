@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/tw.h,v 3.22 2002/03/08 17:36:47 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/tw.h,v 3.24 2004/11/23 02:10:50 christos Exp $ */
 end_comment
 
 begin_comment
@@ -417,6 +417,28 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|match_unique_match
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|InsideCompletion
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|varent
+name|completions
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|color_context_ls
 decl_stmt|;
 end_decl_stmt
 

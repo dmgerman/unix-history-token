@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.h,v 3.114 2004/02/21 20:34:25 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.h,v 3.133 2005/03/25 18:46:41 kim Exp $ */
 end_comment
 
 begin_comment
@@ -29,29 +29,92 @@ directive|include
 file|"config.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_QUAD
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|HAVE_ICONV
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|HAVE_QUAD
-value|1
-end_define
+begin_include
+include|#
+directive|include
+file|<iconv.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_INTTYPES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_STDINT_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_INTTYPES_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|WINNT_NATIVE
+argument_list|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|intptr_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
@@ -282,6 +345,82 @@ directive|ifdef
 name|SHORT_STRINGS
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<wchar.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIDE_STRINGS
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|wchar_t
+name|Char
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|uChar
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|wint_t
+name|eChar
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Can contain any Char value or CHAR_ERR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHAR_ERR
+value|WEOF
+end_define
+
+begin_comment
+comment|/* Pretty please, use bit 31... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|normal_mbtowc
+parameter_list|(
+name|PWC
+parameter_list|,
+name|S
+parameter_list|,
+name|N
+parameter_list|)
+value|rt_mbtowc(PWC, S, N)
+end_define
+
+begin_define
+define|#
+directive|define
+name|reset_mbtowc
+parameter_list|()
+value|mbtowc(NULL, NULL, 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|short
@@ -296,6 +435,47 @@ name|short
 name|uChar
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|eChar
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|CHAR_ERR
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|normal_mbtowc
+parameter_list|(
+name|PWC
+parameter_list|,
+name|S
+parameter_list|,
+name|N
+parameter_list|)
+value|((void)(N), *(PWC) = (unsigned char)*(S), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|reset_mbtowc
+parameter_list|()
+value|((void)0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -327,6 +507,42 @@ name|uChar
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|eChar
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|CHAR_ERR
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|normal_mbtowc
+parameter_list|(
+name|PWC
+parameter_list|,
+name|S
+parameter_list|,
+name|N
+parameter_list|)
+value|((void)(N), *(PWC) = (unsigned char)*(S), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|reset_mbtowc
+parameter_list|()
+value|((void)0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -336,6 +552,42 @@ name|a
 parameter_list|)
 value|(strsave(a))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SIZEOF_WCHAR_T
+operator|>=
+literal|4
+end_if
+
+begin_typedef
+typedef|typedef
+name|wchar_t
+name|NLSChar
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Assumes sizeof (int)>= 4, unlike some parts of tcsh */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|NLSChar
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
@@ -355,105 +607,6 @@ name|a
 parameter_list|)
 value|(void) (a)
 end_define
-
-begin_comment
-comment|/*  * If your compiler complains, then you can either  * throw it away and get gcc or, use the following define  * and get rid of the typedef.  * [The 4.2/3BSD vax compiler does not like that]  * Both MULTIFLOW and PCC compilers exhbit this bug.  -- sterling@netcom.com  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIGVOID
-end_ifdef
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|uts
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|MULTIFLOW
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|PCC
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|sigret_t
-value|void
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !((vax || uts || MULTIFLOW || PCC)&& !__GNUC__) */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|sigret_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* (vax || uts || MULTIFLOW || PCC)&& !__GNUC__ */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !SIGVOID */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|sigret_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SIGVOID */
-end_comment
 
 begin_comment
 comment|/*  * Return true if the path is absolute  */
@@ -723,6 +876,17 @@ end_comment
 
 begin_comment
 comment|/*  * The shell moves std in/out/diag and the old std input away from units  * 0, 1, and 2 so that it is easy to set up these standards for invoked  * commands.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSAFE
+value|5
+end_define
+
+begin_comment
+comment|/* We keep the first 5 descriptors untouched */
 end_comment
 
 begin_define
@@ -1465,56 +1629,11 @@ name|WINNT_NATIVE
 argument_list|)
 end_if
 
-begin_comment
-comment|/*  * We should be using setpgid and setpgid  * by now, but in some systems we use the  * old routines...  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|getpgrp
-value|__getpgrp
-end_define
-
-begin_define
-define|#
-directive|define
-name|setpgrp
-value|__setpgrp
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|getpgrp
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|setpgrp
-end_undef
 
 begin_comment
 comment|/*  * the gcc+protoize version of<stdlib.h>  * redefines malloc(), so we define the following  * to avoid it.  */
@@ -1531,6 +1650,16 @@ operator|||
 name|defined
 argument_list|(
 name|linux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNU__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GLIBC__
 argument_list|)
 operator|||
 name|defined
@@ -1562,7 +1691,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* linux */
+comment|/* glibc */
 end_comment
 
 begin_define
@@ -1635,7 +1764,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* linux || sgi */
+comment|/* glibc || sgi */
 end_comment
 
 begin_include
@@ -1673,6 +1802,16 @@ operator|||
 name|defined
 argument_list|(
 name|linux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNU__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GLIBC__
 argument_list|)
 end_if
 
@@ -2017,11 +2156,9 @@ end_include
 begin_if
 if|#
 directive|if
-name|__STDC__
-operator|||
 name|defined
 argument_list|(
-name|FUNCPROTO
+name|PROTOTYPES
 argument_list|)
 end_if
 
@@ -2076,7 +2213,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DIRENT
+name|HAVE_DIRENT_H
 end_ifdef
 
 begin_include
@@ -2093,7 +2230,7 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|hp9000s500
+name|HAVE_NDIR_H
 end_ifdef
 
 begin_include
@@ -2131,8 +2268,26 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DIRENT */
+comment|/* HAVE_DIRENT_H */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRUCT_DIRENT_D_INO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|d_ino
+value|d_fileno
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -2207,7 +2362,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PW_SHADOW
+name|HAVE_SHADOW_H
 end_ifdef
 
 begin_include
@@ -2222,13 +2377,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PW_SHADOW */
+comment|/* HAVE_SHADOW_H */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PW_AUTH
+name|HAVE_AUTH_H
 end_ifdef
 
 begin_include
@@ -2243,7 +2398,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PW_AUTH */
+comment|/* HAVE_AUTH_H */
 end_comment
 
 begin_if
@@ -2403,10 +2558,9 @@ name|_SS_MAXSIZE
 argument_list|)
 operator|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|NO_SS_FAMILY
+name|HAVE_STRUCT_SOCKADDR_STORAGE_SS_FAMILY
 argument_list|)
 end_if
 
@@ -2501,30 +2655,11 @@ end_ifndef
 begin_if
 if|#
 directive|if
-name|__STDC__
-operator|||
 name|defined
 argument_list|(
-name|FUNCPROTO
+name|PROTOTYPES
 argument_list|)
 end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FUNCPROTO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FUNCPROTO
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2550,52 +2685,6 @@ name|a
 parameter_list|)
 value|()
 end_define
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|apollo
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|volatile
-end_define
-
-begin_comment
-comment|/* Apollo 'c' extensions need this */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* apollo */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2717,13 +2806,6 @@ begin_comment
 comment|/* PURIFY */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|bool
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  * ASCII vs. EBCDIC  */
 end_comment
@@ -2769,13 +2851,23 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__NetBSD__
+end_ifndef
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|WINNT_NATIVE
 end_ifndef
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|POSIX
+name|GETPGRP_VOID
 end_ifndef
 
 begin_decl_stmt
@@ -2795,64 +2887,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* POSIX */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BSD4_4
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|SUNOS4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IRIS4D
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|DGUX
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|pid_t
-name|getpgrp
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !(BSD || SUNOS4 || IRIS4D || DGUX) */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -2872,34 +2906,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* BSD || SUNOS4 || IRISD || DGUX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* POSIX */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|pid_t
-name|setpgrp
-name|__P
-argument_list|(
-operator|(
-name|pid_t
-operator|,
-name|pid_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -2909,9 +2915,14 @@ begin_comment
 comment|/* !WINNT_NATIVE */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
-name|sigret_t
+name|RETSIGTYPE
 argument_list|(
 argument|*signalfun_t
 argument_list|)
@@ -3484,7 +3495,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|chkstop
 name|IZERO
 decl_stmt|;
@@ -3528,7 +3539,7 @@ end_else
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|didcch
 name|IZERO
 decl_stmt|;
@@ -3549,7 +3560,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|didfds
 name|IZERO
 decl_stmt|;
@@ -3561,7 +3572,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|doneinp
 name|IZERO
 decl_stmt|;
@@ -3573,7 +3584,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|exiterr
 name|IZERO
 decl_stmt|;
@@ -3585,7 +3596,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|child
 name|IZERO
 decl_stmt|;
@@ -3597,7 +3608,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|haderr
 name|IZERO
 decl_stmt|;
@@ -3609,7 +3620,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|intty
 name|IZERO
 decl_stmt|;
@@ -3621,7 +3632,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|intact
 name|IZERO
 decl_stmt|;
@@ -3633,7 +3644,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|justpr
 name|IZERO
 decl_stmt|;
@@ -3645,7 +3656,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|loginsh
 name|IZERO
 decl_stmt|;
@@ -3657,7 +3668,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|neednote
 name|IZERO
 decl_stmt|;
@@ -3669,7 +3680,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|noexec
 name|IZERO
 decl_stmt|;
@@ -3681,7 +3692,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|pjobs
 name|IZERO
 decl_stmt|;
@@ -3693,7 +3704,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|setintr
 name|IZERO
 decl_stmt|;
@@ -3705,7 +3716,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|timflg
 name|IZERO
 decl_stmt|;
@@ -3717,7 +3728,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|havhash
 name|IZERO
 decl_stmt|;
@@ -3729,7 +3740,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|editing
 name|IZERO
 decl_stmt|;
@@ -3741,7 +3752,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|noediting
 name|IZERO
 decl_stmt|;
@@ -3753,7 +3764,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|bslash_quote
 name|IZERO
 decl_stmt|;
@@ -3765,7 +3776,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|isoutatty
 name|IZERO
 decl_stmt|;
@@ -3777,7 +3788,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|isdiagatty
 name|IZERO
 decl_stmt|;
@@ -3789,7 +3800,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|is1atty
 name|IZERO
 decl_stmt|;
@@ -3801,7 +3812,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|is2atty
 name|IZERO
 decl_stmt|;
@@ -3813,7 +3824,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|arun
 name|IZERO
 decl_stmt|;
@@ -3837,7 +3848,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|inheredoc
 name|IZERO
 decl_stmt|;
@@ -3849,7 +3860,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|windowchg
 name|IZERO
 decl_stmt|;
@@ -3858,6 +3869,37 @@ end_decl_stmt
 begin_comment
 comment|/* We received a window change event */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KANJI
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SHORT_STRINGS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|DSPMBYTE
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|dspmbyte_ls
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Global i/o info  */
@@ -3902,7 +3944,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|bool
+name|int
 name|dolzero
 decl_stmt|;
 end_decl_stmt
@@ -3923,21 +3965,11 @@ begin_comment
 comment|/* Error message from scanner/parser */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BSD4_4
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|errno
+end_ifndef
 
 begin_decl_stmt
 specifier|extern
@@ -4185,12 +4217,20 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|uid_t
 name|uid
 decl_stmt|,
 name|euid
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Invokers real and effective */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|gid_t
 name|gid
 decl_stmt|,
 name|egid
@@ -4203,7 +4243,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|pid_t
 name|opgrp
 decl_stmt|,
 comment|/* Initial pgrp and tty pgrp */
@@ -4624,8 +4664,120 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SHORT_STRINGS
+name|WIDE_STRINGS
 end_ifdef
+
+begin_comment
+comment|/* Implies SHORT_STRINGS */
+end_comment
+
+begin_comment
+comment|/* 31st char bit used for 'ing (not 32nd, we want all values nonnegative) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUOTE
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRIM
+value|0x3FFFFFFF
+end_define
+
+begin_comment
+comment|/* Mask to strip quote bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNDER
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Underline flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOLD
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Bold flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STANDOUT
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Standout flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LITERAL
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Literal character flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTES
+value|0x3C000000
+end_define
+
+begin_comment
+comment|/* The bits used for attributes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INVALID_BYTE
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Invalid character on input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHAR
+value|0x003FFFFF
+end_define
+
+begin_comment
+comment|/* Mask to mask out the character */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SHORT_STRINGS
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -4642,11 +4794,11 @@ begin_define
 define|#
 directive|define
 name|TRIM
-value|0077777
+value|0073777
 end_define
 
 begin_comment
-comment|/* Mask to strip quote bit */
+comment|/* Mask to strip quote/lit bit */
 end_comment
 
 begin_define
@@ -4703,6 +4855,13 @@ end_define
 begin_comment
 comment|/* The bits used for attributes */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|INVALID_BYTE
+value|0
+end_define
 
 begin_define
 define|#
@@ -4800,6 +4959,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INVALID_BYTE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHAR
 value|0000177
 end_define
@@ -4812,6 +4978,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|CHAR_DBWIDTH
+value|(LITERAL|(LITERAL-1))
+end_define
 
 begin_decl_stmt
 name|EXTERN
@@ -4839,7 +5012,7 @@ block|{
 name|off_t
 name|Bfseekp
 decl_stmt|;
-comment|/* Seek pointer */
+comment|/* Seek pointer, generally != lseek() value */
 name|off_t
 name|Bfbobp
 decl_stmt|;
@@ -4858,6 +5031,21 @@ modifier|*
 name|Bfbuf
 decl_stmt|;
 comment|/* The array of buffer blocks */
+ifdef|#
+directive|ifdef
+name|WIDE_STRINGS
+comment|/* Number of bytes in each character if (cantell) */
+name|unsigned
+name|char
+name|Bfclens
+index|[
+name|BUFSIZE
+operator|+
+literal|1
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|B
 struct|;
@@ -4981,6 +5169,13 @@ name|fbuf
 value|B.Bfbuf
 end_define
 
+begin_define
+define|#
+directive|define
+name|fclens
+value|B.Bfclens
+end_define
+
 begin_comment
 comment|/*  * The shell finds commands in loops by reseeking the input  * For whiles, in particular, it reseeks to the beginning of the  * line the while was on; hence the while placement restrictions.  */
 end_comment
@@ -4995,7 +5190,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
-name|bool
+name|int
 name|cantell
 decl_stmt|;
 end_decl_stmt
@@ -5512,6 +5707,7 @@ specifier|extern
 struct|struct
 name|biltins
 block|{
+specifier|const
 name|char
 modifier|*
 name|bname
@@ -5568,11 +5764,19 @@ begin_comment
 comment|/* WINNT_NATIVE*/
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|bequiet
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 specifier|extern
 struct|struct
 name|srch
 block|{
+specifier|const
 name|char
 modifier|*
 name|s_name
@@ -5825,7 +6029,7 @@ begin_define
 define|#
 directive|define
 name|MAXVARLEN
-value|30
+value|256
 end_define
 
 begin_comment
@@ -5915,6 +6119,7 @@ block|{
 name|int
 name|limconst
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|limname
@@ -5922,6 +6127,7 @@ decl_stmt|;
 name|int
 name|limdiv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|limscale
@@ -6149,6 +6355,12 @@ directive|ifdef
 name|CASE_INSENSITIVE
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIDE_STRINGS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -6156,8 +6368,28 @@ name|samecase
 parameter_list|(
 name|x
 parameter_list|)
-value|(isupper((unsigned char)(x)) ? \ 		      tolower((unsigned char)(x)) : (x))
+value|(towlower(x))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|samecase
+parameter_list|(
+name|x
+parameter_list|)
+value|(isupper((unsigned char)(x)) ? \ 		       tolower((unsigned char)(x)) : (x))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -6406,6 +6638,129 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIDE_STRINGS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Strchr
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|wcschr(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strrchr
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|wcsrchr(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strcat
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|wcscat(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strncat
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|wcsncat(a, b, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strcpy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|wcscpy(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strncpy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|wcsncpy(a, b, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strlen
+parameter_list|(
+name|a
+parameter_list|)
+value|wcslen(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strcmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|wcscmp(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strncmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|wcsncmp(a, b, c)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -6518,6 +6873,11 @@ parameter_list|)
 value|s_strncmp(a, b, c)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -6585,6 +6945,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+specifier|const
 name|char
 modifier|*
 name|bname
@@ -6671,11 +7032,13 @@ specifier|extern
 struct|struct
 name|mesg
 block|{
+specifier|const
 name|char
 modifier|*
 name|iname
 decl_stmt|;
 comment|/* name from /usr/include */
+specifier|const
 name|char
 modifier|*
 name|pname
@@ -6798,57 +7161,81 @@ name|tcsh
 decl_stmt|;
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"tc.h"
-end_include
+begin_decl_stmt
+specifier|extern
+name|int
+name|xlate_cr
+decl_stmt|;
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"sh.decls.h"
-end_include
+begin_decl_stmt
+specifier|extern
+name|int
+name|output_raw
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*  * To print system call errors...  */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|int
+name|lbuffed
+decl_stmt|;
+end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD4_4
-end_ifdef
+begin_decl_stmt
+specifier|extern
+name|time_t
+name|Htime
+decl_stmt|;
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
+begin_decl_stmt
+specifier|extern
+name|int
+name|numeof
+decl_stmt|;
+end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
+begin_decl_stmt
+specifier|extern
+name|int
+name|insource
+decl_stmt|;
+end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|linux
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEEDstrerror
-end_ifdef
+begin_decl_stmt
+specifier|extern
+name|char
+name|linbuf
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|sys_errlist
-index|[]
+name|linp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsig
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VFORK
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|use_fork
 decl_stmt|;
 end_decl_stmt
 
@@ -6860,25 +7247,22 @@ end_endif
 begin_decl_stmt
 specifier|extern
 name|int
-name|errno
-decl_stmt|,
-name|sys_nerr
+name|tellwhat
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|extern
+name|int
+name|NoNLSRebind
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* !linux */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"tc.h"
+end_include
 
 begin_ifndef
 ifndef|#
@@ -6892,11 +7276,24 @@ directive|ifdef
 name|NLS_CATALOGS
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|linux
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNU__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -7081,6 +7478,31 @@ name|catd
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ICONV
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CGETS
+parameter_list|(
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|iconv_catgets(catd, b, c, d)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -7094,6 +7516,11 @@ name|d
 parameter_list|)
 value|catgets(catd, b, c, d)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -7204,7 +7631,7 @@ end_if
 
 begin_decl_stmt
 specifier|extern
-name|bool
+name|int
 name|filec
 decl_stmt|;
 end_decl_stmt
@@ -7217,6 +7644,12 @@ end_endif
 begin_comment
 comment|/* FILEC */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sh.decls.h"
+end_include
 
 begin_comment
 comment|/*  * Since on some machines characters are unsigned, and the signed  * keyword is not universally implemented, we treat all characters  * as unsigned and sign extend them where we need.  */
@@ -7231,6 +7664,23 @@ name|a
 parameter_list|)
 value|(((a)& 0x80) ? ((a) | ~0x7f) : (a))
 end_define
+
+begin_comment
+comment|/*  * explanation for use by the "--help" option  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HELP_STRING
+value|"\ -b file		batch mode, read and execute commands from `file' \n\ -c command	run `command' from next argument \n\ -d		load directory stack from `~/.cshdirs' \n\ -Dname[=value]	define environment variable `name' to `value' (DomainOS only) \n\ -e		exit on any error \n\ -f		start faster by ignoring the start-up file \n\ -F		use fork() instead of vfork() when spawning (ConvexOS only) \n\ -i		interactive, even when input is not from a terminal \n\ -l		act as a login shell, must be the only option specified \n\ -m		load the start-up file, whether or not owned by effective user \n\ -n file		no execute mode, just check syntax of the following `file' \n\ -q		accept SIGQUIT for running under a debugger \n\ -s		read commands from standard input \n\ -t		read one line from standard input \n\ -v		echo commands after history substitution \n\ -V		like -v but including commands read from the start-up file \n\ -x		echo commands immediately before execution \n\ -X		like -x but including commands read from the start-up file \n\ --help		print this message and exit \n\ --version	print the version shell variable and exit \n\ \nSee the tcsh(1) manual page for detailed information.\n"
+end_define
+
+begin_include
+include|#
+directive|include
+file|"tc.nls.h"
+end_include
 
 begin_endif
 endif|#

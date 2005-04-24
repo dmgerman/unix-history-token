@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.c,v 3.109 2004/02/21 20:34:24 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.c,v 3.123 2005/03/21 21:26:36 kim Exp $ */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_comment
 begin_macro
 name|RCSID
 argument_list|(
-literal|"$Id: sh.c,v 3.109 2004/02/21 20:34:24 christos Exp $"
+literal|"$Id: sh.c,v 3.123 2005/03/21 21:26:36 kim Exp $"
 argument_list|)
 end_macro
 
@@ -78,22 +78,15 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|bool
+name|int
 name|MapsAreInited
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|bool
+name|int
 name|NLSMapsAreInited
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|NoNLSRebind
 decl_stmt|;
 end_decl_stmt
 
@@ -193,7 +186,7 @@ comment|/* TESLA */
 end_comment
 
 begin_decl_stmt
-name|bool
+name|int
 name|use_fork
 init|=
 literal|0
@@ -247,7 +240,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|reenter
 init|=
 literal|0
@@ -256,7 +249,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|nverbose
 init|=
 literal|0
@@ -265,7 +258,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|nexececho
 init|=
 literal|0
@@ -274,7 +267,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|quitit
 init|=
 literal|0
@@ -283,7 +276,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|rdirs
 init|=
 literal|0
@@ -291,7 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|bool
+name|int
 name|fast
 init|=
 literal|0
@@ -300,7 +293,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|batch
 init|=
 literal|0
@@ -309,7 +302,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|mflag
 init|=
 literal|0
@@ -318,7 +311,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|prompt
 init|=
 literal|1
@@ -326,7 +319,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|enterhist
 init|=
@@ -335,7 +327,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|bool
+name|int
 name|tellwhat
 init|=
 literal|0
@@ -358,7 +350,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|bool
+name|int
 name|dolzero
 init|=
 literal|0
@@ -474,7 +466,7 @@ decl_stmt|;
 name|int
 name|onelflg
 decl_stmt|;
-name|bool
+name|int
 name|enterhist
 decl_stmt|;
 name|Char
@@ -485,7 +477,7 @@ decl_stmt|;
 name|Char
 name|HIST
 decl_stmt|;
-name|bool
+name|int
 name|cantell
 decl_stmt|;
 name|struct
@@ -541,10 +533,11 @@ name|srcfile
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
-name|bool
+name|int
 operator|,
 name|int
 operator|,
@@ -567,10 +560,11 @@ name|srcfile
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
-name|bool
+name|int
 operator|,
 name|int
 operator|,
@@ -593,7 +587,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|sigret_t
+name|RETSIGTYPE
 name|phup
 name|__P
 argument_list|(
@@ -613,7 +607,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|bool
+name|int
 operator|,
 name|int
 operator|,
@@ -756,7 +750,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -764,14 +757,12 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|AUTOLOGOUT
-specifier|register
 name|Char
 modifier|*
 name|cp2
 decl_stmt|;
 endif|#
 directive|endif
-specifier|register
 name|char
 modifier|*
 name|tcp
@@ -779,11 +770,9 @@ decl_stmt|,
 modifier|*
 name|ttyn
 decl_stmt|;
-specifier|register
 name|int
 name|f
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -870,7 +859,7 @@ name|mal_setstatsfile
 argument_list|(
 name|fdopen
 argument_list|(
-name|dup2
+name|dmove
 argument_list|(
 name|open
 argument_list|(
@@ -1585,6 +1574,10 @@ control|)
 continue|continue;
 name|AsciiOnly
 operator|=
+name|MB_CUR_MAX
+operator|==
+literal|1
+operator|&&
 name|k
 operator|>
 literal|0377
@@ -2815,6 +2808,19 @@ argument_list|,
 name|VAR_READWRITE
 argument_list|)
 expr_stmt|;
+comment|/*      * Compatibility with tcsh>= 6.12 by default      */
+name|set
+argument_list|(
+name|STRcsubstnonl
+argument_list|,
+name|Strsave
+argument_list|(
+name|STRNULL
+argument_list|)
+argument_list|,
+name|VAR_READWRITE
+argument_list|)
+expr_stmt|;
 comment|/*      * Random default kill ring size      */
 name|set
 argument_list|(
@@ -3403,6 +3409,53 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"--help"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|xprintf
+argument_list|(
+literal|"%S\n\n"
+argument_list|,
+name|varval
+argument_list|(
+name|STRversion
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xprintf
+argument_list|(
+name|CGETS
+argument_list|(
+literal|11
+argument_list|,
+literal|8
+argument_list|,
+name|HELP_STRING
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xexit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Process the arguments.      *       * Note that processing of -v/-x is actually delayed till after script      * processing.      *       * We set the first character of our name to be '-' if we are a shell       * running interruptible commands.  Many programs which examine ps'es       * use this to filter such shells out.      */
 name|argc
 operator|--
@@ -3574,7 +3627,6 @@ argument_list|)
 expr_stmt|;
 comment|/* 		 * * Give an error on -c arguments that end in * backslash to 		 * ensure that you don't make * nonportable csh scripts. 		 */
 block|{
-specifier|register
 name|int
 name|count
 decl_stmt|;
@@ -3654,7 +3706,6 @@ literal|'D'
 case|:
 comment|/* -D	Define environment variable */
 block|{
-specifier|register
 name|Char
 modifier|*
 name|dp
@@ -5515,18 +5566,15 @@ modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -5758,7 +5806,6 @@ argument_list|)
 return|;
 else|else
 block|{
-specifier|register
 name|Char
 modifier|*
 name|ep
@@ -5879,11 +5926,12 @@ name|flag
 parameter_list|,
 name|av
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|f
 decl_stmt|;
-name|bool
+name|int
 name|onlyown
 decl_stmt|;
 name|int
@@ -5895,7 +5943,6 @@ modifier|*
 name|av
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|unit
 decl_stmt|;
@@ -6061,12 +6108,13 @@ argument_list|,
 name|OLDSTD
 argument_list|)
 condition|)
+block|{
 name|st
 operator|->
 name|OLDSTD
 operator|=
 name|OLDSTD
-operator|,
+expr_stmt|;
 name|OLDSTD
 operator|=
 name|dmove
@@ -6077,6 +6125,17 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close_on_exec
+argument_list|(
+name|OLDSTD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|NEED_SAVE_FD
@@ -6086,12 +6145,13 @@ argument_list|,
 name|SHOUT
 argument_list|)
 condition|)
+block|{
 name|st
 operator|->
 name|SHOUT
 operator|=
 name|SHOUT
-operator|,
+expr_stmt|;
 name|SHOUT
 operator|=
 name|dmove
@@ -6102,6 +6162,17 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close_on_exec
+argument_list|(
+name|SHOUT
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|NEED_SAVE_FD
@@ -6111,12 +6182,13 @@ argument_list|,
 name|SHDIAG
 argument_list|)
 condition|)
+block|{
 name|st
 operator|->
 name|SHDIAG
 operator|=
 name|SHDIAG
-operator|,
+expr_stmt|;
 name|SHDIAG
 operator|=
 name|dmove
@@ -6127,6 +6199,17 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close_on_exec
+argument_list|(
+name|SHDIAG
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|donefds
 argument_list|()
 expr_stmt|;
@@ -6412,11 +6495,9 @@ condition|)
 return|return;
 comment|/* Reset input arena */
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -6424,7 +6505,6 @@ name|nfbuf
 init|=
 name|fbuf
 decl_stmt|;
-specifier|register
 name|int
 name|nfblocks
 init|=
@@ -6709,11 +6789,10 @@ name|hflg
 parameter_list|,
 name|av
 parameter_list|)
-specifier|register
 name|int
 name|unit
 decl_stmt|;
-name|bool
+name|int
 name|onlyown
 decl_stmt|;
 name|int
@@ -6990,6 +7069,11 @@ decl_stmt|;
 block|{
 name|USE
 argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+name|USE
+argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
@@ -7170,7 +7254,7 @@ expr_stmt|;
 block|}
 comment|/*  * in the event of a HUP we want to save the history  */
 specifier|static
-name|sigret_t
+name|RETSIGTYPE
 name|phup
 parameter_list|(
 name|snum
@@ -7413,16 +7497,6 @@ argument_list|(
 name|snum
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SIGVOID
-return|return
-operator|(
-name|snum
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 specifier|static
 name|Char
@@ -7443,13 +7517,7 @@ name|int
 name|just_signaled
 decl_stmt|;
 comment|/* bugfix by Michael Bloom (mg@ttidca.TTI.COM) */
-ifdef|#
-directive|ifdef
-name|SIGVOID
-comment|/*ARGSUSED*/
-endif|#
-directive|endif
-name|sigret_t
+name|RETSIGTYPE
 name|pintr
 parameter_list|(
 name|snum
@@ -7458,6 +7526,11 @@ name|int
 name|snum
 decl_stmt|;
 block|{
+name|USE
+argument_list|(
+name|snum
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UNRELSIGS
@@ -7487,27 +7560,16 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SIGVOID
-return|return
-operator|(
-name|snum
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 name|void
 name|pintr1
 parameter_list|(
 name|wantnl
 parameter_list|)
-name|bool
+name|int
 name|wantnl
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -7602,10 +7664,6 @@ block|}
 block|}
 comment|/* MH - handle interrupted completions specially */
 block|{
-specifier|extern
-name|int
-name|InsideCompletion
-decl_stmt|;
 if|if
 condition|(
 name|InsideCompletion
@@ -7618,10 +7676,6 @@ expr_stmt|;
 block|}
 comment|/* JV - Make sure we shut off inputl */
 block|{
-specifier|extern
-name|Char
-name|GettingInput
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -7677,19 +7731,9 @@ directive|endif
 name|drainoline
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_VMS_POSIX
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|WINNT_NATIVE
-argument_list|)
+ifdef|#
+directive|ifdef
+name|HAVE_GETPWENT
 operator|(
 name|void
 operator|)
@@ -7698,7 +7742,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !_VMS_POSIX&& !WINNT_NATIVE */
 comment|/*      * If we have an active "onintr" then we search for the label. Note that if      * one does "onintr -" then we shan't be interruptible so we needn't worry      * about that here.      */
 if|if
 condition|(
@@ -7822,14 +7865,10 @@ name|process
 parameter_list|(
 name|catch
 parameter_list|)
-name|bool
+name|int
 name|catch
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-name|Expand
-decl_stmt|;
 name|jmp_buf_t
 name|osetexit
 decl_stmt|;
@@ -8421,10 +8460,6 @@ name|tellwhat
 operator|)
 condition|)
 block|{
-name|windowchg
-operator|=
-literal|0
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -8471,7 +8506,6 @@ name|t
 parameter_list|,
 name|c
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -8483,19 +8517,14 @@ modifier|*
 name|c
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|f
 decl_stmt|;
-name|bool
+name|int
 name|hflg
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|int
-name|bequiet
 decl_stmt|;
 name|char
 name|buf
@@ -8707,13 +8736,11 @@ name|void
 name|mailchk
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|varent
 modifier|*
 name|v
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -8731,7 +8758,7 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
-name|bool
+name|int
 name|new
 decl_stmt|;
 name|v
@@ -9102,6 +9129,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|char
+modifier|*
+name|type
+decl_stmt|;
 if|if
 condition|(
 name|stb
@@ -9140,6 +9171,24 @@ name|new
 operator|)
 condition|)
 continue|continue;
+name|type
+operator|=
+name|strsave
+argument_list|(
+name|new
+condition|?
+name|CGETS
+argument_list|(
+literal|11
+argument_list|,
+literal|6
+argument_list|,
+literal|"new "
+argument_list|)
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cnt
@@ -9157,18 +9206,7 @@ argument_list|,
 literal|"You have %smail.\n"
 argument_list|)
 argument_list|,
-name|new
-condition|?
-name|CGETS
-argument_list|(
-literal|11
-argument_list|,
-literal|6
-argument_list|,
-literal|"new "
-argument_list|)
-else|:
-literal|""
+name|type
 argument_list|)
 expr_stmt|;
 else|else
@@ -9183,20 +9221,14 @@ argument_list|,
 literal|"You have %smail in %s.\n"
 argument_list|)
 argument_list|,
-name|new
-condition|?
-name|CGETS
-argument_list|(
-literal|11
-argument_list|,
-literal|6
-argument_list|,
-literal|"new "
-argument_list|)
-else|:
-literal|""
+name|type
 argument_list|,
 name|filename
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|type
 argument_list|)
 expr_stmt|;
 block|}
@@ -9308,13 +9340,8 @@ name|NLS_BUGS
 ifdef|#
 directive|ifdef
 name|NLS_CATALOGS
-operator|(
-name|void
-operator|)
-name|catclose
-argument_list|(
-name|catd
-argument_list|)
+name|nlsclose
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -9635,13 +9662,8 @@ name|child
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|catclose
-argument_list|(
-name|catd
-argument_list|)
+name|nlsclose
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif

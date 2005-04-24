@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/gethost.c,v 1.9 2002/12/04 12:30:55 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/gethost.c,v 1.10 2005/01/05 16:06:13 christos Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|RCSID
 argument_list|(
-literal|"$Id: gethost.c,v 1.9 2002/12/04 12:30:55 christos Exp $"
+literal|"$Id: gethost.c,v 1.10 2005/01/05 16:06:13 christos Exp $"
 argument_list|)
 end_macro
 
@@ -109,49 +109,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_comment
-comment|/* Some people don't bother to declare these */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SUNOS4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ibm032
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|extern
-name|int
-name|fprintf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|fclose
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SUNOS4 || ibm032 */
-end_comment
 
 begin_define
 define|#

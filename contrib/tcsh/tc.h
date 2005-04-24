@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/tc.h,v 3.5 2002/03/08 17:36:47 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/tc.h,v 3.6 2004/08/04 17:12:31 christos Exp $ */
 end_comment
 
 begin_comment
@@ -65,6 +65,13 @@ include|#
 directive|include
 file|"tc.decls.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tlength
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

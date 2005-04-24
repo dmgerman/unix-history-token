@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/config_f.h,v 3.26 2004/03/21 16:48:14 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/config_f.h,v 3.32 2005/03/04 13:46:04 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ name|_h_config_f
 end_define
 
 begin_comment
-comment|/*  * SHORT_STRINGS Use 16 bit characters instead of 8 bit chars  * 	         This fixes up quoting problems and eases implementation  *	         of nls...  *  */
+comment|/*  * SHORT_STRINGS Use at least 16 bit characters instead of 8 bit chars  * 	         This fixes up quoting problems and eases implementation  *	         of nls...  *  */
 end_comment
 
 begin_define
@@ -32,6 +32,46 @@ define|#
 directive|define
 name|SHORT_STRINGS
 end_define
+
+begin_comment
+comment|/*  * WIDE_STRINGS	Represent strings using wide characters  *		Allows proper function in multibyte encodings like UTF-8  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SHORT_STRINGS
+argument_list|)
+operator|&&
+name|SIZEOF_WCHAR_T
+operator|>=
+literal|4
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|WINNT_NATIVE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_OSD_POSIX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|WIDE_STRINGS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * NLS:		Use Native Language System  *		Routines like setlocale() are needed  *		if you don't have<locale.h>, you don't want  *		to define this.  */
@@ -134,7 +174,7 @@ name|SUSPENDED
 end_define
 
 begin_comment
-comment|/*  * KANJI	Ignore meta-next, and the ISO character set. Should  *		be used with SHORT_STRINGS  *  */
+comment|/*  * KANJI	Ignore meta-next, and the ISO character set. Should  *		be used with SHORT_STRINGS (or WIDE_STRINGS)  *  */
 end_comment
 
 begin_define
@@ -147,11 +187,31 @@ begin_comment
 comment|/*  * DSPMBYTE	add variable "dspmbyte" and display multi-byte string at  *		only output, when "dspmbyte" is set. Should be used with  *		KANJI  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SHORT_STRINGS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|WIDE_STRINGS
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|DSPMBYTE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * MBYTEDEBUG	when "dspmbyte" is changed, set multi-byte checktable to  *		variable "mbytemap".  *		(use for multi-byte table check)  */
@@ -370,6 +430,134 @@ end_endif
 begin_comment
 comment|/* !lint&& !SABER */
 end_comment
+
+begin_comment
+comment|/* Consistency checks */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIDE_STRINGS
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|SIZEOF_WCHAR_T
+operator|<
+literal|4
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"wchar_t must be at least 4 bytes for WIDE_STRINGS"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WINNT_NATIVE
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"WIDE_STRINGS cannot be used together with WINNT_NATIVE"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHORT_STRINGS
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"SHORT_STRINGS must be defined if WIDE_STRINGS is defined"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NLS
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"NLS must be defined if WIDE_STRINGS is defined"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DSPMBYTE
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"DSPMBYTE must not be defined if WIDE_STRINGS is defined"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SHORT_STRINGS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|DSPMBYTE
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"SHORT_STRINGS must be defined if DSPMBYTE is defined"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
