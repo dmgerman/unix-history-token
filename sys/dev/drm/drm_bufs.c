@@ -841,6 +841,10 @@ block|{
 case|case
 name|_DRM_REGISTERS
 case|:
+name|map
+operator|->
+name|handle
+operator|=
 name|drm_ioremap
 argument_list|(
 name|dev
