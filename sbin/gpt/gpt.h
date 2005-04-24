@@ -148,8 +148,8 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
 name|device_name
-index|[]
 decl_stmt|;
 end_decl_stmt
 
