@@ -320,10 +320,6 @@ name|wrap
 decl_stmt|;
 comment|/* bit 0 true for zlib, bit 1 true for gzip */
 name|Byte
-name|data_type
-decl_stmt|;
-comment|/* UNKNOWN, BINARY or ASCII */
-name|Byte
 name|method
 decl_stmt|;
 comment|/* STORED (for zip only) or DEFLATED */

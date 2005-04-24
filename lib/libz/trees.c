@@ -5124,6 +5124,8 @@ if|if
 condition|(
 name|s
 operator|->
+name|strm
+operator|->
 name|data_type
 operator|==
 name|Z_UNKNOWN
@@ -6264,12 +6266,10 @@ name|Freq
 expr_stmt|;
 name|s
 operator|->
+name|strm
+operator|->
 name|data_type
 operator|=
-call|(
-name|Byte
-call|)
-argument_list|(
 name|bin_freq
 operator|>
 operator|(
@@ -6281,7 +6281,6 @@ condition|?
 name|Z_BINARY
 else|:
 name|Z_ASCII
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* ===========================================================================  * Reverse the first len bits of a code, using straightforward code (a faster  * method would use a table)  * IN assertion: 1<= len<= 15  */

@@ -209,6 +209,13 @@ name|msg
 operator|=
 name|Z_NULL
 expr_stmt|;
+name|strm
+operator|->
+name|adler
+operator|=
+literal|1
+expr_stmt|;
+comment|/* to support ill-conceived Java test suite */
 name|state
 operator|->
 name|mode
@@ -3749,6 +3756,16 @@ name|len
 expr_stmt|;
 block|}
 block|}
+comment|/* handle error breaks in while */
+if|if
+condition|(
+name|state
+operator|->
+name|mode
+operator|==
+name|BAD
+condition|)
+break|break;
 comment|/* build code tables */
 name|state
 operator|->

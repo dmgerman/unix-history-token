@@ -7,6 +7,10 @@ begin_comment
 comment|/* @(#) $Id$ */
 end_comment
 
+begin_comment
+comment|/*   Note on the use of DYNAMIC_CRC_TABLE: there is no mutex or semaphore   protection on the static variables used to control the first-use generation   of the crc tables.  Therefore, if you #define DYNAMIC_CRC_TABLE, you should   first call get_crc_table() to initialize the tables before allowing more than   one thread to use crc32().  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -312,6 +316,7 @@ end_ifdef
 
 begin_decl_stmt
 name|local
+specifier|volatile
 name|int
 name|crc_table_empty
 init|=
@@ -408,6 +413,14 @@ decl_stmt|;
 comment|/* polynomial exclusive-or pattern */
 comment|/* terms of polynomial defining this crc (except x^32): */
 specifier|static
+specifier|volatile
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
+comment|/* flag to limit concurrent making */
+specifier|static
 specifier|const
 name|unsigned
 name|char
@@ -444,6 +457,16 @@ block|,
 literal|26
 block|}
 decl_stmt|;
+comment|/* See if another task is already doing this (not thread-safe, but better        than nothing -- significantly reduces duration of vulnerability in        case the advice about DYNAMIC_CRC_TABLE is ignored) */
+if|if
+condition|(
+name|first
+condition|)
+block|{
+name|first
+operator|=
+literal|0
+expr_stmt|;
 comment|/* make exclusive-or pattern from polynomial (0xedb88320UL) */
 name|poly
 operator|=
@@ -552,7 +575,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|BYFOUR
-comment|/* generate crc for each value followed by one, two, and three zeros, and        then the byte reversal of those as well as the first table */
+comment|/* generate crc for each value followed by one, two, and three zeros,            and then the byte reversal of those as well as the first table */
 for|for
 control|(
 name|n
@@ -656,6 +679,17 @@ name|crc_table_empty
 operator|=
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* not first */
+comment|/* wait for the other guy to finish (not efficient, but rare) */
+while|while
+condition|(
+name|crc_table_empty
+condition|)
+empty_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|MAKECRCH
