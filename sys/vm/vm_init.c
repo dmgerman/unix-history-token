@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -134,6 +140,47 @@ name|long
 name|physmem
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|exec_map_entries
+init|=
+literal|16
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vm.exec_map_entries"
+argument_list|,
+operator|&
+name|exec_map_entries
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|exec_map_entries
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|exec_map_entries
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of simultaneous execs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * System initialization  */
@@ -467,7 +514,7 @@ operator|&
 name|maxaddr
 argument_list|,
 operator|(
-literal|16
+name|exec_map_entries
 operator|*
 operator|(
 name|ARG_MAX
