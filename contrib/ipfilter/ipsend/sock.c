@@ -4,29 +4,40 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * sock.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * sock.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|__sgi
+name|lint
 argument_list|)
-operator|&&
-operator|(
-name|IRIX
-operator|>
-literal|602
-operator|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<sys/ptimers.h>
-end_include
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)sock.c	1.2 1/11/96 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)Id: sock.c,v 2.8.4.1 2004/03/23 12:58:06 darrenr Exp"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -36,37 +47,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -79,12 +60,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -142,6 +117,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -195,6 +180,11 @@ directive|undef
 name|KERNEL
 end_undef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -238,6 +228,12 @@ operator|!
 name|defined
 argument_list|(
 name|hpux
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__osf__
 argument_list|)
 end_if
 
@@ -342,6 +338,26 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"radix_ipf.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -375,45 +391,44 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ipsend.h"
+file|<stdio.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)sock.c	1.2 1/11/96 (C)1995 Darren Reed"
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)$Id: sock.c,v 2.1.4.6 2002/12/06 11:40:36 darrenr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipsend.h"
+end_include
 
 begin_decl_stmt
 name|int
@@ -2421,13 +2436,6 @@ operator|=
 name|initdevice
 argument_list|(
 name|dev
-argument_list|,
-name|ntohs
-argument_list|(
-name|lsin
-operator|.
-name|sin_port
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
