@@ -1877,6 +1877,10 @@ operator|>
 name|pp
 operator|->
 name|mediasize
+operator|-
+name|pp
+operator|->
+name|sectorsize
 condition|)
 block|{
 name|gctl_error
