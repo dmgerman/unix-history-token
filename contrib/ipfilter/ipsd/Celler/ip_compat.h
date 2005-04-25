@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
 comment|/*  * (C)opyright 1995 by Darren Reed.  *  * This code may be freely distributed as long as it retains this notice  * and is not changed in any way.  The author accepts no responsibility  * for the use of this software.  I hate legaleese, don't you ?  *  * @(#)ip_compat.h	1.1 9/14/95  */
 end_comment
 

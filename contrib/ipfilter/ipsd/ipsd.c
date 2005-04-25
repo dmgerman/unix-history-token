@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1995-1998 Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  *   The author of this software makes no garuntee about the  * performance of this package or its suitability to fulfill any purpose.  *  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * (C)opyright 1995-1998 Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
 begin_include
@@ -175,7 +179,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsd.c,v 2.1.4.1 2001/06/26 10:43:21 darrenr Exp $"
+literal|"@(#)Id: ipsd.c,v 2.2 2001/06/09 17:09:25 darrenr Exp"
 decl_stmt|;
 end_decl_stmt
 

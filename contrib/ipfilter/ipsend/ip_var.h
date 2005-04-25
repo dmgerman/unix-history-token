@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	@(#)ip_var.h 1.11 88/08/19 SMI; from UCB 7.1 6/5/86	*/
 end_comment
 
@@ -125,11 +129,6 @@ operator|||
 name|defined
 argument_list|(
 name|i386
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
 argument_list|)
 name|u_char
 name|ip_hl

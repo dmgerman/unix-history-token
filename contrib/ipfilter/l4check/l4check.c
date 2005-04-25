@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
 comment|/*  * (C)Copyright March, 2000 - Darren Reed.  */
 end_comment
 
@@ -732,15 +736,6 @@ name|int
 name|dead
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|l4
-operator|->
-name|l4_fd
-operator|!=
-operator|-
-literal|1
-condition|)
 name|close
 argument_list|(
 name|l4
@@ -1652,11 +1647,9 @@ argument_list|(
 literal|"connect"
 argument_list|)
 expr_stmt|;
-name|closel4
+name|close
 argument_list|(
-name|l4
-argument_list|,
-literal|1
+name|fd
 argument_list|)
 expr_stmt|;
 name|fd
@@ -2227,7 +2220,7 @@ directive|ifdef
 name|HAVE_INET_ATON
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|host
@@ -2252,7 +2245,7 @@ else|#
 directive|else
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|host
@@ -2318,7 +2311,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|port
@@ -2765,7 +2758,7 @@ operator|*
 name|line
 operator|)
 operator|&&
-name|isspace
+name|ISSPACE
 argument_list|(
 name|c
 argument_list|)

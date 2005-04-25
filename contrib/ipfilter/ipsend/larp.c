@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * larp.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * larp.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
 begin_if
@@ -31,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: larp.c,v 2.1.4.1 2001/06/26 10:43:22 darrenr Exp $"
+literal|"@(#)Id: larp.c,v 2.4 2003/12/01 02:01:16 darrenr Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,13 +47,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -73,12 +71,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -92,6 +84,24 @@ begin_include
 include|#
 directive|include
 file|<net/if_arp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
 comment|/*  * (C)opyright 1992-1998 Darren Reed. (from tcplog)  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
@@ -747,7 +751,7 @@ operator|*
 name|s
 operator|&&
 operator|!
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|s

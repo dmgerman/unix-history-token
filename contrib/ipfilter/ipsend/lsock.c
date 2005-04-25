@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lsock.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * lsock.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
 begin_if
@@ -31,35 +35,9 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: lsock.c,v 2.1.4.3 2002/12/06 11:40:36 darrenr Exp $"
+literal|"@(#)Id: lsock.c,v 2.3 2001/06/09 17:09:26 darrenr Exp"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
-operator|&&
-operator|(
-name|IRIX
-operator|>
-literal|602
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ptimers.h>
-end_include
 
 begin_endif
 endif|#
@@ -1369,13 +1347,6 @@ operator|=
 name|initdevice
 argument_list|(
 name|dev
-argument_list|,
-name|ntohs
-argument_list|(
-name|lsin
-operator|.
-name|sin_port
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)
