@@ -243,6 +243,10 @@ name|rid
 operator|=
 name|ATA_IOADDR_RID
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|io
 operator|=
 name|bus_alloc_resource
@@ -263,11 +267,7 @@ name|ATA_IOSIZE
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|io
+operator|)
 condition|)
 return|return
 name|ENXIO
@@ -315,6 +315,10 @@ name|rid
 operator|=
 name|ATA_CTLADDR_RID
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|ctlio
 operator|=
 name|bus_alloc_resource
@@ -335,11 +339,7 @@ name|ATA_CTLIOSIZE
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ctlio
+operator|)
 condition|)
 block|{
 name|bus_release_resource

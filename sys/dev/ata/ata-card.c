@@ -241,6 +241,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|pccard_get_function
@@ -250,17 +253,10 @@ argument_list|,
 operator|&
 name|fcn
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
+operator|)
 condition|)
 return|return
-operator|(
 name|error
-operator|)
 return|;
 comment|/* if it says its a disk we should register it */
 if|if
@@ -270,9 +266,7 @@ operator|==
 name|PCCARD_FUNCTION_DISK
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/* match other devices here, primarily cdrom/dvd rom */
 if|if
@@ -315,15 +309,11 @@ name|pp_name
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 return|return
-operator|(
 name|ENXIO
-operator|)
 return|;
 block|}
 end_function
@@ -365,6 +355,10 @@ name|rid
 operator|=
 name|ATA_IOADDR_RID
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|io
 operator|=
 name|bus_alloc_resource
@@ -385,11 +379,7 @@ name|ATA_IOSIZE
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|io
+operator|)
 condition|)
 return|return
 name|ENXIO
@@ -483,6 +473,10 @@ name|rid
 operator|=
 name|ATA_CTLADDR_RID
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|ctlio
 operator|=
 name|bus_alloc_resource
@@ -503,11 +497,7 @@ name|ATA_CTLIOSIZE
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ctlio
+operator|)
 condition|)
 block|{
 name|bus_release_resource
