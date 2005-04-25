@@ -3064,6 +3064,7 @@ name|ENOPROTOOPT
 expr_stmt|;
 break|break;
 block|}
+break|break;
 default|default:
 name|error
 operator|=
