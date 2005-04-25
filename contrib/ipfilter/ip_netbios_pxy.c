@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Simple netbios-dgm transparent proxy for in-kernel use.  * For use with the NAT code.  * $Id: ip_netbios_pxy.c,v 1.1.2.3 2002/01/09 09:28:37 darrenr Exp $  */
+comment|/*	$NetBSD$	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2002 Paul J. Ledbetter III  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ip_netbios_pxy.c,v 1.1.2.3 2002/01/09 09:28:37 darrenr Exp $  */
+comment|/*  * Simple netbios-dgm transparent proxy for in-kernel use.  * For use with the NAT code.  * Id: ip_netbios_pxy.c,v 2.8 2003/12/01 02:52:16 darrenr Exp  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 2002-2003 Paul J. Ledbetter III  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Id: ip_netbios_pxy.c,v 2.8 2003/12/01 02:52:16 darrenr Exp  */
 end_comment
 
 begin_define
@@ -26,15 +30,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|ippr_netbios_fini
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ippr_netbios_out
 name|__P
 argument_list|(
 operator|(
 name|fr_info_t
-operator|*
-operator|,
-name|ip_t
 operator|*
 operator|,
 name|ap_session_t
@@ -51,6 +64,14 @@ begin_decl_stmt
 specifier|static
 name|frentry_t
 name|netbiosfr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|netbios_proxy_init
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -96,9 +117,51 @@ name|FR_QUICK
 operator||
 name|FR_KEEPSTATE
 expr_stmt|;
+name|MUTEX_INIT
+argument_list|(
+operator|&
+name|netbiosfr
+operator|.
+name|fr_lock
+argument_list|,
+literal|"NETBIOS proxy rule lock"
+argument_list|)
+expr_stmt|;
+name|netbios_proxy_init
+operator|=
+literal|1
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ippr_netbios_fini
+parameter_list|()
+block|{
+if|if
+condition|(
+name|netbios_proxy_init
+operator|==
+literal|1
+condition|)
+block|{
+name|MUTEX_DESTROY
+argument_list|(
+operator|&
+name|netbiosfr
+operator|.
+name|fr_lock
+argument_list|)
+expr_stmt|;
+name|netbios_proxy_init
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -108,8 +171,6 @@ name|ippr_netbios_out
 parameter_list|(
 name|fin
 parameter_list|,
-name|ip
-parameter_list|,
 name|aps
 parameter_list|,
 name|nat
@@ -117,10 +178,6 @@ parameter_list|)
 name|fr_info_t
 modifier|*
 name|fin
-decl_stmt|;
-name|ip_t
-modifier|*
-name|ip
 decl_stmt|;
 name|ap_session_t
 modifier|*
@@ -146,10 +203,30 @@ name|udphdr_t
 modifier|*
 name|udp
 decl_stmt|;
+name|ip_t
+modifier|*
+name|ip
+decl_stmt|;
 name|mb_t
 modifier|*
 name|m
 decl_stmt|;
+name|aps
+operator|=
+name|aps
+expr_stmt|;
+comment|/* LINT */
+name|nat
+operator|=
+name|nat
+expr_stmt|;
+comment|/* LINT */
+name|ip
+operator|=
+name|fin
+operator|->
+name|fin_ip
+expr_stmt|;
 name|m
 operator|=
 operator|*
@@ -173,27 +250,13 @@ argument_list|(
 name|udphdr_t
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|SOLARIS
 name|dlen
 operator|=
-name|msgdsize
+name|M_LEN
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|dlen
-operator|=
-name|mbufchainlen
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|dlen
 operator|-=
 name|off
@@ -218,7 +281,7 @@ name|fin
 operator|->
 name|fin_dp
 expr_stmt|;
-comment|/*  	 * move past the 	 *	ip header; 	 *	udp header; 	 *	4 bytes into the net bios dgm header.  	 *  According to rfc1002, this should be the exact location of 	 *  the source address/port 	 */
+comment|/* 	 * move past the 	 *	ip header; 	 *	udp header; 	 *	4 bytes into the net bios dgm header. 	 *  According to rfc1002, this should be the exact location of 	 *  the source address/port 	 */
 name|off
 operator|+=
 literal|4
@@ -349,10 +412,7 @@ literal|0xFF
 argument_list|)
 expr_stmt|;
 comment|/* replace data in packet */
-if|#
-directive|if
-name|SOLARIS
-name|copyin_mblk
+name|COPYBACK
 argument_list|(
 name|m
 argument_list|,
@@ -366,24 +426,6 @@ argument_list|,
 name|dgmbuf
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|m_copyback
-argument_list|(
-name|m
-argument_list|,
-name|off
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dgmbuf
-argument_list|)
-argument_list|,
-name|dgmbuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;

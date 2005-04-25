@@ -1,28 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|__sgi
+name|lint
 argument_list|)
-operator|&&
-operator|(
-name|IRIX
-operator|>
-literal|602
-operator|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<sys/ptimers.h>
-end_include
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ipsopt.c	1.2 1/11/96 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)Id: ipsopt.c,v 2.4.4.1 2004/03/23 12:58:05 darrenr Exp"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -33,24 +48,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -89,6 +86,24 @@ directive|include
 file|<netinet/ip.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -124,37 +139,47 @@ directive|include
 file|"ipsend.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__P
+end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)ipsopt.c	1.2 1/11/96 (C)1995 Darren Reed"
-decl_stmt|;
-end_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)$Id: ipsopt.c,v 2.1.4.5 2004/04/10 11:50:52 darrenr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|__P
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__P
+parameter_list|(
+name|x
+parameter_list|)
+value|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -359,7 +384,7 @@ end_decl_stmt
 
 begin_function
 name|u_short
-name|seclevel
+name|ipseclevel
 parameter_list|(
 name|slevel
 parameter_list|)
@@ -629,7 +654,7 @@ name|IPOPT_SECURITY
 case|:
 name|lvl
 operator|=
-name|seclevel
+name|ipseclevel
 argument_list|(
 name|class
 argument_list|)

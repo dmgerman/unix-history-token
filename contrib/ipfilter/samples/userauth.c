@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*	$NetBSD$	*/
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -119,10 +123,22 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|IPL_AUTH
+name|IPL_NAME
 argument_list|,
 name|O_RDWR
 argument_list|)
+expr_stmt|;
+name|fra
+operator|.
+name|fra_len
+operator|=
+literal|0
+expr_stmt|;
+name|fra
+operator|.
+name|fra_buf
+operator|=
+name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -176,7 +192,7 @@ if|if
 condition|(
 name|fi
 operator|->
-name|fi_fl
+name|fi_flx
 operator|&
 name|FI_TCPUDP
 condition|)
@@ -208,7 +224,7 @@ if|if
 condition|(
 name|fi
 operator|->
-name|fi_fl
+name|fi_flx
 operator|&
 name|FI_TCPUDP
 condition|)
@@ -314,7 +330,7 @@ name|fra_info
 operator|.
 name|fin_fi
 operator|.
-name|fi_fl
+name|fi_flx
 operator|&
 name|FI_TCPUDP
 condition|)

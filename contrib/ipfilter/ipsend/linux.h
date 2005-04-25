@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)linux.h	1.1 8/19/95  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * This code may be freely distributed as long as it retains this notice  * and is not changed in any way.  The author accepts no responsibility  * for the use of this software.  I hate legaleese, don't you ?  *  * @(#)linux.h	1.1 8/19/95  */
 end_comment
 
 begin_include

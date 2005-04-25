@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ipsend.h (C) 1997-1998 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * ipsend.h (C) 1997-1998 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * The author provides this program as-is, with no gaurantee for its  * suitability for any specific purpose.  The author takes no responsibility  * for the misuse/abuse of this program and provides it for the sole purpose  * of testing packet filter policies.  This file maybe distributed freely  * providing it is not modified and that this notice remains in tact.  *  */
 end_comment
 
 begin_ifndef
@@ -53,7 +57,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"ip_compat.h"
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipf.h"
 end_include
 
 begin_ifdef
@@ -83,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"ipt.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ipf.h"
 end_include
 
 begin_decl_stmt
@@ -294,7 +298,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_short
-name|seclevel
+name|ipseclevel
 name|__P
 argument_list|(
 operator|(
@@ -356,8 +360,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-operator|,
-name|int
 operator|,
 name|int
 operator|)
@@ -657,19 +659,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|openkmem
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|kmemcpy
 name|__P
 argument_list|(
@@ -712,34 +701,6 @@ directive|define
 name|OPT_RAW
 value|0x80000
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|const
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

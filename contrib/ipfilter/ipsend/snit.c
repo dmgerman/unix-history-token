@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1992-1998 Darren Reed. (from tcplog)  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * (C)opyright 1992-1998 Darren Reed. (from tcplog)  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
 begin_include
@@ -205,7 +209,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: snit.c,v 2.1.4.1 2001/06/26 10:43:22 darrenr Exp $"
+literal|"@(#)Id: snit.c,v 2.3 2001/06/09 17:09:26 darrenr Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,8 +263,6 @@ name|initdevice
 parameter_list|(
 name|device
 parameter_list|,
-name|sport
-parameter_list|,
 name|tout
 parameter_list|)
 name|char
@@ -268,8 +270,6 @@ modifier|*
 name|device
 decl_stmt|;
 name|int
-name|sport
-decl_stmt|,
 name|tout
 decl_stmt|;
 block|{

@@ -1,63 +1,48 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ipsend.c (C) 1995-1998 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * ipsend.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|__sgi
+name|lint
 argument_list|)
-operator|&&
-operator|(
-name|IRIX
-operator|>
-literal|602
-operator|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<sys/ptimers.h>
-end_include
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"%W% %G% (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)Id: iptest.c,v 2.6 2004/01/08 13:34:31 darrenr Exp"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
 
 begin_include
 include|#
@@ -107,24 +92,6 @@ directive|include
 file|<netinet/ip.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_icmp.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -162,45 +129,38 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"ipsend.h"
+file|<stdio.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"%W% %G% (C)1995 Darren Reed"
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)$Id: iptest.c,v 2.2.2.4 2002/12/06 11:40:35 darrenr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipsend.h"
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -533,10 +493,10 @@ operator|*
 name|ip
 argument_list|)
 expr_stmt|;
+name|IP_HL_A
+argument_list|(
 name|ip
-operator|->
-name|ip_hl
-operator|=
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -544,6 +504,7 @@ name|ip
 argument_list|)
 operator|>>
 literal|2
+argument_list|)
 expr_stmt|;
 while|while
 condition|(

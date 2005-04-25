@@ -1,33 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1992-1998 Darren Reed.  * (C)opyright 1997 Marc Boucher.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*	$NetBSD$	*/
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
-operator|&&
-operator|(
-name|IRIX
-operator|>
-literal|602
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ptimers.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * (C)opyright 1992-1998 Darren Reed.  * (C)opyright 1997 Marc Boucher.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
+end_comment
 
 begin_include
 include|#
@@ -122,25 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/udp.h>
+file|"ipsend.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ipsend.h"
 end_include
 
 begin_if
@@ -180,9 +146,6 @@ parameter_list|(
 name|char
 modifier|*
 name|device
-parameter_list|,
-name|int
-name|sport
 parameter_list|,
 name|int
 name|tout

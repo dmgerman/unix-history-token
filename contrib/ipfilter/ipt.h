@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  * $Id: ipt.h,v 2.2.2.1 2001/06/26 10:43:19 darrenr Exp $  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: ipt.h,v 2.6 2003/02/16 02:33:09 darrenr Exp  */
 end_comment
 
 begin_ifndef
@@ -122,9 +126,19 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|int
+name|r_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|R_DO_CKSUM
+value|0x01
+end_define
 
 begin_decl_stmt
 specifier|extern

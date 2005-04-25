@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4.2.8 2003/06/11 22:28:16 darrenr Exp $  */
+comment|/*	$NetBSD$	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_frag.h	1.5 3/24/96  * Id: ip_frag.h,v 2.23.2.1 2004/03/29 16:21:56 darrenr Exp  */
 end_comment
 
 begin_ifndef
@@ -30,14 +34,28 @@ block|{
 name|struct
 name|ipfr
 modifier|*
+name|ipfr_hnext
+decl_stmt|,
+modifier|*
+modifier|*
+name|ipfr_hprev
+decl_stmt|;
+name|struct
+name|ipfr
+modifier|*
 name|ipfr_next
 decl_stmt|,
+modifier|*
 modifier|*
 name|ipfr_prev
 decl_stmt|;
 name|void
 modifier|*
 name|ipfr_data
+decl_stmt|;
+name|void
+modifier|*
+name|ipfr_ifp
 decl_stmt|;
 name|struct
 name|in_addr
@@ -46,10 +64,6 @@ decl_stmt|;
 name|struct
 name|in_addr
 name|ipfr_dst
-decl_stmt|;
-name|void
-modifier|*
-name|ipfr_ifp
 decl_stmt|;
 name|u_32_t
 name|ipfr_optmsk
@@ -68,6 +82,9 @@ name|ipfr_p
 decl_stmt|;
 name|u_char
 name|ipfr_tos
+decl_stmt|;
+name|u_32_t
+name|ipfr_pass
 decl_stmt|;
 name|u_short
 name|ipfr_off
@@ -111,6 +128,12 @@ decl_stmt|;
 name|u_long
 name|ifs_inuse
 decl_stmt|;
+name|u_long
+name|ifs_retrans0
+decl_stmt|;
+name|u_long
+name|ifs_short
+decl_stmt|;
 name|struct
 name|ipfr
 modifier|*
@@ -132,8 +155,15 @@ begin_define
 define|#
 directive|define
 name|IPFR_CMPSZ
-value|(offsetof(ipfr_t, ipfr_off) - \ 			 offsetof(ipfr_t, ipfr_src))
+value|(offsetof(ipfr_t, ipfr_pass) - \ 			 offsetof(ipfr_t, ipfr_ifp))
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipfr_size
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -151,9 +181,35 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|fr_fraginit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fr_fragunload
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|ipfrstat_t
 modifier|*
-name|ipfr_fragstats
+name|fr_fragstats
 name|__P
 argument_list|(
 operator|(
@@ -166,14 +222,31 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipfr_newfrag
+name|fr_newfrag
 name|__P
 argument_list|(
 operator|(
-name|ip_t
+name|fr_info_t
 operator|*
 operator|,
+name|u_32_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|frentry_t
+modifier|*
+name|fr_knownfrag
+name|__P
+argument_list|(
+operator|(
 name|fr_info_t
+operator|*
+operator|,
+name|u_32_t
 operator|*
 operator|)
 argument_list|)
@@ -183,15 +256,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipfr_nat_newfrag
+name|fr_nat_newfrag
 name|__P
 argument_list|(
 operator|(
-name|ip_t
-operator|*
-operator|,
 name|fr_info_t
 operator|*
+operator|,
+name|u_32_t
 operator|,
 expr|struct
 name|nat
@@ -205,13 +277,10 @@ begin_decl_stmt
 specifier|extern
 name|nat_t
 modifier|*
-name|ipfr_nat_knownfrag
+name|fr_nat_knownfrag
 name|__P
 argument_list|(
 operator|(
-name|ip_t
-operator|*
-operator|,
 name|fr_info_t
 operator|*
 operator|)
@@ -221,15 +290,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|frentry_t
-modifier|*
-name|ipfr_knownfrag
+name|int
+name|fr_ipid_newfrag
 name|__P
 argument_list|(
 operator|(
-name|ip_t
+name|fr_info_t
 operator|*
 operator|,
+name|u_32_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_32_t
+name|fr_ipid_knownfrag
+name|__P
+argument_list|(
+operator|(
 name|fr_info_t
 operator|*
 operator|)
@@ -240,7 +321,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|ipfr_forget
+name|fr_forget
 name|__P
 argument_list|(
 operator|(
@@ -254,7 +335,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|ipfr_forgetnat
+name|fr_forgetnat
 name|__P
 argument_list|(
 operator|(
@@ -268,7 +349,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|ipfr_unload
+name|fr_fragclear
 name|__P
 argument_list|(
 operator|(
@@ -281,7 +362,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|ipfr_fragexpire
+name|fr_fragexpire
 name|__P
 argument_list|(
 operator|(
@@ -290,16 +371,16 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|(
 operator|(
 name|BSD
 operator|>=
@@ -312,6 +393,26 @@ name|defined
 argument_list|(
 name|__sgi
 argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>=
+literal|60500
+operator|)
+operator|)
+operator|)
 end_if
 
 begin_if
@@ -332,7 +433,7 @@ end_if
 begin_decl_stmt
 specifier|extern
 name|void
-name|ipfr_slowtimer
+name|fr_slowtimer
 name|__P
 argument_list|(
 operator|(
@@ -350,7 +451,7 @@ end_else
 begin_decl_stmt
 specifier|extern
 name|void
-name|ipfr_slowtimer
+name|fr_slowtimer
 name|__P
 argument_list|(
 operator|(
@@ -374,7 +475,7 @@ end_else
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipfr_slowtimer
+name|fr_slowtimer
 name|__P
 argument_list|(
 operator|(
@@ -389,44 +490,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* (BSD>= 199306) || SOLARIS */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|ipfr_slowtimer
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __IP_FIL_H__ */
+comment|/* __IP_FRAG_H__ */
 end_comment
 
 end_unit
