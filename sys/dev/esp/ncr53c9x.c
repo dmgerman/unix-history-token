@@ -10057,8 +10057,11 @@ operator|->
 name|sc_prevphase
 argument_list|)
 expr_stmt|;
+comment|/* 				 * XXX This will cause a chip reset and will 				 *     prevent us from finding out the real 				 *     problem with the device.  However, it's 				 *     neccessary until a way can be found to 				 *     safely cancel the DMA that is in 				 *     progress. 				 */
 if|if
 condition|(
+literal|1
+operator|||
 operator|(
 name|ecb
 operator|->
