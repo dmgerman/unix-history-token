@@ -661,6 +661,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VGE_EEPROM
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -677,6 +683,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1027,6 +1038,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VGE_EEPROM
+end_ifdef
+
 begin_comment
 comment|/*  * Read a word of data stored in the EEPROM at address 'addr.'  */
 end_comment
@@ -1194,6 +1211,11 @@ return|return;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Read a sequence of words from the EEPROM.  */
 end_comment
@@ -1234,6 +1256,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VGE_EEPROM
 name|u_int16_t
 name|word
 init|=
@@ -1303,6 +1328,51 @@ operator|=
 name|word
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|CSR_SETBIT_1
+argument_list|(
+name|sc
+argument_list|,
+name|VGE_EECSR
+argument_list|,
+name|VGE_EECSR_RELOAD
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ETHER_ADDR_LEN
+condition|;
+name|i
+operator|++
+control|)
+name|dest
+index|[
+name|i
+index|]
+operator|=
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|VGE_PAR0
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
