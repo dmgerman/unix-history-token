@@ -6887,7 +6887,7 @@ name|arpcom
 operator|.
 name|ac_if
 argument_list|,
-name|LINK_STATE_UP
+name|LINK_STATE_DOWN
 argument_list|)
 expr_stmt|;
 block|}
@@ -6927,7 +6927,7 @@ name|arpcom
 operator|.
 name|ac_if
 argument_list|,
-name|LINK_STATE_DOWN
+name|LINK_STATE_UP
 argument_list|)
 expr_stmt|;
 if|#
