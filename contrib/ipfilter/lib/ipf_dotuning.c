@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ipl.h"
+file|"netinet/ipl.h"
 end_include
 
 begin_include

@@ -174,7 +174,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|_tcp_flagset
+name|myflagset
 index|[]
 init|=
 literal|"FSRPAUEC"
@@ -184,7 +184,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_char
-name|_tcp_flags
+name|myflags
 index|[]
 init|=
 block|{
@@ -1687,16 +1687,6 @@ operator|==
 name|IPPROTO_TCP
 condition|)
 block|{
-specifier|extern
-name|char
-name|_tcp_flagset
-index|[]
-decl_stmt|;
-specifier|extern
-name|u_char
-name|_tcp_flags
-index|[]
-decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -1730,7 +1720,7 @@ name|t
 operator|=
 name|strchr
 argument_list|(
-name|_tcp_flagset
+name|myflagset
 argument_list|,
 operator|*
 name|s
@@ -1741,11 +1731,11 @@ name|tcp
 operator|->
 name|th_flags
 operator||=
-name|_tcp_flags
+name|myflags
 index|[
 name|t
 operator|-
-name|_tcp_flagset
+name|myflagset
 index|]
 expr_stmt|;
 if|if
