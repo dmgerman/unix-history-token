@@ -1012,6 +1012,10 @@ argument_list|)
 expr_stmt|;
 name|_NgDebugBytes
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|msg
 operator|->
 name|data

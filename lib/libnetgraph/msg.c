@@ -200,6 +200,10 @@ name|cmd
 expr_stmt|;
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|msg
 operator|.
 name|header
@@ -452,6 +456,10 @@ expr_stmt|;
 comment|/* Build inner header (only need cmdstr, arglen, and data fields) */
 name|strncpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ascii
 operator|->
 name|header
@@ -1109,9 +1117,7 @@ operator|*
 operator|)
 name|sgbuf
 decl_stmt|;
-name|int
-name|len
-decl_stmt|,
+name|socklen_t
 name|sglen
 init|=
 sizeof|sizeof
@@ -1120,6 +1126,8 @@ name|sgbuf
 argument_list|)
 decl_stmt|;
 name|int
+name|len
+decl_stmt|,
 name|errnosv
 decl_stmt|;
 comment|/* Read reply */

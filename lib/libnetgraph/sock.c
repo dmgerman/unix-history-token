@@ -872,7 +872,7 @@ operator|*
 operator|)
 name|frombuf
 decl_stmt|;
-name|int
+name|socklen_t
 name|fromlen
 init|=
 sizeof|sizeof
