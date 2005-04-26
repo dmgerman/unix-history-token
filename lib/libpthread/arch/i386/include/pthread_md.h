@@ -441,9 +441,6 @@ modifier|*
 name|kcb
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|COMPAT_32BIT
 name|int
 name|val
 decl_stmt|;
@@ -476,15 +473,6 @@ literal|7
 expr_stmt|;
 asm|__asm __volatile("movl %0, %%gs" : : "r" (val));
 block|}
-else|#
-directive|else
-name|_amd64_set_gsbase
-argument_list|(
-name|kcb
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
