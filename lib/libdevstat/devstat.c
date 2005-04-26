@@ -759,13 +759,6 @@ decl_stmt|;
 name|int
 name|numdevs
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"devstat_getnumdevs"
-decl_stmt|;
 name|numdevsize
 operator|=
 sizeof|sizeof
@@ -814,9 +807,9 @@ argument_list|,
 literal|"%s: error getting number of devices\n"
 literal|"%s: %s"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -889,13 +882,6 @@ decl_stmt|;
 name|long
 name|generation
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"devstat_getgeneration"
-decl_stmt|;
 name|gensize
 operator|=
 sizeof|sizeof
@@ -943,9 +929,9 @@ argument_list|)
 argument_list|,
 literal|"%s: error getting devstat generation\n%s: %s"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1018,13 +1004,6 @@ decl_stmt|;
 name|int
 name|version
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"devstat_getversion"
-decl_stmt|;
 name|versize
 operator|=
 sizeof|sizeof
@@ -1072,9 +1051,9 @@ argument_list|)
 argument_list|,
 literal|"%s: error getting devstat version\n%s: %s"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1141,13 +1120,6 @@ modifier|*
 name|kd
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"devstat_checkversion"
-decl_stmt|;
 name|int
 name|buflen
 decl_stmt|,
@@ -1218,11 +1190,11 @@ literal|"\n"
 else|:
 literal|""
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|DEVSTAT_VERSION
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|version
 argument_list|)
@@ -1267,7 +1239,7 @@ name|buflen
 argument_list|,
 literal|"%s: libdevstat newer than kernel\n"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|)
 expr_stmt|;
 else|else
@@ -1285,7 +1257,7 @@ name|buflen
 argument_list|,
 literal|"%s: kernel newer than libdevstat\n"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1355,13 +1327,6 @@ name|devinfo
 modifier|*
 name|dinfo
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"devstat_getdevs"
-decl_stmt|;
 name|struct
 name|timespec
 name|ts
@@ -1390,7 +1355,7 @@ argument_list|)
 argument_list|,
 literal|"%s: stats->dinfo was NULL"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1677,9 +1642,9 @@ argument_list|,
 literal|"%s: error getting device "
 literal|"stats\n%s: %s"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1709,9 +1674,9 @@ argument_list|,
 literal|"%s: error getting device stats\n"
 literal|"%s: %s"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -3729,13 +3694,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"devstat_buildmatch"
-decl_stmt|;
 comment|/* We can't do much without a string to parse */
 if|if
 condition|(
@@ -3755,7 +3713,7 @@ argument_list|)
 argument_list|,
 literal|"%s: no match expression"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -3839,7 +3797,7 @@ argument_list|)
 argument_list|,
 literal|"%s: too many type arguments"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4104,7 +4062,7 @@ literal|"%s: cannot have more than "
 literal|"one match item in a single "
 literal|"category"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4198,7 +4156,7 @@ argument_list|)
 argument_list|,
 literal|"%s: unknown match item \"%s\""
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|tstr
 index|[
@@ -4489,13 +4447,6 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"devstat_compute_statistics"
-decl_stmt|;
 name|u_int64_t
 name|totalbytes
 decl_stmt|,
@@ -4569,7 +4520,7 @@ argument_list|)
 argument_list|,
 literal|"%s: current stats structure was NULL"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4780,7 +4731,7 @@ argument_list|)
 argument_list|,
 literal|"%s: metric %d is out of range"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|metric
 argument_list|)
@@ -5797,7 +5748,7 @@ argument_list|)
 argument_list|,
 literal|"%s: unknown metric %d"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|metric
 argument_list|)
@@ -5852,13 +5803,6 @@ name|size_t
 name|nbytes
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"readkmem"
-decl_stmt|;
 if|if
 condition|(
 name|kvm_read
@@ -5887,7 +5831,7 @@ argument_list|)
 argument_list|,
 literal|"%s: error reading value (kvm_read): %s"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -5932,13 +5876,6 @@ name|size_t
 name|nbytes
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"readkmem_nl"
-decl_stmt|;
 name|struct
 name|nlist
 name|nl
@@ -5992,7 +5929,7 @@ argument_list|)
 argument_list|,
 literal|"%s: error getting name list (kvm_nlist): %s"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -6076,13 +6013,6 @@ name|rv
 init|=
 name|NULL
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|func_name
-init|=
-literal|"get_devstat_kvm"
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -6160,7 +6090,7 @@ argument_list|)
 argument_list|,
 literal|"%s: out of memory (initial malloc failed)"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -6313,7 +6243,7 @@ argument_list|)
 argument_list|,
 literal|"%s: out of memory (malloc failed)"
 argument_list|,
-name|func_name
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
