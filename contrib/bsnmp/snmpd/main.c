@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmpd/main.c,v 1.90 2005/02/25 11:50:03 brandt_h Exp $  *  * SNMPd main stuff.  */
+comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmpd/main.c,v 1.91 2005/04/22 12:18:14 brandt_h Exp $  *  * SNMPd main stuff.  */
 end_comment
 
 begin_include
@@ -92,6 +92,29 @@ include|#
 directive|include
 file|<inttypes.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_TCPWRAPPERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tcpd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -616,6 +639,29 @@ init|=
 literal|"\ Begemot simple SNMP daemon. Copyright (c) 2001-2002 Fraunhofer Institute for\n\ Open Communication Systems (FhG Fokus). All rights reserved.\n\ usage: snmpd [-dh] [-c file] [-D options] [-I path] [-l prefix]\n\              [-m variable=value] [-p file]\n\ options:\n\   -d		don't daemonize\n\   -h		print this info\n\   -c file	specify configuration file\n\   -D options	debugging options\n\   -I path	system include path\n\   -l prefix	default basename for pid and config file\n\   -m var=val	define variable\n\   -p file	specify pid file\n\ "
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* hosts_access(3) request */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_TCPWRAPPERS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|request_info
+name|req
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* transports */
@@ -3876,6 +3922,17 @@ decl_stmt|;
 name|ssize_t
 name|slen
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_TCPWRAPPERS
+name|char
+name|client
+index|[
+literal|16
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* get input depending on the transport */
 if|if
 condition|(
@@ -3915,6 +3972,99 @@ operator|-
 literal|1
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|USE_TCPWRAPPERS
+comment|/* 	 * In case of AF_INET{6} peer, do hosts_access(5) check. 	 */
+if|if
+condition|(
+name|inet_ntop
+argument_list|(
+name|pi
+operator|->
+name|peer
+operator|->
+name|sa_family
+argument_list|,
+operator|&
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|pi
+operator|->
+name|peer
+operator|)
+operator|->
+name|sin_addr
+argument_list|,
+name|client
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|client
+argument_list|)
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|request_set
+argument_list|(
+operator|&
+name|req
+argument_list|,
+name|RQ_CLIENT_ADDR
+argument_list|,
+name|client
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hosts_access
+argument_list|(
+operator|&
+name|req
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"refused connection from %.500s"
+argument_list|,
+name|eval_client
+argument_list|(
+operator|&
+name|req
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+block|}
+else|else
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"inet_ntop(): %m"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Handle input 	 */
 name|ierr
 operator|=
@@ -6162,6 +6312,30 @@ operator|=
 name|random
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_TCPWRAPPERS
+comment|/* 	 * Initialize hosts_access(3) handler. 	 */
+name|request_init
+argument_list|(
+operator|&
+name|req
+argument_list|,
+name|RQ_DAEMON
+argument_list|,
+literal|"snmpd"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sock_methods
+argument_list|(
+operator|&
+name|req
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize the tree. 	 */
 if|if
 condition|(
