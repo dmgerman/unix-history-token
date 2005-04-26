@@ -980,7 +980,7 @@ name|driver_t
 name|nve_driver
 init|=
 block|{
-literal|"nv"
+literal|"nve"
 block|,
 name|nve_methods
 block|,
