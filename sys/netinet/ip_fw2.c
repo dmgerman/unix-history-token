@@ -1484,7 +1484,7 @@ name|ICMP
 parameter_list|(
 name|p
 parameter_list|)
-value|((struct icmp *)(p))
+value|((struct icmphdr *)(p))
 end_define
 
 begin_define
@@ -1504,7 +1504,7 @@ name|int
 name|icmptype_match
 parameter_list|(
 name|struct
-name|icmp
+name|icmphdr
 modifier|*
 name|icmp
 parameter_list|,
@@ -1558,7 +1558,7 @@ name|int
 name|is_icmp_query
 parameter_list|(
 name|struct
-name|icmp
+name|icmphdr
 modifier|*
 name|icmp
 parameter_list|)
@@ -3477,7 +3477,7 @@ argument_list|)
 decl_stmt|;
 comment|/* these three are all aliases to the same thing */
 name|struct
-name|icmp
+name|icmphdr
 modifier|*
 specifier|const
 name|icmp
@@ -3485,7 +3485,7 @@ init|=
 name|L3HDR
 argument_list|(
 expr|struct
-name|icmp
+name|icmphdr
 argument_list|,
 name|ip
 argument_list|)
@@ -9615,7 +9615,6 @@ break|break;
 case|case
 name|IPPROTO_ICMP
 case|:
-comment|/* 				 * we only care for 4 bytes: type, code, 				 * checksum 				 */
 name|PULLUP_TO
 argument_list|(
 name|hlen
@@ -9623,7 +9622,7 @@ argument_list|,
 name|ulp
 argument_list|,
 expr|struct
-name|icmp
+name|icmphdr
 argument_list|)
 expr_stmt|;
 name|args

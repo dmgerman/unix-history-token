@@ -43,6 +43,30 @@ end_comment
 
 begin_struct
 struct|struct
+name|icmphdr
+block|{
+name|u_char
+name|icmp_type
+decl_stmt|;
+comment|/* type of message, see below */
+name|u_char
+name|icmp_code
+decl_stmt|;
+comment|/* type sub code */
+name|u_short
+name|icmp_cksum
+decl_stmt|;
+comment|/* ones complement cksum of struct */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure of an icmp packet.  *  * XXX: should start with a struct icmphdr.  */
+end_comment
+
+begin_struct
+struct|struct
 name|icmp
 block|{
 name|u_char
