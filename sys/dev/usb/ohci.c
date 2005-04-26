@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  *	$NetBSD: ohci.c,v 1.142 2003/10/11 03:04:26 toshii Exp $  *	$NetBSD: ohci.c,v 1.143 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ohci.c,v 1.144 2003/11/23 19:18:06 augustss Exp $  *	$NetBSD: ohci.c,v 1.145 2003/11/23 19:20:25 augustss Exp $  *	$NetBSD: ohci.c,v 1.146 2003/12/29 08:17:10 toshii Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  *	$NetBSD: ohci.c,v 1.142 2003/10/11 03:04:26 toshii Exp $  *	$NetBSD: ohci.c,v 1.143 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ohci.c,v 1.144 2003/11/23 19:18:06 augustss Exp $  *	$NetBSD: ohci.c,v 1.145 2003/11/23 19:20:25 augustss Exp $  *	$NetBSD: ohci.c,v 1.146 2003/12/29 08:17:10 toshii Exp $  *	$NetBSD: ohci.c,v 1.147 2004/06/22 07:20:35 mycroft Exp $  *	$NetBSD: ohci.c,v 1.148 2004/06/22 18:27:46 mycroft Exp $  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -1975,6 +1975,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|ohci_detach
@@ -1989,10 +1994,23 @@ name|flags
 parameter_list|)
 block|{
 name|int
+name|i
+decl_stmt|,
 name|rv
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 if|if
 condition|(
 name|sc
@@ -2023,6 +2041,8 @@ operator|(
 name|rv
 operator|)
 return|;
+endif|#
+directive|endif
 name|usb_uncallout
 argument_list|(
 name|sc
@@ -2061,6 +2081,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|OWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_INTERRUPT_DISABLE
+argument_list|,
+name|OHCI_ALL_INTRS
+argument_list|)
+expr_stmt|;
+name|OWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_CONTROL
+argument_list|,
+name|OHCI_HCFS_RESET
+argument_list|)
+expr_stmt|;
 name|usb_delay_ms
 argument_list|(
 operator|&
@@ -2072,7 +2110,71 @@ literal|300
 argument_list|)
 expr_stmt|;
 comment|/* XXX let stray task complete */
-comment|/* free data structures XXX */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|OHCI_NO_EDS
+condition|;
+name|i
+operator|++
+control|)
+name|ohci_free_sed
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|sc_eds
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|ohci_free_sed
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|sc_isoc_head
+argument_list|)
+expr_stmt|;
+name|ohci_free_sed
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|sc_bulk_head
+argument_list|)
+expr_stmt|;
+name|ohci_free_sed
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|sc_ctrl_head
+argument_list|)
+expr_stmt|;
+name|usb_freemem
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_hccadma
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
@@ -2080,11 +2182,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|ohci_soft_ed_t
@@ -2698,43 +2795,24 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The OHCI hardware can handle at most one 4k crossing. 		 * XXX - currently we only allocate contigous buffers, but 		 * the OHCI spec says: If during the data transfer the buffer 		 * address contained in the HC's working copy of 		 * CurrentBufferPointer crosses a 4K boundary, the upper 20 		 * bits of Buffer End are copied to the working value of 		 * CurrentBufferPointer causing the next buffer address to 		 * be the 0th byte in the same 4K page that contains the 		 * last byte of the buffer (the 4K boundary crossing may 		 * occur within a data packet transfer.) 		 * 		 * If/when dma has multiple segments, this will need to 		 * properly handle fragmenting TD's. 		 * 		 * We can describe the above using maxsegsz = 4k and nsegs = 2 		 * in the future. 		 */
+comment|/* 		 * The OHCI hardware can handle at most one 4k crossing. 		 * XXX - currently we only allocate contigous buffers, but 		 * the OHCI spec says: If during the data transfer the buffer 		 * address contained in the HC's working copy of 		 * CurrentBufferPointer crosses a 4K boundary, the upper 20 		 * bits of Buffer End are copied to the working value of 		 * CurrentBufferPointer causing the next buffer address to 		 * be the 0th byte in the same 4K page that contains the 		 * last byte of the buffer (the 4K boundary crossing may 		 * occur within a data packet transfer.) 		 * 		 * If/when dma has multiple segments, this will need to 		 * properly handle fragmenting TD's. 		 *  		 * Note that if we are gathering data from multiple SMALL 		 * segments, e.g. mbufs, we need to do special gymnastics, 		 * e.g. bounce buffering or data aggregation, 		 * BEFORE WE GET HERE because a bulk USB transfer must 		 * consist of maximally sized packets right up to the end. 		 * A shorter than maximal packet means that it is the end 		 * of the transfer. If the data transfer length is a 		 * multiple of the packet size, then a 0 byte 		 * packet will be the signal of the end of transfer. 		 * Since packets can't cross TDs this means that 		 * each TD except the last one must cover an exact multiple 		 * of the maximal packet length. 		 */
 if|if
 condition|(
-name|OHCI_PAGE
-argument_list|(
-name|dataphys
-argument_list|)
-operator|==
-name|OHCI_PAGE
-argument_list|(
-name|DMAADDR
-argument_list|(
-name|dma
-argument_list|,
-name|offset
-operator|+
-name|len
-operator|-
-literal|1
-argument_list|)
-argument_list|)
-operator|||
-name|len
-operator|-
-operator|(
-name|OHCI_PAGE_SIZE
-operator|-
 name|OHCI_PAGE_OFFSET
 argument_list|(
 name|dataphys
 argument_list|)
-operator|)
+operator|+
+name|len
 operator|<=
+operator|(
+literal|2
+operator|*
 name|OHCI_PAGE_SIZE
+operator|)
 condition|)
 block|{
-comment|/* we can handle it in this TD */
+comment|/* We can handle all that remains in this TD */
 name|curlen
 operator|=
 name|len
@@ -2742,7 +2820,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* XXX The calculation below is wrong and could 			 * result in a packet that is not a multiple of the 			 * MaxPacketSize in the case where the buffer does not 			 * start on an appropriate address (like for example in 			 * the case of an mbuf cluster). You'll get an early 			 * short packet. 			 */
 comment|/* must use multiple TDs, fill as much as possible. */
 name|curlen
 operator|=
@@ -2773,22 +2850,19 @@ operator|->
 name|wMaxPacketSize
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|curlen
-operator|==
-literal|0
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
+operator|(
+name|curlen
+operator|!=
+literal|0
+operator|)
+argument_list|,
+operator|(
 literal|"ohci_alloc_std: curlen == 0"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|DPRINTFN
 argument_list|(
@@ -5001,6 +5075,15 @@ argument_list|,
 name|xfer
 argument_list|)
 expr_stmt|;
+name|OXFER
+argument_list|(
+name|xfer
+argument_list|)
+operator|->
+name|ohci_xfer_flags
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -5154,20 +5237,6 @@ end_function
 begin_comment
 comment|/*  * Shut down the controller when the system is going down.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
 
 begin_function
 name|void
@@ -5480,11 +5549,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -8704,7 +8768,7 @@ name|length
 operator|=
 name|len
 expr_stmt|;
-comment|/* Update device address and length since they may have changed. */
+comment|/* Update device address and length since they may have changed 	   during the setup of the control pipe in usbd_new_device(). */
 comment|/* XXX This only needs to be done once, but it's too early in open. */
 comment|/* XXXX Should not touch ED here! */
 name|sed
@@ -10783,9 +10847,12 @@ argument_list|)
 operator||
 name|OHCI_ED_SET_EN
 argument_list|(
+name|UE_GET_ADDR
+argument_list|(
 name|ed
 operator|->
 name|bEndpointAddress
+argument_list|)
 argument_list|)
 operator||
 operator|(
@@ -11319,6 +11386,16 @@ name|status
 parameter_list|)
 block|{
 name|struct
+name|ohci_xfer
+modifier|*
+name|oxfer
+init|=
+name|OXFER
+argument_list|(
+name|xfer
+argument_list|)
+decl_stmt|;
+name|struct
 name|ohci_pipe
 modifier|*
 name|opipe
@@ -11461,11 +11538,90 @@ argument_list|(
 literal|"ohci_abort_xfer: not in process context"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If an abort is already in progress then just wait for it to 	 * complete and return. 	 */
+if|if
+condition|(
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+operator|&
+name|OHCI_XFER_ABORTING
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"ohci_abort_xfer: already aborting\n"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* No need to wait if we're aborting from a timeout. */
+if|if
+condition|(
+name|status
+operator|==
+name|USBD_TIMEOUT
+condition|)
+return|return;
+comment|/* Override the status which might be USBD_TIMEOUT. */
+name|xfer
+operator|->
+name|status
+operator|=
+name|status
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"ohci_abort_xfer: waiting for abort to finish\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+operator||=
+name|OHCI_XFER_ABORTWAIT
+expr_stmt|;
+while|while
+condition|(
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+operator|&
+name|OHCI_XFER_ABORTING
+condition|)
+name|tsleep
+argument_list|(
+operator|&
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"ohciaw"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Step 1: Make interrupt routine and hardware ignore xfer. 	 */
 name|s
 operator|=
 name|splusb
 argument_list|()
+expr_stmt|;
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+operator||=
+name|OHCI_XFER_ABORTING
 expr_stmt|;
 name|xfer
 operator|->
@@ -11618,6 +11774,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+operator|&=
+operator|~
+name|OHCI_XFER_ABORTING
+expr_stmt|;
+comment|/* XXX */
 name|splx
 argument_list|(
 name|s
@@ -11791,6 +11955,39 @@ argument_list|)
 expr_stmt|;
 comment|/* remove hardware skip */
 comment|/* 	 * Step 5: Execute callback. 	 */
+comment|/* Do the wakeup first to avoid touching the xfer after the callback. */
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+operator|&=
+operator|~
+name|OHCI_XFER_ABORTING
+expr_stmt|;
+if|if
+condition|(
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+operator|&
+name|OHCI_XFER_ABORTWAIT
+condition|)
+block|{
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+operator|&=
+operator|~
+name|OHCI_XFER_ABORTWAIT
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|oxfer
+operator|->
+name|ohci_xfer_flags
+argument_list|)
+expr_stmt|;
+block|}
 name|usb_transfer_complete
 argument_list|(
 name|xfer

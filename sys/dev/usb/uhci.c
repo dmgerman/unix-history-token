@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  *	$NetBSD: uhci.c,v 1.175 2003/09/12 16:18:08 mycroft Exp $  *	$NetBSD: uhci.c,v 1.176 2003/11/04 19:11:21 mycroft Exp $  */
+comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  *	$NetBSD: uhci.c,v 1.175 2003/09/12 16:18:08 mycroft Exp $  *	$NetBSD: uhci.c,v 1.176 2003/11/04 19:11:21 mycroft Exp $  *	$NetBSD: uhci.c,v 1.177 2003/12/29 08:17:10 toshii Exp $  *	$NetBSD: uhci.c,v 1.178 2004/03/02 16:32:05 martin Exp $  *	$NetBSD: uhci.c,v 1.180 2004/07/17 20:12:03 mycroft Exp $  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -1546,7 +1546,7 @@ end_function_decl
 
 begin_function_decl
 name|Static
-name|__inline__
+name|__inline
 name|uhci_soft_qh_t
 modifier|*
 name|uhci_find_prev_qh
@@ -1990,7 +1990,7 @@ end_define
 
 begin_function
 name|Static
-name|__inline__
+name|__inline
 name|uhci_soft_qh_t
 modifier|*
 name|uhci_find_prev_qh
@@ -3050,6 +3050,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|uhci_detach
@@ -3071,6 +3076,17 @@ name|rv
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 if|if
 condition|(
 name|sc
@@ -3101,6 +3117,25 @@ operator|(
 name|rv
 operator|)
 return|;
+endif|#
+directive|endif
+name|UWRITE2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_INTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* disable interrupts */
+name|uhci_run
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -3171,6 +3206,19 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* XXX free other data structures XXX */
+name|usb_freemem
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_dma
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
@@ -3178,11 +3226,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|usbd_status
@@ -3369,6 +3412,30 @@ operator|.
 name|sc
 operator|=
 name|sc
+expr_stmt|;
+name|usb_init_task
+argument_list|(
+operator|&
+name|UXFER
+argument_list|(
+name|xfer
+argument_list|)
+operator|->
+name|abort_task
+argument_list|,
+name|uhci_timeout_task
+argument_list|,
+name|xfer
+argument_list|)
+expr_stmt|;
+name|UXFER
+argument_list|(
+name|xfer
+argument_list|)
+operator|->
+name|uhci_xfer_flags
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3798,6 +3865,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* in case BIOS has started it */
+name|uhci_globalreset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|uhci_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* restore saved state */
 name|UWRITE4
 argument_list|(
@@ -6367,6 +6444,27 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* not in 4.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIST_FOREACH_SAFE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|,
+name|tvar
+parameter_list|)
+define|\
+value|for ((var) = LIST_FIRST((head));                                \             (var)&& ((tvar) = LIST_NEXT((var), field), 1);             \             (var) = (tvar))
+end_define
+
 begin_function
 name|void
 name|uhci_softintr
@@ -6385,6 +6483,9 @@ decl_stmt|;
 name|uhci_intr_info_t
 modifier|*
 name|ii
+decl_stmt|,
+modifier|*
+name|nextii
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -6418,13 +6519,15 @@ name|intr_context
 operator|++
 expr_stmt|;
 comment|/* 	 * Interrupts on UHCI really suck.  When the host controller 	 * interrupts because a transfer is completed there is no 	 * way of knowing which transfer it was.  You can scan down 	 * the TDs and QHs of the previous frame to limit the search, 	 * but that assumes that the interrupt was not delayed by more 	 * than 1 ms, which may not always be true (e.g. after debug 	 * output on a slow console). 	 * We scan all interrupt descriptors to see if any have 	 * completed. 	 */
-name|LIST_FOREACH
+name|LIST_FOREACH_SAFE
 argument_list|(
 argument|ii
 argument_list|,
 argument|&sc->sc_intrhead
 argument_list|,
 argument|list
+argument_list|,
+argument|nextii
 argument_list|)
 name|uhci_check_intr
 argument_list|(
@@ -7462,20 +7565,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Execute the abort in a process context. */
-name|usb_init_task
-argument_list|(
-operator|&
-name|uxfer
-operator|->
-name|abort_task
-argument_list|,
-name|uhci_timeout_task
-argument_list|,
-name|ii
-operator|->
-name|xfer
-argument_list|)
-expr_stmt|;
 name|usb_add_task
 argument_list|(
 name|uxfer
@@ -7631,7 +7720,7 @@ argument_list|,
 name|UHCI_STS
 argument_list|)
 operator|&
-name|UHCI_STS_USBINT
+name|UHCI_STS_ALLINTRS
 condition|)
 name|uhci_intr1
 argument_list|(
@@ -7741,7 +7830,7 @@ argument_list|,
 name|UHCI_STS
 argument_list|)
 operator|&
-name|UHCI_STS_USBINT
+name|UHCI_STS_ALLINTRS
 condition|)
 name|uhci_intr1
 argument_list|(
@@ -9581,15 +9670,22 @@ name|usbd_status
 name|status
 parameter_list|)
 block|{
+name|struct
+name|uhci_xfer
+modifier|*
+name|uxfer
+init|=
+name|UXFER
+argument_list|(
+name|xfer
+argument_list|)
+decl_stmt|;
 name|uhci_intr_info_t
 modifier|*
 name|ii
 init|=
 operator|&
-name|UXFER
-argument_list|(
-name|xfer
-argument_list|)
+name|uxfer
 operator|->
 name|iinfo
 decl_stmt|;
@@ -9721,11 +9817,90 @@ argument_list|(
 literal|"uhci_abort_xfer: not in process context"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If an abort is already in progress then just wait for it to 	 * complete and return. 	 */
+if|if
+condition|(
+name|uxfer
+operator|->
+name|uhci_xfer_flags
+operator|&
+name|UHCI_XFER_ABORTING
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"uhci_abort_xfer: already aborting\n"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* No need to wait if we're aborting from a timeout. */
+if|if
+condition|(
+name|status
+operator|==
+name|USBD_TIMEOUT
+condition|)
+return|return;
+comment|/* Override the status which might be USBD_TIMEOUT. */
+name|xfer
+operator|->
+name|status
+operator|=
+name|status
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"uhci_abort_xfer: waiting for abort to finish\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|uxfer
+operator|->
+name|uhci_xfer_flags
+operator||=
+name|UHCI_XFER_ABORTWAIT
+expr_stmt|;
+while|while
+condition|(
+name|uxfer
+operator|->
+name|uhci_xfer_flags
+operator|&
+name|UHCI_XFER_ABORTING
+condition|)
+name|tsleep
+argument_list|(
+operator|&
+name|uxfer
+operator|->
+name|uhci_xfer_flags
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"uhciaw"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Step 1: Make interrupt routine and hardware ignore xfer. 	 */
 name|s
 operator|=
 name|splusb
 argument_list|()
+expr_stmt|;
+name|uxfer
+operator|->
+name|uhci_xfer_flags
+operator||=
+name|UHCI_XFER_ABORTING
 expr_stmt|;
 name|xfer
 operator|->
@@ -9743,6 +9918,23 @@ argument_list|,
 name|uhci_timeout
 argument_list|,
 name|ii
+argument_list|)
+expr_stmt|;
+name|usb_rem_task
+argument_list|(
+name|xfer
+operator|->
+name|pipe
+operator|->
+name|device
+argument_list|,
+operator|&
+name|UXFER
+argument_list|(
+name|xfer
+argument_list|)
+operator|->
+name|abort_task
 argument_list|)
 expr_stmt|;
 name|DPRINTFN
@@ -9872,12 +10064,6 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 3: Execute callback. 	 */
-name|xfer
-operator|->
-name|hcpriv
-operator|=
-name|ii
-expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -9903,6 +10089,39 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Do the wakeup first to avoid touching the xfer after the callback. */
+name|uxfer
+operator|->
+name|uhci_xfer_flags
+operator|&=
+operator|~
+name|UHCI_XFER_ABORTING
+expr_stmt|;
+if|if
+condition|(
+name|uxfer
+operator|->
+name|uhci_xfer_flags
+operator|&
+name|UHCI_XFER_ABORTWAIT
+condition|)
+block|{
+name|uxfer
+operator|->
+name|uhci_xfer_flags
+operator|&=
+operator|~
+name|UHCI_XFER_ABORTWAIT
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|uxfer
+operator|->
+name|uhci_xfer_flags
+argument_list|)
+expr_stmt|;
+block|}
 name|usb_transfer_complete
 argument_list|(
 name|xfer
@@ -16960,7 +17179,11 @@ argument_list|)
 case|:
 if|if
 condition|(
+operator|(
 name|value
+operator|&
+literal|0xff
+operator|)
 operator|!=
 literal|0
 condition|)
