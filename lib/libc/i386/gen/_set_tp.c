@@ -185,7 +185,7 @@ expr_stmt|;
 asm|__asm __volatile("movl %0,%%gs" : : "rm" ((sel<< 3) | 7));
 else|#
 directive|else
-name|_amd64_set_gsbase
+name|i386_set_gsbase
 argument_list|(
 name|tp
 argument_list|)
