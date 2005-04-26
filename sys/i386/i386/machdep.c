@@ -6463,7 +6463,7 @@ literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GTGATE_SEL	7 Null Descriptor - Placeholder */
+comment|/* GNDIS_SEL	7 NDIS Descriptor */
 block|{
 literal|0x0
 block|,
@@ -6691,6 +6691,62 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GUFS_SEL	14 %fs Descriptor for user */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0xfffff
+block|,
+comment|/* length - all address space */
+name|SDT_MEMRWA
+block|,
+comment|/* segment type */
+name|SEL_UPL
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GUGS_SEL	15 %gs Descriptor for user */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0xfffff
+block|,
+comment|/* length - all address space */
+name|SDT_MEMRWA
+block|,
+comment|/* segment type */
+name|SEL_UPL
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|1
 block|,
 comment|/* default 32 vs 16 bit size */
 literal|1
@@ -9007,8 +9063,7 @@ comment|/* Init basic tunables, hz etc */
 name|init_param1
 argument_list|()
 expr_stmt|;
-comment|/* 	 * make gdt memory segments, the code segment goes up to end of the 	 * page with etext in it, the data segment goes to the end of 	 * the address space 	 */
-comment|/* 	 * XXX text protection is temporarily (?) disabled.  The limit was 	 * i386_btop(round_page(etext)) - 1. 	 */
+comment|/* 	 * Make gdt memory segments.  All segments cover the full 4GB 	 * of address space and permissions are enforced at page level. 	 */
 name|gdt_segs
 index|[
 name|GCODE_SEL
@@ -9050,24 +9105,6 @@ index|]
 operator|.
 name|pcpu
 expr_stmt|;
-name|gdt_segs
-index|[
-name|GPRIV_SEL
-index|]
-operator|.
-name|ssd_limit
-operator|=
-name|atop
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|privatespace
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
 name|pc
@@ -9075,6 +9112,8 @@ operator|=
 operator|&
 name|__pcpu
 expr_stmt|;
+endif|#
+directive|endif
 name|gdt_segs
 index|[
 name|GPRIV_SEL
@@ -9084,17 +9123,11 @@ name|ssd_limit
 operator|=
 name|atop
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pcpu
-argument_list|)
+literal|0
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|gdt_segs
 index|[
 name|GPRIV_SEL
@@ -9251,7 +9284,6 @@ name|MTX_NOWITNESS
 argument_list|)
 expr_stmt|;
 comment|/* make ldt memory segments */
-comment|/* 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  And it 	 * should be spelled ...MAX_USER... 	 */
 name|ldt_segs
 index|[
 name|LUCODE_SEL
@@ -9261,7 +9293,7 @@ name|ssd_limit
 operator|=
 name|atop
 argument_list|(
-name|VM_MAXUSER_ADDRESS
+literal|0
 operator|-
 literal|1
 argument_list|)
@@ -9275,7 +9307,7 @@ name|ssd_limit
 operator|=
 name|atop
 argument_list|(
-name|VM_MAXUSER_ADDRESS
+literal|0
 operator|-
 literal|1
 argument_list|)
@@ -10044,6 +10076,20 @@ expr_stmt|;
 name|ltr
 argument_list|(
 name|gsel_tss
+argument_list|)
+expr_stmt|;
+comment|/* pointer to selector slot for %fs/%gs */
+name|PCPU_SET
+argument_list|(
+name|fsgs_gdt
+argument_list|,
+operator|&
+name|gdt
+index|[
+name|GUFS_SEL
+index|]
+operator|.
+name|sd
 argument_list|)
 expr_stmt|;
 name|dblfault_tss

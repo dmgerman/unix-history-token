@@ -44,7 +44,7 @@ name|PCPU_MD_FIELDS
 define|\
 value|struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
-value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	int	pc_currentldt;						\ 	u_int	pc_acpi_id;						\ 	u_int	pc_apic_id
+value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	int	pc_currentldt;						\ 	u_int	pc_acpi_id;						\ 	u_int	pc_apic_id;						\ 	struct	segment_descriptor *pc_fsgs_gdt
 end_define
 
 begin_if

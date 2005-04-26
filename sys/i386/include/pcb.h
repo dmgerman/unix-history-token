@@ -134,6 +134,18 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* vm86bios scratch space */
+name|u_long
+name|pcb_fsd
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_long
+name|pcb_gsd
+index|[
+literal|2
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

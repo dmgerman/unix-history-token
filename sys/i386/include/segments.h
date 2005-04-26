@@ -1126,12 +1126,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GTGATE_SEL
+name|GNDIS_SEL
 value|7
 end_define
 
 begin_comment
-comment|/* Process task switch gate */
+comment|/* For the NDIS layer */
 end_comment
 
 begin_define
@@ -1214,8 +1214,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NGDT
+name|GUFS_SEL
 value|15
+end_define
+
+begin_comment
+comment|/* User %fs Descriptor (order critical: 1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GUGS_SEL
+value|16
+end_define
+
+begin_comment
+comment|/* User %gs Descriptor (order critical: 2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGDT
+value|17
 end_define
 
 begin_comment
