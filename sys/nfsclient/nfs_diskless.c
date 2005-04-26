@@ -481,6 +481,15 @@ return|return;
 comment|/* no matching interface */
 name|match_done
 label|:
+name|setenv
+argument_list|(
+literal|"boot.netif.name"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
 name|strlcpy
 argument_list|(
 name|nd

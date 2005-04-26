@@ -8916,6 +8916,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|setenv
+argument_list|(
+literal|"boot.netif.name"
+argument_list|,
+name|ifctx
+operator|->
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|md_mount
