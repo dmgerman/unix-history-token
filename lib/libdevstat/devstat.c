@@ -1760,6 +1760,10 @@ name|dinfo
 operator|->
 name|mem_ptr
 operator|=
+operator|(
+name|u_int8_t
+operator|*
+operator|)
 name|get_devstat_kvm
 argument_list|(
 name|kd
