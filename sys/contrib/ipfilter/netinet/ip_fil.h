@@ -19,6 +19,12 @@ directive|define
 name|__IP_FIL_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"netinet/ip_compat.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
