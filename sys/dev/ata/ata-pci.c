@@ -712,6 +712,78 @@ return|return
 literal|"Intel 6300ESB SATA150 controller"
 return|;
 case|case
+literal|0x266f8086
+case|:
+return|return
+literal|"Intel ICH6 ATA100 controller"
+return|;
+case|case
+literal|0x26518086
+case|:
+comment|/* Intel ICH6 SATA150 */
+comment|/* Clear SATA error registers */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0xa0
+argument_list|,
+literal|0x54
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0xa4
+argument_list|,
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0xa4
+argument_list|,
+literal|4
+argument_list|)
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0xa0
+argument_list|,
+literal|0x64
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0xa4
+argument_list|,
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0xa4
+argument_list|,
+literal|4
+argument_list|)
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+return|return
+literal|"Intel ICH6 SATA150 controller"
+return|;
+case|case
 literal|0x522910b9
 case|:
 if|if
@@ -1762,6 +1834,10 @@ case|case
 literal|0x25b08086
 case|:
 comment|/* Intel 6300ESB SATA150 RAID */
+case|case
+literal|0x26518086
+case|:
+comment|/* Intel ICH6 SATA150 */
 break|break;
 case|case
 literal|0x3318105a
@@ -3382,6 +3458,10 @@ case|case
 literal|0x25b08086
 case|:
 comment|/* Intel 6300ESB SATA150 RAID */
+case|case
+literal|0x26518086
+case|:
+comment|/* Intel ICH6 SATA150 */
 name|dmastat
 operator|=
 name|ATA_INB

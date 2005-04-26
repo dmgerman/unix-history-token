@@ -1008,6 +1008,10 @@ literal|0x25b08086
 case|:
 comment|/* Intel 6300ESB SATA150 RAID */
 case|case
+literal|0x26518086
+case|:
+comment|/* Intel ICH6 SATA150 */
+case|case
 literal|0x3318105a
 case|:
 comment|/* Promise SATA */
@@ -1214,6 +1218,14 @@ literal|0x25b08086
 case|:
 comment|/* Intel 6300ESB SATA150 RAID */
 case|case
+literal|0x266f8086
+case|:
+comment|/* Intel ICH6 */
+case|case
+literal|0x26518086
+case|:
+comment|/* Intel ICH6 SATA150 */
+case|case
 literal|0x24ca8086
 case|:
 comment|/* Intel ICH4 mobile */
@@ -1293,6 +1305,10 @@ operator|||
 name|chiptype
 operator|==
 literal|0x25a28086
+operator|||
+name|chiptype
+operator|==
+literal|0x266f8086
 operator|)
 condition|)
 name|dma_mode

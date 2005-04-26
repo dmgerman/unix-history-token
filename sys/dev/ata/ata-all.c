@@ -1845,6 +1845,10 @@ case|case
 literal|0x24df8086
 case|:
 comment|/* Intel ICH5 SATA RAID */
+case|case
+literal|0x26518086
+case|:
+comment|/* Intel ICH6 SATA */
 if|if
 condition|(
 operator|(
