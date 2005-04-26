@@ -12608,14 +12608,12 @@ operator|)
 return|;
 if|if
 condition|(
+name|vers
+operator|&&
+operator|(
 operator|!
 name|force_tag_match
 operator|||
-operator|(
-name|vers
-operator|!=
-name|NULL
-operator|&&
 name|RCS_datecmp
 argument_list|(
 name|vers
@@ -16993,6 +16991,8 @@ name|NULL
 decl_stmt|;
 name|size_t
 name|loglen
+init|=
+literal|0
 decl_stmt|;
 name|Node
 modifier|*
@@ -30362,10 +30362,8 @@ name|ln
 control|)
 block|{
 name|char
+modifier|*
 name|buf
-index|[
-literal|80
-index|]
 decl_stmt|;
 comment|/* Period which separates year from month in date.  */
 name|char
@@ -30402,6 +30400,20 @@ name|prvers
 operator|=
 name|vers
 expr_stmt|;
+name|buf
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|prvers
+operator|->
+name|version
+argument_list|)
+operator|+
+literal|24
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|buf
@@ -30422,6 +30434,11 @@ argument_list|(
 name|buf
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 comment|/* Now output the date.  */

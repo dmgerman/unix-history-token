@@ -1680,6 +1680,12 @@ name|rcs
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|rcs_orig
+init|=
+name|NULL
+decl_stmt|;
 name|RCSNode
 modifier|*
 name|rcsfile
@@ -1808,6 +1814,8 @@ name|isattic
 operator|=
 literal|1
 expr_stmt|;
+name|rcs_orig
+operator|=
 name|rcs
 operator|=
 name|xmalloc
@@ -3581,13 +3589,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rcs
-operator|!=
-name|NULL
+name|rcs_orig
 condition|)
 name|free
 argument_list|(
-name|rcs
+name|rcs_orig
 argument_list|)
 expr_stmt|;
 return|return
