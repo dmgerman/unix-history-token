@@ -7689,22 +7689,6 @@ name|arg1
 expr_stmt|;
 if|if
 condition|(
-name|proto
-operator|!=
-literal|41
-condition|)
-comment|/* XXX: IPv6 is special */
-name|pe
-operator|=
-name|getprotobynumber
-argument_list|(
-name|cmd
-operator|->
-name|arg1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|flags
 operator|&
 name|HAVE_OPTIONS
