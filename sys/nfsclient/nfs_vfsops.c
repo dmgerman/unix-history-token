@@ -2829,15 +2829,9 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+operator|==
+literal|0
 condition|)
-name|mp
-operator|->
-name|mnt_flag
-operator|&=
-operator|~
-name|MNT_RDONLY
-expr_stmt|;
-else|else
 name|mp
 operator|->
 name|mnt_flag
