@@ -1376,7 +1376,7 @@ name|RTLD_STATIC_TLS_EXTRA
 expr_stmt|;
 name|tls
 operator|=
-name|alloca_tls
+name|allocate_tls
 argument_list|(
 name|objs
 argument_list|,
