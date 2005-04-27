@@ -9632,12 +9632,6 @@ name|v_iflag
 operator||=
 name|VI_DOOMED
 expr_stmt|;
-name|vp
-operator|->
-name|v_vxthread
-operator|=
-name|curthread
-expr_stmt|;
 name|oweinact
 operator|=
 operator|(
@@ -9873,12 +9867,6 @@ operator|->
 name|v_type
 operator|=
 name|VBAD
-expr_stmt|;
-name|vp
-operator|->
-name|v_vxthread
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* 	 * If it is on the freelist and not already at the head, 	 * move it to the head of the list. The test of the 	 * VDOOMED flag and the reference count of zero is because 	 * it will be removed from the free list by getnewvnode, 	 * but will not have its reference count incremented until 	 * after calling vgone. If the reference count were 	 * incremented first, vgone would (incorrectly) try to 	 * close the previous instance of the underlying object. 	 */
 if|if
