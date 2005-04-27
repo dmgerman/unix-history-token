@@ -333,12 +333,6 @@ name|int
 name|v_usecount
 decl_stmt|;
 comment|/* i ref count of users */
-name|struct
-name|thread
-modifier|*
-name|v_vxthread
-decl_stmt|;
-comment|/* i thread running vgone. */
 name|u_long
 name|v_iflag
 decl_stmt|;
