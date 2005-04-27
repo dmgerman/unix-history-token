@@ -388,14 +388,7 @@ argument_list|(
 name|lowerrootvp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Unlock lower node to avoid deadlock. 	 */
-block|if (lowerrootvp->v_op == union_vnodeop_p) 		VOP_UNLOCK(lowerrootvp, 0, td);
-endif|#
-directive|endif
-comment|/* 	 * Obtain upper vnode by calling namei() on the path.  The 	 * upperrootvp will be turned referenced but not locked. 	 */
+comment|/* 	 * Obtain upper vnode by calling namei() on the path.  The 	 * upperrootvp will be turned referenced and locked. 	 */
 name|NDINIT
 argument_list|(
 name|ndp
@@ -404,7 +397,7 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
-name|WANTPARENT
+name|LOCKLEAF
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -420,12 +413,6 @@ argument_list|(
 name|ndp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (lowerrootvp->v_op == union_vnodeop_p) 		vn_lock(lowerrootvp, LK_EXCLUSIVE | LK_RETRY, td);
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
@@ -445,19 +432,6 @@ operator|=
 name|ndp
 operator|->
 name|ni_vp
-expr_stmt|;
-name|vrele
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-argument_list|)
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_dvp
-operator|=
-name|NULL
 expr_stmt|;
 name|UDEBUG
 argument_list|(
@@ -617,6 +591,26 @@ break|break;
 case|case
 name|UNMNT_BELOW
 case|:
+name|VOP_UNLOCK
+argument_list|(
+name|upperrootvp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|vn_lock
+argument_list|(
+name|lowerrootvp
+argument_list|,
+name|LK_RETRY
+operator||
+name|LK_EXCLUSIVE
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|um
 operator|->
 name|um_lowervp
@@ -736,6 +730,17 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|VOP_UNLOCK
+argument_list|(
+name|um
+operator|->
+name|um_uppervp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|um
 operator|->
 name|um_cred
@@ -997,7 +1002,7 @@ name|um
 operator|->
 name|um_uppervp
 condition|)
-name|vrele
+name|vput
 argument_list|(
 name|um
 operator|->
@@ -1030,7 +1035,7 @@ if|if
 condition|(
 name|upperrootvp
 condition|)
-name|vrele
+name|vput
 argument_list|(
 name|upperrootvp
 argument_list|)
