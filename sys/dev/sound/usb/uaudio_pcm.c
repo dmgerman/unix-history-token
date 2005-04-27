@@ -1545,6 +1545,16 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|sndstat_unregister
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|uaudio_sndstat_register
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|pcm_addchan
 argument_list|(
 name|dev

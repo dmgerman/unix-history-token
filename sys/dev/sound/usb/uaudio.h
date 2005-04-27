@@ -254,5 +254,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|uaudio_sndstat_register
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
