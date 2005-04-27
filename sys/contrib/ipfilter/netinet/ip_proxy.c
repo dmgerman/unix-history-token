@@ -615,11 +615,22 @@ directive|include
 file|"netinet/ip_raudio_pxy.c"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFILTER_H323
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"netinet/ip_h323_pxy.c"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
