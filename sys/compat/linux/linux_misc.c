@@ -1271,6 +1271,8 @@ name|ni
 argument_list|,
 name|LOOKUP
 argument_list|,
+name|ISOPEN
+operator||
 name|FOLLOW
 operator||
 name|LOCKLEAF

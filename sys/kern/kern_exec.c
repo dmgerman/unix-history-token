@@ -1454,6 +1454,8 @@ name|ndp
 argument_list|,
 name|LOOKUP
 argument_list|,
+name|ISOPEN
+operator||
 name|LOCKLEAF
 operator||
 name|FOLLOW

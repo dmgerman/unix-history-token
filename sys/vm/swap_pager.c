@@ -6307,6 +6307,8 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
+name|ISOPEN
+operator||
 name|FOLLOW
 argument_list|,
 name|UIO_USERSPACE

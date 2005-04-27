@@ -426,6 +426,8 @@ name|ni_cnd
 operator|.
 name|cn_flags
 operator|=
+name|ISOPEN
+operator||
 name|LOCKPARENT
 operator||
 name|LOCKLEAF
@@ -817,6 +819,8 @@ name|ni_cnd
 operator|.
 name|cn_flags
 operator|=
+name|ISOPEN
+operator||
 operator|(
 operator|(
 name|fmode
