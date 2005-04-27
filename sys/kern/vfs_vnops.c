@@ -3643,19 +3643,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|vp
-operator|->
-name|v_vxthread
-operator|!=
-name|curthread
-argument_list|,
-operator|(
-literal|"recursive vn_lock in inactive/reclaim."
-operator|)
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 if|if
@@ -3694,12 +3681,6 @@ operator|->
 name|v_iflag
 operator|&
 name|VI_DOOMED
-operator|&&
-name|vp
-operator|->
-name|v_vxthread
-operator|!=
-name|td
 condition|)
 block|{
 name|VI_UNLOCK
@@ -3784,12 +3765,6 @@ operator|->
 name|v_iflag
 operator|&
 name|VI_DOOMED
-operator|&&
-name|vp
-operator|->
-name|v_vxthread
-operator|!=
-name|td
 operator|&&
 operator|(
 name|flags
