@@ -2081,14 +2081,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|ASSERT_VOP_LOCKED
-argument_list|(
-operator|*
-name|vpp
-argument_list|,
-literal|"union_allocvp"
-argument_list|)
-expr_stmt|;
 operator|(
 operator|*
 name|vpp
@@ -4235,7 +4227,8 @@ name|cn
 operator|.
 name|cn_flags
 operator|=
-operator|(
+name|ISOPEN
+operator||
 name|LOCKPARENT
 operator||
 name|LOCKLEAF
@@ -4245,7 +4238,6 @@ operator||
 name|SAVENAME
 operator||
 name|ISLASTCN
-operator|)
 expr_stmt|;
 name|cn
 operator|.
