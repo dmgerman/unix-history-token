@@ -168,23 +168,11 @@ modifier|*
 name|tcb
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|COMPAT_32BIT
 name|i386_set_gsbase
 argument_list|(
 name|tcb
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|_amd64_set_gsbase
-argument_list|(
-name|tcb
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
