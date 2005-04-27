@@ -89,6 +89,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"netdb_private.h"
+end_include
+
 begin_function_decl
 specifier|extern
 name|int
