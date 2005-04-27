@@ -79,12 +79,9 @@ name|SIOCGNATL
 value|_IOWR('r', 63, struct ipfobj)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIOCPROXY
-value|_IOWR('r', 64, struct ap_control)
-end_define
+begin_comment
+comment|/*	SIOCPROXY	_IOWR('r', 64, struct ap_control) */
+end_comment
 
 begin_else
 else|#
@@ -119,12 +116,9 @@ name|SIOCGNATL
 value|_IOWR(r, 63, struct ipfobj)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIOCPROXY
-value|_IOWR(r, 64, struct ap_control)
-end_define
+begin_comment
+comment|/*	SIOCPROXY	_IOWR(r, 64, struct ap_control) */
+end_comment
 
 begin_endif
 endif|#

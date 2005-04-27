@@ -37,6 +37,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SIOCPROXY
+value|_IOWR('r', 64, struct ap_control)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SIOCPROXY
+value|_IOWR(r, 64, struct ap_control)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -74,6 +112,12 @@ name|ipnat
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ipstate
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -101,7 +145,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* sequence # difference */
-name|tcp_seq
+name|u_32_t
 name|apt_seqmin
 index|[
 literal|2
@@ -115,7 +159,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* sequence # difference */
-name|tcp_seq
+name|u_32_t
 name|apt_ackmin
 index|[
 literal|2
@@ -823,7 +867,7 @@ name|u_32_t
 name|rap_sbf
 decl_stmt|;
 comment|/* flag to indicate which of the 19 bytes have 				 * been filled 				 */
-name|tcp_seq
+name|u_32_t
 name|rap_sseq
 decl_stmt|;
 block|}
@@ -948,7 +992,8 @@ name|nat_t
 modifier|*
 name|ipsc_nat
 decl_stmt|;
-name|ipstate_t
+name|struct
+name|ipstate
 modifier|*
 name|ipsc_state
 decl_stmt|;
@@ -1011,7 +1056,8 @@ name|nat_t
 modifier|*
 name|pptp_nat
 decl_stmt|;
-name|ipstate_t
+name|struct
+name|ipstate
 modifier|*
 name|pptp_state
 decl_stmt|;

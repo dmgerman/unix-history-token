@@ -669,16 +669,9 @@ literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)Id: ip_frag.c,v 2.77 2004/01/27 00:24:54 darrenr Exp"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static const char rcsid[] = "@(#)Id: ip_frag.c,v 2.77 2004/01/27 00:24:54 darrenr Exp"; */
+end_comment
 
 begin_endif
 endif|#

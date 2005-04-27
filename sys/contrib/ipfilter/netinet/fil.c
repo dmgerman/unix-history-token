@@ -932,16 +932,9 @@ literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)Id: fil.c,v 2.243.2.57 2005/03/28 10:47:50 darrenr Exp"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static const char rcsid[] = "@(#)Id: fil.c,v 2.243.2.57 2005/03/28 10:47:50 darrenr Exp"; */
+end_comment
 
 begin_endif
 endif|#
