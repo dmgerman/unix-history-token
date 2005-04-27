@@ -450,6 +450,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISOPEN
+value|0x0200000
+end_define
+
+begin_comment
+comment|/* caller is opening; return a real vnode. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NOCROSSMOUNT
 value|0x0400000
 end_define
