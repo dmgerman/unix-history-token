@@ -611,6 +611,9 @@ modifier|*
 name|ciss_cam_sim
 decl_stmt|;
 name|int
+name|ciss_soft_reset
+decl_stmt|;
+name|int
 name|ciss_flags
 decl_stmt|;
 define|#
