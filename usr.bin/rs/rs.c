@@ -310,8 +310,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|orows
+init|=
+literal|0
 decl_stmt|,
 name|ocols
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2337,6 +2341,9 @@ comment|/*case 3: 		opages = atoi(av[2]);*/
 case|case
 literal|2
 case|:
+if|if
+condition|(
+operator|(
 name|ocols
 operator|=
 name|atoi
@@ -2346,10 +2353,20 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|ocols
+operator|=
+literal|0
 expr_stmt|;
 case|case
 literal|1
 case|:
+if|if
+condition|(
+operator|(
 name|orows
 operator|=
 name|atoi
@@ -2359,6 +2376,13 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|orows
+operator|=
+literal|0
 expr_stmt|;
 case|case
 literal|0
