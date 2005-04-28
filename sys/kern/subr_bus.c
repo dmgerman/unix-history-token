@@ -5090,6 +5090,26 @@ end_function
 
 begin_function
 name|int
+name|device_is_attached
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|dev
+operator|->
+name|state
+operator|>=
+name|DS_ATTACHED
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|device_set_devclass
 parameter_list|(
 name|device_t

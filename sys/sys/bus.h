@@ -1407,6 +1407,16 @@ end_comment
 
 begin_function_decl
 name|int
+name|device_is_attached
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|device_is_enabled
 parameter_list|(
 name|device_t
