@@ -590,7 +590,10 @@ name|sed
 operator|->
 name|line
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+name|sed
+operator|->
+name|line
 argument_list|,
 literal|"%.*s\n"
 argument_list|,
@@ -732,7 +735,10 @@ name|sed
 operator|->
 name|line
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+name|sed
+operator|->
+name|line
 argument_list|,
 literal|"%.*s\n"
 argument_list|,
@@ -941,7 +947,10 @@ name|sed
 operator|->
 name|line
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+name|sed
+operator|->
+name|line
 argument_list|,
 literal|"%.*s\n"
 argument_list|,
@@ -1162,7 +1171,10 @@ name|sed
 operator|->
 name|line
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+name|sed
+operator|->
+name|line
 argument_list|,
 name|sed
 operator|->
@@ -1471,7 +1483,7 @@ name|sed
 operator|->
 name|aliases
 index|[
-name|SERVENT_MAXALIASES
+name|_MAXALIASES
 operator|-
 literal|1
 index|]

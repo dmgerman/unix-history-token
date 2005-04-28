@@ -526,7 +526,10 @@ name|ped
 operator|->
 name|line
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+name|ped
+operator|->
+name|line
 argument_list|,
 name|ped
 operator|->
@@ -734,7 +737,7 @@ name|ped
 operator|->
 name|aliases
 index|[
-name|PROTOENT_MAXALIASES
+name|_MAXALIASES
 operator|-
 literal|1
 index|]
