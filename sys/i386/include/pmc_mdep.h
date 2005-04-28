@@ -520,6 +520,28 @@ begin_comment
 comment|/* 40 bits */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P4_CCCR_MSR_FIRST
+value|0x360
+end_define
+
+begin_comment
+comment|/* MSR_BPU_CCCR0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P4_PERFCTR_MSR_FIRST
+value|0x300
+end_define
+
+begin_comment
+comment|/* MSR_BPU_COUNTER0 */
+end_comment
+
 begin_comment
 comment|/* Intel PPro, Celeron, P-II, P-III, Pentium-M PMCS */
 end_comment

@@ -1544,6 +1544,10 @@ name|int
 name|pp_refcnt
 decl_stmt|;
 comment|/* reference count */
+name|uint32_t
+name|pp_flags
+decl_stmt|;
+comment|/* flags */
 name|struct
 name|proc
 modifier|*
@@ -1622,9 +1626,12 @@ name|PMC_FLAG_OWNS_LOGFILE
 value|0x04
 end_define
 
-begin_comment
-comment|/* owns system-sampling log file */
-end_comment
+begin_define
+define|#
+directive|define
+name|PMC_FLAG_ENABLE_MSR_ACCESS
+value|0x08
+end_define
 
 begin_comment
 comment|/*  * struct pmc_hw -- describe the state of the PMC hardware  *  * When in use, a HW PMC is associated with one allocated 'struct pmc'  * pointed to by field 'phw_pmc'.  When inactive, this field is NULL.  *  * On an SMP box, one or more HW PMC's in process virtual mode with  * the same 'phw_pmc' could be executing on different CPUs.  In order  * to handle this case correctly, we need to ensure that only  * incremental counts get added to the saved value in the associated  * 'struct pmc'.  The 'phw_save' field is used to keep the saved PMC  * value at the time the hardware is started during this context  * switch (i.e., the difference between the new (hardware) count and  * the saved count is atomically added to the count field in 'struct  * pmc' at context switch time).  *  */
@@ -1925,7 +1932,7 @@ name|_cpu
 parameter_list|)
 function_decl|;
 comment|/* machine dependent cleanup  */
-comment|/* thread context switch in */
+comment|/* thread context switch in/out */
 name|int
 function_decl|(
 modifier|*
@@ -1936,9 +1943,13 @@ name|struct
 name|pmc_cpu
 modifier|*
 name|_p
+parameter_list|,
+name|struct
+name|pmc_process
+modifier|*
+name|_pp
 parameter_list|)
 function_decl|;
-comment|/* thread context switch out  */
 name|int
 function_decl|(
 modifier|*
@@ -1949,6 +1960,11 @@ name|struct
 name|pmc_cpu
 modifier|*
 name|_p
+parameter_list|,
+name|struct
+name|pmc_process
+modifier|*
+name|_pp
 parameter_list|)
 function_decl|;
 comment|/* configuring/reading/writing the hardware PMCs */

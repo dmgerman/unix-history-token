@@ -2163,6 +2163,23 @@ name|pmc_hw
 modifier|*
 name|phw
 decl_stmt|;
+name|PMCDBG
+argument_list|(
+name|MDP
+argument_list|,
+name|CFG
+argument_list|,
+literal|1
+argument_list|,
+literal|"cpu=%d ri=%d pm=%p"
+argument_list|,
+name|cpu
+argument_list|,
+name|ri
+argument_list|,
+name|pm
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|cpu
@@ -2226,9 +2243,15 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[amd,%d] hwpmc not unconfigured before re-config"
+literal|"[amd,%d] pm=%p phw->pm=%p hwpmc not unconfigured"
 operator|,
 name|__LINE__
+operator|,
+name|pm
+operator|,
+name|phw
+operator|->
+name|phw_pmc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2257,6 +2280,11 @@ name|struct
 name|pmc_cpu
 modifier|*
 name|pc
+parameter_list|,
+name|struct
+name|pmc_process
+modifier|*
+name|pp
 parameter_list|)
 block|{
 operator|(
@@ -2264,7 +2292,40 @@ name|void
 operator|)
 name|pc
 expr_stmt|;
-comment|/* enable the RDPMC instruction */
+name|PMCDBG
+argument_list|(
+name|MDP
+argument_list|,
+name|SWI
+argument_list|,
+literal|1
+argument_list|,
+literal|"pc=%p pp=%p enable-msr=%d"
+argument_list|,
+name|pc
+argument_list|,
+name|pp
+argument_list|,
+operator|(
+name|pp
+operator|->
+name|pp_flags
+operator|&
+name|PMC_FLAG_ENABLE_MSR_ACCESS
+operator|)
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* enable the RDPMC instruction if needed */
+if|if
+condition|(
+name|pp
+operator|->
+name|pp_flags
+operator|&
+name|PMC_FLAG_ENABLE_MSR_ACCESS
+condition|)
 name|load_cr4
 argument_list|(
 name|rcr4
@@ -2292,6 +2353,11 @@ name|struct
 name|pmc_cpu
 modifier|*
 name|pc
+parameter_list|,
+name|struct
+name|pmc_process
+modifier|*
+name|pp
 parameter_list|)
 block|{
 operator|(
@@ -2299,7 +2365,42 @@ name|void
 operator|)
 name|pc
 expr_stmt|;
-comment|/* disallow RDPMC instruction */
+operator|(
+name|void
+operator|)
+name|pp
+expr_stmt|;
+comment|/* can be NULL */
+name|PMCDBG
+argument_list|(
+name|MDP
+argument_list|,
+name|SWO
+argument_list|,
+literal|1
+argument_list|,
+literal|"pc=%p pp=%p enable-msr=%d"
+argument_list|,
+name|pc
+argument_list|,
+name|pp
+argument_list|,
+name|pp
+condition|?
+operator|(
+name|pp
+operator|->
+name|pp_flags
+operator|&
+name|PMC_FLAG_ENABLE_MSR_ACCESS
+operator|)
+operator|==
+literal|1
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* always turn off the RDPMC instruction */
 name|load_cr4
 argument_list|(
 name|rcr4
@@ -3832,6 +3933,8 @@ name|ri
 index|]
 operator|.
 name|pm_perfctr
+operator|-
+name|AMD_PMC_PERFCTR_0
 expr_stmt|;
 return|return
 literal|0
