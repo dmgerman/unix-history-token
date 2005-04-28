@@ -85,6 +85,7 @@ end_endif
 begin_decl_stmt
 specifier|static
 specifier|const
+name|long
 name|double
 name|huge
 init|=
@@ -147,9 +148,6 @@ if|if
 condition|(
 name|huge
 operator|+
-operator|(
-name|double
-operator|)
 name|x
 operator|>
 literal|0.0
@@ -214,9 +212,6 @@ if|if
 condition|(
 name|huge
 operator|+
-operator|(
-name|double
-operator|)
 name|x
 operator|>
 literal|0.0
@@ -296,9 +291,6 @@ if|if
 condition|(
 name|huge
 operator|+
-operator|(
-name|double
-operator|)
 name|x
 operator|>
 literal|0.0
