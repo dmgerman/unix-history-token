@@ -526,7 +526,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|apb_map_checkrange
+name|apb_checkrange
 parameter_list|(
 name|u_int8_t
 name|map
@@ -819,18 +819,14 @@ expr_stmt|;
 comment|/* 	 * If this is a "default" allocation against this rid, we can't work 	 * out where it's coming from (we should actually never see these) so 	 * we just have to punt. 	 */
 if|if
 condition|(
-operator|(
 name|start
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
 name|end
 operator|==
 operator|~
 literal|0
-operator|)
 condition|)
 block|{
 name|device_printf
@@ -854,10 +850,11 @@ name|child
 argument_list|)
 argument_list|)
 expr_stmt|;
+goto|goto
+name|passup
+goto|;
 block|}
-else|else
-block|{
-comment|/* 		 * Fail the allocation for this range if it's not supported. 		 * XXX we should probably just fix up the bridge decode and 		 * soldier on. 		 */
+comment|/* 	 * Fail the allocation for this range if it's not supported. 	 * XXX we should probably just fix up the bridge decode and 	 * soldier on. 	 */
 switch|switch
 condition|(
 name|type
@@ -869,7 +866,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|apb_map_checkrange
+name|apb_checkrange
 argument_list|(
 name|sc
 operator|->
@@ -887,8 +884,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device %s%d requested "
-literal|"unsupported I/O range 0x%lx-0x%lx\n"
+literal|"device %s%d requested unsupported "
+literal|"I/O range 0x%lx-0x%lx\n"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -925,8 +922,8 @@ name|ops_pcib_sc
 operator|.
 name|dev
 argument_list|,
-literal|"device %s%d requested decoded I/O range "
-literal|"0x%lx-0x%lx\n"
+literal|"device "
+literal|"%s%d requested decoded I/O range 0x%lx-0x%lx\n"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -950,7 +947,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|apb_map_checkrange
+name|apb_checkrange
 argument_list|(
 name|sc
 operator|->
@@ -968,8 +965,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device %s%d requested "
-literal|"unsupported memory range 0x%lx-0x%lx\n"
+literal|"device %s%d requested unsupported "
+literal|"memory range 0x%lx-0x%lx\n"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -1006,8 +1003,8 @@ name|ops_pcib_sc
 operator|.
 name|dev
 argument_list|,
-literal|"device %s%d requested decoded memory "
-literal|"range 0x%lx-0x%lx\n"
+literal|"device "
+literal|"%s%d requested decoded memory range 0x%lx-0x%lx\n"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -1028,7 +1025,8 @@ break|break;
 default|default:
 break|break;
 block|}
-block|}
+name|passup
+label|:
 comment|/* 	 * Bridge is OK decoding this resource, so pass it up. 	 */
 return|return
 operator|(
