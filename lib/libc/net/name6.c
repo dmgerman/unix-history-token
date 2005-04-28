@@ -35,19 +35,11 @@ directive|include
 file|"namespace.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|YP
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ICMPNL
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -961,23 +953,11 @@ begin_comment
 comment|/* ICMPNL */
 end_comment
 
-begin_comment
-comment|/*  * XXX: Many dependencies are not thread-safe.  Still, we cannot use  * getipnodeby*() in conjunction with other functions which call them.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|YP
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ICMPNL
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -7339,9 +7319,6 @@ name|int
 operator|*
 argument_list|)
 expr_stmt|;
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
 name|hp
 operator|=
 name|_gethostbynisname
@@ -7365,9 +7342,6 @@ name|hp
 argument_list|,
 name|errp
 argument_list|)
-expr_stmt|;
-name|THREAD_UNLOCK
-argument_list|()
 expr_stmt|;
 operator|*
 operator|(
@@ -7462,9 +7436,6 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
 name|hp
 operator|=
 name|_gethostbynisaddr
@@ -7490,9 +7461,6 @@ name|hp
 argument_list|,
 name|errp
 argument_list|)
-expr_stmt|;
-name|THREAD_UNLOCK
-argument_list|()
 expr_stmt|;
 operator|*
 operator|(
