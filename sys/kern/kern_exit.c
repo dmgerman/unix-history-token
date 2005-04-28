@@ -1855,6 +1855,23 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX hack, swap in parent process, please see TDP_WAKEPROC0 	 * code, because TDP_WAKEPROC0 is only useful if thread is 	 * leaving critical region, but here we never leave and 	 * thread_exit() will call cpu_throw(), TDP_WAKEPROC0 is never 	 * cleared. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_pptr
+operator|->
+name|p_sflag
+operator|&
+name|PS_SWAPINREQ
+condition|)
+name|wakeup
+argument_list|(
+operator|&
+name|proc0
+argument_list|)
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
