@@ -462,6 +462,22 @@ begin_comment
 comment|/* directory part of PREFIX */
 end_comment
 
+begin_comment
+comment|/*  * Warning flags  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|WARN_DIRSYNTAX
+init|=
+literal|0x0001
+block|,
+comment|/* syntax errors in directives */
+block|}
+enum|;
+end_enum
+
 begin_function_decl
 name|int
 name|Make_TimeStamp

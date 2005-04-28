@@ -3720,6 +3720,12 @@ operator|*
 name|line
 operator|!=
 literal|'\0'
+operator|&&
+operator|(
+name|warnflags
+operator|&
+name|WARN_DIRSYNTAX
+operator|)
 condition|)
 block|{
 name|Parse_Error
@@ -3839,6 +3845,12 @@ operator|*
 name|line
 operator|!=
 literal|'\0'
+operator|&&
+operator|(
+name|warnflags
+operator|&
+name|WARN_DIRSYNTAX
+operator|)
 condition|)
 block|{
 name|Parse_Error

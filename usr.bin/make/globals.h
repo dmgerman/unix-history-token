@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lst.h"
 end_include
 
@@ -316,6 +322,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* warning flags */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|warnflags
 decl_stmt|;
 end_decl_stmt
 

@@ -315,6 +315,12 @@ comment|/* .PRECIOUS given on line by itself */
 end_comment
 
 begin_decl_stmt
+name|uint32_t
+name|warnflags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|Boolean
 name|noBuiltins
@@ -732,7 +738,7 @@ expr_stmt|;
 define|#
 directive|define
 name|OPTFLAGS
-value|"ABC:D:E:I:PSV:Xd:ef:ij:km:nqrstv"
+value|"ABC:D:E:I:PSV:Xd:ef:ij:km:nqrstvx:"
 while|while
 condition|(
 operator|(
@@ -1336,6 +1342,39 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"dirsyntax"
+argument_list|,
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|MFLAGS_append
+argument_list|(
+literal|"-x"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|warnflags
+operator||=
+name|WARN_DIRSYNTAX
+expr_stmt|;
+block|}
 break|break;
 default|default:
 case|case
@@ -4144,13 +4183,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: make [-BPSXeiknqrstv] [-C directory] [-D variable] [-d flags]"
+literal|"usage: make [-ABPSXeiknqrstv] [-C directory] [-D variable] [-d flags]"
 argument_list|,
 literal|"            [-E variable] [-f makefile] [-I directory] [-j max_jobs]"
 argument_list|,
-literal|"            [-m directory] [-V variable] [variable=value] [target ...]"
+literal|"            [-m directory] [-V variable] [variable=value] [-x warn_flag]"
+argument_list|,
+literal|"            [target ...]"
 argument_list|)
 expr_stmt|;
 name|exit
