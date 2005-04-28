@@ -3164,7 +3164,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"%u object%s flushed\n"
+literal|"%zd object%s flushed\n"
 argument_list|,
 name|flush
 operator|.
