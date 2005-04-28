@@ -1108,6 +1108,8 @@ expr_stmt|;
 name|ngroups
 operator|=
 name|NGROUPS
+operator|+
+literal|1
 expr_stmt|;
 name|getgrouplist
 argument_list|(
