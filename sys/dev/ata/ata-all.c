@@ -622,13 +622,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|ch
-operator|->
-name|hw
-operator|.
-name|reset
+name|ATA_RESET
 argument_list|(
-name|ch
+name|dev
 argument_list|)
 expr_stmt|;
 name|ATA_LOCKING
@@ -984,13 +980,9 @@ name|state_mtx
 argument_list|)
 expr_stmt|;
 comment|/* reset the controller HW, the channel and device(s) */
-name|ch
-operator|->
-name|hw
-operator|.
-name|reset
+name|ATA_RESET
 argument_list|(
-name|ch
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* reinit the children and delete any that fails */

@@ -2878,6 +2878,12 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+else|else
+name|ata_generic_reset
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

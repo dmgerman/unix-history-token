@@ -155,18 +155,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ata_generic_reset
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|ata_wait
 parameter_list|(
@@ -902,14 +890,6 @@ operator|.
 name|end_transaction
 operator|=
 name|ata_end_transaction
-expr_stmt|;
-name|ch
-operator|->
-name|hw
-operator|.
-name|reset
-operator|=
-name|ata_generic_reset
 expr_stmt|;
 name|ch
 operator|->
@@ -3244,7 +3224,6 @@ comment|/* must be called with ATA channel locked */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ata_generic_reset
 parameter_list|(
@@ -3291,14 +3270,6 @@ literal|0
 decl_stmt|,
 name|timeout
 decl_stmt|;
-comment|/* reset controller (host) */
-name|ATA_RESET
-argument_list|(
-name|ch
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* do we have any signs of ATA/ATAPI HW being present ? */
 name|ATA_IDX_OUTB
 argument_list|(
