@@ -4500,13 +4500,7 @@ argument_list|,
 name|sc_coldexplist
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_bus
-operator|->
-name|use_polling
-operator|++
-expr_stmt|;
+comment|/* 		sc->sc_bus->use_polling++; */
 name|sc
 operator|->
 name|sc_port
@@ -4524,13 +4518,7 @@ operator|->
 name|root_hub
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_bus
-operator|->
-name|use_polling
-operator|--
-expr_stmt|;
+comment|/* 		sc->sc_bus->use_polling--; */
 block|}
 block|}
 end_function
