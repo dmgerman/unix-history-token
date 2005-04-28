@@ -34,6 +34,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|keyword_hash
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
