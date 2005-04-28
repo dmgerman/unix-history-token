@@ -7339,13 +7339,6 @@ name|int
 operator|*
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|af
-operator|==
-name|AF_INET
-condition|)
-block|{
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
@@ -7376,7 +7369,6 @@ expr_stmt|;
 name|THREAD_UNLOCK
 argument_list|()
 expr_stmt|;
-block|}
 operator|*
 operator|(
 expr|struct
@@ -7470,13 +7462,6 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|af
-operator|==
-name|AF_INET
-condition|)
-block|{
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
@@ -7509,7 +7494,6 @@ expr_stmt|;
 name|THREAD_UNLOCK
 argument_list|()
 expr_stmt|;
-block|}
 operator|*
 operator|(
 expr|struct
