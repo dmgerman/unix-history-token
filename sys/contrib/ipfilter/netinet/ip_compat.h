@@ -9447,9 +9447,11 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|BSD
 operator|>
 literal|199306
+operator|)
 end_if
 
 begin_define
@@ -9462,14 +9464,14 @@ begin_define
 define|#
 directive|define
 name|U_QUAD_T
-value|u_quad_t
+value|unsigned long long
 end_define
 
 begin_define
 define|#
 directive|define
 name|QUAD_T
-value|quad_t
+value|long long
 end_define
 
 begin_else

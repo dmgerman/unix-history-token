@@ -451,7 +451,7 @@ directive|ifdef
 name|USE_QUAD_T
 name|PRINTF
 argument_list|(
-literal|"\tforward: pkts in %qd bytes in %qd pkts out %qd bytes out %qd\n\tbackward: pkts in %qd bytes in %qd pkts out %qd bytes out %qd\n"
+literal|"\tforward: pkts in %lld bytes in %lld pkts out %lld bytes out %lld\n\tbackward: pkts in %lld bytes in %lld pkts out %lld bytes out %lld\n"
 argument_list|,
 name|ips
 operator|.
