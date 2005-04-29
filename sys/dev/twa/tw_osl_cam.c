@@ -1831,8 +1831,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+comment|/* 	 * It's been observed that twa_poll can get called (from 	 * dashutdown --> xpt_polled_action) even when interrupts are 	 * active, in which case, the ISR might clear the interrupt, 	 * leaving the call to tw_cl_interrupt below, no way of determining 	 * that the response from firmware is ready, resulting in 	 * tw_cl_deferred_interrupt never getting called.  To cover this case, 	 * we will make the call to tw_cl_deferred_interrupt not dependent 	 * on the return value from tw_cl_interrupt. 	 */
 name|tw_cl_interrupt
 argument_list|(
 operator|&
@@ -1842,7 +1841,7 @@ operator|->
 name|ctlr_handle
 operator|)
 argument_list|)
-condition|)
+expr_stmt|;
 name|tw_cl_deferred_interrupt
 argument_list|(
 operator|&
