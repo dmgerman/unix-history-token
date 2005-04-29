@@ -3890,7 +3890,7 @@ name|open
 argument_list|(
 name|s
 argument_list|,
-name|O_RDONLY
+name|rwmode
 argument_list|)
 expr_stmt|;
 name|free
