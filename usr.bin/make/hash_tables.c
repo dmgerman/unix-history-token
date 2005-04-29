@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * DO NOT EDIT  * $FreeBSD$  * auto-generated from FreeBSD: src/usr.bin/make/parse.c,v 1.98 2005/04/28 12:05:43 harti Exp   * DO NOT EDIT  */
+comment|/*  * DO NOT EDIT  * $FreeBSD$  * auto-generated from FreeBSD: src/usr.bin/make/parse.c,v 1.99 2005/04/29 14:37:44 harti Exp   * DO NOT EDIT  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"directive_hash.h"
+file|"hash_tables.h"
 end_include
 
 begin_comment

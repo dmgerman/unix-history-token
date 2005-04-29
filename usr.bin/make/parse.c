@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"directive_hash.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"for.h"
 end_include
 
@@ -109,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"GNode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hash_tables.h"
 end_include
 
 begin_include
