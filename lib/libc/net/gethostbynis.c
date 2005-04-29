@@ -566,7 +566,7 @@ condition|)
 block|{
 name|h_errno
 operator|=
-name|NETDB_INTERNAL
+name|NO_RECOVERY
 expr_stmt|;
 return|return
 operator|-
