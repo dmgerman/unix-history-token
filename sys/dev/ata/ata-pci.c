@@ -2625,7 +2625,13 @@ case|case
 literal|0x01bc10de
 case|:
 comment|/* nVIDIA nForce default setup */
-comment|/* set prefetch, postwrite */
+comment|/* set prefetch, postwrite, avoid doing it for VIA chips. */
+if|if
+condition|(
+name|type
+operator|!=
+literal|0x05711106
+condition|)
 name|pci_write_config
 argument_list|(
 name|dev
