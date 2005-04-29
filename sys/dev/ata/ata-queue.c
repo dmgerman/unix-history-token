@@ -2498,6 +2498,12 @@ name|state
 operator||=
 name|ATA_TIMEOUT
 expr_stmt|;
+name|ch
+operator|->
+name|running
+operator|=
+name|NULL
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&

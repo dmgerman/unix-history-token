@@ -2709,24 +2709,6 @@ comment|/* ata-lowlevel.c: */
 end_comment
 
 begin_function_decl
-name|int
-name|ata_getparam
-parameter_list|(
-name|device_t
-name|parent
-parameter_list|,
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|,
-name|u_int8_t
-name|command
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ata_generic_hw
 parameter_list|(
