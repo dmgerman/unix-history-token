@@ -835,39 +835,6 @@ parameter_list|)
 value|mtx_unlock((z)->uz_lock)
 end_define
 
-begin_define
-define|#
-directive|define
-name|CPU_LOCK_INIT
-parameter_list|(
-name|cpu
-parameter_list|)
-define|\
-value|mtx_init(&uma_pcpu_mtx[(cpu)], "UMA pcpu", "UMA pcpu",	\ 	    MTX_DEF | MTX_DUPOK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_LOCK
-parameter_list|(
-name|cpu
-parameter_list|)
-define|\
-value|mtx_lock(&uma_pcpu_mtx[(cpu)])
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_UNLOCK
-parameter_list|(
-name|cpu
-parameter_list|)
-define|\
-value|mtx_unlock(&uma_pcpu_mtx[(cpu)])
-end_define
-
 begin_comment
 comment|/*  * Find a slab within a hash table.  This is used for OFFPAGE zones to lookup  * the slab structure.  *  * Arguments:  *	hash  The hash table to search.  *	data  The base page of the item.  *  * Returns:  *	A pointer to a slab if successful, else NULL.  */
 end_comment
