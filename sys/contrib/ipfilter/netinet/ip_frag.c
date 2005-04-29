@@ -2160,6 +2160,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ipid
 expr_stmt|;
 operator|*
@@ -2942,6 +2945,9 @@ name|id
 operator|=
 operator|(
 name|u_32_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ipf
 operator|->
