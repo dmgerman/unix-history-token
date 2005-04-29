@@ -3722,7 +3722,7 @@ operator|!=
 literal|'\0'
 operator|&&
 operator|(
-name|warnflags
+name|warn_flags
 operator|&
 name|WARN_DIRSYNTAX
 operator|)
@@ -3847,7 +3847,7 @@ operator|!=
 literal|'\0'
 operator|&&
 operator|(
-name|warnflags
+name|warn_flags
 operator|&
 name|WARN_DIRSYNTAX
 operator|)

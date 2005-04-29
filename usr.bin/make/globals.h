@@ -332,9 +332,35 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uint32_t
-name|warnflags
+name|warn_cmd
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* positive warning flags on command line */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|warn_nocmd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* negative warning flags on command line */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|warn_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current warning flags */
+end_comment
 
 begin_endif
 endif|#

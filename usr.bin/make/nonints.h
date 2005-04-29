@@ -34,6 +34,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|Main_ParseWarn
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|Buffer
 modifier|*
 name|Cmd_Exec
