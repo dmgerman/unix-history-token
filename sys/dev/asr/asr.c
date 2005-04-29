@@ -11949,6 +11949,14 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ha_devt
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
