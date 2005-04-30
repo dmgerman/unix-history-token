@@ -11564,13 +11564,6 @@ name|b_iodone
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * Device drivers may or may not hold giant, hold it here 		 * if we're calling into unknown code. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -11583,12 +11576,6 @@ name|biodone
 call|)
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
