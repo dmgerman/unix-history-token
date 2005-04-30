@@ -10630,6 +10630,12 @@ name|aio_liojob
 modifier|*
 name|lj
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|wakeup
 argument_list|(
 name|bp
@@ -10893,6 +10899,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
