@@ -2410,7 +2410,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * bfreekva() - free the kva allocation for a buffer.  *  *	Must be called at splbio() or higher as this is the only locking for  *	buffer_map.  *  *	Since this call frees up buffer space, we call bufspacewakeup().  */
+comment|/*  * bfreekva() - free the kva allocation for a buffer.  *  *	Since this call frees up buffer space, we call bufspacewakeup().  */
 end_comment
 
 begin_function
@@ -2650,12 +2650,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splbio
-argument_list|()
-decl_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_BUF
@@ -2748,11 +2742,6 @@ operator|&=
 operator|~
 name|B_REMFREE
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Fixup numfreebuffers count.  If the buffer is invalid or not 	 * delayed-write, the buffer was free and we must decrement 	 * numfreebuffers. 	 */
@@ -2782,11 +2771,6 @@ operator|&
 name|numfreebuffers
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -3250,8 +3234,6 @@ parameter_list|)
 block|{
 name|int
 name|oldflags
-decl_stmt|,
-name|s
 decl_stmt|;
 name|CTR3
 argument_list|(
@@ -3309,11 +3291,6 @@ name|panic
 argument_list|(
 literal|"bufwrite: buffer is not busy???"
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -3417,11 +3394,6 @@ name|p_ru
 operator|.
 name|ru_oublock
 operator|++
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3896,7 +3868,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	bdirty:  *  *	Turn buffer into delayed write request.  We must clear BIO_READ and  *	B_RELBUF, and we must set B_DELWRI.  We reassign the buffer to   *	itself to properly update it in the dirty/clean lists.  We mark it  *	B_DONE to ensure that any asynchronization of the buffer properly  *	clears B_DONE ( else a panic will occur later ).    *  *	bdirty() is kinda like bdwrite() - we have to clear B_INVAL which  *	might have been set pre-getblk().  Unlike bwrite/bdwrite, bdirty()  *	should only be called if the buffer is known-good.  *  *	Since the buffer is not on a queue, we do not update the numfreebuffers  *	count.  *  *	Must be called at splbio().  *	The buffer must be on QUEUE_NONE.  */
+comment|/*  *	bdirty:  *  *	Turn buffer into delayed write request.  We must clear BIO_READ and  *	B_RELBUF, and we must set B_DELWRI.  We reassign the buffer to   *	itself to properly update it in the dirty/clean lists.  We mark it  *	B_DONE to ensure that any asynchronization of the buffer properly  *	clears B_DONE ( else a panic will occur later ).    *  *	bdirty() is kinda like bdwrite() - we have to clear B_INVAL which  *	might have been set pre-getblk().  Unlike bwrite/bdwrite, bdirty()  *	should only be called if the buffer is known-good.  *  *	Since the buffer is not on a queue, we do not update the numfreebuffers  *	count.  *  *	The buffer must be on QUEUE_NONE.  */
 end_comment
 
 begin_function
@@ -4046,7 +4018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	bundirty:  *  *	Clear B_DELWRI for buffer.  *  *	Since the buffer is not on a queue, we do not update the numfreebuffers  *	count.  *	  *	Must be called at splbio().  *	The buffer must be on QUEUE_NONE.  */
+comment|/*  *	bundirty:  *  *	Clear B_DELWRI for buffer.  *  *	Since the buffer is not on a queue, we do not update the numfreebuffers  *	count.  *	  *	The buffer must be on QUEUE_NONE.  */
 end_comment
 
 begin_function
@@ -4227,14 +4199,6 @@ operator|>=
 name|hidirtybuffers
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4277,11 +4241,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -4327,9 +4286,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_BUF
@@ -4368,11 +4324,6 @@ operator|,
 name|bp
 operator|)
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5056,11 +5007,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* enqueue */
@@ -5433,11 +5379,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5455,14 +5396,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_BUF
@@ -5516,11 +5449,6 @@ comment|/* do not release to free list */
 name|BUF_UNLOCK
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5654,11 +5582,6 @@ operator|&
 name|bqlock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|brelse
 argument_list|(
 name|bp
@@ -5758,11 +5681,6 @@ comment|/* unlock */
 name|BUF_UNLOCK
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -6207,9 +6125,6 @@ operator|->
 name|b_vp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|ncl
 decl_stmt|;
 name|int
@@ -6221,11 +6136,6 @@ decl_stmt|;
 name|int
 name|maxcl
 decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 comment|/* 	 * right now we support clustered writing only to regular files.  If 	 * we find a clusterable block we could be in the middle of a cluster 	 * rather then at the beginning. 	 */
 if|if
 condition|(
@@ -6416,11 +6326,6 @@ argument_list|,
 name|ncl
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|nwritten
 return|;
@@ -6436,11 +6341,6 @@ operator|->
 name|b_flags
 operator||=
 name|B_ASYNC
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 comment|/* 	 * default (old) behavior, writing out only one block 	 * 	 * XXX returns b_bufsize instead of b_bcount for nwritten? 	 */
 name|nwritten
@@ -7595,9 +7495,6 @@ name|void
 name|buf_daemon
 parameter_list|()
 block|{
-name|int
-name|s
-decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -7617,11 +7514,6 @@ name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This process is allowed to take the buffer cache to the limit 	 */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8121,12 +8013,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splbio
-argument_list|()
-decl_stmt|;
 name|BO_LOCK
 argument_list|(
 name|bo
@@ -8144,11 +8030,6 @@ expr_stmt|;
 name|BO_UNLOCK
 argument_list|(
 name|bo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -8786,9 +8667,6 @@ modifier|*
 name|bo
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|CTR3
@@ -8835,11 +8713,6 @@ operator|&
 name|vp
 operator|->
 name|v_bufobj
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|loop
 label|:
@@ -9179,11 +9052,6 @@ goto|goto
 name|loop
 goto|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -9217,16 +9085,9 @@ name|flags
 operator|&
 name|GB_NOCREAT
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
-block|}
 name|bsize
 operator|=
 name|bo
@@ -9296,21 +9157,14 @@ name|slpflag
 operator|||
 name|slptimeo
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
-block|}
 goto|goto
 name|loop
 goto|;
 block|}
-comment|/* 		 * This code is used to make sure that a buffer is not 		 * created while the getnewbuf routine is blocked. 		 * This can be a problem whether the vnode is locked or not. 		 * If the buffer is created out from under us, we have to 		 * throw away the one we just created.  There is now window 		 * race because we are safely running at splbio() from the 		 * point of the duplicate buffer creation through to here, 		 * and we've locked the buffer. 		 * 		 * Note: this must occur before we associate the buffer 		 * with the vp especially considering limitations in 		 * the splay tree implementation when dealing with duplicate 		 * lblkno's. 		 */
+comment|/* 		 * This code is used to make sure that a buffer is not 		 * created while the getnewbuf routine is blocked. 		 * This can be a problem whether the vnode is locked or not. 		 * If the buffer is created out from under us, we have to 		 * throw away the one we just created. 		 * 		 * Note: this must occur before we associate the buffer 		 * with the vp especially considering limitations in 		 * the splay tree implementation when dealing with duplicate 		 * lblkno's. 		 */
 name|BO_LOCK
 argument_list|(
 name|bo
@@ -9483,11 +9337,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -9577,9 +9426,6 @@ modifier|*
 name|bp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|maxsize
 decl_stmt|;
 name|maxsize
@@ -9592,11 +9438,6 @@ operator|)
 operator|&
 operator|~
 name|BKVAMASK
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -9618,11 +9459,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|allocbuf
 argument_list|(
 name|bp
@@ -11026,14 +10862,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -11059,11 +10887,6 @@ argument_list|,
 name|PRIBIO
 argument_list|,
 literal|"biowr"
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -11444,9 +11267,6 @@ name|bufobj
 modifier|*
 name|dropobj
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -11474,11 +11294,6 @@ name|bp
 operator|->
 name|b_flags
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|dropobj
 operator|=
@@ -11585,11 +11400,6 @@ condition|)
 name|bufobj_wdrop
 argument_list|(
 name|dropobj
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12243,11 +12053,6 @@ condition|)
 name|bufobj_wdrop
 argument_list|(
 name|dropobj
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
