@@ -172,9 +172,6 @@ name|struct
 name|hostent_data
 modifier|*
 name|hed
-parameter_list|,
-name|int
-name|mapped
 parameter_list|)
 block|{
 name|char
@@ -443,7 +440,11 @@ condition|)
 break|break;
 if|if
 condition|(
-name|mapped
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_USE_INET6
 condition|)
 block|{
 name|_map_v4v6_address
@@ -822,12 +823,6 @@ argument_list|,
 name|he
 argument_list|,
 name|hed
-argument_list|,
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_USE_INET6
 argument_list|)
 return|;
 block|}
@@ -924,8 +919,6 @@ argument_list|,
 name|he
 argument_list|,
 name|hed
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
