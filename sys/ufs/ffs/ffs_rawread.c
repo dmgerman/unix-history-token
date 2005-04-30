@@ -280,19 +280,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|ffs_rawreadwakeup
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -961,7 +948,7 @@ name|bp
 operator|->
 name|b_iodone
 operator|=
-name|ffs_rawreadwakeup
+name|bdone
 expr_stmt|;
 name|bp
 operator|->
@@ -2223,25 +2210,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|ffs_rawreadwakeup
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-block|{
-name|bdone
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
