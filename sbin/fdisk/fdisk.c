@@ -986,6 +986,12 @@ literal|"Solaris x86 boot"
 block|}
 block|,
 block|{
+literal|0xBF
+block|,
+literal|"Solaris x86 (new)"
+block|}
+block|,
+block|{
 literal|0xC1
 block|,
 literal|"DRDOS/sec with 12-bit FAT"
@@ -1597,6 +1603,16 @@ condition|(
 name|errno
 operator|==
 name|ENOENT
+operator|&&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
 condition|)
 block|{
 comment|/* Try prepending "/dev" */
@@ -3874,7 +3890,7 @@ name|open
 argument_list|(
 name|s
 argument_list|,
-name|O_RDONLY
+name|rwmode
 argument_list|)
 expr_stmt|;
 name|free
