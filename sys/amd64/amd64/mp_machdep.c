@@ -2861,6 +2861,10 @@ argument_list|(
 name|vector
 argument_list|)
 expr_stmt|;
+comment|/*  	* Enable interrupts here to workaround Opteron Errata 106. 	* The while loop runs entirely out of instruction cache, 	* which blocks updates to the cache from other CPUs. 	* Interrupts break the lock, allowing the write to post. 	*/
+name|enable_intr
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|smp_tlb_wait
@@ -2868,6 +2872,9 @@ operator|<
 name|ncpu
 condition|)
 name|ia32_pause
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 block|}
@@ -3137,6 +3144,10 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
+comment|/*  	* Enable interrupts here to workaround Opteron Errata 106. 	* The while loop runs entirely out of instruction cache, 	* which blocks updates to the cache from other CPUs. 	* Interrupts break the lock, allowing the write to post. 	*/
+name|enable_intr
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|smp_tlb_wait
@@ -3144,6 +3155,9 @@ operator|<
 name|ncpu
 condition|)
 name|ia32_pause
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 block|}
