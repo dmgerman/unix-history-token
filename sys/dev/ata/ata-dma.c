@@ -122,9 +122,7 @@ specifier|static
 name|void
 name|ata_dmaalloc
 parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -134,9 +132,7 @@ specifier|static
 name|void
 name|ata_dmafree
 parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -164,9 +160,7 @@ specifier|static
 name|int
 name|ata_dmaload
 parameter_list|(
-name|struct
-name|ata_device
-modifier|*
+name|device_t
 parameter_list|,
 name|caddr_t
 parameter_list|,
@@ -182,9 +176,7 @@ specifier|static
 name|int
 name|ata_dmaunload
 parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -221,7 +213,7 @@ begin_define
 define|#
 directive|define
 name|MAXWSPCSZ
-value|PAGE_SIZE
+value|PAGE_SIZE*2
 end_define
 
 begin_struct
@@ -242,12 +234,20 @@ begin_function
 name|void
 name|ata_dmainit
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|ata_channel
 modifier|*
 name|ch
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -406,12 +406,20 @@ specifier|static
 name|void
 name|ata_dmaalloc
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|ata_channel
 modifier|*
 name|ch
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|struct
 name|ata_dc_cb_args
 name|ccba
@@ -713,7 +721,9 @@ name|dmatag
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|PAGE_SIZE
+literal|64
+operator|*
+literal|1024
 argument_list|,
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
@@ -858,8 +868,6 @@ name|error
 label|:
 name|device_printf
 argument_list|(
-name|ch
-operator|->
 name|dev
 argument_list|,
 literal|"WARNING - DMA allocation failed, disabling DMA\n"
@@ -867,7 +875,7 @@ argument_list|)
 expr_stmt|;
 name|ata_dmafree
 argument_list|(
-name|ch
+name|dev
 argument_list|)
 expr_stmt|;
 name|free
@@ -893,12 +901,20 @@ specifier|static
 name|void
 name|ata_dmafree
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|ata_channel
 modifier|*
 name|ch
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|ch
@@ -1304,10 +1320,8 @@ specifier|static
 name|int
 name|ata_dmaload
 parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
+name|device_t
+name|dev
 parameter_list|,
 name|caddr_t
 name|data
@@ -1328,8 +1342,6 @@ name|device_get_softc
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|atadev
-operator|->
 name|dev
 argument_list|)
 argument_list|)
@@ -1351,8 +1363,6 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|atadev
-operator|->
 name|dev
 argument_list|,
 literal|"FAILURE - already active DMA on this device\n"
@@ -1371,8 +1381,6 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|atadev
-operator|->
 name|dev
 argument_list|,
 literal|"FAILURE - zero length DMA transfer attempted\n"
@@ -1419,8 +1427,6 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|atadev
-operator|->
 name|dev
 argument_list|,
 literal|"FAILURE - non aligned DMA transfer attempted\n"
@@ -1444,11 +1450,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|atadev
-operator|->
 name|dev
 argument_list|,
-literal|"FAILURE - oversized DMA transfer attempted %d> %d\n"
+literal|"FAILURE - oversized DMA transfer attempt %d> %d\n"
 argument_list|,
 name|count
 argument_list|,
@@ -1586,12 +1590,23 @@ begin_function
 name|int
 name|ata_dmaunload
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|ata_channel
 modifier|*
 name|ch
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+decl_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|ch

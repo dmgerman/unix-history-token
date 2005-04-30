@@ -108,9 +108,7 @@ modifier|*
 name|locking
 function_decl|)
 parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
+name|device_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -121,9 +119,7 @@ modifier|*
 name|reset
 function_decl|)
 parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
+name|device_t
 parameter_list|)
 function_decl|;
 name|void
@@ -132,9 +128,7 @@ modifier|*
 name|dmainit
 function_decl|)
 parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
+name|device_t
 parameter_list|)
 function_decl|;
 name|void
@@ -143,9 +137,7 @@ modifier|*
 name|setmode
 function_decl|)
 parameter_list|(
-name|struct
-name|ata_device
-modifier|*
+name|device_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -2254,9 +2246,7 @@ begin_function_decl
 name|void
 name|ata_dmainit
 parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

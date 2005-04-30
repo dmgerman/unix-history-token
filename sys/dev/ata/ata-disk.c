@@ -812,19 +812,6 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|ata_channel
-modifier|*
-name|ch
-init|=
-name|device_get_softc
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|struct
 name|ad_softc
 modifier|*
 name|adp
@@ -920,8 +907,6 @@ expr_stmt|;
 comment|/* fail requests on the queue and any thats "in flight" for this device */
 name|ata_fail_requests
 argument_list|(
-name|ch
-argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
@@ -979,7 +964,7 @@ name|ATA_SUPPORT_FLUSHCACHE
 condition|)
 name|ata_controlcmd
 argument_list|(
-name|atadev
+name|dev
 argument_list|,
 name|ATA_FLUSHCACHE
 argument_list|,
@@ -1780,7 +1765,7 @@ expr_stmt|;
 comment|/* enable read caching */
 name|ata_controlcmd
 argument_list|(
-name|atadev
+name|dev
 argument_list|,
 name|ATA_SETFEATURES
 argument_list|,
@@ -1798,7 +1783,7 @@ name|ata_wc
 condition|)
 name|ata_controlcmd
 argument_list|(
-name|atadev
+name|dev
 argument_list|,
 name|ATA_SETFEATURES
 argument_list|,
@@ -1812,7 +1797,7 @@ expr_stmt|;
 else|else
 name|ata_controlcmd
 argument_list|(
-name|atadev
+name|dev
 argument_list|,
 name|ATA_SETFEATURES
 argument_list|,
@@ -1860,7 +1845,7 @@ condition|(
 operator|!
 name|ata_controlcmd
 argument_list|(
-name|atadev
+name|dev
 argument_list|,
 name|ATA_SET_MULTI
 argument_list|,

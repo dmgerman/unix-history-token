@@ -2110,6 +2110,8 @@ name|atadev
 index|[
 name|tid
 index|]
+operator|->
+name|dev
 argument_list|,
 name|ATA_ATAPI_RESET
 argument_list|,

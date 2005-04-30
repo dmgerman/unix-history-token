@@ -208,12 +208,20 @@ begin_function
 name|void
 name|ata_generic_hw
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|ata_channel
 modifier|*
 name|ch
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|ch
 operator|->
 name|hw
@@ -369,7 +377,9 @@ name|hw
 operator|.
 name|command
 argument_list|(
-name|atadev
+name|request
+operator|->
+name|dev
 argument_list|,
 name|request
 operator|->
@@ -574,7 +584,9 @@ name|dma
 operator|->
 name|load
 argument_list|(
-name|atadev
+name|request
+operator|->
+name|dev
 argument_list|,
 name|request
 operator|->
@@ -620,7 +632,9 @@ name|hw
 operator|.
 name|command
 argument_list|(
-name|atadev
+name|request
+operator|->
+name|dev
 argument_list|,
 name|request
 operator|->
@@ -689,7 +703,9 @@ name|dma
 operator|->
 name|start
 argument_list|(
-name|ch
+name|request
+operator|->
+name|dev
 argument_list|)
 condition|)
 block|{
@@ -787,7 +803,9 @@ name|hw
 operator|.
 name|command
 argument_list|(
-name|atadev
+name|request
+operator|->
+name|dev
 argument_list|,
 name|ATA_PACKET_CMD
 argument_list|,
@@ -979,6 +997,7 @@ expr_stmt|;
 goto|goto
 name|begin_continue
 goto|;
+comment|/* ATAPI DMA commands */
 case|case
 name|ATA_R_ATAPI
 operator||
@@ -1052,7 +1071,9 @@ name|dma
 operator|->
 name|load
 argument_list|(
-name|atadev
+name|request
+operator|->
+name|dev
 argument_list|,
 name|request
 operator|->
@@ -1098,7 +1119,9 @@ name|hw
 operator|.
 name|command
 argument_list|(
-name|atadev
+name|request
+operator|->
+name|dev
 argument_list|,
 name|ATA_PACKET_CMD
 argument_list|,
@@ -1274,7 +1297,9 @@ name|dma
 operator|->
 name|start
 argument_list|(
-name|ch
+name|request
+operator|->
+name|dev
 argument_list|)
 condition|)
 block|{
@@ -1320,7 +1345,9 @@ name|dma
 operator|->
 name|unload
 argument_list|(
-name|ch
+name|request
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
@@ -1940,7 +1967,9 @@ name|dma
 operator|->
 name|stop
 argument_list|(
-name|ch
+name|request
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* did we get error or data */
@@ -2005,7 +2034,9 @@ name|dma
 operator|->
 name|unload
 argument_list|(
-name|ch
+name|request
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* done with HW */
@@ -2454,7 +2485,9 @@ name|dma
 operator|->
 name|stop
 argument_list|(
-name|ch
+name|request
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* did we get error or data */
@@ -2523,7 +2556,9 @@ name|dma
 operator|->
 name|unload
 argument_list|(
-name|ch
+name|request
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* done with HW */
@@ -2566,12 +2601,20 @@ begin_function
 name|void
 name|ata_generic_reset
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|ata_channel
 modifier|*
 name|ch
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|u_int8_t
 name|ostat0
 init|=
@@ -2732,8 +2775,6 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|ch
-operator|->
 name|dev
 argument_list|,
 literal|"reset tp1 mask=%02x ostat0=%02x ostat1=%02x\n"
@@ -2903,8 +2944,6 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|ch
-operator|->
 name|dev
 argument_list|,
 literal|"stat0=0x%02x err=0x%02x lsb=0x%02x msb=0x%02x\n"
@@ -3117,8 +3156,6 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|ch
-operator|->
 name|dev
 argument_list|,
 literal|"stat1=0x%02x err=0x%02x lsb=0x%02x msb=0x%02x\n"
@@ -3381,8 +3418,6 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|ch
-operator|->
 name|dev
 argument_list|,
 literal|"reset tp2 stat0=%02x stat1=%02x devices=0x%b\n"
@@ -3604,10 +3639,8 @@ begin_function
 name|int
 name|ata_generic_command
 parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
+name|device_t
+name|dev
 parameter_list|,
 name|u_int8_t
 name|command
@@ -3631,10 +3664,18 @@ name|device_get_softc
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|atadev
-operator|->
 name|dev
 argument_list|)
+argument_list|)
+decl_stmt|;
+name|struct
+name|ata_device
+modifier|*
+name|atadev
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
 argument_list|)
 decl_stmt|;
 comment|/* select device */
@@ -3670,8 +3711,6 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|atadev
-operator|->
 name|dev
 argument_list|,
 literal|"timeout sending command=%02x\n"
@@ -3799,8 +3838,6 @@ break|break;
 default|default:
 name|device_printf
 argument_list|(
-name|atadev
-operator|->
 name|dev
 argument_list|,
 literal|"can't translate cmd to 48bit version\n"

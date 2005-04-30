@@ -511,19 +511,6 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|ata_channel
-modifier|*
-name|ch
-init|=
-name|device_get_softc
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|struct
 name|afd_softc
 modifier|*
 name|fdp
@@ -544,8 +531,6 @@ expr_stmt|;
 comment|/* fail requests on the queue and any thats "in flight" for this device */
 name|ata_fail_requests
 argument_list|(
-name|ch
-argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
@@ -603,7 +588,7 @@ name|ATA_SUPPORT_FLUSHCACHE
 condition|)
 name|ata_controlcmd
 argument_list|(
-name|atadev
+name|dev
 argument_list|,
 name|ATA_FLUSHCACHE
 argument_list|,
@@ -1586,7 +1571,7 @@ condition|(
 operator|!
 name|ata_atapicmd
 argument_list|(
-name|atadev
+name|dev
 argument_list|,
 name|ccb
 argument_list|,
@@ -1758,7 +1743,7 @@ return|;
 return|return
 name|ata_atapicmd
 argument_list|(
-name|atadev
+name|dev
 argument_list|,
 name|ccb
 argument_list|,
@@ -1783,16 +1768,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|int8_t
 name|ccb
 index|[
@@ -1836,7 +1811,7 @@ decl_stmt|;
 return|return
 name|ata_atapicmd
 argument_list|(
-name|atadev
+name|dev
 argument_list|,
 name|ccb
 argument_list|,

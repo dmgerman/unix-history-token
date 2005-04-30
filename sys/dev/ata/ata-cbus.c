@@ -1409,7 +1409,7 @@ name|io
 expr_stmt|;
 name|ata_default_registers
 argument_list|(
-name|ch
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* initialize softc for this channel */
@@ -1421,7 +1421,7 @@ name|ATA_USE_16BIT
 expr_stmt|;
 name|ata_generic_hw
 argument_list|(
-name|ch
+name|dev
 argument_list|)
 expr_stmt|;
 return|return

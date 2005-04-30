@@ -1162,7 +1162,7 @@ block|}
 comment|/* catch request in ch->running if we havn't already */
 name|ata_catch_inflight
 argument_list|(
-name|ch
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* we're done release the channel for new work */
@@ -4140,12 +4140,20 @@ begin_function
 name|void
 name|ata_default_registers
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|ata_channel
 modifier|*
 name|ch
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 comment|/* fill in the defaults from whats setup already */
 name|ch
 operator|->
@@ -4756,10 +4764,8 @@ begin_function
 name|int
 name|ata_limit_mode
 parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
+name|device_t
+name|dev
 parameter_list|,
 name|int
 name|mode
@@ -4768,6 +4774,16 @@ name|int
 name|maxmode
 parameter_list|)
 block|{
+name|struct
+name|ata_device
+modifier|*
+name|atadev
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|maxmode
