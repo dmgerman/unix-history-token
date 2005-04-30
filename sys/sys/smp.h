@@ -320,6 +320,26 @@ name|smp_ipi_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDB_STOP_NMI
+end_ifdef
+
+begin_function_decl
+name|int
+name|stop_cpus_nmi
+parameter_list|(
+name|cpumask_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
