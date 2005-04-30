@@ -1180,11 +1180,13 @@ condition|(
 operator|(
 name|error
 operator|=
-name|gethostent_r
+name|gethostent_p
 argument_list|(
 name|he
 argument_list|,
 name|hed
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
