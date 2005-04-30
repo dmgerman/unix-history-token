@@ -3731,7 +3731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read from a file  */
+comment|/*  * Write to a file  */
 end_comment
 
 begin_function
