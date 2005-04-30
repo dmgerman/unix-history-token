@@ -2272,6 +2272,9 @@ name|bp
 operator|->
 name|b_error
 expr_stmt|;
+name|VM_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|pmap_qremove
 argument_list|(
 name|trunc_page
@@ -2288,6 +2291,9 @@ name|bp
 operator|->
 name|b_npages
 argument_list|)
+expr_stmt|;
+name|VM_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Move memory from the large cluster buffer into the component 	 * buffers and mark IO as done on these. 	 */
 for|for
