@@ -4369,6 +4369,9 @@ name|object
 init|=
 name|NULL
 decl_stmt|;
+name|VM_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -4724,6 +4727,9 @@ name|nsw_wcount_sync
 operator|)
 operator|)
 argument_list|)
+expr_stmt|;
+name|VM_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(
