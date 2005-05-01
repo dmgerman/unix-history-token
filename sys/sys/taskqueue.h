@@ -69,6 +69,12 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|struct
 name|taskqueue
@@ -89,6 +95,11 @@ parameter_list|,
 name|void
 modifier|*
 name|context
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -244,7 +255,7 @@ parameter_list|,
 name|init
 parameter_list|)
 define|\ 									\
-value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	taskqueue_##name =						\ 	    taskqueue_create(#name, M_NOWAIT, (enqueue), (context));	\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL)					\ 									\ struct __hack
+value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	static struct proc *taskqueue_##name##_proc;			\ 	taskqueue_##name =						\ 	    taskqueue_create(#name, M_NOWAIT, (enqueue), (context),	\&taskqueue_##name##_proc);					\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL)					\ 									\ struct __hack
 end_define
 
 begin_define
@@ -255,7 +266,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static struct proc *taskqueue_##name##_proc;				\ TASKQUEUE_DEFINE(name, taskqueue_thread_enqueue,&taskqueue_##name,	\ 	kthread_create(taskqueue_thread_loop,&taskqueue_##name,	\&taskqueue_##name##_proc, 0, 0, #name " taskq"))
+value|TASKQUEUE_DEFINE(name, taskqueue_thread_enqueue,&taskqueue_##name,	\ 	kthread_create(taskqueue_thread_loop,&taskqueue_##name,	\&taskqueue_##name##_proc, 0, 0, #name " taskq"))
 end_define
 
 begin_comment
