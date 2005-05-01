@@ -12954,10 +12954,7 @@ name|ch
 init|=
 name|device_get_softc
 argument_list|(
-name|device_get_parent
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|ch
@@ -12988,10 +12985,7 @@ name|ch
 init|=
 name|device_get_softc
 argument_list|(
-name|device_get_parent
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|ch
@@ -16095,7 +16089,7 @@ name|ctlr
 init|=
 name|device_get_softc
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
@@ -16108,10 +16102,7 @@ name|ch
 init|=
 name|device_get_softc
 argument_list|(
-name|device_get_parent
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -16275,7 +16266,7 @@ name|ctlr
 init|=
 name|device_get_softc
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
@@ -16288,10 +16279,7 @@ name|ch
 init|=
 name|device_get_softc
 argument_list|(
-name|device_get_parent
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|int

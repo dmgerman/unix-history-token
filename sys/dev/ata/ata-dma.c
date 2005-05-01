@@ -1340,10 +1340,7 @@ name|ch
 init|=
 name|device_get_softc
 argument_list|(
-name|device_get_parent
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|struct
@@ -1601,10 +1598,7 @@ name|ch
 init|=
 name|device_get_softc
 argument_list|(
-name|device_get_parent
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|bus_dmamap_sync

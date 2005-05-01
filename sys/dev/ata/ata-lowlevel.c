@@ -584,7 +584,7 @@ name|dma
 operator|->
 name|load
 argument_list|(
-name|request
+name|ch
 operator|->
 name|dev
 argument_list|,
@@ -703,7 +703,7 @@ name|dma
 operator|->
 name|start
 argument_list|(
-name|request
+name|ch
 operator|->
 name|dev
 argument_list|)
@@ -1071,7 +1071,7 @@ name|dma
 operator|->
 name|load
 argument_list|(
-name|request
+name|ch
 operator|->
 name|dev
 argument_list|,
@@ -1297,7 +1297,7 @@ name|dma
 operator|->
 name|start
 argument_list|(
-name|request
+name|ch
 operator|->
 name|dev
 argument_list|)
@@ -1345,7 +1345,7 @@ name|dma
 operator|->
 name|unload
 argument_list|(
-name|request
+name|ch
 operator|->
 name|dev
 argument_list|)
@@ -1967,7 +1967,7 @@ name|dma
 operator|->
 name|stop
 argument_list|(
-name|request
+name|ch
 operator|->
 name|dev
 argument_list|)
@@ -2034,7 +2034,7 @@ name|dma
 operator|->
 name|unload
 argument_list|(
-name|request
+name|ch
 operator|->
 name|dev
 argument_list|)
@@ -2485,7 +2485,7 @@ name|dma
 operator|->
 name|stop
 argument_list|(
-name|request
+name|ch
 operator|->
 name|dev
 argument_list|)
@@ -2556,7 +2556,7 @@ name|dma
 operator|->
 name|unload
 argument_list|(
-name|request
+name|ch
 operator|->
 name|dev
 argument_list|)
