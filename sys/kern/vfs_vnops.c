@@ -1732,6 +1732,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"IO_NODELOCKED with no vp lock held"
+argument_list|)
+expr_stmt|;
 name|auio
 operator|.
 name|uio_iov
