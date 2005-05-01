@@ -1766,7 +1766,7 @@ parameter_list|(
 name|dev
 parameter_list|)
 define|\
-value|(((struct ad_softc *)device_get_ivars(dev))->total_secs - 63)
+value|(((((struct ad_softc *)device_get_ivars(dev))->total_secs / (((struct ad_softc *)device_get_ivars(dev))->heads * ((struct ad_softc *)device_get_ivars(dev))->sectors)) * ((struct ad_softc *)device_get_ivars(dev))->heads * ((struct ad_softc *)device_get_ivars(dev))->sectors) - ((struct ad_softc *)device_get_ivars(dev))->sectors)
 end_define
 
 begin_struct
