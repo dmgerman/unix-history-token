@@ -824,6 +824,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YP
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -855,6 +861,11 @@ name|va_list
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -7232,6 +7243,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YP
+end_ifdef
+
 begin_comment
 comment|/*  * NIS  *  * XXX actually a hack.  */
 end_comment
@@ -7253,9 +7270,6 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|YP
 specifier|const
 name|char
 modifier|*
@@ -7351,13 +7365,6 @@ name|NS_SUCCESS
 else|:
 name|NS_NOTFOUND
 return|;
-else|#
-directive|else
-return|return
-name|NS_UNAVAIL
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7378,9 +7385,6 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|YP
 specifier|const
 name|void
 modifier|*
@@ -7480,15 +7484,13 @@ name|NS_SUCCESS
 else|:
 name|NS_NOTFOUND
 return|;
-else|#
-directive|else
-return|return
-name|NS_UNAVAIL
-return|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
