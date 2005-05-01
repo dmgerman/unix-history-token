@@ -733,6 +733,31 @@ name|tf_trapno
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|KDB_STOP_NMI
+comment|/* Handler for NMI IPIs used for debugging */
+if|if
+condition|(
+name|type
+operator|==
+name|T_NMI
+condition|)
+block|{
+if|if
+condition|(
+name|ipi_nmi_handler
+argument_list|()
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* KDB_STOP_NMI */
+ifdef|#
+directive|ifdef
 name|KDB
 if|if
 condition|(
