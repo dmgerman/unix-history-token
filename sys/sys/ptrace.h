@@ -463,7 +463,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|if ((p)->p_flag& P_TRACED&& (p)->p_stops& (flag)) {	\ 		PROC_LOCK(p);					\ 		ptracestop((td), SIGTRAP);			\ 	}
+value|if ((p)->p_flag& P_TRACED&& (p)->p_stops& (flag)) {	\ 		PROC_LOCK(p);					\ 		ptracestop((td), SIGTRAP);			\ 		PROC_UNLOCK(p);					\ 	}
 end_define
 
 begin_comment
