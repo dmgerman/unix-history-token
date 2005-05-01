@@ -148,13 +148,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|MBRSIGOFF
-value|510
-end_define
-
 begin_comment
 comment|/*  *  * Ported to 386bsd by Julian Elischer  Thu Oct 15 20:26:46 PDT 1992  *  * 14-Dec-89  Robert Baron (rvb) at Carnegie-Mellon University  *	Copyright (c) 1989	Robert. V. Baron  *	Created.  */
 end_comment
@@ -3177,23 +3170,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|dos_sectors
-operator|>
-literal|63
-operator|)
-operator|||
-operator|(
 name|dos_cyls
 operator|>
 literal|1023
-operator|)
 operator|||
-operator|(
 name|dos_heads
 operator|>
 literal|255
-operator|)
+operator|||
+name|dos_sectors
+operator|>
+literal|63
 condition|)
 name|printf
 argument_list|(
