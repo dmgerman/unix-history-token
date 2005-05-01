@@ -6422,6 +6422,14 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+else|else
+name|panic
+argument_list|(
+literal|"brelvp: Buffer %p not on queue."
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7622,6 +7630,14 @@ operator|)
 condition|)
 name|buf_vlist_remove
 argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+else|else
+name|panic
+argument_list|(
+literal|"reassignbuf: Buffer %p not on queue."
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
