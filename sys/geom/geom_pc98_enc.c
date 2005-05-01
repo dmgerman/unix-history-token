@@ -58,7 +58,7 @@ name|ptr
 init|=
 name|pp
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|d
@@ -240,7 +240,7 @@ name|ptr
 init|=
 name|pp
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|ptr
