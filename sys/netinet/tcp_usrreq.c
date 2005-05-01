@@ -2562,12 +2562,6 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-specifier|const
-name|int
-name|inirw
-init|=
-name|INI_WRITE
-decl_stmt|;
 name|int
 name|unlocked
 init|=
