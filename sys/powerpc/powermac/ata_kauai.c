@@ -683,7 +683,7 @@ name|ATA_KAUAI_ALTOFFSET
 expr_stmt|;
 name|ata_default_registers
 argument_list|(
-name|ch
+name|dev
 argument_list|)
 expr_stmt|;
 name|ch
@@ -702,7 +702,7 @@ name|ATA_NO_SLAVE
 expr_stmt|;
 name|ata_generic_hw
 argument_list|(
-name|ch
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
