@@ -3862,11 +3862,11 @@ for|for
 control|(
 name|p
 operator|=
-literal|1
+literal|0
 init|;
 name|p
 operator|<
-literal|5
+name|NDOSPART
 condition|;
 name|p
 operator|++
@@ -3882,6 +3882,8 @@ argument_list|,
 name|disk
 argument_list|,
 name|p
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|fdw
