@@ -1268,6 +1268,8 @@ name|pm_classes
 index|[
 name|i
 index|]
+operator|.
+name|pm_class
 expr_stmt|;
 name|printf
 argument_list|(

@@ -47,7 +47,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* #classes of PMCs in a CPU */
+comment|/* #classes of PMCs in a system */
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|PMC_VERSION_PATCH
-value|0x0001
+value|0x0002
 end_define
 
 begin_define
@@ -710,7 +710,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Flags used in operations.  */
+comment|/*  * Flags used in operations on PMCs.  */
 end_comment
 
 begin_define
@@ -743,7 +743,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/*OP CONFIGURELOG ctx switches */
+comment|/*OP ALLOCATE track ctx switches */
 end_comment
 
 begin_define
@@ -754,7 +754,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/*OP CONFIGURELOG log proc exits */
+comment|/*OP ALLOCATE log proc exits */
 end_comment
 
 begin_define
@@ -777,6 +777,17 @@ end_define
 
 begin_comment
 comment|/*OP RW get old value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_F_ATTACHED_TO_OWNER
+value|0x00010000
+end_define
+
+begin_comment
+comment|/*attached to owner*/
 end_comment
 
 begin_comment
@@ -802,6 +813,67 @@ define|#
 directive|define
 name|PMC_ID_INVALID
 value|(~ (pmc_id_t) 0)
+end_define
+
+begin_comment
+comment|/*  * PMC IDs have the following format:  *  * +--------+----------+-----------+-----------+  * |   CPU  | PMC MODE | PMC CLASS | ROW INDEX |  * +--------+----------+-----------+-----------+  *  * where each field is 8 bits wide.  Field 'CPU' is set to the  * requested CPU for system-wide PMCs or PMC_CPU_ANY for process-mode  * PMCs.  Field 'PMC MODE' is the allocated PMC mode.  Field 'PMC  * CLASS' is the class of the PMC.  Field 'ROW INDEX' is the row index  * for the PMC.  *  * The 'ROW INDEX' ranges over 0..NWPMCS where NHWPMCS is the total  * number of hardware PMCs on this cpu.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_ID_TO_ROWINDEX
+parameter_list|(
+name|ID
+parameter_list|)
+value|((ID)& 0xFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_ID_TO_CLASS
+parameter_list|(
+name|ID
+parameter_list|)
+value|(((ID)& 0xFF00)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_ID_TO_MODE
+parameter_list|(
+name|ID
+parameter_list|)
+value|(((ID)& 0xFF0000)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_ID_TO_CPU
+parameter_list|(
+name|ID
+parameter_list|)
+value|(((ID)& 0xFF000000)>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_ID_MAKE_ID
+parameter_list|(
+name|CPU
+parameter_list|,
+name|MODE
+parameter_list|,
+name|CLASS
+parameter_list|,
+name|ROWINDEX
+parameter_list|)
+define|\
+value|((((CPU)& 0xFF)<< 24) | (((MODE)& 0xFF)<< 16) |	\ 	(((CLASS)& 0xFF)<< 8) | ((ROWINDEX)& 0xFF))
 end_define
 
 begin_comment
@@ -997,10 +1069,13 @@ begin_struct
 struct|struct
 name|pmc_info
 block|{
-name|uint32_t
-name|pm_caps
+name|char
+name|pm_name
+index|[
+name|PMC_NAME_MAX
+index|]
 decl_stmt|;
-comment|/* counter capabilities */
+comment|/* pmc name */
 name|enum
 name|pmc_class
 name|pm_class
@@ -1011,6 +1086,20 @@ name|pm_enabled
 decl_stmt|;
 comment|/* whether enabled */
 name|enum
+name|pmc_disp
+name|pm_rowdisp
+decl_stmt|;
+comment|/* FREE, THREAD or STANDLONE */
+name|pid_t
+name|pm_ownerpid
+decl_stmt|;
+comment|/* owner, or -1 */
+name|enum
+name|pmc_mode
+name|pm_mode
+decl_stmt|;
+comment|/* current mode [enum pmc_mode] */
+name|enum
 name|pmc_event
 name|pm_event
 decl_stmt|;
@@ -1018,36 +1107,11 @@ comment|/* current event */
 name|uint32_t
 name|pm_flags
 decl_stmt|;
-comment|/* counter flags */
-name|enum
-name|pmc_mode
-name|pm_mode
-decl_stmt|;
-comment|/* current mode [enum pmc_mode] */
-name|pid_t
-name|pm_ownerpid
-decl_stmt|;
-comment|/* owner, or -1 */
+comment|/* current flags */
 name|pmc_value_t
 name|pm_reloadcount
 decl_stmt|;
 comment|/* sampling counters only */
-name|enum
-name|pmc_disp
-name|pm_rowdisp
-decl_stmt|;
-comment|/* FREE, THREAD or STANDLONE */
-name|uint32_t
-name|pm_width
-decl_stmt|;
-comment|/* width of the PMC */
-name|char
-name|pm_name
-index|[
-name|PMC_NAME_MAX
-index|]
-decl_stmt|;
-comment|/* pmc name */
 block|}
 struct|;
 end_struct
@@ -1076,6 +1140,27 @@ end_comment
 
 begin_struct
 struct|struct
+name|pmc_classinfo
+block|{
+name|enum
+name|pmc_class
+name|pm_class
+decl_stmt|;
+comment|/* class id */
+name|uint32_t
+name|pm_caps
+decl_stmt|;
+comment|/* counter capabilities */
+name|uint32_t
+name|pm_width
+decl_stmt|;
+comment|/* width of the PMC */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|pmc_op_getcpuinfo
 block|{
 name|enum
@@ -1084,10 +1169,6 @@ name|pm_cputype
 decl_stmt|;
 comment|/* what kind of CPU */
 name|uint32_t
-name|pm_nclass
-decl_stmt|;
-comment|/* #classes of PMCs */
-name|uint32_t
 name|pm_ncpu
 decl_stmt|;
 comment|/* number of CPUs */
@@ -1095,8 +1176,12 @@ name|uint32_t
 name|pm_npmc
 decl_stmt|;
 comment|/* #PMCs per CPU */
-name|enum
-name|pmc_class
+name|uint32_t
+name|pm_nclass
+decl_stmt|;
+comment|/* #classes of PMCs */
+name|struct
+name|pmc_classinfo
 name|pm_classes
 index|[
 name|PMC_CLASS_MAX
@@ -1330,7 +1415,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * struct pmc  *  * Describes each allocated PMC.  *  * Each PMC has precisely one owner, namely the process that allocated  * the PMC.  *  * Multiple target process may be being monitored by a PMC.  The  * 'pm_targets' field links all the target processes being monitored  * by this PMC.  *  * The 'pm_savedvalue' field is protected by a mutex.  *  * On a multi-cpu machine, multiple target threads associated with a  * process-virtual PMC could be concurrently executing on different  * CPUs.  The 'pm_runcount' field is atomically incremented every time  * the PMC gets scheduled on a CPU and atomically decremented when it  * get descheduled.  Deletion of a PMC is only permitted when this  * field is '0'.  *  */
+comment|/*  * struct pmc  *  * Describes each allocated PMC.  *  * Each PMC has precisely one owner, namely the process that allocated  * the PMC.  *  * A PMC may be attached to multiple target processes.  The  * 'pm_targets' field links all the target processes being monitored  * by this PMC.  *  * The 'pm_savedvalue' field is protected by a mutex.  *  * On a multi-cpu machine, multiple target threads associated with a  * process-virtual PMC could be concurrently executing on different  * CPUs.  The 'pm_runcount' field is atomically incremented every time  * the PMC gets scheduled on a CPU and atomically decremented when it  * get descheduled.  Deletion of a PMC is only permitted when this  * field is '0'.  *  */
 end_comment
 
 begin_struct
@@ -1345,13 +1430,9 @@ argument_list|)
 name|pm_targets
 expr_stmt|;
 comment|/* list of target processes */
-comment|/* 	 * Global PMCs are allocated on a CPU and are not moved around. 	 * For global PMCs we need to record the CPU the PMC was allocated 	 * on. 	 * 	 * Virtual PMCs run on whichever CPU is currently executing 	 * their owner threads.  For these PMCs we need to save their 	 * current PMC counter values when they are taken off CPU. 	 */
+comment|/* 	 * System-wide PMCs are allocated on a CPU and are not moved 	 * around.  For system-wide PMCs we record the CPU the PMC was 	 * allocated on in the 'CPU' field of the pmc ID. 	 * 	 * Virtual PMCs run on whichever CPU is currently executing 	 * their targets' threads.  For these PMCs we need to save 	 * their current PMC counter values when they are taken off 	 * CPU. 	 */
 union|union
 block|{
-name|uint32_t
-name|pm_cpu
-decl_stmt|;
-comment|/* System-wide PMCs */
 name|pmc_value_t
 name|pm_savedvalue
 decl_stmt|;
@@ -1359,7 +1440,7 @@ comment|/* Virtual PMCS */
 block|}
 name|pm_gv
 union|;
-comment|/* 	 * for sampling modes, we keep track of the PMC's "reload 	 * count", which is the counter value to be loaded in when 	 * arming the PMC for the next counting session.  For counting 	 * modes on PMCs that are read-only (e.g., the x86 TSC), we 	 * keep track of the initial value at the start of 	 * counting-mode operation. 	 */
+comment|/* 	 * For sampling mode PMCs, we keep track of the PMC's "reload 	 * count", which is the counter value to be loaded in when 	 * arming the PMC for the next counting session.  For counting 	 * modes on PMCs that are read-only (e.g., the x86 TSC), we 	 * keep track of the initial value at the start of 	 * counting-mode operation. 	 */
 union|union
 block|{
 name|pmc_value_t
@@ -1378,11 +1459,6 @@ name|pm_caps
 decl_stmt|;
 comment|/* PMC capabilities */
 name|enum
-name|pmc_class
-name|pm_class
-decl_stmt|;
-comment|/* class of PMC */
-name|enum
 name|pmc_event
 name|pm_event
 decl_stmt|;
@@ -1391,21 +1467,12 @@ name|uint32_t
 name|pm_flags
 decl_stmt|;
 comment|/* additional flags PMC_F_... */
-name|enum
-name|pmc_mode
-name|pm_mode
-decl_stmt|;
-comment|/* current mode */
 name|struct
 name|pmc_owner
 modifier|*
 name|pm_owner
 decl_stmt|;
 comment|/* owner thread state */
-name|uint32_t
-name|pm_rowindex
-decl_stmt|;
-comment|/* row index */
 name|uint32_t
 name|pm_runcount
 decl_stmt|;
@@ -1414,7 +1481,12 @@ name|enum
 name|pmc_state
 name|pm_state
 decl_stmt|;
-comment|/* state (active/inactive only) */
+comment|/* current PMC state */
+comment|/* 	 * The PMC ID field encodes the row-index for the PMC, its 	 * mode, class and the CPU# associated with the PMC. 	 */
+name|pmc_id_t
+name|pm_id
+decl_stmt|;
+comment|/* allocated PMC id */
 comment|/* md extensions */
 if|#
 directive|if
@@ -1484,6 +1556,50 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Accessor macros for 'struct pmc'  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_TO_MODE
+parameter_list|(
+name|P
+parameter_list|)
+value|PMC_ID_TO_MODE((P)->pm_id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_TO_CLASS
+parameter_list|(
+name|P
+parameter_list|)
+value|PMC_ID_TO_CLASS((P)->pm_id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_TO_ROWINDEX
+parameter_list|(
+name|P
+parameter_list|)
+value|PMC_ID_TO_ROWINDEX((P)->pm_id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_TO_CPU
+parameter_list|(
+name|P
+parameter_list|)
+value|PMC_ID_TO_CPU((P)->pm_id)
+end_define
+
+begin_comment
 comment|/*  * struct pmc_list  *  * Describes a list of PMCs.  */
 end_comment
 
@@ -1547,7 +1663,7 @@ comment|/* reference count */
 name|uint32_t
 name|pp_flags
 decl_stmt|;
-comment|/* flags */
+comment|/* flags PMC_PP_* */
 name|struct
 name|proc
 modifier|*
@@ -1563,6 +1679,13 @@ comment|/* NHWPMCs */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PMC_PP_ENABLE_MSR_ACCESS
+value|0x00000001
+end_define
 
 begin_comment
 comment|/*  * struct pmc_owner  *  * We associate a PMC with an 'owner' process.  *  * A process can be associated with 0..NCPUS*NHWPMC PMCs during its  * lifetime, where NCPUS is the numbers of CPUS in the system and  * NHWPMC is the number of hardware PMCs per CPU.  These are  * maintained in the list headed by the 'po_pmcs' to save on space.  *  */
@@ -1590,7 +1713,7 @@ comment|/* list of owned PMCs */
 name|uint32_t
 name|po_flags
 decl_stmt|;
-comment|/* PMC_FLAG_* */
+comment|/* flags PMC_PO_* */
 name|struct
 name|proc
 modifier|*
@@ -1608,29 +1731,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|PMC_FLAG_IS_OWNER
-value|0x01
+name|PMC_PO_HAS_TS_PMC
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PMC_FLAG_HAS_TS_PMC
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMC_FLAG_OWNS_LOGFILE
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMC_FLAG_ENABLE_MSR_ACCESS
-value|0x08
+name|PMC_PO_OWNS_LOGFILE
+value|0x00000002
 end_define
 
 begin_comment
@@ -1884,8 +1993,20 @@ begin_struct
 struct|struct
 name|pmc_mdep
 block|{
-name|enum
-name|pmc_class
+name|uint32_t
+name|pmd_cputype
+decl_stmt|;
+comment|/* from enum pmc_cputype */
+name|uint32_t
+name|pmd_npmc
+decl_stmt|;
+comment|/* max PMCs per CPU */
+name|uint32_t
+name|pmd_nclass
+decl_stmt|;
+comment|/* # PMC classes supported */
+name|struct
+name|pmc_classinfo
 name|pmd_classes
 index|[
 name|PMC_CLASS_MAX
@@ -1897,18 +2018,6 @@ index|[
 name|PMC_CLASS_MAX
 index|]
 decl_stmt|;
-name|uint32_t
-name|pmd_cputype
-decl_stmt|;
-comment|/* from enum pmc_cputype */
-name|uint32_t
-name|pmd_nclass
-decl_stmt|;
-comment|/* # PMC classes supported */
-name|uint32_t
-name|pmd_npmc
-decl_stmt|;
-comment|/* max PMCs per CPU */
 comment|/* 	 * Methods 	 */
 name|int
 function_decl|(
@@ -1984,6 +2093,25 @@ name|struct
 name|pmc
 modifier|*
 name|_pm
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pmd_get_config
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|,
+name|struct
+name|pmc
+modifier|*
+modifier|*
+name|_ppm
 parameter_list|)
 function_decl|;
 name|int
@@ -2640,6 +2768,17 @@ end_define
 
 begin_comment
 comment|/* stop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_DEBUG_MIN_INT
+value|13
+end_define
+
+begin_comment
+comment|/* interrupts */
 end_comment
 
 begin_comment

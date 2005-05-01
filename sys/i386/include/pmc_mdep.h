@@ -542,6 +542,26 @@ begin_comment
 comment|/* MSR_BPU_COUNTER0 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P4_RELOAD_COUNT_TO_PERFCTR_VALUE
+parameter_list|(
+name|V
+parameter_list|)
+value|(1 - (V))
+end_define
+
+begin_define
+define|#
+directive|define
+name|P4_PERFCTR_VALUE_TO_RELOAD_COUNT
+parameter_list|(
+name|P
+parameter_list|)
+value|(1 - (P))
+end_define
+
 begin_comment
 comment|/* Intel PPro, Celeron, P-II, P-III, Pentium-M PMCS */
 end_comment
