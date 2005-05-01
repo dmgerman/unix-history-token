@@ -3034,6 +3034,17 @@ name|vp
 operator|->
 name|v_object
 expr_stmt|;
+if|if
+condition|(
+name|object
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EACCES
+operator|)
+return|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
