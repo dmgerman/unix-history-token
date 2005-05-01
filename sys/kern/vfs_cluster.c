@@ -539,21 +539,12 @@ return|;
 block|}
 else|else
 block|{
-name|int
-name|s
-decl_stmt|;
 name|bp
 operator|->
 name|b_flags
 operator|&=
 operator|~
 name|B_RAM
-expr_stmt|;
-comment|/* 			 * We do the spl here so that there is no window 			 * between the incore and the b_usecount increment 			 * below.  We opt to keep the spl out of the loop 			 * for efficiency. 			 */
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|VI_LOCK
 argument_list|(
@@ -641,11 +632,6 @@ block|}
 name|VI_UNLOCK
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -3173,8 +3159,6 @@ name|int
 name|i
 decl_stmt|,
 name|j
-decl_stmt|,
-name|s
 decl_stmt|;
 name|int
 name|totalwritten
@@ -3196,11 +3180,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 comment|/* 		 * If the buffer is not delayed-write (i.e. dirty), or it 		 * is delayed-write but either locked or inval, it cannot 		 * partake in the clustered write. 		 */
 name|VI_LOCK
 argument_list|(
@@ -3245,11 +3224,6 @@ expr_stmt|;
 operator|--
 name|len
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -3276,11 +3250,6 @@ name|start_lbn
 expr_stmt|;
 operator|--
 name|len
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -3312,11 +3281,6 @@ expr_stmt|;
 operator|--
 name|len
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 name|bremfree
@@ -3330,11 +3294,6 @@ name|b_flags
 operator|&=
 operator|~
 name|B_DONE
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 comment|/* 		 * Extra memory in the buffer, punt on this buffer. 		 * XXX we could handle this in most cases, but we would 		 * have to push the extra memory down to after our max 		 * possible cluster size and then potentially pull it back 		 * up if the cluster was terminated prematurely--too much 		 * hassle. 		 */
 if|if
@@ -3577,11 +3536,6 @@ literal|0
 condition|)
 block|{
 comment|/* If not the first buffer */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 comment|/* 				 * If the adjacent data is not even in core it 				 * can't need to be written. 				 */
 name|VI_LOCK
 argument_list|(
@@ -3620,11 +3574,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 comment|/* 				 * If it IS in core, but has different 				 * characteristics, or is locked (which 				 * means it could be undergoing a background 				 * I/O or be in a weird state), then don't 				 * cluster with it. 				 */
@@ -3646,14 +3595,7 @@ name|vp
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 if|if
 condition|(
 operator|(
@@ -3704,11 +3646,6 @@ block|{
 name|BUF_UNLOCK
 argument_list|(
 name|tbp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3770,11 +3707,6 @@ argument_list|(
 name|tbp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 comment|/* 				 * Ok, it's passed all the tests, 				 * so remove it from the free list 				 * and mark it busy. We will use it. 				 */
@@ -3789,11 +3721,6 @@ name|b_flags
 operator|&=
 operator|~
 name|B_DONE
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* end of code for non-first buffers only */
@@ -4014,11 +3941,6 @@ name|b_bufsize
 operator|+=
 name|size
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|bundirty
 argument_list|(
 name|tbp
@@ -4061,11 +3983,6 @@ argument_list|(
 name|tbp
 operator|->
 name|b_bufobj
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|BUF_KERNPROC
