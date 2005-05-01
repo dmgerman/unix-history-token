@@ -3095,7 +3095,7 @@ return|return
 operator|(
 name|error
 operator|)
-operator|:
+return|;
 block|}
 end_function
 
