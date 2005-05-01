@@ -1124,8 +1124,6 @@ modifier|*
 name|nbp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -1144,11 +1142,6 @@ expr_stmt|;
 name|loop1
 label|:
 comment|/* 	 * MARK/SCAN initialization to avoid infinite loops. 	 */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|bp
@@ -1172,19 +1165,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Flush all dirty buffers associated with a vnode. 	 */
 name|loop2
 label|:
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|bp
@@ -1275,22 +1258,12 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
 name|bremfree
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|bawrite
@@ -1378,16 +1351,9 @@ name|maxretry
 operator|>=
 literal|0
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 goto|goto
 name|loop1
 goto|;
-block|}
 name|error
 operator|=
 name|EAGAIN
@@ -1410,11 +1376,6 @@ argument_list|(
 literal|"fsync: giving up on dirty"
 argument_list|,
 name|vp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
