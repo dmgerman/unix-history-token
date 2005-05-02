@@ -123,15 +123,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-specifier|extern
-name|Distribution
-name|DistTable
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+specifier|static
 name|Distribution
 name|SrcDistTable
 index|[]
@@ -139,7 +131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|Distribution
 name|XOrgDistTable
 index|[]
