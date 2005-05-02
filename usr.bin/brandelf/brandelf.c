@@ -802,7 +802,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|elfstrtype
 argument_list|,
