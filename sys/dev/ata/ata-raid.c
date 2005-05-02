@@ -18117,11 +18117,13 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-return|return
 name|ata_raid_read_metadata
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function
