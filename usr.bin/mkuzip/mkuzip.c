@@ -800,8 +800,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"data size %llu bytes, number of clusters "
-literal|"%u, index lengh %u bytes\n"
+literal|"data size %ju bytes, number of clusters "
+literal|"%u, index lengh %zu bytes\n"
 argument_list|,
 name|sb
 operator|.
@@ -1015,7 +1015,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"compressed data to %llu bytes, saved %lld "
+literal|"compressed data to %ju bytes, saved %lld "
 literal|"bytes, %.2f%% decrease.\n"
 argument_list|,
 name|offset
