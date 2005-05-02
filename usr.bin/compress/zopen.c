@@ -827,7 +827,7 @@ modifier|*
 name|zs
 decl_stmt|;
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|bp
 decl_stmt|;
