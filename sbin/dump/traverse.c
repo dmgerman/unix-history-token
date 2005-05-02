@@ -511,7 +511,7 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|;
