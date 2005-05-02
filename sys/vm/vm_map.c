@@ -11460,8 +11460,6 @@ name|vmspace
 modifier|*
 name|newvmspace
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|newvmspace
 operator|=
 name|vmspace_alloc
