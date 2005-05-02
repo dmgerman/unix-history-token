@@ -1447,7 +1447,7 @@ literal|"\t -n rate\t set sampling rate\n"
 literal|"\t -o file\t send print output to \"file\"\n"
 literal|"\t -p spec\t allocate process-private counting PMC\n"
 literal|"\t -s spec\t allocate system-wide counting PMC\n"
-literal|"\t -t pid\t attach to running process with pid \"pid\"\n"
+literal|"\t -t pid\t\t attach to running process with pid \"pid\"\n"
 literal|"\t -w secs\t set printing time interval"
 argument_list|)
 expr_stmt|;
