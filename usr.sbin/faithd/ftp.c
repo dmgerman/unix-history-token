@@ -5160,11 +5160,6 @@ return|return
 name|n
 return|;
 block|}
-name|freeaddrinfo
-argument_list|(
-name|res
-argument_list|)
-expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -5177,6 +5172,11 @@ argument_list|,
 name|res
 operator|->
 name|ai_addrlen
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
 argument_list|)
 expr_stmt|;
 goto|goto
