@@ -53,7 +53,7 @@ decl_stmt|;
 name|int32_t
 name|index
 decl_stmt|;
-name|u_char
+name|char
 modifier|*
 name|ifname
 decl_stmt|;

@@ -7448,7 +7448,7 @@ index|[
 name|IFNAMSIZ
 index|]
 decl_stmt|;
-name|int
+name|socklen_t
 name|namelen
 init|=
 name|IFNAMSIZ
@@ -9649,9 +9649,6 @@ else|else
 block|{
 name|bpp
 operator|=
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|buf
 index|[
