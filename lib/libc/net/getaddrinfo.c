@@ -3853,10 +3853,11 @@ name|struct
 name|sockaddr_storage
 name|ss
 decl_stmt|;
+name|socklen_t
+name|srclen
+decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|srclen
 decl_stmt|;
 comment|/* set unspec ("no source is available"), just in case */
 name|aio
