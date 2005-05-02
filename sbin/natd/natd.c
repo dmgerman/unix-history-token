@@ -809,6 +809,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|pidName
@@ -2323,7 +2324,7 @@ decl_stmt|;
 name|int
 name|wrote
 decl_stmt|;
-name|int
+name|socklen_t
 name|addrSize
 decl_stmt|;
 name|struct
@@ -2691,7 +2692,7 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|int
+name|socklen_t
 name|addrSize
 decl_stmt|;
 name|struct
@@ -2840,7 +2841,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"{%s} %08x"
+literal|"{%s}"
 argument_list|,
 name|mip
 operator|->
@@ -4165,6 +4166,7 @@ name|RefreshAddr
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -4189,6 +4191,7 @@ name|InitiateShutdown
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 comment|/*  * Start timer to allow kernel gracefully  * shutdown existing connections when system  * is shut down.  */
@@ -4221,6 +4224,7 @@ name|Shutdown
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|running
@@ -5921,7 +5925,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|aliaslink
 init|=
 name|NULL
 decl_stmt|;
@@ -6364,7 +6368,7 @@ name|remotePortCopy
 operator|=
 literal|0
 expr_stmt|;
-name|link
+name|aliaslink
 operator|=
 name|LibAliasRedirectPort
 argument_list|(
@@ -6406,7 +6410,7 @@ name|serverPool
 operator|!=
 name|NULL
 operator|&&
-name|link
+name|aliaslink
 operator|!=
 name|NULL
 condition|)
@@ -6478,7 +6482,7 @@ name|LibAliasAddServer
 argument_list|(
 name|mla
 argument_list|,
-name|link
+name|aliaslink
 argument_list|,
 name|localAddr
 argument_list|,
@@ -6757,7 +6761,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|aliaslink
 decl_stmt|;
 name|strlcpy
 argument_list|(
@@ -6864,7 +6868,7 @@ operator|&
 name|publicAddr
 argument_list|)
 expr_stmt|;
-name|link
+name|aliaslink
 operator|=
 name|LibAliasRedirectAddr
 argument_list|(
@@ -6882,7 +6886,7 @@ name|serverPool
 operator|!=
 name|NULL
 operator|&&
-name|link
+name|aliaslink
 operator|!=
 name|NULL
 condition|)
@@ -6915,7 +6919,7 @@ name|LibAliasAddServer
 argument_list|(
 name|mla
 argument_list|,
-name|link
+name|aliaslink
 argument_list|,
 name|localAddr
 argument_list|,
