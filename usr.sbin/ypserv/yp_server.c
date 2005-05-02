@@ -658,7 +658,7 @@ name|argp
 operator|->
 name|map
 argument_list|,
-literal|"ipnode"
+literal|"ipnodes"
 argument_list|)
 operator|)
 operator|&&
@@ -695,7 +695,7 @@ name|argp
 operator|->
 name|map
 argument_list|,
-literal|"ipnode"
+literal|"ipnodes"
 argument_list|)
 operator|)
 condition|)
