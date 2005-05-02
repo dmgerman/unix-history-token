@@ -1467,14 +1467,6 @@ argument_list|)
 expr_stmt|;
 name|sbp
 operator|->
-name|f_flags
-operator|=
-name|nmp
-operator|->
-name|nm_flag
-expr_stmt|;
-name|sbp
-operator|->
 name|f_iosize
 operator|=
 name|nfs_iosize
