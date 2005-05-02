@@ -718,7 +718,7 @@ name|struct
 name|sockaddr_in
 name|saddr
 decl_stmt|;
-name|int
+name|socklen_t
 name|asize
 init|=
 sizeof|sizeof
@@ -1071,7 +1071,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
+name|socklen_t
 name|ssize
 init|=
 sizeof|sizeof
