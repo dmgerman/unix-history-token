@@ -2739,6 +2739,22 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_object
+operator|=
+name|tvp
+operator|->
+name|v_object
+expr_stmt|;
 comment|/* 	 * Release any locks held. 	 */
 if|if
 condition|(
