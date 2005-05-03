@@ -898,14 +898,6 @@ name|dt
 decl_stmt|,
 name|lnow
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|devstat_mutex
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -1092,14 +1084,6 @@ block|{
 name|devstat_trans_flags
 name|flg
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|devstat_mutex
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
