@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: util.c,v 1.18 2004/01/22 16:10:30 beck Exp $ */
+comment|/*	$OpenBSD: util.c,v 1.19 2004/07/06 19:49:11 dhartmei Exp $ */
 end_comment
 
 begin_comment
@@ -134,6 +134,13 @@ file|"util.h"
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|ReverseMode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|Debug_Level
 decl_stmt|;
@@ -234,6 +241,11 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|client_sa_ptr
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+name|proxy_sa_ptr
 parameter_list|)
 block|{
 name|struct
@@ -251,7 +263,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|real_server_sa_ptr
+name|proxy_sa_ptr
 argument_list|)
 expr_stmt|;
 if|if
@@ -265,7 +277,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-name|real_server_sa_ptr
+name|proxy_sa_ptr
 argument_list|,
 operator|&
 name|slen
@@ -330,6 +342,15 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ReverseMode
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Build up the pf natlook structure. 	 * Just for IPv4 right now 	 */
 name|memset
 argument_list|(
@@ -378,7 +399,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|real_server_sa_ptr
+name|proxy_sa_ptr
 operator|->
 name|sin_addr
 operator|.
@@ -402,7 +423,7 @@ name|natlook
 operator|.
 name|dport
 operator|=
-name|real_server_sa_ptr
+name|proxy_sa_ptr
 operator|->
 name|sin_port
 expr_stmt|;

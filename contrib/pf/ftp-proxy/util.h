@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: util.h,v 1.3 2002/05/23 10:22:14 deraadt Exp $ */
+comment|/*	$OpenBSD: util.h,v 1.5 2005/02/24 15:49:08 dhartmei Exp $ */
 end_comment
 
 begin_comment
@@ -90,6 +90,7 @@ name|sa
 decl_stmt|,
 name|real_sa
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|who
@@ -143,6 +144,11 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|client_sa_ptr
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+name|proxy_sa_ptr
 parameter_list|)
 function_decl|;
 end_function_decl
