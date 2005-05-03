@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -197,6 +203,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/ufs_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_include
@@ -2904,24 +2916,6 @@ begin_comment
 comment|/* bufs redirtied as dir entry cannot write */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -3195,14 +3189,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|worklist_num
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|num_on_worklist
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -22397,6 +22403,8 @@ argument_list|(
 literal|"softdep_fsync_mountdev: vnode not a disk"
 argument_list|)
 expr_stmt|;
+name|restart
+label|:
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -22514,32 +22522,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|ACQUIRE_LOCK
-argument_list|(
-operator|&
-name|lk
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Since we may have slept during the I/O, we need  		 * to start from a known point. 		 */
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|nbp
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_bufobj
-operator|.
-name|bo_dirty
-operator|.
-name|bv_hd
-argument_list|)
-expr_stmt|;
+goto|goto
+name|restart
+goto|;
 block|}
 name|FREE_LOCK
 argument_list|(
