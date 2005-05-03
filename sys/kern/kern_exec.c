@@ -1257,6 +1257,9 @@ name|int
 name|credential_changing
 decl_stmt|;
 name|int
+name|vfslocked
+decl_stmt|;
+name|int
 name|textset
 decl_stmt|;
 ifdef|#
@@ -1461,6 +1464,8 @@ operator||
 name|FOLLOW
 operator||
 name|SAVENAME
+operator||
+name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -1471,14 +1476,12 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|interpret
 label|:
+name|vfslocked
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|namei
@@ -1493,6 +1496,13 @@ condition|)
 goto|goto
 name|exec_fail
 goto|;
+name|vfslocked
+operator|=
+name|NDHASGIANT
+argument_list|(
+name|ndp
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp
@@ -1772,6 +1782,11 @@ name|object
 operator|=
 name|NULL
 expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
 comment|/* set new name to that of the interpreter */
 name|NDINIT
 argument_list|(
@@ -1784,6 +1799,8 @@ operator||
 name|FOLLOW
 operator||
 name|SAVENAME
+operator||
+name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -2968,10 +2985,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
 return|return
@@ -3011,8 +3027,6 @@ decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|imgp
@@ -3488,8 +3502,6 @@ decl_stmt|;
 name|vm_map_t
 name|map
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|imgp
 operator|->
 name|vmspace_destroyed
