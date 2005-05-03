@@ -3096,8 +3096,6 @@ name|sysentvec
 modifier|*
 name|sv
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Do we have a valid ELF header ? 	 */
 if|if
 condition|(

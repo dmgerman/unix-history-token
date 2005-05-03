@@ -348,8 +348,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Linux and *BSD binaries look very much alike, 	 * only the machine id is different: 	 * 0x64 for Linux, 0x86 for *BSD, 0x00 for BSDI. 	 * NetBSD is in network byte order.. ugh. 	 */
 if|if
 condition|(
