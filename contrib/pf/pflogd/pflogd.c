@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pflogd.c,v 1.27 2004/02/13 19:01:57 otto Exp $	*/
+comment|/*	$OpenBSD: pflogd.c,v 1.33 2005/02/09 12:09:30 henning Exp $	*/
 end_comment
 
 begin_comment
@@ -1138,6 +1138,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|logmsg
 argument_list|(
 name|LOG_ERR
@@ -1175,6 +1180,11 @@ operator|-
 literal|1
 condition|)
 block|{
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|logmsg
 argument_list|(
 name|LOG_ERR
@@ -1210,6 +1220,11 @@ literal|0
 argument_list|)
 condition|)
 block|{
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|logmsg
 argument_list|(
 name|LOG_ERR
@@ -1260,6 +1275,11 @@ name|snaplen
 argument_list|)
 condition|)
 block|{
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|logmsg
 argument_list|(
 name|LOG_WARNING
@@ -1774,7 +1794,6 @@ operator|!=
 literal|1
 condition|)
 block|{
-comment|/* try to undo header to prevent corruption */
 name|off_t
 name|pos
 init|=
@@ -1783,6 +1802,7 @@ argument_list|(
 name|f
 argument_list|)
 decl_stmt|;
+comment|/* try to undo header to prevent corruption */
 if|if
 condition|(
 name|pos
@@ -2271,6 +2291,13 @@ name|phandler
 init|=
 name|dump_packet
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errstr
+init|=
+name|NULL
+decl_stmt|;
 name|closefrom
 argument_list|(
 name|STDERR_FILENO
@@ -2315,22 +2342,23 @@ literal|'d'
 case|:
 name|delay
 operator|=
-name|atoi
+name|strtonum
 argument_list|(
 name|optarg
+argument_list|,
+literal|5
+argument_list|,
+literal|60
+operator|*
+literal|60
+argument_list|,
+operator|&
+name|errstr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|delay
-operator|<
-literal|5
-operator|||
-name|delay
-operator|>
-literal|60
-operator|*
-literal|60
+name|errstr
 condition|)
 name|usage
 argument_list|()
@@ -2349,9 +2377,16 @@ literal|'s'
 case|:
 name|snaplen
 operator|=
-name|atoi
+name|strtonum
 argument_list|(
 name|optarg
+argument_list|,
+literal|0
+argument_list|,
+name|PFLOGD_MAXSNAPLEN
+argument_list|,
+operator|&
+name|errstr
 argument_list|)
 expr_stmt|;
 if|if
@@ -2366,9 +2401,7 @@ name|DEF_SNAPLEN
 expr_stmt|;
 if|if
 condition|(
-name|snaplen
-operator|>
-name|PFLOGD_MAXSNAPLEN
+name|errstr
 condition|)
 name|snaplen
 operator|=
@@ -2446,6 +2479,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+name|tzset
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2663,7 +2699,7 @@ name|hpcap
 argument_list|,
 name|PCAP_NUM_PKTS
 argument_list|,
-name|dump_packet
+name|phandler
 argument_list|,
 operator|(
 name|u_char

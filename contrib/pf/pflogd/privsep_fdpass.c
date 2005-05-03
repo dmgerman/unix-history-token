@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: privsep_fdpass.c,v 1.1 2003/10/22 18:51:55 canacar Exp $	*/
+comment|/*	$OpenBSD: privsep_fdpass.c,v 1.2 2004/08/13 02:51:48 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -470,6 +470,25 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cmsg
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: no message header"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|cmsg

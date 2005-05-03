@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_osfp.c,v 1.8 2004/02/27 10:42:00 henning Exp $ */
+comment|/*	$OpenBSD: pfctl_osfp.c,v 1.12 2005/02/17 13:18:00 aaron Exp $ */
 end_comment
 
 begin_comment
@@ -587,7 +587,7 @@ condition|(
 operator|(
 name|in
 operator|=
-name|fopen
+name|pfctl_fopen
 argument_list|(
 name|fp_filename
 argument_list|,
@@ -600,7 +600,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"fopen(%s)"
+literal|"%s"
 argument_list|,
 name|fp_filename
 argument_list|)
@@ -1496,15 +1496,16 @@ operator|->
 name|nm_sublist
 argument_list|)
 expr_stmt|;
-name|fingerprint_count
-operator|--
-expr_stmt|;
 name|free
 argument_list|(
 name|nm
 argument_list|)
 expr_stmt|;
 block|}
+name|fingerprint_count
+operator|=
+literal|0
+expr_stmt|;
 name|class_count
 operator|=
 literal|0
@@ -1836,7 +1837,7 @@ condition|(
 operator|(
 name|ptr
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|wr_name
 argument_list|,
@@ -2570,7 +2571,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|version_name
 argument_list|,
@@ -2589,7 +2590,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|version_name
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pathnames.h,v 1.6 2003/06/03 20:38:59 beck Exp $	*/
+comment|/*	$OpenBSD: pathnames.h,v 1.7 2004/04/25 18:40:42 beck Exp $	*/
 end_comment
 
 begin_comment
@@ -75,6 +75,13 @@ define|#
 directive|define
 name|PATH_AUTHPF_SHELL
 value|"/usr/sbin/authpf"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_PFCTL
+value|"/sbin/pfctl"
 end_define
 
 end_unit

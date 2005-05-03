@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: getline.c,v 1.15 2003/06/28 01:04:57 deraadt Exp $ */
+comment|/*	$OpenBSD: getline.c,v 1.16 2004/09/16 04:50:51 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -262,6 +262,7 @@ operator|<=
 literal|128
 condition|)
 block|{
+name|unsigned
 name|char
 modifier|*
 name|tmp
@@ -461,6 +462,7 @@ decl_stmt|;
 name|int
 name|ix
 decl_stmt|;
+name|unsigned
 name|char
 name|tbuf
 index|[
@@ -771,6 +773,7 @@ operator|-
 literal|5
 condition|)
 block|{
+name|unsigned
 name|char
 modifier|*
 name|tmp

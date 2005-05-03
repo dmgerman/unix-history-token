@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_qstats.c,v 1.29 2004/03/15 15:25:44 dhartmei Exp $ */
+comment|/*	$OpenBSD: pfctl_qstats.c,v 1.30 2004/04/27 21:47:32 kjc Exp $ */
 end_comment
 
 begin_comment
@@ -402,6 +402,17 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|nodes
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"No queue in use\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|node
@@ -467,6 +478,10 @@ block|}
 while|while
 condition|(
 name|verbose2
+operator|&&
+name|nodes
+operator|>
+literal|0
 condition|)
 block|{
 name|printf
@@ -486,6 +501,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|nodes
+operator|=
 name|pfctl_update_qstats
 argument_list|(
 name|dev
@@ -493,6 +511,7 @@ argument_list|,
 operator|&
 name|root
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1
