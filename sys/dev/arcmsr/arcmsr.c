@@ -5691,11 +5691,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pccb
 operator|->
 name|ccb_h
 operator|.
 name|status
+operator|&
+name|CAM_STATUS_MASK
+operator|)
 operator|!=
 name|CAM_REQ_INPROG
 condition|)
