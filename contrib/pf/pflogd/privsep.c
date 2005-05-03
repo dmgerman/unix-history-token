@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: privsep.c,v 1.8 2004/03/14 19:17:05 otto Exp $	*/
+comment|/*	$OpenBSD: privsep.c,v 1.13 2004/12/22 09:21:02 otto Exp $	*/
 end_comment
 
 begin_comment
@@ -311,6 +311,8 @@ name|int
 name|snaplen
 decl_stmt|,
 name|ret
+decl_stmt|,
+name|olderrno
 decl_stmt|;
 name|struct
 name|passwd
@@ -593,7 +595,7 @@ literal|0
 return|;
 block|}
 comment|/* Father */
-comment|/* Pass ALRM/TERM/HUP through to child, and accept CHLD */
+comment|/* Pass ALRM/TERM/HUP/INT/QUIT through to child, and accept CHLD */
 name|signal
 argument_list|(
 name|SIGALRM
@@ -611,6 +613,20 @@ expr_stmt|;
 name|signal
 argument_list|(
 name|SIGHUP
+argument_list|,
+name|sig_pass_to_chld
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|sig_pass_to_chld
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
 argument_list|,
 name|sig_pass_to_chld
 argument_list|)
@@ -760,6 +776,20 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
+name|olderrno
+operator|=
+name|errno
+expr_stmt|;
+name|send_fd
+argument_list|(
+name|socks
+index|[
+literal|0
+index|]
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fd
@@ -776,20 +806,11 @@ name|filename
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|olderrno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|send_fd
-argument_list|(
-name|socks
-index|[
-literal|0
-index|]
-argument_list|,
-name|fd
-argument_list|)
-expr_stmt|;
+else|else
 name|close
 argument_list|(
 name|fd
@@ -983,7 +1004,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: called from privileged portion\n"
+literal|"%s: called from privileged portion"
 argument_list|,
 name|__func__
 argument_list|)

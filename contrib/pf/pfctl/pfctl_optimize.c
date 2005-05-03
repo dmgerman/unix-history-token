@@ -10,6 +10,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -4144,6 +4158,17 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|por2
+operator|==
+name|NULL
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|por2
@@ -4156,6 +4181,8 @@ operator|->
 name|sb_rules
 argument_list|)
 condition|)
+endif|#
+directive|endif
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&

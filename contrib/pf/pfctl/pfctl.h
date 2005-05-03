@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl.h,v 1.33 2004/02/19 21:37:01 cedric Exp $ */
+comment|/*	$OpenBSD: pfctl.h,v 1.37 2005/01/05 18:23:10 mcbride Exp $ */
 end_comment
 
 begin_comment
@@ -409,46 +409,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pfr_ina_begin
-parameter_list|(
-name|struct
-name|pfr_table
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pfr_ina_commit
-parameter_list|(
-name|struct
-name|pfr_table
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|pfr_ina_define
 parameter_list|(
 name|struct
@@ -624,10 +584,6 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -637,10 +593,6 @@ begin_function_decl
 name|int
 name|pfctl_show_tables
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -667,10 +619,6 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -720,6 +668,22 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|FILE
+modifier|*
+name|pfctl_fopen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -804,6 +768,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|loadopt
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -951,10 +922,6 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -968,10 +935,6 @@ name|pfr_buffer
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|,
 specifier|const
 name|char

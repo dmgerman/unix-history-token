@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pf_print_state.c,v 1.39 2004/02/10 17:48:08 henning Exp $	*/
+comment|/*	$OpenBSD: pf_print_state.c,v 1.40 2004/12/10 22:13:26 henning Exp $	*/
 end_comment
 
 begin_comment
@@ -392,6 +392,21 @@ case|:
 name|printf
 argument_list|(
 literal|"no-route"
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|PF_ADDR_RTLABEL
+case|:
+name|printf
+argument_list|(
+literal|"route \"%s\""
+argument_list|,
+name|addr
+operator|->
+name|v
+operator|.
+name|rtlabelname
 argument_list|)
 expr_stmt|;
 return|return;

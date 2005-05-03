@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_altq.c,v 1.83 2004/03/14 21:51:44 dhartmei Exp $	*/
+comment|/*	$OpenBSD: pfctl_altq.c,v 1.86 2005/02/28 14:04:51 henning Exp $	*/
 end_comment
 
 begin_comment
@@ -1698,6 +1698,12 @@ name|if_pa
 decl_stmt|,
 modifier|*
 name|parent
+decl_stmt|,
+modifier|*
+name|altq
+decl_stmt|;
+name|u_int32_t
+name|bwsum
 decl_stmt|;
 name|int
 name|error
@@ -1897,9 +1903,6 @@ operator|==
 name|ALTQT_HFSC
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|pa
 operator|->
 name|bandwidth
@@ -1918,36 +1921,7 @@ name|parent
 operator|->
 name|bandwidth
 argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bandwidth for %s invalid (%d / %d)\n"
-argument_list|,
-name|pa
-operator|->
-name|qname
-argument_list|,
-name|bw
-operator|->
-name|bw_absolute
-argument_list|,
-name|bw
-operator|->
-name|bw_percent
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|pa
@@ -1977,12 +1951,16 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* check the sum of the child bandwidth is under parent's */
 if|if
 condition|(
 name|parent
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|pa
 operator|->
 name|bandwidth
@@ -1992,11 +1970,9 @@ operator|->
 name|bandwidth
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bandwidth for %s higher than parent\n"
+literal|"bandwidth for %s higher than parent"
 argument_list|,
 name|pa
 operator|->
@@ -2008,6 +1984,94 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+name|bwsum
+operator|=
+literal|0
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|altq
+argument_list|,
+argument|&altqs
+argument_list|,
+argument|entries
+argument_list|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|altq
+operator|->
+name|ifname
+argument_list|,
+name|pa
+operator|->
+name|ifname
+argument_list|,
+name|IFNAMSIZ
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|altq
+operator|->
+name|qname
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+operator|&&
+name|strncmp
+argument_list|(
+name|altq
+operator|->
+name|parent
+argument_list|,
+name|pa
+operator|->
+name|parent
+argument_list|,
+name|PF_QNAME_SIZE
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|bwsum
+operator|+=
+name|altq
+operator|->
+name|bandwidth
+expr_stmt|;
+block|}
+name|bwsum
+operator|+=
+name|pa
+operator|->
+name|bandwidth
+expr_stmt|;
+if|if
+condition|(
+name|bwsum
+operator|>
+name|parent
+operator|->
+name|bandwidth
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"the sum of the child bandwidth higher"
+literal|" than parent \"%s\""
+argument_list|,
+name|parent
+operator|->
+name|qname
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -3813,7 +3877,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * admission control: 	 * for the real-time service curve, the sum of the service curves 	 * should not exceed 80% of the interface bandwidth.  20% is reserved 	 * not to over-commit the actual interface bandwidth. 	 * for the link-sharing service curve, the sum of the child service 	 * curve should not exceed the parent service curve. 	 * for the upper-limit service curve, the assigned bandwidth should 	 * be smaller than the interface bandwidth, and the upper-limit should 	 * be larger than the real-time service curve when both are defined. 	 */
+comment|/* 	 * admission control: 	 * for the real-time service curve, the sum of the service curves 	 * should not exceed 80% of the interface bandwidth.  20% is reserved 	 * not to over-commit the actual interface bandwidth. 	 * for the linkshare service curve, the sum of the child service 	 * curve should not exceed the parent service curve. 	 * for the upper-limit service curve, the assigned bandwidth should 	 * be smaller than the interface bandwidth, and the upper-limit should 	 * be larger than the real-time service curve when both are defined. 	 */
 name|parent
 operator|=
 name|qname_to_pfaltq
@@ -3972,7 +4036,7 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/* if the class has a link-sharing service curve, add it. */
+comment|/* if the class has a linkshare service curve, add it. */
 if|if
 condition|(
 name|opts
@@ -4049,6 +4113,41 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* add this queue to the sum */
+name|sc
+operator|.
+name|m1
+operator|=
+name|opts
+operator|->
+name|rtsc_m1
+expr_stmt|;
+name|sc
+operator|.
+name|d
+operator|=
+name|opts
+operator|->
+name|rtsc_d
+expr_stmt|;
+name|sc
+operator|.
+name|m2
+operator|=
+name|opts
+operator|->
+name|rtsc_m2
+expr_stmt|;
+name|gsc_add_sc
+argument_list|(
+operator|&
+name|rtsc
+argument_list|,
+operator|&
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* compare the sum with 80% of the interface */
 name|sc
 operator|.
 name|m1
@@ -4088,7 +4187,18 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"real-time sc exceeds the interface bandwidth"
+literal|"real-time sc exceeds 80%% of the interface "
+literal|"bandwidth (%s)"
+argument_list|,
+name|rate2str
+argument_list|(
+operator|(
+name|double
+operator|)
+name|sc
+operator|.
+name|m2
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4096,7 +4206,7 @@ name|err_ret
 goto|;
 block|}
 block|}
-comment|/* check the link-sharing service curve. */
+comment|/* check the linkshare service curve. */
 if|if
 condition|(
 name|opts
@@ -4106,6 +4216,41 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* add this queue to the child sum */
+name|sc
+operator|.
+name|m1
+operator|=
+name|opts
+operator|->
+name|lssc_m1
+expr_stmt|;
+name|sc
+operator|.
+name|d
+operator|=
+name|opts
+operator|->
+name|lssc_d
+expr_stmt|;
+name|sc
+operator|.
+name|m2
+operator|=
+name|opts
+operator|->
+name|lssc_m2
+expr_stmt|;
+name|gsc_add_sc
+argument_list|(
+operator|&
+name|lssc
+argument_list|,
+operator|&
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* compare the sum of the children with parent's sc */
 name|sc
 operator|.
 name|m1
@@ -4157,7 +4302,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"link-sharing sc exceeds parent's sc"
+literal|"linkshare sc exceeds parent's sc"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5973,6 +6118,17 @@ argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|ifr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strlcpy
@@ -6123,6 +6279,17 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"socket"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|ifr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
