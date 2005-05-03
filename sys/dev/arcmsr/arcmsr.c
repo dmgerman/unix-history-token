@@ -9685,20 +9685,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|pACB
-operator|->
-name|acb_flags
-operator||=
-name|ACB_F_STOP_THREAD
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|pACB
-operator|->
-name|kthread_proc
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|pACB->acb_flags |= ACB_F_STOP_THREAD; 	wakeup(pACB->kthread_proc);
 comment|/* signal to kernel thread do_dpcQ: "stop thread" */
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
