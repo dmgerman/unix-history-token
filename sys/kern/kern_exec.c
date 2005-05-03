@@ -1277,6 +1277,10 @@ name|will_transition
 decl_stmt|;
 endif|#
 directive|endif
+name|vfslocked
+operator|=
+literal|0
+expr_stmt|;
 name|imgp
 operator|=
 operator|&
@@ -1426,17 +1430,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 goto|goto
 name|exec_fail
 goto|;
-block|}
 endif|#
 directive|endif
 name|imgp
@@ -1478,10 +1474,6 @@ argument_list|)
 expr_stmt|;
 name|interpret
 label|:
-name|vfslocked
-operator|=
-literal|0
-expr_stmt|;
 name|error
 operator|=
 name|namei
@@ -1786,6 +1778,10 @@ name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
 argument_list|)
+expr_stmt|;
+name|vfslocked
+operator|=
+literal|0
 expr_stmt|;
 comment|/* set new name to that of the interpreter */
 name|NDINIT
@@ -2938,10 +2934,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|exit1
