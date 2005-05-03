@@ -8150,9 +8150,6 @@ name|flags
 decl_stmt|,
 name|devnull
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* VFS */
 name|fdp
 operator|=
 name|td
@@ -8227,6 +8224,9 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|vfslocked
+decl_stmt|;
 name|error
 operator|=
 name|falloc
@@ -8267,6 +8267,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -8363,6 +8365,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|vfslocked
+operator|=
+name|NDHASGIANT
+argument_list|(
+operator|&
+name|nd
+argument_list|)
+expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -8432,6 +8442,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|devnull
