@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<posix4/ksem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<posix4/posix4.h>
 end_include
 
@@ -518,85 +524,6 @@ name|x
 parameter_list|)
 value|id_to_sem(x)
 end_define
-
-begin_struct
-struct|struct
-name|kuser
-block|{
-name|pid_t
-name|ku_pid
-decl_stmt|;
-name|LIST_ENTRY
-argument_list|(
-argument|kuser
-argument_list|)
-name|ku_next
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ksem
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|ksem
-argument_list|)
-name|ks_entry
-expr_stmt|;
-comment|/* global list entry */
-name|int
-name|ks_onlist
-decl_stmt|;
-comment|/* boolean if on a list (ks_entry) */
-name|char
-modifier|*
-name|ks_name
-decl_stmt|;
-comment|/* if named, this is the name */
-name|int
-name|ks_ref
-decl_stmt|;
-comment|/* number of references */
-name|mode_t
-name|ks_mode
-decl_stmt|;
-comment|/* protection bits */
-name|uid_t
-name|ks_uid
-decl_stmt|;
-comment|/* creator uid */
-name|gid_t
-name|ks_gid
-decl_stmt|;
-comment|/* creator gid */
-name|unsigned
-name|int
-name|ks_value
-decl_stmt|;
-comment|/* current value */
-name|struct
-name|cv
-name|ks_cv
-decl_stmt|;
-comment|/* waiters sleep here */
-name|int
-name|ks_waiters
-decl_stmt|;
-comment|/* number of waiters */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|kuser
-argument_list|)
-name|ks_users
-expr_stmt|;
-comment|/* pids using this sem */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * available semaphores go here, this includes sem_init and any semaphores  * created via sem_open that have not yet been unlinked.  */
