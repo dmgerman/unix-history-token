@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: pf_osfp.c,v 1.9 2004/01/04 20:08:42 pvalchev Exp $ */
+comment|/*	$OpenBSD: pf_osfp.c,v 1.10 2004/04/09 19:30:41 frantzen Exp $ */
 end_comment
 
 begin_comment
@@ -1452,7 +1452,8 @@ literal|0
 argument_list|,
 literal|"pfosfpen"
 argument_list|,
-name|NULL
+operator|&
+name|pool_allocator_nointr
 argument_list|)
 expr_stmt|;
 name|pool_init
@@ -1474,7 +1475,8 @@ literal|0
 argument_list|,
 literal|"pfosfp"
 argument_list|,
-name|NULL
+operator|&
+name|pool_allocator_nointr
 argument_list|)
 expr_stmt|;
 endif|#

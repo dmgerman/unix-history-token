@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_pfsync.h,v 1.13 2004/03/22 04:54:17 mcbride Exp $	*/
+comment|/*	$OpenBSD: if_pfsync.h,v 1.19 2005/01/20 17:47:38 mcbride Exp $	*/
 end_comment
 
 begin_comment
@@ -224,6 +224,20 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PFSYNC_FLAG_COMPRESS
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFSYNC_FLAG_STALE
+value|0x02
+end_define
 
 begin_struct
 struct|struct
@@ -481,6 +495,10 @@ endif|#
 directive|endif
 name|struct
 name|in_addr
+name|sc_sync_peer
+decl_stmt|;
+name|struct
+name|in_addr
 name|sc_sendaddr
 decl_stmt|;
 name|struct
@@ -488,13 +506,13 @@ name|mbuf
 modifier|*
 name|sc_mbuf
 decl_stmt|;
-comment|/* current cummulative mbuf */
+comment|/* current cumulative mbuf */
 name|struct
 name|mbuf
 modifier|*
 name|sc_mbuf_net
 decl_stmt|;
-comment|/* current cummulative mbuf */
+comment|/* current cumulative mbuf */
 name|union
 name|sc_statep
 name|sc_statep
@@ -663,59 +681,67 @@ begin_struct
 struct|struct
 name|pfsyncstats
 block|{
-name|u_long
+name|u_int64_t
 name|pfsyncs_ipackets
 decl_stmt|;
 comment|/* total input packets, IPv4 */
-name|u_long
+name|u_int64_t
 name|pfsyncs_ipackets6
 decl_stmt|;
 comment|/* total input packets, IPv6 */
-name|u_long
+name|u_int64_t
 name|pfsyncs_badif
 decl_stmt|;
 comment|/* not the right interface */
-name|u_long
+name|u_int64_t
 name|pfsyncs_badttl
 decl_stmt|;
 comment|/* TTL is not PFSYNC_DFLTTL */
-name|u_long
+name|u_int64_t
 name|pfsyncs_hdrops
 decl_stmt|;
-comment|/* packets shorter than header */
-name|u_long
+comment|/* packets shorter than hdr */
+name|u_int64_t
 name|pfsyncs_badver
 decl_stmt|;
 comment|/* bad (incl unsupp) version */
-name|u_long
+name|u_int64_t
 name|pfsyncs_badact
 decl_stmt|;
 comment|/* bad action */
-name|u_long
+name|u_int64_t
 name|pfsyncs_badlen
 decl_stmt|;
 comment|/* data length does not match */
-name|u_long
+name|u_int64_t
 name|pfsyncs_badauth
 decl_stmt|;
 comment|/* bad authentication */
-name|u_long
+name|u_int64_t
+name|pfsyncs_stale
+decl_stmt|;
+comment|/* stale state */
+name|u_int64_t
+name|pfsyncs_badval
+decl_stmt|;
+comment|/* bad values */
+name|u_int64_t
 name|pfsyncs_badstate
 decl_stmt|;
 comment|/* insert/lookup failed */
-name|u_long
+name|u_int64_t
 name|pfsyncs_opackets
 decl_stmt|;
 comment|/* total output packets, IPv4 */
-name|u_long
+name|u_int64_t
 name|pfsyncs_opackets6
 decl_stmt|;
 comment|/* total output packets, IPv6 */
-name|u_long
+name|u_int64_t
 name|pfsyncs_onomem
 decl_stmt|;
-comment|/* no memory for an mbuf for a send */
-name|u_long
+comment|/* no memory for an mbuf */
+name|u_int64_t
 name|pfsyncs_oerrors
 decl_stmt|;
 comment|/* ip output error */
@@ -732,10 +758,14 @@ struct|struct
 name|pfsyncreq
 block|{
 name|char
-name|pfsyncr_syncif
+name|pfsyncr_syncdev
 index|[
 name|IFNAMSIZ
 index|]
+decl_stmt|;
+name|struct
+name|in_addr
+name|pfsyncr_syncpeer
 decl_stmt|;
 name|int
 name|pfsyncr_maxupdates
@@ -746,6 +776,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
 
 begin_define
 define|#
@@ -760,6 +796,11 @@ directive|define
 name|SIOCGETPFSYNC
 value|_IOWR('i', 248, struct ifreq)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -902,7 +943,7 @@ name|pfsync_update_state
 parameter_list|(
 name|st
 parameter_list|)
-value|do {				\ 	if (!st->sync_flags)					\ 		pfsync_pack_state(PFSYNC_ACT_UPD, (st), 1);	\ 	st->sync_flags&= ~PFSTATE_FROMSYNC;			\ } while (0)
+value|do {				\ 	if (!st->sync_flags)					\ 		pfsync_pack_state(PFSYNC_ACT_UPD, (st), 	\ 		    PFSYNC_FLAG_COMPRESS);			\ 	st->sync_flags&= ~PFSTATE_FROMSYNC;			\ } while (0)
 end_define
 
 begin_define
@@ -912,7 +953,7 @@ name|pfsync_delete_state
 parameter_list|(
 name|st
 parameter_list|)
-value|do {				\ 	if (!st->sync_flags)					\ 		pfsync_pack_state(PFSYNC_ACT_DEL, (st), 1);	\ 	st->sync_flags&= ~PFSTATE_FROMSYNC;			\ } while (0)
+value|do {				\ 	if (!st->sync_flags)					\ 		pfsync_pack_state(PFSYNC_ACT_DEL, (st),		\ 		    PFSYNC_FLAG_COMPRESS);			\ 	st->sync_flags&= ~PFSTATE_FROMSYNC;			\ } while (0)
 end_define
 
 begin_endif
