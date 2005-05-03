@@ -63,6 +63,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_function
 specifier|const
 name|char
