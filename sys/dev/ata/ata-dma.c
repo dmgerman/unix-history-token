@@ -737,21 +737,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|ds
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|atadev
-operator|->
-name|channel
-operator|->
-name|flags
-operator|&=
-operator|~
-name|ATA_DMA_ACTIVE
-expr_stmt|;
 block|}
 end_function
 
@@ -968,7 +953,6 @@ name|mask54
 init|=
 literal|0
 decl_stmt|;
-empty_stmt|;
 comment|/* set our most pessimistic default mode */
 name|atadev
 operator|->
@@ -1011,69 +995,6 @@ case|case
 literal|0x26518086
 case|:
 comment|/* Intel ICH6 SATA150 */
-case|case
-literal|0x3318105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3319105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3371105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3373105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3376105a
-case|:
-comment|/* Promise SATA */
-if|if
-condition|(
-operator|(
-name|device
-operator|==
-literal|0
-operator|&&
-name|atadev
-operator|->
-name|channel
-operator|->
-name|sata_master_idx
-operator|)
-operator|||
-operator|(
-name|device
-operator|==
-literal|1
-operator|&&
-name|atadev
-operator|->
-name|channel
-operator|->
-name|sata_slave_idx
-operator|)
-condition|)
-block|{
-name|atadev
-operator|->
-name|param
-operator|->
-name|hwres_cblid
-operator|=
-literal|1
-expr_stmt|;
-name|ata_prtdev
-argument_list|(
-name|atadev
-argument_list|,
-literal|"Force SATA cable UDMA okay\n"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -8336,53 +8257,6 @@ operator|=
 name|ATA_PIO
 expr_stmt|;
 return|return;
-case|case
-literal|0x3318105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3319105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3371105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3373105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3376105a
-case|:
-comment|/* Promise SATA */
-name|error
-operator|=
-name|ata_command
-argument_list|(
-name|atadev
-argument_list|,
-name|ATA_C_SETFEATURES
-argument_list|,
-literal|0
-argument_list|,
-name|ATA_UDMA5
-argument_list|,
-name|ATA_C_F_SETXFER
-argument_list|,
-name|ATA_WAIT_READY
-argument_list|)
-expr_stmt|;
-name|ata_dmacreate
-argument_list|(
-name|atadev
-argument_list|,
-name|apiomode
-argument_list|,
-name|ATA_UDMA5
-argument_list|)
-expr_stmt|;
-return|return;
 default|default:
 comment|/* unknown controller chip */
 comment|/* better not try generic DMA on ATAPI devices it almost never works */
@@ -8915,21 +8789,6 @@ name|struct
 name|ata_dmasetup_data_cb_args
 name|cba
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-if|if
-condition|(
-name|ch
-operator|->
-name|active
-operator|&
-name|ATA_DEAD
-condition|)
-return|return
-operator|-
-literal|1
-return|;
 if|if
 condition|(
 name|ds
@@ -9048,96 +8907,6 @@ name|flags
 operator||=
 name|ATA_DS_READ
 expr_stmt|;
-switch|switch
-condition|(
-name|ch
-operator|->
-name|chiptype
-condition|)
-block|{
-case|case
-literal|0x3318105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3319105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3371105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3373105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3376105a
-case|:
-comment|/* Promise SATA */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-name|ATA_OUTL
-argument_list|(
-name|ch
-operator|->
-name|r_bmio
-argument_list|,
-name|ATA_BMDTP_PORT
-argument_list|,
-name|ds
-operator|->
-name|mdmatab
-argument_list|)
-expr_stmt|;
-name|ATA_OUTL
-argument_list|(
-name|ch
-operator|->
-name|r_bmio
-argument_list|,
-name|ATA_BMCTL_PORT
-argument_list|,
-operator|(
-operator|(
-name|ds
-operator|->
-name|flags
-operator|&
-name|ATA_DS_READ
-operator|)
-condition|?
-literal|0x00000080
-else|:
-literal|0x000000c0
-operator|)
-operator||
-operator|(
-name|ch
-operator|->
-name|unit
-operator|+
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|ATA_OUTL
 argument_list|(
 name|ch
@@ -9212,11 +8981,6 @@ operator||
 name|ATA_BMCMD_START_STOP
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -9245,8 +9009,6 @@ name|ds
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|s
 decl_stmt|;
 name|ch
 operator|=
@@ -9296,55 +9058,6 @@ name|ds
 operator|->
 name|ddmamap
 argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|ch
-operator|->
-name|chiptype
-condition|)
-block|{
-case|case
-literal|0x3318105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3319105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3371105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3373105a
-case|:
-comment|/* Promise SATA */
-case|case
-literal|0x3376105a
-case|:
-comment|/* Promise SATA */
-name|ch
-operator|->
-name|flags
-operator|&=
-operator|~
-name|ATA_DMA_ACTIVE
-expr_stmt|;
-name|ds
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|ATA_OUTB
 argument_list|(
@@ -9405,11 +9118,6 @@ operator|->
 name|flags
 operator|=
 literal|0
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
