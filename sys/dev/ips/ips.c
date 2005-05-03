@@ -2602,14 +2602,6 @@ argument_list|,
 literal|"got a non-command irq\n"
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|queue_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2739,6 +2731,7 @@ block|{
 name|uint32_t
 name|ts
 decl_stmt|;
+comment|/* 	 * Locks are not used here because this is only called during 	 * crashdumps. 	 */
 name|ts
 operator|=
 name|time_second
