@@ -7901,7 +7901,7 @@ comment|/*boundary*/
 literal|0
 argument_list|,
 comment|/*lowaddr*/
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/*highaddr*/
 name|BUS_SPACE_MAXADDR
@@ -7954,7 +7954,7 @@ comment|/*boundary*/
 literal|0
 argument_list|,
 comment|/*lowaddr*/
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/*highaddr*/
 name|BUS_SPACE_MAXADDR
@@ -8180,7 +8180,7 @@ comment|/*maxsegsz*/
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/*flags*/
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/*lockfunc*/
 name|NULL
@@ -8247,7 +8247,7 @@ comment|/*maxsegsz*/
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/*flags*/
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 operator|&
 name|pACB
