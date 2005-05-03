@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfvar.h,v 1.187 2004/03/22 04:54:18 mcbride Exp $ */
-end_comment
-
-begin_comment
-comment|/* add	$OpenBSD: pfvar.h,v 1.194 2004/05/11 07:34:11 dhartmei Exp $ */
+comment|/*	$OpenBSD: pfvar.h,v 1.213 2005/03/03 07:13:39 dhartmei Exp $ */
 end_comment
 
 begin_comment
@@ -22,6 +18,12 @@ define|#
 directive|define
 name|_NET_PFVAR_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -45,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<net/radix.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
 end_include
 
 begin_include
@@ -111,6 +119,8 @@ block|,
 name|PF_DROP
 block|,
 name|PF_SCRUB
+block|,
+name|PF_NOSCRUB
 block|,
 name|PF_NAT
 block|,
@@ -252,6 +262,8 @@ name|PFTM_ADAPTIVE_END
 block|,
 name|PFTM_SRC_NODE
 block|,
+name|PFTM_TS_DIFF
+block|,
 name|PFTM_MAX
 block|,
 name|PFTM_PURGE
@@ -260,6 +272,208 @@ name|PFTM_UNTIL_PACKET
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* PFTM default values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_TCP_FIRST_PACKET_VAL
+value|120
+end_define
+
+begin_comment
+comment|/* First TCP packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_TCP_OPENING_VAL
+value|30
+end_define
+
+begin_comment
+comment|/* No response yet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_TCP_ESTABLISHED_VAL
+value|24*60*60
+end_define
+
+begin_comment
+comment|/* Established */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_TCP_CLOSING_VAL
+value|15 * 60
+end_define
+
+begin_comment
+comment|/* Half closed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_TCP_FIN_WAIT_VAL
+value|45
+end_define
+
+begin_comment
+comment|/* Got both FINs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_TCP_CLOSED_VAL
+value|90
+end_define
+
+begin_comment
+comment|/* Got a RST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_UDP_FIRST_PACKET_VAL
+value|60
+end_define
+
+begin_comment
+comment|/* First UDP packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_UDP_SINGLE_VAL
+value|30
+end_define
+
+begin_comment
+comment|/* Unidirectional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_UDP_MULTIPLE_VAL
+value|60
+end_define
+
+begin_comment
+comment|/* Bidirectional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_ICMP_FIRST_PACKET_VAL
+value|20
+end_define
+
+begin_comment
+comment|/* First ICMP packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_ICMP_ERROR_REPLY_VAL
+value|10
+end_define
+
+begin_comment
+comment|/* Got error response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_OTHER_FIRST_PACKET_VAL
+value|60
+end_define
+
+begin_comment
+comment|/* First packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_OTHER_SINGLE_VAL
+value|30
+end_define
+
+begin_comment
+comment|/* Unidirectional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_OTHER_MULTIPLE_VAL
+value|60
+end_define
+
+begin_comment
+comment|/* Bidirectional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_FRAG_VAL
+value|30
+end_define
+
+begin_comment
+comment|/* Fragment expire */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_INTERVAL_VAL
+value|10
+end_define
+
+begin_comment
+comment|/* Expire interval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_SRC_NODE_VAL
+value|0
+end_define
+
+begin_comment
+comment|/* Source tracking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFTM_TS_DIFF_VAL
+value|30
+end_define
+
+begin_comment
+comment|/* Allowed TS diff */
+end_comment
 
 begin_enum
 enum|enum
@@ -324,6 +538,8 @@ block|,
 name|PF_ADDR_DYNIFTL
 block|,
 name|PF_ADDR_TABLE
+block|,
+name|PF_ADDR_RTLABEL
 block|}
 enum|;
 end_enum
@@ -488,6 +704,15 @@ name|tblname
 index|[
 name|PF_TABLE_NAME_SIZE
 index|]
+decl_stmt|;
+name|char
+name|rtlabelname
+index|[
+name|RTLABEL_LEN
+index|]
+decl_stmt|;
+name|u_int32_t
+name|rtlabel
 decl_stmt|;
 block|}
 name|v
@@ -1032,10 +1257,10 @@ name|x
 parameter_list|,
 name|af
 parameter_list|,
-name|not
+name|neg
 parameter_list|)
 define|\
-value|(							\ 		(((aw)->type == PF_ADDR_NOROUTE&&		\ 		    pf_routable((x), (af))) ||			\ 		((aw)->type == PF_ADDR_TABLE&&			\ 		    !pfr_match_addr((aw)->p.tbl, (x), (af))) ||	\ 		((aw)->type == PF_ADDR_DYNIFTL&&		\ 		    !pfi_match_addr((aw)->p.dyn, (x), (af))) || \ 		((aw)->type == PF_ADDR_ADDRMASK&&		\ 		    !PF_AZERO(&(aw)->v.a.mask, (af))&&		\ 		    !PF_MATCHA(0,&(aw)->v.a.addr,		\&(aw)->v.a.mask, (x), (af)))) !=		\ 		(not)						\ 	)
+value|(							\ 		(((aw)->type == PF_ADDR_NOROUTE&&		\ 		    pf_routable((x), (af))) ||			\ 		((aw)->type == PF_ADDR_RTLABEL&&		\ 		    !pf_rtlabel_match((x), (af), (aw))) ||	\ 		((aw)->type == PF_ADDR_TABLE&&			\ 		    !pfr_match_addr((aw)->p.tbl, (x), (af))) ||	\ 		((aw)->type == PF_ADDR_DYNIFTL&&		\ 		    !pfi_match_addr((aw)->p.dyn, (x), (af))) || \ 		((aw)->type == PF_ADDR_ADDRMASK&&		\ 		    !PF_AZERO(&(aw)->v.a.mask, (af))&&		\ 		    !PF_MATCHA(0,&(aw)->v.a.addr,		\&(aw)->v.a.mask, (x), (af)))) !=		\ 		(neg)						\ 	)
 end_define
 
 begin_struct
@@ -1087,7 +1312,7 @@ literal|2
 index|]
 decl_stmt|;
 name|u_int8_t
-name|not
+name|neg
 decl_stmt|;
 name|u_int8_t
 name|port_op
@@ -1646,6 +1871,13 @@ block|}
 union|;
 end_union
 
+begin_define
+define|#
+directive|define
+name|PF_ANCHOR_NAME_SIZE
+value|64
+end_define
+
 begin_struct
 struct|struct
 name|pf_rule
@@ -1735,16 +1967,6 @@ index|]
 decl_stmt|;
 define|#
 directive|define
-name|PF_ANCHOR_NAME_SIZE
-value|16
-name|char
-name|anchorname
-index|[
-name|PF_ANCHOR_NAME_SIZE
-index|]
-decl_stmt|;
-define|#
-directive|define
 name|PF_TAG_NAME_SIZE
 value|16
 name|char
@@ -1757,6 +1979,12 @@ name|char
 name|match_tagname
 index|[
 name|PF_TAG_NAME_SIZE
+index|]
+decl_stmt|;
+name|char
+name|overload_tblname
+index|[
+name|PF_TABLE_NAME_SIZE
 index|]
 decl_stmt|;
 name|TAILQ_ENTRY
@@ -1788,6 +2016,11 @@ name|pf_anchor
 modifier|*
 name|anchor
 decl_stmt|;
+name|struct
+name|pfr_ktable
+modifier|*
+name|overload_tbl
+decl_stmt|;
 name|pf_osfp_t
 name|os_fingerprint
 decl_stmt|;
@@ -1813,6 +2046,20 @@ name|u_int32_t
 name|max_src_states
 decl_stmt|;
 name|u_int32_t
+name|max_src_conn
+decl_stmt|;
+struct|struct
+block|{
+name|u_int32_t
+name|limit
+decl_stmt|;
+name|u_int32_t
+name|seconds
+decl_stmt|;
+block|}
+name|max_src_conn_rate
+struct|;
+name|u_int32_t
 name|qid
 decl_stmt|;
 name|u_int32_t
@@ -1823,6 +2070,9 @@ name|rt_listid
 decl_stmt|;
 name|u_int32_t
 name|nr
+decl_stmt|;
+name|u_int32_t
+name|prob
 decl_stmt|;
 name|u_int16_t
 name|return_icmp
@@ -1918,6 +2168,23 @@ name|return_ttl
 decl_stmt|;
 name|u_int8_t
 name|tos
+decl_stmt|;
+name|u_int8_t
+name|anchor_relative
+decl_stmt|;
+name|u_int8_t
+name|anchor_wildcard
+decl_stmt|;
+define|#
+directive|define
+name|PF_FLUSH
+value|0x01
+define|#
+directive|define
+name|PF_FLUSH_GLOBAL
+value|0x02
+name|u_int8_t
+name|flush
 decl_stmt|;
 block|}
 struct|;
@@ -2077,6 +2344,34 @@ end_comment
 
 begin_struct
 struct|struct
+name|pf_threshold
+block|{
+name|u_int32_t
+name|limit
+decl_stmt|;
+define|#
+directive|define
+name|PF_THRESHOLD_MULT
+value|1000
+define|#
+directive|define
+name|PF_THRESHOLD_MAX
+value|0xffffffff / PF_THRESHOLD_MULT
+name|u_int32_t
+name|seconds
+decl_stmt|;
+name|u_int32_t
+name|count
+decl_stmt|;
+name|u_int32_t
+name|last
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|pf_src_node
 block|{
 name|RB_ENTRY
@@ -2112,6 +2407,13 @@ name|u_int32_t
 name|states
 decl_stmt|;
 name|u_int32_t
+name|conn
+decl_stmt|;
+name|struct
+name|pf_threshold
+name|conn_rate
+decl_stmt|;
+name|u_int32_t
 name|creation
 decl_stmt|;
 name|u_int32_t
@@ -2142,6 +2444,23 @@ begin_struct
 struct|struct
 name|pf_state_scrub
 block|{
+name|struct
+name|timeval
+name|pfss_last
+decl_stmt|;
+comment|/* time received last packet	*/
+name|u_int32_t
+name|pfss_tsecr
+decl_stmt|;
+comment|/* last echoed timestamp	*/
+name|u_int32_t
+name|pfss_tsval
+decl_stmt|;
+comment|/* largest timestamp		*/
+name|u_int32_t
+name|pfss_tsval0
+decl_stmt|;
+comment|/* original timestamp		*/
 name|u_int16_t
 name|pfss_flags
 decl_stmt|;
@@ -2149,18 +2468,38 @@ define|#
 directive|define
 name|PFSS_TIMESTAMP
 value|0x0001
-comment|/* modulate timestamp	*/
+comment|/* modulate timestamp		*/
+define|#
+directive|define
+name|PFSS_PAWS
+value|0x0010
+comment|/* stricter PAWS checks		*/
+define|#
+directive|define
+name|PFSS_PAWS_IDLED
+value|0x0020
+comment|/* was idle too long.  no PAWS	*/
+define|#
+directive|define
+name|PFSS_DATA_TS
+value|0x0040
+comment|/* timestamp on data packets	*/
+define|#
+directive|define
+name|PFSS_DATA_NOTS
+value|0x0080
+comment|/* no timestamp on data packets	*/
 name|u_int8_t
 name|pfss_ttl
 decl_stmt|;
-comment|/* stashed TTL		*/
+comment|/* stashed TTL			*/
 name|u_int8_t
 name|pad
 decl_stmt|;
 name|u_int32_t
 name|pfss_ts_mod
 decl_stmt|;
-comment|/* timestamp modulation	*/
+comment|/* timestamp modulation		*/
 block|}
 struct|;
 end_struct
@@ -2362,6 +2701,9 @@ decl_stmt|;
 name|u_int32_t
 name|creatorid
 decl_stmt|;
+name|u_int16_t
+name|tag
+decl_stmt|;
 name|sa_family_t
 name|af
 decl_stmt|;
@@ -2391,6 +2733,10 @@ define|#
 directive|define
 name|PFSTATE_FROMSYNC
 value|0x02
+define|#
+directive|define
+name|PFSTATE_STALE
+value|0x04
 name|u_int8_t
 name|pad
 decl_stmt|;
@@ -2418,22 +2764,6 @@ begin_struct
 struct|struct
 name|pf_ruleset
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|pf_ruleset
-argument_list|)
-name|entries
-expr_stmt|;
-define|#
-directive|define
-name|PF_RULESET_NAME_SIZE
-value|16
-name|char
-name|name
-index|[
-name|PF_RULESET_NAME_SIZE
-index|]
-decl_stmt|;
 struct|struct
 block|{
 name|struct
@@ -2486,11 +2816,21 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|TAILQ_HEAD
+name|RB_HEAD
 argument_list|(
-name|pf_rulesetqueue
+name|pf_anchor_global
 argument_list|,
-name|pf_ruleset
+name|pf_anchor
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RB_HEAD
+argument_list|(
+name|pf_anchor_node
+argument_list|,
+name|pf_anchor
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2499,35 +2839,75 @@ begin_struct
 struct|struct
 name|pf_anchor
 block|{
-name|TAILQ_ENTRY
+name|RB_ENTRY
 argument_list|(
 argument|pf_anchor
 argument_list|)
-name|entries
+name|entry_global
 expr_stmt|;
+name|RB_ENTRY
+argument_list|(
+argument|pf_anchor
+argument_list|)
+name|entry_node
+expr_stmt|;
+name|struct
+name|pf_anchor
+modifier|*
+name|parent
+decl_stmt|;
+name|struct
+name|pf_anchor_node
+name|children
+decl_stmt|;
 name|char
 name|name
 index|[
 name|PF_ANCHOR_NAME_SIZE
 index|]
 decl_stmt|;
+name|char
+name|path
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 name|struct
-name|pf_rulesetqueue
-name|rulesets
+name|pf_ruleset
+name|ruleset
 decl_stmt|;
 name|int
-name|tables
+name|refcnt
 decl_stmt|;
+comment|/* anchor rules */
 block|}
 struct|;
 end_struct
 
 begin_expr_stmt
-name|TAILQ_HEAD
+name|RB_PROTOTYPE
 argument_list|(
-name|pf_anchorqueue
+name|pf_anchor_global
 argument_list|,
 name|pf_anchor
+argument_list|,
+name|entry_global
+argument_list|,
+name|pf_anchor_compare
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RB_PROTOTYPE
+argument_list|(
+name|pf_anchor_node
+argument_list|,
+name|pf_anchor
+argument_list|,
+name|entry_node
+argument_list|,
+name|pf_anchor_compare
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2537,13 +2917,6 @@ define|#
 directive|define
 name|PF_RESERVED_ANCHOR
 value|"_pf"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PF_INTERFACE_RULESET
-value|"_if"
 end_define
 
 begin_define
@@ -2616,13 +2989,7 @@ block|{
 name|char
 name|pfrt_anchor
 index|[
-name|PF_ANCHOR_NAME_SIZE
-index|]
-decl_stmt|;
-name|char
-name|pfrt_ruleset
-index|[
-name|PF_RULESET_NAME_SIZE
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
@@ -2917,6 +3284,9 @@ name|pfrke_not
 decl_stmt|;
 name|u_int8_t
 name|pfrke_mark
+decl_stmt|;
+name|u_int8_t
+name|pfrke_intrpool
 decl_stmt|;
 block|}
 struct|;
@@ -3408,6 +3778,28 @@ begin_comment
 comment|/* interface attached */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PFI_IFLAG_SKIP
+value|0x0100
+end_define
+
+begin_comment
+comment|/* skip filtering on interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFI_IFLAG_SETABLE_MASK
+value|0x0100
+end_define
+
+begin_comment
+comment|/* setable via DIOC{SET,CLR}IFFLAG */
+end_comment
+
 begin_struct
 struct|struct
 name|pf_pdesc
@@ -3477,6 +3869,11 @@ name|pf_addr
 modifier|*
 name|dst
 decl_stmt|;
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
 name|u_int16_t
 modifier|*
 name|ip_sum
@@ -3494,6 +3891,11 @@ directive|define
 name|PFDESC_TCP_NORM
 value|0x0001
 comment|/* TCP shall be statefully scrubbed */
+define|#
+directive|define
+name|PFDESC_IP_REAS
+value|0x0002
+comment|/* IP frags would've been reassembled */
 name|sa_family_t
 name|af
 decl_stmt|;
@@ -3606,8 +4008,107 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PFRES_MAX
+name|PFRES_TS
 value|6
+end_define
+
+begin_comment
+comment|/* Bad TCP Timestamp (RFC1323) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_CONGEST
+value|7
+end_define
+
+begin_comment
+comment|/* Congestion (of ipintrq) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_IPOPTIONS
+value|8
+end_define
+
+begin_comment
+comment|/* IP option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_PROTCKSUM
+value|9
+end_define
+
+begin_comment
+comment|/* Protocol checksum invalid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_BADSTATE
+value|10
+end_define
+
+begin_comment
+comment|/* State mismatch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_STATEINS
+value|11
+end_define
+
+begin_comment
+comment|/* State insertion failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_MAXSTATES
+value|12
+end_define
+
+begin_comment
+comment|/* State limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_SRCLIMIT
+value|13
+end_define
+
+begin_comment
+comment|/* Source node/conn limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_SYNPROXY
+value|14
+end_define
+
+begin_comment
+comment|/* SYN proxy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_MAX
+value|15
 end_define
 
 begin_comment
@@ -3618,7 +4119,106 @@ begin_define
 define|#
 directive|define
 name|PFRES_NAMES
-value|{ \ 	"match", \ 	"bad-offset", \ 	"fragment", \ 	"short", \ 	"normalize", \ 	"memory", \ 	NULL \ }
+value|{ \ 	"match", \ 	"bad-offset", \ 	"fragment", \ 	"short", \ 	"normalize", \ 	"memory", \ 	"bad-timestamp", \ 	"congestion", \ 	"ip-option", \ 	"proto-cksum", \ 	"state-mismatch", \ 	"state-insert", \ 	"state-limit", \ 	"src-limit", \ 	"synproxy", \ 	NULL \ }
+end_define
+
+begin_comment
+comment|/* Counters for other things we want to keep track of */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCNT_STATES
+value|0
+end_define
+
+begin_comment
+comment|/* states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCNT_SRCSTATES
+value|1
+end_define
+
+begin_comment
+comment|/* max-src-states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCNT_SRCNODES
+value|2
+end_define
+
+begin_comment
+comment|/* max-src-nodes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCNT_SRCCONN
+value|3
+end_define
+
+begin_comment
+comment|/* max-src-conn */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCNT_SRCCONNRATE
+value|4
+end_define
+
+begin_comment
+comment|/* max-src-conn-rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCNT_OVERLOAD_TABLE
+value|5
+end_define
+
+begin_comment
+comment|/* entry added to overload table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCNT_OVERLOAD_FLUSH
+value|6
+end_define
+
+begin_comment
+comment|/* state entries flushed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCNT_MAX
+value|7
+end_define
+
+begin_comment
+comment|/* total+1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCNT_NAMES
+value|{ \ 	"max states per rule", \ 	"max-src-states", \ 	"max-src-nodes", \ 	"max-src-conn", \ 	"max-src-conn-rate", \ 	"overload table insertion", \ 	"overload flush states", \ 	NULL \ }
 end_define
 
 begin_comment
@@ -3799,6 +4399,13 @@ index|[
 name|PFRES_MAX
 index|]
 decl_stmt|;
+name|u_int64_t
+name|lcounters
+index|[
+name|LCNT_MAX
+index|]
+decl_stmt|;
+comment|/* limit counters */
 name|u_int64_t
 name|fcounters
 index|[
@@ -4161,13 +4768,7 @@ decl_stmt|;
 name|char
 name|anchor
 index|[
-name|PF_ANCHOR_NAME_SIZE
-index|]
-decl_stmt|;
-name|char
-name|ruleset
-index|[
-name|PF_RULESET_NAME_SIZE
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|struct
@@ -4197,13 +4798,13 @@ decl_stmt|;
 name|char
 name|anchor
 index|[
-name|PF_ANCHOR_NAME_SIZE
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
-name|ruleset
+name|anchor_call
 index|[
-name|PF_RULESET_NAME_SIZE
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|struct
@@ -4456,38 +5057,21 @@ end_struct
 
 begin_struct
 struct|struct
-name|pfioc_anchor
-block|{
-name|u_int32_t
-name|nr
-decl_stmt|;
-name|char
-name|name
-index|[
-name|PF_ANCHOR_NAME_SIZE
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|pfioc_ruleset
 block|{
 name|u_int32_t
 name|nr
 decl_stmt|;
 name|char
-name|anchor
+name|path
 index|[
-name|PF_ANCHOR_NAME_SIZE
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
 name|name
 index|[
-name|PF_RULESET_NAME_SIZE
+name|PF_ANCHOR_NAME_SIZE
 index|]
 decl_stmt|;
 block|}
@@ -4529,13 +5113,7 @@ decl_stmt|;
 name|char
 name|anchor
 index|[
-name|PF_ANCHOR_NAME_SIZE
-index|]
-decl_stmt|;
-name|char
-name|ruleset
-index|[
-name|PF_RULESET_NAME_SIZE
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|u_int32_t
@@ -4785,22 +5363,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIOCBEGINRULES
-value|_IOWR('D',  3, struct pfioc_rule)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIOCADDRULE
 value|_IOWR('D',  4, struct pfioc_rule)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCCOMMITRULES
-value|_IOWR('D',  5, struct pfioc_rule)
 end_define
 
 begin_define
@@ -4954,22 +5518,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIOCBEGINALTQS
-value|_IOWR('D', 44, u_int32_t)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIOCADDALTQ
 value|_IOWR('D', 45, struct pfioc_altq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCCOMMITALTQS
-value|_IOWR('D', 46, u_int32_t)
 end_define
 
 begin_define
@@ -5035,19 +5585,9 @@ name|DIOCCHANGEADDR
 value|_IOWR('D', 55, struct pfioc_pooladdr)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DIOCGETANCHORS
-value|_IOWR('D', 56, struct pfioc_anchor)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCGETANCHOR
-value|_IOWR('D', 57, struct pfioc_anchor)
-end_define
+begin_comment
+comment|/* XXX cut 55 - 57 */
+end_comment
 
 begin_define
 define|#
@@ -5171,20 +5711,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIOCRINABEGIN
-value|_IOWR('D', 75, struct pfioc_table)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCRINACOMMIT
-value|_IOWR('D', 76, struct pfioc_table)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIOCRINADEFINE
 value|_IOWR('D', 77, struct pfioc_table)
 end_define
@@ -5264,6 +5790,20 @@ define|#
 directive|define
 name|DIOCICLRISTATS
 value|_IOWR('D', 88, struct pfioc_iface)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCSETIFFLAG
+value|_IOWR('D', 89, struct pfioc_iface)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCCLRIFFLAG
+value|_IOWR('D', 90, struct pfioc_iface)
 end_define
 
 begin_ifdef
@@ -5347,7 +5887,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|pf_anchorqueue
+name|pf_anchor_global
 name|pf_anchors
 decl_stmt|;
 end_decl_stmt
@@ -5536,16 +6076,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|pf_update_anchor_rules
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -5603,6 +6133,18 @@ name|void
 name|pf_purge_expired_states
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|pf_purge_expired_state
+parameter_list|(
+name|struct
+name|pf_state
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5695,6 +6237,28 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|pf_print_state
+parameter_list|(
+name|struct
+name|pf_state
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|pf_print_flags
+parameter_list|(
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|struct
 name|pf_anchor
 modifier|*
@@ -5714,9 +6278,7 @@ name|pf_ruleset
 modifier|*
 name|pf_find_ruleset
 parameter_list|(
-name|char
-modifier|*
-parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -5730,15 +6292,9 @@ name|pf_ruleset
 modifier|*
 name|pf_find_or_create_ruleset
 parameter_list|(
+specifier|const
 name|char
-index|[
-name|PF_ANCHOR_NAME_SIZE
-index|]
-parameter_list|,
-name|char
-index|[
-name|PF_RULESET_NAME_SIZE
-index|]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5841,6 +6397,10 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
+parameter_list|,
+name|struct
+name|ether_header
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5873,6 +6433,10 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|ether_header
 modifier|*
 parameter_list|)
 function_decl|;
@@ -6111,6 +6675,10 @@ modifier|*
 parameter_list|,
 name|u_short
 modifier|*
+parameter_list|,
+name|struct
+name|pf_pdesc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6131,6 +6699,10 @@ name|pfi_kif
 modifier|*
 parameter_list|,
 name|u_short
+modifier|*
+parameter_list|,
+name|struct
+name|pf_pdesc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -6226,6 +6798,10 @@ name|tcphdr
 modifier|*
 parameter_list|,
 name|struct
+name|pf_state
+modifier|*
+parameter_list|,
+name|struct
 name|pf_state_peer
 modifier|*
 parameter_list|,
@@ -6271,6 +6847,23 @@ name|addr
 parameter_list|,
 name|sa_family_t
 name|af
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pf_rtlabel_match
+parameter_list|(
+name|struct
+name|pf_addr
+modifier|*
+parameter_list|,
+name|sa_family_t
+parameter_list|,
+name|struct
+name|pf_addr_wrap
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6545,6 +7138,23 @@ name|int
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pfr_insert_kentry
+parameter_list|(
+name|struct
+name|pfr_ktable
+modifier|*
+parameter_list|,
+name|struct
+name|pfr_addr
+modifier|*
+parameter_list|,
+name|long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7002,6 +7612,32 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pfi_set_flags
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pfi_clear_flags
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pfi_match_addr
 parameter_list|(
 name|struct
@@ -7043,6 +7679,15 @@ name|u_int16_t
 parameter_list|,
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pf_tag_ref
+parameter_list|(
+name|u_int16_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: if_pflog.h,v 1.10 2004/03/19 04:52:04 frantzen Exp $ */
+comment|/* $OpenBSD: if_pflog.h,v 1.11 2004/05/19 17:50:51 dhartmei Exp $ */
 end_comment
 
 begin_comment
@@ -32,27 +32,12 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* XXX keep in sync with pfvar.h */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PF_RULESET_NAME_SIZE
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|PF_RULESET_NAME_SIZE
+name|PFLOG_RULESET_NAME_SIZE
 value|16
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -79,7 +64,7 @@ decl_stmt|;
 name|char
 name|ruleset
 index|[
-name|PF_RULESET_NAME_SIZE
+name|PFLOG_RULESET_NAME_SIZE
 index|]
 decl_stmt|;
 name|u_int32_t

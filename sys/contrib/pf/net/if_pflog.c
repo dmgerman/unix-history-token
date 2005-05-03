@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: if_pflog.c,v 1.11 2003/12/31 11:18:25 cedric Exp $	*/
+comment|/*	$OpenBSD: if_pflog.c,v 1.12 2004/05/19 17:50:51 dhartmei Exp $	*/
 end_comment
 
 begin_comment
@@ -862,14 +862,22 @@ condition|(
 name|ruleset
 operator|!=
 name|NULL
+operator|&&
+name|ruleset
+operator|->
+name|anchor
+operator|!=
+name|NULL
 condition|)
-name|memcpy
+name|strlcpy
 argument_list|(
 name|hdr
 operator|.
 name|ruleset
 argument_list|,
 name|ruleset
+operator|->
+name|anchor
 operator|->
 name|name
 argument_list|,
