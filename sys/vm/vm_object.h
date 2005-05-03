@@ -282,6 +282,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OBJ_NEEDGIANT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* object requires Giant */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IDX_TO_OFF
 parameter_list|(
 name|idx

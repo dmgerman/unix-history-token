@@ -4525,6 +4525,16 @@ operator|)
 operator|&
 name|PQ_L2_MASK
 expr_stmt|;
+name|result
+operator|->
+name|flags
+operator||=
+name|source
+operator|->
+name|flags
+operator|&
+name|OBJ_NEEDGIANT
+expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|source
