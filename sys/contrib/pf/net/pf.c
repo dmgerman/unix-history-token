@@ -30302,7 +30302,7 @@ operator|*
 name|state
 operator|)
 operator|->
-name|src
+name|dst
 operator|.
 name|max_win
 expr_stmt|;
@@ -30329,7 +30329,7 @@ operator|*
 name|state
 operator|)
 operator|->
-name|dst
+name|src
 operator|.
 name|max_win
 expr_stmt|;
