@@ -4767,6 +4767,16 @@ operator|=
 name|source
 expr_stmt|;
 block|}
+name|new_object
+operator|->
+name|flags
+operator||=
+name|orig_object
+operator|->
+name|flags
+operator|&
+name|OBJ_NEEDGIANT
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
