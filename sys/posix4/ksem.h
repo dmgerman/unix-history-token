@@ -32,6 +32,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_struct
 struct|struct
 name|kuser
@@ -107,6 +119,12 @@ argument_list|)
 name|ks_users
 expr_stmt|;
 comment|/* pids using this sem */
+name|struct
+name|label
+modifier|*
+name|ks_label
+decl_stmt|;
+comment|/* MAC label */
 block|}
 struct|;
 end_struct
