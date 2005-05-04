@@ -38671,7 +38671,7 @@ literal|0
 argument_list|,
 name|ifp
 operator|->
-name|ifp_mtu
+name|if_mtu
 argument_list|)
 expr_stmt|;
 name|PF_LOCK
