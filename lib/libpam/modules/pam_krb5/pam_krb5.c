@@ -1375,6 +1375,16 @@ index|[]
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|_FREEFALL_CONFIG
+return|return
+operator|(
+name|PAM_SUCCESS
+operator|)
+return|;
+else|#
+directive|else
 name|krb5_error_code
 name|krbret
 decl_stmt|;
@@ -2439,6 +2449,8 @@ operator|(
 name|retval
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
