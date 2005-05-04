@@ -8325,6 +8325,7 @@ name|ctx
 operator|->
 name|f_name
 argument_list|,
+operator|&
 name|ctx
 operator|->
 name|f_nmlen

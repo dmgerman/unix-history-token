@@ -1017,6 +1017,7 @@ modifier|*
 name|name
 parameter_list|,
 name|int
+modifier|*
 name|nmlen
 parameter_list|,
 name|int
