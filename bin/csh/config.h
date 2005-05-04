@@ -341,9 +341,12 @@ begin_comment
 comment|/* Define to 1 if `ut_host' is member of `struct utmp'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRUCT_UTMP_UT_HOST */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_UTMP_UT_HOST
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if `ut_tv' is member of `struct utmp'. */
