@@ -1509,6 +1509,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xadd
 init|=
@@ -2023,6 +2025,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xdel
 init|=
@@ -2561,6 +2565,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xadd
 init|=
@@ -3807,6 +3813,8 @@ name|int
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|;
 name|long
 name|tzero
@@ -7311,6 +7319,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xadd
 init|=
@@ -8249,6 +8259,8 @@ name|workq
 decl_stmt|;
 name|int
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|n
 decl_stmt|,
@@ -8542,6 +8554,8 @@ name|int
 name|i
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xzero
 init|=
@@ -10161,6 +10175,8 @@ name|rs
 decl_stmt|;
 name|int
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xadd
 init|=
