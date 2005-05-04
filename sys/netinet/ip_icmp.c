@@ -560,7 +560,7 @@ name|code
 parameter_list|,
 name|dest
 parameter_list|,
-name|destifp
+name|mtu
 parameter_list|)
 name|struct
 name|mbuf
@@ -575,10 +575,8 @@ decl_stmt|;
 name|n_long
 name|dest
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|destifp
+name|int
+name|mtu
 decl_stmt|;
 block|{
 specifier|register
@@ -918,7 +916,7 @@ name|code
 operator|==
 name|ICMP_UNREACH_NEEDFRAG
 operator|&&
-name|destifp
+name|mtu
 condition|)
 block|{
 name|icp
@@ -927,9 +925,7 @@ name|icmp_nextmtu
 operator|=
 name|htons
 argument_list|(
-name|destifp
-operator|->
-name|if_mtu
+name|mtu
 argument_list|)
 expr_stmt|;
 block|}

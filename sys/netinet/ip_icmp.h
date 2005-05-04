@@ -967,9 +967,7 @@ name|int
 parameter_list|,
 name|n_long
 parameter_list|,
-name|struct
-name|ifnet
-modifier|*
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

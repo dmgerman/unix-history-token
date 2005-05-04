@@ -359,7 +359,7 @@ name|ICMP_UNREACH_HOST
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -942,7 +942,7 @@ name|ICMP_UNREACH_FILTER_PROHIB
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1330,7 +1330,7 @@ name|ICMP_TIMXCEED_INTRANS
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1744,7 +1744,7 @@ name|ICMP_UNREACH_HOST
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1814,7 +1814,7 @@ name|ICMP_UNREACH_HOST
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1960,7 +1960,7 @@ name|ICMP_UNREACH_NEEDFRAG
 argument_list|,
 literal|0
 argument_list|,
-name|ifp
+name|mtu
 argument_list|)
 expr_stmt|;
 goto|goto
