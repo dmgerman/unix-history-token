@@ -6384,11 +6384,6 @@ name|regs
 parameter_list|)
 block|{
 name|struct
-name|pcb
-modifier|*
-name|pcb
-decl_stmt|;
-name|struct
 name|trapframe
 modifier|*
 name|tp
@@ -6593,11 +6588,13 @@ name|regs
 operator|->
 name|r_ss
 expr_stmt|;
-name|pcb
-operator|=
 name|td
 operator|->
 name|td_pcb
+operator|->
+name|pcb_flags
+operator||=
+name|PCB_FULLCTX
 expr_stmt|;
 return|return
 operator|(
