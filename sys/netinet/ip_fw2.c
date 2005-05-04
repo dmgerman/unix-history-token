@@ -92,19 +92,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|IPFW2
-value|1
-end_define
-
-begin_if
-if|#
-directive|if
-name|IPFW2
-end_if
-
 begin_include
 include|#
 directive|include
@@ -17086,15 +17073,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPFW2 */
-end_comment
 
 end_unit
 

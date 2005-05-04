@@ -30,13 +30,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|IPFW2
-value|1
-end_define
-
 begin_comment
 comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by the "dummynet lock".  *  * Most important Changes:  *  * 011004: KLDable  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
 end_comment
@@ -5410,11 +5403,7 @@ argument|int pipe_nr
 argument_list|,
 argument|struct ip_fw *rule
 argument_list|)
-block|{
-if|#
-directive|if
-name|IPFW2
-block|struct
+block|{     struct
 name|dn_flow_set
 operator|*
 name|fs
@@ -5516,34 +5505,6 @@ name|opcode
 operator|==
 name|O_QUEUE
 condition|)
-else|#
-directive|else
-comment|/* !IPFW2 */
-name|struct
-name|dn_flow_set
-modifier|*
-name|fs
-init|=
-name|NULL
-decl_stmt|;
-end_if
-
-begin_if
-if|if
-condition|(
-operator|(
-name|rule
-operator|->
-name|fw_flg
-operator|&
-name|IP_FW_F_COMMAND
-operator|)
-operator|==
-name|IP_FW_F_QUEUE
-condition|)
-endif|#
-directive|endif
-comment|/* !IPFW2 */
 for|for
 control|(
 name|fs
@@ -5615,12 +5576,6 @@ begin_comment
 comment|/* record for the future */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|IPFW2
-end_if
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5671,31 +5626,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|if
-condition|(
-name|fs
-operator|!=
-name|NULL
-condition|)
-name|rule
-operator|->
-name|pipe_ptr
-operator|=
-name|fs
-expr_stmt|;
-end_if
 
 begin_endif
 endif|#
@@ -5771,9 +5701,6 @@ decl_stmt|;
 name|int
 name|is_pipe
 decl_stmt|;
-if|#
-directive|if
-name|IPFW2
 name|ipfw_insn
 modifier|*
 name|cmd
@@ -5785,8 +5712,6 @@ operator|->
 name|rule
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
 name|KASSERT
 argument_list|(
 name|m
@@ -5800,9 +5725,6 @@ literal|"dummynet_io: mbuf queue passed to dummynet"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|IPFW2
 if|if
 condition|(
 name|cmd
@@ -5828,24 +5750,6 @@ operator|==
 name|O_PIPE
 operator|)
 expr_stmt|;
-else|#
-directive|else
-name|is_pipe
-operator|=
-operator|(
-name|fwa
-operator|->
-name|rule
-operator|->
-name|fw_flg
-operator|&
-name|IP_FW_F_COMMAND
-operator|)
-operator|==
-name|IP_FW_F_PIPE
-expr_stmt|;
-endif|#
-directive|endif
 name|DUMMYNET_LOCK
 argument_list|()
 expr_stmt|;
