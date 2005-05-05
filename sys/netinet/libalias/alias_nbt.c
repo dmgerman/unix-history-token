@@ -697,13 +697,13 @@ argument_list|(
 literal|":"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Set up to out of Name field */
 if|if
@@ -2823,6 +2823,11 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 break|break;
@@ -2831,11 +2836,6 @@ name|count
 operator|--
 expr_stmt|;
 block|}
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|(
