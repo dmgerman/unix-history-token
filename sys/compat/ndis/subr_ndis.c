@@ -7360,6 +7360,9 @@ literal|"invalid shared memory: vaddr: %p paddr: 0x%jx\n"
 argument_list|,
 name|vaddr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|paddr
 operator|.
 name|np_quad
