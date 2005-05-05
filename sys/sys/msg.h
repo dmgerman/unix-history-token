@@ -323,6 +323,24 @@ name|msginfo
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Kernel wrapper for the user-level structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|msqid_kernel
+block|{
+comment|/* 	 * Data structure exposed to user space. 	 */
+name|struct
+name|msqid_ds
+name|u
+decl_stmt|;
+comment|/* 	 * Kernel-private components of the message queue. 	 */
+block|}
+struct|;
+end_struct
+
 begin_else
 else|#
 directive|else

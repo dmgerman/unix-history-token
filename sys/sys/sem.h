@@ -331,6 +331,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Kernel wrapper for the user-level structure  */
+end_comment
+
+begin_struct
+struct|struct
+name|semid_kernel
+block|{
+name|struct
+name|semid_ds
+name|u
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* internal "mode" bits */
 end_comment
 
