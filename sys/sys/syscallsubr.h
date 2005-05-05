@@ -700,11 +700,6 @@ parameter_list|,
 name|struct
 name|msqid_ds
 modifier|*
-parameter_list|,
-name|struct
-name|msqid_ds
-modifier|*
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
