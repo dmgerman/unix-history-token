@@ -13114,11 +13114,6 @@ operator|->
 name|ndis_stat_ch
 argument_list|)
 expr_stmt|;
-name|ndis_halt_nic
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|NDIS_LOCK
 argument_list|(
 name|sc
@@ -13148,6 +13143,11 @@ name|IFF_OACTIVE
 operator|)
 expr_stmt|;
 name|NDIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ndis_halt_nic
 argument_list|(
 name|sc
 argument_list|)

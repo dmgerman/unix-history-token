@@ -13269,10 +13269,6 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Poke each DPC queue and wait 	 * for them to drain. 	 */
-name|kq
-operator|=
-name|kq_queues
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -13288,7 +13284,9 @@ operator|++
 control|)
 block|{
 name|kq
-operator|+=
+operator|=
+name|kq_queues
+operator|+
 name|i
 expr_stmt|;
 name|KeSetEvent
