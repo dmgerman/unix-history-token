@@ -709,18 +709,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|ShowAliasStats
-parameter_list|(
-name|struct
-name|libalias
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -772,9 +760,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_LOGGING
+end_ifndef
+
 begin_comment
 comment|/* Log file control */
 end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|ShowAliasStats
+parameter_list|(
+name|struct
+name|libalias
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -799,6 +805,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -947,6 +958,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_LOGGING
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -1054,6 +1071,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Internal routines for finding, deleting and adding links  Port Allocation:     GetNewPort()             -- find and reserve new alias port number     GetSocket()              -- try to allocate a socket for a given port  Link creation and deletion:     CleanupAliasData()      - remove all link chains from lookup table     IncrementalCleanup()    - look for stale links in a single chain     DeleteLink()            - remove link     AddLink()               - add link     ReLink()                - change link  Link search:     FindLinkOut()           - find link for outgoing packets     FindLinkIn()            - find link for incoming packets  Port search:     FindNewPortGroup()      - find an available group of ports */
@@ -2678,6 +2700,9 @@ argument_list|(
 name|lnk
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_LOGGING
 comment|/* Write statistics, if logging enabled */
 if|if
 condition|(
@@ -2694,6 +2719,8 @@ name|la
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3272,6 +3299,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+ifndef|#
+directive|ifndef
+name|NO_LOGGING
 if|if
 condition|(
 name|la
@@ -3287,6 +3317,8 @@ name|la
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|lnk
@@ -7872,6 +7904,12 @@ block|}
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_LOGGING
+end_ifndef
+
 begin_comment
 comment|/* Init the log file and enable logging */
 end_comment
@@ -7976,6 +8014,11 @@ name|PKT_ALIAS_LOG
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Outside world interfaces  -- "outside world" means other than alias*.c routines --      PacketAliasRedirectPort()     PacketAliasAddServer()     PacketAliasRedirectProto()     PacketAliasRedirectAddr()     PacketAliasRedirectDynamic()     PacketAliasRedirectDelete()     PacketAliasSetAddress()     PacketAliasInit()     PacketAliasUninit()     PacketAliasSetMode()  (prototypes in alias.h) */
@@ -8962,11 +9005,16 @@ name|deleteAllLinks
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_LOGGING
 name|UninitPacketAliasLog
 argument_list|(
 name|la
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|NO_FW_PUNCH
@@ -9017,6 +9065,9 @@ name|mask
 comment|/* Mask of which flags to affect (use 0 to 				 * do a probe for flag values) */
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|NO_LOGGING
 comment|/* Enable logging? */
 if|if
 condition|(
@@ -9052,6 +9103,8 @@ name|la
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|NO_FW_PUNCH

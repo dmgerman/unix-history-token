@@ -864,12 +864,23 @@ begin_comment
 comment|/*  * If PKT_ALIAS_LOG is set, a message will be printed to /var/log/alias.log  * every time a link is created or deleted.  This is useful for debugging.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_LOGGING
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|PKT_ALIAS_LOG
 value|0x01
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * If PKT_ALIAS_DENY_INCOMING is set, then incoming connections (e.g. to ftp,  * telnet or web servers will be prevented by the aliasing mechanism.  */

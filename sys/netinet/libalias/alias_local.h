@@ -157,11 +157,16 @@ name|deleteAllLinks
 decl_stmt|;
 comment|/* If equal to zero, DeleteLink()  */
 comment|/* will not remove permanent links */
+ifndef|#
+directive|ifndef
+name|NO_LOGGING
 name|FILE
 modifier|*
 name|monitorFile
 decl_stmt|;
 comment|/* File descriptor for link        */
+endif|#
+directive|endif
 comment|/* statistics monitoring file      */
 name|int
 name|newDefaultLink
