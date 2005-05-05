@@ -966,6 +966,10 @@ name|t
 operator|->
 name|cipher
 argument_list|,
+name|IEEE80211_KEY_XMIT
+operator||
+name|IEEE80211_KEY_RECV
+argument_list|,
 operator|&
 name|key
 argument_list|)
