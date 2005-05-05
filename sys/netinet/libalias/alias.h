@@ -23,6 +23,39 @@ directive|define
 name|_ALIAS_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * The kernel version of libalias does not support these features.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_FW_PUNCH
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_LOGGING
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_USE_SOCKETS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The external interface to libalias, the packet aliasing engine.  *  * There are two sets of functions:  *  * PacketAlias*() the old API which doesn't take an instance pointer  * and therefore can only have one packet engine at a time.  *  * LibAlias*() the new API which takes as first argument a pointer to  * the instance of the packet aliasing engine.  *  * The functions otherwise correspond to each other one for one, except  * for the LibAliasUnaliasOut()/PacketUnaliasOut() function which were  * were misnamed in the old API.  */
 end_comment
