@@ -908,12 +908,23 @@ begin_comment
 comment|/*  * If PKT_ALIAS_USE_SOCKETS is set, then when partially specified links (e.g.  * destination port and/or address is zero), the packet aliasing engine will  * attempt to allocate a socket for the aliasing port it chooses.  This will  * avoid interference with the host machine.  Fully specified links do not  * require this.  This bit is set after a call to PacketAliasInit(), so it is  * a default mode of operation.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_USE_SOCKETS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|PKT_ALIAS_USE_SOCKETS
 value|0x08
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*-  * If PKT_ALIAS_UNREGISTERED_ONLY is set, then only packets with  * unregistered source addresses will be aliased.  Private  * addresses are those in the following ranges:  *  *		10.0.0.0     ->   10.255.255.255  *		172.16.0.0   ->   172.31.255.255  *		192.168.0.0  ->   192.168.255.255  */

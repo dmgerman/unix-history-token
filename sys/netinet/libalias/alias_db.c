@@ -613,10 +613,15 @@ name|int
 name|expire_time
 decl_stmt|;
 comment|/* Expire time for link                */
+ifndef|#
+directive|ifndef
+name|NO_USE_SOCKETS
 name|int
 name|sockfd
 decl_stmt|;
 comment|/* socket descriptor                   */
+endif|#
+directive|endif
 name|LIST_ENTRY
 argument_list|(
 argument|alias_link
@@ -1103,6 +1108,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_USE_SOCKETS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|u_short
@@ -1121,6 +1132,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1569,6 +1585,9 @@ condition|(
 name|go_ahead
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|NO_USE_SOCKETS
 if|if
 condition|(
 operator|(
@@ -1640,6 +1659,8 @@ block|}
 block|}
 else|else
 block|{
+endif|#
+directive|endif
 name|lnk
 operator|->
 name|alias_port
@@ -1651,7 +1672,12 @@ operator|(
 literal|0
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|NO_USE_SOCKETS
 block|}
+endif|#
+directive|endif
 block|}
 name|port_sys
 operator|=
@@ -1699,6 +1725,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_USE_SOCKETS
+end_ifndef
 
 begin_function
 specifier|static
@@ -1909,6 +1941,11 @@ return|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* FindNewPortGroup() returns a base port number for an available    range of contiguous port numbers. Note that if a port number    is already in use, that does not mean that it cannot be used by    another link concurrently.  This is because FindNewPortGroup()    looks for unused triplets: (dest addr, dest port, alias port). */
@@ -2568,6 +2605,9 @@ argument_list|,
 name|list_in
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_USE_SOCKETS
 comment|/* Close socket, if one has been allocated */
 if|if
 condition|(
@@ -2592,6 +2632,8 @@ name|sockfd
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Link-type dependent cleanup */
 switch|switch
 condition|(
@@ -2854,6 +2896,9 @@ name|link_type
 operator|=
 name|link_type
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_USE_SOCKETS
 name|lnk
 operator|->
 name|sockfd
@@ -2861,6 +2906,8 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 name|lnk
 operator|->
 name|flags
@@ -8953,8 +9000,13 @@ operator|->
 name|packetAliasMode
 operator|=
 name|PKT_ALIAS_SAME_PORTS
+ifndef|#
+directive|ifndef
+name|NO_USE_SOCKETS
 operator||
 name|PKT_ALIAS_USE_SOCKETS
+endif|#
+directive|endif
 operator||
 name|PKT_ALIAS_RESET_ON_ADDR_CHANGE
 expr_stmt|;
