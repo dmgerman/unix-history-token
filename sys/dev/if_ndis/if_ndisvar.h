@@ -74,6 +74,9 @@ name|void
 modifier|*
 name|ndis_saddr
 decl_stmt|;
+name|ndis_physaddr
+name|ndis_paddr
+decl_stmt|;
 name|struct
 name|ndis_shmem
 modifier|*
@@ -334,6 +337,15 @@ decl_stmt|;
 name|driver_object
 modifier|*
 name|ndis_dobj
+decl_stmt|;
+name|ndis_work_item
+name|ndis_tickitem
+decl_stmt|;
+name|ndis_work_item
+name|ndis_startitem
+decl_stmt|;
+name|ndis_work_item
+name|ndis_resetitem
 decl_stmt|;
 name|bus_dma_tag_t
 name|ndis_parent_tag

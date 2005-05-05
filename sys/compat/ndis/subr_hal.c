@@ -1387,7 +1387,7 @@ name|NULL
 block|,
 literal|0
 block|,
-name|WINDRV_WRAP_CDECL
+name|WINDRV_WRAP_STDCALL
 block|}
 block|,
 comment|/* End of list. */
