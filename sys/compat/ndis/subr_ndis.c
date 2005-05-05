@@ -11876,13 +11876,6 @@ argument_list|,
 name|afilename
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|afilename
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
