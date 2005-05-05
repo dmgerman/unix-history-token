@@ -1208,7 +1208,7 @@ name|p
 operator|+=
 name|hlen
 expr_stmt|;
-name|memmove
+name|bcopy
 argument_list|(
 name|p
 operator|+
