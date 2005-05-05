@@ -21,6 +21,35 @@ begin_comment
 comment|/*    Alias_smedia.c is meant to contain the aliasing code for streaming media    protocols.  It performs special processing for RSTP sessions under TCP.    Specifically, when a SETUP request is sent by a client, or a 200 reply    is sent by a server, it is intercepted and modified.  The address is    changed to the gateway machine and an aliasing port is used.     More specifically, the "client_port" configuration parameter is    parsed for SETUP requests.  The "server_port" configuration parameter is    parsed for 200 replies eminating from a server.  This is intended to handle    the unicast case.     RTSP also allows a redirection of a stream to another client by using the    "destination" configuration parameter.  The destination config parm would    indicate a different IP address.  This function is NOT supported by the    RTSP translation code below.     The RTSP multicast functions without any address translation intervention.     For this routine to work, the SETUP/200 must fit entirely    into a single TCP packet.  This is typically the case, but exceptions    can easily be envisioned under the actual specifications.     Probably the most troubling aspect of the approach taken here is    that the new SETUP/200 will typically be a different length, and    this causes a certain amount of bookkeeping to keep track of the    changes of sequence and acknowledgment numbers, since the client    machine is totally unaware of the modification to the TCP stream.     Initial version:  May, 2000 (eds) */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/libkern.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -33,11 +62,10 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -69,11 +97,39 @@ directive|include
 file|<netinet/udp.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/libalias/alias_local.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/libalias/alias.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|"alias_local.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

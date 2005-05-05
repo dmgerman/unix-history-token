@@ -25,6 +25,65 @@ begin_comment
 comment|/* System includes */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/libkern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/limits.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -58,14 +117,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<arpa/inet.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* BSD IPV4 includes */
@@ -95,11 +153,28 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<netinet/libalias/alias_local.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/libalias/alias.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -120,6 +195,11 @@ end_include
 begin_comment
 comment|/* Public API functions for libalias */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*     Data structures  */

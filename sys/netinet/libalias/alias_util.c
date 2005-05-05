@@ -25,17 +25,39 @@ begin_comment
 comment|/* Note: the checksum routines assume that the actual checksum word has been zeroed out.  If the checksum word is filled with the proper value, then these routines will give a result of zero (useful for testing purposes); */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/param.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -61,6 +83,29 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/libalias/alias.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/libalias/alias_local.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -72,6 +117,11 @@ include|#
 directive|include
 file|"alias_local.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|u_short

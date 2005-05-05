@@ -3,17 +3,22 @@ begin_comment
 comment|/*-  * alias_skinny.c  *  * Copyright (c) 2002, 2003 MarcusCom, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Author: Joe Marcus Clarke<marcus@FreeBSD.org>  *  * $FreeBSD$  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sys/param.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -30,6 +35,35 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_systm.h>
 end_include
 
@@ -37,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -63,17 +91,33 @@ directive|include
 file|<netinet/udp.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<netinet/libalias/alias_local.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|"alias_local.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * alias_skinny.c handles the translation for the Cisco Skinny Station  * protocol.  Skinny typically uses TCP port 2000 to set up calls between  * a Cisco Call Manager and a Cisco IP phone.  When a phone comes on line,  * it first needs to register with the Call Manager.  To do this it sends  * a registration message.  This message contains the IP address of the  * IP phone.  This message must then be translated to reflect our global  * IP address.  Along with the registration message (and usually in the  * same packet), the phone sends an IP port message.  This message indicates  * the TCP port over which it will communicate.  *  * When a call is placed from the phone, the Call Manager will send an  * Open Receive Channel message to the phone to let the caller know someone  * has answered.  The phone then sends back an Open Receive Channel  * Acknowledgement.  In this packet, the phone sends its IP address again,  * and the UDP port over which the voice traffic should flow.  These values  * need translation.  Right after the Open Receive Channel Acknowledgement,  * the Call Manager sends a Start Media Transmission message indicating the  * call is connected.  This message contains the IP address and UDP port  * number of the remote (called) party.  Once this message is translated, the  * call can commence.  The called part sends the first UDP packet to the  * calling phone at the pre-arranged UDP port in the Open Receive Channel  * Acknowledgement.  *  * Skinny is a Cisco-proprietary protocol and is a trademark of Cisco Systems,  * Inc.  All rights reserved. */
