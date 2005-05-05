@@ -1211,10 +1211,10 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 name|p
-operator|+
-name|slen
 argument_list|,
 name|p
+operator|+
+name|slen
 argument_list|,
 name|dlen
 argument_list|)
