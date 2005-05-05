@@ -2751,11 +2751,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|P_SHOULDSTOP
-argument_list|(
+operator|(
 name|p
-argument_list|)
+operator|->
+name|p_flag
+operator|&
+name|P_STOPPED_SIG
+operator|)
 operator|&&
+operator|(
 name|p
 operator|->
 name|p_suspcount
@@ -2763,6 +2767,7 @@ operator|==
 name|p
 operator|->
 name|p_numthreads
+operator|)
 operator|&&
 operator|(
 name|p
