@@ -354,7 +354,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmsegs
 decl_stmt|;
@@ -380,7 +380,7 @@ name|void
 name|shm_deallocate_segment
 parameter_list|(
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -399,7 +399,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shm_find_segment_by_shmid
 parameter_list|(
@@ -411,7 +411,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shm_find_segment_by_shmidx
 parameter_list|(
@@ -898,6 +898,8 @@ index|[
 name|i
 index|]
 operator|.
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -909,6 +911,8 @@ name|shmsegs
 index|[
 name|i
 index|]
+operator|.
+name|u
 operator|.
 name|shm_perm
 operator|.
@@ -933,7 +937,7 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shm_find_segment_by_shmid
 parameter_list|(
@@ -945,7 +949,7 @@ name|int
 name|segnum
 decl_stmt|;
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
@@ -984,6 +988,8 @@ condition|(
 operator|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -1000,6 +1006,8 @@ operator|&&
 operator|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -1012,6 +1020,8 @@ operator|)
 operator|||
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|seq
@@ -1037,7 +1047,7 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shm_find_segment_by_shmidx
 parameter_list|(
@@ -1046,7 +1056,7 @@ name|segnum
 parameter_list|)
 block|{
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
@@ -1078,6 +1088,8 @@ condition|(
 operator|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -1094,6 +1106,8 @@ operator|&&
 operator|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -1125,7 +1139,7 @@ parameter_list|(
 name|shmseg
 parameter_list|)
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
@@ -1139,11 +1153,15 @@ name|vm_object_deallocate
 argument_list|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_internal
 argument_list|)
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_internal
 operator|=
 name|NULL
@@ -1154,6 +1172,8 @@ name|round_page
 argument_list|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_segsz
 argument_list|)
 expr_stmt|;
@@ -1169,6 +1189,8 @@ operator|--
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -1195,7 +1217,7 @@ name|shmmap_s
 parameter_list|)
 block|{
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
@@ -1232,6 +1254,8 @@ name|round_page
 argument_list|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_segsz
 argument_list|)
 expr_stmt|;
@@ -1275,6 +1299,8 @@ literal|1
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_dtime
 operator|=
 name|time_second
@@ -1285,6 +1311,8 @@ operator|(
 operator|--
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_nattch
 operator|<=
 literal|0
@@ -1293,6 +1321,8 @@ operator|&&
 operator|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -1599,7 +1629,7 @@ decl_stmt|,
 name|flags
 decl_stmt|;
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
@@ -1753,6 +1783,8 @@ argument_list|,
 operator|&
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 argument_list|,
 operator|(
@@ -1828,6 +1860,8 @@ name|round_page
 argument_list|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_segsz
 argument_list|)
 expr_stmt|;
@@ -1976,6 +2010,8 @@ name|vm_object_reference
 argument_list|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_internal
 argument_list|)
 expr_stmt|;
@@ -1992,6 +2028,8 @@ name|vm_map
 argument_list|,
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_internal
 argument_list|,
 literal|0
@@ -2029,6 +2067,8 @@ name|vm_object_deallocate
 argument_list|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_internal
 argument_list|)
 expr_stmt|;
@@ -2072,6 +2112,8 @@ name|shmid
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_lpid
 operator|=
 name|p
@@ -2080,12 +2122,16 @@ name|p_pid
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_atime
 operator|=
 name|time_second
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_nattch
 operator|++
 expr_stmt|;
@@ -2252,7 +2298,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
@@ -2326,6 +2372,8 @@ argument_list|,
 operator|&
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 argument_list|,
 name|IPC_R
@@ -2344,6 +2392,8 @@ name|shm_perm
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 expr_stmt|;
 name|outbuf
@@ -2352,6 +2402,8 @@ name|shm_segsz
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_segsz
 expr_stmt|;
 name|outbuf
@@ -2360,6 +2412,8 @@ name|shm_cpid
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_cpid
 expr_stmt|;
 name|outbuf
@@ -2368,6 +2422,8 @@ name|shm_lpid
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_lpid
 expr_stmt|;
 name|outbuf
@@ -2376,6 +2432,8 @@ name|shm_nattch
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_nattch
 expr_stmt|;
 name|outbuf
@@ -2384,6 +2442,8 @@ name|shm_atime
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_atime
 expr_stmt|;
 name|outbuf
@@ -2392,6 +2452,8 @@ name|shm_dtime
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_dtime
 expr_stmt|;
 name|outbuf
@@ -2400,6 +2462,8 @@ name|shm_ctime
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_ctime
 expr_stmt|;
 name|outbuf
@@ -2408,6 +2472,8 @@ name|shm_handle
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_internal
 expr_stmt|;
 name|error
@@ -2551,7 +2617,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
@@ -2767,6 +2833,8 @@ argument_list|,
 operator|&
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 argument_list|,
 name|IPC_R
@@ -2783,7 +2851,10 @@ name|memcpy
 argument_list|(
 name|buf
 argument_list|,
+operator|&
 name|shmseg
+operator|->
+name|u
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2824,6 +2895,8 @@ name|shmid
 argument_list|,
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 argument_list|)
 expr_stmt|;
@@ -2855,6 +2928,8 @@ argument_list|,
 operator|&
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 argument_list|,
 name|IPC_M
@@ -2869,6 +2944,8 @@ name|done2
 goto|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|uid
@@ -2881,6 +2958,8 @@ name|uid
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|gid
@@ -2893,6 +2972,8 @@ name|gid
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -2900,6 +2981,8 @@ operator|=
 operator|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -2920,6 +3003,8 @@ operator|)
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_ctime
 operator|=
 name|time_second
@@ -2938,6 +3023,8 @@ argument_list|,
 operator|&
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 argument_list|,
 name|IPC_M
@@ -2952,6 +3039,8 @@ name|done2
 goto|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|key
@@ -2960,6 +3049,8 @@ name|IPC_PRIVATE
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -2970,6 +3061,8 @@ if|if
 condition|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_nattch
 operator|<=
 literal|0
@@ -3239,7 +3332,7 @@ name|segnum
 decl_stmt|;
 block|{
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
@@ -3258,6 +3351,8 @@ if|if
 condition|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -3268,6 +3363,8 @@ block|{
 comment|/* 		 * This segment is in the process of being allocated.  Wait 		 * until it's done, and look the key up again (in case the 		 * allocation failed or it was freed). 		 */
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -3338,6 +3435,8 @@ argument_list|,
 operator|&
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 argument_list|,
 name|mode
@@ -3364,6 +3463,8 @@ name|size
 operator|>
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_segsz
 condition|)
 return|return
@@ -3384,6 +3485,8 @@ name|segnum
 argument_list|,
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 argument_list|)
 expr_stmt|;
@@ -3439,7 +3542,7 @@ operator|->
 name|td_ucred
 decl_stmt|;
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
@@ -3543,6 +3646,8 @@ index|[
 name|i
 index|]
 operator|.
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -3589,6 +3694,8 @@ expr_stmt|;
 comment|/* 	 * In case we sleep in malloc(), mark the segment present but deleted 	 * so that noone else tries to create the same key. 	 */
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -3599,6 +3706,8 @@ name|SHMSEG_REMOVED
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|key
@@ -3609,6 +3718,8 @@ name|key
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|seq
@@ -3616,6 +3727,8 @@ operator|=
 operator|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|seq
@@ -3633,6 +3746,8 @@ name|segnum
 argument_list|,
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 argument_list|)
 expr_stmt|;
@@ -3702,18 +3817,24 @@ argument_list|)
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_internal
 operator|=
 name|shm_object
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|cuid
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|uid
@@ -3724,12 +3845,16 @@ name|cr_uid
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|cgid
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|gid
@@ -3740,6 +3865,8 @@ name|cr_gid
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -3747,6 +3874,8 @@ operator|=
 operator|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -3764,6 +3893,8 @@ name|SHMSEG_ALLOCATED
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_segsz
 operator|=
 name|uap
@@ -3772,6 +3903,8 @@ name|size
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_cpid
 operator|=
 name|td
@@ -3782,26 +3915,36 @@ name|p_pid
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_lpid
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_nattch
 operator|=
 literal|0
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_atime
 operator|=
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_dtime
 operator|=
 literal|0
 expr_stmt|;
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_ctime
 operator|=
 name|time_second
@@ -3820,6 +3963,8 @@ if|if
 condition|(
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -3830,6 +3975,8 @@ block|{
 comment|/* 		 * Somebody else wanted this key while we were asleep.  Wake 		 * them up now. 		 */
 name|shmseg
 operator|->
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -4258,6 +4405,8 @@ name|shmid
 argument_list|)
 index|]
 operator|.
+name|u
+operator|.
 name|shm_nattch
 operator|++
 expr_stmt|;
@@ -4386,7 +4535,7 @@ name|int
 name|i
 decl_stmt|;
 name|struct
-name|shmid_ds
+name|shmid_kernel
 modifier|*
 name|newsegs
 decl_stmt|;
@@ -4479,6 +4628,8 @@ index|[
 name|i
 index|]
 operator|.
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -4489,6 +4640,8 @@ name|shmsegs
 index|[
 name|i
 index|]
+operator|.
+name|u
 operator|.
 name|shm_perm
 operator|.
@@ -4665,6 +4818,8 @@ index|[
 name|i
 index|]
 operator|.
+name|u
+operator|.
 name|shm_perm
 operator|.
 name|mode
@@ -4675,6 +4830,8 @@ name|shmsegs
 index|[
 name|i
 index|]
+operator|.
+name|u
 operator|.
 name|shm_perm
 operator|.
