@@ -162,13 +162,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet/libalias/alias_local.h>
+file|<netinet/libalias/alias.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/libalias/alias.h>
+file|<netinet/libalias/alias_local.h>
 end_include
 
 begin_else
@@ -179,21 +179,21 @@ end_else
 begin_include
 include|#
 directive|include
-file|"alias_local.h"
-end_include
-
-begin_comment
-comment|/* Functions used by alias*.c */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"alias.h"
 end_include
 
 begin_comment
 comment|/* Public API functions for libalias */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"alias_local.h"
+end_include
+
+begin_comment
+comment|/* Functions used by alias*.c */
 end_comment
 
 begin_endif

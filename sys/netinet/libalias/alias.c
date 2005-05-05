@@ -100,13 +100,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet/libalias/alias_local.h>
+file|<netinet/libalias/alias.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/libalias/alias.h>
+file|<netinet/libalias/alias_local.h>
 end_include
 
 begin_else
@@ -117,13 +117,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|"alias_local.h"
+file|"alias.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"alias.h"
+file|"alias_local.h"
 end_include
 
 begin_endif
