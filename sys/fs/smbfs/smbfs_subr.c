@@ -1439,13 +1439,13 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|size_t
 name|ilen
 init|=
 operator|*
 name|nmlen
 decl_stmt|;
-name|int
+name|size_t
 name|olen
 decl_stmt|;
 name|char
