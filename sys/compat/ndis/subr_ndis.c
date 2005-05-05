@@ -7356,7 +7356,7 @@ block|{
 name|printf
 argument_list|(
 literal|"NDIS: buggy driver tried to free "
-literal|"invalid shared memory: vaddr: %p paddr: 0x%qx\n"
+literal|"invalid shared memory: vaddr: %p paddr: 0x%jx\n"
 argument_list|,
 name|vaddr
 argument_list|,
