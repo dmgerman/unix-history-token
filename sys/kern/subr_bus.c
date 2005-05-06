@@ -14017,6 +14017,17 @@ name|ENOENT
 operator|)
 return|;
 comment|/* 	 * Populate the return array. 	 */
+name|bzero
+argument_list|(
+operator|&
+name|udev
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|udev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|udev
 operator|.
 name|dv_handle
