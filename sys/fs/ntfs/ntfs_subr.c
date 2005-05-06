@@ -5670,7 +5670,7 @@ expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntreaddir: rdbuf: 0x%p, blsize: %d\n"
+literal|"ntfs_ntreaddir: rdbuf: %p, blsize: %d\n"
 operator|,
 name|rdbuf
 operator|,
@@ -9443,7 +9443,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"ntfs_runtocn: run: 0x%p, %ld bytes, vcn:%ld\n"
+literal|"ntfs_runtocn: run: %p, %ld bytes, vcn:%ld\n"
 argument_list|,
 name|run
 argument_list|,
