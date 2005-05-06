@@ -5512,7 +5512,7 @@ name|caddr_t
 name|rdbuf
 decl_stmt|;
 comment|/* Buffer to read directory's blocks  */
-name|u_char
+name|u_int8_t
 modifier|*
 name|bmp
 init|=
@@ -5724,7 +5724,7 @@ name|MALLOC
 argument_list|(
 name|bmp
 argument_list|,
-name|u_char
+name|u_int8_t
 operator|*
 argument_list|,
 name|bmvap
@@ -6203,7 +6203,7 @@ operator|<<
 operator|(
 name|blnum
 operator|&
-literal|3
+literal|7
 operator|)
 operator|)
 condition|)
