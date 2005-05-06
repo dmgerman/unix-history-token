@@ -130,7 +130,7 @@ comment|/*  * alias_skinny.c handles the translation for the Cisco Skinny Statio
 end_comment
 
 begin_comment
-comment|/* #define DEBUG 1 */
+comment|/* #define LIBALIAS_DEBUG 1 */
 end_comment
 
 begin_comment
@@ -853,7 +853,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -910,7 +910,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -952,7 +952,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -978,7 +978,7 @@ name|msgId
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1028,7 +1028,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1042,7 +1042,7 @@ return|return;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1104,7 +1104,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1118,7 +1118,7 @@ return|return;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1185,7 +1185,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1199,7 +1199,7 @@ return|return;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr

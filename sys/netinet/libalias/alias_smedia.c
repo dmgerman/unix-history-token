@@ -823,7 +823,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -911,7 +911,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr

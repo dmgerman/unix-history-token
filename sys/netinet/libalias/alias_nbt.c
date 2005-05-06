@@ -341,7 +341,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 end_ifdef
 
 begin_function
@@ -586,7 +586,7 @@ break|break;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|":"
@@ -645,7 +645,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 if|if
 condition|(
 name|isprint
@@ -679,7 +679,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"%c"
@@ -697,7 +697,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|":"
@@ -918,7 +918,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"\nType=%02x,"
@@ -1042,7 +1042,7 @@ name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"%s:%d-->"
@@ -1159,7 +1159,7 @@ name|alias_port
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"%s:%d\n"
@@ -1349,7 +1349,7 @@ break|break;
 default|default:
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"\nUnknown Type on Question %0x\n"
@@ -1570,7 +1570,7 @@ expr_stmt|;
 comment|/* Processing all in_addr array */
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"NB rec[%s"
@@ -1633,7 +1633,7 @@ break|break;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"<%s>"
@@ -1757,7 +1757,7 @@ name|newaddr
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"O"
@@ -1768,7 +1768,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 else|else
 block|{
 name|printf
@@ -1938,7 +1938,7 @@ expr_stmt|;
 comment|/* Processing all in_addr array */
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"Arec [%s"
@@ -1997,7 +1997,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"..%s"
@@ -2690,7 +2690,7 @@ condition|)
 break|break;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"type=%02x, count=%d\n"
@@ -2816,7 +2816,7 @@ break|break;
 default|default:
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|"\nUnknown Type of Resource %0x\n"
@@ -3036,7 +3036,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|printf
 argument_list|(
 literal|" [%s] ID=%02x, op=%01x, flag=%02x, rcode=%01x, qd=%04x"
@@ -3259,7 +3259,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|PrintRcode
 argument_list|(
 name|nsh

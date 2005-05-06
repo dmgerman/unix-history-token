@@ -1607,7 +1607,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1840,7 +1840,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1942,7 +1942,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1974,7 +1974,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -2328,7 +2328,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -3335,7 +3335,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -3468,7 +3468,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -7745,7 +7745,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -8098,7 +8098,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -8325,7 +8325,7 @@ break|break;
 default|default:
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -8385,7 +8385,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 else|else
 block|{
 name|fprintf
@@ -8630,7 +8630,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 else|else
 block|{
 name|fprintf
@@ -8720,7 +8720,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 else|else
 block|{
 name|fprintf
@@ -10333,7 +10333,7 @@ name|fireWallBaseNum
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stderr

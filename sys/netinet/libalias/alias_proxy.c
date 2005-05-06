@@ -1782,7 +1782,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stdout
@@ -2070,7 +2070,7 @@ directive|undef
 name|OPTION_LEN_INT32
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
 name|stdout
