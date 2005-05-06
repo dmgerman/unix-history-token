@@ -514,7 +514,11 @@ operator|!
 name|gotend
 condition|)
 block|{
-name|val
+name|unsigned
+name|long
+name|l
+decl_stmt|;
+name|l
 operator|=
 name|strtoul
 argument_list|(
@@ -528,11 +532,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|val
+name|l
 operator|==
 name|ULONG_MAX
 operator|||
-name|val
+name|l
 operator|==
 literal|0
 condition|)
@@ -541,6 +545,13 @@ operator|(
 literal|0
 operator|)
 return|;
+name|val
+operator|=
+operator|(
+name|in_addr_t
+operator|)
+name|l
+expr_stmt|;
 comment|/*  		 * If the whole string is invalid, endptr will equal 		 * c.. this way we can make sure someone hasn't 		 * gone '.12' or something which would get past 		 * the next check. 		 */
 if|if
 condition|(
