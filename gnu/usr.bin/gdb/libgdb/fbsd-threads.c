@@ -2749,6 +2749,13 @@ name|ptid
 argument_list|)
 condition|)
 return|return;
+if|if
+condition|(
+name|fbsd_thread_core
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* Enable thread event reporting for this thread. */
 name|err
 operator|=
