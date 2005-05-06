@@ -318,10 +318,6 @@ argument_list|,
 name|S_IRUSR
 operator||
 name|S_IWUSR
-operator||
-name|S_IRGRP
-operator||
-name|S_IROTH
 argument_list|,
 literal|"iir%d"
 argument_list|,
@@ -355,10 +351,6 @@ argument_list|,
 name|S_IRUSR
 operator||
 name|S_IWUSR
-operator||
-name|S_IRGRP
-operator||
-name|S_IROTH
 argument_list|,
 literal|"iir"
 argument_list|)
