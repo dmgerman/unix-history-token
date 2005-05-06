@@ -66,14 +66,14 @@ value|1
 comment|/* Variable's value currently being used. 				 * Used to avoid recursion */
 define|#
 directive|define
-name|VAR_FROM_ENV
-value|2
-comment|/* Variable comes from the environment */
-define|#
-directive|define
 name|VAR_JUNK
 value|4
 comment|/* Variable is a junk variable that 				 * should be destroyed when done with 				 * it. Used by Var_Parse for undefined, 				 * modified variables */
+define|#
+directive|define
+name|VAR_TO_ENV
+value|8
+comment|/* Place variable in environment */
 block|}
 name|Var
 typedef|;
@@ -300,7 +300,9 @@ begin_function_decl
 name|void
 name|Var_Init
 parameter_list|(
-name|void
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -349,6 +351,21 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|GNode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|Var_SetEnv
+parameter_list|(
 specifier|const
 name|char
 modifier|*

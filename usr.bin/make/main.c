@@ -267,6 +267,19 @@ name|MAKEFLAGS
 value|".MAKEFLAGS"
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX what header declares this variable? */
+end_comment
+
 begin_comment
 comment|/* Targets to be made */
 end_comment
@@ -2556,7 +2569,9 @@ argument_list|()
 expr_stmt|;
 comment|/* Initialize directory structures so -I flags 				 * can be processed correctly */
 name|Var_Init
-argument_list|()
+argument_list|(
+name|environ
+argument_list|)
 expr_stmt|;
 comment|/* As well as the lists of variables for 				 * parsing arguments */
 name|str_init
@@ -2883,6 +2898,15 @@ operator|&
 name|dirSearchPath
 argument_list|,
 name|curdir
+argument_list|)
+expr_stmt|;
+name|Var_Set
+argument_list|(
+literal|".ST_EXPORTVAR"
+argument_list|,
+literal|"YES"
+argument_list|,
+name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 name|Var_Set

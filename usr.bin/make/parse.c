@@ -360,6 +360,9 @@ comment|/* .DEFAULT */
 name|End
 block|,
 comment|/* .END */
+name|ExportVar
+block|,
+comment|/* .EXPORTVAR */
 name|Ignore
 block|,
 comment|/* .IGNORE */
@@ -378,9 +381,6 @@ comment|/* .MFLAGS or .MAKEFLAGS */
 name|Main
 block|,
 comment|/* .MAIN and we don't have anyth. user-spec. to make */
-name|NoExport
-block|,
-comment|/* .NOEXPORT */
 name|Not
 block|,
 comment|/* Not special */
@@ -519,6 +519,14 @@ block|,
 name|Attribute
 block|,
 name|OP_EXEC
+block|}
+block|,
+block|{
+literal|".EXPORTVAR"
+block|,
+name|ExportVar
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3612,6 +3620,22 @@ operator|&
 name|paths
 argument_list|,
 name|NOFREE
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|specType
+operator|==
+name|ExportVar
+condition|)
+block|{
+name|Var_SetEnv
+argument_list|(
+name|line
+argument_list|,
+name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 block|}
