@@ -209,6 +209,17 @@ return|;
 case|case
 name|IFDATA_GENERAL
 case|:
+name|bzero
+argument_list|(
+operator|&
+name|ifmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifmd
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ifnlen
 operator|=
 name|snprintf

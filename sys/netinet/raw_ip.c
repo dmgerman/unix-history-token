@@ -3054,6 +3054,17 @@ name|struct
 name|xinpcb
 name|xi
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|xi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|xi
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xi
 operator|.
 name|xi_len
