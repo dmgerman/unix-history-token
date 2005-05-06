@@ -413,6 +413,7 @@ comment|/*  * Number of seconds between 1970 and 1601 year  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int64_t
 name|DIFF1970TO1601
 init|=
