@@ -13676,7 +13676,7 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|>
+operator|!=
 literal|0
 condition|)
 block|{
@@ -13815,21 +13815,6 @@ name|tp
 condition|)
 block|{
 comment|/* 		 * XXX: Either this argument should go away, or we should 		 * XXX: require it and do a ttyrel(tp) here and allocate 		 * XXX: a new tty.  For now do nothing. 		 */
-comment|/*  		 * If ttyrel() will recycle the tty, go ahead 		 * and let it. Otherwise conform to the old behavior. 		 * The console device in particular ends up here with 		 * positive refcounts, and destroying it really messes 		 * up init. 		 */
-if|if
-condition|(
-name|tp
-operator|->
-name|t_refcnt
-operator|<=
-literal|1
-condition|)
-name|ttyrel
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-else|else
 return|return
 operator|(
 name|tp
