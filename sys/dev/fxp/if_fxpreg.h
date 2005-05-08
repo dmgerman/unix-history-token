@@ -2289,5 +2289,38 @@ begin_comment
 comment|/* 82550 C stepping */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FXP_REV_82551_E
+value|14
+end_define
+
+begin_comment
+comment|/* 82551 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_REV_82551_F
+value|15
+end_define
+
+begin_comment
+comment|/* 82551 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_REV_82551_10
+value|16
+end_define
+
+begin_comment
+comment|/* 82551 */
+end_comment
+
 end_unit
 
