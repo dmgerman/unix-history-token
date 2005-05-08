@@ -70,13 +70,31 @@ end_define
 begin_define
 define|#
 directive|define
-name|DOSPTYP_386BSD
-value|0x94
+name|DOSMID_386BSD
+value|(0x14|0x80)
 end_define
 
 begin_comment
-comment|/* 386BSD partition type */
+comment|/* 386BSD | bootable */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSSID_386BSD
+value|(0x44|0x80)
+end_define
+
+begin_comment
+comment|/* 386BSD | active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_386BSD
+value|(DOSSID_386BSD<< 8 | DOSMID_386BSD)
+end_define
 
 begin_struct
 struct|struct
@@ -86,20 +104,10 @@ name|unsigned
 name|char
 name|dp_mid
 decl_stmt|;
-define|#
-directive|define
-name|DOSMID_386BSD
-value|(0x14|0x80)
-comment|/* 386bsd|bootable */
 name|unsigned
 name|char
 name|dp_sid
 decl_stmt|;
-define|#
-directive|define
-name|DOSSID_386BSD
-value|(0x44|0x80)
-comment|/* 386bsd|active */
 name|unsigned
 name|char
 name|dp_dum1
