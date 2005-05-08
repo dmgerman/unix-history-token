@@ -487,12 +487,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_function_decl
 name|void
 name|machine_check
@@ -501,11 +495,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* probe_keyboard.c */
@@ -602,12 +591,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -617,11 +600,6 @@ name|ra
 parameter_list|)
 value|(ra - BOOTSEG * 0x10)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

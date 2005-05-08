@@ -143,9 +143,6 @@ literal|0x0
 block|}
 block|,
 comment|/* 0x18 : boot code */
-ifdef|#
-directive|ifdef
-name|PC98
 comment|/* 	 * The limit of boot data should be more than or equal to 0x9FFFF 	 * for saving BIOS parameter and EPSON machine ID into 2'nd T-VRAM, 	 * because base address is normally 0x10000. 	 */
 block|{
 literal|0xFFFF
@@ -162,25 +159,6 @@ literal|0x0
 block|}
 block|,
 comment|/* 0x20 : boot data */
-else|#
-directive|else
-block|{
-literal|0xFFFF
-block|,
-name|RUN
-block|,
-name|RUN
-block|,
-literal|0x92
-block|,
-literal|0x40
-block|,
-literal|0x0
-block|}
-block|,
-comment|/* 0x20 : boot data */
-endif|#
-directive|endif
 block|{
 literal|0xFFFF
 block|,

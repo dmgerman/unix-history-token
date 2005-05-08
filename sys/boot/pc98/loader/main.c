@@ -475,15 +475,6 @@ operator|/
 literal|1024
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|PC98
-comment|/* detect ACPI for future reference */
-name|biosacpi_detect
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"\n"
@@ -810,9 +801,6 @@ name|initial_bootdev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are booted by an old bootstrap, we have to guess at the BIOS 	 * unit number.  We will loose if there is more than one disk type 	 * and we are not booting from the lowest-numbered disk type  	 * (ie. SCSI when IDE also exists). 	 */
-ifdef|#
-directive|ifdef
-name|PC98
 if|if
 condition|(
 operator|(
@@ -867,38 +855,6 @@ name|initial_bootdev
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-if|if
-condition|(
-operator|(
-name|biosdev
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|B_TYPE
-argument_list|(
-name|initial_bootdev
-argument_list|)
-operator|!=
-literal|2
-operator|)
-condition|)
-comment|/* biosdev doesn't match major */
-name|biosdev
-operator|=
-literal|0x80
-operator|+
-name|B_UNIT
-argument_list|(
-name|initial_bootdev
-argument_list|)
-expr_stmt|;
-comment|/* assume harddisk */
-endif|#
-directive|endif
 block|}
 name|new_currdev
 operator|.

@@ -35,22 +35,11 @@ directive|include
 file|<sys/reboot.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<pc98/pc98/pc98.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -547,9 +536,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|PC98
 name|int
 name|i
 init|=
@@ -573,30 +559,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* about 600ns */
-else|#
-directive|else
-name|int
-name|i
-init|=
-literal|800
-decl_stmt|;
-while|while
-condition|(
-operator|--
-name|i
-operator|>=
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -671,9 +633,6 @@ name|unsigned
 name|physaddr
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|PC98
 specifier|static
 name|int
 name|counter
@@ -712,69 +671,26 @@ name|counter
 operator|++
 operator|)
 return|;
-else|#
-directive|else
-name|unsigned
-name|result
-decl_stmt|;
-comment|/* 	 * Give the fs prefix separately because gas omits it for 	 * "movl %fs:0x46c, %eax". 	 */
-asm|__asm __volatile("fs; movl %1, %0" : "=r" (result)
-block|:
-literal|"m"
-operator|(
-operator|*
-operator|(
-name|unsigned
-operator|*
-operator|)
-name|physaddr
-operator|)
-block|)
-function|;
+block|}
 end_function
 
-begin_return
-return|return
-operator|(
-name|result
-operator|)
-return|;
-end_return
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_macro
-unit|}  int
+begin_function
+name|int
 name|gets
-argument_list|(
-argument|char *buf
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|)
 block|{
 define|#
 directive|define
 name|bios_tick
 value|pword(0x46c)
-ifdef|#
-directive|ifdef
-name|PC98
 define|#
 directive|define
 name|BIOS_TICK_MS
 value|1
-else|#
-directive|else
-define|#
-directive|define
-name|BIOS_TICK_MS
-value|55
-endif|#
-directive|endif
 name|unsigned
 name|initial_bios_tick
 decl_stmt|;
@@ -912,7 +828,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int

@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * $NetBSD: gatea20.c,v 1.2 1997/10/29 00:32:49 fvdl Exp $  */
 end_comment
 
+begin_comment
+comment|/* extracted from freebsd:sys/i386/boot/biosboot/io.c */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -16,10 +20,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* extracted from freebsd:sys/i386/boot/biosboot/io.c */
-end_comment
 
 begin_include
 include|#
@@ -153,9 +153,6 @@ name|gateA20
 parameter_list|()
 block|{
 asm|__asm("pushfl ; cli");
-ifdef|#
-directive|ifdef
-name|PC98
 name|outb
 argument_list|(
 literal|0xf2
@@ -170,99 +167,6 @@ argument_list|,
 literal|0x02
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* IBM PC */
-ifdef|#
-directive|ifdef
-name|IBM_L40
-name|outb
-argument_list|(
-literal|0x92
-argument_list|,
-literal|0x2
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* !IBM_L40 */
-while|while
-condition|(
-name|inb
-argument_list|(
-name|K_STATUS
-argument_list|)
-operator|&
-name|K_IBUF_FUL
-condition|)
-empty_stmt|;
-while|while
-condition|(
-name|inb
-argument_list|(
-name|K_STATUS
-argument_list|)
-operator|&
-name|K_OBUF_FUL
-condition|)
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-name|K_RDWR
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|K_CMD
-argument_list|,
-name|KC_CMD_WOUT
-argument_list|)
-expr_stmt|;
-name|delay
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|inb
-argument_list|(
-name|K_STATUS
-argument_list|)
-operator|&
-name|K_IBUF_FUL
-condition|)
-empty_stmt|;
-name|outb
-argument_list|(
-name|K_RDWR
-argument_list|,
-name|x_20
-argument_list|)
-expr_stmt|;
-name|delay
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|inb
-argument_list|(
-name|K_STATUS
-argument_list|)
-operator|&
-name|K_IBUF_FUL
-condition|)
-empty_stmt|;
-endif|#
-directive|endif
-comment|/* IBM_L40 */
-endif|#
-directive|endif
-comment|/* IBM PC */
 asm|__asm("popfl");
 block|}
 end_function
