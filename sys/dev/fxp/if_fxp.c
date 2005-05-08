@@ -4149,7 +4149,7 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Hook our interrupt after all initialization is complete. 	 * XXX This driver has been tested with the INTR_MPSAFFE flag set 	 * however, ifp and its functions are not fully locked so MPSAFE 	 * should not be used unless you can handle potential data loss. 	 */
+comment|/*  	 * Hook our interrupt after all initialization is complete. 	 */
 name|error
 operator|=
 name|bus_setup_intr
