@@ -252,7 +252,7 @@ value|(N_SYMOFF(ex) + le32toh((ex).a_syms))
 end_define
 
 begin_comment
-comment|/*  * Header prepended to each a.out file.  * only manipulate the a_midmag field via the  * N_SETMAGIC/N_GET{MAGIC,MID,FLAG} macros in a.out.h  */
+comment|/*  * Header prepended to each a.out file.  * only manipulate the a_midmag field via the  * N_SETMAGIC/N_GET{MAGIC,MID,FLAG} macros.  */
 end_comment
 
 begin_struct
