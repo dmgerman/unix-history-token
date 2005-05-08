@@ -343,7 +343,7 @@ name|dptr
 operator|->
 name|dp_mid
 operator|==
-name|DOSPTYP_386BSD
+name|DOSMID_386BSD
 condition|)
 block|{
 name|slice
