@@ -4593,6 +4593,8 @@ modifier|*
 name|matchfuncptr
 function_decl|)
 parameter_list|(
+name|interface_type
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,

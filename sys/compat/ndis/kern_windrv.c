@@ -771,6 +771,10 @@ name|matchfunc
 argument_list|(
 name|d
 operator|->
+name|windrv_bustype
+argument_list|,
+name|d
+operator|->
 name|windrv_devlist
 argument_list|,
 name|ctx
