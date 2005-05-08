@@ -1295,10 +1295,7 @@ block|}
 if|if
 condition|(
 name|t
-index|[
-name|devidx
-index|]
-operator|.
+operator|->
 name|ndis_name
 operator|==
 name|NULL
