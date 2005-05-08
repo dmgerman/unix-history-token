@@ -5301,6 +5301,10 @@ name|nmb_interrupt
 expr_stmt|;
 if|if
 condition|(
+name|intr
+operator|==
+name|NULL
+operator|||
 name|sc
 operator|->
 name|ndis_block
