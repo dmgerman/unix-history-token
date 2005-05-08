@@ -1225,7 +1225,7 @@ name|t
 operator|->
 name|visit_type
 operator|=
-name|TREE_ERROR
+name|TREE_ERROR_DIR
 operator|)
 return|;
 block|}
@@ -1264,7 +1264,7 @@ name|t
 operator|->
 name|visit_type
 operator|=
-name|TREE_ERROR
+name|TREE_ERROR_DIR
 operator|)
 return|;
 block|}

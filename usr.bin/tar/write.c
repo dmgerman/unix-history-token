@@ -2569,7 +2569,7 @@ if|if
 condition|(
 name|tree_ret
 operator|==
-name|TREE_ERROR
+name|TREE_ERROR_DIR
 condition|)
 name|bsdtar_warnc
 argument_list|(
@@ -2577,7 +2577,7 @@ name|bsdtar
 argument_list|,
 name|errno
 argument_list|,
-literal|"%s"
+literal|"%s: Couldn't visit directory"
 argument_list|,
 name|name
 argument_list|)
@@ -2610,7 +2610,7 @@ name|bsdtar
 argument_list|,
 name|errno
 argument_list|,
-literal|"%s: Cannot open"
+literal|"%s: Cannot stat"
 argument_list|,
 name|path
 argument_list|)
@@ -3392,7 +3392,7 @@ name|bsdtar
 argument_list|,
 name|errno
 argument_list|,
-literal|"%s"
+literal|"%s: could not open file"
 argument_list|,
 name|pathname
 argument_list|)

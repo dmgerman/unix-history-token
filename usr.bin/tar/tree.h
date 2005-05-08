@@ -82,7 +82,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TREE_ERROR
+name|TREE_ERROR_DIR
 value|-1
 end_define
 
