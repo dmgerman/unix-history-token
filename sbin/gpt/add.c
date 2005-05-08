@@ -693,6 +693,17 @@ argument_list|,
 name|tpg
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%sp%u added\n"
+argument_list|,
+name|device_name
+argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

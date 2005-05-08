@@ -73,6 +73,13 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|int
+name|all
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|uuid_t
 name|type
 decl_stmt|;
@@ -107,7 +114,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-b lba] [-i index] [-s lba] [-t uuid] device\n"
+literal|"usage: %s -a device\n"
+literal|"       %s [-b lba] [-i index] [-s lba] [-t uuid] device\n"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|getprogname
 argument_list|()
@@ -583,6 +594,17 @@ argument_list|,
 name|tpg
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%sp%u removed\n"
+argument_list|,
+name|device_name
+argument_list|,
+name|m
+operator|->
+name|map_index
+argument_list|)
+expr_stmt|;
 name|removed
 operator|++
 expr_stmt|;
@@ -636,7 +658,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:i:s:t:"
+literal|"ab:i:s:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -649,6 +671,23 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+if|if
+condition|(
+name|all
+operator|>
+literal|0
+condition|)
+name|usage_remove
+argument_list|()
+expr_stmt|;
+name|all
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'b'
 case|:
@@ -913,6 +952,37 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|all
+operator|^
+operator|(
+name|block
+operator|>
+literal|0
+operator|||
+name|entry
+operator|>
+literal|0
+operator|||
+name|size
+operator|>
+literal|0
+operator|||
+operator|!
+name|uuid_is_nil
+argument_list|(
+operator|&
+name|type
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+condition|)
+name|usage_remove
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|argc
