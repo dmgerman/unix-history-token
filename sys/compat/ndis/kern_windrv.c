@@ -1125,6 +1125,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|WINDRV_LOADED
+value|htonl(0x42534F44)
+end_define
+
 begin_comment
 comment|/*  * Loader routine for actual Windows driver modules, ultimately  * calls the driver's DriverEntry() routine.  */
 end_comment
@@ -1188,7 +1195,33 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+name|uint32_t
+modifier|*
+name|ptr
+decl_stmt|;
 comment|/* 	 * First step: try to relocate and dynalink the executable 	 * driver image. 	 */
+name|ptr
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|img
+operator|+
+literal|8
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ptr
+operator|==
+name|WINDRV_LOADED
+condition|)
+goto|goto
+name|skipreloc
+goto|;
 comment|/* Perform text relocation */
 if|if
 condition|(
@@ -1302,6 +1335,13 @@ name|ENOEXEC
 operator|)
 return|;
 block|}
+operator|*
+name|ptr
+operator|=
+name|WINDRV_LOADED
+expr_stmt|;
+name|skipreloc
+label|:
 comment|/* Next step: find the driver entry point. */
 name|pe_get_optional_header
 argument_list|(
