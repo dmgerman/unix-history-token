@@ -262,6 +262,25 @@ begin_comment
 comment|/* IPv4 or IPv6 */
 end_comment
 
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|_res_hostalias
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2093,6 +2112,12 @@ name|type
 decl_stmt|,
 name|len
 decl_stmt|;
+name|char
+name|abuf
+index|[
+name|MAXDNAME
+index|]
+decl_stmt|;
 name|name
 operator|=
 name|va_arg
@@ -2219,9 +2244,14 @@ operator|&&
 operator|(
 name|cp
 operator|=
-name|__hostalias
+name|_res_hostalias
 argument_list|(
 name|name
+argument_list|,
+name|abuf
+argument_list|,
+sizeof|sizeof
+name|abuf
 argument_list|)
 operator|)
 condition|)
