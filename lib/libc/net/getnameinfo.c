@@ -420,17 +420,6 @@ condition|)
 return|return
 name|EAI_FAIL
 return|;
-if|if
-condition|(
-name|sa
-operator|->
-name|sa_len
-operator|!=
-name|salen
-condition|)
-return|return
-name|EAI_FAIL
-return|;
 name|family
 operator|=
 name|sa
