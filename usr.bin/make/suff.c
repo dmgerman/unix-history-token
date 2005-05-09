@@ -3332,8 +3332,6 @@ name|buf
 operator|=
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|child
 operator|->
 name|name

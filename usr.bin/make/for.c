@@ -391,8 +391,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|ptr
 argument_list|,
 name|VAR_CMD
@@ -915,7 +913,7 @@ name|str
 operator|=
 name|Buf_Peel
 argument_list|(
-name|Var_Subst
+name|Var_SubstOnly
 argument_list|(
 name|var
 argument_list|,

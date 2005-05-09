@@ -4466,8 +4466,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|cp
 argument_list|,
 name|ctxt
@@ -4537,8 +4535,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|cp
 argument_list|,
 name|VAR_CMD
@@ -4842,8 +4838,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|file
 argument_list|,
 name|VAR_CMD
@@ -6078,8 +6072,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|file
 argument_list|,
 name|VAR_CMD
@@ -6389,8 +6381,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|line
 argument_list|,
 name|VAR_GLOBAL
@@ -6510,8 +6500,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|line
 argument_list|,
 name|VAR_CMD
@@ -7222,8 +7210,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|line
 argument_list|,
 name|VAR_CMD

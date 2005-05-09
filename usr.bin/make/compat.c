@@ -737,8 +737,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|cmd
 argument_list|,
 name|gn

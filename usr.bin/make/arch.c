@@ -537,8 +537,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|libName
 argument_list|,
 name|ctxt
@@ -768,8 +766,6 @@ name|buf1
 operator|=
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|memName
 argument_list|,
 name|ctxt

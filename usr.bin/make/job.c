@@ -1640,8 +1640,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|cmd
 argument_list|,
 name|job
@@ -2957,8 +2955,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|Lst_Datum
 argument_list|(
 name|ln
@@ -5288,8 +5284,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|Lst_Datum
 argument_list|(
 name|ln

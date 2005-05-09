@@ -3372,8 +3372,6 @@ name|buf
 operator|=
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|VPATH
 argument_list|,
 name|VAR_CMD
@@ -3638,8 +3636,6 @@ name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|NULL
-argument_list|,
 name|v
 argument_list|,
 name|VAR_GLOBAL
