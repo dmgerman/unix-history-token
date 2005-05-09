@@ -205,16 +205,6 @@ directive|include
 file|<isa/isavar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/ic/if_wl_i82586.h>
-end_include
-
-begin_comment
-comment|/* Definitions for the Intel chip */
-end_comment
-
 begin_comment
 comment|/* was 1000 in original, fed to DELAY(x) */
 end_comment
@@ -225,6 +215,16 @@ directive|define
 name|DELAYCONST
 value|1000
 end_define
+
+begin_include
+include|#
+directive|include
+file|<dev/wl/if_wl_i82586.h>
+end_include
+
+begin_comment
+comment|/* Definitions for the Intel chip */
+end_comment
 
 begin_include
 include|#
