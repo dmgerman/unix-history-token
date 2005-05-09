@@ -436,6 +436,7 @@ name|p
 operator|!=
 name|NULL
 condition|)
+block|{
 name|cp
 operator|=
 name|p
@@ -505,6 +506,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 operator|*
 name|q
