@@ -2131,19 +2131,6 @@ name|ACPI_MAX_THREADS
 value|3
 end_define
 
-begin_comment
-comment|/* ACPI task kernel thread initialization. */
-end_comment
-
-begin_function_decl
-name|int
-name|acpi_task_thread_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
