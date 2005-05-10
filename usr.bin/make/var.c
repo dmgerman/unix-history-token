@@ -343,7 +343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy a Var object.  *  * Params:  * 	v	Object to destroy.  * 	f	True if internal buffer in Buffer object is to be removed.  */
+comment|/*  * Destroy a Var object.  *  * Params:  *	v	Object to destroy.  *	f	True if internal buffer in Buffer object is to be removed.  */
 end_comment
 
 begin_function
@@ -7327,10 +7327,7 @@ begin_function
 name|void
 name|Var_Dump
 parameter_list|(
-specifier|const
-name|GNode
-modifier|*
-name|ctxt
+name|void
 parameter_list|)
 block|{
 specifier|const
@@ -7343,11 +7340,52 @@ name|Var
 modifier|*
 name|v
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"#*** Global Variables:\n"
+argument_list|)
+expr_stmt|;
 name|LST_FOREACH
 argument_list|(
 argument|ln
 argument_list|,
-argument|&ctxt->context
+argument|&VAR_GLOBAL->context
+argument_list|)
+block|{
+name|v
+operator|=
+name|Lst_Datum
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-16s = %s\n"
+argument_list|,
+name|v
+operator|->
+name|name
+argument_list|,
+name|Buf_Data
+argument_list|(
+name|v
+operator|->
+name|val
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"#*** Command-line Variables:\n"
+argument_list|)
+expr_stmt|;
+name|LST_FOREACH
+argument_list|(
+argument|ln
+argument_list|,
+argument|&VAR_CMD->context
 argument_list|)
 block|{
 name|v

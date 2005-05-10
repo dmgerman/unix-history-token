@@ -1520,25 +1520,8 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"#*** Global Variables:\n"
-argument_list|)
-expr_stmt|;
 name|Var_Dump
-argument_list|(
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#*** Command-line Variables:\n"
-argument_list|)
-expr_stmt|;
-name|Var_Dump
-argument_list|(
-name|VAR_CMD
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(

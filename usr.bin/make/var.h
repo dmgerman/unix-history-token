@@ -251,10 +251,7 @@ begin_function_decl
 name|void
 name|Var_Dump
 parameter_list|(
-specifier|const
-name|struct
-name|GNode
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
