@@ -27,6 +27,32 @@ name|Buffer
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* Variables defined in a global context, e.g in the Makefile itself */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|GNode
+modifier|*
+name|VAR_GLOBAL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Variables defined on the command line */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|GNode
+modifier|*
+name|VAR_CMD
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|Var_Append

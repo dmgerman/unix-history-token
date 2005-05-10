@@ -259,32 +259,6 @@ comment|/* .DEFAULT rule */
 end_comment
 
 begin_comment
-comment|/* Variables defined in a global context, e.g in the Makefile itself */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|GNode
-modifier|*
-name|VAR_GLOBAL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Variables defined on the command line */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|GNode
-modifier|*
-name|VAR_CMD
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Value returned by Var_Parse when an error is encountered.  It actually  * points to an empty string, so naive callers needn't worry about it. */
 end_comment
 
