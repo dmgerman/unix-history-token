@@ -3738,11 +3738,13 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|Punt
 argument_list|(
 literal|"Cannot fork"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cpid
@@ -9742,17 +9744,44 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Fork 	 */
-switch|switch
+if|if
 condition|(
+operator|(
 name|cpid
 operator|=
 name|vfork
 argument_list|()
+operator|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
-case|case
+operator|*
+name|error
+operator|=
+literal|"Couldn't exec \"%s\""
+expr_stmt|;
+return|return
+operator|(
+name|buf
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|cpid
+operator|==
 literal|0
-case|:
+condition|)
+block|{
+name|char
+modifier|*
+name|args
+index|[
+literal|4
+index|]
+decl_stmt|;
 comment|/* 		 * Close input side of pipe 		 */
 name|close
 argument_list|(
@@ -9781,14 +9810,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-block|{
-name|char
-modifier|*
-name|args
-index|[
-literal|4
-index|]
-decl_stmt|;
 comment|/* Set up arguments for shell */
 name|args
 index|[
@@ -9830,24 +9851,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
-case|case
-operator|-
-literal|1
-case|:
-operator|*
-name|error
-operator|=
-literal|"Couldn't exec \"%s\""
-expr_stmt|;
-return|return
-operator|(
-name|buf
-operator|)
-return|;
-default|default:
-comment|/* 		 * No need for the writing half 		 */
+comment|/* 	 * No need for the writing half 	 */
 name|close
 argument_list|(
 name|fds
@@ -9935,7 +9941,7 @@ name|error
 operator|=
 literal|"Error reading shell's output for \"%s\""
 expr_stmt|;
-comment|/* 		 * Close the input side of the pipe. 		 */
+comment|/* 	 * Close the input side of the pipe. 	 */
 name|close
 argument_list|(
 name|fds
@@ -9944,7 +9950,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Wait for the process to exit. 		 */
+comment|/* 	 * Wait for the process to exit. 	 */
 while|while
 condition|(
 operator|(
@@ -9982,8 +9988,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 return|return
 operator|(
 name|buf
@@ -10964,16 +10968,17 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Fork and execute the single command. If the fork fails, we abort. 	 */
+if|if
+condition|(
+operator|(
 name|cpid
 operator|=
 name|vfork
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|cpid
-operator|<
-literal|0
+operator|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|Fatal
@@ -11059,7 +11064,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * we need to print out the command associated with this Gnode in 	 * Targ_PrintCmd from Targ_PrintGraph when debugging at level g2, 	 * in main(), Fatal() and DieHorribly(), therefore do not free it 	 * when debugging. 	 */
+comment|/* 	 * we need to print out the command associated with this 	 * Gnode in Targ_PrintCmd from Targ_PrintGraph when debugging 	 * at level g2, in main(), Fatal() and DieHorribly(), 	 * therefore do not free it when debugging. 	 */
 if|if
 condition|(
 operator|!
@@ -11147,6 +11152,7 @@ name|reason
 argument_list|)
 condition|)
 block|{
+comment|/* stopped */
 name|status
 operator|=
 name|WSTOPSIG
@@ -11154,7 +11160,6 @@ argument_list|(
 name|reason
 argument_list|)
 expr_stmt|;
-comment|/* stopped */
 block|}
 elseif|else
 if|if
@@ -11165,6 +11170,7 @@ name|reason
 argument_list|)
 condition|)
 block|{
+comment|/* exited */
 name|status
 operator|=
 name|WEXITSTATUS
@@ -11172,7 +11178,6 @@ argument_list|(
 name|reason
 argument_list|)
 expr_stmt|;
-comment|/* exited */
 if|if
 condition|(
 name|status
@@ -11191,6 +11196,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* signaled */
 name|status
 operator|=
 name|WTERMSIG
@@ -11198,7 +11204,6 @@ argument_list|(
 name|reason
 argument_list|)
 expr_stmt|;
-comment|/* signaled */
 name|printf
 argument_list|(
 literal|"*** Signal %d"
@@ -11236,7 +11241,7 @@ condition|(
 name|keepgoing
 condition|)
 block|{
-comment|/* 						 * Abort the current target, 						 * but let others continue. 						 */
+comment|/* 						 * Abort the current 						 * target, but let 						 * others continue. 						 */
 name|printf
 argument_list|(
 literal|" (continuing)\n"
@@ -11246,7 +11251,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 					 * Continue executing commands for this 					 * target. If we return 0, this will 					 * happen... 					 */
+comment|/* 					 * Continue executing 					 * commands for this target. 					 * If we return 0, this will 					 * happen... 					 */
 name|printf
 argument_list|(
 literal|" (ignored)\n"
@@ -11269,7 +11274,7 @@ argument_list|,
 name|rstat
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 block|}
 return|return
