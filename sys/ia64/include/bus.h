@@ -28,20 +28,8 @@ name|_MACHINE_BUS_H_
 end_define
 
 begin_comment
-comment|/*  * Platform notes:  * o	We don't use the _MACHINE_BUS_PIO_H_ and _MACHINE_BUS_MEMIO_H_  *	macros to conditionally compile for I/O port, memory mapped I/O  *	or both. It's a micro-optimization that is not worth the pain  *	because there is no I/O port space. I/O ports are emulated by  *	doing memory mapped I/O in a special memory range. The address  *	translation is slightly magic for I/O port accesses, but it does  *	not warrant the overhead.  *  */
+comment|/*  * Platform notes:  * o	We don't use the _MACHINE_BUS_PIO_H_ and _MACHINE_BUS_MEMIO_H_  *	macros to conditionally compile for I/O port, memory mapped I/O  *	or both. It's a micro-optimization that is not worth the pain  *	because there is no I/O port space. I/O ports are emulated by  *	doing memory mapped I/O in a special memory range. The address  *	translation is slightly magic for I/O port accesses, but it does  *	not warrant the overhead.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|_MACHINE_BUS_MEMIO_H_
-end_define
-
-begin_define
-define|#
-directive|define
-name|_MACHINE_BUS_PIO_H_
-end_define
 
 begin_include
 include|#
