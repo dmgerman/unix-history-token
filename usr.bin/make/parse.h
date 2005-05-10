@@ -57,6 +57,153 @@ name|PARSE_FATAL
 value|1
 end_define
 
+begin_comment
+comment|/*  * Definitions for the "local" variables. Used only for clarity.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET
+value|"@"
+end_define
+
+begin_comment
+comment|/* Target of dependency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OODATE
+value|"?"
+end_define
+
+begin_comment
+comment|/* All out-of-date sources */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALLSRC
+value|">"
+end_define
+
+begin_comment
+comment|/* All sources */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMPSRC
+value|"<"
+end_define
+
+begin_comment
+comment|/* Source implied by transformation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PREFIX
+value|"*"
+end_define
+
+begin_comment
+comment|/* Common prefix */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE
+value|"!"
+end_define
+
+begin_comment
+comment|/* Archive in "archive(member)" syntax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMBER
+value|"%"
+end_define
+
+begin_comment
+comment|/* Member in "archive(member)" syntax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTARGET
+value|"@F"
+end_define
+
+begin_comment
+comment|/* file part of TARGET */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTARGET
+value|"@D"
+end_define
+
+begin_comment
+comment|/* directory part of TARGET */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIMPSRC
+value|"<F"
+end_define
+
+begin_comment
+comment|/* file part of IMPSRC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIMPSRC
+value|"<D"
+end_define
+
+begin_comment
+comment|/* directory part of IMPSRC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPREFIX
+value|"*F"
+end_define
+
+begin_comment
+comment|/* file part of PREFIX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPREFIX
+value|"*D"
+end_define
+
+begin_comment
+comment|/* directory part of PREFIX */
+end_comment
+
 begin_function_decl
 name|void
 name|Parse_Error

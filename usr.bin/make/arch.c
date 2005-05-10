@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"parse.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"targ.h"
 end_include
 

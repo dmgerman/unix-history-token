@@ -52,10 +52,128 @@ modifier|*
 name|path
 decl_stmt|;
 comment|/* The full pathname of the target file */
-comment|/* 	 * The type of operator used to define the sources (qv. parse.c) 	 * See OP_ flags in make.h 	 */
+comment|/* 	 * The type of operator used to define the sources (qv. parse.c) 	 * 	 * The OP_ constants are used when parsing a dependency line as a way of 	 * communicating to other parts of the program the way in which a target 	 * should be made. These constants are bitwise-OR'ed together and 	 * placed in the 'type' field of each node. Any node that has 	 * a 'type' field which satisfies the OP_NOP function was never never on 	 * the lefthand side of an operator, though it may have been on the 	 * righthand side... 	 */
 name|int
 name|type
 decl_stmt|;
+define|#
+directive|define
+name|OP_DEPENDS
+value|0x00000001
+comment|/* Execution of commands depends on 					 * kids (:) */
+define|#
+directive|define
+name|OP_FORCE
+value|0x00000002
+comment|/* Always execute commands (!) */
+define|#
+directive|define
+name|OP_DOUBLEDEP
+value|0x00000004
+comment|/* Execution of commands depends on 					 * kids per line (::) */
+define|#
+directive|define
+name|OP_OPMASK
+value|(OP_DEPENDS|OP_FORCE|OP_DOUBLEDEP)
+define|#
+directive|define
+name|OP_OPTIONAL
+value|0x00000008
+comment|/* Don't care if the target doesn't 					 * exist and can't be created */
+define|#
+directive|define
+name|OP_USE
+value|0x00000010
+comment|/* 					 * Use associated commands for 					 * parents 					 */
+define|#
+directive|define
+name|OP_EXEC
+value|0x00000020
+comment|/* Target is never out of date, but 					 * always execute commands anyway. 					 * Its time doesn't matter, so it has 					 * none...sort of 					 */
+define|#
+directive|define
+name|OP_IGNORE
+value|0x00000040
+comment|/* 					 * Ignore errors when creating the node 					 */
+define|#
+directive|define
+name|OP_PRECIOUS
+value|0x00000080
+comment|/* Don't remove the target when 					 * interrupted */
+define|#
+directive|define
+name|OP_SILENT
+value|0x00000100
+comment|/* Don't echo commands when executed */
+define|#
+directive|define
+name|OP_MAKE
+value|0x00000200
+comment|/* 					 * Target is a recurrsive make so its 					 * commands should always be executed 					 * when it is out of date, regardless 					 * of the state of the -n or -t flags 					 */
+define|#
+directive|define
+name|OP_JOIN
+value|0x00000400
+comment|/* Target is out-of-date only if any of 					 * its children was out-of-date */
+define|#
+directive|define
+name|OP_INVISIBLE
+value|0x00004000
+comment|/* The node is invisible to its parents. 					 * I.e. it doesn't show up in the 					 * parents's local variables. */
+define|#
+directive|define
+name|OP_NOTMAIN
+value|0x00008000
+comment|/* The node is exempt from normal 'main 					 * target' processing in parse.c */
+define|#
+directive|define
+name|OP_PHONY
+value|0x00010000
+comment|/* Not a file target; run always */
+comment|/* Attributes applied by PMake */
+define|#
+directive|define
+name|OP_TRANSFORM
+value|0x80000000
+comment|/* The node is a transformation rule */
+define|#
+directive|define
+name|OP_MEMBER
+value|0x40000000
+comment|/* Target is a member of an archive */
+define|#
+directive|define
+name|OP_LIB
+value|0x20000000
+comment|/* Target is a library */
+define|#
+directive|define
+name|OP_ARCHV
+value|0x10000000
+comment|/* Target is an archive construct */
+define|#
+directive|define
+name|OP_HAS_COMMANDS
+value|0x08000000
+comment|/* Target has all the commands it 					 * should.  Used when parsing to catch 					 * multiple commands for a target */
+define|#
+directive|define
+name|OP_SAVE_CMDS
+value|0x04000000
+comment|/* Saving commands on .END (Compat) */
+define|#
+directive|define
+name|OP_DEPS_FOUND
+value|0x02000000
+comment|/* Already processed by Suff_FindDeps */
+comment|/*  * OP_NOP will return TRUE if the node with the given type was not the  * object of a dependency operator  */
+define|#
+directive|define
+name|OP_NOP
+parameter_list|(
+name|t
+parameter_list|)
+value|(((t)& OP_OPMASK) == 0x00000000)
 name|int
 name|order
 decl_stmt|;
