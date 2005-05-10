@@ -3186,9 +3186,15 @@ name|LstNode
 modifier|*
 name|ln
 decl_stmt|;
+name|char
+name|defsysmk
+index|[]
+init|=
+name|PATH_DEFSYSMK
+decl_stmt|;
 name|Path_Expand
 argument_list|(
-name|PATH_DEFSYSMK
+name|defsysmk
 argument_list|,
 operator|&
 name|sysIncPath
