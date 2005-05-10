@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/lptreg.h>
+file|<pc98/cbus/olptreg.h>
 end_include
 
 begin_include
