@@ -68,25 +68,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/fdcvar.h>
+file|<pc98/cbus/cbus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/fdreg.h>
+file|<pc98/cbus/fdcreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pc98/cbus/fdcvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<isa/isavar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/pc98.h>
 end_include
 
 begin_decl_stmt

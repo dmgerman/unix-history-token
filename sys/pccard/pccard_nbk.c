@@ -86,7 +86,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98.h>
+file|<pc98/cbus/cbus.h>
 end_include
 
 begin_else

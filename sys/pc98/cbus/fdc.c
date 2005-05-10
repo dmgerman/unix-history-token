@@ -138,13 +138,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98.h>
+file|<pc98/cbus/cbus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98_machdep.h>
+file|<pc98/cbus/fdcreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pc98/cbus/fdcvar.h>
 end_include
 
 begin_include
@@ -156,13 +162,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/fdreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/fdcvar.h>
+file|<pc98/pc98/pc98_machdep.h>
 end_include
 
 begin_else

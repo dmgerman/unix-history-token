@@ -28,7 +28,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/sc_machdep.h>
+file|<pc98/cbus/sc_machdep.h>
 end_include
 
 begin_elif
