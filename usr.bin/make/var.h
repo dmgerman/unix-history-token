@@ -53,6 +53,29 @@ name|VAR_CMD
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Value returned by Var_Parse when an error is encountered.  It actually  * points to an empty string, so naive callers needn't worry about it.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|var_Error
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Do old-style variable substitution */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|oldVars
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|Var_Append
