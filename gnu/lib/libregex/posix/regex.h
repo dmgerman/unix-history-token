@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.    Copyright (C) 1985,1989-1993,1995-1998, 2000 Free Software Foundation, Inc.     This file is part of the GNU C Library.  Its master source is NOT part of    the C library, however.  The master source lives in /gd/gnu/lib.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for data structures and routines for the regular    expression library.    Copyright (C) 1985,1989-93,1995-98,2000,2001,2002,2003    Free Software Foundation, Inc.    This file is part of the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Lesser General Public    License as published by the Free Software Foundation; either    version 2.1 of the License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Lesser General Public License for more details.     You should have received a copy of the GNU Lesser General Public    License along with the GNU C Library; if not, write to the Free    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA    02111-1307 USA.  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,12 @@ directive|define
 name|_REGEX_H
 value|1
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_comment
 comment|/* Allow the use in C++ code.  */
@@ -180,6 +186,26 @@ define|#
 directive|define
 name|RE_INVALID_INTERVAL_ORD
 value|(RE_DEBUG<< 1)
+comment|/* If this bit is set, then ignore case when matching.    If not set, then case is significant.  */
+define|#
+directive|define
+name|RE_ICASE
+value|(RE_INVALID_INTERVAL_ORD<< 1)
+comment|/* This bit is used internally like RE_CONTEXT_INDEP_ANCHORS but only    for ^, because it is difficult to scan the regex backwards to find    whether ^ should be special.  */
+define|#
+directive|define
+name|RE_CARET_ANCHORS_HERE
+value|(RE_ICASE<< 1)
+comment|/* If this bit is set, then \{ cannot be first in an bre or    immediately after an alternation or begin-group operator.  */
+define|#
+directive|define
+name|RE_CONTEXT_INVALID_DUP
+value|(RE_CARET_ANCHORS_HERE<< 1)
+comment|/* If this bit is set, then no_sub will be set to 1 during    re_compile_pattern.  */
+define|#
+directive|define
+name|RE_NO_SUB
+value|(RE_CONTEXT_INVALID_DUP<< 1)
 comment|/* This global variable defines the particular regexp syntax to use (for    some interfaces).  When a regexp is compiled, the syntax used is    stored in the pattern buffer, so changing this does not affect    already-compiled regexps.  */
 specifier|extern
 name|reg_syntax_t
@@ -200,7 +226,7 @@ define|#
 directive|define
 name|RE_SYNTAX_GNU_AWK
 define|\
-value|((RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DEBUG)	\& ~(RE_DOT_NOT_NULL | RE_INTERVALS | RE_CONTEXT_INDEP_OPS))
+value|((RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DEBUG)	\& ~(RE_DOT_NOT_NULL | RE_INTERVALS | RE_CONTEXT_INDEP_OPS		\        | RE_CONTEXT_INVALID_OPS ))
 define|#
 directive|define
 name|RE_SYNTAX_POSIX_AWK
@@ -240,7 +266,7 @@ define|#
 directive|define
 name|RE_SYNTAX_POSIX_BASIC
 define|\
-value|(_RE_SYNTAX_POSIX_COMMON | RE_BK_PLUS_QM)
+value|(_RE_SYNTAX_POSIX_COMMON | RE_BK_PLUS_QM | RE_CONTEXT_INVALID_DUP)
 comment|/* Differs from ..._POSIX_BASIC only in that RE_BK_PLUS_QM becomes    RE_LIMITED_OPS, i.e., \? \+ \| are not recognized.  Actually, this    isn't minimal, since other operators, such as \`, aren't disabled.  */
 define|#
 directive|define
@@ -305,6 +331,11 @@ define|#
 directive|define
 name|REG_NOTEOL
 value|(1<< 1)
+comment|/* Use PMATCH[0] to delimit the start and end of the search in the    buffer.  */
+define|#
+directive|define
+name|REG_STARTEND
+value|(1<< 2)
 comment|/* If any error codes are removed, changed, or added, update the    `re_error_msg' table in regex.c.  */
 typedef|typedef
 enum|enum
@@ -334,7 +365,7 @@ block|,
 comment|/* Invalid pattern.  */
 name|REG_ECOLLATE
 block|,
-comment|/* Not implemented.  */
+comment|/* Inalid collating element.  */
 name|REG_ECTYPE
 block|,
 comment|/* Invalid character class name.  */
@@ -873,10 +904,38 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* For now unconditionally define __restrict_arr to expand to nothing.    Ideally we would have a test for the compiler which allows defining    it to restrict.  */
+comment|/* gcc 3.1 and up support the [restrict] syntax.  */
+ifndef|#
+directive|ifndef
+name|__restrict_arr
+if|#
+directive|if
+name|__GNUC__
+operator|>
+literal|3
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|3
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|1
+operator|)
 define|#
 directive|define
 name|__restrict_arr
+value|__restrict
+else|#
+directive|else
+define|#
+directive|define
+name|__restrict_arr
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* POSIX compatibility.  */
 specifier|extern
 name|int
