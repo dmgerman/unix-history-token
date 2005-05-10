@@ -37,6 +37,12 @@ name|Lst
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|Buffer
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * The OP_ constants are used when parsing a dependency line as a way of  * communicating to other parts of the program the way in which a target  * should be made. These constants are bitwise-OR'ed together and  * placed in the 'type' field of each node. Any node that has  * a 'type' field which satisfies the OP_NOP function was never never on  * the lefthand side of an operator, though it may have been on the  * righthand side...  */
 end_comment
@@ -530,6 +536,31 @@ parameter_list|(
 name|struct
 name|Lst
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|Main_ParseArgLine
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|Main_ParseWarn
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

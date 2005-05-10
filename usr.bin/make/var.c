@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"nonints.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"parse.h"
 end_include
 
