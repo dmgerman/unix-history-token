@@ -37,6 +37,12 @@ name|GNode
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|Buffer
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -240,6 +246,24 @@ name|void
 name|Job_AbortAll
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|Buffer
+modifier|*
+name|Cmd_Exec
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

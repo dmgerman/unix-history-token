@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"job.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"make.h"
 end_include
 
