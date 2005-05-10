@@ -33,13 +33,19 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|Buffer
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|GNode
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|Buffer
+name|Lst
 struct_decl|;
 end_struct_decl
 
@@ -263,6 +269,31 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|Compat_Run
+parameter_list|(
+name|struct
+name|Lst
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|Compat_RunCommand
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|GNode
 modifier|*
 parameter_list|)
 function_decl|;
