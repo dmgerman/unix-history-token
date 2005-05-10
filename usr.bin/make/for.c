@@ -922,8 +922,6 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-name|VAR_GLOBAL
-argument_list|,
 name|FALSE
 argument_list|)
 argument_list|)

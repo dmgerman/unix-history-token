@@ -228,10 +228,6 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|struct
-name|GNode
-modifier|*
-parameter_list|,
 name|Boolean
 parameter_list|)
 function_decl|;
