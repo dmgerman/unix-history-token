@@ -234,6 +234,46 @@ directive|include
 file|"var.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|TMPPAT
+value|"/tmp/makeXXXXXXXXXX"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_KQUEUE
+end_ifndef
+
+begin_comment
+comment|/*  * The SEL_ constants determine the maximum amount of time spent in select  * before coming out to see if a child has finished. SEL_SEC is the number of  * seconds and SEL_USEC is the number of micro-seconds  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEL_SEC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEL_USEC
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !USE_KQUEUE */
+end_comment
+
 begin_comment
 comment|/*  * Job Table definitions.  *  * The job "table" is kept as a linked Lst in 'jobs', with the number of  * active jobs maintained in the 'nJobs' variable. At no time will this  * exceed the value of 'maxJobs', initialized by the Job_Init function.  *  * When a job is finished, the Make_Update function is called on each of the  * parents of the node which was just remade. This takes care of the upward  * traversal of the dependency graph.  */
 end_comment
