@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * var.c --  *	Variable-handling functions  *  * Interface:  *	Var_Set		Set the value of a variable in the given  *			context. The variable is created if it doesn't  *			yet exist. The value and variable name need not  *			be preserved.  *  *	Var_Append	Append more characters to an existing variable  *			in the given context. The variable needn't  *			exist already -- it will be created if it doesn't.  *			A space is placed between the old value and the  *			new one.  *  *	Var_Exists	See if a variable exists.  *  *	Var_Value	Return the value of a variable in a context or  *			NULL if the variable is undefined.  *  *	Var_Subst	Substitute named variable, or all variables if  *			NULL in a string using  *			the given context as the top-most one. If the  *			third argument is non-zero, Parse_Error is  *			called if any variables are undefined.  *  *	Var_Parse	Parse a variable expansion from a string and  *			return the result and the number of characters  *			consumed.  *  *	Var_Delete	Delete a variable in a context.  *  *	Var_Init	Initialize this module.  *  * Debugging:  *	Var_Dump	Print out all variables defined in the given  *			context.  *  * XXX: There's a lot of duplication in these functions.  */
+comment|/**  * var.c --  *	Variable-handling functions  *  * Interface:  *	Var_Set		Set the value of a variable in the given  *			context. The variable is created if it doesn't  *			yet exist. The value and variable name need not  *			be preserved.  *  *	Var_Append	Append more characters to an existing variable  *			in the given context. The variable needn't  *			exist already -- it will be created if it doesn't.  *			A space is placed between the old value and the  *			new one.  *  *	Var_Exists	See if a variable exists.  *  *	Var_Value	Return the value of a variable in a context or  *			NULL if the variable is undefined.  *  *	Var_Subst	Substitute named variable, or all variables if  *			NULL in a string using  *			the given context as the top-most one. If the  *			third argument is non-zero, Parse_Error is  *			called if any variables are undefined.  *  *	Var_Parse	Parse a variable expansion from a string and  *			return the result and the number of characters  *			consumed.  *  *	Var_Delete	Delete a variable in a context.  *  *	Var_Init	Initialize this module.  *  * Debugging:  *	Var_Dump	Print out all variables defined in the given  *			context.  *  * XXX: There's a lot of duplication in these functions.  */
 end_comment
 
 begin_include
@@ -388,7 +388,7 @@ value|'}'
 end_define
 
 begin_comment
-comment|/*  * Create a Var object.  *  * Params:  *	name		Name of variable (copied).  *	value		Value of variable (copied) or NULL.  *	flags		Flags set on variable.  *  * Returns:  *	New variable.  */
+comment|/**  * Create a Var object.  *  * Params:  *	name		Name of variable (copied).  *	value		Value of variable (copied) or NULL.  *	flags		Flags set on variable.  *  * Returns:  *	New variable.  */
 end_comment
 
 begin_function
@@ -475,7 +475,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy a Var object.  *  * Params:  *	v	Object to destroy.  *	f	True if internal buffer in Buffer object is to be removed.  */
+comment|/**  * Destroy a Var object.  *  * Params:  *	v	Object to destroy.  *	f	True if internal buffer in Buffer object is to be removed.  */
 end_comment
 
 begin_function
@@ -516,7 +516,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * VarHead  *	Remove the tail of the given word and place the result in the given  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  */
+comment|/**  * Remove the tail of the given word and place the result in the given  * buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  */
 end_comment
 
 begin_function
@@ -627,7 +627,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * VarTail  *	Remove the head of the given word and place the result in the given  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  */
+comment|/**  * Remove the head of the given word and place the result in the given  * buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  */
 end_comment
 
 begin_function
@@ -720,7 +720,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * VarSuffix  *	Place the suffix of the given word in the given buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The suffix from the word is placed in the buffer.  */
+comment|/**  * Place the suffix of the given word in the given buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The suffix from the word is placed in the buffer.  */
 end_comment
 
 begin_function
@@ -807,7 +807,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * VarRoot  *	Remove the suffix of the given word and place the result in the  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  */
+comment|/**  * Remove the suffix of the given word and place the result in the  * buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  */
 end_comment
 
 begin_function
@@ -898,7 +898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * VarMatch  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *	A space will be added if requested.  A pattern is supplied  *	which the word must match.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  */
+comment|/**  * Place the word in the buffer if it matches the given pattern.  * Callback function for VarModify to implement the :M modifier.  * A space will be added if requested.  A pattern is supplied  * which the word must match.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  */
 end_comment
 
 begin_function
@@ -976,7 +976,7 @@ name|SYSVVARSUB
 end_ifdef
 
 begin_comment
-comment|/**  * VarSYSVMatch  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  A space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  */
+comment|/**  * Place the word in the buffer if it matches the given pattern.  * Callback function for VarModify to implement the System V %  * modifiers.  A space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  */
 end_comment
 
 begin_function
@@ -1098,7 +1098,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/**  * VarNoMatch  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  A  *	space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  */
+comment|/**  * Place the word in the buffer if it doesn't match the given pattern.  * Callback function for VarModify to implement the :N modifier.  A  * space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  */
 end_comment
 
 begin_function
@@ -1171,7 +1171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * VarSubstitute  *	Perform a string-substitution on the given word, placing the  *	result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  */
+comment|/**  * Perform a string-substitution on the given word, placing the  * result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  */
 end_comment
 
 begin_function
@@ -1905,7 +1905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * VarRESubstitute  *	Perform a regex substitution on the given word, placing the  *	result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  */
+comment|/**  * Perform a regex substitution on the given word, placing the  * result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  */
 end_comment
 
 begin_function
@@ -2563,7 +2563,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a variable in a variable list.  */
+comment|/**  * Find a variable in a variable list.  */
 end_comment
 
 begin_function
@@ -2632,7 +2632,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarPossiblyExpand --  *	Expand a variable name's embedded variables in the given context.  *  * Results:  *	The contents of name, possibly expanded.  *-----------------------------------------------------------------------  */
+comment|/**  * Expand a variable name's embedded variables in the given context.  *  * Results:  *	The contents of name, possibly expanded.  */
 end_comment
 
 begin_function
@@ -3262,7 +3262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Add a new variable of name name and value val to the given context.  *  * Results:  *	None  *  * Side Effects:  *	The new variable is placed at the front of the given context  *	The name and val arguments are duplicated so they may  *	safely be freed.  */
+comment|/**  * Add a new variable of name name and value val to the given context.  *  * Side Effects:  *	The new variable is placed at the front of the given context  *	The name and val arguments are duplicated so they may  *	safely be freed.  */
 end_comment
 
 begin_function
@@ -3323,7 +3323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Delete --  *	Remove a variable from a context.  *  * Results:  *	None.  *  * Side Effects:  *	The Var structure is removed and freed.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Remove a variable from a context.  *  * Side Effects:  *	The Var structure is removed and freed.  */
 end_comment
 
 begin_function
@@ -3417,7 +3417,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Set --  *	Set the variable name to the value val in the given context.  *  * Results:  *	None.  *  * Side Effects:  *	If the variable doesn't yet exist, a new record is created for it.  *	Else the old value is freed and the new one stuck in its place  *  * Notes:  *	The variable is searched for only in its context before being  *	created in that context. I.e. if the context is VAR_GLOBAL,  *	only VAR_GLOBAL->context is searched. Likewise if it is VAR_CMD, only  *	VAR_CMD->context is searched. This is done to avoid the literally  *	thousands of unnecessary strcmp's that used to be done to  *	set, say, $(@) or $(<).  *-----------------------------------------------------------------------  */
+comment|/**  * Set the variable name to the value val in the given context.  *  * Side Effects:  *	If the variable doesn't yet exist, a new record is created for it.  *	Else the old value is freed and the new one stuck in its place  *  * Notes:  *	The variable is searched for only in its context before being  *	created in that context. I.e. if the context is VAR_GLOBAL,  *	only VAR_GLOBAL->context is searched. Likewise if it is VAR_CMD, only  *	VAR_CMD->context is searched. This is done to avoid the literally  *	thousands of unnecessary strcmp's that used to be done to  *	set, say, $(@) or $(<).  */
 end_comment
 
 begin_function
@@ -3572,7 +3572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Var_SetEnv --  *	Set the VAR_TO_ENV flag on a variable  */
+comment|/**  * Set the VAR_TO_ENV flag on a variable  */
 end_comment
 
 begin_function
@@ -3713,7 +3713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Append --  *	The variable of the given name has the given value appended to it in  *	the given context.  *  * Results:  *	None  *  * Side Effects:  *	If the variable doesn't exist, it is created. Else the strings  *	are concatenated (with a space in between).  *  * Notes:  *	Only if the variable is being sought in the global context is the  *	environment searched.  *	XXX: Knows its calling circumstances in that if called with ctxt  *	an actual target, it will only search that context since only  *	a local variable could be being appended to. This is actually  *	a big win and must be tolerated.  *-----------------------------------------------------------------------  */
+comment|/**  * The variable of the given name has the given value appended to it in  * the given context.  *  * Side Effects:  *	If the variable doesn't exist, it is created. Else the strings  *	are concatenated (with a space in between).  *  * Notes:  *	Only if the variable is being sought in the global context is the  *	environment searched.  *	XXX: Knows its calling circumstances in that if called with ctxt  *	an actual target, it will only search that context since only  *	a local variable could be being appended to. This is actually  *	a big win and must be tolerated.  */
 end_comment
 
 begin_function
@@ -3853,7 +3853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Exists --  *	See if the given variable exists.  *  * Results:  *	TRUE if it does, FALSE if it doesn't  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * See if the given variable exists.  *  * Results:  *	TRUE if it does, FALSE if it doesn't  */
 end_comment
 
 begin_function
@@ -3931,7 +3931,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Value --  *	Return the value of the named variable in the given context  *  * Results:  *	The value if the variable exists, NULL if it doesn't  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
+comment|/**  * Return the value of the named variable in the given context  *  * Results:  *	The value if the variable exists, NULL if it doesn't  */
 end_comment
 
 begin_function
@@ -4032,7 +4032,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarModify --  *	Modify each of the words of the passed string using the given  *	function. Used to implement all modifiers.  *  * Results:  *	A string of all the words modified appropriately.  *  * Side Effects:  *	Uses brk_string() so it invalidates any previous call to  *	brk_string().  *  *-----------------------------------------------------------------------  */
+comment|/**  * Modify each of the words of the passed string using the given  * function. Used to implement all modifiers.  *  * Results:  *	A string of all the words modified appropriately.  *  * Side Effects:  *	Uses brk_string() so it invalidates any previous call to  *	brk_string().  */
 end_comment
 
 begin_function
@@ -4143,7 +4143,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSortWords --  *	Sort the words in the string.  *  * Input:  *	str		String whose words should be sorted  *	cmp		A comparison function to control the ordering  *  * Results:  *	A string containing the words sorted  *  * Side Effects:  *	Uses brk_string() so it invalidates any previous call to  *	brk_string().  *  *-----------------------------------------------------------------------  */
+comment|/**  * Sort the words in the string.  *  * Input:  *	str		String whose words should be sorted  *	cmp		A comparison function to control the ordering  *  * Results:  *	A string containing the words sorted  *  * Side Effects:  *	Uses brk_string() so it invalidates any previous call to  *	brk_string().  */
 end_comment
 
 begin_function
@@ -4330,7 +4330,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarGetPattern --  *	Pass through the tstr looking for 1) escaped delimiters,  *	'$'s and backslashes (place the escaped character in  *	uninterpreted) and 2) unescaped $'s that aren't before  *	the delimiter (expand the variable substitution).  *	Return the expanded string or NULL if the delimiter was missing  *	If pattern is specified, handle escaped ampersands, and replace  *	unescaped ampersands with the lhs of the pattern.  *  * Results:  *	A string of all the words modified appropriately.  *	If length is specified, return the string length of the buffer  *	If flags is specified and the last character of the pattern is a  *	$ set the VAR_MATCH_END bit of flags.  *  * Side Effects:  *	None.  *-----------------------------------------------------------------------  */
+comment|/**  * Pass through the tstr looking for 1) escaped delimiters,  * '$'s and backslashes (place the escaped character in  * uninterpreted) and 2) unescaped $'s that aren't before  * the delimiter (expand the variable substitution).  * Return the expanded string or NULL if the delimiter was missing  * If pattern is specified, handle escaped ampersands, and replace  * unescaped ampersands with the lhs of the pattern.  *  * Results:  *	A string of all the words modified appropriately.  *	If length is specified, return the string length of the buffer  *	If flags is specified and the last character of the pattern is a  *	$ set the VAR_MATCH_END bit of flags.  */
 end_comment
 
 begin_function
@@ -8366,7 +8366,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The value of the variable or var_Error if the specification  *	is invalid.  The number of characters in the specification  *	is placed in the variable pointed to by consumed.  (for  *	invalid specifications, this is just 2 to skip the '$' and  *	the following letter, or 1 if '$' was the last character  *	in the string).  A Boolean in *freeResult telling whether the  *	returned string should be freed by the caller.  *  * Side Effects:  *	None.  *-----------------------------------------------------------------------  */
+comment|/**  * Given the start of a variable invocation, extract the variable  * name and find its value, then modify it according to the  * specification.  *  * Results:  *	The value of the variable or var_Error if the specification  *	is invalid.  The number of characters in the specification  *	is placed in the variable pointed to by consumed.  (for  *	invalid specifications, this is just 2 to skip the '$' and  *	the following letter, or 1 if '$' was the last character  *	in the string).  A Boolean in *freeResult telling whether the  *	returned string should be freed by the caller.  */
 end_comment
 
 begin_function
@@ -8444,7 +8444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * Results:  *	The number of characters in the specification.  For invalid  *	specifications, this is just 2 to skip the '$' and the  *	following letter, or 1 if '$' was the last character in the  *	string.  */
+comment|/*  * Given the start of a variable invocation, determine the length  * of the specification.  *  * Results:  *	The number of characters in the specification.  For invalid  *	specifications, this is just 2 to skip the '$' and the  *	following letter, or 1 if '$' was the last character in the  *	string.  */
 end_comment
 
 begin_function
@@ -8519,8 +8519,228 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|match_var
+parameter_list|(
+specifier|const
+name|char
+name|str
+index|[]
+parameter_list|,
+specifier|const
+name|char
+name|var
+index|[]
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|start
+init|=
+name|str
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|str
+operator|++
+expr_stmt|;
+comment|/* consume '$' */
+if|if
+condition|(
+name|str
+index|[
+literal|0
+index|]
+operator|==
+name|OPEN_PAREN
+operator|||
+name|str
+index|[
+literal|0
+index|]
+operator|==
+name|OPEN_BRACE
+condition|)
+block|{
+name|str
+operator|++
+expr_stmt|;
+comment|/* consume opening paren or brace */
+while|while
+condition|(
+name|str
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+name|str
+index|[
+literal|0
+index|]
+operator|==
+literal|'$'
+condition|)
+block|{
+comment|/* 				 * A variable inside the variable. We cannot 				 * expand the external variable yet. 				 */
+return|return
+operator|(
+name|str
+operator|-
+name|start
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|str
+index|[
+literal|0
+index|]
+operator|==
+literal|':'
+operator|||
+name|str
+index|[
+literal|0
+index|]
+operator|==
+name|CLOSE_PAREN
+operator|||
+name|str
+index|[
+literal|0
+index|]
+operator|==
+name|CLOSE_BRACE
+condition|)
+block|{
+name|len
+operator|=
+name|str
+operator|-
+operator|(
+name|start
+operator|+
+literal|2
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|var
+index|[
+name|len
+index|]
+operator|==
+literal|'\0'
+operator|&&
+name|strncmp
+argument_list|(
+name|var
+argument_list|,
+name|start
+operator|+
+literal|2
+argument_list|,
+name|len
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* match */
+block|}
+else|else
+block|{
+comment|/* 					 * Not the variable we want to 					 * expand. 					 */
+return|return
+operator|(
+name|str
+operator|-
+name|start
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+operator|++
+name|str
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+name|str
+operator|-
+name|start
+operator|)
+return|;
+block|}
+else|else
+block|{
+comment|/* Single letter variable name */
+if|if
+condition|(
+name|var
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+operator|&&
+name|var
+index|[
+literal|0
+index|]
+operator|==
+name|str
+index|[
+literal|0
+index|]
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* match */
+block|}
+else|else
+block|{
+name|str
+operator|++
+expr_stmt|;
+comment|/* consume variable name */
+return|return
+operator|(
+name|str
+operator|-
+name|start
+operator|)
+return|;
+block|}
+block|}
+block|}
+end_function
+
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Subst  --  *	Substitute for all variables in the given string in the given context  *	If err is TRUE, Parse_Error will be called when an undefined  *	variable is encountered.  *  * Results:  *	The resulting string.  *  * Side Effects:  *	None. The old string must be freed by the caller  *-----------------------------------------------------------------------  */
+comment|/**  * Substitute for all variables in the given string in the given  * context If err is TRUE, Parse_Error will be called when an  * undefined variable is encountered.  *  * Results:  *	The resulting string.  *  * Side Effects:  *	None. The old string must be freed by the caller  */
 end_comment
 
 begin_function
@@ -8802,225 +9022,9 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|match_var
-parameter_list|(
-specifier|const
-name|char
-name|str
-index|[]
-parameter_list|,
-specifier|const
-name|char
-name|var
-index|[]
-parameter_list|)
-block|{
-specifier|const
-name|char
-modifier|*
-name|start
-init|=
-name|str
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-name|str
-operator|++
-expr_stmt|;
-comment|/* consume '$' */
-if|if
-condition|(
-name|str
-index|[
-literal|0
-index|]
-operator|==
-name|OPEN_PAREN
-operator|||
-name|str
-index|[
-literal|0
-index|]
-operator|==
-name|OPEN_BRACE
-condition|)
-block|{
-name|str
-operator|++
-expr_stmt|;
-comment|/* consume opening paren or brace */
-while|while
-condition|(
-name|str
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-condition|)
-block|{
-if|if
-condition|(
-name|str
-index|[
-literal|0
-index|]
-operator|==
-literal|'$'
-condition|)
-block|{
-comment|/* 				 * A variable inside the variable. We cannot 				 * expand the external variable yet. 				 */
-return|return
-operator|(
-name|str
-operator|-
-name|start
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|str
-index|[
-literal|0
-index|]
-operator|==
-literal|':'
-operator|||
-name|str
-index|[
-literal|0
-index|]
-operator|==
-name|CLOSE_PAREN
-operator|||
-name|str
-index|[
-literal|0
-index|]
-operator|==
-name|CLOSE_BRACE
-condition|)
-block|{
-name|len
-operator|=
-name|str
-operator|-
-operator|(
-name|start
-operator|+
-literal|2
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|var
-index|[
-name|len
-index|]
-operator|==
-literal|'\0'
-operator|&&
-name|strncmp
-argument_list|(
-name|var
-argument_list|,
-name|start
-operator|+
-literal|2
-argument_list|,
-name|len
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* match */
-block|}
-else|else
-block|{
-comment|/* 					 * Not the variable we want to 					 * expand. 					 */
-return|return
-operator|(
-name|str
-operator|-
-name|start
-operator|)
-return|;
-block|}
-block|}
-else|else
-block|{
-operator|++
-name|str
-expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-name|str
-operator|-
-name|start
-operator|)
-return|;
-block|}
-else|else
-block|{
-comment|/* Single letter variable name */
-if|if
-condition|(
-name|var
-index|[
-literal|1
-index|]
-operator|==
-literal|'\0'
-operator|&&
-name|var
-index|[
-literal|0
-index|]
-operator|==
-name|str
-index|[
-literal|0
-index|]
-condition|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* match */
-block|}
-else|else
-block|{
-name|str
-operator|++
-expr_stmt|;
-comment|/* consume variable name */
-return|return
-operator|(
-name|str
-operator|-
-name|start
-operator|)
-return|;
-block|}
-block|}
-block|}
-end_function
+begin_comment
+comment|/**  * Substitute for all variables except if it is the same as 'var',  * in the given string in the given context.  If err is TRUE,  * Parse_Error will be called when an undefined variable is  * encountered.  *  * Results:  *	The resulting string.  *  * Side Effects:  *	None. The old string must be freed by the caller  */
+end_comment
 
 begin_function
 name|Buffer
@@ -9300,7 +9304,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Init --  *	Initialize the module  *  * Results:  *	None  *  * Side Effects:  *	The VAR_CMD and VAR_GLOBAL contexts are created  *-----------------------------------------------------------------------  */
+comment|/**  * Initialize the module  *  * Side Effects:  *	The VAR_CMD and VAR_GLOBAL contexts are created  */
 end_comment
 
 begin_function
@@ -9424,7 +9428,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Dump --  *	print all variables in a context  *-----------------------------------------------------------------------  */
+comment|/**  * Print all variables in global and command line contexts.  */
 end_comment
 
 begin_function
