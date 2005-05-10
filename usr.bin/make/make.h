@@ -298,24 +298,6 @@ value|(((t)& OP_OPMASK) == 0x00000000)
 end_define
 
 begin_comment
-comment|/*  * Error levels for parsing. PARSE_FATAL means the process cannot continue  * once the makefile has been parsed. PARSE_WARNING means it can. Passed  * as the first argument to Parse_Error.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PARSE_WARNING
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PARSE_FATAL
-value|1
-end_define
-
-begin_comment
 comment|/*  * Definitions for the "local" variables. Used only for clarity.  */
 end_comment
 

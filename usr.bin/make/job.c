@@ -788,6 +788,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|shellPath
@@ -801,6 +802,7 @@ comment|/* full pathname of executable image */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|shellName

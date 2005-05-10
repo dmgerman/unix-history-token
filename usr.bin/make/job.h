@@ -51,22 +51,6 @@ end_struct_decl
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|shellPath
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|shellName
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|maxJobs
 decl_stmt|;
