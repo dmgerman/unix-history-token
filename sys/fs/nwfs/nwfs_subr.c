@@ -1003,11 +1003,6 @@ name|struct
 name|nwnode
 modifier|*
 name|dnp
-init|=
-name|VTONW
-argument_list|(
-name|dvp
-argument_list|)
 decl_stmt|;
 name|struct
 name|ncp_conn
@@ -1040,6 +1035,13 @@ name|ENOENT
 operator|)
 return|;
 block|}
+name|dnp
+operator|=
+name|VTONW
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 name|nmp
 operator|=
 name|VTONWFS
