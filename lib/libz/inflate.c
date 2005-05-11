@@ -10,20 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_include
-include|#
-directive|include
 file|"zutil.h"
 end_include
 
@@ -223,6 +209,13 @@ name|msg
 operator|=
 name|Z_NULL
 expr_stmt|;
+name|strm
+operator|->
+name|adler
+operator|=
+literal|1
+expr_stmt|;
+comment|/* to support ill-conceived Java test suite */
 name|state
 operator|->
 name|mode
@@ -3763,6 +3756,7 @@ name|len
 expr_stmt|;
 block|}
 block|}
+comment|/* handle error breaks in while */
 if|if
 condition|(
 name|state

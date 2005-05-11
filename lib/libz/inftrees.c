@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2003 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2004 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -42,7 +28,7 @@ name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.2.1 Copyright 1995-2003 Mark Adler "
+literal|" inflate 1.2.2 Copyright 1995-2004 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -348,9 +334,9 @@ literal|21
 block|,
 literal|16
 block|,
-literal|76
+literal|199
 block|,
-literal|66
+literal|198
 block|}
 decl_stmt|;
 specifier|static
@@ -594,11 +580,68 @@ name|max
 operator|==
 literal|0
 condition|)
-return|return
-operator|-
+block|{
+comment|/* no symbols to code at all */
+name|this
+operator|.
+name|op
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
+literal|64
+expr_stmt|;
+comment|/* invalid code marker */
+name|this
+operator|.
+name|bits
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 literal|1
+expr_stmt|;
+name|this
+operator|.
+name|val
+operator|=
+operator|(
+name|unsigned
+name|short
+operator|)
+literal|0
+expr_stmt|;
+operator|*
+operator|(
+operator|*
+name|table
+operator|)
+operator|++
+operator|=
+name|this
+expr_stmt|;
+comment|/* make a table to force an error */
+operator|*
+operator|(
+operator|*
+name|table
+operator|)
+operator|++
+operator|=
+name|this
+expr_stmt|;
+operator|*
+name|bits
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|0
 return|;
-comment|/* no codes! */
+comment|/* no symbols, but wait for decoding to report error */
+block|}
 for|for
 control|(
 name|min
@@ -1407,10 +1450,6 @@ name|next
 operator|=
 operator|*
 name|table
-expr_stmt|;
-name|curr
-operator|=
-name|root
 expr_stmt|;
 name|this
 operator|.
