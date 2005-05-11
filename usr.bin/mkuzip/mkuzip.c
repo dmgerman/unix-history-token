@@ -115,7 +115,7 @@ name|CLOOP_MAGIC_START
 index|[]
 init|=
 literal|"#!/bin/sh\n#V2.0 Format\n"
-literal|"m=geom_uzip\n(kldstat -n $m 2>&-||kldload $m)>&-&&"
+literal|"m=geom_uzip\n(kldstat -m $m 2>&-||kldload $m)>&-&&"
 literal|"mount_cd9660 /dev/`mdconfig -af $0`.uzip $1\nexit $?\n"
 decl_stmt|;
 end_decl_stmt
@@ -672,13 +672,15 @@ name|O_TRUNC
 operator||
 name|O_CREAT
 argument_list|,
-name|S_IRUSR
-operator||
-name|S_IWUSR
+name|S_IRWXU
 operator||
 name|S_IRGRP
 operator||
+name|S_IXGRP
+operator||
 name|S_IROTH
+operator||
+name|S_IXOTH
 argument_list|)
 expr_stmt|;
 if|if
@@ -801,7 +803,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"data size %ju bytes, number of clusters "
-literal|"%u, index lengh %zu bytes\n"
+literal|"%u, index length %zu bytes\n"
 argument_list|,
 name|sb
 operator|.
