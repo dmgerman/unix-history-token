@@ -22583,14 +22583,6 @@ decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
-name|path
-operator|=
-name|request_ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-expr_stmt|;
 name|status
 operator|=
 name|xpt_create_path
