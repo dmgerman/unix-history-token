@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Gleb Smirnoff<glebius@FreeBSD.org>  * Copyright (c) 2001-2003 Roman V. Palagin<romanp@unshadow.net>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	 $SourceForge: ng_netflow.h,v 1.26 2004/09/04 15:44:55 glebius Exp $  *	 $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004-2005 Gleb Smirnoff<glebius@FreeBSD.org>  * Copyright (c) 2001-2003 Roman V. Palagin<romanp@unshadow.net>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	 $SourceForge: ng_netflow.h,v 1.26 2004/09/04 15:44:55 glebius Exp $  *	 $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -45,6 +45,13 @@ define|#
 directive|define
 name|NG_NETFLOW_HOOK_DATA
 value|"iface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_HOOK_OUT
+value|"out"
 end_define
 
 begin_define
@@ -542,6 +549,10 @@ name|hook_p
 name|hook
 decl_stmt|;
 comment|/* NULL when disconnected */
+name|hook_p
+name|out
+decl_stmt|;
+comment|/* NULL when no bypass hook */
 name|struct
 name|ng_netflow_ifinfo
 name|info
@@ -717,34 +728,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Make sure packet large enough to contain len bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHECK_MLEN
-parameter_list|(
-name|m
-parameter_list|,
-name|length
-parameter_list|)
-value|((m)->m_pkthdr.len< (length))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHECK_PULLUP
-parameter_list|(
-name|m
-parameter_list|,
-name|length
-parameter_list|)
-value|((m)->m_len< (length)&& \ 				(((m) = m_pullup((m),(length))) == NULL))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -803,11 +786,14 @@ parameter_list|(
 name|priv_p
 parameter_list|,
 name|struct
-name|mbuf
-modifier|*
+name|ip
 modifier|*
 parameter_list|,
 name|iface_p
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
