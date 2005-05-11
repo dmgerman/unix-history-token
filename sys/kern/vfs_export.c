@@ -1157,6 +1157,10 @@ argument_list|,
 name|M_MOUNT
 argument_list|)
 expr_stmt|;
+name|nep
+operator|=
+name|NULL
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_flag
