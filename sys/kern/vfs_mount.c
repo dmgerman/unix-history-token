@@ -5719,17 +5719,7 @@ name|asked
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
 name|root_mount_wait
-argument_list|()
-expr_stmt|;
-name|mp
-operator|=
-name|devfs_first
 argument_list|()
 expr_stmt|;
 comment|/* 	 * We are booted with instructions to prompt for the root filesystem. 	 */
