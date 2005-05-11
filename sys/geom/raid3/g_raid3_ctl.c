@@ -2393,13 +2393,6 @@ label|:
 if|if
 condition|(
 name|cp
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|cp
 operator|->
 name|acw
 operator|>
@@ -2436,7 +2429,6 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-block|}
 name|g_destroy_geom
 argument_list|(
 name|gp
