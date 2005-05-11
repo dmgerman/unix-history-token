@@ -2392,13 +2392,6 @@ name|end
 label|:
 if|if
 condition|(
-name|gp
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
 name|cp
 operator|!=
 name|NULL
@@ -2449,7 +2442,6 @@ argument_list|(
 name|gp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
