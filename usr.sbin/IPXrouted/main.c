@@ -795,7 +795,7 @@ name|shutdown
 argument_list|(
 name|r
 argument_list|,
-literal|0
+name|SHUT_RD
 argument_list|)
 expr_stmt|;
 comment|/* for now, don't want reponses */
