@@ -107,6 +107,12 @@ name|guardsize_attr
 operator|=
 name|_thr_guard_default
 expr_stmt|;
+name|pattr
+operator|->
+name|stacksize_attr
+operator|=
+name|_thr_stack_default
+expr_stmt|;
 comment|/* Return a pointer to the attribute object: */
 operator|*
 name|attr
