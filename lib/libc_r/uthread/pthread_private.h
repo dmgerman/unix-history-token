@@ -1499,39 +1499,19 @@ begin_comment
 comment|/*  * Miscellaneous definitions.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|PTHREAD_STACK32_DEFAULT
+value|(1 * 1024 * 1024)
+end_define
 
 begin_define
 define|#
 directive|define
-name|PTHREAD_STACK_DEFAULT
-value|65536
+name|PTHREAD_STACK64_DEFAULT
+value|(2 * 1024 * 1024)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_STACK_DEFAULT
-value|0x40000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Size of default red zone at the end of each stack.  In actuality, this "red  * zone" is merely an unmapped region, except in the case of the initial stack.  * Since mmap() makes it possible to specify the maximum growth of a MAP_STACK  * region, an unmapped gap between thread stacks achieves the same effect as  * explicitly mapped red zones.  * This is declared and initialized in uthread_init.c.  */
@@ -1551,43 +1531,37 @@ name|_pthread_page_size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_pthread_stack_default
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_pthread_stack_initial
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Maximum size of initial thread's stack.  This perhaps deserves to be larger  * than the stacks of other threads, since many applications are likely to run  * almost entirely on this stack.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|PTHREAD_STACK32_INITIAL
+value|(2 * 1024 * 1024)
+end_define
 
 begin_define
 define|#
 directive|define
-name|PTHREAD_STACK_INITIAL
-value|0x100000
+name|PTHREAD_STACK64_INITIAL
+value|(4 * 1024 * 1024)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_STACK_INITIAL
-value|0x400000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Define the different priority ranges.  All applications have thread  * priorities constrained within 0-31.  The threads library raises the  * priority when delivering signals in order to ensure that signal  * delivery happens (from the POSIX spec) "as soon as possible".  * In the future, the threads library will also be able to map specific  * threads into real-time (cooperating) processes or kernel threads.  * The RT and SIGNAL priorities will be used internally and added to  * thread base priorities so that the scheduling queue can handle both  * normal and RT priority threads with and without signal handling.  *  * The approach taken is that, within each class, signal delivery  * always has priority over thread execution.  */
@@ -2881,7 +2855,8 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|PTHREAD_STACK_DEFAULT
+operator|-
+literal|1
 block|,
 operator|-
 literal|1
