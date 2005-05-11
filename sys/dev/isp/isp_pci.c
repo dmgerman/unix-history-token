@@ -1686,7 +1686,7 @@ name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -2509,7 +2509,7 @@ name|PCIR_COMMAND
 argument_list|,
 name|cmd
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure the Cache Line Size register is set sensibly. 	 */
