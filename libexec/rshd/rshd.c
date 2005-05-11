@@ -1244,9 +1244,7 @@ name|shutdown
 argument_list|(
 literal|0
 argument_list|,
-literal|1
-operator|+
-literal|1
+name|SHUT_RDWR
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2341,9 +2339,7 @@ name|shutdown
 argument_list|(
 name|s
 argument_list|,
-literal|1
-operator|+
-literal|1
+name|SHUT_RDWR
 argument_list|)
 expr_stmt|;
 name|FD_CLR
