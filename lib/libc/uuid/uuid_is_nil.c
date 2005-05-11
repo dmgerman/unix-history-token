@@ -27,6 +27,7 @@ modifier|*
 name|status
 parameter_list|)
 block|{
+specifier|const
 name|uint32_t
 modifier|*
 name|p
@@ -54,6 +55,7 @@ comment|/* 	 * Pick the largest type that has equivalent alignment constraints 	
 name|p
 operator|=
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
