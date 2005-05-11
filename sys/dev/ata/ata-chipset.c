@@ -8783,7 +8783,7 @@ literal|"Intel ICH6"
 block|}
 block|,
 block|{
-name|ATA_I82801FBM
+name|ATA_I82801FB_M
 block|,
 literal|0
 block|,
@@ -8794,6 +8794,76 @@ block|,
 name|ATA_SA150
 block|,
 literal|"Intel ICH6"
+block|}
+block|,
+block|{
+name|ATA_I82801GB
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0x00
+block|,
+name|ATA_UDMA5
+block|,
+literal|"Intel ICH7"
+block|}
+block|,
+block|{
+name|ATA_I82801GB_S1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0x00
+block|,
+name|ATA_SA150
+block|,
+literal|"Intel ICH7"
+block|}
+block|,
+block|{
+name|ATA_I82801GB_R1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0x00
+block|,
+name|ATA_SA150
+block|,
+literal|"Intel ICH7"
+block|}
+block|,
+block|{
+name|ATA_I82801GB_M
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0x00
+block|,
+name|ATA_SA150
+block|,
+literal|"Intel ICH7"
+block|}
+block|,
+block|{
+name|ATA_I82801GB_AH
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0x00
+block|,
+name|ATA_SA150
+block|,
+literal|"Intel ICH7"
 block|}
 block|,
 block|{
