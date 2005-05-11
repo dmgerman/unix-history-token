@@ -893,7 +893,7 @@ name|shutdown
 argument_list|(
 name|s
 argument_list|,
-literal|0
+name|SHUT_RD
 argument_list|)
 expr_stmt|;
 comment|/* Don't want to read back our messages */
@@ -3153,7 +3153,7 @@ name|shutdown
 argument_list|(
 name|s
 argument_list|,
-literal|0
+name|SHUT_RD
 argument_list|)
 expr_stmt|;
 comment|/* Don't want to read back our messages */
