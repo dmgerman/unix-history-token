@@ -2581,7 +2581,7 @@ name|shutdown
 argument_list|(
 name|netf
 argument_list|,
-literal|2
+name|SHUT_RDWR
 argument_list|)
 expr_stmt|;
 name|exit
