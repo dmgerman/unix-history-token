@@ -2478,7 +2478,7 @@ argument_list|,
 literal|"timeout"
 argument_list|)
 expr_stmt|;
-comment|/*      * set the state to TIMEOUT so we wont loose the race with       * an eventual interrupt arriving late      */
+comment|/*      * flag the request ATA_R_TIMEOUT and NULL out the running request      * so we wont loose the race with an eventual interrupt arriving late      * and dont reissue the command in ata_catch_inflight()      */
 if|if
 condition|(
 name|ch
@@ -2499,6 +2499,12 @@ operator|->
 name|flags
 operator||=
 name|ATA_R_TIMEOUT
+expr_stmt|;
+name|ch
+operator|->
+name|running
+operator|=
+name|NULL
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
