@@ -548,6 +548,20 @@ name|md_saved_cspr
 operator|=
 literal|0
 expr_stmt|;
+name|td2
+operator|->
+name|td_md
+operator|.
+name|md_tp
+operator|=
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|*
+operator|)
+name|ARM_TP_ADDRESS
+expr_stmt|;
 block|}
 end_function
 
