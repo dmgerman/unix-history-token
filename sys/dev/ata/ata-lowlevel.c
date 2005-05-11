@@ -3387,6 +3387,23 @@ init|=
 literal|5000
 decl_stmt|;
 comment|/* issue packet command to controller */
+if|if
+condition|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_DMA
+condition|)
+name|ATA_IDX_OUTB
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_FEATURE
+argument_list|,
+name|ATA_F_DMA
+argument_list|)
+expr_stmt|;
 name|ATA_IDX_OUTB
 argument_list|(
 name|ch
