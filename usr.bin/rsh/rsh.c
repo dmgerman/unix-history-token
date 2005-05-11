@@ -941,7 +941,7 @@ name|shutdown
 argument_list|(
 name|rem
 argument_list|,
-literal|1
+name|SHUT_WR
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1252,7 +1252,7 @@ name|shutdown
 argument_list|(
 name|rem
 argument_list|,
-literal|1
+name|SHUT_WR
 argument_list|)
 expr_stmt|;
 name|exit
