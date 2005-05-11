@@ -6052,6 +6052,21 @@ name|dp
 expr_stmt|;
 block|}
 block|}
+name|KASSERT
+argument_list|(
+name|disk
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL disk for %s."
+operator|,
+name|sc
+operator|->
+name|sc_name
+operator|)
+argument_list|)
+expr_stmt|;
 name|cbp
 operator|=
 name|g_clone_bio
