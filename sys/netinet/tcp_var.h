@@ -137,6 +137,22 @@ end_struct
 
 begin_struct
 struct|struct
+name|sackhint
+block|{
+name|struct
+name|sackhole
+modifier|*
+name|nexthole
+decl_stmt|;
+name|int
+name|sack_bytes_rexmit
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|tcptemp
 block|{
 name|u_char
@@ -588,6 +604,11 @@ name|tcp_seq
 name|sack_newdata
 decl_stmt|;
 comment|/* New data xmitted in this recovery 					   episode starts at this seq number */
+name|struct
+name|sackhint
+name|sackhint
+decl_stmt|;
+comment|/* SACK scoreboard hint */
 block|}
 struct|;
 end_struct
@@ -2548,22 +2569,6 @@ parameter_list|,
 name|int
 modifier|*
 name|sack_bytes_rexmt
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|tcp_sacked_bytes
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-name|tp
-parameter_list|,
-name|int
-modifier|*
-name|lost_not_rexmitted
 parameter_list|)
 function_decl|;
 end_function_decl
