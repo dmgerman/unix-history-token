@@ -338,5 +338,30 @@ name|NETFLOW_V5_MAX_SIZE
 value|(sizeof(netflow_v5_header)+ \ 			     sizeof(netflow_v5_record)*NETFLOW_V5_MAX_RECORDS)
 end_define
 
+begin_struct
+struct|struct
+name|netflow_v5_export_dgram
+block|{
+name|struct
+name|netflow_v5_header
+name|header
+decl_stmt|;
+name|struct
+name|netflow_v5_record
+name|r
+index|[
+name|NETFLOW_V5_MAX_RECORDS
+index|]
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
+struct|;
+end_struct
+
 end_unit
 

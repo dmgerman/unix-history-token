@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|NGM_NETFLOW_COOKIE
-value|1101814790
+value|1115810374
 end_define
 
 begin_define
@@ -113,9 +113,15 @@ name|nfinfo_used
 decl_stmt|;
 comment|/* number of used cache records */
 name|uint32_t
-name|nfinfo_free
+name|nfinfo_failed
 decl_stmt|;
-comment|/* number of free records */
+comment|/* number of failed allocations */
+name|uint32_t
+name|nfinfo_act_exp
+decl_stmt|;
+name|uint32_t
+name|nfinfo_inact_exp
+decl_stmt|;
 name|uint32_t
 name|nfinfo_inact_t
 decl_stmt|;
@@ -453,27 +459,13 @@ name|struct
 name|flow_entry_data
 name|f
 decl_stmt|;
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|flow_entry
 argument_list|)
 name|fle_hash
 expr_stmt|;
-comment|/* entries in one hash item */
-name|TAILQ_ENTRY
-argument_list|(
-argument|flow_entry
-argument_list|)
-name|fle_work
-expr_stmt|;
-comment|/* entries in work queue*/
-name|SLIST_ENTRY
-argument_list|(
-argument|flow_entry
-argument_list|)
-name|fle_free
-expr_stmt|;
-comment|/* entries in free stack */
+comment|/* entries in hash slot */
 block|}
 struct|;
 end_struct
@@ -490,7 +482,7 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_INFO_TYPE
-value|{			\ 	{ "Bytes",&ng_parse_uint64_type },	\ 	{ "Packets",&ng_parse_uint32_type },	\ 	{ "Records used",&ng_parse_uint32_type },\ 	{ "Records free",&ng_parse_uint32_type },\ 	{ "Inactive timeout",&ng_parse_uint32_type },\ 	{ "Active timeout",&ng_parse_uint32_type },\ 	{ NULL }					\ }
+value|{			\ 	{ "Bytes",&ng_parse_uint64_type },	\ 	{ "Packets",&ng_parse_uint32_type },	\ 	{ "Records used",&ng_parse_uint32_type },\ 	{ "Failed allocations",&ng_parse_uint32_type },\ 	{ "Active expiries",&ng_parse_uint32_type },\ 	{ "Inactive expiries",&ng_parse_uint32_type },\ 	{ "Inactive timeout",&ng_parse_uint32_type },\ 	{ "Active timeout",&ng_parse_uint32_type },\ 	{ NULL }					\ }
 end_define
 
 begin_comment
@@ -615,11 +607,12 @@ name|struct
 name|callout
 name|exp_callout
 decl_stmt|;
-comment|/* Flow cache is a big chunk of memory referenced by 'cache'. 	 * Accounting engine searches for its record using hashing index 	 * 'hash'. Expiry engine searches for its record from begining of 	 * tail queue 'expire_q'. Allocation is performed using last free 	 * stack held in singly linked list 'free_l' */
+comment|/* expiry periodic job */
+comment|/* 	 * Flow entries are allocated in uma(9) zone zone. They are 	 * indexed by hash hash. Each hash element consist of tailqueue 	 * head and mutex to protect this element. 	 */
 define|#
 directive|define
 name|CACHESIZE
-value|65536
+value|(65536*4)
 define|#
 directive|define
 name|CACHELOWAT
@@ -628,74 +621,22 @@ define|#
 directive|define
 name|CACHEHIGHWAT
 value|(CACHESIZE * 9/10)
-name|struct
-name|flow_entry
-modifier|*
-name|cache
+name|uma_zone_t
+name|zone
 decl_stmt|;
 name|struct
 name|flow_hash_entry
 modifier|*
 name|hash
 decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|flow_entry
-argument_list|)
-name|work_queue
-expr_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|flow_entry
-argument_list|)
-name|free_list
-expr_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|flow_entry
-argument_list|)
-name|expire_list
-expr_stmt|;
-comment|/* Mutexes to protect above lists */
-name|struct
-name|mtx
-name|work_mtx
+comment|/* 	 * NetFlow data export 	 * 	 * export_item is a data item, it has an mbuf with cluster 	 * attached to it. A thread detaches export_item from priv 	 * and works with it. If the export is full it is sent, and 	 * a new one is allocated. Before exiting thread re-attaches 	 * its current item back to priv. If there is item already, 	 * current incomplete datagram is sent.  	 * export_mtx is used for attaching/detaching. 	 */
+name|item_p
+name|export_item
 decl_stmt|;
 name|struct
 name|mtx
-name|free_mtx
+name|export_mtx
 decl_stmt|;
-name|struct
-name|mtx
-name|expire_mtx
-decl_stmt|;
-comment|/* ng_netflow_export_send() forms its datagram here. */
-struct|struct
-name|netflow_export_dgram
-block|{
-name|struct
-name|netflow_v5_header
-name|header
-decl_stmt|;
-name|struct
-name|netflow_v5_record
-name|r
-index|[
-name|NETFLOW_V5_MAX_RECORDS
-index|]
-decl_stmt|;
-block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
-name|dgram
-struct|;
 block|}
 struct|;
 end_struct
@@ -717,8 +658,13 @@ begin_struct
 struct|struct
 name|flow_hash_entry
 block|{
-name|LIST_HEAD
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+name|TAILQ_HEAD
 argument_list|(
+argument|fhead
 argument_list|,
 argument|flow_entry
 argument_list|)

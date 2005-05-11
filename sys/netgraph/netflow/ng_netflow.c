@@ -645,19 +645,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|priv
-operator|->
-name|dgram
-operator|.
-name|header
-operator|.
-name|version
-operator|=
-name|htons
-argument_list|(
-name|NETFLOW_V5
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1045,6 +1032,14 @@ name|export
 operator|=
 name|hook
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* TODO: profile& test first */
+comment|/* 		 * We send export dgrams in interrupt handlers and in 		 * callout threads. We'd better queue data for later 		 * netgraph ISR processing. 		 */
+block|NG_HOOK_FORCE_QUEUE(NG_HOOK_PEER(hook));
+endif|#
+directive|endif
 comment|/* Exporter is ready. Let's schedule expiry. */
 name|callout_reset
 argument_list|(
