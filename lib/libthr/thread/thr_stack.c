@@ -118,7 +118,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * Base address of the last stack allocated (including its red zone, if there is  * one).  Stacks are allocated contiguously, starting beyond the top of the main  * stack.  When a new stack is created, a red zone is typically created  * (actually, the red zone is simply left unmapped) above the top of the stack,  * such that the stack will not be able to grow all the way to the bottom of the  * next stack.  This isn't fool-proof.  It is possible for a stack to grow by a  * large amount, such that it grows into the next stack, and as long as the  * memory within the red zone is never accessed, nothing will prevent one thread  * stack from trouncing all over the next.  *  * low memory  *     . . . . . . . . . . . . . . . . . .   *    |                                   |  *    |             stack 3               | start of 3rd thread stack  *    +-----------------------------------+  *    |                                   |  *    |       Red Zone (guard page)       | red zone for 2nd thread  *    |                                   |  *    +-----------------------------------+  *    |  stack 2 - PTHREAD_STACK_DEFAULT  | top of 2nd thread stack  *    |                                   |  *    |                                   |  *    |                                   |  *    |                                   |  *    |             stack 2               |  *    +-----------------------------------+<-- start of 2nd thread stack  *    |                                   |  *    |       Red Zone                    | red zone for 1st thread  *    |                                   |  *    +-----------------------------------+  *    |  stack 1 - PTHREAD_STACK_DEFAULT  | top of 1st thread stack  *    |                                   |  *    |                                   |  *    |                                   |  *    |                                   |  *    |             stack 1               |  *    +-----------------------------------+<-- start of 1st thread stack  *    |                                   |   (initial value of last_stack)  *    |       Red Zone                    |  *    |                                   | red zone for main thread  *    +-----------------------------------+  *    | USRSTACK - PTHREAD_STACK_INITIAL  | top of main thread stack  *    |                                   | ^  *    |                                   | |  *    |                                   | |  *    |                                   | | stack growth  *    |                                   |  *    +-----------------------------------+<-- start of main thread stack  *                                              (USRSTACK)  * high memory  *  */
+comment|/**  * Base address of the last stack allocated (including its red zone, if there is  * one).  Stacks are allocated contiguously, starting beyond the top of the main  * stack.  When a new stack is created, a red zone is typically created  * (actually, the red zone is simply left unmapped) above the top of the stack,  * such that the stack will not be able to grow all the way to the bottom of the  * next stack.  This isn't fool-proof.  It is possible for a stack to grow by a  * large amount, such that it grows into the next stack, and as long as the  * memory within the red zone is never accessed, nothing will prevent one thread  * stack from trouncing all over the next.  *  * low memory  *     . . . . . . . . . . . . . . . . . .   *    |                                   |  *    |             stack 3               | start of 3rd thread stack  *    +-----------------------------------+  *    |                                   |  *    |       Red Zone (guard page)       | red zone for 2nd thread  *    |                                   |  *    +-----------------------------------+  *    |  stack 2 - _pthread_stack_default | top of 2nd thread stack  *    |                                   |  *    |                                   |  *    |                                   |  *    |                                   |  *    |             stack 2               |  *    +-----------------------------------+<-- start of 2nd thread stack  *    |                                   |  *    |       Red Zone                    | red zone for 1st thread  *    |                                   |  *    +-----------------------------------+  *    |  stack 1 - _pthread_stack_default | top of 1st thread stack  *    |                                   |  *    |                                   |  *    |                                   |  *    |                                   |  *    |             stack 1               |  *    +-----------------------------------+<-- start of 1st thread stack  *    |                                   |   (initial value of last_stack)  *    |       Red Zone                    |  *    |                                   | red zone for main thread  *    +-----------------------------------+  *    | USRSTACK - _pthread_stack_initial | top of main thread stack  *    |                                   | ^  *    |                                   | |  *    |                                   | |  *    |                                   | | stack growth  *    |                                   |  *    +-----------------------------------+<-- start of main thread stack  *                                              (USRSTACK)  * high memory  *  */
 end_comment
 
 begin_decl_stmt
@@ -188,7 +188,7 @@ if|if
 condition|(
 name|stack_size
 operator|==
-name|PTHREAD_STACK_DEFAULT
+name|_pthread_stack_default
 operator|&&
 name|guardsize
 operator|==
@@ -300,7 +300,7 @@ name|last_stack
 operator|=
 name|_usrstack
 operator|-
-name|PTHREAD_STACK_INITIAL
+name|_pthread_stack_initial
 operator|-
 name|_pthread_guard_default
 expr_stmt|;
@@ -446,7 +446,7 @@ name|spare_stack
 operator|->
 name|stacksize
 operator|==
-name|PTHREAD_STACK_DEFAULT
+name|_pthread_stack_default
 operator|&&
 name|spare_stack
 operator|->

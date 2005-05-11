@@ -833,8 +833,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTHREAD_STACK_DEFAULT
-value|65536
+name|PTHREAD_STACK32_DEFAULT
+value|(1 * 1024 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_STACK64_DEFAULT
+value|(2 * 1024 * 1024)
 end_define
 
 begin_comment
@@ -855,6 +862,20 @@ name|_pthread_page_size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_pthread_stack_default
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_pthread_stack_initial
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Maximum size of initial thread's stack.  This perhaps deserves to be larger  * than the stacks of other threads, since many applications are likely to run  * almost entirely on this stack.  */
 end_comment
@@ -862,8 +883,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTHREAD_STACK_INITIAL
-value|0x100000
+name|PTHREAD_STACK32_INITIAL
+value|(2 * 1024 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_STACK64_INITIAL
+value|(4 * 1024 * 1024)
 end_define
 
 begin_comment
@@ -1795,7 +1823,8 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|PTHREAD_STACK_DEFAULT
+operator|-
+literal|1
 block|,
 operator|-
 literal|1
