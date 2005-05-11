@@ -1675,6 +1675,35 @@ directive|include
 file|<dev/isp/ispmbox.h>
 end_include
 
+begin_function_decl
+name|void
+name|isp_prt
+parameter_list|(
+name|struct
+name|ispsoftc
+modifier|*
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/*  * isp_osinfo definiitions&& shorthand  */
 end_comment

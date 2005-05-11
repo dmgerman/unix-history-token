@@ -102,23 +102,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_CDEFS_H_
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|this file needs sys/cdefs.h as a prerequisite
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
@@ -2927,37 +2910,8 @@ value|((void *) 2)
 end_define
 
 begin_comment
-comment|/*  * Platform Dependent Error and Debug Printout  */
+comment|/*  * Platform Dependent Error and Debug Printout  *  * Generally this is:  *  *    void isp_prt(struct ispsoftc *, int level, const char *, ...)  *  * but due to compiler differences on different platforms this won't be  * formally done here. Instead, it goes in each platform definition file.  */
 end_comment
-
-begin_function_decl
-name|void
-name|isp_prt
-parameter_list|(
-name|struct
-name|ispsoftc
-modifier|*
-parameter_list|,
-name|int
-name|level
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|3
-operator|,
-function_decl|4
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_define
 define|#
