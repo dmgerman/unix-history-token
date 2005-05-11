@@ -582,7 +582,7 @@ name|shutdown
 argument_list|(
 name|so
 argument_list|,
-literal|2
+name|SHUT_RDWR
 argument_list|)
 operator|<
 literal|0
