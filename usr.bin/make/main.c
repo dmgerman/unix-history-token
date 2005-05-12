@@ -2503,10 +2503,13 @@ name|p
 decl_stmt|,
 modifier|*
 name|p1
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|pathp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
@@ -2686,8 +2689,16 @@ directive|endif
 comment|/* 	 * PC-98 kernel sets the `i386' string to the utsname.machine and 	 * it cannot be distinguished from IBM-PC by uname(3).  Therefore, 	 * we check machine.ispc98 and adjust the machine variable before 	 * using usname(3) below. 	 * NOTE: machdep.ispc98 was defined on 1998/8/31. At that time, 	 * __FreeBSD_version was defined as 300003. So, this check can 	 * safely be done with any kernel with version> 300003. 	 */
 if|if
 condition|(
-operator|!
+operator|(
 name|machine
+operator|=
+name|getenv
+argument_list|(
+literal|"MACHINE"
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|int
@@ -2735,14 +2746,7 @@ block|}
 comment|/* 	 * Get the name of this type of MACHINE from utsname 	 * so we can share an executable for similar machines. 	 * (i.e. m68k: amiga hp300, mac68k, sun3, ...) 	 * 	 * Note that while MACHINE is decided at run-time, 	 * MACHINE_ARCH is always known at compile time. 	 */
 if|if
 condition|(
-operator|(
 name|machine
-operator|=
-name|getenv
-argument_list|(
-literal|"MACHINE"
-argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
