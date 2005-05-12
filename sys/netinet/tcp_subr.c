@@ -4247,6 +4247,17 @@ decl_stmt|;
 name|caddr_t
 name|inp_ppcb
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|xt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|xt
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xt
 operator|.
 name|xt_len
