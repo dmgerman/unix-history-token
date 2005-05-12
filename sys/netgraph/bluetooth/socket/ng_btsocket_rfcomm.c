@@ -7864,6 +7864,8 @@ name|le16toh
 argument_list|(
 name|length
 argument_list|)
+operator|>>
+literal|1
 expr_stmt|;
 name|m_adj
 argument_list|(
