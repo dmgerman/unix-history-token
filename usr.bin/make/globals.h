@@ -104,6 +104,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|jobLimit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -j argument: maximum number of jobs */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|Boolean
 name|jobsRunning
 decl_stmt|;

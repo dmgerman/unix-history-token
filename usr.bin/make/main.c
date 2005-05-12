@@ -411,6 +411,16 @@ comment|/* -j argument given */
 end_comment
 
 begin_decl_stmt
+name|int
+name|jobLimit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -j argument: maximum number of jobs */
+end_comment
+
+begin_decl_stmt
 name|Boolean
 name|compatMake
 decl_stmt|;
@@ -1465,7 +1475,7 @@ name|forceJobs
 operator|=
 name|TRUE
 expr_stmt|;
-name|maxJobs
+name|jobLimit
 operator|=
 name|strtol
 argument_list|(
@@ -1479,7 +1489,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|maxJobs
+name|jobLimit
 operator|<=
 literal|0
 operator|||
@@ -2566,7 +2576,7 @@ name|jobsRunning
 operator|=
 name|FALSE
 expr_stmt|;
-name|maxJobs
+name|jobLimit
 operator|=
 name|DEFMAXJOBS
 expr_stmt|;
@@ -3564,7 +3574,7 @@ condition|)
 block|{
 name|Job_Init
 argument_list|(
-name|maxJobs
+name|jobLimit
 argument_list|)
 expr_stmt|;
 name|jobsRunning

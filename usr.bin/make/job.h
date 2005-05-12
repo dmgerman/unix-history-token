@@ -49,17 +49,6 @@ name|Lst
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|maxJobs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of jobs that may run */
-end_comment
-
 begin_function_decl
 name|void
 name|Shell_Init

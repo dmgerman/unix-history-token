@@ -2758,7 +2758,7 @@ break|break;
 case|case
 name|NotParallel
 case|:
-name|maxJobs
+name|jobLimit
 operator|=
 literal|1
 expr_stmt|;

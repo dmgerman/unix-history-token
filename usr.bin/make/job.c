@@ -815,15 +815,16 @@ begin_comment
 comment|/* last component of shell */
 end_comment
 
+begin_comment
+comment|/*  * The maximum number of jobs that may run. This is initialize from the  * -j argument for the leading make and from the FIFO for sub-makes.  */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|int
 name|maxJobs
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* The most children we can run at once */
-end_comment
 
 begin_decl_stmt
 specifier|static
