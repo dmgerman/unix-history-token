@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_debug_npx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_isa.h"
 end_include
 
@@ -213,34 +207,6 @@ include|#
 directive|include
 file|<machine/ucontext.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/cbus/cbus.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

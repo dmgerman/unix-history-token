@@ -197,17 +197,6 @@ begin_comment
 comment|/* 8237A DMA Controller #2 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IO_NPX
-value|0x0F0
-end_define
-
-begin_comment
-comment|/* Numeric Coprocessor */
-end_comment
-
 begin_comment
 comment|/* Cards */
 end_comment
@@ -301,17 +290,6 @@ end_define
 
 begin_comment
 comment|/* Monochrome display controllers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_NPXSIZE
-value|16
-end_define
-
-begin_comment
-comment|/* 80387/80487 NPX registers */
 end_comment
 
 begin_define
@@ -429,33 +407,6 @@ end_endif
 begin_comment
 comment|/* !RAM_BEGIN */
 end_comment
-
-begin_comment
-comment|/*  * IRQs  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IRQ_NPX
-value|13
-end_define
-
-begin_comment
-comment|/*  * Npx MD defines  */
-end_comment
-
-begin_comment
-comment|/* full reset on some systems, NOP on others */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|npx_full_reset
-parameter_list|()
-value|outb(IO_NPX + 1, 0)
-end_define
 
 begin_endif
 endif|#

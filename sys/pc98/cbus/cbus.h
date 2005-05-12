@@ -172,17 +172,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_NPX
-value|0x0F8
-end_define
-
-begin_comment
-comment|/* Numeric Coprocessor */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_WD1_EPSON
 value|0x80
 end_define
@@ -269,17 +258,6 @@ end_define
 
 begin_comment
 comment|/* "Normal" LPT controllers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_NPXSIZE
-value|8
-end_define
-
-begin_comment
-comment|/* 80387/80487 NPX registers */
 end_comment
 
 begin_endif
@@ -413,32 +391,6 @@ end_endif
 begin_comment
 comment|/* !RAM_BEGIN */
 end_comment
-
-begin_comment
-comment|/*  * IRQs  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IRQ_NPX
-value|8
-end_define
-
-begin_comment
-comment|/*  * Npx MD defines  */
-end_comment
-
-begin_comment
-comment|/* full reset of npx: not needed on pc98 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|npx_full_reset
-parameter_list|()
-end_define
 
 begin_define
 define|#

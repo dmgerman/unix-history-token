@@ -311,6 +311,47 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|IO_NPX
+value|0x0F0
+end_define
+
+begin_comment
+comment|/* Numeric Coprocessor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_NPXSIZE
+value|16
+end_define
+
+begin_comment
+comment|/* 80387/80487 NPX registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRQ_NPX
+value|13
+end_define
+
+begin_comment
+comment|/* full reset on some systems, NOP on others */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|npx_full_reset
+parameter_list|()
+value|outb(IO_NPX + 1, 0)
+end_define
+
 begin_function_decl
 name|int
 name|npxdna
