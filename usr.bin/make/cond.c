@@ -1441,10 +1441,24 @@ decl_stmt|;
 if|if
 condition|(
 name|condPushBack
-operator|==
+operator|!=
 name|None
 condition|)
 block|{
+name|t
+operator|=
+name|condPushBack
+expr_stmt|;
+name|condPushBack
+operator|=
+name|None
+expr_stmt|;
+return|return
+operator|(
+name|t
+operator|)
+return|;
+block|}
 while|while
 condition|(
 operator|*
@@ -1587,7 +1601,7 @@ decl_stmt|;
 name|Boolean
 name|doFree
 decl_stmt|;
-comment|/* 			 * Parse the variable spec and skip over it, saving its 			 * value in lhs. 			 */
+comment|/* 		 * Parse the variable spec and skip over it, saving its 		 * value in lhs. 		 */
 name|t
 operator|=
 name|Err
@@ -1616,7 +1630,7 @@ operator|==
 name|var_Error
 condition|)
 block|{
-comment|/* 				 * Even if !doEval, we still report syntax 				 * errors, which is what getting var_Error 				 * back with !doEval means. 				 */
+comment|/* 			 * Even if !doEval, we still report syntax 			 * errors, which is what getting var_Error 			 * back with !doEval means. 			 */
 return|return
 operator|(
 name|Err
@@ -1745,7 +1759,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* 			 * Skip whitespace to get to the operator 			 */
+comment|/* 		 * Skip whitespace to get to the operator 		 */
 while|while
 condition|(
 name|isspace
@@ -1761,7 +1775,7 @@ condition|)
 name|condExpr
 operator|++
 expr_stmt|;
-comment|/* 			 * Make sure the operator is a valid one. If it isn't a 			 * known relational operator, pretend we got a 			 * != 0 comparison. 			 */
+comment|/* 		 * Make sure the operator is a valid one. If it isn't a 		 * known relational operator, pretend we got a 		 * != 0 comparison. 		 */
 name|op
 operator|=
 name|condExpr
@@ -1870,7 +1884,7 @@ operator|==
 literal|'"'
 condition|)
 block|{
-comment|/* 				 * Doing a string comparison. Only allow == and 				 * != for * operators. 				 */
+comment|/* 			 * Doing a string comparison. Only allow == and 			 * != for * operators. 			 */
 name|char
 modifier|*
 name|string
@@ -2017,7 +2031,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-comment|/* 						 * Backslash escapes things -- 						 * skip over next character,							 * if it exists. 						 */
+comment|/* 					 * Backslash escapes things -- 					 * skip over next character,							 * if it exists. 					 */
 name|cp
 operator|++
 expr_stmt|;
@@ -2152,7 +2166,7 @@ name|op
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Null-terminate rhs and perform the 				 * comparison. t is set to the result. 				 */
+comment|/* 			 * Null-terminate rhs and perform the 			 * comparison. t is set to the result. 			 */
 if|if
 condition|(
 operator|*
@@ -2228,7 +2242,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 				 * rhs is either a float or an integer. 				 * Convert both the lhs and the rhs to a 				 * double and compare the two. 				 */
+comment|/* 			 * rhs is either a float or an integer. 			 * Convert both the lhs and the rhs to a 			 * double and compare the two. 			 */
 name|double
 name|left
 decl_stmt|,
@@ -2379,7 +2393,7 @@ operator|==
 name|condExpr
 condition|)
 block|{
-comment|/* 						 * Skip over the right-hand side 						 */
+comment|/* 					 * Skip over the right-hand side 					 */
 name|condExpr
 operator|=
 name|c
@@ -2617,7 +2631,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Use CondDoDefined to evaluate the argument 				 * and CondGetArg to extract the argument from 				 * the 'function call'. 				 */
+comment|/* 			 * Use CondDoDefined to evaluate the argument 			 * and CondGetArg to extract the argument from 			 * the 'function call'. 			 */
 name|evalProc
 operator|=
 name|CondDoDefined
@@ -2672,7 +2686,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Use CondDoMake to evaluate the argument and 				 * CondGetArg to extract the argument from the 				 * 'function call'. 				 */
+comment|/* 			 * Use CondDoMake to evaluate the argument and 			 * CondGetArg to extract the argument from the 			 * 'function call'. 			 */
 name|evalProc
 operator|=
 name|CondDoMake
@@ -2727,7 +2741,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Use CondDoExists to evaluate the argument and 				 * CondGetArg to extract the argument from the 				 * 'function call'. 				 */
+comment|/* 			 * Use CondDoExists to evaluate the argument and 			 * CondGetArg to extract the argument from the 			 * 'function call'. 			 */
 name|evalProc
 operator|=
 name|CondDoExists
@@ -2782,7 +2796,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Use Var_Parse to parse the spec in parens and 				 * return True if the resulting string is empty. 				 */
+comment|/* 			 * Use Var_Parse to parse the spec in parens and 			 * return True if the resulting string is empty. 			 */
 name|size_t
 name|length
 decl_stmt|;
@@ -2873,7 +2887,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 						 * A variable is empty when it 						 * just contains spaces... 						 * 4/15/92, christos 						 */
+comment|/* 					 * A variable is empty when it 					 * just contains spaces... 					 * 4/15/92, christos 					 */
 name|char
 modifier|*
 name|p
@@ -2926,7 +2940,7 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 					 * Advance condExpr to beyond the 					 * closing ). Note that we subtract 					 * one from arglen + length b/c length 					 * is calculated from 					 * condExpr[arglen - 1]. 					 */
+comment|/* 				 * Advance condExpr to beyond the 				 * closing ). Note that we subtract 				 * one from arglen + length b/c length 				 * is calculated from 				 * condExpr[arglen - 1]. 				 */
 name|condExpr
 operator|+=
 name|arglen
@@ -2963,7 +2977,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Use CondDoTarget to evaluate the argument and 				 * CondGetArg to extract the argument from the 				 * 'function call'. 				 */
+comment|/* 			 * Use CondDoTarget to evaluate the argument and 			 * CondGetArg to extract the argument from the 			 * 'function call'. 			 */
 name|evalProc
 operator|=
 name|CondDoTarget
@@ -3005,7 +3019,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 				 * The symbol is itself the argument to the 				 * default function. We advance condExpr to 				 * the end of the symbol by hand (the next 				 * whitespace, closing paren or binary operator) 				 * and set to invert the evaluation 				 * function if condInvert is TRUE. 				 */
+comment|/* 			 * The symbol is itself the argument to the 			 * default function. We advance condExpr to 			 * the end of the symbol by hand (the next 			 * whitespace, closing paren or binary operator) 			 * and set to invert the evaluation 			 * function if condInvert is TRUE. 			 */
 name|use_default
 label|:
 name|invert
@@ -3032,7 +3046,7 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Evaluate the argument using the set function. If 			 * invert is TRUE, we invert the sense of the function. 			 */
+comment|/* 		 * Evaluate the argument using the set function. If 		 * invert is TRUE, we invert the sense of the function. 		 */
 name|t
 operator|=
 operator|(
@@ -3073,18 +3087,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
-block|}
-else|else
-block|{
-name|t
-operator|=
-name|condPushBack
-expr_stmt|;
-name|condPushBack
-operator|=
-name|None
-expr_stmt|;
 block|}
 return|return
 operator|(
