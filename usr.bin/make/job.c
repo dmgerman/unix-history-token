@@ -1261,6 +1261,21 @@ name|__dead2
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|Compat_RunCommand
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|GNode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * The following array is used to make a fast determination of which  * commands and characters are interpreted specially by the shell.  * If a command is one of these or contains any of these characters,  * it is executed by the shell, not directly by us.  * XXX Both of these arrays should be configurable via .SHELL  */
 end_comment
@@ -11067,6 +11082,7 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|Compat_RunCommand
 parameter_list|(
