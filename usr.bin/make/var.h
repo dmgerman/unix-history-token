@@ -17,13 +17,19 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|Buffer
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|GNode
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|Buffer
+name|List
 struct_decl|;
 end_struct_decl
 
@@ -191,6 +197,19 @@ modifier|*
 parameter_list|,
 name|Boolean
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|Var_Print
+parameter_list|(
+name|struct
+name|Lst
+modifier|*
+parameter_list|,
+name|Boolean
 parameter_list|)
 function_decl|;
 end_function_decl
