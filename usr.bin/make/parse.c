@@ -4162,24 +4162,6 @@ modifier|*
 name|opc
 decl_stmt|;
 comment|/* ptr to operator character to 			 * null-terminate the variable name */
-comment|/* 	 * Avoid clobbered variable warnings by forcing the compiler 	 * to ``unregister'' variables 	 */
-if|#
-directive|if
-name|__GNUC__
-operator|(
-name|void
-operator|)
-operator|&
-name|cp
-expr_stmt|;
-operator|(
-name|void
-operator|)
-operator|&
-name|line
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Skip to variable name 	 */
 while|while
 condition|(
