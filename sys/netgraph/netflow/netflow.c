@@ -762,12 +762,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX: do stats! */
-name|log
+name|atomic_add_32
 argument_list|(
-name|LOG_DEBUG
+operator|&
+name|priv
+operator|->
+name|info
+operator|.
+name|nfinfo_export_failed
 argument_list|,
-literal|"get_export_dgram failed\n"
+literal|1
 argument_list|)
 expr_stmt|;
 name|uma_zfree_arg
@@ -1076,7 +1080,7 @@ name|priv
 operator|->
 name|info
 operator|.
-name|nfinfo_failed
+name|nfinfo_alloc_failed
 argument_list|,
 literal|1
 argument_list|)

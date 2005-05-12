@@ -103,25 +103,31 @@ block|{
 name|uint64_t
 name|nfinfo_bytes
 decl_stmt|;
-comment|/* total number of accounted bytes */
+comment|/* accounted bytes */
 name|uint32_t
 name|nfinfo_packets
 decl_stmt|;
-comment|/* total number of accounted packets */
+comment|/* accounted packets */
 name|uint32_t
 name|nfinfo_used
 decl_stmt|;
-comment|/* number of used cache records */
+comment|/* used cache records */
 name|uint32_t
-name|nfinfo_failed
+name|nfinfo_alloc_failed
 decl_stmt|;
-comment|/* number of failed allocations */
+comment|/* failed allocations */
+name|uint32_t
+name|nfinfo_export_failed
+decl_stmt|;
+comment|/* failed exports */
 name|uint32_t
 name|nfinfo_act_exp
 decl_stmt|;
+comment|/* active expiries */
 name|uint32_t
 name|nfinfo_inact_exp
 decl_stmt|;
+comment|/* inactive expiries */
 name|uint32_t
 name|nfinfo_inact_t
 decl_stmt|;
@@ -482,7 +488,7 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_INFO_TYPE
-value|{			\ 	{ "Bytes",&ng_parse_uint64_type },	\ 	{ "Packets",&ng_parse_uint32_type },	\ 	{ "Records used",&ng_parse_uint32_type },\ 	{ "Failed allocations",&ng_parse_uint32_type },\ 	{ "Active expiries",&ng_parse_uint32_type },\ 	{ "Inactive expiries",&ng_parse_uint32_type },\ 	{ "Inactive timeout",&ng_parse_uint32_type },\ 	{ "Active timeout",&ng_parse_uint32_type },\ 	{ NULL }					\ }
+value|{			\ 	{ "Bytes",&ng_parse_uint64_type },	\ 	{ "Packets",&ng_parse_uint32_type },	\ 	{ "Records used",&ng_parse_uint32_type },\ 	{ "Failed allocations",&ng_parse_uint32_type },\ 	{ "Failed exports",&ng_parse_uint32_type },\ 	{ "Active expiries",&ng_parse_uint32_type },\ 	{ "Inactive expiries",&ng_parse_uint32_type },\ 	{ "Inactive timeout",&ng_parse_uint32_type },\ 	{ "Active timeout",&ng_parse_uint32_type },\ 	{ NULL }					\ }
 end_define
 
 begin_comment
