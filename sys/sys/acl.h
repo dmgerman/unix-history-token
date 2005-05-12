@@ -245,34 +245,6 @@ name|ACL_TYPE_DEFAULT
 value|0x00000001
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACL_TYPE_AFS
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACL_TYPE_CODA
-value|0x00000003
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACL_TYPE_NTFS
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACL_TYPE_NWFS
-value|0x00000005
-end_define
-
 begin_comment
 comment|/*  * Possible flags in ae_perm field.  */
 end_comment
