@@ -59,19 +59,18 @@ directive|include
 file|"util.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"var.h"
-end_include
-
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 modifier|*
 name|buffer
 decl_stmt|;
@@ -81,7 +80,12 @@ begin_decl_stmt
 specifier|static
 name|int
 name|argmax
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|curlen
 decl_stmt|;
 end_decl_stmt
@@ -97,20 +101,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|p1
-decl_stmt|;
+name|argmax
+operator|=
+literal|50
+expr_stmt|;
 name|argv
 operator|=
 name|emalloc
 argument_list|(
 operator|(
-operator|(
 name|argmax
-operator|=
-literal|50
-operator|)
 operator|+
 literal|1
 operator|)
@@ -127,15 +127,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|Var_Value
-argument_list|(
-literal|".MAKE"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|,
-operator|&
-name|p1
-argument_list|)
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -270,7 +262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * brk_string --  *	Fracture a string into an array of words (as delineated by tabs or  *	spaces) taking quotation marks into account.  Leading tabs/spaces  *	are ignored.  *  * returns --  *	Pointer to the array of pointers to the words.  To make life easier,  *	the first word is always the value of the .MAKE variable.  */
+comment|/*-  * brk_string --  *	Fracture a string into an array of words (as delineated by tabs or  *	spaces) taking quotation marks into account.  Leading tabs/spaces  *	are ignored.  *  * returns --  *	Pointer to the array of pointers to the words.  */
 end_comment
 
 begin_function

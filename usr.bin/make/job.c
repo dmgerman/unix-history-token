@@ -9268,18 +9268,6 @@ name|line
 operator|++
 expr_stmt|;
 block|}
-name|words
-operator|=
-name|brk_string
-argument_list|(
-name|line
-argument_list|,
-operator|&
-name|wordCount
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -9298,11 +9286,23 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Parse the specification by keyword but skip the first word - it 	 * is not set by brk_string. 	 */
+name|words
+operator|=
+name|brk_string
+argument_list|(
+name|line
+argument_list|,
+operator|&
 name|wordCount
-operator|--
+argument_list|,
+name|TRUE
+argument_list|)
 expr_stmt|;
 name|words
 operator|++
+expr_stmt|;
+name|wordCount
+operator|--
 expr_stmt|;
 for|for
 control|(
@@ -11096,6 +11096,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* 	 * Break the command into words to form an argument 	 * vector we can execute. brk_string sticks NULL 	 * in av[0], so we have to skip over it... 	 */
 name|av
 operator|=
 name|brk_string
