@@ -9871,6 +9871,17 @@ operator|->
 name|vfc_next
 control|)
 block|{
+name|bzero
+argument_list|(
+operator|&
+name|ovfs
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ovfs
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ovfs
 operator|.
 name|vfc_vfsops

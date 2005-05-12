@@ -4062,6 +4062,17 @@ name|struct
 name|xunpcb
 name|xu
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|xu
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|xu
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xu
 operator|.
 name|xu_len
