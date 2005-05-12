@@ -221,6 +221,19 @@ directive|include
 file|"var.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX what header declares this variable? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -242,114 +255,6 @@ name|MKLVL_ENVVAR
 value|"__MKLVL__"
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAKEFLAGS
-value|".MAKEFLAGS"
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX what header declares this variable? */
-end_comment
-
-begin_comment
-comment|/* Targets to be made */
-end_comment
-
-begin_decl_stmt
-name|Lst
-name|create
-init|=
-name|Lst_Initializer
-argument_list|(
-name|create
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|time_t
-name|now
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Time at start of make */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|GNode
-modifier|*
-name|DEFAULT
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* .DEFAULT node */
-end_comment
-
-begin_decl_stmt
-name|Boolean
-name|allPrecious
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* .PRECIOUS given on line by itself */
-end_comment
-
-begin_decl_stmt
-name|uint32_t
-name|warn_flags
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* actual warning flags */
-end_comment
-
-begin_decl_stmt
-name|uint32_t
-name|warn_cmd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* command line warning flags */
-end_comment
-
-begin_decl_stmt
-name|uint32_t
-name|warn_nocmd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* command line no-warning flags */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|Boolean
-name|noBuiltins
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -r flag */
-end_comment
-
 begin_comment
 comment|/* ordered list of makefiles to read */
 end_comment
@@ -365,17 +270,6 @@ name|makefiles
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|Boolean
-name|expandVars
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* fully expand printed variables */
-end_comment
 
 begin_comment
 comment|/* list of variables to print */
@@ -396,6 +290,28 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|Boolean
+name|expandVars
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fully expand printed variables */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|noBuiltins
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -r flag */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|Boolean
 name|forceJobs
 decl_stmt|;
 end_decl_stmt
@@ -405,13 +321,87 @@ comment|/* -j argument given */
 end_comment
 
 begin_decl_stmt
-name|int
-name|jobLimit
+specifier|static
+name|char
+modifier|*
+name|curdir
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -j argument: maximum number of jobs */
+comment|/* startup directory */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|objdir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* where we chdir'ed to */
+end_comment
+
+begin_comment
+comment|/* (-E) vars to override from env */
+end_comment
+
+begin_decl_stmt
+name|Lst
+name|envFirstVars
+init|=
+name|Lst_Initializer
+argument_list|(
+name|envFirstVars
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Targets to be made */
+end_comment
+
+begin_decl_stmt
+name|Lst
+name|create
+init|=
+name|Lst_Initializer
+argument_list|(
+name|create
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|allPrecious
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* .PRECIOUS given on line by itself */
+end_comment
+
+begin_decl_stmt
+name|Boolean
+name|beSilent
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -s flag */
+end_comment
+
+begin_decl_stmt
+name|Boolean
+name|beVerbose
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -v flag */
 end_comment
 
 begin_decl_stmt
@@ -436,12 +426,32 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
-name|noExecute
+name|ignoreErrors
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -n flag */
+comment|/* -i flag */
+end_comment
+
+begin_decl_stmt
+name|int
+name|jobLimit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -j argument */
+end_comment
+
+begin_decl_stmt
+name|Boolean
+name|jobsRunning
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TRUE if the jobs might be running */
 end_comment
 
 begin_decl_stmt
@@ -452,6 +462,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* -k flag */
+end_comment
+
+begin_decl_stmt
+name|Boolean
+name|noExecute
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -n flag */
 end_comment
 
 begin_decl_stmt
@@ -485,97 +505,55 @@ comment|/* !-P flag */
 end_comment
 
 begin_decl_stmt
-name|Boolean
-name|ignoreErrors
+name|uint32_t
+name|warn_cmd
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -i flag */
+comment|/* command line warning flags */
 end_comment
 
 begin_decl_stmt
-name|Boolean
-name|beSilent
+name|uint32_t
+name|warn_flags
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -s flag */
+comment|/* actual warning flags */
 end_comment
 
 begin_decl_stmt
-name|Boolean
-name|beVerbose
+name|uint32_t
+name|warn_nocmd
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -v flag */
-end_comment
-
-begin_comment
-comment|/* (-E) vars to override from env */
+comment|/* command line no-warning flags */
 end_comment
 
 begin_decl_stmt
-name|Lst
-name|envFirstVars
-init|=
-name|Lst_Initializer
-argument_list|(
-name|envFirstVars
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Boolean
-name|jobsRunning
+name|time_t
+name|now
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* TRUE if the jobs might be running */
+comment|/* Time at start of make */
 end_comment
 
-begin_function_decl
-name|char
+begin_decl_stmt
+name|struct
+name|GNode
 modifier|*
-name|chdir_verify_path
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|curdir
+name|DEFAULT
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* startup directory */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|objdir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* where we chdir'ed to */
+comment|/* .DEFAULT node */
 end_comment
 
 begin_comment
@@ -633,7 +611,7 @@ name|str
 decl_stmt|;
 name|Var_Append
 argument_list|(
-name|MAKEFLAGS
+literal|".MAKEFLAGS"
 argument_list|,
 name|flag
 argument_list|,
@@ -656,7 +634,7 @@ argument_list|)
 expr_stmt|;
 name|Var_Append
 argument_list|(
-name|MAKEFLAGS
+literal|".MAKEFLAGS"
 argument_list|,
 name|str
 argument_list|,
@@ -2068,7 +2046,7 @@ argument_list|)
 decl_stmt|;
 name|Var_Append
 argument_list|(
-name|MAKEFLAGS
+literal|".MAKEFLAGS"
 argument_list|,
 name|ptr
 argument_list|,
@@ -2281,6 +2259,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|chdir_verify_path
@@ -2559,6 +2538,84 @@ decl_stmt|,
 modifier|*
 name|start
 decl_stmt|;
+comment|/* 	 * Initialize file global variables. 	 */
+name|expandVars
+operator|=
+name|TRUE
+expr_stmt|;
+name|noBuiltins
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Read the built-in rules */
+name|forceJobs
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* No -j flag */
+name|curdir
+operator|=
+name|cdpath
+expr_stmt|;
+comment|/* 	 * Initialize program global variables. 	 */
+name|beSilent
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Print commands as executed */
+name|ignoreErrors
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Pay attention to non-zero returns */
+name|noExecute
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Execute all commands */
+name|keepgoing
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Stop on error */
+name|allPrecious
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Remove targets when interrupted */
+name|queryFlag
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* This is not just a check-run */
+name|touchFlag
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Actually update targets */
+name|usePipes
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* Catch child output in pipes */
+name|debug
+operator|=
+literal|0
+expr_stmt|;
+comment|/* No debug verbosity, please. */
+name|jobsRunning
+operator|=
+name|FALSE
+expr_stmt|;
+name|jobLimit
+operator|=
+name|DEFMAXJOBS
+expr_stmt|;
+name|compatMake
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* No compat mode */
 name|check_make_level
 argument_list|()
 expr_stmt|;
@@ -2811,78 +2868,6 @@ operator|=
 literal|"unknown"
 expr_stmt|;
 block|}
-name|expandVars
-operator|=
-name|TRUE
-expr_stmt|;
-name|beSilent
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Print commands as executed */
-name|ignoreErrors
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Pay attention to non-zero returns */
-name|noExecute
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Execute all commands */
-name|keepgoing
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Stop on error */
-name|allPrecious
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Remove targets when interrupted */
-name|queryFlag
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* This is not just a check-run */
-name|noBuiltins
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Read the built-in rules */
-name|touchFlag
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Actually update targets */
-name|usePipes
-operator|=
-name|TRUE
-expr_stmt|;
-comment|/* Catch child output in pipes */
-name|debug
-operator|=
-literal|0
-expr_stmt|;
-comment|/* No debug verbosity, please. */
-name|jobsRunning
-operator|=
-name|FALSE
-expr_stmt|;
-name|jobLimit
-operator|=
-name|DEFMAXJOBS
-expr_stmt|;
-name|forceJobs
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* No -j flag */
-name|compatMake
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* No compat mode */
 comment|/* 	 * Initialize the parsing, directory and variable modules to prepare 	 * for the reading of inclusion paths and variable settings on the 	 * command line 	 */
 name|Proc_Init
 argument_list|()
@@ -2913,7 +2898,7 @@ argument_list|)
 expr_stmt|;
 name|Var_SetGlobal
 argument_list|(
-name|MAKEFLAGS
+literal|".MAKEFLAGS"
 argument_list|,
 literal|""
 argument_list|)
@@ -2977,10 +2962,6 @@ name|argv
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find where we are... 	 */
-name|curdir
-operator|=
-name|cdpath
-expr_stmt|;
 if|if
 condition|(
 name|getcwd
@@ -3619,7 +3600,7 @@ name|p
 operator|=
 name|Var_Value
 argument_list|(
-name|MAKEFLAGS
+literal|".MAKEFLAGS"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
