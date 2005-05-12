@@ -5722,6 +5722,9 @@ decl_stmt|;
 name|root_mount_wait
 argument_list|()
 expr_stmt|;
+name|devfs_first
+argument_list|()
+expr_stmt|;
 comment|/* 	 * We are booted with instructions to prompt for the root filesystem. 	 */
 if|if
 condition|(
