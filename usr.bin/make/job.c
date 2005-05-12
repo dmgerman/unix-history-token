@@ -1163,6 +1163,9 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+name|pid_t
+name|child_pid
+decl_stmt|;
 block|}
 name|ProcStuff
 typedef|;
@@ -1639,6 +1642,62 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+block|}
+end_function
+
+begin_comment
+comment|/**  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ProcWait
+parameter_list|(
+name|ProcStuff
+modifier|*
+name|ps
+parameter_list|)
+block|{
+name|pid_t
+name|pid
+decl_stmt|;
+name|int
+name|status
+decl_stmt|;
+comment|/* 	 * Wait for the process to exit. 	 */
+while|while
+condition|(
+operator|(
+operator|(
+name|pid
+operator|=
+name|wait
+argument_list|(
+operator|&
+name|status
+argument_list|)
+operator|)
+operator|!=
+name|ps
+operator|->
+name|child_pid
+operator|)
+operator|&&
+operator|(
+name|pid
+operator|>=
+literal|0
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
+return|return
+operator|(
+name|status
+operator|)
+return|;
 block|}
 end_function
 
@@ -4048,10 +4107,6 @@ block|{
 name|ProcStuff
 name|ps
 decl_stmt|;
-name|pid_t
-name|cpid
-decl_stmt|;
-comment|/* ID of new child */
 if|if
 condition|(
 name|DEBUG
@@ -4244,7 +4299,9 @@ comment|/* 	 * Fork.  Warning since we are doing vfork() instead of fork(), 	 * 
 if|if
 condition|(
 operator|(
-name|cpid
+name|ps
+operator|.
+name|child_pid
 operator|=
 name|vfork
 argument_list|()
@@ -4260,9 +4317,12 @@ literal|"Cannot fork"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
-name|cpid
+name|ps
+operator|.
+name|child_pid
 operator|==
 literal|0
 condition|)
@@ -4292,7 +4352,9 @@ name|job
 operator|->
 name|pid
 operator|=
-name|cpid
+name|ps
+operator|.
+name|child_pid
 expr_stmt|;
 if|if
 condition|(
@@ -10010,14 +10072,6 @@ index|]
 decl_stmt|;
 comment|/* Pipe streams */
 name|int
-name|cpid
-decl_stmt|;
-comment|/* Child PID */
-name|int
-name|pid
-decl_stmt|;
-comment|/* PID from wait() */
-name|int
 name|status
 decl_stmt|;
 comment|/* command exit status */
@@ -10203,7 +10257,9 @@ comment|/* 	 * Fork.  Warning since we are doing vfork() instead of fork(), 	 * 
 if|if
 condition|(
 operator|(
-name|cpid
+name|ps
+operator|.
+name|child_pid
 operator|=
 name|vfork
 argument_list|()
@@ -10224,9 +10280,12 @@ name|buf
 operator|)
 return|;
 block|}
+elseif|else
 if|if
 condition|(
-name|cpid
+name|ps
+operator|.
+name|child_pid
 operator|==
 literal|0
 condition|)
@@ -10374,30 +10433,14 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for the process to exit. 	 */
-while|while
-condition|(
-operator|(
-operator|(
-name|pid
+name|status
 operator|=
-name|wait
+name|ProcWait
 argument_list|(
 operator|&
-name|status
+name|ps
 argument_list|)
-operator|)
-operator|!=
-name|cpid
-operator|)
-operator|&&
-operator|(
-name|pid
-operator|>=
-literal|0
-operator|)
-condition|)
-continue|continue;
+expr_stmt|;
 if|if
 condition|(
 name|status
@@ -10883,10 +10926,6 @@ name|int
 name|status
 decl_stmt|;
 comment|/* Description of child's death */
-name|int
-name|cpid
-decl_stmt|;
-comment|/* Child actually found */
 name|ReturnStatus
 name|rstat
 decl_stmt|;
@@ -11322,7 +11361,9 @@ comment|/* 	 * Warning since we are doing vfork() instead of fork(), 	 * do not 
 if|if
 condition|(
 operator|(
-name|cpid
+name|ps
+operator|.
+name|child_pid
 operator|=
 name|vfork
 argument_list|()
@@ -11338,9 +11379,12 @@ literal|"Could not fork"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
-name|cpid
+name|ps
+operator|.
+name|child_pid
 operator|==
 literal|0
 condition|)
@@ -11440,7 +11484,9 @@ name|reason
 argument_list|)
 operator|)
 operator|!=
-name|cpid
+name|ps
+operator|.
+name|child_pid
 condition|)
 block|{
 if|if
