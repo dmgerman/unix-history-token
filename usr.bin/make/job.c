@@ -1164,6 +1164,13 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+name|int
+name|argv_free
+decl_stmt|;
+comment|/* release argv after use */
+name|int
+name|errCheck
+decl_stmt|;
 name|pid_t
 name|child_pid
 decl_stmt|;
@@ -4990,6 +4997,12 @@ operator|.
 name|argv
 operator|=
 name|argv
+expr_stmt|;
+name|ps
+operator|.
+name|argv_free
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Fork.  Warning since we are doing vfork() instead of fork(), 	 * do not allocate memory in the child process! 	 */
 if|if
@@ -10921,6 +10934,12 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|ps
+operator|.
+name|argv_free
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Fork.  Warning since we are doing vfork() instead of fork(), 	 * do not allocate memory in the child process! 	 */
 if|if
 condition|(
@@ -11529,11 +11548,6 @@ modifier|*
 name|av
 decl_stmt|;
 comment|/* Argument vector for thing to exec */
-name|char
-modifier|*
-name|cmd_save
-decl_stmt|;
-comment|/* saved cmd */
 name|ProcStuff
 name|ps
 decl_stmt|;
@@ -11917,6 +11931,12 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|ps
+operator|.
+name|argv_free
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -11926,7 +11946,19 @@ name|argv
 operator|=
 name|av
 expr_stmt|;
+name|ps
+operator|.
+name|argv_free
+operator|=
+literal|0
+expr_stmt|;
 block|}
+name|ps
+operator|.
+name|errCheck
+operator|=
+name|errCheck
+expr_stmt|;
 comment|/* 	 * Warning since we are doing vfork() instead of fork(), 	 * do not allocate memory in the child process! 	 */
 if|if
 condition|(
@@ -11972,9 +12004,9 @@ else|else
 block|{
 if|if
 condition|(
-name|av
-operator|==
-name|NULL
+name|ps
+operator|.
+name|argv_free
 condition|)
 block|{
 name|free
@@ -12028,13 +12060,6 @@ block|{
 name|free
 argument_list|(
 name|cmdStart
-argument_list|)
-expr_stmt|;
-name|Lst_Replace
-argument_list|(
-name|cmdNode
-argument_list|,
-name|cmd_save
 argument_list|)
 expr_stmt|;
 block|}
@@ -12132,6 +12157,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ps
+operator|.
 name|errCheck
 condition|)
 block|{
