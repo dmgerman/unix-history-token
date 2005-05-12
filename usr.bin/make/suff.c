@@ -4357,16 +4357,29 @@ modifier|*
 name|eoname
 decl_stmt|;
 comment|/* End of member portion */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* Start of member's name */
+name|char
+modifier|*
+name|p1
+decl_stmt|;
 name|GNode
 modifier|*
 name|mem
 decl_stmt|;
 comment|/* Node for member */
-comment|/* Variables to be copied from the member node */
+name|Suff
+modifier|*
+name|ms
+decl_stmt|;
+comment|/* Suffix descriptor for member */
 specifier|static
+specifier|const
 name|char
 modifier|*
-specifier|const
 name|copy
 index|[]
 init|=
@@ -4379,20 +4392,6 @@ block|,
 comment|/* Must be second */
 block|}
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-comment|/* Index into copy and vals */
-name|Suff
-modifier|*
-name|ms
-decl_stmt|;
-comment|/* Suffix descriptor for member */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* Start of member's name */
 comment|/* 	 * The node is an archive(member) pair. so we must find a 	 * suffix for both of them. 	 */
 name|eoarch
 operator|=
@@ -4493,51 +4492,18 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Copy in the variables from the member node to this one. 	 */
-for|for
-control|(
-name|i
-operator|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|copy
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|copy
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-block|{
-name|char
-modifier|*
-name|p1
-decl_stmt|;
 name|Var_Set
 argument_list|(
 name|copy
 index|[
-name|i
+literal|1
 index|]
 argument_list|,
 name|Var_Value
 argument_list|(
 name|copy
 index|[
-name|i
+literal|1
 index|]
 argument_list|,
 name|mem
@@ -4554,7 +4520,34 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-block|}
+name|Var_Set
+argument_list|(
+name|copy
+index|[
+literal|0
+index|]
+argument_list|,
+name|Var_Value
+argument_list|(
+name|copy
+index|[
+literal|0
+index|]
+argument_list|,
+name|mem
+argument_list|,
+operator|&
+name|p1
+argument_list|)
+argument_list|,
+name|gn
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 name|ms
 operator|=
 name|mem
