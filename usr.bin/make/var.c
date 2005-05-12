@@ -3599,6 +3599,37 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * Set the a global name variable to the value.  */
+end_comment
+
+begin_function
+name|void
+name|Var_SetGlobal
+parameter_list|(
+specifier|const
+name|char
+name|name
+index|[]
+parameter_list|,
+specifier|const
+name|char
+name|value
+index|[]
+parameter_list|)
+block|{
+name|Var_Set
+argument_list|(
+name|name
+argument_list|,
+name|value
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Set the VAR_TO_ENV flag on a variable  */
 end_comment
 
