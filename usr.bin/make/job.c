@@ -1646,7 +1646,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  */
+comment|/**  * Wait for child process to terminate.  */
 end_comment
 
 begin_function
@@ -1666,10 +1666,12 @@ name|int
 name|status
 decl_stmt|;
 comment|/* 	 * Wait for the process to exit. 	 */
-while|while
-condition|(
-operator|(
-operator|(
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|pid
 operator|=
 name|wait
@@ -1677,21 +1679,46 @@ argument_list|(
 operator|&
 name|status
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
 operator|!=
+name|EINTR
+condition|)
+block|{
+name|Fatal
+argument_list|(
+literal|"error in wait: %d"
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+name|pid
+operator|==
 name|ps
 operator|->
 name|child_pid
-operator|)
-operator|&&
-operator|(
-name|pid
-operator|>=
-literal|0
-operator|)
 condition|)
 block|{
-continue|continue;
+break|break;
+block|}
+if|if
+condition|(
+name|interrupted
+condition|)
+block|{
+break|break;
+block|}
 block|}
 return|return
 operator|(
@@ -10926,10 +10953,6 @@ name|int
 name|status
 decl_stmt|;
 comment|/* Description of child's death */
-name|ReturnStatus
-name|rstat
-decl_stmt|;
-comment|/* Status of fork */
 name|LstNode
 modifier|*
 name|cmdNode
@@ -11398,6 +11421,8 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|av
@@ -11443,7 +11468,7 @@ name|argv
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * we need to print out the command associated with this 	 * Gnode in Targ_PrintCmd from Targ_PrintGraph when debugging 	 * at level g2, in main(), Fatal() and DieHorribly(), 	 * therefore do not free it when debugging. 	 */
+comment|/* 		 * we need to print out the command associated with this 		 * Gnode in Targ_PrintCmd from Targ_PrintGraph when debugging 		 * at level g2, in main(), Fatal() and DieHorribly(), 		 * therefore do not free it when debugging. 		 */
 if|if
 condition|(
 operator|!
@@ -11466,48 +11491,15 @@ name|cmd_save
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The child is off and running. Now all we can do is wait... 	 */
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-while|while
-condition|(
-operator|(
-name|rstat
+comment|/* 		 * The child is off and running. Now all we can do is wait... 		 */
+name|reason
 operator|=
-name|wait
+name|ProcWait
 argument_list|(
 operator|&
-name|reason
-argument_list|)
-operator|)
-operator|!=
 name|ps
-operator|.
-name|child_pid
-condition|)
-block|{
-if|if
-condition|(
-name|interrupted
-operator|||
-operator|(
-name|rstat
-operator|==
-operator|-
-literal|1
-operator|&&
-name|errno
-operator|!=
-name|EINTR
-operator|)
-condition|)
-block|{
-break|break;
-block|}
-block|}
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|interrupted
@@ -11517,32 +11509,6 @@ argument_list|(
 name|interrupted
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rstat
-operator|>
-operator|-
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|WIFSTOPPED
-argument_list|(
-name|reason
-argument_list|)
-condition|)
-block|{
-comment|/* stopped */
-name|status
-operator|=
-name|WSTOPSIG
-argument_list|(
-name|reason
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|WIFEXITED
@@ -11562,9 +11528,17 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|!=
+operator|==
 literal|0
 condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+else|else
 block|{
 name|printf
 argument_list|(
@@ -11575,9 +11549,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|WIFSTOPPED
+argument_list|(
+name|reason
+argument_list|)
+condition|)
+block|{
+name|status
+operator|=
+name|WSTOPSIG
+argument_list|(
+name|reason
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
-comment|/* signaled */
 name|status
 operator|=
 name|WTERMSIG
@@ -11595,19 +11585,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|WIFEXITED
-argument_list|(
-name|reason
-argument_list|)
-operator|||
-name|status
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
 name|errCheck
 condition|)
 block|{
@@ -11622,47 +11599,34 @@ condition|(
 name|keepgoing
 condition|)
 block|{
-comment|/* 						 * Abort the current 						 * target, but let 						 * others continue. 						 */
+comment|/* 				 * Abort the current 				 * target, but let 				 * others continue. 				 */
 name|printf
 argument_list|(
 literal|" (continuing)\n"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-comment|/* 					 * Continue executing 					 * commands for this target. 					 * If we return 0, this will 					 * happen... 					 */
-name|printf
-argument_list|(
-literal|" (ignored)\n"
-argument_list|)
-expr_stmt|;
-name|status
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-break|break;
-block|}
-else|else
-block|{
-name|Fatal
-argument_list|(
-literal|"error in wait: %d"
-argument_list|,
-name|rstat
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-block|}
 return|return
 operator|(
 name|status
 operator|)
 return|;
+block|}
+else|else
+block|{
+comment|/* 			 * Continue executing 			 * commands for this target. 			 * If we return 0, this will 			 * happen... 			 */
+name|printf
+argument_list|(
+literal|" (ignored)\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
 block|}
 end_function
 
