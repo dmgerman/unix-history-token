@@ -66,6 +66,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * TRUE if environment should be searched for all variables before  * the global context  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|checkEnvFirst
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Do old-style variable substitution */
 end_comment
 

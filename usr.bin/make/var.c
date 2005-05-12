@@ -327,6 +327,7 @@ comment|/*  * Internally, variables are contained in four different contexts.  *
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|GNode
 modifier|*
 name|VAR_ENV
@@ -357,6 +358,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* variables defined on the command-line */
+end_comment
+
+begin_decl_stmt
+name|Boolean
+name|oldVars
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* variable substitution style */
+end_comment
+
+begin_decl_stmt
+name|Boolean
+name|checkEnvFirst
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -e flag */
 end_comment
 
 begin_define

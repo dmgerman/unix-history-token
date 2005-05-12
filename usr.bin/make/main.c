@@ -400,16 +400,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|maxJobs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -j argument */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|Boolean
 name|forceJobs
@@ -518,26 +508,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* -v flag */
-end_comment
-
-begin_decl_stmt
-name|Boolean
-name|oldVars
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* variable substitution style */
-end_comment
-
-begin_decl_stmt
-name|Boolean
-name|checkEnvFirst
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -e flag */
 end_comment
 
 begin_comment
