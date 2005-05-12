@@ -1449,7 +1449,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/kbd/kbdtables.h>
+file|<pc98/cbus/pckbdtables.h>
 end_include
 
 begin_comment
