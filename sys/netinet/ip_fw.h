@@ -215,6 +215,15 @@ comment|/* none				*/
 name|O_JAIL
 block|,
 comment|/* u32 = id			*/
+name|O_ALTQ
+block|,
+comment|/* u32 = altq classif. qid	*/
+name|O_DIVERTED
+block|,
+comment|/* arg1=bitmap (1:loop, 2:out)	*/
+name|O_TCPDATALEN
+block|,
+comment|/* arg1 = tcp data len		*/
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -465,6 +474,26 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * This is used for storing an altq queue id number.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_insn_altq
+block|{
+name|ipfw_insn
+name|o
+decl_stmt|;
+name|u_int32_t
+name|qid
+decl_stmt|;
+block|}
+name|ipfw_insn_altq
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * This is used for limit rules.  */
 end_comment
 
@@ -533,7 +562,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Here we have the structure representing an ipfw rule.  *  * It starts with a general area (with link fields and counters)  * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values.  *  * Given a rule pointer  r:  *  *  r->cmd		is the start of the first instruction.  *  ACTION_PTR(r)	is the start of the first action (things to do  *			once a rule matched).  *  * When assembling instruction, remember the following:  *  *  + if a rule has a "keep-state" (or "limit") option, then the  *	first instruction (at r->cmd) MUST BE an O_PROBE_STATE  *  + if a rule has a "log" option, then the first action  *	(at ACTION_PTR(r)) MUST be O_LOG  *  * NOTE: we use a simple linked list of rules because we never need  * 	to delete a rule without scanning the list. We do not use  *	queue(3) macros for portability and readability.  */
+comment|/*  * Here we have the structure representing an ipfw rule.  *  * It starts with a general area (with link fields and counters)  * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values.  *  * Given a rule pointer  r:  *  *  r->cmd		is the start of the first instruction.  *  ACTION_PTR(r)	is the start of the first action (things to do  *			once a rule matched).  *  * When assembling instruction, remember the following:  *  *  + if a rule has a "keep-state" (or "limit") option, then the  *	first instruction (at r->cmd) MUST BE an O_PROBE_STATE  *  + if a rule has a "log" option, then the first action  *	(at ACTION_PTR(r)) MUST be O_LOG  *  + if a rule has an "altq" option, it comes after "log"  *  * NOTE: we use a simple linked list of rules because we never need  * 	to delete a rule without scanning the list. We do not use  *	queue(3) macros for portability and readability.  */
 end_comment
 
 begin_struct
@@ -888,21 +917,35 @@ begin_define
 define|#
 directive|define
 name|IP_FW_PORT_DYNT_FLAG
-value|0x10000
+value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IP_FW_PORT_TEE_FLAG
-value|0x20000
+value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IP_FW_PORT_DENY_FLAG
-value|0x40000
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_DIVERT_LOOPBACK_FLAG
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_DIVERT_OUTPUT_FLAG
+value|0x00100000
 end_define
 
 begin_comment

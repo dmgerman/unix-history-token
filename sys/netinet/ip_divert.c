@@ -194,6 +194,12 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/ip_fw.h>
+end_include
+
 begin_comment
 comment|/*  * Divert sockets  */
 end_comment
@@ -891,6 +897,16 @@ modifier|*
 name|control
 parameter_list|)
 block|{
+name|struct
+name|m_tag
+modifier|*
+name|mtag
+decl_stmt|;
+name|struct
+name|divert_tag
+modifier|*
+name|dt
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -914,25 +930,6 @@ name|control
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* Loopback avoidance and state recovery */
-if|if
-condition|(
-name|sin
-condition|)
-block|{
-name|struct
-name|m_tag
-modifier|*
-name|mtag
-decl_stmt|;
-name|struct
-name|divert_tag
-modifier|*
-name|dt
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|mtag
 operator|=
 name|m_tag_get
@@ -986,9 +983,7 @@ name|dt
 operator|->
 name|cookie
 operator|=
-name|sin
-operator|->
-name|sin_port
+literal|0
 expr_stmt|;
 name|m_tag_prepend
 argument_list|(
@@ -996,6 +991,23 @@ name|m
 argument_list|,
 name|mtag
 argument_list|)
+expr_stmt|;
+comment|/* Loopback avoidance and state recovery */
+if|if
+condition|(
+name|sin
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|dt
+operator|->
+name|cookie
+operator|=
+name|sin
+operator|->
+name|sin_port
 expr_stmt|;
 comment|/* 		 * Find receive interface with the given name, stuffed 		 * (if it exists) in the sin_zero[] field. 		 * The name is user supplied data so don't trust its size 		 * or that it is zero terminated. 		 */
 for|for
@@ -1088,6 +1100,12 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
+name|dt
+operator|->
+name|info
+operator||=
+name|IP_FW_DIVERT_OUTPUT_FLAG
+expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -1250,6 +1268,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|dt
+operator|->
+name|info
+operator||=
+name|IP_FW_DIVERT_LOOPBACK_FLAG
+expr_stmt|;
 if|if
 condition|(
 name|m
