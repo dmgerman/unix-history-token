@@ -599,6 +599,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|hyperthreading_allowed
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
