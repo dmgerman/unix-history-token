@@ -2474,8 +2474,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
+name|int
 name|ttyname_r
 parameter_list|(
 name|int

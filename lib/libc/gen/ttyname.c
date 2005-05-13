@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"un-namespace.h"
 end_include
 
@@ -182,8 +188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|char
-modifier|*
+name|int
 name|ttyname_r
 parameter_list|(
 name|int
@@ -201,18 +206,10 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-name|char
-modifier|*
-name|rval
-decl_stmt|;
 name|struct
 name|fiodgname_arg
 name|fgn
 decl_stmt|;
-name|rval
-operator|=
-name|NULL
-expr_stmt|;
 operator|*
 name|buf
 operator|=
@@ -229,7 +226,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|rval
+name|ENOTTY
 operator|)
 return|;
 comment|/* Must be a character device. */
@@ -253,7 +250,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|rval
+name|ENOTTY
 operator|)
 return|;
 comment|/* Must have enough room */
@@ -268,7 +265,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|rval
+name|ERANGE
 operator|)
 return|;
 name|strcpy
@@ -315,7 +312,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|buf
+name|EINVAL
 operator|)
 return|;
 name|devname_r
@@ -346,7 +343,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|buf
+literal|0
 operator|)
 return|;
 block|}
@@ -371,8 +368,9 @@ name|__isthreaded
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
+block|{
+if|if
+condition|(
 name|ttyname_r
 argument_list|(
 name|fd
@@ -382,8 +380,21 @@ argument_list|,
 sizeof|sizeof
 name|ttyname_buf
 argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
+else|else
+return|return
+operator|(
+name|ttyname_buf
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|ttyname_init
@@ -506,8 +517,6 @@ operator|)
 return|;
 block|}
 block|}
-return|return
-operator|(
 name|ttyname_r
 argument_list|(
 name|fd
@@ -521,6 +530,10 @@ argument_list|)
 operator|+
 name|MAXNAMLEN
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|buf
 operator|)
 return|;
 block|}
