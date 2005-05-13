@@ -3816,11 +3816,32 @@ operator|!=
 name|count
 condition|)
 block|{
+if|if
+condition|(
+name|res
+operator|==
+operator|-
+literal|1
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nonly wrote %d of %jd bytes: %s\n"
+literal|"\n%s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nonly wrote %d of %jd"
+literal|" bytes\n"
 argument_list|,
 name|res
 argument_list|,
@@ -3828,11 +3849,6 @@ operator|(
 name|intmax_t
 operator|)
 name|count
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
