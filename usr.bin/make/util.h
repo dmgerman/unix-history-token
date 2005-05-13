@@ -428,6 +428,8 @@ name|flag2str
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

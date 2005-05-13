@@ -744,6 +744,9 @@ name|tab
 parameter_list|,
 name|u_int
 name|flags
+parameter_list|,
+name|int
+name|par
 parameter_list|)
 block|{
 name|int
@@ -751,6 +754,10 @@ name|first
 init|=
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|par
+condition|)
 name|fprintf
 argument_list|(
 name|fp
@@ -785,7 +792,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+name|par
+condition|?
 literal|"|"
+else|:
+literal|" "
 argument_list|)
 expr_stmt|;
 name|first
@@ -808,6 +819,10 @@ name|tab
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|par
+condition|)
 name|fprintf
 argument_list|(
 name|fp

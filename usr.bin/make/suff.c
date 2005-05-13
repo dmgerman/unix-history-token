@@ -6477,6 +6477,8 @@ argument_list|,
 name|s
 operator|->
 name|flags
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
