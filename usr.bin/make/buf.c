@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sprite.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"util.h"
 end_include
 

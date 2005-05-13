@@ -18,13 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sprite.h"
+file|"lst.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lst.h"
+file|"util.h"
 end_include
 
 begin_struct_decl

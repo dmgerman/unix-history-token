@@ -22,7 +22,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sprite.h"
+file|"util.h"
 end_include
 
 begin_struct_decl
