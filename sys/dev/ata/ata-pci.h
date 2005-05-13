@@ -164,7 +164,7 @@ index|[
 literal|8
 index|]
 struct|;
-comment|/* SOS max ch# for now XXX */
+comment|/* XXX SOS max ch# for now */
 block|}
 struct|;
 end_struct

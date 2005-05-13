@@ -2918,7 +2918,7 @@ break|break;
 case|case
 name|ATAATTACH
 case|:
-comment|/* SOS should enable channel HW on controller XXX */
+comment|/* XXX SOS should enable channel HW on controller */
 name|error
 operator|=
 name|ata_attach
@@ -2937,7 +2937,7 @@ argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
-comment|/* SOS should disable channel HW on controller XXX */
+comment|/* XXX SOS should disable channel HW on controller */
 break|break;
 default|default:
 if|if

@@ -6352,7 +6352,7 @@ argument_list|(
 name|rdp
 argument_list|)
 expr_stmt|;
-comment|/* wipe the metadata instead? XXX SOS */
+comment|/* XXX SOS wipe metadata instead? */
 name|ata_raid_arrays
 index|[
 name|array
@@ -6547,7 +6547,7 @@ condition|)
 return|return
 name|EBUSY
 return|;
-comment|/* validate size etc etc XXX SOS */
+comment|/* XXX SOS validate size etc etc */
 name|ars
 operator|->
 name|raid
@@ -10649,7 +10649,7 @@ name|config_id
 operator|)
 condition|)
 continue|continue;
-comment|/* 	 * update our knowledge about the array config based on generation 	 * we only grap the first volume description (yet) since the 	 * BIOS'n I have access to puts crap into the following XXX SOS 	 */
+comment|/* 	 * update our knowledge about the array config based on generation 	 * we only grap the first volume description (yet) since the 	 * BIOS'n I have access to puts crap into the following ones 	 */
 if|if
 condition|(
 operator|!
@@ -17242,7 +17242,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* XXX SOS hackish */
 name|raid
 operator|->
 name|format

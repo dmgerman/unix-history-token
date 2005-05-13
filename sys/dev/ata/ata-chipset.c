@@ -1126,7 +1126,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -3367,7 +3366,6 @@ argument_list|,
 name|ATA_AHCI_IS
 argument_list|)
 expr_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -3816,7 +3814,7 @@ argument_list|(
 literal|500000
 argument_list|)
 expr_stmt|;
-comment|/* XXX SOS */
+comment|/* XXX SOS this is not entirely wrong */
 comment|/* spin up device */
 name|ATA_OUTL
 argument_list|(
@@ -4398,7 +4396,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -7085,7 +7082,7 @@ argument_list|,
 name|ATA_WDMA2
 argument_list|)
 expr_stmt|;
-comment|/* XXX missing WDMA0+1 + PIO modes */
+comment|/* XXX SOS missing WDMA0+1 + PIO modes */
 if|if
 condition|(
 name|mode
@@ -7741,7 +7738,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -9340,7 +9336,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -12090,7 +12085,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -15452,7 +15446,8 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* softreset HOST module XXX SOS what about other outstandings */
+comment|/* softreset HOST module */
+comment|/* XXX SOS what about other outstandings */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -17969,7 +17964,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -18128,7 +18122,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -21308,7 +21301,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -21623,7 +21615,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit
@@ -21821,7 +21812,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* implement this as a toggle instead to balance load XXX */
 for|for
 control|(
 name|unit

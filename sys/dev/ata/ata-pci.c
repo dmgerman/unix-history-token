@@ -2824,7 +2824,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* free resources for io and ctlio XXX SOS */
+comment|/* XXX SOS free resources for io and ctlio ?? */
 return|return
 literal|0
 return|;
