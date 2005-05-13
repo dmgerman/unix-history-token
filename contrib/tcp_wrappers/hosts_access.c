@@ -1867,9 +1867,6 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NI_WITHSCOPEID
 if|if
 condition|(
 name|pat
@@ -1889,8 +1886,6 @@ condition|)
 return|return
 name|NO
 return|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|!
@@ -2486,9 +2481,6 @@ condition|)
 return|return
 name|NO
 return|;
-ifdef|#
-directive|ifdef
-name|NI_WITHSCOPEID
 if|if
 condition|(
 name|net
@@ -2508,8 +2500,6 @@ condition|)
 return|return
 name|NO
 return|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|mask_len

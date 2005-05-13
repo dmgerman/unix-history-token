@@ -4827,7 +4827,7 @@ literal|0
 decl_stmt|,
 name|flag
 init|=
-name|NI_WITHSCOPEID
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -5053,7 +5053,7 @@ decl_stmt|;
 name|int
 name|flag
 init|=
-name|NI_WITHSCOPEID
+literal|0
 decl_stmt|;
 comment|/* use local variable for safety */
 name|struct
