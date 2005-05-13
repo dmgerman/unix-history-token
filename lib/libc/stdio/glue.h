@@ -24,9 +24,16 @@ modifier|*
 name|iobs
 decl_stmt|;
 block|}
-name|__sglue
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|glue
+name|__sglue
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
