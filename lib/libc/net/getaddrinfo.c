@@ -10934,12 +10934,12 @@ operator|->
 name|ai_next
 expr_stmt|;
 block|}
-block|}
 name|free
 argument_list|(
 name|ypbuf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* ipnodes.byname can hold both IPv4/v6 */
 name|r
