@@ -51,15 +51,6 @@ end_struct_decl
 
 begin_function_decl
 name|void
-name|Shell_Init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|Job_Touch
 parameter_list|(
 name|struct

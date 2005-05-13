@@ -8595,6 +8595,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|Shell_Init
 parameter_list|(
@@ -10105,12 +10106,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * The user provided a path. If s/he gave nothing else 		 * (fullSpec is FALSE), try and find a matching shell in the 		 * ones we know of. Else we just take the specification at its 		 * word and copy it to a new location. In either case, we need 		 * to record the path the user gave for the shell. 		 */
-name|free
-argument_list|(
-name|shellPath
-argument_list|)
-expr_stmt|;
-name|shellPath
+name|path
 operator|=
 name|estrdup
 argument_list|(
@@ -10127,7 +10123,12 @@ name|NULL
 condition|)
 block|{
 comment|/* get the base name as the name */
-name|path
+if|if
+condition|(
+operator|(
+name|newShell
+operator|.
+name|name
 operator|=
 name|strrchr
 argument_list|(
@@ -10135,32 +10136,27 @@ name|path
 argument_list|,
 literal|'/'
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|path
+operator|)
 operator|==
 name|NULL
 condition|)
 block|{
-name|path
-operator|=
-name|shellPath
-expr_stmt|;
-block|}
-else|else
-block|{
-name|path
-operator|+=
-literal|1
-expr_stmt|;
-block|}
 name|newShell
 operator|.
 name|name
 operator|=
 name|path
 expr_stmt|;
+block|}
+else|else
+block|{
+name|newShell
+operator|.
+name|name
+operator|+=
+literal|1
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -10195,6 +10191,11 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FAILURE
@@ -10213,6 +10214,15 @@ name|newShell
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|shellPath
+argument_list|)
+expr_stmt|;
+name|shellPath
+operator|=
+name|path
+expr_stmt|;
 block|}
 comment|/* set the new shell */
 name|JobFreeShell
@@ -11897,7 +11907,7 @@ index|]
 operator|=
 name|strdup
 argument_list|(
-name|shellName
+name|shellPath
 argument_list|)
 expr_stmt|;
 name|ps
