@@ -15,12 +15,6 @@ begin_comment
 comment|/* FIXME:    2.  We should not export so much of the DFA internals.    In addition to clobbering modularity, we eat up valuable    name space. */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"mbcache.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -923,10 +917,6 @@ operator|,
 name|size_t
 operator|,
 name|int
-operator|*
-operator|,
-expr|struct
-name|mb_cache
 operator|*
 operator|)
 argument_list|)
