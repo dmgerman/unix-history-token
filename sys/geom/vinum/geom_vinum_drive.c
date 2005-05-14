@@ -2128,19 +2128,6 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|->
-name|sectorsize
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 comment|/* Find the VINUM class and its associated geom. */
 name|gp2
 operator|=
