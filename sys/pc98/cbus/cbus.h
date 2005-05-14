@@ -62,17 +62,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_DMA
-value|0x001
-end_define
-
-begin_comment
-comment|/* 8237A DMA Controller */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_ICU2
 value|0x008
 end_define

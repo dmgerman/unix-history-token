@@ -51,17 +51,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_DMA1
-value|0x000
-end_define
-
-begin_comment
-comment|/* 8237A DMA Controller #1 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_ICU1
 value|0x020
 end_define
@@ -117,34 +106,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_DMAPG
-value|0x080
-end_define
-
-begin_comment
-comment|/* DMA Page Registers */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_ICU2
 value|0x0A0
 end_define
 
 begin_comment
 comment|/* 8259A Interrupt Controller #2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_DMA2
-value|0x0C0
-end_define
-
-begin_comment
-comment|/* 8237A DMA Controller #2 */
 end_comment
 
 begin_comment

@@ -96,19 +96,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ic/i8237.h>
+file|<isa/isareg.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<isa/isavar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isa/isa_dmareg.h>
 end_include
 
 begin_function_decl

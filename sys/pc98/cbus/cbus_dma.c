@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ic/i8237.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<isa/isavar.h>
 end_include
 
@@ -123,67 +117,11 @@ directive|include
 file|<pc98/cbus/cbus.h>
 end_include
 
-begin_comment
-comment|/* **  Register definitions for DMA controller 1 (channels 0..3): */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_CHN
-parameter_list|(
-name|c
-parameter_list|)
-value|(IO_DMA + (4*(c)))
-end_define
-
-begin_comment
-comment|/* addr reg for channel c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_STATUS
-value|(IO_DMA + 0x10)
-end_define
-
-begin_comment
-comment|/* status register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_SMSK
-value|(IO_DMA + 0x14)
-end_define
-
-begin_comment
-comment|/* single mask register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_MODE
-value|(IO_DMA + 0x16)
-end_define
-
-begin_comment
-comment|/* mode register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_FFC
-value|(IO_DMA + 0x18)
-end_define
-
-begin_comment
-comment|/* clear first/last FF */
-end_comment
+begin_include
+include|#
+directive|include
+file|<pc98/cbus/cbus_dmareg.h>
+end_include
 
 begin_function_decl
 specifier|static

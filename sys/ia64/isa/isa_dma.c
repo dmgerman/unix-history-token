@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ic/i8237.h>
+file|<isa/isa_dmareg.h>
 end_include
 
 begin_include
