@@ -1450,7 +1450,7 @@ literal|3600
 operator|*
 literal|24
 expr_stmt|;
-comment|/* Calclulate the month */
+comment|/* Calculate the month */
 name|lpyear
 operator|=
 name|udf_isaleapyear
@@ -1560,7 +1560,7 @@ operator|*
 literal|24
 expr_stmt|;
 block|}
-comment|/* 	 * Calculate the time zone.  The timezone is 12 bit signed 2's 	 * compliment, so we gotta do some extra magic to handle it right. 	 */
+comment|/* 	 * Calculate the time zone.  The timezone is 12 bit signed 2's 	 * complement, so we gotta do some extra magic to handle it right. 	 */
 name|tz
 operator|.
 name|u_tz_offset
@@ -2575,7 +2575,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compare a CS0 dstring with a name passed in from the VFS layer.  Return  * 0 on a successful match, nonzero therwise.  Unicode work may need to be done  * here also.  */
+comment|/*  * Compare a CS0 dstring with a name passed in from the VFS layer.  Return  * 0 on a successful match, nonzero otherwise.  Unicode work may need to be done  * here also.  */
 end_comment
 
 begin_function
