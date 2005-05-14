@@ -935,6 +935,18 @@ block|,
 name|TYPE_PL2303
 block|}
 block|,
+comment|/* Sitecom USB to Serial */
+block|{
+name|USB_VENDOR_SITECOM
+block|,
+name|USB_PRODUCT_SITECOM_SERIAL
+block|,
+operator|-
+literal|1
+block|,
+name|TYPE_PL2303
+block|}
+block|,
 block|{
 literal|0
 block|,
