@@ -125,13 +125,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/timerreg.h>
+file|<machine/timerreg.h>
 end_include
 
 begin_ifdef

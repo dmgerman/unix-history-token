@@ -201,7 +201,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa.h>
+file|<machine/ppireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/timerreg.h>
 end_include
 
 begin_include
@@ -219,6 +225,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<isa/isareg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isa/isavar.h>
 end_include
 
@@ -226,12 +238,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/timerreg.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -1323,20 +1329,11 @@ modifier|*
 name|chan
 parameter_list|)
 block|{
-name|outb
-argument_list|(
-name|IO_PPI
-argument_list|,
-name|inb
-argument_list|(
-name|IO_PPI
-argument_list|)
-operator|&
-literal|0xFC
-argument_list|)
+name|ppi_spkr_off
+argument_list|()
 expr_stmt|;
 comment|/* disable counter2 output to speaker */
-name|release_timer2
+name|timer_spkr_release
 argument_list|()
 expr_stmt|;
 name|beeping
@@ -1365,12 +1362,8 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
-name|acquire_timer2
-argument_list|(
-name|TIMER_SQWAVE
-operator||
-name|TIMER_16BIT
-argument_list|)
+name|timer_spkr_acquire
+argument_list|()
 condition|)
 if|if
 condition|(
@@ -1398,22 +1391,9 @@ operator|&
 name|clock_lock
 argument_list|)
 expr_stmt|;
-name|outb
+name|spkr_set_pitch
 argument_list|(
-name|TIMER_CNTR2
-argument_list|,
 name|pitch
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|TIMER_CNTR2
-argument_list|,
-operator|(
-name|pitch
-operator|>>
-literal|8
-operator|)
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -1429,17 +1409,8 @@ name|beeping
 condition|)
 block|{
 comment|/* enable counter2 output to speaker */
-name|outb
-argument_list|(
-name|IO_PPI
-argument_list|,
-name|inb
-argument_list|(
-name|IO_PPI
-argument_list|)
-operator||
-literal|3
-argument_list|)
+name|ppi_spkr_on
+argument_list|()
 expr_stmt|;
 name|beeping
 operator|=

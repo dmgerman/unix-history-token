@@ -77,40 +77,6 @@ directive|include
 file|<isa/isavar.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/cbus/cbus.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/timerreg.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -121,6 +87,18 @@ begin_include
 include|#
 directive|include
 file|<machine/speaker.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ppireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/timerreg.h>
 end_include
 
 begin_decl_stmt
@@ -213,10 +191,6 @@ begin_comment
 comment|/**************** MACHINE DEPENDENT PART STARTS HERE *************************  *  * This section defines a function tone() which causes a tone of given  * frequency and duration from the ISA console speaker.  * Another function endtone() is defined to force sound off, and there is  * also a rest() entry point to do pauses.  *  * Audible sound is generated using the Programmable Interval Timer (PIT) and  * Programmable Peripheral Interface (PPI) attached to the ISA speaker. The  * PPI controls whether sound is passed through at all; the PIT's channel 2 is  * used to generate clicks (a square wave) of whatever frequency is desired.  */
 end_comment
 
-begin_comment
-comment|/*  * XXX PPI control values should be in a header and used in clock.c.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -230,66 +204,6 @@ name|SPKR_DESC
 value|"PC98 speaker"
 end_define
 
-begin_define
-define|#
-directive|define
-name|PPI_SPKR
-value|0x08
-end_define
-
-begin_comment
-comment|/* turn these PPI bits on to pass sound */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIT_COUNT
-value|0x3fdb
-end_define
-
-begin_comment
-comment|/* PIT count address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPEAKER_ON
-value|outb(IO_PPI, inb(IO_PPI)& ~PPI_SPKR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPEAKER_OFF
-value|outb(IO_PPI, inb(IO_PPI) | PPI_SPKR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIMER_ACQUIRE
-value|acquire_timer1(TIMER_SEL1 | TIMER_SQWAVE | TIMER_16BIT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIMER_RELEASE
-value|release_timer1()
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPEAKER_WRITE
-parameter_list|(
-name|val
-parameter_list|)
-value|{ \ 					outb(PIT_COUNT, (val& 0xff)); \ 					outb(PIT_COUNT, (val>> 8)); \ 				}
-end_define
-
 begin_else
 else|#
 directive|else
@@ -300,55 +214,6 @@ define|#
 directive|define
 name|SPKR_DESC
 value|"PC speaker"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPI_SPKR
-value|0x03
-end_define
-
-begin_comment
-comment|/* turn these PPI bits on to pass sound */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPEAKER_ON
-value|outb(IO_PPI, inb(IO_PPI) | PPI_SPKR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPEAKER_OFF
-value|outb(IO_PPI, inb(IO_PPI)& ~PPI_SPKR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIMER_ACQUIRE
-value|acquire_timer2(TIMER_SEL2 | TIMER_SQWAVE | TIMER_16BIT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIMER_RELEASE
-value|release_timer2()
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPEAKER_WRITE
-parameter_list|(
-name|val
-parameter_list|)
-value|{ \ 					outb(TIMER_CNTR2, (val& 0xff)); \     					outb(TIMER_CNTR2, (val>> 8)); \ 				}
 end_define
 
 begin_endif
@@ -507,7 +372,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|TIMER_ACQUIRE
+name|timer_spkr_acquire
+argument_list|()
 condition|)
 block|{
 comment|/* enter list of waiting procs ??? */
@@ -526,7 +392,7 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|SPEAKER_WRITE
+name|spkr_set_pitch
 argument_list|(
 name|divisor
 argument_list|)
@@ -535,7 +401,8 @@ name|enable_intr
 argument_list|()
 expr_stmt|;
 comment|/* turn the speaker on */
-name|SPEAKER_ON
+name|ppi_spkr_on
+argument_list|()
 expr_stmt|;
 comment|/*      * Set timeout to endtone function, then give up the timeslice.      * This is so other processes can execute while the tone is being      * emitted.      */
 if|if
@@ -558,14 +425,16 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
-name|SPEAKER_OFF
+name|ppi_spkr_off
+argument_list|()
 expr_stmt|;
 name|sps
 operator|=
 name|splclock
 argument_list|()
 expr_stmt|;
-name|TIMER_RELEASE
+name|timer_spkr_release
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(

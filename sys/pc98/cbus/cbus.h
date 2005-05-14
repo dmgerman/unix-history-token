@@ -106,34 +106,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_PPI
-value|0x035
-end_define
-
-begin_comment
-comment|/* Programmable Peripheral Interface */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_KBD
 value|0x041
 end_define
 
 begin_comment
 comment|/* 8251A Keyboard */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_TIMER1
-value|0x071
-end_define
-
-begin_comment
-comment|/* 8253C Timer */
 end_comment
 
 begin_define

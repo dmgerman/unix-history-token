@@ -191,6 +191,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/ppireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/timerreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/icu.h>
 end_include
 
@@ -222,12 +234,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/timerreg.h>
-end_include
 
 begin_comment
 comment|/*  * 32-bit time_t's can't reach leap years before 1904 or after 2036, so we  * can use a simple formula for leap years.  */
@@ -1226,20 +1232,11 @@ modifier|*
 name|chan
 parameter_list|)
 block|{
-name|outb
-argument_list|(
-name|IO_PPI
-argument_list|,
-name|inb
-argument_list|(
-name|IO_PPI
-argument_list|)
-operator||
-literal|0x08
-argument_list|)
+name|ppi_spkr_off
+argument_list|()
 expr_stmt|;
 comment|/* disable counter1 output to speaker */
-name|release_timer1
+name|timer_spkr_release
 argument_list|()
 expr_stmt|;
 name|beeping
@@ -1268,12 +1265,8 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
-name|acquire_timer1
-argument_list|(
-name|TIMER_SQWAVE
-operator||
-name|TIMER_16BIT
-argument_list|)
+name|timer_spkr_acquire
+argument_list|()
 condition|)
 if|if
 condition|(
@@ -1298,22 +1291,9 @@ block|}
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|outb
+name|spkr_set_pitch
 argument_list|(
-literal|0x3fdb
-argument_list|,
 name|pitch
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-literal|0x3fdb
-argument_list|,
-operator|(
-name|pitch
-operator|>>
-literal|8
-operator|)
 argument_list|)
 expr_stmt|;
 name|enable_intr
@@ -1326,19 +1306,8 @@ name|beeping
 condition|)
 block|{
 comment|/* enable counter1 output to speaker */
-name|outb
-argument_list|(
-name|IO_PPI
-argument_list|,
-operator|(
-name|inb
-argument_list|(
-name|IO_PPI
-argument_list|)
-operator|&
-literal|0xf7
-operator|)
-argument_list|)
+name|ppi_spkr_on
+argument_list|()
 expr_stmt|;
 name|beeping
 operator|=

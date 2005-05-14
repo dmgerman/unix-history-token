@@ -84,45 +84,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_TIMER1
-value|0x040
-end_define
-
-begin_comment
-comment|/* 8253 Timer #1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_TIMER2
-value|0x048
-end_define
-
-begin_comment
-comment|/* 8253 Timer #2 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_KBD
 value|0x060
 end_define
 
 begin_comment
 comment|/* 8042 Keyboard */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_PPI
-value|0x061
-end_define
-
-begin_comment
-comment|/* Programmable Peripheral Interface */
 end_comment
 
 begin_define

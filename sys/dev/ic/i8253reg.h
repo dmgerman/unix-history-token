@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  *  * Register definitions for the Intel 8253 Programmable Interval Timer.  *  * This chip has three independent 16-bit down counters that can be  * read on the fly.  There are three mode registers and three countdown  * registers.  The countdown registers are addressed directly, via the  * first three I/O ports.  The three mode registers are accessed via  * the fourth I/O port, with two bits in the mode byte indicating the  * register.  (Why are hardware interfaces always so braindead?).  *  * To write a value into the countdown register, the mode register  * is first programmed with a command indicating the which byte of  * the two byte register is to be modified.  The three possibilities  * are load msb (TMR_MR_MSB), load lsb (TMR_MR_LSB), or load lsb then  * msb (TMR_MR_BOTH).  *  * To read the current value ("on the fly") from the countdown register,  * you write a "latch" command into the mode register, then read the stable  * value from the corresponding I/O port.  For example, you write  * TMR_MR_LATCH into the corresponding mode register.  Presumably,  * after doing this, a write operation to the I/O port would result  * in undefined behavior (but hopefully not fry the chip).  * Reading in this manner has no side effects.  *  * [ALPHA]  * The outputs of the three timers are connected as follows:  *  *	 timer 0 -> irq 0  *	 timer 1 -> dma chan 0 (for dram refresh)  * 	 timer 2 -> speaker (via keyboard controller)  *  * Timer 0 is used to call hardclock.  * Timer 2 is used to generate console beeps.  */
+comment|/*  * Register definitions for the Intel 8253 Programmable Interval Timer.  *  * This chip has three independent 16-bit down counters that can be  * read on the fly.  There are three mode registers and three countdown  * registers.  The countdown registers are addressed directly, via the  * first three I/O ports.  The three mode registers are accessed via  * the fourth I/O port, with two bits in the mode byte indicating the  * register.  (Why are hardware interfaces always so braindead?).  *  * To write a value into the countdown register, the mode register  * is first programmed with a command indicating the which byte of  * the two byte register is to be modified.  The three possibilities  * are load msb (TMR_MR_MSB), load lsb (TMR_MR_LSB), or load lsb then  * msb (TMR_MR_BOTH).  *  * To read the current value ("on the fly") from the countdown register,  * you write a "latch" command into the mode register, then read the stable  * value from the corresponding I/O port.  For example, you write  * TMR_MR_LATCH into the corresponding mode register.  Presumably,  * after doing this, a write operation to the I/O port would result  * in undefined behavior (but hopefully not fry the chip).  * Reading in this manner has no side effects.  */
 end_comment
 
 begin_comment
@@ -14,8 +14,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIMER_CNTR0
-value|(IO_TIMER1 + 0)
+name|TIMER_REG_CNTR0
+value|0
 end_define
 
 begin_comment
@@ -25,8 +25,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIMER_CNTR1
-value|(IO_TIMER1 + 1)
+name|TIMER_REG_CNTR1
+value|1
 end_define
 
 begin_comment
@@ -36,8 +36,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIMER_CNTR2
-value|(IO_TIMER1 + 2)
+name|TIMER_REG_CNTR2
+value|2
 end_define
 
 begin_comment
@@ -47,8 +47,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIMER_MODE
-value|(IO_TIMER1 + 3)
+name|TIMER_REG_MODE
+value|3
 end_define
 
 begin_comment
