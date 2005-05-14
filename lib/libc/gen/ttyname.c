@@ -312,7 +312,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|EINVAL
+literal|0
 operator|)
 return|;
 name|devname_r
