@@ -3531,6 +3531,13 @@ operator|+
 name|match_size
 expr_stmt|;
 block|}
+name|fputs
+argument_list|(
+literal|"\33[K"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
 name|fwrite
 argument_list|(
