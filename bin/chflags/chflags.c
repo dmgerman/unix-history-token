@@ -151,6 +151,8 @@ name|Lflag
 decl_stmt|,
 name|Rflag
 decl_stmt|,
+name|hflag
+decl_stmt|,
 name|ch
 decl_stmt|,
 name|fts_options
@@ -166,11 +168,27 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|change_flags
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
 name|Hflag
 operator|=
 name|Lflag
 operator|=
 name|Rflag
+operator|=
+name|hflag
 operator|=
 literal|0
 expr_stmt|;
@@ -185,7 +203,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPR"
+literal|"HLPRh"
 argument_list|)
 operator|)
 operator|!=
@@ -240,6 +258,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'h'
+case|:
+name|hflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -275,6 +301,18 @@ name|FTS_PHYSICAL
 expr_stmt|;
 if|if
 condition|(
+name|hflag
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"the -R and -h options "
+literal|"may not be specified together"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|Hflag
 condition|)
 name|fts_options
@@ -301,6 +339,34 @@ else|else
 name|fts_options
 operator|=
 name|FTS_LOGICAL
+expr_stmt|;
+comment|/* XXX: Why don't chflags and lchflags have compatible prototypes? */
+if|if
+condition|(
+name|hflag
+condition|)
+name|change_flags
+operator|=
+operator|(
+name|int
+argument_list|(
+argument|*
+argument_list|)
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|)
+operator|)
+name|lchflags
+expr_stmt|;
+else|else
+name|change_flags
+operator|=
+name|chflags
 expr_stmt|;
 name|flags
 operator|=
@@ -548,7 +614,13 @@ case|case
 name|FTS_SLNONE
 case|:
 comment|/* 			 * The only symlinks that end up here are ones that 			 * don't point to anything and ones that we found 			 * doing a physical walk. 			 */
+if|if
+condition|(
+operator|!
+name|hflag
+condition|)
 continue|continue;
+comment|/* FALLTHROUGH */
 default|default:
 break|break;
 block|}
@@ -560,7 +632,10 @@ block|{
 if|if
 condition|(
 operator|!
-name|chflags
+call|(
+modifier|*
+name|change_flags
+call|)
 argument_list|(
 name|p
 operator|->
@@ -592,7 +667,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|chflags
+call|(
+modifier|*
+name|change_flags
+call|)
 argument_list|(
 name|p
 operator|->
@@ -657,7 +735,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chflags [-R [-H | -L | -P]] flags file ...\n"
+literal|"usage: chflags [-h] [-R [-H | -L | -P]] flags file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
