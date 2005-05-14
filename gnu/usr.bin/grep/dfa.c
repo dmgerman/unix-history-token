@@ -12467,6 +12467,17 @@ name|charset_matched
 goto|;
 block|}
 comment|/* match with a character?  */
+if|if
+condition|(
+name|case_fold
+condition|)
+name|wc
+operator|=
+name|towlower
+argument_list|(
+name|wc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
