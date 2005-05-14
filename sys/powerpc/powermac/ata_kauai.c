@@ -697,8 +697,6 @@ operator|->
 name|flags
 operator||=
 name|ATA_USE_16BIT
-operator||
-name|ATA_NO_SLAVE
 expr_stmt|;
 name|ata_generic_hw
 argument_list|(
