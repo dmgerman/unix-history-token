@@ -140,9 +140,30 @@ name|ng_nodelist_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|uma_zone_t
+name|ng_qzone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|maxalloc
+init|=
+literal|512
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Mutex that protects the free queue item list */
+comment|/* limit the damage of a leak */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETGRAPH_DEBUG
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -152,11 +173,9 @@ name|ngq_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETGRAPH_DEBUG
-end_ifdef
+begin_comment
+comment|/* protects the queue item list */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -1437,20 +1456,6 @@ end_comment
 begin_comment
 comment|/*----------------------------------------------*/
 end_comment
-
-begin_comment
-comment|/* Warning: Generally use NG_FREE_ITEM() instead */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_FREE_ITEM_REAL
-parameter_list|(
-name|item
-parameter_list|)
-value|do { FREE((item), M_NETGRAPH_ITEM); } while (0)
-end_define
 
 begin_comment
 comment|/* Set this to kdb_enter("X") to catch all errors as they occur */
@@ -10825,8 +10830,6 @@ name|data
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -10839,7 +10842,7 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-comment|/* Register line discipline */
+comment|/* Initialize everything. */
 name|mtx_init
 argument_list|(
 operator|&
@@ -10888,22 +10891,54 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETGRAPH_DEBUG
 name|mtx_init
 argument_list|(
 operator|&
 name|ngq_mtx
 argument_list|,
-literal|"netgraph free item list mutex"
+literal|"netgraph item list mutex"
 argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|s
+endif|#
+directive|endif
+name|ng_qzone
 operator|=
-name|splimp
-argument_list|()
+name|uma_zcreate
+argument_list|(
+literal|"NetGraph items"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ng_item
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_CACHE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|ng_qzone
+argument_list|,
+name|maxalloc
+argument_list|)
 expr_stmt|;
 name|netisr_register
 argument_list|(
@@ -10918,11 +10953,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NETISR_MPSAFE
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11043,43 +11073,6 @@ begin_comment
 comment|/************************************************************************ 			Queue element get/free routines ************************************************************************/
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|allocated
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of items malloc'd */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|maxalloc
-init|=
-literal|128
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* limit the damage of a leak */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ngqfreemax
-init|=
-literal|64
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cache at most this many */
-end_comment
-
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
@@ -11112,76 +11105,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.graph.ngqfreemax"
-argument_list|,
-operator|&
-name|ngqfreemax
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_graph
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ngqfreemax
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|ngqfreemax
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum number of free queue items to cache"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|ngqfreelow
-init|=
-literal|4
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* try malloc if free< this */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|volatile
-name|int
-name|ngqfreesize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of cached entries */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|volatile
-name|item_p
-name|ngqfree
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* free ones */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -11204,17 +11127,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|allocated
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of items malloc'd */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Get a queue entry  * This is usually called when a packet first enters netgraph.  * By definition, this is usually from an interrupt, or from a user.  * Users are not so important, but try be quick for the times that it's  * an interrupt.  * XXX If reserve is low, we should try to get 2 from malloc as this  * would indicate it often fails.  */
+comment|/*  * Get a queue entry.  * This is usually called when a packet first enters netgraph.  * By definition, this is usually from an interrupt, or from a user.  * Users are not so important, but try be quick for the times that it's  * an interrupt.  */
 end_comment
 
 begin_function
 specifier|static
+name|__inline
 name|item_p
 name|ng_getqblk
 parameter_list|(
@@ -11226,65 +11161,31 @@ name|item
 init|=
 name|NULL
 decl_stmt|;
-comment|/* 	 * Try get a cached queue block, or else allocate a new one 	 * If we are less than our reserve, try malloc. If malloc 	 * fails, then that's what the reserve is for... 	 * We have our little reserve 	 * because we use M_NOWAIT for malloc. This just helps us 	 * avoid dropping packets while not increasing the time 	 * we take to service the interrupt (on average) (I hope). 	 */
+name|item
+operator|=
+name|uma_zalloc
+argument_list|(
+name|ng_qzone
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETGRAPH_DEBUG
+if|if
+condition|(
+name|item
+condition|)
+block|{
 name|mtx_lock
 argument_list|(
 operator|&
 name|ngq_mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ngqfreesize
-operator|<
-name|ngqfreelow
-operator|)
-operator|||
-operator|(
-name|ngqfree
-operator|==
-name|NULL
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|allocated
-operator|<
-name|maxalloc
-condition|)
-block|{
-comment|/* don't leak forever */
-name|MALLOC
-argument_list|(
-name|item
-argument_list|,
-name|item_p
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|item
-argument_list|)
-argument_list|,
-name|M_NETGRAPH_ITEM
-argument_list|,
-operator|(
-name|M_NOWAIT
-operator||
-name|M_ZERO
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|item
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|NETGRAPH_DEBUG
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -11295,54 +11196,18 @@ argument_list|,
 name|all
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NETGRAPH_DEBUG */
 name|allocated
 operator|++
 expr_stmt|;
-block|}
-block|}
-block|}
-comment|/* 	 * We didn't or couldn't malloc. 	 * try get one from our cache. 	 */
-if|if
-condition|(
-name|item
-operator|==
-name|NULL
-operator|&&
-operator|(
-name|item
-operator|=
-name|ngqfree
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|ngqfree
-operator|=
-name|item
-operator|->
-name|el_next
-expr_stmt|;
-name|ngqfreesize
-operator|--
-expr_stmt|;
-name|item
-operator|->
-name|el_flags
-operator|&=
-operator|~
-name|NGQF_FREE
-expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
 name|ngq_mtx
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|item
@@ -11364,21 +11229,6 @@ name|item
 parameter_list|)
 block|{
 comment|/* 	 * The item may hold resources on it's own. We need to free 	 * these before we can free the item. What they are depends upon 	 * what kind of item it is. it is important that nodes zero 	 * out pointers to resources that they remove from the item 	 * or we release them again here. 	 */
-if|if
-condition|(
-name|item
-operator|->
-name|el_flags
-operator|&
-name|NGQF_FREE
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|" Freeing free queue item"
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|item
@@ -11461,44 +11311,15 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-name|item
-operator|->
-name|el_flags
-operator||=
-name|NGQF_FREE
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETGRAPH_DEBUG
 name|mtx_lock
 argument_list|(
 operator|&
 name|ngq_mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ngqfreesize
-operator|<
-name|ngqfreemax
-condition|)
-block|{
-name|ngqfreesize
-operator|++
-expr_stmt|;
-name|item
-operator|->
-name|el_next
-operator|=
-name|ngqfree
-expr_stmt|;
-name|ngqfree
-operator|=
-name|item
-expr_stmt|;
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|NETGRAPH_DEBUG
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -11509,22 +11330,22 @@ argument_list|,
 name|all
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NETGRAPH_DEBUG */
-name|NG_FREE_ITEM_REAL
-argument_list|(
-name|item
-argument_list|)
-expr_stmt|;
 name|allocated
 operator|--
 expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
 name|ngq_mtx
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|uma_zfree
+argument_list|(
+name|ng_qzone
+argument_list|,
+name|item
 argument_list|)
 expr_stmt|;
 block|}
@@ -11689,31 +11510,6 @@ name|int
 name|line
 parameter_list|)
 block|{
-if|if
-condition|(
-name|item
-operator|->
-name|el_flags
-operator|&
-name|NGQF_FREE
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" Free item, freed at %s, line %d\n"
-argument_list|,
-name|item
-operator|->
-name|lastfile
-argument_list|,
-name|item
-operator|->
-name|lastline
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|" ACTIVE item, last used at %s, line %d"
@@ -11818,7 +11614,6 @@ argument_list|(
 literal|" - UNDEFINED!\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
