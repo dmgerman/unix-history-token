@@ -5401,18 +5401,6 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|IPFILTER_LKM
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
 end_if
 
 begin_if
@@ -8370,6 +8358,12 @@ operator|)
 operator|||
 operator|(
 name|NBPFILTER
+operator|>
+literal|0
+operator|)
+operator|||
+operator|(
+name|DEV_BPF
 operator|>
 literal|0
 operator|)
