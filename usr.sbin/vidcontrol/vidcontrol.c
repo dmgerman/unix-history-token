@@ -2395,8 +2395,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"
-literal|[=%dF"
+literal|"\e[=%dF"
 argument_list|,
 name|color
 argument_list|)
@@ -2439,8 +2438,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"
-literal|[=%dG"
+literal|"\e[=%dG"
 argument_list|,
 name|color
 argument_list|)
@@ -2498,8 +2496,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"
-literal|[=%dH"
+literal|"\e[=%dH"
 argument_list|,
 name|color
 argument_list|)
@@ -2542,8 +2539,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"
-literal|[=%dI"
+literal|"\e[=%dI"
 argument_list|,
 name|color
 argument_list|)
@@ -2676,8 +2672,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"
-literal|[=%dA"
+literal|"\e[=%dA"
 argument_list|,
 name|color
 argument_list|)
@@ -3528,8 +3523,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"
-literal|[=0G\n\n"
+literal|"\e[=0G\n\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3550,18 +3544,9 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"
-literal|[=15F
-literal|[=0G        %2d
-literal|[=%dF%-16s"
-literal|"
-literal|[=15F
-literal|[=0G        %2d
-literal|[=%dF%-16s        "
-literal|"
-literal|[=15F %2d
-literal|[=%dGBACKGROUND
-literal|[=0G\n"
+literal|"\e[=15F\e[=0G        %2d \e[=%dF%-16s"
+literal|"\e[=15F\e[=0G        %2d \e[=%dF%-16s        "
+literal|"\e[=15F %2d \e[=%dGBACKGROUND\e[=0G\n"
 argument_list|,
 name|i
 argument_list|,
@@ -3597,11 +3582,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"
-literal|[=%dF
-literal|[=%dG
-literal|[=%dH
-literal|[=%dI\n"
+literal|"\e[=%dF\e[=%dG\e[=%dH\e[=%dI\n"
 argument_list|,
 name|info
 operator|.
