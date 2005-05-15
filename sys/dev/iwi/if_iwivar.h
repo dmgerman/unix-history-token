@@ -294,6 +294,10 @@ define|#
 directive|define
 name|IWI_FLAG_FW_INITED
 value|(1<< 1)
+define|#
+directive|define
+name|IWI_FLAG_FW_WARNED
+value|(1<< 2)
 name|struct
 name|iwi_cmd_ring
 name|cmdq
