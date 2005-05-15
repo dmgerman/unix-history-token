@@ -481,6 +481,20 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__LONG_BIT
+operator|==
+literal|64
+name|ne
+operator|->
+name|__n_pad0
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ABI compatibility */
+endif|#
+directive|endif
 name|ne
 operator|->
 name|n_addrtype
@@ -870,8 +884,7 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|net
 decl_stmt|;
 name|int
@@ -894,9 +907,9 @@ name|net
 operator|=
 name|va_arg
 argument_list|(
-argument|ap
+name|ap
 argument_list|,
-argument|unsigned long
+name|uint32_t
 argument_list|)
 expr_stmt|;
 name|type

@@ -470,7 +470,7 @@ decl_stmt|;
 name|int
 name|a_addrlen
 decl_stmt|;
-name|int
+name|socklen_t
 name|a_socklen
 decl_stmt|;
 name|int
@@ -6604,6 +6604,20 @@ name|afd
 operator|->
 name|a_socklen
 expr_stmt|;
+if|#
+directive|if
+name|__LONG_BIT
+operator|==
+literal|64
+name|ai
+operator|->
+name|__ai_pad0
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ABI compatibility */
+endif|#
+directive|endif
 name|ai
 operator|->
 name|ai_addr
