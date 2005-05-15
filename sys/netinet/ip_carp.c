@@ -611,6 +611,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_carp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|suppress_preempt
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|carp_suppress_preempt
+argument_list|,
+literal|0
+argument_list|,
+literal|"Preemption is suppressed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|struct
 name|carpstats
@@ -2305,6 +2326,22 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/*	carpdetach(sc); */
+comment|/* 	 * If an interface is destroyed which is suppressing the preemption, 	 * decrease the global counter, otherwise the host will never get 	 * out of the carp supressing state. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_suppress
+condition|)
+name|carp_suppress_preempt
+operator|--
+expr_stmt|;
+name|sc
+operator|->
+name|sc_suppress
+operator|=
+literal|0
+expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&
