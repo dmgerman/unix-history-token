@@ -149,6 +149,20 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|struct
+name|assign
+modifier|*
+name|find_next_assign
+parameter_list|(
+name|struct
+name|assign
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
 name|section
 modifier|*
 name|find_section
@@ -507,6 +521,76 @@ block|}
 return|return
 operator|(
 name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|struct
+name|assign
+modifier|*
+name|find_next_assign
+parameter_list|(
+name|struct
+name|assign
+modifier|*
+name|a
+parameter_list|)
+block|{
+name|struct
+name|assign
+modifier|*
+name|assign
+decl_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|assign
+argument_list|,
+argument|&ah
+argument_list|,
+argument|link
+argument_list|)
+block|{
+if|if
+condition|(
+name|assign
+operator|==
+name|a
+condition|)
+break|break;
+block|}
+name|assign
+operator|=
+name|assign
+operator|->
+name|link
+operator|.
+name|tqe_next
+expr_stmt|;
+if|if
+condition|(
+name|assign
+operator|==
+name|NULL
+operator|||
+name|assign
+operator|->
+name|section
+operator|!=
+name|a
+operator|->
+name|section
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+return|return
+operator|(
+name|assign
 operator|)
 return|;
 block|}
@@ -1001,6 +1085,14 @@ name|found
 init|=
 literal|0
 decl_stmt|;
+comment|/* Emit start of PCI device table */
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|"#define NDIS_PCI_DEV_TABLE"
+argument_list|)
+expr_stmt|;
 comment|/* Find manufacturer name */
 name|manf
 operator|=
@@ -1011,6 +1103,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|nextmanf
+label|:
 comment|/* Find manufacturer section */
 if|if
 condition|(
@@ -1190,18 +1284,12 @@ name|found
 operator|==
 literal|0
 condition|)
-return|return;
+goto|goto
+name|done
+goto|;
 name|found
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Emit start of PCI device table */
-name|fprintf
-argument_list|(
-name|ofp
-argument_list|,
-literal|"#define NDIS_PCI_DEV_TABLE"
-argument_list|)
 expr_stmt|;
 name|retry
 label|:
@@ -1310,6 +1398,25 @@ goto|goto
 name|retry
 goto|;
 block|}
+comment|/* Handle Manufacturer sections with multiple entries. */
+name|manf
+operator|=
+name|find_next_assign
+argument_list|(
+name|manf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|manf
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|nextmanf
+goto|;
+name|done
+label|:
 comment|/* Emit end of table */
 name|fprintf
 argument_list|(
@@ -1318,6 +1425,7 @@ argument_list|,
 literal|"\n\n"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1366,6 +1474,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|nextmanf
+label|:
 comment|/* Find manufacturer section */
 if|if
 condition|(
@@ -1545,7 +1655,9 @@ name|found
 operator|==
 literal|0
 condition|)
-return|return;
+goto|goto
+name|done
+goto|;
 name|found
 operator|=
 literal|0
@@ -1665,6 +1777,25 @@ goto|goto
 name|retry
 goto|;
 block|}
+comment|/* Handle Manufacturer sections with multiple entries. */
+name|manf
+operator|=
+name|find_next_assign
+argument_list|(
+name|manf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|manf
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|nextmanf
+goto|;
+name|done
+label|:
 comment|/* Emit end of table */
 name|fprintf
 argument_list|(
@@ -1673,6 +1804,7 @@ argument_list|,
 literal|"\n\n"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -2724,6 +2856,14 @@ condition|)
 name|is_winnt
 operator|++
 expr_stmt|;
+comment|/* Emit start of block */
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|"ndis_cfg ndis_regvals[] = {"
+argument_list|)
+expr_stmt|;
 comment|/* Find manufacturer name */
 name|manf
 operator|=
@@ -2734,6 +2874,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|nextmanf
+label|:
 comment|/* Find manufacturer section */
 if|if
 condition|(
@@ -2854,14 +2996,6 @@ name|vals
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-comment|/* Emit start of block */
-name|fprintf
-argument_list|(
-name|ofp
-argument_list|,
-literal|"ndis_cfg ndis_regvals[] = {"
 argument_list|)
 expr_stmt|;
 name|retry
@@ -3096,6 +3230,22 @@ goto|goto
 name|retry
 goto|;
 block|}
+name|manf
+operator|=
+name|find_next_assign
+argument_list|(
+name|manf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|manf
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|nextmanf
+goto|;
 name|fprintf
 argument_list|(
 name|ofp
