@@ -1073,28 +1073,6 @@ name|CONS_SETTERM
 value|_IOW('c', 113, term_info_t)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ADJUST_CLOCK
-value|_IO('t',100)
-end_define
-
-begin_comment
-comment|/* for 98note resume */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Vty switching ioctl commands.  */
 end_comment

@@ -7717,23 +7717,6 @@ return|;
 endif|#
 directive|endif
 comment|/* SC_NO_FONT_LOADING */
-ifdef|#
-directive|ifdef
-name|PC98
-case|case
-name|ADJUST_CLOCK
-case|:
-comment|/* /dev/rtc for 98note resume */
-name|inittodr
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-endif|#
-directive|endif
 default|default:
 break|break;
 block|}
