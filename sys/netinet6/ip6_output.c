@@ -10328,10 +10328,6 @@ operator|->
 name|ip6po_nexthop
 operator|==
 name|NULL
-operator|&&
-name|canwait
-operator|==
-name|M_NOWAIT
 condition|)
 goto|goto
 name|bad

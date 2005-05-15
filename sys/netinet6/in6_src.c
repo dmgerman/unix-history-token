@@ -2716,6 +2716,8 @@ expr_stmt|;
 comment|/* 		 * Check if the outgoing interface conflicts with 		 * the interface specified by ipi6_ifindex (if specified). 		 * Note that loopback interface is always okay. 		 * (this may happen when we are sending a packet to one of 		 *  our own addresses.) 		 */
 if|if
 condition|(
+name|ifp
+operator|&&
 name|opts
 operator|&&
 name|opts

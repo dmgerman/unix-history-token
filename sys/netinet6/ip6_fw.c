@@ -3673,6 +3673,8 @@ directive|endif
 comment|/* 	 * At this point, we're going to drop the packet. 	 * Send a reject notice if all of the following are true: 	 * 	 * - The packet matched a reject rule 	 * - The packet is not an ICMP packet, or is an ICMP query packet 	 * - The packet is not a multicast or broadcast packet 	 */
 if|if
 condition|(
+name|rule
+operator|&&
 operator|(
 name|rule
 operator|->
