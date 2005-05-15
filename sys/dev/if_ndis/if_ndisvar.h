@@ -347,6 +347,9 @@ decl_stmt|;
 name|ndis_work_item
 name|ndis_resetitem
 decl_stmt|;
+name|kdpc
+name|ndis_rxdpc
+decl_stmt|;
 name|bus_dma_tag_t
 name|ndis_parent_tag
 decl_stmt|;

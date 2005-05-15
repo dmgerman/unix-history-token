@@ -1602,7 +1602,7 @@ name|NDIS_REAP_TIMERS
 argument|ndis_miniport_timer	*t, *n;
 endif|#
 directive|endif
-argument|sc = arg;  	NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) { 		NDIS_UNLOCK(sc); 		return(EIO); 	}  	sc->ndis_block->nmb_devicectx = NULL;
+argument|sc = arg;
 ifdef|#
 directive|ifdef
 name|NDIS_REAP_TIMERS
@@ -1610,6 +1610,7 @@ comment|/* 	 * Drivers are sometimes very lax about cancelling all 	 * their tim
 argument|t = sc->ndis_block->nmb_timerlist; 	while (t != NULL) { 		KeCancelTimer(&t->nmt_ktimer); 		n = t; 		t = t->nmt_nexttimer; 		n->nmt_nexttimer = NULL; 	} 	sc->ndis_block->nmb_timerlist = NULL; 	KeFlushQueuedDpcs();
 endif|#
 directive|endif
+argument|NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) { 		NDIS_UNLOCK(sc); 		return(EIO); 	}  	sc->ndis_block->nmb_devicectx = NULL;
 comment|/* 	 * The adapter context is only valid after the init 	 * handler has been called, and is invalid once the 	 * halt handler has been called. 	 */
 argument|haltfunc = sc->ndis_chars->nmc_halt_func; 	NDIS_UNLOCK(sc);  	MSCALL1(haltfunc, adapter);  	NDIS_LOCK(sc); 	sc->ndis_block->nmb_miniportadapterctx = NULL; 	NDIS_UNLOCK(sc);  	return(
 literal|0
@@ -1645,11 +1646,15 @@ argument|* hz); 		rval = sc->ndis_block->nmb_getstat; 	}  	if (byteswritten) 		*
 literal|0
 argument|); }  uint32_t NdisAddDevice(drv, pdo) 	driver_object		*drv; 	device_object		*pdo; { 	device_object		*fdo; 	ndis_miniport_block	*block; 	struct ndis_softc	*sc; 	uint32_t		status;  	status = IoCreateDevice(drv, sizeof(ndis_miniport_block), NULL, 	    FILE_DEVICE_UNKNOWN,
 literal|0
-argument|, FALSE,&fdo);  	if (status != STATUS_SUCCESS) 		return(status);  	block = fdo->do_devext; 	block->nmb_deviceobj = fdo; 	block->nmb_physdeviceobj = pdo; 	block->nmb_nextdeviceobj = IoAttachDeviceToDeviceStack(fdo, pdo); 	KeInitializeSpinLock(&block->nmb_lock);
+argument|, FALSE,&fdo);  	if (status != STATUS_SUCCESS) 		return(status);  	block = fdo->do_devext;  	block->nmb_filterdbs.nf_ethdb = block; 	block->nmb_deviceobj = fdo; 	block->nmb_physdeviceobj = pdo; 	block->nmb_nextdeviceobj = IoAttachDeviceToDeviceStack(fdo, pdo); 	KeInitializeSpinLock(&block->nmb_lock);
 comment|/* 	 * Stash pointers to the miniport block and miniport 	 * characteristics info in the if_ndis softc so the 	 * UNIX wrapper driver can get to them later.          */
 argument|sc = device_get_softc(pdo->do_devext); 	sc->ndis_block = block; 	sc->ndis_chars = IoGetDriverObjectExtension(drv, (void *)
 literal|1
 argument|);
+comment|/* 	 * If the driver has a MiniportTransferData() function, 	 * we should allocate a private RX packet pool. 	 */
+argument|if (sc->ndis_chars->nmc_transferdata_func != NULL) { 		NdisAllocatePacketPool(&status,&block->nmb_rxpool,
+literal|32
+argument|, PROTOCOL_RESERVED_SIZE_IN_PACKET); 		if (status != NDIS_STATUS_SUCCESS) { 			IoDetachDevice(block->nmb_nextdeviceobj); 			IoDeleteDevice(fdo); 			return(status); 		} 		INIT_LIST_HEAD((&block->nmb_packetlist)); 	}
 comment|/* Give interrupt handling priority over timers. */
 argument|IoInitializeDpcRequest(fdo, kernndis_functbl[
 literal|6
@@ -1669,7 +1674,7 @@ argument|].ipt_wrap; 	block->nmb_resetdone_func = kernndis_functbl[
 literal|4
 argument|].ipt_wrap; 	block->nmb_sendrsrc_func = kernndis_functbl[
 literal|5
-argument|].ipt_wrap; 	block->nmb_pendingreq = NULL;  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link);  	return (STATUS_SUCCESS); }  int ndis_unload_driver(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	device_object		*fdo;  	sc = arg;  	if (sc->ndis_block->nmb_rlist != NULL) 		free(sc->ndis_block->nmb_rlist, M_DEVBUF);  	ndis_flush_sysctls(sc);  	TAILQ_REMOVE(&ndis_devhead, sc->ndis_block, link);  	fdo = sc->ndis_block->nmb_deviceobj; 	IoDetachDevice(sc->ndis_block->nmb_nextdeviceobj); 	IoDeleteDevice(fdo);  	return(
+argument|].ipt_wrap; 	block->nmb_pendingreq = NULL;  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link);  	return (STATUS_SUCCESS); }  int ndis_unload_driver(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	device_object		*fdo;  	sc = arg;  	if (sc->ndis_block->nmb_rlist != NULL) 		free(sc->ndis_block->nmb_rlist, M_DEVBUF);  	ndis_flush_sysctls(sc);  	TAILQ_REMOVE(&ndis_devhead, sc->ndis_block, link);  	if (sc->ndis_chars->nmc_transferdata_func != NULL) 		NdisFreePacketPool(sc->ndis_block->nmb_rxpool); 	fdo = sc->ndis_block->nmb_deviceobj; 	IoDetachDevice(sc->ndis_block->nmb_nextdeviceobj); 	IoDeleteDevice(fdo);  	return(
 literal|0
 argument|); }
 end_function

@@ -4905,6 +4905,42 @@ name|ndis_packet_oob
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Our protocol private region for handling ethernet.  * We need this to stash some of the things returned  * by NdisMEthIndicateReceive().  */
+end_comment
+
+begin_struct
+struct|struct
+name|ndis_ethpriv
+block|{
+name|void
+modifier|*
+name|nep_ctx
+decl_stmt|;
+comment|/* packet context */
+name|long
+name|nep_offset
+decl_stmt|;
+comment|/* residual data to transfer */
+name|void
+modifier|*
+name|nep_pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ndis_ethpriv
+name|ndis_ethpriv
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -5007,7 +5043,7 @@ literal|2
 index|]
 decl_stmt|;
 name|uint8_t
-name|nm_protocolreserved
+name|np_protocolreserved
 index|[
 name|PROTOCOL_RESERVED_SIZE_IN_PACKET
 index|]
@@ -5117,6 +5153,13 @@ name|ndis_filterdbs
 name|ndis_filterdbs
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|nf_ethdb
+value|u.nf_ethdb
+end_define
 
 begin_enum
 enum|enum
@@ -5867,6 +5910,9 @@ decl_stmt|;
 name|ndis_miniport_timer
 modifier|*
 name|nmb_timerlist
+decl_stmt|;
+name|ndis_handle
+name|nmb_rxpool
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
