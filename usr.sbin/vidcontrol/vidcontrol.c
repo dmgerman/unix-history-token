@@ -3518,7 +3518,53 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|cur_mode
+decl_stmt|,
+name|fore
 decl_stmt|;
+name|fore
+operator|=
+literal|15
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|CONS_GET
+argument_list|,
+operator|&
+name|cur_mode
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"must be on a virtual console"
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|cur_mode
+condition|)
+block|{
+case|case
+name|M_PC98_80x25
+case|:
+case|case
+name|M_PC98_80x30
+case|:
+name|fore
+operator|=
+literal|7
+expr_stmt|;
+break|break;
+block|}
 name|fprintf
 argument_list|(
 name|stdout
@@ -3544,9 +3590,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"\e[=15F\e[=0G        %2d \e[=%dF%-16s"
-literal|"\e[=15F\e[=0G        %2d \e[=%dF%-16s        "
-literal|"\e[=15F %2d \e[=%dGBACKGROUND\e[=0G\n"
+literal|"\e[=%dF\e[=0G        %2d \e[=%dF%-16s"
+literal|"\e[=%dF\e[=0G        %2d \e[=%dF%-16s        "
+literal|"\e[=%dF %2d \e[=%dGBACKGROUND\e[=0G\n"
+argument_list|,
+name|fore
 argument_list|,
 name|i
 argument_list|,
@@ -3557,6 +3605,8 @@ index|[
 name|i
 index|]
 argument_list|,
+name|fore
+argument_list|,
 name|i
 operator|+
 literal|8
@@ -3571,6 +3621,8 @@ name|i
 operator|+
 literal|8
 index|]
+argument_list|,
+name|fore
 argument_list|,
 name|i
 argument_list|,
