@@ -593,7 +593,7 @@ name|ng_package_data
 argument_list|(
 name|m
 argument_list|,
-name|NULL
+name|NG_NOFLAGS
 argument_list|)
 expr_stmt|;
 if|if
