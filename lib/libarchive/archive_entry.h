@@ -578,6 +578,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|archive_entry_copy_pathname
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|archive_entry_copy_pathname_w
 parameter_list|(
 name|struct
