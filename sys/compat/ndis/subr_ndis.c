@@ -7259,11 +7259,6 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
-name|int
-name|checks
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|vaddr
@@ -7315,9 +7310,6 @@ condition|(
 name|sh
 condition|)
 block|{
-name|checks
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|sh
