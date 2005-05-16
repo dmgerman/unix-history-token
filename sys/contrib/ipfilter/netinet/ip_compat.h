@@ -15012,6 +15012,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RESCUE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|IPFILTER_BPF
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
