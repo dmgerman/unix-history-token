@@ -164,12 +164,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ata/ata-commands.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ata_if.h>
 end_include
 
@@ -3852,7 +3846,14 @@ break|break;
 default|default:
 name|error
 operator|=
-name|ENOTTY
+name|ata_device_ioctl
+argument_list|(
+name|dev
+argument_list|,
+name|cmd
+argument_list|,
+name|addr
+argument_list|)
 expr_stmt|;
 block|}
 return|return

@@ -805,7 +805,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* NOP command */
+comment|/* NOP */
 end_comment
 
 begin_define
@@ -833,12 +833,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_ATAPI_RESET
+name|ATA_DEVICE_RESET
 value|0x08
 end_define
 
 begin_comment
-comment|/* reset ATAPI device */
+comment|/* reset device */
 end_comment
 
 begin_define
@@ -849,7 +849,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* read command */
+comment|/* read */
 end_comment
 
 begin_define
@@ -860,7 +860,7 @@ value|0x24
 end_define
 
 begin_comment
-comment|/* read command */
+comment|/* read 48bit LBA */
 end_comment
 
 begin_define
@@ -871,7 +871,7 @@ value|0x25
 end_define
 
 begin_comment
-comment|/* read w/DMA command */
+comment|/* read DMA 48bit LBA */
 end_comment
 
 begin_define
@@ -882,7 +882,7 @@ value|0x26
 end_define
 
 begin_comment
-comment|/* read w/DMA QUEUED command */
+comment|/* read DMA QUEUED 48bit LBA */
 end_comment
 
 begin_define
@@ -893,7 +893,7 @@ value|0x29
 end_define
 
 begin_comment
-comment|/* read multi command */
+comment|/* read multi 48bit LBA */
 end_comment
 
 begin_define
@@ -904,7 +904,7 @@ value|0x30
 end_define
 
 begin_comment
-comment|/* write command */
+comment|/* write */
 end_comment
 
 begin_define
@@ -915,7 +915,7 @@ value|0x34
 end_define
 
 begin_comment
-comment|/* write command */
+comment|/* write 48bit LBA */
 end_comment
 
 begin_define
@@ -926,7 +926,7 @@ value|0x35
 end_define
 
 begin_comment
-comment|/* write w/DMA command */
+comment|/* write DMA 48bit LBA */
 end_comment
 
 begin_define
@@ -937,7 +937,7 @@ value|0x36
 end_define
 
 begin_comment
-comment|/* write w/DMA QUEUED command */
+comment|/* write DMA QUEUED 48bit LBA*/
 end_comment
 
 begin_define
@@ -948,7 +948,40 @@ value|0x39
 end_define
 
 begin_comment
-comment|/* write multi command */
+comment|/* write multi 48bit LBA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_READ_FPDMA_QUEUED
+value|0x60
+end_define
+
+begin_comment
+comment|/* read DMA NCQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_WRITE_FPDMA_QUEUED
+value|0x61
+end_define
+
+begin_comment
+comment|/* write DMA NCQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SEEK
+value|0x70
+end_define
+
+begin_comment
+comment|/* seek */
 end_comment
 
 begin_define
@@ -987,12 +1020,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_CFA_ERASE
+value|0xc0
+end_define
+
+begin_comment
+comment|/* CFA erase */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_READ_MUL
 value|0xc4
 end_define
 
 begin_comment
-comment|/* read multi command */
+comment|/* read multi */
 end_comment
 
 begin_define
@@ -1003,7 +1047,7 @@ value|0xc5
 end_define
 
 begin_comment
-comment|/* write multi command */
+comment|/* write multi */
 end_comment
 
 begin_define
@@ -1014,7 +1058,7 @@ value|0xc6
 end_define
 
 begin_comment
-comment|/* set multi size command */
+comment|/* set multi size */
 end_comment
 
 begin_define
@@ -1025,7 +1069,7 @@ value|0xc7
 end_define
 
 begin_comment
-comment|/* read w/DMA QUEUED command */
+comment|/* read DMA QUEUED */
 end_comment
 
 begin_define
@@ -1036,7 +1080,7 @@ value|0xc8
 end_define
 
 begin_comment
-comment|/* read w/DMA command */
+comment|/* read DMA */
 end_comment
 
 begin_define
@@ -1047,7 +1091,7 @@ value|0xca
 end_define
 
 begin_comment
-comment|/* write w/DMA command */
+comment|/* write DMA */
 end_comment
 
 begin_define
@@ -1058,7 +1102,62 @@ value|0xcc
 end_define
 
 begin_comment
-comment|/* write w/DMA QUEUED command */
+comment|/* write DMA QUEUED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_STANDBY_IMMEDIATE
+value|0xe0
+end_define
+
+begin_comment
+comment|/* standby immediate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_IDLE_IMMEDIATE
+value|0xe1
+end_define
+
+begin_comment
+comment|/* idle immediate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_STANDBY_CMD
+value|0xe2
+end_define
+
+begin_comment
+comment|/* standby */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_IDLE_CMD
+value|0xe3
+end_define
+
+begin_comment
+comment|/* idle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_READ_BUFFER
+value|0xe4
+end_define
+
+begin_comment
+comment|/* read buffer */
 end_comment
 
 begin_define
@@ -1069,7 +1168,7 @@ value|0xe6
 end_define
 
 begin_comment
-comment|/* sleep command */
+comment|/* sleep */
 end_comment
 
 begin_define
@@ -1213,6 +1312,39 @@ end_define
 
 begin_comment
 comment|/* disable service interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SECURITY_FREEE_LOCK
+value|0xf5
+end_define
+
+begin_comment
+comment|/* freeze security config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_READ_NATIVE_MAX_ADDDRESS
+value|0xf8
+end_define
+
+begin_comment
+comment|/* read native max address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SET_MAX_ADDRESS
+value|0xf9
+end_define
+
+begin_comment
+comment|/* set max address */
 end_comment
 
 begin_comment
@@ -1813,85 +1945,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|ata_cmd
+name|ata_ioc_devices
 block|{
 name|int
 name|channel
-decl_stmt|;
-name|int
-name|device
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-define|#
-directive|define
-name|ATAGMAXCHANNEL
-value|0x0101
-define|#
-directive|define
-name|ATAGPARM
-value|0x0102
-define|#
-directive|define
-name|ATAGMODE
-value|0x0103
-define|#
-directive|define
-name|ATASMODE
-value|0x0104
-define|#
-directive|define
-name|ATAREQUEST
-value|0x0108
-define|#
-directive|define
-name|ATAREINIT
-value|0x0110
-define|#
-directive|define
-name|ATAATTACH
-value|0x0111
-define|#
-directive|define
-name|ATADETACH
-value|0x0112
-define|#
-directive|define
-name|ATARAIDCREATE
-value|0x0120
-define|#
-directive|define
-name|ATARAIDDELETE
-value|0x0121
-define|#
-directive|define
-name|ATARAIDSTATUS
-value|0x0122
-define|#
-directive|define
-name|ATARAIDADDSPARE
-value|0x0123
-define|#
-directive|define
-name|ATARAIDREBUILD
-value|0x0124
-define|#
-directive|define
-name|ATAENCSTAT
-value|0x0130
-union|union
-block|{
-name|int
-name|maxchan
-decl_stmt|;
-struct|struct
-block|{
-name|int
-name|type
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|char
 name|name
@@ -1910,20 +1967,51 @@ literal|2
 index|]
 decl_stmt|;
 block|}
-name|param
 struct|;
+end_struct
+
+begin_comment
+comment|/* pr channel ATA ioctl calls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOCATAGMAXCHANNEL
+value|_IOR('a',  1, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATAREINIT
+value|_IOW('a',  2, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATAATTACH
+value|_IOW('a',  3, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATADETACH
+value|_IOW('a',  4, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATADEVICES
+value|_IOWR('a',  5, struct ata_ioc_devices)
+end_define
+
+begin_struct
 struct|struct
-block|{
-name|int
-name|mode
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|mode
-struct|;
-struct|struct
+name|ata_ioc_request
 block|{
 union|union
 block|{
@@ -1990,79 +2078,83 @@ name|int
 name|error
 decl_stmt|;
 block|}
-name|request
 struct|;
+end_struct
+
+begin_comment
+comment|/* pr device ATA ioctl calls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOCATAREQUEST
+value|_IOWR('a', 100, struct ata_ioc_request)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATAGPARM
+value|_IOR('a', 101, struct ata_params)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATAGMODE
+value|_IOR('a', 102, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATASMODE
+value|_IOW('a', 103, int)
+end_define
+
+begin_struct
 struct|struct
-name|raid_setup
+name|ata_ioc_raid_config
 block|{
+name|int
+name|lun
+decl_stmt|;
 name|int
 name|type
 decl_stmt|;
 define|#
 directive|define
 name|AR_JBOD
-value|0x01
+value|0x0001
 define|#
 directive|define
 name|AR_SPAN
-value|0x02
+value|0x0002
 define|#
 directive|define
 name|AR_RAID0
-value|0x04
+value|0x0004
 define|#
 directive|define
 name|AR_RAID1
-value|0x08
+value|0x0008
 define|#
 directive|define
 name|AR_RAID01
-value|0x10
+value|0x0010
 define|#
 directive|define
 name|AR_RAID3
-value|0x20
+value|0x0020
 define|#
 directive|define
 name|AR_RAID4
-value|0x40
+value|0x0040
 define|#
 directive|define
 name|AR_RAID5
-value|0x80
-name|int
-name|total_disks
-decl_stmt|;
-name|int
-name|disks
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|int
-name|interleave
-decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-block|}
-name|raid_setup
-struct|;
-struct|struct
-name|raid_status
-block|{
-name|int
-name|type
-decl_stmt|;
-name|int
-name|total_disks
-decl_stmt|;
-name|int
-name|disks
-index|[
-literal|16
-index|]
-decl_stmt|;
+value|0x0080
 name|int
 name|interleave
 decl_stmt|;
@@ -2084,46 +2176,56 @@ value|4
 name|int
 name|progress
 decl_stmt|;
-block|}
-name|raid_status
-struct|;
-struct|struct
-block|{
 name|int
-name|disk
-decl_stmt|;
-block|}
-name|raid_spare
-struct|;
-struct|struct
-block|{
-name|int
-name|fan
+name|total_disks
 decl_stmt|;
 name|int
-name|temp
+name|disks
+index|[
+literal|16
+index|]
 decl_stmt|;
-name|int
-name|v05
-decl_stmt|;
-name|int
-name|v12
-decl_stmt|;
-block|}
-name|enclosure
-struct|;
-block|}
-name|u
-union|;
 block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* ATA RAID ioctl calls */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|IOCATA
-value|_IOWR('a',  1, struct ata_cmd)
+name|IOCATARAIDCREATE
+value|_IOW('a', 200, struct ata_ioc_raid_config)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATARAIDDELETE
+value|_IOW('a', 201, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATARAIDSTATUS
+value|_IOR('a', 202, struct ata_ioc_raid_config)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATARAIDADDSPARE
+value|_IOW('a', 203, struct ata_ioc_raid_config)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATARAIDREBUILD
+value|_IOW('a', 204, int)
 end_define
 
 begin_endif

@@ -1436,7 +1436,7 @@ name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
-name|addr
+name|data
 parameter_list|,
 name|int
 name|flag
@@ -1488,7 +1488,7 @@ expr|struct
 name|mtget
 operator|*
 operator|)
-name|addr
+name|data
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -1622,7 +1622,7 @@ expr|struct
 name|mtop
 operator|*
 operator|)
-name|addr
+name|data
 decl_stmt|;
 switch|switch
 condition|(
@@ -1853,7 +1853,7 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
-name|addr
+name|data
 operator|=
 name|position
 operator|.
@@ -1891,7 +1891,7 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
-name|addr
+name|data
 operator|=
 name|position
 operator|.
@@ -1915,7 +1915,7 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
-name|addr
+name|data
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1935,14 +1935,21 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
-name|addr
+name|data
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|error
 operator|=
-name|ENOTTY
+name|ata_device_ioctl
+argument_list|(
+name|dev
+argument_list|,
+name|cmd
+argument_list|,
+name|data
+argument_list|)
 expr_stmt|;
 block|}
 return|return

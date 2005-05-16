@@ -2113,7 +2113,7 @@ index|]
 operator|->
 name|dev
 argument_list|,
-name|ATA_ATAPI_RESET
+name|ATA_DEVICE_RESET
 argument_list|,
 literal|0
 argument_list|,
