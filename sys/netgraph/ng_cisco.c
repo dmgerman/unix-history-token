@@ -1068,12 +1068,6 @@ name|resp
 argument_list|,
 name|msg
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ng_mesg
-argument_list|)
-operator|+
 name|NG_TEXTRESPONSE
 argument_list|,
 name|M_NOWAIT
