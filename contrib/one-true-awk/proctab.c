@@ -33,644 +33,644 @@ operator|*
 operator|)
 literal|"FIRSTTOKEN"
 block|,
-comment|/* 57346 */
+comment|/* 258 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"PROGRAM"
 block|,
-comment|/* 57347 */
+comment|/* 259 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"PASTAT"
 block|,
-comment|/* 57348 */
+comment|/* 260 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"PASTAT2"
 block|,
-comment|/* 57349 */
+comment|/* 261 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"XBEGIN"
 block|,
-comment|/* 57350 */
+comment|/* 262 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"XEND"
 block|,
-comment|/* 57351 */
+comment|/* 263 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"NL"
 block|,
-comment|/* 57352 */
+comment|/* 264 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"ARRAY"
 block|,
-comment|/* 57353 */
+comment|/* 265 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"MATCH"
 block|,
-comment|/* 57354 */
+comment|/* 266 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"NOTMATCH"
 block|,
-comment|/* 57355 */
+comment|/* 267 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"MATCHOP"
 block|,
-comment|/* 57356 */
+comment|/* 268 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"FINAL"
 block|,
-comment|/* 57357 */
+comment|/* 269 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"DOT"
 block|,
-comment|/* 57358 */
+comment|/* 270 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"ALL"
 block|,
-comment|/* 57359 */
+comment|/* 271 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"CCL"
 block|,
-comment|/* 57360 */
+comment|/* 272 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"NCCL"
 block|,
-comment|/* 57361 */
+comment|/* 273 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"CHAR"
 block|,
-comment|/* 57362 */
+comment|/* 274 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"OR"
 block|,
-comment|/* 57363 */
+comment|/* 275 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"STAR"
 block|,
-comment|/* 57364 */
+comment|/* 276 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"QUEST"
 block|,
-comment|/* 57365 */
+comment|/* 277 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"PLUS"
 block|,
-comment|/* 57366 */
+comment|/* 278 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"AND"
 block|,
-comment|/* 57367 */
+comment|/* 279 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"BOR"
 block|,
-comment|/* 57368 */
+comment|/* 280 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"APPEND"
 block|,
-comment|/* 57369 */
+comment|/* 281 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"EQ"
 block|,
-comment|/* 57370 */
+comment|/* 282 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"GE"
 block|,
-comment|/* 57371 */
+comment|/* 283 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"GT"
 block|,
-comment|/* 57372 */
+comment|/* 284 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"LE"
 block|,
-comment|/* 57373 */
+comment|/* 285 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"LT"
 block|,
-comment|/* 57374 */
+comment|/* 286 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"NE"
 block|,
-comment|/* 57375 */
+comment|/* 287 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"IN"
 block|,
-comment|/* 57376 */
+comment|/* 288 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"ARG"
 block|,
-comment|/* 57377 */
+comment|/* 289 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"BLTIN"
 block|,
-comment|/* 57378 */
+comment|/* 290 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"BREAK"
 block|,
-comment|/* 57379 */
+comment|/* 291 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"CLOSE"
 block|,
-comment|/* 57380 */
+comment|/* 292 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"CONTINUE"
 block|,
-comment|/* 57381 */
+comment|/* 293 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"DELETE"
 block|,
-comment|/* 57382 */
+comment|/* 294 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"DO"
 block|,
-comment|/* 57383 */
+comment|/* 295 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"EXIT"
 block|,
-comment|/* 57384 */
+comment|/* 296 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"FOR"
 block|,
-comment|/* 57385 */
+comment|/* 297 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"FUNC"
 block|,
-comment|/* 57386 */
+comment|/* 298 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"SUB"
 block|,
-comment|/* 57387 */
+comment|/* 299 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"GSUB"
 block|,
-comment|/* 57388 */
+comment|/* 300 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"IF"
 block|,
-comment|/* 57389 */
+comment|/* 301 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"INDEX"
 block|,
-comment|/* 57390 */
+comment|/* 302 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"LSUBSTR"
 block|,
-comment|/* 57391 */
+comment|/* 303 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"MATCHFCN"
 block|,
-comment|/* 57392 */
+comment|/* 304 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"NEXT"
 block|,
-comment|/* 57393 */
+comment|/* 305 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"NEXTFILE"
 block|,
-comment|/* 57394 */
+comment|/* 306 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"ADD"
 block|,
-comment|/* 57395 */
+comment|/* 307 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"MINUS"
 block|,
-comment|/* 57396 */
+comment|/* 308 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"MULT"
 block|,
-comment|/* 57397 */
+comment|/* 309 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"DIVIDE"
 block|,
-comment|/* 57398 */
+comment|/* 310 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"MOD"
 block|,
-comment|/* 57399 */
+comment|/* 311 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"ASSIGN"
 block|,
-comment|/* 57400 */
+comment|/* 312 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"ASGNOP"
 block|,
-comment|/* 57401 */
+comment|/* 313 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"ADDEQ"
 block|,
-comment|/* 57402 */
+comment|/* 314 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"SUBEQ"
 block|,
-comment|/* 57403 */
+comment|/* 315 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"MULTEQ"
 block|,
-comment|/* 57404 */
+comment|/* 316 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"DIVEQ"
 block|,
-comment|/* 57405 */
+comment|/* 317 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"MODEQ"
 block|,
-comment|/* 57406 */
+comment|/* 318 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"POWEQ"
 block|,
-comment|/* 57407 */
+comment|/* 319 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"PRINT"
 block|,
-comment|/* 57408 */
+comment|/* 320 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"PRINTF"
 block|,
-comment|/* 57409 */
+comment|/* 321 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"SPRINTF"
 block|,
-comment|/* 57410 */
+comment|/* 322 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"ELSE"
 block|,
-comment|/* 57411 */
+comment|/* 323 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"INTEST"
 block|,
-comment|/* 57412 */
+comment|/* 324 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"CONDEXPR"
 block|,
-comment|/* 57413 */
+comment|/* 325 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"POSTINCR"
 block|,
-comment|/* 57414 */
+comment|/* 326 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"PREINCR"
 block|,
-comment|/* 57415 */
+comment|/* 327 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"POSTDECR"
 block|,
-comment|/* 57416 */
+comment|/* 328 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"PREDECR"
 block|,
-comment|/* 57417 */
+comment|/* 329 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"VAR"
 block|,
-comment|/* 57418 */
+comment|/* 330 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"IVAR"
 block|,
-comment|/* 57419 */
+comment|/* 331 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"VARNF"
 block|,
-comment|/* 57420 */
+comment|/* 332 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"CALL"
 block|,
-comment|/* 57421 */
+comment|/* 333 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"NUMBER"
 block|,
-comment|/* 57422 */
+comment|/* 334 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"STRING"
 block|,
-comment|/* 57423 */
+comment|/* 335 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"REGEXPR"
 block|,
-comment|/* 57424 */
+comment|/* 336 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"GETLINE"
 block|,
-comment|/* 57425 */
-operator|(
-name|char
-operator|*
-operator|)
-literal|"RETURN"
-block|,
-comment|/* 57426 */
-operator|(
-name|char
-operator|*
-operator|)
-literal|"SPLIT"
-block|,
-comment|/* 57427 */
+comment|/* 337 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"SUBSTR"
 block|,
-comment|/* 57428 */
+comment|/* 338 */
+operator|(
+name|char
+operator|*
+operator|)
+literal|"SPLIT"
+block|,
+comment|/* 339 */
+operator|(
+name|char
+operator|*
+operator|)
+literal|"RETURN"
+block|,
+comment|/* 340 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"WHILE"
 block|,
-comment|/* 57429 */
+comment|/* 341 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"CAT"
 block|,
-comment|/* 57430 */
-operator|(
-name|char
-operator|*
-operator|)
-literal|"NOT"
-block|,
-comment|/* 57431 */
+comment|/* 342 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"UMINUS"
 block|,
-comment|/* 57432 */
+comment|/* 343 */
+operator|(
+name|char
+operator|*
+operator|)
+literal|"NOT"
+block|,
+comment|/* 344 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"POWER"
 block|,
-comment|/* 57433 */
-operator|(
-name|char
-operator|*
-operator|)
-literal|"DECR"
-block|,
-comment|/* 57434 */
+comment|/* 345 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"INCR"
 block|,
-comment|/* 57435 */
+comment|/* 346 */
+operator|(
+name|char
+operator|*
+operator|)
+literal|"DECR"
+block|,
+comment|/* 347 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"INDIRECT"
 block|,
-comment|/* 57436 */
+comment|/* 348 */
 operator|(
 name|char
 operator|*
 operator|)
 literal|"LASTTOKEN"
 block|,
-comment|/* 57437 */
+comment|/* 349 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -934,36 +934,36 @@ comment|/* REGEXPR */
 function_decl|getline
 operator|,
 comment|/* GETLINE */
-function_decl|jump
-operator|,
-comment|/* RETURN */
-function_decl|split
-operator|,
-comment|/* SPLIT */
 function_decl|substr
 operator|,
 comment|/* SUBSTR */
+function_decl|split
+operator|,
+comment|/* SPLIT */
+function_decl|jump
+operator|,
+comment|/* RETURN */
 function_decl|whilestat
 operator|,
 comment|/* WHILE */
 function_decl|cat
 operator|,
 comment|/* CAT */
+function_decl|arith
+operator|,
+comment|/* UMINUS */
 function_decl|boolop
 operator|,
 comment|/* NOT */
 function_decl|arith
 operator|,
-comment|/* UMINUS */
-function_decl|arith
-operator|,
 comment|/* POWER */
 function_decl|nullproc
 operator|,
-comment|/* DECR */
+comment|/* INCR */
 function_decl|nullproc
 operator|,
-comment|/* INCR */
+comment|/* DECR */
 function_decl|indirect
 operator|,
 comment|/* INDIRECT */

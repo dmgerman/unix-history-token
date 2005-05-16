@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<math.h>
 end_include
 
@@ -4622,6 +4628,9 @@ name|n
 parameter_list|)
 comment|/* $( a[0] ) */
 block|{
+name|Awkfloat
+name|val
+decl_stmt|;
 name|Cell
 modifier|*
 name|x
@@ -4643,15 +4652,38 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|val
+operator|=
+name|getfval
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+comment|/* freebsd: defend against super large field numbers */
+if|if
+condition|(
+operator|(
+name|Awkfloat
+operator|)
+name|INT_MAX
+operator|<
+name|val
+condition|)
+name|FATAL
+argument_list|(
+literal|"trying to access out of range field %s"
+argument_list|,
+name|x
+operator|->
+name|nval
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 operator|(
 name|int
 operator|)
-name|getfval
-argument_list|(
-name|x
-argument_list|)
+name|val
 expr_stmt|;
 if|if
 condition|(
@@ -8183,6 +8215,14 @@ name|s
 argument_list|)
 condition|)
 do|;
+name|pfa
+operator|->
+name|initstat
+operator|=
+name|tempstat
+expr_stmt|;
+comment|/* bwk: has to be here to reset */
+comment|/* cf gsub and refldbld */
 block|}
 name|n
 operator|++
