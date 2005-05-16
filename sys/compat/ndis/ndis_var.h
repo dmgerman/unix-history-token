@@ -4248,17 +4248,62 @@ name|NUMBER_OF_SINGLE_WORK_ITEMS
 value|6
 end_define
 
-begin_typedef
-typedef|typedef
-name|work_queue_item
+begin_struct_decl
+struct_decl|struct
 name|ndis_work_item
-typedef|;
-end_typedef
+struct_decl|;
+end_struct_decl
 
 begin_typedef
 typedef|typedef
-name|work_item_func
+name|void
+function_decl|(
+modifier|*
 name|ndis_proc
+function_decl|)
+parameter_list|(
+name|struct
+name|ndis_work_item
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|ndis_work_item
+block|{
+name|void
+modifier|*
+name|nwi_ctx
+decl_stmt|;
+name|ndis_proc
+name|nwi_func
+decl_stmt|;
+name|uint8_t
+name|nwi_wraprsvd
+index|[
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|*
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ndis_work_item
+name|ndis_work_item
 typedef|;
 end_typedef
 
@@ -4273,7 +4318,8 @@ name|f
 parameter_list|,
 name|c
 parameter_list|)
-value|ExInitializeWorkItem(w, f, c)
+define|\
+value|do {				\ 		(w)->nwi_ctx = c;	\ 		(w)->nwi_func = f;	\ 	} while (0)
 end_define
 
 begin_ifdef
