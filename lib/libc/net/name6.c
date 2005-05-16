@@ -15,10 +15,6 @@ begin_comment
 comment|/*  *	Atsushi Onoe<onoe@sm.sony.co.jp>  */
 end_comment
 
-begin_comment
-comment|/*  * TODO for thread safe  *	use mutex for _hostconf, _hostconf_init.  *	rewrite resolvers to be thread safe  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -38,6 +34,31 @@ include|#
 directive|include
 file|"namespace.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ICMPNL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"reentrant.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -172,12 +193,6 @@ begin_include
 include|#
 directive|include
 file|<nsswitch.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pthread.h>
 end_include
 
 begin_include
@@ -941,19 +956,29 @@ comment|/* ICMPNL */
 end_comment
 
 begin_comment
-comment|/*  * XXX: Many dependencies are not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call them.  */
+comment|/*  * XXX: Many dependencies are not thread-safe.  Still, we cannot use  * getipnodeby*() in conjunction with other functions which call them.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"libc_private.h"
-end_include
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ICMPNL
+argument_list|)
+end_if
 
 begin_decl_stmt
-specifier|extern
-name|pthread_mutex_t
-name|__getaddrinfo_thread_lock
+specifier|static
+name|mutex_t
+name|_getipnodeby_thread_lock
+init|=
+name|MUTEX_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -962,8 +987,7 @@ define|#
 directive|define
 name|THREAD_LOCK
 parameter_list|()
-define|\
-value|if (__isthreaded) _pthread_mutex_lock(&__getaddrinfo_thread_lock);
+value|mutex_lock(&_getipnodeby_thread_lock);
 end_define
 
 begin_define
@@ -971,9 +995,13 @@ define|#
 directive|define
 name|THREAD_UNLOCK
 parameter_list|()
-define|\
-value|if (__isthreaded) _pthread_mutex_unlock(&__getaddrinfo_thread_lock);
+value|mutex_unlock(&_getipnodeby_thread_lock);
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Host lookup order if nsswitch.conf is broken or nonexistant */

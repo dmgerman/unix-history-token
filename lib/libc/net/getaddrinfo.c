@@ -145,12 +145,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<resolv.h>
 end_include
 
@@ -1672,36 +1666,6 @@ block|, }
 block|, }
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * XXX: Many dependencies are not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call them.  */
-end_comment
-
-begin_decl_stmt
-name|pthread_mutex_t
-name|__getaddrinfo_thread_lock
-init|=
-name|PTHREAD_MUTEX_INITIALIZER
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|THREAD_LOCK
-parameter_list|()
-define|\
-value|if (__isthreaded) _pthread_mutex_lock(&__getaddrinfo_thread_lock);
-end_define
-
-begin_define
-define|#
-directive|define
-name|THREAD_UNLOCK
-parameter_list|()
-define|\
-value|if (__isthreaded) _pthread_mutex_unlock(&__getaddrinfo_thread_lock);
-end_define
 
 begin_comment
 comment|/* XXX macros that make external reference is BAD. */
@@ -7130,9 +7094,6 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7148,22 +7109,14 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|THREAD_UNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 name|EAI_SERVICE
 return|;
-block|}
 name|port
 operator|=
 name|sp
 operator|->
 name|s_port
-expr_stmt|;
-name|THREAD_UNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 if|if
