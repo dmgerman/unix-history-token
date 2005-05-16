@@ -12,7 +12,7 @@ comment|/*-----------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2002 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@acm.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
+comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2005 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@bzip.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
 end_comment
 
 begin_comment
@@ -2091,6 +2091,10 @@ decl_stmt|;
 name|Int32
 name|nUnused
 decl_stmt|;
+name|void
+modifier|*
+name|unusedTmpV
+decl_stmt|;
 name|UChar
 modifier|*
 name|unusedTmp
@@ -2262,15 +2266,8 @@ name|bzerr
 argument_list|,
 name|bzf
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|(
 operator|&
-name|unusedTmp
-operator|)
+name|unusedTmpV
 argument_list|,
 operator|&
 name|nUnused
@@ -2286,6 +2283,14 @@ name|panic
 argument_list|(
 literal|"decompress:bzReadGetUnused"
 argument_list|)
+expr_stmt|;
+name|unusedTmp
+operator|=
+operator|(
+name|UChar
+operator|*
+operator|)
+name|unusedTmpV
 expr_stmt|;
 for|for
 control|(
@@ -2703,6 +2708,10 @@ decl_stmt|;
 name|Int32
 name|nUnused
 decl_stmt|;
+name|void
+modifier|*
+name|unusedTmpV
+decl_stmt|;
 name|UChar
 modifier|*
 name|unusedTmp
@@ -2819,15 +2828,8 @@ name|bzerr
 argument_list|,
 name|bzf
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|(
 operator|&
-name|unusedTmp
-operator|)
+name|unusedTmpV
 argument_list|,
 operator|&
 name|nUnused
@@ -2843,6 +2845,14 @@ name|panic
 argument_list|(
 literal|"test:bzReadGetUnused"
 argument_list|)
+expr_stmt|;
+name|unusedTmp
+operator|=
+operator|(
+name|UChar
+operator|*
+operator|)
+name|unusedTmpV
 expr_stmt|;
 for|for
 control|(
@@ -3396,7 +3406,7 @@ argument_list|,
 literal|"\n%s: PANIC -- internal consistency error:\n"
 literal|"\t%s\n"
 literal|"\tThis is a BUG.  Please report it to me at:\n"
-literal|"\tjseward@acm.org\n"
+literal|"\tjseward@bzip.org\n"
 argument_list|,
 name|progName
 argument_list|,
@@ -3598,7 +3608,7 @@ literal|"   (3) A real bug in bzip2 -- I hope this should never be the case.\n"
 literal|"   The user's manual, Section 4.3, has more info on (1) and (2).\n"
 literal|"   \n"
 literal|"   If you suspect this is a bug in bzip2, or are unsure about (1)\n"
-literal|"   or (2), feel free to report it to me at: jseward@acm.org.\n"
+literal|"   or (2), feel free to report it to me at: jseward@bzip.org.\n"
 literal|"   Section 4.3 of the user's manual describes the info a useful\n"
 literal|"   bug report should have.  If the manual is available on your\n"
 literal|"   system, please try and read it before mailing me.  If you don't\n"
@@ -3626,7 +3636,7 @@ literal|"   (4) A real bug in bzip2 -- I hope this should never be the case.\n"
 literal|"   The user's manual, Section 4.3, has more info on (2) and (3).\n"
 literal|"   \n"
 literal|"   If you suspect this is a bug in bzip2, or are unsure about (2)\n"
-literal|"   or (3), feel free to report it to me at: jseward@acm.org.\n"
+literal|"   or (3), feel free to report it to me at: jseward@bzip.org.\n"
 literal|"   Section 4.3 of the user's manual describes the info a useful\n"
 literal|"   bug report should have.  If the manual is available on your\n"
 literal|"   system, please try and read it before mailing me.  If you don't\n"
@@ -6594,7 +6604,7 @@ argument_list|,
 literal|"bzip2, a block-sorting file compressor.  "
 literal|"Version %s.\n"
 literal|"   \n"
-literal|"   Copyright (C) 1996-2002 by Julian Seward.\n"
+literal|"   Copyright (C) 1996-2005 by Julian Seward.\n"
 literal|"   \n"
 literal|"   This program is free software; you can redistribute it and/or modify\n"
 literal|"   it under the terms set out in the LICENSE file, which is included\n"

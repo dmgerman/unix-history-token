@@ -16,7 +16,7 @@ comment|/*-------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2002 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@acm.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
+comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2005 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@bzip.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
 end_comment
 
 begin_comment
@@ -65,12 +65,12 @@ name|stderr
 argument_list|,
 literal|"\n\nbzip2/libbzip2: internal error number %d.\n"
 literal|"This is a bug in bzip2/libbzip2, %s.\n"
-literal|"Please report it to me at: jseward@acm.org.  If this happened\n"
+literal|"Please report it to me at: jseward@bzip.org.  If this happened\n"
 literal|"when you were using some program which uses libbzip2 as a\n"
 literal|"component, you should also report this bug to the author(s)\n"
 literal|"of that program.  Please make an effort to report this bug;\n"
 literal|"timely and accurate bug reports eventually lead to higher\n"
-literal|"quality software.  Thanks.  Julian Seward, 30 December 2001.\n\n"
+literal|"quality software.  Thanks.  Julian Seward, 15 February 2005.\n\n"
 argument_list|,
 name|errcode
 argument_list|,
@@ -2440,9 +2440,13 @@ begin_comment
 comment|/*---------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|/* Return  True iff data corruption is discovered.    Returns False if there is no problem. */
+end_comment
+
 begin_function
 specifier|static
-name|void
+name|Bool
 name|unRLE_obuf_to_output_FAST
 parameter_list|(
 name|DState
@@ -2481,7 +2485,9 @@ name|avail_out
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|False
+return|;
 if|if
 condition|(
 name|s
@@ -2578,7 +2584,25 @@ name|save_nblock
 operator|+
 literal|1
 condition|)
-return|return;
+return|return
+name|False
+return|;
+comment|/* Only caused by corrupt data stream? */
+if|if
+condition|(
+name|s
+operator|->
+name|nblock_used
+operator|>
+name|s
+operator|->
+name|save_nblock
+operator|+
+literal|1
+condition|)
+return|return
+name|True
+return|;
 name|s
 operator|->
 name|state_out_len
@@ -3000,6 +3024,16 @@ operator|--
 expr_stmt|;
 block|}
 block|}
+comment|/* Only caused by corrupt data stream? */
+if|if
+condition|(
+name|c_nblock_used
+operator|>
+name|s_save_nblockPP
+condition|)
+return|return
+name|True
+return|;
 comment|/* can a new run be started? */
 if|if
 condition|(
@@ -3248,6 +3282,9 @@ name|cs_avail_out
 expr_stmt|;
 comment|/* end save */
 block|}
+return|return
+name|False
+return|;
 block|}
 end_function
 
@@ -3333,9 +3370,13 @@ begin_comment
 comment|/*---------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|/* Return  True iff data corruption is discovered.    Returns False if there is no problem. */
+end_comment
+
 begin_function
 specifier|static
-name|void
+name|Bool
 name|unRLE_obuf_to_output_SMALL
 parameter_list|(
 name|DState
@@ -3374,7 +3415,9 @@ name|avail_out
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|False
+return|;
 if|if
 condition|(
 name|s
@@ -3471,7 +3514,25 @@ name|save_nblock
 operator|+
 literal|1
 condition|)
-return|return;
+return|return
+name|False
+return|;
+comment|/* Only caused by corrupt data stream? */
+if|if
+condition|(
+name|s
+operator|->
+name|nblock_used
+operator|>
+name|s
+operator|->
+name|save_nblock
+operator|+
+literal|1
+condition|)
+return|return
+name|True
+return|;
 name|s
 operator|->
 name|state_out_len
@@ -3713,7 +3774,9 @@ name|avail_out
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|False
+return|;
 if|if
 condition|(
 name|s
@@ -3810,7 +3873,25 @@ name|save_nblock
 operator|+
 literal|1
 condition|)
-return|return;
+return|return
+name|False
+return|;
+comment|/* Only caused by corrupt data stream? */
+if|if
+condition|(
+name|s
+operator|->
+name|nblock_used
+operator|>
+name|s
+operator|->
+name|save_nblock
+operator|+
+literal|1
+condition|)
+return|return
+name|True
+return|;
 name|s
 operator|->
 name|state_out_len
@@ -4016,6 +4097,9 @@ modifier|*
 name|strm
 parameter_list|)
 block|{
+name|Bool
+name|corrupt
+decl_stmt|;
 name|DState
 modifier|*
 name|s
@@ -4086,17 +4170,28 @@ name|s
 operator|->
 name|smallDecompress
 condition|)
+name|corrupt
+operator|=
 name|unRLE_obuf_to_output_SMALL
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
 else|else
+name|corrupt
+operator|=
 name|unRLE_obuf_to_output_FAST
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|corrupt
+condition|)
+return|return
+name|BZ_DATA_ERROR
+return|;
 if|if
 condition|(
 name|s
@@ -4133,7 +4228,7 @@ literal|3
 condition|)
 name|VPrintf2
 argument_list|(
-literal|" {0x%x, 0x%x}"
+literal|" {0x%08x, 0x%08x}"
 argument_list|,
 name|s
 operator|->
@@ -4246,7 +4341,7 @@ literal|3
 condition|)
 name|VPrintf2
 argument_list|(
-literal|"\n    combined CRCs: stored = 0x%x, computed = 0x%x"
+literal|"\n    combined CRCs: stored = 0x%08x, computed = 0x%08x"
 argument_list|,
 name|s
 operator|->
