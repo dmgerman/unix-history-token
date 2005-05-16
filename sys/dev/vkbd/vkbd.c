@@ -5638,8 +5638,9 @@ expr_stmt|;
 name|state
 operator|->
 name|ks_flags
-operator|=
-literal|0
+operator|&=
+operator|~
+name|COMPOSE
 expr_stmt|;
 name|state
 operator|->
