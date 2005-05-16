@@ -207,6 +207,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"netdb_private.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
