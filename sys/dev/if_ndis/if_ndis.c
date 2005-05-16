@@ -4157,7 +4157,7 @@ operator|->
 name|ndis_tickitem
 argument_list|,
 operator|(
-name|work_item_func
+name|ndis_proc
 operator|)
 name|ndis_ticktask_wrap
 argument_list|,
@@ -4172,7 +4172,7 @@ operator|->
 name|ndis_startitem
 argument_list|,
 operator|(
-name|work_item_func
+name|ndis_proc
 operator|)
 name|ndis_starttask_wrap
 argument_list|,
@@ -4187,7 +4187,7 @@ operator|->
 name|ndis_resetitem
 argument_list|,
 operator|(
-name|work_item_func
+name|ndis_proc
 operator|)
 name|ndis_resettask_wrap
 argument_list|,
