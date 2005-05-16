@@ -249,6 +249,17 @@ end_comment
 begin_decl_stmt
 name|Cell
 modifier|*
+name|fsloc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* FS */
+end_comment
+
+begin_decl_stmt
+name|Cell
+modifier|*
 name|nrloc
 decl_stmt|;
 end_decl_stmt
@@ -432,9 +443,8 @@ argument_list|,
 name|CCON
 argument_list|)
 expr_stmt|;
-name|FS
+name|fsloc
 operator|=
-operator|&
 name|setsymtab
 argument_list|(
 literal|"FS"
@@ -449,6 +459,11 @@ name|DONTFREE
 argument_list|,
 name|symtab
 argument_list|)
+expr_stmt|;
+name|FS
+operator|=
+operator|&
+name|fsloc
 operator|->
 name|sval
 expr_stmt|;
@@ -2254,7 +2269,7 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"starting setsval %p: %s = \"%s\", t=%o\n"
+literal|"starting setsval %p: %s = \"%s\", t=%o, r,f=%d,%d\n"
 operator|,
 name|vp
 operator|,
@@ -2270,6 +2285,10 @@ operator|,
 name|vp
 operator|->
 name|tval
+operator|,
+name|donerec
+operator|,
+name|donefld
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2408,7 +2427,7 @@ expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"setsval %p: %s = \"%s (%p)\", t=%o\n"
+literal|"setsval %p: %s = \"%s (%p) \", t=%o r,f=%d,%d\n"
 operator|,
 name|vp
 operator|,
@@ -2426,6 +2445,10 @@ operator|,
 name|vp
 operator|->
 name|tval
+operator|,
+name|donerec
+operator|,
+name|donefld
 operator|)
 argument_list|)
 expr_stmt|;

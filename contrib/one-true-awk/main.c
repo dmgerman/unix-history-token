@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"version 20040207"
+literal|"version 20050424"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,12 +152,23 @@ begin_comment
 comment|/* 2 = cmdline, 1 = compile, 0 = running */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_PFILE
+value|20
+end_define
+
+begin_comment
+comment|/* max number of -f's */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
 name|pfile
 index|[
-literal|20
+name|MAX_PFILE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -387,6 +398,19 @@ condition|)
 name|FATAL
 argument_list|(
 literal|"no program filename"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|npfile
+operator|>=
+name|MAX_PFILE
+operator|-
+literal|1
+condition|)
+name|FATAL
+argument_list|(
+literal|"too many -f options"
 argument_list|)
 expr_stmt|;
 name|pfile

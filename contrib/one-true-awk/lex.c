@@ -730,7 +730,7 @@ comment|/* alphanumeric */
 block|}
 else|else
 block|{
-comment|/* it's a number */
+comment|/* maybe it's a number, but could be . */
 name|char
 modifier|*
 name|rem
@@ -847,12 +847,6 @@ name|rem
 argument_list|)
 expr_stmt|;
 comment|/* parse the number */
-name|unputstr
-argument_list|(
-name|rem
-argument_list|)
-expr_stmt|;
-comment|/* put rest back for later */
 if|if
 condition|(
 name|rem
@@ -868,7 +862,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* so return one character as token */
+comment|/* return one character as token */
 name|retc
 operator|=
 name|buf
@@ -877,10 +871,24 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* character is its own type */
+name|unputstr
+argument_list|(
+name|rem
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* put rest back for later */
 block|}
 else|else
 block|{
 comment|/* some prefix was a number */
+name|unputstr
+argument_list|(
+name|rem
+argument_list|)
+expr_stmt|;
+comment|/* put rest back for later */
 name|rem
 index|[
 literal|0
@@ -888,12 +896,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* so truncate where failure started */
+comment|/* truncate buf after number part */
 name|retc
 operator|=
 literal|'0'
 expr_stmt|;
-comment|/* number */
+comment|/* type is number */
 block|}
 block|}
 operator|*
@@ -1042,6 +1050,7 @@ name|regexpr
 argument_list|()
 return|;
 block|}
+comment|/* printf("top\n"); */
 for|for
 control|(
 init|;
@@ -1059,6 +1068,7 @@ operator|&
 name|bufsize
 argument_list|)
 expr_stmt|;
+comment|/* printf("gettok [%s]\n", buf); */
 if|if
 condition|(
 name|c
