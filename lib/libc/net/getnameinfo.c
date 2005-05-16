@@ -118,10 +118,10 @@ block|{
 name|int
 name|a_af
 decl_stmt|;
-name|int
+name|size_t
 name|a_addrlen
 decl_stmt|;
-name|int
+name|socklen_t
 name|a_socklen
 decl_stmt|;
 name|int
@@ -820,7 +820,7 @@ operator|&
 name|NI_NUMERICHOST
 condition|)
 block|{
-name|int
+name|size_t
 name|numaddrlen
 decl_stmt|;
 comment|/* NUMERICHOST and NAMEREQD conflicts with each other */
@@ -1141,7 +1141,7 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-name|int
+name|size_t
 name|numaddrlen
 decl_stmt|;
 name|char
@@ -1503,6 +1503,9 @@ name|n
 operator|<
 literal|0
 operator|||
+operator|(
+name|size_t
+operator|)
 name|n
 operator|>=
 name|bufsiz
