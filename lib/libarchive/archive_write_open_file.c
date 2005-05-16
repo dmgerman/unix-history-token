@@ -542,6 +542,17 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
+comment|/* 	 * If the output file is a regular file, don't add it to 	 * itself.  If it's a device file, it's okay to add the device 	 * entry to the output archive. 	 */
+if|if
+condition|(
+name|S_ISREG
+argument_list|(
+name|pst
+operator|->
+name|st_mode
+argument_list|)
+condition|)
+block|{
 name|a
 operator|->
 name|skip_file_dev
@@ -558,6 +569,7 @@ name|pst
 operator|->
 name|st_ino
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ARCHIVE_OK
