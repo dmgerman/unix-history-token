@@ -3023,7 +3023,7 @@ name|ng_package_data
 argument_list|(
 name|NULL
 argument_list|,
-name|NULL
+name|NG_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
