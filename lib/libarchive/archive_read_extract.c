@@ -2283,6 +2283,11 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|extract
 operator|->
 name|pst
@@ -2299,11 +2304,6 @@ argument_list|,
 name|entry
 argument_list|,
 name|flags
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 return|return

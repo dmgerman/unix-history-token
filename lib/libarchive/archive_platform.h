@@ -46,6 +46,40 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD__
+operator|>
+literal|4
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_ACL_CREATE_ENTRY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ACL_INIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ACL_SET_FILE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -263,25 +297,12 @@ name|HAVE_STRUCT_STAT_ST_RDEV
 value|1
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD__
-operator|>
-literal|4
-end_if
-
 begin_define
 define|#
 directive|define
 name|HAVE_SYS_ACL_H
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -487,19 +508,25 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TODO: Test for the functions we use as well... */
+comment|/*  * If this platform has<sys/acl.h>, acl_create(), acl_init(), and  * acl_set_file(), we assume it has the rest of the POSIX.1e draft  * functions used in archive_read_extract.c.  */
 end_comment
 
 begin_if
 if|#
 directive|if
 name|HAVE_SYS_ACL_H
+operator|&&
+name|HAVE_ACL_CREATE_ENTRY
+operator|&&
+name|HAVE_ACL_INIT
+operator|&&
+name|HAVE_ACL_SET_FILE
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_POSIX_ACLS
+name|HAVE_POSIX_ACL
 value|1
 end_define
 
