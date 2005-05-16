@@ -2880,6 +2880,63 @@ literal|"\040PBE"
 comment|/* Pending Break Enable */
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cpu_feature2
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\n  Features2=0x%b"
+argument_list|,
+name|cpu_feature2
+argument_list|,
+literal|"\020"
+literal|"\001SSE3"
+comment|/* SSE3 */
+literal|"\002<b1>"
+literal|"\003RSVD2>"
+comment|/* "Reserved" bit 2 */
+literal|"\004MON"
+comment|/* MONITOR/MWAIT Instructions */
+literal|"\005DS_CPL"
+comment|/* CPL Qualified Debug Store */
+literal|"\006<b5>"
+comment|/* Machine specific registers */
+literal|"\007<b6>"
+comment|/* Physical address extension */
+literal|"\010EST"
+comment|/* Enhanced SpeedStep */
+literal|"\011TM2"
+comment|/* Thermal Monitor 2 */
+literal|"\012<b9>"
+literal|"\013CNTX-ID"
+comment|/* L1 context ID available */
+literal|"\014<b11>"
+literal|"\015<b12>"
+literal|"\016CX16"
+comment|/* CMPXCHG16B Instruction */
+literal|"\017<b14>"
+literal|"\020<b15>"
+literal|"\021<b16>"
+literal|"\022<b17>"
+literal|"\023<b18>"
+literal|"\024<b19>"
+literal|"\025<b20>"
+literal|"\026<b21>"
+literal|"\027<b22>"
+literal|"\030<b23>"
+literal|"\031<b24>"
+literal|"\032<b25>"
+literal|"\033<b26>"
+literal|"\034<b27>"
+literal|"\035<b28>"
+literal|"\036<b29>"
+literal|"\037<b30>"
+literal|"\040<b31>"
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If this CPU supports hyperthreading then mention 			 * the number of logical CPU's it contains. 			 */
 if|if
 condition|(
