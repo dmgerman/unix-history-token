@@ -2205,7 +2205,7 @@ operator|->
 name|lastport
 expr_stmt|;
 block|}
-comment|/* 		 * For UDP, use random port allocation as long as the user 		 * allows it.  For TCP (and as of yet unknown) connections, 		 * use random port allocation only if the user allows it AND 		 * ipport_tick allows it. 		 */
+comment|/* 		 * For UDP, use random port allocation as long as the user 		 * allows it.  For TCP (and as of yet unknown) connections, 		 * use random port allocation only if the user allows it AND 		 * ipport_tick() allows it. 		 */
 if|if
 condition|(
 name|ipport_randomized
