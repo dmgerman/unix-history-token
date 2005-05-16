@@ -4982,7 +4982,7 @@ parameter_list|,
 name|resp
 parameter_list|)
 define|\
-value|do {								\ 		if (resp) {						\ 			ng_ID_t _dest = NGI_RETADDR(item);		\ 			NGI_RETADDR(item) = 0;				\ 			NGI_MSG(item) = resp;				\ 			if ((ng_address_ID((here), (item),		\ 					_dest, 0)) == 0) {		\ 				SAVE_LINE(item);			\ 				(error) = ng_snd_item((item), 1);	\ 			} else {					\ 				NG_FREE_ITEM(item);			\ 				(error) = EINVAL;			\ 			}						\ 		} else {						\ 			NG_FREE_ITEM(item);				\ 		}							\ 		(item) = NULL;						\ 	} while (0)
+value|do {								\ 		if (resp) {						\ 			ng_ID_t _dest = NGI_RETADDR(item);		\ 			NGI_RETADDR(item) = 0;				\ 			NGI_MSG(item) = resp;				\ 			if ((ng_address_ID((here), (item),		\ 					_dest, 0)) == 0) {		\ 				SAVE_LINE(item);			\ 				(error) = ng_snd_item((item), NG_QUEUE);\ 			} else {					\ 				NG_FREE_ITEM(item);			\ 				(error) = EINVAL;			\ 			}						\ 		} else {						\ 			NG_FREE_ITEM(item);				\ 		}							\ 		(item) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
