@@ -4839,7 +4839,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_data((m), NULL))) {		\ 			NG_FWD_ITEM_HOOK(error, _item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_data((m), NG_NOFLAGS))) {	\ 			NG_FWD_ITEM_HOOK(error, _item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 	} while (0)
 end_define
 
 begin_define
@@ -4900,7 +4900,7 @@ parameter_list|,
 name|retaddr
 parameter_list|)
 define|\
-value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_hook((here), (_item),		\ 					(hook), (retaddr))) == 0) {	\ 			SAVE_LINE(_item);				\ 			(error) = ng_snd_item((_item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_msg(msg, NG_NOFLAGS)) == NULL) {\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_hook((here), (_item),		\ 					(hook), (retaddr))) == 0) {	\ 			SAVE_LINE(_item);				\ 			(error) = ng_snd_item((_item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
 end_define
 
 begin_define
@@ -4919,7 +4919,7 @@ parameter_list|,
 name|retaddr
 parameter_list|)
 define|\
-value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_path((here), (_item),		\ 					(path), (retaddr))) == 0) {	\ 			SAVE_LINE(_item);				\ 			(error) = ng_snd_item((_item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_msg(msg, NG_NOFLAGS)) == NULL) {\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_path((here), (_item),		\ 					(path), (retaddr))) == 0) {	\ 			SAVE_LINE(_item);				\ 			(error) = ng_snd_item((_item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
 end_define
 
 begin_define
@@ -4938,7 +4938,7 @@ parameter_list|,
 name|retaddr
 parameter_list|)
 define|\
-value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_ID((here), (_item),		\ 					(ID), (retaddr))) == 0) {	\ 			SAVE_LINE(_item);				\ 			(error) = ng_snd_item((_item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_msg(msg, NG_NOFLAGS)) == NULL) {\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_ID((here), (_item),		\ 					(ID), (retaddr))) == 0) {	\ 			SAVE_LINE(_item);				\ 			(error) = ng_snd_item((_item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
@@ -5370,9 +5370,8 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|void
-modifier|*
-name|dummy
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5385,6 +5384,9 @@ name|struct
 name|ng_mesg
 modifier|*
 name|msg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5478,7 +5480,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ng_send_fn
+name|ng_send_fn1
 parameter_list|(
 name|node_p
 name|node
@@ -5496,33 +5498,31 @@ name|arg1
 parameter_list|,
 name|int
 name|arg2
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|ng_queue_fn
+begin_define
+define|#
+directive|define
+name|ng_send_fn
 parameter_list|(
-name|node_p
 name|node
 parameter_list|,
-name|hook_p
 name|hook
 parameter_list|,
-name|ng_item_fn
-modifier|*
 name|fn
 parameter_list|,
-name|void
-modifier|*
 name|arg1
 parameter_list|,
-name|int
 name|arg2
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|ng_send_fn1(node, hook, fn, arg1, arg2, NG_NOFLAGS)
+end_define
 
 begin_function_decl
 name|int
@@ -5580,6 +5580,43 @@ name|c
 parameter_list|)
 value|callout_init(c, CALLOUT_MPSAFE)
 end_define
+
+begin_comment
+comment|/* Flags for netgraph functions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NOFLAGS
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* no special options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_QUEUE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* enqueue item, don't dispatch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_WAITOK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* use M_WAITOK, etc. */
+end_comment
 
 begin_comment
 comment|/*  * prototypes the user should DEFINITELY not use directly  */
