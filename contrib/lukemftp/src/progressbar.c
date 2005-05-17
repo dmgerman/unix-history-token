@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: progressbar.c,v 1.6 2005/02/10 16:00:28 jmc Exp $	*/
+comment|/*	$NetBSD: progressbar.c,v 1.7 2005/04/11 01:49:31 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: progressbar.c,v 1.6 2005/02/10 16:00:28 jmc Exp $"
+literal|"$NetBSD: progressbar.c,v 1.7 2005/04/11 01:49:31 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -704,7 +704,7 @@ argument_list|,
 name|ratio
 argument_list|)
 expr_stmt|;
-comment|/* 			 * calculate the length of the `*' bar, ensuring that 			 * the number of stars won't exceed the buffer size  			 */
+comment|/* 			 * calculate the length of the `*' bar, ensuring that 			 * the number of stars won't exceed the buffer size 			 */
 name|barlength
 operator|=
 name|MIN

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.90 2004/07/21 00:09:14 lukem Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.94 2005/05/13 05:03:49 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the Univers
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1997 and 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1997 and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -65,7 +65,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.90 2004/07/21 00:09:14 lukem Exp $"
+literal|"$NetBSD: main.c,v 1.94 2005/05/13 05:03:49 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -292,6 +292,9 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|isupload
+decl_stmt|;
+name|socklen_t
+name|slen
 decl_stmt|;
 name|setlocale
 argument_list|(
@@ -548,7 +551,7 @@ argument_list|,
 literal|"can't create socket"
 argument_list|)
 expr_stmt|;
-name|len
+name|slen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -573,10 +576,11 @@ operator|&
 name|rcvbuf_size
 argument_list|,
 operator|&
-name|len
+name|slen
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -585,7 +589,7 @@ argument_list|,
 literal|"unable to get default rcvbuf size"
 argument_list|)
 expr_stmt|;
-name|len
+name|slen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -610,10 +614,11 @@ operator|&
 name|sndbuf_size
 argument_list|,
 operator|&
-name|len
+name|slen
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -2657,7 +2662,7 @@ condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"sorry, input line too long.\n"
+literal|"Sorry, input line is too long.\n"
 argument_list|,
 name|ttyout
 argument_list|)
@@ -2700,9 +2705,6 @@ name|cursor_pos
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|buf
 operator|=
 name|el_gets
@@ -2712,7 +2714,10 @@ argument_list|,
 operator|&
 name|num
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
 operator|==
 name|NULL
 operator|||
@@ -2742,26 +2747,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|buf
-index|[
-operator|--
-name|num
-index|]
-operator|==
-literal|'\n'
-condition|)
-block|{
-if|if
-condition|(
-name|num
-operator|==
-literal|0
-condition|)
-break|break;
-block|}
-elseif|else
-if|if
-condition|(
 name|num
 operator|>=
 sizeof|sizeof
@@ -2772,7 +2757,7 @@ condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"sorry, input line too long.\n"
+literal|"Sorry, input line is too long.\n"
 argument_list|,
 name|ttyout
 argument_list|)
@@ -2788,6 +2773,17 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|line
+index|[
+operator|--
+name|num
+index|]
+operator|==
+literal|'\n'
+condition|)
+block|{
 name|line
 index|[
 name|num
@@ -2795,6 +2791,14 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|num
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
 name|history
 argument_list|(
 name|hist

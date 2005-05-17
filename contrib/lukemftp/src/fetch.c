@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: fetch.c,v 1.155 2005/01/12 22:37:41 lukem Exp $	*/
+comment|/*	$NetBSD: fetch.c,v 1.158 2005/05/14 15:26:43 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: fetch.c,v 1.155 2005/01/12 22:37:41 lukem Exp $"
+literal|"$NetBSD: fetch.c,v 1.158 2005/05/14 15:26:43 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1054,6 +1054,11 @@ expr_stmt|;
 comment|/* use  `clen - 1'  to not encode the trailing NUL */
 name|base64_encode
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|clear
 argument_list|,
 name|clen
@@ -3733,11 +3738,6 @@ block|}
 comment|/* success */
 break|break;
 block|}
-name|freeaddrinfo
-argument_list|(
-name|res0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|s
@@ -6351,6 +6351,15 @@ name|closefunc
 call|)
 argument_list|(
 name|fout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res0
+condition|)
+name|freeaddrinfo
+argument_list|(
+name|res0
 argument_list|)
 expr_stmt|;
 name|FREEPTR

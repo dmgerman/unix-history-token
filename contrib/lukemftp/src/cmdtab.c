@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cmdtab.c,v 1.43 2004/07/15 08:50:10 lukem Exp $	*/
+comment|/*	$NetBSD: cmdtab.c,v 1.44 2005/04/11 01:49:31 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: cmdtab.c,v 1.43 2004/07/15 08:50:10 lukem Exp $"
+literal|"$NetBSD: cmdtab.c,v 1.44 2005/04/11 01:49:31 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
