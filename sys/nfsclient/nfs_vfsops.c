@@ -2822,7 +2822,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 name|mp
@@ -2834,14 +2834,11 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|!
-operator|(
 name|mp
 operator|->
 name|mnt_flag
 operator|&
 name|MNT_UPDATE
-operator|)
 condition|)
 name|mp
 operator|->
