@@ -2807,6 +2807,7 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Set read-only flag if requested; otherwise, clear it if this is 	 * an update.  If this is not an update, then either the read-only 	 * flag is already clear, or this is a root mount and it was set 	 * intentionally at some previous point. 	 */
 if|if
 condition|(
 name|vfs_getopt
@@ -2821,13 +2822,32 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 name|mp
 operator|->
 name|mnt_flag
 operator||=
+name|MNT_RDONLY
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+operator|(
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_UPDATE
+operator|)
+condition|)
+name|mp
+operator|->
+name|mnt_flag
+operator|&=
+operator|~
 name|MNT_RDONLY
 expr_stmt|;
 comment|/* 	 * Silently clear NFSMNT_NOCONN if it's a TCP mount, it makes 	 * no sense in that context. 	 */
