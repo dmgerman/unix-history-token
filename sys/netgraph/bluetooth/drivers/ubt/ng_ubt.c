@@ -1161,7 +1161,7 @@ block|}
 comment|/* This should be the last item in the list */
 block|}
 decl_stmt|;
-comment|/* 	 * If device violates Bluetooth specification and has bDeviceClass, 	 * bDeviceSubClass and bDeviceProtocol set to wrong values then you 	 * could try to put VendorID/ProductID pair into the list below.  	 * Currently I do not know of any such devices. 	 */
+comment|/* 	 * If device violates Bluetooth specification and has bDeviceClass, 	 * bDeviceSubClass and bDeviceProtocol set to wrong values then you 	 * could try to put VendorID/ProductID pair into the list below.  	 */
 name|Static
 name|struct
 name|usb_devno
@@ -1170,6 +1170,13 @@ name|ubt_broken_devices
 index|[]
 init|=
 block|{
+block|{
+name|USB_VENDOR_AVM
+block|,
+literal|0x3800
+block|}
+block|,
+comment|/* AVM USB Bluetooth-Adapter BlueFritz! */
 block|{
 literal|0
 block|,
