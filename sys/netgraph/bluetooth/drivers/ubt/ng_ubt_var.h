@@ -395,32 +395,6 @@ name|hook_p
 name|sc_hook
 decl_stmt|;
 comment|/* upstream hook */
-comment|/* Device specific */
-name|struct
-name|cdev
-modifier|*
-name|sc_ctrl_dev
-decl_stmt|;
-comment|/* control device */
-name|struct
-name|cdev
-modifier|*
-name|sc_intr_dev
-decl_stmt|;
-comment|/* interrupt device */
-name|struct
-name|cdev
-modifier|*
-name|sc_bulk_dev
-decl_stmt|;
-comment|/* bulk device */
-name|int
-name|sc_refcnt
-decl_stmt|;
-comment|/* device ref. count */
-name|int
-name|sc_dying
-decl_stmt|;
 block|}
 struct|;
 end_struct
