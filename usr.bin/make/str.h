@@ -28,6 +28,43 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/**  * An array of c-strings.  The pointers stored in argv, point to  * strings stored in buffer.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ArgArray
+block|{
+name|int
+name|size
+decl_stmt|;
+comment|/* size of argv array */
+name|int
+name|argc
+decl_stmt|;
+comment|/* strings referenced in argv */
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+comment|/* array of string pointers */
+name|size_t
+name|len
+decl_stmt|;
+comment|/* size of buffer */
+name|char
+modifier|*
+name|buffer
+decl_stmt|;
+comment|/* data buffer */
+block|}
+name|ArgArray
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * These constants are all used by the Str_Concat function to decide how the  * final string should look. If STR_ADDSPACE is given, a space will be  * placed between the two strings. If STR_ADDSLASH is given, a '/' will  * be used instead of a space. If neither is given, no intervening characters  * will be placed between the two strings in the final output.  */
 end_comment
 
@@ -55,9 +92,10 @@ end_comment
 
 begin_function_decl
 name|void
-name|str_init
+name|ArgArray_Done
 parameter_list|(
-name|void
+name|ArgArray
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -81,17 +119,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-modifier|*
+name|void
 name|brk_string
 parameter_list|(
-specifier|const
-name|char
+name|ArgArray
 modifier|*
 parameter_list|,
-name|int
-modifier|*
+specifier|const
+name|char
+index|[]
 parameter_list|,
 name|Boolean
 parameter_list|)
@@ -111,17 +147,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-modifier|*
+name|void
 name|MAKEFLAGS_break
 parameter_list|(
-specifier|const
-name|char
+name|ArgArray
 modifier|*
 parameter_list|,
-name|int
-modifier|*
+specifier|const
+name|char
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl

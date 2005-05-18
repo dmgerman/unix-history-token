@@ -147,8 +147,9 @@ begin_function_decl
 name|Boolean
 name|Job_ParseShell
 parameter_list|(
+specifier|const
 name|char
-modifier|*
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl

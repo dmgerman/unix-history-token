@@ -4113,38 +4113,34 @@ modifier|*
 name|datum
 parameter_list|)
 block|{
-name|char
-modifier|*
-modifier|*
-name|av
-decl_stmt|;
-comment|/* word list [first word does not count] */
-name|int
-name|ac
+name|ArgArray
+name|aa
 decl_stmt|;
 name|Buffer
 modifier|*
 name|buf
 decl_stmt|;
 comment|/* Buffer for the new string */
-name|Boolean
-name|addSpace
-decl_stmt|;
-comment|/* TRUE if need to add a space to the buffer 				 * before adding the trimmed word */
 name|int
 name|i
 decl_stmt|;
-name|av
-operator|=
+name|Boolean
+name|addSpace
+decl_stmt|;
+comment|/* 					 * TRUE if need to add a space to 					 * the buffer before adding the 					 * trimmed word 					 */
 name|brk_string
 argument_list|(
-name|str
-argument_list|,
 operator|&
-name|ac
+name|aa
+argument_list|,
+name|str
 argument_list|,
 name|FALSE
 argument_list|)
+expr_stmt|;
+name|addSpace
+operator|=
+name|FALSE
 expr_stmt|;
 name|buf
 operator|=
@@ -4152,10 +4148,6 @@ name|Buf_Init
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-name|addSpace
-operator|=
-name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -4165,7 +4157,9 @@ literal|1
 init|;
 name|i
 operator|<
-name|ac
+name|aa
+operator|.
+name|argc
 condition|;
 name|i
 operator|++
@@ -4177,7 +4171,9 @@ modifier|*
 name|modProc
 call|)
 argument_list|(
-name|av
+name|aa
+operator|.
+name|argv
 index|[
 name|i
 index|]
@@ -4187,6 +4183,12 @@ argument_list|,
 name|buf
 argument_list|,
 name|datum
+argument_list|)
+expr_stmt|;
+name|ArgArray_Done
+argument_list|(
+operator|&
+name|aa
 argument_list|)
 expr_stmt|;
 return|return
@@ -4201,7 +4203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Sort the words in the string.  *  * Input:  *	str		String whose words should be sorted  *	cmp		A comparison function to control the ordering  *  * Results:  *	A string containing the words sorted  *  * Side Effects:  *	Uses brk_string() so it invalidates any previous call to  *	brk_string().  */
+comment|/**  * Sort the words in the string.  *  * Input:  *	str		String whose words should be sorted  *	cmp		A comparison function to control the ordering  *  * Results:  *	A string containing the words sorted  */
 end_comment
 
 begin_function
@@ -4231,13 +4233,8 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
-name|char
-modifier|*
-modifier|*
-name|av
-decl_stmt|;
-name|int
-name|ac
+name|ArgArray
+name|aa
 decl_stmt|;
 name|Buffer
 modifier|*
@@ -4246,25 +4243,27 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|av
-operator|=
 name|brk_string
 argument_list|(
-name|str
-argument_list|,
 operator|&
-name|ac
+name|aa
+argument_list|,
+name|str
 argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
 name|qsort
 argument_list|(
-name|av
+name|aa
+operator|.
+name|argv
 operator|+
 literal|1
 argument_list|,
-name|ac
+name|aa
+operator|.
+name|argc
 operator|-
 literal|1
 argument_list|,
@@ -4292,7 +4291,9 @@ literal|1
 init|;
 name|i
 operator|<
-name|ac
+name|aa
+operator|.
+name|argc
 condition|;
 name|i
 operator|++
@@ -4302,7 +4303,9 @@ name|Buf_Append
 argument_list|(
 name|buf
 argument_list|,
-name|av
+name|aa
+operator|.
+name|argv
 index|[
 name|i
 index|]
@@ -4319,7 +4322,9 @@ argument_list|(
 operator|(
 name|i
 operator|<
-name|ac
+name|aa
+operator|.
+name|argc
 operator|-
 literal|1
 operator|)
@@ -4331,6 +4336,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|ArgArray_Done
+argument_list|(
+operator|&
+name|aa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Buf_Peel
