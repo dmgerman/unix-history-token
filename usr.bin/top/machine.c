@@ -4036,9 +4036,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do {									\ 	long diff;											\ 	if (ps.wcpu)											\ 		diff = floor(1.0E6 * weighted_cpu(pctdouble((b)->ki_pctcpu), (b))) -			\ 		    floor(1.0E6 * weighted_cpu(pctdouble((a)->ki_pctcpu), (a)));			\ 	else												\ 		diff = (long)(b)->ki_pctcpu - (long)(a)->ki_pctcpu;					\
-comment|/* fprintf(stderr, "XXX: wcpu %d a %p (%s) b %p (%s) foo %lf\n",				\ 	    ps.wcpu, (a), (a)->ki_comm, (b), (b)->ki_comm, foo); */
-value|\ 	if (diff != 0)											\ 		return (diff> 0 ? 1 : -1);								\ } while (0)
+value|do { \ 	long diff; \ 	if (ps.wcpu) \ 		diff = floor(1.0E6 * weighted_cpu(pctdouble((b)->ki_pctcpu), (b))) - \ 		    floor(1.0E6 * weighted_cpu(pctdouble((a)->ki_pctcpu), (a))); \ 	else \ 		diff = (long)(b)->ki_pctcpu - (long)(a)->ki_pctcpu; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
 end_define
 
 begin_define
