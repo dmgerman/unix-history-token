@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2001-2003, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2001-2005, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_comment
@@ -179,6 +179,16 @@ begin_define
 define|#
 directive|define
 name|msec_delay
+parameter_list|(
+name|x
+parameter_list|)
+value|DELAY(1000*(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|msec_delay_irq
 parameter_list|(
 name|x
 parameter_list|)
@@ -532,7 +542,65 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_READ_REG_ARRAY_DWORD
+value|E1000_READ_REG_ARRAY
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_WRITE_REG_ARRAY
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|,
+name|index
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|E1000_WRITE_OFFSET(hw, E1000_REG_OFFSET(hw, reg) + ((index)<< 2), value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_WRITE_REG_ARRAY_BYTE
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|,
+name|index
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_1( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        E1000_REG_OFFSET(hw, reg) + (index), \                        value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_WRITE_REG_ARRAY_WORD
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|,
+name|index
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_2( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        E1000_REG_OFFSET(hw, reg) + (index), \                        value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_WRITE_REG_ARRAY_DWORD
 parameter_list|(
 name|hw
 parameter_list|,
