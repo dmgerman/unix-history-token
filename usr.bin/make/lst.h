@@ -326,7 +326,7 @@ name|NODE
 parameter_list|,
 name|D
 parameter_list|)
-value|(((NODE) == NULL) ? FAILURE : \ 				    (((NODE)->datum = (D)), SUCCESS))
+value|((void)((NODE)->datum = (D)))
 end_define
 
 begin_comment

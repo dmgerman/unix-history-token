@@ -40,7 +40,7 @@ comment|/* OLD_JOKE */
 end_comment
 
 begin_comment
-comment|/*-  * job.c --  *	handle the creation etc. of our child processes.  *  * Interface:  *	Job_Make	Start the creation of the given target.  *  *	Job_CatchChildren  *			Check for and handle the termination of any children.  *			This must be called reasonably frequently to keep the  *			whole make going at a decent clip, since job table  *			entries aren't removed until their process is caught  *			this way. Its single argument is TRUE if the function  *			should block waiting for a child to terminate.  *  *	Job_CatchOutput	Print any output our children have produced. Should  *			also be called fairly frequently to keep the user  *			informed of what's going on. If no output is waiting,  *			it will block for a time given by the SEL_* constants,  *			below, or until output is ready.  *  *	Job_Init	Called to intialize this module. in addition, any  *			commands attached to the .BEGIN target are executed  *			before this function returns. Hence, the makefile must  *			have been parsed before this function is called.  *  *	Job_Full	Return TRUE if the job table is filled.  *  *	Job_Empty	Return TRUE if the job table is completely empty.  *  *	Job_ParseShell	Given the line following a .SHELL target, parse the  *			line as a shell specification. Returns FAILURE if the  *			spec was incorrect.  *  *	Job_Finish	Perform any final processing which needs doing. This  *			includes the execution of any commands which have  *			been/were attached to the .END target. It should only  *			be called when the job table is empty.  *  *	Job_AbortAll	Abort all currently running jobs. It doesn't handle  *			output or do anything for the jobs, just kills them.  *			It should only be called in an emergency, as it were.  *  *	Job_CheckCommands  *			Verify that the commands for a target are ok. Provide  *			them if necessary and possible.  *  *	Job_Touch	Update a target without really updating it.  *  *	Job_Wait	Wait for all currently-running jobs to finish.  *  * compat.c --  *	The routines in this file implement the full-compatibility  *	mode of PMake. Most of the special functionality of PMake  *	is available in this mode. Things not supported:  *	    - different shells.  *	    - friendly variable substitution.  *  * Interface:  *	Compat_Run	    Initialize things for this module and recreate  *			    thems as need creatin'  */
+comment|/*-  * job.c --  *	handle the creation etc. of our child processes.  *  * Interface:  *	Job_Make	Start the creation of the given target.  *  *	Job_CatchChildren  *			Check for and handle the termination of any children.  *			This must be called reasonably frequently to keep the  *			whole make going at a decent clip, since job table  *			entries aren't removed until their process is caught  *			this way. Its single argument is TRUE if the function  *			should block waiting for a child to terminate.  *  *	Job_CatchOutput	Print any output our children have produced. Should  *			also be called fairly frequently to keep the user  *			informed of what's going on. If no output is waiting,  *			it will block for a time given by the SEL_* constants,  *			below, or until output is ready.  *  *	Job_Init	Called to intialize this module. in addition, any  *			commands attached to the .BEGIN target are executed  *			before this function returns. Hence, the makefile must  *			have been parsed before this function is called.  *  *	Job_Full	Return TRUE if the job table is filled.  *  *	Job_Empty	Return TRUE if the job table is completely empty.  *  *	Job_ParseShell	Given the line following a .SHELL target, parse the  *			line as a shell specification. Returns FALSE if the  *			spec was incorrect.  *  *	Job_Finish	Perform any final processing which needs doing. This  *			includes the execution of any commands which have  *			been/were attached to the .END target. It should only  *			be called when the job table is empty.  *  *	Job_AbortAll	Abort all currently running jobs. It doesn't handle  *			output or do anything for the jobs, just kills them.  *			It should only be called in an emergency, as it were.  *  *	Job_CheckCommands  *			Verify that the commands for a target are ok. Provide  *			them if necessary and possible.  *  *	Job_Touch	Update a target without really updating it.  *  *	Job_Wait	Wait for all currently-running jobs to finish.  *  * compat.c --  *	The routines in this file implement the full-compatibility  *	mode of PMake. Most of the special functionality of PMake  *	is available in this mode. Things not supported:  *	    - different shells.  *	    - friendly variable substitution.  *  * Interface:  *	Compat_Run	    Initialize things for this module and recreate  *			    thems as need creatin'  */
 end_comment
 
 begin_include
@@ -9544,11 +9544,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Job_ParseShell  *	Parse a shell specification and set up commandShell, shellPath  *	and shellName appropriately.  *  * Results:  *	FAILURE if the specification was incorrect.  *  * Side Effects:  *	commandShell points to a Shell structure (either predefined or  *	created from the shell spec), shellPath is the full path of the  *	shell described by commandShell, while shellName is just the  *	final component of shellPath.  *  * Notes:  *	A shell specification consists of a .SHELL target, with dependency  *	operator, followed by a series of blank-separated words. Double  *	quotes can be used to use blanks in words. A backslash escapes  *	anything (most notably a double-quote and a space) and  *	provides the functionality it does in C. Each word consists of  *	keyword and value separated by an equal sign. There should be no  *	unnecessary spaces in the word. The keywords are as follows:  *	    name	    Name of shell.  *	    path	    Location of shell. Overrides "name" if given  *	    quiet	    Command to turn off echoing.  *	    echo	    Command to turn echoing on  *	    filter	    Result of turning off echoing that shouldn't be  *			    printed.  *	    echoFlag	    Flag to turn echoing on at the start  *	    errFlag	    Flag to turn error checking on at the start  *	    hasErrCtl	    True if shell has error checking control  *	    check	    Command to turn on error checking if hasErrCtl  *			    is TRUE or template of command to echo a command  *			    for which error checking is off if hasErrCtl is  *			    FALSE.  *	    ignore	    Command to turn off error checking if hasErrCtl  *			    is TRUE or template of command to execute a  *			    command so as to ignore any errors it returns if  *			    hasErrCtl is FALSE.  */
+comment|/**  * Job_ParseShell  *	Parse a shell specification and set up commandShell, shellPath  *	and shellName appropriately.  *  * Results:  *	TRUE if the specification was correct. FALSE otherwise.  *  * Side Effects:  *	commandShell points to a Shell structure (either predefined or  *	created from the shell spec), shellPath is the full path of the  *	shell described by commandShell, while shellName is just the  *	final component of shellPath.  *  * Notes:  *	A shell specification consists of a .SHELL target, with dependency  *	operator, followed by a series of blank-separated words. Double  *	quotes can be used to use blanks in words. A backslash escapes  *	anything (most notably a double-quote and a space) and  *	provides the functionality it does in C. Each word consists of  *	keyword and value separated by an equal sign. There should be no  *	unnecessary spaces in the word. The keywords are as follows:  *	    name	    Name of shell.  *	    path	    Location of shell. Overrides "name" if given  *	    quiet	    Command to turn off echoing.  *	    echo	    Command to turn echoing on  *	    filter	    Result of turning off echoing that shouldn't be  *			    printed.  *	    echoFlag	    Flag to turn echoing on at the start  *	    errFlag	    Flag to turn error checking on at the start  *	    hasErrCtl	    True if shell has error checking control  *	    check	    Command to turn on error checking if hasErrCtl  *			    is TRUE or template of command to echo a command  *			    for which error checking is off if hasErrCtl is  *			    FALSE.  *	    ignore	    Command to turn off error checking if hasErrCtl  *			    is TRUE or template of command to execute a  *			    command so as to ignore any errors it returns if  *			    hasErrCtl is FALSE.  */
 end_comment
 
 begin_function
-name|ReturnStatus
+name|Boolean
 name|Job_ParseShell
 parameter_list|(
 name|char
@@ -9699,7 +9699,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -9983,7 +9983,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -10065,7 +10065,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -10098,7 +10098,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -10198,7 +10198,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -10242,7 +10242,7 @@ name|name
 expr_stmt|;
 return|return
 operator|(
-name|SUCCESS
+name|TRUE
 operator|)
 return|;
 block|}

@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * arch.c --  *	Functions to manipulate libraries, archives and their members.  *  *	Once again, cacheing/hashing comes into play in the manipulation  * of archives. The first time an archive is referenced, all of its members'  * headers are read and hashed and the archive closed again. All hashed  * archives are kept on a list which is searched each time an archive member  * is referenced.  *  * The interface to this module is:  *	Arch_ParseArchive	Given an archive specification, return a list  *				of GNode's, one for each member in the spec.  *				FAILURE is returned if the specification is  *				invalid for some reason.  *  *	Arch_Touch		Alter the modification time of the archive  *				member described by the given node to be  *				the current time.  *  *	Arch_TouchLib		Update the modification time of the library  *				described by the given node. This is special  *				because it also updates the modification time  *				of the library's table of contents.  *  *	Arch_MTime		Find the modification time of a member of  *				an archive *in the archive*. The time is also  *				placed in the member's GNode. Returns the  *				modification time.  *  *	Arch_MemTime		Find the modification time of a member of  *				an archive. Called when the member doesn't  *				already exist. Looks in the archive for the  *				modification time. Returns the modification  *				time.  *  *	Arch_FindLib		Search for a library along a path. The  *				library name in the GNode should be in  *				-l<name> format.  *  *	Arch_LibOODate		Special function to decide if a library node  *				is out-of-date.  *  *	Arch_Init		Initialize this module.  */
+comment|/*-  * arch.c --  *	Functions to manipulate libraries, archives and their members.  *  *	Once again, cacheing/hashing comes into play in the manipulation  * of archives. The first time an archive is referenced, all of its members'  * headers are read and hashed and the archive closed again. All hashed  * archives are kept on a list which is searched each time an archive member  * is referenced.  *  * The interface to this module is:  *	Arch_ParseArchive	Given an archive specification, return a list  *				of GNode's, one for each member in the spec.  *				FALSE is returned if the specification is  *				invalid for some reason.  *  *	Arch_Touch		Alter the modification time of the archive  *				member described by the given node to be  *				the current time.  *  *	Arch_TouchLib		Update the modification time of the library  *				described by the given node. This is special  *				because it also updates the modification time  *				of the library's table of contents.  *  *	Arch_MTime		Find the modification time of a member of  *				an archive *in the archive*. The time is also  *				placed in the member's GNode. Returns the  *				modification time.  *  *	Arch_MemTime		Find the modification time of a member of  *				an archive. Called when the member doesn't  *				already exist. Looks in the archive for the  *				modification time. Returns the modification  *				time.  *  *	Arch_FindLib		Search for a library along a path. The  *				library name in the GNode should be in  *				-l<name> format.  *  *	Arch_LibOODate		Special function to decide if a library node  *				is out-of-date.  *  *	Arch_Init		Initialize this module.  */
 end_comment
 
 begin_include
@@ -369,11 +369,11 @@ value|do {					\ 	if (arch_fatal)						\ 		Fatal ARGS;					\ 	else							\ 		Err
 end_define
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_ParseArchive --  *	Parse the archive specification in the given line and find/create  *	the nodes for the specified archive members, placing their nodes  *	on the given list, given the pointer to the start of the  *	specification, a Lst on which to place the nodes, and a context  *	in which to expand variables.  *  * Results:  *	SUCCESS if it was a valid specification. The linePtr is updated  *	to point to the first non-space after the archive spec. The  *	nodes for the members are placed on the given list.  *  * Side Effects:  *	Some nodes may be created. The given list is extended.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_ParseArchive --  *	Parse the archive specification in the given line and find/create  *	the nodes for the specified archive members, placing their nodes  *	on the given list, given the pointer to the start of the  *	specification, a Lst on which to place the nodes, and a context  *	in which to expand variables.  *  * Results:  *	TRUE if it was a valid specification. The linePtr is updated  *	to point to the first non-space after the archive spec. The  *	nodes for the members are placed on the given list.  *  * Side Effects:  *	Some nodes may be created. The given list is extended.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
-name|ReturnStatus
+name|Boolean
 name|Arch_ParseArchive
 parameter_list|(
 name|char
@@ -499,7 +499,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -667,7 +667,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -715,7 +715,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -874,7 +874,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -899,6 +899,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
 name|Arch_ParseArchive
 argument_list|(
 operator|&
@@ -908,11 +909,9 @@ name|nodeLst
 argument_list|,
 name|ctxt
 argument_list|)
-operator|!=
-name|SUCCESS
 condition|)
 block|{
-comment|/* 				 * Error in nested call -- free buffer and 				 * return FAILURE ourselves. 				 */
+comment|/* 				 * Error in nested call -- free buffer and 				 * return FALSE ourselves. 				 */
 name|free
 argument_list|(
 name|buf
@@ -927,7 +926,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -1089,7 +1088,7 @@ expr_stmt|;
 comment|/* XXXHB Lst_Destroy(&members) */
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -1174,7 +1173,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|FAILURE
+name|FALSE
 operator|)
 return|;
 block|}
@@ -1254,7 +1253,7 @@ name|cp
 expr_stmt|;
 return|return
 operator|(
-name|SUCCESS
+name|TRUE
 operator|)
 return|;
 block|}

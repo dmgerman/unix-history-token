@@ -2470,9 +2470,10 @@ operator|==
 literal|'('
 condition|)
 block|{
-comment|/* 			 * Archives must be handled specially to make sure the 			 * OP_ARCHV flag is set in their 'type' field, for one 			 * thing, and because things like "archive(file1.o 			 * file2.o file3.o)" are permissible. Arch_ParseArchive 			 * will set 'line' to be the first non-blank after the 			 * archive-spec. It creates/finds nodes for the members 			 * and places them on the given list, returning SUCCESS 			 * if all went well and FAILURE if there was an error in 			 * the specification. On error, line should remain 			 * untouched. 			 */
+comment|/* 			 * Archives must be handled specially to make sure the 			 * OP_ARCHV flag is set in their 'type' field, for one 			 * thing, and because things like "archive(file1.o 			 * file2.o file3.o)" are permissible. Arch_ParseArchive 			 * will set 'line' to be the first non-blank after the 			 * archive-spec. It creates/finds nodes for the members 			 * and places them on the given list, returning TRUE 			 * if all went well and FALSE if there was an error in 			 * the specification. On error, line should remain 			 * untouched. 			 */
 if|if
 condition|(
+operator|!
 name|Arch_ParseArchive
 argument_list|(
 operator|&
@@ -2483,8 +2484,6 @@ name|targets
 argument_list|,
 name|VAR_CMD
 argument_list|)
-operator|!=
-name|SUCCESS
 condition|)
 block|{
 name|Parse_Error
@@ -3397,12 +3396,11 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|Job_ParseShell
 argument_list|(
 name|line
 argument_list|)
-operator|!=
-name|SUCCESS
 condition|)
 block|{
 name|Parse_Error
@@ -3721,6 +3719,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|Arch_ParseArchive
 argument_list|(
 operator|&
@@ -3731,8 +3730,6 @@ name|sources
 argument_list|,
 name|VAR_CMD
 argument_list|)
-operator|!=
-name|SUCCESS
 condition|)
 block|{
 name|Parse_Error

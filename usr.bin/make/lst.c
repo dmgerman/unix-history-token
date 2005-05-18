@@ -168,7 +168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Lst_Concat  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *  * Results:  *	SUCCESS if all went well. FAILURE otherwise.  *  * Arguments:  *	list1	The list to which list2 is to be appended  *	list2	The list to append to list1  *	flags	LST_CONCNEW if LstNode's should be duplicated  *		LST_CONCLINK if should just be relinked  *  * Side Effects:  *	New elements are created and appended the the first list.  */
+comment|/**  * Lst_Concat  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *  * Arguments:  *	list1	The list to which list2 is to be appended  *	list2	The list to append to list1  *	flags	LST_CONCNEW if LstNode's should be duplicated  *		LST_CONCLINK if should just be relinked  *  * Side Effects:  *	New elements are created and appended the the first list.  */
 end_comment
 
 begin_function
@@ -838,7 +838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Lst_Remove  *	Remove the given node from the given list.  *  * Results:  *	SUCCESS or FAILURE.  *  * Side Effects:  *	The list's firstPtr will be set to NULL if ln is the last  *	node on the list. firsPtr and lastPtr will be altered if ln is  *	either the first or last node, respectively, on the list.  */
+comment|/**  * Lst_Remove  *	Remove the given node from the given list.  *  * Side Effects:  *	The list's firstPtr will be set to NULL if ln is the last  *	node on the list. firsPtr and lastPtr will be altered if ln is  *	either the first or last node, respectively, on the list.  */
 end_comment
 
 begin_function

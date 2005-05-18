@@ -67,27 +67,6 @@ begin_comment
 comment|/* TRUE */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|ReturnStatus
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|SUCCESS
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FAILURE
-value|1
-end_define
-
 begin_define
 define|#
 directive|define

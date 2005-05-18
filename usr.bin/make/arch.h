@@ -51,7 +51,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|ReturnStatus
+name|Boolean
 name|Arch_ParseArchive
 parameter_list|(
 name|char
