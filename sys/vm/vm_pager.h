@@ -595,7 +595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_pager_haspage  *  *	Check to see if an object's pager has the requested page.  The  *	object's pager will also set before and after to give the caller  *	some idea of the number of pages before and after the requested  *	page can be I/O'd efficiently.  *  *	This routine does not have to be called at any particular spl.  */
+comment|/*  *	vm_pager_haspage  *  *	Check to see if an object's pager has the requested page.  The  *	object's pager will also set before and after to give the caller  *	some idea of the number of pages before and after the requested  *	page can be I/O'd efficiently.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -661,7 +661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *      vm_pager_page_unswapped  *   *      called at splvm() to destroy swap associated with the page.  *   *      This function may not block.  *  *	XXX: A much better name would be "vm_pager_page_dirtied()"  *	XXX: It is not obvious if this could be profitably used by any  *	XXX: pagers besides the swap_pager or if it should even be a  *	XXX: generic pager_op in the first place.  */
+comment|/*   *      vm_pager_page_unswapped  *   *	Destroy swap associated with the page.  *   *	The object containing the page must be locked.  *      This function may not block.  *  *	XXX: A much better name would be "vm_pager_page_dirtied()"  *	XXX: It is not obvious if this could be profitably used by any  *	XXX: pagers besides the swap_pager or if it should even be a  *	XXX: generic pager_op in the first place.  */
 end_comment
 
 begin_function
