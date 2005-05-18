@@ -163,6 +163,10 @@ name|int
 name|uid
 decl_stmt|;
 comment|/* only this uid (unless uid == -1) */
+name|int
+name|wcpu
+decl_stmt|;
+comment|/* show weighted cpu */
 name|char
 modifier|*
 name|command

@@ -406,7 +406,7 @@ name|char
 name|smp_header_thr
 index|[]
 init|=
-literal|"  PID %-*.*s  THR PRI NICE   SIZE    RES STATE  C   TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s  THR PRI NICE   SIZE    RES STATE  C   TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,7 +417,7 @@ name|smp_header
 index|[]
 init|=
 literal|"  PID %-*.*s "
-literal|"PRI NICE   SIZE    RES STATE  C   TIME   WCPU    CPU COMMAND"
+literal|"PRI NICE   SIZE    RES STATE  C   TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,7 +426,7 @@ define|#
 directive|define
 name|smp_Proc_format
 define|\
-value|"%5d %-*.*s %s%3d %4d%7s %6s %-6.6s %1x%7s %5.2f%% %5.2f%% %.*s"
+value|"%5d %-*.*s %s%3d %4d%7s %6s %-6.6s %1x%7s %5.2f%% %.*s"
 end_define
 
 begin_decl_stmt
@@ -435,7 +435,7 @@ name|char
 name|up_header_thr
 index|[]
 init|=
-literal|"  PID %-*.*s  THR PRI NICE   SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s  THR PRI NICE   SIZE    RES STATE    TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -446,7 +446,7 @@ name|up_header
 index|[]
 init|=
 literal|"  PID %-*.*s "
-literal|"PRI NICE   SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
+literal|"PRI NICE   SIZE    RES STATE    TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,7 +455,7 @@ define|#
 directive|define
 name|up_Proc_format
 define|\
-value|"%5d %-*.*s %s%3d %4d%7s %6s %-6.6s%.0d%7s %5.2f%% %5.2f%% %.*s"
+value|"%5d %-*.*s %s%3d %4d%7s %6s %-6.6s%.0d%7s %5.2f%% %.*s"
 end_define
 
 begin_comment
@@ -1240,6 +1240,32 @@ else|:
 name|up_header_thr
 operator|)
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|Header
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Header
+argument_list|)
+argument_list|,
+name|prehead
+argument_list|,
+name|namelength
+argument_list|,
+name|namelength
+argument_list|,
+name|uname_field
+argument_list|,
+name|ps
+operator|.
+name|wcpu
+condition|?
+literal|"WCPU"
+else|:
+literal|"CPU"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|DISP_IO
@@ -1248,8 +1274,6 @@ name|prehead
 operator|=
 name|io_header
 expr_stmt|;
-break|break;
-block|}
 name|snprintf
 argument_list|(
 name|Header
@@ -1268,6 +1292,8 @@ argument_list|,
 name|uname_field
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|cmdlengthdelta
 operator|=
 name|strlen
@@ -3741,6 +3767,10 @@ argument_list|(
 name|cputime
 argument_list|)
 argument_list|,
+name|ps
+operator|.
+name|wcpu
+condition|?
 literal|100.0
 operator|*
 name|weighted_cpu
@@ -3749,7 +3779,7 @@ name|pct
 argument_list|,
 name|pp
 argument_list|)
-argument_list|,
+else|:
 literal|100.0
 operator|*
 name|pct
@@ -4006,7 +4036,9 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	long diff = (long)(b)->ki_pctcpu - (long)(a)->ki_pctcpu; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+value|do {									\ 	long diff;											\ 	if (ps.wcpu)											\ 		diff = floor(1.0E6 * weighted_cpu(pctdouble((b)->ki_pctcpu), (b))) -			\ 		    floor(1.0E6 * weighted_cpu(pctdouble((a)->ki_pctcpu), (a)));			\ 	else												\ 		diff = (long)(b)->ki_pctcpu - (long)(a)->ki_pctcpu;					\
+comment|/* fprintf(stderr, "XXX: wcpu %d a %p (%s) b %p (%s) foo %lf\n",				\ 	    ps.wcpu, (a), (a)->ki_comm, (b), (b)->ki_comm, foo); */
+value|\ 	if (diff != 0)											\ 		return (diff> 0 ? 1 : -1);								\ } while (0)
 end_define
 
 begin_define
