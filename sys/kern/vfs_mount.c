@@ -5211,9 +5211,7 @@ end_comment
 
 begin_function
 specifier|static
-name|struct
-name|mount
-modifier|*
+name|void
 name|devfs_first
 parameter_list|(
 name|void
@@ -5265,11 +5263,7 @@ name|vfsp
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+return|return;
 name|error
 operator|=
 name|vfs_mount_alloc
@@ -5303,11 +5297,7 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+return|return;
 name|error
 operator|=
 name|VFS_MOUNT
@@ -5334,11 +5324,7 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5390,11 +5376,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|mp
-operator|)
-return|;
 block|}
 end_function
 
