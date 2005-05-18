@@ -1690,13 +1690,18 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|s
-operator|!=
+operator|==
 name|NULL
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* can happen on device disconnect */
 do|do
 block|{
 name|len
