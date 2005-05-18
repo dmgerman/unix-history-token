@@ -1119,7 +1119,7 @@ name|arg
 argument_list|,
 name|flag
 argument_list|,
-name|wakeup
+name|wuflag
 argument_list|)
 expr_stmt|;
 name|KASSERT
