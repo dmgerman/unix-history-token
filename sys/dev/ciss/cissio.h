@@ -656,6 +656,47 @@ name|IOCTL_Command_struct
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|LUNAddr_struct
+name|LUN_info
+decl_stmt|;
+comment|/* 8 */
+name|RequestBlock_struct
+name|Request
+decl_stmt|;
+comment|/* 20 */
+name|ErrorInfo_struct
+name|error_info
+decl_stmt|;
+comment|/* 48 */
+name|u_int16_t
+name|buf_size
+decl_stmt|;
+comment|/* 2 */
+name|u_int32_t
+name|buf
+decl_stmt|;
+comment|/* 4 */
+block|}
+name|__packed
+name|IOCTL_Command_struct32
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Note that we'd normally pass the struct in directly, but  * this code is trying to be compatible with other drivers.  */
 end_comment
@@ -736,6 +777,24 @@ directive|define
 name|CCISS_PASSTHRU
 value|_IOWR ('C', 210, IOCTL_Command_struct)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CCISS_PASSTHRU32
+value|_IOWR ('C', 210, IOCTL_Command_struct32)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_pragma
 pragma|#
