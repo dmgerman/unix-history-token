@@ -729,28 +729,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ixgb_q
-block|{
-name|bus_dmamap_t
-name|map
-decl_stmt|;
-comment|/* bus_dma map for packet */
-name|int
-name|nsegs
-decl_stmt|;
-comment|/* # of segments/descriptors */
-name|bus_dma_segment_t
-name|segs
-index|[
-name|IXGB_MAX_SCATTER
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Bus dma allocation structure used by ixgb_dma_malloc and ixgb_dma_free.  */
 end_comment
