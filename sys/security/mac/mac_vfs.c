@@ -2472,6 +2472,9 @@ name|vp
 parameter_list|,
 name|int
 name|prot
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -2510,6 +2513,8 @@ operator|->
 name|v_label
 argument_list|,
 name|prot
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 return|return

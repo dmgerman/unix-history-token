@@ -2675,6 +2675,9 @@ name|vp
 parameter_list|,
 name|int
 name|prot
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
