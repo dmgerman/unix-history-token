@@ -827,7 +827,7 @@ modifier|*
 name|zs
 decl_stmt|;
 specifier|const
-name|char
+name|u_char
 modifier|*
 name|bp
 decl_stmt|;
@@ -858,6 +858,11 @@ name|num
 expr_stmt|;
 name|bp
 operator|=
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
 name|wbp
 expr_stmt|;
 if|if
