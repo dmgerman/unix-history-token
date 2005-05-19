@@ -1511,7 +1511,6 @@ argument_list|,
 operator|&
 name|bp
 argument_list|,
-operator|&
 name|ep
 argument_list|)
 expr_stmt|;
@@ -1865,7 +1864,6 @@ argument_list|,
 operator|&
 name|bp
 argument_list|,
-operator|&
 name|ep
 argument_list|)
 expr_stmt|;
