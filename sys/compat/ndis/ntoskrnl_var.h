@@ -4382,6 +4382,9 @@ name|device_object
 modifier|*
 name|iw_dobj
 decl_stmt|;
+name|int
+name|iw_idx
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -4411,8 +4414,32 @@ end_define
 begin_define
 define|#
 directive|define
-name|WORKQUEUE_HUPERCRITICAL
+name|WORKQUEUE_HYPERCRITICAL
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORKITEM_THREADS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORKITEM_LEGACY_THREAD
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORKIDX_INC
+parameter_list|(
+name|x
+parameter_list|)
+value|(x) = (x + 1) % WORKITEM_LEGACY_THREAD
 end_define
 
 begin_comment
