@@ -2340,27 +2340,6 @@ end_comment
 
 begin_block
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|trim_header
-argument_list|(
-name|text
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|!=
-name|NULL
-condition|)
-name|text
-operator|=
-name|s
-expr_stmt|;
 if|if
 condition|(
 name|header_status
@@ -2386,11 +2365,6 @@ operator|=
 name|OFF
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
