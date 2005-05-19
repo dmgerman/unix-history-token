@@ -1837,9 +1837,6 @@ name|vm_object_t
 name|object
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 comment|/* 	 * Remove from list right away so lookups will fail if we block for 	 * pageout completion. 	 */
 if|if
 condition|(
@@ -1892,19 +1889,9 @@ literal|"swpdea"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free all remaining metadata.  We only bother to free it from  	 * the swap meta data.  We do not attempt to free swapblk's still 	 * associated with vm_page_t's for this object.  We do not care 	 * if paging is still in progress on some objects. 	 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|swp_pager_meta_free_all
 argument_list|(
 name|object
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -2333,12 +2320,6 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splvm
-argument_list|()
-decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -2353,11 +2334,6 @@ argument_list|,
 name|start
 argument_list|,
 name|size
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -2382,9 +2358,6 @@ name|size
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|n
 init|=
 literal|0
@@ -2400,11 +2373,6 @@ init|=
 name|start
 decl_stmt|;
 comment|/* save start index */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -2467,11 +2435,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -2517,11 +2480,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2554,9 +2512,6 @@ block|{
 name|vm_pindex_t
 name|i
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|srcobject
@@ -2570,11 +2525,6 @@ name|dstobject
 argument_list|,
 name|MA_OWNED
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
 expr_stmt|;
 comment|/* 	 * If destroysource is set, we remove the source object from the  	 * swap_pager internal queue now.  	 */
 if|if
@@ -2763,11 +2713,6 @@ operator|=
 name|OBJT_DEFAULT
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2798,9 +2743,6 @@ block|{
 name|daddr_t
 name|blk0
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -2809,11 +2751,6 @@ name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * do we have good backing store at the requested index ? 	 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|blk0
 operator|=
 name|swp_pager_meta_ctl
@@ -2832,11 +2769,6 @@ operator|==
 name|SWAPBLK_NONE
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|before
@@ -2998,11 +2930,6 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -3081,9 +3008,6 @@ name|vm_page_t
 name|mreq
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
 name|int
@@ -3119,11 +3043,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate range to retrieve.  The pages have already been assigned 	 * their swapblks.  We require a *contiguous* range but we know it to 	 * not span devices.   If we do not supply it, bad things 	 * happen.  Note that blk, iblk& jblk can be SWAPBLK_NONE, but the  	 * loops are set up such that the case(s) are handled implicitly. 	 * 	 * The swp_*() calls must be made at splvm().  vm_page_free() does 	 * not need to be, but it will go a little faster if it is. 	 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|blk
 operator|=
 name|swp_pager_meta_ctl
@@ -3303,11 +3222,6 @@ expr_stmt|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Return VM_PAGER_FAIL if we have nothing to do.  Return mreq  	 * still busy, but the others unbusied. 	 */
 if|if
@@ -3560,11 +3474,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * wait for the page we want to complete.  PG_SWAPINPROG is always 	 * cleared on completion.  If an I/O error occurs, SWAPBLK_NONE 	 * is set in the meta-data. 	 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -3638,11 +3547,6 @@ block|}
 block|}
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
@@ -3794,9 +3698,6 @@ block|{
 name|int
 name|n
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 comment|/* 		 * limit range 		 */
 if|if
 condition|(
@@ -3831,11 +3732,6 @@ operator|=
 name|n
 expr_stmt|;
 comment|/* 		 * Adjust difference ( if possible ).  If the current async 		 * count is too low, we may not be able to make the adjustment 		 * at this time. 		 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|n
 operator|-=
 name|nsw_wcount_async_max
@@ -3864,11 +3760,6 @@ name|nsw_wcount_async
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
@@ -3892,9 +3783,6 @@ operator|+=
 name|n
 control|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|int
 name|j
 decl_stmt|;
@@ -3926,11 +3814,6 @@ name|n
 argument_list|,
 name|nsw_cluster_max
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
 expr_stmt|;
 comment|/* 		 * Get biggest block of swap we can.  If we fail, fall 		 * back and try to allocate a smaller block.  Don't go 		 * overboard trying to allocate space if it would overly 		 * fragment swap. 		 */
 while|while
@@ -3984,11 +3867,6 @@ name|j
 index|]
 operator|=
 name|VM_PAGER_FAIL
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -4220,11 +4098,6 @@ name|bp
 operator|->
 name|b_npages
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* 		 * asynchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to swapdev_strategy 		 */
 if|if
 condition|(
@@ -4287,11 +4160,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Wait for the sync I/O to complete, then update rtvals. 		 * We just set the rtvals[] to VM_PAGER_PEND so we can call 		 * our async completion routine at the end, thus avoiding a 		 * double-free. 		 */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|bwait
 argument_list|(
 name|bp
@@ -4329,11 +4197,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 name|VM_OBJECT_LOCK
 argument_list|(
@@ -4358,9 +4221,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -4424,12 +4284,6 @@ name|b_error
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * set object, raise to splvm(). 	 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 comment|/* 	 * remove the mapping for kernel virtual 	 */
 name|pmap_qremove
 argument_list|(
@@ -4723,11 +4577,6 @@ operator|&
 name|nsw_wcount_sync
 operator|)
 operator|)
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -8367,9 +8216,6 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -8400,11 +8246,6 @@ name|vhold
 argument_list|(
 name|vp2
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -8443,11 +8284,6 @@ operator|->
 name|b_vp
 operator|=
 name|vp2
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|bp
 operator|->
