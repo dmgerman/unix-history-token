@@ -35,19 +35,11 @@ directive|include
 file|"namespace.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|YP
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ICMPNL
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -961,23 +953,11 @@ begin_comment
 comment|/* ICMPNL */
 end_comment
 
-begin_comment
-comment|/*  * XXX: Many dependencies are not thread-safe.  Still, we cannot use  * getipnodeby*() in conjunction with other functions which call them.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|YP
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ICMPNL
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1355,22 +1335,24 @@ name|union
 name|inx_addr
 name|addrbuf
 decl_stmt|;
-if|if
+switch|switch
 condition|(
 name|af
-operator|!=
+condition|)
+block|{
+case|case
 name|AF_INET
+case|:
 ifdef|#
 directive|ifdef
 name|INET6
-operator|&&
-name|af
-operator|!=
+case|case
 name|AF_INET6
+case|:
 endif|#
 directive|endif
-condition|)
-block|{
+break|break;
+default|default:
 operator|*
 name|errp
 operator|=
@@ -1541,12 +1523,10 @@ operator|==
 name|NULL
 operator|)
 operator|&&
-operator|(
 name|MAPADDRENABLED
 argument_list|(
 name|flags
 argument_list|)
-operator|)
 condition|)
 block|{
 name|struct
@@ -7271,7 +7251,7 @@ name|YP
 end_ifdef
 
 begin_comment
-comment|/*  * NIS  *  * XXX actually a hack, these are INET4 specific.  */
+comment|/*  * NIS  *  * XXX actually a hack.  */
 end_comment
 
 begin_function
@@ -7340,16 +7320,6 @@ name|int
 operator|*
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|af
-operator|==
-name|AF_INET
-condition|)
-block|{
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
 name|hp
 operator|=
 name|_gethostbynisname
@@ -7374,10 +7344,6 @@ argument_list|,
 name|errp
 argument_list|)
 expr_stmt|;
-name|THREAD_UNLOCK
-argument_list|()
-expr_stmt|;
-block|}
 operator|*
 operator|(
 expr|struct
@@ -7471,16 +7437,6 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|af
-operator|==
-name|AF_INET
-condition|)
-block|{
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
 name|hp
 operator|=
 name|_gethostbynisaddr
@@ -7507,10 +7463,6 @@ argument_list|,
 name|errp
 argument_list|)
 expr_stmt|;
-name|THREAD_UNLOCK
-argument_list|()
-expr_stmt|;
-block|}
 operator|*
 operator|(
 expr|struct
