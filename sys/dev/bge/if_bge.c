@@ -432,6 +432,14 @@ block|,
 block|{
 name|BCOM_VENDORID
 block|,
+name|BCOM_DEVICEID_BCM5714C
+block|,
+literal|"Broadcom BCM5714C Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
 name|BCOM_DEVICEID_BCM5721
 block|,
 literal|"Broadcom BCM5721 Gigabit Ethernet"
@@ -10640,6 +10648,21 @@ name|sc
 operator|->
 name|bge_chipid
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Treat the 5714 like the 5750 until we have more info 	 * on this chip. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5714
+condition|)
+name|sc
+operator|->
+name|bge_asicrev
+operator|=
+name|BGE_ASICREV_BCM5750
 expr_stmt|;
 comment|/* 	 * XXX: Broadcom Linux driver.  Not in specs or eratta. 	 * PCI-Express? 	 */
 if|if
