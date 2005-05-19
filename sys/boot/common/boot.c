@@ -594,6 +594,10 @@ operator|-
 literal|1
 condition|)
 block|{
+name|timeout
+operator|=
+literal|10
+expr_stmt|;
 comment|/* try to get a delay from the environment */
 if|if
 condition|(
@@ -627,23 +631,11 @@ name|ep
 condition|)
 name|timeout
 operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|timeout
-operator|==
-operator|-
-literal|1
-condition|)
-comment|/* all else fails */
-name|timeout
-operator|=
 literal|10
 expr_stmt|;
+comment|/* Unparseable? Set default! */
+block|}
+block|}
 name|kernelname
 operator|=
 name|getenv
@@ -699,6 +691,13 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|timeout
+operator|>=
+literal|0
+condition|)
+block|{
 name|otime
 operator|=
 name|time
@@ -829,6 +828,14 @@ operator|=
 name|ntime
 expr_stmt|;
 block|}
+block|}
+block|}
+else|else
+block|{
+name|yes
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
