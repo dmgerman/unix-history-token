@@ -934,7 +934,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*       * Try $bootfile, then try our builtin default      */
+comment|/*      * Try $bootfile, then try our builtin default      */
 if|if
 condition|(
 operator|(
@@ -1085,7 +1085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to find the /etc/fstab file on the filesystem (rootdev),  * which should be be the root filesystem, and parse it to find   * out what the kernel ought to think the root filesystem is.  *  * If we're successful, set vfs.root.mountfrom to<vfstype>:<path>  * so that the kernel can tell both which VFS and which node to use  * to mount the device.  If this variable's already set, don't  * overwrite it.  */
+comment|/*  * Try to find the /etc/fstab file on the filesystem (rootdev),  * which should be be the root filesystem, and parse it to find  * out what the kernel ought to think the root filesystem is.  *  * If we're successful, set vfs.root.mountfrom to<vfstype>:<path>  * so that the kernel can tell both which VFS and which node to use  * to mount the device.  If this variable's already set, don't  * overwrite it.  */
 end_comment
 
 begin_function
