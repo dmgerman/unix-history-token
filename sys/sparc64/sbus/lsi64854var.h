@@ -133,16 +133,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* interrupt handler */
-name|int
-function_decl|(
+name|driver_intr_t
 modifier|*
 name|sc_intrchain
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
+decl_stmt|;
 comment|/* next handler in intr chain */
 name|void
 modifier|*
@@ -263,8 +257,19 @@ value|do {				\ 	uint32_t csr = L64854_GCSR(sc);		\ 	csr |= D_EN_DMA;			\ 	L6485
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|lsi64854_attach
+parameter_list|(
+name|struct
+name|lsi64854_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lsi64854_detach
 parameter_list|(
 name|struct
 name|lsi64854_softc

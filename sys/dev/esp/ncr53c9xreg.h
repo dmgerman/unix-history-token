@@ -1165,7 +1165,7 @@ comment|/*	Threshold 8 Mode	*/
 end_comment
 
 begin_comment
-comment|/* Config #3 also different on NCR53CF9x/FAS216 */
+comment|/* Config #3 also different on NCR53CF9x/FAS100A/FAS216/FAS236 */
 end_comment
 
 begin_define

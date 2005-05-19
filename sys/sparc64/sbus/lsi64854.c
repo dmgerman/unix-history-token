@@ -257,7 +257,7 @@ comment|/*  * Finish attaching this DMA device.  * Front-end must fill in these 
 end_comment
 
 begin_function
-name|void
+name|int
 name|lsi64854_attach
 parameter_list|(
 name|struct
@@ -268,6 +268,9 @@ parameter_list|)
 block|{
 name|uint32_t
 name|csr
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|/* Indirect functions */
 switch|switch
@@ -331,8 +334,8 @@ operator|=
 name|lsi64854_reset
 expr_stmt|;
 comment|/* Allocate a dmamap */
-if|if
-condition|(
+name|error
+operator|=
 name|bus_dma_tag_create
 argument_list|(
 name|sc
@@ -378,6 +381,12 @@ name|sc
 operator|->
 name|sc_buffer_dmat
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -389,10 +398,14 @@ argument_list|,
 literal|"cannot allocate buffer DMA tag\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|bus_dmamap_create
 argument_list|(
 name|sc
@@ -406,6 +419,10 @@ name|sc
 operator|->
 name|sc_dmamap
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -419,7 +436,18 @@ argument_list|,
 literal|"DMA map create failed\n"
 argument_list|)
 expr_stmt|;
-return|return;
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|sc_buffer_dmat
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|csr
 operator|=
@@ -444,7 +472,11 @@ name|sc_rev
 operator|==
 name|DMAREV_HME
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|device_printf
 argument_list|(
 name|sc
@@ -475,7 +507,7 @@ name|DMAREV_ESC
 case|:
 name|printf
 argument_list|(
-literal|"esc"
+literal|"ESC"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -537,6 +569,64 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|lsi64854_detach
+parameter_list|(
+name|struct
+name|lsi64854_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|setup
+condition|)
+name|bus_dmamap_unload
+argument_list|(
+name|sc
+operator|->
+name|sc_buffer_dmat
+argument_list|,
+name|sc
+operator|->
+name|sc_dmamap
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_destroy
+argument_list|(
+name|sc
+operator|->
+name|sc_buffer_dmat
+argument_list|,
+name|sc
+operator|->
+name|sc_dmamap
+argument_list|)
+expr_stmt|;
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|sc_buffer_dmat
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1697,7 +1787,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* transferred< 0 ? */
+comment|/* transfered< 0? */
 if|#
 directive|if
 literal|0
@@ -1955,10 +2045,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|rv
-operator||
 call|(
 modifier|*
 name|sc
@@ -1970,6 +2056,10 @@ name|sc
 operator|->
 name|sc_intrchainarg
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rv
 operator|)
 return|;
 block|}

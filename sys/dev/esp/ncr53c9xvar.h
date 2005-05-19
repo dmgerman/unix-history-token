@@ -168,8 +168,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|NCR_VARIANT_MAX
+name|NCR_VARIANT_FAS100A
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_VARIANT_FAS236
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_VARIANT_MAX
+value|13
 end_define
 
 begin_comment
@@ -1129,6 +1143,10 @@ modifier|*
 name|sc_omess
 decl_stmt|;
 comment|/* MSGOUT buffer */
+name|int
+name|sc_omess_self
+decl_stmt|;
+comment|/* MSGOUT buffer is self-allocated */
 name|caddr_t
 name|sc_omp
 decl_stmt|;
@@ -1141,6 +1159,10 @@ modifier|*
 name|sc_imess
 decl_stmt|;
 comment|/* MSGIN buffer */
+name|int
+name|sc_imess_self
+decl_stmt|;
+comment|/* MSGIN buffer is self-allocated */
 name|caddr_t
 name|sc_imp
 decl_stmt|;
@@ -1834,8 +1856,6 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
