@@ -5,7 +5,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int8_t
+name|uint8_t
 function_decl|(
 modifier|*
 name|mk48txx_nvrd_t
@@ -30,7 +30,7 @@ name|device_t
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_typedef
@@ -47,6 +47,15 @@ name|bus_space_handle_t
 name|sc_bsh
 decl_stmt|;
 comment|/* bus space handle */
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
+comment|/* hardware mutex */
+name|eventhandler_tag
+name|sc_wet
+decl_stmt|;
+comment|/* watchdog event handler tag */
 specifier|const
 name|char
 modifier|*
@@ -73,6 +82,17 @@ define|#
 directive|define
 name|MK48TXX_NO_CENT_ADJUST
 value|0x0001
+comment|/* don't manually adjust century */
+define|#
+directive|define
+name|MK48TXX_WDOG_REGISTER
+value|0x0002
+comment|/* register watchdog */
+define|#
+directive|define
+name|MK48TXX_WDOG_ENABLE_WDS
+value|0x0004
+comment|/* enable watchdog steering bit */
 name|mk48txx_nvrd_t
 name|sc_nvrd
 decl_stmt|;

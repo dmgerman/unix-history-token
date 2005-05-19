@@ -424,6 +424,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MK48TXX_WDOG_BMB_SHIFT
+value|2
+end_define
+
+begin_comment
+comment|/* shift for watchdog multiplier */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MK48TXX_WDOG_WDS
 value|0x80
 end_define
@@ -560,6 +571,17 @@ end_define
 
 begin_comment
 comment|/* century bit (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDAY_CB_SHIFT
+value|4
+end_define
+
+begin_comment
+comment|/* shift for century bit */
 end_comment
 
 begin_define
