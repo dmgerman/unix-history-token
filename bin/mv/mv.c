@@ -1790,7 +1790,7 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"%s: did not terminate normally"
 argument_list|,
@@ -1811,7 +1811,7 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"%s: terminated with %d (non-zero) status"
 argument_list|,
@@ -1910,7 +1910,7 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"%s: did not terminate normally"
 argument_list|,
@@ -1931,7 +1931,7 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"%s: terminated with %d (non-zero) status"
 argument_list|,
