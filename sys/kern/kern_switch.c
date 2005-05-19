@@ -1147,7 +1147,7 @@ condition|(
 name|td
 operator|->
 name|td_priority
-operator|>
+operator|>=
 name|running_thread
 operator|->
 name|td_priority
@@ -1488,7 +1488,7 @@ condition|(
 name|td
 operator|->
 name|td_priority
-operator|>
+operator|>=
 name|running_thread
 operator|->
 name|td_priority
