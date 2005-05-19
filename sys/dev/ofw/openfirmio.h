@@ -36,7 +36,7 @@ comment|/* passed or returned node id */
 name|int
 name|of_namelen
 decl_stmt|;
-comment|/* length of op_name */
+comment|/* length of of_name */
 specifier|const
 name|char
 modifier|*
@@ -46,7 +46,7 @@ comment|/* pointer to field name */
 name|int
 name|of_buflen
 decl_stmt|;
-comment|/* length of op_buf (value-result) */
+comment|/* length of of_buf (value-result) */
 name|char
 modifier|*
 name|of_buf
