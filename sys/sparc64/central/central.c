@@ -314,6 +314,13 @@ argument_list|,
 name|central_get_resource_list
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_get_resource
+argument_list|,
+name|bus_generic_rl_get_resource
+argument_list|)
+block|,
 comment|/* ofw_bus interface */
 name|DEVMETHOD
 argument_list|(
@@ -1144,7 +1151,6 @@ name|flags
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|SYS_RES_MEMORY
 case|:
@@ -1358,8 +1364,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-break|break;
-default|default:
 break|break;
 block|}
 return|return

@@ -207,6 +207,13 @@ argument_list|,
 name|fhc_get_resource_list
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_get_resource
+argument_list|,
+name|bus_generic_rl_get_resource
+argument_list|)
+block|,
 comment|/* ofw_bus interface */
 name|DEVMETHOD
 argument_list|(
