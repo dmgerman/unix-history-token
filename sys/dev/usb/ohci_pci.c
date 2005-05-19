@@ -199,6 +199,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_OHCI_VENDORID_SUN
+value|0x108e
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_OHCI_DEVICEID_ALADDIN_V
 value|0x523710b9
 end_define
@@ -373,6 +380,24 @@ modifier|*
 name|ohci_device_keylargo
 init|=
 literal|"Apple KeyLargo USB controller"
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCI_OHCI_DEVICEID_PCIO2USB
+value|0x1103108e
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ohci_device_pcio2usb
+init|=
+literal|"Sun PCIO-2 USB controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -706,6 +731,14 @@ operator|(
 name|ohci_device_keylargo
 operator|)
 return|;
+case|case
+name|PCI_OHCI_DEVICEID_PCIO2USB
+case|:
+return|return
+operator|(
+name|ohci_device_pcio2usb
+operator|)
+return|;
 default|default:
 if|if
 condition|(
@@ -825,6 +858,30 @@ expr_stmt|;
 name|pci_enable_busmaster
 argument_list|(
 name|self
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Some Sun PCIO-2 USB controllers have their intpin register 	 * bogusly set to 0, although it should be 4. Correct that. 	 */
+if|if
+condition|(
+name|pci_get_devid
+argument_list|(
+name|self
+argument_list|)
+operator|==
+name|PCI_OHCI_DEVICEID_PCIO2USB
+operator|&&
+name|pci_get_intpin
+argument_list|(
+name|self
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pci_set_intpin
+argument_list|(
+name|self
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 name|rid
