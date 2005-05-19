@@ -6428,6 +6428,12 @@ name|errno
 condition|)
 block|{
 case|case
+name|ENOBUFS
+case|:
+case|case
+name|ENETDOWN
+case|:
+case|case
 name|EHOSTUNREACH
 case|:
 case|case
