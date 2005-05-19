@@ -20,6 +20,24 @@ name|_SPARC64_SBUS_SBUSVAR_H_
 end_define
 
 begin_comment
+comment|/*  * Macros for probe order  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBUS_ORDER_FIRST
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUS_ORDER_NORMAL
+value|20
+end_define
+
+begin_comment
 comment|/*  * PROM-reported DMA burst sizes for the SBus  */
 end_comment
 
@@ -92,6 +110,8 @@ name|SBUS_IVAR_BURSTSZ
 block|,
 name|SBUS_IVAR_CLOCKFREQ
 block|,
+name|SBUS_IVAR_IGN
+block|,
 name|SBUS_IVAR_SLOT
 block|, }
 enum|;
@@ -133,6 +153,17 @@ argument_list|(
 argument|clockfreq
 argument_list|,
 argument|CLOCKFREQ
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|SBUS_ACCESSOR
+argument_list|(
+argument|ign
+argument_list|,
+argument|IGN
 argument_list|,
 argument|int
 argument_list|)
