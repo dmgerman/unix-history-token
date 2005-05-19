@@ -15,6 +15,11 @@ name|bus_space_handle_t
 name|sc_bsh
 decl_stmt|;
 comment|/* bus space handle */
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
+comment|/* hardware mutex */
 name|u_char
 name|sc_rega
 decl_stmt|;
