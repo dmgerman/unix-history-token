@@ -4102,8 +4102,6 @@ name|adapter
 operator|->
 name|timer
 argument_list|,
-literal|2
-operator|*
 name|hz
 argument_list|,
 name|em_local_timer
@@ -4350,8 +4348,6 @@ name|adapter
 operator|->
 name|timer
 argument_list|,
-literal|2
-operator|*
 name|hz
 argument_list|,
 name|em_local_timer
@@ -4648,8 +4644,6 @@ name|adapter
 operator|->
 name|timer
 argument_list|,
-literal|2
-operator|*
 name|hz
 argument_list|,
 name|em_local_timer
@@ -7524,8 +7518,6 @@ name|adapter
 operator|->
 name|timer
 argument_list|,
-literal|2
-operator|*
 name|hz
 argument_list|,
 name|em_local_timer
