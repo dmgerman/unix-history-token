@@ -345,9 +345,6 @@ name|int
 name|sc_enabled
 decl_stmt|;
 name|int
-name|sc_rtype
-decl_stmt|;
-name|int
 name|sc_nmres
 decl_stmt|;
 name|int
@@ -1662,12 +1659,6 @@ name|CS4231_SBUS
 expr_stmt|;
 name|sc
 operator|->
-name|sc_rtype
-operator|=
-name|SYS_RES_MEMORY
-expr_stmt|;
-name|sc
-operator|->
 name|sc_nmres
 operator|=
 literal|1
@@ -1761,12 +1752,6 @@ operator|->
 name|sc_burst
 operator|=
 name|EBDCSR_BURST_1
-expr_stmt|;
-name|sc
-operator|->
-name|sc_rtype
-operator|=
-name|SYS_RES_IOPORT
 expr_stmt|;
 name|sc
 operator|->
@@ -1907,9 +1892,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-name|sc
-operator|->
-name|sc_rtype
+name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|sc
@@ -3806,9 +3789,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-name|sc
-operator|->
-name|sc_rtype
+name|SYS_RES_MEMORY
 argument_list|,
 name|sc
 operator|->
