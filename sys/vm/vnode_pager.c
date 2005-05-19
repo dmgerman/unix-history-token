@@ -2121,7 +2121,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* we definitely need to be at splvm here */
 name|bwait
 argument_list|(
 name|bp
