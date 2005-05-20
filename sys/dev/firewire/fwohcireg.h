@@ -90,6 +90,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_VENDORID_SUN
+value|0x108e
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_DEVICE_CS4210
 value|(0x000f<< 16)
 end_define
@@ -281,6 +288,13 @@ define|#
 directive|define
 name|FW_DEVICE_82372FB
 value|(0x7605<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_PCIO2FW
+value|(0x1102<< 16)
 end_define
 
 begin_define
