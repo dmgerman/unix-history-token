@@ -3170,13 +3170,23 @@ condition|)
 break|break;
 block|}
 comment|/* 	 * free pages outside our collection range.   Note: we never free 	 * mreq, it must remain busy throughout. 	 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
+if|if
+condition|(
+literal|0
+operator|<
+name|i
+operator|||
+name|j
+operator|<
+name|count
+condition|)
 block|{
 name|int
 name|k
 decl_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|k
@@ -3219,10 +3229,10 @@ name|k
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* 	 * Return VM_PAGER_FAIL if we have nothing to do.  Return mreq  	 * still busy, but the others unbusied. 	 */
 if|if
 condition|(
@@ -3410,11 +3420,6 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_npages
@@ -3437,17 +3442,8 @@ operator|->
 name|b_npages
 expr_stmt|;
 comment|/* 	 * We still hold the lock on mreq, and our automatic completion routine 	 * does not remove it. 	 */
-name|VM_OBJECT_LOCK
-argument_list|(
-name|mreq
-operator|->
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_object_pip_add
 argument_list|(
-name|mreq
-operator|->
 name|object
 argument_list|,
 name|bp
@@ -3457,8 +3453,6 @@ argument_list|)
 expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
-name|mreq
-operator|->
 name|object
 argument_list|)
 expr_stmt|;
@@ -3550,8 +3544,6 @@ argument_list|()
 expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
-name|mreq
-operator|->
 name|object
 argument_list|)
 expr_stmt|;
