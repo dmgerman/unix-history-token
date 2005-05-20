@@ -3009,7 +3009,7 @@ return|;
 comment|/* return SUCCESS */
 name|DELAY
 argument_list|(
-literal|100000
+literal|1000
 argument_list|)
 expr_stmt|;
 block|}
