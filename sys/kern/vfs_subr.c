@@ -13113,25 +13113,21 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|curthread
 operator|!=
 name|NULL
-condition|)
+argument_list|,
+operator|(
+literal|"vfs_unmountall: NULL curthread"
+operator|)
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|curthread
 expr_stmt|;
-else|else
-name|td
-operator|=
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|initproc
-argument_list|)
-expr_stmt|;
-comment|/* XXX XXX proc0? */
 comment|/* 	 * Since this only runs when rebooting, it is not interlocked. 	 */
 while|while
 condition|(
