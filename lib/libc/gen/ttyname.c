@@ -514,6 +514,8 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
 name|ttyname_r
 argument_list|(
 name|fd
@@ -527,7 +529,14 @@ argument_list|)
 operator|+
 name|MAXNAMLEN
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 return|return
 operator|(
 name|buf
