@@ -4518,7 +4518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Get a list of devices in the devclass  *  * An array containing a list of all the devices in the given devclass  * is allocated and returned in @p *devlistp. The number of devices  * in the array is returned in @p *devcountp. The caller should free  * the array using @c free(p, M_TEMP).  *  * @param dc		the devclass to examine  * @param devlistp	points at location for array pointer return  *			value  * @param devcountp	points at location for array size return value  *  * @retval 0		success  * @retval ENOMEM	the array allocation failed  */
+comment|/**  * @brief Get a list of devices in the devclass  *  * An array containing a list of all the devices in the given devclass  * is allocated and returned in @p *devlistp. The number of devices  * in the array is returned in @p *devcountp. The caller should free  * the array using @c free(p, M_TEMP), even if @p *devcountp is 0.  *  * @param dc		the devclass to examine  * @param devlistp	points at location for array pointer return  *			value  * @param devcountp	points at location for array size return value  *  * @retval 0		success  * @retval ENOMEM	the array allocation failed  */
 end_comment
 
 begin_function
