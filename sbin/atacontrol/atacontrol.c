@@ -2089,7 +2089,7 @@ literal|"atacontrol: Invalid channel %s\n"
 argument_list|,
 name|argv
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -2164,7 +2164,7 @@ literal|"atacontrol: Invalid channel %s\n"
 argument_list|,
 name|argv
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -2251,7 +2251,7 @@ literal|"atacontrol: Invalid channel %s\n"
 argument_list|,
 name|argv
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -2347,7 +2347,7 @@ literal|"atacontrol: Invalid channel %s\n"
 argument_list|,
 name|argv
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
