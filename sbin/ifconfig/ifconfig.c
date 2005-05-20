@@ -4534,6 +4534,12 @@ condition|(
 name|p
 operator|!=
 name|NULL
+operator|&&
+name|p
+operator|->
+name|af_status
+operator|!=
+name|NULL
 condition|)
 name|p
 operator|->
