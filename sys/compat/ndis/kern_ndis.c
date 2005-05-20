@@ -1610,9 +1610,9 @@ comment|/* 	 * Drivers are sometimes very lax about cancelling all 	 * their tim
 argument|t = sc->ndis_block->nmb_timerlist; 	while (t != NULL) { 		KeCancelTimer(&t->nmt_ktimer); 		n = t; 		t = t->nmt_nexttimer; 		n->nmt_nexttimer = NULL; 	} 	sc->ndis_block->nmb_timerlist = NULL; 	KeFlushQueuedDpcs();
 endif|#
 directive|endif
-argument|NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) { 		NDIS_UNLOCK(sc); 		return(EIO); 	}  	sc->ndis_block->nmb_devicectx = NULL;
+argument|NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) { 		NDIS_UNLOCK(sc); 		return(EIO); 	}  	sc->ndis_block->nmb_miniportadapterctx = NULL; 	sc->ndis_block->nmb_devicectx = NULL;
 comment|/* 	 * The adapter context is only valid after the init 	 * handler has been called, and is invalid once the 	 * halt handler has been called. 	 */
-argument|haltfunc = sc->ndis_chars->nmc_halt_func; 	NDIS_UNLOCK(sc);  	MSCALL1(haltfunc, adapter);  	NDIS_LOCK(sc); 	sc->ndis_block->nmb_miniportadapterctx = NULL; 	NDIS_UNLOCK(sc);  	return(
+argument|haltfunc = sc->ndis_chars->nmc_halt_func; 	NDIS_UNLOCK(sc);  	MSCALL1(haltfunc, adapter);  	return(
 literal|0
 argument|); }  int ndis_shutdown_nic(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_shutdown_handler	shutdownfunc;  	sc = arg; 	NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	shutdownfunc = sc->ndis_chars->nmc_shutdown_handler; 	NDIS_UNLOCK(sc); 	if (adapter == NULL || shutdownfunc == NULL) 		return(EIO);  	if (sc->ndis_chars->nmc_rsvd0 == NULL) 		MSCALL1(shutdownfunc, adapter); 	else 		MSCALL1(shutdownfunc, sc->ndis_chars->nmc_rsvd0);  	TAILQ_REMOVE(&ndis_devhead, sc->ndis_block, link);  	return(
 literal|0

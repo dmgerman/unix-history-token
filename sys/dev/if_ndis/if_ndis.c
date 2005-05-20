@@ -13665,19 +13665,6 @@ condition|(
 name|error
 condition|)
 break|break;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|ndis_dev
-argument_list|,
-literal|"setting SSID to %s\n"
-argument_list|,
-name|ssid
-operator|.
-name|ns_ssid
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ndis_set_info
