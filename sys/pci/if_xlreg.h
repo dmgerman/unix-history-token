@@ -3080,6 +3080,10 @@ name|struct
 name|mtx
 name|xl_mtx
 decl_stmt|;
+name|struct
+name|task
+name|xl_task
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
