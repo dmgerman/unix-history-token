@@ -41,6 +41,16 @@ directive|include
 file|<machine/timerreg.h>
 end_include
 
+begin_comment
+comment|/*  * There are 2 definitions of MCOUNT to have a C version and an asm version  * with the same name and not have LOCORE #ifdefs to distinguish them.  *<machine/profile.h> provides a C version, and<machine/asmacros.h>  * provides an asm version.  To avoid conflicts, #undef the asm version.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MCOUNT
+end_undef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -94,12 +104,6 @@ include|#
 directive|include
 file|<machine/profile.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|MCOUNT
-end_undef
 
 begin_define
 define|#
