@@ -511,17 +511,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
-decl_stmt|,
-modifier|*
-name|np
-decl_stmt|,
-modifier|*
-name|fmt
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|hexmode
 decl_stmt|;
 comment|/*  	 * Find the OID for the rman interface node. 	 * This is just the usual evil, undocumented sysctl juju. 	 */
 name|name2oid
@@ -1037,17 +1029,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
-decl_stmt|,
-modifier|*
-name|np
-decl_stmt|,
-modifier|*
-name|fmt
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|hexmode
 decl_stmt|;
 comment|/*  	 * Find the OID for the rman interface node. 	 * This is just the usual evil, undocumented sysctl juju. 	 */
 name|name2oid
