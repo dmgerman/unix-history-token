@@ -3546,7 +3546,7 @@ name|free
 argument_list|(
 name|kbd
 argument_list|,
-name|M_DEVBUF
+name|M_VKBD
 argument_list|)
 expr_stmt|;
 operator|*
