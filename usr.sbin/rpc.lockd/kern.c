@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Berkeley Software Design, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Berkeley Software Design Inc's name may not be used to endorse or  *    promote products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED BY BERKELEY SOFTWARE DESIGN INC ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL BERKELEY SOFTWARE DESIGN INC BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      from BSDI kern.c,v 1.2 1998/11/25 22:38:27 don Exp  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997 Berkeley Software Design, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Berkeley Software Design Inc's name may not be used to endorse or  *    promote products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED BY BERKELEY SOFTWARE DESIGN INC ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL BERKELEY SOFTWARE DESIGN INC BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      from BSDI kern.c,v 1.2 1998/11/25 22:38:27 don Exp  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -205,12 +219,43 @@ begin_comment
 comment|/* Hostname. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|devfd
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
 name|client_cleanup
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|from_addr
+parameter_list|(
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lock_request
+parameter_list|(
+name|LOCKD_MSG
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -233,8 +278,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|lock_request
+name|void
+name|show
 parameter_list|(
 name|LOCKD_MSG
 modifier|*
@@ -253,16 +298,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|show
-parameter_list|(
-name|LOCKD_MSG
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|unlock_request
 parameter_list|(
@@ -271,13 +306,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|int
-name|devfd
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -441,9 +469,6 @@ block|{
 name|LOCKD_MSG
 name|msg
 decl_stmt|;
-name|fd_set
-name|rdset
-decl_stmt|;
 name|int
 name|nr
 decl_stmt|,
@@ -454,9 +479,6 @@ name|child
 decl_stmt|;
 name|uid_t
 name|daemon_uid
-decl_stmt|;
-name|mode_t
-name|old_umask
 decl_stmt|;
 name|struct
 name|passwd
