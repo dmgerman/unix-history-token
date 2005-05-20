@@ -117,9 +117,6 @@ name|struct
 name|portal_cred
 name|save_area
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|pbuf
 index|[
 literal|0
