@@ -958,11 +958,10 @@ modifier|*
 name|resid
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
+name|ssize_t
 name|nread
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|totread
 decl_stmt|;
 name|struct
