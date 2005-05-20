@@ -768,9 +768,6 @@ modifier|*
 name|th
 parameter_list|)
 block|{
-name|prgregset_t
-name|gregs
-decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -3404,8 +3401,6 @@ name|tcb_addr
 decl_stmt|,
 modifier|*
 name|dtv_addr
-decl_stmt|,
-name|tcb_tp
 decl_stmt|;
 name|int
 name|tls_index

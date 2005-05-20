@@ -5340,8 +5340,6 @@ name|tcb_addr
 decl_stmt|,
 modifier|*
 name|dtv_addr
-decl_stmt|,
-name|tcb_tp
 decl_stmt|;
 name|int
 name|tls_index
