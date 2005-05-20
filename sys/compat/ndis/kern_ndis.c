@@ -1607,7 +1607,7 @@ ifdef|#
 directive|ifdef
 name|NDIS_REAP_TIMERS
 comment|/* 	 * Drivers are sometimes very lax about cancelling all 	 * their timers. Cancel them all ourselves, just to be 	 * safe. We must do this before invoking MiniportHalt(), 	 * since if we wait until after, the memory in which 	 * the timers reside will no longer be valid. 	 */
-argument|t = sc->ndis_block->nmb_timerlist; 	while (t != NULL) { 		KeCancelTimer(&t->nmt_ktimer); 		n = t; 		t = t->nmt_nexttimer; 		n->nmt_nexttimer = NULL; 	} 	sc->ndis_block->nmb_timerlist = NULL; 	KeFlushQueuedDpcs();
+argument|t = sc->ndis_block->nmb_timerlist; 	while (t != NULL) { 		KeCancelTimer(&t->nmt_ktimer); 		n = t; 		t = t->nmt_nexttimer; 		n->nmt_nexttimer = NULL; 	} 	sc->ndis_block->nmb_timerlist = NULL; 	if (!cold) 		KeFlushQueuedDpcs();
 endif|#
 directive|endif
 argument|NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) { 		NDIS_UNLOCK(sc); 		return(EIO); 	}  	sc->ndis_block->nmb_miniportadapterctx = NULL; 	sc->ndis_block->nmb_devicectx = NULL;

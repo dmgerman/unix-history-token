@@ -14223,7 +14223,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|ndis_shutdown_nic
+name|ndis_stop
 argument_list|(
 name|sc
 argument_list|)
