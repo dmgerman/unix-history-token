@@ -2554,6 +2554,20 @@ operator|->
 name|td_oncpu
 index|]
 expr_stmt|;
+comment|/* 	 * Ugly hack. During system bootstrap (cold == 1), only CPU 0 	 * is running. So if we were loaded at bootstrap, only CPU 0 	 * will have our special GDT entry. This is a problem for SMP 	 * systems, so to deal with this, we check here to make sure 	 * the TID for this processor has been initialized, and if it 	 * hasn't, we need to do it right now or else things will 	 * explode. 	 */
+if|if
+condition|(
+name|t
+operator|->
+name|tid_self
+operator|!=
+name|t
+condition|)
+name|x86_newldt
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|t
 operator|->
 name|tid_oldfs
