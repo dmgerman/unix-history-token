@@ -330,10 +330,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|len
 operator|-
 name|strlen
 argument_list|(
