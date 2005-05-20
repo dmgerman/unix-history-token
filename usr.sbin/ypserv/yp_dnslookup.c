@@ -151,9 +151,10 @@ literal|2
 index|]
 decl_stmt|;
 name|int
-name|len
-decl_stmt|,
 name|i
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 name|char
 name|addr
@@ -1380,12 +1381,6 @@ name|HEADER
 argument_list|)
 operator|+
 name|MAXPACKET
-index|]
-decl_stmt|;
-name|char
-name|retrybuf
-index|[
-name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|struct

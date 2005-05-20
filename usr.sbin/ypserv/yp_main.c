@@ -392,10 +392,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* def FD_SETSIZE */
-specifier|extern
-name|int
-name|forked
-decl_stmt|;
 name|int
 name|fd_setsize
 init|=
