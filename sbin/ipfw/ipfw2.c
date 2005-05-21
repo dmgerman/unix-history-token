@@ -18151,6 +18151,8 @@ name|av
 argument_list|,
 literal|"ip6"
 argument_list|)
+operator|==
+literal|0
 condition|)
 operator|*
 name|proto
@@ -22347,12 +22349,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
-name|av
-operator|++
 expr_stmt|;
 break|break;
 case|case
