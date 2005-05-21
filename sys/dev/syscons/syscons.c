@@ -1591,7 +1591,9 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"sc%d: no video adapter found.\n"
+literal|"%s%d: no video adapter found.\n"
+argument_list|,
+name|SC_DRIVER_NAME
 argument_list|,
 name|unit
 argument_list|)
@@ -2298,7 +2300,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sc%d: %s<%d virtual consoles, flags=0x%x>\n"
+literal|"%s%d: %s<%d virtual consoles, flags=0x%x>\n"
+argument_list|,
+name|SC_DRIVER_NAME
 argument_list|,
 name|unit
 argument_list|,
@@ -2325,7 +2329,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sc%d:"
+literal|"%s%d:"
+argument_list|,
+name|SC_DRIVER_NAME
 argument_list|,
 name|unit
 argument_list|)
@@ -5197,7 +5203,9 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"sc%d: VT_SETMODE "
+literal|"%s%d: VT_SETMODE "
+operator|,
+name|SC_DRIVER_NAME
 operator|,
 name|sc
 operator|->
@@ -5650,7 +5658,9 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"sc%d: VT_FALSE\n"
+literal|"%s%d: VT_FALSE\n"
+operator|,
+name|SC_DRIVER_NAME
 operator|,
 name|sc
 operator|->
@@ -5686,7 +5696,9 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"sc%d: VT_TRUE\n"
+literal|"%s%d: VT_TRUE\n"
+operator|,
+name|SC_DRIVER_NAME
 operator|,
 name|sc
 operator|->
@@ -5717,7 +5729,9 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"sc%d: VT_ACKACQ\n"
+literal|"%s%d: VT_ACKACQ\n"
+operator|,
+name|SC_DRIVER_NAME
 operator|,
 name|sc
 operator|->
@@ -16244,7 +16258,13 @@ name|scp
 operator|->
 name|border
 operator|=
-name|BG_BLACK
+operator|(
+name|SC_NORM_ATTR
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0x0f
 expr_stmt|;
 name|scp
 operator|->
