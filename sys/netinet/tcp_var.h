@@ -345,10 +345,11 @@ directive|define
 name|TF_SIGNATURE
 value|0x400000
 comment|/* require MD5 digests (RFC2385) */
-name|int
-name|t_force
-decl_stmt|;
-comment|/* 1 if forcing out a byte */
+define|#
+directive|define
+name|TF_FORCEDATA
+value|0x800000
+comment|/* force out a byte */
 name|tcp_seq
 name|snd_una
 decl_stmt|;

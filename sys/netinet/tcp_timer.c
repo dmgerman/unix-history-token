@@ -2041,9 +2041,9 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|t_force
-operator|=
-literal|1
+name|t_flags
+operator||=
+name|TF_FORCEDATA
 expr_stmt|;
 operator|(
 name|void
@@ -2055,9 +2055,10 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|t_force
-operator|=
-literal|0
+name|t_flags
+operator|&=
+operator|~
+name|TF_FORCEDATA
 expr_stmt|;
 name|out
 label|:

@@ -1029,7 +1029,9 @@ if|if
 condition|(
 name|tp
 operator|->
-name|t_force
+name|t_flags
+operator|&
+name|TF_FORCEDATA
 condition|)
 block|{
 if|if
@@ -1468,7 +1470,9 @@ if|if
 condition|(
 name|tp
 operator|->
-name|t_force
+name|t_flags
+operator|&
+name|TF_FORCEDATA
 condition|)
 comment|/* typ. timeout case */
 goto|goto
@@ -1741,7 +1745,7 @@ goto|goto
 name|just_return
 goto|;
 block|}
-comment|/* 	 * TCP window updates are not reliable, rather a polling protocol 	 * using ``persist'' packets is used to insure receipt of window 	 * updates.  The three ``states'' for the output side are: 	 *	idle			not doing retransmits or persists 	 *	persisting		to move a small or zero window 	 *	(re)transmitting	and thereby not persisting 	 * 	 * callout_active(tp->tt_persist) 	 *	is true when we are in persist state. 	 * tp->t_force 	 *	is set when we are called to send a persist packet. 	 * callout_active(tp->tt_rexmt) 	 *	is set when we are retransmitting 	 * The output side is idle when both timers are zero. 	 * 	 * If send window is too small, there is data to transmit, and no 	 * retransmit or persist is pending, then go to persist state. 	 * If nothing happens soon, send when timer expires: 	 * if window is nonzero, transmit what we can, 	 * otherwise force out a byte. 	 */
+comment|/* 	 * TCP window updates are not reliable, rather a polling protocol 	 * using ``persist'' packets is used to insure receipt of window 	 * updates.  The three ``states'' for the output side are: 	 *	idle			not doing retransmits or persists 	 *	persisting		to move a small or zero window 	 *	(re)transmitting	and thereby not persisting 	 * 	 * callout_active(tp->tt_persist) 	 *	is true when we are in persist state. 	 * (tp->t_flags& TF_FORCEDATA) 	 *	is set when we are called to send a persist packet. 	 * callout_active(tp->tt_rexmt) 	 *	is set when we are retransmitting 	 * The output side is idle when both timers are zero. 	 * 	 * If send window is too small, there is data to transmit, and no 	 * retransmit or persist is pending, then go to persist state. 	 * If nothing happens soon, send when timer expires: 	 * if window is nonzero, transmit what we can, 	 * otherwise force out a byte. 	 */
 if|if
 condition|(
 name|so
@@ -2653,9 +2657,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
-name|t_force
+name|t_flags
+operator|&
+name|TF_FORCEDATA
+operator|)
 operator|&&
 name|len
 operator|==
@@ -3779,9 +3787,13 @@ block|}
 comment|/* 	 * In transmit state, time the transmission and arrange for 	 * the retransmit.  In persist state, just set snd_max. 	 */
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
-name|t_force
+name|t_flags
+operator|&
+name|TF_FORCEDATA
+operator|)
 operator|==
 literal|0
 operator|||
@@ -4300,9 +4312,13 @@ block|{
 comment|/* 		 * We know that the packet was lost, so back out the 		 * sequence number advance, if any. 		 */
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
-name|t_force
+name|t_flags
+operator|&
+name|TF_FORCEDATA
+operator|)
 operator|==
 literal|0
 operator|||
