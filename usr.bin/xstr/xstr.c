@@ -589,7 +589,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: xstr [-v] [-c] [-] [name ...]\n"
+literal|"usage: xstr [-cv] [-] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
