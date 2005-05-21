@@ -437,7 +437,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: finger [-46klmpshoT] [login ...]\n"
+literal|"usage: finger [-46gklmpshoT] [user ...] [user@host ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

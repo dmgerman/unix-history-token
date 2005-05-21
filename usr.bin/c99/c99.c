@@ -496,18 +496,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: c99 [-cEgs] [-D name[=value]] [-I directory] ... [-L directory] ...\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n"
 argument_list|,
-literal|"       [-o outfile] [-O optlevel] [-U name]... operand ...\n"
+literal|"usage: c99 [-cEgs] [-D name[=value]] ... [-I directory] ... [-L directory] ..."
+argument_list|,
+literal|"       [-o outfile] [-O optlevel] [-U name] ... operand ..."
 argument_list|)
 expr_stmt|;
 name|exit

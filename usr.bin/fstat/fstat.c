@@ -4535,7 +4535,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: fstat [-fmnv] [-p pid] [-u user] [-N system] [-M core] [file ...]\n"
+literal|"usage: fstat [-fmnv] [-M core] [-N system] [-p pid] [-u user] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

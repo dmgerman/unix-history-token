@@ -1348,7 +1348,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: unifdef [-cdeklnst]"
+literal|"usage: unifdef [-cdeklnst] [-Ipath]"
 literal|" [-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym] ... [file]\n"
 argument_list|)
 expr_stmt|;

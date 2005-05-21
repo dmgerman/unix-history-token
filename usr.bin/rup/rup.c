@@ -974,7 +974,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rup [hosts ...]\n"
+literal|"usage: rup [host ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

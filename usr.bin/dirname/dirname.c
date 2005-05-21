@@ -232,7 +232,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dirname path\n"
+literal|"usage: dirname string\n"
 argument_list|)
 expr_stmt|;
 name|exit

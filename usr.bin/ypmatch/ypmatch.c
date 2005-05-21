@@ -182,7 +182,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: ypmatch [-d domain] [-t] [-k] key [key ...] mname"
+literal|"usage: ypmatch [-kt] [-d domainname] key ... mapname"
 argument_list|,
 literal|"       ypmatch -x"
 argument_list|)

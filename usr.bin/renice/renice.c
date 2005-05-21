@@ -769,7 +769,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: renice priority     [[-p] pid ...] [[-g] pgrp ...] [[-u] user ...]"
+literal|"usage: renice priority [[-p] pid ...] [[-g] pgrp ...] [[-u] user ...]"
 argument_list|,
 literal|"       renice -n increment [[-p] pid ...] [[-g] pgrp ...] [[-u] user ...]"
 argument_list|)

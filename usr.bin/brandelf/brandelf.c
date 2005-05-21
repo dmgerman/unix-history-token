@@ -684,11 +684,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: brandelf [-f ELF ABI number] [-v] [-l] [-t string] file ...\n"
+literal|"usage: brandelf [-lv] [-f ELF_ABI_number] [-t string] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit

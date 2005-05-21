@@ -188,7 +188,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: ypcat [-k] [-d domainname] [-t] mapname"
+literal|"usage: ypcat [-kt] [-d domainname] mapname"
 argument_list|,
 literal|"       ypcat -x"
 argument_list|)

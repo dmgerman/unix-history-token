@@ -249,7 +249,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: asa [file...]\n"
+literal|"usage: asa [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -1260,7 +1260,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lastcomm [-EScesu] [ -f file ] [command ...] [user ...] [tty ...]\n"
+literal|"usage: lastcomm [-EScesu] [-f file] [command ...] [user ...] [terminal ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -856,9 +856,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: newkey [-u username]"
+literal|"usage: newkey -h hostname"
 argument_list|,
-literal|"       newkey [-h hostname]"
+literal|"       newkey -u username"
 argument_list|)
 expr_stmt|;
 name|exit

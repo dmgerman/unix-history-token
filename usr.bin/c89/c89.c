@@ -359,8 +359,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: c89 [-c] [-D name[=value]] [...] [-E] [-g] [-I directory ...]\n"
-literal|"       [-L directory ...] [-o outfile] [-O] [-s] [-U name ...] operand ...\n"
+literal|"usage: c89 [-cEgOs] [-D name[=value]] ... [-I directory] ... [-L directory] ...\n"
+literal|"           [-o outfile] [-U name] ... operand ...\n"
 literal|"\n"
 literal|"       where operand is one or more of file.c, file.o, file.a\n"
 literal|"       or -llibrary\n"

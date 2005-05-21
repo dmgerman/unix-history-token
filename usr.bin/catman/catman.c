@@ -3529,7 +3529,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-fLnrv] [directories...]\n"
+literal|"usage: %s [-fLnrv] [directories ...]\n"
 argument_list|,
 name|getprogname
 argument_list|()

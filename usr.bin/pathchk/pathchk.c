@@ -241,7 +241,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pathchk [-p] pathname...\n"
+literal|"usage: pathchk [-p] pathname ...\n"
 argument_list|)
 expr_stmt|;
 name|exit

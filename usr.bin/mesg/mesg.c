@@ -394,7 +394,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mesg [y | n]\n"
+literal|"usage: mesg [n | y]\n"
 argument_list|)
 expr_stmt|;
 name|exit

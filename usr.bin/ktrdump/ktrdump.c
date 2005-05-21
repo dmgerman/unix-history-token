@@ -113,7 +113,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: ktrdump [-c] [-f] [-q] [-r] [-t] [-e execfile] [-i ktrfile ] [-m corefile] [-o outfile]"
+value|"usage: ktrdump [-cfqrt] [-e execfile] [-i ktrfile] [-m corefile] [-o outfile]"
 end_define
 
 begin_decl_stmt
@@ -1541,11 +1541,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|errx
+name|fprintf
 argument_list|(
-literal|1
+name|stderr
 argument_list|,
 name|USAGE
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -759,7 +759,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: truncate [-c] -s [+|-]size[K|M|G] file ..."
+literal|"usage: truncate [-c] -s [+|-]size[K|k|M|m|G|g] file ..."
 argument_list|,
 literal|"       truncate [-c] -r rfile file ..."
 argument_list|)

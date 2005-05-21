@@ -2456,7 +2456,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: printf format [arg ...]\n"
+literal|"usage: printf format [arguments ...]\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1793,7 +1793,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rsh [-46dn] [-l login] [-t timeout] host [command]\n"
+literal|"usage: rsh [-46dn] [-l username] [-t timeout] host [command]\n"
 argument_list|)
 expr_stmt|;
 name|exit

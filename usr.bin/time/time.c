@@ -1166,7 +1166,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: time [-al] [-h|-p] [-o file] utility [argument ...]\n"
+literal|"usage: time [-al] [-h | -p] [-o file] utility [argument ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

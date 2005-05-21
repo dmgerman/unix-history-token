@@ -1668,7 +1668,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: showmount [-a | -d] [-e3] host\n"
+literal|"usage: showmount [-a | -d] [-e3] [host]\n"
 argument_list|)
 expr_stmt|;
 name|exit
