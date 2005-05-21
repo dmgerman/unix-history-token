@@ -270,7 +270,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldstat [-v] [-i id] [-n name] [-m name]\n"
+literal|"usage: kldstat [-v] [-i id] [-n filename]\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       kldstat [-m modname]\n"
 argument_list|)
 expr_stmt|;
 name|exit
