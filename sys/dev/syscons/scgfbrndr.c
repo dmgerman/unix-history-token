@@ -32,23 +32,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__sparc64__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_creator.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__powerpc__
 end_ifdef
 
@@ -884,7 +867,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DEV_CREATOR
+name|__sparc64__
 argument_list|)
 operator|||
 name|defined
