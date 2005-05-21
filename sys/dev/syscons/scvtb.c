@@ -277,6 +277,9 @@ operator||=
 name|VTB_VALID
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 case|case
 name|VTB_FRAMEBUFFER
 case|:
@@ -296,6 +299,8 @@ operator||=
 name|VTB_VALID
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 break|break;
 block|}
@@ -450,6 +455,9 @@ name|int
 name|at
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -474,6 +482,8 @@ literal|0x00ff
 operator|)
 return|;
 else|else
+endif|#
+directive|endif
 return|return
 operator|(
 operator|*
@@ -506,6 +516,9 @@ name|int
 name|at
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -530,6 +543,8 @@ literal|0xff00
 operator|)
 return|;
 else|else
+endif|#
+directive|endif
 return|return
 operator|(
 operator|*
@@ -568,6 +583,9 @@ name|int
 name|a
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -591,6 +609,8 @@ name|c
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 operator|*
 operator|(
 name|u_int16_t
@@ -628,6 +648,9 @@ name|int
 name|a
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -646,6 +669,8 @@ name|c
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 operator|*
 operator|(
 name|u_int16_t
@@ -751,6 +776,9 @@ name|int
 name|attr
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -778,6 +806,8 @@ name|vtb_size
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|fillw
 argument_list|(
 name|attr
@@ -825,6 +855,9 @@ name|int
 name|count
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 comment|/* XXX if both are VTB_VRAMEBUFFER... */
 if|if
 condition|(
@@ -834,7 +867,6 @@ name|vtb_type
 operator|==
 name|VTB_FRAMEBUFFER
 condition|)
-block|{
 name|bcopy_toio
 argument_list|(
 name|sc_vtb_pointer
@@ -859,7 +891,6 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -869,7 +900,6 @@ name|vtb_type
 operator|==
 name|VTB_FRAMEBUFFER
 condition|)
-block|{
 name|bcopy_fromio
 argument_list|(
 name|sc_vtb_pointer
@@ -894,9 +924,9 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 operator|(
@@ -929,7 +959,6 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -986,6 +1015,9 @@ operator|->
 name|vtb_tail
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb1
@@ -994,7 +1026,6 @@ name|vtb_type
 operator|==
 name|VTB_FRAMEBUFFER
 condition|)
-block|{
 name|bcopy_fromio
 argument_list|(
 name|sc_vtb_pointer
@@ -1021,9 +1052,9 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 operator|(
@@ -1058,7 +1089,6 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|from
 operator|+=
 name|len
@@ -1150,6 +1180,9 @@ name|vtb_size
 operator|-
 name|at
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -1175,6 +1208,8 @@ name|count
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|fillw
 argument_list|(
 name|attr
@@ -1259,6 +1294,9 @@ operator|<=
 literal|0
 condition|)
 return|return;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -1267,7 +1305,6 @@ name|vtb_type
 operator|==
 name|VTB_FRAMEBUFFER
 condition|)
-block|{
 name|bcopy_io
 argument_list|(
 name|sc_vtb_pointer
@@ -1292,9 +1329,9 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 operator|(
@@ -1327,7 +1364,6 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1390,6 +1426,9 @@ operator|>
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -1398,7 +1437,6 @@ name|vtb_type
 operator|==
 name|VTB_FRAMEBUFFER
 condition|)
-block|{
 name|bcopy_io
 argument_list|(
 name|sc_vtb_pointer
@@ -1425,9 +1463,9 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 operator|(
@@ -1463,7 +1501,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -1497,6 +1537,8 @@ name|len
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|fillw
 argument_list|(
 name|attr
@@ -1559,7 +1601,6 @@ name|vtb
 operator|->
 name|vtb_size
 condition|)
-block|{
 name|count
 operator|=
 name|vtb
@@ -1568,9 +1609,11 @@ name|vtb_size
 operator|-
 name|at
 expr_stmt|;
-block|}
 else|else
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -1579,7 +1622,6 @@ name|vtb_type
 operator|==
 name|VTB_FRAMEBUFFER
 condition|)
-block|{
 name|bcopy_io
 argument_list|(
 name|sc_vtb_pointer
@@ -1614,9 +1656,9 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 operator|(
@@ -1660,7 +1702,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|vtb
@@ -1686,6 +1730,8 @@ name|count
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|fillw
 argument_list|(
 name|attr
