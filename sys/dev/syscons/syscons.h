@@ -274,12 +274,39 @@ parameter_list|)
 value|if (SC_DEBUG_LEVEL>= (l)) printf p
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__sparc64__
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SC_DRIVER_NAME
 value|"sc"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Use a different driver name on sparc64 so it does not get confused  * with the system controller devices which are also termed 'sc' in OFW.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_DRIVER_NAME
+value|"syscons"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
