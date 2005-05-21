@@ -170,12 +170,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FBTYPE_NOTSUN3
+name|FBTYPE_PCIMISC
 value|11
 end_define
 
 begin_comment
-comment|/* reserved for customer */
+comment|/* (generic) PCI misc. disp. */
 end_comment
 
 begin_define
