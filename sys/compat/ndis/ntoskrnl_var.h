@@ -589,6 +589,21 @@ define|\
 value|do {					\ 		list_entry		*f;	\ 						\ 		f = l->nle_flink;		\ 		e->nle_flink = f;		\ 		e->nle_blink = l;		\ 		f->nle_blink = e;		\ 		l->nle_flink = e;		\ 	} while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CONTAINING_RECORD
+parameter_list|(
+name|addr
+parameter_list|,
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+define|\
+value|((type *)((vm_offset_t)(addr) - (vm_offset_t)(&((type *)0)->field)))
+end_define
+
 begin_struct
 struct|struct
 name|nt_dispatch_header
@@ -933,7 +948,6 @@ end_struct_decl
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|void
 function_decl|(
 modifier|*
@@ -966,9 +980,11 @@ decl_stmt|;
 name|uint8_t
 name|k_num
 decl_stmt|;
+comment|/* CPU number */
 name|uint8_t
 name|k_importance
 decl_stmt|;
+comment|/* priority */
 name|list_entry
 name|k_dpclistentry
 decl_stmt|;
@@ -988,12 +1004,41 @@ name|void
 modifier|*
 name|k_sysarg2
 decl_stmt|;
-name|register_t
+name|void
+modifier|*
 name|k_lock
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|KDPC_IMPORTANCE_LOW
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KDPC_IMPORTANCE_MEDIUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KDPC_IMPORTANCE_HIGH
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|KDPC_CPU_DEFAULT
+value|255
+end_define
 
 begin_typedef
 typedef|typedef
@@ -2882,7 +2927,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|uint32_t
 function_decl|(
 modifier|*
@@ -2904,7 +2948,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|uint32_t
 function_decl|(
 modifier|*
@@ -3283,7 +3326,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|(void *)FASTCALL2(InterlockedExchange, (uint32_t *)(dst),	\ 	(uintptr_t)(val))
+value|(void *)InterlockedExchange((uint32_t *)(dst), (uintptr_t)(val))
 end_define
 
 begin_define
@@ -3427,7 +3470,6 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|uint32_t
 function_decl|(
 modifier|*
@@ -4302,6 +4344,175 @@ value|0x00000007
 end_define
 
 begin_comment
+comment|/*  * IO_WORKITEM is an opaque structures that must be allocated  * via IoAllocateWorkItem() and released via IoFreeWorkItem().  * Consequently, we can define it any way we want.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|io_workitem_func
+function_decl|)
+parameter_list|(
+name|device_object
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|io_workitem
+block|{
+name|io_workitem_func
+name|iw_func
+decl_stmt|;
+name|void
+modifier|*
+name|iw_ctx
+decl_stmt|;
+name|list_entry
+name|iw_listentry
+decl_stmt|;
+name|device_object
+modifier|*
+name|iw_dobj
+decl_stmt|;
+name|int
+name|iw_idx
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|io_workitem
+name|io_workitem
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|WORKQUEUE_CRITICAL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORKQUEUE_DELAYED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORKQUEUE_HYPERCRITICAL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORKITEM_THREADS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORKITEM_LEGACY_THREAD
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORKIDX_INC
+parameter_list|(
+name|x
+parameter_list|)
+value|(x) = (x + 1) % WORKITEM_LEGACY_THREAD
+end_define
+
+begin_comment
+comment|/*  * Older, deprecated work item API, needed to support NdisQueueWorkItem().  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|work_queue_item
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|work_item_func
+function_decl|)
+parameter_list|(
+name|struct
+name|work_queue_item
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|work_queue_item
+block|{
+name|list_entry
+name|wqi_entry
+decl_stmt|;
+name|work_item_func
+name|wqi_func
+decl_stmt|;
+name|void
+modifier|*
+name|wqi_ctx
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|work_queue_item
+name|work_queue_item
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ExInitializeWorkItem
+parameter_list|(
+name|w
+parameter_list|,
+name|func
+parameter_list|,
+name|ctx
+parameter_list|)
+define|\
+value|do {						\ 		(w)->wqi_func = (func);			\ 		(w)->wqi_ctx = (ctx);			\ 		INIT_LIST_HEAD(&((w)->wqi_entry));	\ 	} while (0);
+end_define
+
+begin_comment
+unit|\
 comment|/*  * FreeBSD's kernel stack is 2 pages in size by default. The  * Windows stack is larger, so we need to give our threads more  * stack pages. 4 should be enough, we use 8 just to extra safe.  */
 end_comment
 
@@ -4311,6 +4522,74 @@ directive|define
 name|NDIS_KSTACK_PAGES
 value|8
 end_define
+
+begin_comment
+comment|/*  * Different kinds of function wrapping we can do.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_STDCALL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_FASTCALL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_REGPARM
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_CDECL
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDRV_WRAP_AMD64
+value|5
+end_define
+
+begin_struct
+struct|struct
+name|drvdb_ent
+block|{
+name|driver_object
+modifier|*
+name|windrv_object
+decl_stmt|;
+name|void
+modifier|*
+name|windrv_devlist
+decl_stmt|;
+name|ndis_cfg
+modifier|*
+name|windrv_regvals
+decl_stmt|;
+name|interface_type
+name|windrv_bustype
+decl_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|drvdb_ent
+argument_list|)
+name|link
+expr_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|extern
@@ -4329,6 +4608,25 @@ name|funcptr
 function_decl|)
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|matchfuncptr
+function_decl|)
+parameter_list|(
+name|interface_type
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -4370,6 +4668,21 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|struct
+name|drvdb_ent
+modifier|*
+name|windrv_match
+parameter_list|(
+name|matchfuncptr
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|windrv_load
 parameter_list|(
@@ -4378,6 +4691,14 @@ parameter_list|,
 name|vm_offset_t
 parameter_list|,
 name|int
+parameter_list|,
+name|interface_type
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|ndis_cfg
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4459,6 +4780,10 @@ name|funcptr
 parameter_list|,
 name|funcptr
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4469,6 +4794,26 @@ name|int
 name|windrv_unwrap
 parameter_list|(
 name|funcptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ctxsw_utow
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ctxsw_wtou
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4494,7 +4839,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeInitializeDpc
@@ -4512,7 +4856,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeInsertQueueDpc
@@ -4530,7 +4873,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeRemoveQueueDpc
@@ -4542,7 +4884,52 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
+specifier|extern
+name|void
+name|KeSetImportanceDpc
+parameter_list|(
+name|kdpc
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|KeSetTargetProcessorDpc
+parameter_list|(
+name|kdpc
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|KeFlushQueuedDpcs
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|KeGetCurrentProcessorNumber
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|KeInitializeTimer
@@ -4554,7 +4941,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeInitializeTimerEx
@@ -4568,7 +4954,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeSetTimer
@@ -4585,7 +4970,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeSetTimerEx
@@ -4604,7 +4988,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeCancelTimer
@@ -4616,7 +4999,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeReadStateTimer
@@ -4628,7 +5010,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|KeWaitForSingleObject
@@ -4649,7 +5030,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeInitializeEvent
@@ -4665,7 +5045,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeClearEvent
@@ -4677,7 +5056,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|KeReadStateEvent
@@ -4689,7 +5067,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|KeSetEvent
@@ -4705,7 +5082,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|KeResetEvent
@@ -4722,38 +5098,29 @@ directive|ifdef
 name|__i386__
 end_ifdef
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|void
 name|KefAcquireSpinLockAtDpcLevel
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
 name|kspin_lock
-operator|*
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|void
 name|KefReleaseSpinLockFromDpcLevel
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
 name|kspin_lock
-operator|*
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeAcquireSpinLockRaiseToDpc
@@ -4770,7 +5137,6 @@ directive|else
 end_else
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeAcquireSpinLockAtDpcLevel
@@ -4782,7 +5148,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeReleaseSpinLockFromDpcLevel
@@ -4799,7 +5164,6 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|KeInitializeSpinLock
@@ -4810,26 +5174,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|uintptr_t
 name|InterlockedExchange
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 specifier|volatile
 name|uint32_t
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|uintptr_t
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 modifier|*
@@ -4845,7 +5204,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|ExFreePool
@@ -4857,7 +5215,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|IoAllocateDriverObjectExtension
@@ -4878,7 +5235,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 modifier|*
@@ -4894,7 +5250,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|IoCreateDevice
@@ -4921,7 +5276,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|IoDeleteDevice
@@ -4933,7 +5287,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|device_object
 modifier|*
@@ -4945,43 +5298,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|uint32_t
 name|IofCallDriver
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 name|device_object
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|irp
-operator|*
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|void
 name|IofCompleteRequest
-argument_list|(
-name|REGARGS2
-argument_list|(
+parameter_list|(
 name|irp
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|uint8_t
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|IoAcquireCancelSpinLock
@@ -4993,7 +5337,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|IoReleaseCancelSpinLock
@@ -5004,7 +5347,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|IoCancelIrp
@@ -5016,7 +5358,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|IoDetachDevice
@@ -5028,7 +5369,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|device_object
 modifier|*
@@ -5044,7 +5384,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
+specifier|extern
 name|mdl
 modifier|*
 name|IoAllocateMdl
@@ -5065,11 +5405,65 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
+specifier|extern
 name|void
 name|IoFreeMdl
 parameter_list|(
 name|mdl
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|io_workitem
+modifier|*
+name|IoAllocateWorkItem
+parameter_list|(
+name|device_object
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ExQueueWorkItem
+parameter_list|(
+name|work_queue_item
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|IoFreeWorkItem
+parameter_list|(
+name|io_workitem
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|IoQueueWorkItem
+parameter_list|(
+name|io_workitem
+modifier|*
+parameter_list|,
+name|io_workitem_func
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -5084,7 +5478,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|FASTCALL2(IofCallDriver, a, b)
+value|IofCallDriver(a, b)
 end_define
 
 begin_define
@@ -5096,7 +5490,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|FASTCALL2(IofCompleteRequest, a, b)
+value|IofCompleteRequest(a, b)
 end_define
 
 begin_comment
@@ -5118,7 +5512,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|*(b) = FASTCALL1(KfAcquireSpinLock, a)
+value|*(b) = KfAcquireSpinLock(a)
 end_define
 
 begin_define
@@ -5130,7 +5524,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|FASTCALL2(KfReleaseSpinLock, a, b)
+value|KfReleaseSpinLock(a, b)
 end_define
 
 begin_define
@@ -5140,7 +5534,7 @@ name|KeRaiseIrql
 parameter_list|(
 name|a
 parameter_list|)
-value|FASTCALL1(KfRaiseIrql, a)
+value|KfRaiseIrql(a)
 end_define
 
 begin_define
@@ -5150,7 +5544,7 @@ name|KeLowerIrql
 parameter_list|(
 name|a
 parameter_list|)
-value|FASTCALL1(KfLowerIrql, a)
+value|KfLowerIrql(a)
 end_define
 
 begin_define
@@ -5160,8 +5554,7 @@ name|KeAcquireSpinLockAtDpcLevel
 parameter_list|(
 name|a
 parameter_list|)
-define|\
-value|FASTCALL1(KefAcquireSpinLockAtDpcLevel, a)
+value|KefAcquireSpinLockAtDpcLevel(a)
 end_define
 
 begin_define
@@ -5171,8 +5564,7 @@ name|KeReleaseSpinLockFromDpcLevel
 parameter_list|(
 name|a
 parameter_list|)
-define|\
-value|FASTCALL1(KefReleaseSpinLockFromDpcLevel, a)
+value|KefReleaseSpinLockFromDpcLevel(a)
 end_define
 
 begin_endif

@@ -3871,7 +3871,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|void
 function_decl|(
 modifier|*
@@ -3952,6 +3951,76 @@ typedef|typedef
 name|struct
 name|ndis_spin_lock
 name|ndis_spin_lock
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|ndis_rw_lock
+block|{
+union|union
+block|{
+name|kspin_lock
+name|nrl_spinlock
+decl_stmt|;
+name|void
+modifier|*
+name|nrl_ctx
+decl_stmt|;
+block|}
+name|u
+union|;
+name|uint8_t
+name|nrl_rsvd
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|nrl_spinlock
+value|u.nrl_spinlock
+end_define
+
+begin_define
+define|#
+directive|define
+name|nrl_ctx
+value|u.nrl_ctx;
+end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ndis_rw_lock
+name|ndis_rw_lock
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|ndis_lock_state
+block|{
+name|uint16_t
+name|nls_lockstate
+decl_stmt|;
+name|ndis_kirql
+name|nls_oldirql
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ndis_lock_state
+name|ndis_lock_state
 typedef|;
 end_typedef
 
@@ -4172,6 +4241,13 @@ name|ndis_interrupt_mode
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|NUMBER_OF_SINGLE_WORK_ITEMS
+value|6
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|ndis_work_item
@@ -4204,8 +4280,7 @@ name|void
 modifier|*
 name|nwi_ctx
 decl_stmt|;
-name|void
-modifier|*
+name|ndis_proc
 name|nwi_func
 decl_stmt|;
 name|uint8_t
@@ -4231,6 +4306,21 @@ name|ndis_work_item
 name|ndis_work_item
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|NdisInitializeWorkItem
+parameter_list|(
+name|w
+parameter_list|,
+name|f
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|do {				\ 		(w)->nwi_ctx = c;	\ 		(w)->nwi_func = f;	\ 	} while (0)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -4861,6 +4951,49 @@ name|ndis_packet_oob
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Our protocol private region for handling ethernet.  * We need this to stash some of the things returned  * by NdisMEthIndicateReceive().  */
+end_comment
+
+begin_struct
+struct|struct
+name|ndis_ethpriv
+block|{
+name|void
+modifier|*
+name|nep_ctx
+decl_stmt|;
+comment|/* packet context */
+name|long
+name|nep_offset
+decl_stmt|;
+comment|/* residual data to transfer */
+name|void
+modifier|*
+name|nep_pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ndis_ethpriv
+name|ndis_ethpriv
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|PROTOCOL_RESERVED_SIZE_IN_PACKET
+value|(4 * sizeof(void *))
+end_define
+
 begin_struct
 struct|struct
 name|ndis_packet
@@ -4956,9 +5089,9 @@ literal|2
 index|]
 decl_stmt|;
 name|uint8_t
-name|nm_protocolreserved
+name|np_protocolreserved
 index|[
-literal|1
+name|PROTOCOL_RESERVED_SIZE_IN_PACKET
 index|]
 decl_stmt|;
 comment|/* 	 * This next part is probably wrong, but we need some place 	 * to put the out of band data structure... 	 */
@@ -4986,6 +5119,9 @@ decl_stmt|;
 name|int
 name|np_txidx
 decl_stmt|;
+name|kdpc
+name|np_dpc
+decl_stmt|;
 name|kspin_lock
 name|np_lock
 decl_stmt|;
@@ -5000,13 +5136,6 @@ name|ndis_packet
 name|ndis_packet
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|PROTOCOL_RESERVED_SIZE_IN_PACKET
-value|(4 * sizeof(void *))
-end_define
 
 begin_comment
 comment|/* mbuf ext type for NDIS */
@@ -5070,6 +5199,13 @@ name|ndis_filterdbs
 name|ndis_filterdbs
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|nf_ethdb
+value|u.nf_ethdb
+end_define
 
 begin_enum
 enum|enum
@@ -5461,6 +5597,10 @@ block|{
 name|int
 name|nf_type
 decl_stmt|;
+name|char
+modifier|*
+name|nf_name
+decl_stmt|;
 name|void
 modifier|*
 name|nf_vp
@@ -5794,28 +5934,14 @@ modifier|*
 name|nmb_wanrxdone_func
 decl_stmt|;
 comment|/* 	 * End of windows-specific portion of miniport block. Everything 	 * below is BSD-specific. 	 */
-name|struct
-name|ifnet
-modifier|*
-name|nmb_ifp
-decl_stmt|;
 name|uint8_t
 name|nmb_dummybuf
 index|[
 literal|128
 index|]
 decl_stmt|;
-name|device_object
-name|nmb_devobj
-decl_stmt|;
 name|ndis_config_parm
 name|nmb_replyparm
-decl_stmt|;
-name|int
-name|nmb_pciidx
-decl_stmt|;
-name|device_t
-name|nmb_dev
 decl_stmt|;
 name|ndis_resource_list
 modifier|*
@@ -5827,8 +5953,12 @@ decl_stmt|;
 name|ndis_status
 name|nmb_setstat
 decl_stmt|;
-name|vm_offset_t
-name|nmb_img
+name|ndis_miniport_timer
+modifier|*
+name|nmb_timerlist
+decl_stmt|;
+name|ndis_handle
+name|nmb_rxpool
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
@@ -6121,7 +6251,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
 name|ndis_status
 function_decl|(
 modifier|*
@@ -6609,50 +6738,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|ndis_sched
-parameter_list|(
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|ndis_unsched
-parameter_list|(
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|ndis_thsuspend
 parameter_list|(
 name|struct
@@ -6715,7 +6800,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|NdisAddDevice
@@ -6730,7 +6814,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisAllocatePacketPool
@@ -6749,7 +6832,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisAllocatePacketPoolEx
@@ -6770,7 +6852,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint32_t
 name|NdisPacketPoolUsage
@@ -6781,7 +6862,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisFreePacketPool
@@ -6792,7 +6872,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisAllocatePacket
@@ -6810,12 +6889,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|void
 name|NdisFreePacket
 parameter_list|(
 name|ndis_packet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ndis_status
+name|NdisScheduleWorkItem
+parameter_list|(
+name|ndis_work_item
 modifier|*
 parameter_list|)
 function_decl|;

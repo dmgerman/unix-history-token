@@ -88,67 +88,51 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|uint8_t
 name|KfAcquireSpinLock
-argument_list|(
-name|REGARGS1
-argument_list|(
+parameter_list|(
 name|kspin_lock
-operator|*
-name|lock
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
+specifier|extern
 name|void
 name|KfReleaseSpinLock
-argument_list|(
-name|REGARGS2
-argument_list|(
-argument|kspin_lock *lock
-argument_list|,
-argument|uint8_t newirql
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|kspin_lock
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|uint8_t
 name|KfRaiseIrql
-argument_list|(
-name|REGARGS1
-argument_list|(
-argument|uint8_t irql
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|__fastcall
+begin_function_decl
 specifier|extern
 name|void
 name|KfLowerIrql
-argument_list|(
-name|REGARGS1
-argument_list|(
-argument|uint8_t oldirql
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|extern
 name|uint8_t
 name|KeGetCurrentIrql

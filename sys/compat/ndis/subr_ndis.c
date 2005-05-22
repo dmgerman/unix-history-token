@@ -276,6 +276,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/ndis/cfg_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/ndis/resource_var.h>
 end_include
 
@@ -295,12 +301,6 @@ begin_include
 include|#
 directive|include
 file|<compat/ndis/ndis_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/ndis/cfg_var.h>
 end_include
 
 begin_include
@@ -348,7 +348,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitializeWrapper
@@ -369,7 +368,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRegisterMiniport
@@ -385,7 +383,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisAllocateMemoryWithTag
@@ -402,7 +399,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisAllocateMemory
@@ -421,7 +417,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeMemory
@@ -437,7 +432,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMSetAttributesEx
@@ -456,7 +450,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisOpenConfiguration
@@ -473,7 +466,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisOpenConfigurationKeyByIndex
@@ -495,7 +487,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisOpenConfigurationKeyByName
@@ -553,7 +544,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisReadConfiguration
@@ -576,7 +566,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisWriteConfiguration
@@ -596,7 +585,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisCloseConfiguration
@@ -607,7 +595,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisAllocateSpinLock
@@ -619,7 +606,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeSpinLock
@@ -631,7 +617,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisAcquireSpinLock
@@ -643,7 +628,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisReleaseSpinLock
@@ -655,7 +639,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisDprAcquireSpinLock
@@ -667,7 +650,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisDprReleaseSpinLock
@@ -679,7 +661,47 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
+specifier|static
+name|void
+name|NdisInitializeReadWriteLock
+parameter_list|(
+name|ndis_rw_lock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|NdisAcquireReadWriteLock
+parameter_list|(
+name|ndis_rw_lock
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|ndis_lock_state
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|NdisReleaseReadWriteLock
+parameter_list|(
+name|ndis_rw_lock
+modifier|*
+parameter_list|,
+name|ndis_lock_state
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|uint32_t
 name|NdisReadPciSlotInformation
@@ -699,7 +721,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisWritePciSlotInformation
@@ -753,7 +774,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMStartBufferPhysicalMapping
@@ -777,7 +797,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMCompleteBufferPhysicalMapping
@@ -793,7 +812,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMInitializeTimer
@@ -812,7 +830,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitializeTimer
@@ -829,7 +846,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisSetTimer
@@ -843,7 +859,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMSetPeriodicTimer
@@ -857,7 +872,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMCancelTimer
@@ -872,7 +886,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|ndis_timercall
@@ -893,7 +906,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMQueryAdapterResources
@@ -913,7 +925,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRegisterIoPortRange
@@ -932,7 +943,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMDeregisterIoPortRange
@@ -950,7 +960,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisReadNetworkAddress
@@ -971,7 +980,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisQueryMapRegisterCount
@@ -985,7 +993,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMAllocateMapRegisters
@@ -1004,7 +1011,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMFreeMapRegisters
@@ -1033,7 +1039,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMAllocateSharedMemory
@@ -1059,6 +1064,9 @@ specifier|static
 name|void
 name|ndis_asyncmem_complete
 parameter_list|(
+name|device_object
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|)
@@ -1066,7 +1074,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMAllocateSharedMemoryAsync
@@ -1084,7 +1091,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMFreeSharedMemory
@@ -1104,7 +1110,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMMapIoSpace
@@ -1123,7 +1128,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMUnmapIoSpace
@@ -1139,7 +1143,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisGetCacheFillSize
@@ -1150,7 +1153,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisMGetDmaAlignment
@@ -1161,7 +1163,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMInitializeScatterGatherDma
@@ -1176,7 +1177,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisUnchainBufferAtFront
@@ -1192,7 +1192,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisUnchainBufferAtBack
@@ -1208,7 +1207,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisAllocateBufferPool
@@ -1225,7 +1223,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeBufferPool
@@ -1236,7 +1233,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisAllocateBuffer
@@ -1259,7 +1255,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeBuffer
@@ -1271,7 +1266,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisBufferLength
@@ -1283,7 +1277,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisQueryBuffer
@@ -1302,7 +1295,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisQueryBufferSafe
@@ -1323,7 +1315,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 modifier|*
@@ -1336,7 +1327,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 modifier|*
@@ -1351,7 +1341,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisAdjustBufferLength
@@ -1365,7 +1354,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisInterlockedIncrement
@@ -1377,7 +1365,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisInterlockedDecrement
@@ -1389,7 +1376,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitializeEvent
@@ -1401,7 +1387,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisSetEvent
@@ -1413,7 +1398,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisResetEvent
@@ -1425,7 +1409,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint8_t
 name|NdisWaitEvent
@@ -1439,7 +1422,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisUnicodeStringToAnsiString
@@ -1454,7 +1436,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisAnsiStringToUnicodeString
@@ -1469,7 +1450,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMPciAssignResources
@@ -1486,7 +1466,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRegisterInterrupt
@@ -1510,7 +1489,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMDeregisterInterrupt
@@ -1522,7 +1500,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMRegisterAdapterShutdownHandler
@@ -1538,7 +1515,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMDeregisterAdapterShutdownHandler
@@ -1549,7 +1525,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NDIS_BUFFER_TO_SPAN_PAGES
@@ -1561,7 +1536,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetBufferPhysicalArraySize
@@ -1576,7 +1550,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisQueryBufferOffset
@@ -1594,7 +1567,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMSleep
@@ -1605,7 +1577,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisReadPcmciaAttributeMemory
@@ -1623,7 +1594,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisWritePcmciaAttributeMemory
@@ -1641,7 +1611,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|list_entry
 modifier|*
@@ -1660,7 +1629,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|list_entry
 modifier|*
@@ -1676,7 +1644,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|list_entry
 modifier|*
@@ -1695,7 +1662,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint8_t
 name|NdisMSynchronizeWithInterrupt
@@ -1713,7 +1679,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetCurrentSystemTime
@@ -1725,7 +1690,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetSystemUpTime
@@ -1737,7 +1701,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitializeString
@@ -1752,7 +1715,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitAnsiString
@@ -1767,7 +1729,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitUnicodeString
@@ -1782,7 +1743,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeString
@@ -1794,7 +1754,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRemoveMiniport
@@ -1806,7 +1765,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisTerminateWrapper
@@ -1820,7 +1778,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMGetDeviceProperty
@@ -1849,7 +1806,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetFirstBufferFromPacket
@@ -1875,7 +1831,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetFirstBufferFromPacketSafe
@@ -1922,7 +1877,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisOpenFile
@@ -1945,7 +1899,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMapFile
@@ -1963,7 +1916,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisUnmapFile
@@ -1974,7 +1926,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisCloseFile
@@ -1985,7 +1936,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|uint8_t
 name|NdisSystemProcessorCount
@@ -1996,7 +1946,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMIndicateStatusComplete
@@ -2007,7 +1956,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMIndicateStatus
@@ -2026,17 +1974,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ndis_workfunc
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|funcptr
 name|ndis_findwrap
 parameter_list|(
@@ -2046,19 +1983,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
-specifier|static
-name|ndis_status
-name|NdisScheduleWorkItem
-parameter_list|(
-name|ndis_work_item
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisCopyFromPacketToPacket
@@ -2082,7 +2006,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisCopyFromPacketToPacketSafe
@@ -2108,7 +2031,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRegisterDevice
@@ -2136,7 +2058,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMDeregisterDevice
@@ -2147,7 +2068,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMQueryAdapterInstanceName
@@ -2161,7 +2081,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|NdisMRegisterUnloadHandler
@@ -2175,7 +2094,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
 name|dummy
@@ -2242,6 +2160,14 @@ operator|&
 name|patch
 operator|->
 name|ipt_wrap
+argument_list|,
+name|patch
+operator|->
+name|ipt_argcnt
+argument_list|,
+name|patch
+operator|->
+name|ipt_ftype
 argument_list|)
 expr_stmt|;
 name|patch
@@ -2586,7 +2512,6 @@ comment|/*  * This routine does the messy Windows Driver Model device attachment
 end_comment
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitializeWrapper
@@ -2636,7 +2561,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|NdisTerminateWrapper
@@ -2659,7 +2583,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRegisterMiniport
@@ -2807,7 +2730,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisAllocateMemoryWithTag
@@ -2870,7 +2792,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisAllocateMemory
@@ -2938,7 +2859,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeMemory
@@ -2977,7 +2897,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMSetAttributesEx
@@ -3048,7 +2967,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|NdisOpenConfiguration
@@ -3086,7 +3004,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|NdisOpenConfigurationKeyByName
@@ -3130,7 +3047,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|NdisOpenConfigurationKeyByIndex
@@ -3651,7 +3567,6 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
 specifier|static
 name|void
 name|NdisReadConfiguration
@@ -4093,7 +4008,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisWriteConfiguration
@@ -4326,7 +4240,6 @@ name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisCloseConfiguration
@@ -4340,7 +4253,6 @@ block|{
 return|return;
 block|}
 comment|/*  * Initialize a Windows spinlock.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisAllocateSpinLock
@@ -4369,7 +4281,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*  * Destroy a Windows spinlock. This is a no-op for now. There are two reasons  * for this. One is that it's sort of superfluous: we don't have to do anything  * special to deallocate the spinlock. The other is that there are some buggy  * drivers which call NdisFreeSpinLock() _after_ calling NdisFreeMemory() on  * the block of memory in which the spinlock resides. (Yes, ADMtek, I'm  * talking to you.)  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeSpinLock
@@ -4403,7 +4314,6 @@ directive|endif
 return|return;
 block|}
 comment|/*  * Acquire a spinlock from IRQL<= DISPATCH_LEVEL.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisAcquireSpinLock
@@ -4431,7 +4341,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*  * Release a spinlock from IRQL == DISPATCH_LEVEL.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisReleaseSpinLock
@@ -4458,7 +4367,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*  * Acquire a spinlock when already running at IRQL == DISPATCH_LEVEL.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisDprAcquireSpinLock
@@ -4481,7 +4389,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*  * Release a spinlock without leaving IRQL == DISPATCH_LEVEL.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisDprReleaseSpinLock
@@ -4503,7 +4410,167 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
+specifier|static
+name|void
+name|NdisInitializeReadWriteLock
+parameter_list|(
+name|lock
+parameter_list|)
+name|ndis_rw_lock
+modifier|*
+name|lock
+decl_stmt|;
+block|{
+name|KeInitializeSpinLock
+argument_list|(
+operator|&
+name|lock
+operator|->
+name|nrl_spinlock
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|lock
+operator|->
+name|nrl_rsvd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lock
+operator|->
+name|nrl_rsvd
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+specifier|static
+name|void
+name|NdisAcquireReadWriteLock
+parameter_list|(
+name|lock
+parameter_list|,
+name|writeacc
+parameter_list|,
+name|state
+parameter_list|)
+name|ndis_rw_lock
+modifier|*
+name|lock
+decl_stmt|;
+name|uint8_t
+name|writeacc
+decl_stmt|;
+name|ndis_lock_state
+modifier|*
+name|state
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|writeacc
+operator|==
+name|TRUE
+condition|)
+block|{
+name|KeAcquireSpinLock
+argument_list|(
+operator|&
+name|lock
+operator|->
+name|nrl_spinlock
+argument_list|,
+operator|&
+name|state
+operator|->
+name|nls_oldirql
+argument_list|)
+expr_stmt|;
+name|lock
+operator|->
+name|nrl_rsvd
+index|[
+literal|0
+index|]
+operator|++
+expr_stmt|;
+block|}
+else|else
+name|lock
+operator|->
+name|nrl_rsvd
+index|[
+literal|1
+index|]
+operator|++
+expr_stmt|;
+return|return;
+block|}
+specifier|static
+name|void
+name|NdisReleaseReadWriteLock
+parameter_list|(
+name|lock
+parameter_list|,
+name|state
+parameter_list|)
+name|ndis_rw_lock
+modifier|*
+name|lock
+decl_stmt|;
+name|ndis_lock_state
+modifier|*
+name|state
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|lock
+operator|->
+name|nrl_rsvd
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|lock
+operator|->
+name|nrl_rsvd
+index|[
+literal|0
+index|]
+operator|--
+expr_stmt|;
+name|KeReleaseSpinLock
+argument_list|(
+operator|&
+name|lock
+operator|->
+name|nrl_spinlock
+argument_list|,
+name|state
+operator|->
+name|nls_oldirql
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|lock
+operator|->
+name|nrl_rsvd
+index|[
+literal|1
+index|]
+operator|--
+expr_stmt|;
+return|return;
+block|}
 specifier|static
 name|uint32_t
 name|NdisReadPciSlotInformation
@@ -4623,7 +4690,6 @@ name|len
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisWritePciSlotInformation
@@ -4802,6 +4868,16 @@ name|driver_object
 modifier|*
 name|drv
 decl_stmt|;
+name|struct
+name|ndis_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|block
 operator|=
 operator|(
@@ -4822,9 +4898,25 @@ name|drv
 operator|=
 name|block
 operator|->
-name|nmb_physdeviceobj
+name|nmb_deviceobj
 operator|->
 name|do_drvobj
+expr_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
 expr_stmt|;
 name|error
 operator|=
@@ -4858,6 +4950,12 @@ operator|&&
 name|flags
 operator|&
 name|MESSAGE_RESOURCE_UNICODE
+operator|&&
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
 condition|)
 block|{
 name|ustr
@@ -4916,6 +5014,15 @@ else|:
 name|str
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -4965,6 +5072,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 specifier|static
@@ -5068,7 +5176,6 @@ name|nseg
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMStartBufferPhysicalMapping
@@ -5237,7 +5344,6 @@ name|nma_cnt
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMCompleteBufferPhysicalMapping
@@ -5340,7 +5446,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*  * This is an older (?) timer init routine which doesn't  * accept a miniport context handle. Serialized miniports should  * never call this function.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitializeTimer
@@ -5383,9 +5488,18 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
+name|KeSetImportanceDpc
+argument_list|(
+operator|&
+name|timer
+operator|->
+name|nt_kdpc
+argument_list|,
+name|KDPC_IMPORTANCE_LOW
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|ndis_timercall
@@ -5474,7 +5588,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*  * For a long time I wondered why there were two NDIS timer initialization  * routines, and why this one needed an NDIS_MINIPORT_TIMER and the  * MiniportAdapterHandle. The NDIS_MINIPORT_TIMER has its own callout  * function and context pointers separate from those in the DPC, which  * allows for another level of indirection: when the timer fires, we  * can have our own timer function invoked, and from there we can call  * the driver's function. But why go to all that trouble? Then it hit  * me: for serialized miniports, the timer callouts are not re-entrant.  * By trapping the callouts and having access to the MiniportAdapterHandle,  * we can protect the driver callouts by acquiring the NDIS serialization  * lock. This is essential for allowing serialized miniports to work  * correctly on SMP systems. On UP hosts, setting IRQL to DISPATCH_LEVEL  * is enough to prevent other threads from pre-empting you, but with  * SMP, you must acquire a lock as well, otherwise the other CPU is  * free to clobber you.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisMInitializeTimer
@@ -5502,6 +5615,9 @@ modifier|*
 name|ctx
 decl_stmt|;
 block|{
+name|uint8_t
+name|irql
+decl_stmt|;
 comment|/* Save the driver's funcptr and context */
 name|timer
 operator|->
@@ -5548,10 +5664,63 @@ argument_list|,
 name|timer
 argument_list|)
 expr_stmt|;
+name|timer
+operator|->
+name|nmt_ktimer
+operator|.
+name|k_dpc
+operator|=
+operator|&
+name|timer
+operator|->
+name|nmt_kdpc
+expr_stmt|;
+name|KeAcquireSpinLock
+argument_list|(
+operator|&
+name|timer
+operator|->
+name|nmt_block
+operator|->
+name|nmb_lock
+argument_list|,
+operator|&
+name|irql
+argument_list|)
+expr_stmt|;
+name|timer
+operator|->
+name|nmt_nexttimer
+operator|=
+name|timer
+operator|->
+name|nmt_block
+operator|->
+name|nmb_timerlist
+expr_stmt|;
+name|timer
+operator|->
+name|nmt_block
+operator|->
+name|nmb_timerlist
+operator|=
+name|timer
+expr_stmt|;
+name|KeReleaseSpinLock
+argument_list|(
+operator|&
+name|timer
+operator|->
+name|nmt_block
+operator|->
+name|nmb_lock
+argument_list|,
+name|irql
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/*  * In Windows, there's both an NdisMSetTimer() and an NdisSetTimer(),  * but the former is just a macro wrapper around the latter.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisSetTimer
@@ -5594,7 +5763,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMSetPeriodicTimer
@@ -5639,7 +5807,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*  * Technically, this is really NdisCancelTimer(), but we also  * (ab)use it for NdisMCancelTimer(), since in our implementation  * we don't need the extra info in the ndis_miniport_timer  * structure just to cancel a timer.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisMCancelTimer
@@ -5670,7 +5837,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMQueryAdapterResources
@@ -5798,7 +5964,6 @@ name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRegisterIoPortRange
@@ -5916,7 +6081,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMDeregisterIoPortRange
@@ -5945,7 +6109,6 @@ decl_stmt|;
 block|{
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisReadNetworkAddress
@@ -6067,7 +6230,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisQueryMapRegisterCount
@@ -6095,7 +6257,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMAllocateMapRegisters
@@ -6298,7 +6459,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMFreeMapRegisters
@@ -6445,7 +6605,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*  * This maps to bus_dmamem_alloc().  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisMAllocateSharedMemory
@@ -6703,6 +6862,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Save the physical address along with the source address. 	 * The AirGo MIMO driver will call NdisMFreeSharedMemory() 	 * with a bogus virtual address sometimes, but with a valid 	 * physical address. To keep this from causing trouble, we 	 * use the physical address to as a sanity check in case 	 * searching based on the virtual address fails. 	 */
+name|sh
+operator|->
+name|ndis_paddr
+operator|.
+name|np_quad
+operator|=
+name|paddr
+operator|->
+name|np_quad
+expr_stmt|;
 name|sh
 operator|->
 name|ndis_saddr
@@ -6729,9 +6899,6 @@ block|}
 struct|struct
 name|ndis_allocwork
 block|{
-name|ndis_handle
-name|na_adapter
-decl_stmt|;
 name|uint32_t
 name|na_len
 decl_stmt|;
@@ -6742,14 +6909,24 @@ name|void
 modifier|*
 name|na_ctx
 decl_stmt|;
+name|io_workitem
+modifier|*
+name|na_iw
+decl_stmt|;
 block|}
 struct|;
 specifier|static
 name|void
 name|ndis_asyncmem_complete
 parameter_list|(
+name|dobj
+parameter_list|,
 name|arg
 parameter_list|)
+name|device_object
+modifier|*
+name|dobj
+decl_stmt|;
 name|void
 modifier|*
 name|arg
@@ -6776,7 +6953,6 @@ decl_stmt|;
 name|ndis_physaddr
 name|paddr
 decl_stmt|;
-name|__stdcall
 name|ndis_allocdone_handler
 name|donefunc
 decl_stmt|;
@@ -6790,9 +6966,9 @@ operator|(
 name|ndis_miniport_block
 operator|*
 operator|)
-name|w
+name|dobj
 operator|->
-name|na_adapter
+name|do_devext
 expr_stmt|;
 name|sc
 operator|=
@@ -6825,9 +7001,7 @@ name|nmc_allocate_complete_func
 expr_stmt|;
 name|NdisMAllocateSharedMemory
 argument_list|(
-name|w
-operator|->
-name|na_adapter
+name|block
 argument_list|,
 name|w
 operator|->
@@ -6848,9 +7022,7 @@ name|MSCALL5
 argument_list|(
 name|donefunc
 argument_list|,
-name|w
-operator|->
-name|na_adapter
+name|block
 argument_list|,
 name|vaddr
 argument_list|,
@@ -6866,16 +7038,22 @@ operator|->
 name|na_ctx
 argument_list|)
 expr_stmt|;
+name|IoFreeWorkItem
+argument_list|(
+name|w
+operator|->
+name|na_iw
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
-name|arg
+name|w
 argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMAllocateSharedMemoryAsync
@@ -6902,14 +7080,49 @@ modifier|*
 name|ctx
 decl_stmt|;
 block|{
+name|ndis_miniport_block
+modifier|*
+name|block
+decl_stmt|;
 name|struct
 name|ndis_allocwork
 modifier|*
 name|w
 decl_stmt|;
+name|io_workitem
+modifier|*
+name|iw
+decl_stmt|;
+name|io_workitem_func
+name|ifw
+decl_stmt|;
 if|if
 condition|(
 name|adapter
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NDIS_STATUS_FAILURE
+operator|)
+return|;
+name|block
+operator|=
+name|adapter
+expr_stmt|;
+name|iw
+operator|=
+name|IoAllocateWorkItem
+argument_list|(
+name|block
+operator|->
+name|nmb_deviceobj
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|iw
 operator|==
 name|NULL
 condition|)
@@ -6946,12 +7159,6 @@ operator|)
 return|;
 name|w
 operator|->
-name|na_adapter
-operator|=
-name|adapter
-expr_stmt|;
-name|w
-operator|->
 name|na_cached
 operator|=
 name|cached
@@ -6968,14 +7175,34 @@ name|na_ctx
 operator|=
 name|ctx
 expr_stmt|;
-comment|/* 	 * Pawn this work off on the SWI thread instead of the 	 * taskqueue thread, because sometimes drivers will queue 	 * up work items on the taskqueue thread that will block, 	 * which would prevent the memory allocation from completing 	 * when we need it. 	 */
-name|ndis_sched
+name|w
+operator|->
+name|na_iw
+operator|=
+name|iw
+expr_stmt|;
+name|ifw
+operator|=
+operator|(
+name|io_workitem_func
+operator|)
+name|ndis_findwrap
 argument_list|(
+operator|(
+name|funcptr
+operator|)
 name|ndis_asyncmem_complete
+argument_list|)
+expr_stmt|;
+name|IoQueueWorkItem
+argument_list|(
+name|iw
+argument_list|,
+name|ifw
+argument_list|,
+name|WORKQUEUE_DELAYED
 argument_list|,
 name|w
-argument_list|,
-name|NDIS_SWI
 argument_list|)
 expr_stmt|;
 return|return
@@ -6984,7 +7211,6 @@ name|NDIS_STATUS_PENDING
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMFreeSharedMemory
@@ -7093,6 +7319,20 @@ operator|==
 name|vaddr
 condition|)
 break|break;
+comment|/* 	 	 * Check the physaddr too, just in case the driver lied 		 * about the virtual address. 		 */
+if|if
+condition|(
+name|sh
+operator|->
+name|ndis_paddr
+operator|.
+name|np_quad
+operator|==
+name|paddr
+operator|.
+name|np_quad
+condition|)
+break|break;
 name|prev
 operator|=
 name|sh
@@ -7103,6 +7343,30 @@ name|sh
 operator|->
 name|ndis_next
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|sh
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"NDIS: buggy driver tried to free "
+literal|"invalid shared memory: vaddr: %p paddr: 0x%jx\n"
+argument_list|,
+name|vaddr
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|paddr
+operator|.
+name|np_quad
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|bus_dmamap_unload
 argument_list|(
@@ -7121,7 +7385,9 @@ name|sh
 operator|->
 name|ndis_stag
 argument_list|,
-name|vaddr
+name|sh
+operator|->
+name|ndis_saddr
 argument_list|,
 name|sh
 operator|->
@@ -7169,7 +7435,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMMapIoSpace
@@ -7349,7 +7614,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMUnmapIoSpace
@@ -7373,7 +7637,6 @@ decl_stmt|;
 block|{
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisGetCacheFillSize
@@ -7387,7 +7650,6 @@ literal|128
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisMGetDmaAlignment
@@ -7400,12 +7662,11 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-literal|128
+literal|16
 operator|)
 return|;
 block|}
 comment|/*  * NDIS has two methods for dealing with NICs that support DMA.  * One is to just pass packets to the driver and let it call  * NdisMStartBufferPhysicalMapping() to map each buffer in the packet  * all by itself, and the other is to let the NDIS library handle the  * buffer mapping internally, and hand the driver an already populated  * scatter/gather fragment list. If the driver calls  * NdisMInitializeScatterGatherDma(), it wants to use the latter  * method.  */
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMInitializeScatterGatherDma
@@ -7534,7 +7795,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 name|void
 name|NdisAllocatePacketPool
 parameter_list|(
@@ -7693,7 +7953,6 @@ name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 name|void
 name|NdisAllocatePacketPoolEx
 parameter_list|(
@@ -7742,7 +8001,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|__stdcall
 name|uint32_t
 name|NdisPacketPoolUsage
 parameter_list|(
@@ -7805,7 +8063,6 @@ name|cnt
 operator|)
 return|;
 block|}
-name|__stdcall
 name|void
 name|NdisFreePacketPool
 parameter_list|(
@@ -7896,7 +8153,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|__stdcall
 name|void
 name|NdisAllocatePacket
 parameter_list|(
@@ -8134,7 +8390,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 name|void
 name|NdisFreePacket
 parameter_list|(
@@ -8289,7 +8544,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisUnchainBufferAtFront
@@ -8388,7 +8642,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisUnchainBufferAtBack
@@ -8515,7 +8768,6 @@ block|}
 return|return;
 block|}
 comment|/*  * The NDIS "buffer" is really an MDL (memory descriptor list)  * which is used to describe a buffer in a way that allows it  * to mapped into different contexts. We have to be careful how  * we handle them: in some versions of Windows, the NdisFreeBuffer()  * routine is an actual function in the NDIS API, but in others  * it's just a macro wrapper around IoFreeMdl(). There's really  * no way to use the 'descnum' parameter to count how many  * "buffers" are allocated since in order to use IoFreeMdl() to  * dispose of a buffer, we have to use IoAllocateMdl() to allocate  * them, and IoAllocateMdl() just grabs them out of the heap.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisAllocateBufferPool
@@ -8551,7 +8803,6 @@ name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeBufferPool
@@ -8564,7 +8815,6 @@ decl_stmt|;
 block|{
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisAllocateBuffer
@@ -8644,7 +8894,6 @@ name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeBuffer
@@ -8664,7 +8913,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Aw c'mon. */
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisBufferLength
@@ -8686,7 +8934,6 @@ operator|)
 return|;
 block|}
 comment|/*  * Get the virtual address and length of a buffer.  * Note: the vaddr argument is optional.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisQueryBuffer
@@ -8736,7 +8983,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Same as above -- we don't care about the priority. */
-name|__stdcall
 specifier|static
 name|void
 name|NdisQueryBufferSafe
@@ -8791,7 +9037,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Damnit Microsoft!! How many ways can you do the same thing?! */
-name|__stdcall
 specifier|static
 name|void
 modifier|*
@@ -8813,7 +9058,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 modifier|*
@@ -8840,7 +9084,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisAdjustBufferLength
@@ -8866,7 +9109,6 @@ name|len
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisInterlockedIncrement
@@ -8896,7 +9138,6 @@ name|addend
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisInterlockedDecrement
@@ -8926,7 +9167,6 @@ name|addend
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitializeEvent
@@ -8953,7 +9193,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisSetEvent
@@ -8979,7 +9218,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisResetEvent
@@ -9001,7 +9239,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|uint8_t
 name|NdisWaitEvent
@@ -9077,7 +9314,6 @@ name|TRUE
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisUnicodeStringToAnsiString
@@ -9154,7 +9390,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisAnsiStringToUnicodeString
@@ -9294,7 +9529,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMPciAssignResources
@@ -9357,7 +9591,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRegisterInterrupt
@@ -9445,7 +9678,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMDeregisterInterrupt
@@ -9459,7 +9691,6 @@ decl_stmt|;
 block|{
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMRegisterAdapterShutdownHandler
@@ -9540,7 +9771,6 @@ name|shutdownctx
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMDeregisterAdapterShutdownHandler
@@ -9610,7 +9840,6 @@ name|NULL
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NDIS_BUFFER_TO_SPAN_PAGES
@@ -9664,7 +9893,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetBufferPhysicalArraySize
@@ -9699,7 +9927,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisQueryBufferOffset
@@ -9748,7 +9975,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMSleep
@@ -9763,6 +9989,7 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+comment|/* 	 * During system bootstrap, (i.e. cold == 1), we aren't 	 * allowed to msleep(), so calling ndis_thsuspend() here 	 * will return 0, and we won't actually have delayed. This 	 * is a problem because some drivers expect NdisMSleep() 	 * to always wait, and might fail if the expected delay 	 * period does not in fact elapse. As a workaround, if the 	 * attempt to sleep delay fails, we do a hard DELAY() instead. 	 */
 name|tv
 operator|.
 name|tv_sec
@@ -9775,6 +10002,8 @@ name|tv_usec
 operator|=
 name|usecs
 expr_stmt|;
+if|if
+condition|(
 name|ndis_thsuspend
 argument_list|(
 name|curthread
@@ -9789,10 +10018,16 @@ operator|&
 name|tv
 argument_list|)
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|DELAY
+argument_list|(
+name|usecs
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisReadPcmciaAttributeMemory
@@ -9932,7 +10167,6 @@ name|i
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|uint32_t
 name|NdisWritePcmciaAttributeMemory
@@ -10072,7 +10306,6 @@ name|i
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|list_entry
 modifier|*
@@ -10162,7 +10395,6 @@ name|flink
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|list_entry
 modifier|*
@@ -10244,7 +10476,6 @@ name|entry
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|list_entry
 modifier|*
@@ -10334,7 +10565,6 @@ name|blink
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|uint8_t
 name|NdisMSynchronizeWithInterrupt
@@ -10358,17 +10588,16 @@ modifier|*
 name|syncctx
 decl_stmt|;
 block|{
-name|__stdcall
 name|uint8_t
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|sync
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-decl_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|uint8_t
 name|rval
 decl_stmt|;
@@ -10431,7 +10660,6 @@ operator|)
 return|;
 block|}
 comment|/*  * Return the number of 100 nanosecond intervals since  * January 1, 1601. (?!?!)  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetCurrentSystemTime
@@ -10479,7 +10707,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*  * Return the number of milliseconds since the system booted.  */
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetSystemUpTime
@@ -10491,20 +10718,33 @@ modifier|*
 name|tval
 decl_stmt|;
 block|{
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|nanouptime
+argument_list|(
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
 operator|*
 name|tval
 operator|=
-operator|(
-name|ticks
-operator|*
-name|hz
-operator|)
+name|ts
+operator|.
+name|tv_nsec
 operator|/
+literal|1000000
+operator|+
+name|ts
+operator|.
+name|tv_sec
+operator|*
 literal|1000
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitializeString
@@ -10566,7 +10806,6 @@ literal|2
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisFreeString
@@ -10611,7 +10850,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRemoveMiniport
@@ -10629,7 +10867,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitAnsiString
@@ -10710,7 +10947,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisInitUnicodeString
@@ -10809,7 +11045,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMGetDeviceProperty
@@ -10906,7 +11141,6 @@ name|nmb_nextdeviceobj
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetFirstBufferFromPacket
@@ -11032,7 +11266,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisGetFirstBufferFromPacketSafe
@@ -11308,7 +11541,6 @@ operator|)
 return|;
 block|}
 comment|/* can also return NDIS_STATUS_RESOURCES/NDIS_STATUS_ERROR_READING_FILE */
-name|__stdcall
 specifier|static
 name|void
 name|NdisOpenFile
@@ -11430,6 +11662,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|afilename
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 operator|*
 name|status
 operator|=
@@ -11437,6 +11676,12 @@ name|NDIS_STATUS_RESOURCES
 expr_stmt|;
 return|return;
 block|}
+name|fh
+operator|->
+name|nf_name
+operator|=
+name|afilename
+expr_stmt|;
 comment|/* 	 * During system bootstrap, it's impossible to load files 	 * from the rootfs since it's not mounted yet. We therefore 	 * offer the possibility of opening files that have been 	 * preloaded as modules instead. Both choices will work 	 * when kldloading a module from multiuser, but only the 	 * module option will work during bootstrap. The module 	 * loading option works by using the ndiscvt(8) utility 	 * to convert the arbitrary file into a .ko using objcopy(1). 	 * This file will contain two special symbols: filename_start 	 * and filename_end. All we have to do is traverse the KLD 	 * list in search of those symbols and we've found the file 	 * data. As an added bonus, ndiscvt(8) will also generate 	 * a normal .o file which can be linked statically with 	 * the kernel. This means that the symbols will actual reside 	 * in the kernel's symbol table, but that doesn't matter to 	 * us since the kernel appears to us as just another module. 	 */
 comment|/* 	 * This is an evil trick for getting the head of the linked 	 * file list, which is not exported from kern_linker.o. It 	 * happens that linker file #1 is always the kernel, and is 	 * always the first element in the list. 	 */
 name|head
@@ -11534,13 +11779,6 @@ name|filehandle
 operator|=
 name|fh
 expr_stmt|;
-name|free
-argument_list|(
-name|afilename
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 operator|*
 name|status
 operator|=
@@ -11612,6 +11850,13 @@ argument_list|(
 name|fh
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|afilename
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 operator|*
 name|status
 operator|=
@@ -11630,13 +11875,6 @@ argument_list|,
 name|ndis_filepath
 argument_list|,
 name|afilename
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|afilename
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -11761,6 +11999,13 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|afilename
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|ExFreePool
@@ -11854,7 +12099,6 @@ name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMapFile
@@ -11975,9 +12219,9 @@ name|ndis_find_sym
 argument_list|(
 name|lf
 argument_list|,
-name|lf
+name|fh
 operator|->
-name|filename
+name|nf_name
 argument_list|,
 literal|"_start"
 argument_list|,
@@ -12118,7 +12362,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisUnmapFile
@@ -12173,7 +12416,6 @@ name|NULL
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisCloseFile
@@ -12293,6 +12535,15 @@ name|nf_vp
 operator|=
 name|NULL
 expr_stmt|;
+name|free
+argument_list|(
+name|fh
+operator|->
+name|nf_name
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 name|ExFreePool
 argument_list|(
 name|fh
@@ -12300,7 +12551,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|uint8_t
 name|NdisSystemProcessorCount
@@ -12339,7 +12589,6 @@ parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;
-name|__stdcall
 specifier|static
 name|void
 name|NdisMIndicateStatusComplete
@@ -12354,7 +12603,6 @@ name|ndis_miniport_block
 modifier|*
 name|block
 decl_stmt|;
-name|__stdcall
 name|ndis_statusdone_handler
 name|statusdonefunc
 decl_stmt|;
@@ -12381,7 +12629,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMIndicateStatus
@@ -12412,7 +12659,6 @@ name|ndis_miniport_block
 modifier|*
 name|block
 decl_stmt|;
-name|__stdcall
 name|ndis_status_handler
 name|statusfunc
 decl_stmt|;
@@ -12445,50 +12691,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-specifier|static
-name|void
-name|ndis_workfunc
-parameter_list|(
-name|ctx
-parameter_list|)
-name|void
-modifier|*
-name|ctx
-decl_stmt|;
-block|{
-name|ndis_work_item
-modifier|*
-name|work
-decl_stmt|;
-name|__stdcall
-name|ndis_proc
-name|workfunc
-decl_stmt|;
-name|work
-operator|=
-name|ctx
-expr_stmt|;
-name|workfunc
-operator|=
-name|work
-operator|->
-name|nwi_func
-expr_stmt|;
-name|MSCALL2
-argument_list|(
-name|workfunc
-argument_list|,
-name|work
-argument_list|,
-name|work
-operator|->
-name|nwi_ctx
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|__stdcall
-specifier|static
+comment|/*  * The DDK documentation says that you should use IoQueueWorkItem()  * instead of ExQueueWorkItem(). The problem is, IoQueueWorkItem()  * is fundamentally incompatible with NdisScheduleWorkItem(), which  * depends on the API semantics of ExQueueWorkItem(). In our world,  * ExQueueWorkItem() is implemented on top of IoAllocateQueueItem()  * anyway.  *  * There are actually three distinct APIs here. NdisScheduleWorkItem()  * takes a pointer to an NDIS_WORK_ITEM. ExQueueWorkItem() takes a pointer  * to a WORK_QUEUE_ITEM. And finally, IoQueueWorkItem() takes a pointer  * to an opaque work item thingie which you get from IoAllocateWorkItem().  * An NDIS_WORK_ITEM is not the same as a WORK_QUEUE_ITEM. However,  * the NDIS_WORK_ITEM has some opaque storage at the end of it, and we  * (ab)use this storage as a WORK_QUEUE_ITEM, which is what we submit  * to ExQueueWorkItem().  *  * Got all that? (Sheesh.)  */
 name|ndis_status
 name|NdisScheduleWorkItem
 parameter_list|(
@@ -12499,13 +12702,41 @@ modifier|*
 name|work
 decl_stmt|;
 block|{
-name|ndis_sched
+name|work_queue_item
+modifier|*
+name|wqi
+decl_stmt|;
+name|wqi
+operator|=
+operator|(
+name|work_queue_item
+operator|*
+operator|)
+name|work
+operator|->
+name|nwi_wraprsvd
+expr_stmt|;
+name|ExInitializeWorkItem
 argument_list|(
-name|ndis_workfunc
+name|wqi
+argument_list|,
+operator|(
+name|work_item_func
+operator|)
+name|work
+operator|->
+name|nwi_func
 argument_list|,
 name|work
+operator|->
+name|nwi_ctx
+argument_list|)
+expr_stmt|;
+name|ExQueueWorkItem
+argument_list|(
+name|wqi
 argument_list|,
-name|NDIS_TASKQUEUE
+name|WORKQUEUE_DELAYED
 argument_list|)
 expr_stmt|;
 return|return
@@ -12514,7 +12745,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisCopyFromPacketToPacket
@@ -12891,7 +13121,6 @@ name|copied
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisCopyFromPacketToPacketSafe
@@ -12952,7 +13181,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMRegisterDevice
@@ -12995,37 +13223,57 @@ modifier|*
 name|devhandle
 decl_stmt|;
 block|{
-name|ndis_miniport_block
-modifier|*
-name|block
+name|uint32_t
+name|status
 decl_stmt|;
-name|block
+name|device_object
+modifier|*
+name|dobj
+decl_stmt|;
+name|status
 operator|=
-operator|(
-name|ndis_miniport_block
-operator|*
-operator|)
+name|IoCreateDevice
+argument_list|(
 name|handle
+argument_list|,
+literal|0
+argument_list|,
+name|devname
+argument_list|,
+name|FILE_DEVICE_UNKNOWN
+argument_list|,
+literal|0
+argument_list|,
+name|FALSE
+argument_list|,
+operator|&
+name|dobj
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|STATUS_SUCCESS
+condition|)
+block|{
 operator|*
 name|devobj
 operator|=
-name|block
-operator|->
-name|nmb_deviceobj
+name|dobj
 expr_stmt|;
 operator|*
 name|devhandle
 operator|=
-name|handle
+name|dobj
 expr_stmt|;
+block|}
 return|return
 operator|(
-name|NDIS_STATUS_SUCCESS
+name|status
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMDeregisterDevice
@@ -13036,13 +13284,17 @@ name|ndis_handle
 name|handle
 decl_stmt|;
 block|{
+name|IoDeleteDevice
+argument_list|(
+name|handle
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|ndis_status
 name|NdisMQueryAdapterInstanceName
@@ -13121,7 +13373,6 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|NdisMRegisterUnloadHandler
@@ -13140,7 +13391,6 @@ decl_stmt|;
 block|{
 return|return;
 block|}
-name|__stdcall
 specifier|static
 name|void
 name|dummy
@@ -13153,594 +13403,861 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/*  * Note: a couple of entries in this table specify the  * number of arguments as "foo + 1". These are routines  * that accept a 64-bit argument, passed by value. On  * x86, these arguments consume two longwords on the stack,  * so we lie and say there's one additional argument so  * that the wrapping routines will do the right thing.  */
 name|image_patch_table
 name|ndis_functbl
 index|[]
 init|=
 block|{
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisCopyFromPacketToPacket
+argument_list|,
+literal|6
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisCopyFromPacketToPacketSafe
+argument_list|,
+literal|7
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisScheduleWorkItem
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMIndicateStatusComplete
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMIndicateStatus
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisSystemProcessorCount
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisUnchainBufferAtBack
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisGetFirstBufferFromPacket
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisGetFirstBufferFromPacketSafe
+argument_list|,
+literal|6
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisGetBufferPhysicalArraySize
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMGetDeviceProperty
+argument_list|,
+literal|6
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInitAnsiString
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInitUnicodeString
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisWriteConfiguration
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAnsiStringToUnicodeString
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisTerminateWrapper
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisOpenConfigurationKeyByName
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisOpenConfigurationKeyByIndex
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMRemoveMiniport
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInitializeString
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisFreeString
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisGetCurrentSystemTime
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisGetSystemUpTime
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMSynchronizeWithInterrupt
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMAllocateSharedMemoryAsync
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInterlockedInsertHeadList
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInterlockedInsertTailList
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInterlockedRemoveHeadList
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInitializeWrapper
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMRegisterMiniport
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAllocateMemoryWithTag
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAllocateMemory
+argument_list|,
+literal|4
+operator|+
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMSetAttributesEx
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisCloseConfiguration
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisReadConfiguration
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisOpenConfiguration
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAcquireSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisReleaseSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisDprAcquireSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisDprReleaseSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAllocateSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
+argument_list|(
+name|NdisInitializeReadWriteLock
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|IMPORT_SFUNC
+argument_list|(
+name|NdisAcquireReadWriteLock
+argument_list|,
+literal|3
+argument_list|)
+block|,
+name|IMPORT_SFUNC
+argument_list|(
+name|NdisReleaseReadWriteLock
+argument_list|,
+literal|2
+argument_list|)
+block|,
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisFreeSpinLock
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisFreeMemory
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisReadPciSlotInformation
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisWritePciSlotInformation
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_SFUNC_MAP
 argument_list|(
 name|NdisImmediateReadPciSlotInformation
 argument_list|,
 name|NdisReadPciSlotInformation
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_SFUNC_MAP
 argument_list|(
 name|NdisImmediateWritePciSlotInformation
 argument_list|,
 name|NdisWritePciSlotInformation
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_CFUNC
 argument_list|(
 name|NdisWriteErrorLogEntry
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMStartBufferPhysicalMapping
+argument_list|,
+literal|6
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMCompleteBufferPhysicalMapping
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMInitializeTimer
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInitializeTimer
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisSetTimer
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMCancelTimer
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_SFUNC_MAP
 argument_list|(
 name|NdisCancelTimer
 argument_list|,
 name|NdisMCancelTimer
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMSetPeriodicTimer
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMQueryAdapterResources
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMRegisterIoPortRange
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMDeregisterIoPortRange
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisReadNetworkAddress
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisQueryMapRegisterCount
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMAllocateMapRegisters
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMFreeMapRegisters
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMAllocateSharedMemory
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMMapIoSpace
+argument_list|,
+literal|4
+operator|+
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMUnmapIoSpace
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisGetCacheFillSize
+argument_list|,
+literal|0
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMGetDmaAlignment
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMInitializeScatterGatherDma
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAllocatePacketPool
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAllocatePacketPoolEx
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAllocatePacket
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisFreePacket
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisFreePacketPool
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_SFUNC_MAP
 argument_list|(
 name|NdisDprAllocatePacket
 argument_list|,
 name|NdisAllocatePacket
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC_MAP
+name|IMPORT_SFUNC_MAP
 argument_list|(
 name|NdisDprFreePacket
 argument_list|,
 name|NdisFreePacket
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAllocateBufferPool
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAllocateBuffer
+argument_list|,
+literal|5
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisQueryBuffer
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisQueryBufferSafe
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisBufferVirtualAddress
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisBufferVirtualAddressSafe
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisBufferLength
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisFreeBuffer
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisFreeBufferPool
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInterlockedIncrement
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInterlockedDecrement
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisInitializeEvent
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisSetEvent
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisResetEvent
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisWaitEvent
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisUnicodeStringToAnsiString
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMPciAssignResources
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMFreeSharedMemory
+argument_list|,
+literal|5
+operator|+
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMRegisterInterrupt
+argument_list|,
+literal|7
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMDeregisterInterrupt
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMRegisterAdapterShutdownHandler
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMDeregisterAdapterShutdownHandler
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NDIS_BUFFER_TO_SPAN_PAGES
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisQueryBufferOffset
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisAdjustBufferLength
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisPacketPoolUsage
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMSleep
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisUnchainBufferAtFront
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisReadPcmciaAttributeMemory
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisWritePcmciaAttributeMemory
+argument_list|,
+literal|4
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisOpenFile
+argument_list|,
+literal|5
+operator|+
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMapFile
+argument_list|,
+literal|3
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisUnmapFile
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisCloseFile
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMRegisterDevice
+argument_list|,
+literal|6
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMDeregisterDevice
+argument_list|,
+literal|1
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMQueryAdapterInstanceName
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|NdisMRegisterUnloadHandler
+argument_list|,
+literal|2
 argument_list|)
 block|,
-name|IMPORT_FUNC
+name|IMPORT_SFUNC
 argument_list|(
 name|ndis_timercall
+argument_list|,
+literal|4
+argument_list|)
+block|,
+name|IMPORT_SFUNC
+argument_list|(
+name|ndis_asyncmem_complete
+argument_list|,
+literal|2
 argument_list|)
 block|,
 comment|/* 	 * This last entry is a catch-all for any function we haven't 	 * implemented yet. The PE import list patching routine will 	 * use it for any function that doesn't have an explicit match 	 * in this table. 	 */
@@ -13753,6 +14270,10 @@ operator|)
 name|dummy
 block|,
 name|NULL
+block|,
+literal|0
+block|,
+name|WINDRV_WRAP_STDCALL
 block|}
 block|,
 comment|/* End of list. */
