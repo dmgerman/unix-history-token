@@ -1204,7 +1204,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* 			 * Invalid segment selectors and out of bounds 			 * %eip's and %esp's can be set up in user mode. 			 * This causes a fault in kernel mode when the 			 * kernel tries to return to user mode.  We want 			 * to get this fault so that we can fix the 			 * problem here and not have to check all the 			 * selectors and pointers when the user changes 			 * them. 			 */
+comment|/* 			 * Invalid segment selectors and out of bounds 			 * %rip's and %rsp's can be set up in user mode. 			 * This causes a fault in kernel mode when the 			 * kernel tries to return to user mode.  We want 			 * to get this fault so that we can fix the 			 * problem here and not have to check all the 			 * selectors and pointers when the user changes 			 * them. 			 */
 if|if
 condition|(
 name|frame
