@@ -383,11 +383,11 @@ literal|1
 block|,
 literal|1
 block|,
-literal|1
+literal|0
 block|,
 literal|1
 block|,
-name|APIC_LVT_DM_FIXED
+name|APIC_LVT_DM_NMI
 block|,
 literal|0
 block|}
@@ -1335,6 +1335,33 @@ operator|->
 name|lvt_lint1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+comment|/* Program the PMC LVT entry if present. */
+if|if
+condition|(
+name|maxlvt
+operator|>=
+name|LVT_PMC
+condition|)
+name|lapic
+operator|->
+name|lvt_pcint
+operator|=
+name|lvt_mode
+argument_list|(
+name|la
+argument_list|,
+name|LVT_PMC
+argument_list|,
+name|lapic
+operator|->
+name|lvt_pcint
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Program timer LVT and setup handler. */
 name|lapic
 operator|->
