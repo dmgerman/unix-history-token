@@ -102,10 +102,6 @@ begin_comment
 comment|/* space is mem space */
 end_comment
 
-begin_comment
-comment|/*  * Bus address and size types  */
-end_comment
-
 begin_define
 define|#
 directive|define
