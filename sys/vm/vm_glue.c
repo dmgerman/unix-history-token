@@ -2545,8 +2545,6 @@ name|didswap
 init|=
 literal|0
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|retry
 label|:
 name|sx_slock
