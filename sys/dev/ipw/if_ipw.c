@@ -1362,6 +1362,17 @@ name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
 block|}
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x41
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* enable bus-mastering */
 name|pci_enable_busmaster
 argument_list|(
@@ -4036,6 +4047,17 @@ decl_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x41
+argument_list|,
+literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
