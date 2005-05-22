@@ -298,6 +298,10 @@ define|#
 directive|define
 name|IWI_FLAG_FW_WARNED
 value|(1<< 2)
+define|#
+directive|define
+name|IWI_FLAG_SCANNING
+value|(1<< 3)
 name|struct
 name|iwi_cmd_ring
 name|cmdq
@@ -335,6 +339,9 @@ name|mem_rid
 decl_stmt|;
 name|int
 name|irq_rid
+decl_stmt|;
+name|int
+name|antenna
 decl_stmt|;
 name|int
 name|dwelltime

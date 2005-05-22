@@ -974,6 +974,10 @@ name|IWI_CMD_SET_RTS_THRESHOLD
 value|15
 define|#
 directive|define
+name|IWI_CMD_SET_FRAG_THRESHOLD
+value|16
+define|#
+directive|define
 name|IWI_CMD_SET_POWER_MODE
 value|17
 define|#
@@ -992,6 +996,14 @@ define|#
 directive|define
 name|IWI_CMD_SET_RATES
 value|22
+define|#
+directive|define
+name|IWI_CMD_ABORT_SCAN
+value|23
+define|#
+directive|define
+name|IWI_CMD_SET_OPTIE
+value|31
 define|#
 directive|define
 name|IWI_CMD_DISABLE
@@ -1048,20 +1060,6 @@ define|#
 directive|define
 name|IWI_MODE_11G
 value|2
-end_define
-
-begin_comment
-comment|/* macro for command IWI_CMD_SET_SENSITIVITY */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWI_RSSIDBM2RAW
-parameter_list|(
-name|rssi
-parameter_list|)
-value|((rssi) - 112)
 end_define
 
 begin_comment
@@ -1189,8 +1187,12 @@ name|uint8_t
 name|reserved1
 decl_stmt|;
 name|uint16_t
-name|reserved2
+name|policy
 decl_stmt|;
+define|#
+directive|define
+name|IWI_POLICY_OPTIE
+value|2
 name|uint8_t
 name|plen
 decl_stmt|;
@@ -1248,10 +1250,14 @@ name|type
 decl_stmt|;
 define|#
 directive|define
+name|IWI_SCAN_TYPE_PASSIVE
+value|1
+define|#
+directive|define
 name|IWI_SCAN_TYPE_BROADCAST
 value|3
 name|uint16_t
-name|intval
+name|dwelltime
 decl_stmt|;
 name|uint8_t
 name|channels
@@ -1293,7 +1299,7 @@ name|uint8_t
 name|reserved1
 decl_stmt|;
 name|uint8_t
-name|answer_broadcast_probe_req
+name|answer_pbreq
 decl_stmt|;
 name|uint8_t
 name|allow_invalid_frames
@@ -1302,13 +1308,13 @@ name|uint8_t
 name|multicast_enabled
 decl_stmt|;
 name|uint8_t
-name|exclude_unicast_unencrypted
+name|drop_unicast_unencrypted
 decl_stmt|;
 name|uint8_t
 name|disable_unicast_decryption
 decl_stmt|;
 name|uint8_t
-name|exclude_multicast_unencrypted
+name|drop_multicast_unencrypted
 decl_stmt|;
 name|uint8_t
 name|disable_multicast_decryption
