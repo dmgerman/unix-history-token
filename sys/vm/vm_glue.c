@@ -1954,8 +1954,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -2122,7 +2120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  *  *  XXXKSE - process with the thread with highest priority counts..  *  * Giant is still held at this point, to be released in tsleep.  */
+comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  *  *  XXXKSE - process with the thread with highest priority counts..  *  * Giant is held on entry.  */
 end_comment
 
 begin_comment
@@ -2172,7 +2170,12 @@ operator||
 name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
-comment|/* GIANT_REQUIRED */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|loop
 label|:
 if|if
