@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* signals.c -- install and maintain Info signal handlers.    $Id: signals.c,v 1.4 2003/01/29 19:23:22 karl Exp $     Copyright (C) 1993, 1994, 1995, 1998, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* signals.c -- install and maintain signal handlers.    $Id: signals.c,v 1.7 2004/04/11 17:56:46 karl Exp $     Copyright (C) 1993, 1994, 1995, 1998, 2002, 2003, 2004 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -14,6 +14,15 @@ include|#
 directive|include
 file|"signals.h"
 end_include
+
+begin_function_decl
+name|void
+name|initialize_info_signal_handler
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* **************************************************************** */
@@ -59,24 +68,17 @@ specifier|static
 name|void
 name|sigprocmask
 parameter_list|(
-name|operation
-parameter_list|,
-name|newset
-parameter_list|,
-name|oldset
-parameter_list|)
 name|int
 name|operation
-decl_stmt|,
-decl|*
+parameter_list|,
+name|int
+modifier|*
 name|newset
-decl_stmt|,
+parameter_list|,
+name|int
 modifier|*
 name|oldset
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -130,7 +132,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -186,12 +188,10 @@ specifier|static
 name|void
 name|mask_termsig
 parameter_list|(
-name|set
-parameter_list|)
 name|sigset_t
 modifier|*
 name|set
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -233,6 +233,21 @@ argument_list|(
 name|set
 argument_list|,
 name|SIGWINCH
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGQUIT
+argument_list|)
+name|sigaddset
+argument_list|(
+name|set
+argument_list|,
+name|SIGQUIT
 argument_list|)
 expr_stmt|;
 endif|#
@@ -283,7 +298,10 @@ begin_function_decl
 specifier|static
 name|RETSIGTYPE
 name|info_signal_proc
-parameter_list|()
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -315,17 +333,13 @@ specifier|static
 name|void
 name|set_termsig
 parameter_list|(
-name|sig
-parameter_list|,
-name|old
-parameter_list|)
 name|int
 name|sig
-decl_stmt|;
+parameter_list|,
 name|signal_info
 modifier|*
 name|old
-decl_stmt|;
+parameter_list|)
 block|{
 name|sigaction
 argument_list|(
@@ -345,18 +359,14 @@ specifier|static
 name|void
 name|restore_termsig
 parameter_list|(
-name|sig
-parameter_list|,
-name|saved
-parameter_list|)
 name|int
 name|sig
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|signal_info
 modifier|*
 name|saved
-decl_stmt|;
+parameter_list|)
 block|{
 name|sigaction
 argument_list|(
@@ -461,17 +471,24 @@ name|old_USR1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|signal_info
+name|old_QUIT
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|initialize_info_signal_handler
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SIGACTION
-argument_list|)
+ifdef|#
+directive|ifdef
+name|SA_NOCLDSTOP
+comment|/* (Based on info from Paul Eggert found in coreutils.)  Don't use      HAVE_SIGACTION to decide whether to use the sa_handler, sa_flags,      sa_mask members, as some systems (Solaris 7+) don't define them.  Use      SA_NOCLDSTOP instead; it's been part of POSIX.1 since day 1 (in 1988).  */
 name|info_signal_handler
 operator|.
 name|sa_handler
@@ -494,7 +511,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_SIGACTION */
+comment|/* SA_NOCLDSTOP */
 if|#
 directive|if
 name|defined
@@ -548,6 +565,22 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|SIGQUIT
+argument_list|)
+name|set_termsig
+argument_list|(
+name|SIGQUIT
+argument_list|,
+operator|&
+name|old_QUIT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SIGINT
 argument_list|)
 name|set_termsig
@@ -584,7 +617,9 @@ begin_function
 specifier|static
 name|void
 name|redisplay_after_signal
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|terminal_clear_screen
 argument_list|()
@@ -623,7 +658,9 @@ begin_function
 specifier|static
 name|void
 name|reset_info_window_sizes
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|terminal_goto_xy
 argument_list|(
@@ -658,8 +695,6 @@ argument_list|(
 name|screenwidth
 argument_list|,
 name|screenheight
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|redisplay_after_signal
@@ -673,15 +708,15 @@ specifier|static
 name|RETSIGTYPE
 name|info_signal_proc
 parameter_list|(
-name|sig
-parameter_list|)
 name|int
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
 name|signal_info
 modifier|*
 name|old_signal_handler
+init|=
+name|NULL
 decl_stmt|;
 if|#
 directive|if
@@ -772,6 +807,17 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|SIGQUIT
+argument_list|)
+case|case
+name|SIGQUIT
+case|:
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SIGINT
 argument_list|)
 case|case
@@ -822,6 +868,26 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SIGTSTP */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGQUIT
+argument_list|)
+if|if
+condition|(
+name|sig
+operator|==
+name|SIGQUIT
+condition|)
+name|old_signal_handler
+operator|=
+operator|&
+name|old_QUIT
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SIGQUIT */
 if|#
 directive|if
 name|defined
