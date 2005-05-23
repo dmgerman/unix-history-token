@@ -384,13 +384,11 @@ name|out
 expr_stmt|;
 block|}
 else|else
-block|{
 return|return
 operator|(
-name|EPFNOSUPPORT
+name|EINVAL
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|*
