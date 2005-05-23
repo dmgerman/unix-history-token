@@ -9420,6 +9420,17 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Disks went down in starting phase, so destroy 			 * device. 			 */
+name|G_MIRROR_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"root_mount_rel[1] %p"
+argument_list|,
+name|sc
+operator|->
+name|sc_rootmount
+argument_list|)
+expr_stmt|;
 name|root_mount_rel
 argument_list|(
 name|sc
@@ -9453,6 +9464,17 @@ else|else
 block|{
 return|return;
 block|}
+name|G_MIRROR_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"root_mount_rel[2] %p"
+argument_list|,
+name|sc
+operator|->
+name|sc_rootmount
+argument_list|)
+expr_stmt|;
 name|root_mount_rel
 argument_list|(
 name|sc
@@ -12626,6 +12648,17 @@ operator|=
 name|root_mount_hold
 argument_list|(
 literal|"GMIRROR"
+argument_list|)
+expr_stmt|;
+name|G_MIRROR_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"root_mount_hold %p"
+argument_list|,
+name|sc
+operator|->
+name|sc_rootmount
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Run timeout. 	 */
