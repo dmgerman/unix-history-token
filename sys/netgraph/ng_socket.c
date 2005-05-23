@@ -1164,9 +1164,6 @@ decl_stmt|;
 name|linker_file_t
 name|lf
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 comment|/* Not found, try to load it as a loadable module. */
 name|snprintf
 argument_list|(
