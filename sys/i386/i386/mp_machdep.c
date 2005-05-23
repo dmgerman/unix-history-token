@@ -2659,9 +2659,6 @@ name|mpbiosreason
 decl_stmt|;
 endif|#
 directive|endif
-name|u_long
-name|mpbioswarmvec
-decl_stmt|;
 name|struct
 name|pcpu
 modifier|*
@@ -2674,14 +2671,17 @@ decl_stmt|;
 name|uintptr_t
 name|kptbase
 decl_stmt|;
+name|u_int32_t
+name|mpbioswarmvec
+decl_stmt|;
 name|int
-name|i
-decl_stmt|,
-name|pg
-decl_stmt|,
 name|apic_id
 decl_stmt|,
 name|cpu
+decl_stmt|,
+name|i
+decl_stmt|,
+name|pg
 decl_stmt|;
 name|POSTCODE
 argument_list|(
@@ -2710,7 +2710,7 @@ operator|=
 operator|*
 operator|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|WARMBOOT_OFF
@@ -3141,7 +3141,7 @@ expr_stmt|;
 comment|/* restore the warmstart vector */
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|WARMBOOT_OFF

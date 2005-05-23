@@ -1917,7 +1917,7 @@ operator||
 name|PSL_D
 argument_list|)
 expr_stmt|;
-comment|/* Disable local apic just to be sure. */
+comment|/* Disable local APIC just to be sure. */
 name|lapic_disable
 argument_list|()
 expr_stmt|;
@@ -2343,18 +2343,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_char
-name|mpbiosreason
-decl_stmt|;
-name|u_int32_t
-name|mpbioswarmvec
-decl_stmt|;
-name|int
-name|apic_id
-decl_stmt|,
-name|cpu
-decl_stmt|,
-name|i
+name|vm_offset_t
+name|va
+init|=
+name|boot_address
+operator|+
+name|KERNBASE
 decl_stmt|;
 name|u_int64_t
 modifier|*
@@ -2366,12 +2360,18 @@ decl_stmt|,
 modifier|*
 name|pt2
 decl_stmt|;
-name|vm_offset_t
-name|va
-init|=
-name|boot_address
-operator|+
-name|KERNBASE
+name|u_int32_t
+name|mpbioswarmvec
+decl_stmt|;
+name|int
+name|apic_id
+decl_stmt|,
+name|cpu
+decl_stmt|,
+name|i
+decl_stmt|;
+name|u_char
+name|mpbiosreason
 decl_stmt|;
 name|mtx_init
 argument_list|(
@@ -2633,12 +2633,12 @@ argument_list|)
 expr_stmt|;
 comment|/* 'warm-start' */
 comment|/* start each AP */
+for|for
+control|(
 name|cpu
 operator|=
 literal|0
-expr_stmt|;
-for|for
-control|(
+operator|,
 name|apic_id
 operator|=
 literal|0
@@ -3385,6 +3385,7 @@ if|if
 condition|(
 name|smp_started
 condition|)
+block|{
 name|smp_tlb_shootdown
 argument_list|(
 name|IPI_INVLTLB
@@ -3394,6 +3395,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3436,6 +3438,7 @@ if|if
 condition|(
 name|smp_started
 condition|)
+block|{
 name|smp_tlb_shootdown
 argument_list|(
 name|IPI_INVLRNG
@@ -3445,6 +3448,7 @@ argument_list|,
 name|addr2
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3460,6 +3464,7 @@ if|if
 condition|(
 name|smp_started
 condition|)
+block|{
 name|smp_targeted_tlb_shootdown
 argument_list|(
 name|mask
@@ -3471,6 +3476,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3489,6 +3495,7 @@ if|if
 condition|(
 name|smp_started
 condition|)
+block|{
 name|smp_targeted_tlb_shootdown
 argument_list|(
 name|mask
@@ -3500,6 +3507,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3521,6 +3529,7 @@ if|if
 condition|(
 name|smp_started
 condition|)
+block|{
 name|smp_targeted_tlb_shootdown
 argument_list|(
 name|mask
@@ -3532,6 +3541,7 @@ argument_list|,
 name|addr2
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
