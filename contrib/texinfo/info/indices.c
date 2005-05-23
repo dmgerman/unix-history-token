@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* indices.c -- deal with an Info file index.    $Id: indices.c,v 1.2 2003/02/11 16:39:06 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* indices.c -- deal with an Info file index.    $Id: indices.c,v 1.5 2004/04/11 17:56:45 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2002, 2003, 2004 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -183,19 +183,15 @@ specifier|static
 name|void
 name|add_index_to_index_nodenames
 parameter_list|(
-name|array
-parameter_list|,
-name|node
-parameter_list|)
 name|REFERENCE
 modifier|*
 modifier|*
 name|array
-decl_stmt|;
+parameter_list|,
 name|NODE
 modifier|*
 name|node
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -340,12 +336,10 @@ modifier|*
 modifier|*
 name|info_indices_of_window
 parameter_list|(
-name|window
-parameter_list|)
 name|WINDOW
 modifier|*
 name|window
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE_BUFFER
 modifier|*
@@ -375,12 +369,10 @@ modifier|*
 modifier|*
 name|info_indices_of_file_buffer
 parameter_list|(
-name|file_buffer
-parameter_list|)
 name|FILE_BUFFER
 modifier|*
 name|file_buffer
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -713,23 +705,17 @@ begin_function
 name|void
 name|do_info_index_search
 parameter_list|(
-name|window
-parameter_list|,
-name|count
-parameter_list|,
-name|search_string
-parameter_list|)
 name|WINDOW
 modifier|*
 name|window
-decl_stmt|;
+parameter_list|,
 name|int
 name|count
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|search_string
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE_BUFFER
 modifier|*
@@ -792,10 +778,18 @@ argument_list|)
 expr_stmt|;
 name|window_message_in_echo_area
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 literal|"Finding index entries..."
 argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|index_index
@@ -815,10 +809,18 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 literal|"No indices found."
 argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -846,6 +848,10 @@ name|info_read_maybe_completing
 argument_list|(
 name|window
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 literal|"Index entry: "
@@ -1016,18 +1022,14 @@ begin_function
 name|int
 name|index_entry_exists
 parameter_list|(
-name|window
-parameter_list|,
-name|string
-parameter_list|)
 name|WINDOW
 modifier|*
 name|window
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1283,10 +1285,18 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 literal|"No previous index search string."
 argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1300,10 +1310,18 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 literal|"No index entries."
 argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1486,15 +1504,23 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
-literal|"No %sindex entries containing \"%s\"."
+literal|"No %sindex entries containing `%s'."
 argument_list|)
 argument_list|,
 name|index_offset
 operator|>
 literal|0
 condition|?
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 literal|"more "
@@ -1605,7 +1631,7 @@ name|show_index_match
 condition|)
 block|{
 name|int
-name|j
+name|k
 decl_stmt|,
 name|ls
 decl_stmt|,
@@ -1642,15 +1668,15 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|j
+name|k
 operator|=
 literal|0
 init|;
-name|j
+name|k
 operator|<
 name|ls
 condition|;
-name|j
+name|k
 operator|++
 control|)
 if|if
@@ -1659,7 +1685,7 @@ name|upper
 condition|)
 name|match
 index|[
-name|j
+name|k
 operator|+
 name|start
 index|]
@@ -1668,7 +1694,7 @@ name|info_tolower
 argument_list|(
 name|match
 index|[
-name|j
+name|k
 operator|+
 name|start
 index|]
@@ -1677,7 +1703,7 @@ expr_stmt|;
 else|else
 name|match
 index|[
-name|j
+name|k
 operator|+
 name|start
 index|]
@@ -1686,7 +1712,7 @@ name|info_toupper
 argument_list|(
 name|match
 index|[
-name|j
+name|k
 operator|+
 name|start
 index|]
@@ -1702,10 +1728,16 @@ name|format
 operator|=
 name|replace_in_documentation
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
-literal|"Found \"%s\" in %s. (`\\[next-index-match]' tries to find next.)"
+literal|"Found `%s' in %s. (`\\[next-index-match]' tries to find next.)"
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|window_message_in_echo_area
@@ -1714,6 +1746,10 @@ name|format
 argument_list|,
 name|match
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|name
 argument_list|)
 expr_stmt|;
@@ -1752,6 +1788,10 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|msg_cant_file_node
 argument_list|,
 name|index_index
@@ -1875,17 +1915,13 @@ modifier|*
 modifier|*
 name|apropos_in_all_indices
 parameter_list|(
-name|search_string
-parameter_list|,
-name|inform
-parameter_list|)
 name|char
 modifier|*
 name|search_string
-decl_stmt|;
+parameter_list|,
 name|int
 name|inform
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2194,12 +2230,18 @@ name|inform
 condition|)
 name|message_in_echo_area
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
-literal|"Scanning indices of \"%s\"..."
+literal|"Scanning indices of `%s'..."
 argument_list|)
 argument_list|,
 name|files_name
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|this_index
@@ -2422,19 +2464,17 @@ define|#
 directive|define
 name|APROPOS_NONE
 define|\
-value|N_("No available info files have \"%s\" in their indices.")
+value|N_("No available info files have `%s' in their indices.")
 end_define
 
 begin_function
 name|void
 name|info_apropos
 parameter_list|(
-name|string
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 name|REFERENCE
 modifier|*
@@ -2455,18 +2495,22 @@ condition|(
 operator|!
 name|apropos_list
 condition|)
-block|{
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 name|APROPOS_NONE
 argument_list|)
 argument_list|,
 name|string
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 specifier|register
@@ -2556,6 +2600,10 @@ name|info_read_in_echo_area
 argument_list|(
 name|window
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 literal|"Index apropos: "
@@ -2614,18 +2662,22 @@ condition|(
 operator|!
 name|apropos_list
 condition|)
-block|{
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 name|APROPOS_NONE
 argument_list|)
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 specifier|register
@@ -2641,12 +2693,20 @@ argument_list|()
 expr_stmt|;
 name|printf_to_message_buffer
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
-literal|"\n* Menu: Nodes whoses indices contain \"%s\":\n"
+literal|"\n* Menu: Nodes whose indices contain `%s':\n"
 argument_list|)
 argument_list|,
 name|line
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|line_buffer
@@ -2737,6 +2797,10 @@ argument_list|(
 literal|"%s\n"
 argument_list|,
 name|line_buffer
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

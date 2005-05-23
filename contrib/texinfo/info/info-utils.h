@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info-utils.h -- Exported functions and variables from info-utils.c.    $Id: info-utils.h,v 1.2 2003/03/06 23:21:48 karl Exp $        Copyright (C) 1993, 1996, 1998, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info-utils.h -- Exported functions and variables from info-utils.c.    $Id: info-utils.h,v 1.4 2004/04/11 17:56:45 karl Exp $        Copyright (C) 1993, 1996, 1998, 2002, 2003, 2004 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -62,6 +62,10 @@ decl_stmt|,
 name|end
 decl_stmt|;
 comment|/* Offsets within the containing node of LABEL. */
+name|int
+name|line_number
+decl_stmt|;
+comment|/* Specific line number a menu item points to.  */
 block|}
 name|REFERENCE
 typedef|;
@@ -109,7 +113,14 @@ end_comment
 begin_function_decl
 name|void
 name|info_parse_node
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|string
+parameter_list|,
+name|int
+name|newlines_okay
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -123,7 +134,11 @@ name|REFERENCE
 modifier|*
 modifier|*
 name|info_menu_of_node
-parameter_list|()
+parameter_list|(
+name|NODE
+modifier|*
+name|node
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -137,7 +152,11 @@ name|REFERENCE
 modifier|*
 modifier|*
 name|info_xrefs_of_node
-parameter_list|()
+parameter_list|(
+name|NODE
+modifier|*
+name|node
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -151,7 +170,11 @@ name|REFERENCE
 modifier|*
 modifier|*
 name|info_xrefs
-parameter_list|()
+parameter_list|(
+name|SEARCH_BINDING
+modifier|*
+name|binding
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -164,7 +187,16 @@ specifier|extern
 name|REFERENCE
 modifier|*
 name|info_get_labeled_reference
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|label
+parameter_list|,
+name|REFERENCE
+modifier|*
+modifier|*
+name|references
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -178,7 +210,11 @@ name|REFERENCE
 modifier|*
 modifier|*
 name|info_menu_items
-parameter_list|()
+parameter_list|(
+name|SEARCH_BINDING
+modifier|*
+name|binding
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -191,7 +227,17 @@ name|REFERENCE
 modifier|*
 modifier|*
 name|info_concatenate_references
-parameter_list|()
+parameter_list|(
+name|REFERENCE
+modifier|*
+modifier|*
+name|ref1
+parameter_list|,
+name|REFERENCE
+modifier|*
+modifier|*
+name|ref2
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -204,7 +250,11 @@ specifier|extern
 name|REFERENCE
 modifier|*
 name|info_copy_reference
-parameter_list|()
+parameter_list|(
+name|REFERENCE
+modifier|*
+name|src
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -216,7 +266,12 @@ begin_function_decl
 specifier|extern
 name|void
 name|info_free_references
-parameter_list|()
+parameter_list|(
+name|REFERENCE
+modifier|*
+modifier|*
+name|references
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -227,7 +282,11 @@ end_comment
 begin_function_decl
 name|void
 name|canonicalize_whitespace
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|string
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -240,7 +299,14 @@ specifier|extern
 name|char
 modifier|*
 name|printed_representation
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|char
+name|character
+parameter_list|,
+name|int
+name|hpos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -253,7 +319,11 @@ specifier|extern
 name|char
 modifier|*
 name|filename_non_directory
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|pathname
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -265,7 +335,11 @@ begin_function_decl
 specifier|extern
 name|int
 name|internal_info_node_p
-parameter_list|()
+parameter_list|(
+name|NODE
+modifier|*
+name|node
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -277,7 +351,15 @@ begin_function_decl
 specifier|extern
 name|void
 name|name_internal_node
-parameter_list|()
+parameter_list|(
+name|NODE
+modifier|*
+name|node
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -290,7 +372,11 @@ specifier|extern
 name|WINDOW
 modifier|*
 name|get_internal_info_window
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -303,7 +389,11 @@ specifier|extern
 name|WINDOW
 modifier|*
 name|get_window_of_node
-parameter_list|()
+parameter_list|(
+name|NODE
+modifier|*
+name|node
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -316,7 +406,13 @@ specifier|extern
 name|void
 name|info_parse_label
 parameter_list|(
-comment|/* label, node */
+name|char
+modifier|*
+name|label
+parameter_list|,
+name|NODE
+modifier|*
+name|node
 parameter_list|)
 function_decl|;
 end_function_decl

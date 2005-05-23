@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* footnotes.c -- Some functions for manipulating footnotes.    $Id: footnotes.c,v 1.2 2002/11/06 00:41:17 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* footnotes.c -- Some functions for manipulating footnotes.    $Id: footnotes.c,v 1.4 2004/04/11 17:56:45 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2002, 2004 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -31,12 +31,24 @@ literal|"*Footnotes*"
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|NODE
+modifier|*
+name|make_footnotes_node
+parameter_list|(
+name|NODE
+modifier|*
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
 name|FOOTNOTE_HEADER_FORMAT
 define|\
-value|"*** Footnotes appearing in the node \"%s\" ***\n"
+value|"*** Footnotes appearing in the node `%s' ***\n"
 end_define
 
 begin_comment
@@ -48,7 +60,9 @@ specifier|static
 name|WINDOW
 modifier|*
 name|find_footnotes_window
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|WINDOW
 modifier|*
@@ -111,12 +125,10 @@ name|NODE
 modifier|*
 name|make_footnotes_node
 parameter_list|(
-name|node
-parameter_list|)
 name|NODE
 modifier|*
 name|node
-decl_stmt|;
+parameter_list|)
 block|{
 name|NODE
 modifier|*
@@ -620,12 +632,10 @@ begin_function
 name|int
 name|info_get_or_remove_footnotes
 parameter_list|(
-name|window
-parameter_list|)
 name|WINDOW
 modifier|*
 name|window
-decl_stmt|;
+parameter_list|)
 block|{
 name|WINDOW
 modifier|*
@@ -772,6 +782,10 @@ name|auto_footnotes_p
 condition|)
 name|inform_in_echo_area
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 literal|"Footnotes could not be displayed"
@@ -916,7 +930,15 @@ name|FN_UNFOUND
 case|:
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|msg_no_foot_node
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -925,7 +947,15 @@ name|FN_UNABLE
 case|:
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|msg_win_too_small
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* html.h -- declarations for html-related utilities.    $Id: html.h,v 1.4 2002/10/31 22:08:23 karl Exp $     Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* html.h -- declarations for html-related utilities.    $Id: html.h,v 1.6 2004/11/30 02:03:23 karl Exp $     Copyright (C) 1999, 2000, 2002, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -32,6 +32,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|tag
+decl_stmt|;
+name|char
+modifier|*
+name|attribs
 decl_stmt|;
 block|}
 name|HSTACK
@@ -68,7 +72,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|html_output_head
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -82,7 +88,8 @@ name|char
 modifier|*
 name|escape_string
 parameter_list|(
-comment|/* char * */
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -96,7 +103,12 @@ specifier|extern
 name|void
 name|insert_html_tag
 parameter_list|(
-comment|/* int start_or_end, char *tag */
+name|int
+name|start_or_end
+parameter_list|,
+name|char
+modifier|*
+name|tag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -110,13 +122,19 @@ specifier|extern
 name|void
 name|add_link
 parameter_list|(
-comment|/* char *node, char *attributes */
+name|char
+modifier|*
+name|nodename
+parameter_list|,
+name|char
+modifier|*
+name|attributes
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Escape URL-special characters as %xy.  */
+comment|/* Escape URL-special characters.  */
 end_comment
 
 begin_function_decl
@@ -124,7 +142,12 @@ specifier|extern
 name|void
 name|add_escaped_anchor_name
 parameter_list|(
-comment|/* char *name */
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|old
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -138,7 +161,12 @@ specifier|extern
 name|void
 name|add_anchor_name
 parameter_list|(
-comment|/* nodename, href */
+name|char
+modifier|*
+name|nodename
+parameter_list|,
+name|int
+name|href
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -148,7 +176,27 @@ specifier|extern
 name|void
 name|add_url_name
 parameter_list|(
-comment|/* nodename, href */
+name|char
+modifier|*
+name|nodename
+parameter_list|,
+name|int
+name|href
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|add_nodename_to_filename
+parameter_list|(
+name|char
+modifier|*
+name|nodename
+parameter_list|,
+name|int
+name|href
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -159,20 +207,74 @@ name|char
 modifier|*
 name|nodename_to_filename
 parameter_list|(
-comment|/* nodename */
+name|char
+modifier|*
+name|nodename
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|add_nodename_to_filename
+name|int
+name|rollback_empty_tag
 parameter_list|(
-comment|/*nodename, href */
+name|char
+modifier|*
+name|tag
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VA_FPRINTF
+argument_list|)
+operator|&&
+name|__STDC__
+end_if
+
+begin_function_decl
+specifier|extern
+name|void
+name|insert_html_tag_with_attribute
+parameter_list|(
+name|int
+name|start_or_end
+parameter_list|,
+name|char
+modifier|*
+name|tag
+parameter_list|,
+name|char
+modifier|*
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|void
+name|insert_html_tag_with_attribute
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* doc.h -- Structures associating function pointers with documentation.    $Id: doc.h,v 1.1 2002/08/25 23:38:38 karl Exp $     Copyright (C) 1993, 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* doc.h -- Structures associating function pointers with documentation.    $Id: doc.h,v 1.3 2004/04/11 17:56:45 karl Exp $     Copyright (C) 1993, 2001, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_if
@@ -130,76 +130,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|function_documentation
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|key_documentation
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|pretty_keyname
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|pretty_keyseq
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|where_is
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|replace_in_documentation
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|info_document_key
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|dump_map_to_message_buffer
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Under the old key-binding system, an info command is specified by    the pointer to its function.  Under the new INFOKEY binding system,     it is specified by a pointer to the command's FUNCTION_DOC structure,    defined in doc.c, from which the pointer to the function can be    easily divined using the InfoFunction() extractor.  */
 end_comment
@@ -220,6 +150,10 @@ name|InfoCommand
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* The cast to VFunction * prevents pgcc from complaining about    dereferencing a void *.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -227,7 +161,7 @@ name|InfoFunction
 parameter_list|(
 name|ic
 parameter_list|)
-value|((ic) ? (ic)->func : NULL)
+value|((ic) ? (ic)->func : (VFunction *) NULL)
 end_define
 
 begin_define
@@ -305,6 +239,16 @@ begin_comment
 comment|/* !INFOKEY */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"infomap.h"
+end_include
+
+begin_comment
+comment|/* for Keymap.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -319,7 +263,11 @@ specifier|extern
 name|char
 modifier|*
 name|function_name
-parameter_list|()
+parameter_list|(
+name|InfoCommand
+modifier|*
+name|cmd
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -328,7 +276,11 @@ specifier|extern
 name|InfoCommand
 modifier|*
 name|named_function
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -340,6 +292,107 @@ end_endif
 begin_comment
 comment|/* NAMED_FUNCTIONS */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|function_documentation
+parameter_list|(
+name|InfoCommand
+modifier|*
+name|cmd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|key_documentation
+parameter_list|(
+name|char
+name|key
+parameter_list|,
+name|Keymap
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|pretty_keyname
+parameter_list|(
+name|unsigned
+name|char
+name|key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|pretty_keyseq
+parameter_list|(
+name|char
+modifier|*
+name|keyseq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|where_is
+parameter_list|(
+name|Keymap
+name|map
+parameter_list|,
+name|InfoCommand
+modifier|*
+name|cmd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|replace_in_documentation
+parameter_list|(
+name|char
+modifier|*
+name|string
+parameter_list|,
+name|int
+name|help_is_only_window_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|dump_map_to_message_buffer
+parameter_list|(
+name|char
+modifier|*
+name|prefix
+parameter_list|,
+name|Keymap
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

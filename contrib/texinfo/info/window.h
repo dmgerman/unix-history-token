@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* window.h -- Structure and flags used in manipulating Info windows.    $Id: window.h,v 1.1 2002/08/25 23:38:38 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* window.h -- Structure and flags used in manipulating Info windows.    $Id: window.h,v 1.3 2004/04/11 17:56:46 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 1997, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"nodes.h"
+file|"infomap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"infomap.h"
+file|"nodes.h"
 end_include
 
 begin_comment
@@ -146,6 +146,34 @@ expr_stmt|;
 comment|/* What gets saved. */
 block|}
 name|WINDOW_STATE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Structure defining the current state of an incremental search. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|WINDOW_STATE_DECL
+expr_stmt|;
+comment|/* The node, pagetop and point. */
+name|int
+name|search_index
+decl_stmt|;
+comment|/* Offset of the last char in the search string. */
+name|int
+name|direction
+decl_stmt|;
+comment|/* The direction that this search is heading in. */
+name|int
+name|failing
+decl_stmt|;
+comment|/* Whether or not this search failed. */
+block|}
+name|SEARCH_STATE
 typedef|;
 end_typedef
 
@@ -293,7 +321,11 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_make_modeline
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -305,7 +337,13 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_initialize_windows
-parameter_list|()
+parameter_list|(
+name|int
+name|width
+parameter_list|,
+name|int
+name|height
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -318,7 +356,11 @@ specifier|extern
 name|WINDOW
 modifier|*
 name|window_make_window
-parameter_list|()
+parameter_list|(
+name|NODE
+modifier|*
+name|node
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -330,7 +372,11 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_delete_window
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -354,7 +400,15 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_set_node_of_window
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|,
+name|NODE
+modifier|*
+name|node
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -366,7 +420,13 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_new_screen_size
-parameter_list|()
+parameter_list|(
+name|int
+name|width
+parameter_list|,
+name|int
+name|height
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -378,7 +438,14 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_change_window_height
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|,
+name|int
+name|amount
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -390,7 +457,11 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_adjust_pagetop
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -416,7 +487,10 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_tile_windows
-parameter_list|()
+parameter_list|(
+name|int
+name|style
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -428,7 +502,11 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_toggle_wrap
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -440,7 +518,14 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_mark_chain
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|chain
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -452,7 +537,14 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_unmark_chain
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|chain
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -464,7 +556,14 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_goto_percentage
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|,
+name|int
+name|percent
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -477,7 +576,19 @@ specifier|extern
 name|NODE
 modifier|*
 name|build_message_node
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -489,7 +600,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|initialize_message_buffer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -501,7 +614,23 @@ begin_function_decl
 specifier|extern
 name|void
 name|printf_to_message_buffer
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|,
+name|void
+modifier|*
+name|arg3
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -514,7 +643,9 @@ specifier|extern
 name|NODE
 modifier|*
 name|message_buffer_to_node
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -526,7 +657,9 @@ begin_function_decl
 specifier|extern
 name|int
 name|message_buffer_length_this_line
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -538,7 +671,14 @@ begin_function_decl
 specifier|extern
 name|int
 name|pad_to
-parameter_list|()
+parameter_list|(
+name|int
+name|count
+parameter_list|,
+name|char
+modifier|*
+name|string
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -550,7 +690,19 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_message_in_echo_area
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -562,7 +714,19 @@ begin_function_decl
 specifier|extern
 name|void
 name|message_in_echo_area
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -570,7 +734,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|unmessage_in_echo_area
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -582,7 +748,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|window_clear_echo_area
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -594,7 +762,11 @@ begin_function_decl
 specifier|extern
 name|int
 name|window_physical_lines
-parameter_list|()
+parameter_list|(
+name|NODE
+modifier|*
+name|node
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -606,7 +778,11 @@ begin_function_decl
 specifier|extern
 name|void
 name|calculate_line_starts
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -618,7 +794,11 @@ begin_function_decl
 specifier|extern
 name|void
 name|recalculate_line_starts
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -630,7 +810,13 @@ begin_function_decl
 specifier|extern
 name|int
 name|character_width
-parameter_list|()
+parameter_list|(
+name|int
+name|character
+parameter_list|,
+name|int
+name|hpos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -642,7 +828,14 @@ begin_function_decl
 specifier|extern
 name|int
 name|string_width
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|string
+parameter_list|,
+name|int
+name|hpos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -654,7 +847,11 @@ begin_function_decl
 specifier|extern
 name|int
 name|window_line_of_point
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -666,7 +863,11 @@ begin_function_decl
 specifier|extern
 name|int
 name|window_get_goal_column
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -678,7 +879,11 @@ begin_function_decl
 specifier|extern
 name|int
 name|window_get_cursor_column
-parameter_list|()
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -686,16 +891,37 @@ begin_comment
 comment|/* Get and Set the node, pagetop, and point of WINDOW. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|window_get_state
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|,
+name|SEARCH_STATE
+modifier|*
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|window_set_state
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|WINDOW
+modifier|*
+name|window
+parameter_list|,
+name|SEARCH_STATE
+modifier|*
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Count the number of characters in LINE that precede the printed column    offset of GOAL. */
@@ -705,7 +931,14 @@ begin_function_decl
 specifier|extern
 name|int
 name|window_chars_to_goal
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|line
+parameter_list|,
+name|int
+name|goal
+parameter_list|)
 function_decl|;
 end_function_decl
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.h -- Header file which includes all of the other headers.    $Id: info.h,v 1.2 2003/02/11 16:39:06 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info.h -- Header file which includes all of the other headers.    $Id: info.h,v 1.4 2004/04/11 17:56:45 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2001, 2002, 2003, 2004 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -460,7 +460,31 @@ begin_function_decl
 specifier|extern
 name|void
 name|info_error
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|add_file_directory_to_path
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -615,19 +639,6 @@ end_decl_stmt
 begin_escape
 end_escape
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|filename_non_directory
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Found in info-utils.c. */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -637,17 +648,25 @@ name|INFOKEY
 argument_list|)
 end_if
 
+begin_comment
+comment|/* Found in variables.c. */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
 name|set_variable_to_value
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|value
+parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Found in variables.c. */
-end_comment
 
 begin_endif
 endif|#
@@ -658,50 +677,26 @@ begin_comment
 comment|/* INFOKEY */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BUILDING_LIBRARY
-argument_list|)
-end_if
+begin_comment
+comment|/* Found in m-x.c.  */
+end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|int
-name|info_windows_initialized_p
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Found in session.c */
-end_comment
-
-begin_comment
-comment|/* Found in window.c. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|message_in_echo_area
-argument_list|()
-decl_stmt|,
-name|unmessage_in_echo_area
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !BUILDING_LIBRARY */
-end_comment
+name|char
+modifier|*
+name|read_function_name
+parameter_list|(
+name|char
+modifier|*
+name|prompt
+parameter_list|,
+name|WINDOW
+modifier|*
+name|window
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
