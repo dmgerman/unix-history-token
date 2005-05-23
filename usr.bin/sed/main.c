@@ -478,7 +478,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Eae:f:i:n"
+literal|"Eae:f:i:ln"
 argument_list|)
 operator|)
 operator|!=
@@ -581,6 +581,24 @@ case|:
 name|inplace
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+if|if
+condition|(
+name|setlinebuf
+argument_list|(
+name|stdout
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|warnx
+argument_list|(
+literal|"setlinebuf() failed"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -711,9 +729,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sed script [-Ean] [-i extension] [file ...]"
+literal|"usage: sed script [-Ealn] [-i extension] [file ...]"
 argument_list|,
-literal|"       sed [-an] [-i extension] [-e script] ... [-f script_file] ... [file ...]"
+literal|"       sed [-Ealn] [-i extension] [-e script] ... [-f script_file] ... [file ...]"
 argument_list|)
 expr_stmt|;
 name|exit
