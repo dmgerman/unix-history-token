@@ -8076,6 +8076,11 @@ literal|0
 argument_list|)
 condition|)
 return|return;
+comment|/* make RXMAC really SIMPLEX */
+name|macc
+operator||=
+name|HME_MAC_RXCFG_ME
+expr_stmt|;
 if|if
 condition|(
 name|reenable
@@ -8269,6 +8274,8 @@ operator|(
 name|HME_MAC_RXCFG_ENABLE
 operator||
 name|HME_MAC_RXCFG_HENABLE
+operator||
+name|HME_MAC_RXCFG_ME
 operator|)
 argument_list|)
 expr_stmt|;
