@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* macro.h -- declarations for macro.c.    $Id: macro.h,v 1.1 2002/08/25 23:38:38 karl Exp $     Copyright (C) 1998, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    */
+comment|/* macro.h -- declarations for macro.c.    $Id: macro.h,v 1.2 2004/04/11 17:56:47 karl Exp $     Copyright (C) 1998, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    */
 end_comment
 
 begin_ifndef
@@ -135,7 +135,11 @@ begin_function_decl
 specifier|extern
 name|void
 name|execute_macro
-parameter_list|()
+parameter_list|(
+name|MACRO_DEF
+modifier|*
+name|def
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -144,7 +148,11 @@ specifier|extern
 name|MACRO_DEF
 modifier|*
 name|find_macro
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -153,7 +161,11 @@ specifier|extern
 name|char
 modifier|*
 name|expand_macro
-parameter_list|()
+parameter_list|(
+name|MACRO_DEF
+modifier|*
+name|def
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -162,7 +174,14 @@ specifier|extern
 name|ITEXT
 modifier|*
 name|remember_itext
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|pointer
+parameter_list|,
+name|int
+name|offset
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -170,7 +189,11 @@ begin_function_decl
 specifier|extern
 name|void
 name|forget_itext
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|pointer
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -178,7 +201,14 @@ begin_function_decl
 specifier|extern
 name|void
 name|maybe_write_itext
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|pointer
+parameter_list|,
+name|int
+name|offset
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -186,7 +216,17 @@ begin_function_decl
 specifier|extern
 name|void
 name|write_region_to_macro_output
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|string
+parameter_list|,
+name|int
+name|start
+parameter_list|,
+name|int
+name|end
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -194,7 +234,10 @@ begin_function_decl
 specifier|extern
 name|void
 name|append_to_expansion_output
-parameter_list|()
+parameter_list|(
+name|int
+name|offset
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -202,7 +245,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|me_append_before_this_command
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -210,7 +255,27 @@ begin_function_decl
 specifier|extern
 name|void
 name|me_execute_string
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|execution_string
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|me_execute_string_keep_state
+parameter_list|(
+name|char
+modifier|*
+name|execution_string
+parameter_list|,
+name|char
+modifier|*
+name|append_string
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -219,7 +284,11 @@ specifier|extern
 name|char
 modifier|*
 name|alias_expand
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|tok
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -227,7 +296,11 @@ begin_function_decl
 specifier|extern
 name|int
 name|enclosure_command
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|tok
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -235,7 +308,16 @@ begin_function_decl
 specifier|extern
 name|void
 name|enclosure_expand
-parameter_list|()
+parameter_list|(
+name|int
+name|arg
+parameter_list|,
+name|int
+name|start
+parameter_list|,
+name|int
+name|end
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -247,13 +329,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|cm_macro
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|,
 name|cm_rmacro
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|,
 name|cm_unmacro
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -261,12 +349,55 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|cm_alias
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|,
 name|cm_definfoenclose
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|array_len
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|array
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|free_array
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|array
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|get_brace_args
+parameter_list|(
+name|int
+name|quote_single
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* system.h: system-dependent declarations; include this first.    $Id: system.h,v 1.5 2003/03/22 17:40:39 karl Exp $     Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* system.h: system-dependent declarations; include this first.    $Id: system.h,v 1.12 2004/04/26 13:56:57 karl Exp $     Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -63,7 +63,15 @@ specifier|extern
 name|char
 modifier|*
 name|substring
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -73,28 +81,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*<unistd.h> should be included before any preprocessor test    of _POSIX_VERSION.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_UNISTD_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_UNISTD_H */
+comment|/* We follow the order of header inclusion from Autoconf's    ac_includes_default, more or less.  */
 end_comment
 
 begin_include
@@ -204,24 +191,6 @@ parameter_list|)
 value|(String)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_LC_MESSAGES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LC_MESSAGES
-value|(-1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -270,11 +239,11 @@ begin_comment
 comment|/* Don't use bcopy!  Use memmove if source and destination may overlap,    memcpy otherwise.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|HAVE_STRING_H
-end_ifdef
+end_if
 
 begin_if
 if|#
@@ -302,16 +271,59 @@ directive|include
 file|<string.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_STRINGS_H
+end_if
+
+begin_comment
+comment|/* Always include<strings.h> if we have it.  This is because that's    what Autoconf's AC_CHECK_DECL does.  On IBM AIX 4.2, strncasecmp is    only declared in strings.h.  */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<strings.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_STRNCASECMP
+operator|||
+operator|!
+name|HAVE_STRCASECMP
+end_if
+
+begin_include
+include|#
+directive|include
+file|"strcase.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_MEMCHR
+end_if
 
 begin_function_decl
 name|char
@@ -325,6 +337,31 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*<unistd.h> defines _POSIX_VERSION, but Paul Eggert points out that is    only supposed to be used in user code, not other system headers.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_UNISTD_H */
+end_comment
 
 begin_include
 include|#
@@ -893,13 +930,24 @@ name|DEFAULT_INFOPATH
 value|"c:/djgpp/info;/usr/local/info;/usr/info;."
 end_define
 
+begin_comment
+comment|/* DJGPP supports /dev/null, which is okay for Unix aficionados,        shell scripts and Makefiles, but interactive DOS die-hards        would probably want to have NUL as well.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALSO_NULL_DEVICE
+value|"NUL"
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* !__DJGPP__ */
+comment|/* O_BINARY&& !__DJGPP__ */
 end_comment
 
 begin_define
@@ -925,7 +973,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__DJGPP__ */
+comment|/* O_BINARY&& !__DJGPP__ */
 end_comment
 
 begin_define
@@ -948,7 +996,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__MSDOS__ */
+comment|/* O_BINARY&& !__MSDOS__ */
 end_comment
 
 begin_define
@@ -986,17 +1034,77 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__MSDOS__ */
+comment|/* O_BINARY&& !__MSDOS__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__CYGWIN__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_TMPDIR
+value|"/tmp/"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_SEP
+value|":"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* O_BINARY&& !__CYGWIN__ */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SET_BINARY
-parameter_list|(
-name|f
-parameter_list|)
-value|do {if (!isatty(f)) setmode(f,O_BINARY);} while(0)
+name|DEFAULT_TMPDIR
+value|"c:/"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_SEP
+value|";"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* O_BINARY&& !__CYGWIN__ */
+end_comment
+
+begin_comment
+comment|/* Back to any O_BINARY system.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FILENAME_CMP
+value|strcasecmp
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILENAME_CMPN
+value|strncasecmp
 end_define
 
 begin_define
@@ -1016,21 +1124,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|IS_SLASH
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) == '/' || (c) == '\\')
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_DRIVE
 parameter_list|(
 name|n
 parameter_list|)
 value|((n)[0]&& (n)[1] == ':')
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_SLASH
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == '/' || (c) == '\\')
 end_define
 
 begin_define
@@ -1046,22 +1154,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|FILENAME_CMP
-value|strcasecmp
+name|PIPE_USE_FORK
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|FILENAME_CMPN
-value|strncasecmp
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_SEP
-value|";"
+name|SET_BINARY
+parameter_list|(
+name|f
+parameter_list|)
+value|do {if (!isatty(f)) setmode(f,O_BINARY);} while(0)
 end_define
 
 begin_define
@@ -1071,27 +1175,13 @@ name|STRIP_DOT_EXE
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_TMPDIR
-value|"c:/"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIPE_USE_FORK
-value|0
-end_define
-
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* not O_BINARY */
+comment|/* not O_BINARY, i.e., Unix */
 end_comment
 
 begin_define
@@ -1240,26 +1330,14 @@ comment|/* not O_BINARY */
 end_comment
 
 begin_comment
-comment|/* DJGPP supports /dev/null, which is okay for Unix aficionados,    shell scripts and Makefiles, but interactive DOS die-hards    would probably want to have NUL as well.  */
+comment|/* Everything but DJGPP.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__DJGPP__
-end_ifdef
-
-begin_define
-define|#
-directive|define
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ALSO_NULL_DEVICE
-value|"NUL"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_define
 define|#
@@ -1299,7 +1377,12 @@ name|struct
 name|passwd
 modifier|*
 name|getpwnam
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1312,11 +1395,18 @@ specifier|extern
 name|void
 modifier|*
 name|xmalloc
-argument_list|()
+argument_list|(
+name|size_t
+argument_list|)
 decl_stmt|,
 modifier|*
 name|xrealloc
-argument_list|()
+argument_list|(
+name|void
+operator|*
+argument_list|,
+name|size_t
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1325,7 +1415,11 @@ specifier|extern
 name|char
 modifier|*
 name|xstrdup
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1333,7 +1427,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|xexit
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1351,6 +1447,32 @@ parameter_list|,
 name|s2
 parameter_list|)
 value|(strcmp (s1, s2) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRCASEEQ
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
+value|(strcasecmp (s1, s2) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRNCASEEQ
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|,
+name|n
+parameter_list|)
+value|(strncasecmp (s1, s2, n) == 0)
 end_define
 
 begin_comment

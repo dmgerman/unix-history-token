@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lang.h -- declarations for language codes etc.    $Id: lang.h,v 1.4 2003/05/01 00:05:27 karl Exp $     Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
+comment|/* lang.h -- declarations for language codes etc.    $Id: lang.h,v 1.6 2004/04/11 17:56:47 karl Exp $     Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
 end_comment
 
 begin_ifndef
@@ -357,7 +357,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The document encoding. This is usefull if we working e.g.  * with german Texinfo so we can produce correct german umlaut  * while creating output (--no-headers ASCII like).  */
+comment|/* The document encoding. This is useful to produce true 8-bit    characters according to the @documentencoding.  */
 end_comment
 
 begin_typedef
@@ -413,6 +413,18 @@ begin_decl_stmt
 specifier|extern
 name|encoding_code_type
 name|document_encoding_code
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If an encoding is not supported, just keep it as a string.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|unknown_encoding
 decl_stmt|;
 end_decl_stmt
 
@@ -479,7 +491,7 @@ name|char
 modifier|*
 name|encname
 decl_stmt|;
-comment|/* encoding name like "ISO-8859-1", valid in Emacs */
+comment|/* encoding name like "iso-8859-1", valid in                             HTML and Emacs */
 name|iso_map_type
 modifier|*
 name|isotab
@@ -513,10 +525,14 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|cm_documentlanguage
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|,
 name|cm_documentencoding
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -527,13 +543,28 @@ end_comment
 begin_decl_stmt
 name|void
 name|cm_accent
-argument_list|()
+argument_list|(
+name|int
+name|arg
+argument_list|)
 decl_stmt|,
 name|cm_special_char
-argument_list|()
+argument_list|(
+name|int
+name|arg
+argument_list|)
 decl_stmt|,
 name|cm_dotless
-argument_list|()
+argument_list|(
+name|int
+name|arg
+argument_list|,
+name|int
+name|start
+argument_list|,
+name|int
+name|end
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -541,24 +572,89 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|cm_accent_umlaut
-argument_list|()
+argument_list|(
+name|int
+name|arg
+argument_list|,
+name|int
+name|start
+argument_list|,
+name|int
+name|end
+argument_list|)
 decl_stmt|,
 name|cm_accent_acute
-argument_list|()
+argument_list|(
+name|int
+name|arg
+argument_list|,
+name|int
+name|start
+argument_list|,
+name|int
+name|end
+argument_list|)
 decl_stmt|,
 name|cm_accent_cedilla
-argument_list|()
+argument_list|(
+name|int
+name|arg
+argument_list|,
+name|int
+name|start
+argument_list|,
+name|int
+name|end
+argument_list|)
 decl_stmt|,
 name|cm_accent_hat
-argument_list|()
+argument_list|(
+name|int
+name|arg
+argument_list|,
+name|int
+name|start
+argument_list|,
+name|int
+name|end
+argument_list|)
 decl_stmt|,
 name|cm_accent_grave
-argument_list|()
+argument_list|(
+name|int
+name|arg
+argument_list|,
+name|int
+name|start
+argument_list|,
+name|int
+name|end
+argument_list|)
 decl_stmt|,
 name|cm_accent_tilde
-argument_list|()
+argument_list|(
+name|int
+name|arg
+argument_list|,
+name|int
+name|start
+argument_list|,
+name|int
+name|end
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|current_document_encoding
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

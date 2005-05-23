@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.c -- Display nodes of Info files in multiple windows.    $Id: info.c,v 1.7 2003/05/19 13:10:59 karl Exp $     Copyright (C) 1993, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info.c -- Display nodes of Info files in multiple windows.    $Id: info.c,v 1.11 2004/04/11 17:56:45 karl Exp $     Copyright (C) 1993, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -261,12 +261,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Non-zero means don't remove ANSI escape sequences from man pages.  */
+comment|/* Non-zero means don't remove ANSI escape sequences.  */
 end_comment
 
 begin_decl_stmt
 name|int
 name|raw_escapes_p
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Non-zero means print the absolute location of the file to be loaded.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|print_where_p
 init|=
 literal|0
 decl_stmt|;
@@ -397,6 +410,17 @@ name|IDXSRCH_OPTION
 block|}
 block|,
 block|{
+literal|"location"
+block|,
+literal|0
+block|,
+operator|&
+name|print_where_p
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"node"
 block|,
 literal|1
@@ -425,6 +449,17 @@ operator|&
 name|raw_escapes_p
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"no-raw-escapes"
+block|,
+literal|0
+block|,
+operator|&
+name|raw_escapes_p
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -490,6 +525,17 @@ block|,
 literal|1
 block|}
 block|,
+block|{
+literal|"where"
+block|,
+literal|0
+block|,
+operator|&
+name|print_where_p
+block|,
+literal|1
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|__MSDOS__
@@ -535,7 +581,7 @@ name|char
 modifier|*
 name|short_options
 init|=
-literal|"d:n:f:ho:ORsb"
+literal|"d:n:f:ho:ORswb"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,7 +596,7 @@ name|char
 modifier|*
 name|short_options
 init|=
-literal|"d:n:f:ho:ORs"
+literal|"d:n:f:ho:ORws"
 decl_stmt|;
 end_decl_stmt
 
@@ -579,7 +625,9 @@ begin_function_decl
 specifier|static
 name|void
 name|info_short_help
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -587,15 +635,9 @@ begin_function_decl
 specifier|static
 name|void
 name|init_messages
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
+parameter_list|(
 name|void
-name|add_file_directory_to_path
-parameter_list|()
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -626,18 +668,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|getopt_long_index
@@ -661,6 +699,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ENABLE_NLS
 comment|/* Set the text message domain.  */
 name|bindtextdomain
 argument_list|(
@@ -674,6 +715,8 @@ argument_list|(
 name|PACKAGE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|init_messages
 argument_list|()
 expr_stmt|;
@@ -855,6 +898,15 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+comment|/* For compatibility with man, -w is --where.  */
+case|case
+literal|'w'
+case|:
+name|print_where_p
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|__MSDOS__
@@ -1012,14 +1064,17 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
+name|puts
+argument_list|(
+literal|"Copyright (C) 2004 Free Software Foundation, Inc."
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
+literal|"There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
 argument_list|)
-argument_list|,
-literal|"2003"
 argument_list|)
 expr_stmt|;
 name|xexit
@@ -1150,6 +1205,34 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INFODIR2
+comment|/* from the Makefile, too */
+ifdef|#
+directive|ifdef
+name|INFODIR
+if|if
+condition|(
+operator|!
+name|STREQ
+argument_list|(
+name|INFODIR
+argument_list|,
+name|INFODIR2
+argument_list|)
+condition|)
+endif|#
+directive|endif
+name|info_add_path
+argument_list|(
+name|INFODIR2
+argument_list|,
+name|INFOPATH_PREPEND
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 comment|/* If the user specified a particular filename, add the path of that      file to the contents of INFOPATH. */
@@ -1210,11 +1293,19 @@ condition|)
 name|info_error
 argument_list|(
 name|info_recent_file_error
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|msg_cant_find_node
 argument_list|,
 name|user_nodenames
@@ -1225,6 +1316,8 @@ literal|0
 index|]
 else|:
 literal|"Top"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|xexit
@@ -1246,6 +1339,22 @@ argument_list|(
 name|initial_node
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|print_where_p
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|user_filename
+condition|?
+name|user_filename
+else|:
+literal|"unknown?!"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|user_output_filename
@@ -1277,10 +1386,12 @@ expr_stmt|;
 block|}
 comment|/* If there are arguments remaining, they are the names of menu items      in sequential info files starting from the first one loaded.  That      file name is either "dir", or the contents of user_filename if one      was specified. */
 block|{
+specifier|const
 name|char
 modifier|*
 name|errstr
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|errarg1
 decl_stmt|,
@@ -1321,6 +1432,65 @@ name|initial_node
 operator|=
 name|new_initial_node
 expr_stmt|;
+if|if
+condition|(
+name|print_where_p
+condition|)
+block|{
+if|if
+condition|(
+name|initial_node
+operator|->
+name|parent
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|initial_node
+operator|->
+name|parent
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|initial_node
+operator|->
+name|filename
+operator|&&
+operator|!
+name|is_dir_name
+argument_list|(
+name|filename_non_directory
+argument_list|(
+name|initial_node
+operator|->
+name|filename
+argument_list|)
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|initial_node
+operator|->
+name|filename
+argument_list|)
+expr_stmt|;
+else|else
+name|xexit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|xexit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If the user specified that this node should be output, then do that        now.  Otherwise, start the Info session with this node.  Or act        accordingly if the initial node was not found.  */
 if|if
 condition|(
@@ -1347,6 +1517,10 @@ expr_stmt|;
 else|else
 name|info_error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|errstr
 argument_list|,
 name|errarg1
@@ -1365,6 +1539,10 @@ name|begin_info_session_with_error
 argument_list|(
 name|initial_node
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|errstr
 argument_list|,
 name|errarg1
@@ -1604,12 +1782,10 @@ begin_function
 name|void
 name|add_file_directory_to_path
 parameter_list|(
-name|filename
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1724,26 +1900,18 @@ begin_function
 name|void
 name|info_error
 parameter_list|(
-name|format
-parameter_list|,
-name|arg1
-parameter_list|,
-name|arg2
-parameter_list|)
 name|char
 modifier|*
 name|format
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|arg1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|void
+modifier|*
 name|arg2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|info_error_was_printed
 operator|=
@@ -1861,7 +2029,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1874,7 +2042,9 @@ begin_function
 specifier|static
 name|void
 name|info_short_help
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -1906,7 +2076,7 @@ name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Usage: %s [OPTION]... [MENU-ITEM...]\n\ \n\ Read documentation in Info format.\n\ \n\ Options:\n\       --apropos=STRING         look up STRING in all indices of all manuals.\n\   -d, --directory=DIR          add DIR to INFOPATH.\n\       --dribble=FILENAME       remember user keystrokes in FILENAME.\n\   -f, --file=FILENAME          specify Info file to visit.\n\   -h, --help                   display this help and exit.\n\       --index-search=STRING    go to node pointed by index entry STRING.\n\   -n, --node=NODENAME          specify nodes in first visited Info file.\n\   -o, --output=FILENAME        output selected nodes to FILENAME.\n\   -R, --raw-escapes            don't remove ANSI escapes from man pages.\n\       --restore=FILENAME       read initial keystrokes from FILENAME.\n\   -O, --show-options, --usage  go to command-line options node.\n%s\       --subnodes               recursively output menu items.\n\       --vi-keys                use vi-like and less-like key bindings.\n\       --version                display version information and exit.\n\ \n\ The first non-option argument, if present, is the menu entry to start from;\n\ it is searched for in all `dir' files along INFOPATH.\n\ If it is not present, info merges all `dir' files and shows the result.\n\ Any remaining arguments are treated as the names of menu\n\ items relative to the initial node visited.\n\ \n\ Examples:\n\   info                       show top-level dir menu\n\   info emacs                 start at emacs node from top-level dir\n\   info emacs buffers         start at buffers node within emacs manual\n\   info --show-options emacs  start at node with emacs' command line options\n\   info -f ./foo.info         show file ./foo.info, not searching dir\n\ "
+literal|"\ Usage: %s [OPTION]... [MENU-ITEM...]\n\ \n\ Read documentation in Info format.\n\ \n\ Options:\n\       --apropos=STRING         look up STRING in all indices of all manuals.\n\   -d, --directory=DIR          add DIR to INFOPATH.\n\       --dribble=FILENAME       remember user keystrokes in FILENAME.\n\   -f, --file=FILENAME          specify Info file to visit.\n\   -h, --help                   display this help and exit.\n\       --index-search=STRING    go to node pointed by index entry STRING.\n\   -n, --node=NODENAME          specify nodes in first visited Info file.\n\   -o, --output=FILENAME        output selected nodes to FILENAME.\n\   -R, --raw-escapes            output \"raw\" ANSI escapes (default).\n\       --no-raw-escapes         output escapes as literal text.\n\       --restore=FILENAME       read initial keystrokes from FILENAME.\n\   -O, --show-options, --usage  go to command-line options node.\n%s\       --subnodes               recursively output menu items.\n\   -w, --where, --location      print physical location of Info file.\n\       --vi-keys                use vi-like and less-like key bindings.\n\       --version                display version information and exit.\n\ \n\ The first non-option argument, if present, is the menu entry to start from;\n\ it is searched for in all `dir' files along INFOPATH.\n\ If it is not present, info merges all `dir' files and shows the result.\n\ Any remaining arguments are treated as the names of menu\n\ items relative to the initial node visited.\n\ \n\ Examples:\n\   info                       show top-level dir menu\n\   info emacs                 start at emacs node from top-level dir\n\   info emacs buffers         start at buffers node within emacs manual\n\   info --show-options emacs  start at node with emacs' command line options\n\   info -f ./foo.info         show file ./foo.info, not searching dir\n\ "
 argument_list|)
 argument_list|,
 name|program_name
@@ -2069,7 +2239,9 @@ begin_function
 specifier|static
 name|void
 name|init_messages
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|msg_cant_find_node
 operator|=

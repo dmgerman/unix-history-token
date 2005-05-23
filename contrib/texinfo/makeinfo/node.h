@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* node.h -- declarations for Node.    $Id: node.h,v 1.1 2002/08/25 23:38:39 karl Exp $     Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* node.h -- declarations for Node.    $Id: node.h,v 1.2 2004/04/11 17:56:47 karl Exp $     Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|NODE_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"xref.h"
+end_include
 
 begin_comment
 comment|/* The various references that we know about. */
@@ -77,6 +83,10 @@ name|int
 name|number
 decl_stmt|;
 comment|/* Number for this node, relevant for HTML                            splitting -- from use+define order, not just                            define. */
+name|int
+name|order
+decl_stmt|;
+comment|/* The order of the tag, starting from zero.  */
 name|char
 modifier|*
 name|html_fname
@@ -239,6 +249,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Node order counter.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|node_order
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The current node's section level. */
 end_comment
 
@@ -268,7 +289,11 @@ specifier|extern
 name|TAG_ENTRY
 modifier|*
 name|find_node
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -298,7 +323,14 @@ specifier|extern
 name|char
 modifier|*
 name|glean_node_from_menu
-parameter_list|()
+parameter_list|(
+name|int
+name|remember_ref
+parameter_list|,
+name|enum
+name|reftype
+name|ref_type
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -310,7 +342,18 @@ begin_function_decl
 specifier|extern
 name|void
 name|remember_node_reference
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|node
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+name|enum
+name|reftype
+name|type
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -322,7 +365,12 @@ begin_function_decl
 specifier|extern
 name|void
 name|set_current_output_filename
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fname
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -335,7 +383,104 @@ specifier|extern
 name|char
 modifier|*
 name|expand_node_name
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|number_of_node
+parameter_list|(
+name|char
+modifier|*
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_tag_table
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|write_tag_table
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|free_node_references
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|free_node_node_references
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|validate_file
+parameter_list|(
+name|TAG_ENTRY
+modifier|*
+name|tag_table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|split_file
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|clean_old_split_files
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 end_function_decl
 

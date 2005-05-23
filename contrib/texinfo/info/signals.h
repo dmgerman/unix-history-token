@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* signals.h -- header to include system dependent signal definitions.    $Id: signals.h,v 1.1 2002/08/25 23:38:38 karl Exp $     Copyright (C) 1993, 1994, 1995, 1997, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* signals.h -- header to include system dependent signal definitions.    $Id: signals.h,v 1.2 2004/04/11 17:56:46 karl Exp $     Copyright (C) 1993, 1994, 1995, 1997, 2002, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -93,6 +93,10 @@ begin_comment
 comment|/* !HAVE_SIGPROCMASK&& !sigmask */
 end_comment
 
+begin_comment
+comment|/* Without SA_NOCLDSTOP, sigset_t might end up being undefined even    though we have sigprocmask, on older systems, according to Nelson    Beebe.  The test is from coreutils/sort.c, via Paul Eggert.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -100,6 +104,12 @@ operator|!
 name|defined
 argument_list|(
 name|HAVE_SIGPROCMASK
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|SA_NOCLDSTOP
 argument_list|)
 end_if
 

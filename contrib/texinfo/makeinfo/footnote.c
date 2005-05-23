@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* footnote.c -- footnotes for Texinfo.    $Id: footnote.c,v 1.4 2002/11/05 03:04:26 karl Exp $     Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* footnote.c -- footnotes for Texinfo.    $Id: footnote.c,v 1.7 2004/04/11 17:56:47 karl Exp $     Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -30,7 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"node.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xml.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xref.h"
 end_include
 
 begin_comment
@@ -126,6 +138,9 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_escape
+end_escape
+
 begin_comment
 comment|/* Set the footnote style based on the style identifier in STRING. */
 end_comment
@@ -134,12 +149,10 @@ begin_function
 name|int
 name|set_footnote_style
 parameter_list|(
-name|string
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -186,7 +199,9 @@ end_function
 begin_function
 name|void
 name|cm_footnotestyle
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -273,23 +288,18 @@ comment|/* A method for remembering footnotes.  Note that this list gets output 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|remember_note
 parameter_list|(
-name|marker
-parameter_list|,
-name|note
-parameter_list|)
 name|char
 modifier|*
 name|marker
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|note
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|FN
 modifier|*
@@ -341,7 +351,7 @@ name|footnote_count
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* How to get rid of existing footnotes. */
@@ -351,7 +361,9 @@ begin_function
 specifier|static
 name|void
 name|free_pending_notes
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FN
 modifier|*
@@ -419,7 +431,9 @@ end_comment
 begin_function
 name|void
 name|cm_footnote
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -754,6 +768,7 @@ condition|(
 name|html
 condition|)
 block|{
+comment|/* Hyperlink also serves as an anchor (mnemonic: fnd is footnote          definition.)  */
 name|add_html_elt
 argument_list|(
 literal|"<a rel=\"footnote\" href="
@@ -761,7 +776,9 @@ argument_list|)
 expr_stmt|;
 name|add_word_args
 argument_list|(
-literal|"\"#fn-%d\"><sup>%s</sup></a>"
+literal|"\"#fn-%d\" name=\"fnd-%d\"><sup>%s</sup></a>"
+argument_list|,
+name|current_footnote_number
 argument_list|,
 name|current_footnote_number
 argument_list|,
@@ -910,7 +927,9 @@ end_comment
 begin_function
 name|void
 name|output_pending_notes
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FN
 modifier|*
@@ -929,23 +948,34 @@ condition|(
 name|html
 condition|)
 block|{
-comment|/* The type= attribute is used just in case some weirdo browser          out there doesn't use numbers by default.  Since we rely on the          browser to produce the footnote numbers, we need to make sure          they ARE indeed numbers.  Pre-HTML4 browsers seem to not care.  */
-name|add_word
+name|add_html_block_elt
 argument_list|(
-literal|"<div class=\"footnote\">\n<hr>\n<h4>"
+literal|"<div class=\"footnote\">\n<hr>\n"
 argument_list|)
 expr_stmt|;
+comment|/* We add an anchor here so @printindex can refer to this point          (as the node name) for entries defined in footnotes.  */
+if|if
+condition|(
+operator|!
+name|splitting
+condition|)
 name|add_word
 argument_list|(
+literal|"<a name=\"texinfo-footnotes-in-document\"></a>"
+argument_list|)
+expr_stmt|;
+name|add_word_args
+argument_list|(
+literal|"<h4>%s</h4>"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|_
 argument_list|(
 literal|"Footnotes"
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|add_word
-argument_list|(
-literal|"</h4>\n<ol type=\"1\">\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1028,6 +1058,11 @@ break|break;
 block|}
 comment|/* Handle the footnotes in reverse order. */
 block|{
+name|int
+name|save_in_fixed_width_font
+init|=
+name|in_fixed_width_font
+decl_stmt|;
 name|FN
 modifier|*
 modifier|*
@@ -1086,6 +1121,10 @@ name|indented_fill
 operator|=
 literal|1
 expr_stmt|;
+name|in_fixed_width_font
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1105,13 +1144,32 @@ name|html
 condition|)
 block|{
 comment|/* Make the text of every footnote begin a separate paragraph.  */
+name|add_html_block_elt
+argument_list|(
+literal|"<p class=\"footnote\"><small>"
+argument_list|)
+expr_stmt|;
+comment|/* Make footnote number a link to its definition.  */
 name|add_word_args
 argument_list|(
-literal|"<li><a name=\"fn-%d\"></a>\n<p>"
+literal|"[<a name=\"fn-%d\" href=\"#fnd-%d\">%d</a>]"
 argument_list|,
 name|footnote
 operator|->
 name|number
+argument_list|,
+name|footnote
+operator|->
+name|number
+argument_list|,
+name|footnote
+operator|->
+name|number
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"</small> "
 argument_list|)
 expr_stmt|;
 name|already_outputting_pending_notes
@@ -1203,7 +1261,7 @@ name|html
 condition|)
 name|add_word
 argument_list|(
-literal|"</ol><hr></div>"
+literal|"<hr></div>"
 argument_list|)
 expr_stmt|;
 name|close_paragraph
@@ -1213,6 +1271,10 @@ name|free
 argument_list|(
 name|array
 argument_list|)
+expr_stmt|;
+name|in_fixed_width_font
+operator|=
+name|save_in_fixed_width_font
 expr_stmt|;
 block|}
 name|free_pending_notes
