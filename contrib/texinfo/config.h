@@ -71,6 +71,17 @@ comment|/* #undef HAVE_ARGZ_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `asprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ASPRINTF
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `bzero' function. */
 end_comment
 
@@ -90,6 +101,39 @@ comment|/* #undef HAVE_DCGETTEXT */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `feof_unlocked', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_FEOF_UNLOCKED
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `fgets_unlocked', and to 0 if    you don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_FGETS_UNLOCKED
+value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `getc_unlocked', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_GETC_UNLOCKED
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `getenv', and to 0 if you don't.    */
 end_comment
 
@@ -101,18 +145,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if this function is declared. */
+comment|/* Define to 1 if you have the declaration of `memchr', and to 0 if you don't.    */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_DECL_STRCASECMP
+name|HAVE_DECL_MEMCHR
 value|1
 end_define
 
 begin_comment
-comment|/* Define if this function is declared. */
+comment|/* Define to 1 if you have the declaration of `strcoll', and to 0 if you    don't. */
 end_comment
 
 begin_define
@@ -123,7 +167,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if this function is declared. */
+comment|/* Define to 1 if you have the declaration of `strerror', and to 0 if you    don't. */
 end_comment
 
 begin_define
@@ -134,14 +178,25 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if this function is declared. */
+comment|/* Define to 1 if you have the declaration of `_snprintf', and to 0 if you    don't. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_DECL_STRNCASECMP
-value|1
+name|HAVE_DECL__SNPRINTF
+value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `_snwprintf', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL__SNWPRINTF
+value|0
 end_define
 
 begin_comment
@@ -164,23 +219,15 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `feof_unlocked' function. */
+comment|/* Define to 1 if you have the `fwprintf' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_FEOF_UNLOCKED
+name|HAVE_FWPRINTF
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `fgets_unlocked' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FGETS_UNLOCKED */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `getcwd' function. */
@@ -190,17 +237,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETCWD
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `getc_unlocked' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETC_UNLOCKED
 value|1
 end_define
 
@@ -279,9 +315,23 @@ begin_comment
 comment|/* Define if you have the iconv() function. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_ICONV
+value|1
+end_define
+
 begin_comment
-comment|/* #undef HAVE_ICONV */
+comment|/* Define if you have the 'intmax_t' type in<stdint.h> or<inttypes.h>. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTMAX_T
+value|1
+end_define
 
 begin_comment
 comment|/* Define if<inttypes.h> exists and doesn't clash with<sys/types.h>. */
@@ -362,6 +412,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_LOCALE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the 'long double' type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LONG_DOUBLE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the 'long long' type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LONG_LONG
 value|1
 end_define
 
@@ -478,6 +550,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if your printf() function supports format strings with positions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_POSIX_PRINTF
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `putenv' function. */
 end_comment
 
@@ -562,6 +645,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SIGSETMASK
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `snprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SNPRINTF
 value|1
 end_define
 
@@ -906,6 +1000,39 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the 'wchar_t' type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCHAR_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `wcslen' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCSLEN
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the 'wint_t' type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WINT_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `__argz_count' function. */
 end_comment
 
@@ -949,9 +1076,12 @@ begin_comment
 comment|/* Define as const if the declaration of iconv() needs const. */
 end_comment
 
-begin_comment
-comment|/* #undef ICONV_CONST */
-end_comment
+begin_define
+define|#
+directive|define
+name|ICONV_CONST
+value|const
+end_define
 
 begin_comment
 comment|/* Define if integer division by zero raises signal SIGFPE. */
@@ -1005,7 +1135,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"GNU Texinfo 4.6"
+value|"GNU Texinfo 4.8"
 end_define
 
 begin_comment
@@ -1027,7 +1157,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.6"
+value|"4.8"
 end_define
 
 begin_comment
@@ -1050,7 +1180,15 @@ value|void
 end_define
 
 begin_comment
-comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time.         STACK_DIRECTION> 0 => grows toward higher addresses         STACK_DIRECTION< 0 => grows toward lower addresses         STACK_DIRECTION = 0 => direction of growth unknown */
+comment|/* Define as the maximum value of type 'size_t', if the system doesn't define    it. */
+end_comment
+
+begin_comment
+comment|/* #undef SIZE_MAX */
+end_comment
+
+begin_comment
+comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time. 	STACK_DIRECTION> 0 => grows toward higher addresses 	STACK_DIRECTION< 0 => grows toward lower addresses 	STACK_DIRECTION = 0 => direction of growth unknown */
 end_comment
 
 begin_comment
@@ -1092,7 +1230,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.6"
+value|"4.8"
 end_define
 
 begin_comment
@@ -1128,12 +1266,23 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
-comment|/* Define as `__inline' if that's what the C compiler calls it, or to nothing    if it is not supported. */
+comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
 
 begin_comment
 comment|/* #undef inline */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to rpl_mkstemp if the replacement function should be used. */
@@ -1149,6 +1298,22 @@ end_comment
 
 begin_comment
 comment|/* #undef off_t */
+end_comment
+
+begin_comment
+comment|/* Define as the type of the result of subtracting two pointers, if the system    doesn't define it. */
+end_comment
+
+begin_comment
+comment|/* #undef ptrdiff_t */
+end_comment
+
+begin_comment
+comment|/* Define to empty if the C compiler doesn't support this keyword. */
+end_comment
+
+begin_comment
+comment|/* #undef signed */
 end_comment
 
 begin_comment
