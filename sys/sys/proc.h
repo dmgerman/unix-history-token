@@ -1166,12 +1166,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_WAKEPROC0
+name|TDP_UNUSED10
 value|0x00000400
 end_define
 
 begin_comment
-comment|/* Wants caller to wakeup(&proc0) */
+comment|/* --available -- */
 end_comment
 
 begin_define
@@ -3920,6 +3920,15 @@ name|struct
 name|proc
 modifier|*
 name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kick_proc0
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

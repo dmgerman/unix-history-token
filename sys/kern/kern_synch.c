@@ -1658,12 +1658,9 @@ name|p_sflag
 operator||=
 name|PS_SWAPINREQ
 expr_stmt|;
-comment|/* 			 * due to a LOR between sched_lock and 			 * the sleepqueue chain locks, delay 			 * wakeup proc0 until thread leaves 			 * critical region. 			 */
-name|curthread
-operator|->
-name|td_pflags
-operator||=
-name|TDP_WAKEPROC0
+comment|/* 			 * due to a LOR between sched_lock and 			 * the sleepqueue chain locks, use 			 * lower level scheduling functions. 			 */
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 block|}
