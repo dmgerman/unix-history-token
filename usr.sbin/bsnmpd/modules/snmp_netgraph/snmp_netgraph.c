@@ -465,7 +465,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
+name|uint64_t
 name|ngtype_tick
 decl_stmt|;
 end_decl_stmt
