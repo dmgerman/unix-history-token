@@ -594,6 +594,10 @@ operator|-
 literal|1
 condition|)
 block|{
+name|timeout
+operator|=
+literal|10
+expr_stmt|;
 comment|/* try to get a delay from the environment */
 if|if
 condition|(
@@ -627,23 +631,11 @@ name|ep
 condition|)
 name|timeout
 operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|timeout
-operator|==
-operator|-
-literal|1
-condition|)
-comment|/* all else fails */
-name|timeout
-operator|=
 literal|10
 expr_stmt|;
+comment|/* Unparseable? Set default! */
+block|}
+block|}
 name|kernelname
 operator|=
 name|getenv
@@ -699,6 +691,13 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|timeout
+operator|>=
+literal|0
+condition|)
+block|{
 name|otime
 operator|=
 name|time
@@ -830,6 +829,14 @@ name|ntime
 expr_stmt|;
 block|}
 block|}
+block|}
+else|else
+block|{
+name|yes
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|yes
@@ -934,7 +941,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*       * Try $bootfile, then try our builtin default      */
+comment|/*      * Try $bootfile, then try our builtin default      */
 if|if
 condition|(
 operator|(
@@ -1085,7 +1092,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to find the /etc/fstab file on the filesystem (rootdev),  * which should be be the root filesystem, and parse it to find   * out what the kernel ought to think the root filesystem is.  *  * If we're successful, set vfs.root.mountfrom to<vfstype>:<path>  * so that the kernel can tell both which VFS and which node to use  * to mount the device.  If this variable's already set, don't  * overwrite it.  */
+comment|/*  * Try to find the /etc/fstab file on the filesystem (rootdev),  * which should be be the root filesystem, and parse it to find  * out what the kernel ought to think the root filesystem is.  *  * If we're successful, set vfs.root.mountfrom to<vfstype>:<path>  * so that the kernel can tell both which VFS and which node to use  * to mount the device.  If this variable's already set, don't  * overwrite it.  */
 end_comment
 
 begin_function
