@@ -353,7 +353,7 @@ begin_define
 define|#
 directive|define
 name|TCP_MAX_SACK
-value|3
+value|4
 end_define
 
 begin_comment
