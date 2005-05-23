@@ -64,7 +64,6 @@ comment|/**  * Initialize the argument array object.  The array is initially  * 
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ArgArray_Init
 parameter_list|(

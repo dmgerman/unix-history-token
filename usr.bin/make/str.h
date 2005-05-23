@@ -92,6 +92,16 @@ end_comment
 
 begin_function_decl
 name|void
+name|ArgArray_Init
+parameter_list|(
+name|ArgArray
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ArgArray_Done
 parameter_list|(
 name|ArgArray
