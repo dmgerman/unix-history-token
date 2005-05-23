@@ -4959,6 +4959,9 @@ decl_stmt|,
 modifier|*
 name|res
 decl_stmt|;
+name|int
+name|ecode
+decl_stmt|;
 name|q
 operator|=
 name|NULL
@@ -5009,24 +5012,18 @@ expr_stmt|;
 comment|/*AF_INET6*/
 name|hints
 operator|.
-name|ai_flags
-operator|=
-name|AI_NUMERICHOST
-expr_stmt|;
-name|hints
-operator|.
 name|ai_socktype
 operator|=
 name|SOCK_DGRAM
 expr_stmt|;
 comment|/*dummy*/
-if|if
-condition|(
+name|ecode
+operator|=
 name|getaddrinfo
 argument_list|(
 name|s
 argument_list|,
-literal|"0"
+name|NULL
 argument_list|,
 operator|&
 name|hints
@@ -5034,6 +5031,10 @@ argument_list|,
 operator|&
 name|res
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ecode
 operator|!=
 literal|0
 operator|||
@@ -5062,9 +5063,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: bad value\n"
+literal|"%s: %s\n"
 argument_list|,
 name|s
+argument_list|,
+name|gai_strerror
+argument_list|(
+name|ecode
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
