@@ -553,6 +553,10 @@ name|char
 modifier|*
 name|meta
 decl_stmt|;
+name|Boolean
+name|unsetenv
+decl_stmt|;
+comment|/* unsetenv("ENV") before exec */
 block|}
 struct|;
 end_struct
@@ -796,7 +800,7 @@ literal|"meta='"
 name|SH_META
 literal|"' builtins='"
 name|SH_BUILTINS
-literal|"'"
+literal|"' unsetenv=T"
 block|,
 name|NULL
 block|}
@@ -1744,19 +1748,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|DEFSHELL
-operator|==
-literal|2
-comment|/* 	 * Turn off ENV to make ksh happier. 	 */
-name|unsetenv
-argument_list|(
-literal|"ENV"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1934,6 +1925,20 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|commandShell
+operator|->
+name|unsetenv
+condition|)
+block|{
+comment|/* for the benfit of ksh */
+name|unsetenv
+argument_list|(
+literal|"ENV"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8540,6 +8545,17 @@ operator|->
 name|meta
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  unsetenv=%d\n"
+argument_list|,
+name|sh
+operator|->
+name|unsetenv
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9149,6 +9165,51 @@ name|estrdup
 argument_list|(
 name|eq
 argument_list|)
+expr_stmt|;
+operator|*
+name|fullSpec
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|keyw
+argument_list|,
+literal|"unsetenv"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|sh
+operator|->
+name|unsetenv
+operator|=
+operator|(
+operator|*
+name|eq
+operator|==
+literal|'Y'
+operator|||
+operator|*
+name|eq
+operator|==
+literal|'y'
+operator|||
+operator|*
+name|eq
+operator|==
+literal|'T'
+operator|||
+operator|*
+name|eq
+operator|==
+literal|'t'
+operator|)
 expr_stmt|;
 operator|*
 name|fullSpec
