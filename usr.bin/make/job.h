@@ -144,17 +144,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Boolean
-name|Job_ParseShell
-parameter_list|(
-specifier|const
-name|char
-index|[]
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|Job_Finish
 parameter_list|(
@@ -184,15 +173,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|Proc_Init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|Shell_Init
 parameter_list|(
 name|void
 parameter_list|)

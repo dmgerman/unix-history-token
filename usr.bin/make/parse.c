@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"shell.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"str.h"
 end_include
 
@@ -3394,7 +3400,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|Job_ParseShell
+name|Shell_Parse
 argument_list|(
 name|line
 argument_list|)
