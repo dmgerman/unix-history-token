@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -310,6 +316,17 @@ name|mdproc
 modifier|*
 name|mdp2
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|RFPROC
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|pcb1
 operator|=
 name|td1
@@ -1217,12 +1234,6 @@ name|td
 operator|->
 name|td_kstack
 operator|+
-name|td
-operator|->
-name|td_kstack_pages
-operator|*
-name|PAGE_SIZE
-operator|+
 name|USPACE_UNDEF_STACK_TOP
 expr_stmt|;
 comment|/* Setup to release sched_lock in fork_exit(). */
@@ -1450,12 +1461,6 @@ operator|)
 name|td
 operator|->
 name|td_kstack
-operator|+
-name|td
-operator|->
-name|td_kstack_pages
-operator|*
-name|PAGE_SIZE
 operator|+
 name|USPACE_SVC_STACK_TOP
 operator|-
