@@ -2864,8 +2864,11 @@ operator|.
 name|ar_date
 argument_list|)
 argument_list|,
-literal|"%lld"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ts
 argument_list|)
 expr_stmt|;
