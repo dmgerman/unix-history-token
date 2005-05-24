@@ -302,13 +302,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|Var_Value
 parameter_list|(
 specifier|const
 name|char
-modifier|*
+index|[]
 parameter_list|,
 name|struct
 name|GNode

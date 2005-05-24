@@ -9210,6 +9210,7 @@ name|curTarg
 argument_list|)
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|file

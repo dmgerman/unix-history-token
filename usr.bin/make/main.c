@@ -2502,6 +2502,7 @@ init|=
 name|TRUE
 decl_stmt|;
 comment|/* FALSE if all targets up to date */
+specifier|const
 name|char
 modifier|*
 name|p

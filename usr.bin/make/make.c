@@ -787,6 +787,7 @@ modifier|*
 name|pgn
 decl_stmt|;
 comment|/* the parent node */
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -797,6 +798,7 @@ modifier|*
 name|ln
 decl_stmt|;
 comment|/* Element in parents and iParents lists */
+specifier|const
 name|char
 modifier|*
 name|cpref
@@ -1214,6 +1216,7 @@ name|GNode
 modifier|*
 name|cgn
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|child
