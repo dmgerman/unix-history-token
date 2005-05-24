@@ -3697,6 +3697,13 @@ expr_stmt|;
 block|}
 name|checkTuner
 label|:
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BKTR_OVERRIDE_TUNER
+argument_list|)
 if|if
 condition|(
 name|card
@@ -3709,6 +3716,13 @@ name|bktr
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|bktr
+operator|->
+name|bt848_tuner
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|bktr
@@ -3735,6 +3749,8 @@ goto|goto
 name|checkDBX
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/* look for a tuner */
 name|tuner_i2c_address
 operator|=
