@@ -345,6 +345,8 @@ literal|"ldr	%1, [%2]\n"
 literal|"cmp	%1, %3\n"
 literal|"streq	%4, [%2]\n"
 literal|"2:\n"
+literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
 literal|"moveq	%1, #1\n"
 literal|"movne	%1, #0\n"
 operator|:
@@ -415,6 +417,8 @@ literal|"ldr	%1, [%2]\n"
 literal|"add	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
+literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
 operator|:
 literal|"=r"
 operator|(
@@ -470,6 +474,8 @@ literal|"ldr	%1, [%2]\n"
 literal|"sub	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
+literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
 operator|:
 literal|"=r"
 operator|(
@@ -525,6 +531,8 @@ literal|"ldr	%1, [%2]\n"
 literal|"orr	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
+literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
 operator|:
 literal|"=r"
 operator|(
@@ -580,6 +588,8 @@ literal|"ldr	%1, [%2]\n"
 literal|"bic	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
+literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
 operator|:
 literal|"=r"
 operator|(
