@@ -2547,7 +2547,7 @@ name|int
 name|vbisize
 decl_stmt|;
 comment|/* Number of bytes in the circular buffer */
-name|u_long
+name|uint32_t
 name|vbi_sequence_number
 decl_stmt|;
 comment|/* sequence number for VBI */
