@@ -2885,6 +2885,10 @@ name|environ
 argument_list|)
 expr_stmt|;
 comment|/* As well as the lists of variables for 				 * parsing arguments */
+comment|/* 	 * Initialize the Shell so that we have a shell for != assignments 	 * on the command line. 	 */
+name|Shell_Init
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Initialize various variables. 	 *	MAKE also gets this name, for compatibility 	 *	.MAKEFLAGS gets set to the empty string just in case. 	 *	MFLAGS also gets initialized empty, for compatibility. 	 */
 name|Var_SetGlobal
 argument_list|(
