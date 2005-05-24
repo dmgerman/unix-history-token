@@ -1137,33 +1137,29 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|arm9_cache_syncI
+name|arm9_icache_sync_all
 block|,
 comment|/* icache_sync_all	*/
-name|arm9_cache_syncI_rng
+name|arm9_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
-comment|/* ...cache in write-though mode... */
-name|arm9_cache_flushD
+name|arm9_dcache_wbinv_all
 block|,
 comment|/* dcache_wbinv_all	*/
-name|arm9_cache_flushD_rng
+name|arm9_dcache_wbinv_range
 block|,
 comment|/* dcache_wbinv_range	*/
-name|arm9_cache_flushD_rng
+comment|/*XXX*/
+name|arm9_dcache_wbinv_range
 block|,
 comment|/* dcache_inv_range	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
+name|arm9_dcache_wb_range
 block|,
 comment|/* dcache_wb_range	*/
-name|arm9_cache_flushID
+name|arm9_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all	*/
-name|arm9_cache_flushID_rng
+name|arm9_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_range	*/
 comment|/* Other functions */
@@ -3164,6 +3160,42 @@ expr_stmt|;
 comment|/* V4 or higher */
 name|get_cachetype_cp15
 argument_list|()
+expr_stmt|;
+name|arm9_dcache_sets_inc
+operator|=
+literal|1U
+operator|<<
+name|arm_dcache_l2_linesize
+expr_stmt|;
+name|arm9_dcache_sets_max
+operator|=
+operator|(
+literal|1U
+operator|<<
+operator|(
+name|arm_dcache_l2_linesize
+operator|+
+name|arm_dcache_l2_nsets
+operator|)
+operator|)
+operator|-
+name|arm9_dcache_sets_inc
+expr_stmt|;
+name|arm9_dcache_index_inc
+operator|=
+literal|1U
+operator|<<
+operator|(
+literal|32
+operator|-
+name|arm_dcache_l2_assoc
+operator|)
+expr_stmt|;
+name|arm9_dcache_index_max
+operator|=
+literal|0U
+operator|-
+name|arm9_dcache_index_inc
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -6653,6 +6685,8 @@ operator||
 name|CPU_CONTROL_DC_ENABLE
 operator||
 name|CPU_CONTROL_WBUF_ENABLE
+operator||
+name|CPU_CONTROL_LABT_ENABLE
 expr_stmt|;
 name|cpuctrlmask
 operator|=
@@ -6678,9 +6712,9 @@ name|CPU_CONTROL_AFLT_ENABLE
 operator||
 name|CPU_CONTROL_LABT_ENABLE
 operator||
-name|CPU_CONTROL_BPRD_ENABLE
+name|CPU_CONTROL_VECRELOC
 operator||
-name|CPU_CONTROL_CPCLK
+name|CPU_CONTROL_ROUNDROBIN
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -6728,7 +6762,7 @@ expr_stmt|;
 comment|/* Set the control register */
 name|cpu_control
 argument_list|(
-literal|0xffffffff
+name|cpuctrlmask
 argument_list|,
 name|cpuctrl
 argument_list|)
