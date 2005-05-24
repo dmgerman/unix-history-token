@@ -1482,7 +1482,7 @@ expr_stmt|;
 name|p
 operator|->
 name|p_lock
-operator|++
+operator|--
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
