@@ -143,6 +143,22 @@ name|defined
 argument_list|(
 name|__powerpc__
 argument_list|)
+comment|/* 	 * No need to sync the icache for modules: this will 	 * be done by the kernel after relocation. 	 */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|(
+operator|*
+name|result
+operator|)
+operator|->
+name|f_type
+argument_list|,
+literal|"elf kernel"
+argument_list|)
+condition|)
 name|__syncicache
 argument_list|(
 operator|(
