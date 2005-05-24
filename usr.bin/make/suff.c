@@ -4362,10 +4362,6 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* Start of member's name */
-name|char
-modifier|*
-name|p1
-decl_stmt|;
 name|GNode
 modifier|*
 name|mem
@@ -4507,17 +4503,9 @@ literal|1
 index|]
 argument_list|,
 name|mem
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 argument_list|,
 name|gn
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 name|Var_Set
@@ -4535,17 +4523,9 @@ literal|0
 index|]
 argument_list|,
 name|mem
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 argument_list|,
 name|gn
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 name|ms

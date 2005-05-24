@@ -923,10 +923,6 @@ index|[
 name|argLen
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|p1
-decl_stmt|;
 name|Boolean
 name|result
 decl_stmt|;
@@ -944,9 +940,6 @@ argument_list|(
 name|arg
 argument_list|,
 name|VAR_CMD
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 operator|!=
 name|NULL
@@ -964,11 +957,6 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
 name|arg
 index|[
 name|argLen

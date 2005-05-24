@@ -799,14 +799,6 @@ decl_stmt|;
 comment|/* Element in parents and iParents lists */
 name|char
 modifier|*
-name|p1
-decl_stmt|;
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
-name|char
-modifier|*
 name|cpref
 decl_stmt|;
 name|cname
@@ -816,14 +808,6 @@ argument_list|(
 name|TARGET
 argument_list|,
 name|cgn
-argument_list|,
-operator|&
-name|p1
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the child was actually made, see what its modification time is 	 * now -- some rules won't actually update the file. If the file still 	 * doesn't exist, make its mtime now. 	 */
@@ -1146,9 +1130,6 @@ argument_list|(
 name|PREFIX
 argument_list|,
 name|cgn
-argument_list|,
-operator|&
-name|ptr
 argument_list|)
 expr_stmt|;
 for|for
@@ -1209,11 +1190,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|free
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1241,10 +1217,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|child
-decl_stmt|;
-name|char
-modifier|*
-name|p1
 decl_stmt|;
 name|LST_FOREACH
 argument_list|(
@@ -1280,10 +1252,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|p1
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|OP_NOP
@@ -1318,9 +1286,6 @@ argument_list|(
 name|TARGET
 argument_list|,
 name|cgn
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 expr_stmt|;
 name|Var_Append
@@ -1398,11 +1363,6 @@ name|gn
 argument_list|)
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 if|if
@@ -1465,17 +1425,9 @@ argument_list|(
 name|ALLSRC
 argument_list|,
 name|gn
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 argument_list|,
 name|gn
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 block|}

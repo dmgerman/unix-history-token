@@ -2505,9 +2505,6 @@ comment|/* FALSE if all targets up to date */
 name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|p1
 decl_stmt|;
 specifier|const
 name|char
@@ -3613,9 +3610,6 @@ argument_list|(
 literal|".MAKEFLAGS"
 argument_list|,
 name|VAR_GLOBAL
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 operator|)
 operator|!=
@@ -3632,11 +3626,6 @@ argument_list|,
 name|p
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For compatibility, look at the directories in the VPATH variable 	 * and add them to the search path, if the variable is defined. The 	 * variable's value is in the same format as the PATH envariable, i.e. 	 *<directory>:<directory>:<directory>... 	 */

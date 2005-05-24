@@ -3900,10 +3900,6 @@ name|commands
 argument_list|)
 condition|)
 block|{
-name|char
-modifier|*
-name|p1
-decl_stmt|;
 comment|/* 			 * Make only looks for a .DEFAULT if the node was 			 * never the target of an operator, so that's what we 			 * do too. If a .DEFAULT was given, we substitute its 			 * commands for gn's commands and set the IMPSRC 			 * variable to be the target's name The DEFAULT node 			 * acts like a transformation rule, in that gn also 			 * inherits any attributes or sources attached to 			 * .DEFAULT itself. 			 */
 name|Make_HandleUse
 argument_list|(
@@ -3921,17 +3917,9 @@ argument_list|(
 name|TARGET
 argument_list|,
 name|gn
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 argument_list|,
 name|gn
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 block|}
@@ -9224,10 +9212,6 @@ condition|)
 block|{
 name|char
 modifier|*
-name|p1
-decl_stmt|;
-name|char
-modifier|*
 name|file
 init|=
 name|Var_Value
@@ -9235,9 +9219,6 @@ argument_list|(
 name|TARGET
 argument_list|,
 name|curTarg
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 decl_stmt|;
 if|if
@@ -9262,11 +9243,6 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * Run .INTERRUPT only if hit with interrupt signal 	 */
 if|if
@@ -10361,10 +10337,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|char
-modifier|*
-name|p1
-decl_stmt|;
 name|Var_Set
 argument_list|(
 name|IMPSRC
@@ -10374,17 +10346,9 @@ argument_list|(
 name|TARGET
 argument_list|,
 name|gn
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 argument_list|,
 name|pgn
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 block|}
@@ -10711,10 +10675,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|char
-modifier|*
-name|p1
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"\n\nStop in %s.\n"
@@ -10724,15 +10684,7 @@ argument_list|(
 literal|".CURDIR"
 argument_list|,
 name|gn
-argument_list|,
-operator|&
-name|p1
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 name|exit
@@ -10777,10 +10729,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|char
-modifier|*
-name|p1
-decl_stmt|;
 name|Var_Set
 argument_list|(
 name|IMPSRC
@@ -10790,17 +10738,9 @@ argument_list|(
 name|TARGET
 argument_list|,
 name|gn
-argument_list|,
-operator|&
-name|p1
 argument_list|)
 argument_list|,
 name|pgn
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 block|}
