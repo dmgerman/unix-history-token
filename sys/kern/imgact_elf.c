@@ -377,28 +377,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__arm__
-end_ifdef
-
-begin_function_decl
-name|int
-name|__elfN
-parameter_list|(
-name|fallback_brand
-parameter_list|)
-init|=
-literal|9
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|int
 name|__elfN
@@ -410,11 +388,6 @@ operator|-
 literal|1
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
