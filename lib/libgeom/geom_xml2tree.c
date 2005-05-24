@@ -2198,6 +2198,17 @@ operator|=
 name|geom_getxml
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|errno
+operator|)
+return|;
 name|error
 operator|=
 name|geom_xml2tree
