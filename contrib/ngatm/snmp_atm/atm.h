@@ -36,19 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"snmpmod.h"
+file|<bsnmp/snmpmod.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"snmp_mibII.h"
+file|<bsnmp/snmp_mibII.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"snmp_atm.h"
+file|<bsnmp/snmp_atm.h>
 end_include
 
 begin_comment
