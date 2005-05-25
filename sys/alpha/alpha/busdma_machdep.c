@@ -2030,6 +2030,9 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|bus_dma_segment_t
+name|segment
+decl_stmt|;
 name|vm_offset_t
 name|vaddr
 decl_stmt|;
@@ -2080,6 +2083,13 @@ name|vm_offset_t
 operator|)
 name|buf
 argument_list|)
+expr_stmt|;
+name|dmat
+operator|->
+name|segments
+operator|=
+operator|&
+name|segment
 expr_stmt|;
 name|dmat
 operator|->
@@ -2162,6 +2172,12 @@ literal|1
 argument_list|,
 name|error
 argument_list|)
+expr_stmt|;
+name|dmat
+operator|->
+name|segments
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
