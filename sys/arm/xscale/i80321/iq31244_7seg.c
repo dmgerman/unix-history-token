@@ -442,7 +442,7 @@ specifier|static
 name|int
 name|freq
 init|=
-literal|100
+literal|20
 decl_stmt|;
 end_decl_stmt
 
