@@ -273,7 +273,7 @@ parameter_list|(
 name|SC
 parameter_list|)
 define|\
-value|do {								\ 		if (++sc->txmbuf> 20000)				\ 			DBG(sc,	TX ("txmbuf %u", sc->txmbuf));		\ 		else if (sc->txmbuf == 1)				\ 			DBG(sc, TX, ("txmbuf leaves 0"));		\ 	} while (0)
+value|do {								\ 		if (++sc->txmbuf> 20000)				\ 			DBG(sc,	TX, ("txmbuf %u", sc->txmbuf));		\ 		else if (sc->txmbuf == 1)				\ 			DBG(sc, TX, ("txmbuf leaves 0"));		\ 	} while (0)
 end_define
 
 begin_else
