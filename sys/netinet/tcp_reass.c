@@ -7021,10 +7021,10 @@ argument_list|)
 condition|)
 block|{
 name|int
-name|data_in_pipe
+name|awnd
 decl_stmt|;
 comment|/* 						 * Compute the amount of data in flight first. 						 * We can inject new data into the pipe iff  						 * we have less than 1/2 the original window's 	 						 * worth of data in flight. 						 */
-name|data_in_pipe
+name|awnd
 operator|=
 operator|(
 name|tp
@@ -7033,7 +7033,7 @@ name|snd_nxt
 operator|-
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 operator|)
 operator|+
 name|tp
@@ -7044,7 +7044,7 @@ name|sack_bytes_rexmit
 expr_stmt|;
 if|if
 condition|(
-name|data_in_pipe
+name|awnd
 operator|<
 name|tp
 operator|->

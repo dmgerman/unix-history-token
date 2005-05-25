@@ -586,7 +586,7 @@ name|snd_holes
 expr_stmt|;
 comment|/* SACK scoreboard (sorted) */
 name|tcp_seq
-name|rcv_lastsack
+name|snd_fack
 decl_stmt|;
 comment|/* last seq number(+1) sack'd by rcv'r*/
 name|int

@@ -1429,10 +1429,10 @@ operator|->
 name|snd_holes
 argument_list|)
 condition|)
-comment|/* 		 * Empty scoreboard. Need to initialize rcv_lastsack (it may be 		 * uninitialized or have a bogus value). Scoreboard holes 		 * (from the sack blocks received) are created later below (in 		 * the logic that adds holes to the tail of the scoreboard). 		 */
+comment|/* 		 * Empty scoreboard. Need to initialize snd_fack (it may be 		 * uninitialized or have a bogus value). Scoreboard holes 		 * (from the sack blocks received) are created later below (in 		 * the logic that adds holes to the tail of the scoreboard). 		 */
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 operator|=
 name|tp
 operator|->
@@ -1481,7 +1481,7 @@ name|SEQ_LT
 argument_list|(
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 argument_list|,
 name|sack
 operator|.
@@ -1900,7 +1900,7 @@ name|SEQ_LT
 argument_list|(
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 argument_list|,
 name|sack
 operator|.
@@ -1917,7 +1917,7 @@ name|tp
 argument_list|,
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 argument_list|,
 name|sack
 operator|.
@@ -1946,7 +1946,7 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 operator|=
 name|sack
 operator|.
@@ -1977,7 +1977,7 @@ name|SEQ_LT
 argument_list|(
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 argument_list|,
 name|sack
 operator|.
@@ -1986,7 +1986,7 @@ argument_list|)
 condition|)
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 operator|=
 name|sack
 operator|.
@@ -2833,12 +2833,12 @@ name|snd_nxt
 argument_list|,
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 argument_list|)
 condition|)
 return|return;
 comment|/* We're already beyond any SACKed blocks */
-comment|/* 	 * Two cases for which we want to advance snd_nxt: 	 * i) snd_nxt lies between end of one hole and beginning of another 	 * ii) snd_nxt lies between end of last hole and rcv_lastsack 	 */
+comment|/* 	 * Two cases for which we want to advance snd_nxt: 	 * i) snd_nxt lies between end of one hole and beginning of another 	 * ii) snd_nxt lies between end of last hole and snd_fack 	 */
 while|while
 condition|(
 operator|(
@@ -2919,7 +2919,7 @@ name|snd_nxt
 operator|=
 name|tp
 operator|->
-name|rcv_lastsack
+name|snd_fack
 expr_stmt|;
 return|return;
 block|}
