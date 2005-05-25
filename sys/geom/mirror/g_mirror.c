@@ -10166,7 +10166,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
@@ -10202,6 +10201,7 @@ name|sc_rootmount
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 comment|/* 		 * Genid should be bumped immediately, so do it here. 		 */
 if|if
