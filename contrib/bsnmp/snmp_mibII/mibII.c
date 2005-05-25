@@ -2078,6 +2078,10 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|info
 expr_stmt|;
 name|info
