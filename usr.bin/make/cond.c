@@ -2203,6 +2203,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|*
+name|cp
+operator|==
+literal|'\0'
+operator|||
+operator|(
 operator|!
 name|qt
 operator|&&
@@ -2210,6 +2216,7 @@ operator|*
 name|cp
 operator|==
 literal|')'
+operator|)
 condition|)
 name|condExpr
 operator|=
