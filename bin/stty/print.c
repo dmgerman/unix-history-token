@@ -685,7 +685,7 @@ name|put
 argument_list|(
 literal|"-onocr"
 argument_list|,
-name|OXTABS
+name|ONOCR
 argument_list|,
 literal|0
 argument_list|)
@@ -694,7 +694,7 @@ name|put
 argument_list|(
 literal|"-onlret"
 argument_list|,
-name|OXTABS
+name|ONLRET
 argument_list|,
 literal|0
 argument_list|)
