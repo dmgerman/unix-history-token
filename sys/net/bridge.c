@@ -3764,14 +3764,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-comment|/* glebius: am I right here? */
 if|if
 condition|(
 name|m
 operator|==
 name|NULL
 condition|)
-block|{
 name|if_printf
 argument_list|(
 name|ifp
@@ -3787,12 +3785,6 @@ else|:
 literal|"multicast"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 endif|#
 directive|endif
 return|return
@@ -3810,13 +3802,24 @@ argument_list|,
 name|dst
 argument_list|)
 expr_stmt|;
+comment|/* 	 * But in some cases the bridge may return the 	 * packet for us to free; sigh. 	 */
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-comment|/* not reached */
 block|}
 end_function
 
