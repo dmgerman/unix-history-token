@@ -779,10 +779,6 @@ operator|==
 name|S_IFIFO
 condition|)
 block|{
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|fflag
 operator|=
 literal|0
