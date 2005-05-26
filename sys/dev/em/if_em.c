@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2001-2003, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2001-2005, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"1.7.35"
+literal|"2.1.7"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ comment|/* Intel(R) PRO/1000 Network Connection */
 block|{
 literal|0x8086
 block|,
-literal|0x1000
+name|E1000_DEV_ID_82540EM
 block|,
 name|PCI_ANY_ID
 block|,
@@ -79,7 +79,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1001
+name|E1000_DEV_ID_82540EM_LOM
 block|,
 name|PCI_ANY_ID
 block|,
@@ -91,7 +91,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1004
+name|E1000_DEV_ID_82540EP
 block|,
 name|PCI_ANY_ID
 block|,
@@ -103,7 +103,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1008
+name|E1000_DEV_ID_82540EP_LOM
 block|,
 name|PCI_ANY_ID
 block|,
@@ -115,7 +115,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1009
+name|E1000_DEV_ID_82540EP_LP
 block|,
 name|PCI_ANY_ID
 block|,
@@ -127,7 +127,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x100C
+name|E1000_DEV_ID_82541EI
 block|,
 name|PCI_ANY_ID
 block|,
@@ -139,7 +139,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x100D
+name|E1000_DEV_ID_82541ER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -151,7 +151,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x100E
+name|E1000_DEV_ID_82541ER_LOM
 block|,
 name|PCI_ANY_ID
 block|,
@@ -163,7 +163,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x100F
+name|E1000_DEV_ID_82541EI_MOBILE
 block|,
 name|PCI_ANY_ID
 block|,
@@ -175,7 +175,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1010
+name|E1000_DEV_ID_82541GI
 block|,
 name|PCI_ANY_ID
 block|,
@@ -187,7 +187,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1011
+name|E1000_DEV_ID_82541GI_LF
 block|,
 name|PCI_ANY_ID
 block|,
@@ -199,7 +199,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1012
+name|E1000_DEV_ID_82541GI_MOBILE
 block|,
 name|PCI_ANY_ID
 block|,
@@ -211,7 +211,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1013
+name|E1000_DEV_ID_82542
 block|,
 name|PCI_ANY_ID
 block|,
@@ -223,7 +223,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1014
+name|E1000_DEV_ID_82543GC_FIBER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -235,7 +235,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1015
+name|E1000_DEV_ID_82543GC_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -247,7 +247,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1016
+name|E1000_DEV_ID_82544EI_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -259,7 +259,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1017
+name|E1000_DEV_ID_82544EI_FIBER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -271,7 +271,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1018
+name|E1000_DEV_ID_82544GC_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -283,7 +283,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1019
+name|E1000_DEV_ID_82544GC_LOM
 block|,
 name|PCI_ANY_ID
 block|,
@@ -295,7 +295,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x101A
+name|E1000_DEV_ID_82545EM_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -307,7 +307,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x101D
+name|E1000_DEV_ID_82545EM_FIBER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -319,7 +319,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x101E
+name|E1000_DEV_ID_82545GM_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -331,7 +331,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1026
+name|E1000_DEV_ID_82545GM_FIBER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -343,7 +343,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1027
+name|E1000_DEV_ID_82545GM_SERDES
 block|,
 name|PCI_ANY_ID
 block|,
@@ -355,7 +355,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1028
+name|E1000_DEV_ID_82546EB_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -367,7 +367,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1075
+name|E1000_DEV_ID_82546EB_FIBER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -379,7 +379,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1076
+name|E1000_DEV_ID_82546EB_QUAD_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -391,7 +391,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1077
+name|E1000_DEV_ID_82546GB_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -403,7 +403,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1078
+name|E1000_DEV_ID_82546GB_FIBER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -415,7 +415,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x1079
+name|E1000_DEV_ID_82546GB_SERDES
 block|,
 name|PCI_ANY_ID
 block|,
@@ -427,7 +427,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x107A
+name|E1000_DEV_ID_82546GB_PCIE
 block|,
 name|PCI_ANY_ID
 block|,
@@ -439,7 +439,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x107B
+name|E1000_DEV_ID_82546GB_QUAD_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -451,7 +451,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x107C
+name|E1000_DEV_ID_82547EI
 block|,
 name|PCI_ANY_ID
 block|,
@@ -463,7 +463,43 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x108A
+name|E1000_DEV_ID_82547EI_MOBILE
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_82547GI
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_82573E
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_82573E_IAMT
 block|,
 name|PCI_ANY_ID
 block|,
@@ -3262,6 +3298,24 @@ operator|>
 name|MAX_JUMBO_FRAME_SIZE
 operator|-
 name|ETHER_HDR_LEN
+operator|||
+expr|\
+comment|/* 82573 does not support jumbo frames */
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82573
+operator|&&
+name|ifr
+operator|->
+name|ifr_mtu
+operator|>
+name|ETHERMTU
+operator|)
 condition|)
 block|{
 name|error
@@ -10285,6 +10339,20 @@ if|if
 condition|(
 name|adapter
 operator|->
+name|hw
+operator|.
+name|mac_type
+operator|>=
+name|em_82573
+condition|)
+name|reg_tctl
+operator||=
+name|E1000_TCTL_MULR
+expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
 name|link_duplex
 operator|==
 literal|1
@@ -10954,16 +11022,6 @@ operator|->
 name|num_tx_desc
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|DBG_STATS
-name|adapter
-operator|->
-name|clean_tx_interrupts
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 name|num_avail
 operator|=
 name|adapter
@@ -12519,16 +12577,6 @@ name|E1000_RXD_STAT_DD
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DBG_STATS
-name|adapter
-operator|->
-name|no_pkts_avail
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 while|while
@@ -15232,33 +15280,6 @@ name|RADV
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DBG_STATS
-name|printf
-argument_list|(
-literal|"em%d: Packets not Avail = %ld\n"
-argument_list|,
-name|unit
-argument_list|,
-name|adapter
-operator|->
-name|no_pkts_avail
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"em%d: CleanTxInterrupts = %ld\n"
-argument_list|,
-name|unit
-argument_list|,
-name|adapter
-operator|->
-name|clean_tx_interrupts
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"em%d: fifo workaround = %lld, fifo_reset = %lld\n"
