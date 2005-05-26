@@ -274,6 +274,12 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
+asm|__asm__("and $0xfffffff0,%esp");
+endif|#
+directive|endif
 name|cleanup
 operator|=
 name|get_rtld_cleanup
