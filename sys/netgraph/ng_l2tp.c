@@ -3704,11 +3704,11 @@ expr_stmt|;
 comment|/* Trim offset padding */
 if|if
 condition|(
-name|offset
-operator|<=
+operator|(
 literal|2
-operator|||
+operator|+
 name|offset
+operator|)
 operator|>
 name|m
 operator|->
@@ -3741,6 +3741,8 @@ name|m_adj
 argument_list|(
 name|m
 argument_list|,
+literal|2
+operator|+
 name|offset
 argument_list|)
 expr_stmt|;
