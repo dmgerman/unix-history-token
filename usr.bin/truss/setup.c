@@ -240,7 +240,7 @@ name|flags
 operator|=
 name|PF_LINGER
 expr_stmt|;
-comment|/*      * The PF_LINGER flag tells procfs not to wake up the      * process on last close; normally, this is the behaviour      * we want.      */
+comment|/* 		 * The PF_LINGER flag tells procfs not to wake up the 		 * process on last close; normally, this is the behaviour 		 * we want. 		 */
 if|if
 condition|(
 name|ioctl
@@ -313,7 +313,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/*      * Process exited before it got to us -- meaning the exec failed      * miserably -- so we just quietly exit.      */
+comment|/* 		 * Process exited before it got to us -- meaning the exec failed 		 * miserably -- so we just quietly exit. 		 */
 name|exit
 argument_list|(
 literal|1
@@ -416,7 +416,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|pid
+operator|)
 return|;
 block|}
 end_function
@@ -431,6 +433,9 @@ name|start_tracing
 parameter_list|(
 name|int
 name|pid
+parameter_list|,
+name|int
+name|failisfatal
 parameter_list|,
 name|int
 name|eventflags
@@ -478,9 +483,12 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/*      * The process may have run away before we could start -- this      * happens with SUGID programs.  So we need to see if it still      * exists before we complain bitterly.      */
+comment|/* 		 * The process may have run away before we could start -- this 		 * happens with SUGID programs.  So we need to see if it still 		 * exists before we complain bitterly. 		 */
 if|if
 condition|(
+operator|!
+name|failisfatal
+operator|&&
 name|kill
 argument_list|(
 name|pid
@@ -492,8 +500,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|err
 argument_list|(
@@ -556,7 +566,7 @@ argument_list|,
 literal|"cannot set procfs event bit mask"
 argument_list|)
 expr_stmt|;
-comment|/*    * This clears the PF_LINGER set above in setup_and_wait();    * if truss happens to die before this, then the process    * needs to be woken up via procctl.    */
+comment|/* 	 * This clears the PF_LINGER set above in setup_and_wait(); 	 * if truss happens to die before this, then the process 	 * needs to be woken up via procctl. 	 */
 if|if
 condition|(
 name|ioctl
@@ -577,7 +587,9 @@ literal|"cannot clear PF_LINGER"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|fd
+operator|)
 return|;
 block|}
 end_function
