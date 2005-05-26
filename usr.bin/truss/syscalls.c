@@ -389,6 +389,28 @@ block|}
 block|}
 block|,
 block|{
+literal|"mkdir"
+block|,
+literal|1
+block|,
+literal|2
+block|,
+block|{
+block|{
+name|String
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|Octal
+block|,
+literal|1
+block|}
+block|}
+block|}
+block|,
+block|{
 literal|"linux_open"
 block|,
 literal|1
@@ -3016,7 +3038,7 @@ name|POLLKNOWN_EVENTS
 define|\
 value|(POLLIN | POLLPRI | POLLOUT | POLLERR | POLLHUP | POLLNVAL | \ 	 POLLRDNORM |POLLRDBAND | POLLWRBAND | POLLINIGNEOF)
 name|u
-operator|+=
+operator|=
 name|snprintf
 argument_list|(
 name|tmp
