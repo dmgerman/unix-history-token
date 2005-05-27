@@ -3734,13 +3734,6 @@ begin_comment
 comment|/* queued as a writer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NGQF_FREE
-value|0x08
-end_define
-
 begin_comment
 comment|/*  * Get the mbuf (etc) out of an item.  * Sets the value in the item to NULL in case we need to call NG_FREE_ITEM()  * with it, (to avoid freeing the things twice).  * If you don't want to zero out the item then realise that the  * item still owns it.  * Retaddr is different. There are no references on that. It's just a number.  * The debug versions must be either all used everywhere or not at all.  */
 end_comment
@@ -4088,30 +4081,6 @@ name|int
 name|line
 parameter_list|)
 block|{
-if|if
-condition|(
-name|item
-operator|->
-name|el_flags
-operator|&
-name|NGQF_FREE
-condition|)
-block|{
-name|dumpitem
-argument_list|(
-name|item
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"free item!"
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|item
 operator|)
