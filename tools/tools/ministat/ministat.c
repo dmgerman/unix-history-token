@@ -3774,7 +3774,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ministat [ -c confidence ] [-s] [file [file ...]]\n"
+literal|"Usage: ministat [ -c confidence ] [-ns] [file [file ...]]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3822,6 +3822,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"}\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-n : print summary statistics only, no graph/test\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3882,6 +3889,11 @@ name|flag_s
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|flag_n
+init|=
+literal|0
+decl_stmt|;
 name|ci
 operator|=
 operator|-
@@ -3898,7 +3910,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:s"
+literal|"c:sn"
 argument_list|)
 operator|)
 operator|!=
@@ -3976,6 +3988,14 @@ name|usage
 argument_list|(
 literal|"No support for confidence level"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|flag_n
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -4107,6 +4127,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|flag_n
+condition|)
+block|{
 name|SetupPlot
 argument_list|(
 literal|74
@@ -4163,6 +4189,7 @@ expr_stmt|;
 name|DumpPlot
 argument_list|()
 expr_stmt|;
+block|}
 name|VitalsHead
 argument_list|()
 expr_stmt|;
@@ -4202,6 +4229,11 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|flag_n
+condition|)
 name|Relative
 argument_list|(
 name|ds
