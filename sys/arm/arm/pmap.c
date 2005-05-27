@@ -1186,29 +1186,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|pmap_deactivate
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|pmap_deactivate
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-block|{ }
-end_function
-
 begin_comment
 comment|/*  * This list exists for the benefit of pmap_map_chunk().  It keeps track  * of the kernel L2 tables during bootstrap, so that pmap_map_chunk() can  * find them as necessary.  *  * Note that the data on this list MUST remain valid after initarm() returns,  * as pmap_bootstrap() uses it to contruct L2 table metadata.  */
 end_comment
