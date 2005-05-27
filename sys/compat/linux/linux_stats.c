@@ -929,11 +929,6 @@ name|void
 name|bsd_to_linux_statfs
 parameter_list|(
 name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
 name|statfs
 modifier|*
 name|bsd_statfs
@@ -1144,8 +1139,6 @@ operator|)
 return|;
 name|bsd_to_linux_statfs
 argument_list|(
-name|td
-argument_list|,
 operator|&
 name|bsd_statfs
 argument_list|,
@@ -1247,8 +1240,6 @@ name|error
 return|;
 name|bsd_to_linux_statfs
 argument_list|(
-name|td
-argument_list|,
 operator|&
 name|bsd_statfs
 argument_list|,
