@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Mark Santcroos<marks@ripe.net>  * Copyright (c) 2004 Gleb Smirnoff<glebius@FreeBSD.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Netgraph "device" node  *  * This node presents a /dev/ngd%d device that interfaces to an other  * netgraph node.  *  * $FreeBSD$  *  */
+comment|/*-  * Copyright (c) 2002 Mark Santcroos<marks@ripe.net>  * Copyright (c) 2004-2005 Gleb Smirnoff<glebius@FreeBSD.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Netgraph "device" node  *  * This node presents a /dev/ngd%d device that interfaces to an other  * netgraph node.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_if
@@ -286,12 +286,6 @@ name|struct
 name|ifqueue
 name|readq
 decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|ngd_private
-argument_list|)
-name|links
-expr_stmt|;
 name|struct
 name|ng_node
 modifier|*
@@ -339,47 +333,17 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* List of all active nodes and mutex to protect it */
+comment|/* unit number allocator entity */
 end_comment
-
-begin_expr_stmt
-specifier|static
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|ngd_private
-argument_list|)
-name|ngd_nodes
-operator|=
-name|SLIST_HEAD_INITIALIZER
-argument_list|(
-name|ngd_nodes
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
-name|ng_device_mtx
+name|unrhdr
+modifier|*
+name|ngd_unit
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|MTX_SYSINIT
-argument_list|(
-name|ng_device
-argument_list|,
-operator|&
-name|ng_device_mtx
-argument_list|,
-literal|"ng_device"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Maximum number of NGD devices */
@@ -389,12 +353,8 @@ begin_define
 define|#
 directive|define
 name|MAX_NGD
-value|25
+value|999
 end_define
-
-begin_comment
-comment|/* should be more than enough for now */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -495,22 +455,77 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Helper functions */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|get_free_unit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/******************************************************************************  *  Netgraph methods  ******************************************************************************/
 end_comment
+
+begin_comment
+comment|/*  * Handle loading and unloading for this node type.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ng_device_mod_event
+parameter_list|(
+name|module_t
+name|mod
+parameter_list|,
+name|int
+name|event
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+switch|switch
+condition|(
+name|event
+condition|)
+block|{
+case|case
+name|MOD_LOAD
+case|:
+name|ngd_unit
+operator|=
+name|new_unrhdr
+argument_list|(
+literal|0
+argument_list|,
+name|MAX_NGD
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MOD_UNLOAD
+case|:
+name|delete_unrhdr
+argument_list|(
+name|ngd_unit
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
+block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * create new node  */
@@ -560,69 +575,14 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_device_mtx
-argument_list|)
-expr_stmt|;
+comment|/* Allocate unit number */
 name|priv
 operator|->
 name|unit
 operator|=
-name|get_free_unit
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|priv
-operator|->
-name|unit
-operator|<
-literal|0
-condition|)
-block|{
-name|printf
+name|alloc_unr
 argument_list|(
-literal|"%s: No free unit found by get_free_unit(), "
-literal|"increase MAX_NGD\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_device_mtx
-argument_list|)
-expr_stmt|;
-name|FREE
-argument_list|(
-name|priv
-argument_list|,
-name|M_NETGRAPH
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-name|SLIST_INSERT_HEAD
-argument_list|(
-operator|&
-name|ngd_nodes
-argument_list|,
-name|priv
-argument_list|,
-name|links
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_device_mtx
+name|ngd_unit
 argument_list|)
 expr_stmt|;
 comment|/* Initialize mutexes and queue */
@@ -744,6 +704,15 @@ operator|.
 name|ifq_mtx
 argument_list|)
 expr_stmt|;
+name|free_unr
+argument_list|(
+name|ngd_unit
+argument_list|,
+name|priv
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|priv
@@ -849,7 +818,7 @@ block|{
 case|case
 name|NGM_DEVICE_GET_DEVNAME
 case|:
-comment|/* XXX: Fix when NGD_MAX us bigger */
+comment|/* XXX: Fix when MAX_NGD us bigger */
 name|NG_MKRESPONSE
 argument_list|(
 name|resp
@@ -861,7 +830,7 @@ argument_list|(
 name|NG_DEVICE_DEVNAME
 argument_list|)
 operator|+
-literal|3
+literal|4
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1201,30 +1170,6 @@ operator|->
 name|ngd_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_device_mtx
-argument_list|)
-expr_stmt|;
-name|SLIST_REMOVE
-argument_list|(
-operator|&
-name|ngd_nodes
-argument_list|,
-name|priv
-argument_list|,
-name|ngd_private
-argument_list|,
-name|links
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_device_mtx
-argument_list|)
-expr_stmt|;
 name|IF_DRAIN
 argument_list|(
 operator|&
@@ -1243,6 +1188,15 @@ operator|->
 name|readq
 operator|.
 name|ifq_mtx
+argument_list|)
+expr_stmt|;
+name|free_unr
+argument_list|(
+name|ngd_unit
+argument_list|,
+name|priv
+operator|->
+name|unit
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -1450,7 +1404,7 @@ comment|/*  * process ioctl  *  * they are translated into netgraph messages and
 end_comment
 
 begin_comment
-unit|static int ngdioctl(struct cdev *dev, u_long cmd, caddr_t addr, int flag, struct thread *td) { 	struct ngd_softc *sc =&ngd_softc; 	struct ngd_connection * connection = NULL; 	struct ngd_connection * tmp; 	int error = 0; 	struct ng_mesg *msg; 	struct ngd_param_s * datap;  	DBG;  	SLIST_FOREACH(tmp,&sc->head,links) { 		if(tmp->ngddev == dev) { 			connection = tmp; 		} 	} 	if(connection == NULL) { 		printf("%s(): connection is still NULL, no dev found\n",__func__); 		return(-1); 	}  	NG_MKMESSAGE(msg, NGM_DEVICE_COOKIE, cmd, sizeof(struct ngd_param_s), 			M_NOWAIT); 	if (msg == NULL) { 		printf("%s(): msg == NULL\n",__func__); 		goto nomsg; 	}
+unit|static int ngdioctl(struct cdev *dev, u_long cmd, caddr_t addr, int flag, struct thread *td) { 	struct ngd_softc *sc =&ngd_softc; 	struct ngd_connection * connection = NULL; 	struct ngd_connection * tmp; 	int error = 0; 	struct ng_mesg *msg; 	struct ngd_param_s * datap;  	DBG;  	NG_MKMESSAGE(msg, NGM_DEVICE_COOKIE, cmd, sizeof(struct ngd_param_s), 			M_NOWAIT); 	if (msg == NULL) { 		printf("%s(): msg == NULL\n",__func__); 		goto nomsg; 	}
 comment|/* pass the ioctl data into the ->data area */
 end_comment
 
@@ -1868,114 +1822,6 @@ expr_stmt|;
 return|return
 operator|(
 name|revents
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************************************  *  Helper subroutines  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|get_free_unit
-parameter_list|()
-block|{
-name|struct
-name|ngd_private
-modifier|*
-name|priv
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|n
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|unit
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|DBG
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|ng_device_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-comment|/* When there is no list yet, the first device unit is always 0. */
-if|if SLIST_EMPTY
-condition|(
-operator|&
-name|ngd_nodes
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Just do a brute force loop to find the first free unit that is 	 * smaller than MAX_NGD. 	 * Set MAX_NGD to a large value, doesn't impact performance. 	 */
-for|for
-control|(
-name|n
-operator|=
-literal|0
-init|;
-name|n
-operator|<
-name|MAX_NGD
-operator|&&
-name|unit
-operator|==
-operator|-
-literal|1
-condition|;
-name|n
-operator|++
-control|)
-block|{
-name|SLIST_FOREACH
-argument_list|(
-argument|priv
-argument_list|,
-argument|&ngd_nodes
-argument_list|,
-argument|links
-argument_list|)
-block|{
-if|if
-condition|(
-name|priv
-operator|->
-name|unit
-operator|==
-name|n
-condition|)
-block|{
-name|unit
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-block|}
-name|unit
-operator|=
-name|n
-expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-name|unit
 operator|)
 return|;
 block|}
