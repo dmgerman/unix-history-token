@@ -3265,19 +3265,6 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hack: If we are suspending but are on the sleep queue 	 * then we are in msleep or the cv equivalent. We 	 * want to look like we have two Inhibitors. 	 * May already be set.. doesn't matter. 	 */
-if|if
-condition|(
-name|TD_ON_SLEEPQ
-argument_list|(
-name|td
-argument_list|)
-condition|)
-name|TD_SET_SLEEPING
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
