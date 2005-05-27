@@ -2170,10 +2170,6 @@ name|void
 name|cvtstatfs
 parameter_list|(
 name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
 name|statfs
 modifier|*
 parameter_list|,
@@ -2270,8 +2266,6 @@ operator|)
 return|;
 name|cvtstatfs
 argument_list|(
-name|td
-argument_list|,
 operator|&
 name|sf
 argument_list|,
@@ -2387,8 +2381,6 @@ operator|)
 return|;
 name|cvtstatfs
 argument_list|(
-name|td
-argument_list|,
 operator|&
 name|sf
 argument_list|,
@@ -2777,8 +2769,6 @@ expr_stmt|;
 block|}
 name|cvtstatfs
 argument_list|(
-name|td
-argument_list|,
 name|sp
 argument_list|,
 operator|&
@@ -3021,8 +3011,6 @@ operator|)
 return|;
 name|cvtstatfs
 argument_list|(
-name|td
-argument_list|,
 operator|&
 name|sf
 argument_list|,
@@ -3060,17 +3048,10 @@ specifier|static
 name|void
 name|cvtstatfs
 parameter_list|(
-name|td
-parameter_list|,
 name|nsp
 parameter_list|,
 name|osp
 parameter_list|)
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|struct
 name|statfs
 modifier|*
