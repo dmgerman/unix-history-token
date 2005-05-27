@@ -1285,15 +1285,6 @@ operator|*
 name|cmd
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: %s"
-argument_list|,
-name|PATH_CONFIG
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|parse
@@ -1302,6 +1293,15 @@ condition|)
 name|autoboot
 operator|=
 literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|PATH_CONFIG
+argument_list|,
+name|cmd
+argument_list|)
 expr_stmt|;
 comment|/* Do not process this command twice */
 operator|*
