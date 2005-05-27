@@ -66,15 +66,15 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_netgraph.h"
+end_include
+
 begin_comment
 comment|/* debugging options */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NETGRAPH_DEBUG
-end_define
 
 begin_define
 define|#
