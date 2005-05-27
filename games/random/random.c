@@ -514,7 +514,7 @@ name|random
 argument_list|()
 operator|)
 operator|/
-name|LONG_MAX
+name|RAND_MAX
 argument_list|)
 return|;
 comment|/* 	 * Select whether to print the first line.  (Prime the pump.) 	 * We find a random number between 0 and denom - 1 and, if it's 	 * 0 (which has a 1 / denom chance of being true), we select the 	 * line. 	 */
@@ -529,7 +529,7 @@ operator|*
 name|random
 argument_list|()
 operator|/
-name|LONG_MAX
+name|RAND_MAX
 argument_list|)
 operator|==
 literal|0
@@ -592,7 +592,7 @@ operator|*
 name|random
 argument_list|()
 operator|/
-name|LONG_MAX
+name|RAND_MAX
 argument_list|)
 operator|==
 literal|0
