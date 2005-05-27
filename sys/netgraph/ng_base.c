@@ -11228,7 +11228,6 @@ argument_list|,
 name|maxalloc
 argument_list|)
 expr_stmt|;
-comment|/* XXX could use NETISR_MPSAFE but need to verify code */
 name|netisr_register
 argument_list|(
 name|NETISR_NETGRAPH
@@ -11241,7 +11240,7 @@ name|ngintr
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NETISR_MPSAFE
 argument_list|)
 expr_stmt|;
 break|break;

@@ -5571,10 +5571,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* We should mark callout mpsafe as soon as we mark netgraph ISR mpsafe */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -5582,7 +5578,7 @@ name|ng_callout_init
 parameter_list|(
 name|c
 parameter_list|)
-value|callout_init(c, 0)
+value|callout_init(c, CALLOUT_MPSAFE)
 end_define
 
 begin_comment
