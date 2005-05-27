@@ -833,7 +833,7 @@ end_define
 begin_if
 if|#
 directive|if
-literal|1
+literal|0
 end_if
 
 begin_comment
