@@ -912,11 +912,18 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * An mbuf may hasn't come from userland, but we pretend 	 * that it has. 	 */
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
