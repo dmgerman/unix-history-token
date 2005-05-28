@@ -232,28 +232,6 @@ name|ARGSTR
 value|"Dalnx"
 end_define
 
-begin_comment
-comment|/* wrapper for KAME-special getnameinfo() */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NI_WITHSCOPEID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NI_WITHSCOPEID
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -1044,8 +1022,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
 comment|/* error check ? */

@@ -304,28 +304,6 @@ file|"ifconfig.h"
 end_include
 
 begin_comment
-comment|/* wrapper for KAME-special getnameinfo() */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NI_WITHSCOPEID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NI_WITHSCOPEID
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Since "struct ifreq" is composed of various union members, callers  * should pay special attention to interprete the value.  * (.e.g. little/big endian difference in the structure.)  */
 end_comment
 
@@ -6917,27 +6895,6 @@ literal|""
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|NI_WITHSCOPEID
-specifier|const
-name|int
-name|niflag
-init|=
-name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
-decl_stmt|;
-else|#
-directive|else
-specifier|const
-name|int
-name|niflag
-init|=
-name|NI_NUMERICHOST
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|INET6
 name|struct
 name|in6_ifreq
@@ -7134,7 +7091,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|niflag
+name|NI_NUMERICHOST
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -7225,7 +7182,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|niflag
+name|NI_NUMERICHOST
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7868,8 +7825,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
 if|if
@@ -8050,8 +8005,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
 if|if

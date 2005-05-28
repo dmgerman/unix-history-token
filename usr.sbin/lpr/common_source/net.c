@@ -935,8 +935,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
 argument_list|)
 operator|!=
 literal|0
@@ -988,8 +986,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
 argument_list|)
 operator|!=
 literal|0
