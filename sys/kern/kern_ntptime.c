@@ -736,6 +736,8 @@ name|timespec
 name|atv
 decl_stmt|;
 comment|/* nanosecond time */
+name|GIANT_REQUIRED
+expr_stmt|;
 name|nanotime
 argument_list|(
 operator|&
@@ -903,10 +905,22 @@ name|struct
 name|ntptimeval
 name|ntv
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|ntp_gettime1
 argument_list|(
 operator|&
 name|ntv
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
