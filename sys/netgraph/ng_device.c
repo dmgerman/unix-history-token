@@ -167,6 +167,21 @@ begin_comment
 comment|/* Netgraph methods */
 end_comment
 
+begin_function_decl
+specifier|static
+name|int
+name|ng_device_mod_event
+parameter_list|(
+name|module_t
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|ng_constructor_t
@@ -229,6 +244,11 @@ operator|.
 name|name
 operator|=
 name|NG_DEVICE_NODE_TYPE
+block|,
+operator|.
+name|mod_event
+operator|=
+name|ng_device_mod_event
 block|,
 operator|.
 name|constructor
