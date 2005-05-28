@@ -16,7 +16,7 @@ name|_NET_IF_TYPES_H_
 end_define
 
 begin_comment
-comment|/*  * Interface types for benefit of parsing media address headers.  * This list is derived from the SNMP list of ifTypes, originally  * documented in RFC1573, now maintained as:  *  * 	ftp.isi.edu/in-notes/iana/assignments/smi-numbers  */
+comment|/*  * Interface types for benefit of parsing media address headers.  * This list is derived from the SNMP list of ifTypes, originally  * documented in RFC1573, now maintained as:  *  * 	http://www.iana.org/assignments/smi-numbers  */
 end_comment
 
 begin_define
