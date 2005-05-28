@@ -20109,7 +20109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * syscall for the rpc.lockd to use to translate a NFS file handle into  * an open descriptor.  *  * warning: do not remove the suser() call or this becomes one giant  * security hole.  */
+comment|/*  * syscall for the rpc.lockd to use to translate a NFS file handle into  * an open descriptor.  *  * warning: do not remove the suser() call or this becomes one giant  * security hole.  *  * MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -20311,6 +20311,12 @@ name|error
 operator|)
 return|;
 comment|/* find the mount point */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|mp
 operator|=
 name|vfs_getvfs
@@ -20327,11 +20333,15 @@ name|mp
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ESTALE
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* now give me my vnode, it gets returned to me locked */
 name|error
 operator|=
@@ -20352,11 +20362,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* 	 * from now on we have to make sure not 	 * to forget about the vnode 	 * any error that causes an abort must vput(vp) 	 * just set error = err and 'goto bad;'. 	 */
 comment|/* 	 * from vn_open 	 */
 if|if
@@ -20560,11 +20568,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|VOP_LEASE
 argument_list|(
@@ -20895,11 +20901,9 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|vn_lock
 argument_list|(
@@ -20935,6 +20939,12 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_retval
@@ -20956,6 +20966,14 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|out
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -20965,7 +20983,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stat an (NFS) file handle.  */
+comment|/*  * Stat an (NFS) file handle.  *  * MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -21080,6 +21098,12 @@ operator|(
 name|error
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -21096,11 +21120,19 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ESTALE
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -21120,11 +21152,19 @@ name|vp
 argument_list|)
 operator|)
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|error
 operator|=
 name|vn_stat
@@ -21146,6 +21186,12 @@ expr_stmt|;
 name|vput
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -21183,7 +21229,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement fstatfs() for (NFS) file handles.  */
+comment|/*  * Implement fstatfs() for (NFS) file handles.  *  * MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -21365,6 +21411,12 @@ operator|(
 name|error
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -21381,11 +21433,19 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ESTALE
 operator|)
 return|;
+block|}
 name|error
 operator|=
 name|VFS_FHTOVP
@@ -21405,11 +21465,19 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|mp
 operator|=
 name|vp
@@ -21446,11 +21514,19 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Set these in case the underlying filesystem fails to do so. 	 */
@@ -21485,6 +21561,12 @@ argument_list|,
 name|sp
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
