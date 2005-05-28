@@ -929,7 +929,7 @@ value|137
 end_define
 
 begin_comment
-comment|/*  * Reserved for Apple IP-over-IEEE-1394.  */
+comment|/*  * Apple IP-over-IEEE 1394, as per a request from Dieter Siegmund  *<dieter@apple.com>.  The header that's presented is an Ethernet-like  * header:  *  *	#define FIREWIRE_EUI64_LEN	8  *	struct firewire_header {  *		u_char  firewire_dhost[FIREWIRE_EUI64_LEN];  *		u_char  firewire_shost[FIREWIRE_EUI64_LEN];  *		u_short firewire_type;  *	};  *  * with "firewire_type" being an Ethernet type value, rather than,  * for example, raw GASP frames being handed up.  */
 end_comment
 
 begin_define
@@ -938,6 +938,10 @@ directive|define
 name|DLT_APPLE_IP_OVER_IEEE1394
 value|138
 end_define
+
+begin_comment
+comment|/*  * 139 through 142 are reserved for SS7.  */
+end_comment
 
 begin_comment
 comment|/*  * Reserved for DOCSIS.  */
@@ -980,7 +984,123 @@ value|146
 end_define
 
 begin_comment
-comment|/*  * Reserved for AbsoluteValue Systems 802.11 capture.  */
+comment|/*  * Reserved for private use.  If you have some link-layer header type  * that you want to use within your organization, with the capture files  * using that link-layer header type not ever be sent outside your  * organization, you can use these values.  *  * No libpcap release will use these for any purpose, nor will any  * tcpdump release use them, either.  *  * Do *NOT* use these in capture files that you expect anybody not using  * your private versions of capture-file-reading tools to read; in  * particular, do *NOT* use them in products, otherwise you may find that  * people won't be able to use tcpdump, or snort, or Ethereal, or... to  * read capture files from your firewall/intrusion detection/traffic  * monitoring/etc. appliance, or whatever product uses that DLT_ value,  * and you may also find that the developers of those applications will  * not accept patches to let them read those files.  *  * Also, do not use them if somebody might send you a capture using them  * for *their* private type and tools using them for *your* private type  * would have to read them.  *  * Instead, ask "tcpdump-workers@tcpdump.org" for a new DLT_ value,  * as per the comment above, and use the type you're given.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_USER0
+value|147
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER1
+value|148
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER2
+value|149
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER3
+value|150
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER4
+value|151
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER5
+value|152
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER6
+value|153
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER7
+value|154
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER8
+value|155
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER9
+value|156
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER10
+value|157
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER11
+value|158
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER12
+value|159
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER13
+value|160
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER14
+value|161
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_USER15
+value|162
+end_define
+
+begin_comment
+comment|/*  * For future use with 802.11 captures - defined by AbsoluteValue  * Systems to store a number of bits of link-layer information  * including radio information:  *  *	http://www.shaftnet.org/~pizza/software/capturefrm.txt  *  * but it might be used by some non-AVS drivers now or in the  * future.  */
 end_comment
 
 begin_define
@@ -991,7 +1111,11 @@ value|163
 end_define
 
 begin_comment
-comment|/*  * Reserved for Juniper-private DLT.  */
+comment|/* 802.11 plus AVS radio header */
+end_comment
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  The DLT_s are used  * for passing on chassis-internal metainformation such as  * QOS profiles, etc..  */
 end_comment
 
 begin_define
@@ -1000,6 +1124,152 @@ directive|define
 name|DLT_JUNIPER_MONITOR
 value|164
 end_define
+
+begin_comment
+comment|/*  * Reserved for BACnet MS/TP.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_BACNET_MS_TP
+value|165
+end_define
+
+begin_comment
+comment|/*  * Another PPP variant as per request from Karsten Keil<kkeil@suse.de>.  *  * This is used in some OSes to allow a kernel socket filter to distinguish  * between incoming and outgoing packets, on a socket intended to  * supply pppd with outgoing packets so it can do dial-on-demand and  * hangup-on-lack-of-demand; incoming packets are filtered out so they  * don't cause pppd to hold the connection up (you don't want random  * input packets such as port scans, packets from old lost connections,  * etc. to force the connection to stay up).  *  * The first byte of the PPP header (0xff03) is modified to accomodate  * the direction - 0x00 = IN, 0x01 = OUT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PPP_PPPD
+value|166
+end_define
+
+begin_comment
+comment|/*  * Names for backwards compatibility with older versions of some PPP  * software; new software should use DLT_PPP_PPPD.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PPP_WITH_DIRECTION
+value|DLT_PPP_PPPD
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_LINUX_PPP_WITHDIRECTION
+value|DLT_PPP_PPPD
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  The DLT_s are used  * for passing on chassis-internal metainformation such as  * QOS profiles, cookies, etc..  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_PPPOE
+value|167
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_PPPOE_ATM
+value|168
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_GPRS_LLC
+value|169
+end_define
+
+begin_comment
+comment|/* GPRS LLC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_GPF_T
+value|170
+end_define
+
+begin_comment
+comment|/* GPF-T (ITU-T G.7041/Y.1303) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_GPF_F
+value|171
+end_define
+
+begin_comment
+comment|/* GPF-F (ITU-T G.7041/Y.1303) */
+end_comment
+
+begin_comment
+comment|/*  * Requested by Oolan Zimmer<oz@gcom.com> for use in Gcom's T1/E1 line  * monitoring equipment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_GCOM_T1E1
+value|172
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_GCOM_SERIAL
+value|173
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  The DLT_ is used  * for internal communication to Physical Interface Cards (PIC)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_PIC_PEER
+value|174
+end_define
+
+begin_comment
+comment|/*  * Link types requested by Gregor Maier<gregor@endace.com> of Endace  * Measurement Systems.  They add an ERF header (see  * http://www.endace.com/support/EndaceRecordFormat.pdf) in front of  * the link-layer header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_ERF_ETH
+value|175
+end_define
+
+begin_comment
+comment|/* Ethernet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_ERF_POS
+value|176
+end_define
+
+begin_comment
+comment|/* Packet-over-SONET */
+end_comment
 
 begin_comment
 comment|/*  * The instruction encodings.  */
