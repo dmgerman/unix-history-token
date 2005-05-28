@@ -9270,6 +9270,21 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
+case|case
+name|IPPROTO_OSPFIGP
+case|:
+comment|/* XXX OSPF header check? */
+name|PULLUP_TO
+argument_list|(
+name|hlen
+argument_list|,
+name|ulp
+argument_list|,
+expr|struct
+name|ip6_ext
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
