@@ -113,6 +113,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|I6300ESBID
+value|0x25a68086
+end_define
+
+begin_comment
+comment|/* 6300ESB needs to be treated as ICH4 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICH6ID
 value|0x266e8086
 end_define
@@ -2876,6 +2887,17 @@ operator|->
 name|dev
 argument_list|)
 operator|!=
+name|I6300ESBID
+operator|)
+operator|&&
+operator|(
+name|pci_get_devid
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+operator|!=
 name|ICH6ID
 operator|)
 condition|)
@@ -3139,6 +3161,21 @@ expr_stmt|;
 return|return
 name|BUS_PROBE_LOW_PRIORITY
 return|;
+case|case
+name|I6300ESBID
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 6300ESB"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1000
+return|;
+comment|/* allow a better driver to override us */
 case|case
 name|ICH6ID
 case|:
@@ -3426,6 +3463,13 @@ name|dev
 argument_list|)
 operator|==
 name|ICH5ID
+operator|||
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|I6300ESBID
 operator|||
 name|pci_get_devid
 argument_list|(
