@@ -1800,6 +1800,26 @@ goto|goto
 name|release
 goto|;
 block|}
+if|if
+condition|(
+name|sap
+operator|==
+name|NULL
+condition|)
+name|len
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Make compiler happy. */
+else|else
+name|len
+operator|=
+name|sap
+operator|->
+name|sg_len
+operator|-
+literal|2
+expr_stmt|;
 comment|/* 	 * If the user used any of these ways to not specify an address 	 * then handle specially. 	 */
 if|if
 condition|(
@@ -1810,15 +1830,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
-operator|(
 name|len
-operator|=
-name|sap
-operator|->
-name|sg_len
-operator|-
-literal|2
-operator|)
 operator|<=
 literal|0
 operator|)
