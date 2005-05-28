@@ -88,36 +88,16 @@ define|\
 value|release_timer2()
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|spkr_set_pitch
 parameter_list|(
-name|u_int16_t
 name|pitch
 parameter_list|)
-block|{
-name|outb
-argument_list|(
-name|TIMER_CNTR2
-argument_list|,
-name|pitch
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|TIMER_CNTR2
-argument_list|,
-name|pitch
-operator|>>
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+define|\
+value|do { \ 		outb(TIMER_CNTR2, (pitch)& 0xff); \ 		outb(TIMER_CNTR2, (pitch)>> 8); \ 	} while(0)
+end_define
 
 begin_endif
 endif|#
