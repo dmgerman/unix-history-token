@@ -380,7 +380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_add_new_page:  *  *	Add a new page to the freelist for use by the system.  *	Must be called at splhigh().  */
+comment|/*  *	vm_add_new_page:  *  *	Add a new page to the freelist for use by the system.  */
 end_comment
 
 begin_function
@@ -582,7 +582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_pageq_remove_nowakeup:  *  * 	vm_page_unqueue() without any wakeup  *  *	This routine must be called at splhigh().  *	This routine may not block.  */
+comment|/*  * vm_pageq_remove_nowakeup:  *  * 	vm_page_unqueue() without any wakeup  *  *	The queue containing the given page must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -656,7 +656,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_pageq_remove:  *  *	Remove a page from its queue.  *  *	This routine must be called at splhigh().  *	This routine may not block.  */
+comment|/*  * vm_pageq_remove:  *  *	Remove a page from its queue.  *  *	The queue containing the given page must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -760,7 +760,7 @@ literal|1
 end_if
 
 begin_comment
-comment|/*  *	vm_pageq_find:  *  *	Find a page on the specified queue with color optimization.  *  *	The page coloring optimization attempts to locate a page  *	that does not overload other nearby pages in the object in  *	the cpu's L2 cache.  We need this optimization because cpu  *	caches tend to be physical caches, while object spaces tend   *	to be virtual.  *  *	This routine must be called at splvm().  *	This routine may not block.  *  *	This routine may only be called from the vm_pageq_find()  *	function in this file.  */
+comment|/*  *	vm_pageq_find:  *  *	Find a page on the specified queue with color optimization.  *  *	The page coloring optimization attempts to locate a page  *	that does not overload other nearby pages in the object in  *	the cpu's L2 cache.  We need this optimization because cpu  *	caches tend to be physical caches, while object spaces tend   *	to be virtual.  *  *	The specified queue must be locked.  *	This routine may not block.  *  *	This routine may only be called from the vm_pageq_find()  *	function in this file.  */
 end_comment
 
 begin_function
