@@ -6326,12 +6326,6 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|pmap_enter
 argument_list|(
 name|pm
@@ -6345,12 +6339,6 @@ operator||
 name|VM_PROT_EXECUTE
 argument_list|,
 name|FALSE
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK
