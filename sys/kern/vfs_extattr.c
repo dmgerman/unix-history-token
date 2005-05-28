@@ -733,7 +733,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Change filesystem quotas.  */
+comment|/*  * Change filesystem quotas.  *  * MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -821,6 +821,12 @@ operator|(
 name|EPERM
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -853,11 +859,19 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|NDFREE
 argument_list|(
 operator|&
@@ -901,11 +915,19 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|error
 operator|=
 name|VFS_QUOTACTL
@@ -930,6 +952,12 @@ expr_stmt|;
 name|vn_finished_write
 argument_list|(
 name|vmp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
