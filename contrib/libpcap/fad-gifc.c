@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-gifc.c,v 1.4.2.1 2003/11/15 23:26:39 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-gifc.c,v 1.8 2005/01/29 10:34:04 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,6 +746,18 @@ decl_stmt|;
 name|unsigned
 name|buf_size
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SOLARIS
+name|char
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|q
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|ifreq
 name|ifrflags
@@ -1067,6 +1079,35 @@ operator|+
 name|n
 operator|)
 expr_stmt|;
+comment|/* 		 * XXX - The 32-bit compatibility layer for Linux on IA-64 		 * is slightly broken. It correctly converts the structures 		 * to and from kernel land from 64 bit to 32 bit but  		 * doesn't update ifc.ifc_len, leaving it larger than the  		 * amount really used. This means we read off the end  		 * of the buffer and encounter an interface with an  		 * "empty" name. Since this is highly unlikely to ever  		 * occur in a valid case we can just finish looking for  		 * interfaces if we see an empty name. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+operator|*
+name|ifrp
+operator|->
+name|ifr_name
+operator|)
+condition|)
+break|break;
+comment|/* 		 * Skip entries that begin with "dummy". 		 * XXX - what are these?  Is this Linux-specific? 		 * Are there platforms on which we shouldn't do this? 		 */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|ifrp
+operator|->
+name|ifr_name
+argument_list|,
+literal|"dummy"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 comment|/* 		 * Get the flags for this interface, and skip it if it's 		 * not up. 		 */
 name|strncpy
 argument_list|(
@@ -1605,6 +1646,68 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_SOLARIS
+comment|/* 		 * If this entry has a colon followed by a number at 		 * the end, it's a logical interface.  Those are just 		 * the way you assign multiple IP addresses to a real 		 * interface, so an entry for a logical interface should 		 * be treated like the entry for the real interface; 		 * we do that by stripping off the ":" and the number. 		 */
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|ifrp
+operator|->
+name|ifr_name
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 			 * We have a ":"; is it followed by a number? 			 */
+name|q
+operator|=
+name|p
+operator|+
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|isdigit
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|q
+argument_list|)
+condition|)
+name|q
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|q
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* 				 * All digits after the ":" until the end. 				 * Strip off the ":" and everything after 				 * it. 				 */
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 comment|/* 		 * Add information for this address to the list. 		 */
 if|if
 condition|(

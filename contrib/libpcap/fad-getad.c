@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-getad.c,v 1.7.2.2 2004/03/11 23:04:52 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-getad.c,v 1.10 2004/11/04 07:26:04 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AF_PACKET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux/if_packet.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * This is fun.  *  * In older BSD systems, socket addresses were fixed-length, and  * "sizeof (struct sockaddr)" gave the size of the structure.  * All addresses fit within a "struct sockaddr".  *  * In newer BSD systems, the socket address is variable-length, and  * there's an "sa_len" field giving the length of the structure;  * this allows socket addresses to be longer than 2 bytes of family  * and 14 bytes of data.  *  * Some commercial UNIXes use the old BSD scheme, some use the RFC 2553  * variant of the old BSD scheme (with "struct sockaddr_storage" rather  * than "struct sockaddr"), and some use the new BSD scheme.  *  * Some versions of GNU libc use neither scheme, but has an "SA_LEN()"  * macro that determines the size based on the address family.  Other  * versions don't have "SA_LEN()" (as it was in drafts of RFC 2553  * but not in the final version).  On the latter systems, we explicitly  * check the AF_ type to determine the length; we assume that on  * all those systems we have "struct sockaddr_storage".  */
 end_comment
@@ -206,6 +223,23 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|sockaddr_in6
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|AF_PACKET
+case|case
+name|AF_PACKET
+case|:
+return|return
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_ll
 argument_list|)
 operator|)
 return|;

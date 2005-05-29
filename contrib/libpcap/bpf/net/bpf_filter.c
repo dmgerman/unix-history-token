@@ -33,7 +33,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/bpf/net/bpf_filter.c,v 1.43.2.1 2003/11/15 23:26:49 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/bpf/net/bpf_filter.c,v 1.44 2003/11/15 23:24:07 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

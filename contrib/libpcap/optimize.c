@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/optimize.c,v 1.76.2.3 2003/12/22 00:26:36 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/optimize.c,v 1.85 2005/04/04 08:42:18 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<memory.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -114,6 +120,59 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__DJGPP__
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|_w32_ffs
+parameter_list|(
+name|int
+name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ffs
+value|_w32_ffs
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Represents a deleted instruction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOP
+value|-1
+end_define
+
+begin_comment
+comment|/*  * Register numbers for use-def values.  * 0 through BPF_MEMWORDS-1 represent the corresponding scratch memory  * location.  A_ATOM is the accumulator and X_ATOM is the index  * register.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -126,13 +185,6 @@ define|#
 directive|define
 name|X_ATOM
 value|(BPF_MEMWORDS+1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOP
-value|-1
 end_define
 
 begin_comment
@@ -1958,6 +2010,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Compute the sets of registers used, defined, and killed by 'b'.  *  * "Used" means that a statement in 'b' uses the register before any  * statement in 'b' defines it, i.e. it uses the value left in  * that register by a predecessor block of this block.  * "Defined" means that a statement in 'b' defines it.  * "Killed" means that a statement in 'b' defines it before any  * statement in 'b' uses it, i.e. it kills the value left in that  * register by a predecessor block of this block.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2155,14 +2211,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
-name|ATOMELEM
-argument_list|(
-name|def
-argument_list|,
-name|A_ATOM
-argument_list|)
-operator|&&
 name|BPF_CLASS
 argument_list|(
 name|b
@@ -2174,6 +2222,59 @@ argument_list|)
 operator|==
 name|BPF_JMP
 condition|)
+block|{
+comment|/* 		 * XXX - what about RET? 		 */
+name|atom
+operator|=
+name|atomuse
+argument_list|(
+operator|&
+name|b
+operator|->
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|atom
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|atom
+operator|==
+name|AX_ATOM
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ATOMELEM
+argument_list|(
+name|def
+argument_list|,
+name|X_ATOM
+argument_list|)
+condition|)
+name|use
+operator||=
+name|ATOMMASK
+argument_list|(
+name|X_ATOM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ATOMELEM
+argument_list|(
+name|def
+argument_list|,
+name|A_ATOM
+argument_list|)
+condition|)
 name|use
 operator||=
 name|ATOMMASK
@@ -2181,6 +2282,39 @@ argument_list|(
 name|A_ATOM
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|atom
+operator|<
+name|N_ATOMS
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ATOMELEM
+argument_list|(
+name|def
+argument_list|,
+name|atom
+argument_list|)
+condition|)
+name|use
+operator||=
+name|ATOMMASK
+argument_list|(
+name|atom
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 name|b
 operator|->
 name|def
@@ -3061,11 +3195,18 @@ name|last
 operator|=
 name|s
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+comment|/*empty*/
+init|;
+comment|/*empty*/
+condition|;
+name|s
+operator|=
+name|next
+control|)
 block|{
+comment|/* 		 * Skip over nops. 		 */
 name|s
 operator|=
 name|this_op
@@ -3080,6 +3221,8 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* nothing left in the block */
+comment|/* 		 * Find the next real instruction after that one 		 * (skipping nops). 		 */
 name|next
 operator|=
 name|this_op
@@ -3096,6 +3239,7 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* no next instruction */
 name|last
 operator|=
 name|next
@@ -3243,7 +3387,8 @@ argument_list|,
 name|X_ATOM
 argument_list|)
 condition|)
-break|break;
+continue|continue;
+comment|/* 			 * Check that the instruction following the ldi 			 * is an addx, or it's an ldxms with an addx 			 * following it (with 0 or more nops between the 			 * ldxms and addx). 			 */
 if|if
 condition|(
 name|next
@@ -3294,7 +3439,8 @@ operator||
 name|BPF_X
 operator|)
 condition|)
-break|break;
+continue|continue;
+comment|/* 			 * Check that a tax follows that (with 0 or more 			 * nops between them). 			 */
 name|tax
 operator|=
 name|this_op
@@ -3322,7 +3468,8 @@ operator||
 name|BPF_TAX
 operator|)
 condition|)
-break|break;
+continue|continue;
+comment|/* 			 * Check that an ild follows that (with 0 or more 			 * nops between them). 			 */
 name|ild
 operator|=
 name|this_op
@@ -3360,8 +3507,8 @@ argument_list|)
 operator|!=
 name|BPF_IND
 condition|)
-break|break;
-comment|/* 			 * XXX We need to check that X is not 			 * subsequently used.  We know we can eliminate the 			 * accumulator modifications since it is defined 			 * by the last stmt of this sequence. 			 * 			 * We want to turn this sequence: 			 * 			 * (004) ldi     #0x2		{s} 			 * (005) ldxms   [14]		{next}  -- optional 			 * (006) addx			{add} 			 * (007) tax			{tax} 			 * (008) ild     [x+0]		{ild} 			 * 			 * into this sequence: 			 * 			 * (004) nop 			 * (005) ldxms   [14] 			 * (006) nop 			 * (007) nop 			 * (008) ild     [x+2] 			 * 			 */
+continue|continue;
+comment|/* 			 * We want to turn this sequence: 			 * 			 * (004) ldi     #0x2		{s} 			 * (005) ldxms   [14]		{next}  -- optional 			 * (006) addx			{add} 			 * (007) tax			{tax} 			 * (008) ild     [x+0]		{ild} 			 * 			 * into this sequence: 			 * 			 * (004) nop 			 * (005) ldxms   [14] 			 * (006) nop 			 * (007) nop 			 * (008) ild     [x+2] 			 * 			 * XXX We need to check that X is not 			 * subsequently used, because we want to change 			 * what'll be in it after this sequence. 			 * 			 * We know we can eliminate the accumulator 			 * modifications earlier in the sequence since 			 * it is defined by the last stmt of this sequence 			 * (i.e., the last statement of the sequence loads 			 * a value into the accumulator, so we can eliminate 			 * earlier operations on the accumulator). 			 */
 name|ild
 operator|->
 name|s
@@ -3403,26 +3550,36 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|next
-expr_stmt|;
 block|}
-comment|/* 	 * If we have a subtract to do a comparison, and the X register 	 * is a known constant, we can merge this value into the 	 * comparison. 	 */
+comment|/* 	 * If the comparison at the end of a block is an equality 	 * comparison against a constant, and nobody uses the value 	 * we leave in the A register at the end of a block, and 	 * the operation preceding the comparison is an arithmetic 	 * operation, we can sometime optimize it away. 	 */
 if|if
 condition|(
-name|BPF_OP
-argument_list|(
 name|b
 operator|->
 name|s
 operator|.
 name|code
-argument_list|)
 operator|==
+operator|(
+name|BPF_JMP
+operator||
 name|BPF_JEQ
+operator||
+name|BPF_K
+operator|)
+operator|&&
+operator|!
+name|ATOMELEM
+argument_list|(
+name|b
+operator|->
+name|out_use
+argument_list|,
+name|A_ATOM
+argument_list|)
 condition|)
 block|{
+comment|/* 	    	 * We can optimize away certain subtractions of the 	    	 * X register. 	    	 */
 if|if
 condition|(
 name|last
@@ -3438,16 +3595,6 @@ name|BPF_SUB
 operator||
 name|BPF_X
 operator|)
-operator|&&
-operator|!
-name|ATOMELEM
-argument_list|(
-name|b
-operator|->
-name|out_use
-argument_list|,
-name|A_ATOM
-argument_list|)
 condition|)
 block|{
 name|val
@@ -3469,7 +3616,7 @@ operator|.
 name|is_const
 condition|)
 block|{
-comment|/* 				 * sub x  ->	nop 				 * jeq #y	jeq #(x+y) 				 */
+comment|/* 				 * If we have a subtract to do a comparison, 				 * and the X register is a known constant, 				 * we can merge this value into the 				 * comparison: 				 * 				 * sub x  ->	nop 				 * jeq #y	jeq #(x+y) 				 */
 name|b
 operator|->
 name|s
@@ -3508,7 +3655,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * sub #x  ->	nop 				 * jeq #0	jeq #x 				 */
+comment|/* 				 * If the X register isn't a constant, 				 * and the comparison in the test is 				 * against 0, we can compare with the 				 * X register, instead: 				 * 				 * sub x  ->	nop 				 * jeq #0	jeq x 				 */
 name|last
 operator|->
 name|s
@@ -3523,23 +3670,9 @@ name|s
 operator|.
 name|code
 operator|=
-name|BPF_CLASS
-argument_list|(
-name|b
-operator|->
-name|s
-operator|.
-name|code
-argument_list|)
+name|BPF_JMP
 operator||
-name|BPF_OP
-argument_list|(
-name|b
-operator|->
-name|s
-operator|.
-name|code
-argument_list|)
+name|BPF_JEQ
 operator||
 name|BPF_X
 expr_stmt|;
@@ -3549,7 +3682,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Likewise, a constant subtract can be simplified. 		 */
+comment|/* 		 * Likewise, a constant subtract can be simplified: 		 * 		 * sub #x ->	nop 		 * jeq #y ->	jeq #(x+y) 		 */
 elseif|else
 if|if
 condition|(
@@ -3566,16 +3699,6 @@ name|BPF_SUB
 operator||
 name|BPF_K
 operator|)
-operator|&&
-operator|!
-name|ATOMELEM
-argument_list|(
-name|b
-operator|->
-name|out_use
-argument_list|,
-name|A_ATOM
-argument_list|)
 condition|)
 block|{
 name|last
@@ -3603,8 +3726,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * and #k	nop 	 * jeq #0  ->	jset #k 	 */
+comment|/* 		 * And, similarly, a constant AND can be simplified 		 * if we're testing against 0, i.e.: 		 * 		 * and #k	nop 		 * jeq #0  ->	jset #k 		 */
+elseif|else
 if|if
 condition|(
 name|last
@@ -3620,16 +3743,6 @@ name|BPF_AND
 operator||
 name|BPF_K
 operator|)
-operator|&&
-operator|!
-name|ATOMELEM
-argument_list|(
-name|b
-operator|->
-name|out_use
-argument_list|,
-name|A_ATOM
-argument_list|)
 operator|&&
 name|b
 operator|->
@@ -3681,6 +3794,7 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * jset #0        ->   never 	 * jset #ffffffff ->   always 	 */
 if|if
@@ -5396,6 +5510,8 @@ name|i
 decl_stmt|;
 name|bpf_int32
 name|aval
+decl_stmt|,
+name|xval
 decl_stmt|;
 if|#
 directive|if
@@ -5403,7 +5519,7 @@ literal|0
 block|for (s = b->stmts; s&& s->next; s = s->next) 		if (BPF_CLASS(s->s.code) == BPF_JMP) { 			do_stmts = 0; 			break; 		}
 endif|#
 directive|endif
-comment|/* 	 * Initialize the atom values. 	 * If we have no predecessors, everything is undefined. 	 * Otherwise, we inherent our values from our predecessors. 	 * If any register has an ambiguous value (i.e. control paths are 	 * merging) give it the undefined value of 0. 	 */
+comment|/* 	 * Initialize the atom values. 	 */
 name|p
 operator|=
 name|b
@@ -5416,6 +5532,8 @@ name|p
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* 		 * We have no predecessors, so everything is undefined 		 * upon entry to this block. 		 */
 name|memset
 argument_list|(
 operator|(
@@ -5436,8 +5554,10 @@ name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
+comment|/* 		 * Inherit values from our predecessors. 		 * 		 * First, get the values from the predecessor along the 		 * first edge leading to this node. 		 */
 name|memcpy
 argument_list|(
 operator|(
@@ -5466,6 +5586,7 @@ name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Now look at all the other nodes leading to this node. 		 * If, for the predecessor along that edge, a register 		 * has a different value from the one we have (i.e., 		 * control paths are merging, and the merging paths 		 * assign different values to that register), give the 		 * register the undefined value of 0. 		 */
 while|while
 condition|(
 operator|(
@@ -5530,6 +5651,15 @@ index|[
 name|A_ATOM
 index|]
 expr_stmt|;
+name|xval
+operator|=
+name|b
+operator|->
+name|val
+index|[
+name|X_ATOM
+index|]
+expr_stmt|;
 for|for
 control|(
 name|s
@@ -5560,7 +5690,7 @@ argument_list|,
 name|do_stmts
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is a special case: if we don't use anything from this 	 * block, and we load the accumulator with value that is 	 * already there, or if this block is a return, 	 * eliminate all the statements. 	 */
+comment|/* 	 * This is a special case: if we don't use anything from this 	 * block, and we load the accumulator or index register with a 	 * value that is already there, or if this block is a return, 	 * eliminate all the statements. 	 * 	 * XXX - what if it does a store? 	 * 	 * XXX - why does it matter whether we use anything from this 	 * block?  If the accumulator or index register doesn't change 	 * its value, isn't that OK even if we use that value? 	 * 	 * XXX - if we load the accumulator with a different value, 	 * and the block ends with a conditional branch, we obviously 	 * can't eliminate it, as the branch depends on that value. 	 * For the index register, the conditional branch only depends 	 * on the index register value if the test is against the index 	 * register value rather than a constant; if nothing uses the 	 * value we put into the index register, and we're not testing 	 * against the index register's value, and there aren't any 	 * other problems that would keep us from eliminating this 	 * block, can we eliminate it? 	 */
 if|if
 condition|(
 name|do_stmts
@@ -5585,6 +5715,19 @@ name|A_ATOM
 index|]
 operator|==
 name|aval
+operator|&&
+name|xval
+operator|!=
+literal|0
+operator|&&
+name|b
+operator|->
+name|val
+index|[
+name|X_ATOM
+index|]
+operator|==
+name|xval
 operator|)
 operator|||
 name|BPF_CLASS
@@ -5917,7 +6060,7 @@ name|oval0
 operator|==
 name|oval1
 condition|)
-comment|/* 		 * The operands are identical, so the 		 * result is true if a true branch was 		 * taken to get here, otherwise false. 		 */
+comment|/* 		 * The operands of the branch instructions are 		 * identical, so the result is true if a true 		 * branch was taken to get here, otherwise false. 		 */
 return|return
 name|sense
 condition|?
@@ -5945,7 +6088,7 @@ operator||
 name|BPF_K
 operator|)
 condition|)
-comment|/* 		 * At this point, we only know the comparison if we 		 * came down the true branch, and it was an equality 		 * comparison with a constant.  We rely on the fact that 		 * distinct constants have distinct value numbers. 		 */
+comment|/* 		 * At this point, we only know the comparison if we 		 * came down the true branch, and it was an equality 		 * comparison with a constant. 		 * 		 * I.e., if we came down the true branch, and the branch 		 * was an equality comparison with a constant, we know the 		 * accumulator contains that constant.  If we came down 		 * the false branch, or the comparison wasn't with a 		 * constant, we don't know what was in the accumulator. 		 * 		 * We rely on the fact that distinct constants have distinct 		 * value numbers. 		 */
 return|return
 name|JF
 argument_list|(

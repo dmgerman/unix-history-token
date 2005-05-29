@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/libpcap/ppp.h,v 1.8 1999/10/19 15:18:31 itojun Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/libpcap/ppp.h,v 1.12 2005/02/08 19:52:19 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -27,6 +27,28 @@ end_define
 
 begin_comment
 comment|/* The control byte value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_PPPD_IN
+value|0x00
+end_define
+
+begin_comment
+comment|/* non-standard for DLT_PPP_PPPD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_PPPD_OUT
+value|0x01
+end_define
+
+begin_comment
+comment|/* non-standard for DLT_PPP_PPPD */
 end_comment
 
 begin_comment
@@ -201,6 +223,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PPP_MPLS_UCAST
+value|0x0281
+end_define
+
+begin_comment
+comment|/* rfc 3032 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_MPLS_MCAST
+value|0x0283
+end_define
+
+begin_comment
+comment|/* rfc 3022 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PPP_IPCP
 value|0x8021
 end_define
@@ -295,6 +339,17 @@ end_define
 
 begin_comment
 comment|/* IPv6 Control Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_MPLSCP
+value|0x8281
+end_define
+
+begin_comment
+comment|/* rfc 3022 */
 end_comment
 
 begin_define
