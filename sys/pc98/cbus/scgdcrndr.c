@@ -184,6 +184,12 @@ name|sc_rndr_sw_t
 name|txtrndrsw
 init|=
 block|{
+operator|(
+name|vr_init_t
+operator|*
+operator|)
+name|gdc_nop
+block|,
 name|gdc_txtclear
 block|,
 name|gdc_txtborder
@@ -237,6 +243,12 @@ name|sc_rndr_sw_t
 name|grrndrsw
 init|=
 block|{
+operator|(
+name|vr_init_t
+operator|*
+operator|)
+name|gdc_nop
+block|,
 operator|(
 name|vr_clear_t
 operator|*
