@@ -270,7 +270,18 @@ name|void
 modifier|*
 name|dummy
 decl_stmt|;
-block|{ }
+block|{
+comment|/* nexus0 is the top of the amd64 device tree */
+name|device_add_child
+argument_list|(
+name|root_bus
+argument_list|,
+literal|"nexus"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -288,16 +299,6 @@ block|{
 comment|/* 	 * Enable interrupts on the processor.  The interrupts are still 	 * disabled in the interrupt controllers until interrupt handlers 	 * are registered. 	 */
 name|enable_intr
 argument_list|()
-expr_stmt|;
-comment|/* nexus0 is the top of the i386 device tree */
-name|device_add_child
-argument_list|(
-name|root_bus
-argument_list|,
-literal|"nexus"
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 comment|/* initialize new bus architecture */
 name|root_bus_configure

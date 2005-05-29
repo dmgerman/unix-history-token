@@ -189,7 +189,17 @@ name|void
 modifier|*
 name|dummy
 parameter_list|)
-block|{ }
+block|{
+name|device_add_child
+argument_list|(
+name|root_bus
+argument_list|,
+literal|"nexus"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -202,15 +212,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|device_add_child
-argument_list|(
-name|root_bus
-argument_list|,
-literal|"nexus"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|root_bus_configure
 argument_list|()
 expr_stmt|;
