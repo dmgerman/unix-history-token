@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  * Copyright (c) 2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -110,6 +110,69 @@ begin_comment
 comment|/* time when first defined :-) */
 end_comment
 
+begin_comment
+comment|/*  * Two malloc type structures are present: malloc_type, which is used by a  * type owner to declare the type, and malloc_type_internal, which holds  * malloc-owned statistics and other ABI-sensitive fields, such as the set of  * malloc statistics indexed by the compile-time MAXCPU constant.  * Applications should avoid introducing dependence on the allocator private  * data layout and size.  *  * The malloc_type ks_next field is protected by malloc_mtx.  Other fields in  * malloc_type are static after initialization so unsynchronized.  *  * Statistics in malloc_type_stats are written only when holding a critical  * section and running on the CPU associated with the index into the stat  * array, but read lock-free resulting in possible (minor) races, which the  * monitoring app should take into account.  */
+end_comment
+
+begin_struct
+struct|struct
+name|malloc_type_stats
+block|{
+name|u_long
+name|mts_memalloced
+decl_stmt|;
+comment|/* Bytes allocated on CPU. */
+name|u_long
+name|mts_memfreed
+decl_stmt|;
+comment|/* Bytes freed on CPU. */
+name|u_long
+name|mts_numallocs
+decl_stmt|;
+comment|/* Number of allocates on CPU. */
+name|u_long
+name|mts_numfrees
+decl_stmt|;
+comment|/* number of frees on CPU. */
+name|u_long
+name|mts_size
+decl_stmt|;
+comment|/* Bitmask of sizes allocated on CPU. */
+name|u_long
+name|_mts_reserved1
+decl_stmt|;
+comment|/* Reserved field. */
+name|u_long
+name|_mts_reserved2
+decl_stmt|;
+comment|/* Reserved field. */
+name|u_long
+name|_mts_reserved3
+decl_stmt|;
+comment|/* Reserved field. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|malloc_type_internal
+block|{
+name|struct
+name|malloc_type_stats
+name|mti_stats
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * ABI-compatible version of the old 'struct malloc_type', only all stats are  * now malloc-managed in malloc-owned memory rather than in caller memory, so  * as to avoid ABI issues.  The ks_next pointer is reused as a pointer to the  * internal data handle.  */
+end_comment
+
 begin_struct
 struct|struct
 name|malloc_type
@@ -119,42 +182,71 @@ name|malloc_type
 modifier|*
 name|ks_next
 decl_stmt|;
-comment|/* next in list */
+comment|/* Next in global chain. */
 name|u_long
-name|ks_memuse
+name|_ks_memuse
 decl_stmt|;
-comment|/* total memory held in bytes */
+comment|/* No longer used. */
 name|u_long
-name|ks_size
+name|_ks_size
 decl_stmt|;
-comment|/* sizes of this thing that are allocated */
+comment|/* No longer used. */
 name|u_long
-name|ks_inuse
+name|_ks_inuse
 decl_stmt|;
-comment|/* # of packets of this type currently in use */
+comment|/* No longer used. */
 name|uint64_t
-name|ks_calls
+name|_ks_calls
 decl_stmt|;
-comment|/* total packets of this type ever allocated */
+comment|/* No longer used. */
 name|u_long
-name|ks_maxused
+name|_ks_maxused
 decl_stmt|;
-comment|/* maximum number ever used */
+comment|/* No longer used. */
 name|u_long
 name|ks_magic
 decl_stmt|;
-comment|/* if it's not magic, don't touch it */
+comment|/* Detect programmer error. */
 specifier|const
 name|char
 modifier|*
 name|ks_shortdesc
 decl_stmt|;
-comment|/* short description */
-name|struct
-name|mtx
-name|ks_mtx
+comment|/* Printable type name. */
+comment|/* 	 * struct malloc_type was terminated with a struct mtx, which is no 	 * longer required.  For ABI reasons, continue to flesh out the full 	 * size of the old structure, but reuse the _lo_class field for our 	 * internal data handle. 	 */
+name|void
+modifier|*
+name|ks_handle
 decl_stmt|;
-comment|/* lock for stats */
+comment|/* Priv. data, was lo_class. */
+specifier|const
+name|char
+modifier|*
+name|_lo_name
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|_lo_type
+decl_stmt|;
+name|u_int
+name|_lo_flags
+decl_stmt|;
+name|void
+modifier|*
+name|_lo_list_next
+decl_stmt|;
+name|struct
+name|witness
+modifier|*
+name|_lo_witness
+decl_stmt|;
+name|uintptr_t
+name|_mtx_lock
+decl_stmt|;
+name|u_int
+name|_mtx_recurse
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -177,7 +269,7 @@ parameter_list|,
 name|longdesc
 parameter_list|)
 define|\
-value|struct malloc_type type[1] = { \ 		{ NULL, 0, 0, 0, 0, 0, M_MAGIC, shortdesc, {} } \ 	}; \ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init, type); \ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY, malloc_uninit, type)
+value|struct malloc_type type[1] = {					\ 		{ NULL, 0, 0, 0, 0, 0, M_MAGIC, shortdesc, NULL, NULL,	\ 		    NULL, 0, NULL, NULL, 0, 0 }				\ 	};								\ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init,	\ 	    type);							\ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY,		\ 	    malloc_uninit, type);
 end_define
 
 begin_define
