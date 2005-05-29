@@ -3673,6 +3673,7 @@ argument_list|(
 name|cur_scp
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -3681,19 +3682,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
-else|else
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-break|break;
+comment|/* NOTREACHED */
 case|case
 name|MOUSE_HIDE
 case|:
@@ -3729,6 +3718,7 @@ operator|->
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -3737,19 +3727,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
-else|else
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-break|break;
+comment|/* NOTREACHED */
 case|case
 name|MOUSE_MOVEABS
 case|:

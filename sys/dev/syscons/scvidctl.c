@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * This code is derived from software contributed to The DragonFly Project  * by Sascha Wildner<saw@online.de>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1598,29 +1598,28 @@ condition|)
 return|return
 name|EINVAL
 return|;
-comment|/* only 16 color, 4 plane modes are supported XXX */
+comment|/*      * We currently support the following graphic modes:      *      * - 4 bpp planar modes whose memory size does not exceed 64K      * - 15, 16, 24 and 32 bpp linear modes      */
 if|if
 condition|(
-operator|(
 name|info
 operator|.
-name|vi_depth
-operator|!=
-literal|4
-operator|)
-operator|||
-operator|(
+name|vi_mem_model
+operator|==
+name|V_INFO_MM_PLANAR
+condition|)
+block|{
+if|if
+condition|(
 name|info
 operator|.
 name|vi_planes
 operator|!=
 literal|4
-operator|)
 condition|)
 return|return
 name|ENODEV
 return|;
-comment|/*      * set_pixel_mode() currently does not support video modes whose      * memory size is larger than 64K. Because such modes require      * bank switching to access the entire screen. XXX      */
+comment|/* 	 * A memory size>64K requires bank switching to access the entire 	 * screen. XXX 	 */
 if|if
 condition|(
 name|info
@@ -1637,6 +1636,59 @@ name|info
 operator|.
 name|vi_window_size
 condition|)
+return|return
+name|ENODEV
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|info
+operator|.
+name|vi_mem_model
+operator|==
+name|V_INFO_MM_DIRECT
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|info
+operator|.
+name|vi_depth
+operator|!=
+literal|15
+operator|)
+operator|&&
+operator|(
+name|info
+operator|.
+name|vi_depth
+operator|!=
+literal|16
+operator|)
+operator|&&
+operator|(
+name|info
+operator|.
+name|vi_depth
+operator|!=
+literal|24
+operator|)
+operator|&&
+operator|(
+name|info
+operator|.
+name|vi_depth
+operator|!=
+literal|32
+operator|)
+condition|)
+return|return
+name|ENODEV
+return|;
+block|}
+else|else
 return|return
 name|ENODEV
 return|;
