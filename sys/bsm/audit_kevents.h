@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BSM_AUDIT_KEVENTS_H
+name|_BSM_AUDIT_KEVENTS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BSM_AUDIT_KEVENTS_H
+name|_BSM_AUDIT_KEVENTS_H_
 end_define
 
 begin_comment
@@ -32,7 +32,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_BSM_AUDIT_KEVENTS_H */
+comment|/* !_BSM_AUDIT_KEVENTS_H_ */
 end_comment
 
 end_unit
