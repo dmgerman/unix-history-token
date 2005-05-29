@@ -3172,10 +3172,8 @@ literal|"Intel 6300ESB"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1000
+name|BUS_PROBE_LOW_PRIORITY
 return|;
-comment|/* allow a better driver to override us */
 case|case
 name|ICH6ID
 case|:
