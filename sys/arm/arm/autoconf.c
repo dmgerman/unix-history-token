@@ -214,13 +214,6 @@ expr_stmt|;
 name|root_bus_configure
 argument_list|()
 expr_stmt|;
-name|cold
-operator|=
-literal|0
-expr_stmt|;
-name|cninit_finish
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -233,7 +226,15 @@ name|void
 modifier|*
 name|dummy
 parameter_list|)
-block|{ }
+block|{
+name|cninit_finish
+argument_list|()
+expr_stmt|;
+name|cold
+operator|=
+literal|0
+expr_stmt|;
+block|}
 end_function
 
 end_unit
