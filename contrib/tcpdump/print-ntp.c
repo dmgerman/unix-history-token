@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.37.2.2 2003/11/16 08:51:36 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.41 2004/01/28 14:54:50 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,112 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|tok
+name|ntp_mode_values
+index|[]
+init|=
+block|{
+block|{
+name|MODE_UNSPEC
+block|,
+literal|"unspecified"
+block|}
+block|,
+block|{
+name|MODE_SYM_ACT
+block|,
+literal|"symmetric active"
+block|}
+block|,
+block|{
+name|MODE_SYM_PAS
+block|,
+literal|"symmetric passive"
+block|}
+block|,
+block|{
+name|MODE_CLIENT
+block|,
+literal|"Client"
+block|}
+block|,
+block|{
+name|MODE_SERVER
+block|,
+literal|"Server"
+block|}
+block|,
+block|{
+name|MODE_BROADCAST
+block|,
+literal|"Broadcast"
+block|}
+block|,
+block|{
+name|MODE_RES1
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|MODE_RES2
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tok
+name|ntp_leapind_values
+index|[]
+init|=
+block|{
+block|{
+name|NO_WARNING
+block|,
+literal|""
+block|}
+block|,
+block|{
+name|PLUS_SEC
+block|,
+literal|"+1s"
+block|}
+block|,
+block|{
+name|MINUS_SEC
+block|,
+literal|"-1s"
+block|}
+block|,
+block|{
+name|ALARM
+block|,
+literal|"clock unsynchronized"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Print ntp requests  */
 end_comment
@@ -208,27 +314,6 @@ operator|*
 operator|)
 name|cp
 expr_stmt|;
-comment|/* Note funny sized packets */
-if|if
-condition|(
-name|length
-operator|!=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ntpdata
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" [len=%d]"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
 name|TCHECK
 argument_list|(
 name|bp
@@ -258,46 +343,6 @@ argument_list|,
 name|version
 argument_list|)
 expr_stmt|;
-name|leapind
-operator|=
-name|bp
-operator|->
-name|status
-operator|&
-name|LEAPMASK
-expr_stmt|;
-switch|switch
-condition|(
-name|leapind
-condition|)
-block|{
-case|case
-name|NO_WARNING
-case|:
-break|break;
-case|case
-name|PLUS_SEC
-case|:
-name|fputs
-argument_list|(
-literal|" +1s"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MINUS_SEC
-case|:
-name|fputs
-argument_list|(
-literal|" -1s"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|mode
 operator|=
 name|bp
@@ -306,108 +351,70 @@ name|status
 operator|&
 name|MODEMASK
 expr_stmt|;
-switch|switch
+if|if
 condition|(
-name|mode
+operator|!
+name|vflag
 condition|)
 block|{
-case|case
-name|MODE_UNSPEC
-case|:
-comment|/* unspecified */
-name|fputs
+name|printf
 argument_list|(
-literal|" unspec"
+literal|", %s, length %u"
 argument_list|,
-name|stdout
+name|tok2str
+argument_list|(
+name|ntp_mode_values
+argument_list|,
+literal|"Unknown mode"
+argument_list|,
+name|mode
+argument_list|)
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|MODE_SYM_ACT
-case|:
-comment|/* symmetric active */
-name|fputs
-argument_list|(
-literal|" sym_act"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MODE_SYM_PAS
-case|:
-comment|/* symmetric passive */
-name|fputs
-argument_list|(
-literal|" sym_pas"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MODE_CLIENT
-case|:
-comment|/* client */
-name|fputs
-argument_list|(
-literal|" client"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MODE_SERVER
-case|:
-comment|/* server */
-name|fputs
-argument_list|(
-literal|" server"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MODE_BROADCAST
-case|:
-comment|/* broadcast */
-name|fputs
-argument_list|(
-literal|" bcast"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MODE_RES1
-case|:
-comment|/* reserved */
-name|fputs
-argument_list|(
-literal|" res1"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MODE_RES2
-case|:
-comment|/* reserved */
-name|fputs
-argument_list|(
-literal|" res2"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
+return|return;
 block|}
+name|printf
+argument_list|(
+literal|", length %u\n\t%s"
+argument_list|,
+name|length
+argument_list|,
+name|tok2str
+argument_list|(
+name|ntp_mode_values
+argument_list|,
+literal|"Unknown mode"
+argument_list|,
+name|mode
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|leapind
+operator|=
+name|bp
+operator|->
+name|status
+operator|&
+name|LEAPMASK
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", Leap indicator: %s (%u)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|ntp_leapind_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|leapind
+argument_list|)
+argument_list|,
+name|leapind
+argument_list|)
+expr_stmt|;
 name|TCHECK
 argument_list|(
 name|bp
@@ -417,7 +424,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", strat %d"
+literal|", Stratum %u"
 argument_list|,
 name|bp
 operator|->
@@ -433,7 +440,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", poll %d"
+literal|", poll %us"
 argument_list|,
 name|bp
 operator|->
@@ -445,36 +452,30 @@ name|TCHECK2
 argument_list|(
 name|bp
 operator|->
-name|distance
+name|root_delay
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", prec %d"
+literal|", precision %d"
 argument_list|,
 name|bp
 operator|->
 name|precision
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|vflag
-condition|)
-return|return;
 name|TCHECK
 argument_list|(
 name|bp
 operator|->
-name|distance
+name|root_delay
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|" dist "
+literal|"\n\tRoot Delay: "
 argument_list|,
 name|stdout
 argument_list|)
@@ -484,19 +485,19 @@ argument_list|(
 operator|&
 name|bp
 operator|->
-name|distance
+name|root_delay
 argument_list|)
 expr_stmt|;
 name|TCHECK
 argument_list|(
 name|bp
 operator|->
-name|dispersion
+name|root_dispersion
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|", disp "
+literal|", Root dispersion: "
 argument_list|,
 name|stdout
 argument_list|)
@@ -506,7 +507,7 @@ argument_list|(
 operator|&
 name|bp
 operator|->
-name|dispersion
+name|root_dispersion
 argument_list|)
 expr_stmt|;
 name|TCHECK
@@ -518,7 +519,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|", ref "
+literal|", Reference-ID: "
 argument_list|,
 name|stdout
 argument_list|)
@@ -624,34 +625,12 @@ name|TCHECK
 argument_list|(
 name|bp
 operator|->
-name|reftime
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'@'
-argument_list|)
-expr_stmt|;
-name|p_ntp_time
-argument_list|(
-operator|&
-operator|(
-name|bp
-operator|->
-name|reftime
-operator|)
-argument_list|)
-expr_stmt|;
-name|TCHECK
-argument_list|(
-name|bp
-operator|->
-name|org
+name|ref_timestamp
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|" orig "
+literal|"\n\t  Reference Timestamp:  "
 argument_list|,
 name|stdout
 argument_list|)
@@ -662,7 +641,7 @@ operator|&
 operator|(
 name|bp
 operator|->
-name|org
+name|ref_timestamp
 operator|)
 argument_list|)
 expr_stmt|;
@@ -670,12 +649,77 @@ name|TCHECK
 argument_list|(
 name|bp
 operator|->
-name|rec
+name|org_timestamp
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|" rec "
+literal|"\n\t  Originator Timestamp: "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+name|p_ntp_time
+argument_list|(
+operator|&
+operator|(
+name|bp
+operator|->
+name|org_timestamp
+operator|)
+argument_list|)
+expr_stmt|;
+name|TCHECK
+argument_list|(
+name|bp
+operator|->
+name|rec_timestamp
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\n\t  Receive Timestamp:    "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+name|p_ntp_time
+argument_list|(
+operator|&
+operator|(
+name|bp
+operator|->
+name|rec_timestamp
+operator|)
+argument_list|)
+expr_stmt|;
+name|TCHECK
+argument_list|(
+name|bp
+operator|->
+name|xmt_timestamp
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\n\t  Transmit Timestamp:   "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+name|p_ntp_time
+argument_list|(
+operator|&
+operator|(
+name|bp
+operator|->
+name|xmt_timestamp
+operator|)
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\n\t    Originator - Receive Timestamp:  "
 argument_list|,
 name|stdout
 argument_list|)
@@ -686,27 +730,20 @@ operator|&
 operator|(
 name|bp
 operator|->
-name|org
+name|org_timestamp
 operator|)
 argument_list|,
 operator|&
 operator|(
 name|bp
 operator|->
-name|rec
+name|rec_timestamp
 operator|)
-argument_list|)
-expr_stmt|;
-name|TCHECK
-argument_list|(
-name|bp
-operator|->
-name|xmt
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|" xmt "
+literal|"\n\t    Originator - Transmit Timestamp: "
 argument_list|,
 name|stdout
 argument_list|)
@@ -717,17 +754,18 @@ operator|&
 operator|(
 name|bp
 operator|->
-name|org
+name|org_timestamp
 operator|)
 argument_list|,
 operator|&
 operator|(
 name|bp
 operator|->
-name|xmt
+name|xmt_timestamp
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* FIXME key-id, authentication */
 return|return;
 name|trunc
 label|:
@@ -913,13 +951,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_STRFTIME
-comment|/* 	 * For extra verbosity, print the time in human-readable format. 	 */
+comment|/* 	 * print the time in human-readable format. 	 */
 if|if
 condition|(
-name|vflag
-operator|>
-literal|1
-operator|&&
 name|i
 condition|)
 block|{

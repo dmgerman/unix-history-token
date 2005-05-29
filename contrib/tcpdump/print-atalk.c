@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atalk.c,v 1.78.2.2 2003/11/16 08:51:11 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atalk.c,v 1.81 2004/05/01 09:41:50 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -813,6 +813,16 @@ name|snet
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|eflag
+condition|)
+name|printf
+argument_list|(
+literal|"AT "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|length
 operator|<
 name|ddpSize
@@ -873,7 +883,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"> %s.%s:"
+literal|"> %s.%s: "
 argument_list|,
 name|ataddr_string
 argument_list|(
@@ -1213,6 +1223,17 @@ expr|struct
 name|atATP
 operator|*
 operator|)
+name|bp
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ddpEIGRP
+case|:
+name|eigrp_print
+argument_list|(
 name|bp
 argument_list|,
 name|length

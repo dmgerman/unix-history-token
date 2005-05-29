@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.37.2.4 2004/03/24 02:52:37 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.45 2005/04/06 21:32:42 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,293 @@ include|#
 directive|include
 file|<tcpdump-stdinc.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"interface.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_HELLO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_REGISTER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_REGISTER_STOP
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_JOIN_PRUNE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_BOOTSTRAP
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_ASSERT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_GRAFT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_GRAFT_ACK
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_CANDIDATE_RP
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_TYPE_PRUNE_REFRESH
+value|9
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tok
+name|pimv2_type_values
+index|[]
+init|=
+block|{
+block|{
+name|PIMV2_TYPE_HELLO
+block|,
+literal|"Hello"
+block|}
+block|,
+block|{
+name|PIMV2_TYPE_REGISTER
+block|,
+literal|"Register"
+block|}
+block|,
+block|{
+name|PIMV2_TYPE_REGISTER_STOP
+block|,
+literal|"Register Stop"
+block|}
+block|,
+block|{
+name|PIMV2_TYPE_JOIN_PRUNE
+block|,
+literal|"Join / Prune"
+block|}
+block|,
+block|{
+name|PIMV2_TYPE_BOOTSTRAP
+block|,
+literal|"Bootstrap"
+block|}
+block|,
+block|{
+name|PIMV2_TYPE_ASSERT
+block|,
+literal|"Assert"
+block|}
+block|,
+block|{
+name|PIMV2_TYPE_GRAFT
+block|,
+literal|"Graft"
+block|}
+block|,
+block|{
+name|PIMV2_TYPE_GRAFT_ACK
+block|,
+literal|"Graft Acknowledgement"
+block|}
+block|,
+block|{
+name|PIMV2_TYPE_CANDIDATE_RP
+block|,
+literal|"Candidate RP Advertisement"
+block|}
+block|,
+block|{
+name|PIMV2_TYPE_PRUNE_REFRESH
+block|,
+literal|"Prune Refresh"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PIMV2_HELLO_OPTION_HOLDTIME
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_HELLO_OPTION_LANPRUNEDELAY
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_HELLO_OPTION_DR_PRIORITY_OLD
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_HELLO_OPTION_DR_PRIORITY
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_HELLO_OPTION_GENID
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_HELLO_OPTION_REFRESH_CAP
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_HELLO_OPTION_BIDIR_CAP
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_HELLO_OPTION_ADDRESS_LIST
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_HELLO_OPTION_ADDRESS_LIST_OLD
+value|65001
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tok
+name|pimv2_hello_option_values
+index|[]
+init|=
+block|{
+block|{
+name|PIMV2_HELLO_OPTION_HOLDTIME
+block|,
+literal|"Hold Time"
+block|}
+block|,
+block|{
+name|PIMV2_HELLO_OPTION_LANPRUNEDELAY
+block|,
+literal|"LAN Prune Delay"
+block|}
+block|,
+block|{
+name|PIMV2_HELLO_OPTION_DR_PRIORITY_OLD
+block|,
+literal|"DR Priority (Old)"
+block|}
+block|,
+block|{
+name|PIMV2_HELLO_OPTION_DR_PRIORITY
+block|,
+literal|"DR Priority"
+block|}
+block|,
+block|{
+name|PIMV2_HELLO_OPTION_GENID
+block|,
+literal|"Generation ID"
+block|}
+block|,
+block|{
+name|PIMV2_HELLO_OPTION_REFRESH_CAP
+block|,
+literal|"State Refresh Capability"
+block|}
+block|,
+block|{
+name|PIMV2_HELLO_OPTION_BIDIR_CAP
+block|,
+literal|"Bi-Directional Capability"
+block|}
+block|,
+block|{
+name|PIMV2_HELLO_OPTION_ADDRESS_LIST
+block|,
+literal|"Address List"
+block|}
+block|,
+block|{
+name|PIMV2_HELLO_OPTION_ADDRESS_LIST_OLD
+block|,
+literal|"Address List (Old)"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * XXX: We consider a case where IPv6 is not ready yet for portability,  * but PIM dependent defintions should be independent of IPv6...  */
@@ -1951,13 +2238,70 @@ block|{
 case|case
 literal|2
 case|:
-comment|/* avoid hardcoding? */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+operator|!
+name|vflag
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"pim v2"
+literal|"PIMv%u, %s, length: %u"
+argument_list|,
+name|PIM_VER
+argument_list|(
+name|pim
+operator|->
+name|pim_typever
+argument_list|)
+argument_list|,
+name|tok2str
+argument_list|(
+name|pimv2_type_values
+argument_list|,
+literal|"Unknown Type"
+argument_list|,
+name|PIM_TYPE
+argument_list|(
+name|pim
+operator|->
+name|pim_typever
+argument_list|)
+argument_list|)
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"PIMv%u, length: %u\n\t%s"
+argument_list|,
+name|PIM_VER
+argument_list|(
+name|pim
+operator|->
+name|pim_typever
+argument_list|)
+argument_list|,
+name|len
+argument_list|,
+name|tok2str
+argument_list|(
+name|pimv2_type_values
+argument_list|,
+literal|"Unknown Type"
+argument_list|,
+name|PIM_TYPE
+argument_list|(
+name|pim
+operator|->
+name|pim_typever
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pimv2_print
@@ -1967,14 +2311,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
-literal|"pim v%d"
+literal|"PIMv%u, length: %u"
 argument_list|,
 name|PIM_VER
 argument_list|(
@@ -1982,6 +2324,8 @@ name|pim
 operator|->
 name|pim_typever
 argument_list|)
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2631,7 +2975,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"[RFC2117-encoding] "
+literal|", RFC2117-encoding"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2645,7 +2989,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|0
+name|PIMV2_TYPE_HELLO
 case|:
 block|{
 name|u_int16_t
@@ -2653,14 +2997,6 @@ name|otype
 decl_stmt|,
 name|olen
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Hello"
-argument_list|)
-expr_stmt|;
 name|bp
 operator|+=
 literal|4
@@ -2716,56 +3052,48 @@ operator|+
 name|olen
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n\t  %s Option (%u), length: %u, Value: "
+argument_list|,
+name|tok2str
+argument_list|(
+name|pimv2_hello_option_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|otype
+argument_list|)
+argument_list|,
+name|otype
+argument_list|,
+name|olen
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+literal|4
+expr_stmt|;
 switch|switch
 condition|(
 name|otype
 condition|)
 block|{
 case|case
-literal|1
+name|PIMV2_HELLO_OPTION_HOLDTIME
 case|:
-comment|/* Hold time */
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" (Hold-time "
-argument_list|)
-expr_stmt|;
 name|relts_print
 argument_list|(
 name|EXTRACT_16BITS
 argument_list|(
-operator|&
 name|bp
-index|[
-literal|4
-index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|")"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|PIMV2_HELLO_OPTION_LANPRUNEDELAY
 case|:
-comment|/* LAN Prune Delay */
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" (LAN-Prune-Delay: "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|olen
@@ -2778,7 +3106,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"!olen=%d!)"
+literal|"ERROR: Option Lenght != 4 Bytes (%u)"
 argument_list|,
 name|olen
 argument_list|)
@@ -2798,22 +3126,16 @@ name|lan_delay
 operator|=
 name|EXTRACT_16BITS
 argument_list|(
-operator|&
 name|bp
-index|[
-literal|4
-index|]
 argument_list|)
 expr_stmt|;
 name|override_interval
 operator|=
 name|EXTRACT_16BITS
 argument_list|(
-operator|&
 name|bp
-index|[
-literal|6
-index|]
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 name|t_bit
@@ -2838,7 +3160,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"T-bit=%d lan-delay=%dms override-interval=%dms)"
+literal|"\n\t    T-bit=%d, LAN delay %dms, Override interval %dms"
 argument_list|,
 name|t_bit
 argument_list|,
@@ -2850,148 +3172,89 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|18
+name|PIMV2_HELLO_OPTION_DR_PRIORITY_OLD
 case|:
-comment|/* Old DR-Priority */
-if|if
-condition|(
-name|olen
-operator|==
-literal|4
-condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" (OLD-DR-Priority: %d)"
-argument_list|,
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
-name|bp
-index|[
-literal|4
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-goto|goto
-name|unknown
-goto|;
-break|break;
 case|case
-literal|19
+name|PIMV2_HELLO_OPTION_DR_PRIORITY
 case|:
-comment|/* DR-Priority */
-if|if
+switch|switch
 condition|(
 name|olen
-operator|==
+condition|)
+block|{
+case|case
 literal|0
-condition|)
-block|{
-operator|(
-name|void
-operator|)
+case|:
 name|printf
 argument_list|(
-literal|" (OLD-bidir-capable)"
+literal|"Bi-Directional Capability (Old)"
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" (DR-Priority: "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|olen
-operator|!=
+case|case
 literal|4
-condition|)
-block|{
-operator|(
-name|void
-operator|)
+case|:
 name|printf
 argument_list|(
-literal|"!olen=%d!)"
-argument_list|,
-name|olen
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%d)"
+literal|"%u"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
-operator|&
 name|bp
-index|[
-literal|4
-index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"ERROR: Option Lenght != 4 Bytes (%u)"
+argument_list|,
+name|olen
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
-literal|20
+name|PIMV2_HELLO_OPTION_GENID
 case|:
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (Genid: 0x%08x)"
+literal|"0x%08x"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
-operator|&
 name|bp
-index|[
-literal|4
-index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|21
+name|PIMV2_HELLO_OPTION_REFRESH_CAP
 case|:
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (State Refresh Capable; v%d"
+literal|"v%d"
 argument_list|,
+operator|*
 name|bp
-index|[
-literal|4
-index|]
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+operator|(
 name|bp
-index|[
-literal|5
-index|]
+operator|+
+literal|1
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -3001,15 +3264,17 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" interval "
+literal|", interval "
 argument_list|)
 expr_stmt|;
 name|relts_print
 argument_list|(
+operator|*
+operator|(
 name|bp
-index|[
-literal|5
-index|]
+operator|+
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3017,11 +3282,9 @@ if|if
 condition|(
 name|EXTRACT_16BITS
 argument_list|(
-operator|&
 name|bp
-index|[
-literal|6
-index|]
+operator|+
+literal|2
 argument_list|)
 operator|!=
 literal|0
@@ -3036,61 +3299,24 @@ literal|" ?0x%04x?"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
-operator|&
 name|bp
-index|[
-literal|6
-index|]
+operator|+
+literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|")"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
-literal|22
+name|PIMV2_HELLO_OPTION_BIDIR_CAP
 case|:
-comment|/* Bidir-Capable */
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" (bidir-capable)"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
-literal|24
+name|PIMV2_HELLO_OPTION_ADDRESS_LIST_OLD
 case|:
-comment|/* Address List */
 case|case
-literal|65001
+name|PIMV2_HELLO_OPTION_ADDRESS_LIST
 case|:
-comment|/* Address List (old implementations) */
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" (%saddr-list"
-argument_list|,
-name|otype
-operator|==
-literal|65001
-condition|?
-literal|"old"
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vflag
@@ -3103,23 +3329,17 @@ name|u_char
 modifier|*
 name|ptr
 init|=
-operator|&
 name|bp
-index|[
-literal|4
-index|]
 decl_stmt|;
 while|while
 condition|(
 name|ptr
 operator|<
-operator|&
+operator|(
 name|bp
-index|[
-literal|4
 operator|+
 name|olen
-index|]
+operator|)
 condition|)
 block|{
 name|int
@@ -3127,7 +3347,7 @@ name|advance
 decl_stmt|;
 name|printf
 argument_list|(
-literal|" "
+literal|"\n\t    "
 argument_list|)
 expr_stmt|;
 name|advance
@@ -3161,44 +3381,50 @@ name|advance
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|")"
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
-name|unknown
-label|:
 if|if
 condition|(
 name|vflag
+operator|<=
+literal|1
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|print_unknown_data
 argument_list|(
-literal|" [Hello option %d]"
+name|bp
 argument_list|,
-name|otype
+literal|"\n\t    "
+argument_list|,
+name|olen
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
+comment|/* do we want to see an additionally hexdump ? */
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|print_unknown_data
+argument_list|(
+name|bp
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|olen
+argument_list|)
+expr_stmt|;
 name|bp
 operator|+=
-literal|4
-operator|+
 name|olen
 expr_stmt|;
 block|}
 break|break;
 block|}
 case|case
-literal|1
+name|PIMV2_TYPE_REGISTER
 case|:
 block|{
 name|struct
@@ -3206,14 +3432,6 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Register"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vflag
@@ -3300,6 +3518,8 @@ argument_list|)
 expr_stmt|;
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|bp
 argument_list|,
 name|len
@@ -3347,16 +3567,8 @@ block|}
 break|break;
 block|}
 case|case
-literal|2
+name|PIMV2_TYPE_REGISTER_STOP
 case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Register-Stop"
-argument_list|)
-expr_stmt|;
 name|bp
 operator|+=
 literal|4
@@ -3469,14 +3681,15 @@ name|advance
 expr_stmt|;
 break|break;
 case|case
-literal|3
+name|PIMV2_TYPE_JOIN_PRUNE
 case|:
 case|case
-literal|6
+name|PIMV2_TYPE_GRAFT
 case|:
 case|case
-literal|7
+name|PIMV2_TYPE_GRAFT_ACK
 case|:
+comment|/*          * 0                   1                   2                   3          *   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |PIM Ver| Type  | Addr length   |           Checksum            |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |             Unicast-Upstream Neighbor Address                 |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |  Reserved     | Num groups    |          Holdtime             |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |            Encoded-Multicast Group Address-1                  |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |   Number of Joined  Sources   |   Number of Pruned Sources    |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |               Encoded-Joined Source Address-1                 |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |                             .                                 |          *  |                             .                                 |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |               Encoded-Joined Source Address-n                 |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |               Encoded-Pruned Source Address-1                 |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |                             .                                 |          *  |                             .                                 |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |               Encoded-Pruned Source Address-n                 |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |                           .                                   |          *  |                           .                                   |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          *  |                Encoded-Multicast Group Address-n              |          *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          */
 block|{
 name|u_int8_t
 name|ngroup
@@ -3495,53 +3708,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-switch|switch
-condition|(
-name|PIM_TYPE
-argument_list|(
-name|pim
-operator|->
-name|pim_typever
-argument_list|)
-condition|)
-block|{
-case|case
-literal|3
-case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Join/Prune"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|6
-case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Graft"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|7
-case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Graft-ACK"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|bp
 operator|+=
 literal|4
@@ -3575,7 +3741,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" upstream-neighbor="
+literal|", upstream-neighbor: "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3647,7 +3813,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" groups=%u"
+literal|"\n\t  %u group(s)"
 argument_list|,
 name|ngroup
 argument_list|)
@@ -3670,7 +3836,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" holdtime="
+literal|", holdtime: "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3684,7 +3850,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"infty"
+literal|"infinite"
 argument_list|)
 expr_stmt|;
 else|else
@@ -3730,9 +3896,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (group%d: "
+literal|"\n\t    group #%u: "
 argument_list|,
 name|i
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3821,9 +3989,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" join=%u"
+literal|", joined sources: %u, pruned sources: %u"
 argument_list|,
 name|njoin
+argument_list|,
+name|nprune
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3853,7 +4023,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" "
+literal|"\n\t      joined source #%u: "
+argument_list|,
+name|j
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3895,16 +4069,6 @@ operator|-=
 name|advance
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" prune=%u"
-argument_list|,
-name|nprune
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -3924,7 +4088,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" "
+literal|"\n\t      pruned source #%u: "
+argument_list|,
+name|j
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3966,21 +4134,13 @@ operator|-=
 name|advance
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|")"
-argument_list|)
-expr_stmt|;
 block|}
 name|jp_done
 label|:
 break|break;
 block|}
 case|case
-literal|4
+name|PIMV2_TYPE_BOOTSTRAP
 case|:
 block|{
 name|int
@@ -3990,14 +4150,6 @@ name|j
 decl_stmt|,
 name|frpcnt
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Bootstrap"
-argument_list|)
-expr_stmt|;
 name|bp
 operator|+=
 literal|4
@@ -4414,16 +4566,8 @@ label|:
 break|break;
 block|}
 case|case
-literal|5
+name|PIMV2_TYPE_ASSERT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Assert"
-argument_list|)
-expr_stmt|;
 name|bp
 operator|+=
 literal|4
@@ -4598,7 +4742,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|8
+name|PIMV2_TYPE_CANDIDATE_RP
 case|:
 block|{
 name|int
@@ -4606,14 +4750,6 @@ name|i
 decl_stmt|,
 name|pfxcnt
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Candidate-RP-Advertisement"
-argument_list|)
-expr_stmt|;
 name|bp
 operator|+=
 literal|4
@@ -4814,16 +4950,8 @@ block|}
 break|break;
 block|}
 case|case
-literal|9
+name|PIMV2_TYPE_PRUNE_REFRESH
 case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" Prune-Refresh"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5002,6 +5130,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

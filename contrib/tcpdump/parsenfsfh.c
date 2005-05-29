@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.25.2.2 2003/11/16 08:51:07 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.28 2004/03/25 03:30:55 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,6 +356,7 @@ name|fh
 decl_stmt|;
 name|int
 name|len
+name|_U_
 decl_stmt|;
 name|my_fsid
 modifier|*

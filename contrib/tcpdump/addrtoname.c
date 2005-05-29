@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.96.2.6 2004/03/24 04:14:31 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.108 2005/03/27 22:38:09 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,7 +109,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_NETINET_ETHER_H
+name|NETINET_ETHER_H_DECLARES_ETHER_NTOHOST
 end_ifdef
 
 begin_include
@@ -118,17 +118,13 @@ directive|include
 file|<netinet/ether.h>
 end_include
 
-begin_comment
-comment|/* ether_ntohost on linux */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_NETINET_ETHER_H */
+comment|/* NETINET_ETHER_H_DECLARES_ETHER_NTOHOST */
 end_comment
 
 begin_endif
@@ -139,6 +135,40 @@ end_endif
 begin_comment
 comment|/* USE_ETHER_NTOHOST */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_DECL_ETHER_NTOHOST
+argument_list|)
+operator|||
+operator|!
+name|HAVE_DECL_ETHER_NTOHOST
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|ether_ntohost
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ether_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -420,15 +450,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__MINGW32__
-comment|/* MinGW doesn't provide getnameinfo */
-return|return
-name|NULL
-return|;
-else|#
-directive|else
 if|if
 condition|(
 name|getnameinfo
@@ -481,9 +502,6 @@ operator|&
 name|host
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* __MINGW32__ */
 break|break;
 default|default:
 return|return
@@ -506,7 +524,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* INET6& WIN32*/
+comment|/* INET6& WIN32 */
 end_comment
 
 begin_ifdef
@@ -2373,6 +2391,7 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+comment|/* 		 * We don't cast it to "const struct ether_addr *" 		 * because some systems don't modify the Ethernet 		 * address but fail to declare the second argument 		 * as a "const" pointer. 		 */
 if|if
 condition|(
 name|ether_ntohost
@@ -2380,7 +2399,6 @@ argument_list|(
 name|buf2
 argument_list|,
 operator|(
-specifier|const
 expr|struct
 name|ether_addr
 operator|*
@@ -2532,8 +2550,6 @@ block|{
 specifier|register
 name|u_int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 specifier|register
 name|char
@@ -2611,26 +2627,16 @@ argument_list|(
 literal|"linkaddr_string: malloc"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|j
-operator|=
-operator|*
-name|ep
-operator|>>
-literal|4
-operator|)
-operator|!=
-literal|0
-condition|)
 operator|*
 name|cp
 operator|++
 operator|=
 name|hex
 index|[
-name|j
+operator|*
+name|ep
+operator|>>
+literal|4
 index|]
 expr_stmt|;
 operator|*
@@ -2668,26 +2674,16 @@ operator|++
 operator|=
 literal|':'
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|j
-operator|=
-operator|*
-name|ep
-operator|>>
-literal|4
-operator|)
-operator|!=
-literal|0
-condition|)
 operator|*
 name|cp
 operator|++
 operator|=
 name|hex
 index|[
-name|j
+operator|*
+name|ep
+operator|>>
+literal|4
 index|]
 expr_stmt|;
 operator|*
@@ -3191,6 +3187,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|ISONSAP_MAX_LENGTH
+value|20
+end_define
+
 begin_function
 specifier|const
 name|char
@@ -3201,18 +3204,15 @@ specifier|const
 name|u_char
 modifier|*
 name|nsap
+parameter_list|,
+specifier|register
+name|u_int
+name|nsap_length
 parameter_list|)
 block|{
 specifier|register
 name|u_int
-name|i
-decl_stmt|,
-name|nlen
-init|=
-name|nsap
-index|[
-literal|0
-index|]
+name|nsap_idx
 decl_stmt|;
 specifier|register
 name|char
@@ -3225,6 +3225,21 @@ name|enamemem
 modifier|*
 name|tp
 decl_stmt|;
+if|if
+condition|(
+name|nsap_length
+operator|<
+literal|1
+operator|||
+name|nsap_length
+operator|>
+name|ISONSAP_MAX_LENGTH
+condition|)
+name|error
+argument_list|(
+literal|"isonsap_string: illegal length"
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|lookup_nsap
@@ -3255,17 +3270,10 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-name|nlen
-operator|*
-literal|2
-operator|+
-literal|2
-operator|+
-operator|(
-name|nlen
-operator|>>
-literal|1
-operator|)
+sizeof|sizeof
+argument_list|(
+literal|"xx.xxxx.xxxx.xxxx.xxxx.xxxx.xxxx.xxxx.xxxx.xxxx.xx"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3279,20 +3287,17 @@ argument_list|(
 literal|"isonsap_string: malloc"
 argument_list|)
 expr_stmt|;
-name|nsap
-operator|++
-expr_stmt|;
 for|for
 control|(
-name|i
+name|nsap_idx
 operator|=
 literal|0
 init|;
-name|i
+name|nsap_idx
 operator|<
-name|nlen
+name|nsap_length
 condition|;
-name|i
+name|nsap_idx
 operator|++
 control|)
 block|{
@@ -3325,7 +3330,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|i
+name|nsap_idx
 operator|&
 literal|1
 operator|)
@@ -3334,19 +3339,21 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|i
+name|nsap_idx
 operator|+
 literal|1
 operator|<
-name|nlen
+name|nsap_length
 operator|)
 condition|)
+block|{
 operator|*
 name|cp
 operator|++
 operator|=
 literal|'.'
 expr_stmt|;
+block|}
 block|}
 operator|*
 name|cp
@@ -3966,31 +3973,45 @@ block|}
 end_function
 
 begin_comment
-comment|/*XXX from libbpfc.a */
+comment|/* in libpcap.a (nametoaddr.c) */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WIN32
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_STATIC_LIBPCAP
+argument_list|)
+end_if
 
-begin_struct
-specifier|extern
-struct|struct
-name|eproto
-block|{
-else|#
-directive|else
+begin_macro
 name|__declspec
 argument_list|(
 argument|dllimport
 argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+specifier|extern
+endif|#
+directive|endif
+specifier|const
 struct|struct
 name|eproto
 block|{
-endif|#
-directive|endif
+specifier|const
 name|char
 modifier|*
 name|s
@@ -4002,6 +4023,9 @@ block|}
 name|eproto_db
 index|[]
 struct|;
+end_struct
+
+begin_function
 specifier|static
 name|void
 name|init_eprotoarray
@@ -4109,6 +4133,9 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_struct
 specifier|static
 struct|struct
 name|protoidlist
@@ -4227,7 +4254,13 @@ name|NULL
 block|}
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/*  * SNAP proto IDs with org code 0:0:0 are actually encapsulated Ethernet  * types.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|init_protoidarray
@@ -4397,6 +4430,9 @@ name|name
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_struct
 specifier|static
 struct|struct
 name|etherlist
@@ -4455,7 +4491,13 @@ name|NULL
 block|}
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/*  * Initialize the ethers hash table.  We take two different approaches  * depending on whether or not the system provides the ethers name  * service.  If it does, we just wire in a few names at startup,  * and etheraddr_string() fills in the table on demand.  If it doesn't,  * then we suck in the entire /etc/ethers file at startup.  The idea  * is that parsing the local file will be fast, but spinning through  * all the ethers entries via NIS& next_etherent might be very slow.  *  * XXX pcap_next_etherent doesn't belong in the pcap interface, but  * since the pcap module already does name-to-address translation,  * it's already does most of the work for the ethernet address-to-name  * translation, so we just pcap_next_etherent as a convenience.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|init_etherarray
@@ -4599,7 +4641,7 @@ continue|continue;
 ifdef|#
 directive|ifdef
 name|USE_ETHER_NTOHOST
-comment|/* Use yp/nis version of name if available */
+comment|/* 		 * Use YP/NIS version of name if available. 		 * 		 * We don't cast it to "const struct ether_addr *" 		 * because some systems don't modify the Ethernet 		 * address but fail to declare the second argument 		 * as a "const" pointer. 		 */
 if|if
 condition|(
 name|ether_ntohost
@@ -4607,7 +4649,6 @@ argument_list|(
 name|name
 argument_list|,
 operator|(
-specifier|const
 expr|struct
 name|ether_addr
 operator|*
@@ -4643,6 +4684,9 @@ name|name
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|tok
@@ -4741,6 +4785,9 @@ name|NULL
 block|}
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|void
 name|init_llcsaparray
@@ -4833,6 +4880,9 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|tok
@@ -6129,6 +6179,9 @@ literal|0
 block|}
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|void
 name|init_ipxsaparray
@@ -6238,7 +6291,13 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize the address to name translation machinery.  We map all  * non-local IP addresses to numeric addresses if fflag is true (i.e.,  * to prevent blocking on the nameserver).  localnet is the IP address  * of the local network.  mask is its subnet mask.  */
+end_comment
+
+begin_function
 name|void
 name|init_addrtoname
 parameter_list|(
@@ -6288,6 +6347,9 @@ name|init_ipxsaparray
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|const
 name|char
 modifier|*
@@ -6390,7 +6452,13 @@ name|name
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* Return a zero'ed hnamemem struct and cuts down on calloc() overhead */
+end_comment
+
+begin_function
 name|struct
 name|hnamemem
 modifier|*
@@ -6474,10 +6542,19 @@ name|p
 operator|)
 return|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|INET6
+end_ifdef
+
+begin_comment
 comment|/* Return a zero'ed h6namemem struct and cuts down on calloc() overhead */
+end_comment
+
+begin_function
 name|struct
 name|h6namemem
 modifier|*
@@ -6561,7 +6638,7 @@ name|p
 operator|)
 return|;
 block|}
-end_struct
+end_function
 
 begin_endif
 endif|#

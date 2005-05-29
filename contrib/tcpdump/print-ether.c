@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.82.2.3 2003/12/29 22:42:21 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.95 2005/04/06 21:32:39 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,13 +85,11 @@ directive|include
 file|"ether.h"
 end_include
 
-begin_decl_stmt
-specifier|const
-name|u_char
-modifier|*
-name|snapend
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"llc.h"
+end_include
 
 begin_decl_stmt
 specifier|const
@@ -101,6 +99,74 @@ name|ethertype_values
 index|[]
 init|=
 block|{
+comment|/* not really ethertypes but PIDs that are used        in the SNAP printer - its more convenient        to put them into a single tokentable */
+block|{
+name|PID_RFC2684_ETH_FCS
+block|,
+literal|"Ethernet + FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_ETH_NOFCS
+block|,
+literal|"Ethernet no FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_802_4_FCS
+block|,
+literal|"802.4 + FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_802_4_NOFCS
+block|,
+literal|"w/o FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_802_5_FCS
+block|,
+literal|"Tokenring + FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_802_5_NOFCS
+block|,
+literal|"Tokenring no FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_FDDI_FCS
+block|,
+literal|"FDDI + FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_FDDI_NOFCS
+block|,
+literal|"FDDI no FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_802_6_FCS
+block|,
+literal|"802.6 + FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_802_6_NOFCS
+block|,
+literal|"802.6 no FCS"
+block|}
+block|,
+block|{
+name|PID_RFC2684_BPDU
+block|,
+literal|"BPDU"
+block|}
+block|,
+comment|/* the real Ethertypes */
 block|{
 name|ETHERTYPE_IP
 block|,
@@ -270,9 +336,33 @@ literal|"PPPoE S"
 block|}
 block|,
 block|{
+name|ETHERTYPE_EAPOL
+block|,
+literal|"EAPOL"
+block|}
+block|,
+block|{
+name|ETHERTYPE_JUMBO
+block|,
+literal|"Jumbo"
+block|}
+block|,
+block|{
 name|ETHERTYPE_LOOPBACK
 block|,
 literal|"Loopback"
+block|}
+block|,
+block|{
+name|ETHERTYPE_ISO
+block|,
+literal|"OSI"
+block|}
+block|,
+block|{
+name|ETHERTYPE_GRE_ISO
+block|,
+literal|"GRE-OSI"
 block|}
 block|,
 block|{
@@ -672,7 +762,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the top level routine of the printer.  'p' points  * to the ether header of the packet, 'h->ts' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
+comment|/*  * This is the top level routine of the printer.  'p' points  * to the ether header of the packet, 'h->ts' is the timestamp,  * 'h->len' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
 end_comment
 
 begin_function
@@ -756,6 +846,8 @@ name|ETHERTYPE_IP
 case|:
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -795,6 +887,8 @@ name|ETHERTYPE_REVARP
 case|:
 name|arp_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1062,6 +1156,152 @@ literal|1
 operator|)
 return|;
 case|case
+name|ETHERTYPE_JUMBO
+case|:
+name|ether_type
+operator|=
+name|ntohs
+argument_list|(
+operator|*
+operator|(
+name|u_int16_t
+operator|*
+operator|)
+operator|(
+name|p
+operator|)
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+name|length
+operator|-=
+literal|2
+expr_stmt|;
+name|caplen
+operator|-=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|ether_type
+operator|>
+name|ETHERMTU
+condition|)
+block|{
+if|if
+condition|(
+name|eflag
+condition|)
+name|printf
+argument_list|(
+literal|"ethertype %s, "
+argument_list|,
+name|tok2str
+argument_list|(
+name|ethertype_values
+argument_list|,
+literal|"0x%04x"
+argument_list|,
+name|ether_type
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|recurse
+goto|;
+block|}
+operator|*
+name|extracted_ether_type
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|llc_print
+argument_list|(
+name|p
+argument_list|,
+name|length
+argument_list|,
+name|caplen
+argument_list|,
+name|p
+operator|-
+literal|16
+argument_list|,
+name|p
+operator|-
+literal|10
+argument_list|,
+name|extracted_ether_type
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ether_hdr_print
+argument_list|(
+name|p
+operator|-
+literal|16
+argument_list|,
+name|length
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|xflag
+operator|&&
+operator|!
+name|qflag
+condition|)
+name|default_print
+argument_list|(
+name|p
+operator|-
+literal|16
+argument_list|,
+name|caplen
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|ETHERTYPE_ISO
+case|:
+name|isoclns_print
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|,
+name|length
+operator|-
+literal|1
+argument_list|,
+name|length
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
 name|ETHERTYPE_PPPOED
 case|:
 case|case
@@ -1075,6 +1315,23 @@ name|ETHERTYPE_PPPOES2
 case|:
 name|pppoe_print
 argument_list|(
+name|p
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|ETHERTYPE_EAPOL
+case|:
+name|eap_print
+argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1159,6 +1416,10 @@ return|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

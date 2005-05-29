@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sunrpc.c,v 1.43.2.2 2003/11/16 08:51:47 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sunrpc.c,v 1.46 2004/12/27 00:41:31 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ directive|include
 file|<tcpdump-stdinc.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GETRPCBYNUMBER
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -72,17 +78,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIN32
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<rpc/pmap_prot.h>
-end_include
+begin_comment
+comment|/* HAVE_RPC_RPCENT_H */
+end_comment
 
 begin_endif
 endif|#
@@ -90,7 +88,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* HAVE_GETRPCBYNUMBER */
 end_comment
 
 begin_include
@@ -145,6 +143,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"rpc_auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rpc_msg.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -238,7 +248,7 @@ block|{
 specifier|register
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 decl_stmt|;
@@ -280,7 +290,7 @@ name|rp
 operator|=
 operator|(
 expr|struct
-name|rpc_msg
+name|sunrpc_msg
 operator|*
 operator|)
 name|bp
@@ -616,9 +626,9 @@ name|u_int32_t
 name|prog
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|WIN32
+ifdef|#
+directive|ifdef
+name|HAVE_GETRPCBYNUMBER
 specifier|register
 name|struct
 name|rpcent
@@ -655,9 +665,9 @@ operator|(
 name|buf
 operator|)
 return|;
-ifndef|#
-directive|ifndef
-name|WIN32
+ifdef|#
+directive|ifdef
+name|HAVE_GETRPCBYNUMBER
 name|rp
 operator|=
 name|getrpcbynumber
@@ -673,7 +683,6 @@ name|NULL
 condition|)
 endif|#
 directive|endif
-comment|/* WIN32 */
 operator|(
 name|void
 operator|)
@@ -691,9 +700,9 @@ argument_list|,
 name|prog
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|WIN32
+ifdef|#
+directive|ifdef
+name|HAVE_GETRPCBYNUMBER
 else|else
 name|strlcpy
 argument_list|(

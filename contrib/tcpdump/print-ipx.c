@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipx.c,v 1.34.2.2 2003/11/16 08:51:28 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipx.c,v 1.40 2004/05/26 19:57:57 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +182,16 @@ operator|*
 operator|)
 name|p
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|eflag
+condition|)
+name|printf
+argument_list|(
+literal|"IPX "
+argument_list|)
+expr_stmt|;
 name|TCHECK
 argument_list|(
 name|ipx
@@ -224,7 +234,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.%04x:"
+literal|"%s.%04x: "
 argument_list|,
 name|ipxaddr_string
 argument_list|(
@@ -416,7 +426,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" ipx-ncp %d"
+literal|"ipx-ncp %d"
 argument_list|,
 name|length
 argument_list|)
@@ -460,7 +470,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" ipx-netbios %d"
+literal|"ipx-netbios %d"
 argument_list|,
 name|length
 argument_list|)
@@ -486,7 +496,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" ipx-diags %d"
+literal|"ipx-diags %d"
 argument_list|,
 name|length
 argument_list|)
@@ -500,7 +510,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" ipx-nwlink-dgm %d"
+literal|"ipx-nwlink-dgm %d"
 argument_list|,
 name|length
 argument_list|)
@@ -521,12 +531,9 @@ break|break;
 case|case
 name|IPX_SKT_EIGRP
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|eigrp_print
 argument_list|(
-literal|" ipx-eigrp %d"
+name|datap
 argument_list|,
 name|length
 argument_list|)
@@ -538,7 +545,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" ipx-#%x %d"
+literal|"ipx-#%x %d"
 argument_list|,
 name|dstSkt
 argument_list|,
