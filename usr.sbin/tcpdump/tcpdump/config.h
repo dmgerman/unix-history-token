@@ -28,6 +28,14 @@ comment|/* #undef HAVE_BUGGY_CAST128 */
 end_comment
 
 begin_comment
+comment|/* Define if you enable IPv6 support */
+end_comment
+
+begin_comment
+comment|/* #undef INET6 */
+end_comment
+
+begin_comment
 comment|/* Define if you enable support for the libsmi. */
 end_comment
 
@@ -58,6 +66,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_NEW_RES_STATE */
 end_comment
+
+begin_comment
+comment|/* define if<inttypes.h> defines PRI[doxu]64 macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTTYPES_H_DEFINES_FORMATS
+value|1
+end_define
 
 begin_comment
 comment|/*  * define if struct ether_header.ether_dhost is a struct with ether_addr_octet  */
@@ -264,6 +283,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have getrpcbynumber() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETRPCBYNUMBER
+value|1
+end_define
+
+begin_comment
 comment|/* define if unaligned memory accesses fail */
 end_comment
 
@@ -326,6 +356,14 @@ comment|/* #undef int32_t */
 end_comment
 
 begin_comment
+comment|/* #undef int64_t */
+end_comment
+
+begin_comment
+comment|/* #undef u_int8_t */
+end_comment
+
+begin_comment
 comment|/* #undef u_int16_t */
 end_comment
 
@@ -334,7 +372,27 @@ comment|/* #undef u_int32_t */
 end_comment
 
 begin_comment
-comment|/* #undef u_int8_t */
+comment|/* #undef u_int64_t */
+end_comment
+
+begin_comment
+comment|/* Workaround for missing 64-bit formats */
+end_comment
+
+begin_comment
+comment|/* #undef PRId64 */
+end_comment
+
+begin_comment
+comment|/* #undef PRIo64 */
+end_comment
+
+begin_comment
+comment|/* #undef PRIx64 */
+end_comment
+
+begin_comment
+comment|/* #undef PRIu64 */
 end_comment
 
 begin_comment
@@ -373,6 +431,33 @@ comment|/* #undef HAVE_NETDNET_DNETDB_H_DNET_HTOA */
 end_comment
 
 begin_comment
+comment|/* define if should drop privileges by default */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_USER */
+end_comment
+
+begin_comment
+comment|/* define if should chroot when dropping privileges */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_CHROOT */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `alarm' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ALARM
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `bpf_dump' function. */
 end_comment
 
@@ -380,6 +465,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_BPF_DUMP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `ether_ntohost', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_ETHER_NTOHOST
 value|1
 end_define
 
@@ -493,16 +589,19 @@ begin_comment
 comment|/* Define to 1 if you have the<netinet/if_ether.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_NETINET_IF_ETHER_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_NETINET_IF_ETHER_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<openssl/evp.h> header file. */
 end_comment
 
 begin_comment
-comment|/* #define HAVE_OPENSSL_EVP_H 1 */
+comment|/* #undef HAVE_OPENSSL_EVP_H 1 */
 end_comment
 
 begin_comment
@@ -805,6 +904,24 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if netinet/ether.h declares `ether_ntohost' */
+end_comment
+
+begin_comment
+comment|/* #undef NETINET_ETHER_H_DECLARES_ETHER_NTOHOST */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if netinet/if_ether.h declares `ether_ntohost' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETINET_IF_ETHER_H_DECLARES_ETHER_NTOHOST
+end_define
+
+begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
 end_comment
 
@@ -901,6 +1018,17 @@ define|#
 directive|define
 name|SIZEOF_LONG
 value|4
+end_define
+
+begin_comment
+comment|/* The size of a `long long', as computed by sizeof. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_LONG_LONG
+value|8
 end_define
 
 begin_comment
