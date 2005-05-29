@@ -26,8 +26,28 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"bzlib_private.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BZ_NO_COMPRESS
+end_ifndef
 
 begin_comment
 comment|/*---------------------------------------------------*/
@@ -127,6 +147,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BZ_NO_COMPRESS */
+end_comment
 
 begin_comment
 comment|/*---------------------------------------------------*/
@@ -247,6 +276,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BZ_NO_COMPRESS
+end_ifndef
 
 begin_comment
 comment|/*---------------------------------------------------*/
@@ -2201,6 +2236,15 @@ name|BZ_OK
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BZ_NO_COMPRESS */
+end_comment
 
 begin_comment
 comment|/*---------------------------------------------------*/
@@ -4514,6 +4558,12 @@ name|BZ_OK
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BZ_NO_COMPRESS
+end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -7976,6 +8026,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BZ_NO_COMPRESS */
+end_comment
 
 begin_comment
 comment|/*-------------------------------------------------------------*/
