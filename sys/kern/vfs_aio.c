@@ -1240,21 +1240,6 @@ begin_comment
 comment|/* Async job list */
 end_comment
 
-begin_expr_stmt
-specifier|static
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|aiocblist
-argument_list|)
-name|aio_bufjobs
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Phys I/O job list */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
@@ -1777,12 +1762,6 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|aio_jobs
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|aio_bufjobs
 argument_list|)
 expr_stmt|;
 name|kaio_zone
@@ -5328,16 +5307,6 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|aio_bufjobs
-argument_list|,
-name|aiocbe
-argument_list|,
-name|list
-argument_list|)
-expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
 name|ki
 operator|->
 name|kaio_bufqueue
@@ -5494,16 +5463,6 @@ operator|->
 name|jobflags
 operator||=
 name|AIOCBLIST_DONE
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|aio_bufjobs
-argument_list|,
-name|aiocbe
-argument_list|,
-name|list
-argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
@@ -10800,16 +10759,6 @@ name|ki
 operator|->
 name|kaio_buffer_finished_count
 operator|++
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|aio_bufjobs
-argument_list|,
-name|aiocbe
-argument_list|,
-name|list
-argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
