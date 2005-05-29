@@ -2896,7 +2896,7 @@ literal|"\020"
 literal|"\001SSE3"
 comment|/* SSE3 */
 literal|"\002<b1>"
-literal|"\003RSVD2>"
+literal|"\003RSVD2"
 comment|/* "Reserved" bit 2 */
 literal|"\004MON"
 comment|/* MONITOR/MWAIT Instructions */
