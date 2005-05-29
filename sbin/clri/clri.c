@@ -234,6 +234,10 @@ operator|*
 operator|++
 name|argv
 expr_stmt|;
+name|sbp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* get the superblock. */
 if|if
 condition|(
@@ -404,20 +408,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot find file system superblock\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"cannot find file system superblock"
 argument_list|)
 expr_stmt|;
-block|}
 name|bsize
 operator|=
 name|sbp
