@@ -142,22 +142,10 @@ name|AIC_PCI_CONFIG
 value|1
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/bus_memio.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_pio.h>
-end_include
 
 begin_include
 include|#

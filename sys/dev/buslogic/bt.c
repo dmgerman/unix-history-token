@@ -69,33 +69,6 @@ directive|include
 file|<sys/bus.h>
 end_include
 
-begin_comment
-comment|/*  * XXX It appears that BusLogic PCI adapters go out to lunch if you   *     attempt to perform memory mapped I/O.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_memio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_pio.h>
-end_include
-
 begin_include
 include|#
 directive|include

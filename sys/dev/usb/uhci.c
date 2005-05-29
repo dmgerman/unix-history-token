@@ -106,12 +106,6 @@ directive|include
 file|<sys/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/bus_pio.h>
-end_include
-
 begin_if
 if|#
 directive|if

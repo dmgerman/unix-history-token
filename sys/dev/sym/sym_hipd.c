@@ -123,33 +123,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus_memio.h>
-end_include
-
-begin_comment
-comment|/*  *  Only include bus_pio if needed.  *  This avoids bus space primitives to be uselessly bloated   *  by out-of-age PIO operations.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYM_CONF_IOMAPPED
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_pio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
