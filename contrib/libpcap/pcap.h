@@ -4,7 +4,7 @@ comment|/* -*- Mode: c; tab-width: 8; indent-tabs-mode: 1; c-basic-offset: 8; -*
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/pcap.h,v 1.45.2.4 2004/01/27 22:56:20 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/pcap.h,v 1.52 2004/12/18 08:52:11 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -183,6 +183,96 @@ directive|endif
 comment|/* WIN32 */
 block|}
 struct|;
+ifdef|#
+directive|ifdef
+name|MSDOS
+comment|/*  * As returned by the pcap_stats_ex()  */
+struct|struct
+name|pcap_stat_ex
+block|{
+name|u_long
+name|rx_packets
+decl_stmt|;
+comment|/* total packets received       */
+name|u_long
+name|tx_packets
+decl_stmt|;
+comment|/* total packets transmitted    */
+name|u_long
+name|rx_bytes
+decl_stmt|;
+comment|/* total bytes received         */
+name|u_long
+name|tx_bytes
+decl_stmt|;
+comment|/* total bytes transmitted      */
+name|u_long
+name|rx_errors
+decl_stmt|;
+comment|/* bad packets received         */
+name|u_long
+name|tx_errors
+decl_stmt|;
+comment|/* packet transmit problems     */
+name|u_long
+name|rx_dropped
+decl_stmt|;
+comment|/* no space in Rx buffers       */
+name|u_long
+name|tx_dropped
+decl_stmt|;
+comment|/* no space available for Tx    */
+name|u_long
+name|multicast
+decl_stmt|;
+comment|/* multicast packets received   */
+name|u_long
+name|collisions
+decl_stmt|;
+comment|/* detailed rx_errors: */
+name|u_long
+name|rx_length_errors
+decl_stmt|;
+name|u_long
+name|rx_over_errors
+decl_stmt|;
+comment|/* receiver ring buff overflow  */
+name|u_long
+name|rx_crc_errors
+decl_stmt|;
+comment|/* recv'd pkt with crc error    */
+name|u_long
+name|rx_frame_errors
+decl_stmt|;
+comment|/* recv'd frame alignment error */
+name|u_long
+name|rx_fifo_errors
+decl_stmt|;
+comment|/* recv'r fifo overrun          */
+name|u_long
+name|rx_missed_errors
+decl_stmt|;
+comment|/* recv'r missed packet         */
+comment|/* detailed tx_errors */
+name|u_long
+name|tx_aborted_errors
+decl_stmt|;
+name|u_long
+name|tx_carrier_errors
+decl_stmt|;
+name|u_long
+name|tx_fifo_errors
+decl_stmt|;
+name|u_long
+name|tx_heartbeat_errors
+decl_stmt|;
+name|u_long
+name|tx_window_errors
+decl_stmt|;
+block|}
+struct|;
+endif|#
+directive|endif
 comment|/*  * Item in a list of interfaces.  */
 struct|struct
 name|pcap_if
@@ -337,6 +427,17 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|pcap_t
+modifier|*
+name|pcap_fopen_offline
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 name|void
 name|pcap_close
 parameter_list|(
@@ -461,6 +562,32 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_inject
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_sendpacket
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 name|char
@@ -630,6 +757,18 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|pcap_dumper_t
+modifier|*
+name|pcap_dump_fopen
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
 name|int
 name|pcap_dump_flush
 parameter_list|(
@@ -743,9 +882,12 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WIN32
+argument_list|)
 comment|/*  * Win32 definitions  */
 name|int
 name|pcap_setbuff
@@ -770,21 +912,6 @@ name|mode
 parameter_list|)
 function_decl|;
 name|int
-name|pcap_sendpacket
-parameter_list|(
-name|pcap_t
-modifier|*
-name|p
-parameter_list|,
-name|u_char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-name|int
 name|pcap_setmintocopy
 parameter_list|(
 name|pcap_t
@@ -804,6 +931,7 @@ directive|include
 file|<Win32-Extensions.h>
 endif|#
 directive|endif
+comment|/* WPCAP */
 define|#
 directive|define
 name|MODE_CAPT
@@ -816,8 +944,53 @@ define|#
 directive|define
 name|MODE_MON
 value|2
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+comment|/*  * MS-DOS definitions  */
+name|int
+name|pcap_stats_ex
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|struct
+name|pcap_stat_ex
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|pcap_set_wait
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|yield
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|,
+name|int
+name|wait
+parameter_list|)
+function_decl|;
+name|u_long
+name|pcap_mac_packets
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 else|#
 directive|else
+comment|/* UN*X */
 comment|/*  * UN*X definitions  */
 name|int
 name|pcap_get_selectable_fd
@@ -828,7 +1001,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* WIN32 */
+comment|/* WIN32/MSDOS/UN*X */
 ifdef|#
 directive|ifdef
 name|__cplusplus

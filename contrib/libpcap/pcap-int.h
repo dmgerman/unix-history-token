@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/pcap-int.h,v 1.55.2.4 2003/12/15 01:42:24 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/pcap-int.h,v 1.68 2004/12/18 08:52:10 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -39,6 +39,17 @@ file|<packet32.h>
 endif|#
 directive|endif
 comment|/* WIN32 */
+ifdef|#
+directive|ifdef
+name|MSDOS
+include|#
+directive|include
+file|<fcntl.h>
+include|#
+directive|include
+file|<io.h>
+endif|#
+directive|endif
 comment|/*  * Savefile  */
 typedef|typedef
 enum|enum
@@ -111,6 +122,11 @@ name|long
 name|OrigMissed
 decl_stmt|;
 comment|/* missed by i/f before this run */
+name|char
+modifier|*
+name|device
+decl_stmt|;
+comment|/* device name */
 ifdef|#
 directive|ifdef
 name|linux
@@ -131,14 +147,13 @@ name|cooked
 decl_stmt|;
 comment|/* using SOCK_DGRAM rather than SOCK_RAW */
 name|int
+name|ifindex
+decl_stmt|;
+comment|/* interface index of device we're bound to */
+name|int
 name|lo_ifindex
 decl_stmt|;
 comment|/* interface index of the loopback device */
-name|char
-modifier|*
-name|device
-decl_stmt|;
-comment|/* device name */
 name|struct
 name|pcap
 modifier|*
@@ -202,6 +217,9 @@ decl_stmt|;
 name|int
 name|selectable_fd
 decl_stmt|;
+name|int
+name|send_fd
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* WIN32 */
@@ -223,6 +241,33 @@ name|int
 name|break_loop
 decl_stmt|;
 comment|/* flag set to force break from packet-reading loop */
+ifdef|#
+directive|ifdef
+name|PCAP_FDDIPAD
+name|int
+name|fddipad
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MSDOS
+name|int
+name|inter_packet_wait
+decl_stmt|;
+comment|/* offline: wait between packets */
+name|void
+function_decl|(
+modifier|*
+name|wait_proc
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/*          call proc while waiting */
+endif|#
+directive|endif
 name|struct
 name|pcap_sf
 name|sf
@@ -268,6 +313,22 @@ name|pcap_handler
 parameter_list|,
 name|u_char
 modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|inject_op
+function_decl|)
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 name|int
@@ -364,7 +425,7 @@ decl_stmt|;
 name|int
 name|dlt_count
 decl_stmt|;
-name|int
+name|u_int
 modifier|*
 name|dlt_list
 decl_stmt|;
@@ -515,9 +576,19 @@ include|#
 directive|include
 file|<stdarg.h>
 comment|/*  * Routines that most pcap implementations can use for non-blocking mode.  */
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
 name|int
 name|pcap_getnonblock_fd
 parameter_list|(
@@ -543,6 +614,13 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+name|void
+name|pcap_close_common
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/*  * Internal interfaces for "pcap_findalldevs()".  *  * "pcap_platform_finddevs()" is a platform-dependent routine to  * add devices not found by the "standard" mechanisms (SIOCGIFCONF,  * "getifaddrs()", etc..  *  * "pcap_add_if()" adds an interface to the list of interfaces.  */
 name|int
 name|pcap_platform_finddevs
@@ -562,6 +640,7 @@ name|pcap_if_t
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -602,6 +681,7 @@ name|pcap_if_t
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -664,11 +744,6 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* XXX */
-specifier|extern
-name|int
-name|pcap_fddipad
-decl_stmt|;
 name|int
 name|install_bpf_program
 parameter_list|(
