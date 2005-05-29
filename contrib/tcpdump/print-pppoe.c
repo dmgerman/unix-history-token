@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pppoe.c,v 1.24.2.4 2004/03/24 03:04:22 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pppoe.c,v 1.30 2004/08/27 03:57:41 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,7 +372,7 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|u_short
+name|u_int16_t
 name|pppoe_ver
 decl_stmt|,
 name|pppoe_type
@@ -380,7 +380,8 @@ decl_stmt|,
 name|pppoe_code
 decl_stmt|,
 name|pppoe_sessionid
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|pppoe_length
 decl_stmt|;
 specifier|const
@@ -391,6 +392,33 @@ decl_stmt|,
 modifier|*
 name|pppoe_payload
 decl_stmt|;
+if|if
+condition|(
+name|length
+operator|<
+name|PPPOE_HDRLEN
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"truncated-pppoe %u"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|length
+operator|)
+return|;
+block|}
+name|length
+operator|-=
+name|PPPOE_HDRLEN
+expr_stmt|;
 name|pppoe_packet
 operator|=
 name|bp
@@ -460,24 +488,6 @@ name|PPPOE_HDRLEN
 expr_stmt|;
 if|if
 condition|(
-name|snapend
-operator|<
-name|pppoe_payload
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" truncated PPPoE"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|PPPOE_HDRLEN
-operator|)
-return|;
-block|}
-if|if
-condition|(
 name|pppoe_ver
 operator|!=
 literal|1
@@ -535,10 +545,31 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" [len %d!]"
+literal|" [len %u!]"
 argument_list|,
 name|pppoe_length
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pppoe_length
+operator|>
+name|length
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" [len %u> %u!]"
+argument_list|,
+name|pppoe_length
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+name|pppoe_length
+operator|=
+name|length
 expr_stmt|;
 block|}
 if|if
@@ -556,31 +587,25 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|pppoe_payload
-operator|+
 name|pppoe_length
 operator|<
-name|snapend
+name|length
 operator|&&
-name|snapend
-operator|-
-name|pppoe_payload
+name|length
 operator|+
-literal|14
+name|ETHER_HDRLEN
 operator|>
-literal|64
+literal|60
 condition|)
 block|{
-comment|/* (small packets are probably just padded up to the ethernet 		   minimum of 64 bytes) */
+comment|/* (small packets are probably just padded up to the ethernet 		   minimum of 60 bytes of data + 4 bytes of CRC) */
 name|printf
 argument_list|(
-literal|" [length %d (%d extra bytes)]"
+literal|" [length %u (%u extra bytes)]"
 argument_list|,
 name|pppoe_length
 argument_list|,
-name|snapend
-operator|-
-name|pppoe_payload
+name|length
 operator|-
 name|pppoe_length
 argument_list|)
@@ -588,6 +613,14 @@ expr_stmt|;
 if|#
 directive|if
 name|RESPECT_PAYLOAD_LENGTH
+if|if
+condition|(
+name|snaplend
+operator|>
+name|pppoe_payload
+operator|+
+name|pppoe_length
+condition|)
 name|snapend
 operator|=
 name|pppoe_payload
@@ -599,9 +632,7 @@ directive|else
 comment|/* Actual PPPoE implementations appear to ignore the payload 		   length and use the full ethernet frame anyways */
 name|pppoe_length
 operator|=
-name|snapend
-operator|-
-name|pppoe_payload
+name|length
 expr_stmt|;
 endif|#
 directive|endif
@@ -626,26 +657,26 @@ name|p
 init|=
 name|pppoe_payload
 decl_stmt|;
-comment|/* 		 * loop invariant: 		 * p points to next tag, 		 * tag_type is previous tag or 0xffff for first iteration 		 */
+comment|/* 		 * loop invariant: 		 * p points to current tag, 		 * tag_type is previous tag or 0xffff for first iteration 		 */
 while|while
 condition|(
 name|tag_type
 operator|&&
 name|p
-operator|+
-literal|4
 operator|<
 name|pppoe_payload
 operator|+
-name|length
-operator|&&
-name|p
-operator|+
-literal|4
-operator|<
-name|snapend
+name|pppoe_length
 condition|)
 block|{
+name|TCHECK2
+argument_list|(
+operator|*
+name|p
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|tag_type
 operator|=
 name|EXTRACT_16BITS
@@ -700,6 +731,14 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* TODO print UTF-8 decoded text */
+name|TCHECK2
+argument_list|(
+operator|*
+name|p
+argument_list|,
+name|tag_len
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|v

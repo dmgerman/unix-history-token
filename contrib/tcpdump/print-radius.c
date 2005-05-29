@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"$Id: print-radius.c,v 1.19.2.4 2004/02/06 14:38:51 hannes Exp $"
+literal|"$Id: print-radius.c,v 1.27 2004/07/21 21:45:47 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4034,7 +4034,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* do we want to see an additionally hexdump ? */
+comment|/* do we also want to see a hex dump ? */
 if|if
 condition|(
 name|vflag
@@ -4050,7 +4050,7 @@ condition|)
 name|print_unknown_data
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 name|rad_attr

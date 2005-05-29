@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igmp.c,v 1.11.2.3 2003/11/19 09:41:29 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igmp.c,v 1.15 2004/03/24 00:59:16 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1673,6 +1673,16 @@ break|break;
 case|case
 literal|0x17
 case|:
+name|TCHECK2
+argument_list|(
+name|bp
+index|[
+literal|4
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

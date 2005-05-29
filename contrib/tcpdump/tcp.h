@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/tcp.h,v 1.10 2002/12/11 07:14:11 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/tcp.h,v 1.11 2004/03/23 07:15:37 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -245,6 +245,35 @@ end_define
 
 begin_comment
 comment|/* T/TCP CC options (rfc1644) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_SIGNATURE
+value|19
+end_define
+
+begin_comment
+comment|/* Keyed MD5 (rfc2385) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_SIGNATURE
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCP_SIGLEN
+value|16
+end_define
+
+begin_comment
+comment|/* length of an option 19 digest */
 end_comment
 
 begin_define

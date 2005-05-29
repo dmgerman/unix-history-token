@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip.h,v 1.10 2002/12/11 07:13:53 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip.h,v 1.11 2004/09/27 21:13:10 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -342,6 +342,17 @@ end_define
 
 begin_comment
 comment|/* strict source route */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPOPT_RA
+value|148
+end_define
+
+begin_comment
+comment|/* router-alert, rfc2113 */
 end_comment
 
 begin_comment

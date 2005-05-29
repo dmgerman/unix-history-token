@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/gmpls.c,v 1.2.2.2 2003/11/16 08:51:05 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/gmpls.c,v 1.5 2004/09/15 17:54:10 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -641,6 +641,73 @@ block|{
 literal|58
 block|,
 literal|"Fiber Channel"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DIFFSERV_BC_MODEL_RDM
+value|0
+end_define
+
+begin_comment
+comment|/* draft-ietf-tewg-diff-te-proto-07 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIFFSERV_BC_MODEL_MAM
+value|1
+end_define
+
+begin_comment
+comment|/* draft-ietf-tewg-diff-te-proto-07 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIFFSERV_BC_MODEL_EXTD_MAM
+value|254
+end_define
+
+begin_comment
+comment|/* experimental */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|tok
+name|diffserv_te_bc_values
+index|[]
+init|=
+block|{
+block|{
+name|DIFFSERV_BC_MODEL_RDM
+block|,
+literal|"Russian dolls"
+block|}
+block|,
+block|{
+name|DIFFSERV_BC_MODEL_MAM
+block|,
+literal|"Maximum allocation"
+block|}
+block|,
+block|{
+name|DIFFSERV_BC_MODEL_EXTD_MAM
+block|,
+literal|"Maximum allocation with E-LSP support"
 block|}
 block|,
 block|{

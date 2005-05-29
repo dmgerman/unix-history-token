@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-msdp.c,v 1.4.2.2 2003/11/16 08:51:34 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-msdp.c,v 1.7 2005/04/06 21:32:41 mcr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,6 +317,8 @@ argument_list|)
 expr_stmt|;
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|sp
 operator|+
 operator|*
@@ -463,6 +465,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

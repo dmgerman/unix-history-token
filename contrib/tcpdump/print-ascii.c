@@ -38,7 +38,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ascii.c,v 1.10.2.3 2003/12/29 22:42:20 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ascii.c,v 1.16 2004/07/21 22:00:10 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,7 +111,7 @@ name|ascii_print_with_offset
 parameter_list|(
 specifier|register
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|ident
 parameter_list|,
@@ -640,7 +640,7 @@ name|ascii_print
 parameter_list|(
 specifier|register
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|ident
 parameter_list|,
@@ -679,7 +679,7 @@ name|hex_print_with_offset
 parameter_list|(
 specifier|register
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|ident
 parameter_list|,
@@ -836,7 +836,7 @@ name|hex_print
 parameter_list|(
 specifier|register
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|ident
 parameter_list|,

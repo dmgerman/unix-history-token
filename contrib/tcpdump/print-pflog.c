@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pflog.c,v 1.7.2.4 2004/03/29 21:56:26 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pflog.c,v 1.13 2005/04/06 21:32:41 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,14 +274,32 @@ modifier|*
 name|hdr
 parameter_list|)
 block|{
-if|if
-condition|(
+name|u_int32_t
+name|rulenr
+decl_stmt|,
+name|subrulenr
+decl_stmt|;
+name|rulenr
+operator|=
+name|ntohl
+argument_list|(
+name|hdr
+operator|->
+name|rulenr
+argument_list|)
+expr_stmt|;
+name|subrulenr
+operator|=
 name|ntohl
 argument_list|(
 name|hdr
 operator|->
 name|subrulenr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|subrulenr
 operator|==
 operator|(
 name|u_int32_t
@@ -293,12 +311,7 @@ name|printf
 argument_list|(
 literal|"rule %u/"
 argument_list|,
-name|ntohl
-argument_list|(
-name|hdr
-operator|->
 name|rulenr
-argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -306,23 +319,13 @@ name|printf
 argument_list|(
 literal|"rule %u.%s.%u/"
 argument_list|,
-name|ntohl
-argument_list|(
-name|hdr
-operator|->
 name|rulenr
-argument_list|)
 argument_list|,
 name|hdr
 operator|->
 name|ruleset
 argument_list|,
-name|ntohl
-argument_list|(
-name|hdr
-operator|->
 name|subrulenr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -564,6 +567,8 @@ endif|#
 directive|endif
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -644,6 +649,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

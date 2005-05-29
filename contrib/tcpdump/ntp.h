@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /tcpdump/master/tcpdump/ntp.h,v 1.7 2003/08/06 04:58:21 guy Exp $ */
+comment|/* $Header: /tcpdump/master/tcpdump/ntp.h,v 1.8 2004/01/28 14:34:50 hannes Exp $ */
 end_comment
 
 begin_comment
@@ -55,11 +55,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  =================  Table 3.3. Packet Variables   ================= */
-end_comment
-
-begin_comment
-comment|/*  *    0			  1		      2			  3  *    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |LI | VN  | Mode|	  Stratum    |	    Poll     |	 Precision   |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |			   Synchronizing Distance		     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |			  Synchronizing Dispersion		     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |			Reference Clock Identifier		     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |								     |  *   |		       Reference Timestamp (64 bits)		     |  *   |								     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |								     |  *   |		       Originate Timestamp (64 bits)		     |  *   |								     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |								     |  *   |			Receive Timestamp (64 bits)		     |  *   |								     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |								     |  *   |			Transmit Timestamp (64 bits)		     |  *   |								     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ */
+comment|/* rfc2030  *                      1                   2                   3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |LI | VN  |Mode |    Stratum    |     Poll      |   Precision   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                          Root Delay                           |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                       Root Dispersion                         |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                     Reference Identifier                      |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                                                               |  * |                   Reference Timestamp (64)                    |  * |                                                               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                                                               |  * |                   Originate Timestamp (64)                    |  * |                                                               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                                                               |  * |                    Receive Timestamp (64)                     |  * |                                                               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                                                               |  * |                    Transmit Timestamp (64)                    |  * |                                                               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                 Key Identifier (optional) (32)                |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                                                               |  * |                                                               |  * |                 Message Digest (optional) (128)               |  * |                                                               |  * |                                                               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
 end_comment
 
 begin_struct
@@ -85,30 +81,39 @@ literal|8
 decl_stmt|;
 name|struct
 name|s_fixedpt
-name|distance
+name|root_delay
 decl_stmt|;
 name|struct
 name|s_fixedpt
-name|dispersion
+name|root_dispersion
 decl_stmt|;
 name|u_int32_t
 name|refid
 decl_stmt|;
 name|struct
 name|l_fixedpt
-name|reftime
+name|ref_timestamp
 decl_stmt|;
 name|struct
 name|l_fixedpt
-name|org
+name|org_timestamp
 decl_stmt|;
 name|struct
 name|l_fixedpt
-name|rec
+name|rec_timestamp
 decl_stmt|;
 name|struct
 name|l_fixedpt
-name|xmt
+name|xmt_timestamp
+decl_stmt|;
+name|u_int32_t
+name|key_id
+decl_stmt|;
+name|u_int8_t
+name|message_digest
+index|[
+literal|16
+index|]
 decl_stmt|;
 block|}
 struct|;

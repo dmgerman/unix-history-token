@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mpls.c,v 1.8.2.2 2003/11/16 08:51:34 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mpls.c,v 1.13 2005/04/06 21:32:41 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,101 +89,11 @@ begin_comment
 comment|/* must come after interface.h */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LABEL_MASK
-value|0xfffff000
-end_define
-
-begin_define
-define|#
-directive|define
-name|LABEL_SHIFT
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXP_MASK
-value|0x00000e00
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXP_SHIFT
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|STACK_MASK
-value|0x00000100
-end_define
-
-begin_define
-define|#
-directive|define
-name|STACK_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTL_MASK
-value|0x000000ff
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTL_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPLS_LABEL
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& LABEL_MASK)>> LABEL_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPLS_EXP
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& EXP_MASK)>> EXP_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPLS_STACK
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& STACK_MASK)>> STACK_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPLS_TTL
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& TTL_MASK)>> TTL_SHIFT)
-end_define
+begin_include
+include|#
+directive|include
+file|"mpls.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -411,6 +321,8 @@ case|:
 comment|/* IPv4 implicit NULL label */
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -510,6 +422,8 @@ argument_list|)
 expr_stmt|;
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -689,46 +603,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * draft-ietf-mpls-lsp-ping-02.txt  */
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
 end_comment
-
-begin_function
-name|void
-name|mpls_lsp_ping_print
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-name|pptr
-parameter_list|,
-name|u_int
-name|length
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"UDP, LSP-PING, length: %u"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vflag
-operator|>
-literal|1
-condition|)
-name|print_unknown_data
-argument_list|(
-name|pptr
-argument_list|,
-literal|"\n\t  "
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 end_unit
 

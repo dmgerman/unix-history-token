@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-egp.c,v 1.34.2.2 2003/11/16 08:51:18 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-egp.c,v 1.37 2005/01/12 11:19:09 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -853,6 +853,10 @@ specifier|const
 name|u_int8_t
 modifier|*
 name|bp
+parameter_list|,
+specifier|register
+name|u_int
+name|length
 parameter_list|)
 block|{
 specifier|register
@@ -886,10 +890,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST
+name|TTEST2
 argument_list|(
 operator|*
 name|egp
+argument_list|,
+name|length
 argument_list|)
 condition|)
 block|{

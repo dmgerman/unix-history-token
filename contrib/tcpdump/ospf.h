@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.11 2003/10/22 17:08:46 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.16 2004/09/20 14:56:34 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -152,6 +152,17 @@ end_define
 
 begin_comment
 comment|/* O bit: Opaque LSA capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_OPTION_DN
+value|0x80
+end_define
+
+begin_comment
+comment|/* DN bit: Up/Down Bit capable - draft-ietf-ospf-2547-dnbit-04 */
 end_comment
 
 begin_comment
@@ -313,7 +324,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* rfc1587 - Not so Stubby Areas */
+comment|/* rfc3101 - Not so Stubby Areas */
 end_comment
 
 begin_define
@@ -368,7 +379,18 @@ value|3
 end_define
 
 begin_comment
-comment|/* draft-ietf-ospf-hitless-restart */
+comment|/* rfc3623 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TYPE_RI
+value|4
+end_define
+
+begin_comment
+comment|/* draft-ietf-ospf-cap-03 */
 end_comment
 
 begin_define
@@ -539,6 +561,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_DIFFSERV_TE
+value|17
+end_define
+
+begin_comment
+comment|/* draft-ietf-tewg-diff-te-proto-06 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_TYPE_PTP
 value|1
 end_define
@@ -556,6 +589,94 @@ end_define
 
 begin_comment
 comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_GRACE_TLV_PERIOD
+value|1
+end_define
+
+begin_comment
+comment|/* rfc3623 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_GRACE_TLV_REASON
+value|2
+end_define
+
+begin_comment
+comment|/* rfc3623 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_GRACE_TLV_INT_ADDRESS
+value|3
+end_define
+
+begin_comment
+comment|/* rfc3623 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_GRACE_TLV_REASON_UNKNOWN
+value|0
+end_define
+
+begin_comment
+comment|/* rfc3623 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_GRACE_TLV_REASON_SW_RESTART
+value|1
+end_define
+
+begin_comment
+comment|/* rfc3623 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_GRACE_TLV_REASON_SW_UPGRADE
+value|2
+end_define
+
+begin_comment
+comment|/* rfc3623 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_GRACE_TLV_REASON_CP_SWITCH
+value|3
+end_define
+
+begin_comment
+comment|/* rfc3623 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_RI_TLV_CAP
+value|1
+end_define
+
+begin_comment
+comment|/* draft-ietf-ospf-cap-03 */
 end_comment
 
 begin_comment
@@ -936,6 +1057,44 @@ decl_stmt|;
 comment|/* may repeat   */
 block|}
 name|un_te_lsa_tlv
+struct|;
+comment|/* Opaque Grace LSA */
+struct|struct
+block|{
+name|u_int16_t
+name|type
+decl_stmt|;
+name|u_int16_t
+name|length
+decl_stmt|;
+name|u_int8_t
+name|data
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* may repeat   */
+block|}
+name|un_grace_tlv
+struct|;
+comment|/* Opaque Router information LSA */
+struct|struct
+block|{
+name|u_int16_t
+name|type
+decl_stmt|;
+name|u_int16_t
+name|length
+decl_stmt|;
+name|u_int8_t
+name|data
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* may repeat   */
+block|}
+name|un_ri_tlv
 struct|;
 comment|/* Unknown LSA */
 struct|struct

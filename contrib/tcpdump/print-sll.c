@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sll.c,v 1.12.2.2 2003/11/16 08:51:44 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sll.c,v 1.16 2004/10/28 00:34:29 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ether.h"
 end_include
 
@@ -96,6 +102,53 @@ include|#
 directive|include
 file|"sll.h"
 end_include
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|tok
+name|sll_pkttype_values
+index|[]
+init|=
+block|{
+block|{
+name|LINUX_SLL_HOST
+block|,
+literal|"In"
+block|}
+block|,
+block|{
+name|LINUX_SLL_BROADCAST
+block|,
+literal|"B"
+block|}
+block|,
+block|{
+name|LINUX_SLL_MULTICAST
+block|,
+literal|"M"
+block|}
+block|,
+block|{
+name|LINUX_SLL_OTHERHOST
+block|,
+literal|"P"
+block|}
+block|,
+block|{
+name|LINUX_SLL_OUTGOING
+block|,
+literal|"Out"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -114,103 +167,36 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|u_short
-name|halen
-decl_stmt|;
-switch|switch
-condition|(
-name|ntohs
+name|printf
 argument_list|(
+literal|"%3s "
+argument_list|,
+name|tok2str
+argument_list|(
+name|sll_pkttype_values
+argument_list|,
+literal|"?"
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
 name|sllp
 operator|->
 name|sll_pkttype
 argument_list|)
-condition|)
-block|{
-case|case
-name|LINUX_SLL_HOST
-case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"< "
+argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|LINUX_SLL_BROADCAST
-case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"B "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|LINUX_SLL_MULTICAST
-case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"M "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|LINUX_SLL_OTHERHOST
-case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"P "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|LINUX_SLL_OUTGOING
-case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"> "
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"? "
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 comment|/* 	 * XXX - check the link-layer address type value? 	 * For now, we just assume 6 means Ethernet. 	 * XXX - print others as strings of hex? 	 */
-name|halen
-operator|=
-name|ntohs
+if|if
+condition|(
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sllp
 operator|->
 name|sll_halen
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|halen
 operator|==
 literal|6
 condition|)
@@ -239,22 +225,30 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s "
+literal|"ethertype %s (0x%04x), length %u: "
 argument_list|,
-name|etherproto_string
+name|tok2str
 argument_list|(
+name|ethertype_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
 name|sllp
 operator|->
 name|sll_protocol
 argument_list|)
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+argument_list|,
+name|EXTRACT_16BITS
 argument_list|(
-literal|"%d: "
+operator|&
+name|sllp
+operator|->
+name|sll_protocol
+argument_list|)
 argument_list|,
 name|length
 argument_list|)
@@ -263,7 +257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the top level routine of the printer.  'p' points to the  * Linux "cooked capture" header of the packet, 'h->ts' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
+comment|/*  * This is the top level routine of the printer.  'p' points to the  * Linux "cooked capture" header of the packet, 'h->ts' is the timestamp,  * 'h->len' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
 end_comment
 
 begin_function
