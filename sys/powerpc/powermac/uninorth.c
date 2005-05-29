@@ -955,6 +955,8 @@ operator|+
 name|io
 operator|->
 name|size_lo
+operator|-
+literal|1
 argument_list|)
 operator|!=
 literal|0
@@ -1078,6 +1080,8 @@ name|i
 index|]
 operator|->
 name|size_lo
+operator|-
+literal|1
 argument_list|)
 operator|!=
 literal|0
