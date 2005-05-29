@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-win32.c,v 1.7.2.1 2003/11/15 23:26:40 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-win32.c,v 1.11 2005/01/29 00:52:22 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -583,18 +583,10 @@ name|curdev
 argument_list|,
 name|devlist
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|name
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|desc
 argument_list|,
 name|errbuf
@@ -760,20 +752,75 @@ modifier|*
 name|desc
 decl_stmt|;
 name|char
+modifier|*
 name|AdaptersName
-index|[
-literal|8192
-index|]
 decl_stmt|;
 name|ULONG
 name|NameLength
-init|=
-literal|8192
 decl_stmt|;
 name|char
 modifier|*
 name|name
 decl_stmt|;
+name|PacketGetAdapterNames
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|NameLength
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NameLength
+operator|>
+literal|0
+condition|)
+name|AdaptersName
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|NameLength
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+operator|*
+name|alldevsp
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|AdaptersName
+operator|==
+name|NULL
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"Cannot allocate enough memory to list the adapters."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -796,6 +843,11 @@ literal|"PacketGetAdapterNames: %s"
 argument_list|,
 name|pcap_win32strerror
 argument_list|()
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|AdaptersName
 argument_list|)
 expr_stmt|;
 return|return
@@ -855,7 +907,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* 	 * Add an entry for this interface. 	 */
+comment|/* 		 * Add an entry for this interface. 		 */
 if|if
 condition|(
 name|pcap_add_if_win32
@@ -874,7 +926,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 			* Failure. 			*/
+comment|/* 			 * Failure. 			 */
 name|ret
 operator|=
 operator|-
@@ -909,7 +961,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 	 * We had an error; free the list we've been constructing. 	 */
+comment|/* 		 * We had an error; free the list we've been constructing. 		 */
 if|if
 condition|(
 name|devlist
@@ -932,6 +984,11 @@ operator|*
 name|alldevsp
 operator|=
 name|devlist
+expr_stmt|;
+name|free
+argument_list|(
+name|AdaptersName
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

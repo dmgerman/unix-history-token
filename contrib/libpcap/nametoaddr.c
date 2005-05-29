@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.68.2.3 2003/11/19 18:13:48 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.77 2005/03/27 22:26:25 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,10 @@ directive|ifdef
 name|HAVE_ETHER_HOSTTON
 end_ifdef
 
+begin_comment
+comment|/*  * XXX - do we need any of this if<netinet/if_ether.h> doesn't declare  * ether_hostton()?  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -189,6 +193,27 @@ end_endif
 
 begin_comment
 comment|/* HAVE_NETINET_IF_ETHER_H */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETINET_ETHER_H_DECLARES_ETHER_HOSTTON
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ether.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET_ETHER_H_DECLARES_ETHER_HOSTTON */
 end_comment
 
 begin_endif
@@ -507,6 +532,13 @@ operator|.
 name|ai_socktype
 operator|=
 name|SOCK_STREAM
+expr_stmt|;
+comment|/*not really*/
+name|hints
+operator|.
+name|ai_protocol
+operator|=
+name|IPPROTO_TCP
 expr_stmt|;
 comment|/*not really*/
 name|error
@@ -1076,6 +1108,116 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"llc.h"
+end_include
+
+begin_comment
+comment|/* Static data base of LLC values. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|eproto
+name|llc_db
+index|[]
+init|=
+block|{
+block|{
+literal|"iso"
+block|,
+name|LLCSAP_ISONS
+block|}
+block|,
+block|{
+literal|"stp"
+block|,
+name|LLCSAP_8021D
+block|}
+block|,
+block|{
+literal|"ipx"
+block|,
+name|LLCSAP_IPX
+block|}
+block|,
+block|{
+literal|"netbeui"
+block|,
+name|LLCSAP_NETBEUI
+block|}
+block|,
+block|{
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|pcap_nametollc
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|struct
+name|eproto
+modifier|*
+name|p
+init|=
+name|llc_db
+decl_stmt|;
+while|while
+condition|(
+name|p
+operator|->
+name|s
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|p
+operator|->
+name|s
+argument_list|,
+name|s
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|p
+operator|->
+name|p
+return|;
+name|p
+operator|+=
+literal|1
+expr_stmt|;
+block|}
+return|return
+name|PROTO_UNDEF
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Hex digit to integer. */
 end_comment
@@ -1592,37 +1734,17 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/*  * XXX - perhaps this should, instead, be declared in "lbl/os-XXX.h" files,  * for those OS versions that don't declare it, rather than being declared  * here?  That way, for example, we could declare it on FreeBSD 2.x (which  * doesn't declare it), but not on FreeBSD 3.x (which declares it like  * this) or FreeBSD 4.x (which declares it with its first argument as  * "const char *", so no matter how we declare it here, it'll fail to  * compile on one of 3.x or 4.x).  */
-end_comment
-
 begin_if
 if|#
 directive|if
 operator|!
 name|defined
 argument_list|(
-name|sgi
+name|HAVE_DECL_ETHER_HOSTTON
 argument_list|)
-operator|&&
+operator|||
 operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-expr|\
-operator|!
-name|defined
-argument_list|(
-name|_UNICOSMP
-argument_list|)
+name|HAVE_DECL_ETHER_HOSTTON
 end_if
 
 begin_function_decl
@@ -1630,6 +1752,7 @@ specifier|extern
 name|int
 name|ether_hostton
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/inet.c,v 1.58.2.1 2003/11/15 23:26:41 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/inet.c,v 1.66 2005/02/10 19:38:06 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,11 +74,22 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSDOS
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -108,16 +119,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_comment
-comment|/* concession to AIX */
-end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -196,11 +197,21 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|WIN32
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -214,7 +225,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* !WIN32&& !__BORLANDC__ */
 end_comment
 
 begin_ifdef
@@ -240,23 +251,6 @@ directive|define
 name|INT_MAX
 value|2147483647
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_IFADDRS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ifaddrs.h>
-end_include
 
 begin_endif
 endif|#
@@ -520,6 +514,10 @@ modifier|*
 name|errbuf
 parameter_list|)
 block|{
+name|pcap_t
+modifier|*
+name|p
+decl_stmt|;
 name|pcap_if_t
 modifier|*
 name|curdev
@@ -533,6 +531,46 @@ decl_stmt|;
 name|int
 name|this_instance
 decl_stmt|;
+comment|/* 	 * Can we open this interface for live capture? 	 * 	 * We do this check so that interfaces that ae supplied 	 * by the interface enumeration mechanism we're using 	 * but that don't support packet capture aren't included 	 * in the list.  An example of this is loopback interfaces 	 * on Solaris; we don't just omit loopback interfaces 	 * becaue you *can* capture on loopback interfaces on some 	 * OSes. 	 */
+name|p
+operator|=
+name|pcap_open_live
+argument_list|(
+name|name
+argument_list|,
+literal|68
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|errbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * No.  Don't bother including it. 		 * Don't treat this as an error, though. 		 */
+operator|*
+name|curdev_ret
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|pcap_close
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Is there already an entry in the list for this interface? 	 */
 for|for
 control|(
@@ -885,6 +923,7 @@ modifier|*
 modifier|*
 name|alldevs
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1368,6 +1407,7 @@ modifier|*
 modifier|*
 name|devlist
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1575,11 +1615,21 @@ block|}
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|WIN32
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Return the name of a network interface attached to the system, or NULL  * if none can be found.  The interface must be configured up; the  * lowest unit number is preferred; loopback is ignored.  */
@@ -2153,14 +2203,14 @@ return|;
 block|}
 end_block
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* WIN32 */
-end_comment
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+end_elif
 
 begin_comment
 comment|/*  * Return the name of a network interface attached to the system, or NULL  * if none can be found.  The interface must be configured up; the  * lowest unit number is preferred; loopback is ignored.  */
@@ -2230,6 +2280,8 @@ index|[
 literal|8192
 index|]
 decl_stmt|;
+if|if
+condition|(
 name|PacketGetAdapterNames
 argument_list|(
 name|AdaptersName
@@ -2237,11 +2289,15 @@ argument_list|,
 operator|&
 name|NameLength
 argument_list|)
-expr_stmt|;
+condition|)
 return|return
 operator|(
 name|AdaptersName
 operator|)
+return|;
+else|else
+return|return
+name|NULL
 return|;
 block|}
 else|else
@@ -2313,6 +2369,9 @@ return|return
 name|NULL
 return|;
 block|}
+if|if
+condition|(
+operator|!
 name|PacketGetAdapterNames
 argument_list|(
 operator|(
@@ -2323,7 +2382,32 @@ argument_list|,
 operator|&
 name|NameLength
 argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"PacketGetAdapterNames: %s"
+argument_list|,
+name|pcap_win32strerror
+argument_list|()
+argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|TAdaptersName
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|tAstr
 operator|=
 operator|(
@@ -2430,6 +2514,11 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|TAdaptersName
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|char
@@ -2455,8 +2544,8 @@ name|maskp
 parameter_list|,
 name|errbuf
 parameter_list|)
-specifier|const
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|device
@@ -2653,7 +2742,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* !WIN32&& !MSDOS */
 end_comment
 
 end_unit

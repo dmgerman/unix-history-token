@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h       7.1 (Berkeley) 5/7/91  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-bpf.h,v 1.9.2.9 2004/03/28 21:45:32 fenner Exp $ (LBL)  */
+comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h       7.1 (Berkeley) 5/7/91  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-bpf.h,v 1.34 2005/02/08 20:03:15 guy Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -30,6 +30,21 @@ define|#
 directive|define
 name|BPF_RELEASE
 value|199606
+ifdef|#
+directive|ifdef
+name|MSDOS
+comment|/* must be 32-bit */
+typedef|typedef
+name|long
+name|bpf_int32
+typedef|;
+typedef|typedef
+name|unsigned
+name|long
+name|bpf_u_int32
+typedef|;
+else|#
+directive|else
 typedef|typedef
 name|int
 name|bpf_int32
@@ -38,6 +53,8 @@ typedef|typedef
 name|u_int
 name|bpf_u_int32
 typedef|;
+endif|#
+directive|endif
 comment|/*  * Alignment macros.  BPF_WORDALIGN rounds up to the next   * even multiple of BPF_ALIGNMENT.   */
 ifndef|#
 directive|ifndef
@@ -114,7 +131,7 @@ define|#
 directive|define
 name|DLT_NULL
 value|0
-comment|/* no link-layer encapsulation */
+comment|/* BSD loopback encapsulation */
 define|#
 directive|define
 name|DLT_EN10MB
@@ -235,6 +252,11 @@ directive|define
 name|DLT_ATM_CLIP
 value|19
 comment|/* Linux Classical-IP over ATM */
+comment|/*  * Apparently Redback uses this for its SmartEdge 400/800.  I hope  * nobody else decided to use it, too.  */
+define|#
+directive|define
+name|DLT_REDBACK_SMARTEDGE
+value|32
 comment|/*  * These values are defined by NetBSD; other platforms should refrain from  * using them for other purposes, so that NetBSD savefiles with link  * types of 50 or 51 can be read as this type on all platforms.  */
 define|#
 directive|define
@@ -380,12 +402,12 @@ directive|define
 name|DLT_AURORA
 value|126
 comment|/* Xilinx Aurora link layer */
-comment|/*  * BSD header for 802.11 plus a number of bits of link-layer information  * including radio information.  */
+comment|/*  * Header for 802.11 plus a number of bits of link-layer information  * including radio information, used by some recent BSD drivers as  * well as the madwifi Atheros driver for Linux.  */
 define|#
 directive|define
 name|DLT_IEEE802_11_RADIO
 value|127
-comment|/* 802.11 plus BSD radio header */
+comment|/* 802.11 plus radiotap radio header */
 comment|/*  * Reserved for the TZSP encapsulation, as per request from  * Chris Waters<chris.waters@networkchemistry.com>  * TZSP is a generic encapsulation for any other link type,  * which includes a means to include meta-information  * with the packet, e.g. signal strength and channel  * for 802.11 packets.  */
 define|#
 directive|define
@@ -437,7 +459,7 @@ directive|define
 name|DLT_APPLE_IP_OVER_IEEE1394
 value|138
 comment|/*  * 139 through 142 are reserved for SS7.  */
-comment|/*  * Reserved for DOCSIS MAC frames.  */
+comment|/*  * DOCSIS MAC frames.  */
 define|#
 directive|define
 name|DLT_DOCSIS
@@ -521,7 +543,7 @@ define|#
 directive|define
 name|DLT_USER15
 value|162
-comment|/*  * For future use with 802.11 captures - defined by AbsoluteValue  * Systems to store a number of bits of link-layer information  * including radio information:  *  *	http://www.shaftnet.org/~pizza/software/capturefrm.txt  *  * but could and arguably should also be used by non-AVS Linux  * 802.11 drivers; that may happen in the future.  */
+comment|/*  * For future use with 802.11 captures - defined by AbsoluteValue  * Systems to store a number of bits of link-layer information  * including radio information:  *  *	http://www.shaftnet.org/~pizza/software/capturefrm.txt  *  * but it might be used by some non-AVS drivers now or in the  * future.  */
 define|#
 directive|define
 name|DLT_IEEE802_11_RADIO_AVS
@@ -532,6 +554,74 @@ define|#
 directive|define
 name|DLT_JUNIPER_MONITOR
 value|164
+comment|/*  * Reserved for BACnet MS/TP.  */
+define|#
+directive|define
+name|DLT_BACNET_MS_TP
+value|165
+comment|/*  * Another PPP variant as per request from Karsten Keil<kkeil@suse.de>.  *  * This is used in some OSes to allow a kernel socket filter to distinguish  * between incoming and outgoing packets, on a socket intended to  * supply pppd with outgoing packets so it can do dial-on-demand and  * hangup-on-lack-of-demand; incoming packets are filtered out so they  * don't cause pppd to hold the connection up (you don't want random  * input packets such as port scans, packets from old lost connections,  * etc. to force the connection to stay up).  *  * The first byte of the PPP header (0xff03) is modified to accomodate  * the direction - 0x00 = IN, 0x01 = OUT.  */
+define|#
+directive|define
+name|DLT_PPP_PPPD
+value|166
+comment|/*  * Names for backwards compatibility with older versions of some PPP  * software; new software should use DLT_PPP_PPPD.  */
+define|#
+directive|define
+name|DLT_PPP_WITH_DIRECTION
+value|DLT_PPP_PPPD
+define|#
+directive|define
+name|DLT_LINUX_PPP_WITHDIRECTION
+value|DLT_PPP_PPPD
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  The DLT_s are used  * for passing on chassis-internal metainformation such as  * QOS profiles, cookies, etc..  */
+define|#
+directive|define
+name|DLT_JUNIPER_PPPOE
+value|167
+define|#
+directive|define
+name|DLT_JUNIPER_PPPOE_ATM
+value|168
+define|#
+directive|define
+name|DLT_GPRS_LLC
+value|169
+comment|/* GPRS LLC */
+define|#
+directive|define
+name|DLT_GPF_T
+value|170
+comment|/* GPF-T (ITU-T G.7041/Y.1303) */
+define|#
+directive|define
+name|DLT_GPF_F
+value|171
+comment|/* GPF-F (ITU-T G.7041/Y.1303) */
+comment|/*  * Requested by Oolan Zimmer<oz@gcom.com> for use in Gcom's T1/E1 line  * monitoring equipment.  */
+define|#
+directive|define
+name|DLT_GCOM_T1E1
+value|172
+define|#
+directive|define
+name|DLT_GCOM_SERIAL
+value|173
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  The DLT_ is used  * for internal communication to Physical Interface Cards (PIC)  */
+define|#
+directive|define
+name|DLT_JUNIPER_PIC_PEER
+value|174
+comment|/*  * Link types requested by Gregor Maier<gregor@endace.com> of Endace  * Measurement Systems.  They add an ERF header (see  * http://www.endace.com/support/EndaceRecordFormat.pdf) in front of  * the link-layer header.  */
+define|#
+directive|define
+name|DLT_ERF_ETH
+value|175
+comment|/* Ethernet */
+define|#
+directive|define
+name|DLT_ERF_POS
+value|176
+comment|/* Packet-over-SONET */
 comment|/*  * The instruction encodings.  */
 comment|/* instruction classes */
 define|#

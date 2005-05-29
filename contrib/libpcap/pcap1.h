@@ -4,7 +4,7 @@ comment|/* -*- Mode: c; tab-width: 8; indent-tabs-mode: 1; c-basic-offset: 8; -*
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap.h,v 1.52 2004/12/18 08:52:11 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap1.h,v 1.2 2004/03/30 14:42:50 mcr Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -19,14 +19,11 @@ directive|define
 name|lib_pcap_h
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|WIN32
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -34,38 +31,13 @@ directive|include
 file|<pcap-stdinc.h>
 end_include
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|MSDOS
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_comment
-comment|/* u_int, u_char etc. */
-end_comment
-
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* UN*X */
+comment|/* WIN32 */
 end_comment
 
 begin_include
@@ -86,7 +58,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32/MSDOS/UN*X */
+comment|/* WIN32 */
 end_comment
 
 begin_ifndef
@@ -127,11 +99,11 @@ directive|endif
 define|#
 directive|define
 name|PCAP_VERSION_MAJOR
-value|2
+value|3
 define|#
 directive|define
 name|PCAP_VERSION_MINOR
-value|4
+value|0
 define|#
 directive|define
 name|PCAP_ERRBUF_SIZE
@@ -175,8 +147,164 @@ name|pcap_addr
 name|pcap_addr_t
 typedef|;
 comment|/*  * The first record in the file contains saved values for some  * of the flags used in the printout phases of tcpdump.  * Many fields here are 32 bit ints so compilers won't insert unwanted  * padding; these files need to be interchangeable across architectures.  *  * Do not change the layout of this structure, in any way (this includes  * changes that only affect the length of fields in this structure).  *  * Also, do not change the interpretation of any of the members of this  * structure, in any way (this includes using values other than  * LINKTYPE_ values, as defined in "savefile.c", in the "linktype"  * field).  *  * Instead:  *  *	introduce a new structure for the new format, if the layout  *	of the structure changed;  *  *	send mail to "tcpdump-workers@tcpdump.org", requesting a new  *	magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed file  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old file header as well as files with the new file header  *	(using the magic number to determine the header format).  *  * Then supply the changes to "patches@tcpdump.org", so that future  * versions of libpcap and programs that use it (such as tcpdump) will  * be able to read your new capture file format.  */
+enum|enum
+name|pcap1_info_types
+block|{
+name|PCAP_DATACAPTURE
+block|,
+name|PCAP_TIMESTAMP
+block|,
+name|PCAP_WALLTIME
+block|,
+name|PCAP_TIMESKEW
+block|,
+name|PCAP_PROBEPLACE
+block|,
+comment|/* aka direction */
+name|PCAP_COMMENT
+block|,
+comment|/* comment */
+block|}
+enum|;
 struct|struct
-name|pcap_file_header
+name|pcap1_info_container
+block|{
+name|bpf_u_int32
+name|info_len
+decl_stmt|;
+comment|/* in bytes */
+name|bpf_u_int32
+name|info_type
+decl_stmt|;
+comment|/* enum pcap1_info_types */
+name|unsigned
+name|char
+name|info_data
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|pcap1_info_timestamp
+block|{
+name|struct
+name|pcap1_info_container
+name|pic
+decl_stmt|;
+name|bpf_u_int32
+name|nanoseconds
+decl_stmt|;
+comment|/* 10^-9 of seconds */
+name|bpf_u_int32
+name|seconds
+decl_stmt|;
+comment|/* seconds since Unix epoch - GMT */
+name|bpf_u_int16
+name|macroseconds
+decl_stmt|;
+comment|/* 16 bits more of MSB of time */
+name|bpf_u_int16
+name|sigfigs
+decl_stmt|;
+comment|/* accuracy of timestamps - LSB bits */
+block|}
+struct|;
+struct|struct
+name|pcap1_info_packet
+block|{
+name|struct
+name|pcap1_info_container
+name|pic
+decl_stmt|;
+name|bpf_u_int32
+name|caplen
+decl_stmt|;
+comment|/* length of portion present */
+name|bpf_u_int32
+name|len
+decl_stmt|;
+comment|/* length this packet (off wire) */
+name|bpf_u_int32
+name|linktype
+decl_stmt|;
+comment|/* data link type (LINKTYPE_*) */
+name|bpf_u_int32
+name|ifIndex
+decl_stmt|;
+comment|/* abstracted interface index */
+name|unsigned
+name|char
+name|packet_data
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+struct|;
+enum|enum
+name|pcap1_probe
+block|{
+name|INBOUND
+init|=
+literal|1
+block|,
+name|OUTBOUND
+init|=
+literal|2
+block|,
+name|FORWARD
+init|=
+literal|3
+block|,
+name|PREENCAP
+init|=
+literal|4
+block|,
+name|POSTDECAP
+init|=
+literal|5
+block|, }
+enum|;
+struct|struct
+name|pcap1_info_probe
+block|{
+name|struct
+name|pcap1_info_container
+name|pic
+decl_stmt|;
+name|bpf_u_int32
+name|probeloc
+decl_stmt|;
+comment|/* enum pcap1_probe */
+name|unsigned
+name|char
+name|probe_desc
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|pcap1_info_comment
+block|{
+name|struct
+name|pcap1_info_container
+name|pic
+decl_stmt|;
+name|unsigned
+name|char
+name|comment
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|pcap1_packet_header
 block|{
 name|bpf_u_int32
 name|magic
@@ -187,43 +315,19 @@ decl_stmt|;
 name|u_short
 name|version_minor
 decl_stmt|;
-name|bpf_int32
-name|thiszone
-decl_stmt|;
-comment|/* gmt to local correction */
 name|bpf_u_int32
-name|sigfigs
+name|block_len
 decl_stmt|;
-comment|/* accuracy of timestamps */
-name|bpf_u_int32
-name|snaplen
+name|struct
+name|pcap1_info_container
+name|pics
+index|[
+literal|0
+index|]
 decl_stmt|;
-comment|/* max length saved portion of each pkt */
-name|bpf_u_int32
-name|linktype
-decl_stmt|;
-comment|/* data link type (LINKTYPE_*) */
 block|}
 struct|;
 comment|/*  * Each packet in the dump file is prepended with this generic header.  * This gets around the problem of different headers for different  * packet interfaces.  */
-struct|struct
-name|pcap_pkthdr
-block|{
-name|struct
-name|timeval
-name|ts
-decl_stmt|;
-comment|/* time stamp */
-name|bpf_u_int32
-name|caplen
-decl_stmt|;
-comment|/* length of portion present */
-name|bpf_u_int32
-name|len
-decl_stmt|;
-comment|/* length this packet (off wire) */
-block|}
-struct|;
 comment|/*  * As returned by the pcap_stats()  */
 struct|struct
 name|pcap_stat
@@ -252,96 +356,6 @@ directive|endif
 comment|/* WIN32 */
 block|}
 struct|;
-ifdef|#
-directive|ifdef
-name|MSDOS
-comment|/*  * As returned by the pcap_stats_ex()  */
-struct|struct
-name|pcap_stat_ex
-block|{
-name|u_long
-name|rx_packets
-decl_stmt|;
-comment|/* total packets received       */
-name|u_long
-name|tx_packets
-decl_stmt|;
-comment|/* total packets transmitted    */
-name|u_long
-name|rx_bytes
-decl_stmt|;
-comment|/* total bytes received         */
-name|u_long
-name|tx_bytes
-decl_stmt|;
-comment|/* total bytes transmitted      */
-name|u_long
-name|rx_errors
-decl_stmt|;
-comment|/* bad packets received         */
-name|u_long
-name|tx_errors
-decl_stmt|;
-comment|/* packet transmit problems     */
-name|u_long
-name|rx_dropped
-decl_stmt|;
-comment|/* no space in Rx buffers       */
-name|u_long
-name|tx_dropped
-decl_stmt|;
-comment|/* no space available for Tx    */
-name|u_long
-name|multicast
-decl_stmt|;
-comment|/* multicast packets received   */
-name|u_long
-name|collisions
-decl_stmt|;
-comment|/* detailed rx_errors: */
-name|u_long
-name|rx_length_errors
-decl_stmt|;
-name|u_long
-name|rx_over_errors
-decl_stmt|;
-comment|/* receiver ring buff overflow  */
-name|u_long
-name|rx_crc_errors
-decl_stmt|;
-comment|/* recv'd pkt with crc error    */
-name|u_long
-name|rx_frame_errors
-decl_stmt|;
-comment|/* recv'd frame alignment error */
-name|u_long
-name|rx_fifo_errors
-decl_stmt|;
-comment|/* recv'r fifo overrun          */
-name|u_long
-name|rx_missed_errors
-decl_stmt|;
-comment|/* recv'r missed packet         */
-comment|/* detailed tx_errors */
-name|u_long
-name|tx_aborted_errors
-decl_stmt|;
-name|u_long
-name|tx_carrier_errors
-decl_stmt|;
-name|u_long
-name|tx_fifo_errors
-decl_stmt|;
-name|u_long
-name|tx_heartbeat_errors
-decl_stmt|;
-name|u_long
-name|tx_window_errors
-decl_stmt|;
-block|}
-struct|;
-endif|#
-directive|endif
 comment|/*  * Item in a list of interfaces.  */
 struct|struct
 name|pcap_if
@@ -496,17 +510,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-name|pcap_t
-modifier|*
-name|pcap_fopen_offline
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
 name|void
 name|pcap_close
 parameter_list|(
@@ -631,32 +634,6 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
-parameter_list|)
-function_decl|;
-name|int
-name|pcap_inject
-parameter_list|(
-name|pcap_t
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-name|int
-name|pcap_sendpacket
-parameter_list|(
-name|pcap_t
-modifier|*
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 name|char
@@ -826,18 +803,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-name|pcap_dumper_t
-modifier|*
-name|pcap_dump_fopen
-parameter_list|(
-name|pcap_t
-modifier|*
-parameter_list|,
-name|FILE
-modifier|*
-name|fp
-parameter_list|)
-function_decl|;
 name|int
 name|pcap_dump_flush
 parameter_list|(
@@ -951,12 +916,9 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|WIN32
-argument_list|)
 comment|/*  * Win32 definitions  */
 name|int
 name|pcap_setbuff
@@ -981,6 +943,21 @@ name|mode
 parameter_list|)
 function_decl|;
 name|int
+name|pcap_sendpacket
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|u_char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+name|int
 name|pcap_setmintocopy
 parameter_list|(
 name|pcap_t
@@ -1000,7 +977,6 @@ directive|include
 file|<Win32-Extensions.h>
 endif|#
 directive|endif
-comment|/* WPCAP */
 define|#
 directive|define
 name|MODE_CAPT
@@ -1009,57 +985,8 @@ define|#
 directive|define
 name|MODE_STAT
 value|1
-define|#
-directive|define
-name|MODE_MON
-value|2
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|MSDOS
-argument_list|)
-comment|/*  * MS-DOS definitions  */
-name|int
-name|pcap_stats_ex
-parameter_list|(
-name|pcap_t
-modifier|*
-parameter_list|,
-name|struct
-name|pcap_stat_ex
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-name|pcap_set_wait
-parameter_list|(
-name|pcap_t
-modifier|*
-name|p
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|yield
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-parameter_list|,
-name|int
-name|wait
-parameter_list|)
-function_decl|;
-name|u_long
-name|pcap_mac_packets
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
 else|#
 directive|else
-comment|/* UN*X */
 comment|/*  * UN*X definitions  */
 name|int
 name|pcap_get_selectable_fd
@@ -1070,7 +997,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* WIN32/MSDOS/UN*X */
+comment|/* WIN32 */
 ifdef|#
 directive|ifdef
 name|__cplusplus
