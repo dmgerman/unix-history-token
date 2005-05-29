@@ -740,6 +740,10 @@ decl_stmt|;
 name|int
 name|match
 decl_stmt|;
+name|match
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|mapp

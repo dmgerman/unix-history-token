@@ -1249,6 +1249,11 @@ name|c
 decl_stmt|,
 name|len
 decl_stmt|;
+name|s
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|hostres
 operator|=
 name|gethostinfo
