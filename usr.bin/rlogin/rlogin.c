@@ -1039,7 +1039,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|dest_realm
 argument_list|,
