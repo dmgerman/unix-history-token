@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995-1999 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: snprintf.c,v 1.6.2.2 2003/11/16 08:52:02 guy Exp $ */
+comment|/* $Id: snprintf.c,v 1.8 2003/11/16 09:36:51 guy Exp $ */
 end_comment
 
 begin_ifdef
@@ -38,7 +38,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/snprintf.c,v 1.6.2.2 2003/11/16 08:52:02 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/snprintf.c,v 1.8 2003/11/16 09:36:51 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
