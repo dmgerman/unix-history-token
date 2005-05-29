@@ -1052,6 +1052,20 @@ operator|->
 name|n_aliases
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|__LONG_BIT
+operator|==
+literal|64
+name|ne
+operator|->
+name|__n_pad0
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ABI compatibility */
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -1083,8 +1097,7 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|net
 decl_stmt|;
 name|int
@@ -1124,17 +1137,16 @@ index|[
 name|MAXDNAME
 index|]
 decl_stmt|;
-name|unsigned
-name|long
+name|uint32_t
 name|net2
 decl_stmt|;
 name|net
 operator|=
 name|va_arg
 argument_list|(
-argument|ap
+name|ap
 argument_list|,
-argument|unsigned long
+name|uint32_t
 argument_list|)
 expr_stmt|;
 name|net_type
@@ -1456,28 +1468,22 @@ operator|==
 literal|0
 condition|)
 block|{
-name|unsigned
-name|u_net
-init|=
-name|net
-decl_stmt|;
-comment|/* maybe net should be unsigned ? */
 comment|/* Strip trailing zeros */
 while|while
 condition|(
 operator|(
-name|u_net
+name|net
 operator|&
 literal|0xff
 operator|)
 operator|==
 literal|0
 operator|&&
-name|u_net
+name|net
 operator|!=
 literal|0
 condition|)
-name|u_net
+name|net
 operator|>>=
 literal|8
 expr_stmt|;
@@ -1485,8 +1491,22 @@ name|ne
 operator|->
 name|n_net
 operator|=
-name|u_net
+name|net
 expr_stmt|;
+if|#
+directive|if
+name|__LONG_BIT
+operator|==
+literal|64
+name|ne
+operator|->
+name|__n_pad0
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ABI compatibility */
+endif|#
+directive|endif
 return|return
 name|NS_SUCCESS
 return|;

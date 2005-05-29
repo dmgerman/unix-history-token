@@ -18,42 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
 begin_comment
 comment|/* XXX: for FILE */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_UINT32_T_DECLARED
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
-name|uint32_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|_UINT32_T_DECLARED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -799,8 +769,7 @@ begin_function_decl
 name|int
 name|getnetbyaddr_r
 parameter_list|(
-name|unsigned
-name|long
+name|uint32_t
 name|addr
 parameter_list|,
 name|int

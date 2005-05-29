@@ -542,7 +542,7 @@ begin_function
 name|int
 name|getnetbyaddr_r
 parameter_list|(
-name|u_long
+name|uint32_t
 name|addr
 parameter_list|,
 name|int
@@ -780,6 +780,9 @@ if|if
 condition|(
 name|getnetbyaddr_r
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|addr
 argument_list|,
 name|af
