@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-nfs.c,v 1.99.2.2 2003/11/16 08:51:35 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-nfs.c,v 1.106 2005/01/05 08:16:45 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<tcpdump-stdinc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/rpc.h>
 end_include
 
 begin_include
@@ -126,6 +120,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"rpc_auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rpc_msg.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -148,7 +154,7 @@ name|xid_map_enter
 parameter_list|(
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 parameter_list|,
 specifier|const
@@ -165,7 +171,7 @@ name|xid_map_find
 parameter_list|(
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 parameter_list|,
 specifier|const
@@ -188,7 +194,7 @@ name|interp_reply
 parameter_list|(
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 parameter_list|,
 name|u_int32_t
@@ -229,22 +235,6 @@ name|sa3
 parameter_list|,
 name|int
 name|verbose
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|print_int64
-parameter_list|(
-specifier|const
-name|u_int32_t
-modifier|*
-name|dp
-parameter_list|,
-name|int
-name|how
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -688,209 +678,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Print out a 64-bit integer. This appears to be different on each system,  * try to make the best of it. The integer stored as 2 consecutive XDR  * encoded 32-bit integers, to which a pointer is passed.  *  * Assume that a system that has INT64_FORMAT defined, has a 64-bit  * integer datatype and can print it.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UNSIGNED
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIGNED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HEX
-value|2
-end_define
-
-begin_function
-specifier|static
-name|int
-name|print_int64
-parameter_list|(
-specifier|const
-name|u_int32_t
-modifier|*
-name|dp
-parameter_list|,
-name|int
-name|how
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|INT64_FORMAT
-name|u_int64_t
-name|res
-decl_stmt|;
-name|res
-operator|=
-operator|(
-operator|(
-name|u_int64_t
-operator|)
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
-name|dp
-index|[
-literal|0
-index|]
-argument_list|)
-operator|<<
-literal|32
-operator|)
-operator||
-operator|(
-name|u_int64_t
-operator|)
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
-name|dp
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|how
-condition|)
-block|{
-case|case
-name|SIGNED
-case|:
-name|printf
-argument_list|(
-name|INT64_FORMAT
-argument_list|,
-name|res
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|UNSIGNED
-case|:
-name|printf
-argument_list|(
-name|U_INT64_FORMAT
-argument_list|,
-name|res
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|HEX
-case|:
-name|printf
-argument_list|(
-name|HEX_INT64_FORMAT
-argument_list|,
-name|res
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-else|#
-directive|else
-name|u_int32_t
-name|high
-decl_stmt|;
-name|high
-operator|=
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
-name|dp
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|how
-condition|)
-block|{
-case|case
-name|SIGNED
-case|:
-case|case
-name|UNSIGNED
-case|:
-case|case
-name|HEX
-case|:
-if|if
-condition|(
-name|high
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"0x%x%08x"
-argument_list|,
-name|high
-argument_list|,
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
-name|dp
-index|[
-literal|1
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"0x%x"
-argument_list|,
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
-name|dp
-index|[
-literal|1
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-return|return
-literal|1
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -1643,7 +1430,7 @@ block|{
 specifier|register
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 decl_stmt|;
@@ -1674,7 +1461,7 @@ operator|=
 operator|(
 specifier|const
 expr|struct
-name|rpc_msg
+name|sunrpc_msg
 operator|*
 operator|)
 name|bp
@@ -1781,7 +1568,7 @@ operator|.
 name|rp_stat
 argument_list|)
 operator|==
-name|MSG_ACCEPTED
+name|SUNRPC_MSG_ACCEPTED
 condition|?
 literal|"ok"
 else|:
@@ -1835,7 +1622,7 @@ parameter_list|(
 specifier|register
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 parameter_list|,
@@ -2302,7 +2089,7 @@ block|{
 specifier|register
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 decl_stmt|;
@@ -2347,7 +2134,7 @@ operator|=
 operator|(
 specifier|const
 expr|struct
-name|rpc_msg
+name|sunrpc_msg
 operator|*
 operator|)
 name|bp
@@ -2772,7 +2559,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %u bytes @ "
+literal|" %u bytes @ %"
+name|PRIu64
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2782,13 +2570,15 @@ index|[
 literal|2
 index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|print_int64
-argument_list|(
-name|dp
 argument_list|,
-name|UNSIGNED
+name|EXTRACT_64BITS
+argument_list|(
+operator|&
+name|dp
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2875,13 +2665,14 @@ name|TCHECK
 argument_list|(
 name|dp
 index|[
-literal|4
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %u bytes @ "
+literal|" %u (%u) bytes @ %"
+name|PRIu64
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2891,13 +2682,24 @@ index|[
 literal|4
 index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|print_int64
-argument_list|(
-name|dp
 argument_list|,
-name|UNSIGNED
+name|EXTRACT_32BITS
+argument_list|(
+operator|&
+name|dp
+index|[
+literal|2
+index|]
+argument_list|)
+argument_list|,
+name|EXTRACT_64BITS
+argument_list|(
+operator|&
+name|dp
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3539,7 +3341,8 @@ expr_stmt|;
 comment|/* 				 * We shouldn't really try to interpret the 				 * offset cookie here. 				 */
 name|printf
 argument_list|(
-literal|" %u bytes @ "
+literal|" %u bytes @ %"
+name|PRId64
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -3549,13 +3352,15 @@ index|[
 literal|4
 index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|print_int64
-argument_list|(
-name|dp
 argument_list|,
-name|SIGNED
+name|EXTRACT_64BITS
+argument_list|(
+operator|&
+name|dp
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3664,7 +3469,8 @@ expr_stmt|;
 comment|/* 			 * We don't try to interpret the offset 			 * cookie here. 			 */
 name|printf
 argument_list|(
-literal|" %u bytes @ "
+literal|" %u bytes @ %"
+name|PRId64
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -3674,19 +3480,30 @@ index|[
 literal|4
 index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|print_int64
-argument_list|(
-name|dp
 argument_list|,
-name|SIGNED
+name|EXTRACT_64BITS
+argument_list|(
+operator|&
+name|dp
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|vflag
 condition|)
+block|{
+name|TCHECK
+argument_list|(
+name|dp
+index|[
+literal|5
+index|]
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" max %u verf %08x%08x"
@@ -3711,6 +3528,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 break|break;
@@ -3853,9 +3671,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|TCHECK
+argument_list|(
+name|dp
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|" %u bytes @ "
+literal|" %u bytes @ %"
+name|PRIu64
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -3865,13 +3692,15 @@ index|[
 literal|2
 index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|print_int64
-argument_list|(
-name|dp
 argument_list|,
-name|UNSIGNED
+name|EXTRACT_64BITS
+argument_list|(
+operator|&
+name|dp
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4264,7 +4093,7 @@ name|xid_map_enter
 parameter_list|(
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 parameter_list|,
@@ -4524,7 +4353,7 @@ name|xid_map_find
 parameter_list|(
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 parameter_list|,
@@ -4836,7 +4665,7 @@ parameter_list|(
 specifier|register
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 parameter_list|,
@@ -4855,7 +4684,7 @@ name|u_int
 name|len
 decl_stmt|;
 name|enum
-name|accept_stat
+name|sunrpc_accept_stat
 name|astat
 decl_stmt|;
 comment|/* 	 * Portability note: 	 * Here we find the address of the ar_verf credentials. 	 * Originally, this calculation was 	 *	dp = (u_int32_t *)&rp->rm_reply.rp_acpt.ar_verf 	 * On the wire, the rp_acpt field starts immediately after 	 * the (32 bit) rp_stat field.  However, rp_acpt (which is a 	 * "struct accepted_reply") contains a "struct opaque_auth", 	 * whose internal representation contains a pointer, so on a 	 * 64-bit machine the compiler inserts 32 bits of padding 	 * before rp->rm_reply.rp_acpt.ar_verf.  So, we cannot use 	 * the internal representation to parse the on-the-wire 	 * representation.  Instead, we skip past the rp_stat field, 	 * which is an "enum" and so occupies one 32-bit word. 	 */
@@ -4952,11 +4781,11 @@ name|astat
 condition|)
 block|{
 case|case
-name|SUCCESS
+name|SUNRPC_SUCCESS
 case|:
 break|break;
 case|case
-name|PROG_UNAVAIL
+name|SUNRPC_PROG_UNAVAIL
 case|:
 name|printf
 argument_list|(
@@ -4974,7 +4803,7 @@ name|NULL
 operator|)
 return|;
 case|case
-name|PROG_MISMATCH
+name|SUNRPC_PROG_MISMATCH
 case|:
 name|printf
 argument_list|(
@@ -4992,7 +4821,7 @@ name|NULL
 operator|)
 return|;
 case|case
-name|PROC_UNAVAIL
+name|SUNRPC_PROC_UNAVAIL
 case|:
 name|printf
 argument_list|(
@@ -5010,7 +4839,7 @@ name|NULL
 operator|)
 return|;
 case|case
-name|GARBAGE_ARGS
+name|SUNRPC_GARBAGE_ARGS
 case|:
 name|printf
 argument_list|(
@@ -5028,7 +4857,7 @@ name|NULL
 operator|)
 return|;
 case|case
-name|SYSTEM_ERR
+name|SUNRPC_SYSTEM_ERR
 case|:
 name|printf
 argument_list|(
@@ -5307,10 +5136,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" sz "
-argument_list|)
-expr_stmt|;
-name|print_int64
+literal|" sz %"
+name|PRIu64
+argument_list|,
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -5320,8 +5149,7 @@ operator|&
 name|fap
 operator|->
 name|fa3_size
-argument_list|,
-name|UNSIGNED
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5404,10 +5232,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" fsid "
-argument_list|)
-expr_stmt|;
-name|print_int64
+literal|" fsid %"
+name|PRIx64
+argument_list|,
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -5417,16 +5245,15 @@ operator|&
 name|fap
 operator|->
 name|fa3_fsid
-argument_list|,
-name|HEX
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" fileid "
-argument_list|)
-expr_stmt|;
-name|print_int64
+literal|" fileid %"
+name|PRIx64
+argument_list|,
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -5436,8 +5263,7 @@ operator|&
 name|fap
 operator|->
 name|fa3_fileid
-argument_list|,
-name|HEX
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6037,10 +5863,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" tbytes "
-argument_list|)
-expr_stmt|;
-name|print_int64
+literal|" tbytes %"
+name|PRIu64
+literal|" fbytes %"
+name|PRIu64
+literal|" abytes %"
+name|PRIu64
+argument_list|,
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -6050,16 +5880,9 @@ operator|&
 name|sfsp
 operator|->
 name|sf_tbytes
+argument_list|)
 argument_list|,
-name|UNSIGNED
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" fbytes "
-argument_list|)
-expr_stmt|;
-name|print_int64
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -6069,16 +5892,9 @@ operator|&
 name|sfsp
 operator|->
 name|sf_fbytes
+argument_list|)
 argument_list|,
-name|UNSIGNED
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" abytes "
-argument_list|)
-expr_stmt|;
-name|print_int64
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -6088,8 +5904,7 @@ operator|&
 name|sfsp
 operator|->
 name|sf_abytes
-argument_list|,
-name|UNSIGNED
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6099,10 +5914,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" tfiles "
-argument_list|)
-expr_stmt|;
-name|print_int64
+literal|" tfiles %"
+name|PRIu64
+literal|" ffiles %"
+name|PRIu64
+literal|" afiles %"
+name|PRIu64
+literal|" invar %u"
+argument_list|,
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -6112,16 +5932,9 @@ operator|&
 name|sfsp
 operator|->
 name|sf_tfiles
+argument_list|)
 argument_list|,
-name|UNSIGNED
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" ffiles "
-argument_list|)
-expr_stmt|;
-name|print_int64
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -6131,16 +5944,9 @@ operator|&
 name|sfsp
 operator|->
 name|sf_ffiles
+argument_list|)
 argument_list|,
-name|UNSIGNED
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" afiles "
-argument_list|)
-expr_stmt|;
-name|print_int64
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -6150,13 +5956,7 @@ operator|&
 name|sfsp
 operator|->
 name|sf_afiles
-argument_list|,
-name|UNSIGNED
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" invar %u"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -6360,14 +6160,17 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|" sz "
-argument_list|)
-expr_stmt|;
-name|print_int64
-argument_list|(
-name|dp
+literal|" sz %"
+name|PRIu64
 argument_list|,
-name|UNSIGNED
+name|EXTRACT_64BITS
+argument_list|(
+operator|&
+name|dp
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7150,7 +6953,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" rtmult %u wtmult %u maxfsz "
+literal|" rtmult %u wtmult %u maxfsz %"
+name|PRIu64
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -7167,9 +6971,8 @@ name|sfp
 operator|->
 name|fs_wtmult
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|print_int64
+argument_list|,
+name|EXTRACT_64BITS
 argument_list|(
 operator|(
 name|u_int32_t
@@ -7179,8 +6982,7 @@ operator|&
 name|sfp
 operator|->
 name|fs_maxfilesize
-argument_list|,
-name|UNSIGNED
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7406,7 +7208,7 @@ name|interp_reply
 parameter_list|(
 specifier|const
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 parameter_list|,

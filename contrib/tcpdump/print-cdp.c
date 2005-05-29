@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cdp.c,v 1.19.2.5 2004/03/24 06:00:51 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cdp.c,v 1.25 2004/10/07 14:53:11 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,12 @@ end_include
 begin_comment
 comment|/* must come after interface.h */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"nlpid.h"
+end_include
 
 begin_define
 define|#
@@ -1171,7 +1177,7 @@ operator|&&
 operator|*
 name|p
 operator|==
-literal|0xcc
+name|NLPID_IP
 operator|&&
 name|al
 operator|==

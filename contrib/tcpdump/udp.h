@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/udp.h,v 1.5 2003/10/27 22:44:37 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/udp.h,v 1.8 2005/04/06 21:33:28 mcr Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -115,6 +115,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SYSLOG_PORT
+value|514
+end_define
+
+begin_comment
+comment|/* rfc3164 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TIMED_PORT
 value|525
 end_define
@@ -172,6 +183,24 @@ end_define
 
 begin_comment
 comment|/*XXX*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIP_PORT
+value|5060
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISAKMP_PORT_NATT
+value|4500
+end_define
+
+begin_comment
+comment|/* rfc3948 */
 end_comment
 
 begin_define
@@ -334,6 +363,17 @@ end_define
 
 begin_comment
 comment|/* draft-katz-ward-bfd-v4v6-1hop-00.txt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LMP_PORT
+value|49998
+end_define
+
+begin_comment
+comment|/* unofficial - no IANA assignment yet */
 end_comment
 
 begin_ifdef

@@ -70,6 +70,16 @@ name|HAVE_NEW_RES_STATE
 end_undef
 
 begin_comment
+comment|/* define if<inttypes.h> defines PRI[doxu]64 macros */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|INTTYPES_H_DEFINES_FORMATS
+end_undef
+
+begin_comment
 comment|/*  * define if struct ether_header.ether_dhost is a struct with ether_addr_octet  */
 end_comment
 
@@ -280,6 +290,16 @@ name|HAVE_PCAP_DATALINK_VAL_TO_DESCRIPTION
 end_undef
 
 begin_comment
+comment|/* define if you have getrpcbynumber() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GETRPCBYNUMBER
+end_undef
+
+begin_comment
 comment|/* define if unaligned memory accesses fail */
 end_comment
 
@@ -358,6 +378,18 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|int64_t
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|u_int8_t
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|u_int16_t
 end_undef
 
@@ -370,7 +402,35 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|u_int8_t
+name|u_int64_t
+end_undef
+
+begin_comment
+comment|/* Workaround for missing 64-bit formats */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PRId64
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PRIo64
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PRIx64
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PRIu64
 end_undef
 
 begin_comment
@@ -411,6 +471,26 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_NETDNET_DNETDB_H_DNET_HTOA
+end_undef
+
+begin_comment
+comment|/* define if should drop privileges by default */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WITH_USER
+end_undef
+
+begin_comment
+comment|/* define if should chroot when dropping privileges */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WITH_CHROOT
 end_undef
 
 end_unit

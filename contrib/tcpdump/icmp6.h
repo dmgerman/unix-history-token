@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.14 2002/12/11 07:13:52 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.16 2005/01/14 10:41:50 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -417,15 +417,83 @@ begin_comment
 comment|/* node information reply */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IND_SOLICIT
+value|141
+end_define
+
 begin_comment
-comment|/* The definitions below are experimental. TBA */
+comment|/* inverse neighbor solicitation */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|IND_ADVERT
+value|142
+end_define
+
+begin_comment
+comment|/* inverse neighbor advertisement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_V2_MEMBERSHIP_REPORT
+value|143
+end_define
+
+begin_comment
+comment|/* v2 membership report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLDV2_LISTENER_REPORT
+value|143
+end_define
+
+begin_comment
+comment|/* v2 multicast listener report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_HADISCOV_REQUEST
+value|144
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMP6_HADISCOV_REPLY
+value|145
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMP6_MOBILEPREFIX_SOLICIT
+value|146
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMP6_MOBILEPREFIX_ADVERT
+value|147
+end_define
+
+begin_define
+define|#
+directive|define
 name|MLD6_MTRACE_RESP
-value|141
+value|200
 end_define
 
 begin_comment
@@ -436,66 +504,18 @@ begin_define
 define|#
 directive|define
 name|MLD6_MTRACE
-value|142
+value|201
 end_define
 
 begin_comment
 comment|/* mtrace messages */
 end_comment
 
-begin_comment
-comment|/* Folloing numbers are defined in the mobile-ip draft. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICMP6_HADISCOV_REQUEST
-value|150
-end_define
-
-begin_comment
-comment|/* XXX To be authorized */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICMP6_HADISCOV_REPLY
-value|151
-end_define
-
-begin_comment
-comment|/* XXX To be authorized */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICMP6_MOBILEPREFIX_SOLICIT
-value|152
-end_define
-
-begin_comment
-comment|/* XXX To be authorized */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICMP6_MOBILEPREFIX_ADVERT
-value|153
-end_define
-
-begin_comment
-comment|/* XXX To be authorized */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ICMP6_MAXTYPE
-value|153
+value|201
 end_define
 
 begin_define
@@ -811,6 +831,20 @@ name|mld6_reserved
 value|mld6_hdr.icmp6_data16[1]
 end_define
 
+begin_define
+define|#
+directive|define
+name|MLD_MINLEN
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLDV2_MINLEN
+value|28
+end_define
+
 begin_comment
 comment|/*  * Neighbor Discovery  */
 end_comment
@@ -1095,29 +1129,25 @@ name|nd_na_flags_reserved
 value|nd_na_hdr.icmp6_data32[0]
 end_define
 
-begin_comment
-comment|/* netowkr endian */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ND_NA_FLAG_ROUTER
-value|((u_int32_t)htonl(0x80000000))
+value|0x80000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ND_NA_FLAG_SOLICITED
-value|((u_int32_t)htonl(0x40000000))
+value|0x40000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ND_NA_FLAG_OVERRIDE
-value|((u_int32_t)htonl(0x20000000))
+value|0x20000000
 end_define
 
 begin_struct
@@ -1265,14 +1295,23 @@ decl_stmt|;
 name|u_int8_t
 name|nd_opt_pi_flags_reserved
 decl_stmt|;
-name|u_int32_t
+name|u_int8_t
 name|nd_opt_pi_valid_time
+index|[
+literal|4
+index|]
 decl_stmt|;
-name|u_int32_t
+name|u_int8_t
 name|nd_opt_pi_preferred_time
+index|[
+literal|4
+index|]
 decl_stmt|;
-name|u_int32_t
+name|u_int8_t
 name|nd_opt_pi_reserved2
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|struct
 name|in6_addr

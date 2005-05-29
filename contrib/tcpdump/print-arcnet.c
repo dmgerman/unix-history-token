@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-arcnet.c,v 1.15.2.2 2003/11/16 08:51:09 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-arcnet.c,v 1.20 2005/04/06 21:32:38 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,7 +384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the top level routine of the printer.  'p' points  * to the ARCNET header of the packet, 'h->ts' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
+comment|/*  * This is the top level routine of the printer.  'p' points  * to the ARCNET header of the packet, 'h->ts' is the timestamp,  * 'h->len' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
 end_comment
 
 begin_function
@@ -707,7 +707,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the top level routine of the printer.  'p' points  * to the ARCNET header of the packet, 'h->ts' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  It is quite similar  * to the non-Linux style printer except that Linux doesn't ever  * supply packets that look like exception frames, it always supplies  * reassembled packets rather than raw frames, and headers have an  * extra "offset" field between the src/dest and packet type.  */
+comment|/*  * This is the top level routine of the printer.  'p' points  * to the ARCNET header of the packet, 'h->ts' is the timestamp,  * 'h->len' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  It is quite similar  * to the non-Linux style printer except that Linux doesn't ever  * supply packets that look like exception frames, it always supplies  * reassembled packets rather than raw frames, and headers have an  * extra "offset" field between the src/dest and packet type.  */
 end_comment
 
 begin_function
@@ -928,6 +928,8 @@ name|ARCTYPE_IP
 case|:
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -970,6 +972,8 @@ name|ARCTYPE_REVARP
 case|:
 name|arp_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1033,6 +1037,10 @@ return|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: bsd  * End:  */
+end_comment
 
 end_unit
 

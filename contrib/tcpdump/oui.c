@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/oui.c,v 1.2.2.1 2004/02/06 14:38:51 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/oui.c,v 1.4 2005/04/06 20:13:13 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,15 +73,39 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x009069
+name|OUI_ENCAP_ETHER
 block|,
-literal|"Juniper"
+literal|"Ethernet"
 block|}
 block|,
 block|{
-literal|0x00000c
+name|OUI_CISCO
 block|,
 literal|"Cisco"
+block|}
+block|,
+block|{
+name|OUI_CISCO_90
+block|,
+literal|"Cisco bridged"
+block|}
+block|,
+block|{
+name|OUI_RFC2684
+block|,
+literal|"Ethernet bridged"
+block|}
+block|,
+block|{
+name|OUI_APPLETALK
+block|,
+literal|"Appletalk"
+block|}
+block|,
+block|{
+name|OUI_JUNIPER
+block|,
+literal|"Juniper"
 block|}
 block|, }
 decl_stmt|;

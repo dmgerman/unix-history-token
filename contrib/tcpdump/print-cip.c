@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cip.c,v 1.21.2.2 2003/11/16 08:51:15 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cip.c,v 1.25 2005/04/06 21:32:39 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the top level routine of the printer.  'p' points  * to the LLC/SNAP or raw header of the packet, 'h->ts' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
+comment|/*  * This is the top level routine of the printer.  'p' points  * to the LLC/SNAP or raw header of the packet, 'h->ts' is the timestamp,  * 'h->len' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
 end_comment
 
 begin_function
@@ -315,6 +315,8 @@ block|{
 comment|/* 		 * LLC header is absent; treat it as just IP. 		 */
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -328,6 +330,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/gmpls.h,v 1.2 2003/06/09 23:28:09 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/gmpls.h,v 1.3 2004/09/15 17:54:11 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -39,6 +39,15 @@ specifier|extern
 name|struct
 name|tok
 name|gmpls_payload_values
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tok
+name|diffserv_te_bc_values
 index|[]
 decl_stmt|;
 end_decl_stmt

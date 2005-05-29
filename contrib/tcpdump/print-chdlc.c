@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-chdlc.c,v 1.28.2.3 2004/03/24 00:46:03 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-chdlc.c,v 1.32 2005/04/06 21:32:38 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,6 +268,8 @@ name|ETHERTYPE_IP
 case|:
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 operator|(
 specifier|const
 name|u_char
@@ -778,6 +780,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

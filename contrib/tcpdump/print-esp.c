@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-esp.c,v 1.44.2.4 2003/11/19 05:36:40 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-esp.c,v 1.55 2004/07/21 22:00:11 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,52 +128,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__MINGW32__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__WATCOMC__
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strsep
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-name|stringp
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|delim
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Missing/strsep.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -294,33 +252,15 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|sa_list
-modifier|*
-name|sa_list_head
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|sa_list
-modifier|*
-name|sa_default
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
 name|esp_print_addsa
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|struct
 name|sa_list
 modifier|*
@@ -358,8 +298,15 @@ name|nsa
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"ran out of memory to allocate sa structure"
 argument_list|)
 expr_stmt|;
@@ -373,7 +320,9 @@ if|if
 condition|(
 name|sa_def
 condition|)
-name|sa_default
+name|ndo
+operator|->
+name|ndo_sa_default
 operator|=
 name|nsa
 expr_stmt|;
@@ -381,9 +330,13 @@ name|nsa
 operator|->
 name|next
 operator|=
-name|sa_list_head
+name|ndo
+operator|->
+name|ndo_sa_list_head
 expr_stmt|;
-name|sa_list_head
+name|ndo
+operator|->
+name|ndo_sa_list_head
 operator|=
 name|nsa
 expr_stmt|;
@@ -395,6 +348,10 @@ specifier|static
 name|int
 name|hexdigit
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|char
 name|hex
 parameter_list|)
@@ -458,8 +415,15 @@ operator|)
 return|;
 else|else
 block|{
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"invalid hex digit %c in espsecret\n"
 argument_list|,
 name|hex
@@ -477,6 +441,10 @@ specifier|static
 name|int
 name|hex2byte
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|char
 modifier|*
 name|hexstring
@@ -490,6 +458,8 @@ operator|=
 operator|(
 name|hexdigit
 argument_list|(
+name|ndo
+argument_list|,
 name|hexstring
 index|[
 literal|0
@@ -501,6 +471,8 @@ operator|)
 operator|+
 name|hexdigit
 argument_list|(
+name|ndo
+argument_list|,
 name|hexstring
 index|[
 literal|1
@@ -522,6 +494,10 @@ specifier|static
 name|void
 name|esp_print_decode_onesecret
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|char
 modifier|*
 name|line
@@ -714,6 +690,8 @@ condition|)
 continue|continue;
 name|esp_print_decode_onesecret
 argument_list|(
+name|ndo
+argument_list|,
 name|fileline
 argument_list|)
 expr_stmt|;
@@ -787,8 +765,15 @@ operator|!
 name|spikey
 condition|)
 block|{
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_warning
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"print_esp: failed to decode spi# %s\n"
 argument_list|,
 name|foo
@@ -912,8 +897,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_warning
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"print_esp: can not decode IP# %s\n"
 argument_list|,
 name|spikey
@@ -952,11 +944,6 @@ modifier|*
 name|evp
 decl_stmt|;
 name|int
-name|ivlen
-init|=
-literal|8
-decl_stmt|;
-name|int
 name|authlen
 init|=
 literal|0
@@ -993,8 +980,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_warning
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"failed to decode espsecret: %s\n"
 argument_list|,
 name|decode
@@ -1122,8 +1116,15 @@ operator|!
 name|evp
 condition|)
 block|{
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_warning
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"failed to find cipher algo %s\n"
 argument_list|,
 name|decode
@@ -1165,7 +1166,10 @@ name|sa1
 operator|.
 name|ivlen
 operator|=
-name|ivlen
+name|EVP_CIPHER_iv_length
+argument_list|(
+name|evp
+argument_list|)
 expr_stmt|;
 name|colon
 operator|++
@@ -1208,8 +1212,15 @@ operator|>
 literal|256
 condition|)
 block|{
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_warning
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"secret is too big: %d\n"
 argument_list|,
 name|len
@@ -1245,6 +1256,8 @@ index|]
 operator|=
 name|hex2byte
 argument_list|(
+name|ndo
+argument_list|,
 name|colon
 argument_list|)
 expr_stmt|;
@@ -1347,6 +1360,8 @@ block|}
 block|}
 name|esp_print_addsa
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|sa1
 argument_list|,
@@ -1361,7 +1376,9 @@ specifier|static
 name|void
 name|esp_print_decodesecret
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
+name|ndo
 parameter_list|)
 block|{
 name|char
@@ -1374,13 +1391,19 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|espsecret
+name|ndo
+operator|->
+name|ndo_espsecret
 expr_stmt|;
 while|while
 condition|(
-name|espsecret
+name|ndo
+operator|->
+name|ndo_espsecret
 operator|&&
-name|espsecret
+name|ndo
+operator|->
+name|ndo_espsecret
 index|[
 literal|0
 index|]
@@ -1397,7 +1420,9 @@ operator|=
 name|strsep
 argument_list|(
 operator|&
-name|espsecret
+name|ndo
+operator|->
+name|ndo_espsecret
 argument_list|,
 literal|"\n,"
 argument_list|)
@@ -1408,15 +1433,21 @@ condition|)
 block|{
 name|line
 operator|=
-name|espsecret
+name|ndo
+operator|->
+name|ndo_espsecret
 expr_stmt|;
-name|espsecret
+name|ndo
+operator|->
+name|ndo_espsecret
 operator|=
 name|NULL
 expr_stmt|;
 block|}
 name|esp_print_decode_onesecret
 argument_list|(
+name|ndo
+argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
@@ -1429,7 +1460,10 @@ specifier|static
 name|void
 name|esp_init
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
+name|ndo
+name|_U_
 parameter_list|)
 block|{
 name|OpenSSL_add_all_algorithms
@@ -1454,10 +1488,18 @@ begin_function
 name|int
 name|esp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
 name|bp
+parameter_list|,
+specifier|const
+name|int
+name|length
 parameter_list|,
 specifier|const
 name|u_char
@@ -1553,7 +1595,6 @@ name|u_char
 modifier|*
 name|ivoff
 decl_stmt|;
-specifier|const
 name|u_char
 modifier|*
 name|p
@@ -1599,7 +1640,9 @@ name|initialized
 condition|)
 block|{
 name|esp_init
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 name|initialized
 operator|=
@@ -1618,7 +1661,9 @@ directive|endif
 comment|/* 'ep' points to the end of available data. */
 name|ep
 operator|=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 expr_stmt|;
 if|if
 condition|(
@@ -1646,8 +1691,15 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_printf
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"ESP(spi=0x%08x"
 argument_list|,
 name|EXTRACT_32BITS
@@ -1659,9 +1711,16 @@ name|esp_spi
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_printf
+call|)
 argument_list|(
-literal|",seq=0x%x"
+name|ndo
+argument_list|,
+literal|",seq=0x%x)"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -1672,9 +1731,18 @@ name|esp_seq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_printf
+call|)
 argument_list|(
-literal|")"
+name|ndo
+argument_list|,
+literal|", length %u"
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -1688,7 +1756,9 @@ directive|else
 comment|/* initiailize SAs */
 if|if
 condition|(
-name|sa_list_head
+name|ndo
+operator|->
+name|ndo_sa_list_head
 operator|==
 name|NULL
 condition|)
@@ -1696,18 +1766,24 @@ block|{
 if|if
 condition|(
 operator|!
-name|espsecret
+name|ndo
+operator|->
+name|ndo_espsecret
 condition|)
 goto|goto
 name|fail
 goto|;
 name|esp_print_decodesecret
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|sa_list_head
+name|ndo
+operator|->
+name|ndo_sa_list_head
 operator|==
 name|NULL
 condition|)
@@ -1783,7 +1859,9 @@ for|for
 control|(
 name|sa
 operator|=
-name|sa_list_head
+name|ndo
+operator|->
+name|ndo_sa_list_head
 init|;
 name|sa
 operator|!=
@@ -1893,7 +1971,9 @@ for|for
 control|(
 name|sa
 operator|=
-name|sa_list_head
+name|ndo
+operator|->
+name|ndo_sa_list_head
 init|;
 name|sa
 operator|!=
@@ -1971,7 +2051,9 @@ name|NULL
 condition|)
 name|sa
 operator|=
-name|sa_default
+name|ndo
+operator|->
+name|ndo_sa_default
 expr_stmt|;
 comment|/* if not found fail */
 if|if
@@ -2044,6 +2126,14 @@ name|sa
 operator|->
 name|secretlen
 expr_stmt|;
+name|ep
+operator|=
+name|ep
+operator|-
+name|sa
+operator|->
+name|authlen
+expr_stmt|;
 if|if
 condition|(
 name|sa
@@ -2084,8 +2174,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|printf
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_warning
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"espkey init failed"
 argument_list|)
 expr_stmt|;
@@ -2159,14 +2256,6 @@ expr|struct
 name|newesp
 argument_list|)
 expr_stmt|;
-name|ep
-operator|=
-name|ep
-operator|-
-name|sa
-operator|->
-name|authlen
-expr_stmt|;
 comment|/* sanity check for pad length */
 if|if
 condition|(
@@ -2214,8 +2303,14 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-name|printf
+call|(
+name|ndo
+operator|->
+name|ndo_printf
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|": "
 argument_list|)
 expr_stmt|;
@@ -2232,6 +2327,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

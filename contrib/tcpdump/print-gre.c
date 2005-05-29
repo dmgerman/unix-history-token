@@ -25,7 +25,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-gre.c,v 1.22.2.2 2003/11/16 08:51:24 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-gre.c,v 1.28 2005/04/06 21:32:39 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ethertype.h"
 end_include
 
 begin_define
@@ -170,48 +176,73 @@ begin_comment
 comment|/* acknowledgment# present */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|tok
+name|gre_flag_values
+index|[]
+init|=
+block|{
+block|{
+name|GRE_CP
+block|,
+literal|"checksum present"
+block|}
+block|,
+block|{
+name|GRE_RP
+block|,
+literal|"routing present"
+block|}
+block|,
+block|{
+name|GRE_KP
+block|,
+literal|"key present"
+block|}
+block|,
+block|{
+name|GRE_SP
+block|,
+literal|"sequence# present"
+block|}
+block|,
+block|{
+name|GRE_sP
+block|,
+literal|"source routing present"
+block|}
+block|,
+block|{
+name|GRE_RECRS
+block|,
+literal|"recursion count"
+block|}
+block|,
+block|{
+name|GRE_AP
+block|,
+literal|"ack present"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
-name|GRE_VERS
+name|GRE_VERS_MASK
 value|0x0007
 end_define
 
 begin_comment
 comment|/* protocol version */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GREPROTO_IP
-value|0x0800
-end_define
-
-begin_comment
-comment|/* IP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GREPROTO_PPP
-value|0x880b
-end_define
-
-begin_comment
-comment|/* PPTP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GREPROTO_ISO
-value|0x00fe
-end_define
-
-begin_comment
-comment|/* OSI */
 end_comment
 
 begin_comment
@@ -360,14 +391,23 @@ argument_list|(
 name|bp
 argument_list|)
 operator|&
-literal|7
+name|GRE_VERS_MASK
 expr_stmt|;
-if|if
+name|printf
+argument_list|(
+literal|"GREv%u"
+argument_list|,
+name|vers
+argument_list|)
+expr_stmt|;
+switch|switch
 condition|(
 name|vers
-operator|==
-literal|0
 condition|)
+block|{
+case|case
+literal|0
+case|:
 name|gre_print_0
 argument_list|(
 name|bp
@@ -375,13 +415,10 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|vers
-operator|==
+break|break;
+case|case
 literal|1
-condition|)
+case|:
 name|gre_print_1
 argument_list|(
 name|bp
@@ -389,14 +426,15 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+default|default:
 name|printf
 argument_list|(
-literal|"gre-unknown-version=%u"
-argument_list|,
-name|vers
+literal|" ERROR: unknown-version"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 return|return;
 block|}
 end_function
@@ -435,63 +473,20 @@ if|if
 condition|(
 name|vflag
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"[%s%s%s%s%s] "
+literal|", Flags [%s]"
 argument_list|,
-operator|(
-name|flags
-operator|&
-name|GRE_CP
-operator|)
-condition|?
-literal|"C"
-else|:
-literal|""
+name|bittok2str
+argument_list|(
+name|gre_flag_values
 argument_list|,
-operator|(
-name|flags
-operator|&
-name|GRE_RP
-operator|)
-condition|?
-literal|"R"
-else|:
-literal|""
+literal|"none"
 argument_list|,
-operator|(
 name|flags
-operator|&
-name|GRE_KP
-operator|)
-condition|?
-literal|"K"
-else|:
-literal|""
-argument_list|,
-operator|(
-name|flags
-operator|&
-name|GRE_SP
-operator|)
-condition|?
-literal|"S"
-else|:
-literal|""
-argument_list|,
-operator|(
-name|flags
-operator|&
-name|GRE_sP
-operator|)
-condition|?
-literal|"s"
-else|:
-literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|len
 operator|-=
 literal|2
@@ -554,7 +549,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|"sum 0x%x "
+literal|", sum 0x%x"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -581,7 +576,7 @@ name|trunc
 goto|;
 name|printf
 argument_list|(
-literal|"off 0x%x "
+literal|", off 0x%x"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -616,7 +611,7 @@ name|trunc
 goto|;
 name|printf
 argument_list|(
-literal|"key=0x%x "
+literal|", key=0x%x"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -651,7 +646,7 @@ name|trunc
 goto|;
 name|printf
 argument_list|(
-literal|"seq %u "
+literal|", seq %u"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -775,15 +770,90 @@ name|srelen
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|eflag
+condition|)
+name|printf
+argument_list|(
+literal|", proto %s (0x%04x)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|ethertype_values
+argument_list|,
+literal|"unknown"
+argument_list|,
+name|prot
+argument_list|)
+argument_list|,
+name|prot
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", length %u"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vflag
+operator|<
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|": "
+argument_list|)
+expr_stmt|;
+comment|/* put in a colon as protocol demarc */
+else|else
+name|printf
+argument_list|(
+literal|"\n\t"
+argument_list|)
+expr_stmt|;
+comment|/* if verbose go multiline */
 switch|switch
 condition|(
 name|prot
 condition|)
 block|{
 case|case
-name|GREPROTO_IP
+name|ETHERTYPE_IP
 case|:
 name|ip_print
+argument_list|(
+name|gndo
+argument_list|,
+name|bp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|ETHERTYPE_IPV6
+case|:
+name|ip6_print
+argument_list|(
+name|bp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+case|case
+name|ETHERTYPE_MPLS
+case|:
+name|mpls_print
 argument_list|(
 name|bp
 argument_list|,
@@ -792,7 +862,29 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|GREPROTO_ISO
+name|ETHERTYPE_IPX
+case|:
+name|ipx_print
+argument_list|(
+name|bp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ETHERTYPE_ATALK
+case|:
+name|atalk_print
+argument_list|(
+name|bp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ETHERTYPE_GRE_ISO
 case|:
 name|isoclns_print
 argument_list|(
@@ -866,73 +958,20 @@ if|if
 condition|(
 name|vflag
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"[%s%s%s%s%s%s] "
+literal|", Flags [%s]"
 argument_list|,
-operator|(
-name|flags
-operator|&
-name|GRE_CP
-operator|)
-condition|?
-literal|"C"
-else|:
-literal|""
+name|bittok2str
+argument_list|(
+name|gre_flag_values
 argument_list|,
-operator|(
-name|flags
-operator|&
-name|GRE_RP
-operator|)
-condition|?
-literal|"R"
-else|:
-literal|""
+literal|"none"
 argument_list|,
-operator|(
 name|flags
-operator|&
-name|GRE_KP
-operator|)
-condition|?
-literal|"K"
-else|:
-literal|""
-argument_list|,
-operator|(
-name|flags
-operator|&
-name|GRE_SP
-operator|)
-condition|?
-literal|"S"
-else|:
-literal|""
-argument_list|,
-operator|(
-name|flags
-operator|&
-name|GRE_sP
-operator|)
-condition|?
-literal|"s"
-else|:
-literal|""
-argument_list|,
-operator|(
-name|flags
-operator|&
-name|GRE_AP
-operator|)
-condition|?
-literal|"A"
-else|:
-literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|len
@@ -961,66 +1000,6 @@ if|if
 condition|(
 name|flags
 operator|&
-name|GRE_CP
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"cpset!"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|flags
-operator|&
-name|GRE_RP
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"rpset!"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|GRE_KP
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"kpunset!"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|flags
-operator|&
-name|GRE_sP
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"spset!"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|flags
-operator|&
 name|GRE_KP
 condition|)
 block|{
@@ -1045,7 +1024,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"call %d "
+literal|", call %d"
 argument_list|,
 name|k
 operator|&
@@ -1079,7 +1058,7 @@ name|trunc
 goto|;
 name|printf
 argument_list|(
-literal|"seq %u "
+literal|", seq %u"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -1114,7 +1093,7 @@ name|trunc
 goto|;
 name|printf
 argument_list|(
-literal|"ack %u "
+literal|", ack %u"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -1141,25 +1120,81 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"no-payload"
+literal|", no-payload"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|eflag
+condition|)
+name|printf
+argument_list|(
+literal|", proto %s (0x%04x)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|ethertype_values
+argument_list|,
+literal|"unknown"
+argument_list|,
+name|prot
+argument_list|)
+argument_list|,
+name|prot
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", length %u"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|GRE_SP
+operator|)
+operator|==
+literal|0
+condition|)
 return|return;
-block|}
+if|if
+condition|(
+name|vflag
+operator|<
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|": "
+argument_list|)
+expr_stmt|;
+comment|/* put in a colon as protocol demarc */
+else|else
+name|printf
+argument_list|(
+literal|"\n\t"
+argument_list|)
+expr_stmt|;
+comment|/* if verbose go multiline */
 switch|switch
 condition|(
 name|prot
 condition|)
 block|{
 case|case
-name|GREPROTO_PPP
+name|ETHERTYPE_PPP
 case|:
-name|printf
+name|ppp_print
 argument_list|(
-literal|"gre-ppp-payload"
+name|bp
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1216,7 +1251,7 @@ name|GRESRE_IP
 case|:
 name|printf
 argument_list|(
-literal|"(rtaf=ip"
+literal|", (rtaf=ip"
 argument_list|)
 expr_stmt|;
 name|gre_sre_ip_print
@@ -1241,7 +1276,7 @@ name|GRESRE_ASN
 case|:
 name|printf
 argument_list|(
-literal|"(rtaf=asn"
+literal|", (rtaf=asn"
 argument_list|)
 expr_stmt|;
 name|gre_sre_asn_print
@@ -1264,7 +1299,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"(rtaf=0x%x) "
+literal|", (rtaf=0x%x) "
 argument_list|,
 name|af
 argument_list|)
@@ -1312,7 +1347,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" badoffset=%u"
+literal|", badoffset=%u"
 argument_list|,
 name|sreoff
 argument_list|)
@@ -1328,7 +1363,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" badlength=%u"
+literal|", badlength=%u"
 argument_list|,
 name|srelen
 argument_list|)
@@ -1344,7 +1379,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" badoff/len=%u/%u"
+literal|", badoff/len=%u/%u"
 argument_list|,
 name|sreoff
 argument_list|,
@@ -1458,7 +1493,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" badoffset=%u"
+literal|", badoffset=%u"
 argument_list|,
 name|sreoff
 argument_list|)
@@ -1474,7 +1509,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" badlength=%u"
+literal|", badlength=%u"
 argument_list|,
 name|srelen
 argument_list|)
@@ -1490,7 +1525,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" badoff/len=%u/%u"
+literal|", badoff/len=%u/%u"
 argument_list|,
 name|sreoff
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.14 2003/05/22 15:29:22 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.16 2004/10/20 16:14:16 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -38,6 +38,28 @@ end_define
 
 begin_comment
 comment|/* The control byte value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_WITHDIRECTION_IN
+value|0x00
+end_define
+
+begin_comment
+comment|/* non-standard for DLT_PPP_WITHDIRECTION */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_WITHDIRECTION_OUT
+value|0x01
+end_define
+
+begin_comment
+comment|/* non-standard for DLT_PPP_WITHDIRECTION */
 end_comment
 
 begin_comment
@@ -163,6 +185,17 @@ end_define
 
 begin_comment
 comment|/* Banyan Vines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_ML
+value|0x003d
+end_define
+
+begin_comment
+comment|/* Multi-Link PPP */
 end_comment
 
 begin_define
@@ -439,7 +472,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PPP_MP
+name|PPP_MPCP
 value|0xc03d
 end_define
 

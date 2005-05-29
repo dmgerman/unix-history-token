@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-udp.c,v 1.124.2.5 2003/11/19 00:19:25 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-udp.c,v 1.138 2005/04/07 00:28:17 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,12 +70,6 @@ begin_include
 include|#
 directive|include
 file|<arpa/tftp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/rpc.h>
 end_include
 
 begin_include
@@ -147,6 +141,18 @@ begin_include
 include|#
 directive|include
 file|"ipproto.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rpc_auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rpc_msg.h"
 end_include
 
 begin_include
@@ -2620,12 +2626,12 @@ condition|)
 block|{
 specifier|register
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 decl_stmt|;
 name|enum
-name|msg_type
+name|sunrpc_msg_type
 name|direction
 decl_stmt|;
 switch|switch
@@ -2696,7 +2702,7 @@ name|rp
 operator|=
 operator|(
 expr|struct
-name|rpc_msg
+name|sunrpc_msg
 operator|*
 operator|)
 operator|(
@@ -2709,7 +2715,7 @@ name|direction
 operator|=
 operator|(
 expr|enum
-name|msg_type
+name|sunrpc_msg_type
 operator|)
 name|EXTRACT_32BITS
 argument_list|(
@@ -2723,7 +2729,7 @@ if|if
 condition|(
 name|direction
 operator|==
-name|CALL
+name|SUNRPC_CALL
 condition|)
 name|sunrpcrequest_print
 argument_list|(
@@ -2931,7 +2937,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|FALSE
+literal|0
 block|)
 empty_stmt|;
 endif|#
@@ -2951,19 +2957,19 @@ condition|)
 block|{
 specifier|register
 name|struct
-name|rpc_msg
+name|sunrpc_msg
 modifier|*
 name|rp
 decl_stmt|;
 name|enum
-name|msg_type
+name|sunrpc_msg_type
 name|direction
 decl_stmt|;
 name|rp
 operator|=
 operator|(
 expr|struct
-name|rpc_msg
+name|sunrpc_msg
 operator|*
 operator|)
 operator|(
@@ -2986,7 +2992,7 @@ name|direction
 operator|=
 operator|(
 expr|enum
-name|msg_type
+name|sunrpc_msg_type
 operator|)
 name|EXTRACT_32BITS
 argument_list|(
@@ -3004,7 +3010,7 @@ name|NFS_PORT
 operator|&&
 name|direction
 operator|==
-name|CALL
+name|SUNRPC_CALL
 condition|)
 block|{
 name|nfsreq_print
@@ -3034,7 +3040,7 @@ name|NFS_PORT
 operator|&&
 name|direction
 operator|==
-name|REPLY
+name|SUNRPC_REPLY
 condition|)
 block|{
 name|nfsreply_print
@@ -3067,7 +3073,7 @@ name|SUNRPC_PORT
 operator|&&
 name|direction
 operator|==
-name|CALL
+name|SUNRPC_CALL
 condition|)
 block|{
 name|sunrpcrequest_print
@@ -3179,7 +3185,11 @@ argument_list|)
 operator|==
 literal|4
 operator|&&
+operator|(
 name|vflag
+operator|>
+literal|1
+operator|)
 operator|&&
 operator|!
 name|fragmented
@@ -3563,7 +3573,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|FALSE
+literal|0
 block|)
 empty_stmt|;
 endif|#
@@ -3578,6 +3588,36 @@ argument_list|)
 condition|)
 name|isakmp_print
 argument_list|(
+name|gndo
+argument_list|,
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+operator|(
+name|up
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|length
+argument_list|,
+name|bp2
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ISPORT
+argument_list|(
+name|ISAKMP_PORT_NATT
+argument_list|)
+condition|)
+name|isakmp_rfc3948_print
+argument_list|(
+name|gndo
+argument_list|,
 operator|(
 specifier|const
 name|u_char
@@ -3613,6 +3653,8 @@ argument_list|)
 condition|)
 name|isakmp_print
 argument_list|(
+name|gndo
+argument_list|,
 operator|(
 specifier|const
 name|u_char
@@ -4117,7 +4159,7 @@ argument_list|(
 name|MPLS_LSP_PING_PORT
 argument_list|)
 condition|)
-name|mpls_lsp_ping_print
+name|lspping_print
 argument_list|(
 operator|(
 specifier|const
@@ -4162,13 +4204,85 @@ argument_list|,
 name|dport
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ISPORT
+argument_list|(
+name|LMP_PORT
+argument_list|)
+condition|)
+name|lmp_print
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+operator|(
+name|up
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ISPORT
+argument_list|(
+name|SIP_PORT
+argument_list|)
+condition|)
+name|sip_print
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+operator|(
+name|up
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ISPORT
+argument_list|(
+name|SYSLOG_PORT
+argument_list|)
+condition|)
+name|syslog_print
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+operator|(
+name|up
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 else|else
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"UDP, length: %u"
+literal|"UDP, length %u"
 argument_list|,
 call|(
 name|u_int32_t
@@ -4199,7 +4313,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"UDP, length: %u"
+literal|"UDP, length %u"
 argument_list|,
 call|(
 name|u_int32_t
@@ -4217,6 +4331,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
 unit|}
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
+
 end_unit
 

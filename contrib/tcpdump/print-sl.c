@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sl.c,v 1.62.2.2 2003/11/16 08:51:44 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sl.c,v 1.65 2005/04/06 21:32:42 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -269,6 +269,8 @@ literal|4
 case|:
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -413,6 +415,8 @@ endif|#
 directive|endif
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 operator|(
 name|u_char
 operator|*

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.13.2.2 2003/11/16 08:51:44 guy Exp $ (NETLAB/PEL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.16 2004/12/15 08:43:23 guy Exp $ (NETLAB/PEL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,11 @@ specifier|const
 name|void
 modifier|*
 name|nextChunk
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|sep
 decl_stmt|;
 name|sctpPktHdr
 operator|=
@@ -438,10 +443,18 @@ expr_stmt|;
 if|if
 condition|(
 name|vflag
-operator|<
+operator|>=
 literal|2
 condition|)
-return|return;
+name|sep
+operator|=
+literal|"\n\t"
+expr_stmt|;
+else|else
+name|sep
+operator|=
+literal|" ("
+expr_stmt|;
 comment|/* cycle through all chunks, printing information on each one */
 for|for
 control|(
@@ -580,7 +593,9 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t%d) "
+literal|"%s%d) "
+argument_list|,
+name|sep
 argument_list|,
 name|chunkCount
 operator|+
@@ -777,6 +792,8 @@ expr_stmt|;
 if|if
 condition|(
 name|vflag
+operator|>=
+literal|2
 condition|)
 comment|/* if verbose output is specified */
 block|{
@@ -1540,6 +1557,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|vflag
+operator|<
+literal|2
+condition|)
+name|sep
+operator|=
+literal|", ("
+expr_stmt|;
 block|}
 block|}
 end_function

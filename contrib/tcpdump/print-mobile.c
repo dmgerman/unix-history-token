@@ -38,7 +38,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mobile.c,v 1.12.2.2 2003/11/16 08:51:33 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mobile.c,v 1.15 2004/03/24 01:58:14 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,13 @@ condition|(
 name|length
 operator|<
 name|MOBILE_SIZE
+operator|||
+operator|!
+name|TTEST
+argument_list|(
+operator|*
+name|mob
+argument_list|)
 condition|)
 block|{
 name|fputs

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/oui.h,v 1.2.2.1 2004/02/06 14:38:50 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/oui.h,v 1.3 2005/04/06 20:13:13 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -24,6 +24,72 @@ name|smi_values
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|OUI_ENCAP_ETHER
+value|0x000000
+end_define
+
+begin_comment
+comment|/* encapsulated Ethernet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_CISCO
+value|0x00000c
+end_define
+
+begin_comment
+comment|/* Cisco protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_CISCO_90
+value|0x0000f8
+end_define
+
+begin_comment
+comment|/* Cisco bridging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_RFC2684
+value|0x0080c2
+end_define
+
+begin_comment
+comment|/* RFC 2684 bridged Ethernet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_APPLETALK
+value|0x080007
+end_define
+
+begin_comment
+comment|/* Appletalk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_JUNIPER
+value|0x009069
+end_define
+
+begin_comment
+comment|/* Juniper */
+end_comment
 
 begin_define
 define|#

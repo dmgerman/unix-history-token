@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lane.c,v 1.20.2.2 2003/11/16 08:51:31 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lane.c,v 1.23 2004/03/17 23:24:37 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,7 +318,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the top level routine of the printer.  'p' points  * to the LANE header of the packet, 'h->ts' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  *  * This assumes 802.3, not 802.5, LAN emulation.  */
+comment|/*  * This is the top level routine of the printer.  'p' points  * to the LANE header of the packet, 'h->ts' is the timestamp,  * 'h->len' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  *  * This assumes 802.3, not 802.5, LAN emulation.  */
 end_comment
 
 begin_function

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rsvp.c,v 1.24.2.3 2004/03/24 04:01:08 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rsvp.c,v 1.33 2005/01/13 07:08:54 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -655,6 +655,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RSVP_OBJ_CLASSTYPE
+value|125
+end_define
+
+begin_comment
+comment|/* draft-ietf-tewg-diff-te-proto-07 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RSVP_OBJ_SUGGESTED_LABEL
 value|129
 end_define
@@ -931,6 +942,12 @@ block|{
 name|RSVP_OBJ_DETOUR
 block|,
 literal|"Detour"
+block|}
+block|,
+block|{
+name|RSVP_OBJ_CLASSTYPE
+block|,
+literal|"Class Type"
 block|}
 block|,
 block|{
@@ -1304,6 +1321,36 @@ block|,
 block|{
 literal|256
 operator|*
+name|RSVP_OBJ_MESSAGE_ID
+operator|+
+name|RSVP_CTYPE_1
+block|,
+literal|"1"
+block|}
+block|,
+block|{
+literal|256
+operator|*
+name|RSVP_OBJ_MESSAGE_ID_ACK
+operator|+
+name|RSVP_CTYPE_1
+block|,
+literal|"1"
+block|}
+block|,
+block|{
+literal|256
+operator|*
+name|RSVP_OBJ_MESSAGE_ID_LIST
+operator|+
+name|RSVP_CTYPE_1
+block|,
+literal|"1"
+block|}
+block|,
+block|{
+literal|256
+operator|*
 name|RSVP_OBJ_STYLE
 operator|+
 name|RSVP_CTYPE_1
@@ -1595,6 +1642,16 @@ block|{
 literal|256
 operator|*
 name|RSVP_OBJ_PROPERTIES
+operator|+
+name|RSVP_CTYPE_1
+block|,
+literal|"1"
+block|}
+block|,
+block|{
+literal|256
+operator|*
+name|RSVP_OBJ_CLASSTYPE
 operator|+
 name|RSVP_CTYPE_1
 block|,
@@ -2033,6 +2090,13 @@ name|RSVP_OBJ_ERROR_SPEC_CODE_NOTIFY
 value|25
 end_define
 
+begin_define
+define|#
+directive|define
+name|RSVP_OBJ_ERROR_SPEC_CODE_DIFFSERV_TE
+value|125
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2051,6 +2115,12 @@ block|{
 name|RSVP_OBJ_ERROR_SPEC_CODE_NOTIFY
 block|,
 literal|"Notify Error"
+block|}
+block|,
+block|{
+name|RSVP_OBJ_ERROR_SPEC_CODE_DIFFSERV_TE
+block|,
+literal|"Diffserv TE Error"
 block|}
 block|,
 block|{
@@ -2128,6 +2198,65 @@ block|{
 literal|10
 block|,
 literal|"Unsupported L3PID"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tok
+name|rsvp_obj_error_code_diffserv_te_values
+index|[]
+init|=
+block|{
+block|{
+literal|1
+block|,
+literal|"Unexpected CLASSTYPE object"
+block|}
+block|,
+block|{
+literal|2
+block|,
+literal|"Unsupported Class-Type"
+block|}
+block|,
+block|{
+literal|3
+block|,
+literal|"Invalid Class-Type value"
+block|}
+block|,
+block|{
+literal|4
+block|,
+literal|"Class-Type and setup priority do not form a configured TE-Class"
+block|}
+block|,
+block|{
+literal|5
+block|,
+literal|"Class-Type and holding priority do not form a configured TE-Class"
+block|}
+block|,
+block|{
+literal|6
+block|,
+literal|"Inconsistency between signaled PSC and signaled Class-Type"
+block|}
+block|,
+block|{
+literal|7
+block|,
+literal|"Inconsistency between signaled PHBs and signaled Class-Type"
 block|}
 block|,
 block|{
@@ -2609,26 +2738,24 @@ block|}
 end_function
 
 begin_function
-name|void
-name|rsvp_print
+specifier|static
+name|int
+name|rsvp_obj_print
 parameter_list|(
-specifier|register
 specifier|const
 name|u_char
 modifier|*
-name|pptr
+name|tptr
 parameter_list|,
-specifier|register
+specifier|const
+name|char
+modifier|*
+name|ident
+parameter_list|,
 name|u_int
-name|len
+name|tlen
 parameter_list|)
 block|{
-specifier|const
-name|struct
-name|rsvp_common_header
-modifier|*
-name|rsvp_com_header
-decl_stmt|;
 specifier|const
 name|struct
 name|rsvp_object_header
@@ -2638,14 +2765,9 @@ decl_stmt|;
 specifier|const
 name|u_char
 modifier|*
-name|tptr
-decl_stmt|,
-modifier|*
 name|obj_tptr
 decl_stmt|;
 name|u_short
-name|tlen
-decl_stmt|,
 name|rsvp_obj_len
 decl_stmt|,
 name|rsvp_obj_ctype
@@ -2664,6 +2786,8 @@ decl_stmt|,
 name|error_code
 decl_stmt|,
 name|error_value
+decl_stmt|,
+name|i
 decl_stmt|;
 union|union
 block|{
@@ -2679,174 +2803,6 @@ union|;
 name|u_int8_t
 name|namelen
 decl_stmt|;
-name|u_int
-name|i
-decl_stmt|;
-name|tptr
-operator|=
-name|pptr
-expr_stmt|;
-name|rsvp_com_header
-operator|=
-operator|(
-specifier|const
-expr|struct
-name|rsvp_common_header
-operator|*
-operator|)
-name|pptr
-expr_stmt|;
-name|TCHECK
-argument_list|(
-operator|*
-name|rsvp_com_header
-argument_list|)
-expr_stmt|;
-comment|/*      * Sanity checking of the header.      */
-if|if
-condition|(
-name|RSVP_EXTRACT_VERSION
-argument_list|(
-name|rsvp_com_header
-operator|->
-name|version_flags
-argument_list|)
-operator|!=
-name|RSVP_VERSION
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"RSVP version %u packet not supported"
-argument_list|,
-name|RSVP_EXTRACT_VERSION
-argument_list|(
-name|rsvp_com_header
-operator|->
-name|version_flags
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* in non-verbose mode just lets print the basic Message Type*/
-if|if
-condition|(
-name|vflag
-operator|<
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"RSVP %s Message, length: %u"
-argument_list|,
-name|tok2str
-argument_list|(
-name|rsvp_msg_type_values
-argument_list|,
-literal|"unknown (%u)"
-argument_list|,
-name|rsvp_com_header
-operator|->
-name|msg_type
-argument_list|)
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* ok they seem to want to know everything - lets fully decode it */
-name|tlen
-operator|=
-name|EXTRACT_16BITS
-argument_list|(
-name|rsvp_com_header
-operator|->
-name|length
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"RSVP\n\tv: %u, msg-type: %s, Flags: [%s], length: %u, ttl: %u, checksum: 0x%04x"
-argument_list|,
-name|RSVP_EXTRACT_VERSION
-argument_list|(
-name|rsvp_com_header
-operator|->
-name|version_flags
-argument_list|)
-argument_list|,
-name|tok2str
-argument_list|(
-name|rsvp_msg_type_values
-argument_list|,
-literal|"unknown, type: %u"
-argument_list|,
-name|rsvp_com_header
-operator|->
-name|msg_type
-argument_list|)
-argument_list|,
-name|bittok2str
-argument_list|(
-name|rsvp_header_flag_values
-argument_list|,
-literal|"none"
-argument_list|,
-name|RSVP_EXTRACT_FLAGS
-argument_list|(
-name|rsvp_com_header
-operator|->
-name|version_flags
-argument_list|)
-argument_list|)
-argument_list|,
-name|tlen
-argument_list|,
-name|rsvp_com_header
-operator|->
-name|ttl
-argument_list|,
-name|EXTRACT_16BITS
-argument_list|(
-name|rsvp_com_header
-operator|->
-name|checksum
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tlen
-operator|<
-sizeof|sizeof
-argument_list|(
-specifier|const
-expr|struct
-name|rsvp_common_header
-argument_list|)
-condition|)
-return|return;
-name|tptr
-operator|+=
-sizeof|sizeof
-argument_list|(
-specifier|const
-expr|struct
-name|rsvp_common_header
-argument_list|)
-expr_stmt|;
-name|tlen
-operator|-=
-sizeof|sizeof
-argument_list|(
-specifier|const
-expr|struct
-name|rsvp_common_header
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|tlen
@@ -2912,10 +2868,35 @@ expr|struct
 name|rsvp_object_header
 argument_list|)
 condition|)
-return|return;
+block|{
 name|printf
 argument_list|(
-literal|"\n\t  %s Object (%u) Flags: [%s"
+literal|"ERROR: object header too short %u< %lu"
+argument_list|,
+name|rsvp_obj_len
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_object_header
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"%s%s Object (%u) Flags: [%s"
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -3034,9 +3015,10 @@ argument_list|,
 name|rsvp_obj_len
 argument_list|)
 condition|)
-goto|goto
-name|trunc
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 name|hexdump
 operator|=
 name|FALSE
@@ -3065,10 +3047,15 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    IPv4 DestAddress: %s, Protocol ID: 0x%02x"
+literal|"%s  IPv4 DestAddress: %s, Protocol ID: 0x%02x"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3085,7 +3072,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Flags: [0x%02x], DestPort %u"
+literal|"%s  Flags: [0x%02x], DestPort %u"
+argument_list|,
+name|ident
 argument_list|,
 operator|*
 operator|(
@@ -3123,10 +3112,15 @@ name|obj_tlen
 operator|<
 literal|20
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    IPv6 DestAddress: %s, Protocol ID: 0x%02x"
+literal|"%s  IPv6 DestAddress: %s, Protocol ID: 0x%02x"
+argument_list|,
+name|ident
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -3143,7 +3137,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Flags: [0x%02x], DestPort %u"
+literal|"%s  Flags: [0x%02x], DestPort %u"
+argument_list|,
+name|ident
 argument_list|,
 operator|*
 operator|(
@@ -3178,10 +3174,15 @@ name|obj_tlen
 operator|<
 literal|36
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    IPv6 Tunnel EndPoint: %s, Tunnel ID: 0x%04x, Extended Tunnel ID: %s"
+literal|"%s  IPv6 Tunnel EndPoint: %s, Tunnel ID: 0x%04x, Extended Tunnel ID: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -3223,10 +3224,15 @@ name|obj_tlen
 operator|<
 literal|12
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    IPv4 Tunnel EndPoint: %s, Tunnel ID: 0x%04x, Extended Tunnel ID: %s"
+literal|"%s  IPv4 Tunnel EndPoint: %s, Tunnel ID: 0x%04x, Extended Tunnel ID: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3281,10 +3287,15 @@ name|obj_tlen
 operator|<
 literal|4
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    IPv4 Receiver Address: %s"
+literal|"%s  IPv4 Receiver Address: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3313,10 +3324,15 @@ name|obj_tlen
 operator|<
 literal|16
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    IPv6 Receiver Address: %s"
+literal|"%s  IPv6 Receiver Address: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -3359,10 +3375,15 @@ name|obj_tlen
 operator|<
 literal|4
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    IPv4 Notify Node Address: %s"
+literal|"%s  IPv4 Notify Node Address: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3391,10 +3412,15 @@ name|obj_tlen
 operator|<
 literal|16
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    IPv6 Notify Node Address: %s"
+literal|"%s  IPv6 Notify Node Address: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -3452,7 +3478,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t    Label: %u"
+literal|"%s  Label: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -3479,10 +3507,15 @@ name|obj_tlen
 operator|<
 literal|4
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Generalized Label: %u"
+literal|"%s  Generalized Label: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -3508,15 +3541,22 @@ name|obj_tlen
 operator|<
 literal|12
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Waveband ID: %u\n\t    Start Label: %u, Stop Label: %u"
+literal|"%s  Waveband ID: %u%s  Start Label: %u, Stop Label: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
 name|obj_tptr
 argument_list|)
+argument_list|,
+name|ident
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -3566,10 +3606,15 @@ name|obj_tlen
 operator|<
 literal|4
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Reservation Style: %s, Flags: [0x%02x]"
+literal|"%s  Reservation Style: %s, Flags: [0x%02x]"
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -3624,10 +3669,15 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Source Address: %s, Source Port: %u"
+literal|"%s  Source Address: %s, Source Port: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3663,10 +3713,15 @@ name|obj_tlen
 operator|<
 literal|20
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Source Address: %s, Source Port: %u"
+literal|"%s  Source Address: %s, Source Port: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -3701,10 +3756,15 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    IPv4 Tunnel Sender Address: %s, LSP-ID: 0x%04x"
+literal|"%s  IPv4 Tunnel Sender Address: %s, LSP-ID: 0x%04x"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3755,7 +3815,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t    L3 Protocol ID: %s"
+literal|"%s  L3 Protocol ID: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -3791,10 +3853,15 @@ name|obj_tlen
 operator|<
 literal|12
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    L3 Protocol ID: %s"
+literal|"%s  L3 Protocol ID: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -3835,7 +3902,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Minimum VPI/VCI: %u/%u"
+literal|"%s  Minimum VPI/VCI: %u/%u"
+argument_list|,
+name|ident
 argument_list|,
 operator|(
 name|EXTRACT_16BITS
@@ -3862,7 +3931,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Maximum VPI/VCI: %u/%u"
+literal|"%s  Maximum VPI/VCI: %u/%u"
+argument_list|,
+name|ident
 argument_list|,
 operator|(
 name|EXTRACT_16BITS
@@ -3905,10 +3976,15 @@ name|obj_tlen
 operator|<
 literal|12
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    L3 Protocol ID: %s"
+literal|"%s  L3 Protocol ID: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -3927,7 +4003,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Minimum/Maximum DLCI: %u/%u, %s%s bit DLCI"
+literal|"%s  Minimum/Maximum DLCI: %u/%u, %s%s bit DLCI"
+argument_list|,
+name|ident
 argument_list|,
 operator|(
 name|EXTRACT_32BITS
@@ -4016,10 +4094,15 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    LSP Encoding Type: %s (%u)"
+literal|"%s  LSP Encoding Type: %s (%u)"
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -4037,7 +4120,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Switching Type: %s (%u), Payload ID: %s (0x%04x)"
+literal|"%s  Switching Type: %s (%u), Payload ID: %s (0x%04x)"
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -4121,7 +4206,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t    Subobject Type: %s"
+literal|"%s  Subobject Type: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -4241,10 +4328,15 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Source Instance: 0x%08x, Destination Instance: 0x%08x"
+literal|"%s  Source Instance: 0x%08x, Destination Instance: 0x%08x"
+argument_list|,
+name|ident
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -4292,17 +4384,22 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Restart  Time: %ums, Recovery Time: %ums"
+literal|"%s  Restart  Time: %ums, Recovery Time: %ums"
 argument_list|,
-name|EXTRACT_16BITS
+name|ident
+argument_list|,
+name|EXTRACT_32BITS
 argument_list|(
 name|obj_tptr
 argument_list|)
 argument_list|,
-name|EXTRACT_16BITS
+name|EXTRACT_32BITS
 argument_list|(
 name|obj_tptr
 operator|+
@@ -4343,7 +4440,10 @@ name|obj_tlen
 operator|<
 literal|4
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|namelen
 operator|=
 operator|*
@@ -4361,10 +4461,15 @@ literal|4
 operator|+
 name|namelen
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Session Name: "
+literal|"%s  Session Name: "
+argument_list|,
+name|ident
 argument_list|)
 expr_stmt|;
 for|for
@@ -4394,7 +4499,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Setup Priority: %u, Holding Priority: %u, Flags: [%s]"
+literal|"%s  Setup Priority: %u, Holding Priority: %u, Flags: [%s]"
+argument_list|,
+name|ident
 argument_list|,
 operator|(
 name|int
@@ -4478,10 +4585,15 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Previous/Next Interface: %s, Logical Interface Handle: 0x%08x"
+literal|"%s  Previous/Next Interface: %s, Logical Interface Handle: 0x%08x"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -4526,10 +4638,15 @@ name|obj_tlen
 operator|<
 literal|20
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Previous/Next Interface: %s, Logical Interface Handle: 0x%08x"
+literal|"%s  Previous/Next Interface: %s, Logical Interface Handle: 0x%08x"
+argument_list|,
+name|ident
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -4584,10 +4701,15 @@ name|obj_tlen
 operator|<
 literal|4
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Refresh Period: %ums"
+literal|"%s  Refresh Period: %ums"
+argument_list|,
+name|ident
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -4635,10 +4757,15 @@ name|obj_tlen
 operator|<
 literal|4
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Msg-Version: %u, length: %u"
+literal|"%s  Msg-Version: %u, length: %u"
+argument_list|,
+name|ident
 argument_list|,
 operator|(
 operator|*
@@ -4688,7 +4815,9 @@ literal|2
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Service Type: %s (%u), break bit %s set, Service length: %u"
+literal|"%s  Service Type: %s (%u), break bit %s set, Service length: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -4796,10 +4925,15 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Source Address: %s, Source Port: %u"
+literal|"%s  Source Address: %s, Source Port: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -4835,10 +4969,15 @@ name|obj_tlen
 operator|<
 literal|20
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Source Address: %s, Source Port: %u"
+literal|"%s  Source Address: %s, Source Port: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -4871,10 +5010,15 @@ name|obj_tlen
 operator|<
 literal|20
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Source Address: %s, Flow Label: %u"
+literal|"%s  Source Address: %s, Flow Label: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -4907,10 +5051,15 @@ name|obj_tlen
 operator|<
 literal|20
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Source Address: %s, LSP-ID: 0x%04x"
+literal|"%s  Source Address: %s, LSP-ID: 0x%04x"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -4945,10 +5094,15 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
-literal|"\n\t    Source Address: %s, LSP-ID: 0x%04x"
+literal|"%s  Source Address: %s, LSP-ID: 0x%04x"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -4996,7 +5150,10 @@ name|obj_tlen
 operator|<
 literal|16
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|bw
 operator|.
 name|i
@@ -5010,7 +5167,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Setup Priority: %u, Holding Priority: %u, Hop-limit: %u, Bandwidth: %.10g Mbps"
+literal|"%s  Setup Priority: %u, Holding Priority: %u, Hop-limit: %u, Bandwidth: %.10g Mbps"
+argument_list|,
+name|ident
 argument_list|,
 operator|(
 name|int
@@ -5049,7 +5208,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Include Colors: 0x%08x, Exclude Colors: 0x%08x"
+literal|"%s  Include Colors: 0x%08x, Exclude Colors: 0x%08x"
+argument_list|,
+name|ident
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -5102,7 +5263,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t    PLR-ID: %s, Avoid-Node-ID: %s"
+literal|"%s  PLR-ID: %s, Avoid-Node-ID: %s"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -5135,6 +5298,47 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|RSVP_OBJ_CLASSTYPE
+case|:
+switch|switch
+condition|(
+name|rsvp_obj_ctype
+condition|)
+block|{
+case|case
+name|RSVP_CTYPE_1
+case|:
+name|printf
+argument_list|(
+literal|"%s  Class Type: %u"
+argument_list|,
+name|ident
+argument_list|,
+name|EXTRACT_32BITS
+argument_list|(
+name|obj_tptr
+argument_list|)
+operator|&
+literal|0x7
+argument_list|)
+expr_stmt|;
+name|obj_tlen
+operator|-=
+literal|4
+expr_stmt|;
+name|obj_tptr
+operator|+=
+literal|4
+expr_stmt|;
+break|break;
+default|default:
+name|hexdump
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|RSVP_OBJ_ERROR_SPEC
 case|:
 switch|switch
@@ -5155,7 +5359,10 @@ name|obj_tlen
 operator|<
 literal|8
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|error_code
 operator|=
 operator|*
@@ -5176,7 +5383,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Error Node Adress: %s, Flags: [0x%02x]\n\t    Error Code: %s (%u)"
+literal|"%s  Error Node Address: %s, Flags: [0x%02x]%s  Error Code: %s (%u)"
+argument_list|,
+name|ident
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -5189,6 +5398,8 @@ name|obj_tptr
 operator|+
 literal|4
 operator|)
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -5217,6 +5428,26 @@ argument_list|,
 name|tok2str
 argument_list|(
 name|rsvp_obj_error_code_routing_values
+argument_list|,
+literal|"unknown"
+argument_list|,
+name|error_value
+argument_list|)
+argument_list|,
+name|error_value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|RSVP_OBJ_ERROR_SPEC_CODE_DIFFSERV_TE
+case|:
+name|printf
+argument_list|(
+literal|", Error Value: %s (%u)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|rsvp_obj_error_code_diffserv_te_values
 argument_list|,
 literal|"unknown"
 argument_list|,
@@ -5262,7 +5493,10 @@ name|obj_tlen
 operator|<
 literal|20
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|error_code
 operator|=
 operator|*
@@ -5283,7 +5517,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    Error Node Adress: %s, Flags: [0x%02x]\n\t    Error Code: %s (%u)"
+literal|"%s  Error Node Address: %s, Flags: [0x%02x]%s  Error Code: %s (%u)"
+argument_list|,
+name|ident
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -5296,6 +5532,8 @@ name|obj_tptr
 operator|+
 literal|16
 operator|)
+argument_list|,
+name|ident
 argument_list|,
 name|tok2str
 argument_list|(
@@ -5372,7 +5610,10 @@ name|obj_tlen
 operator|<
 literal|4
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|padbytes
 operator|=
 name|EXTRACT_16BITS
@@ -5384,7 +5625,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    TLV count: %u, padding bytes: %u"
+literal|"%s  TLV count: %u, padding bytes: %u"
+argument_list|,
+name|ident
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -5414,9 +5657,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t      %s TLV (0x%02x), length: %u"
+literal|"%s    %s TLV (0x%02x), length: %u"
 argument_list|,
 comment|/* length includes header */
+name|ident
+argument_list|,
 name|tok2str
 argument_list|(
 name|rsvp_obj_prop_tlv_values
@@ -5449,7 +5694,10 @@ operator|+
 literal|1
 operator|)
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|print_unknown_data
 argument_list|(
 name|obj_tptr
@@ -5495,6 +5743,102 @@ name|TRUE
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|RSVP_OBJ_MESSAGE_ID
+case|:
+comment|/* fall through */
+case|case
+name|RSVP_OBJ_MESSAGE_ID_ACK
+case|:
+comment|/* fall through */
+case|case
+name|RSVP_OBJ_MESSAGE_ID_LIST
+case|:
+switch|switch
+condition|(
+name|rsvp_obj_ctype
+condition|)
+block|{
+case|case
+name|RSVP_CTYPE_1
+case|:
+if|if
+condition|(
+name|obj_tlen
+operator|<
+literal|8
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|printf
+argument_list|(
+literal|"%s  Flags [0x%02x], epoch: %u"
+argument_list|,
+name|ident
+argument_list|,
+operator|*
+name|obj_tptr
+argument_list|,
+name|EXTRACT_24BITS
+argument_list|(
+name|obj_tptr
+operator|+
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|obj_tlen
+operator|-=
+literal|4
+expr_stmt|;
+name|obj_tptr
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* loop through as long there are no messages left */
+while|while
+condition|(
+name|obj_tlen
+operator|>=
+literal|4
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s    Message-ID 0x%08x (%u)"
+argument_list|,
+name|ident
+argument_list|,
+name|EXTRACT_32BITS
+argument_list|(
+name|obj_tptr
+argument_list|)
+argument_list|,
+name|EXTRACT_32BITS
+argument_list|(
+name|obj_tptr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|obj_tlen
+operator|-=
+literal|4
+expr_stmt|;
+name|obj_tptr
+operator|+=
+literal|4
+expr_stmt|;
+block|}
+break|break;
+default|default:
+name|hexdump
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+break|break;
 comment|/*          *  FIXME those are the defined objects that lack a decoder          *  you are welcome to contribute code ;-)          */
 case|case
 name|RSVP_OBJ_INTEGRITY
@@ -5504,15 +5848,6 @@ name|RSVP_OBJ_SCOPE
 case|:
 case|case
 name|RSVP_OBJ_POLICY_DATA
-case|:
-case|case
-name|RSVP_OBJ_MESSAGE_ID
-case|:
-case|case
-name|RSVP_OBJ_MESSAGE_ID_ACK
-case|:
-case|case
-name|RSVP_OBJ_MESSAGE_ID_LIST
 case|:
 case|case
 name|RSVP_OBJ_LABEL_SET
@@ -5539,9 +5874,10 @@ argument_list|,
 name|obj_tlen
 argument_list|)
 expr_stmt|;
+comment|/* FIXME indentation */
 break|break;
 block|}
-comment|/* do we want to see an additionally hexdump ? */
+comment|/* do we also want to see a hex dump ? */
 if|if
 condition|(
 name|vflag
@@ -5567,6 +5903,7 @@ argument_list|)
 argument_list|,
 literal|"\n\t    "
 argument_list|,
+comment|/* FIXME indentation */
 name|rsvp_obj_len
 operator|-
 sizeof|sizeof
@@ -5584,6 +5921,530 @@ name|tlen
 operator|-=
 name|rsvp_obj_len
 expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+name|trunc
+label|:
+name|printf
+argument_list|(
+literal|"\n\t\t packet exceeded snapshot"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|rsvp_print
+parameter_list|(
+specifier|register
+specifier|const
+name|u_char
+modifier|*
+name|pptr
+parameter_list|,
+specifier|register
+name|u_int
+name|len
+parameter_list|)
+block|{
+specifier|const
+name|struct
+name|rsvp_common_header
+modifier|*
+name|rsvp_com_header
+decl_stmt|;
+specifier|const
+name|u_char
+modifier|*
+name|tptr
+decl_stmt|,
+modifier|*
+name|subtptr
+decl_stmt|;
+name|u_short
+name|tlen
+decl_stmt|,
+name|subtlen
+decl_stmt|;
+name|tptr
+operator|=
+name|pptr
+expr_stmt|;
+name|rsvp_com_header
+operator|=
+operator|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+operator|*
+operator|)
+name|pptr
+expr_stmt|;
+name|TCHECK
+argument_list|(
+operator|*
+name|rsvp_com_header
+argument_list|)
+expr_stmt|;
+comment|/*      * Sanity checking of the header.      */
+if|if
+condition|(
+name|RSVP_EXTRACT_VERSION
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|version_flags
+argument_list|)
+operator|!=
+name|RSVP_VERSION
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ERROR: RSVP version %u packet not supported"
+argument_list|,
+name|RSVP_EXTRACT_VERSION
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|version_flags
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* in non-verbose mode just lets print the basic Message Type*/
+if|if
+condition|(
+name|vflag
+operator|<
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"RSVPv%u %s Message, length: %u"
+argument_list|,
+name|RSVP_EXTRACT_VERSION
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|version_flags
+argument_list|)
+argument_list|,
+name|tok2str
+argument_list|(
+name|rsvp_msg_type_values
+argument_list|,
+literal|"unknown (%u)"
+argument_list|,
+name|rsvp_com_header
+operator|->
+name|msg_type
+argument_list|)
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* ok they seem to want to know everything - lets fully decode it */
+name|tlen
+operator|=
+name|EXTRACT_16BITS
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|length
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n\tRSVPv%u %s Message (%u), Flags: [%s], length: %u, ttl: %u, checksum: 0x%04x"
+argument_list|,
+name|RSVP_EXTRACT_VERSION
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|version_flags
+argument_list|)
+argument_list|,
+name|tok2str
+argument_list|(
+name|rsvp_msg_type_values
+argument_list|,
+literal|"unknown, type: %u"
+argument_list|,
+name|rsvp_com_header
+operator|->
+name|msg_type
+argument_list|)
+argument_list|,
+name|rsvp_com_header
+operator|->
+name|msg_type
+argument_list|,
+name|bittok2str
+argument_list|(
+name|rsvp_header_flag_values
+argument_list|,
+literal|"none"
+argument_list|,
+name|RSVP_EXTRACT_FLAGS
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|version_flags
+argument_list|)
+argument_list|)
+argument_list|,
+name|tlen
+argument_list|,
+name|rsvp_com_header
+operator|->
+name|ttl
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|checksum
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tlen
+operator|<
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ERROR: common header too short %u< %lu"
+argument_list|,
+name|tlen
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|tptr
+operator|+=
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+expr_stmt|;
+name|tlen
+operator|-=
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|rsvp_com_header
+operator|->
+name|msg_type
+condition|)
+block|{
+case|case
+name|RSVP_MSGTYPE_AGGREGATE
+case|:
+while|while
+condition|(
+name|tlen
+operator|>
+literal|0
+condition|)
+block|{
+name|subtptr
+operator|=
+name|tptr
+expr_stmt|;
+name|rsvp_com_header
+operator|=
+operator|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+operator|*
+operator|)
+name|subtptr
+expr_stmt|;
+name|TCHECK
+argument_list|(
+operator|*
+name|rsvp_com_header
+argument_list|)
+expr_stmt|;
+comment|/*              * Sanity checking of the header.              */
+if|if
+condition|(
+name|RSVP_EXTRACT_VERSION
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|version_flags
+argument_list|)
+operator|!=
+name|RSVP_VERSION
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ERROR: RSVP version %u packet not supported"
+argument_list|,
+name|RSVP_EXTRACT_VERSION
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|version_flags
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|subtlen
+operator|=
+name|EXTRACT_16BITS
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|length
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n\t  RSVPv%u %s Message (%u), Flags: [%s], length: %u, ttl: %u, checksum: 0x%04x"
+argument_list|,
+name|RSVP_EXTRACT_VERSION
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|version_flags
+argument_list|)
+argument_list|,
+name|tok2str
+argument_list|(
+name|rsvp_msg_type_values
+argument_list|,
+literal|"unknown, type: %u"
+argument_list|,
+name|rsvp_com_header
+operator|->
+name|msg_type
+argument_list|)
+argument_list|,
+name|rsvp_com_header
+operator|->
+name|msg_type
+argument_list|,
+name|bittok2str
+argument_list|(
+name|rsvp_header_flag_values
+argument_list|,
+literal|"none"
+argument_list|,
+name|RSVP_EXTRACT_FLAGS
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|version_flags
+argument_list|)
+argument_list|)
+argument_list|,
+name|subtlen
+argument_list|,
+name|rsvp_com_header
+operator|->
+name|ttl
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+name|rsvp_com_header
+operator|->
+name|checksum
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|subtlen
+operator|<
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ERROR: common header too short %u< %lu"
+argument_list|,
+name|subtlen
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|subtptr
+operator|+=
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+expr_stmt|;
+name|subtlen
+operator|-=
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rsvp_obj_print
+argument_list|(
+name|subtptr
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|subtlen
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return;
+name|tptr
+operator|+=
+name|subtlen
+operator|+
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+expr_stmt|;
+name|tlen
+operator|-=
+name|subtlen
+operator|+
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|rsvp_common_header
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|RSVP_MSGTYPE_PATH
+case|:
+case|case
+name|RSVP_MSGTYPE_RESV
+case|:
+case|case
+name|RSVP_MSGTYPE_PATHERR
+case|:
+case|case
+name|RSVP_MSGTYPE_RESVERR
+case|:
+case|case
+name|RSVP_MSGTYPE_PATHTEAR
+case|:
+case|case
+name|RSVP_MSGTYPE_RESVTEAR
+case|:
+case|case
+name|RSVP_MSGTYPE_RESVCONF
+case|:
+case|case
+name|RSVP_MSGTYPE_HELLO_OLD
+case|:
+case|case
+name|RSVP_MSGTYPE_HELLO
+case|:
+case|case
+name|RSVP_MSGTYPE_ACK
+case|:
+case|case
+name|RSVP_MSGTYPE_SREFRESH
+case|:
+if|if
+condition|(
+name|rsvp_obj_print
+argument_list|(
+name|tptr
+argument_list|,
+literal|"\n\t  "
+argument_list|,
+name|tlen
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return;
+break|break;
+default|default:
+name|print_unknown_data
+argument_list|(
+name|tptr
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|tlen
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 return|return;
 name|trunc

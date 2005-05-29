@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-llc.c,v 1.53.2.3 2003/12/29 22:33:18 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-llc.c,v 1.61 2005/04/06 21:32:41 mcr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"ethertype.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"oui.h"
 end_include
 
 begin_decl_stmt
@@ -369,7 +375,7 @@ name|eflag
 condition|)
 name|printf
 argument_list|(
-literal|"LLC, dsap %s (0x%02x), ssap %s (0x%02x), cmd 0x%02x, "
+literal|"LLC, dsap %s (0x%02x), ssap %s (0x%02x), cmd 0x%02x: "
 argument_list|,
 name|tok2str
 argument_list|(
@@ -422,9 +428,13 @@ name|LLCSAP_GLOBAL
 condition|)
 block|{
 comment|/* 		 * This is an Ethernet_802.3 IPX frame; it has an 		 * 802.3 header (i.e., an Ethernet header where the 		 * type/length field is<= ETHERMTU, i.e. it's a length 		 * field, not a type field), but has no 802.2 header - 		 * the IPX packet starts right after the Ethernet header, 		 * with a signature of two bytes of 0xFF (which is 		 * LLCSAP_GLOBAL). 		 * 		 * (It might also have been an Ethernet_802.3 IPX at 		 * one time, but got bridged onto another network, 		 * such as an 802.11 network; this has appeared in at 		 * least one capture file.) 		 */
+if|if
+condition|(
+name|eflag
+condition|)
 name|printf
 argument_list|(
-literal|"(NOV-802.3) "
+literal|"IPX-802.3: "
 argument_list|)
 expr_stmt|;
 name|ipx_print
@@ -485,6 +495,8 @@ condition|)
 block|{
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 operator|+
 literal|4
@@ -819,6 +831,40 @@ name|llc_ethertype
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|eflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"oui %s (0x%06x), ethertype %s (0x%04x): "
+argument_list|,
+name|tok2str
+argument_list|(
+name|oui_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|orgcode
+argument_list|)
+argument_list|,
+name|orgcode
+argument_list|,
+name|tok2str
+argument_list|(
+name|ethertype_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|et
+argument_list|)
+argument_list|,
+name|et
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX - what *is* the right bridge pad value here? 		 * Does anybody ever bridge one form of LAN traffic 		 * over a networking type that uses 802.2 LLC? 		 */
@@ -1336,16 +1382,6 @@ operator|-=
 literal|4
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" len=%d"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -1630,6 +1666,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

@@ -42,7 +42,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-telnet.c,v 1.21.2.3 2003/12/29 22:42:23 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-telnet.c,v 1.24 2003/12/29 11:05:10 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
