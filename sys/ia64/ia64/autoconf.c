@@ -321,6 +321,9 @@ comment|/* 	 * Now we're ready to handle (pending) interrupts. 	 * XXX this is s
 name|enable_intr
 argument_list|()
 expr_stmt|;
+name|cninit_finish
+argument_list|()
+expr_stmt|;
 name|cold
 operator|=
 literal|0
