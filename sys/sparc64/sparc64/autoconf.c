@@ -228,6 +228,9 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|cninit_finish
+argument_list|()
+expr_stmt|;
 name|cold
 operator|=
 literal|0

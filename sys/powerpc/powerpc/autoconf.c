@@ -207,6 +207,9 @@ operator||
 name|PSL_RI
 argument_list|)
 expr_stmt|;
+name|cninit_finish
+argument_list|()
+expr_stmt|;
 name|cold
 operator|=
 literal|0
