@@ -257,28 +257,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static int atoi(const char *s) {     int n = 0;     while (*s>= '0'&& *s<= '9') 	n = n * 10 + (*s++ - '0');     return n; }  static const char * bootdev_field(int which) { 	char *p = bootinfo.booted_dev; 	char *q; 	static char field[128];
-comment|/* Skip characters to find the right field */
-end_comment
-
-begin_comment
-unit|for (; which; which--) { 		while (*p != ' '&& *p != '\0') 			p++; 		if (*p) 			p++; 	}
-comment|/* Copy out the field and return it */
-end_comment
-
-begin_endif
-unit|q = field; 	while (*p != ' '&& *p != '\0') 		*q++ = *p++; 	*q = '\0';  	return field; }  static const char * bootdev_protocol(void) { 	return bootdev_field(0); }  static int bootdev_slot(void) { 	return atoi(bootdev_field(2)); }  static int bootdev_unit(void) { 	return atoi(bootdev_field(5)); }  static int bootdev_bus(void) { 	return atoi(bootdev_field(1)); }  static int bootdev_channel(void) { 	return atoi(bootdev_field(3)); }  static const char * bootdev_remote_address(void) { 	return bootdev_field(4); }  static int bootdev_boot_dev_type(void) { 	return atoi(bootdev_field(6)); }  static const char * bootdev_ctrl_dev_type(void) { 	return bootdev_field(7); }
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Determine i/o configuration for a machine.  */
 end_comment
@@ -352,6 +330,9 @@ name|alpha_pal_swpipl
 argument_list|(
 name|ALPHA_PSL_IPL_0
 argument_list|)
+expr_stmt|;
+name|cninit_finish
+argument_list|()
 expr_stmt|;
 name|cold
 operator|=
