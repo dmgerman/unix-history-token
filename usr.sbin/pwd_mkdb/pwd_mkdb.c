@@ -545,6 +545,10 @@ name|username
 operator|=
 name|NULL
 expr_stmt|;
+name|oldfp
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
