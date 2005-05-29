@@ -15,6 +15,12 @@ directive|define
 name|_SYS_SYSENT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<bsm/audit.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|thread
@@ -50,6 +56,10 @@ modifier|*
 name|sy_call
 decl_stmt|;
 comment|/* implementing function */
+name|au_event_t
+name|sy_auevent
+decl_stmt|;
+comment|/* audit event associated with syscall */
 block|}
 struct|;
 end_struct
