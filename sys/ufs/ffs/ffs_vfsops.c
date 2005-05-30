@@ -7658,16 +7658,25 @@ name|bp
 parameter_list|)
 block|{
 name|struct
+name|bufobj
+modifier|*
+name|bufobj
+decl_stmt|;
+name|struct
 name|buf
 modifier|*
 name|origbp
 decl_stmt|;
 comment|/* 	 * Find the original buffer that we are writing. 	 */
-name|BO_LOCK
-argument_list|(
+name|bufobj
+operator|=
 name|bp
 operator|->
 name|b_bufobj
+expr_stmt|;
+name|BO_LOCK
+argument_list|(
+name|bufobj
 argument_list|)
 expr_stmt|;
 if|if
@@ -7694,11 +7703,15 @@ argument_list|(
 literal|"backgroundwritedone: lost buffer"
 argument_list|)
 expr_stmt|;
+comment|/* Grab an extra reference to be dropped by the bufdone() below. */
+name|bufobj_wrefl
+argument_list|(
+name|bufobj
+argument_list|)
+expr_stmt|;
 name|BO_UNLOCK
 argument_list|(
-name|bp
-operator|->
-name|b_bufobj
+name|bufobj
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process dependencies then return any unfinished ones. 	 */
@@ -7743,18 +7756,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * This buffer is marked B_NOCACHE, so when it is released 	 * by biodone, it will be tossed. We mark it with BIO_READ 	 * to avoid biodone doing a second bufobj_wdrop. 	 */
+comment|/* 	 * This buffer is marked B_NOCACHE so when it is released 	 * by biodone it will be tossed. 	 */
 name|bp
 operator|->
 name|b_flags
 operator||=
 name|B_NOCACHE
-expr_stmt|;
-name|bp
-operator|->
-name|b_iocmd
-operator|=
-name|BIO_READ
 expr_stmt|;
 name|bp
 operator|->
@@ -7767,12 +7774,6 @@ operator||
 name|B_DONE
 operator|)
 expr_stmt|;
-name|bp
-operator|->
-name|b_iodone
-operator|=
-literal|0
-expr_stmt|;
 name|bufdone
 argument_list|(
 name|bp
@@ -7780,9 +7781,7 @@ argument_list|)
 expr_stmt|;
 name|BO_LOCK
 argument_list|(
-name|origbp
-operator|->
-name|b_bufobj
+name|bufobj
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear the BV_BKGRDINPROG flag in the original buffer 	 * and awaken it if it is waiting for the write to complete. 	 * If BV_BKGRDINPROG is not set in the original buffer it must 	 * have been released and re-instantiated - which is not legal. 	 */
@@ -7835,9 +7834,7 @@ expr_stmt|;
 block|}
 name|BO_UNLOCK
 argument_list|(
-name|origbp
-operator|->
-name|b_bufobj
+name|bufobj
 argument_list|)
 expr_stmt|;
 block|}
