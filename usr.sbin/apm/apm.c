@@ -814,6 +814,8 @@ block|{
 literal|"off-line"
 block|,
 literal|"on-line"
+block|,
+literal|"backup power"
 block|}
 decl_stmt|;
 name|printf
@@ -867,7 +869,7 @@ name|aip
 operator|->
 name|ai_acline
 operator|>
-literal|1
+literal|2
 condition|)
 name|printf
 argument_list|(
