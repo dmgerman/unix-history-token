@@ -375,6 +375,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|bufobj_wrefl
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+name|bo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|bufobj_invalbuf
 parameter_list|(
