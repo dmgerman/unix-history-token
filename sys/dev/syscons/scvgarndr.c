@@ -310,7 +310,14 @@ end_else
 begin_define
 define|#
 directive|define
-name|vga_pxlmouse
+name|vga_pxlmouse_direct
+value|(vr_draw_mouse_t *)vga_nop
+end_define
+
+begin_define
+define|#
+directive|define
+name|vga_pxlmouse_planar
 value|(vr_draw_mouse_t *)vga_nop
 end_define
 
