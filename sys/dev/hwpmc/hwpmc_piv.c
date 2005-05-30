@@ -5649,6 +5649,9 @@ name|cpu
 parameter_list|,
 name|uintptr_t
 name|eip
+parameter_list|,
+name|int
+name|usermode
 parameter_list|)
 block|{
 name|int
@@ -5683,6 +5686,11 @@ operator|(
 name|void
 operator|)
 name|eip
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|usermode
 expr_stmt|;
 name|PMCDBG
 argument_list|(

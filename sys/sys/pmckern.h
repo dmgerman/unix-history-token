@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003-2005, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -52,37 +52,52 @@ end_include
 begin_define
 define|#
 directive|define
-name|PMC_FN_PROCESS_EXIT
+name|PMC_FN_PROCESS_EXEC
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PMC_FN_PROCESS_EXEC
+name|PMC_FN_CSW_IN
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|PMC_FN_PROCESS_FORK
+name|PMC_FN_CSW_OUT
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|PMC_FN_CSW_IN
+name|PMC_FN_DO_SAMPLES
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|PMC_FN_CSW_OUT
+name|PMC_FN_PROCESS_EXIT
 value|5
 end_define
+
+begin_comment
+comment|/* obsolete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_FN_PROCESS_FORK
+value|6
+end_define
+
+begin_comment
+comment|/* obsolete */
+end_comment
 
 begin_comment
 comment|/* hook */
@@ -120,10 +135,13 @@ name|pmc_intr
 function_decl|)
 parameter_list|(
 name|int
-name|cpu
+name|_cpu
 parameter_list|,
 name|uintptr_t
-name|pc
+name|_pc
+parameter_list|,
+name|int
+name|_usermode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -141,7 +159,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hook invocation; for use within the kernel */
+comment|/* Per-cpu flags indicating availability of sampling data */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|cpumask_t
+name|pmc_cpumask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Hook invocation; for use within the kernel */
 end_comment
 
 begin_define
@@ -160,7 +189,7 @@ value|do {						\ 	sx_slock(&pmc_sx);			\ 	if (pmc_hook != NULL)			\ 		(pmc_hook
 end_define
 
 begin_comment
-comment|/* hook invocation that needs an exclusive lock */
+comment|/* Hook invocation that needs an exclusive lock */
 end_comment
 
 begin_define
@@ -179,8 +208,23 @@ value|do {						\ 	sx_xlock(&pmc_sx);			\ 	if (pmc_hook != NULL)			\ 		(pmc_hook
 end_define
 
 begin_comment
-comment|/* context switches cannot take locks */
+comment|/*  * Some hook invocations (e.g., from context switch and clock handling  * code) need to be lock-free.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_CALL_HOOK_UNLOCKED
+parameter_list|(
+name|t
+parameter_list|,
+name|cmd
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|do {						\ 	if (pmc_hook != NULL)			\ 		(pmc_hook)((t), (cmd), (arg));	\ } while (0)
+end_define
 
 begin_define
 define|#
@@ -191,12 +235,11 @@ name|t
 parameter_list|,
 name|cmd
 parameter_list|)
-define|\
-value|do {						\ 	if (pmc_hook != NULL)			\ 		(pmc_hook)((t), (cmd), NULL);	\ } while (0)
+value|PMC_CALL_HOOK_UNLOCKED(t,cmd,NULL)
 end_define
 
 begin_comment
-comment|/*  * check if a process is using HWPMCs.  */
+comment|/* Check if a process is using HWPMCs.*/
 end_comment
 
 begin_define
@@ -208,6 +251,20 @@ name|p
 parameter_list|)
 define|\
 value|(__predict_false(atomic_load_acq_int(&(p)->p_flag)&	\ 	    P_HWPMC))
+end_define
+
+begin_comment
+comment|/* Check if a CPU has recorded samples. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_CPU_HAS_SAMPLES
+parameter_list|(
+name|C
+parameter_list|)
+value|(__predict_false(pmc_cpumask& (1<< (C))))
 end_define
 
 begin_comment

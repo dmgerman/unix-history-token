@@ -3521,6 +3521,9 @@ name|cpu
 parameter_list|,
 name|uintptr_t
 name|eip
+parameter_list|,
+name|int
+name|usermode
 parameter_list|)
 block|{
 name|int
@@ -3550,6 +3553,11 @@ name|pmc_hw
 modifier|*
 name|phw
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|usermode
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|cpu

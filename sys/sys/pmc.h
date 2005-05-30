@@ -2229,6 +2229,9 @@ name|_cpu
 parameter_list|,
 name|uintptr_t
 name|_pc
+parameter_list|,
+name|int
+name|_usermode
 parameter_list|)
 function_decl|;
 name|int

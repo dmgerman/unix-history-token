@@ -3593,6 +3593,9 @@ name|cpu
 parameter_list|,
 name|uintptr_t
 name|eip
+parameter_list|,
+name|int
+name|usermode
 parameter_list|)
 block|{
 operator|(
