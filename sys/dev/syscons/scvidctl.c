@@ -1652,6 +1652,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+operator|(
+name|info
+operator|.
+name|vi_flags
+operator|&
+name|V_INFO_LINEAR
+operator|)
+operator|&&
 operator|(
 name|info
 operator|.
