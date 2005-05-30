@@ -2113,7 +2113,7 @@ name|kaioinfo
 modifier|*
 name|p_aioinfo
 decl_stmt|;
-comment|/* (?) ASYNC I/O info. */
+comment|/* (c) ASYNC I/O info. */
 name|struct
 name|thread
 modifier|*
