@@ -970,17 +970,6 @@ begin_comment
 comment|/* proc on free queue */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|AIOP_SCHED
-value|0x2
-end_define
-
-begin_comment
-comment|/* proc explicitly scheduled */
-end_comment
-
 begin_struct
 struct|struct
 name|aiothreadlist
@@ -4040,20 +4029,6 @@ name|splnet
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Place thread (lightweight process) onto the AIO free thread list. 	 */
-if|if
-condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|aio_freeproc
-argument_list|)
-condition|)
-name|wakeup
-argument_list|(
-operator|&
-name|aio_freeproc
-argument_list|)
-expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -4210,13 +4185,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-name|aiop
-operator|->
-name|aiothreadflags
-operator|&=
-operator|~
-name|AIOP_SCHED
-expr_stmt|;
 comment|/* 		 * Check for jobs. 		 */
 while|while
 condition|(
@@ -4659,25 +4627,10 @@ operator|=
 name|mycp
 expr_stmt|;
 block|}
-comment|/* 		 * If we are the first to be put onto the free queue, wakeup 		 * anyone waiting for a daemon. 		 */
 name|s
 operator|=
 name|splnet
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|aio_freeproc
-argument_list|)
-condition|)
-name|wakeup
-argument_list|(
-operator|&
-name|aio_freeproc
-argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -4703,16 +4656,6 @@ expr_stmt|;
 comment|/* 		 * If daemon is inactive for a long time, allow it to exit, 		 * thereby freeing resources. 		 */
 if|if
 condition|(
-operator|(
-name|aiop
-operator|->
-name|aiothreadflags
-operator|&
-name|AIOP_SCHED
-operator|)
-operator|==
-literal|0
-operator|&&
 name|tsleep
 argument_list|(
 name|aiop
