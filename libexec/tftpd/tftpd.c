@@ -510,7 +510,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cClns:u:Uw"
+literal|"cClns:u:U:w"
 argument_list|)
 operator|)
 operator|!=
