@@ -37,6 +37,12 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_pthreadtypes.h>
+end_include
+
 begin_if
 if|#
 directive|if
