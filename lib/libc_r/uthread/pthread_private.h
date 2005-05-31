@@ -3970,20 +3970,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|_thread_exit
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -5262,14 +5263,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|__sys_exit
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
