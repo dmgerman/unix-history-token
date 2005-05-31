@@ -529,7 +529,7 @@ name|len
 condition|)
 name|panic
 argument_list|(
-literal|"sendudp: bad write (%d != %d)"
+literal|"sendudp: bad write (%zd != %zd)"
 argument_list|,
 name|cc
 argument_list|,

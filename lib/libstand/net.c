@@ -294,7 +294,7 @@ name|ssize
 condition|)
 name|panic
 argument_list|(
-literal|"sendrecv: short write! (%d< %d)"
+literal|"sendrecv: short write! (%zd< %zd)"
 argument_list|,
 name|cc
 argument_list|,
