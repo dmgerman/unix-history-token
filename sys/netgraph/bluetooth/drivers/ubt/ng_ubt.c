@@ -971,29 +971,12 @@ end_macro
 
 begin_block
 block|{
-comment|/* 	 * If for some reason device should not be attached then put 	 * VendorID/ProductID pair into the list below. Currently I 	 * do not know of any such devices. The format is as follows: 	 * 	 *	{ VENDOR_ID, PRODUCT_ID }, 	 * 	 * where VENDOR_ID and PRODUCT_ID are hex numbers. 	 */
+comment|/* 	 * If for some reason device should not be attached then put 	 * VendorID/ProductID pair into the list below. The format is 	 * as follows: 	 * 	 *	{ VENDOR_ID, PRODUCT_ID }, 	 * 	 * where VENDOR_ID and PRODUCT_ID are hex numbers. 	 */
 name|Static
 name|struct
 name|usb_devno
 specifier|const
 name|ubt_ignored_devices
-index|[]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|}
-comment|/* This should be the last item in the list */
-block|}
-decl_stmt|;
-comment|/* 	 * If device violates Bluetooth specification and has bDeviceClass, 	 * bDeviceSubClass and bDeviceProtocol set to wrong values then you 	 * could try to put VendorID/ProductID pair into the list below.  	 */
-name|Static
-name|struct
-name|usb_devno
-specifier|const
-name|ubt_broken_devices
 index|[]
 init|=
 block|{
@@ -1004,6 +987,23 @@ literal|0x3800
 block|}
 block|,
 comment|/* AVM USB Bluetooth-Adapter BlueFritz! */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+comment|/* This should be the last item in the list */
+block|}
+decl_stmt|;
+comment|/* 	 * If device violates Bluetooth specification and has bDeviceClass, 	 * bDeviceSubClass and bDeviceProtocol set to wrong values then you 	 * could try to put VendorID/ProductID pair into the list below. 	 * Adding VendorID/ProductID pair into this list forces ng_ubt(4) 	 * to attach to the broken device. 	 */
+name|Static
+name|struct
+name|usb_devno
+specifier|const
+name|ubt_broken_devices
+index|[]
+init|=
+block|{
 block|{
 literal|0
 block|,
