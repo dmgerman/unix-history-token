@@ -141,7 +141,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -170,7 +170,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -1140,7 +1140,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -1225,7 +1225,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
