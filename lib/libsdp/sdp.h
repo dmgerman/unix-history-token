@@ -1458,17 +1458,28 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(l)->b[15] = *t_cp++; \ 	(l)->b[14] = *t_cp++; \ 	(l)->b[13] = *t_cp++; \ 	(l)->b[12] = *t_cp++; \ 	(l)->b[11] = *t_cp++; \ 	(l)->b[10] = *t_cp++; \ 	(l)->b[9]  = *t_cp++; \ 	(l)->b[8]  = *t_cp++; \ 	(l)->b[7]  = *t_cp++; \ 	(l)->b[6]  = *t_cp++; \ 	(l)->b[5]  = *t_cp++; \ 	(l)->b[4]  = *t_cp++; \ 	(l)->b[3]  = *t_cp++; \ 	(l)->b[2]  = *t_cp++; \ 	(l)->b[1]  = *t_cp++; \ 	(cp) += 16; \ }
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(l)->b[15] = *t_cp++; \ 	(l)->b[14] = *t_cp++; \ 	(l)->b[13] = *t_cp++; \ 	(l)->b[12] = *t_cp++; \ 	(l)->b[11] = *t_cp++; \ 	(l)->b[10] = *t_cp++; \ 	(l)->b[9]  = *t_cp++; \ 	(l)->b[8]  = *t_cp++; \ 	(l)->b[7]  = *t_cp++; \ 	(l)->b[6]  = *t_cp++; \ 	(l)->b[5]  = *t_cp++; \ 	(l)->b[4]  = *t_cp++; \ 	(l)->b[3]  = *t_cp++; \ 	(l)->b[2]  = *t_cp++; \ 	(l)->b[1]  = *t_cp++; \ 	(l)->b[0]  = *t_cp++; \ 	(cp) += 16; \ }
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_define
+define|#
+directive|define
+name|SDP_GET_UUID128
+parameter_list|(
+name|l
+parameter_list|,
+name|cp
+parameter_list|)
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(l)->b[0]  = *t_cp++; \ 	(l)->b[1]  = *t_cp++; \ 	(l)->b[2]  = *t_cp++; \ 	(l)->b[3]  = *t_cp++; \ 	(l)->b[4]  = *t_cp++; \ 	(l)->b[5]  = *t_cp++; \ 	(l)->b[6]  = *t_cp++; \ 	(l)->b[7]  = *t_cp++; \ 	(l)->b[8]  = *t_cp++; \ 	(l)->b[9]  = *t_cp++; \ 	(l)->b[10] = *t_cp++; \ 	(l)->b[11] = *t_cp++; \ 	(l)->b[12] = *t_cp++; \ 	(l)->b[13] = *t_cp++; \ 	(l)->b[14] = *t_cp++; \ 	(l)->b[15] = *t_cp++; \ 	(cp) += 16; \ }
+end_define
 
-begin_comment
-comment|/* BYTE_ORDER != LITTLE_ENDIAN */
-end_comment
+begin_elif
+elif|#
+directive|elif
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_elif
 
 begin_define
 define|#
@@ -1481,6 +1492,29 @@ name|cp
 parameter_list|)
 value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(l)->b[0]  = *t_cp++; \ 	(l)->b[1]  = *t_cp++; \ 	(l)->b[2]  = *t_cp++; \ 	(l)->b[3]  = *t_cp++; \ 	(l)->b[4]  = *t_cp++; \ 	(l)->b[5]  = *t_cp++; \ 	(l)->b[6]  = *t_cp++; \ 	(l)->b[7]  = *t_cp++; \ 	(l)->b[8]  = *t_cp++; \ 	(l)->b[9]  = *t_cp++; \ 	(l)->b[10] = *t_cp++; \ 	(l)->b[11] = *t_cp++; \ 	(l)->b[12] = *t_cp++; \ 	(l)->b[13] = *t_cp++; \ 	(l)->b[14] = *t_cp++; \ 	(l)->b[15] = *t_cp++; \ 	(cp) += 16; \ }
 end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_GET_UUID128
+parameter_list|(
+name|l
+parameter_list|,
+name|cp
+parameter_list|)
+value|SDP_GET128(l, cp)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"Unsupported BYTE_ORDER"
+end_error
 
 begin_endif
 endif|#
@@ -1559,14 +1593,25 @@ parameter_list|)
 value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	*t_cp++ = (l)->b[15]; \ 	*t_cp++ = (l)->b[14]; \ 	*t_cp++ = (l)->b[13]; \ 	*t_cp++ = (l)->b[12]; \ 	*t_cp++ = (l)->b[11]; \ 	*t_cp++ = (l)->b[10]; \ 	*t_cp++ = (l)->b[9];  \ 	*t_cp++ = (l)->b[8];  \ 	*t_cp++ = (l)->b[7];  \ 	*t_cp++ = (l)->b[6];  \ 	*t_cp++ = (l)->b[5];  \ 	*t_cp++ = (l)->b[4];  \ 	*t_cp++ = (l)->b[3];  \ 	*t_cp++ = (l)->b[2];  \ 	*t_cp++ = (l)->b[1];  \ 	*t_cp   = (l)->b[0];  \ 	(cp) += 16; \ }
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_define
+define|#
+directive|define
+name|SDP_PUT_UUID128
+parameter_list|(
+name|l
+parameter_list|,
+name|cp
+parameter_list|)
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	*t_cp++ = (l)->b[0];  \ 	*t_cp++ = (l)->b[1];  \ 	*t_cp++ = (l)->b[2];  \ 	*t_cp++ = (l)->b[3];  \ 	*t_cp++ = (l)->b[4];  \ 	*t_cp++ = (l)->b[5];  \ 	*t_cp++ = (l)->b[6];  \ 	*t_cp++ = (l)->b[7];  \ 	*t_cp++ = (l)->b[8];  \ 	*t_cp++ = (l)->b[9];  \ 	*t_cp++ = (l)->b[10]; \ 	*t_cp++ = (l)->b[11]; \ 	*t_cp++ = (l)->b[12]; \ 	*t_cp++ = (l)->b[13]; \ 	*t_cp++ = (l)->b[14]; \ 	*t_cp   = (l)->b[15]; \ 	(cp) += 16; \ }
+end_define
 
-begin_comment
-comment|/* BYTE_ORDER != LITTLE_ENDIAN */
-end_comment
+begin_elif
+elif|#
+directive|elif
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_elif
 
 begin_define
 define|#
@@ -1579,6 +1624,29 @@ name|cp
 parameter_list|)
 value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	*t_cp++ = (l)->b[0];  \ 	*t_cp++ = (l)->b[1];  \ 	*t_cp++ = (l)->b[2];  \ 	*t_cp++ = (l)->b[3];  \ 	*t_cp++ = (l)->b[4];  \ 	*t_cp++ = (l)->b[5];  \ 	*t_cp++ = (l)->b[6];  \ 	*t_cp++ = (l)->b[7];  \ 	*t_cp++ = (l)->b[8];  \ 	*t_cp++ = (l)->b[9];  \ 	*t_cp++ = (l)->b[10]; \ 	*t_cp++ = (l)->b[11]; \ 	*t_cp++ = (l)->b[12]; \ 	*t_cp++ = (l)->b[13]; \ 	*t_cp++ = (l)->b[14]; \ 	*t_cp   = (l)->b[15]; \ 	(cp) += 16; \ }
 end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_PUT_UUID128
+parameter_list|(
+name|l
+parameter_list|,
+name|cp
+parameter_list|)
+value|SDP_PUT128(l, cp)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"Unsupported BYTE_ORDER"
+end_error
 
 begin_endif
 endif|#
