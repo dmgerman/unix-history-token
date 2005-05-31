@@ -66,10 +66,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#ident "$FreeBSD$"
-end_empty
-
 begin_define
 define|#
 directive|define

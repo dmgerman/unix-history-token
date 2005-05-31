@@ -92,10 +92,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#ident "$FreeBSD$"
-end_empty
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -62,10 +62,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#ident "$FreeBSD$"
-end_empty
-
 begin_function_decl
 specifier|static
 name|void

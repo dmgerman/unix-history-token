@@ -80,10 +80,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#ident "$FreeBSD$"
-end_empty
-
 begin_comment
 comment|/* router advertisement ICMP packet */
 end_comment

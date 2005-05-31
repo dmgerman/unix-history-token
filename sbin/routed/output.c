@@ -62,10 +62,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#ident "$FreeBSD$"
-end_empty
-
 begin_decl_stmt
 name|u_int
 name|update_seqno
