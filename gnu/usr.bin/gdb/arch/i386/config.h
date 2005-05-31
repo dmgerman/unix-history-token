@@ -457,9 +457,11 @@ begin_comment
 comment|/* Define if<sys/ptrace.h> defines the PT_GETXMMREGS request.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PT_GETXMMREGS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PT_GETXMMREGS
+end_define
 
 begin_comment
 comment|/* Define if libunwind library is being used.  */

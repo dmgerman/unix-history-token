@@ -15,6 +15,26 @@ directive|define
 name|_MACHINE_PTRACE_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|__HAVE_PTRACE_MACHDEP
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_GETXMMREGS
+value|(PT_FIRSTMACH + 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_SETXMMREGS
+value|(PT_FIRSTMACH + 1)
+end_define
+
 begin_endif
 endif|#
 directive|endif
