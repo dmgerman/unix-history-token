@@ -574,6 +574,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_I82801FBM
+value|0x26538086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ITE_ID
 value|0x1283
 end_define

@@ -5527,6 +5527,20 @@ literal|"Intel ICH6"
 block|}
 block|,
 block|{
+name|ATA_I82801FBM
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0x00
+block|,
+name|ATA_SA150
+block|,
+literal|"Intel ICH6"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5990,6 +6004,14 @@ operator|->
 name|chipid
 operator|==
 name|ATA_I82801FB_R1
+operator|||
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|chipid
+operator|==
+name|ATA_I82801FBM
 condition|)
 block|{
 name|mask
