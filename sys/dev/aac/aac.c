@@ -10438,7 +10438,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"%s %dMHz, %dMB cache memory, %s\n"
+literal|"%s %dMHz, %dMB memory "
+literal|"(%dMB cache, %dMB execution), %s\n"
 argument_list|,
 name|aac_describe_code
 argument_list|(
@@ -10455,7 +10456,27 @@ name|ClockSpeed
 argument_list|,
 name|info
 operator|->
+name|TotalMem
+operator|/
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|)
+argument_list|,
+name|info
+operator|->
 name|BufferMem
+operator|/
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|)
+argument_list|,
+name|info
+operator|->
+name|ExecutionMem
 operator|/
 operator|(
 literal|1024

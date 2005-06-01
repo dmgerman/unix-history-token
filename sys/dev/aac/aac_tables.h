@@ -301,6 +301,12 @@ name|CPUPPC_xxx
 block|}
 block|,
 block|{
+literal|"IOP302/303"
+block|,
+name|CPUI960_30X
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

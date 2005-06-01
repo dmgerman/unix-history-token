@@ -1340,6 +1340,8 @@ name|CPUMPC_824x
 block|,
 name|CPUPPC_xxx
 block|,
+name|CPUI960_30X
+block|,
 name|CPUSUBTYPE__last
 block|}
 name|AAC_CpuSubType
