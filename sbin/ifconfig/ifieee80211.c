@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2259,7 +2265,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"channel %u out of range, max %u"
+literal|"channel %u out of range, max %zu"
 argument_list|,
 name|first
 argument_list|,
@@ -2290,7 +2296,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"channel %u out of range, max %u"
+literal|"channel %u out of range, max %zu"
 argument_list|,
 name|first
 argument_list|,
@@ -2308,7 +2314,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"channel %u out of range, max %u"
+literal|"channel %u out of range, max %zu"
 argument_list|,
 name|last
 argument_list|,
@@ -3593,7 +3599,7 @@ end_comment
 
 begin_function
 specifier|static
-name|size_t
+name|int
 name|copy_essid
 parameter_list|(
 name|char
@@ -6787,8 +6793,11 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" rsc %llu"
+literal|" rsc %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ik
 operator|->
 name|ik_keyrsc
@@ -6814,8 +6823,11 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" tsc %llu"
+literal|" tsc %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ik
 operator|->
 name|ik_keytsc
