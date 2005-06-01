@@ -3520,7 +3520,9 @@ decl_stmt|;
 block|{
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
-name|pcbinfo
+name|inp
+operator|->
+name|inp_pcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_LOCK_ASSERT
@@ -3609,7 +3611,7 @@ name|inp_pcbinfo
 decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
-name|pcbinfo
+name|ipi
 argument_list|)
 expr_stmt|;
 name|INP_LOCK_ASSERT
