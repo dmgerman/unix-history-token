@@ -9358,7 +9358,7 @@ block|,
 block|{
 literal|"Netherlands"
 block|,
-literal|"ntp1.theinternetone.net"
+literal|"ntp0.nl.net"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9366,13 +9366,13 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.theinternetone.net"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.nl.net"
 block|}
 block|,
 block|{
 literal|"Netherlands #2"
 block|,
-literal|"ntp2.theinternetone.net"
+literal|"ntp1.nl.net"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9380,13 +9380,13 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.theinternetone.net"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.nl.net"
 block|}
 block|,
 block|{
 literal|"Netherlands #3"
 block|,
-literal|"ntp3.theinternetone.net"
+literal|"ntp2.nl.net"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9394,7 +9394,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp3.theinternetone.net"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.nl.net"
 block|}
 block|,
 block|{
