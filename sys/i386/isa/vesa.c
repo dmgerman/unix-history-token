@@ -3727,17 +3727,6 @@ if|if
 condition|(
 name|vesa_adp_info
 operator|->
-name|v_flags
-operator|&
-name|V_NONVGA
-condition|)
-return|return
-literal|1
-return|;
-if|if
-condition|(
-name|vesa_adp_info
-operator|->
 name|v_version
 operator|<
 literal|0x0102
