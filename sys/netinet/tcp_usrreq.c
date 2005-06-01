@@ -5135,6 +5135,11 @@ operator|~
 name|SS_NOFDREF
 expr_stmt|;
 comment|/* don't free the socket yet */
+name|INP_LOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
