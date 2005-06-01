@@ -4005,7 +4005,7 @@ literal|", enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If base is 0, then we have problems.  It is best to ignore 	 * such entires for the moment.  These will be allocated later if 	 * the driver specifically requests them. 	 */
+comment|/* 	 * If base is 0, then we have problems.  It is best to ignore 	 * such entries for the moment.  These will be allocated later if 	 * the driver specifically requests them. 	 */
 if|if
 condition|(
 name|base
