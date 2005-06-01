@@ -4997,6 +4997,12 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
