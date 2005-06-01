@@ -6076,6 +6076,17 @@ operator|.
 name|tcps_drops
 operator|++
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input: "
+literal|"trimthenstep6: tcp_close: head not "
+literal|"locked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_close
@@ -6090,6 +6101,16 @@ case|:
 case|case
 name|TCPS_LAST_ACK
 case|:
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"trimthenstep6: "
+literal|"tcp_close.2: head not locked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_close
@@ -6420,6 +6441,16 @@ operator|&&
 name|tlen
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"trimthenstep6: tcp_close.3: head not "
+literal|"locked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_close
@@ -6524,6 +6555,16 @@ name|rcv_nxt
 argument_list|)
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"trimthenstep6: "
+literal|"tcp_close.4: head not locked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_close
@@ -8432,6 +8473,16 @@ condition|(
 name|ourfinisacked
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input: process_ACK:"
+literal|" tcp_close: head not locked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_close
