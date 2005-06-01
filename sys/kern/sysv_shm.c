@@ -4711,7 +4711,7 @@ name|shminfo
 operator|.
 name|shmall
 operator|*
-name|PAGE_SIZE
+name|i
 expr_stmt|;
 if|if
 condition|(
