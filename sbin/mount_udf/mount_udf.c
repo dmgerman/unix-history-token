@@ -120,15 +120,7 @@ name|MOPT_STDOPTS
 block|,
 name|MOPT_UPDATE
 block|,
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+name|MOPT_NULL
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -137,9 +137,7 @@ init|=
 block|{
 name|MOPT_STDOPTS
 block|,
-block|{
-name|NULL
-block|}
+name|MOPT_NULL
 block|}
 decl_stmt|;
 end_decl_stmt

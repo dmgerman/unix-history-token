@@ -136,9 +136,7 @@ name|MOPT_SYNC
 block|,
 name|MOPT_UPDATE
 block|,
-block|{
-name|NULL
-block|}
+name|MOPT_NULL
 block|}
 decl_stmt|;
 end_decl_stmt
