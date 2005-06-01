@@ -233,7 +233,7 @@ comment|/*  * Set the block size.  */
 end_comment
 
 begin_comment
-comment|/* int archive_read_set_bytes_per_block(struct archive *a, int bytes_per_block) { 	archive_check_magic(a, ARCHIVE_READ_MAGIC, ARCHIVE_STATE_NEW); 	if (bytes_per_block< 1) 		bytes_per_block = 1; 	a->bytes_per_block = bytes_per_block; 	return (0); } */
+comment|/* int archive_read_set_bytes_per_block(struct archive *a, int bytes_per_block) { 	__archive_check_magic(a, ARCHIVE_READ_MAGIC, ARCHIVE_STATE_NEW, "archive_read_set_bytes_per_block"); 	if (bytes_per_block< 1) 		bytes_per_block = 1; 	a->bytes_per_block = bytes_per_block; 	return (0); } */
 end_comment
 
 begin_comment
@@ -280,13 +280,15 @@ decl_stmt|;
 name|int
 name|e
 decl_stmt|;
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_READ_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_NEW
+argument_list|,
+literal|"archive_read_open"
 argument_list|)
 expr_stmt|;
 if|if
@@ -686,7 +688,7 @@ name|slot
 decl_stmt|,
 name|ret
 decl_stmt|;
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
@@ -695,6 +697,8 @@ argument_list|,
 name|ARCHIVE_STATE_HEADER
 operator||
 name|ARCHIVE_STATE_DATA
+argument_list|,
+literal|"archive_read_next_header"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1443,13 +1447,15 @@ decl_stmt|;
 name|off_t
 name|offset
 decl_stmt|;
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_READ_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_DATA
+argument_list|,
+literal|"archive_read_data_skip"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1553,13 +1559,15 @@ modifier|*
 name|offset
 parameter_list|)
 block|{
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_READ_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_DATA
+argument_list|,
+literal|"archive_read_data_block"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1624,13 +1632,15 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_READ_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_ANY
+argument_list|,
+literal|"archive_read_close"
 argument_list|)
 expr_stmt|;
 name|a
@@ -1704,13 +1714,15 @@ decl_stmt|;
 name|int
 name|slots
 decl_stmt|;
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_READ_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_ANY
+argument_list|,
+literal|"archive_read_finish"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1950,13 +1962,15 @@ name|i
 decl_stmt|,
 name|number_slots
 decl_stmt|;
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_READ_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_NEW
+argument_list|,
+literal|"__archive_read_register_format"
 argument_list|)
 expr_stmt|;
 name|number_slots
@@ -2163,13 +2177,15 @@ name|i
 decl_stmt|,
 name|number_slots
 decl_stmt|;
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_READ_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_NEW
+argument_list|,
+literal|"__archive_read_register_compression"
 argument_list|)
 expr_stmt|;
 name|number_slots

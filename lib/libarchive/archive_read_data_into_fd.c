@@ -93,13 +93,15 @@ decl_stmt|;
 name|off_t
 name|output_offset
 decl_stmt|;
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_READ_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_DATA
+argument_list|,
+literal|"archive_read_data_into_fd"
 argument_list|)
 expr_stmt|;
 name|total_written

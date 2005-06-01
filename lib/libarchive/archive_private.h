@@ -501,37 +501,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Utility function to format a USTAR header into a buffer.  If  * "strict" is set, this tries to create the absolutely most portable  * version of a ustar header.  If "strict" is set to 0, then it will  * relax certain requirements.  */
-end_comment
-
-begin_function_decl
-name|int
-name|__archive_write_format_header_ustar
-parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|,
-name|char
-name|buff
-index|[
-literal|512
-index|]
-parameter_list|,
-name|struct
-name|archive_entry
-modifier|*
-parameter_list|,
-name|int
-name|tartype
-parameter_list|,
-name|int
-name|strict
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -606,21 +575,6 @@ name|func
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|archive_check_magic
-parameter_list|(
-name|a
-parameter_list|,
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|__archive_check_magic((a), (m), (s), __func__)
-end_define
 
 begin_function_decl
 name|int
@@ -776,6 +730,37 @@ name|b
 parameter_list|)
 value|((a)< (b) ? (a) : (b))
 end_define
+
+begin_comment
+comment|/*  * Utility function to format a USTAR header into a buffer.  If  * "strict" is set, this tries to create the absolutely most portable  * version of a ustar header.  If "strict" is set to 0, then it will  * relax certain requirements.  *  * Generally, format-specific declarations don't belong in this  * header; this is a rare example of a function that is shared by  * two very similar formats (ustar and pax).  */
+end_comment
+
+begin_function_decl
+name|int
+name|__archive_write_format_header_ustar
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|char
+name|buff
+index|[
+literal|512
+index|]
+parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|int
+name|tartype
+parameter_list|,
+name|int
+name|strict
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
