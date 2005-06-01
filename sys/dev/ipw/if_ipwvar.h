@@ -235,6 +235,10 @@ define|#
 directive|define
 name|IPW_FLAG_HAS_RADIO_SWITCH
 value|(1<< 2)
+define|#
+directive|define
+name|IPW_FLAG_FW_WARNED
+value|(1<< 3)
 name|int
 name|irq_rid
 decl_stmt|;
