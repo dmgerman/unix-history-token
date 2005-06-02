@@ -3907,11 +3907,23 @@ name|ic_caps
 operator|&
 name|IEEE80211_C_WEP
 condition|)
+block|{
+name|sc
+operator|->
+name|sc_cnfauthmode
+operator|=
+name|ic
+operator|->
+name|ic_bss
+operator|->
+name|ni_authmode
+expr_stmt|;
 name|wi_write_wep
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Set multicast filter. */
 name|wi_write_multi
 argument_list|(
