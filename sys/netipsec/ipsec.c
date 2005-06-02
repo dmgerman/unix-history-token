@@ -8425,7 +8425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * shift variable length bunffer to left.  * IN:	bitmap: pointer to the buffer  * 	nbit:	the number of to shift.  *	wsize:	buffer size (bytes).  */
+comment|/*  * shift variable length buffer to left.  * IN:	bitmap: pointer to the buffer  * 	nbit:	the number of to shift.  *	wsize:	buffer size (bytes).  */
 end_comment
 
 begin_function
