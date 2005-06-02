@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -656,7 +662,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * SuffSuffIsSuffix  --  *	See if suff is a suffix of str. Str should point to THE END of the  *	string to check. (THE END == the null byte)  *  * Results:  *	NULL if it ain't, pointer to character in str before suffix if  *	it is.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * SuffSuffIsSuffix  --  *	See if suff is a suffix of str.  *  * Results:  *	NULL if it ain't, pointer to character in str before suffix if  *	it is.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -684,6 +690,16 @@ modifier|*
 name|p2
 decl_stmt|;
 comment|/* Pointer into string being examined */
+name|size_t
+name|len
+decl_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 name|p1
 operator|=
 name|s
@@ -697,6 +713,8 @@ expr_stmt|;
 name|p2
 operator|=
 name|str
+operator|+
+name|len
 expr_stmt|;
 while|while
 condition|(
@@ -705,6 +723,10 @@ operator|>=
 name|s
 operator|->
 name|name
+operator|&&
+name|len
+operator|>
+literal|0
 operator|&&
 operator|*
 name|p1
@@ -717,6 +739,9 @@ name|p1
 operator|--
 expr_stmt|;
 name|p2
+operator|--
+expr_stmt|;
+name|len
 operator|--
 expr_stmt|;
 block|}
@@ -2167,13 +2192,6 @@ argument_list|,
 name|transform
 operator|->
 name|name
-operator|+
-name|strlen
-argument_list|(
-name|transform
-operator|->
-name|name
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4748,19 +4766,6 @@ name|path
 decl_stmt|;
 comment|/* Search path along which to expand */
 comment|/* 	 * Find a path along which to expand the word. 	 * 	 * If the word has a known suffix, use that path. 	 * If it has no known suffix and we're allowed to use the null 	 *   suffix, use its path. 	 * Else use the default system search path. 	 */
-name|cp
-operator|=
-name|cgn
-operator|->
-name|name
-operator|+
-name|strlen
-argument_list|(
-name|cgn
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 name|ln
 operator|=
 name|Lst_Find
@@ -4771,7 +4776,9 @@ operator|(
 name|void
 operator|*
 operator|)
-name|cp
+name|cgn
+operator|->
+name|name
 argument_list|,
 name|SuffSuffIsSuffixP
 argument_list|)
@@ -5695,7 +5702,9 @@ name|ms
 operator|->
 name|parents
 argument_list|,
-name|eoarch
+name|gn
+operator|->
+name|name
 argument_list|,
 name|SuffSuffIsSuffixP
 argument_list|)
@@ -5915,7 +5924,9 @@ name|sufflist
 argument_list|,
 name|ln
 argument_list|,
-name|eoname
+name|gn
+operator|->
+name|name
 argument_list|,
 name|SuffSuffIsSuffixP
 argument_list|)
@@ -6031,6 +6042,13 @@ name|nameLen
 operator|)
 operator|-
 name|sopref
+expr_stmt|;
+name|assert
+argument_list|(
+name|prefLen
+operator|>=
+literal|0
+argument_list|)
 expr_stmt|;
 name|target
 operator|->
