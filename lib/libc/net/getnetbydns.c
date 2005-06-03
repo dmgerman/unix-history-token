@@ -1052,20 +1052,6 @@ operator|->
 name|n_aliases
 operator|++
 expr_stmt|;
-if|#
-directive|if
-name|__LONG_BIT
-operator|==
-literal|64
-name|ne
-operator|->
-name|__n_pad0
-operator|=
-literal|0
-expr_stmt|;
-comment|/* ABI compatibility */
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -1493,20 +1479,6 @@ name|n_net
 operator|=
 name|net
 expr_stmt|;
-if|#
-directive|if
-name|__LONG_BIT
-operator|==
-literal|64
-name|ne
-operator|->
-name|__n_pad0
-operator|=
-literal|0
-expr_stmt|;
-comment|/* ABI compatibility */
-endif|#
-directive|endif
 return|return
 name|NS_SUCCESS
 return|;

@@ -748,23 +748,7 @@ begin_function
 name|struct
 name|netent
 modifier|*
-if|#
-directive|if
-name|__LONG_BIT
-operator|==
-literal|64
 name|getnetbyaddr
-parameter_list|(
-name|u_long
-name|addr
-parameter_list|,
-name|int
-name|af
-parameter_list|)
-comment|/* ABI compatibility */
-else|#
-directive|else
-function|getnetbyaddr
 parameter_list|(
 name|uint32_t
 name|addr
@@ -772,8 +756,6 @@ parameter_list|,
 name|int
 name|af
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|struct
 name|netdata
@@ -798,9 +780,6 @@ if|if
 condition|(
 name|getnetbyaddr_r
 argument_list|(
-operator|(
-name|uint32_t
-operator|)
 name|addr
 argument_list|,
 name|af

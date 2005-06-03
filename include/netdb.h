@@ -210,10 +210,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Note: n_net used to be an unsigned long integer.  * In XNS5, and subsequently in POSIX-2001 it was changed to an  * uint32_t.  * To accomodate for this while preserving binary compatibility with  * the old interface, we prepend or append 32 bits of padding,  * depending on the (LP64) architecture's endianness.  *  * This should be deleted the next time the libc major number is  * incremented.  */
-end_comment
-
 begin_struct
 struct|struct
 name|netent
@@ -233,40 +229,10 @@ name|int
 name|n_addrtype
 decl_stmt|;
 comment|/* net address type */
-if|#
-directive|if
-name|__LONG_BIT
-operator|==
-literal|64
-operator|&&
-name|_BYTE_ORDER
-operator|==
-name|_BIG_ENDIAN
-name|uint32_t
-name|__n_pad0
-decl_stmt|;
-comment|/* ABI compatibility */
-endif|#
-directive|endif
 name|uint32_t
 name|n_net
 decl_stmt|;
 comment|/* network # */
-if|#
-directive|if
-name|__LONG_BIT
-operator|==
-literal|64
-operator|&&
-name|_BYTE_ORDER
-operator|==
-name|_LITTLE_ENDIAN
-name|uint32_t
-name|__n_pad0
-decl_stmt|;
-comment|/* ABI compatibility */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1016,37 +982,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__LONG_BIT
-operator|==
-literal|64
-end_if
-
-begin_function_decl
-name|struct
-name|netent
-modifier|*
-name|getnetbyaddr
-parameter_list|(
-name|unsigned
-name|long
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* ABI compatibility */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|struct
 name|netent
@@ -1059,11 +994,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|struct

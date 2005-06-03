@@ -481,20 +481,6 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__LONG_BIT
-operator|==
-literal|64
-name|ne
-operator|->
-name|__n_pad0
-operator|=
-literal|0
-expr_stmt|;
-comment|/* ABI compatibility */
-endif|#
-directive|endif
 name|ne
 operator|->
 name|n_addrtype
