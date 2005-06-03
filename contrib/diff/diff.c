@@ -3243,25 +3243,6 @@ name|output_style
 name|style
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|output_style
-operator|!=
-name|OUTPUT_NORMAL
-operator|&&
-name|output_style
-operator|!=
-name|style
-condition|)
-name|error
-argument_list|(
-literal|"conflicting specifications of output style"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|output_style
 operator|=
 name|style
