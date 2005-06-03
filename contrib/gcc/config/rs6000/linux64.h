@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for 64 bit PowerPC linux.    Copyright (C) 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for 64 bit PowerPC linux.    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -146,17 +146,22 @@ name|PROCESSOR_DEFAULT64
 value|PROCESSOR_PPC630
 end_define
 
+begin_comment
+comment|/* We don't need to generate entries in .fixup, except when    -mrelocatable or -mrelocatable-lib is given.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
-name|TARGET_RELOCATABLE
+name|RELOCATABLE_NEEDS_FIXUP
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_RELOCATABLE
-value|(!TARGET_64BIT&& (target_flags& MASK_RELOCATABLE))
+name|RELOCATABLE_NEEDS_FIXUP
+define|\
+value|(target_flags& target_flags_explicit& MASK_RELOCATABLE)
 end_define
 
 begin_undef
@@ -492,6 +497,19 @@ name|TARGET_PROTOTYPE
 value|0
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|RELOCATABLE_NEEDS_FIXUP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|RELOCATABLE_NEEDS_FIXUP
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -554,16 +572,6 @@ parameter_list|)
 define|\
 value|do { if (TARGET_64BIT) output_profile_hook (LABEL); } while (0)
 end_define
-
-begin_comment
-comment|/* We don't need to generate entries in .fixup.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|RELOCATABLE_NEEDS_FIXUP
-end_undef
 
 begin_comment
 comment|/* PowerPC64 Linux word-aligns FP doubles when -malign-power is given.  */
@@ -712,6 +720,34 @@ undef|#
 directive|undef
 name|MD_STARTFILE_PREFIX
 end_undef
+
+begin_comment
+comment|/* Linux doesn't support saving and restoring 64-bit regs in a 32-bit    process.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_MISSING_POWERPC64
+value|!TARGET_64BIT
+end_define
+
+begin_comment
+comment|/* glibc has float and long double forms of math functions.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_C99_FUNCTIONS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_C99_FUNCTIONS
+value|1
+end_define
 
 begin_undef
 undef|#
@@ -1291,7 +1327,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_ASM_FILE_END
-value|file_end_indicate_exec_stack
+value|rs6000_elf_end_indicate_exec_stack
 end_define
 
 begin_define
@@ -1308,10 +1344,6 @@ define|\
 value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
 end_define
 
-begin_comment
-comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1321,168 +1353,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|"config/rs6000/linux-unwind.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ucontext.h>
-end_include
-
-begin_enum
-enum|enum
-block|{
-name|SIGNAL_FRAMESIZE
-init|=
-literal|128
-block|}
-enum|;
-end_enum
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* During the 2.5 kernel series the kernel ucontext was changed, but    the new layout is compatible with the old one, so we just define    and use the old one here for simplicity and compatibility.  */
-end_comment
-
-begin_struct
-struct|struct
-name|kernel_old_ucontext
-block|{
-name|unsigned
-name|long
-name|uc_flags
-decl_stmt|;
-name|struct
-name|ucontext
-modifier|*
-name|uc_link
-decl_stmt|;
-name|stack_t
-name|uc_stack
-decl_stmt|;
-name|struct
-name|sigcontext_struct
-name|uc_mcontext
-decl_stmt|;
-name|sigset_t
-name|uc_sigmask
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_enum
-enum|enum
-block|{
-name|SIGNAL_FRAMESIZE
-init|=
-literal|64
-block|}
-enum|;
-end_enum
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
-begin_comment
-comment|/* If the current unwind info (FS) does not contain explicit info    saving R2, then we have to do a minor amount of code reading to    figure out if it was saved.  The big problem here is that the    code that does the save/restore is generated by the linker, so    we have no good way to determine at compile time what to do.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD_FROB_UPDATE_CONTEXT
-parameter_list|(
-name|CTX
-parameter_list|,
-name|FS
-parameter_list|)
-define|\
-value|do {									\     if ((FS)->regs.reg[2].how == REG_UNSAVED)				\       {									\ 	unsigned int *insn						\ 	  = (unsigned int *)						\ 	    _Unwind_GetGR ((CTX), LINK_REGISTER_REGNUM);		\ 	if (*insn == 0xE8410028)					\ 	  _Unwind_SetGRPtr ((CTX), 2, (CTX)->cfa + 40);			\       }									\   } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD_FALLBACK_FRAME_STATE_FOR
-parameter_list|(
-name|CONTEXT
-parameter_list|,
-name|FS
-parameter_list|,
-name|SUCCESS
-parameter_list|)
-define|\
-value|do {									\     unsigned char *pc_ = (CONTEXT)->ra;					\     struct sigcontext *sc_;						\     long new_cfa_;							\     int i_;								\ 									\
-comment|/* addi r1, r1, 128; li r0, 0x0077; sc  (sigreturn) */
-value|\
-comment|/* addi r1, r1, 128; li r0, 0x00AC; sc  (rt_sigreturn) */
-value|\     if (*(unsigned int *) (pc_+0) != 0x38210000 + SIGNAL_FRAMESIZE	\ 	|| *(unsigned int *) (pc_+8) != 0x44000002)			\       break;								\     if (*(unsigned int *) (pc_+4) == 0x38000077)			\       {									\ 	struct sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  struct sigcontext sigctx;					\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->sigctx;						\       }									\     else if (*(unsigned int *) (pc_+4) == 0x380000AC)			\       {									\ 	struct rt_sigframe {						\ 	  int tramp[6];							\ 	  struct siginfo *pinfo;					\ 	  struct ucontext *puc;						\ 	} *rt_ = (struct rt_sigframe *) pc_;				\ 	sc_ =&rt_->puc->uc_mcontext;					\       }									\     else								\       break;								\     									\     new_cfa_ = sc_->regs->gpr[STACK_POINTER_REGNUM];			\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = STACK_POINTER_REGNUM;				\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     									\     for (i_ = 0; i_< 32; i_++)						\       if (i_ != STACK_POINTER_REGNUM)					\ 	{	    							\ 	  (FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	  (FS)->regs.reg[i_].loc.offset 				\ 	    = (long)&(sc_->regs->gpr[i_]) - new_cfa_;			\ 	}								\ 									\     (FS)->regs.reg[LINK_REGISTER_REGNUM].how = REG_SAVED_OFFSET;	\     (FS)->regs.reg[LINK_REGISTER_REGNUM].loc.offset 			\       = (long)&(sc_->regs->link) - new_cfa_;				\ 									\     (FS)->regs.reg[ARG_POINTER_REGNUM].how = REG_SAVED_OFFSET;		\     (FS)->regs.reg[ARG_POINTER_REGNUM].loc.offset 			\       = (long)&(sc_->regs->nip) - new_cfa_;				\     (FS)->retaddr_column = ARG_POINTER_REGNUM;				\     goto SUCCESS;							\   } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MD_FALLBACK_FRAME_STATE_FOR
-parameter_list|(
-name|CONTEXT
-parameter_list|,
-name|FS
-parameter_list|,
-name|SUCCESS
-parameter_list|)
-define|\
-value|do {									\     unsigned char *pc_ = (CONTEXT)->ra;					\     struct sigcontext *sc_;						\     long new_cfa_;							\     int i_;								\ 									\
-comment|/* li r0, 0x7777; sc  (sigreturn old)  */
-value|\
-comment|/* li r0, 0x0077; sc  (sigreturn new)  */
-value|\
-comment|/* li r0, 0x6666; sc  (rt_sigreturn old)  */
-value|\
-comment|/* li r0, 0x00AC; sc  (rt_sigreturn new)  */
-value|\     if (*(unsigned int *) (pc_+4) != 0x44000002)			\       break;								\     if (*(unsigned int *) (pc_+0) == 0x38007777				\ 	|| *(unsigned int *) (pc_+0) == 0x38000077)			\       {									\ 	struct sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  struct sigcontext sigctx;					\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->sigctx;						\       }									\     else if (*(unsigned int *) (pc_+0) == 0x38006666			\ 	     || *(unsigned int *) (pc_+0) == 0x380000AC)		\       {									\ 	struct rt_sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  unsigned long _unused[2];					\ 	  struct siginfo *pinfo;					\ 	  void *puc;							\ 	  struct siginfo info;						\ 	  struct kernel_old_ucontext uc;				\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->uc.uc_mcontext;					\       }									\     else								\       break;								\     									\     new_cfa_ = sc_->regs->gpr[STACK_POINTER_REGNUM];			\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = STACK_POINTER_REGNUM;				\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     									\     for (i_ = 0; i_< 32; i_++)						\       if (i_ != STACK_POINTER_REGNUM)					\ 	{	    							\ 	  (FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	  (FS)->regs.reg[i_].loc.offset 				\ 	    = (long)&(sc_->regs->gpr[i_]) - new_cfa_;			\ 	}								\ 									\     (FS)->regs.reg[LINK_REGISTER_REGNUM].how = REG_SAVED_OFFSET;	\     (FS)->regs.reg[LINK_REGISTER_REGNUM].loc.offset 			\       = (long)&(sc_->regs->link) - new_cfa_;				\ 									\     (FS)->regs.reg[CR0_REGNO].how = REG_SAVED_OFFSET;			\     (FS)->regs.reg[CR0_REGNO].loc.offset 				\       = (long)&(sc_->regs->nip) - new_cfa_;				\     (FS)->retaddr_column = CR0_REGNO;					\     goto SUCCESS;							\   } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|OS_MISSING_POWERPC64
-value|!TARGET_64BIT
-end_define
 
 end_unit
 

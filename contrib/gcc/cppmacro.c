@@ -7359,6 +7359,7 @@ literal|1
 expr_stmt|;
 comment|/* "," */
 block|}
+comment|/* This should match below where we fill in the buffer.  */
 if|if
 condition|(
 name|CPP_OPTION
@@ -7440,10 +7441,7 @@ name|cpp_token_len
 argument_list|(
 name|token
 argument_list|)
-operator|+
-literal|1
 expr_stmt|;
-comment|/* Includes room for ' '.  */
 if|if
 condition|(
 name|token
@@ -7469,6 +7467,18 @@ operator|+=
 literal|3
 expr_stmt|;
 comment|/* " ##" */
+if|if
+condition|(
+name|token
+operator|->
+name|flags
+operator|&
+name|PREV_WHITE
+condition|)
+name|len
+operator|++
+expr_stmt|;
+comment|/* " " */
 block|}
 block|}
 if|if
@@ -7755,24 +7765,6 @@ operator|==
 name|CPP_MACRO_ARG
 condition|)
 block|{
-name|len
-operator|=
-name|NODE_LEN
-argument_list|(
-name|macro
-operator|->
-name|params
-index|[
-name|token
-operator|->
-name|val
-operator|.
-name|arg_no
-operator|-
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 name|memcpy
 argument_list|(
 name|buffer
@@ -7793,12 +7785,40 @@ literal|1
 index|]
 argument_list|)
 argument_list|,
-name|len
+name|NODE_LEN
+argument_list|(
+name|macro
+operator|->
+name|params
+index|[
+name|token
+operator|->
+name|val
+operator|.
+name|arg_no
+operator|-
+literal|1
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|buffer
 operator|+=
-name|len
+name|NODE_LEN
+argument_list|(
+name|macro
+operator|->
+name|params
+index|[
+name|token
+operator|->
+name|val
+operator|.
+name|arg_no
+operator|-
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 else|else

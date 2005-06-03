@@ -170,5 +170,21 @@ name|RS6000_CALL_GLUE
 value|"{cror 31,31,31|nop}"
 end_define
 
+begin_comment
+comment|/* The IBM AIX 4.x assembler doesn't support forward references in    .set directives.  We handle this by deferring the output of .set    directives to the end of the compilation unit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFERRED_OUTPUT_DEFS
+parameter_list|(
+name|DECL
+parameter_list|,
+name|TARGET
+parameter_list|)
+value|true
+end_define
+
 end_unit
 

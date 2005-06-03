@@ -3096,6 +3096,15 @@ return|return
 name|true
 return|;
 block|}
+comment|/* Account for declarations as conditions.  */
+name|expand_cond
+argument_list|(
+name|IF_COND
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|THEN_CLAUSE
@@ -3241,7 +3250,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Expand an unreachable statement list.  This function skips all    statements preceding the first potentially reachable label and    then returns the label (or, in same cases, the statement after    one containing the label).  */
+comment|/* Expand an unreachable statement list.  This function skips all    statements preceding the first potentially reachable label and    then returns the label (or, in same cases, the statement after    one containing the label).  This function returns NULL_TREE if    the end of the given statement list is unreachable, and a    non-NULL value, possibly error_mark_node, otherwise.  */
 end_comment
 
 begin_function
@@ -3408,6 +3417,13 @@ name|TREE_CHAIN
 argument_list|(
 name|t
 argument_list|)
+condition|?
+name|TREE_CHAIN
+argument_list|(
+name|t
+argument_list|)
+else|:
+name|error_mark_node
 return|;
 break|break;
 case|case
@@ -3432,6 +3448,13 @@ name|TREE_CHAIN
 argument_list|(
 name|t
 argument_list|)
+condition|?
+name|TREE_CHAIN
+argument_list|(
+name|t
+argument_list|)
+else|:
+name|error_mark_node
 return|;
 case|case
 name|COMPOUND_STMT
@@ -3469,6 +3492,13 @@ name|TREE_CHAIN
 argument_list|(
 name|t
 argument_list|)
+condition|?
+name|TREE_CHAIN
+argument_list|(
+name|t
+argument_list|)
+else|:
+name|error_mark_node
 return|;
 block|}
 name|warn

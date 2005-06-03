@@ -44,8 +44,17 @@ name|long
 modifier|*
 name|gp
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__visibility__
+parameter_list|(
+function_decl|"hidden"
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

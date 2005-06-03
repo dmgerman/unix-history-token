@@ -5063,6 +5063,17 @@ name|strlen
 argument_list|(
 name|reason
 argument_list|)
+operator|&&
+operator|!
+name|lookup_attribute
+argument_list|(
+literal|"noinline"
+argument_list|,
+name|DECL_ATTRIBUTES
+argument_list|(
+name|fn
+argument_list|)
+argument_list|)
 condition|)
 block|{
 name|warning
@@ -5971,16 +5982,13 @@ name|decl_map
 operator|=
 name|st
 expr_stmt|;
-comment|/* The new expression has side-effects if the old one did.  */
+comment|/* Although, from the semantic viewpoint, the new expression has      side-effects only if the old one did, it is not possible, from      the technical viewpoint, to evaluate the body of a function      multiple times without serious havoc.  */
 name|TREE_SIDE_EFFECTS
 argument_list|(
 name|expr
 argument_list|)
 operator|=
-name|TREE_SIDE_EFFECTS
-argument_list|(
-name|t
-argument_list|)
+literal|1
 expr_stmt|;
 comment|/* Replace the call by the inlined body.  Wrap it in an      EXPR_WITH_FILE_LOCATION so that we'll get debugging line notes      pointing to the right place.  */
 ifndef|#

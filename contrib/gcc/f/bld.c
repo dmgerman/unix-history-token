@@ -4934,7 +4934,7 @@ name|nc
 operator|->
 name|consttype
 operator|=
-name|FFEBLD_constREAL1
+name|FFEBLD_constREAL2
 expr_stmt|;
 name|nc
 operator|->

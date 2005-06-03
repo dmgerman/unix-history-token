@@ -1319,14 +1319,18 @@ name|rtx
 name|new_insn
 decl_stmt|;
 comment|/* END might be a note, so get the last nonnote insn of the block.  */
-name|end
-operator|=
-name|next_nonnote_insn
-argument_list|(
-name|PREV_INSN
+if|if
+condition|(
+name|NOTE_P
 argument_list|(
 name|end
 argument_list|)
+condition|)
+name|end
+operator|=
+name|prev_nonnote_insn
+argument_list|(
+name|end
 argument_list|)
 expr_stmt|;
 comment|/* If the call was the end of the block, then we're OK.  */

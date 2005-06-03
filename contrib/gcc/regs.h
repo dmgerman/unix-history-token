@@ -153,13 +153,6 @@ name|reg_n_info
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|bitmap_head
-name|subregs_of_mode
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Indexed by n, gives number of times (REG n) is used or set.  */
 end_comment

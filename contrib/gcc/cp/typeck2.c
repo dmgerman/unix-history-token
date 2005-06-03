@@ -1427,6 +1427,14 @@ name|type
 argument_list|)
 condition|)
 block|{
+name|tree
+name|cons
+init|=
+name|copy_node
+argument_list|(
+name|init
+argument_list|)
+decl_stmt|;
 name|CONSTRUCTOR_ELTS
 argument_list|(
 name|init
@@ -1444,7 +1452,7 @@ name|type
 argument_list|,
 name|dest
 argument_list|,
-name|init
+name|cons
 argument_list|)
 expr_stmt|;
 name|code
@@ -1455,6 +1463,11 @@ name|EXPR_STMT
 argument_list|,
 name|code
 argument_list|)
+expr_stmt|;
+operator|*
+name|pcode
+operator|=
+name|code
 expr_stmt|;
 name|pcode
 operator|=
@@ -1759,7 +1772,6 @@ literal|"initializer"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* End of special C++ code.  */
 comment|/* Digest the specified initializer into an expression.  */
 name|value
 operator|=
@@ -1776,45 +1788,12 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Store the expression if valid; else report error.  */
+comment|/* If the initializer is not a constant, fill in DECL_INITIAL with      the bits that are constant, and then return an expression that      will perform the dynamic initialization.  */
 if|if
 condition|(
-name|TREE_CODE
-argument_list|(
 name|value
-argument_list|)
-operator|==
-name|ERROR_MARK
-condition|)
-empty_stmt|;
-comment|/* Other code expects that initializers for objects of types that need      constructing never make it into DECL_INITIAL, and passes 'init' to      build_aggr_init without checking DECL_INITIAL.  So just return.  */
-elseif|else
-if|if
-condition|(
-name|TYPE_NEEDS_CONSTRUCTING
-argument_list|(
-name|type
-argument_list|)
-condition|)
-return|return
-name|build
-argument_list|(
-name|INIT_EXPR
-argument_list|,
-name|type
-argument_list|,
-name|decl
-argument_list|,
-name|value
-argument_list|)
-return|;
-elseif|else
-if|if
-condition|(
-name|TREE_STATIC
-argument_list|(
-name|decl
-argument_list|)
+operator|!=
+name|error_mark_node
 operator|&&
 operator|(
 operator|!
@@ -1843,7 +1822,7 @@ argument_list|,
 name|value
 argument_list|)
 return|;
-comment|/* Store the VALUE in DECL_INITIAL.  If we're building a      statement-tree we will actually expand the initialization later      when we output this function.  */
+comment|/* If the value is a constant, just put it in DECL_INITIAL.  If DECL      is an automatic variable, the middle end will turn this into a      dynamic initialization later.  */
 name|DECL_INITIAL
 argument_list|(
 name|decl

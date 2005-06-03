@@ -16,38 +16,6 @@ name|TARGET_VERSION
 value|fprintf (stderr, " (BeOS/PowerPC)");
 end_define
 
-begin_comment
-comment|/* Enable AIX XL compiler calling convention breakage compatibility.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_XL_CALL
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_XL_CALL
-value|(target_flags& MASK_XL_CALL)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{"xl-call", 		MASK_XL_CALL,					\    N_("Always pass floating-point arguments in memory") },		\   {"no-xl-call",	- MASK_XL_CALL,					\    N_("Don't always pass floating-point arguments in memory") },	\   {"threads",		0},						\   {"pe",		0},
-end_define
-
 begin_undef
 undef|#
 directive|undef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Functions related to invoking methods and overloaded functions.    Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998,     1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com) and    modified by Brendan Kehoe (brendan@cygnus.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Functions related to invoking methods and overloaded functions.    Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998,     1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com) and    modified by Brendan Kehoe (brendan@cygnus.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -633,6 +633,8 @@ parameter_list|,
 name|tree
 parameter_list|,
 name|tree
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1875,6 +1877,10 @@ parameter_list|)
 value|(USER_CONV_CAND (NODE)->fn)
 end_define
 
+begin_comment
+comment|/* Returns true iff T is a null pointer constant in the sense of    [conv.ptr].  */
+end_comment
+
 begin_function
 name|bool
 name|null_ptr_cst_p
@@ -1884,6 +1890,20 @@ name|t
 parameter_list|)
 block|{
 comment|/* [conv.ptr]       A null pointer constant is an integral constant expression      (_expr.const_) rvalue of integer type that evaluates to zero.  */
+if|if
+condition|(
+name|DECL_INTEGRAL_CONSTANT_VAR_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+name|t
+operator|=
+name|decl_constant_value
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|t
@@ -2141,6 +2161,9 @@ name|from
 parameter_list|,
 name|tree
 name|expr
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|enum
@@ -2399,6 +2422,8 @@ name|from
 argument_list|)
 argument_list|,
 name|NULL_TREE
+argument_list|,
+name|flags
 argument_list|)
 decl_stmt|;
 if|if
@@ -2813,6 +2838,20 @@ name|conv
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|same_type_p
+argument_list|(
+name|fbase
+argument_list|,
+name|tbase
+argument_list|)
+condition|)
+return|return
+name|NULL
+return|;
 block|}
 elseif|else
 if|if
@@ -3402,6 +3441,13 @@ return|;
 elseif|else
 if|if
 condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|LOOKUP_CONSTRUCTOR_CALLABLE
+operator|)
+operator|&&
 name|IS_AGGR_TYPE
 argument_list|(
 name|to
@@ -4635,6 +4681,8 @@ argument_list|,
 name|from
 argument_list|,
 name|expr
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -8351,6 +8399,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* OBJ is being used in an expression like "OBJ.f (...)".  In other    words, it is about to become the "this" pointer for a member    function call.  Take the address of the object.  */
+end_comment
+
 begin_function
 specifier|static
 name|tree
@@ -8360,7 +8412,17 @@ name|tree
 name|obj
 parameter_list|)
 block|{
-comment|/* Fix this to work on non-lvalues.  */
+comment|/* In a template, we are only concerned about the type of the      expression, so we can take a shortcut.  */
+if|if
+condition|(
+name|processing_template_decl
+condition|)
+return|return
+name|build_address
+argument_list|(
+name|obj
+argument_list|)
+return|;
 return|return
 name|build_unary_op
 argument_list|(
@@ -12582,7 +12644,7 @@ name|valid_operands
 label|:
 name|result
 operator|=
-name|fold
+name|fold_if_not_in_template
 argument_list|(
 name|build
 argument_list|(
@@ -13612,65 +13674,6 @@ name|overloaded_p
 operator|=
 name|true
 expr_stmt|;
-if|if
-condition|(
-name|warn_synth
-operator|&&
-name|fnname
-operator|==
-name|ansi_assopname
-argument_list|(
-name|NOP_EXPR
-argument_list|)
-operator|&&
-name|DECL_ARTIFICIAL
-argument_list|(
-name|cand
-operator|->
-name|fn
-argument_list|)
-operator|&&
-name|candidates
-operator|->
-name|next
-operator|&&
-operator|!
-name|candidates
-operator|->
-name|next
-operator|->
-name|next
-condition|)
-block|{
-name|warning
-argument_list|(
-literal|"using synthesized `%#D' for copy assignment"
-argument_list|,
-name|cand
-operator|->
-name|fn
-argument_list|)
-expr_stmt|;
-name|cp_warning_at
-argument_list|(
-literal|"  where cfront would use `%#D'"
-argument_list|,
-name|cand
-operator|==
-name|candidates
-condition|?
-name|candidates
-operator|->
-name|next
-operator|->
-name|fn
-else|:
-name|candidates
-operator|->
-name|fn
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 name|build_over_call
 argument_list|(
@@ -14751,6 +14754,8 @@ argument_list|,
 name|LOOKUP_NORMAL
 operator||
 name|LOOKUP_ONLYCONVERTING
+operator||
+name|LOOKUP_NO_CONVERSION
 operator||
 name|LOOKUP_CONSTRUCTOR_CALLABLE
 argument_list|)
@@ -23658,6 +23663,16 @@ comment|/*issue_conversion_warnings=*/
 name|true
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error_operand_p
+argument_list|(
+name|expr
+argument_list|)
+condition|)
+return|return
+name|error_mark_node
+return|;
 if|if
 condition|(
 operator|!

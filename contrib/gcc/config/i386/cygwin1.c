@@ -56,7 +56,10 @@ parameter_list|)
 block|{
 name|putenv
 argument_list|(
+name|xstrdup
+argument_list|(
 literal|"GCC_CYGWIN_MINGW=0"
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -79,7 +82,10 @@ literal|0
 condition|)
 name|putenv
 argument_list|(
+name|xstrdup
+argument_list|(
 literal|"GCC_CYGWIN_WIN32=0"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -97,7 +103,10 @@ literal|0
 condition|)
 name|putenv
 argument_list|(
+name|xstrdup
+argument_list|(
 literal|"GCC_CYGWIN_WIN32=1"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -181,7 +190,10 @@ expr_stmt|;
 block|}
 name|putenv
 argument_list|(
+name|xstrdup
+argument_list|(
 literal|"GCC_CYGWIN_MINGW=1"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

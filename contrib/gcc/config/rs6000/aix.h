@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX.    Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX.    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -412,21 +412,21 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_XL_CALL
+name|TARGET_XL_COMPAT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|MASK_XL_CALL
+name|MASK_XL_COMPAT
 value|0x40000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_XL_CALL
-value|(target_flags& MASK_XL_CALL)
+name|TARGET_XL_COMPAT
+value|(target_flags& MASK_XL_COMPAT)
 end_define
 
 begin_undef
@@ -440,7 +440,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{"xl-call", 		MASK_XL_CALL,					\    N_("Always pass floating-point arguments in memory") },		\   {"no-xl-call",	- MASK_XL_CALL,					\    N_("Don't always pass floating-point arguments in memory") },	\   SUBSUBTARGET_SWITCHES
+value|{"xl-compat",		MASK_XL_COMPAT,					\    N_("Conform more closely to IBM XLC semantics") },			\   {"no-xl-compat",	- MASK_XL_COMPAT,				\    N_("Default GCC semantics that differ from IBM XLC") },		\   SUBSUBTARGET_SWITCHES
 end_define
 
 begin_define
@@ -500,7 +500,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__powerpc64__
+name|__64BIT__
 end_ifdef
 
 begin_define

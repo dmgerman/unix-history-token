@@ -8,7 +8,7 @@ comment|/* Compile this one with gcc.  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1999, 2000, 2002, 2003  Free Software Foundation, Inc.    Contributed by Mumit Khan<khan@xraylith.wisc.edu>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1999, 2000, 2002, 2003, 2004  Free Software Foundation, Inc.    Contributed by Mumit Khan<khan@xraylith.wisc.edu>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ name|GCC_GTHR_WIN32_H
 end_define
 
 begin_comment
-comment|/* Windows32 threads specific definitions. The windows32 threading model    does not map well into pthread-inspired gcc's threading model, and so    there are caveats one needs to be aware of.     1. The destructor supplied to __gthread_key_create is ignored for       generic x86-win32 ports. This will certainly cause memory leaks       due to unreclaimed eh contexts (sizeof (eh_context) is at least       24 bytes for x86 currently).        This memory leak may be significant for long-running applications       that make heavy use of C++ EH.        However, Mingw runtime (version 0.3 or newer) provides a mechanism       to emulate pthreads key dtors; the runtime provides a special DLL,       linked in if -mthreads option is specified, that runs the dtors in       the reverse order of registration when each thread exits. If       -mthreads option is not given, a stub is linked in instead of the       DLL, which results in memory leak. Other x86-win32 ports can use       the same technique of course to avoid the leak.     2. The error codes returned are non-POSIX like, and cast into ints.       This may cause incorrect error return due to truncation values on       hw where sizeof (DWORD)> sizeof (int).     3. We might consider using Critical Sections instead of Windows32       mutexes for better performance, but emulating __gthread_mutex_trylock       interface becomes more complicated (Win9x does not support       TryEnterCriticalSectioni, while NT does).     The basic framework should work well enough. In the long term, GCC    needs to use Structured Exception Handling on Windows32.  */
+comment|/* Windows32 threads specific definitions. The windows32 threading model    does not map well into pthread-inspired gcc's threading model, and so    there are caveats one needs to be aware of.     1. The destructor supplied to __gthread_key_create is ignored for       generic x86-win32 ports. This will certainly cause memory leaks       due to unreclaimed eh contexts (sizeof (eh_context) is at least       24 bytes for x86 currently).        This memory leak may be significant for long-running applications       that make heavy use of C++ EH.        However, Mingw runtime (version 0.3 or newer) provides a mechanism       to emulate pthreads key dtors; the runtime provides a special DLL,       linked in if -mthreads option is specified, that runs the dtors in       the reverse order of registration when each thread exits. If       -mthreads option is not given, a stub is linked in instead of the       DLL, which results in memory leak. Other x86-win32 ports can use       the same technique of course to avoid the leak.     2. The error codes returned are non-POSIX like, and cast into ints.       This may cause incorrect error return due to truncation values on       hw where sizeof (DWORD)> sizeof (int).     3. We are currently using a special mutex instead of the Critical       Sections, since Win9x does not support TryEnterCriticalSection       (while NT does).     The basic framework should work well enough. In the long term, GCC    needs to use Structured Exception Handling on Windows32.  */
 end_comment
 
 begin_define
@@ -917,8 +917,16 @@ block|}
 name|__gthread_once_t
 typedef|;
 typedef|typedef
+struct|struct
+block|{
+name|long
+name|counter
+decl_stmt|;
 name|void
 modifier|*
+name|sema
+decl_stmt|;
+block|}
 name|__gthread_mutex_t
 typedef|;
 define|#
@@ -932,7 +940,7 @@ value|__gthread_mutex_init_function
 define|#
 directive|define
 name|__GTHREAD_MUTEX_INIT_DEFAULT
-value|0
+value|{-1, 0}
 if|#
 directive|if
 name|__MINGW32_MAJOR_VERSION
@@ -978,6 +986,49 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* __MINGW32__ version */
+ifdef|#
+directive|ifdef
+name|__GTHREAD_I486_INLINE_LOCK_PRIMITIVES
+specifier|static
+specifier|inline
+name|long
+name|__gthr_i486_lock_cmp_xchg
+parameter_list|(
+name|long
+modifier|*
+name|dest
+parameter_list|,
+name|long
+name|xchg
+parameter_list|,
+name|long
+name|comperand
+parameter_list|)
+block|{
+name|long
+name|result
+decl_stmt|;
+asm|__asm__
+specifier|__volatile__
+asm|("\n\ 	lock\n\ 	cmpxchg{l} {%4, %1|%1, %4}\n" 	: "=a" (result), "=m" (*dest) 	: "0" (comperand), "m" (*dest), "r" (xchg) 	: "cc");
+return|return
+name|result
+return|;
+block|}
+define|#
+directive|define
+name|__GTHR_W32_InterlockedCompareExchange
+value|__gthr_i486_lock_cmp_xchg
+else|#
+directive|else
+comment|/* __GTHREAD_I486_INLINE_LOCK_PRIMITIVES */
+define|#
+directive|define
+name|__GTHR_W32_InterlockedCompareExchange
+value|InterlockedCompareExchange
+endif|#
+directive|endif
+comment|/* __GTHREAD_I486_INLINE_LOCK_PRIMITIVES */
 specifier|static
 specifier|inline
 name|int
@@ -1610,15 +1661,24 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
-comment|/* Create unnamed mutex with default security attr and no initial owner.  */
-operator|*
 name|mutex
+operator|->
+name|counter
 operator|=
-name|CreateMutex
+operator|-
+literal|1
+expr_stmt|;
+name|mutex
+operator|->
+name|sema
+operator|=
+name|CreateSemaphore
 argument_list|(
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+literal|65535
 argument_list|,
 name|NULL
 argument_list|)
@@ -1647,10 +1707,21 @@ condition|)
 block|{
 if|if
 condition|(
+name|InterlockedIncrement
+argument_list|(
+operator|&
+name|mutex
+operator|->
+name|counter
+argument_list|)
+operator|==
+literal|0
+operator|||
 name|WaitForSingleObject
 argument_list|(
-operator|*
 name|mutex
+operator|->
+name|sema
 argument_list|,
 name|INFINITE
 argument_list|)
@@ -1662,10 +1733,21 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
+block|{
+comment|/* WaitForSingleObject returns WAIT_FAILED, and we can only do 	     some best-effort cleanup here.  */
+name|InterlockedDecrement
+argument_list|(
+operator|&
+name|mutex
+operator|->
+name|counter
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 return|return
 name|status
@@ -1694,15 +1776,20 @@ condition|)
 block|{
 if|if
 condition|(
-name|WaitForSingleObject
+name|__GTHR_W32_InterlockedCompareExchange
 argument_list|(
-operator|*
+operator|&
 name|mutex
+operator|->
+name|counter
 argument_list|,
 literal|0
+argument_list|,
+operator|-
+literal|1
 argument_list|)
-operator|==
-name|WAIT_OBJECT_0
+operator|<
+literal|0
 condition|)
 name|status
 operator|=
@@ -1733,22 +1820,36 @@ condition|(
 name|__gthread_active_p
 argument_list|()
 condition|)
-return|return
-operator|(
-name|ReleaseMutex
+block|{
+if|if
+condition|(
+name|InterlockedDecrement
 argument_list|(
-operator|*
+operator|&
 name|mutex
+operator|->
+name|counter
 argument_list|)
-operator|!=
+operator|>=
 literal|0
-operator|)
+condition|)
+return|return
+name|ReleaseSemaphore
+argument_list|(
+name|mutex
+operator|->
+name|sema
+argument_list|,
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 condition|?
 literal|0
 else|:
 literal|1
 return|;
-else|else
+block|}
 return|return
 literal|0
 return|;

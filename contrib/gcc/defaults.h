@@ -359,6 +359,33 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Decide whether to defer emitting the assembler output for an equate    of two values.  The default is to not defer output.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TARGET_DEFERRED_OUTPUT_DEFS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFERRED_OUTPUT_DEFS
+parameter_list|(
+name|DECL
+parameter_list|,
+name|TARGET
+parameter_list|)
+value|false
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* This is how to output the definition of a user-level label named    NAME, such as the label on a static function or variable NAME.  */
 end_comment
 

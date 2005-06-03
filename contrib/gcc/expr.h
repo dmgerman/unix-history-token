@@ -2185,6 +2185,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Discard any pending stack adjustment.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|discard_pending_stack_adjust
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* When exiting from function, if safe, clear out any pending stack adjust    so the adjustment won't get done.  */
 end_comment
 

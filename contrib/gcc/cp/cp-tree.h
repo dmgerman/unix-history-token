@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for C++ parsing and type checking.    Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for C++ parsing and type checking.    Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -5765,6 +5765,21 @@ value|(TREE_LANG_FLAG_2 (VAR_DECL_CHECK (NODE)))
 end_define
 
 begin_comment
+comment|/* Nonzero for a VAR_DECL that can be used in an integral constant    expression.            [expr.const]        An integral constant-expression can only involve ... const       variables of static or enumeration types initialized with       constant expressions ...       The standard does not require that the expression be non-volatile.    G++ implements the proposed correction in DR 457.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_INTEGRAL_CONSTANT_VAR_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TREE_CODE (NODE) == VAR_DECL				\&& CP_TYPE_CONST_NON_VOLATILE_P (TREE_TYPE (NODE))	\&& INTEGRAL_OR_ENUMERATION_TYPE_P (TREE_TYPE (NODE))	\&& DECL_INITIALIZED_BY_CONSTANT_EXPRESSION_P (NODE))
+end_define
+
+begin_comment
 comment|/* Nonzero if the DECL was initialized in the class definition itself,    rather than outside the class.  This is used for both static member    VAR_DECLS, and FUNTION_DECLS that are defined in the class.  */
 end_comment
 
@@ -8384,7 +8399,7 @@ value|(DECL_LANG_SPECIFIC (FUNCTION_DECL_CHECK (DECL))->decl_flags.u.thunk_alias
 end_define
 
 begin_comment
-comment|/* For thunk NODE, this is the FUNCTION_DECL thunked to.  */
+comment|/* For thunk NODE, this is the FUNCTION_DECL thunked to.  It is    possible for the target to be a thunk too.  */
 end_comment
 
 begin_define
@@ -12882,6 +12897,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|tree
+name|check_var_type
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|bool
@@ -14816,16 +14843,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|maybe_check_template_type
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|tree
 name|most_specialized_instantiation
 parameter_list|(
@@ -15766,6 +15783,16 @@ name|original_binfo
 parameter_list|(
 name|tree
 parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|shared_member_p
+parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
@@ -17695,6 +17722,16 @@ name|cp_auto_var_in_fn_p
 parameter_list|(
 name|tree
 parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_if_not_in_template
+parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;

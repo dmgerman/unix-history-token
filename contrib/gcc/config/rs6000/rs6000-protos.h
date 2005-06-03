@@ -1135,7 +1135,7 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
-name|output_e500_flip_gt_bit
+name|output_e500_flip_eq_bit
 parameter_list|(
 name|rtx
 parameter_list|,
