@@ -250,6 +250,8 @@ comment|/* send to ng_ipfw		*/
 name|O_NGTEE
 block|,
 comment|/* copy to ng_ipfw		*/
+name|O_IP4
+block|,
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
