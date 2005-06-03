@@ -250,5 +250,15 @@ name|TARGET_HAS_F_SETLKW
 value|1
 end_define
 
+begin_comment
+comment|/* Define this so we can compile MS code for use with WINE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_PRAGMA_PACK_PUSH_POP
+end_define
+
 end_unit
 
