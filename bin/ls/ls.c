@@ -602,6 +602,13 @@ comment|/* sort by time vice name */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|f_sizesort
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|f_type
 decl_stmt|;
@@ -918,7 +925,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ABCFGHLPRTWZabcdfghiklmnopqrstuwx"
+literal|"1ABCFGHLPRSTWZabcdfghiklmnopqrstuwx"
 argument_list|)
 operator|)
 operator|!=
@@ -1268,6 +1275,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'S'
+case|:
+name|f_sizesort
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'W'
 case|:
 name|f_whiteout
@@ -1503,7 +1518,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * If not -F, -i, -l, -s or -t options, don't require stat 	 * information, unless in color mode in which case we do 	 * need this to determine which colors to display. 	 */
+comment|/* 	 * If not -F, -i, -l, -s, -S or -t options, don't require stat 	 * information, unless in color mode in which case we do 	 * need this to determine which colors to display. 	 */
 if|if
 condition|(
 operator|!
@@ -1517,6 +1532,9 @@ name|f_size
 operator|&&
 operator|!
 name|f_timesort
+operator|&&
+operator|!
+name|f_sizesort
 operator|&&
 operator|!
 name|f_type
@@ -1609,6 +1627,9 @@ if|if
 condition|(
 operator|!
 name|f_timesort
+operator|&&
+operator|!
+name|f_sizesort
 condition|)
 name|sortfcn
 operator|=
@@ -1632,6 +1653,15 @@ name|sortfcn
 operator|=
 name|revstatcmp
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|f_sizesort
+condition|)
+name|sortfcn
+operator|=
+name|revsizecmp
+expr_stmt|;
 else|else
 comment|/* Use modification time. */
 name|sortfcn
@@ -1645,6 +1675,9 @@ if|if
 condition|(
 operator|!
 name|f_timesort
+operator|&&
+operator|!
+name|f_sizesort
 condition|)
 name|sortfcn
 operator|=
@@ -1667,6 +1700,15 @@ condition|)
 name|sortfcn
 operator|=
 name|statcmp
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|f_sizesort
+condition|)
+name|sortfcn
+operator|=
+name|sizecmp
 expr_stmt|;
 else|else
 comment|/* Use modification time. */
