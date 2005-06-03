@@ -7198,7 +7198,7 @@ name|__left
 decl_stmt|;
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==

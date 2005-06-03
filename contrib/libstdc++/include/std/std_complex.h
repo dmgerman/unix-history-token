@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- complex number classes.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
 end_comment
 
 begin_comment
@@ -4236,28 +4236,7 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCXX_BUGGY_COMPLEX
-end_ifdef
-
-begin_expr_stmt
-name|complex
-argument_list|(
-specifier|const
-name|complex
-operator|&
-name|__z
-argument_list|)
-operator|:
-name|_M_value
-argument_list|(
-argument|__z._M_value
-argument_list|)
-block|{ }
-endif|#
-directive|endif
+begin_decl_stmt
 name|explicit
 name|complex
 argument_list|(
@@ -4268,8 +4247,8 @@ name|double
 operator|>
 operator|&
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|explicit
@@ -5156,28 +5135,7 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCXX_BUGGY_COMPLEX
-end_ifdef
-
 begin_expr_stmt
-name|complex
-argument_list|(
-specifier|const
-name|complex
-operator|&
-name|__z
-argument_list|)
-operator|:
-name|_M_value
-argument_list|(
-argument|__z._M_value
-argument_list|)
-block|{ }
-endif|#
-directive|endif
 name|complex
 argument_list|(
 specifier|const
@@ -6071,28 +6029,7 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCXX_BUGGY_COMPLEX
-end_ifdef
-
 begin_expr_stmt
-name|complex
-argument_list|(
-specifier|const
-name|complex
-operator|&
-name|__z
-argument_list|)
-operator|:
-name|_M_value
-argument_list|(
-argument|__z._M_value
-argument_list|)
-block|{ }
-endif|#
-directive|endif
 name|complex
 argument_list|(
 specifier|const

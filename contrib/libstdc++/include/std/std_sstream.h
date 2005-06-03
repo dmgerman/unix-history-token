@@ -281,17 +281,13 @@ name|__streambuf_type
 argument_list|()
 decl_stmt|,
 name|_M_mode
-argument_list|()
-decl_stmt|,
-name|_M_string
-argument_list|()
-block|{
-name|_M_stringbuf_init
 argument_list|(
 name|__mode
 argument_list|)
-expr_stmt|;
-block|}
+decl_stmt|,
+name|_M_string
+argument_list|()
+block|{ }
 comment|/**        *  @brief  Starts with an existing string buffer.        *  @param  str  A string to copy as a starting buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  This constructor initializes the parent class using its        *  own default ctor.       */
 name|explicit
 name|basic_stringbuf
@@ -347,21 +343,12 @@ name|str
 argument_list|()
 specifier|const
 block|{
-specifier|const
-name|bool
-name|__testout
-operator|=
-name|this
-operator|->
-name|_M_mode
-operator|&
-name|ios_base
-operator|::
-name|out
-block|;
 if|if
 condition|(
-name|__testout
+name|this
+operator|->
+name|pptr
+argument_list|()
 condition|)
 block|{
 comment|// The current egptr() may not be the actual string end.
@@ -448,7 +435,7 @@ expr_stmt|;
 block|}
 name|protected
 label|:
-comment|// Common initialization code for both ctors goes here.
+comment|// Common initialization code goes here.
 comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|void
 name|_M_stringbuf_init
@@ -793,21 +780,12 @@ name|ios_base
 operator|::
 name|in
 decl_stmt|;
-specifier|const
-name|bool
-name|__testout
-init|=
-name|this
-operator|->
-name|_M_mode
-operator|&
-name|ios_base
-operator|::
-name|out
-decl_stmt|;
 if|if
 condition|(
-name|__testout
+name|this
+operator|->
+name|pptr
+argument_list|()
 operator|&&
 name|this
 operator|->

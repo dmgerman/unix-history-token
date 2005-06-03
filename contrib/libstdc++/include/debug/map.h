@@ -778,7 +778,7 @@ argument_list|,
 argument|_InputIterator __last
 argument_list|)
 block|{
-name|__glibcxx_valid_range
+name|__glibcxx_check_valid_range
 argument_list|(
 name|__first
 argument_list|,

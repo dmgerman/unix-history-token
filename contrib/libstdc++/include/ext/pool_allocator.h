@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdlib>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<new>
 end_include
 
@@ -152,7 +158,7 @@ name|__gnu_cxx
 block|{
 comment|/**    *  @if maint    *  Uses various allocators to fulfill underlying requests (and makes as    *  few requests as possible when in default high-speed pool mode).    *    *  Important implementation properties:    *  0. If globally mandated, then allocate objects from new    *  1. If the clients request an object of size> _S_max_bytes, the resulting    *     object will be obtained directly from new    *  2. In all other cases, we allocate an object of size exactly    *     _S_round_up(requested_size).  Thus the client has enough size    *     information that we can return the object to the proper free list    *     without permanently losing part of the object.    *    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 name|class
-name|__pool_base
+name|__pool_alloc_base
 block|{
 name|protected
 label|:
@@ -302,7 +308,7 @@ name|class
 name|__pool_alloc
 operator|:
 name|private
-name|__pool_base
+name|__pool_alloc_base
 block|{
 name|private
 operator|:

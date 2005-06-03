@@ -4,7 +4,7 @@ comment|// List implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -254,6 +254,9 @@ modifier|&
 name|reference
 typedef|;
 name|_List_iterator
+argument_list|()
+operator|:
+name|_M_node
 argument_list|()
 block|{ }
 name|_List_iterator
@@ -544,16 +547,13 @@ name|reference
 typedef|;
 end_typedef
 
-begin_macro
+begin_expr_stmt
 name|_List_const_iterator
 argument_list|()
-end_macro
-
-begin_block
+operator|:
+name|_M_node
+argument_list|()
 block|{ }
-end_block
-
-begin_expr_stmt
 name|_List_const_iterator
 argument_list|(
 specifier|const
