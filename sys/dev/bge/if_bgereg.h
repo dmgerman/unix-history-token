@@ -1058,6 +1058,13 @@ name|BGE_CHIPID_BCM5750_A1
 value|0x40010000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM5714_A0
+value|0x50000000
+end_define
+
 begin_comment
 comment|/* shorthand one */
 end_comment
@@ -1112,6 +1119,13 @@ define|#
 directive|define
 name|BGE_ASICREV_BCM5750
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5714
+value|0x05
 end_define
 
 begin_comment
@@ -10491,6 +10505,13 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5705M_ALT
 value|0x165E
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5714C
+value|0x1668
 end_define
 
 begin_define
