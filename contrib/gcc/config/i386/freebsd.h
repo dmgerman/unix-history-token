@@ -542,7 +542,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_LBRAC);		\     assemble_name (asmfile, buf);					\         fputc ('-', asmfile);						\         assemble_name (asmfile,						\ 	      	 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asmfile, "\n");						\   } while (0)
+value|do {									\     fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_LBRAC);		\     assemble_name (asmfile, NAME);					\         fputc ('-', asmfile);						\         assemble_name (asmfile,						\ 	      	 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asmfile, "\n");						\   } while (0)
 end_define
 
 begin_undef
@@ -561,7 +561,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_RBRAC);		\     assemble_name (asmfile, buf);					\         fputc ('-', asmfile);						\         assemble_name (asmfile,						\ 		 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asmfile, "\n");						\   } while (0)
+value|do {									\     fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_RBRAC);		\     assemble_name (asmfile, NAME);					\         fputc ('-', asmfile);						\         assemble_name (asmfile,						\ 		 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asmfile, "\n");						\   } while (0)
 end_define
 
 end_unit
