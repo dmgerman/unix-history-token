@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
 end_comment
 
 begin_comment
@@ -1542,7 +1542,7 @@ comment|// 0 uninitialized, 1 init,
 end_comment
 
 begin_comment
-comment|// 2 non-consecutive
+comment|// 2 memcpy can't be used
 end_comment
 
 begin_label
@@ -2482,44 +2482,26 @@ begin_comment
 comment|// Set _M_widen_ok to 2 if memcpy can't be used.
 end_comment
 
-begin_for
-for|for
-control|(
-name|size_t
-name|__j
-init|=
-literal|0
-init|;
-name|__j
-operator|<
+begin_if
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|__tmp
+argument_list|,
+name|_M_widen
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|_M_widen
 argument_list|)
-condition|;
-operator|++
-name|__j
-control|)
-if|if
-condition|(
-name|__tmp
-index|[
-name|__j
-index|]
-operator|!=
-name|_M_widen
-index|[
-name|__j
-index|]
+argument_list|)
 condition|)
-block|{
 name|_M_widen_ok
 operator|=
 literal|2
 expr_stmt|;
-break|break;
-block|}
-end_for
+end_if
 
 begin_comment
 unit|}
@@ -2527,11 +2509,11 @@ comment|// Fill in the narrowing cache and flag whether all values are
 end_comment
 
 begin_comment
-comment|// valid or not.  _M_narrow_ok is set to 1 if the whole table is
+comment|// valid or not.  _M_narrow_ok is set to 2 if memcpy can't
 end_comment
 
 begin_comment
-comment|// narrowed, 2 if only some values could be narrowed.
+comment|// be used.
 end_comment
 
 begin_macro
@@ -2594,61 +2576,44 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// Check if any default values were created.  Do this by
-end_comment
+begin_expr_stmt
+name|_M_narrow_ok
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
 
-begin_comment
-comment|// renarrowing with a different default value and comparing.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|__consecutive
-init|=
-name|true
-decl_stmt|;
-end_decl_stmt
-
-begin_for
-for|for
-control|(
-name|size_t
-name|__j
-init|=
-literal|0
-init|;
-name|__j
-operator|<
+begin_if
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|__tmp
+argument_list|,
+name|_M_narrow
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|_M_narrow
 argument_list|)
-condition|;
-operator|++
-name|__j
-control|)
-if|if
-condition|(
-operator|!
-name|_M_narrow
-index|[
-name|__j
-index|]
+argument_list|)
 condition|)
+name|_M_narrow_ok
+operator|=
+literal|2
+expr_stmt|;
+else|else
 block|{
+comment|// Deal with the special case of zero: renarrow with a
+comment|// different default and compare.
 name|char
 name|__c
 decl_stmt|;
 name|do_narrow
 argument_list|(
 name|__tmp
-operator|+
-name|__j
 argument_list|,
 name|__tmp
-operator|+
-name|__j
 operator|+
 literal|1
 argument_list|,
@@ -2664,26 +2629,12 @@ name|__c
 operator|==
 literal|1
 condition|)
-block|{
-name|__consecutive
-operator|=
-name|false
-expr_stmt|;
-break|break;
-block|}
-block|}
-end_for
-
-begin_expr_stmt
 name|_M_narrow_ok
 operator|=
-name|__consecutive
-condition|?
-literal|1
-else|:
 literal|2
 expr_stmt|;
-end_expr_stmt
+block|}
+end_if
 
 begin_empty_stmt
 unit|}     }

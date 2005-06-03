@@ -4,7 +4,7 @@ comment|// underlying io library  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -143,6 +143,7 @@ typedef|typedef
 name|FILE
 name|__c_file
 typedef|;
+comment|// XXX GLIBCXX_ABI Deprecated
 comment|// for ios_base.h
 struct|struct
 name|__ios_flags

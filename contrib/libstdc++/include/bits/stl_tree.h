@@ -4,7 +4,7 @@ comment|// RB tree implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -465,35 +465,23 @@ name|_Link_type
 expr_stmt|;
 end_typedef
 
-begin_macro
+begin_expr_stmt
 name|_Rb_tree_iterator
 argument_list|()
-end_macro
-
-begin_block
+operator|:
+name|_M_node
+argument_list|()
 block|{ }
-end_block
-
-begin_macro
 name|_Rb_tree_iterator
 argument_list|(
 argument|_Link_type __x
 argument_list|)
-end_macro
-
-begin_macro
-unit|:
+operator|:
 name|_M_node
 argument_list|(
 argument|__x
 argument_list|)
-end_macro
-
-begin_block
 block|{ }
-end_block
-
-begin_expr_stmt
 name|reference
 name|operator
 operator|*
@@ -778,35 +766,23 @@ name|_Link_type
 expr_stmt|;
 end_typedef
 
-begin_macro
+begin_expr_stmt
 name|_Rb_tree_const_iterator
 argument_list|()
-end_macro
-
-begin_block
+operator|:
+name|_M_node
+argument_list|()
 block|{ }
-end_block
-
-begin_macro
 name|_Rb_tree_const_iterator
 argument_list|(
 argument|_Link_type __x
 argument_list|)
-end_macro
-
-begin_macro
-unit|:
+operator|:
 name|_M_node
 argument_list|(
 argument|__x
 argument_list|)
-end_macro
-
-begin_block
 block|{ }
-end_block
-
-begin_expr_stmt
 name|_Rb_tree_const_iterator
 argument_list|(
 specifier|const
@@ -3136,6 +3112,8 @@ operator|.
 name|size
 argument_list|()
 operator|&&
+name|std
+operator|::
 name|equal
 argument_list|(
 name|__x
@@ -3214,6 +3192,8 @@ name|__y
 operator|)
 block|{
 return|return
+name|std
+operator|::
 name|lexicographical_compare
 argument_list|(
 name|__x

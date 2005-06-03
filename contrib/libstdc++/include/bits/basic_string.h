@@ -491,6 +491,9 @@ modifier|&
 name|__a
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_FULLY_DYNAMIC_STRING
 if|if
 condition|(
 name|__builtin_expect
@@ -504,6 +507,8 @@ argument_list|,
 name|false
 argument_list|)
 condition|)
+endif|#
+directive|endif
 if|if
 condition|(
 name|__gnu_cxx
@@ -545,6 +550,9 @@ parameter_list|()
 function|throw
 parameter_list|()
 block|{
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_FULLY_DYNAMIC_STRING
 if|if
 condition|(
 name|__builtin_expect
@@ -558,6 +566,8 @@ argument_list|,
 name|false
 argument_list|)
 condition|)
+endif|#
+directive|endif
 name|__gnu_cxx
 operator|::
 name|__atomic_add
@@ -5174,7 +5184,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Compare to a string.        *  @param str  String to compare against.        *  @return  Integer< 0, 0, or> 0.        *        *  Returns an integer< 0 if this string is ordered before @a str, 0 if        *  their values are equivalent, or> 0 if this string is ordered after        *  @a str.  If the lengths of @a str and this string are different, the        *  shorter one is ordered first.  If they are the same, returns the        *  result of traits::compare(data(),str.data(),size());       */
+comment|/**        *  @brief  Compare to a string.        *  @param str  String to compare against.        *  @return  Integer< 0, 0, or> 0.        *        *  Returns an integer< 0 if this string is ordered before @a str, 0 if        *  their values are equivalent, or> 0 if this string is ordered after        *  @a str.  Determines the effective length rlen of the strings to        *  compare as the smallest of size() and str.size().  The function        *  then compares the two strings by calling traits::compare(data(),        *  str.data(),rlen).  If the result of the comparison is nonzero returns        *  it, otherwise the shorter one is ordered first.       */
 end_comment
 
 begin_decl_stmt
@@ -5255,7 +5265,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Compare substring to a string.        *  @param pos  Index of first character of substring.        *  @param n  Number of characters in substring.        *  @param str  String to compare against.        *  @return  Integer< 0, 0, or> 0.        *        *  Form the substring of this string from the @a n characters starting        *  at @a pos.  Returns an integer< 0 if the substring is ordered        *  before @a str, 0 if their values are equivalent, or> 0 if the        *  substring is ordered after @a str.  If the lengths @a of str and the        *  substring are different, the shorter one is ordered first.  If they        *  are the same, returns the result of        *  traits::compare(substring.data(),str.data(),size());       */
+comment|/**        *  @brief  Compare substring to a string.        *  @param pos  Index of first character of substring.        *  @param n  Number of characters in substring.        *  @param str  String to compare against.        *  @return  Integer< 0, 0, or> 0.        *        *  Form the substring of this string from the @a n characters starting        *  at @a pos.  Returns an integer< 0 if the substring is ordered        *  before @a str, 0 if their values are equivalent, or> 0 if the        *  substring is ordered after @a str.  Determines the effective length        *  rlen of the strings to compare as the smallest of the length of the        *  substring and @a str.size().  The function then compares the two        *  strings by calling traits::compare(substring.data(),str.data(),rlen).        *  If the result of the comparison is nonzero returns it, otherwise the        *  shorter one is ordered first.       */
 end_comment
 
 begin_decl_stmt
@@ -5278,7 +5288,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Compare substring to a substring.        *  @param pos1  Index of first character of substring.        *  @param n1  Number of characters in substring.        *  @param str  String to compare against.        *  @param pos2  Index of first character of substring of str.        *  @param n2  Number of characters in substring of str.        *  @return  Integer< 0, 0, or> 0.        *        *  Form the substring of this string from the @a n1 characters starting        *  at @a pos1.  Form the substring of @a str from the @a n2 characters        *  starting at @a pos2.  Returns an integer< 0 if this substring is        *  ordered before the substring of @a str, 0 if their values are        *  equivalent, or> 0 if this substring is ordered after the substring        *  of @a str.  If the lengths of the substring of @a str and this        *  substring are different, the shorter one is ordered first.  If they        *  are the same, returns the result of        *  traits::compare(substring.data(),str.substr(pos2,n2).data(),size());       */
+comment|/**        *  @brief  Compare substring to a substring.        *  @param pos1  Index of first character of substring.        *  @param n1  Number of characters in substring.        *  @param str  String to compare against.        *  @param pos2  Index of first character of substring of str.        *  @param n2  Number of characters in substring of str.        *  @return  Integer< 0, 0, or> 0.        *        *  Form the substring of this string from the @a n1 characters starting        *  at @a pos1.  Form the substring of @a str from the @a n2 characters        *  starting at @a pos2.  Returns an integer< 0 if this substring is        *  ordered before the substring of @a str, 0 if their values are        *  equivalent, or> 0 if this substring is ordered after the substring        *  of @a str.  Determines the effective length rlen of the strings        *  to compare as the smallest of the lengths of the substrings.  The        *  function then compares the two strings by calling        *  traits::compare(substring.data(),str.substr(pos2,n2).data(),rlen).        *  If the result of the comparison is nonzero returns it, otherwise the        *  shorter one is ordered first.       */
 end_comment
 
 begin_decl_stmt
@@ -5307,7 +5317,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Compare to a C string.        *  @param s  C string to compare against.        *  @return  Integer< 0, 0, or> 0.        *        *  Returns an integer< 0 if this string is ordered before @a s, 0 if        *  their values are equivalent, or> 0 if this string is ordered after        *  @a s.  If the lengths of @a s and this string are different, the        *  shorter one is ordered first.  If they are the same, returns the        *  result of traits::compare(data(),s,size());       */
+comment|/**        *  @brief  Compare to a C string.        *  @param s  C string to compare against.        *  @return  Integer< 0, 0, or> 0.        *        *  Returns an integer< 0 if this string is ordered before @a s, 0 if        *  their values are equivalent, or> 0 if this string is ordered after        *  @a s.  Determines the effective length rlen of the strings to        *  compare as the smallest of size() and the length of a string        *  constructed from @a s.  The function then compares the two strings        *  by calling traits::compare(data(),s,rlen).  If the result of the        *  comparison is nonzero returns it, otherwise the shorter one is        *  ordered first.       */
 end_comment
 
 begin_decl_stmt
@@ -5332,7 +5342,7 @@ comment|// 5 String::compare specification questionable
 end_comment
 
 begin_comment
-comment|/**        *  @brief  Compare substring to a C string.        *  @param pos  Index of first character of substring.        *  @param n1  Number of characters in substring.        *  @param s  C string to compare against.        *  @return  Integer< 0, 0, or> 0.        *        *  Form the substring of this string from the @a n1 characters starting        *  at @a pos.  Returns an integer< 0 if the substring is ordered        *  before @a s, 0 if their values are equivalent, or> 0 if the        *  substring is ordered after @a s.  If the lengths of @a s and the        *  substring are different, the shorter one is ordered first.  If they        *  are the same, returns the result of        *  traits::compare(substring.data(),s,size());       */
+comment|/**        *  @brief  Compare substring to a C string.        *  @param pos  Index of first character of substring.        *  @param n1  Number of characters in substring.        *  @param s  C string to compare against.        *  @return  Integer< 0, 0, or> 0.        *        *  Form the substring of this string from the @a n1 characters starting        *  at @a pos.  Returns an integer< 0 if the substring is ordered        *  before @a s, 0 if their values are equivalent, or> 0 if the        *  substring is ordered after @a s.  Determines the effective length        *  rlen of the strings to compare as the smallest of the length of the         *  substring and the length of a string constructed from @a s.  The        *  function then compares the two string by calling        *  traits::compare(substring.data(),s,rlen).  If the result of the        *  comparison is nonzero returns it, otherwise the shorter one is        *  ordered first.       */
 end_comment
 
 begin_decl_stmt
@@ -5355,7 +5365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Compare substring against a character array.        *  @param pos1  Index of first character of substring.        *  @param n1  Number of characters in substring.        *  @param s  character array to compare against.        *  @param n2  Number of characters of s.        *  @return  Integer< 0, 0, or> 0.        *        *  Form the substring of this string from the @a n1 characters starting        *  at @a pos1.  Form a string from the first @a n2 characters of @a s.        *  Returns an integer< 0 if this substring is ordered before the string        *  from @a s, 0 if their values are equivalent, or> 0 if this substring        *  is ordered after the string from @a s. If the lengths of this        *  substring and @a n2 are different, the shorter one is ordered first.        *  If they are the same, returns the result of        *  traits::compare(substring.data(),s,size());        *        *  NB: s must have at least n2 characters, '\0' has no special        *  meaning.       */
+comment|/**        *  @brief  Compare substring against a character array.        *  @param pos1  Index of first character of substring.        *  @param n1  Number of characters in substring.        *  @param s  character array to compare against.        *  @param n2  Number of characters of s.        *  @return  Integer< 0, 0, or> 0.        *        *  Form the substring of this string from the @a n1 characters starting        *  at @a pos1.  Form a string from the first @a n2 characters of @a s.        *  Returns an integer< 0 if this substring is ordered before the string        *  from @a s, 0 if their values are equivalent, or> 0 if this substring        *  is ordered after the string from @a s.   Determines the effective        *  length rlen of the strings to compare as the smallest of the length        *  of the substring and @a n2.  The function then compares the two        *  strings by calling traits::compare(substring.data(),s,rlen).  If the        *  result of the comparison is nonzero returns it, otherwise the shorter        *  one is ordered first.        *        *  NB: s must have at least n2 characters, '\0' has no special        *  meaning.       */
 end_comment
 
 begin_decl_stmt
@@ -5405,6 +5415,9 @@ operator|>
 operator|::
 name|basic_string
 argument_list|()
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_FULLY_DYNAMIC_STRING
 operator|:
 name|_M_dataplus
 argument_list|(
@@ -5413,6 +5426,18 @@ argument_list|,
 argument|_Alloc()
 argument_list|)
 block|{ }
+else|#
+directive|else
+operator|:
+name|_M_dataplus
+argument_list|(
+argument|_S_construct(size_type(), _CharT(), _Alloc())
+argument_list|,
+argument|_Alloc()
+argument_list|)
+block|{ }
+endif|#
+directive|endif
 comment|// operator+
 comment|/**    *  @brief  Concatenate two strings.    *  @param lhs  First string.    *  @param rhs  Last string.    *  @return  New string with value of @a lhs followed by @a rhs.    */
 name|template

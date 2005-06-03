@@ -4,7 +4,7 @@ comment|// Bits and pieces used in algorithms -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -2227,11 +2227,9 @@ argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
 name|__glibcxx_function_requires
 argument_list|(
-argument|_EqualityComparableConcept< 	    typename iterator_traits<_InputIterator1>::value_type>
-argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_EqualityComparableConcept< 	    typename iterator_traits<_InputIterator2>::value_type>
+argument|_EqualOpConcept< 	    typename iterator_traits<_InputIterator1>::value_type
+argument_list|,
+argument|typename iterator_traits<_InputIterator2>::value_type>
 argument_list|)
 name|__glibcxx_requires_valid_range
 argument_list|(
@@ -2570,11 +2568,15 @@ argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept< 	    typename iterator_traits<_InputIterator1>::value_type>
+argument|_LessThanOpConcept< 	    typename iterator_traits<_InputIterator1>::value_type
+argument_list|,
+argument|typename iterator_traits<_InputIterator2>::value_type>
 argument_list|)
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept< 	    typename iterator_traits<_InputIterator2>::value_type>
+argument|_LessThanOpConcept< 	    typename iterator_traits<_InputIterator2>::value_type
+argument_list|,
+argument|typename iterator_traits<_InputIterator1>::value_type>
 argument_list|)
 name|__glibcxx_requires_valid_range
 argument_list|(

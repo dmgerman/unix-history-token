@@ -198,6 +198,16 @@ name|_GLIBCXX_USE_LFS
 end_undef
 
 begin_comment
+comment|// Define if a fully dynamic basic_string is wanted.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_GLIBCXX_FULLY_DYNAMIC_STRING
+end_undef
+
+begin_comment
 comment|// Define if NLS translations are to be used.
 end_comment
 

@@ -3102,12 +3102,6 @@ argument|_Mutable_ForwardIteratorConcept< 				  _ForwardIterator>
 argument_list|)
 name|__glibcxx_function_requires
 argument_list|(
-argument|_ConvertibleConcept<_Tp
-argument_list|,
-argument|typename iterator_traits<_ForwardIterator>::value_type>
-argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
 argument|_EqualOpConcept< 	    typename iterator_traits<_ForwardIterator>::value_type
 argument_list|,
 argument|_Tp>
@@ -16296,12 +16290,6 @@ argument_list|)
 name|__glibcxx_function_requires
 argument_list|(
 argument|_ForwardIteratorConcept<_ForwardIterator>
-argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_EqualOpConcept< 	    typename iterator_traits<_InputIterator>::value_type
-argument_list|,
-argument|typename iterator_traits<_ForwardIterator>::value_type>
 argument_list|)
 name|__glibcxx_function_requires
 argument_list|(
