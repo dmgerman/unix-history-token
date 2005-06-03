@@ -760,7 +760,6 @@ name|char
 modifier|*
 modifier|*
 name|argv
-name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 specifier|static
@@ -782,6 +781,8 @@ block|}
 decl_stmt|;
 name|unsigned
 name|int
+name|i
+decl_stmt|,
 name|result
 decl_stmt|;
 comment|/* This is conditionalized only because that is the way the front      ends used to do it.  Maybe this should be unconditional?  */
@@ -884,26 +885,64 @@ index|[
 name|c_language
 index|]
 expr_stmt|;
-comment|/* If potentially preprocessing Fortran we have to accept its front      end options since the driver passes most of them through.  */
-ifdef|#
-directive|ifdef
-name|CL_F77
 if|if
 condition|(
 name|c_language
 operator|==
 name|clk_c
-operator|&&
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
 name|argc
-operator|>
-literal|2
-operator|&&
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* If preprocessing assembly language, accept any of the C-family 	     front end options since the driver may pass them through.  */
+if|if
+condition|(
 operator|!
 name|strcmp
 argument_list|(
 name|argv
 index|[
-literal|2
+name|i
+index|]
+argument_list|,
+literal|"-lang-asm"
+argument_list|)
+condition|)
+name|result
+operator||=
+name|CL_C
+operator||
+name|CL_ObjC
+operator||
+name|CL_CXX
+operator||
+name|CL_ObjCXX
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CL_F77
+comment|/* If potentially preprocessing Fortran we have to accept its 	     front end options since the driver may them through.  */
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
 index|]
 argument_list|,
 literal|"-traditional-cpp"
@@ -921,6 +960,8 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+block|}
+block|}
 return|return
 name|result
 return|;
@@ -3319,15 +3360,21 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Don't do any compilation or preprocessing if there is no input file.  */
 if|if
 condition|(
 name|this_input_filename
 operator|==
 name|NULL
 condition|)
+block|{
+name|errorcount
+operator|++
+expr_stmt|;
 return|return
-name|true
+name|false
 return|;
+block|}
 if|if
 condition|(
 name|flag_working_directory
@@ -3930,6 +3977,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Disable -dD, -dN and -dI if normal output is suppressed.  Allow      -dM since at least glibc relies on -M -dM to work.  */
+comment|/* Also, flag_no_output implies flag_no_line_commands, always. */
 if|if
 condition|(
 name|flag_no_output
@@ -3948,6 +3996,10 @@ expr_stmt|;
 name|flag_dump_includes
 operator|=
 literal|0
+expr_stmt|;
+name|flag_no_line_commands
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|cpp_opts

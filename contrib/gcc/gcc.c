@@ -2615,7 +2615,7 @@ name|char
 modifier|*
 name|cpp_unique_options
 init|=
-literal|"%{C|CC:%{!E:%eGCC does not support -C or -CC without -E}}\  %{!Q:-quiet} %{nostdinc*} %{C} %{CC} %{v} %{I*} %{P} %I\  %{MD:-MD %{!o:%b.d}%{o*:%.d%*}}\  %{MMD:-MMD %{!o:%b.d}%{o*:%.d%*}}\  %{M} %{MM} %{MF*} %{MG} %{MP} %{MQ*} %{MT*}\  %{!E:%{!M:%{!MM:%{MD|MMD:%{o*:-MQ %*}}}}}\  %{trigraphs} %{remap} %{g3:-dD} %{H} %C %{D*&U*&A*} %{i*} %Z %i\  %{E|M|MM:%W{o*}}"
+literal|"%{C|CC:%{!E:%eGCC does not support -C or -CC without -E}}\  %{!Q:-quiet} %{nostdinc*} %{C} %{CC} %{v} %{I*} %{P} %I\  %{MD:-MD %{!o:%b.d}%{o*:%.d%*}}\  %{MMD:-MMD %{!o:%b.d}%{o*:%.d%*}}\  %{M} %{MM} %{MF*} %{MG} %{MP} %{MQ*} %{MT*}\  %{!E:%{!M:%{!MM:%{MD|MMD:%{o*:-MQ %*}}}}}\  %{remap} %{g3:-dD} %{H} %C %{D*&U*&A*} %{i*} %Z %i\  %{E|M|MM:%W{o*}}"
 decl_stmt|;
 end_decl_stmt
 
@@ -2630,7 +2630,7 @@ name|char
 modifier|*
 name|cpp_options
 init|=
-literal|"%(cpp_unique_options) %1 %{m*} %{std*} %{ansi} %{W*&pedantic*} %{w} %{f*}\  %{g*:%{!g0:%{!fno-working-directory:-fworking-directory}}} %{O*} %{undef}"
+literal|"%(cpp_unique_options) %1 %{m*} %{std*&ansi&trigraphs} %{W*&pedantic*} %{w}\  %{f*} %{g*:%{!g0:%{!fno-working-directory:-fworking-directory}}} %{O*}\  %{undef}"
 decl_stmt|;
 end_decl_stmt
 
@@ -2660,7 +2660,7 @@ name|char
 modifier|*
 name|cc1_options
 init|=
-literal|"%{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\  %1 %{!Q:-quiet} -dumpbase %B %{d*} %{m*} %{a*}\  %{c|S:%{o*:-auxbase-strip %*}%{!o*:-auxbase %b}}%{!c:%{!S:-auxbase %b}}\  %{g*} %{O*} %{W*&pedantic*} %{w} %{std*} %{ansi}\  %{v:-version} %{pg:-p} %{p} %{f*} %{undef}\  %{Qn:-fno-ident} %{--help:--help}\  %{--target-help:--target-help}\  %{!fsyntax-only:%{S:%W{o*}%{!o*:-o %b.s}}}\  %{fsyntax-only:-o %j} %{-param*}"
+literal|"%{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\  %1 %{!Q:-quiet} -dumpbase %B %{d*} %{m*} %{a*}\  %{c|S:%{o*:-auxbase-strip %*}%{!o*:-auxbase %b}}%{!c:%{!S:-auxbase %b}}\  %{g*} %{O*} %{W*&pedantic*} %{w} %{std*&ansi&trigraphs}\  %{v:-version} %{pg:-p} %{p} %{f*} %{undef}\  %{Qn:-fno-ident} %{--help:--help}\  %{--target-help:--target-help}\  %{!fsyntax-only:%{S:%W{o*}%{!o*:-o %b.s}}}\  %{fsyntax-only:-o %j} %{-param*}"
 decl_stmt|;
 end_decl_stmt
 
@@ -3282,7 +3282,7 @@ block|,
 block|{
 literal|"-"
 block|,
-literal|"%{!E:%e-E required when input is from standard input}\     %(trad_capable_cpp) %(cpp_options) %(cpp_debug_options)"
+literal|"%{!E:%e-E or -x required when input is from standard input}\     %(trad_capable_cpp) %(cpp_options) %(cpp_debug_options)"
 block|,
 literal|0
 block|}
@@ -6693,6 +6693,12 @@ directive|else
 literal|"-lgcc_s%M"
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|USE_LIBUNWIND_EXCEPTIONS
+literal|" -lunwind"
+endif|#
+directive|endif
 argument_list|,
 literal|"-lgcc"
 argument_list|,
@@ -6700,7 +6706,15 @@ literal|"-lgcc_eh"
 ifdef|#
 directive|ifdef
 name|USE_LIBUNWIND_EXCEPTIONS
+ifdef|#
+directive|ifdef
+name|HAVE_LD_STATIC_DYNAMIC
+literal|" %{!static:-Bstatic} -lunwind %{!static:-Bdynamic}"
+else|#
+directive|else
 literal|" -lunwind"
+endif|#
+directive|endif
 endif|#
 directive|endif
 argument_list|)

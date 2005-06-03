@@ -7129,6 +7129,10 @@ comment|/* Output some stuff at end of file if nec.  */
 name|dw2_output_indirect_constants
 argument_list|()
 expr_stmt|;
+comment|/* Flush any pending equate directives.  */
+name|process_pending_assemble_output_defs
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|profile_arc_flag
@@ -13071,10 +13075,6 @@ if|if
 condition|(
 name|cfun
 operator|->
-name|recursive_call_emit
-operator|&&
-name|cfun
-operator|->
 name|stack_alignment_needed
 operator|>
 name|cfun
@@ -16480,9 +16480,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|init_adjust_machine_modes
-argument_list|()
-expr_stmt|;
 name|init_emit_once
 argument_list|(
 name|debug_info_level
@@ -16902,6 +16899,10 @@ operator|!
 name|errorcount
 condition|)
 block|{
+comment|/* This must be run always, because it is needed to compute the FP 	 predefined macros, such as __LDBL_MAX__, for targets using non 	 default FP formats.  */
+name|init_adjust_machine_modes
+argument_list|()
+expr_stmt|;
 comment|/* Set up the back-end if requested.  */
 if|if
 condition|(
