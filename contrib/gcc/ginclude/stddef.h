@@ -2361,7 +2361,7 @@ parameter_list|,
 name|MEMBER
 parameter_list|)
 define|\
-value|(__offsetof__ (reinterpret_cast<size_t>		\                  (&reinterpret_cast<char&>		\                   (static_cast<TYPE *> (0)->MEMBER))))
+value|(__offsetof__ (reinterpret_cast<size_t>			\                  (&reinterpret_cast<const volatile char&>	\                   (static_cast<TYPE *> (0)->MEMBER))))
 end_define
 
 begin_endif

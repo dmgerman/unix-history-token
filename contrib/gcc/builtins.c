@@ -7531,6 +7531,10 @@ operator|!=
 name|arg
 condition|)
 block|{
+name|arg
+operator|=
+name|narg
+expr_stmt|;
 name|arglist
 operator|=
 name|build_tree_list
@@ -8043,6 +8047,10 @@ operator|!=
 name|arg1
 condition|)
 block|{
+name|arg1
+operator|=
+name|narg
+expr_stmt|;
 name|temp
 operator|=
 name|build_tree_list
@@ -8079,6 +8087,10 @@ operator|!=
 name|arg0
 condition|)
 block|{
+name|arg0
+operator|=
+name|narg
+expr_stmt|;
 name|arglist
 operator|=
 name|tree_cons
@@ -28968,7 +28980,7 @@ name|arglist
 argument_list|)
 return|;
 block|}
-comment|/* Optimize sqrt(pow(x,y)) = pow(x,y*0.5).  */
+comment|/* Optimize sqrt(pow(x,y)) = pow(|x|,y*0.5).  */
 if|if
 condition|(
 name|flag_unsafe_math_optimizations
@@ -29034,7 +29046,28 @@ argument_list|)
 decl_stmt|;
 name|tree
 name|narg1
-init|=
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tree_expr_nonnegative_p
+argument_list|(
+name|arg0
+argument_list|)
+condition|)
+name|arg0
+operator|=
+name|build1
+argument_list|(
+name|ABS_EXPR
+argument_list|,
+name|type
+argument_list|,
+name|arg0
+argument_list|)
+expr_stmt|;
+name|narg1
+operator|=
 name|fold
 argument_list|(
 name|build
@@ -29053,7 +29086,7 @@ name|dconsthalf
 argument_list|)
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|arglist
 operator|=
 name|tree_cons
