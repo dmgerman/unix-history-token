@@ -1399,6 +1399,12 @@ begin_comment
 comment|/*  * We define this here since<stddef.h>,<sys/queue.h>, and<sys/types.h>  * require it.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1410,6 +1416,29 @@ name|field
 parameter_list|)
 value|((size_t)(&((type *)0)->field))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+define|\
+value|(__offsetof__ (reinterpret_cast<size_t>			\                  (&reinterpret_cast<const volatile char&>	\                   (static_cast<type *> (0)->field))))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
