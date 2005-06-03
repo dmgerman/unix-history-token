@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Reload pseudo regs into hard regs for insns that require hard regs.    Copyright (C) 1987, 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Reload pseudo regs into hard regs for insns that require hard regs.    Copyright (C) 1987, 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13749,6 +13749,31 @@ block|}
 end_function
 
 begin_comment
+comment|/* Subroutine of set_initial_label_offsets called via for_each_eh_label.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|set_initial_eh_label_offset
+parameter_list|(
+name|rtx
+name|label
+parameter_list|)
+block|{
+name|set_label_offsets
+argument_list|(
+name|label
+argument_list|,
+name|NULL_RTX
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Initialize the known label offsets.    Set a known offset for each forced label to be at the initial offset    of each elimination.  We do this because we assume that all    computed jumps occur from a location where each elimination is    at its initial offset.    For all other labels, show that we don't know the offsets.  */
 end_comment
 
@@ -13810,6 +13835,11 @@ argument_list|,
 name|NULL_RTX
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|for_each_eh_label
+argument_list|(
+name|set_initial_eh_label_offset
 argument_list|)
 expr_stmt|;
 block|}
@@ -21855,12 +21885,14 @@ name|need_mode
 operator|=
 name|smallest_mode_for_size
 argument_list|(
-name|GET_MODE_SIZE
+name|GET_MODE_BITSIZE
 argument_list|(
 name|mode
 argument_list|)
 operator|+
 name|byte
+operator|*
+name|BITS_PER_UNIT
 argument_list|,
 name|GET_MODE_CLASS
 argument_list|(
@@ -21870,25 +21902,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|CANNOT_CHANGE_MODE_CLASS
-operator|(
-operator|!
-name|REG_CANNOT_CHANGE_MODE_P
-argument_list|(
-name|i
-argument_list|,
-name|GET_MODE
-argument_list|(
-name|last_reg
-argument_list|)
-argument_list|,
-name|need_mode
-argument_list|)
-operator|&&
-endif|#
-directive|endif
 operator|(
 name|GET_MODE_SIZE
 argument_list|(
@@ -21906,7 +21919,23 @@ operator|)
 ifdef|#
 directive|ifdef
 name|CANNOT_CHANGE_MODE_CLASS
-operator|)
+comment|/* Verify that the register in "i" can be obtained 			 from LAST_REG.  */
+operator|&&
+operator|!
+name|REG_CANNOT_CHANGE_MODE_P
+argument_list|(
+name|REGNO
+argument_list|(
+name|last_reg
+argument_list|)
+argument_list|,
+name|GET_MODE
+argument_list|(
+name|last_reg
+argument_list|)
+argument_list|,
+name|mode
+argument_list|)
 endif|#
 directive|endif
 operator|&&
@@ -28135,6 +28164,13 @@ comment|/* If we are reloading a register that was recently stored in with an   
 if|if
 condition|(
 name|optimize
+comment|/* Only attempt this for input reloads; for RELOAD_OTHER we miss 	 that there may be multiple uses of the previous output reload. 	 Restricting to RELOAD_FOR_INPUT is mostly paranoia.  */
+operator|&&
+name|rl
+operator|->
+name|when_needed
+operator|==
+name|RELOAD_FOR_INPUT
 operator|&&
 operator|(
 name|reload_inherited

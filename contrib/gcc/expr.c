@@ -36803,12 +36803,11 @@ return|;
 comment|/* At this point, a MEM target is no longer useful; we will get better 	 code without it.  */
 if|if
 condition|(
-name|GET_CODE
+operator|!
+name|REG_P
 argument_list|(
 name|target
 argument_list|)
-operator|==
-name|MEM
 condition|)
 name|target
 operator|=
@@ -36843,6 +36842,24 @@ operator|=
 name|tem
 expr_stmt|;
 block|}
+comment|/* We generate better code and avoid problems with op1 mentioning 	 target by forcing op1 into a pseudo if it isn't a constant.  */
+if|if
+condition|(
+operator|!
+name|CONSTANT_P
+argument_list|(
+name|op1
+argument_list|)
+condition|)
+name|op1
+operator|=
+name|force_reg
+argument_list|(
+name|mode
+argument_list|,
+name|op1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|target

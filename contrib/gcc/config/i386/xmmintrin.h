@@ -56,7 +56,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|float
 name|__m128
 name|__attribute__
 typedef|((
@@ -72,7 +72,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|float
 name|__v4sf
 name|__attribute__
 typedef|((

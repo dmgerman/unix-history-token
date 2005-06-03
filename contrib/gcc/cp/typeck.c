@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Build expressions with type checking for C++ compiler.    Copyright (C) 1987, 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Build expressions with type checking for C++ compiler.    Copyright (C) 1987, 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -5058,7 +5058,10 @@ name|error_mark_node
 return|;
 if|if
 condition|(
-name|processing_template_decl
+name|dependent_type_p
+argument_list|(
+name|type
+argument_list|)
 condition|)
 block|{
 name|value
@@ -13730,7 +13733,7 @@ name|folded
 decl_stmt|;
 name|folded
 operator|=
-name|fold
+name|fold_if_not_in_template
 argument_list|(
 name|result
 argument_list|)
@@ -14367,6 +14370,29 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|processing_template_decl
+operator|&&
+name|exp
+operator|!=
+name|error_mark_node
+condition|)
+name|exp
+operator|=
+name|build_min_non_dep
+argument_list|(
+name|code
+argument_list|,
+name|exp
+argument_list|,
+name|orig_expr
+argument_list|,
+comment|/*For {PRE,POST}{INC,DEC}REMENT_EXPR*/
+name|NULL_TREE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TREE_CODE
@@ -14383,28 +14409,6 @@ argument_list|)
 operator|=
 name|ptrmem
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|processing_template_decl
-operator|&&
-name|exp
-operator|!=
-name|error_mark_node
-condition|)
-return|return
-name|build_min_non_dep
-argument_list|(
-name|code
-argument_list|,
-name|exp
-argument_list|,
-name|orig_expr
-argument_list|,
-comment|/*For {PRE,POST}{INC,DEC}REMENT_EXPR*/
-name|NULL_TREE
-argument_list|)
-return|;
 return|return
 name|exp
 return|;
@@ -16269,6 +16273,13 @@ argument_list|)
 operator|!=
 name|METHOD_TYPE
 operator|&&
+name|TREE_CODE
+argument_list|(
+name|arg
+argument_list|)
+operator|!=
+name|OFFSET_REF
+operator|&&
 operator|!
 name|lvalue_or_else
 argument_list|(
@@ -16309,6 +16320,7 @@ comment|/* Inside a template, we are processing a non-dependent 	       expressi
 operator|||
 name|processing_template_decl
 condition|)
+block|{
 name|addr
 operator|=
 name|build_address
@@ -16316,6 +16328,26 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|arg
+argument_list|)
+operator|==
+name|OFFSET_REF
+condition|)
+name|PTRMEM_OK_P
+argument_list|(
+name|addr
+argument_list|)
+operator|=
+name|PTRMEM_OK_P
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -16631,7 +16663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Apply unary lvalue-demanding operator CODE to the expression ARG    for certain kinds of expressions which are not really lvalues    but which we can accept as lvalues.     If ARG is not a kind of expression we can handle, return zero.  */
+comment|/* Apply unary lvalue-demanding operator CODE to the expression ARG    for certain kinds of expressions which are not really lvalues    but which we can accept as lvalues.     If ARG is not a kind of expression we can handle, return    NULL_TREE.  */
 end_comment
 
 begin_function
@@ -22269,12 +22301,15 @@ block|}
 comment|/* Just adjust the DELTA field.  */
 name|my_friendly_assert
 argument_list|(
+name|same_type_ignoring_top_level_qualifiers_p
+argument_list|(
 name|TREE_TYPE
 argument_list|(
 name|delta
 argument_list|)
-operator|==
+argument_list|,
 name|ptrdiff_type_node
+argument_list|)
 argument_list|,
 literal|20030727
 argument_list|)

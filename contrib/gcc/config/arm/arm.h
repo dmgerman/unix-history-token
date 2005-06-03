@@ -3146,7 +3146,7 @@ parameter_list|,
 name|X
 parameter_list|)
 define|\
-value|((CLASS) != LO_REGS				 			\    ? ((true_regnum (X) == -1 ? LO_REGS					\        : (true_regnum (X) + HARD_REGNO_NREGS (0, MODE)> 8) ? LO_REGS	\        : NO_REGS)) 							\    : NO_REGS)
+value|((CLASS) != LO_REGS&& (CLASS) != BASE_REGS				\    ? ((true_regnum (X) == -1 ? LO_REGS					\        : (true_regnum (X) + HARD_REGNO_NREGS (0, MODE)> 8) ? LO_REGS	\        : NO_REGS)) 							\    : NO_REGS)
 end_define
 
 begin_comment

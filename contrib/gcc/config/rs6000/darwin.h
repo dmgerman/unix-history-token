@@ -167,6 +167,18 @@ value|{ "darwin_arch", "ppc" },
 end_define
 
 begin_comment
+comment|/* The "-faltivec" option should have been called "-maltivec" all along.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_OPTION_TRANSLATE_TABLE
+define|\
+value|{ "-faltivec", "-maltivec -include altivec.h" },     \   { "-fno-altivec", "-mno-altivec" },  \   { "-Waltivec-long-deprecated",       "-mwarn-altivec-long" }, \   { "-Wno-altivec-long-deprecated", "-mno-warn-altivec-long" }
+end_define
+
+begin_comment
 comment|/* Make both r2 and r3 available for allocation.  */
 end_comment
 

@@ -7150,7 +7150,13 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|nregs
+operator|>
+literal|0
+condition|)
 name|use_regs
 argument_list|(
 name|call_fusage
@@ -7160,12 +7166,6 @@ argument_list|(
 name|reg
 argument_list|)
 argument_list|,
-name|nregs
-operator|==
-literal|0
-condition|?
-literal|1
-else|:
 name|nregs
 argument_list|)
 expr_stmt|;
@@ -10182,7 +10182,7 @@ name|expand_start_target_temps
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Don't let pending stack adjusts add up to too much. 	 Also, do all pending adjustments now if there is any chance 	 this might be a call to alloca or if we are expanding a sibling 	 call sequence or if we are calling a function that is to return 	 with stack pointer depressed.  */
+comment|/* Don't let pending stack adjusts add up to too much. 	 Also, do all pending adjustments now if there is any chance 	 this might be a call to alloca or if we are expanding a sibling 	 call sequence or if we are calling a function that is to return 	 with stack pointer depressed. 	 Also do the adjustments before a throwing call, otherwise 	 exception handling can fail; PR 19225. */
 if|if
 condition|(
 name|pending_stack_adjust
@@ -10202,6 +10202,21 @@ name|ECF_MAY_BE_ALLOCA
 operator||
 name|ECF_SP_DEPRESSED
 operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|pending_stack_adjust
+operator|>
+literal|0
+operator|&&
+name|flag_exceptions
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|ECF_NOTHROW
 operator|)
 operator|)
 operator|||

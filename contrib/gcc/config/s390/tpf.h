@@ -243,6 +243,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|ASM_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|"%{m31&m64}%{mesa&mzarch}%{march=*}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|LIB_SPEC
 end_undef
 

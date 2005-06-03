@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* C++ Parser.    Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Written by Mark Mitchell<mark@codesourcery.com>.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* C++ Parser.    Copyright (C) 2000, 2001, 2002, 2003, 2004,    2005 Free Software Foundation, Inc.    Written by Mark Mitchell<mark@codesourcery.com>.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -4680,6 +4680,8 @@ modifier|*
 parameter_list|,
 name|bool
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4696,6 +4698,8 @@ name|cp_parser_declarator_kind
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8833,8 +8837,7 @@ argument_list|,
 comment|/*type_p=*/
 name|false
 argument_list|,
-comment|/*is_declarator=*/
-name|false
+name|declarator_p
 argument_list|)
 operator|!=
 name|NULL_TREE
@@ -9211,6 +9214,9 @@ decl_stmt|;
 name|tree
 name|scope
 decl_stmt|;
+name|bool
+name|done
+decl_stmt|;
 comment|/* Consume the `~' token.  */
 name|cp_lexer_consume_token
 argument_list|(
@@ -9307,6 +9313,14 @@ argument_list|)
 return|;
 block|}
 comment|/* If there was an explicit qualification (S::~T), first look 	   in the scope given by the qualification (i.e., S).  */
+name|done
+operator|=
+name|false
+expr_stmt|;
+name|type_decl
+operator|=
+name|NULL_TREE
+expr_stmt|;
 if|if
 condition|(
 name|scope
@@ -9348,21 +9362,17 @@ argument_list|(
 name|parser
 argument_list|)
 condition|)
-return|return
-name|build_nt
-argument_list|(
-name|BIT_NOT_EXPR
-argument_list|,
-name|TREE_TYPE
-argument_list|(
-name|type_decl
-argument_list|)
-argument_list|)
-return|;
+name|done
+operator|=
+name|true
+expr_stmt|;
 block|}
 comment|/* In "N::S::~S", look in "N" as well.  */
 if|if
 condition|(
+operator|!
+name|done
+operator|&&
 name|scope
 operator|&&
 name|qualifying_scope
@@ -9422,22 +9432,18 @@ argument_list|(
 name|parser
 argument_list|)
 condition|)
-return|return
-name|build_nt
-argument_list|(
-name|BIT_NOT_EXPR
-argument_list|,
-name|TREE_TYPE
-argument_list|(
-name|type_decl
-argument_list|)
-argument_list|)
-return|;
+name|done
+operator|=
+name|true
+expr_stmt|;
 block|}
 comment|/* In "p->S::~T", look in the scope given by "*p" as well.  */
 elseif|else
 if|if
 condition|(
+operator|!
+name|done
+operator|&&
 name|object_scope
 condition|)
 block|{
@@ -9495,19 +9501,18 @@ argument_list|(
 name|parser
 argument_list|)
 condition|)
-return|return
-name|build_nt
-argument_list|(
-name|BIT_NOT_EXPR
-argument_list|,
-name|TREE_TYPE
-argument_list|(
-name|type_decl
-argument_list|)
-argument_list|)
-return|;
+name|done
+operator|=
+name|true
+expr_stmt|;
 block|}
 comment|/* Look in the surrounding context.  */
+if|if
+condition|(
+operator|!
+name|done
+condition|)
+block|{
 name|parser
 operator|->
 name|scope
@@ -9550,6 +9555,7 @@ argument_list|,
 name|declarator_p
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* If an error occurred, assume that the name of the 	   destructor is the same as the name of the qualifying 	   class.  That allows us to keep parsing after running 	   into ill-formed destructor names.  */
 if|if
 condition|(
@@ -9986,6 +9992,41 @@ operator|=
 name|parser
 operator|->
 name|qualifying_scope
+expr_stmt|;
+comment|/* In a declarator-id like "X<T>::I::Y<T>" we must be able to 	 look up names in "X<T>::I" in order to determine that "Y" is 	 a template.  So, if we have a typename at this point, we make 	 an effort to look through it.  */
+if|if
+condition|(
+name|is_declaration
+operator|&&
+operator|!
+name|typename_keyword_p
+operator|&&
+name|parser
+operator|->
+name|scope
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|parser
+operator|->
+name|scope
+argument_list|)
+operator|==
+name|TYPENAME_TYPE
+condition|)
+name|parser
+operator|->
+name|scope
+operator|=
+name|resolve_typename_type
+argument_list|(
+name|parser
+operator|->
+name|scope
+argument_list|,
+comment|/*only_current_p=*/
+name|false
+argument_list|)
 expr_stmt|;
 comment|/* Parse the qualifying entity.  */
 name|new_scope
@@ -11037,6 +11078,9 @@ decl_stmt|;
 name|tree
 name|type
 decl_stmt|;
+name|tree
+name|scope
+decl_stmt|;
 comment|/* Consume the `typename' token.  */
 name|cp_lexer_consume_token
 argument_list|(
@@ -11054,7 +11098,9 @@ comment|/*current_scope_valid_p=*/
 name|false
 argument_list|)
 expr_stmt|;
-comment|/* Look for the nested-name-specifier.  */
+comment|/* Look for the nested-name-specifier.  In case of error here, 	   consume the trailing id to avoid subsequent error messages 	   for usual cases.  */
+name|scope
+operator|=
 name|cp_parser_nested_name_specifier
 argument_list|(
 name|parser
@@ -11118,7 +11164,18 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
+comment|/* Don't process id if nested name specifier is invalid.  */
+if|if
+condition|(
+name|scope
+operator|==
+name|error_mark_node
+condition|)
+return|return
+name|error_mark_node
+return|;
 comment|/* If we look up a template-id in a non-dependent qualifying 	   scope, there's no need to create a dependent type.  */
+elseif|else
 if|if
 condition|(
 name|TREE_CODE
@@ -11675,24 +11732,19 @@ operator|==
 name|CP_ID_KIND_UNQUALIFIED
 condition|)
 block|{
-comment|/* We do not perform argument-dependent lookup if 		   normal lookup finds a non-function, in accordance 		   with the expected resolution of DR 218.  */
 if|if
 condition|(
-name|args
-operator|&&
-operator|(
-name|is_overloaded_fn
-argument_list|(
-name|postfix_expression
-argument_list|)
-operator|||
 name|TREE_CODE
 argument_list|(
 name|postfix_expression
 argument_list|)
 operator|==
 name|IDENTIFIER_NODE
-operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|args
 condition|)
 block|{
 name|koenig_p
@@ -11709,16 +11761,7 @@ name|args
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|postfix_expression
-argument_list|)
-operator|==
-name|IDENTIFIER_NODE
-condition|)
+else|else
 name|postfix_expression
 operator|=
 name|unqualified_fn_lookup_error
@@ -11726,6 +11769,73 @@ argument_list|(
 name|postfix_expression
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* We do not perform argument-dependent lookup if 		   normal lookup finds a non-function, in accordance 		   with the expected resolution of DR 218.  */
+elseif|else
+if|if
+condition|(
+name|args
+operator|&&
+name|is_overloaded_fn
+argument_list|(
+name|postfix_expression
+argument_list|)
+condition|)
+block|{
+name|tree
+name|fn
+init|=
+name|get_first_fn
+argument_list|(
+name|postfix_expression
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|fn
+argument_list|)
+operator|==
+name|TEMPLATE_ID_EXPR
+condition|)
+name|fn
+operator|=
+name|OVL_CURRENT
+argument_list|(
+name|TREE_OPERAND
+argument_list|(
+name|fn
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Only do argument dependent lookup if regular 		       lookup does not find a set of member functions. 		       [basic.lookup.koenig]/2a  */
+if|if
+condition|(
+operator|!
+name|DECL_FUNCTION_MEMBER_P
+argument_list|(
+name|fn
+argument_list|)
+condition|)
+block|{
+name|koenig_p
+operator|=
+name|true
+expr_stmt|;
+name|postfix_expression
+operator|=
+name|perform_koenig_lookup
+argument_list|(
+name|postfix_expression
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -11953,6 +12063,9 @@ decl_stmt|;
 name|bool
 name|template_p
 decl_stmt|;
+name|bool
+name|pseudo_destructor_p
+decl_stmt|;
 name|tree
 name|scope
 init|=
@@ -12091,19 +12204,82 @@ operator|->
 name|lexer
 argument_list|)
 expr_stmt|;
-comment|/* If the SCOPE is not a scalar type, we are looking at an 	       ordinary class member access expression, rather than a 	       pseudo-destructor-name.  */
+comment|/* Assume this expression is not a pseudo-destructor access.  */
+name|pseudo_destructor_p
+operator|=
+name|false
+expr_stmt|;
+comment|/* If the SCOPE is a scalar type, then, if this is a valid program, 	       we must be looking at a pseudo-destructor-name.  */
 if|if
 condition|(
-operator|!
 name|scope
-operator|||
-operator|!
+operator|&&
 name|SCALAR_TYPE_P
 argument_list|(
 name|scope
 argument_list|)
 condition|)
 block|{
+name|tree
+name|s
+init|=
+name|NULL_TREE
+decl_stmt|;
+name|tree
+name|type
+decl_stmt|;
+name|cp_parser_parse_tentatively
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
+comment|/* Parse the pseudo-destructor-name.  */
+name|cp_parser_pseudo_destructor_name
+argument_list|(
+name|parser
+argument_list|,
+operator|&
+name|s
+argument_list|,
+operator|&
+name|type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp_parser_parse_definitely
+argument_list|(
+name|parser
+argument_list|)
+condition|)
+block|{
+name|pseudo_destructor_p
+operator|=
+name|true
+expr_stmt|;
+name|postfix_expression
+operator|=
+name|finish_pseudo_destructor_expr
+argument_list|(
+name|postfix_expression
+argument_list|,
+name|s
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|pseudo_destructor_p
+condition|)
+block|{
+comment|/* If the SCOPE is not a scalar type, we are looking 		   at an ordinary class member access expression, 		   rather than a pseudo-destructor-name.  */
 name|template_p
 operator|=
 name|cp_parser_optional_template_keyword
@@ -12224,45 +12400,6 @@ argument_list|(
 name|postfix_expression
 argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Otherwise, try the pseudo-destructor-name production.  */
-else|else
-block|{
-name|tree
-name|s
-init|=
-name|NULL_TREE
-decl_stmt|;
-name|tree
-name|type
-decl_stmt|;
-comment|/* Parse the pseudo-destructor-name.  */
-name|cp_parser_pseudo_destructor_name
-argument_list|(
-name|parser
-argument_list|,
-operator|&
-name|s
-argument_list|,
-operator|&
-name|type
-argument_list|)
-expr_stmt|;
-comment|/* Form the call.  */
-name|postfix_expression
-operator|=
-name|finish_pseudo_destructor_expr
-argument_list|(
-name|postfix_expression
-argument_list|,
-name|s
-argument_list|,
-name|TREE_TYPE
-argument_list|(
-name|type
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -16895,6 +17032,9 @@ name|NULL
 argument_list|,
 comment|/*parenthesized_p=*/
 name|NULL
+argument_list|,
+comment|/*member_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* Parse the attributes.  */
@@ -22340,6 +22480,23 @@ argument_list|,
 name|token
 argument_list|)
 expr_stmt|;
+comment|/* ??? Can we actually assume that, if template_id == 	 error_mark_node, we will have issued a diagnostic to the 	 user, as opposed to simply marking the tentative parse as 	 failed?  */
+if|if
+condition|(
+name|cp_parser_error_occurred
+argument_list|(
+name|parser
+argument_list|)
+operator|&&
+name|template_id
+operator|!=
+name|error_mark_node
+condition|)
+name|error
+argument_list|(
+literal|"parse error in template argument list"
+argument_list|)
+expr_stmt|;
 block|}
 name|pop_deferring_access_checks
 argument_list|()
@@ -22485,6 +22642,8 @@ name|parser
 operator|->
 name|scope
 argument_list|)
+operator|&&
+name|check_dependency_p
 operator|&&
 name|dependent_type_p
 argument_list|(
@@ -22744,6 +22903,11 @@ condition|)
 empty_stmt|;
 else|else
 block|{
+name|tree
+name|fn
+init|=
+name|NULL_TREE
+decl_stmt|;
 comment|/* The standard does not explicitly indicate whether a name that 	 names a set of overloaded declarations, some of which are 	 templates, is a template-name.  However, such a name should 	 be a template-name; otherwise, there is no way to form a 	 template-id for the overloaded templates.  */
 name|fns
 operator|=
@@ -22768,10 +22932,6 @@ argument_list|)
 operator|==
 name|OVERLOAD
 condition|)
-block|{
-name|tree
-name|fn
-decl_stmt|;
 for|for
 control|(
 name|fn
@@ -22800,8 +22960,11 @@ operator|==
 name|TEMPLATE_DECL
 condition|)
 break|break;
-block|}
-else|else
+if|if
+condition|(
+operator|!
+name|fn
+condition|)
 block|{
 comment|/* Otherwise, the name does not name a template.  */
 name|cp_parser_error
@@ -23819,6 +23982,9 @@ name|NULL
 argument_list|,
 comment|/*parenthesized_p=*/
 name|NULL
+argument_list|,
+comment|/*member_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 name|cp_parser_check_for_definition_in_return_type
@@ -24110,6 +24276,101 @@ condition|(
 name|keyword
 condition|)
 block|{
+case|case
+name|RID_ENUM
+case|:
+comment|/* 'enum' [identifier] '{' introduces an enum-specifier; 	 'enum'<anything else> introduces an elaborated-type-specifier.  */
+if|if
+condition|(
+name|cp_lexer_peek_nth_token
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|,
+literal|2
+argument_list|)
+operator|->
+name|type
+operator|==
+name|CPP_OPEN_BRACE
+operator|||
+operator|(
+name|cp_lexer_peek_nth_token
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|,
+literal|2
+argument_list|)
+operator|->
+name|type
+operator|==
+name|CPP_NAME
+operator|&&
+name|cp_lexer_peek_nth_token
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|,
+literal|3
+argument_list|)
+operator|->
+name|type
+operator|==
+name|CPP_OPEN_BRACE
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|parser
+operator|->
+name|num_template_parameter_lists
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"template declaration of `enum'"
+argument_list|)
+expr_stmt|;
+name|cp_parser_skip_to_end_of_block_or_statement
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
+name|type_spec
+operator|=
+name|error_mark_node
+expr_stmt|;
+block|}
+else|else
+name|type_spec
+operator|=
+name|cp_parser_enum_specifier
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|declares_class_or_enum
+condition|)
+operator|*
+name|declares_class_or_enum
+operator|=
+literal|2
+expr_stmt|;
+return|return
+name|type_spec
+return|;
+block|}
+else|else
+goto|goto
+name|elaborated_type_specifier
+goto|;
 comment|/* Any of these indicate either a class-specifier, or an 	 elaborated-type-specifier.  */
 case|case
 name|RID_CLASS
@@ -24120,30 +24381,13 @@ case|:
 case|case
 name|RID_UNION
 case|:
-case|case
-name|RID_ENUM
-case|:
 comment|/* Parse tentatively so that we can back up if we don't find a 	 class-specifier or enum-specifier.  */
 name|cp_parser_parse_tentatively
 argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
-comment|/* Look for the class-specifier or enum-specifier.  */
-if|if
-condition|(
-name|keyword
-operator|==
-name|RID_ENUM
-condition|)
-name|type_spec
-operator|=
-name|cp_parser_enum_specifier
-argument_list|(
-name|parser
-argument_list|)
-expr_stmt|;
-else|else
+comment|/* Look for the class-specifier.  */
 name|type_spec
 operator|=
 name|cp_parser_class_specifier
@@ -24177,6 +24421,8 @@ comment|/* Fall through.  */
 case|case
 name|RID_TYPENAME
 case|:
+name|elaborated_type_specifier
+label|:
 comment|/* Look for an elaborated-type-specifier.  */
 name|type_spec
 operator|=
@@ -26794,21 +27040,11 @@ argument_list|,
 name|CPP_SCOPE
 argument_list|)
 condition|)
-block|{
-comment|/* Consume the `::' token.  */
-name|cp_lexer_consume_token
-argument_list|(
-name|parser
-operator|->
-name|lexer
-argument_list|)
-expr_stmt|;
 comment|/* The inputs are coming next.  */
 name|inputs_p
 operator|=
 name|true
 expr_stmt|;
-block|}
 comment|/* Look for inputs.  */
 if|if
 condition|(
@@ -26824,12 +27060,7 @@ name|CPP_COLON
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|inputs_p
-condition|)
-comment|/* Consume the `:'.  */
+comment|/* Consume the `:' or `::'.  */
 name|cp_lexer_consume_token
 argument_list|(
 name|parser
@@ -26847,15 +27078,6 @@ operator|->
 name|lexer
 argument_list|,
 name|CPP_COLON
-argument_list|)
-operator|&&
-name|cp_lexer_next_token_is_not
-argument_list|(
-name|parser
-operator|->
-name|lexer
-argument_list|,
-name|CPP_SCOPE
 argument_list|)
 operator|&&
 name|cp_lexer_next_token_is_not
@@ -26907,12 +27129,7 @@ name|CPP_COLON
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|clobbers_p
-condition|)
-comment|/* Consume the `:'.  */
+comment|/* Consume the `:' or `::'.  */
 name|cp_lexer_consume_token
 argument_list|(
 name|parser
@@ -27139,6 +27356,9 @@ name|ctor_dtor_or_conv_p
 argument_list|,
 comment|/*parenthesized_p=*/
 name|NULL
+argument_list|,
+comment|/*member_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* Gather up the deferred checks.  */
@@ -27720,7 +27940,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse a declarator.        declarator:      direct-declarator      ptr-operator declarator       abstract-declarator:      ptr-operator abstract-declarator [opt]      direct-abstract-declarator     GNU Extensions:     declarator:      attributes [opt] direct-declarator      attributes [opt] ptr-operator declarator       abstract-declarator:      attributes [opt] ptr-operator abstract-declarator [opt]      attributes [opt] direct-abstract-declarator          Returns a representation of the declarator.  If the declarator has    the form `* declarator', then an INDIRECT_REF is returned, whose    only operand is the sub-declarator.  Analogously, `& declarator' is    represented as an ADDR_EXPR.  For `X::* declarator', a SCOPE_REF is    used.  The first operand is the TYPE for `X'.  The second operand    is an INDIRECT_REF whose operand is the sub-declarator.     Otherwise, the representation is as for a direct-declarator.     (It would be better to define a structure type to represent    declarators, rather than abusing `tree' nodes to represent    declarators.  That would be much clearer and save some memory.    There is no reason for declarators to be garbage-collected, for    example; they are created during parser and no longer needed after    `grokdeclarator' has been called.)     For a ptr-operator that has the optional cv-qualifier-seq,    cv-qualifiers will be stored in the TREE_TYPE of the INDIRECT_REF    node.     If CTOR_DTOR_OR_CONV_P is not NULL, *CTOR_DTOR_OR_CONV_P is used to    detect constructor, destructor or conversion operators. It is set    to -1 if the declarator is a name, and +1 if it is a    function. Otherwise it is set to zero. Usually you just want to    test for>0, but internally the negative value is used.        (The reason for CTOR_DTOR_OR_CONV_P is that a declaration must have    a decl-specifier-seq unless it declares a constructor, destructor,    or conversion.  It might seem that we could check this condition in    semantic analysis, rather than parsing, but that makes it difficult    to handle something like `f()'.  We want to notice that there are    no decl-specifiers, and therefore realize that this is an    expression, not a declaration.)        If PARENTHESIZED_P is non-NULL, *PARENTHESIZED_P is set to true iff    the declarator is a direct-declarator of the form "(...)".  */
+comment|/* Parse a declarator.        declarator:      direct-declarator      ptr-operator declarator       abstract-declarator:      ptr-operator abstract-declarator [opt]      direct-abstract-declarator     GNU Extensions:     declarator:      attributes [opt] direct-declarator      attributes [opt] ptr-operator declarator       abstract-declarator:      attributes [opt] ptr-operator abstract-declarator [opt]      attributes [opt] direct-abstract-declarator          Returns a representation of the declarator.  If the declarator has    the form `* declarator', then an INDIRECT_REF is returned, whose    only operand is the sub-declarator.  Analogously, `& declarator' is    represented as an ADDR_EXPR.  For `X::* declarator', a SCOPE_REF is    used.  The first operand is the TYPE for `X'.  The second operand    is an INDIRECT_REF whose operand is the sub-declarator.     Otherwise, the representation is as for a direct-declarator.     (It would be better to define a structure type to represent    declarators, rather than abusing `tree' nodes to represent    declarators.  That would be much clearer and save some memory.    There is no reason for declarators to be garbage-collected, for    example; they are created during parser and no longer needed after    `grokdeclarator' has been called.)     For a ptr-operator that has the optional cv-qualifier-seq,    cv-qualifiers will be stored in the TREE_TYPE of the INDIRECT_REF    node.     If CTOR_DTOR_OR_CONV_P is not NULL, *CTOR_DTOR_OR_CONV_P is used to    detect constructor, destructor or conversion operators. It is set    to -1 if the declarator is a name, and +1 if it is a    function. Otherwise it is set to zero. Usually you just want to    test for>0, but internally the negative value is used.        (The reason for CTOR_DTOR_OR_CONV_P is that a declaration must have    a decl-specifier-seq unless it declares a constructor, destructor,    or conversion.  It might seem that we could check this condition in    semantic analysis, rather than parsing, but that makes it difficult    to handle something like `f()'.  We want to notice that there are    no decl-specifiers, and therefore realize that this is an    expression, not a declaration.)        If PARENTHESIZED_P is non-NULL, *PARENTHESIZED_P is set to true iff    the declarator is a direct-declarator of the form "(...)".     MEMBER_P is true iff this declarator is a member-declarator.  */
 end_comment
 
 begin_function
@@ -27742,6 +27962,9 @@ parameter_list|,
 name|bool
 modifier|*
 name|parenthesized_p
+parameter_list|,
+name|bool
+name|member_p
 parameter_list|)
 block|{
 name|cp_token
@@ -27865,6 +28088,9 @@ name|NULL
 argument_list|,
 comment|/*parenthesized_p=*/
 name|NULL
+argument_list|,
+comment|/*member_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* If we are parsing an abstract-declarator, we must handle the 	 case where the dependent declarator is absent.  */
@@ -27955,6 +28181,8 @@ argument_list|,
 name|dcl_kind
 argument_list|,
 name|ctor_dtor_or_conv_p
+argument_list|,
+name|member_p
 argument_list|)
 expr_stmt|;
 block|}
@@ -28002,6 +28230,9 @@ parameter_list|,
 name|int
 modifier|*
 name|ctor_dtor_or_conv_p
+parameter_list|,
+name|bool
+name|member_p
 parameter_list|)
 block|{
 name|cp_token
@@ -28083,6 +28314,12 @@ decl_stmt|;
 name|unsigned
 name|saved_num_template_parameter_lists
 decl_stmt|;
+comment|/* In a member-declarator, the only valid interpretation 		 of a parenthesis is the start of a 		 parameter-declaration-clause.  (It is invalid to 		 initialize a static data member with a parenthesized 		 initializer; only the "=" form of initialization is 		 permitted.)  */
+if|if
+condition|(
+operator|!
+name|member_p
+condition|)
 name|cp_parser_parse_tentatively
 argument_list|(
 name|parser
@@ -28145,6 +28382,8 @@ expr_stmt|;
 comment|/* If all went well, parse the cv-qualifier-seq and the 	     	 exception-specification.  */
 if|if
 condition|(
+name|member_p
+operator|||
 name|cp_parser_parse_definitely
 argument_list|(
 name|parser
@@ -28278,6 +28517,8 @@ name|ctor_dtor_or_conv_p
 argument_list|,
 comment|/*parenthesized_p=*/
 name|NULL
+argument_list|,
+name|member_p
 argument_list|)
 expr_stmt|;
 name|parser
@@ -29391,6 +29632,9 @@ name|NULL
 argument_list|,
 comment|/*parenthesized_p=*/
 name|NULL
+argument_list|,
+comment|/*member_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* Check to see if there really was a declarator.  */
@@ -30256,6 +30500,9 @@ comment|/*ctor_dtor_or_conv_p=*/
 name|NULL
 argument_list|,
 name|parenthesized_p
+argument_list|,
+comment|/*member_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 name|parser
@@ -30866,7 +31113,15 @@ parameter_list|)
 block|{
 name|tree
 name|initializer
+init|=
+name|NULL_TREE
 decl_stmt|;
+comment|/* Assume the expression is constant.  */
+operator|*
+name|non_constant_p
+operator|=
+name|false
+expr_stmt|;
 comment|/* If it is not a `{', then we are looking at an      assignment-expression.  */
 if|if
 condition|(
@@ -30878,6 +31133,122 @@ name|lexer
 argument_list|,
 name|CPP_OPEN_BRACE
 argument_list|)
+condition|)
+block|{
+comment|/* Speed up common initializers (simply a literal).  */
+name|cp_token
+modifier|*
+name|token
+init|=
+name|cp_lexer_peek_token
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|)
+decl_stmt|;
+name|cp_token
+modifier|*
+name|token2
+init|=
+name|cp_lexer_peek_nth_token
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|token2
+operator|->
+name|type
+operator|==
+name|CPP_COMMA
+condition|)
+switch|switch
+condition|(
+name|token
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|CPP_CHAR
+case|:
+case|case
+name|CPP_WCHAR
+case|:
+case|case
+name|CPP_NUMBER
+case|:
+name|token
+operator|=
+name|cp_lexer_consume_token
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|)
+expr_stmt|;
+name|initializer
+operator|=
+name|token
+operator|->
+name|value
+expr_stmt|;
+break|break;
+case|case
+name|CPP_STRING
+case|:
+case|case
+name|CPP_WSTRING
+case|:
+name|token
+operator|=
+name|cp_lexer_consume_token
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TREE_CHAIN
+argument_list|(
+name|token
+operator|->
+name|value
+argument_list|)
+condition|)
+name|initializer
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|token
+operator|->
+name|value
+argument_list|)
+expr_stmt|;
+else|else
+name|initializer
+operator|=
+name|token
+operator|->
+name|value
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+comment|/* Otherwise, fall back to the generic assignment expression.  */
+if|if
+condition|(
+operator|!
+name|initializer
 condition|)
 block|{
 name|initializer
@@ -30905,6 +31276,7 @@ argument_list|(
 name|initializer
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -31593,6 +31965,11 @@ name|pop_p
 init|=
 name|false
 decl_stmt|;
+name|tree
+name|scope
+init|=
+name|NULL_TREE
+decl_stmt|;
 name|push_deferring_access_checks
 argument_list|(
 name|dk_no_deferred
@@ -31682,10 +32059,9 @@ if|if
 condition|(
 name|nested_name_specifier_p
 condition|)
-name|pop_p
+block|{
+name|scope
 operator|=
-name|push_scope
-argument_list|(
 name|CP_DECL_CONTEXT
 argument_list|(
 name|TYPE_MAIN_DECL
@@ -31693,8 +32069,15 @@ argument_list|(
 name|type
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|pop_p
+operator|=
+name|push_scope
+argument_list|(
+name|scope
 argument_list|)
 expr_stmt|;
+block|}
 name|type
 operator|=
 name|begin_class_definition
@@ -31799,13 +32182,7 @@ name|pop_p
 condition|)
 name|pop_scope
 argument_list|(
-name|CP_DECL_CONTEXT
-argument_list|(
-name|TYPE_MAIN_DECL
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
+name|scope
 argument_list|)
 expr_stmt|;
 comment|/* If this class is not itself within the scope of another class,      then we need to parse the bodies of all of the queued function      definitions.  Note that the queued functions defined in a class      are not always processed immediately following the      class-specifier for that class.  Consider:         struct A {          struct B { void f() { sizeof (A); } };        };       If `f' were processed before the processing of `A' were      completed, there would be no way to compute the size of `A'.      Note that the nesting we are interested in here is lexical --      not the semantic nesting given by TYPE_CONTEXT.  In particular,      for:         struct A { struct B; };        struct A::B { void f() { } };       there is no need to delay the parsing of `A::B::f'.  */
@@ -32445,6 +32822,31 @@ block|{
 name|tree
 name|scope
 decl_stmt|;
+comment|/* Reject typedef-names in class heads.  */
+if|if
+condition|(
+operator|!
+name|DECL_IMPLICIT_TYPEDEF_P
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"invalid class name in declaration of `%D'"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|NULL_TREE
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 comment|/* Figure out in what scope the declaration is being placed.  */
 name|scope
 operator|=
@@ -33639,6 +34041,9 @@ name|ctor_dtor_or_conv_p
 argument_list|,
 comment|/*parenthesized_p=*/
 name|NULL
+argument_list|,
+comment|/*member_p=*/
+name|true
 argument_list|)
 expr_stmt|;
 comment|/* If something went wrong parsing the declarator, make sure 		 that we at least consume some tokens.  */
@@ -35228,6 +35633,9 @@ name|NULL
 argument_list|,
 comment|/*parenthesized_p=*/
 name|NULL
+argument_list|,
+comment|/*member_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* Restore the saved message.  */
@@ -35945,18 +36353,16 @@ condition|(
 name|token
 operator|->
 name|type
-operator|!=
+operator|==
 name|CPP_NAME
-operator|&&
+operator|||
 name|token
 operator|->
 name|type
-operator|!=
+operator|==
 name|CPP_KEYWORD
 condition|)
-return|return
-name|error_mark_node
-return|;
+block|{
 comment|/* Consume the token.  */
 name|token
 operator|=
@@ -35967,7 +36373,7 @@ operator|->
 name|lexer
 argument_list|)
 expr_stmt|;
-comment|/* Save away the identifier that indicates which attribute this is.  */
+comment|/* Save away the identifier that indicates which attribute  	     this is.  */
 name|identifier
 operator|=
 name|token
@@ -36051,7 +36457,8 @@ operator|->
 name|lexer
 argument_list|)
 expr_stmt|;
-comment|/* If the next token isn't a `,', we're done.  */
+block|}
+comment|/* Now, look for more attributes.  If the next token isn't a 	 `,', we're done.  */
 if|if
 condition|(
 name|token
@@ -39579,6 +39986,22 @@ expr_stmt|;
 comment|/* Parse the assignment-expression.  */
 if|if
 condition|(
+name|DECL_FRIEND_CONTEXT
+argument_list|(
+name|fn
+argument_list|)
+condition|)
+name|push_nested_class
+argument_list|(
+name|DECL_FRIEND_CONTEXT
+argument_list|(
+name|fn
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|DECL_CLASS_SCOPE_P
 argument_list|(
 name|fn
@@ -39604,6 +40027,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DECL_FRIEND_CONTEXT
+argument_list|(
+name|fn
+argument_list|)
+operator|||
 name|DECL_CLASS_SCOPE_P
 argument_list|(
 name|fn
@@ -40474,7 +40902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns TRUE iff the next token is the "," or ">" ending a    template-argument. ">>" is also accepted (after the full    argument was parsed) because it's probably a typo for ">>",    and there is a specific diagnostic for this.  */
+comment|/* Returns TRUE iff the next token is the "," or ">" ending a    template-argument.   */
 end_comment
 
 begin_function
@@ -40513,12 +40941,6 @@ operator|->
 name|type
 operator|==
 name|CPP_GREATER
-operator|||
-name|token
-operator|->
-name|type
-operator|==
-name|CPP_RSHIFT
 operator|)
 return|;
 block|}

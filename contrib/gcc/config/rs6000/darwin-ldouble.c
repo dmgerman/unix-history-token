@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 128-bit long double support routines for Darwin.    Copyright (C) 1993, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* 128-bit long double support routines for Darwin.    Copyright (C) 1993, 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -26,6 +26,11 @@ operator|||
 name|defined
 argument_list|(
 name|__powerpc64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX
 argument_list|)
 operator|)
 end_if
@@ -58,7 +63,7 @@ begin_function_decl
 specifier|extern
 name|long
 name|double
-name|_xlqadd
+name|__gcc_qadd
 parameter_list|(
 name|double
 parameter_list|,
@@ -75,7 +80,7 @@ begin_function_decl
 specifier|extern
 name|long
 name|double
-name|_xlqsub
+name|__gcc_qsub
 parameter_list|(
 name|double
 parameter_list|,
@@ -92,7 +97,7 @@ begin_function_decl
 specifier|extern
 name|long
 name|double
-name|_xlqmul
+name|__gcc_qmul
 parameter_list|(
 name|double
 parameter_list|,
@@ -109,7 +114,7 @@ begin_function_decl
 specifier|extern
 name|long
 name|double
-name|_xlqdiv
+name|__gcc_qdiv
 parameter_list|(
 name|double
 parameter_list|,
@@ -121,6 +126,29 @@ name|double
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__ELF__
+operator|&&
+name|defined
+name|IN_LIBGCC2_S
+end_if
+
+begin_comment
+comment|/* Provide definitions of the old symbol names to statisfy apps and    shared libs built against an older libgcc.  To access the _xlq    symbols an explicit version reference is needed, so these won't    satisfy an unadorned reference like _xlqadd.  If dot symbols are    not needed, the assembler will remove the aliases from the symbol    table.  */
+end_comment
+
+begin_asm
+asm|__asm__ (".symver __gcc_qadd,_xlqadd@GCC_3.4\n\t"          ".symver __gcc_qsub,_xlqsub@GCC_3.4\n\t"          ".symver __gcc_qmul,_xlqmul@GCC_3.4\n\t"          ".symver __gcc_qdiv,_xlqdiv@GCC_3.4\n\t"          ".symver .__gcc_qadd,._xlqadd@GCC_3.4\n\t"          ".symver .__gcc_qsub,._xlqsub@GCC_3.4\n\t"          ".symver .__gcc_qmul,._xlqmul@GCC_3.4\n\t"          ".symver .__gcc_qdiv,._xlqdiv@GCC_3.4");
+end_asm
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -160,7 +188,7 @@ end_comment
 begin_function
 name|long
 name|double
-name|_xlqadd
+name|__gcc_qadd
 parameter_list|(
 name|double
 name|a
@@ -415,7 +443,7 @@ end_function
 begin_function
 name|long
 name|double
-name|_xlqsub
+name|__gcc_qsub
 parameter_list|(
 name|double
 name|a
@@ -431,7 +459,7 @@ name|d
 parameter_list|)
 block|{
 return|return
-name|_xlqadd
+name|__gcc_qadd
 argument_list|(
 name|a
 argument_list|,
@@ -450,7 +478,7 @@ end_function
 begin_function
 name|long
 name|double
-name|_xlqmul
+name|__gcc_qmul
 parameter_list|(
 name|double
 name|a
@@ -591,7 +619,7 @@ end_function
 begin_function
 name|long
 name|double
-name|_xlqdiv
+name|__gcc_qdiv
 parameter_list|(
 name|double
 name|a

@@ -2007,7 +2007,7 @@ begin_define
 define|#
 directive|define
 name|LINK_OS_FREEBSD_SPEC
-value|"\   %{p:%e`-p' not supported; use `-pg' and gprof(1)} \   %{Wl,*:%*} \   %{v:-V} \   %{assert*} %{R*} %{rpath*} %{defsym*} \   %{shared:-Bshareable %{h*} %{soname*}} \   %{!shared: \     %{!static: \       %{rdynamic: -export-dynamic} \       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \     %{static:-Bstatic}} \   %{symbolic:-Bsymbolic}"
+value|"\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \   %{Wl,*:%*} \   %{v:-V} \   %{assert*} %{R*} %{rpath*} %{defsym*} \   %{shared:-Bshareable %{h*} %{soname*}} \   %{!shared: \     %{!static: \       %{rdynamic: -export-dynamic} \       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \     %{static:-Bstatic}} \   %{symbolic:-Bsymbolic}"
 end_define
 
 begin_comment
@@ -2055,7 +2055,7 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_LINUX_SPEC
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} \ %{mnewlib: ecrtn.o%s} %{!mnewlib: crtn.o%s}"
+value|"\ %{shared|pie:crtendS.o%s;:crtend.o%s} \ %{mnewlib:ecrtn.o%s;:crtn.o%s}"
 end_define
 
 begin_define
@@ -2461,6 +2461,7 @@ begin_define
 define|#
 directive|define
 name|RELOCATABLE_NEEDS_FIXUP
+value|1
 end_define
 
 end_unit

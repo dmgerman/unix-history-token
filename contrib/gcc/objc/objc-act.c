@@ -28190,6 +28190,8 @@ literal|'f'
 argument|; break; 	case
 literal|64
 argument|: 	case
+literal|96
+argument|: 	case
 literal|128
 argument|: c =
 literal|'d'

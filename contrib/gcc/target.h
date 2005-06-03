@@ -756,6 +756,19 @@ name|int
 name|ignore
 parameter_list|)
 function_decl|;
+comment|/* For a vendor-specific fundamental TYPE, return a pointer to      a statically-allocated string containing the C++ mangling for      TYPE.  In all other cases, return NULL.  */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|mangle_fundamental_type
+function_decl|)
+parameter_list|(
+name|tree
+name|type
+parameter_list|)
+function_decl|;
 comment|/* Make any adjustments to libfunc names needed for this target.  */
 name|void
 function_decl|(

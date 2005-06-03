@@ -79,6 +79,12 @@ directive|include
 file|"flags.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"target.h"
+end_include
+
 begin_comment
 comment|/* Debugging support.  */
 end_comment
@@ -5101,6 +5107,32 @@ comment|/* Includes wchar_t.  */
 case|case
 name|REAL_TYPE
 case|:
+block|{
+comment|/* Handle any target-specific fundamental types.  */
+specifier|const
+name|char
+modifier|*
+name|target_mangling
+init|=
+name|targetm
+operator|.
+name|mangle_fundamental_type
+argument_list|(
+name|type
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|target_mangling
+condition|)
+block|{
+name|write_string
+argument_list|(
+name|target_mangling
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* If this is a typedef, TYPE may not be one of 	     the standard builtin type nodes, but an alias of one.  Use 	     TYPE_MAIN_VARIANT to get to the underlying builtin type.  */
 name|write_builtin_type
 argument_list|(
@@ -5114,6 +5146,7 @@ operator|++
 name|is_builtin_type
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|COMPLEX_TYPE
 case|:

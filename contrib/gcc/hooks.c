@@ -610,5 +610,26 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Generic hook that takes a tree and returns a NULL string.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|hook_constcharptr_tree_null
+parameter_list|(
+name|tree
+name|t
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
 end_unit
 

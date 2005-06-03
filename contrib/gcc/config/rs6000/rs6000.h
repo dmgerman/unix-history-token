@@ -690,7 +690,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|TARGET_XL_CALL
+name|TARGET_XL_COMPAT
 value|0
 end_define
 
@@ -924,7 +924,7 @@ define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{									\    {"cpu=",&rs6000_select[1].string,					\     N_("Use features of and schedule code for given CPU"), 0},		\    {"tune=",&rs6000_select[2].string,					\     N_("Schedule code for given CPU"), 0},				\    {"debug=",&rs6000_debug_name, N_("Enable debug output"), 0},	\    {"traceback=",&rs6000_traceback_name,				\     N_("Select full, part, or no traceback table"), 0},			\    {"abi=",&rs6000_abi_string, N_("Specify ABI to use"), 0},		\    {"long-double-",&rs6000_long_double_size_string,			\     N_("Specify size of long double (64 or 128 bits)"), 0},		\    {"isel=",&rs6000_isel_string,                                       \     N_("Specify yes/no if isel instructions should be generated"), 0},  \    {"spe=",&rs6000_spe_string,                                         \     N_("Specify yes/no if SPE SIMD instructions should be generated"), 0},\    {"float-gprs=",&rs6000_float_gprs_string,                           \     N_("Specify yes/no if using floating point in the GPRs"), 0},       \    {"vrsave=",&rs6000_altivec_vrsave_string,                           \     N_("Specify yes/no if VRSAVE instructions should be generated for AltiVec"), 0}, \    {"longcall",&rs6000_longcall_switch,				\     N_("Avoid all range limits on call instructions"), 0},		\    {"no-longcall",&rs6000_longcall_switch, "", 0},			\    {"sched-costly-dep=",&rs6000_sched_costly_dep_str,                  \     N_("Determine which dependences between insns are considered costly"), 0}, \    {"insert-sched-nops=",&rs6000_sched_insert_nops_str,                \     N_("Specify which post scheduling nop insertion scheme to apply"), 0}, \    {"align-",&rs6000_alignment_string,					\     N_("Specify alignment of structure fields default/natural"), 0},	\    {"prioritize-restricted-insns=",&rs6000_sched_restricted_insns_priority_str, \     N_("Specify scheduling priority for dispatch slot restricted insns"), 0}, \    SUBTARGET_OPTIONS							\ }
+value|{									\    {"cpu=",&rs6000_select[1].string,					\     N_("Use features of and schedule code for given CPU"), 0},		\    {"tune=",&rs6000_select[2].string,					\     N_("Schedule code for given CPU"), 0},				\    {"debug=",&rs6000_debug_name, N_("Enable debug output"), 0},	\    {"traceback=",&rs6000_traceback_name,				\     N_("Select full, part, or no traceback table"), 0},			\    {"abi=",&rs6000_abi_string, N_("Specify ABI to use"), 0},		\    {"long-double-",&rs6000_long_double_size_string,			\     N_("Specify size of long double (64 or 128 bits)"), 0},		\    {"isel=",&rs6000_isel_string,                                       \     N_("Specify yes/no if isel instructions should be generated"), 0},  \    {"spe=",&rs6000_spe_string,                                         \     N_("Specify yes/no if SPE SIMD instructions should be generated"), 0},\    {"float-gprs=",&rs6000_float_gprs_string,                           \     N_("Specify yes/no if using floating point in the GPRs"), 0},       \    {"vrsave=",&rs6000_altivec_vrsave_string,                           \     N_("Specify yes/no if VRSAVE instructions should be generated for AltiVec"), 0}, \    {"longcall",&rs6000_longcall_switch,				\     N_("Avoid all range limits on call instructions"), 0},		\    {"no-longcall",&rs6000_longcall_switch, "", 0},			\    {"warn-altivec-long",&rs6000_warn_altivec_long_switch, \     N_("Warn about deprecated 'vector long ...' AltiVec type usage"), 0}, \    {"no-warn-altivec-long",&rs6000_warn_altivec_long_switch, "", 0}, \    {"sched-costly-dep=",&rs6000_sched_costly_dep_str,                  \     N_("Determine which dependences between insns are considered costly"), 0}, \    {"insert-sched-nops=",&rs6000_sched_insert_nops_str,                \     N_("Specify which post scheduling nop insertion scheme to apply"), 0}, \    {"align-",&rs6000_alignment_string,					\     N_("Specify alignment of structure fields default/natural"), 0},	\    {"prioritize-restricted-insns=",&rs6000_sched_restricted_insns_priority_str, \     N_("Specify scheduling priority for dispatch slot restricted insns"), 0}, \    SUBTARGET_OPTIONS							\ }
 end_define
 
 begin_comment
@@ -1232,6 +1232,22 @@ specifier|extern
 name|enum
 name|rs6000_nop_insertion
 name|rs6000_sched_insert_nops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rs6000_warn_altivec_long
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|rs6000_warn_altivec_long_switch
 decl_stmt|;
 end_decl_stmt
 
@@ -2473,7 +2489,7 @@ define|#
 directive|define
 name|CONDITIONAL_REGISTER_USAGE
 define|\
-value|{									\   int i;								\   if (! TARGET_POWER)							\     fixed_regs[64] = 1;							\   if (TARGET_64BIT)							\     fixed_regs[13] = call_used_regs[13]					\       = call_really_used_regs[13] = 1; 					\   if (TARGET_SOFT_FLOAT || !TARGET_FPRS)				\     for (i = 32; i< 64; i++)						\       fixed_regs[i] = call_used_regs[i]					\         = call_really_used_regs[i] = 1;					\   if (DEFAULT_ABI == ABI_V4						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM			\&& flag_pic == 2)							\     fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;			\   if (DEFAULT_ABI == ABI_V4						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM			\&& flag_pic == 1)							\     fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (DEFAULT_ABI == ABI_DARWIN						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)			\     global_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (TARGET_ALTIVEC)                                                   \     global_regs[VSCR_REGNO] = 1;                                        \   if (TARGET_SPE)							\     {                                                                   \       global_regs[SPEFSCR_REGNO] = 1;					\       fixed_regs[FIXED_SCRATCH]						\         = call_used_regs[FIXED_SCRATCH]					\ 	= call_really_used_regs[FIXED_SCRATCH] = 1; 			\     }                                                                   \   if (! TARGET_ALTIVEC)							\     {									\       for (i = FIRST_ALTIVEC_REGNO; i<= LAST_ALTIVEC_REGNO; ++i)	\ 	fixed_regs[i] = call_used_regs[i] = call_really_used_regs[i] = 1; \       call_really_used_regs[VRSAVE_REGNO] = 1;				\     }									\   if (TARGET_ALTIVEC_ABI)						\     for (i = FIRST_ALTIVEC_REGNO; i< FIRST_ALTIVEC_REGNO + 20; ++i)	\       call_used_regs[i] = call_really_used_regs[i] = 1;			\ }
+value|{									\   int i;								\   if (! TARGET_POWER)							\     fixed_regs[64] = 1;							\   if (TARGET_64BIT)							\     fixed_regs[13] = call_used_regs[13]					\       = call_really_used_regs[13] = 1; 					\   if (TARGET_SOFT_FLOAT || !TARGET_FPRS)				\     for (i = 32; i< 64; i++)						\       fixed_regs[i] = call_used_regs[i]					\         = call_really_used_regs[i] = 1;					\   if (DEFAULT_ABI == ABI_V4						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM			\&& flag_pic == 2)							\     fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;			\   if (DEFAULT_ABI == ABI_V4						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM			\&& flag_pic == 1)							\     fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (DEFAULT_ABI == ABI_DARWIN						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)			\     global_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (TARGET_TOC&& TARGET_MINIMAL_TOC)					\     fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;		\   if (TARGET_ALTIVEC)                                                   \     global_regs[VSCR_REGNO] = 1;                                        \   if (TARGET_SPE)							\     {                                                                   \       global_regs[SPEFSCR_REGNO] = 1;					\       fixed_regs[FIXED_SCRATCH]						\         = call_used_regs[FIXED_SCRATCH]					\ 	= call_really_used_regs[FIXED_SCRATCH] = 1; 			\     }                                                                   \   if (! TARGET_ALTIVEC)							\     {									\       for (i = FIRST_ALTIVEC_REGNO; i<= LAST_ALTIVEC_REGNO; ++i)	\ 	fixed_regs[i] = call_used_regs[i] = call_really_used_regs[i] = 1; \       call_really_used_regs[VRSAVE_REGNO] = 1;				\     }									\   if (TARGET_ALTIVEC_ABI)						\     for (i = FIRST_ALTIVEC_REGNO; i< FIRST_ALTIVEC_REGNO + 20; ++i)	\       call_used_regs[i] = call_really_used_regs[i] = 1;			\ }
 end_define
 
 begin_comment
@@ -5662,8 +5678,10 @@ block|,
 name|ALTIVEC_BUILTIN_ABS_V8HI
 block|,
 name|ALTIVEC_BUILTIN_ABS_V16QI
-comment|/* SPE builtins.  */
 block|,
+name|ALTIVEC_BUILTIN_COMPILETIME_ERROR
+block|,
+comment|/* SPE builtins.  */
 name|SPE_BUILTIN_EVADDW
 block|,
 name|SPE_BUILTIN_EVAND

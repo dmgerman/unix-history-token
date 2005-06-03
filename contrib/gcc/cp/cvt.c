@@ -3235,6 +3235,25 @@ name|error_mark_node
 return|;
 if|if
 condition|(
+name|TREE_CODE
+argument_list|(
+name|expr
+argument_list|)
+operator|==
+name|PSEUDO_DTOR_EXPR
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"pseudo-destructor is not called"
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
+if|if
+condition|(
 name|VOID_TYPE_P
 argument_list|(
 name|TREE_TYPE

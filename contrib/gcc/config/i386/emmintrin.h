@@ -41,7 +41,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|double
 name|__v2df
 name|__attribute__
 typedef|((

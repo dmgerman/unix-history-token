@@ -1472,7 +1472,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|((REGNO)>= 32&& (REGNO)<= 62 					\    ? (MODE) == SFmode || (MODE) == DFmode || (MODE) == DImode		\    : 1)
+value|((REGNO)>= 32&& (REGNO)<= 62 					\    ? (MODE) == SFmode || (MODE) == DFmode || (MODE) == DImode		\      || (MODE) == SCmode || (MODE) == DCmode				\    : 1)
 end_define
 
 begin_comment
@@ -2571,6 +2571,13 @@ define|#
 directive|define
 name|DWARF_ALT_FRAME_RETURN_COLUMN
 value|DWARF_FRAME_REGNUM (64)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF_ZERO_REG
+value|31
 end_define
 
 begin_comment

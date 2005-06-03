@@ -459,7 +459,7 @@ comment|/* !IN_LIBGCOV */
 end_comment
 
 begin_comment
-comment|/* In gcov we want function linkage to be static. In libgcov we need    these functions to be extern, so prefix them with __gcov.  In the    compiler we want it extern, so that they can be accessed from    elsewhere.  */
+comment|/* In gcov we want function linkage to be static.  In the compiler we want    it extern, so that they can be accessed from elsewhere.  In libgcov we    need these functions to be extern, so prefix them with __gcov.  In    libgcov they must also be hidden so that the instance in the executable    is not also used in a DSO.  */
 end_comment
 
 begin_if
@@ -467,6 +467,16 @@ if|#
 directive|if
 name|IN_LIBGCOV
 end_if
+
+begin_include
+include|#
+directive|include
+file|"auto-host.h"
+end_include
+
+begin_comment
+comment|/* for HAVE_GAS_HIDDEN */
+end_comment
 
 begin_define
 define|#
@@ -597,6 +607,46 @@ name|gcov_sync
 name|gcov_time
 name|gcov_magic
 end_pragma
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GAS_HIDDEN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_HIDDEN
+value|__attribute__ ((__visibility__ ("hidden")))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_HIDDEN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_HIDDEN
+end_define
 
 begin_endif
 endif|#
@@ -1282,82 +1332,87 @@ begin_comment
 comment|/* Register a new object file module.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|__gcov_init
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|gcov_info
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Called before fork, to avoid double counting.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|__gcov_flush
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* The merge function that just sums the counters.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|__gcov_merge_add
-parameter_list|(
+argument_list|(
 name|gcov_type
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|unsigned
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* The merge function to choose the most common value.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|__gcov_merge_single
-parameter_list|(
+argument_list|(
 name|gcov_type
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|unsigned
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* The merge function to choose the most common difference between    consecutive values.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|__gcov_merge_delta
-parameter_list|(
+argument_list|(
 name|gcov_type
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|unsigned
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -1453,6 +1508,7 @@ endif|#
 directive|endif
 block|}
 name|gcov_var
+name|ATTRIBUTE_HIDDEN
 struct|;
 end_struct
 
@@ -1466,18 +1522,19 @@ directive|if
 name|IN_LIBGCOV
 end_if
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|int
 name|gcov_open
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 comment|/*name*/
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -1517,15 +1574,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|int
 name|gcov_close
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Available everywhere.  */
@@ -1561,37 +1619,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|gcov_unsigned_t
 name|gcov_read_unsigned
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|gcov_type
 name|gcov_read_counter
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|void
 name|gcov_read_summary
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|gcov_summary
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -1603,43 +1664,46 @@ begin_comment
 comment|/* Available only in libgcov */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|void
 name|gcov_write_counter
-parameter_list|(
+argument_list|(
 name|gcov_type
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|void
 name|gcov_write_tag_length
-parameter_list|(
+argument_list|(
 name|gcov_unsigned_t
-parameter_list|,
+argument_list|,
 name|gcov_unsigned_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|void
 name|gcov_write_summary
-parameter_list|(
+argument_list|(
 name|gcov_unsigned_t
 comment|/*tag*/
-parameter_list|,
+argument_list|,
 specifier|const
-name|struct
+expr|struct
 name|gcov_summary
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1661,16 +1725,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|void
 name|gcov_seek
-parameter_list|(
+argument_list|(
 name|gcov_position_t
 comment|/*position*/
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -1723,15 +1788,16 @@ begin_comment
 comment|/* Available outside gcov */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|GCOV_LINKAGE
 name|void
 name|gcov_write_unsigned
-parameter_list|(
+argument_list|(
 name|gcov_unsigned_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|ATTRIBUTE_HIDDEN
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

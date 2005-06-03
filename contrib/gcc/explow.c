@@ -3577,6 +3577,9 @@ decl_stmt|;
 name|start_sequence
 argument_list|()
 expr_stmt|;
+name|do_pending_stack_adjust
+argument_list|()
+expr_stmt|;
 comment|/* We must validize inside the sequence, to ensure that any instructions 	 created by the validize call also get moved to the right place.  */
 if|if
 condition|(
@@ -3619,6 +3622,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|do_pending_stack_adjust
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|sa
@@ -3788,6 +3794,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|discard_pending_stack_adjust
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|after

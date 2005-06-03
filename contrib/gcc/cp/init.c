@@ -815,9 +815,6 @@ name|ARRAY_TYPE
 condition|)
 block|{
 name|tree
-name|index
-decl_stmt|;
-name|tree
 name|max_index
 decl_stmt|;
 name|tree
@@ -872,37 +869,10 @@ argument_list|,
 name|integer_minus_one_node
 argument_list|)
 condition|)
-for|for
-control|(
-name|index
-operator|=
-name|size_zero_node
-init|;
-operator|!
-name|tree_int_cst_lt
-argument_list|(
-name|max_index
-argument_list|,
-name|index
-argument_list|)
-condition|;
-name|index
-operator|=
-name|size_binop
-argument_list|(
-name|PLUS_EXPR
-argument_list|,
-name|index
-argument_list|,
-name|size_one_node
-argument_list|)
-control|)
-name|inits
-operator|=
-name|tree_cons
-argument_list|(
-name|index
-argument_list|,
+block|{
+name|tree
+name|elt_init
+init|=
 name|build_zero_init
 argument_list|(
 name|TREE_TYPE
@@ -915,10 +885,33 @@ name|NULL_TREE
 argument_list|,
 name|static_storage_p
 argument_list|)
+decl_stmt|;
+name|tree
+name|range
+init|=
+name|build
+argument_list|(
+name|RANGE_EXPR
+argument_list|,
+name|sizetype
+argument_list|,
+name|size_zero_node
+argument_list|,
+name|max_index
+argument_list|)
+decl_stmt|;
+name|inits
+operator|=
+name|tree_cons
+argument_list|(
+name|range
+argument_list|,
+name|elt_init
 argument_list|,
 name|inits
 argument_list|)
 expr_stmt|;
+block|}
 name|CONSTRUCTOR_ELTS
 argument_list|(
 name|init
@@ -4522,11 +4515,14 @@ name|name
 return|;
 if|if
 condition|(
-name|processing_template_decl
-operator|||
-name|uses_template_parms
+name|dependent_type_p
 argument_list|(
 name|type
+argument_list|)
+operator|||
+name|type_dependent_expression_p
+argument_list|(
+name|name
 argument_list|)
 condition|)
 return|return
@@ -4805,6 +4801,7 @@ return|return
 name|error_mark_node
 return|;
 block|}
+comment|/* Set up BASEBINFO for member lookup.  */
 name|decl
 operator|=
 name|maybe_dummy_object
@@ -5390,7 +5387,7 @@ name|d2
 argument_list|)
 return|;
 block|}
-if|if
+while|while
 condition|(
 name|DECL_P
 argument_list|(
@@ -5405,7 +5402,7 @@ name|decl
 argument_list|)
 operator|==
 name|CONST_DECL
-comment|/* And so are variables with a 'const' type -- unless they 	     are also 'volatile'.  */
+comment|/* And so are variables with a 'const' type -- unless they 		are also 'volatile'.  */
 operator|||
 name|CP_TYPE_CONST_NON_VOLATILE_P
 argument_list|(
@@ -5427,7 +5424,7 @@ name|decl
 argument_list|)
 operator|!=
 name|error_mark_node
-comment|/* This is invalid if initial value is not constant. 	 If it has either a function call, a memory reference, 	 or a variable, then re-evaluating it could give different results.  */
+comment|/* This is invalid if initial value is not constant.  If it 	    has either a function call, a memory reference, or a 	    variable, then re-evaluating it could give different 	    results.  */
 operator|&&
 name|TREE_CONSTANT
 argument_list|(
@@ -5436,7 +5433,7 @@ argument_list|(
 name|decl
 argument_list|)
 argument_list|)
-comment|/* Check for cases where this is sub-optimal, even though valid.  */
+comment|/* Check for cases where this is sub-optimal, even though 	    valid.  */
 operator|&&
 name|TREE_CODE
 argument_list|(
@@ -5448,12 +5445,13 @@ argument_list|)
 operator|!=
 name|CONSTRUCTOR
 condition|)
-return|return
+name|decl
+operator|=
 name|DECL_INITIAL
 argument_list|(
 name|decl
 argument_list|)
-return|;
+expr_stmt|;
 return|return
 name|decl
 return|;
@@ -8663,6 +8661,10 @@ argument_list|(
 name|atype
 argument_list|)
 decl_stmt|;
+comment|/* The element type reached after removing all outer array       types.  */
+name|tree
+name|inner_elt_type
+decl_stmt|;
 comment|/* The type of a pointer to an element in the array.  */
 name|tree
 name|ptype
@@ -8721,6 +8723,13 @@ condition|)
 return|return
 name|error_mark_node
 return|;
+name|inner_elt_type
+operator|=
+name|strip_array_types
+argument_list|(
+name|atype
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|init
@@ -8734,13 +8743,13 @@ operator|(
 operator|!
 name|CLASS_TYPE_P
 argument_list|(
-name|type
+name|inner_elt_type
 argument_list|)
 operator|||
 operator|!
 name|TYPE_HAS_COMPLEX_ASSIGN_REF
 argument_list|(
-name|type
+name|inner_elt_type
 argument_list|)
 operator|)
 else|:
@@ -8772,10 +8781,7 @@ operator|||
 operator|!
 name|TYPE_HAS_NONTRIVIAL_DESTRUCTOR
 argument_list|(
-name|target_type
-argument_list|(
-name|type
-argument_list|)
+name|inner_elt_type
 argument_list|)
 operator|)
 operator|)

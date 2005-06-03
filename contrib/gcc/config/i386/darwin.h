@@ -53,6 +53,16 @@ name|CC1_SPEC
 value|"%{!static:-fPIC}"
 end_define
 
+begin_comment
+comment|/* Use the following macro for any Darwin/x86-specific command-line option    translation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_OPTION_TRANSLATE_TABLE
+end_define
+
 begin_define
 define|#
 directive|define

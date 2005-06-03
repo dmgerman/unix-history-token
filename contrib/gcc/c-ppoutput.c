@@ -1698,8 +1698,6 @@ decl_stmt|;
 if|if
 condition|(
 name|flag_no_line_commands
-operator|||
-name|flag_no_output
 condition|)
 return|return;
 if|if

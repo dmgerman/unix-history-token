@@ -1386,6 +1386,9 @@ decl_stmt|;
 name|int
 name|byte_offset
 decl_stmt|;
+name|rtx
+name|orig_value
+decl_stmt|;
 name|enum
 name|machine_mode
 name|op_mode
@@ -2734,6 +2737,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* If VALUE is a floating-point mode, access it as an integer of the      corresponding size.  This can occur on a machine with 64 bit registers      that uses SFmode for float.  This can also occur for unaligned float      structure fields.  */
+name|orig_value
+operator|=
+name|value
+expr_stmt|;
 if|if
 condition|(
 name|GET_MODE_CLASS
@@ -3075,7 +3082,7 @@ name|bitpos
 argument_list|,
 name|fieldmode
 argument_list|,
-name|value
+name|orig_value
 argument_list|,
 name|total_size
 argument_list|)

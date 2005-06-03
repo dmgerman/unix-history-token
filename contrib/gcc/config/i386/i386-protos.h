@@ -801,6 +801,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|compare_operator
+parameter_list|(
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|enum
 name|machine_mode
 name|ix86_cc_mode

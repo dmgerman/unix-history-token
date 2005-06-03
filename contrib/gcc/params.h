@@ -264,6 +264,14 @@ define|\
 value|PARAM_VALUE (PARAM_MAX_UNROLLED_INSNS)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_LAST_VALUE_RTL
+define|\
+value|PARAM_VALUE (PARAM_MAX_LAST_VALUE_RTL)
+end_define
+
 begin_endif
 endif|#
 directive|endif
