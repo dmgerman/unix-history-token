@@ -37,6 +37,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<gc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_comment
@@ -67,87 +79,12 @@ name|signed_word
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
+begin_define
+define|#
+directive|define
 name|BITS_PER_WORD
-operator|==
-literal|32
-end_if
-
-begin_define
-define|#
-directive|define
-name|LOGWL
-value|5
+value|(CHAR_BIT * sizeof (word))
 end_define
-
-begin_define
-define|#
-directive|define
-name|modWORDSZ
-parameter_list|(
-name|n
-parameter_list|)
-value|((n)& 0x1f)
-end_define
-
-begin_comment
-comment|/* n mod size of word	    */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|BITS_PER_WORD
-operator|==
-literal|64
-end_if
-
-begin_define
-define|#
-directive|define
-name|LOGWL
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|modWORDSZ
-parameter_list|(
-name|n
-parameter_list|)
-value|((n)& 0x3f)
-end_define
-
-begin_comment
-comment|/* n mod size of word	    */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|divWORDSZ
-parameter_list|(
-name|n
-parameter_list|)
-value|((n)>> LOGWL)
-end_define
-
-begin_comment
-comment|/* divide n by size of word      */
-end_comment
 
 begin_include
 include|#
