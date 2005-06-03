@@ -491,7 +491,7 @@ value|aio_un.aiou_sa
 name|int
 name|aio_matchlen
 decl_stmt|;
-name|u_char
+name|char
 modifier|*
 name|aio_h_addr
 decl_stmt|;
@@ -3795,7 +3795,7 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-name|u_char
+name|char
 modifier|*
 name|ap
 decl_stmt|;
@@ -3959,10 +3959,6 @@ control|)
 block|{
 name|ap
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|hp
 operator|->
 name|h_addr_list
