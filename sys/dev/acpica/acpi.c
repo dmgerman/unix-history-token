@@ -4745,6 +4745,13 @@ expr_stmt|;
 comment|/*      * If this is an allocation of the "default" range for a given RID, and      * we know what the resources for this device are (i.e., they're on the      * child's resource list), use those start/end values.      */
 if|if
 condition|(
+name|bus
+operator|==
+name|device_get_parent
+argument_list|(
+name|child
+argument_list|)
+operator|&&
 name|start
 operator|==
 literal|0UL
