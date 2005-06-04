@@ -256,7 +256,7 @@ index|]
 operator|.
 name|flags
 operator|=
-literal|0
+name|PUC_FLAGS_MEMORY
 expr_stmt|;
 block|}
 return|return

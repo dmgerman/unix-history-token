@@ -1250,7 +1250,7 @@ name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
@@ -1348,7 +1348,7 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|,
 name|rid
 argument_list|,
@@ -1429,7 +1429,7 @@ name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|iorid
@@ -1803,7 +1803,7 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|,
 name|sc
 operator|->

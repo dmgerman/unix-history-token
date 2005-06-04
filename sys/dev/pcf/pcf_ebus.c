@@ -409,7 +409,7 @@ name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|sc
@@ -734,7 +734,7 @@ name|bus_deactivate_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|,
 name|sc
 operator|->
@@ -749,7 +749,7 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|,
 name|sc
 operator|->
@@ -895,7 +895,7 @@ name|bus_deactivate_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|,
 name|sc
 operator|->
@@ -910,7 +910,7 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|,
 name|sc
 operator|->
