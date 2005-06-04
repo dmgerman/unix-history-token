@@ -369,7 +369,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The schedulable entity that can be given a context to run.  * A process may have several of these. Probably one per processor  * but posibly a few more. In this universe they are grouped  * with a KSEG that contains the priority and niceness  * for the group.  */
+comment|/*  * The following datastructures are allocated within their parent structure  * but are scheduler specific.  */
+end_comment
+
+begin_comment
+comment|/*  * The schedulable entity that can be given a context to run.  A process may  * have several of these.  */
 end_comment
 
 begin_struct
@@ -473,100 +477,16 @@ name|ke_ksegrp
 value|ke_thread->td_ksegrp
 end_define
 
-begin_comment
-comment|/* flags kept in ke_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED0
-value|0x00001
-end_define
-
-begin_comment
-comment|/* For scheduler-specific use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED1
-value|0x00002
-end_define
-
-begin_comment
-comment|/* For scheduler-specific use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED2
-value|0x00004
-end_define
-
-begin_comment
-comment|/* For scheduler-specific use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED3
-value|0x00008
-end_define
-
-begin_comment
-comment|/* For scheduler-specific use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED4
-value|0x00010
-end_define
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED5
-value|0x00020
-end_define
-
-begin_define
-define|#
-directive|define
-name|KEF_DIDRUN
-value|0x02000
-end_define
-
-begin_comment
-comment|/* Thread actually ran. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_EXIT
-value|0x04000
-end_define
-
-begin_comment
-comment|/* Thread is being killed. */
-end_comment
-
-begin_comment
-comment|/*  * These datastructures are allocated within their parent datastructure but  * are scheduler specific.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ke_assign
 value|ke_procq.tqe_next
 end_define
+
+begin_comment
+comment|/* flags kept in ke_flags */
+end_comment
 
 begin_define
 define|#
@@ -629,6 +549,32 @@ directive|define
 name|KEF_INTERNAL
 value|0x0020
 end_define
+
+begin_comment
+comment|/* Thread added due to migration. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_DIDRUN
+value|0x02000
+end_define
+
+begin_comment
+comment|/* Thread actually ran. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_EXIT
+value|0x04000
+end_define
+
+begin_comment
+comment|/* Thread is being killed. */
+end_comment
 
 begin_struct
 struct|struct
@@ -703,10 +649,7 @@ name|SLOT_RELEASE
 parameter_list|(
 name|kg
 parameter_list|)
-define|\
-value|do {									\ 	kg->kg_avail_opennings++; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot released (->%d)",		\ 	kg,								\ 	kg->kg_concurrency,						\ 	 kg->kg_avail_opennings);					\
-comment|/*KASSERT((kg->kg_avail_opennings<= kg->kg_concurrency),	\ 	    ("slots out of whack")); */
-value|\ } while (0)
+value|(kg)->kg_avail_opennings++
 end_define
 
 begin_define
@@ -716,10 +659,7 @@ name|SLOT_USE
 parameter_list|(
 name|kg
 parameter_list|)
-define|\
-value|do {									\ 	kg->kg_avail_opennings--; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot used (->%d)",			\ 	kg,								\ 	kg->kg_concurrency,						\ 	 kg->kg_avail_opennings);					\
-comment|/*KASSERT((kg->kg_avail_opennings>= 0),			\ 	    ("slots out of whack"));*/
-value|\ } while (0)
+value|(kg)->kg_avail_opennings--
 end_define
 
 begin_decl_stmt
@@ -1226,7 +1166,6 @@ parameter_list|(
 name|struct
 name|ksegrp
 modifier|*
-name|kg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1255,7 +1194,6 @@ parameter_list|(
 name|struct
 name|kse
 modifier|*
-name|ke
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1268,7 +1206,6 @@ parameter_list|(
 name|struct
 name|ksegrp
 modifier|*
-name|kg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1281,10 +1218,8 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|,
 name|u_char
-name|prio
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1297,7 +1232,6 @@ parameter_list|(
 name|struct
 name|ksegrp
 modifier|*
-name|kg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1310,7 +1244,6 @@ parameter_list|(
 name|struct
 name|ksegrp
 modifier|*
-name|kg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1323,7 +1256,6 @@ parameter_list|(
 name|struct
 name|ksegrp
 modifier|*
-name|kg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1336,7 +1268,6 @@ parameter_list|(
 name|struct
 name|kse
 modifier|*
-name|ke
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1355,7 +1286,6 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1368,7 +1298,6 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1381,12 +1310,10 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|,
 name|struct
 name|kse
 modifier|*
-name|ke
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1399,12 +1326,10 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|,
 name|struct
 name|kse
 modifier|*
-name|ke
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1418,12 +1343,10 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|,
 name|struct
 name|kse
 modifier|*
-name|ke
 parameter_list|,
 name|int
 parameter_list|)
@@ -1439,12 +1362,10 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|,
 name|struct
 name|kse
 modifier|*
-name|ke
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1457,10 +1378,8 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|,
 name|int
-name|nice
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1473,10 +1392,8 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|,
 name|int
-name|nice
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1505,15 +1422,12 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|ksq
 parameter_list|,
 name|struct
 name|kse
 modifier|*
-name|ke
 parameter_list|,
 name|int
-name|class
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1528,7 +1442,6 @@ parameter_list|(
 name|struct
 name|runq
 modifier|*
-name|rq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1561,7 +1474,6 @@ parameter_list|(
 name|struct
 name|kseq_group
 modifier|*
-name|ksg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1574,12 +1486,10 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|high
 parameter_list|,
 name|struct
 name|kseq
 modifier|*
-name|low
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1592,10 +1502,8 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|from
 parameter_list|,
 name|int
-name|cpu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1608,7 +1516,6 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1621,10 +1528,8 @@ parameter_list|(
 name|struct
 name|kse
 modifier|*
-name|ke
 parameter_list|,
 name|int
-name|cpu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1651,10 +1556,8 @@ parameter_list|(
 name|struct
 name|kseq
 modifier|*
-name|kseq
 parameter_list|,
 name|int
-name|stealidle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6023,13 +5926,6 @@ operator|=
 name|ksq
 operator|->
 name|ksq_curr
-expr_stmt|;
-name|SLOT_USE
-argument_list|(
-name|newtd
-operator|->
-name|td_ksegrp
-argument_list|)
 expr_stmt|;
 name|TD_SET_RUNNING
 argument_list|(
