@@ -1704,6 +1704,13 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
+block|{
+literal|"rtc_mtx"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
 endif|#
 directive|endif
 endif|#
