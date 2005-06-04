@@ -468,7 +468,7 @@ name|debugproc
 parameter_list|(
 name|p
 parameter_list|)
-value|*((struct kinfo_proc **)&(p)->ki_spare[0])
+value|*((struct kinfo_proc **)&(p)->ki_udata)
 end_define
 
 begin_comment
