@@ -3292,7 +3292,7 @@ index|]
 operator|=
 name|SLLX
 operator||
-literal|12
+literal|32
 expr_stmt|;
 name|flush
 argument_list|(
