@@ -579,6 +579,7 @@ decl_stmt|;
 comment|/* number of holes seen by sender */
 name|TAILQ_HEAD
 argument_list|(
+argument|sackhole_head
 argument_list|,
 argument|sackhole
 argument_list|)
