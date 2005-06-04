@@ -146,6 +146,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_FCHFLAGS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_FCHMOD
 value|1
 end_define
@@ -175,6 +182,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_INTTYPES_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_LCHFLAGS
 value|1
 end_define
 
