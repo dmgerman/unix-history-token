@@ -1531,6 +1531,31 @@ operator||
 name|FFB_DAC_CUR_CTRL_P1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In case this is the console set the cursor of the stdout 	 * instance to the start of the last line so OFW output ends 	 * up beneath what FreeBSD left on the screen. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|CREATOR_CONSOLE
+condition|)
+block|{
+name|OF_interpret
+argument_list|(
+literal|"stdout @ is my-self 0 to column#"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|OF_interpret
+argument_list|(
+literal|"stdout @ is my-self #lines 1 - to line#"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

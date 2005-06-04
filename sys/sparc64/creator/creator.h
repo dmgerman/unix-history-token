@@ -1234,16 +1234,20 @@ name|CREATOR_AFB
 value|(1<< 0)
 define|#
 directive|define
-name|CREATOR_CUREN
+name|CREATOR_CONSOLE
 value|(1<< 1)
 define|#
 directive|define
-name|CREATOR_CURINV
+name|CREATOR_CUREN
 value|(1<< 2)
 define|#
 directive|define
-name|CREATOR_PAC1
+name|CREATOR_CURINV
 value|(1<< 3)
+define|#
+directive|define
+name|CREATOR_PAC1
+value|(1<< 4)
 block|}
 struct|;
 end_struct
