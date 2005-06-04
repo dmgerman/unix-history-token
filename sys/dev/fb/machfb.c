@@ -1274,7 +1274,6 @@ name|machfb_shutdown_final
 parameter_list|(
 name|void
 modifier|*
-name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1286,7 +1285,6 @@ name|machfb_shutdown_reset
 parameter_list|(
 name|void
 modifier|*
-name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1297,7 +1295,6 @@ name|int
 name|machfb_configure
 parameter_list|(
 name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2165,11 +2162,61 @@ name|i
 decl_stmt|,
 name|space
 decl_stmt|;
+comment|/* 	 * For the high-level console probing return the number of 	 * registered adapters. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|VIO_PROBE_ONLY
+operator|)
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|vid_find_adapter
+argument_list|(
+name|MACHFB_DRIVER_NAME
+argument_list|,
+name|i
+argument_list|)
+operator|>=
+literal|0
+condition|;
+name|i
+operator|++
+control|)
+empty_stmt|;
+return|return
+operator|(
+name|i
+operator|)
+return|;
+block|}
+comment|/* Low-level console probing and initialization. */
 name|sc
 operator|=
 operator|&
 name|machfb_softc
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_va
+operator|.
+name|va_flags
+operator|&
+name|V_ADP_REGISTERED
+condition|)
+goto|goto
+name|found
+goto|;
 if|if
 condition|(
 operator|(
@@ -2327,19 +2374,6 @@ operator|.
 name|chip_id
 condition|)
 block|{
-comment|/* 			 * When being called a second time, i.e. during 			 * sc_probe_unit(), just return at this point. 			 * Note that the polarity of the VIO_PROBE_ONLY 			 * flag is somewhat non-intuitive. 			 */
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|VIO_PROBE_ONLY
-operator|)
-condition|)
-goto|goto
-name|found
-goto|;
 name|sc
 operator|->
 name|sc_flags
@@ -4304,10 +4338,7 @@ operator|->
 name|set
 operator|&
 name|FB_CUR_SETCUR
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|fbc
 operator|->
 name|enable
@@ -4336,7 +4367,6 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-block|}
 break|break;
 default|default:
 return|return
@@ -6675,7 +6705,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For cosmetics register a handler that turns off the mouse 	 * pointer on halt. Register a second handler that turns off 	 * the CRTC when resetting, otherwise the OFW boot command 	 * issued by cpu_reset() just doesn't work. 	 */
+comment|/* 	 * Register a handler that performs some cosmetic surgery like 	 * turning off the mouse pointer on halt in preparation for 	 * handing the screen over to the OFW. Register another handler 	 * that turns off the CRTC when resetting, otherwise the OFW 	 * boot command issued by cpu_reset() just doesn't work. 	 */
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_final
@@ -7856,6 +7886,31 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In case this is the console set the cursor of the stdout 	 * instance to the start of the last line so OFW output ends 	 * up beneath what FreeBSD left on the screen. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|MACHFB_CONSOLE
+condition|)
+block|{
+name|OF_interpret
+argument_list|(
+literal|"stdout @ is my-self 0 to column#"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|OF_interpret
+argument_list|(
+literal|"stdout @ is my-self #lines 1 - to line#"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
