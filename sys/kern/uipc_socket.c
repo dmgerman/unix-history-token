@@ -3384,23 +3384,6 @@ operator|.
 name|size_ok
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-operator|(
-name|vm_offset_t
-operator|)
-name|uio
-operator|->
-name|uio_iov
-operator|->
-name|iov_base
-operator|&
-name|PAGE_MASK
-operator|)
-condition|)
-block|{
 name|so_zerocp_stats
 operator|.
 name|align_ok
@@ -3415,7 +3398,10 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-block|}
+name|len
+operator|=
+name|cow_send
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3471,11 +3457,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-name|len
-operator|=
-name|PAGE_SIZE
-expr_stmt|;
 else|#
 directive|else
 comment|/* ZERO_COPY_SOCKETS */
