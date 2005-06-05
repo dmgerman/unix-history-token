@@ -1818,7 +1818,6 @@ name|flags
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|SYS_RES_MEMORY
 case|:
@@ -2020,8 +2019,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-break|break;
-default|default:
 break|break;
 block|}
 return|return
