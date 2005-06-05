@@ -2815,7 +2815,7 @@ name|NULL
 condition|)
 return|return;
 block|}
-comment|/* 	* Tap the packet off here for a bridge.  bridge_input() 	* will return NULL if it has consumed the packet, otherwise 	* it gets processed as normal.  Note that bridge_input() 	* will always return the original packet if we need to 	* process it locally. 	*/
+comment|/* 	 * Tap the packet off here for a bridge.  bridge_input() 	 * will return NULL if it has consumed the packet, otherwise 	 * it gets processed as normal.  Note that bridge_input() 	 * will always return the original packet if we need to 	 * process it locally. 	 */
 if|if
 condition|(
 name|ifp
@@ -2896,7 +2896,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 		* Bridge has determined that the packet is for us. 		* Update our interface pointer -- we may have had 		* to "bridge" the packet locally. 		*/
+comment|/* 		 * Bridge has determined that the packet is for us. 		 * Update our interface pointer -- we may have had 		 * to "bridge" the packet locally. 		 */
 name|ifp
 operator|=
 name|m
