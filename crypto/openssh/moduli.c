@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.9 2004/07/11 17:48:47 deraadt Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.10 2005/01/17 03:25:46 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -78,7 +78,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|QTYPE_SCHNOOR
+name|QTYPE_SCHNORR
 value|(3)
 end_define
 
@@ -2023,7 +2023,7 @@ case|case
 name|QTYPE_SAFE
 case|:
 case|case
-name|QTYPE_SCHNOOR
+name|QTYPE_SCHNORR
 case|:
 case|case
 name|QTYPE_STRONG

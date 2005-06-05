@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002 Tim Rice.  All rights reserved.  * MAP_FAILED c
 end_comment
 
 begin_comment
-comment|/* $Id: xmmap.c,v 1.5 2004/08/14 13:55:38 dtucker Exp $ */
+comment|/* $Id: xmmap.c,v 1.6 2004/10/06 13:15:44 dtucker Exp $ */
 end_comment
 
 begin_include
@@ -119,6 +119,10 @@ if|if
 condition|(
 name|address
 operator|==
+operator|(
+name|void
+operator|*
+operator|)
 name|MAP_FAILED
 condition|)
 block|{

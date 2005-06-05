@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keysign.c,v 1.16 2004/04/18 23:10:26 djm Exp $"
+literal|"$OpenBSD: ssh-keysign.c,v 1.18 2004/08/23 14:29:23 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -660,6 +660,12 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
+name|original_real_uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+comment|/* XXX readconf.c needs this */
 if|if
 condition|(
 operator|(
@@ -667,8 +673,7 @@ name|pw
 operator|=
 name|getpwuid
 argument_list|(
-name|getuid
-argument_list|()
+name|original_real_uid
 argument_list|)
 operator|)
 operator|==
@@ -717,12 +722,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* verify that ssh-keysign is enabled by the admin */
-name|original_real_uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
-comment|/* XXX readconf.c needs this */
 name|initialize_options
 argument_list|(
 operator|&

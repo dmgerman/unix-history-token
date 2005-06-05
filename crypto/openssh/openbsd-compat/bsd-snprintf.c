@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-snprintf.c,v 1.7 2003/05/18 14:13:39 djm Exp $"
+literal|"$Id: bsd-snprintf.c,v 1.9 2004/09/23 11:35:09 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1689,6 +1689,10 @@ name|strln
 operator|=
 literal|0
 init|;
+name|strln
+operator|<
+name|max
+operator|&&
 name|value
 index|[
 name|strln

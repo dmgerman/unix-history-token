@@ -99,5 +99,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ipv64_normalise_mapped
+parameter_list|(
+name|struct
+name|sockaddr_storage
+modifier|*
+parameter_list|,
+name|socklen_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-shadow.c,v 1.5 2004/02/21 23:22:05 dtucker Exp $"
+literal|"$Id: auth-shadow.c,v 1.6 2005/02/16 03:20:06 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -54,6 +54,23 @@ include|#
 directive|include
 file|"log.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DAY
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|DAY
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -70,32 +70,6 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|open
-value|binary_open
-end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|binary_open
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int

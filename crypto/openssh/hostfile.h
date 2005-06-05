@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: hostfile.h,v 1.14 2003/11/10 16:23:41 jakob Exp $	*/
+comment|/*	$OpenBSD: hostfile.h,v 1.15 2005/03/01 10:40:26 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -92,6 +92,8 @@ parameter_list|,
 specifier|const
 name|Key
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -115,6 +117,38 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|HASH_MAGIC
+value|"|1|"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASH_DELIM
+value|'|'
+end_define
+
+begin_function_decl
+name|char
+modifier|*
+name|host_hash
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

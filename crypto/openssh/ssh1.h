@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh1.h,v 1.4 2004/07/11 17:48:47 deraadt Exp $	*/
+comment|/*	$OpenBSD: ssh1.h,v 1.5 2004/10/20 11:48:53 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -10,6 +10,24 @@ end_comment
 begin_comment
 comment|/*  * Definition of message types.  New values can be added, but old values  * should not be removed or without careful consideration of the consequences  * for compatibility.  The maximum value is 254; value 255 is reserved for  * future extension.  */
 end_comment
+
+begin_comment
+comment|/* Ranges */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_MSG_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_MSG_MAX
+value|254
+end_define
 
 begin_comment
 comment|/* Message name */

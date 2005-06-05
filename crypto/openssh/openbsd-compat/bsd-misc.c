@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-misc.c,v 1.25 2004/08/15 08:41:00 djm Exp $"
+literal|"$Id: bsd-misc.c,v 1.26 2005/02/25 23:07:38 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -531,51 +531,6 @@ end_endif
 begin_comment
 comment|/* HAVE_TRUNCATE */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_SETGROUPS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|SETGROUPS_NOOP
-argument_list|)
-end_if
-
-begin_comment
-comment|/*  * Cygwin setgroups should be a noop.  */
-end_comment
-
-begin_function
-name|int
-name|setgroups
-parameter_list|(
-name|size_t
-name|size
-parameter_list|,
-specifier|const
-name|gid_t
-modifier|*
-name|list
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

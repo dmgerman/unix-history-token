@@ -12,10 +12,16 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-pubkey.c,v 1.7 2004/06/21 17:36:31 avsm Exp $"
+literal|"$OpenBSD: auth2-pubkey.c,v 1.9 2004/12/11 01:48:56 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"ssh.h"
+end_include
 
 begin_include
 include|#
@@ -105,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"monitor_wrap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_comment
@@ -685,11 +697,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
+name|authenticated
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -724,7 +735,7 @@ block|{
 name|char
 name|line
 index|[
-literal|8192
+name|SSH_MAX_PUBKEY_BYTES
 index|]
 decl_stmt|;
 name|int
@@ -871,8 +882,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|read_keyfile_line
 argument_list|(
+name|f
+argument_list|,
+name|file
+argument_list|,
 name|line
 argument_list|,
 sizeof|sizeof
@@ -880,8 +895,12 @@ argument_list|(
 name|line
 argument_list|)
 argument_list|,
-name|f
+operator|&
+name|linenum
 argument_list|)
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 name|char
@@ -893,9 +912,6 @@ name|key_options
 init|=
 name|NULL
 decl_stmt|;
-name|linenum
-operator|++
-expr_stmt|;
 comment|/* Skip leading whitespace, empty and comment lines. */
 for|for
 control|(

@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.117 2004/06/22 03:27:16 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.119 2005/02/20 10:01:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1558,6 +1558,24 @@ begin_comment
 comment|/* HAVE_SYS_UN_H */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_IN_ADDR_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|in_addr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -2836,6 +2854,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SSH_AUDIT_EVENTS
+end_define
+
+begin_define
+define|#
+directive|define
+name|CUSTOM_SSH_AUDIT_EVENTS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* OPENSSL_free() is Free() in versions before OpenSSL 0.9.6 */
 end_comment
@@ -3457,6 +3498,53 @@ define|#
 directive|define
 name|CUSTOM_SYS_AUTH_PASSWD
 value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HP-UX 11.11 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BTMP_FILE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PATH_BTMP
+value|BTMP_FILE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_BTMP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_PATH_BTMP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CUSTOM_FAILED_LOGIN
 end_define
 
 begin_endif

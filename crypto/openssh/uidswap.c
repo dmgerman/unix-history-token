@@ -200,6 +200,9 @@ operator|)
 name|saved_egid
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_CYGWIN
 if|if
 condition|(
 name|saved_euid
@@ -213,6 +216,8 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 else|#
 directive|else
 if|if
@@ -1097,6 +1102,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|HAVE_CYGWIN
 comment|/* Try restoration of GID if changed (test clearing of saved gid) */
 if|if
 condition|(
@@ -1105,6 +1113,12 @@ operator|!=
 name|pw
 operator|->
 name|pw_gid
+operator|&&
+name|pw
+operator|->
+name|pw_uid
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|setgid
@@ -1131,6 +1145,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Verify GID drop was successful */
 if|if
 condition|(

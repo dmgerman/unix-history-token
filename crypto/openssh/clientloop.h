@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: clientloop.h,v 1.11 2004/07/11 17:48:47 deraadt Exp $	*/
+comment|/*	$OpenBSD: clientloop.h,v 1.12 2004/11/07 00:01:46 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -74,6 +74,65 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Multiplexing control protocol flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_COMMAND_OPEN
+value|1
+end_define
+
+begin_comment
+comment|/* Open new connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_COMMAND_ALIVE_CHECK
+value|2
+end_define
+
+begin_comment
+comment|/* Check master is alive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_COMMAND_TERMINATE
+value|3
+end_define
+
+begin_comment
+comment|/* Ask master to exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_FLAG_TTY
+value|(1)
+end_define
+
+begin_comment
+comment|/* Request tty on open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_FLAG_SUBSYS
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* Subsystem request on open */
+end_comment
 
 end_unit
 

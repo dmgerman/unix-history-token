@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-cray.h,v 1.11 2004/01/30 03:34:22 dtucker Exp $ */
+comment|/* $Id: bsd-cray.h,v 1.12 2005/02/02 06:10:11 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -67,28 +67,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|CUSTOM_FAILED_LOGIN
-value|1
-end_define
-
-begin_function_decl
-name|void
-name|record_failed_login
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -96,6 +74,13 @@ name|cray_tmpdir
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CUSTOM_FAILED_LOGIN
+value|1
+end_define
 
 begin_ifndef
 ifndef|#

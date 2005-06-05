@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: packet.c,v 1.115 2004/06/21 17:36:31 avsm Exp $"
+literal|"$OpenBSD: packet.c,v 1.116 2004/10/20 11:48:53 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4217,6 +4217,23 @@ operator|&
 name|incoming_packet
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|<
+name|SSH_MSG_MIN
+operator|||
+name|type
+operator|>
+name|SSH_MSG_MAX
+condition|)
+name|packet_disconnect
+argument_list|(
+literal|"Invalid ssh1 packet type: %d"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 name|type
 return|;
@@ -4860,6 +4877,23 @@ name|buffer_get_char
 argument_list|(
 operator|&
 name|incoming_packet
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|<
+name|SSH2_MSG_MIN
+operator|||
+name|type
+operator|>=
+name|SSH2_MSG_LOCAL_MIN
+condition|)
+name|packet_disconnect
+argument_list|(
+literal|"Invalid ssh2 packet type: %d"
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 if|if
