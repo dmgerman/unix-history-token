@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -39,12 +43,46 @@ argument_list|)
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IEEE802_1X_EAPOL_VERSION_2
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|EAPOL_VERSION
 value|2
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Enable support for older Authenticators/Supplicants using EAPOL Version 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EAPOL_VERSION
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! IEEE802_1X_EAPOL_VERSION_2 */
+end_comment
 
 begin_enum
 enum|enum
@@ -546,6 +584,26 @@ parameter_list|(
 name|u8
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee802_1x_finished
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|,
+name|struct
+name|sta_info
+modifier|*
+name|sta
+parameter_list|,
+name|int
+name|success
 parameter_list|)
 function_decl|;
 end_function_decl

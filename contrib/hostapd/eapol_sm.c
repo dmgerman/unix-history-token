@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Host AP (software wireless LAN access point) user space daemon for  * Host AP kernel driver / IEEE 802.1X Authenticator - EAPOL state machine  * Copyright (c) 2002-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Host AP (software wireless LAN access point) user space daemon for  * Host AP kernel driver / IEEE 802.1X Authenticator - EAPOL state machine  * Copyright (c) 2002-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -529,6 +529,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|else
+name|ieee802_1x_finished
+argument_list|(
+name|sm
+operator|->
+name|hapd
+argument_list|,
+name|sm
+operator|->
+name|sta
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_block
@@ -789,6 +803,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|else
+name|ieee802_1x_finished
+argument_list|(
+name|sm
+operator|->
+name|hapd
+argument_list|,
+name|sm
+operator|->
+name|sta
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -876,6 +904,20 @@ operator|&
 name|EAPOL_SM_PREAUTH
 condition|)
 name|rsn_preauth_finished
+argument_list|(
+name|sm
+operator|->
+name|hapd
+argument_list|,
+name|sm
+operator|->
+name|sta
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|ieee802_1x_finished
 argument_list|(
 name|sm
 operator|->
