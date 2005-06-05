@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION_ADDENDUM
-value|"FreeBSD-20041028"
+value|"FreeBSD-20050605"
 end_define
 
 begin_function_decl
