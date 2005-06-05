@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.41 2004/07/21 11:51:29 djm Exp $"
+literal|"$OpenBSD: canohost.c,v 1.42 2005/02/18 03:05:53 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,21 +49,6 @@ parameter_list|(
 name|int
 parameter_list|,
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ipv64_normalise_mapped
-parameter_list|(
-name|struct
-name|sockaddr_storage
-modifier|*
-parameter_list|,
-name|socklen_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -755,7 +740,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ipv64_normalise_mapped
 parameter_list|(
@@ -1024,6 +1008,9 @@ index|[
 name|NI_MAXHOST
 index|]
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 comment|/* Get IP address of client. */
 name|addrlen
 operator|=
@@ -1117,9 +1104,21 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
+name|ipv64_normalise_mapped
+argument_list|(
+operator|&
+name|addr
+argument_list|,
+operator|&
+name|addrlen
+argument_list|)
+expr_stmt|;
 comment|/* Get the address in ascii. */
 if|if
 condition|(
+operator|(
+name|r
+operator|=
 name|getnameinfo
 argument_list|(
 operator|(
@@ -1145,15 +1144,30 @@ literal|0
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 block|{
 name|error
 argument_list|(
-literal|"get_socket_address: getnameinfo %d failed"
+literal|"get_socket_address: getnameinfo %d failed: %s"
 argument_list|,
 name|flags
+argument_list|,
+name|r
+operator|==
+name|EAI_SYSTEM
+condition|?
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+else|:
+name|gai_strerror
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1434,6 +1448,9 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 comment|/* Get IP address of client. */
 name|fromlen
 operator|=
@@ -1556,6 +1573,9 @@ expr_stmt|;
 comment|/* Return port number. */
 if|if
 condition|(
+operator|(
+name|r
+operator|=
 name|getnameinfo
 argument_list|(
 operator|(
@@ -1581,12 +1601,27 @@ argument_list|)
 argument_list|,
 name|NI_NUMERICSERV
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"get_sock_port: getnameinfo NI_NUMERICSERV failed"
+literal|"get_sock_port: getnameinfo NI_NUMERICSERV failed: %s"
+argument_list|,
+name|r
+operator|==
+name|EAI_SYSTEM
+condition|?
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+else|:
+name|gai_strerror
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

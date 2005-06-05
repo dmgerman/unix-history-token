@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh.h,v 1.75 2003/12/02 17:01:15 markus Exp $	*/
+comment|/*	$OpenBSD: ssh.h,v 1.76 2004/12/06 11:41:03 dtucker Exp $	*/
 end_comment
 
 begin_comment
@@ -128,6 +128,17 @@ define|#
 directive|define
 name|SSH_MAX_IDENTITY_FILES
 value|100
+end_define
+
+begin_comment
+comment|/*  * Maximum length of lines in authorized_keys file.  * Current value permits 16kbit RSA and RSA1 keys and 8kbit DSA keys, with  * some room for options and comments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_MAX_PUBKEY_BYTES
+value|8192
 end_define
 
 begin_comment

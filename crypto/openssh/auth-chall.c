@@ -43,6 +43,12 @@ directive|include
 file|"xmalloc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"servconf.h"
+end_include
+
 begin_comment
 comment|/* limited protocol v1 interface to kbd-interactive authentication */
 end_comment
@@ -61,6 +67,13 @@ specifier|static
 name|KbdintDevice
 modifier|*
 name|device
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ServerOptions
+name|options
 decl_stmt|;
 end_decl_stmt
 
@@ -97,6 +110,23 @@ name|u_int
 modifier|*
 name|echo_on
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PAM
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|use_pam
+condition|)
+name|remove_kbdint_device
+argument_list|(
+literal|"pam"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|device
 operator|=
 name|devices

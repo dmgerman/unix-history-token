@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: channels.h,v 1.74 2004/08/11 21:43:04 avsm Exp $	*/
+comment|/*	$OpenBSD: channels.h,v 1.76 2005/03/01 10:09:52 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -293,6 +293,10 @@ name|int
 name|wfd_isatty
 decl_stmt|;
 comment|/* wfd is a tty */
+name|int
+name|client_tty
+decl_stmt|;
+comment|/* (client) TTY has been requested */
 name|int
 name|force_drain
 decl_stmt|;
@@ -1071,6 +1075,10 @@ begin_function_decl
 name|void
 name|channel_request_remote_forwarding
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|u_short
 parameter_list|,
 specifier|const
@@ -1078,16 +1086,6 @@ name|char
 modifier|*
 parameter_list|,
 name|u_short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|channel_request_rforward_cancel
-parameter_list|(
-name|u_short
-name|port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1096,6 +1094,10 @@ begin_function_decl
 name|int
 name|channel_setup_local_fwd_listener
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|u_short
 parameter_list|,
 specifier|const
@@ -1105,6 +1107,21 @@ parameter_list|,
 name|u_short
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|channel_request_rforward_cancel
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|host
+parameter_list|,
+name|u_short
+name|port
 parameter_list|)
 function_decl|;
 end_function_decl

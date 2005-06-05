@@ -139,6 +139,10 @@ name|MONITOR_REQ_PAM_FREE_CTX
 block|,
 name|MONITOR_ANS_PAM_FREE_CTX
 block|,
+name|MONITOR_REQ_AUDIT_EVENT
+block|,
+name|MONITOR_REQ_AUDIT_COMMAND
+block|,
 name|MONITOR_REQ_TERM
 block|}
 enum|;

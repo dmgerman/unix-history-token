@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: servconf.h,v 1.70 2004/06/24 19:30:54 djm Exp $	*/
+comment|/*	$OpenBSD: servconf.h,v 1.71 2004/12/23 23:11:00 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -195,6 +195,10 @@ modifier|*
 name|listen_addrs
 decl_stmt|;
 comment|/* Addresses on which the server listens. */
+name|int
+name|address_family
+decl_stmt|;
+comment|/* Address family used by the server. */
 name|char
 modifier|*
 name|host_key_files

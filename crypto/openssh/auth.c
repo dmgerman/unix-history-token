@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth.c,v 1.56 2004/07/28 09:40:29 markus Exp $"
+literal|"$OpenBSD: auth.c,v 1.58 2005/03/14 11:44:42 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -158,6 +158,18 @@ begin_include
 include|#
 directive|include
 file|"packet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loginrec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"monitor_wrap.h"
 end_include
 
 begin_comment
@@ -541,6 +553,18 @@ operator|.
 name|num_allow_users
 operator|>
 literal|0
+operator|||
+name|options
+operator|.
+name|num_deny_groups
+operator|>
+literal|0
+operator|||
+name|options
+operator|.
+name|num_allow_groups
+operator|>
+literal|0
 condition|)
 block|{
 name|hostname
@@ -606,11 +630,14 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"User %.100s not allowed because listed in DenyUsers"
+literal|"User %.100s from %.100s not allowed "
+literal|"because listed in DenyUsers"
 argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|,
+name|hostname
 argument_list|)
 expr_stmt|;
 return|return
@@ -676,11 +703,14 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"User %.100s not allowed because not listed in AllowUsers"
+literal|"User %.100s from %.100s not allowed because "
+literal|"not listed in AllowUsers"
 argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|,
+name|hostname
 argument_list|)
 expr_stmt|;
 return|return
@@ -722,11 +752,14 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"User %.100s not allowed because not in any group"
+literal|"User %.100s from %.100s not allowed because "
+literal|"not in any group"
 argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|,
+name|hostname
 argument_list|)
 expr_stmt|;
 return|return
@@ -761,11 +794,14 @@ argument_list|()
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"User %.100s not allowed because a group is listed in DenyGroups"
+literal|"User %.100s from %.100s not allowed "
+literal|"because a group is listed in DenyGroups"
 argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|,
+name|hostname
 argument_list|)
 expr_stmt|;
 return|return
@@ -801,11 +837,15 @@ argument_list|()
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"User %.100s not allowed because none of user's groups are listed in AllowGroups"
+literal|"User %.100s from %.100s not allowed "
+literal|"because none of user's groups are listed "
+literal|"in AllowGroups"
 argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|,
+name|hostname
 argument_list|)
 expr_stmt|;
 return|return
@@ -825,6 +865,9 @@ operator|!
 name|sys_auth_allowed_user
 argument_list|(
 name|pw
+argument_list|,
+operator|&
+name|loginmsg
 argument_list|)
 condition|)
 return|return
@@ -971,6 +1014,12 @@ name|authenticated
 operator|==
 literal|0
 operator|&&
+operator|!
+name|authctxt
+operator|->
+name|postponed
+operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|method
@@ -979,6 +1028,27 @@ literal|"password"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|method
+argument_list|,
+literal|"keyboard-interactive"
+argument_list|,
+literal|20
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|method
+argument_list|,
+literal|"challenge-response"
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 name|record_failed_login
 argument_list|(
@@ -986,9 +1056,126 @@ name|authctxt
 operator|->
 name|user
 argument_list|,
+name|get_canonical_hostname
+argument_list|(
+name|options
+operator|.
+name|use_dns
+argument_list|)
+argument_list|,
 literal|"ssh"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSH_AUDIT_EVENTS
+if|if
+condition|(
+name|authenticated
+operator|==
+literal|0
+operator|&&
+operator|!
+name|authctxt
+operator|->
+name|postponed
+condition|)
+block|{
+name|ssh_audit_event_t
+name|event
+decl_stmt|;
+name|debug3
+argument_list|(
+literal|"audit failed auth attempt, method %s euid %d"
+argument_list|,
+name|method
+argument_list|,
+operator|(
+name|int
+operator|)
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Because the auth loop is used in both monitor and slave, 		 * we must be careful to send each event only once and with 		 * enough privs to write the event. 		 */
+name|event
+operator|=
+name|audit_classify_auth
+argument_list|(
+name|method
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|event
+condition|)
+block|{
+case|case
+name|SSH_AUTH_FAIL_NONE
+case|:
+case|case
+name|SSH_AUTH_FAIL_PASSWD
+case|:
+case|case
+name|SSH_AUTH_FAIL_KBDINT
+case|:
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|audit_event
+argument_list|(
+name|event
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SSH_AUTH_FAIL_PUBKEY
+case|:
+case|case
+name|SSH_AUTH_FAIL_HOSTBASED
+case|:
+case|case
+name|SSH_AUTH_FAIL_GSSAPI
+case|:
+comment|/* 			 * This is required to handle the case where privsep 			 * is enabled but it's root logging in, since 			 * use_privsep won't be cleared until after a 			 * successful login. 			 */
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|audit_event
+argument_list|(
+name|event
+argument_list|)
+expr_stmt|;
+else|else
+name|PRIVSEP
+argument_list|(
+name|audit_event
+argument_list|(
+name|event
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|error
+argument_list|(
+literal|"unknown authentication audit event %d"
+argument_list|,
+name|event
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 endif|#
 directive|endif
 block|}
@@ -1975,11 +2162,29 @@ name|record_failed_login
 argument_list|(
 name|user
 argument_list|,
+name|get_canonical_hostname
+argument_list|(
+name|options
+operator|.
+name|use_dns
+argument_list|)
+argument_list|,
 literal|"ssh"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SSH_AUDIT_EVENTS
+name|audit_event
+argument_list|(
+name|SSH_INVALID_USER
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SSH_AUDIT_EVENTS */
 return|return
 operator|(
 name|NULL

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keyscan.c,v 1.50 2004/08/11 21:44:32 avsm Exp $"
+literal|"$OpenBSD: ssh-keyscan.c,v 1.52 2005/03/01 15:47:14 jmc Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -119,6 +119,12 @@ directive|include
 file|"misc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
+end_include
+
 begin_comment
 comment|/* Flag indicating whether IPv4 or IPv6.  This can be set on the command line.    Default value is AF_UNSPEC means both IPv4 and IPv6. */
 end_comment
@@ -170,6 +176,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Get only RSA1 keys by default */
+end_comment
+
+begin_decl_stmt
+name|int
+name|hash_hosts
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Hash hostname on output */
 end_comment
 
 begin_define
@@ -1716,18 +1734,10 @@ modifier|*
 name|key
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|key
-condition|)
-return|return;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"%s "
-argument_list|,
+name|char
+modifier|*
+name|host
+init|=
 name|c
 operator|->
 name|c_output_name
@@ -1739,6 +1749,44 @@ else|:
 name|c
 operator|->
 name|c_name
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|key
+condition|)
+return|return;
+if|if
+condition|(
+name|hash_hosts
+operator|&&
+operator|(
+name|host
+operator|=
+name|host_hash
+argument_list|(
+name|host
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"host_hash failed"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s "
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 name|key_write
@@ -3612,7 +3660,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-v46] [-p port] [-T timeout] [-t type] [-f file]\n"
+literal|"usage: %s [-46Hv] [-f file] [-p port] [-T timeout] [-t type]\n"
 literal|"\t\t   [host | addrlist namelist] [...]\n"
 argument_list|,
 name|__progname
@@ -3710,7 +3758,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"v46p:T:t:f:"
+literal|"Hv46p:T:t:f:"
 argument_list|)
 operator|)
 operator|!=
@@ -3723,6 +3771,14 @@ condition|(
 name|opt
 condition|)
 block|{
+case|case
+literal|'H'
+case|:
+name|hash_hosts
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'p'
 case|:

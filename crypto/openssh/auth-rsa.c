@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rsa.c,v 1.60 2004/06/21 17:36:31 avsm Exp $"
+literal|"$OpenBSD: auth-rsa.c,v 1.62 2004/12/11 01:48:56 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -113,6 +113,12 @@ directive|include
 file|"ssh.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"misc.h"
+end_include
+
 begin_comment
 comment|/* import */
 end_comment
@@ -139,7 +145,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The .ssh/authorized_keys file contains public keys, one per line, in the  * following format:  *   options bits e n comment  * where bits, e and n are decimal numbers,  * and comment is any string of characters up to newline.  The maximum  * length of a line is 8000 characters.  See the documentation for a  * description of the options.  */
+comment|/*  * The .ssh/authorized_keys file contains public keys, one per line, in the  * following format:  *   options bits e n comment  * where bits, e and n are decimal numbers,  * and comment is any string of characters up to newline.  The maximum  * length of a line is SSH_MAX_PUBKEY_BYTES characters.  See sshd(8) for a  * description of the options.  */
 end_comment
 
 begin_function
@@ -587,7 +593,7 @@ block|{
 name|char
 name|line
 index|[
-literal|8192
+name|SSH_MAX_PUBKEY_BYTES
 index|]
 decl_stmt|,
 modifier|*
@@ -765,8 +771,12 @@ expr_stmt|;
 comment|/* 	 * Go though the accepted keys, looking for the current key.  If 	 * found, perform a challenge-response dialog to verify that the 	 * user really has the corresponding private key. 	 */
 while|while
 condition|(
-name|fgets
+name|read_keyfile_line
 argument_list|(
+name|f
+argument_list|,
+name|file
+argument_list|,
 name|line
 argument_list|,
 sizeof|sizeof
@@ -774,8 +784,12 @@ argument_list|(
 name|line
 argument_list|)
 argument_list|,
-name|f
+operator|&
+name|linenum
 argument_list|)
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 name|char
@@ -786,9 +800,6 @@ name|char
 modifier|*
 name|key_options
 decl_stmt|;
-name|linenum
-operator|++
-expr_stmt|;
 comment|/* Skip leading whitespace, empty and comment lines. */
 for|for
 control|(
