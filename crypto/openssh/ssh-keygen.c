@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keygen.c,v 1.120 2005/03/02 01:27:41 djm Exp $"
+literal|"$OpenBSD: ssh-keygen.c,v 1.122 2005/03/11 14:59:06 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4030,7 +4030,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Not replacing existing known_hosts "
-literal|"file beacuse of errors"
+literal|"file because of errors\n"
 argument_list|)
 expr_stmt|;
 name|fclose

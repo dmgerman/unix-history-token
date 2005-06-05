@@ -485,10 +485,6 @@ specifier|const
 name|char
 modifier|*
 name|password
-parameter_list|,
-name|Buffer
-modifier|*
-name|loginmsg
 parameter_list|)
 block|{
 name|char
@@ -616,6 +612,8 @@ condition|)
 block|{
 name|buffer_append
 argument_list|(
+name|ctxt
+operator|->
 name|loginmsg
 argument_list|,
 name|msg

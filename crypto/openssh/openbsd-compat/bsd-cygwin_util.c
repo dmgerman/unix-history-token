@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-cygwin_util.c,v 1.13 2004/08/30 10:42:08 dtucker Exp $"
+literal|"$Id: bsd-cygwin_util.c,v 1.13.4.1 2005/05/25 09:42:40 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -897,6 +897,13 @@ block|,
 block|{
 name|NL
 argument_list|(
+literal|"CYGWIN="
+argument_list|)
+block|}
+block|,
+block|{
+name|NL
+argument_list|(
 literal|"NUMBER_OF_PROCESSORS="
 argument_list|)
 block|}
@@ -991,7 +998,7 @@ argument_list|(
 literal|"WINDIR="
 argument_list|)
 block|}
-block|, }
+block|}
 struct|;
 end_struct
 
@@ -1024,7 +1031,11 @@ name|p
 operator|=
 name|xmalloc
 argument_list|(
+operator|(
 name|WENV_SIZ
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(

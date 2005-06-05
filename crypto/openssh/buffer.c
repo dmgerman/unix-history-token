@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: buffer.c,v 1.22 2004/10/29 23:56:17 djm Exp $"
+literal|"$OpenBSD: buffer.c,v 1.23 2005/03/14 11:46:56 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -244,7 +244,7 @@ if|if
 condition|(
 name|len
 operator|>
-literal|0x100000
+name|BUFFER_MAX_CHUNK
 condition|)
 name|fatal
 argument_list|(
@@ -321,11 +321,14 @@ name|buffer
 operator|->
 name|offset
 operator|>
+name|MIN
+argument_list|(
 name|buffer
 operator|->
 name|alloc
-operator|/
-literal|2
+argument_list|,
+name|BUFFER_MAX_CHUNK
+argument_list|)
 condition|)
 block|{
 name|memmove
@@ -384,7 +387,7 @@ if|if
 condition|(
 name|newlen
 operator|>
-literal|0xa00000
+name|BUFFER_MAX_LEN
 condition|)
 name|fatal
 argument_list|(
