@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.301 2004/08/11 11:50:09 dtucker Exp $"
+literal|"$OpenBSD: sshd.c,v 1.308 2005/02/08 22:24:57 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -377,18 +377,6 @@ modifier|*
 name|config_file_name
 init|=
 name|_PATH_SERVER_CONFIG_FILE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Flag indicating whether IPv4 or IPv6.  This can be set on the command line.  * Default value is AF_UNSPEC means both IPv4 and IPv6.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|IPv4or6
-init|=
-name|AF_UNSPEC
 decl_stmt|;
 end_decl_stmt
 
@@ -2985,7 +2973,7 @@ name|int
 name|startups
 parameter_list|)
 block|{
-name|double
+name|int
 name|p
 decl_stmt|,
 name|r
@@ -3041,10 +3029,6 @@ name|max_startups_begin
 expr_stmt|;
 name|p
 operator|/=
-call|(
-name|double
-call|)
-argument_list|(
 name|options
 operator|.
 name|max_startups
@@ -3052,7 +3036,6 @@ operator|-
 name|options
 operator|.
 name|max_startups_begin
-argument_list|)
 expr_stmt|;
 name|p
 operator|+=
@@ -3060,23 +3043,16 @@ name|options
 operator|.
 name|max_startups_rate
 expr_stmt|;
-name|p
-operator|/=
-literal|100.0
-expr_stmt|;
 name|r
 operator|=
 name|arc4random
 argument_list|()
-operator|/
-operator|(
-name|double
-operator|)
-name|UINT_MAX
+operator|%
+literal|100
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"drop_connection: p %g, r %g"
+literal|"drop_connection: p %d, r %d"
 argument_list|,
 name|p
 argument_list|,
@@ -3108,7 +3084,7 @@ name|stderr
 argument_list|,
 literal|"%s, %s\n"
 argument_list|,
-name|SSH_VERSION
+name|SSH_RELEASE
 argument_list|,
 name|SSLeay_version
 argument_list|(
@@ -3687,11 +3663,27 @@ name|startup_p
 index|[
 literal|2
 index|]
+init|=
+block|{
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|}
 decl_stmt|,
 name|config_s
 index|[
 literal|2
 index|]
+init|=
+block|{
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|}
 decl_stmt|;
 name|int
 name|startups
@@ -3882,7 +3874,9 @@ block|{
 case|case
 literal|'4'
 case|:
-name|IPv4or6
+name|options
+operator|.
+name|address_family
 operator|=
 name|AF_INET
 expr_stmt|;
@@ -3890,7 +3884,9 @@ break|break;
 case|case
 literal|'6'
 case|:
-name|IPv4or6
+name|options
+operator|.
+name|address_family
 operator|=
 name|AF_INET6
 expr_stmt|;
@@ -4333,11 +4329,6 @@ expr_stmt|;
 name|SSLeay_add_all_algorithms
 argument_list|()
 expr_stmt|;
-name|channel_set_af
-argument_list|(
-name|IPv4or6
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Force logging to stderr until we have loaded the private host 	 * key (unless started from inetd) 	 */
 name|log_init
 argument_list|(
@@ -4373,18 +4364,21 @@ operator|!
 name|inetd_flag
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_AIX
 comment|/* 	 * Unset KRB5CCNAME, otherwise the user's session may inherit it from 	 * root's environment 	 */
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"KRB5CCNAME"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
 name|unsetenv
 argument_list|(
 literal|"KRB5CCNAME"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _AIX */
 ifdef|#
 directive|ifdef
 name|_UNICOS
@@ -4482,6 +4476,14 @@ operator|&
 name|options
 argument_list|)
 expr_stmt|;
+comment|/* set default channel AF */
+name|channel_set_af
+argument_list|(
+name|options
+operator|.
+name|address_family
+argument_list|)
+expr_stmt|;
 comment|/* Check that there are no remaining arguments. */
 if|if
 condition|(
@@ -4512,7 +4514,7 @@ name|debug
 argument_list|(
 literal|"sshd version %.100s"
 argument_list|,
-name|SSH_VERSION
+name|SSH_RELEASE
 argument_list|)
 expr_stmt|;
 comment|/* load private host keys */
@@ -5119,8 +5121,12 @@ if|if
 condition|(
 name|debug_flag
 operator|&&
+operator|(
 operator|!
 name|inetd_flag
+operator|||
+name|rexeced_flag
+operator|)
 condition|)
 name|log_stderr
 operator|=
@@ -5455,6 +5461,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|getnameinfo
 argument_list|(
 name|ai
@@ -5483,13 +5492,30 @@ name|NI_NUMERICHOST
 operator||
 name|NI_NUMERICSERV
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 block|{
 name|error
 argument_list|(
-literal|"getnameinfo failed"
+literal|"getnameinfo failed: %.100s"
+argument_list|,
+operator|(
+name|ret
+operator|!=
+name|EAI_SYSTEM
+operator|)
+condition|?
+name|gai_strerror
+argument_list|(
+name|ret
+argument_list|)
+else|:
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -6531,6 +6557,10 @@ argument_list|,
 name|log_stderr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rexec_flag
+condition|)
 name|close
 argument_list|(
 name|config_s
@@ -7044,6 +7074,18 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|SSH_AUDIT_EVENTS
+name|audit_connection_from
+argument_list|(
+name|remote_ip
+argument_list|,
+name|remote_port
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|LIBWRAP
 comment|/* Check whether logins are denied from this host. */
 if|if
@@ -7150,13 +7192,6 @@ expr_stmt|;
 name|packet_set_nonblocking
 argument_list|()
 expr_stmt|;
-comment|/* prepare buffers to collect authentication messages */
-name|buffer_init
-argument_list|(
-operator|&
-name|loginmsg
-argument_list|)
-expr_stmt|;
 comment|/* allocate authentication context */
 name|authctxt
 operator|=
@@ -7187,6 +7222,13 @@ name|the_authctxt
 operator|=
 name|authctxt
 expr_stmt|;
+comment|/* prepare buffer to collect messages to display to user after login */
+name|buffer_init
+argument_list|(
+operator|&
+name|loginmsg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|use_privsep
@@ -7203,13 +7245,6 @@ condition|)
 goto|goto
 name|authenticated
 goto|;
-comment|/* prepare buffer to collect messages to display to user after login */
-name|buffer_init
-argument_list|(
-operator|&
-name|loginmsg
-argument_list|)
-expr_stmt|;
 comment|/* perform the key exchange */
 comment|/* authenticate user and start session */
 if|if
@@ -7256,6 +7291,16 @@ expr_stmt|;
 block|}
 name|authenticated
 label|:
+ifdef|#
+directive|ifdef
+name|SSH_AUDIT_EVENTS
+name|audit_event
+argument_list|(
+name|SSH_AUTH_SUCCESS
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * In privilege separation, we fork another child and prepare 	 * file descriptor passing. 	 */
 if|if
 condition|(
@@ -7306,6 +7351,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_PAM */
+ifdef|#
+directive|ifdef
+name|SSH_AUDIT_EVENTS
+name|PRIVSEP
+argument_list|(
+name|audit_event
+argument_list|(
+name|SSH_CONNECTION_CLOSE
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|packet_close
 argument_list|()
 expr_stmt|;
@@ -8609,6 +8667,25 @@ argument_list|(
 name|the_authctxt
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SSH_AUDIT_EVENTS
+comment|/* done after do_cleanup so it can cancel the PAM auth 'thread' */
+if|if
+condition|(
+operator|!
+name|use_privsep
+operator|||
+name|mm_is_monitor
+argument_list|()
+condition|)
+name|audit_event
+argument_list|(
+name|SSH_CONNECTION_ABANDON
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|_exit
 argument_list|(
 name|i

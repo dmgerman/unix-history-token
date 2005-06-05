@@ -981,6 +981,12 @@ if|if
 condition|(
 name|rrset
 operator|->
+name|rri_nsigs
+operator|>
+literal|0
+operator|&&
+name|rrset
+operator|->
 name|rri_sigs
 operator|==
 name|NULL

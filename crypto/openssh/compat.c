@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: compat.c,v 1.70 2003/11/02 11:01:03 markus Exp $"
+literal|"$OpenBSD: compat.c,v 1.71 2005/03/01 10:09:52 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -162,6 +162,8 @@ operator||
 name|SSH_BUG_NOREKEY
 operator||
 name|SSH_BUG_EXTEOF
+operator||
+name|SSH_OLD_FORWARD_ADDR
 block|}
 block|,
 block|{
@@ -176,6 +178,8 @@ operator||
 name|SSH_BUG_NOREKEY
 operator||
 name|SSH_BUG_EXTEOF
+operator||
+name|SSH_OLD_FORWARD_ADDR
 block|}
 block|,
 block|{
@@ -188,6 +192,8 @@ operator||
 name|SSH_BUG_NOREKEY
 operator||
 name|SSH_BUG_EXTEOF
+operator||
+name|SSH_OLD_FORWARD_ADDR
 block|}
 block|,
 block|{
@@ -201,6 +207,8 @@ operator||
 name|SSH_BUG_NOREKEY
 operator||
 name|SSH_BUG_EXTEOF
+operator||
+name|SSH_OLD_FORWARD_ADDR
 block|}
 block|,
 block|{
@@ -213,6 +221,8 @@ operator||
 name|SSH_BUG_NOREKEY
 operator||
 name|SSH_BUG_EXTEOF
+operator||
+name|SSH_OLD_FORWARD_ADDR
 block|}
 block|,
 block|{
@@ -221,6 +231,8 @@ block|,
 name|SSH_BUG_NOREKEY
 operator||
 name|SSH_BUG_EXTEOF
+operator||
+name|SSH_OLD_FORWARD_ADDR
 block|}
 block|,
 block|{
@@ -229,6 +241,14 @@ literal|"OpenSSH_3.0*,"
 literal|"OpenSSH_3.1*"
 block|,
 name|SSH_BUG_EXTEOF
+operator||
+name|SSH_OLD_FORWARD_ADDR
+block|}
+block|,
+block|{
+literal|"OpenSSH_3.*"
+block|,
+name|SSH_OLD_FORWARD_ADDR
 block|}
 block|,
 block|{

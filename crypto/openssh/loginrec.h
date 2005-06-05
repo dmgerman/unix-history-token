@@ -44,7 +44,7 @@ file|<sys/socket.h>
 end_include
 
 begin_comment
-comment|/* RCSID("$Id: loginrec.h,v 1.7 2003/06/03 02:18:50 djm Exp $"); */
+comment|/* RCSID("$Id: loginrec.h,v 1.9 2005/02/02 06:10:11 dtucker Exp $"); */
 end_comment
 
 begin_comment
@@ -123,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|LINFO_NAMESIZE
-value|64
+value|128
 end_define
 
 begin_define
@@ -529,6 +529,25 @@ name|src
 parameter_list|,
 name|int
 name|dstsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|record_failed_login
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

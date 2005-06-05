@@ -356,9 +356,6 @@ literal|1
 operator|)
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|HAVE_CYGWIN
 comment|/* 	 * Try to push the appropriate streams modules, as described  	 * in Solaris pts(7). 	 */
 name|ioctl
 argument_list|(
@@ -396,9 +393,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* __hpux */
-endif|#
-directive|endif
-comment|/* HAVE_CYGWIN */
 return|return
 operator|(
 literal|0

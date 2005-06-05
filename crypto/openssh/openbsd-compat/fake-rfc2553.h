@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: fake-rfc2553.h,v 1.9 2004/03/10 10:06:33 dtucker Exp $ */
+comment|/* $Id: fake-rfc2553.h,v 1.10 2005/02/11 07:32:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -392,6 +392,13 @@ define|#
 directive|define
 name|EAI_NONAME
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAI_SYSTEM
+value|4
 end_define
 
 begin_endif

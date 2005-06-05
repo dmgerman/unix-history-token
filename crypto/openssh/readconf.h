@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.64 2004/07/11 17:48:47 deraadt Exp $	*/
+comment|/*	$OpenBSD: readconf.h,v 1.66 2005/03/01 10:40:27 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -33,19 +33,24 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|char
+modifier|*
+name|listen_host
+decl_stmt|;
+comment|/* Host (address) to listen on. */
 name|u_short
-name|port
+name|listen_port
 decl_stmt|;
 comment|/* Port to forward. */
 name|char
 modifier|*
-name|host
+name|connect_host
 decl_stmt|;
 comment|/* Host to connect. */
 name|u_short
-name|host_port
+name|connect_port
 decl_stmt|;
-comment|/* Port to connect on host. */
+comment|/* Port to connect on connect_host. */
 block|}
 name|Forward
 typedef|;
@@ -338,6 +343,9 @@ decl_stmt|;
 name|int
 name|control_master
 decl_stmt|;
+name|int
+name|hash_known_hosts
+decl_stmt|;
 block|}
 name|Options
 typedef|;
@@ -385,6 +393,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|parse_forward
+parameter_list|(
+name|Forward
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|process_config_line
 parameter_list|(
 name|Options
@@ -416,13 +438,9 @@ parameter_list|(
 name|Options
 modifier|*
 parameter_list|,
-name|u_short
-parameter_list|,
 specifier|const
-name|char
+name|Forward
 modifier|*
-parameter_list|,
-name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -434,13 +452,9 @@ parameter_list|(
 name|Options
 modifier|*
 parameter_list|,
-name|u_short
-parameter_list|,
 specifier|const
-name|char
+name|Forward
 modifier|*
-parameter_list|,
-name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl

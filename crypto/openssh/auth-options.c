@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-options.c,v 1.28 2003/06/02 09:17:34 markus Exp $"
+literal|"$OpenBSD: auth-options.c,v 1.29 2005/03/01 10:09:52 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1050,15 +1050,11 @@ literal|0
 condition|)
 block|{
 name|char
+modifier|*
 name|host
-index|[
-literal|256
-index|]
 decl_stmt|,
-name|sport
-index|[
-literal|6
-index|]
+modifier|*
+name|p
 decl_stmt|;
 name|u_short
 name|port
@@ -1160,7 +1156,8 @@ argument_list|)
 expr_stmt|;
 name|auth_debug_add
 argument_list|(
-literal|"%.100s, line %lu: missing end quote"
+literal|"%.100s, line %lu: missing "
+literal|"end quote"
 argument_list|,
 name|file
 argument_list|,
@@ -1186,39 +1183,36 @@ expr_stmt|;
 name|opts
 operator|++
 expr_stmt|;
+name|p
+operator|=
+name|patterns
+expr_stmt|;
+name|host
+operator|=
+name|hpdelim
+argument_list|(
+operator|&
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|sscanf
-argument_list|(
-name|patterns
-argument_list|,
-literal|"%255[^:]:%5[0-9]"
-argument_list|,
 name|host
-argument_list|,
-name|sport
-argument_list|)
-operator|!=
-literal|2
-operator|&&
-name|sscanf
+operator|==
+name|NULL
+operator|||
+name|strlen
 argument_list|(
-name|patterns
-argument_list|,
-literal|"%255[^/]/%5[0-9]"
-argument_list|,
 name|host
-argument_list|,
-name|sport
 argument_list|)
-operator|!=
-literal|2
+operator|>=
+name|NI_MAXHOST
 condition|)
 block|{
 name|debug
 argument_list|(
-literal|"%.100s, line %lu: Bad permitopen specification "
-literal|"<%.100s>"
+literal|"%.100s, line %lu: Bad permitopen "
+literal|"specification<%.100s>"
 argument_list|,
 name|file
 argument_list|,
@@ -1246,14 +1240,25 @@ goto|goto
 name|bad_option
 goto|;
 block|}
+name|host
+operator|=
+name|cleanhostname
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|p
+operator|==
+name|NULL
+operator|||
 operator|(
 name|port
 operator|=
 name|a2port
 argument_list|(
-name|sport
+name|p
 argument_list|)
 operator|)
 operator|==
@@ -1262,13 +1267,18 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"%.100s, line %lu: Bad permitopen port<%.100s>"
+literal|"%.100s, line %lu: Bad permitopen port "
+literal|"<%.100s>"
 argument_list|,
 name|file
 argument_list|,
 name|linenum
 argument_list|,
-name|sport
+name|p
+condition|?
+name|p
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|auth_debug_add

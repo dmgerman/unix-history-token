@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-misc.h,v 1.17 2004/08/15 08:41:00 djm Exp $ */
+comment|/* $Id: bsd-misc.h,v 1.18 2005/02/25 23:07:38 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -332,39 +332,6 @@ end_endif
 begin_comment
 comment|/* HAVE_TRUNCATE */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_SETGROUPS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|SETGROUPS_NOOP
-argument_list|)
-end_if
-
-begin_function_decl
-name|int
-name|setgroups
-parameter_list|(
-name|size_t
-parameter_list|,
-specifier|const
-name|gid_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

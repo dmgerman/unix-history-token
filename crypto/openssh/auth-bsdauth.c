@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-bsdauth.c,v 1.5 2002/06/30 21:59:45 deraadt Exp $"
+literal|"$OpenBSD: auth-bsdauth.c,v 1.6 2005/01/19 13:11:47 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -343,6 +343,17 @@ decl_stmt|;
 name|int
 name|authok
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|authctxt
+operator|->
+name|valid
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|authctxt

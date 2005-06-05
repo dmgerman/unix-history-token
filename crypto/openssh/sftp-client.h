@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.12 2004/02/17 05:39:51 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.13 2004/11/29 07:41:24 djm Exp $ */
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Initialiase a SSH filexfer connection. Returns -1 on error or  * protocol version on success.  */
+comment|/*  * Initialiase a SSH filexfer connection. Returns NULL on error or  * a pointer to a initialized sftp_conn struct on success.  */
 end_comment
 
 begin_function_decl

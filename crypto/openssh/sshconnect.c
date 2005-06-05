@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.158 2004/06/21 17:36:31 avsm Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.161 2005/03/02 01:00:06 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1335,7 +1335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If needpriv is true,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if needpriv is true.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  * Return values:  *    0 for OK  *    ECONNREFUSED if we got a "Connection Refused" by the peer on any address  *    ECONNABORTED if we failed without a "Connection refused"  * Suitable error messages for the connection failure will already have been  * printed.  */
+comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If needpriv is true,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if needpriv is true.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  */
 end_comment
 
 begin_function
@@ -1411,12 +1411,6 @@ name|struct
 name|servent
 modifier|*
 name|sp
-decl_stmt|;
-comment|/* 	 * Did we get only other errors than "Connection refused" (which 	 * should block fallback to rsh and similar), or did we get at least 	 * one "Connection refused"? 	 */
-name|int
-name|full_failure
-init|=
-literal|1
 decl_stmt|;
 name|debug2
 argument_list|(
@@ -1713,16 +1707,6 @@ break|break;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|errno
-operator|==
-name|ECONNREFUSED
-condition|)
-name|full_failure
-operator|=
-literal|0
-expr_stmt|;
 name|debug
 argument_list|(
 literal|"connect to address %s port %s: %s"
@@ -1781,7 +1765,7 @@ operator|>=
 name|connection_attempts
 condition|)
 block|{
-name|logit
+name|error
 argument_list|(
 literal|"ssh: connect to host %s port %s: %s"
 argument_list|,
@@ -1796,11 +1780,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|full_failure
-condition|?
-name|ECONNABORTED
-else|:
-name|ECONNREFUSED
+operator|(
+operator|-
+literal|1
+operator|)
 return|;
 block|}
 name|debug
@@ -2583,6 +2566,8 @@ name|HostStatus
 name|ip_status
 decl_stmt|;
 name|int
+name|r
+decl_stmt|,
 name|local
 init|=
 literal|0
@@ -3085,6 +3070,10 @@ argument_list|,
 name|ip
 argument_list|,
 name|host_key
+argument_list|,
+name|options
+operator|.
+name|hash_known_hosts
 argument_list|)
 condition|)
 name|logit
@@ -3308,6 +3297,7 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* 		 * If not in strict mode, add the key automatically to the 		 * local known_hosts file. 		 */
 if|if
 condition|(
 name|options
@@ -3339,24 +3329,89 @@ name|hostp
 operator|=
 name|hostline
 expr_stmt|;
-block|}
-else|else
-name|hostp
-operator|=
-name|host
-expr_stmt|;
-comment|/* 		 * If not in strict mode, add the key automatically to the 		 * local known_hosts file. 		 */
 if|if
 condition|(
-operator|!
+name|options
+operator|.
+name|hash_known_hosts
+condition|)
+block|{
+comment|/* Add hash of host and IP separately */
+name|r
+operator|=
 name|add_host_to_hostfile
 argument_list|(
 name|user_hostfile
 argument_list|,
-name|hostp
+name|host
 argument_list|,
 name|host_key
+argument_list|,
+name|options
+operator|.
+name|hash_known_hosts
 argument_list|)
+operator|&&
+name|add_host_to_hostfile
+argument_list|(
+name|user_hostfile
+argument_list|,
+name|ip
+argument_list|,
+name|host_key
+argument_list|,
+name|options
+operator|.
+name|hash_known_hosts
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Add unhashed "host,ip" */
+name|r
+operator|=
+name|add_host_to_hostfile
+argument_list|(
+name|user_hostfile
+argument_list|,
+name|hostline
+argument_list|,
+name|host_key
+argument_list|,
+name|options
+operator|.
+name|hash_known_hosts
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|r
+operator|=
+name|add_host_to_hostfile
+argument_list|(
+name|user_hostfile
+argument_list|,
+name|host
+argument_list|,
+name|host_key
+argument_list|,
+name|options
+operator|.
+name|hash_known_hosts
+argument_list|)
+expr_stmt|;
+name|hostp
+operator|=
+name|host
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|r
 condition|)
 name|logit
 argument_list|(

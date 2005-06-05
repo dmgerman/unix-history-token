@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: scp.c,v 1.117 2004/08/11 21:44:32 avsm Exp $"
+literal|"$OpenBSD: scp.c,v 1.119 2005/01/24 10:22:06 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -176,6 +176,7 @@ name|do_cmd_pid
 operator|>
 literal|1
 condition|)
+block|{
 name|kill
 argument_list|(
 name|do_cmd_pid
@@ -183,6 +184,16 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
+name|waitpid
+argument_list|(
+name|do_cmd_pid
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|_exit
 argument_list|(
 literal|1
@@ -3756,7 +3767,7 @@ name|SCREWUP
 parameter_list|(
 name|str
 parameter_list|)
-value|do { why = str; goto screwup; } while (0)
+value|{ why = str; goto screwup; }
 name|setimes
 operator|=
 name|targisdir

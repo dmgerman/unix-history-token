@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-arc4random.c,v 1.9 2004/07/18 23:30:40 djm Exp $"
+literal|"$Id: bsd-arc4random.c,v 1.10 2005/02/16 02:01:28 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

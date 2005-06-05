@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.51 2004/07/11 17:48:47 deraadt Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.52 2004/11/25 22:22:14 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -817,6 +817,12 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -984,6 +990,12 @@ name|fx2txt
 argument_list|(
 name|status
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|msg
 argument_list|)
 expr_stmt|;
 return|return

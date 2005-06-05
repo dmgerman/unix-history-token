@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: buffer.h,v 1.11 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: buffer.h,v 1.12 2004/10/29 23:56:17 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -170,6 +170,45 @@ name|buffer_dump
 parameter_list|(
 name|Buffer
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|buffer_get_ret
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|buffer_consume_ret
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|buffer_consume_end_ret
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -145,11 +145,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
+name|authenticated
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
 endif|#
 directive|endif
 return|return

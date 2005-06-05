@@ -1020,7 +1020,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__hpux
+name|GETSPNAM_CONFLICTING_DEFS
 end_ifdef
 
 begin_ifdef

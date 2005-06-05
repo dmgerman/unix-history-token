@@ -4,15 +4,15 @@ comment|/*  * Copyright (c) 2000 Andre Lucas.  All rights reserved.  * Portions 
 end_comment
 
 begin_comment
+comment|/*  * The btmp logging code is derived from login.c from util-linux and is under  * the the following license:  *  * Copyright (c) 1980, 1987, 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
+begin_comment
 comment|/**  ** loginrec.c:  platform-independent login recording and lastlog retrieval  **/
 end_comment
 
 begin_comment
-comment|/*   The new login code explained   ============================    This code attempts to provide a common interface to login recording   (utmp and friends) and last login time retrieval.    Its primary means of achieving this is to use 'struct logininfo', a   union of all the useful fields in the various different types of   system login record structures one finds on UNIX variants.    We depend on autoconf to define which recording methods are to be   used, and which fields are contained in the relevant data structures   on the local system. Many C preprocessor symbols affect which code   gets compiled here.    The code is designed to make it easy to modify a particular   recording method, without affecting other methods nor requiring so   many nested conditional compilation blocks as were commonplace in   the old code.    For login recording, we try to use the local system's libraries as   these are clearly most likely to work correctly. For utmp systems   this usually means login() and logout() or setutent() etc., probably   in libutil, along with logwtmp() etc. On these systems, we fall back   to writing the files directly if we have to, though this method   requires very thorough testing so we do not corrupt local auditing   information. These files and their access methods are very system   specific indeed.    For utmpx systems, the corresponding library functions are   setutxent() etc. To the author's knowledge, all utmpx systems have   these library functions and so no direct write is attempted. If such   a system exists and needs support, direct analogues of the [uw]tmp   code should suffice.    Retrieving the time of last login ('lastlog') is in some ways even   more problemmatic than login recording. Some systems provide a   simple table of all users which we seek based on uid and retrieve a   relatively standard structure. Others record the same information in   a directory with a separate file, and others don't record the   information separately at all. For systems in the latter category,   we look backwards in the wtmp or wtmpx file for the last login entry   for our user. Naturally this is slower and on busy systems could   incur a significant performance penalty.    Calling the new code   --------------------    In OpenSSH all login recording and retrieval is performed in   login.c. Here you'll find working examples. Also, in the logintest.c   program there are more examples.    Internal handler calling method   -------------------------------    When a call is made to login_login() or login_logout(), both   routines set a struct logininfo flag defining which action (log in,   or log out) is to be taken. They both then call login_write(), which   calls whichever of the many structure-specific handlers autoconf   selects for the local system.    The handlers themselves handle system data structure specifics. Both   struct utmp and struct utmpx have utility functions (see   construct_utmp*()) to try to make it simpler to add extra systems   that introduce new features to either structure.    While it may seem terribly wasteful to replicate so much similar   code for each method, experience has shown that maintaining code to   write both struct utmp and utmpx in one function, whilst maintaining   support for all systems whether they have library support or not, is   a difficult and time-consuming task.    Lastlog support proceeds similarly. Functions login_get_lastlog()   (and its OpenSSH-tuned friend login_get_lastlog_time()) call   getlast_entry(), which tries one of three methods to find the last   login time. It uses local system lastlog support if it can,   otherwise it tries wtmp or wtmpx before giving up and returning 0,   meaning "tilt".    Maintenance   -----------    In many cases it's possible to tweak autoconf to select the correct   methods for a particular platform, either by improving the detection   code (best), or by presetting DISABLE_<method> or CONF_<method>_FILE   symbols for the platform.    Use logintest to check which symbols are defined before modifying   configure.ac and loginrec.c. (You have to build logintest yourself   with 'make logintest' as it's not built by default.)    Otherwise, patches to the specific method(s) are very helpful!  */
-end_comment
-
-begin_comment
-comment|/**  ** TODO:  **   homegrown ttyslot()  **   test, test, test  **  ** Platform status:  ** ----------------  **  ** Known good:  **   Linux (Redhat 6.2, Debian)  **   Solaris  **   HP-UX 10.20 (gcc only)  **   IRIX  **   NeXT - M68k/HPPA/Sparc (4.2/3.3)  **  ** Testing required: Please send reports!  **   NetBSD  **   HP-UX 11  **   AIX  **  ** Platforms with known problems:  **   Some variants of Slackware Linux  **  **/
+comment|/*  *  The new login code explained  *  ============================  *  *  This code attempts to provide a common interface to login recording  *  (utmp and friends) and last login time retrieval.  *  *  Its primary means of achieving this is to use 'struct logininfo', a  *  union of all the useful fields in the various different types of  *  system login record structures one finds on UNIX variants.  *  *  We depend on autoconf to define which recording methods are to be  *  used, and which fields are contained in the relevant data structures  *  on the local system. Many C preprocessor symbols affect which code  *  gets compiled here.  *  *  The code is designed to make it easy to modify a particular  *  recording method, without affecting other methods nor requiring so  *  many nested conditional compilation blocks as were commonplace in  *  the old code.  *  *  For login recording, we try to use the local system's libraries as  *  these are clearly most likely to work correctly. For utmp systems  *  this usually means login() and logout() or setutent() etc., probably  *  in libutil, along with logwtmp() etc. On these systems, we fall back  *  to writing the files directly if we have to, though this method  *  requires very thorough testing so we do not corrupt local auditing  *  information. These files and their access methods are very system  *  specific indeed.  *  *  For utmpx systems, the corresponding library functions are  *  setutxent() etc. To the author's knowledge, all utmpx systems have  *  these library functions and so no direct write is attempted. If such  *  a system exists and needs support, direct analogues of the [uw]tmp  *  code should suffice.  *  *  Retrieving the time of last login ('lastlog') is in some ways even  *  more problemmatic than login recording. Some systems provide a  *  simple table of all users which we seek based on uid and retrieve a  *  relatively standard structure. Others record the same information in  *  a directory with a separate file, and others don't record the  *  information separately at all. For systems in the latter category,  *  we look backwards in the wtmp or wtmpx file for the last login entry  *  for our user. Naturally this is slower and on busy systems could  *  incur a significant performance penalty.  *  *  Calling the new code  *  --------------------  *  *  In OpenSSH all login recording and retrieval is performed in  *  login.c. Here you'll find working examples. Also, in the logintest.c  *  program there are more examples.  *  *  Internal handler calling method  *  -------------------------------  *  *  When a call is made to login_login() or login_logout(), both  *  routines set a struct logininfo flag defining which action (log in,  *  or log out) is to be taken. They both then call login_write(), which  *  calls whichever of the many structure-specific handlers autoconf  *  selects for the local system.  *  *  The handlers themselves handle system data structure specifics. Both  *  struct utmp and struct utmpx have utility functions (see  *  construct_utmp*()) to try to make it simpler to add extra systems  *  that introduce new features to either structure.  *  *  While it may seem terribly wasteful to replicate so much similar  *  code for each method, experience has shown that maintaining code to  *  write both struct utmp and utmpx in one function, whilst maintaining  *  support for all systems whether they have library support or not, is  *  a difficult and time-consuming task.  *  *  Lastlog support proceeds similarly. Functions login_get_lastlog()  *  (and its OpenSSH-tuned friend login_get_lastlog_time()) call  *  getlast_entry(), which tries one of three methods to find the last  *  login time. It uses local system lastlog support if it can,  *  otherwise it tries wtmp or wtmpx before giving up and returning 0,  *  meaning "tilt".  *  *  Maintenance  *  -----------  *  *  In many cases it's possible to tweak autoconf to select the correct  *  methods for a particular platform, either by improving the detection  *  code (best), or by presetting DISABLE_<method> or CONF_<method>_FILE  *  symbols for the platform.  *  *  Use logintest to check which symbols are defined before modifying  *  configure.ac and loginrec.c. (You have to build logintest yourself  *  with 'make logintest' as it's not built by default.)  *  *  Otherwise, patches to the specific method(s) are very helpful!  */
 end_comment
 
 begin_include
@@ -51,13 +51,29 @@ directive|include
 file|"atomicio.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: loginrec.c,v 1.58 2004/08/15 09:12:52 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|"packet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"canohost.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buffer.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -92,6 +108,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$Id: loginrec.c,v 1.67 2005/02/15 11:19:28 dtucker Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  ** prototypes for helper functions in this file  **/
@@ -307,6 +331,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|Buffer
+name|loginmsg
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* pick the shortest string */
 end_comment
@@ -320,7 +351,7 @@ name|s1
 parameter_list|,
 name|s2
 parameter_list|)
-value|( sizeof(s1)< sizeof(s2) ? sizeof(s1) : sizeof(s2) )
+value|(sizeof(s1)< sizeof(s2) ? sizeof(s1) : sizeof(s2))
 end_define
 
 begin_comment
@@ -328,7 +359,7 @@ comment|/**  ** platform-independent login functions  **/
 end_comment
 
 begin_comment
-comment|/* login_login(struct logininfo *)     -Record a login  *  * Call with a pointer to a struct logininfo initialised with  * login_init_entry() or login_alloc_entry()  *  * Returns:  *>0 if successful  *  0  on failure (will use OpenSSH's logging facilities for diagnostics)  */
+comment|/*  * login_login(struct logininfo *) - Record a login  *  * Call with a pointer to a struct logininfo initialised with  * login_init_entry() or login_alloc_entry()  *  * Returns:  *>0 if successful  *  0  on failure (will use OpenSSH's logging facilities for diagnostics)  */
 end_comment
 
 begin_function
@@ -348,16 +379,18 @@ operator|=
 name|LTYPE_LOGIN
 expr_stmt|;
 return|return
+operator|(
 name|login_write
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* login_logout(struct logininfo *)     - Record a logout  *  * Call as with login_login()  *  * Returns:  *>0 if successful  *  0  on failure (will use OpenSSH's logging facilities for diagnostics)  */
+comment|/*  * login_logout(struct logininfo *) - Record a logout  *  * Call as with login_login()  *  * Returns:  *>0 if successful  *  0  on failure (will use OpenSSH's logging facilities for diagnostics)  */
 end_comment
 
 begin_function
@@ -377,16 +410,18 @@ operator|=
 name|LTYPE_LOGOUT
 expr_stmt|;
 return|return
+operator|(
 name|login_write
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* login_get_lastlog_time(int)           - Retrieve the last login time  *  * Retrieve the last login time for the given uid. Will try to use the  * system lastlog facilities if they are available, but will fall back  * to looking in wtmp/wtmpx if necessary  *  * Returns:  *   0 on failure, or if user has never logged in  *   Time in seconds from the epoch if successful  *  * Useful preprocessor symbols:  *   DISABLE_LASTLOG: If set, *never* even try to retrieve lastlog  *                    info  *   USE_LASTLOG: If set, indicates the presence of system lastlog  *                facilities. If this and DISABLE_LASTLOG are not set,  *                try to retrieve lastlog information from wtmp/wtmpx.  */
+comment|/*  * login_get_lastlog_time(int) - Retrieve the last login time  *  * Retrieve the last login time for the given uid. Will try to use the  * system lastlog facilities if they are available, but will fall back  * to looking in wtmp/wtmpx if necessary  *  * Returns:  *   0 on failure, or if user has never logged in  *   Time in seconds from the epoch if successful  *  * Useful preprocessor symbols:  *   DISABLE_LASTLOG: If set, *never* even try to retrieve lastlog  *                    info  *   USE_LASTLOG: If set, indicates the presence of system lastlog  *                facilities. If this and DISABLE_LASTLOG are not set,  *                try to retrieve lastlog information from wtmp/wtmpx.  */
 end_comment
 
 begin_function
@@ -414,19 +449,23 @@ name|uid
 argument_list|)
 condition|)
 return|return
+operator|(
 name|li
 operator|.
 name|tv_sec
+operator|)
 return|;
 else|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* login_get_lastlog(struct logininfo *, int)   - Retrieve a lastlog entry  *  * Retrieve a logininfo structure populated (only partially) with  * information from the system lastlog data, or from wtmp/wtmpx if no  * system lastlog information exists.  *  * Note this routine must be given a pre-allocated logininfo.  *  * Returns:  *>0: A pointer to your struct logininfo if successful  *  0  on failure (will use OpenSSH's logging facilities for diagnostics)  *  */
+comment|/*  * login_get_lastlog(struct logininfo *, int)   - Retrieve a lastlog entry  *  * Retrieve a logininfo structure populated (only partially) with  * information from the system lastlog data, or from wtmp/wtmpx if no  * system lastlog information exists.  *  * Note this routine must be given a pre-allocated logininfo.  *  * Returns:  *>0: A pointer to your struct logininfo if successful  *  0  on failure (will use OpenSSH's logging facilities for diagnostics)  */
 end_comment
 
 begin_function
@@ -485,12 +524,14 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"login_get_lastlog: Cannot find account for uid %i"
+literal|"%s: Cannot find account for uid %i"
+argument_list|,
+name|__func__
 argument_list|,
 name|uid
 argument_list|)
 expr_stmt|;
-comment|/* No MIN_SIZEOF here - we absolutely *must not* truncate the 	 * username */
+comment|/* No MIN_SIZEOF here - we absolutely *must not* truncate the 	 * username (XXX - so check for trunc!) */
 name|strlcpy
 argument_list|(
 name|li
@@ -517,17 +558,21 @@ name|li
 argument_list|)
 condition|)
 return|return
+operator|(
 name|li
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* login_alloc_entry(int, char*, char*, char*)    - Allocate and initialise  *                                                  a logininfo structure  *  * This function creates a new struct logininfo, a data structure  * meant to carry the information required to portably record login info.  *  * Returns a pointer to a newly created struct logininfo. If memory  * allocation fails, the program halts.  */
+comment|/*  * login_alloc_entry(int, char*, char*, char*)    - Allocate and initialise  *                                                  a logininfo structure  *  * This function creates a new struct logininfo, a data structure  * meant to carry the information required to portably record login info.  *  * Returns a pointer to a newly created struct logininfo. If memory  * allocation fails, the program halts.  */
 end_comment
 
 begin_function
@@ -562,11 +607,6 @@ name|newli
 decl_stmt|;
 name|newli
 operator|=
-operator|(
-expr|struct
-name|logininfo
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -576,9 +616,6 @@ name|newli
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|login_init_entry
 argument_list|(
 name|newli
@@ -593,7 +630,9 @@ name|line
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|newli
+operator|)
 return|;
 block|}
 end_function
@@ -733,15 +772,19 @@ name|pw
 operator|==
 name|NULL
 condition|)
+block|{
 name|fatal
 argument_list|(
-literal|"login_init_entry: Cannot find user \"%s\""
+literal|"%s: Cannot find user \"%s\""
+argument_list|,
+name|__func__
 argument_list|,
 name|li
 operator|->
 name|username
 argument_list|)
 expr_stmt|;
+block|}
 name|li
 operator|->
 name|uid
@@ -772,13 +815,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* login_set_current_time(struct logininfo *)    - set the current time  *  * Set the current time in a logininfo structure. This function is  * meant to eliminate the need to deal with system dependencies for  * time handling.  */
+comment|/*   * login_set_current_time(struct logininfo *)    - set the current time  *  * Set the current time in a logininfo structure. This function is  * meant to eliminate the need to deal with system dependencies for  * time handling.  */
 end_comment
 
 begin_function
@@ -876,24 +921,13 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
-operator|(
 name|li
 operator|->
 name|hostaddr
 operator|.
 name|sa
-operator|)
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|)
 name|sa
 argument_list|,
 name|bufsize
@@ -921,9 +955,6 @@ directive|ifndef
 name|HAVE_CYGWIN
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|geteuid
 argument_list|()
 operator|!=
@@ -936,7 +967,9 @@ literal|"Attempt to write login records by non-root user (aborting)"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 endif|#
@@ -968,13 +1001,11 @@ name|type
 operator|==
 name|LTYPE_LOGIN
 condition|)
-block|{
 name|lastlog_write_entry
 argument_list|(
 name|li
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 ifdef|#
@@ -1042,6 +1073,9 @@ argument_list|,
 name|li
 operator|->
 name|line
+argument_list|,
+operator|&
+name|loginmsg
 argument_list|)
 condition|)
 name|logit
@@ -1055,8 +1089,46 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SSH_AUDIT_EVENTS
+if|if
+condition|(
+name|li
+operator|->
+name|type
+operator|==
+name|LTYPE_LOGIN
+condition|)
+name|audit_session_open
+argument_list|(
+name|li
+operator|->
+name|line
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|li
+operator|->
+name|type
+operator|==
+name|LTYPE_LOGOUT
+condition|)
+name|audit_session_close
+argument_list|(
+name|li
+operator|->
+name|line
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1129,7 +1201,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1171,24 +1245,26 @@ return|;
 else|#
 directive|else
 comment|/* !USE_LASTLOG */
-ifdef|#
-directive|ifdef
-name|DISABLE_LASTLOG
-comment|/* On some systems we shouldn't even try to obtain last login 	 * time, e.g. AIX */
-return|return
-literal|0
-return|;
-else|#
-directive|else
-comment|/* DISABLE_LASTLOG */
-comment|/* Try to retrieve the last login time from wtmp */
 if|#
 directive|if
+name|defined
+argument_list|(
+name|DISABLE_LASTLOG
+argument_list|)
+comment|/* On some systems we shouldn't even try to obtain last login 	 * time, e.g. AIX */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|USE_WTMP
 argument_list|)
 operator|&&
+expr|\
 operator|(
 name|defined
 argument_list|(
@@ -1209,17 +1285,14 @@ name|li
 argument_list|)
 operator|)
 return|;
-else|#
-directive|else
-comment|/* defined(USE_WTMP)&& (defined(HAVE_TIME_IN_UTMP) || defined(HAVE_TV_IN_UTMP)) */
-comment|/* If wtmp isn't available, try wtmpx */
-if|#
-directive|if
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|USE_WTMPX
 argument_list|)
 operator|&&
+expr|\
 operator|(
 name|defined
 argument_list|(
@@ -1231,7 +1304,7 @@ argument_list|(
 name|HAVE_TV_IN_UTMPX
 argument_list|)
 operator|)
-comment|/* retrieve last login time from utmpx */
+comment|/* If wtmp isn't available, try wtmpx */
 return|return
 operator|(
 name|wtmpx_get_entry
@@ -1244,14 +1317,10 @@ else|#
 directive|else
 comment|/* Give up: No means of retrieving last login time */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-endif|#
-directive|endif
-comment|/* USE_WTMPX&& (HAVE_TIME_IN_UTMPX || HAVE_TV_IN_UTMPX) */
-endif|#
-directive|endif
-comment|/* USE_WTMP&& (HAVE_TIME_IN_UTMP || HAVE_TV_IN_UTMP) */
 endif|#
 directive|endif
 comment|/* DISABLE_LASTLOG */
@@ -1266,7 +1335,7 @@ comment|/*  * 'line' string utility functions  *  * These functions process the 
 end_comment
 
 begin_comment
-comment|/* line_fullname(): add the leading '/dev/' if it doesn't exist make  * sure dst has enough space, if not just copy src (ugh) */
+comment|/*  * line_fullname(): add the leading '/dev/' if it doesn't exist make  * sure dst has enough space, if not just copy src (ugh)  */
 end_comment
 
 begin_function
@@ -1324,7 +1393,6 @@ literal|5
 operator|)
 operator|)
 condition|)
-block|{
 name|strlcpy
 argument_list|(
 name|dst
@@ -1334,7 +1402,6 @@ argument_list|,
 name|dstsize
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|strlcpy
@@ -1357,7 +1424,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|dst
+operator|)
 return|;
 block|}
 end_function
@@ -1428,13 +1497,15 @@ name|dstsize
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|dst
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* line_abbrevname(): Return the abbreviated (usually four-character)  * form of the line (Just use the last<dstsize> characters of the  * full name.)  *  * NOTE: use strncpy because we do NOT necessarily want zero  * termination */
+comment|/*   * line_abbrevname(): Return the abbreviated (usually four-character)  * form of the line (Just use the last<dstsize> characters of the  * full name.)  *  * NOTE: use strncpy because we do NOT necessarily want zero  * termination  */
 end_comment
 
 begin_function
@@ -1560,7 +1631,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|dst
+operator|)
 return|;
 block|}
 end_function
@@ -1607,9 +1680,12 @@ modifier|*
 name|ut
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_TV_IN_UTMP
+argument_list|)
 name|ut
 operator|->
 name|ut_tv
@@ -1630,11 +1706,12 @@ name|li
 operator|->
 name|tv_usec
 expr_stmt|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|HAVE_TIME_IN_UTMP
+argument_list|)
 name|ut
 operator|->
 name|ut_time
@@ -1643,8 +1720,6 @@ name|li
 operator|->
 name|tv_sec
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
@@ -2054,9 +2129,12 @@ modifier|*
 name|utx
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_TV_IN_UTMPX
+argument_list|)
 name|utx
 operator|->
 name|ut_tv
@@ -2077,12 +2155,12 @@ name|li
 operator|->
 name|tv_usec
 expr_stmt|;
-else|#
-directive|else
-comment|/* HAVE_TV_IN_UTMPX */
-ifdef|#
-directive|ifdef
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|HAVE_TIME_IN_UTMPX
+argument_list|)
 name|utx
 operator|->
 name|ut_time
@@ -2093,10 +2171,6 @@ name|tv_sec
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_TIME_IN_UTMPX */
-endif|#
-directive|endif
-comment|/* HAVE_TV_IN_UTMPX */
 block|}
 end_function
 
@@ -2551,7 +2625,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -2566,11 +2642,7 @@ comment|/* UTMP_USE_LIBRARY */
 end_comment
 
 begin_comment
-comment|/* write a utmp entry direct to the file */
-end_comment
-
-begin_comment
-comment|/* This is a slightly modification of code in OpenBSD's login.c */
+comment|/*   * Write a utmp entry direct to the file  * This is a slightly modification of code in OpenBSD's login.c  */
 end_comment
 
 begin_function
@@ -2607,7 +2679,6 @@ name|defined
 argument_list|(
 name|HAVE_GETTTYENT
 argument_list|)
-specifier|register
 name|struct
 name|ttyent
 modifier|*
@@ -2622,12 +2693,7 @@ argument_list|()
 expr_stmt|;
 while|while
 condition|(
-operator|(
-expr|struct
-name|ttyent
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|!=
 operator|(
 name|ty
@@ -2668,12 +2734,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
-expr|struct
-name|ttyent
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|==
 name|ty
 condition|)
@@ -2766,7 +2827,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"%s: llseek: %s"
+literal|"%s: lseek: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -2789,7 +2852,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"%s: Couldn't seek to tty %s slot in %s"
+literal|"%s: Couldn't seek to tty %d slot in %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|tty
 argument_list|,
@@ -2891,10 +2956,6 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
 name|memcpy
 argument_list|(
 name|ut
@@ -2913,7 +2974,6 @@ name|ut_host
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2935,7 +2995,7 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"%s: llseek: %s"
+literal|"%s: lseek: %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2960,7 +3020,7 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"%s: Couldn't seek to tty %s slot in %s"
+literal|"%s: Couldn't seek to tty %d slot in %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2998,6 +3058,7 @@ operator|*
 name|ut
 argument_list|)
 condition|)
+block|{
 name|logit
 argument_list|(
 literal|"%s: error writing %s: %s"
@@ -3012,22 +3073,24 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+block|}
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 else|else
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -3082,11 +3145,15 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"utmp_perform_login: utmp_write_library() failed"
+literal|"%s: utmp_write_library() failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 else|#
@@ -3105,17 +3172,23 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"utmp_perform_login: utmp_write_direct() failed"
+literal|"%s: utmp_write_direct() failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3160,11 +3233,15 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"utmp_perform_logout: utmp_write_library() failed"
+literal|"%s: utmp_write_library() failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 else|#
@@ -3183,17 +3260,23 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"utmp_perform_logout: utmp_write_direct() failed"
+literal|"%s: utmp_write_direct() failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3219,28 +3302,36 @@ case|case
 name|LTYPE_LOGIN
 case|:
 return|return
+operator|(
 name|utmp_perform_login
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 case|case
 name|LTYPE_LOGOUT
 case|:
 return|return
+operator|(
 name|utmp_perform_logout
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 default|default:
 name|logit
 argument_list|(
-literal|"utmp_write_entry: invalid type field"
+literal|"%s: invalid type field"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -3348,7 +3439,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3384,11 +3477,15 @@ parameter_list|)
 block|{
 name|logit
 argument_list|(
-literal|"utmpx_write_direct: not implemented!"
+literal|"%s: not implemented!"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3442,11 +3539,15 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"utmpx_perform_login: utmp_write_library() failed"
+literal|"%s: utmp_write_library() failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 else|#
@@ -3465,17 +3566,23 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"utmpx_perform_login: utmp_write_direct() failed"
+literal|"%s: utmp_write_direct() failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3561,7 +3668,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3587,28 +3696,36 @@ case|case
 name|LTYPE_LOGIN
 case|:
 return|return
+operator|(
 name|utmpx_perform_login
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 case|case
 name|LTYPE_LOGOUT
 case|:
 return|return
+operator|(
 name|utmpx_perform_logout
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 default|default:
 name|logit
 argument_list|(
-literal|"utmpx_write_entry: invalid type field"
+literal|"%s: invalid type field"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -3634,11 +3751,7 @@ name|USE_WTMP
 end_ifdef
 
 begin_comment
-comment|/* write a wtmp entry direct to the end of the file */
-end_comment
-
-begin_comment
-comment|/* This is a slight modification of code in OpenBSD's logwtmp.c */
+comment|/*   * Write a wtmp entry direct to the end of the file  * This is a slight modification of code in OpenBSD's logwtmp.c  */
 end_comment
 
 begin_function
@@ -3690,7 +3803,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"wtmp_write: problem writing %s: %s"
+literal|"%s: problem writing %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMP_FILE
 argument_list|,
@@ -3701,7 +3816,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -3751,7 +3868,9 @@ argument_list|)
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"wtmp_write: problem writing %s: %s"
+literal|"%s: problem writing %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMP_FILE
 argument_list|,
@@ -3766,16 +3885,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -3804,6 +3922,7 @@ name|ut
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|wtmp_write
 argument_list|(
 name|li
@@ -3811,6 +3930,7 @@ argument_list|,
 operator|&
 name|ut
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3839,6 +3959,7 @@ name|ut
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|wtmp_write
 argument_list|(
 name|li
@@ -3846,6 +3967,7 @@ argument_list|,
 operator|&
 name|ut
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3871,35 +3993,43 @@ case|case
 name|LTYPE_LOGIN
 case|:
 return|return
+operator|(
 name|wtmp_perform_login
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 case|case
 name|LTYPE_LOGOUT
 case|:
 return|return
+operator|(
 name|wtmp_perform_logout
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 default|default:
 name|logit
 argument_list|(
-literal|"wtmp_write_entry: invalid type field"
+literal|"%s: invalid type field"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/* Notes on fetching login data from wtmp/wtmpx  *  * Logouts are usually recorded with (amongst other things) a blank  * username on a given tty line.  However, some systems (HP-UX is one)  * leave all fields set, but change the ut_type field to DEAD_PROCESS.  *  * Since we're only looking for logins here, we know that the username  * must be set correctly. On systems that leave it in, we check for  * ut_type==USER_PROCESS (indicating a login.)  *  * Portability: Some systems may set something other than USER_PROCESS  * to indicate a login process. I don't know of any as I write. Also,  * it's possible that some systems may both leave the username in  * place and not have ut_type.  */
+comment|/*   * Notes on fetching login data from wtmp/wtmpx  *  * Logouts are usually recorded with (amongst other things) a blank  * username on a given tty line.  However, some systems (HP-UX is one)  * leave all fields set, but change the ut_type field to DEAD_PROCESS.  *  * Since we're only looking for logins here, we know that the username  * must be set correctly. On systems that leave it in, we check for  * ut_type==USER_PROCESS (indicating a login.)  *  * Portability: Some systems may set something other than USER_PROCESS  * to indicate a login process. I don't know of any as I write. Also,  * it's possible that some systems may both leave the username in  * place and not have ut_type.  */
 end_comment
 
 begin_comment
@@ -3961,18 +4091,24 @@ operator|&
 name|USER_PROCESS
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 else|#
 directive|else
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 endif|#
 directive|endif
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4031,7 +4167,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"wtmp_get_entry: problem opening %s: %s"
+literal|"%s: problem opening %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMP_FILE
 argument_list|,
@@ -4042,7 +4180,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -4060,7 +4200,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"wtmp_get_entry: couldn't stat %s: %s"
+literal|"%s: couldn't stat %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMP_FILE
 argument_list|,
@@ -4076,7 +4218,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* Seek to the start of the last struct utmp */
@@ -4110,7 +4254,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 while|while
@@ -4144,7 +4290,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"wtmp_get_entry: read of %s failed: %s"
+literal|"%s: read of %s failed: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMP_FILE
 argument_list|,
@@ -4160,7 +4308,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -4178,7 +4328,7 @@ name|found
 operator|=
 literal|1
 expr_stmt|;
-comment|/* We've already checked for a time in struct 			 * utmp, in login_getlast(). */
+comment|/* 			 * We've already checked for a time in struct 			 * utmp, in login_getlast() 			 */
 ifdef|#
 directive|ifdef
 name|HAVE_TIME_IN_UTMP
@@ -4295,7 +4445,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -4306,7 +4458,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -4331,11 +4485,7 @@ name|USE_WTMPX
 end_ifdef
 
 begin_comment
-comment|/* write a wtmpx entry direct to the end of the file */
-end_comment
-
-begin_comment
-comment|/* This is a slight modification of code in OpenBSD's logwtmp.c */
+comment|/*  * Write a wtmpx entry direct to the end of the file  * This is a slight modification of code in OpenBSD's logwtmp.c  */
 end_comment
 
 begin_function
@@ -4390,7 +4540,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"wtmpx_write: problem opening %s: %s"
+literal|"%s: problem opening %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMPX_FILE
 argument_list|,
@@ -4401,7 +4553,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -4451,7 +4605,9 @@ argument_list|)
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"wtmpx_write: problem writing %s: %s"
+literal|"%s: problem writing %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMPX_FILE
 argument_list|,
@@ -4466,16 +4622,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 else|#
 directive|else
@@ -4487,7 +4642,9 @@ name|utx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 endif|#
 directive|endif
@@ -4518,6 +4675,7 @@ name|utx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|wtmpx_write
 argument_list|(
 name|li
@@ -4525,6 +4683,7 @@ argument_list|,
 operator|&
 name|utx
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -4553,6 +4712,7 @@ name|utx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|wtmpx_write
 argument_list|(
 name|li
@@ -4560,6 +4720,7 @@ argument_list|,
 operator|&
 name|utx
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -4585,28 +4746,36 @@ case|case
 name|LTYPE_LOGIN
 case|:
 return|return
+operator|(
 name|wtmpx_perform_login
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 case|case
 name|LTYPE_LOGOUT
 case|:
 return|return
+operator|(
 name|wtmpx_perform_logout
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 default|default:
 name|logit
 argument_list|(
-literal|"wtmpx_write_entry: invalid type field"
+literal|"%s: invalid type field"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -4675,18 +4844,24 @@ operator|==
 name|USER_PROCESS
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 else|#
 directive|else
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 endif|#
 directive|endif
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4745,7 +4920,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"wtmpx_get_entry: problem opening %s: %s"
+literal|"%s: problem opening %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMPX_FILE
 argument_list|,
@@ -4756,7 +4933,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -4774,7 +4953,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"wtmpx_get_entry: couldn't stat %s: %s"
+literal|"%s: couldn't stat %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMPX_FILE
 argument_list|,
@@ -4790,7 +4971,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* Seek to the start of the last struct utmpx */
@@ -4824,7 +5007,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 while|while
@@ -4858,7 +5043,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"wtmpx_get_entry: read of %s failed: %s"
+literal|"%s: read of %s failed: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|WTMPX_FILE
 argument_list|,
@@ -4874,10 +5061,12 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-comment|/* Logouts are recorded as a blank username on a particular line. 		 * So, we just need to find the username in struct utmpx */
+comment|/* 		 * Logouts are recorded as a blank username on a particular  		 * line. So, we just need to find the username in struct utmpx 		 */
 if|if
 condition|(
 name|wtmpx_islogin
@@ -4893,9 +5082,12 @@ name|found
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_TV_IN_UTMPX
+argument_list|)
 name|li
 operator|->
 name|tv_sec
@@ -4906,11 +5098,12 @@ name|ut_tv
 operator|.
 name|tv_sec
 expr_stmt|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|HAVE_TIME_IN_UTMPX
+argument_list|)
 name|li
 operator|->
 name|tv_sec
@@ -4919,8 +5112,6 @@ name|utx
 operator|.
 name|ut_time
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|line_fullname
@@ -4941,9 +5132,12 @@ name|line
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_HOST_IN_UTMPX
+argument_list|)
 name|strlcpy
 argument_list|(
 name|li
@@ -5003,7 +5197,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -5013,7 +5209,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -5053,18 +5251,9 @@ name|utmp
 modifier|*
 name|ut
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|ut
 operator|=
-operator|(
-expr|struct
-name|utmp
-operator|*
-operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -5072,18 +5261,7 @@ operator|*
 name|ut
 argument_list|)
 argument_list|)
-operator|)
-condition|)
-block|{
-name|logit
-argument_list|(
-literal|"syslogin_perform_login: couldn't malloc()"
-argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 name|construct_utmp
 argument_list|(
 name|li
@@ -5102,7 +5280,9 @@ name|ut
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -5152,18 +5332,17 @@ argument_list|(
 name|line
 argument_list|)
 condition|)
-block|{
 name|logit
 argument_list|(
-literal|"syslogin_perform_logout: logout() returned an error"
+literal|"%s: logout() returned an error"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_LOGWTMP
-block|}
 else|else
-block|{
 name|logwtmp
 argument_list|(
 name|line
@@ -5175,12 +5354,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 comment|/* FIXME: (ATL - if the need arises) What to do if we have 	 * login, but no logout?  what if logout but no logwtmp? All 	 * routines are in libutil so they should all be there, 	 * but... */
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -5206,28 +5386,36 @@ case|case
 name|LTYPE_LOGIN
 case|:
 return|return
+operator|(
 name|syslogin_perform_login
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 case|case
 name|LTYPE_LOGOUT
 case|:
 return|return
+operator|(
 name|syslogin_perform_logout
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 default|default:
 name|logit
 argument_list|(
-literal|"syslogin_write_entry: Invalid type field"
+literal|"%s: Invalid type field"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -5307,9 +5495,6 @@ name|last
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|line_stripname
 argument_list|(
 name|last
@@ -5390,7 +5575,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"lastlog_perform_login: Couldn't stat %s: %s"
+literal|"%s: Couldn't stat %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|LASTLOG_FILE
 argument_list|,
@@ -5401,7 +5588,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -5414,7 +5603,9 @@ name|st_mode
 argument_list|)
 condition|)
 return|return
+operator|(
 name|LL_DIR
+operator|)
 return|;
 elseif|else
 if|if
@@ -5427,11 +5618,15 @@ name|st_mode
 argument_list|)
 condition|)
 return|return
+operator|(
 name|LL_FILE
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|LL_OTHER
+operator|)
 return|;
 block|}
 end_function
@@ -5523,13 +5718,17 @@ break|break;
 default|default:
 name|logit
 argument_list|(
-literal|"lastlog_openseek: %.100s is not a file or directory!"
+literal|"%s: %.100s is not a file or directory!"
+argument_list|,
+name|__func__
 argument_list|,
 name|LASTLOG_FILE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 operator|*
@@ -5554,7 +5753,9 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"lastlog_openseek: Couldn't open %s: %s"
+literal|"%s: Couldn't open %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|lastlog_file
 argument_list|,
@@ -5565,7 +5766,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -5613,7 +5816,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"lastlog_openseek: %s->lseek(): %s"
+literal|"%s: %s->lseek(): %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|lastlog_file
 argument_list|,
@@ -5624,12 +5829,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -5712,7 +5921,9 @@ argument_list|)
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"lastlog_write_filemode: Error writing to %s: %s"
+literal|"%s: Error writing to %s: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|LASTLOG_FILE
 argument_list|,
@@ -5723,7 +5934,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|close
@@ -5732,7 +5945,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -5758,19 +5973,25 @@ case|case
 name|LTYPE_LOGIN
 case|:
 return|return
+operator|(
 name|lastlog_perform_login
 argument_list|(
 name|li
 argument_list|)
+operator|)
 return|;
 default|default:
 name|logit
 argument_list|(
-literal|"lastlog_write_entry: Invalid type field"
+literal|"%s: Invalid type field"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -6005,6 +6226,451 @@ end_endif
 
 begin_comment
 comment|/* USE_LASTLOG */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BTMP
+end_ifdef
+
+begin_comment
+comment|/*    * Logs failed login attempts in _PATH_BTMP if that exists.    * The most common login failure is to give password instead of username.    * So the _PATH_BTMP file checked for the correct permission, so that    * only root can read it.    */
+end_comment
+
+begin_function
+name|void
+name|record_failed_login
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|username
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hostname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ttyn
+parameter_list|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|struct
+name|utmp
+name|ut
+decl_stmt|;
+name|struct
+name|sockaddr_storage
+name|from
+decl_stmt|;
+name|size_t
+name|fromlen
+init|=
+sizeof|sizeof
+argument_list|(
+name|from
+argument_list|)
+decl_stmt|;
+name|struct
+name|sockaddr_in
+modifier|*
+name|a4
+decl_stmt|;
+name|struct
+name|sockaddr_in6
+modifier|*
+name|a6
+decl_stmt|;
+name|time_t
+name|t
+decl_stmt|;
+name|struct
+name|stat
+name|fst
+decl_stmt|;
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|_PATH_BTMP
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_APPEND
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"Unable to open the btmp file %s: %s"
+argument_list|,
+name|_PATH_BTMP
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|fst
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"%s: fstat of %s failed: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|_PATH_BTMP
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+operator|(
+name|fst
+operator|.
+name|st_mode
+operator|&
+operator|(
+name|S_IRWXG
+operator||
+name|S_IRWXO
+operator|)
+operator|)
+operator|||
+operator|(
+name|fst
+operator|.
+name|st_uid
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"Excess permission or bad ownership on file %s"
+argument_list|,
+name|_PATH_BTMP
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|memset
+argument_list|(
+operator|&
+name|ut
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ut
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* strncpy because we don't necessarily want nul termination */
+name|strncpy
+argument_list|(
+name|ut
+operator|.
+name|ut_user
+argument_list|,
+name|username
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ut
+operator|.
+name|ut_user
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|ut
+operator|.
+name|ut_line
+argument_list|,
+literal|"ssh:notty"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ut
+operator|.
+name|ut_line
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+name|ut
+operator|.
+name|ut_time
+operator|=
+name|t
+expr_stmt|;
+comment|/* ut_time is not always a time_t */
+name|ut
+operator|.
+name|ut_type
+operator|=
+name|LOGIN_PROCESS
+expr_stmt|;
+name|ut
+operator|.
+name|ut_pid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
+comment|/* strncpy because we don't necessarily want nul termination */
+name|strncpy
+argument_list|(
+name|ut
+operator|.
+name|ut_host
+argument_list|,
+name|hostname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ut
+operator|.
+name|ut_host
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|packet_connection_is_on_socket
+argument_list|()
+operator|&&
+name|getpeername
+argument_list|(
+name|packet_get_connection_in
+argument_list|()
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|from
+argument_list|,
+operator|&
+name|fromlen
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ipv64_normalise_mapped
+argument_list|(
+operator|&
+name|from
+argument_list|,
+operator|&
+name|fromlen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|from
+operator|.
+name|ss_family
+operator|==
+name|AF_INET
+condition|)
+block|{
+name|a4
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|from
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|ut
+operator|.
+name|ut_addr
+argument_list|,
+operator|&
+operator|(
+name|a4
+operator|->
+name|sin_addr
+operator|)
+argument_list|,
+name|MIN_SIZEOF
+argument_list|(
+name|ut
+operator|.
+name|ut_addr
+argument_list|,
+name|a4
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|HAVE_ADDR_V6_IN_UTMP
+if|if
+condition|(
+name|from
+operator|.
+name|ss_family
+operator|==
+name|AF_INET6
+condition|)
+block|{
+name|a6
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+operator|&
+name|from
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|ut
+operator|.
+name|ut_addr_v6
+argument_list|,
+operator|&
+operator|(
+name|a6
+operator|->
+name|sin6_addr
+operator|)
+argument_list|,
+name|MIN_SIZEOF
+argument_list|(
+name|ut
+operator|.
+name|ut_addr_v6
+argument_list|,
+name|a6
+operator|->
+name|sin6_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
+if|if
+condition|(
+name|atomicio
+argument_list|(
+name|vwrite
+argument_list|,
+name|fd
+argument_list|,
+operator|&
+name|ut
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ut
+argument_list|)
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|ut
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"Failed to write to %s: %s"
+argument_list|,
+name|_PATH_BTMP
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_BTMP */
 end_comment
 
 end_unit

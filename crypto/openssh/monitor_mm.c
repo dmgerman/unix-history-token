@@ -337,6 +337,10 @@ if|if
 condition|(
 name|address
 operator|==
+operator|(
+name|void
+operator|*
+operator|)
 name|MAP_FAILED
 condition|)
 name|fatal

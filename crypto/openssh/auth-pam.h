@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: auth-pam.h,v 1.26 2004/05/30 10:43:59 dtucker Exp $ */
+comment|/* $Id: auth-pam.h,v 1.27 2004/09/11 12:17:26 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -181,6 +181,15 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|is_pam_session_open
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

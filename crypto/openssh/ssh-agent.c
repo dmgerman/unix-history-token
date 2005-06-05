@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-agent.c,v 1.120 2004/08/11 21:43:05 avsm Exp $"
+literal|"$OpenBSD: ssh-agent.c,v 1.122 2004/10/29 22:53:56 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -606,11 +606,6 @@ block|{
 name|char
 modifier|*
 name|p
-decl_stmt|,
-name|prompt
-index|[
-literal|1024
-index|]
 decl_stmt|;
 name|int
 name|ret
@@ -631,17 +626,11 @@ argument_list|,
 name|SSH_FP_HEX
 argument_list|)
 expr_stmt|;
-name|snprintf
+if|if
+condition|(
+name|ask_permission
 argument_list|(
-name|prompt
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|prompt
-argument_list|)
-argument_list|,
-literal|"Allow use of key %s?\n"
-literal|"Key fingerprint %s."
+literal|"Allow use of key %s?\nKey fingerprint %s."
 argument_list|,
 name|id
 operator|->
@@ -649,49 +638,6 @@ name|comment
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|read_passphrase
-argument_list|(
-name|prompt
-argument_list|,
-name|RP_ALLOW_EOF
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 		 * Accept empty responses and responses consisting 		 * of the word "yes" as affirmative. 		 */
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\0'
-operator|||
-operator|*
-name|p
-operator|==
-literal|'\n'
-operator|||
-name|strcasecmp
-argument_list|(
-name|p
-argument_list|,
-literal|"yes"
-argument_list|)
-operator|==
-literal|0
 condition|)
 name|ret
 operator|=
@@ -702,7 +648,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|ret
@@ -5342,14 +5287,9 @@ name|rlim
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
 name|int
 name|prev_mask
 decl_stmt|;
-endif|#
-directive|endif
 specifier|extern
 name|int
 name|optind
@@ -5853,6 +5793,12 @@ argument_list|(
 literal|"socket"
 argument_list|)
 expr_stmt|;
+operator|*
+name|socket_name
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* Don't unlink any existing file */
 name|cleanup_exit
 argument_list|(
 literal|1
@@ -5894,9 +5840,6 @@ name|sun_path
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
 name|prev_mask
 operator|=
 name|umask
@@ -5904,8 +5847,6 @@ argument_list|(
 literal|0177
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bind
@@ -5934,32 +5875,28 @@ argument_list|(
 literal|"bind"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
+operator|*
+name|socket_name
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* Don't unlink any existing file */
 name|umask
 argument_list|(
 name|prev_mask
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|cleanup_exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
 name|umask
 argument_list|(
 name|prev_mask
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|listen

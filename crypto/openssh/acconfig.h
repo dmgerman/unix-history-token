@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.180 2004/08/16 13:12:06 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.181 2005/02/25 23:07:38 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -59,10 +59,6 @@ name|SPT_TYPE
 undef|#
 directive|undef
 name|SPT_PADCHAR
-comment|/* setgroups() NOOP allowed */
-undef|#
-directive|undef
-name|SETGROUPS_NOOP
 comment|/* SCO workaround */
 undef|#
 directive|undef

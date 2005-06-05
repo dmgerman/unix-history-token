@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-cygwin_util.h,v 1.10 2003/08/07 06:28:16 dtucker Exp $ */
+comment|/* $Id: bsd-cygwin_util.h,v 1.11 2004/08/30 10:42:08 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -113,6 +113,28 @@ name|void
 name|register_9x_service
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+modifier|*
+name|fetch_windows_environment
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free_windows_environment
+parameter_list|(
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
