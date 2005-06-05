@@ -2883,7 +2883,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
