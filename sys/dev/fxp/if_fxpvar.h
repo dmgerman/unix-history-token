@@ -563,25 +563,6 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|uint32_t
-name|saved_maps
-index|[
-literal|5
-index|]
-decl_stmt|;
-comment|/* pci data */
-name|uint32_t
-name|saved_biosaddr
-decl_stmt|;
-name|uint8_t
-name|saved_intline
-decl_stmt|;
-name|uint8_t
-name|saved_cachelnsz
-decl_stmt|;
-name|uint8_t
-name|saved_lattimer
-decl_stmt|;
 name|uint8_t
 name|rfa_size
 decl_stmt|;
