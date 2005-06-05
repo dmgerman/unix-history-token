@@ -1101,6 +1101,32 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ifdrv
+block|{
+name|char
+name|ifd_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name, e.g. "en0" */
+name|unsigned
+name|long
+name|ifd_cmd
+decl_stmt|;
+name|size_t
+name|ifd_len
+decl_stmt|;
+name|void
+modifier|*
+name|ifd_data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*   * Structure used to retrieve aux status data from interfaces.  * Kernel suppliers to this interface should respect the formatting  * needed by ifconfig(8): each line starts with a TAB and ends with  * a newline.  The canonical example to copy and paste is in if_tun.c.  */
 end_comment

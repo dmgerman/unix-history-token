@@ -2751,6 +2751,11 @@ decl_stmt|;
 name|int
 name|req_len
 decl_stmt|;
+name|int
+name|bridged
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_CARP
@@ -2761,6 +2766,18 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|do_bridge
+operator|||
+name|ifp
+operator|->
+name|if_bridge
+condition|)
+name|bridged
+operator|=
+literal|1
+expr_stmt|;
 name|req_len
 operator|=
 name|arphdr_len2
@@ -2878,7 +2895,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|do_bridge
+name|bridged
 operator|||
 operator|(
 name|ia
@@ -2965,7 +2982,7 @@ argument_list|)
 if|if
 condition|(
 operator|(
-name|do_bridge
+name|bridged
 operator|||
 operator|(
 name|ia
@@ -3030,7 +3047,7 @@ comment|/* 	 * If bridging, fall back to using any inet address. 	 */
 if|if
 condition|(
 operator|!
-name|do_bridge
+name|bridged
 operator|||
 operator|(
 name|ia
@@ -3241,7 +3258,7 @@ comment|/* the following is not an error when doing bridging */
 if|if
 condition|(
 operator|!
-name|do_bridge
+name|bridged
 operator|&&
 name|rt
 operator|->

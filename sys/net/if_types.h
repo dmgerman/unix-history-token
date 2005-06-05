@@ -2098,6 +2098,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFT_BRIDGE
+value|0xd1
+end_define
+
+begin_comment
+comment|/* Transparent bridge interface */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFT_STF
 value|0xd7
 end_define

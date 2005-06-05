@@ -506,6 +506,11 @@ modifier|*
 name|if_broadcastaddr
 decl_stmt|;
 comment|/* linklevel broadcast bytestring */
+name|void
+modifier|*
+name|if_bridge
+decl_stmt|;
+comment|/* bridge glue */
 name|struct
 name|lltable
 modifier|*

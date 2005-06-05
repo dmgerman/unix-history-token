@@ -440,6 +440,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LLC_8021D_LSAP
+value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
 name|LLC_X25_LSAP
 value|0x7e
 end_define
