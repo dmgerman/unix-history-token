@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - wpa_supplicant control interface library  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - wpa_supplicant control interface library  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -448,6 +448,8 @@ name|local
 operator|.
 name|sun_path
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 literal|"/tmp/wpa_ctrl_%d-%d"
 argument_list|,
@@ -540,6 +542,8 @@ name|dest
 operator|.
 name|sun_path
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -565,17 +569,6 @@ argument_list|(
 name|ctrl
 operator|->
 name|dest
-operator|.
-name|sun_family
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|ctrl
-operator|->
-name|dest
-operator|.
-name|sun_path
 argument_list|)
 argument_list|)
 operator|<
