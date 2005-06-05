@@ -1782,11 +1782,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|destlen
+decl_stmt|;
+name|ssize_t
 name|unilen
 init|=
 literal|0
-decl_stmt|,
-name|destlen
 decl_stmt|;
 name|size_t
 name|destleft
@@ -1824,6 +1825,9 @@ condition|(
 operator|(
 name|unilen
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|udf_UncompressUnicodeByte
 argument_list|(
 name|len
@@ -1971,6 +1975,9 @@ condition|(
 operator|(
 name|unilen
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|udf_UncompressUnicode
 argument_list|(
 name|len
@@ -2066,6 +2073,9 @@ literal|0
 expr_stmt|;
 name|destlen
 operator|=
+operator|(
+name|int
+operator|)
 name|unilen
 expr_stmt|;
 block|}
