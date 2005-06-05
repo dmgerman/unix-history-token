@@ -1025,11 +1025,6 @@ argument|aio_liojob
 argument_list|)
 name|lioj_list
 expr_stmt|;
-name|struct
-name|kaioinfo
-modifier|*
-name|lioj_ki
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -9795,12 +9790,6 @@ operator|->
 name|lioj_queue_finished_count
 operator|=
 literal|0
-expr_stmt|;
-name|lj
-operator|->
-name|lioj_ki
-operator|=
-name|ki
 expr_stmt|;
 comment|/* 	 * Setup signal. 	 */
 if|if
