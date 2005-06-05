@@ -8,7 +8,7 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.180 2004/08/16 13:12:06 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.181 2005/02/25 23:07:38 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -93,14 +93,6 @@ end_comment
 
 begin_comment
 comment|/* #undef SPT_PADCHAR */
-end_comment
-
-begin_comment
-comment|/* setgroups() NOOP allowed */
-end_comment
-
-begin_comment
-comment|/* #undef SETGROUPS_NOOP */
 end_comment
 
 begin_comment
@@ -907,12 +899,9 @@ begin_comment
 comment|/* Set this to your mail directory if you don't have maillock.h */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAIL_DIRECTORY
-value|"/var/mail"
-end_define
+begin_comment
+comment|/* #undef MAIL_DIRECTORY */
+end_comment
 
 begin_comment
 comment|/* Data types */
@@ -1391,6 +1380,14 @@ comment|/* #undef HAVE_PROC_PID */
 end_comment
 
 begin_comment
+comment|/* Define if you have a getaddrinfo that fails for the all-zeros IPv6 address    */
+end_comment
+
+begin_comment
+comment|/* #undef AIX_GETNAMEINFO_HACK */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if the `getpgrp' function requires zero arguments. */
 end_comment
 
@@ -1400,6 +1397,14 @@ directive|define
 name|GETPGRP_VOID
 value|1
 end_define
+
+begin_comment
+comment|/* Conflicting defs for getspnam */
+end_comment
+
+begin_comment
+comment|/* #undef GETSPNAM_CONFLICTING_DEFS */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `arc4random' function. */
@@ -1451,6 +1456,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<bsm/audit.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BSM_AUDIT_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<bstring.h> header file. */
 end_comment
 
@@ -1481,9 +1494,12 @@ begin_comment
 comment|/* Define if gai_strerror() returns const char * */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CONST_GAI_STRERROR_PROTO */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CONST_GAI_STRERROR_PROTO
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<crypt.h> header file. */
@@ -1491,6 +1507,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_CRYPT_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `authenticate', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_AUTHENTICATE */
 end_comment
 
 begin_comment
@@ -1503,6 +1527,46 @@ directive|define
 name|HAVE_DECL_H_ERRNO
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `loginfailed', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_LOGINFAILED */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `loginrestrictions', and to 0 if    you don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_LOGINRESTRICTIONS */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `loginsuccess', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_LOGINSUCCESS */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `passwdexpired', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_PASSWDEXPIRED */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `setauthdb', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_SETAUTHDB */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<dirent.h> header file. */
@@ -1557,6 +1621,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_ENDUTXENT */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `fchdir' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCHDIR
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `fchmod' function. */
@@ -1642,6 +1717,22 @@ directive|define
 name|HAVE_GETADDRINFO
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `getaudit' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETAUDIT */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `getaudit_addr' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETAUDIT_ADDR */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `getcwd' function. */
@@ -1872,12 +1963,9 @@ begin_comment
 comment|/* Define to 1 if you have the<gssapi.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_GSSAPI_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_GSSAPI_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<gssapi_krb5.h> header file. */
@@ -1951,11 +2039,30 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if the system has the type `in_addr_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_IN_ADDR_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<lastlog.h> header file. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_LASTLOG_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `bsm' library (-lbsm). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBBSM */
 end_comment
 
 begin_comment
@@ -2686,6 +2793,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Have PEERCRED socket option */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SO_PEERCRED */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<stddef.h> header file. */
 end_comment
 
@@ -3342,7 +3457,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_NAME
-value|""
+value|"OpenSSH"
 end_define
 
 begin_comment
@@ -3353,7 +3468,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|""
+value|"OpenSSH Portable"
 end_define
 
 begin_comment
@@ -3364,7 +3479,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_TARNAME
-value|""
+value|"openssh"
 end_define
 
 begin_comment
@@ -3375,8 +3490,16 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|""
+value|"Portable"
 end_define
+
+begin_comment
+comment|/* must supply username to passwd */
+end_comment
+
+begin_comment
+comment|/* #undef PASSWD_NEEDS_USERNAME */
+end_comment
 
 begin_comment
 comment|/* The size of a `char', as computed by sizeof. */
@@ -3434,6 +3557,14 @@ value|2
 end_define
 
 begin_comment
+comment|/* Use audit debugging module */
+end_comment
+
+begin_comment
+comment|/* #undef SSH_AUDIT_EVENTS */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */
 end_comment
 
@@ -3442,6 +3573,32 @@ define|#
 directive|define
 name|STDC_HEADERS
 value|1
+end_define
+
+begin_comment
+comment|/* Use BSM audit module */
+end_comment
+
+begin_comment
+comment|/* #undef USE_BSM_AUDIT */
+end_comment
+
+begin_comment
+comment|/* Use btmp to log bad logins */
+end_comment
+
+begin_comment
+comment|/* #undef USE_BTMP */
+end_comment
+
+begin_comment
+comment|/* Use libedit for sftp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_LIBEDIT
 end_define
 
 begin_comment
@@ -3469,12 +3626,31 @@ comment|/* #undef _LARGE_FILES */
 end_comment
 
 begin_comment
-comment|/* Define as `__inline' if that's what the C compiler calls it, or to nothing    if it is not supported. */
+comment|/* log for bad login attempts */
 end_comment
+
+begin_comment
+comment|/* #undef _PATH_BTMP */
+end_comment
+
+begin_comment
+comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
 
 begin_comment
 comment|/* #undef inline */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* type to use in place of socklen_t if not defined */
