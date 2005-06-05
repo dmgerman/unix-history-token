@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-aix.h,v 1.24 2005/02/16 11:49:31 dtucker Exp $ */
+comment|/* $Id: port-aix.h,v 1.25 2005/03/21 11:46:34 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -129,6 +129,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+operator|(
+name|HAVE_DECL_SETAUTHDB
+operator|==
+literal|0
+operator|)
+end_if
+
 begin_function_decl
 name|int
 name|setauthdb
@@ -142,6 +152,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* these may or may not be in the headers depending on the version */

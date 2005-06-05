@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/rsa.h>
 end_include
 
@@ -190,6 +196,10 @@ name|krb5_ccname
 decl_stmt|;
 endif|#
 directive|endif
+name|Buffer
+modifier|*
+name|loginmsg
+decl_stmt|;
 name|void
 modifier|*
 name|methoddata
@@ -1129,6 +1139,20 @@ modifier|*
 name|fakepw
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sys_auth_passwd
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

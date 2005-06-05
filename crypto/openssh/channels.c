@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: channels.c,v 1.212 2005/03/01 10:09:52 djm Exp $"
+literal|"$OpenBSD: channels.c,v 1.214 2005/03/14 11:46:56 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -104,6 +104,13 @@ end_include
 begin_comment
 comment|/* -- channel core */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CHAN_RBUF
+value|16*1024
+end_define
 
 begin_comment
 comment|/*  * Pointer to an array containing all allocated channels.  The array is  * dynamically extended as needed.  */
@@ -2963,6 +2970,22 @@ else|:
 name|packet_get_maxsize
 argument_list|()
 decl_stmt|;
+comment|/* check buffer limits */
+name|limit
+operator|=
+name|MIN
+argument_list|(
+name|limit
+argument_list|,
+operator|(
+name|BUFFER_MAX_LEN
+operator|-
+name|BUFFER_MAX_CHUNK
+operator|-
+name|CHAN_RBUF
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -6564,9 +6587,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|16
-operator|*
-literal|1024
+name|CHAN_RBUF
 index|]
 decl_stmt|;
 name|int
@@ -7119,9 +7140,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|16
-operator|*
-literal|1024
+name|CHAN_RBUF
 index|]
 decl_stmt|;
 name|int
@@ -10708,7 +10727,7 @@ return|return
 name|success
 return|;
 block|}
-comment|/* 	 * Determine whether or not a port forward listens to loopback, 	 * specified address or wildcard. On the client, a specified bind  	 * address will always override gateway_ports. On the server, a  	 * gateway_ports of 1 (``yes'') will override the client's  	 * specification and force a wildcard bind, whereas a value of 2  	 * (``clientspecified'') will bind to whatever address the client  	 * asked for. 	 * 	 * Special-case listen_addrs are: 	 * 	 * "0.0.0.0"               -> wildcard v4/v6 if SSH_OLD_FORWARD_ADDR 	 * "" (empty string), "*"  -> wildcard v4/v6 	 * "localhost"             -> loopback v4/v6 	 */
+comment|/* 	 * Determine whether or not a port forward listens to loopback, 	 * specified address or wildcard. On the client, a specified bind 	 * address will always override gateway_ports. On the server, a 	 * gateway_ports of 1 (``yes'') will override the client's 	 * specification and force a wildcard bind, whereas a value of 2 	 * (``clientspecified'') will bind to whatever address the client 	 * asked for. 	 * 	 * Special-case listen_addrs are: 	 * 	 * "0.0.0.0"               -> wildcard v4/v6 if SSH_OLD_FORWARD_ADDR 	 * "" (empty string), "*"  -> wildcard v4/v6 	 * "localhost"             -> loopback v4/v6 	 */
 name|addr
 operator|=
 name|NULL

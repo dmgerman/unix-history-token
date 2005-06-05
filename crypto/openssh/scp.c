@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: scp.c,v 1.119 2005/01/24 10:22:06 dtucker Exp $"
+literal|"$OpenBSD: scp.c,v 1.121 2005/04/02 12:41:16 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1480,6 +1480,9 @@ name|thost
 decl_stmt|,
 modifier|*
 name|tuser
+decl_stmt|,
+modifier|*
+name|arg
 decl_stmt|;
 operator|*
 name|targ
@@ -1498,12 +1501,9 @@ name|targ
 operator|=
 literal|"."
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|thost
+name|arg
 operator|=
-name|strrchr
+name|xstrdup
 argument_list|(
 name|argv
 index|[
@@ -1511,6 +1511,16 @@ name|argc
 operator|-
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|thost
+operator|=
+name|strrchr
+argument_list|(
+name|arg
 argument_list|,
 literal|'@'
 argument_list|)
@@ -1526,12 +1536,7 @@ literal|0
 expr_stmt|;
 name|tuser
 operator|=
-name|argv
-index|[
-name|argc
-operator|-
-literal|1
-index|]
+name|arg
 expr_stmt|;
 if|if
 condition|(
@@ -1549,12 +1554,7 @@ else|else
 block|{
 name|thost
 operator|=
-name|argv
-index|[
-name|argc
-operator|-
-literal|1
-index|]
+name|arg
 expr_stmt|;
 name|tuser
 operator|=

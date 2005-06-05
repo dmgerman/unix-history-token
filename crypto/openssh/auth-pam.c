@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-pam.c,v 1.121 2005/01/20 02:29:51 dtucker Exp $"
+literal|"$Id: auth-pam.c,v 1.122 2005/05/25 06:18:10 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -178,10 +178,35 @@ name|utmp_len
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* so we don't silently change behaviour */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|USE_POSIX_THREADS
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"USE_POSIX_THREADS replaced by UNSUPPORTED_POSIX_THREADS_HACK"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Formerly known as USE_POSIX_THREADS, using this is completely unsupported  * and generally a bad idea.  Use at own risk and do not expect support if  * this breaks.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNSUPPORTED_POSIX_THREADS_HACK
 end_ifdef
 
 begin_include
@@ -261,7 +286,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USE_POSIX_THREADS
+name|UNSUPPORTED_POSIX_THREADS_HACK
 end_ifndef
 
 begin_comment
@@ -980,7 +1005,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|USE_POSIX_THREADS
+name|UNSUPPORTED_POSIX_THREADS_HACK
 comment|/* Import variables set by do_pam_account */
 name|sshpam_account_status
 operator|=
@@ -1714,7 +1739,7 @@ operator|)
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|USE_POSIX_THREADS
+name|UNSUPPORTED_POSIX_THREADS_HACK
 specifier|extern
 name|char
 modifier|*
@@ -1910,7 +1935,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|USE_POSIX_THREADS
+name|UNSUPPORTED_POSIX_THREADS_HACK
 comment|/* Export variables set by do_pam_account */
 name|buffer_put_int
 argument_list|(
@@ -2055,7 +2080,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* USE_POSIX_THREADS */
+comment|/* UNSUPPORTED_POSIX_THREADS_HACK */
 comment|/* XXX - can't do much about an error here */
 name|ssh_msg_send
 argument_list|(

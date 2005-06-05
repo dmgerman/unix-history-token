@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: monitor.c,v 1.62 2005/01/30 11:18:08 dtucker Exp $"
+literal|"$OpenBSD: monitor.c,v 1.63 2005/03/10 22:01:05 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1754,6 +1754,13 @@ operator|*
 name|authctxt
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|authctxt
+operator|->
+name|loginmsg
+operator|=
+operator|&
+name|loginmsg
 expr_stmt|;
 if|if
 condition|(
@@ -7625,11 +7632,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|buffer_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|event
@@ -7724,11 +7726,6 @@ expr_stmt|;
 name|xfree
 argument_list|(
 name|cmd
-argument_list|)
-expr_stmt|;
-name|buffer_free
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return

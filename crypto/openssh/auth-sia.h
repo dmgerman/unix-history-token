@@ -16,19 +16,6 @@ name|HAVE_OSF_SIA
 end_ifdef
 
 begin_function_decl
-name|int
-name|sys_auth_passwd
-parameter_list|(
-name|Authctxt
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|session_setup_sia
 parameter_list|(

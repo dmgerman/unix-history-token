@@ -1104,6 +1104,15 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
+name|ipv64_normalise_mapped
+argument_list|(
+operator|&
+name|addr
+argument_list|,
+operator|&
+name|addrlen
+argument_list|)
+expr_stmt|;
 comment|/* Get the address in ascii. */
 if|if
 condition|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: readconf.c,v 1.137 2005/03/04 08:48:06 djm Exp $"
+literal|"$OpenBSD: readconf.c,v 1.139 2005/03/10 22:01:05 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -996,6 +996,19 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|options
+operator|->
+name|local_forwards
+index|[
+name|i
+index|]
+operator|.
+name|listen_host
+operator|!=
+name|NULL
+condition|)
 name|xfree
 argument_list|(
 name|options
@@ -1043,6 +1056,19 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|options
+operator|->
+name|remote_forwards
+index|[
+name|i
+index|]
+operator|.
+name|listen_host
+operator|!=
+name|NULL
+condition|)
 name|xfree
 argument_list|(
 name|options

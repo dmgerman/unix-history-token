@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.52 2004/11/25 22:22:14 markus Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.53 2005/03/10 22:01:05 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

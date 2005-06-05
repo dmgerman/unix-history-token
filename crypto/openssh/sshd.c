@@ -7217,6 +7217,13 @@ name|authctxt
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|authctxt
+operator|->
+name|loginmsg
+operator|=
+operator|&
+name|loginmsg
+expr_stmt|;
 comment|/* XXX global for cleanup, access from other modules */
 name|the_authctxt
 operator|=

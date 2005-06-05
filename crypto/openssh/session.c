@@ -6655,10 +6655,20 @@ operator|.
 name|use_pam
 operator|&&
 operator|!
+name|options
+operator|.
+name|use_login
+operator|&&
+operator|!
 name|is_pam_session_open
 argument_list|()
 condition|)
 block|{
+name|debug3
+argument_list|(
+literal|"PAM session not opened, exiting"
+argument_list|)
+expr_stmt|;
 name|display_loginmsg
 argument_list|()
 expr_stmt|;

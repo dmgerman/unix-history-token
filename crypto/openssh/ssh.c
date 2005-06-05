@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh.c,v 1.233 2005/03/01 17:22:06 jmc Exp $"
+literal|"$OpenBSD: ssh.c,v 1.234 2005/03/10 22:01:06 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3700,6 +3700,29 @@ argument_list|(
 literal|"Remote connections from %.200s:%d forwarded to "
 literal|"local address %.200s:%d"
 argument_list|,
+operator|(
+name|options
+operator|.
+name|remote_forwards
+index|[
+name|i
+index|]
+operator|.
+name|listen_host
+operator|==
+name|NULL
+operator|)
+condition|?
+operator|(
+name|options
+operator|.
+name|gateway_ports
+condition|?
+literal|"*"
+else|:
+literal|"LOCALHOST"
+operator|)
+else|:
 name|options
 operator|.
 name|remote_forwards
@@ -4709,6 +4732,10 @@ condition|(
 name|errno
 operator|==
 name|EINVAL
+operator|||
+name|errno
+operator|==
+name|EADDRINUSE
 condition|)
 name|fatal
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: buffer.h,v 1.12 2004/10/29 23:56:17 djm Exp $	*/
+comment|/*	$OpenBSD: buffer.h,v 1.13 2005/03/14 11:46:56 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -44,6 +44,20 @@ block|}
 name|Buffer
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|BUFFER_MAX_CHUNK
+value|0x100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUFFER_MAX_LEN
+value|0xa00000
+end_define
 
 begin_function_decl
 name|void

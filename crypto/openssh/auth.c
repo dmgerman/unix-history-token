@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth.c,v 1.57 2005/01/22 08:17:59 dtucker Exp $"
+literal|"$OpenBSD: auth.c,v 1.58 2005/03/14 11:44:42 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -543,6 +543,18 @@ operator|||
 name|options
 operator|.
 name|num_allow_users
+operator|>
+literal|0
+operator|||
+name|options
+operator|.
+name|num_deny_groups
+operator|>
+literal|0
+operator|||
+name|options
+operator|.
+name|num_allow_groups
 operator|>
 literal|0
 condition|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: bufaux.h,v 1.20 2004/10/29 23:56:17 djm Exp $	*/
+comment|/*	$OpenBSD: bufaux.h,v 1.21 2005/03/10 22:01:05 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -225,7 +225,7 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|do { u_int l = buffer_get_int(b); buffer_consume(b, l); } while(0)
+value|do { u_int l = buffer_get_int(b); buffer_consume(b, l); } while (0)
 end_define
 
 begin_function_decl
