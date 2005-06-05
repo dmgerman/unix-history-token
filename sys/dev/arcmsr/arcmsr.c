@@ -9731,7 +9731,7 @@ name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|PCIR_MAPS
+name|PCI_BASE_ADDR0
 argument_list|,
 name|pACB
 operator|->
