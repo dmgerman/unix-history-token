@@ -1690,7 +1690,7 @@ name|open
 argument_list|(
 name|device
 argument_list|,
-name|O_RDWR
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -1921,7 +1921,7 @@ name|open
 argument_list|(
 name|device
 argument_list|,
-name|O_RDWR
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
