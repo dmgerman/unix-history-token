@@ -572,6 +572,8 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -587,6 +589,8 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 block|}
@@ -702,6 +706,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|force
 parameter_list|)
 block|{
 specifier|const
@@ -729,6 +736,8 @@ argument_list|(
 name|k
 argument_list|,
 name|m
+argument_list|,
+name|force
 argument_list|)
 else|:
 literal|1
@@ -761,6 +770,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|force
 parameter_list|)
 block|{
 specifier|const
@@ -788,6 +800,8 @@ argument_list|(
 name|k
 argument_list|,
 name|m
+argument_list|,
+name|force
 argument_list|)
 else|:
 literal|1
