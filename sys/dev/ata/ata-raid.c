@@ -22950,6 +22950,11 @@ name|printf
 argument_list|(
 literal|"magic_1             0x%016llx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|meta
 operator|->
 name|magic_1
@@ -22959,6 +22964,11 @@ name|printf
 argument_list|(
 literal|"magic_2             0x%016llx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|meta
 operator|->
 name|magic_2
