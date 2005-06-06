@@ -10046,9 +10046,6 @@ name|vge_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -10093,9 +10090,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|sc
 operator|=

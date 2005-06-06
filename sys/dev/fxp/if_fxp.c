@@ -4889,8 +4889,6 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|s
 decl_stmt|;
 name|FXP_LOCK
@@ -4969,8 +4967,6 @@ name|uint16_t
 name|pci_command
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|s
 decl_stmt|;
 name|FXP_LOCK
