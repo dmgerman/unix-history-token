@@ -112,6 +112,32 @@ comment|/* max number of batched tx descriptors */
 end_comment
 
 begin_comment
+comment|/*  * The key cache is used for h/w cipher state and also for  * tracking station state such as the current tx antenna.  * We also setup a mapping table between key cache slot indices  * and station state to short-circuit node lookups on rx.  * Different parts have different size key caches.  We handle  * up to ATH_KEYMAX entries (could dynamically allocate state).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_KEYMAX
+value|128
+end_define
+
+begin_comment
+comment|/* max key cache size we handle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_KEYBYTES
+value|(ATH_KEYMAX/NBBY)
+end_define
+
+begin_comment
+comment|/* storage space in bytes */
+end_comment
+
+begin_comment
 comment|/* driver-specific node state */
 end_comment
 
@@ -669,8 +695,13 @@ comment|/* LED blink operation active */
 name|sc_mcastkey
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* mcast key cache search */
+name|sc_hasclrkey
+range|:
+literal|1
+decl_stmt|;
+comment|/* CLR key supported */
 comment|/* rate tables */
 specifier|const
 name|HAL_RATE_TABLE
@@ -754,10 +785,19 @@ comment|/* size of key cache */
 name|u_int8_t
 name|sc_keymap
 index|[
-literal|16
+name|ATH_KEYBYTES
 index|]
 decl_stmt|;
-comment|/* bit map of key cache use */
+comment|/* key use bit map */
+name|struct
+name|ieee80211_node
+modifier|*
+name|sc_keyixmap
+index|[
+name|ATH_KEYMAX
+index|]
+decl_stmt|;
+comment|/* key ix->node map */
 name|u_int
 name|sc_ledpin
 decl_stmt|;
@@ -2273,6 +2313,54 @@ parameter_list|)
 define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_BURST, 0, NULL) == HAL_OK)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasmcastkeysearch
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_MCAST_KEYSRCH, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getmcastkeysearch
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_MCAST_KEYSRCH, 1, NULL) == HAL_OK)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getmcastkeysearch
+parameter_list|(
+name|_ah
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
