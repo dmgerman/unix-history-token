@@ -303,6 +303,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|bpf_maxinsns
+init|=
+name|BPF_MAXINSNS
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_bpf
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|maxinsns
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bpf_maxinsns
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum bpf program instructions"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * bpf_iflist is a list of BPF interface structures, each corresponding to a  * specific DLT.  The same network interface might have several BPF interface  * structures registered by different layers in the stack (i.e., 802.11  * frames, ethernet frames, etc).  */
 end_comment
@@ -3643,7 +3673,7 @@ if|if
 condition|(
 name|flen
 operator|>
-name|BPF_MAXINSNS
+name|bpf_maxinsns
 condition|)
 return|return
 operator|(
