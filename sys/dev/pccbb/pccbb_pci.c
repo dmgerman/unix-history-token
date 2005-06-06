@@ -885,12 +885,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
-
 begin_comment
 comment|/*  * Still need this because the pci code only does power for type 0  * header devices.  */
 end_comment
@@ -989,11 +983,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Print out the config space  */
@@ -1225,16 +1214,11 @@ operator|->
 name|intr_handlers
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
 name|cbb_powerstate_d0
 argument_list|(
 name|brdev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|rid
 operator|=
 name|CBBR_SOCKBASE
