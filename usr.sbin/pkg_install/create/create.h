@@ -185,6 +185,13 @@ name|PlistOnly
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|Recursive
+decl_stmt|;
+end_decl_stmt
+
 begin_enum
 enum|enum
 name|zipper
