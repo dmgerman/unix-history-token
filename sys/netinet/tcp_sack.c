@@ -1893,18 +1893,6 @@ name|start
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Go to the previous hole. */
-name|cur
-operator|=
-name|TAILQ_PREV
-argument_list|(
-name|cur
-argument_list|,
-name|sackhole_head
-argument_list|,
-name|scblink
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2039,10 +2027,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Go to the previous sack block. */
-name|sblkp
-operator|--
-expr_stmt|;
 block|}
 name|tp
 operator|->
@@ -2059,6 +2043,35 @@ name|cur
 operator|->
 name|start
 operator|)
+expr_stmt|;
+comment|/* 		 * Testing sblkp->start against cur->start tells us whether 		 * we're done with the sack block or the sack hole. 		 * Accordingly, we advance one or the other. 		 */
+if|if
+condition|(
+name|SEQ_LEQ
+argument_list|(
+name|sblkp
+operator|->
+name|start
+argument_list|,
+name|cur
+operator|->
+name|start
+argument_list|)
+condition|)
+name|cur
+operator|=
+name|TAILQ_PREV
+argument_list|(
+name|cur
+argument_list|,
+name|sackhole_head
+argument_list|,
+name|scblink
+argument_list|)
+expr_stmt|;
+else|else
+name|sblkp
+operator|--
 expr_stmt|;
 block|}
 return|return
