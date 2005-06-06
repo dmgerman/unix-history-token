@@ -4931,7 +4931,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Device resume routine.  Restore some PCI settings in case the BIOS  * doesn't, re-enable busmastering, and restart the interface if  * appropriate.  */
+comment|/*  * Device resume routine. re-enable busmastering, and restart the interface if  * appropriate.  */
 end_comment
 
 begin_function
