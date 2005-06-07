@@ -3164,6 +3164,12 @@ operator|->
 name|rsn_caps
 operator|!=
 literal|0
+operator|&&
+name|rsn
+operator|->
+name|rsn_caps
+operator|!=
+name|RSN_CAP_PREAUTH
 condition|)
 name|ADDSHORT
 argument_list|(
@@ -3579,14 +3585,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* optional capabilities */
-if|if
-condition|(
-name|rsn
-operator|->
-name|rsn_caps
-operator|!=
-literal|0
-condition|)
 name|ADDSHORT
 argument_list|(
 name|frm
