@@ -1419,6 +1419,24 @@ name|m2
 condition|)
 block|{
 comment|/* Deliver duplicate */
+name|NG_SEND_DATA_ONLY
+argument_list|(
+name|error
+argument_list|,
+name|dup
+operator|->
+name|hook
+argument_list|,
+name|m2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 name|dup
 operator|->
 name|stats
@@ -1438,17 +1456,7 @@ operator|.
 name|outFrames
 operator|++
 expr_stmt|;
-name|NG_SEND_DATA_ONLY
-argument_list|(
-name|error
-argument_list|,
-name|dup
-operator|->
-name|hook
-argument_list|,
-name|m2
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Deliver frame out destination hook */
