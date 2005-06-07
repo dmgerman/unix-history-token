@@ -4,6 +4,10 @@ comment|/*	$OpenBSD: bpf.c,v 1.13 2004/05/05 14:28:58 deraadt Exp $	*/
 end_comment
 
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/* BPF socket interface code, originally contributed by Archie Cobbs. */
 end_comment
 
@@ -834,6 +838,9 @@ argument_list|(
 literal|"Can't install packet filter program: %m"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BIOCSETWF
 comment|/* Set up the bpf write filter program structure. */
 name|p
 operator|.
@@ -913,6 +920,8 @@ argument_list|(
 literal|"Cannot lock bpf"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
