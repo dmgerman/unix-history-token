@@ -111,6 +111,39 @@ begin_comment
 comment|/* max number of batched tx descriptors */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATH_BEACON_AIFS_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* default aifs for ap beacon q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_BEACON_CWMIN_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* default cwmin for ap beacon q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_BEACON_CWMAX_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* default cwmax for ap beacon q */
+end_comment
+
 begin_comment
 comment|/*  * The key cache is used for h/w cipher state and also for  * tracking station state such as the current tx antenna.  * We also setup a mapping table between key cache slot indices  * and station state to short-circuit node lookups on rx.  * Different parts have different size key caches.  We handle  * up to ATH_KEYMAX entries (could dynamically allocate state).  */
 end_comment
