@@ -5908,7 +5908,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If we bring in a thread,  		 * then account for it as if it had been added to the 		 * run queue and then chosen. 		 */
+comment|/* 		 * If we bring in a thread account for it as if it had been 		 * added to the run queue and then chosen. 		 */
 name|newtd
 operator|->
 name|td_kse
@@ -5940,6 +5940,24 @@ argument_list|,
 name|newtd
 operator|->
 name|td_kse
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX When we preempt, we've already consumed a slot because 		 * we got here through sched_add().  However, newtd can come 		 * from thread_switchout() which can't SLOT_USE() because 		 * the SLOT code is scheduler dependent.  We must use the 		 * slot here otherwise. 		 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|SW_PREEMPT
+operator|)
+operator|==
+literal|0
+condition|)
+name|SLOT_USE
+argument_list|(
+name|newtd
+operator|->
+name|td_ksegrp
 argument_list|)
 expr_stmt|;
 block|}
