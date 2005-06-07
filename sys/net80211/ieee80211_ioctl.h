@@ -654,6 +654,10 @@ directive|define
 name|IEEE80211_MLME_UNAUTHORIZE
 value|5
 comment|/* unauthorize station */
+name|u_int8_t
+name|im_ssid_len
+decl_stmt|;
+comment|/* length of optional ssid */
 name|u_int16_t
 name|im_reason
 decl_stmt|;
@@ -662,6 +666,12 @@ name|u_int8_t
 name|im_macaddr
 index|[
 name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|u_int8_t
+name|im_ssid
+index|[
+name|IEEE80211_NWID_LEN
 index|]
 decl_stmt|;
 block|}

@@ -9069,9 +9069,9 @@ return|;
 comment|/* XXX must be in S_SCAN state? */
 if|if
 condition|(
-name|ic
-operator|->
-name|ic_des_esslen
+name|mlme
+operator|.
+name|im_ssid_len
 operator|!=
 literal|0
 condition|)
@@ -9090,13 +9090,13 @@ name|mlme
 operator|.
 name|im_macaddr
 argument_list|,
-name|ic
-operator|->
-name|ic_des_esslen
+name|mlme
+operator|.
+name|im_ssid_len
 argument_list|,
-name|ic
-operator|->
-name|ic_des_essid
+name|mlme
+operator|.
+name|im_ssid
 argument_list|)
 expr_stmt|;
 block|}
