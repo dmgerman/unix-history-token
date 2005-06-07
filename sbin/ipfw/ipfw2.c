@@ -7537,7 +7537,7 @@ argument_list|(
 operator|&
 name|flags
 argument_list|,
-name|HAVE_PROTO6
+name|HAVE_PROTO
 argument_list|,
 literal|0
 argument_list|)
@@ -20262,22 +20262,10 @@ name|F_LEN
 argument_list|(
 name|cmd
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
-comment|/* plain IP */
-name|proto
-operator|=
-literal|0
-expr_stmt|;
-else|else
 block|{
-name|proto
-operator|=
-name|cmd
-operator|->
-name|arg1
-expr_stmt|;
 name|prev
 operator|=
 name|cmd
