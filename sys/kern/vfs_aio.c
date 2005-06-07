@@ -10029,7 +10029,8 @@ name|int
 name|command
 decl_stmt|,
 name|found
-decl_stmt|,
+decl_stmt|;
+name|long
 name|jobref
 decl_stmt|;
 for|for
