@@ -8867,6 +8867,13 @@ name|v_iflag
 operator||=
 name|VI_DOINGINACT
 expr_stmt|;
+name|vp
+operator|->
+name|v_iflag
+operator|&=
+operator|~
+name|VI_OWEINACT
+expr_stmt|;
 name|VI_UNLOCK
 argument_list|(
 name|vp
@@ -8904,11 +8911,7 @@ operator|->
 name|v_iflag
 operator|&=
 operator|~
-operator|(
 name|VI_DOINGINACT
-operator||
-name|VI_OWEINACT
-operator|)
 expr_stmt|;
 block|}
 end_function
