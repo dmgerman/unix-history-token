@@ -3286,6 +3286,10 @@ operator|->
 name|address
 argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|ip
 operator|->
 name|client
@@ -3295,6 +3299,7 @@ operator|->
 name|renewal
 operator|-
 name|cur_time
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ip
@@ -5402,6 +5407,9 @@ operator|.
 name|sin_port
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ip
 operator|->
 name|client
@@ -5632,6 +5640,10 @@ name|note
 argument_list|(
 literal|"bound: renewal in %d seconds."
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|ip
 operator|->
 name|client
@@ -5641,6 +5653,7 @@ operator|->
 name|renewal
 operator|-
 name|cur_time
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|add_timeout
