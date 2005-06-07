@@ -287,6 +287,27 @@ directive|define
 name|VM_PROT_READ_IS_EXEC
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_USE_SMALL_ALLOC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UMA_MD_SMALL_ALLOC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ARM_USE_SMALL_ALLOC */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
