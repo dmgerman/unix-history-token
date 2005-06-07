@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: envelope.c,v 8.293 2004/02/18 00:46:18 gshapiro Exp $"
+literal|"@(#)$Id: envelope.c,v 8.294 2005/02/16 23:38:51 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2379,10 +2379,17 @@ name|updfs
 argument_list|(
 name|e
 argument_list|,
-name|true
+operator|-
+literal|1
 argument_list|,
-operator|!
 name|panic
+condition|?
+literal|0
+else|:
+operator|-
+literal|1
+argument_list|,
+literal|"dropenvelope"
 argument_list|)
 expr_stmt|;
 block|}

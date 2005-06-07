@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002, 2004, 2005 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: t-shm.c,v 1.20 2004/08/03 20:51:36 ca Exp $"
+literal|"@(#)$Id: t-shm.c,v 1.22 2005/01/14 02:14:10 ca Exp $"
 argument_list|)
 end_macro
 
@@ -280,6 +280,32 @@ literal|"shmval: %d\n"
 argument_list|,
 operator|*
 name|shm
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|i
+operator|=
+name|sm_shmsetowner
+argument_list|(
+name|shmid
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|getgid
+argument_list|()
+argument_list|,
+literal|0644
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sm_shmsetowner=%d\n"
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 break|break;
@@ -565,6 +591,28 @@ block|{
 name|int
 name|r
 decl_stmt|;
+name|r
+operator|=
+name|sm_shmsetowner
+argument_list|(
+name|shmid
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|getgid
+argument_list|()
+argument_list|,
+literal|0660
+argument_list|)
+expr_stmt|;
+name|SM_TEST
+argument_list|(
+name|r
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 operator|*
 name|shm
 operator|=

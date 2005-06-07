@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.260 2004/11/30 23:29:15 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.261 2005/02/16 23:38:51 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2535,6 +2535,7 @@ condition|)
 block|{
 comment|/* skip next few clauses */
 comment|/* EMPTY */
+comment|/* Note: updfs() is not called in this case! */
 block|}
 elseif|else
 if|if
@@ -2811,9 +2812,11 @@ name|updfs
 argument_list|(
 name|e
 argument_list|,
-name|false
+literal|0
 argument_list|,
-name|true
+literal|1
+argument_list|,
+literal|"collect"
 argument_list|)
 expr_stmt|;
 block|}

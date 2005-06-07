@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.118 2004/08/20 20:30:32 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.120 2005/03/22 22:07:53 ca Exp $  */
 end_comment
 
 begin_comment
@@ -775,6 +775,28 @@ name|_AIX4
 value|40300
 end_define
 
+begin_define
+define|#
+directive|define
+name|SOCKADDR_LEN_T
+value|socklen_t
+end_define
+
+begin_comment
+comment|/* e.g., arg#3 to accept, getsockname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKOPT_LEN_T
+value|socklen_t
+end_define
+
+begin_comment
+comment|/* arg#5 to getsockopt */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -865,6 +887,12 @@ begin_comment
 comment|/* use tzname[] vector */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOCKOPT_LEN_T
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -874,6 +902,15 @@ end_define
 
 begin_comment
 comment|/* arg#5 to getsockopt */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOCKOPT_LEN_T */
 end_comment
 
 begin_if
@@ -895,6 +932,12 @@ begin_comment
 comment|/* setreuid(2) works as of AIX 4.2 */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOCKADDR_LEN_T
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -904,6 +947,15 @@ end_define
 
 begin_comment
 comment|/* e.g., arg#3 to accept, getsockname */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOCKADDR_LEN_T */
 end_comment
 
 begin_endif
@@ -1121,12 +1173,27 @@ begin_comment
 comment|/* pad process title with nulls */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LA_TYPE */
+end_comment
 
 begin_define
 define|#

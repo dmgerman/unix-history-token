@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: shm.h,v 1.10 2003/05/17 18:34:54 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2003, 2005 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: shm.h,v 1.11 2005/01/13 22:57:04 ca Exp $  */
 end_comment
 
 begin_ifndef
@@ -108,6 +108,25 @@ operator|,
 name|int
 operator|,
 name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sm_shmsetowner
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|uid_t
+operator|,
+name|gid_t
+operator|,
+name|mode_t
 operator|)
 argument_list|)
 decl_stmt|;

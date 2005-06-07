@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.902 2004/11/18 21:46:01 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.906 2005/03/16 00:36:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -597,9 +597,7 @@ define|#
 directive|define
 name|RESET_SASLCONN
 define|\
-value|result = reset_saslconn(&conn, AuthRealm, remoteip, localip, auth_id, \&ext_ssf);	\ 	if (result != SASL_OK)			\ 	{					\
-comment|/* This is pretty fatal */
-value|\ 		goto doquit;			\ 	}
+value|do							\ 	{							\ 		result = reset_saslconn(&conn, AuthRealm, remoteip, \ 					localip, auth_id,&ext_ssf); \ 		if (result != SASL_OK)				\ 			sasl_ok = false;			\ 	} while (0)
 end_define
 
 begin_else
@@ -650,9 +648,7 @@ define|#
 directive|define
 name|RESET_SASLCONN
 define|\
-value|result = reset_saslconn(&conn, AuthRealm,&saddr_r,&saddr_l,&ext_ssf); \ 	if (result != SASL_OK)			\ 	{					\
-comment|/* This is pretty fatal */
-value|\ 		goto doquit;			\ 	}
+value|do							\ 	{							\ 		result = reset_saslconn(&conn, AuthRealm,&saddr_r, \&saddr_l,&ext_ssf);	\ 		if (result != SASL_OK)				\ 			sasl_ok = false;			\ 	} while (0)
 end_define
 
 begin_endif
@@ -2642,6 +2638,18 @@ directive|if
 name|SASL
 operator|>=
 literal|20000
+name|localip
+index|[
+literal|0
+index|]
+operator|=
+name|remoteip
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|#
 directive|if
 name|NETINET
@@ -3001,12 +3009,6 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX should these be options settable via .cf ? */
 comment|/* ssp.min_ssf = 0; is default due to memset() */
-if|#
-directive|if
-name|STARTTLS
-endif|#
-directive|endif
-comment|/* STARTTLS */
 block|{
 name|ssp
 operator|.
@@ -18065,6 +18067,11 @@ condition|(
 name|remoteip
 operator|!=
 name|NULL
+operator|&&
+operator|*
+name|remoteip
+operator|!=
+literal|'\0'
 condition|)
 name|result
 operator|=
@@ -18092,6 +18099,11 @@ condition|(
 name|localip
 operator|!=
 name|NULL
+operator|&&
+operator|*
+name|localip
+operator|!=
+literal|'\0'
 condition|)
 name|result
 operator|=
