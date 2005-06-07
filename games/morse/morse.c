@@ -1168,7 +1168,7 @@ begin_define
 define|#
 directive|define
 name|GETOPTOPTS
-value|"d:ef:lsw:"
+value|"c:d:ef:lsw:"
 end_define
 
 begin_define
@@ -1176,7 +1176,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: morse [-els] [-d device] [-w speed] [-f frequency] [string ...]\n"
+value|"usage: morse [-els] [-d device] [-w speed] [-c speed] [-f frequency] [string ...]\n"
 end_define
 
 begin_decl_stmt
@@ -1202,7 +1202,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* words per minute */
+comment|/* effective words per minute */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cpm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* effective words per minute between 				 * characters */
 end_comment
 
 begin_define
@@ -1262,6 +1273,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|float
+name|cdot_clock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|spkr
 decl_stmt|,
@@ -1306,7 +1324,7 @@ begin_define
 define|#
 directive|define
 name|GETOPTOPTS
-value|"d:ef:lpsw:"
+value|"c:d:ef:lpsw:"
 end_define
 
 begin_undef
@@ -1320,7 +1338,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: morse [-elps] [-d device] [-w speed] [-f frequency] [string ...]\n"
+value|"usage: morse [-elps] [-d device] [-w speed] [-c speed] [-f frequency] [string ...]\n"
 end_define
 
 begin_endif
@@ -1389,6 +1407,17 @@ operator|)
 name|ch
 condition|)
 block|{
+case|case
+literal|'c'
+case|:
+name|cpm
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -1534,6 +1563,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|cpm
+operator|==
+literal|0
+condition|)
+name|cpm
+operator|=
+name|wpm
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|pflag
 operator|||
@@ -1549,6 +1588,18 @@ operator|)
 operator|||
 operator|(
 name|wpm
+operator|>
+literal|60
+operator|)
+operator|||
+operator|(
+name|cpm
+operator|<
+literal|1
+operator|)
+operator|||
+operator|(
+name|cpm
 operator|>
 literal|60
 operator|)
@@ -1834,6 +1885,35 @@ comment|/* the dot rate */
 name|dot_clock
 operator|=
 name|dot_clock
+operator|*
+literal|100
+expr_stmt|;
+comment|/* scale for ioctl */
+name|cdot_clock
+operator|=
+name|cpm
+operator|/
+literal|2.4
+expr_stmt|;
+comment|/* dots/sec */
+name|cdot_clock
+operator|=
+literal|1
+operator|/
+name|cdot_clock
+expr_stmt|;
+comment|/* duration of a dot */
+name|cdot_clock
+operator|=
+name|cdot_clock
+operator|/
+literal|2
+expr_stmt|;
+comment|/* dot_clock runs at twice */
+comment|/* the dot rate */
+name|cdot_clock
+operator|=
+name|cdot_clock
 operator|*
 literal|100
 expr_stmt|;
@@ -2387,7 +2467,7 @@ name|sound
 operator|.
 name|duration
 operator|=
-name|dot_clock
+name|cdot_clock
 operator|*
 name|WORD_SPACE
 expr_stmt|;
@@ -2485,7 +2565,7 @@ name|sound
 operator|.
 name|duration
 operator|=
-name|dot_clock
+name|cdot_clock
 operator|*
 name|CHAR_SPACE
 expr_stmt|;
@@ -2582,7 +2662,7 @@ literal|0
 expr_stmt|;
 name|duration
 operator|=
-name|dot_clock
+name|cdot_clock
 operator|*
 name|WORD_SPACE
 expr_stmt|;
@@ -2679,7 +2759,7 @@ expr_stmt|;
 block|}
 name|duration
 operator|=
-name|dot_clock
+name|cdot_clock
 operator|*
 name|CHAR_SPACE
 operator|*
