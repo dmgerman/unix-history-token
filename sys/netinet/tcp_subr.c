@@ -5806,7 +5806,7 @@ operator|==
 name|PRC_MSGSIZE
 condition|)
 block|{
-comment|/* 					     * MTU discovery: 					     * If we got a needfrag set the MTU 					     * in the route to the suggested new 					     * value (if given) and then notify. 					     * If no new MTU was suggested, then 					     * we guess a new one less than the 					     * current value. 					     * If the new MTU is unreasonably 					     * small (defined by sysctl tcp_minmss), 					     * then we up the MTU value to minimum. 					     */
+comment|/* 					     * MTU discovery: 					     * If we got a needfrag set the MTU 					     * in the route to the suggested new 					     * value (if given) and then notify. 					     */
 name|bzero
 argument_list|(
 operator|&
@@ -5840,6 +5840,7 @@ operator|->
 name|icmp_nextmtu
 argument_list|)
 expr_stmt|;
+comment|/* 					     * If no alternative MTU was 					     * proposed, try the next smaller 					     * one. 					     */
 if|if
 condition|(
 operator|!
@@ -5849,7 +5850,12 @@ name|mtu
 operator|=
 name|ip_next_mtu
 argument_list|(
-name|mtu
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -5857,20 +5863,50 @@ expr_stmt|;
 if|if
 condition|(
 name|mtu
-operator|>=
+operator|<
 name|max
 argument_list|(
 literal|296
 argument_list|,
 operator|(
 name|tcp_minmss
+operator|)
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
-operator|)
+argument_list|)
+condition|)
+name|mtu
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mtu
+condition|)
+name|mtu
+operator|=
+name|tcp_mssdflt
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+expr_stmt|;
+comment|/* 					     * Only cache the the MTU if it 					     * is smaller than the interface 					     * or route MTU.  tcp_mtudisc() 					     * will do right thing by itself. 					     */
+if|if
+condition|(
+name|mtu
+operator|<=
+name|tcp_maxmtu
+argument_list|(
+operator|&
+name|inc
 argument_list|)
 condition|)
 name|tcp_hc_updatemtu
