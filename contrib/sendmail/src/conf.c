@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1052 2004/12/15 22:45:55 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1061 2005/03/07 17:18:44 ca Exp $"
 argument_list|)
 end_macro
 
@@ -5353,6 +5353,17 @@ begin_comment
 comment|/* Solaris per-processor-set load average */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LA_LONGLONG
+value|17
+end_define
+
+begin_comment
+comment|/* read kmem for avenrun; interpret as long long */
+end_comment
+
 begin_comment
 comment|/* do guesses based on general OS type */
 end_comment
@@ -5592,6 +5603,12 @@ name|LA_TYPE
 operator|==
 name|LA_SHORT
 operator|)
+operator|||
+operator|(
+name|LA_TYPE
+operator|==
+name|LA_LONGLONG
+operator|)
 end_if
 
 begin_include
@@ -5761,13 +5778,30 @@ index|]
 decl_stmt|;
 else|#
 directive|else
-comment|/* LA_TYPE == LA_SHORT */
+if|#
+directive|if
+name|LA_TYPE
+operator|==
+name|LA_LONGLONG
+name|long
+name|long
+name|avenrun
+index|[
+literal|3
+index|]
+decl_stmt|;
+else|#
+directive|else
+comment|/* LA_TYPE == LA_LONGLONG */
 name|double
 name|avenrun
 index|[
 literal|3
 index|]
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* LA_TYPE == LA_LONGLONG */
 endif|#
 directive|endif
 comment|/* LA_TYPE == LA_SHORT */
@@ -6167,6 +6201,12 @@ name|LA_TYPE
 operator|==
 name|LA_SHORT
 operator|)
+operator|||
+operator|(
+name|LA_TYPE
+operator|==
+name|LA_LONGLONG
+operator|)
 if|if
 condition|(
 name|tTd
@@ -6219,6 +6259,48 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* LA_TYPE == LA_SHORT */
+if|#
+directive|if
+name|LA_TYPE
+operator|==
+name|LA_LONGLONG
+name|sm_dprintf
+argument_list|(
+literal|"getla: avenrun = %lld"
+argument_list|,
+name|avenrun
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|3
+argument_list|,
+literal|15
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|", %lld, %lld"
+argument_list|,
+name|avenrun
+index|[
+literal|1
+index|]
+argument_list|,
+name|avenrun
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* LA_TYPE == LA_LONGLONG */
 name|sm_dprintf
 argument_list|(
 literal|"getla: avenrun = %ld"
@@ -6253,6 +6335,9 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* LA_TYPE == LA_LONGLONG */
 endif|#
 directive|endif
 comment|/* LA_TYPE == LA_SHORT */
@@ -6313,7 +6398,7 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* (LA_TYPE == LA_INT) || (LA_TYPE == LA_SHORT) */
+comment|/* (LA_TYPE == LA_INT) || (LA_TYPE == LA_SHORT) || (LA_TYPE == LA_LONGLONG) */
 if|if
 condition|(
 name|tTd
@@ -6407,7 +6492,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* (LA_TYPE == LA_INT) || (LA_TYPE == LA_SHORT) */
+comment|/* (LA_TYPE == LA_INT) || (LA_TYPE == LA_SHORT) || (LA_TYPE == LA_LONGLONG) */
 block|}
 end_function
 
@@ -6417,7 +6502,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (LA_TYPE == LA_INT) || (LA_TYPE == LA_FLOAT) || (LA_TYPE == LA_SHORT) */
+comment|/* (LA_TYPE == LA_INT) || (LA_TYPE == LA_FLOAT) || (LA_TYPE == LA_SHORT) || (LA_TYPE == LA_LONGLONG) */
 end_comment
 
 begin_if
@@ -22580,6 +22665,15 @@ directive|endif
 comment|/* _FFR_DIGUNIX_SAFECHOWN */
 if|#
 directive|if
+name|_FFR_DM_PER_DAEMON
+comment|/* DeliveryMode per DaemonPortOptions: 'D' */
+literal|"_FFR_DM_PER_DAEMON"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DM_PER_DAEMON */
+if|#
+directive|if
 name|_FFR_DNSMAP_ALIASABLE
 comment|/* Allow dns map type to be used for aliases. */
 comment|/* Don Lewis of TDK */
@@ -22821,9 +22915,19 @@ directive|endif
 comment|/* _FFR_NO_PIPE */
 if|#
 directive|if
+name|_FFR_LOG_NTRIES
+comment|/* log ntries=, from Nik Clayton of FreeBSD */
+literal|"_FFR_LOG_NTRIES"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_LOG_NTRIES */
+if|#
+directive|if
 name|_FFR_PRIV_NOACTUALRECIPIENT
 comment|/* 	** PrivacyOptions=noactualrecipient stops sendmail from putting  	** X-Actual-Recipient lines in DSNs revealing the actual  	** account that addresses map to.  Patch from Dan Harkless. 	*/
 literal|"_FFR_PRIV_NOACTUALRECIPIENT"
+block|,
 endif|#
 directive|endif
 comment|/* _FFR_PRIV_NOACTUALRECIPIENT */
@@ -22957,6 +23061,15 @@ directive|endif
 comment|/* _FFR_SPT_ALIGN */
 if|#
 directive|if
+name|_FFR_SS_PER_DAEMON
+comment|/* SuperSafe per DaemonPortOptions: 'T' (better letter?) */
+literal|"_FFR_SS_PER_DAEMON"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SS_PER_DAEMON */
+if|#
+directive|if
 name|_FFR_TIMERS
 comment|/* Donated code (unused). */
 literal|"_FFR_TIMERS"
@@ -22982,6 +23095,14 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_TRUSTED_QF */
+if|#
+directive|if
+name|_FFR_USE_SEM_LOCKING
+literal|"_FFR_USE_SEM_LOCKING"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_USE_SEM_LOCKING */
 if|#
 directive|if
 name|_FFR_USE_SETLOGIN
