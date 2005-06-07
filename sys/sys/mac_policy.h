@@ -331,7 +331,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|mpo_init_sysv_sema_label
+name|mpo_init_sysv_sem_label
 function_decl|)
 parameter_list|(
 name|struct
@@ -571,7 +571,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|mpo_destroy_sysv_sema_label
+name|mpo_destroy_sysv_sem_label
 function_decl|)
 parameter_list|(
 name|struct
@@ -739,7 +739,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|mpo_cleanup_sysv_sema
+name|mpo_cleanup_sysv_sem
 function_decl|)
 parameter_list|(
 name|struct
@@ -1769,7 +1769,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|mpo_create_sysv_sema
+name|mpo_create_sysv_sem
 function_decl|)
 parameter_list|(
 name|struct

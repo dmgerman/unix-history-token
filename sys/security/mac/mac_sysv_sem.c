@@ -205,7 +205,7 @@ specifier|static
 name|struct
 name|label
 modifier|*
-name|mac_sysv_sema_label_alloc
+name|mac_sysv_sem_label_alloc
 parameter_list|(
 name|void
 parameter_list|)
@@ -224,7 +224,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_sysv_sema_label
+name|init_sysv_sem_label
 argument_list|,
 name|label
 argument_list|)
@@ -245,7 +245,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_sysv_sema
+name|mac_init_sysv_sem
 parameter_list|(
 name|struct
 name|semid_kernel
@@ -257,7 +257,7 @@ name|semakptr
 operator|->
 name|label
 operator|=
-name|mac_sysv_sema_label_alloc
+name|mac_sysv_sem_label_alloc
 argument_list|()
 expr_stmt|;
 block|}
@@ -266,7 +266,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_sysv_sema_label_free
+name|mac_sysv_sem_label_free
 parameter_list|(
 name|struct
 name|label
@@ -276,7 +276,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_sysv_sema_label
+name|destroy_sysv_sem_label
 argument_list|,
 name|label
 argument_list|)
@@ -297,7 +297,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_sysv_sema
+name|mac_destroy_sysv_sem
 parameter_list|(
 name|struct
 name|semid_kernel
@@ -305,7 +305,7 @@ modifier|*
 name|semakptr
 parameter_list|)
 block|{
-name|mac_sysv_sema_label_free
+name|mac_sysv_sem_label_free
 argument_list|(
 name|semakptr
 operator|->
@@ -323,7 +323,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_sysv_sema
+name|mac_create_sysv_sem
 parameter_list|(
 name|struct
 name|ucred
@@ -338,7 +338,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_sysv_sema
+name|create_sysv_sem
 argument_list|,
 name|cred
 argument_list|,
@@ -354,7 +354,7 @@ end_function
 
 begin_function
 name|void
-name|mac_cleanup_sysv_sema
+name|mac_cleanup_sysv_sem
 parameter_list|(
 name|struct
 name|semid_kernel
@@ -364,7 +364,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|cleanup_sysv_sema
+name|cleanup_sysv_sem
 argument_list|,
 name|semakptr
 operator|->

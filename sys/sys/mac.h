@@ -714,7 +714,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_sysv_sema
+name|mac_init_sysv_sem
 parameter_list|(
 name|struct
 name|semid_kernel
@@ -956,7 +956,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_sysv_sema
+name|mac_destroy_sysv_sem
 parameter_list|(
 name|struct
 name|semid_kernel
@@ -1504,7 +1504,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_sysv_sema
+name|mac_create_sysv_sem
 parameter_list|(
 name|struct
 name|ucred
@@ -2032,7 +2032,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_cleanup_sysv_sema
+name|mac_cleanup_sysv_sem
 parameter_list|(
 name|struct
 name|semid_kernel

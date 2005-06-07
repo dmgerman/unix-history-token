@@ -5270,7 +5270,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_biba_create_sysv_sema
+name|mac_biba_create_sysv_sem
 parameter_list|(
 name|struct
 name|ucred
@@ -6839,7 +6839,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_biba_cleanup_sysv_sema
+name|mac_biba_cleanup_sysv_sem
 parameter_list|(
 name|struct
 name|label
@@ -13541,7 +13541,7 @@ operator|=
 name|mac_biba_init_label
 block|,
 operator|.
-name|mpo_init_sysv_sema_label
+name|mpo_init_sysv_sem_label
 operator|=
 name|mac_biba_init_label
 block|,
@@ -13631,7 +13631,7 @@ operator|=
 name|mac_biba_destroy_label
 block|,
 operator|.
-name|mpo_destroy_sysv_sema_label
+name|mpo_destroy_sysv_sem_label
 operator|=
 name|mac_biba_destroy_label
 block|,
@@ -13911,9 +13911,9 @@ operator|=
 name|mac_biba_create_sysv_msgqueue
 block|,
 operator|.
-name|mpo_create_sysv_sema
+name|mpo_create_sysv_sem
 operator|=
-name|mac_biba_create_sysv_sema
+name|mac_biba_create_sysv_sem
 block|,
 operator|.
 name|mpo_create_sysv_shm
@@ -14006,9 +14006,9 @@ operator|=
 name|mac_biba_cleanup_sysv_msgqueue
 block|,
 operator|.
-name|mpo_cleanup_sysv_sema
+name|mpo_cleanup_sysv_sem
 operator|=
-name|mac_biba_cleanup_sysv_sema
+name|mac_biba_cleanup_sysv_sem
 block|,
 operator|.
 name|mpo_cleanup_sysv_shm

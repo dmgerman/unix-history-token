@@ -1438,7 +1438,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_sysv_sema
+name|mac_init_sysv_sem
 argument_list|(
 operator|&
 name|sema
@@ -1594,7 +1594,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|mac_destroy_sysv_sema
+name|mac_destroy_sysv_sem
 argument_list|(
 operator|&
 name|sema
@@ -3357,7 +3357,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_cleanup_sysv_sema
+name|mac_cleanup_sysv_sem
 argument_list|(
 name|semakptr
 argument_list|)
@@ -5334,7 +5334,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_sysv_sema
+name|mac_create_sysv_sem
 argument_list|(
 name|cred
 argument_list|,

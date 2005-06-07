@@ -776,7 +776,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|init_count_sysv_sema
+name|init_count_sysv_sem
 decl_stmt|;
 end_decl_stmt
 
@@ -787,12 +787,12 @@ name|_security_mac_test
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|init_count_sysv_sema
+name|init_count_sysv_sem
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|init_count_sysv_sema
+name|init_count_sysv_sem
 argument_list|,
 literal|0
 argument_list|,
@@ -1308,7 +1308,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|destroy_count_sysv_sema
+name|destroy_count_sysv_sem
 decl_stmt|;
 end_decl_stmt
 
@@ -1319,12 +1319,12 @@ name|_security_mac_test
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|destroy_count_sysv_sema
+name|destroy_count_sysv_sem
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|destroy_count_sysv_sema
+name|destroy_count_sysv_sem
 argument_list|,
 literal|0
 argument_list|,
@@ -2028,7 +2028,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_test_init_sysv_sema_label
+name|mac_test_init_sysv_sem_label
 parameter_list|(
 name|struct
 name|label
@@ -2046,7 +2046,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|init_count_sysv_sema
+name|init_count_sysv_sem
 argument_list|,
 literal|1
 argument_list|)
@@ -2996,7 +2996,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_test_destroy_sysv_sema_label
+name|mac_test_destroy_sysv_sem_label
 parameter_list|(
 name|struct
 name|label
@@ -3024,7 +3024,7 @@ block|{
 name|atomic_add_int
 argument_list|(
 operator|&
-name|destroy_count_sysv_sema
+name|destroy_count_sysv_sem
 argument_list|,
 literal|1
 argument_list|)
@@ -3050,7 +3050,7 @@ condition|)
 block|{
 name|DEBUGGER
 argument_list|(
-literal|"mac_test_destroy_sysv_sema_label: dup destroy"
+literal|"mac_test_destroy_sysv_sem_label: dup destroy"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3058,7 +3058,7 @@ else|else
 block|{
 name|DEBUGGER
 argument_list|(
-literal|"mac_test_destroy_sysv_sema_label: corrupted label"
+literal|"mac_test_destroy_sysv_sem_label: corrupted label"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5343,7 +5343,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_test_create_sysv_sema
+name|mac_test_create_sysv_sem
 parameter_list|(
 name|struct
 name|ucred
@@ -6259,7 +6259,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_test_cleanup_sysv_sema
+name|mac_test_cleanup_sysv_sem
 parameter_list|(
 name|struct
 name|label
@@ -10502,9 +10502,9 @@ operator|=
 name|mac_test_init_sysv_msgqueue_label
 block|,
 operator|.
-name|mpo_init_sysv_sema_label
+name|mpo_init_sysv_sem_label
 operator|=
-name|mac_test_init_sysv_sema_label
+name|mac_test_init_sysv_sem_label
 block|,
 operator|.
 name|mpo_init_sysv_shm_label
@@ -10597,9 +10597,9 @@ operator|=
 name|mac_test_destroy_sysv_msgqueue_label
 block|,
 operator|.
-name|mpo_destroy_sysv_sema_label
+name|mpo_destroy_sysv_sem_label
 operator|=
-name|mac_test_destroy_sysv_sema_label
+name|mac_test_destroy_sysv_sem_label
 block|,
 operator|.
 name|mpo_destroy_sysv_shm_label
@@ -10877,9 +10877,9 @@ operator|=
 name|mac_test_create_sysv_msgqueue
 block|,
 operator|.
-name|mpo_create_sysv_sema
+name|mpo_create_sysv_sem
 operator|=
-name|mac_test_create_sysv_sema
+name|mac_test_create_sysv_sem
 block|,
 operator|.
 name|mpo_create_sysv_shm
@@ -11007,9 +11007,9 @@ operator|=
 name|mac_test_cleanup_sysv_msgqueue
 block|,
 operator|.
-name|mpo_cleanup_sysv_sema
+name|mpo_cleanup_sysv_sem
 operator|=
-name|mac_test_cleanup_sysv_sema
+name|mac_test_cleanup_sysv_sem
 block|,
 operator|.
 name|mpo_cleanup_sysv_shm
