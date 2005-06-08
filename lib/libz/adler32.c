@@ -3,19 +3,9 @@ begin_comment
 comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyright (C) 1995-2003 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* @(#) $Id$ */
+end_comment
 
 begin_define
 define|#

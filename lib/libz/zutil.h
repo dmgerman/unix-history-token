@@ -8,7 +8,7 @@ comment|/* WARNING: this file should *not* be used by applications. It is    par
 end_comment
 
 begin_comment
-comment|/* @(#) $FreeBSD$ */
+comment|/* @(#) $Id$ */
 end_comment
 
 begin_ifndef
@@ -1088,8 +1088,31 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|VMS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NO_vsnprintf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_STRERROR
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMS
+end_ifndef
 
 begin_decl_stmt
 specifier|extern
@@ -1104,6 +1127,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

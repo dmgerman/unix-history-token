@@ -3,19 +3,13 @@ begin_comment
 comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-2003 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  *  * Thanks to Rodney Brown<rbrown64@csc.com.au> for his contribution of faster  * CRC methods: exclusive-oring 32 bits of data at a time, and pre-computing  * tables for updating the shift register in one step with three exclusive-ors  * instead of four steps with four exclusive-ors.  This results about a factor  * of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
+begin_comment
+comment|/* @(#) $Id$ */
+end_comment
 
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*   Note on the use of DYNAMIC_CRC_TABLE: there is no mutex or semaphore   protection on the static variables used to control the first-use generation   of the crc tables.  Therefore, if you #define DYNAMIC_CRC_TABLE, you should   first call get_crc_table() to initialize the tables before allowing more than   one thread to use crc32().  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -322,6 +316,7 @@ end_ifdef
 
 begin_decl_stmt
 name|local
+specifier|volatile
 name|int
 name|crc_table_empty
 init|=
@@ -418,6 +413,14 @@ decl_stmt|;
 comment|/* polynomial exclusive-or pattern */
 comment|/* terms of polynomial defining this crc (except x^32): */
 specifier|static
+specifier|volatile
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
+comment|/* flag to limit concurrent making */
+specifier|static
 specifier|const
 name|unsigned
 name|char
@@ -454,6 +457,16 @@ block|,
 literal|26
 block|}
 decl_stmt|;
+comment|/* See if another task is already doing this (not thread-safe, but better        than nothing -- significantly reduces duration of vulnerability in        case the advice about DYNAMIC_CRC_TABLE is ignored) */
+if|if
+condition|(
+name|first
+condition|)
+block|{
+name|first
+operator|=
+literal|0
+expr_stmt|;
 comment|/* make exclusive-or pattern from polynomial (0xedb88320UL) */
 name|poly
 operator|=
@@ -562,7 +575,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|BYFOUR
-comment|/* generate crc for each value followed by one, two, and three zeros, and        then the byte reversal of those as well as the first table */
+comment|/* generate crc for each value followed by one, two, and three zeros,            and then the byte reversal of those as well as the first table */
 for|for
 control|(
 name|n
@@ -666,6 +679,17 @@ name|crc_table_empty
 operator|=
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* not first */
+comment|/* wait for the other guy to finish (not efficient, but rare) */
+while|while
+condition|(
+name|crc_table_empty
+condition|)
+empty_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|MAKECRCH

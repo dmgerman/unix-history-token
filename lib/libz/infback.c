@@ -1875,6 +1875,7 @@ name|len
 expr_stmt|;
 block|}
 block|}
+comment|/* handle error breaks in while */
 if|if
 condition|(
 name|state

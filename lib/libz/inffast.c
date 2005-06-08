@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inffast.c -- fast decoding  * Copyright (C) 1995-2003 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inffast.c -- fast decoding  * Copyright (C) 1995-2004 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -48,7 +34,7 @@ name|ASMINF
 end_ifndef
 
 begin_comment
-comment|/* Allow machine dependent optimization for post-increment or pre-increment.    Based on testing to date,    Pre-increment preferred for:    - PowerPC G3 (Adler)    - MIPS R5000 (Randers-Pehrson)    Post-increment preferred for:    - none    No measurable difference:    - Pentium III (Anderson)    - 68060 (Nikl)  */
+comment|/* Allow machine dependent optimization for post-increment or pre-increment.    Based on testing to date,    Pre-increment preferred for:    - PowerPC G3 (Adler)    - MIPS R5000 (Randers-Pehrson)    Post-increment preferred for:    - none    No measurable difference:    - Pentium III (Anderson)    - M68060 (Nikl)  */
 end_comment
 
 begin_ifdef
