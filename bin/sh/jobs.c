@@ -4665,6 +4665,12 @@ name|breakwaitcmd
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|<=
+literal|0
+condition|)
 return|return
 operator|-
 literal|1
