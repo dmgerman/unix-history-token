@@ -22722,6 +22722,12 @@ name|aiov
 expr_stmt|;
 name|auio
 operator|.
+name|uio_iovcnt
+operator|=
+literal|1
+expr_stmt|;
+name|auio
+operator|.
 name|uio_offset
 operator|=
 literal|0
@@ -23974,6 +23980,12 @@ name|uio_iov
 operator|=
 operator|&
 name|aiov
+expr_stmt|;
+name|auio
+operator|.
+name|uio_iovcnt
+operator|=
+literal|1
 expr_stmt|;
 name|auio
 operator|.
