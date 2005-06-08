@@ -113,7 +113,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: ktrdump [-c] [-f] [-q] [-r] [-t] [-e execfile] [-i ktrfile ] [-m corefile] [-o outfile]"
+value|"usage: ktrdump [-c] [-f] [-q] [-r] [-t] [-e execfile] [-i ktrfile ] [-m corefile] [-o outfile]\n"
 end_define
 
 begin_decl_stmt
