@@ -4121,7 +4121,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t    Subobject Type: %s"
+literal|"\n\t    Subobject Type: %s, length %u"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -4135,8 +4135,35 @@ operator|*
 name|obj_tptr
 argument_list|)
 argument_list|)
+argument_list|,
+operator|*
+operator|(
+name|obj_tptr
+operator|+
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|(
+name|obj_tptr
+operator|+
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* prevent infinite loops */
+name|printf
+argument_list|(
+literal|"\n\t      ERROR: zero length ERO subtype"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 switch|switch
 condition|(
 name|RSVP_OBJ_XRO_MASK_SUBOBJ
