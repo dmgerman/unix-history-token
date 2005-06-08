@@ -6492,6 +6492,14 @@ name|len
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|advance
+operator|<
+literal|0
+condition|)
+comment|/* infinite loop protection */
+break|break;
 name|tptr
 operator|+=
 name|advance
@@ -8703,11 +8711,14 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\n\t    (illegal prefix length)"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 elseif|else
 if|if
 condition|(

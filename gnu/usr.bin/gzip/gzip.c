@@ -4404,13 +4404,22 @@ if|if
 condition|(
 operator|!
 name|to_stdout
-operator|&&
+condition|)
+block|{
+comment|/* Copy modes, times, ownership, and remove the input file */
+name|copy_stat
+argument_list|(
+operator|&
+name|istat
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|close
 argument_list|(
 name|ofd
 argument_list|)
 condition|)
-block|{
 name|write_error
 argument_list|()
 expr_stmt|;
@@ -4518,20 +4527,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Copy modes, times, ownership, and remove the input file */
-if|if
-condition|(
-operator|!
-name|to_stdout
-condition|)
-block|{
-name|copy_stat
-argument_list|(
-operator|&
-name|istat
 argument_list|)
 expr_stmt|;
 block|}
@@ -6310,6 +6305,10 @@ name|base
 init|=
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|base2
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -6353,6 +6352,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|base2
+operator|=
+name|basename
+argument_list|(
+name|base
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|base
+argument_list|,
+name|base2
+argument_list|)
+expr_stmt|;
 comment|/* If necessary, adapt the name to local OS conventions: */
 if|if
 condition|(
@@ -8044,9 +8057,9 @@ directive|endif
 comment|/* Copy the protection modes */
 if|if
 condition|(
-name|chmod
+name|fchmod
 argument_list|(
-name|ofname
+name|ofd
 argument_list|,
 name|ifstat
 operator|->
@@ -8081,9 +8094,12 @@ block|}
 ifndef|#
 directive|ifndef
 name|NO_CHOWN
-name|chown
+operator|(
+name|void
+operator|)
+name|fchown
 argument_list|(
-name|ofname
+name|ofd
 argument_list|,
 name|ifstat
 operator|->

@@ -1254,6 +1254,14 @@ else|:
 literal|"ignore"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msg_len
+operator|==
+literal|0
+condition|)
+comment|/* infinite loop protection */
+break|break;
 name|msg_tptr
 operator|=
 name|tptr
