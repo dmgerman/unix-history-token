@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2003 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2004 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -102,13 +102,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|deflatePrime
-value|z_deflatePrime
-end_define
-
-begin_define
-define|#
-directive|define
 name|deflateParams
 value|z_deflateParams
 end_define
@@ -118,6 +111,13 @@ define|#
 directive|define
 name|deflateBound
 value|z_deflateBound
+end_define
+
+begin_define
+define|#
+directive|define
+name|deflatePrime
+value|z_deflatePrime
 end_define
 
 begin_define
@@ -160,6 +160,20 @@ define|#
 directive|define
 name|inflateReset
 value|z_inflateReset
+end_define
+
+begin_define
+define|#
+directive|define
+name|inflateBack
+value|z_inflateBack
+end_define
+
+begin_define
+define|#
+directive|define
+name|inflateBackEnd
+value|z_inflateBackEnd
 end_define
 
 begin_define
@@ -209,6 +223,13 @@ define|#
 directive|define
 name|get_crc_table
 value|z_get_crc_table
+end_define
+
+begin_define
+define|#
+directive|define
+name|zError
+value|z_zError
 end_define
 
 begin_define
@@ -1694,8 +1715,20 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This is hard-configured for FreeBSD, since zlib doesn't actually support  * using the system off_t for offsets unless off_t is no longer than long.  */
+comment|/*  * This is hard-configured for FreeBSD, since zlib doesn't actually support  * using the system off_t for offsets unless off_t is no longer than long.  * To minimize the diff, we just "undef z_off_t" rather than modifying  * the following lines.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|z_off_t
+end_undef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|z_off_t
+end_ifndef
 
 begin_define
 define|#
@@ -1703,6 +1736,11 @@ directive|define
 name|z_off_t
 value|long
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
