@@ -661,6 +661,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_I31244
+value|0x32008086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ITE_ID
 value|0x1283
 end_define
