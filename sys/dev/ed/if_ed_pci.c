@@ -328,6 +328,11 @@ name|error
 operator|)
 return|;
 block|}
+name|ed_Novell_read_mac
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ed_alloc_irq
