@@ -169,14 +169,28 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * KERN_PROC subtype ops return arrays of selected proc structure entries:  *  * When adding new fields to this structure, ALWAYS add them at the end  * and decrease the size of the spare field by the amount of space that  * you are adding.  Byte aligned data should be added to the ki_sparestring  * space; other entries should be added to the ki_spare space. Always  * verify that sizeof(struct kinfo_proc) == KINFO_PROC_SIZE when you are  * done. If you change the size of this structure, many programs will stop  * working! Once you have added the new field, you will need to add code  * to initialize it in two places: kern/kern_proc.c in the function  * fill_kinfo_proc and in lib/libkvm/kvm_proc.c in the function kvm_proclist.  *  * KI_NSPARE is the number of spare-longs to define in the array at the  * end of kinfo_proc.  It may need to be overridden on a platform-specific  * basis as new fields are added.  */
+comment|/*  * KERN_PROC subtype ops return arrays of selected proc structure entries:  *  * This struct includes several arrays of spare space, with different arrays  * for different standard C-types.  When adding new variables to this struct,  * the space for byte-aligned data should be taken from the ki_sparestring,  * pointers from ki_spareptrs, word-aligned data from ki_spareints, and  * doubleword-aligned data from ki_sparelongs.  Make sure the space for new  * variables come from the array which matches the size and alignment of  * those variables on ALL hardware platforms, and then adjust the appropriate  * KI_NSPARE_* value(s) to match.  *  * Always verify that sizeof(struct kinfo_proc) == KINFO_PROC_SIZE on all  * platforms after you have added new variables.  Note that if you change  * the value of KINFO_PROC_SIZE, then many userland programs will stop  * working until they are recompiled!  *  * Once you have added the new field, you will need to add code to initialize  * it in two places: function fill_kinfo_proc in sys/kern/kern_proc.c and  * function kvm_proclist in lib/libkvm/kvm_proc.c .  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|KI_NSPARE
-value|15
+name|KI_NSPARE_INT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|KI_NSPARE_LONG
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|KI_NSPARE_PTR
+value|7
 end_define
 
 begin_ifdef
@@ -189,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|912
+value|1088
 end_define
 
 begin_endif
@@ -207,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|912
+value|1088
 end_define
 
 begin_endif
@@ -221,29 +235,16 @@ directive|ifdef
 name|__arm__
 end_ifdef
 
-begin_undef
-undef|#
-directive|undef
-name|KI_NSPARE
-end_undef
-
-begin_comment
-comment|/* Fewer spare longs on this arch */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KI_NSPARE
-value|13
-end_define
-
 begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|648
+value|768
 end_define
+
+begin_comment
+comment|/* value has not been tested... */
+end_comment
 
 begin_endif
 endif|#
@@ -260,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|912
+value|1088
 end_define
 
 begin_endif
@@ -274,28 +275,11 @@ directive|ifdef
 name|__i386__
 end_ifdef
 
-begin_undef
-undef|#
-directive|undef
-name|KI_NSPARE
-end_undef
-
-begin_comment
-comment|/* Fewer spare longs on this arch */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KI_NSPARE
-value|13
-end_define
-
 begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|648
+value|768
 end_define
 
 begin_endif
@@ -309,28 +293,11 @@ directive|ifdef
 name|__powerpc__
 end_ifdef
 
-begin_undef
-undef|#
-directive|undef
-name|KI_NSPARE
-end_undef
-
-begin_comment
-comment|/* Fewer spare longs on this arch */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KI_NSPARE
-value|14
-end_define
-
 begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|656
+value|768
 end_define
 
 begin_endif
@@ -348,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|912
+value|1088
 end_define
 
 begin_endif
@@ -644,6 +611,10 @@ name|u_int
 name|ki_swtime
 decl_stmt|;
 comment|/* Time swapped in or out */
+name|int
+name|ki_spareint1
+decl_stmt|;
+comment|/* unused (just here for alignment) */
 name|u_int64_t
 name|ki_runtime
 decl_stmt|;
@@ -749,6 +720,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* emulation name */
+comment|/* 	 * When adding new variables, take space for char-strings from the 	 * front of ki_sparestrings, and ints from the end of ki_spareints. 	 * That way the spare room from both arrays will remain contiguous. 	 */
 name|char
 name|ki_sparestrings
 index|[
@@ -756,24 +728,41 @@ literal|68
 index|]
 decl_stmt|;
 comment|/* spare string space */
-name|struct
-name|rusage
-name|ki_rusage
+name|int
+name|ki_spareints
+index|[
+name|KI_NSPARE_INT
+index|]
 decl_stmt|;
-comment|/* process rusage statistics */
-name|long
-name|ki_sflag
+comment|/* spare room for growth */
+name|int
+name|ki_jid
 decl_stmt|;
-comment|/* PS_* flags */
+comment|/* Process jail ID */
+name|int
+name|ki_numthreads
+decl_stmt|;
+comment|/* XXXKSE number of threads in total */
+name|lwpid_t
+name|ki_tid
+decl_stmt|;
+comment|/* XXXKSE thread id */
 name|struct
 name|priority
 name|ki_pri
 decl_stmt|;
 comment|/* process priority */
-name|long
-name|ki_tdflags
+name|struct
+name|rusage
+name|ki_rusage
 decl_stmt|;
-comment|/* XXXKSE kthread flag */
+comment|/* process rusage statistics */
+comment|/* XXX - most fields in ki_rusage_ch are not (yet) filled in */
+name|struct
+name|rusage
+name|ki_rusage_ch
+decl_stmt|;
+comment|/* rusage of children processes */
 name|struct
 name|pcb
 modifier|*
@@ -785,44 +774,35 @@ modifier|*
 name|ki_kstack
 decl_stmt|;
 comment|/* kernel virtual addr of stack */
-name|struct
-name|timeval
-name|ki_childstime
-decl_stmt|;
-comment|/* system time used by children */
-name|struct
-name|timeval
-name|ki_childutime
-decl_stmt|;
-comment|/* user time used by children */
-name|lwpid_t
-name|ki_tid
-decl_stmt|;
-comment|/* XXXKSE thread id */
-name|int
-name|ki_numthreads
-decl_stmt|;
-comment|/* XXXKSE number of threads in total */
 name|void
 modifier|*
 name|ki_udata
 decl_stmt|;
 comment|/* User convenience pointer */
-name|int
-name|ki_jid
-decl_stmt|;
-comment|/* Process jail ID */
-name|int
-name|ki_spare_int1
-decl_stmt|;
-comment|/* unused (just here for alignment) */
-name|long
-name|ki_spare
+comment|/* 	 * When adding new variables, take space for pointers from the 	 * front of ki_spareptrs, and longs from the end of ki_sparelongs. 	 * That way the spare room from both arrays will remain contiguous. 	 */
+name|void
+modifier|*
+name|ki_spareptrs
 index|[
-name|KI_NSPARE
+name|KI_NSPARE_PTR
 index|]
 decl_stmt|;
-comment|/* spare room for later growth */
+comment|/* spare room for growth */
+name|long
+name|ki_sparelongs
+index|[
+name|KI_NSPARE_LONG
+index|]
+decl_stmt|;
+comment|/* spare room for growth */
+name|long
+name|ki_sflag
+decl_stmt|;
+comment|/* PS_* flags */
+name|long
+name|ki_tdflags
+decl_stmt|;
+comment|/* XXXKSE kthread flag */
 block|}
 struct|;
 end_struct
@@ -841,6 +821,24 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* XXX - the following two defines are temporary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ki_childstime
+value|ki_rusage_ch.ru_stime
+end_define
+
+begin_define
+define|#
+directive|define
+name|ki_childutime
+value|ki_rusage_ch.ru_utime
+end_define
 
 begin_comment
 comment|/* ki_sessflag values */
