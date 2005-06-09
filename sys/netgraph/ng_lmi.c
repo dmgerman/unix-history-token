@@ -2590,9 +2590,7 @@ name|packetlen
 operator|=
 name|m
 operator|->
-name|m_hdr
-operator|.
-name|mh_len
+name|m_len
 expr_stmt|;
 comment|/* XXX what if it's more than 1 mbuf? */
 if|if
@@ -3329,9 +3327,7 @@ name|packetlen
 operator|=
 name|m
 operator|->
-name|m_hdr
-operator|.
-name|mh_len
+name|m_len
 expr_stmt|;
 name|data
 operator|=
@@ -4267,9 +4263,7 @@ operator|=
 operator|(
 name|m
 operator|->
-name|m_hdr
-operator|.
-name|mh_len
+name|m_len
 operator|-
 name|packetlen
 operator|)
@@ -4289,9 +4283,7 @@ name|k
 operator|<
 name|m
 operator|->
-name|m_hdr
-operator|.
-name|mh_len
+name|m_len
 condition|)
 block|{
 name|pos
@@ -4315,9 +4307,7 @@ name|k
 operator|<
 name|m
 operator|->
-name|m_hdr
-operator|.
-name|mh_len
+name|m_len
 condition|)
 block|{
 name|pos
@@ -4435,9 +4425,7 @@ operator|=
 operator|(
 name|m
 operator|->
-name|m_hdr
-operator|.
-name|mh_len
+name|m_len
 operator|-
 name|packetlen
 operator|)
@@ -4457,9 +4445,7 @@ name|k
 operator|<
 name|m
 operator|->
-name|m_hdr
-operator|.
-name|mh_len
+name|m_len
 condition|)
 block|{
 name|pos
@@ -4483,9 +4469,7 @@ name|k
 operator|<
 name|m
 operator|->
-name|m_hdr
-operator|.
-name|mh_len
+name|m_len
 condition|)
 block|{
 name|pos
