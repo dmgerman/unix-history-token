@@ -4360,9 +4360,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|single_cpu
-operator|)
 operator|&&
 operator|(
 name|cpu
@@ -4450,14 +4448,12 @@ block|{
 if|if
 condition|(
 operator|(
-operator|(
 name|flags
 operator|&
 name|SRQ_YIELDING
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 name|maybe_preempt
 argument_list|(
