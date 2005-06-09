@@ -2481,7 +2481,7 @@ argument_list|,
 name|Data
 argument_list|)
 expr_stmt|;
-name|strupr
+name|AcpiUtStrupr
 argument_list|(
 name|qxx
 argument_list|)
