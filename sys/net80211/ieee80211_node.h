@@ -391,6 +391,14 @@ name|u_int16_t
 name|ni_timoff
 decl_stmt|;
 comment|/* byte offset to TIM ie */
+name|u_int8_t
+name|ni_dtim_period
+decl_stmt|;
+comment|/* DTIM period */
+name|u_int8_t
+name|ni_dtim_count
+decl_stmt|;
+comment|/* DTIM count for last bcn */
 comment|/* others */
 name|int
 name|ni_fails

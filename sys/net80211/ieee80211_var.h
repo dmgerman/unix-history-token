@@ -552,10 +552,14 @@ name|u_int16_t
 name|ic_tim_len
 decl_stmt|;
 comment|/* ic_tim_bitmap size (bytes) */
-name|u_int16_t
+name|u_int8_t
 name|ic_dtim_period
 decl_stmt|;
 comment|/* DTIM period */
+name|u_int8_t
+name|ic_dtim_count
+decl_stmt|;
+comment|/* DTIM count for last bcn */
 name|struct
 name|ifmedia
 name|ic_media
