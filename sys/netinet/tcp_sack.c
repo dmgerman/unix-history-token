@@ -1647,6 +1647,32 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * The highest SACK block is beyond fack. 		 * Append new SACK hole at the tail. 		 * If the second or later highest SACK blocks are also 		 * beyond the current fack, they will be inserted by 		 * way of hole splitting in the while-loop below. 		 */
+name|temp
+operator|=
+name|tcp_sackhole_insert
+argument_list|(
+name|tp
+argument_list|,
+name|tp
+operator|->
+name|snd_fack
+argument_list|,
+name|sblkp
+operator|->
+name|start
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 name|tcp_sackhole_insert
 argument_list|(
 name|tp
@@ -1697,6 +1723,23 @@ operator|=
 name|sblkp
 operator|->
 name|end
+expr_stmt|;
+comment|/* We must have at least one SACK hole in scoreboard */
+name|KASSERT
+argument_list|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|snd_holes
+argument_list|)
+argument_list|,
+operator|(
+literal|"SACK scoreboard must not be empty"
+operator|)
+argument_list|)
 expr_stmt|;
 name|cur
 operator|=
