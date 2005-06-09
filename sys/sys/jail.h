@@ -351,6 +351,12 @@ name|sockaddr
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|statfs
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|jailed
@@ -399,7 +405,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|prison_check_mount
+name|prison_canseemount
 parameter_list|(
 name|struct
 name|ucred
@@ -410,6 +416,28 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|prison_enforce_statfs
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
+name|statfs
+modifier|*
+name|sp
 parameter_list|)
 function_decl|;
 end_function_decl
