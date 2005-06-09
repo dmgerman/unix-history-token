@@ -1935,7 +1935,7 @@ argument_list|,
 operator|&
 name|sdl_m
 argument_list|)
-operator|!=
+operator|==
 name|NULL
 operator|)
 return|;
