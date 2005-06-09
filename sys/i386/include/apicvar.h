@@ -171,8 +171,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPI_PREEMPT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPI_BITMAP_LAST
-value|IPI_AST
+value|IPI_PREEMPT
 end_define
 
 begin_define
