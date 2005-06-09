@@ -7683,7 +7683,7 @@ name|curthread
 decl_stmt|;
 name|struct
 name|buf
-name|sentinal
+name|sentinel
 decl_stmt|;
 name|struct
 name|vnode
@@ -7750,7 +7750,7 @@ name|QUEUE_DIRTY
 index|]
 argument_list|,
 operator|&
-name|sentinal
+name|sentinel
 argument_list|,
 name|b_freelist
 argument_list|)
@@ -7778,7 +7778,7 @@ condition|(
 name|bp
 operator|==
 operator|&
-name|sentinal
+name|sentinel
 condition|)
 break|break;
 name|TAILQ_REMOVE
@@ -8101,7 +8101,7 @@ name|QUEUE_DIRTY
 index|]
 argument_list|,
 operator|&
-name|sentinal
+name|sentinel
 argument_list|,
 name|b_freelist
 argument_list|)
