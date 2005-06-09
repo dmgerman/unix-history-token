@@ -11374,6 +11374,7 @@ operator|)
 operator|)
 operator||
 operator|(
+operator|(
 literal|0x01
 operator|+
 operator|!
@@ -11381,6 +11382,13 @@ operator|(
 name|mode
 operator|&
 literal|0x01
+operator|)
+operator|)
+operator|<<
+operator|(
+name|devno
+operator|<<
+literal|2
 operator|)
 operator|)
 argument_list|,
