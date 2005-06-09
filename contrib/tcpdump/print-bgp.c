@@ -10244,11 +10244,14 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\n\t    (illegal prefix length)"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 elseif|else
 if|if
 condition|(

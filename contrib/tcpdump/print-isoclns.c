@@ -9139,6 +9139,14 @@ argument_list|,
 name|tlv_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tlv_len
+operator|==
+literal|0
+condition|)
+comment|/* something is malformed */
+break|break;
 comment|/* now check if we have a decoder otherwise do a hexdump at the end*/
 switch|switch
 condition|(
@@ -9290,7 +9298,12 @@ name|tptr
 argument_list|,
 literal|1
 argument_list|)
+operator|||
+name|tmp
+operator|<
+literal|3
 condition|)
+comment|/* min. TLV length */
 goto|goto
 name|trunctlv
 goto|;
