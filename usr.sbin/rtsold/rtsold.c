@@ -1065,7 +1065,7 @@ name|LOG_ERR
 argument_list|,
 name|__func__
 argument_list|,
-literal|"failed to initialization interfaces"
+literal|"failed to initialize interfaces"
 argument_list|)
 expr_stmt|;
 name|exit
