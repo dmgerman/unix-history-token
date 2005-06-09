@@ -22,6 +22,108 @@ file|<sys/pmc.h>
 end_include
 
 begin_comment
+comment|/*  * Driver statistics.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pmc_driverstats
+block|{
+name|int
+name|pm_intr_ignored
+decl_stmt|;
+comment|/* #interrupts ignored */
+name|int
+name|pm_intr_processed
+decl_stmt|;
+comment|/* #interrupts processed */
+name|int
+name|pm_intr_bufferfull
+decl_stmt|;
+comment|/* #interrupts with ENOSPC */
+name|int
+name|pm_syscalls
+decl_stmt|;
+comment|/* #syscalls */
+name|int
+name|pm_syscall_errors
+decl_stmt|;
+comment|/* #syscalls with errors */
+name|int
+name|pm_buffer_requests
+decl_stmt|;
+comment|/* #buffer requests */
+name|int
+name|pm_buffer_requests_failed
+decl_stmt|;
+comment|/* #failed buffer requests */
+name|int
+name|pm_log_sweeps
+decl_stmt|;
+comment|/* #sample buffer processing passes */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * CPU information.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pmc_cpuinfo
+block|{
+name|enum
+name|pmc_cputype
+name|pm_cputype
+decl_stmt|;
+comment|/* the kind of CPU */
+name|uint32_t
+name|pm_ncpu
+decl_stmt|;
+comment|/* number of CPUs */
+name|uint32_t
+name|pm_npmc
+decl_stmt|;
+comment|/* #PMCs per CPU */
+name|uint32_t
+name|pm_nclass
+decl_stmt|;
+comment|/* #classes of PMCs */
+name|struct
+name|pmc_classinfo
+name|pm_classes
+index|[
+name|PMC_CLASS_MAX
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Current PMC state.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pmc_pmcinfo
+block|{
+name|int32_t
+name|pm_cpu
+decl_stmt|;
+comment|/* CPU number */
+name|struct
+name|pmc_info
+name|pm_pmcs
+index|[]
+decl_stmt|;
+comment|/* NPMC structs */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Prototypes  */
 end_comment
 
@@ -90,6 +192,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pmc_flush_logfile
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pmc_detach
 parameter_list|(
 name|pmc_id_t
@@ -132,9 +243,23 @@ name|int
 name|pmc_get_driver_stats
 parameter_list|(
 name|struct
-name|pmc_op_getdriverstats
+name|pmc_driverstats
 modifier|*
 name|_gms
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmc_get_msr
+parameter_list|(
+name|pmc_id_t
+name|_pmc
+parameter_list|,
+name|uint32_t
+modifier|*
+name|_msr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -251,6 +376,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pmc_writelog
+parameter_list|(
+name|uint32_t
+name|_udata
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pmc_ncpu
 parameter_list|(
 name|void
@@ -274,7 +409,7 @@ name|pmc_cpuinfo
 parameter_list|(
 specifier|const
 name|struct
-name|pmc_op_getcpuinfo
+name|pmc_cpuinfo
 modifier|*
 modifier|*
 name|_cpu_info
@@ -290,7 +425,7 @@ name|int
 name|_cpu
 parameter_list|,
 name|struct
-name|pmc_op_getpmcinfo
+name|pmc_pmcinfo
 modifier|*
 modifier|*
 name|_pmc_info
@@ -409,37 +544,6 @@ name|_nevents
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Architecture specific extensions  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__i386__
-operator|||
-name|__amd64__
-end_if
-
-begin_function_decl
-name|int
-name|pmc_x86_get_msr
-parameter_list|(
-name|pmc_id_t
-name|_pmc
-parameter_list|,
-name|uint32_t
-modifier|*
-name|_msr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

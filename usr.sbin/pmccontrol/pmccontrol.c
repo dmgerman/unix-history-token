@@ -921,13 +921,13 @@ modifier|*
 name|pd
 decl_stmt|;
 name|struct
-name|pmc_op_getpmcinfo
+name|pmc_pmcinfo
 modifier|*
 name|pi
 decl_stmt|;
 specifier|const
 name|struct
-name|pmc_op_getcpuinfo
+name|pmc_cpuinfo
 modifier|*
 name|pc
 decl_stmt|;
@@ -1219,7 +1219,7 @@ name|eventnamelist
 decl_stmt|;
 specifier|const
 name|struct
-name|pmc_op_getcpuinfo
+name|pmc_cpuinfo
 modifier|*
 name|ci
 decl_stmt|;
@@ -1353,7 +1353,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|pmc_op_getdriverstats
+name|pmc_driverstats
 name|gms
 decl_stmt|;
 if|if
@@ -1382,33 +1382,61 @@ name|N
 parameter_list|,
 name|V
 parameter_list|)
-value|(void) printf("%20s %d\n", (N), gms.pm_##V)
+value|(void) printf("%-40s %d\n", (N), gms.pm_##V)
 name|PRINT
 argument_list|(
-literal|"interrupts-processed"
+literal|"interrupts processed:"
 argument_list|,
 name|intr_processed
 argument_list|)
 expr_stmt|;
 name|PRINT
 argument_list|(
-literal|"interrupts-ignored"
+literal|"non-PMC interrupts:"
 argument_list|,
 name|intr_ignored
 argument_list|)
 expr_stmt|;
 name|PRINT
 argument_list|(
-literal|"system-calls"
+literal|"interrupts dropped due to lack of space:"
+argument_list|,
+name|intr_bufferfull
+argument_list|)
+expr_stmt|;
+name|PRINT
+argument_list|(
+literal|"system calls:"
 argument_list|,
 name|syscalls
 argument_list|)
 expr_stmt|;
 name|PRINT
 argument_list|(
-literal|"system-calls-with-errors"
+literal|"system calls with errors:"
 argument_list|,
 name|syscall_errors
+argument_list|)
+expr_stmt|;
+name|PRINT
+argument_list|(
+literal|"buffer requests:"
+argument_list|,
+name|buffer_requests
+argument_list|)
+expr_stmt|;
+name|PRINT
+argument_list|(
+literal|"buffer requests failed:"
+argument_list|,
+name|buffer_requests_failed
+argument_list|)
+expr_stmt|;
+name|PRINT
+argument_list|(
+literal|"sampling log sweeps:"
+argument_list|,
+name|log_sweeps
 argument_list|)
 expr_stmt|;
 return|return

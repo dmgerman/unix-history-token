@@ -2593,9 +2593,12 @@ block|}
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
-comment|/* 	 * Check if the process is using PMCs and if so do exec() time 	 * processing.  This processing needs to happen AFTER the 	 * P_INEXEC flag is cleared. 	 * 	 * The proc lock needs to be released before taking the PMC 	 * SX. 	 */
+comment|/* 	 * Check if system-wide sampling is in effect or if the 	 * current process is using PMCs.  If so, do exec() time 	 * processing.  This processing needs to happen AFTER the 	 * P_INEXEC flag is cleared. 	 * 	 * The proc lock needs to be released before taking the PMC 	 * SX. 	 */
 if|if
 condition|(
+name|PMC_SYSTEM_SAMPLING_ACTIVE
+argument_list|()
+operator|||
 name|PMC_PROC_IS_USING_PMCS
 argument_list|(
 name|p

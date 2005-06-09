@@ -90,8 +90,20 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|volatile
 name|cpumask_t
 name|pmc_cpumask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * A global count of SS mode PMCs.  When non-zero, this means that  * we have processes that are sampling the system as a whole.  */
+end_comment
+
+begin_decl_stmt
+specifier|volatile
+name|int
+name|pmc_ss_count
 decl_stmt|;
 end_decl_stmt
 

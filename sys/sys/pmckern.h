@@ -77,28 +77,6 @@ name|PMC_FN_DO_SAMPLES
 value|4
 end_define
 
-begin_define
-define|#
-directive|define
-name|PMC_FN_PROCESS_EXIT
-value|5
-end_define
-
-begin_comment
-comment|/* obsolete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PMC_FN_PROCESS_FORK
-value|6
-end_define
-
-begin_comment
-comment|/* obsolete */
-end_comment
-
 begin_comment
 comment|/* hook */
 end_comment
@@ -164,8 +142,21 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|cpumask_t
 name|pmc_cpumask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Count of system-wide sampling PMCs in existence */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|int
+name|pmc_ss_count
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +242,14 @@ name|p
 parameter_list|)
 define|\
 value|(__predict_false(atomic_load_acq_int(&(p)->p_flag)&	\ 	    P_HWPMC))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_SYSTEM_SAMPLING_ACTIVE
+parameter_list|()
+value|(pmc_ss_count> 0)
 end_define
 
 begin_comment
