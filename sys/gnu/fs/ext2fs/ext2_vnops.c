@@ -2363,13 +2363,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|VN_KNOTE_UNLOCKED
-argument_list|(
-name|vp
-argument_list|,
-name|NOTE_ATTRIB
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error

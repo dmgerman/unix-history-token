@@ -651,6 +651,16 @@ parameter_list|)
 value|knote(list, hint, 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|KNLIST_EMPTY
+parameter_list|(
+name|list
+parameter_list|)
+value|SLIST_EMPTY(&(list)->kl_list)
+end_define
+
 begin_comment
 comment|/*  * Flag indicating hint is a signal.  Used by EVFILT_SIGNAL, and also  * shared by EVFILT_PROC  (all knotes attached to p->p_klist)  */
 end_comment

@@ -1124,6 +1124,17 @@ begin_comment
 comment|/* Filesystem is MPSAFE. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNTK_NOKNOTE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Don't send KNOTEs from VOP hooks */
+end_comment
+
 begin_comment
 comment|/*  * Sysctl CTL_VFS definitions.  *  * Second level identifier specifies which filesystem. Second level  * identifier VFS_VFSCONF returns information about all filesystems.  * Second level identifier VFS_GENERIC is non-terminal.  */
 end_comment
@@ -2598,6 +2609,18 @@ parameter_list|(
 name|MP
 parameter_list|)
 value|do 					\ {									\ 	if (VFS_NEEDSGIANT((MP)))					\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_SEND_KNOTE
+parameter_list|(
+name|vp
+parameter_list|,
+name|hint
+parameter_list|)
+value|do					\ {									\ 	if ((vp)->v_mount&&						\ 	    ((vp)->v_mount->mnt_kern_flag& MNTK_NOKNOTE) == 0)		\ 		VN_KNOTE_UNLOCKED((vp), (hint));			\ } while (0)
 end_define
 
 begin_include
