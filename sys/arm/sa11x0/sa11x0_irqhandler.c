@@ -142,45 +142,6 @@ name|sa11x0_softc
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Recalculate the interrupt masks from scratch.  * We could code special registry and deregistry versions of this function that  * would be faster, but the code would be nastier, and we don't expect this to  * happen very much anyway.  */
-end_comment
-
-begin_function
-name|int
-name|arm_get_irqnb
-parameter_list|(
-name|void
-modifier|*
-name|frame
-parameter_list|)
-block|{
-name|struct
-name|sa11x0_softc
-modifier|*
-name|sc
-init|=
-name|sa11x0_softc
-decl_stmt|;
-return|return
-operator|(
-name|bus_space_read_4
-argument_list|(
-name|sc
-operator|->
-name|sc_iot
-argument_list|,
-name|sc
-operator|->
-name|sc_ioh
-argument_list|,
-name|SAIPIC_IP
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 specifier|static
 name|uint32_t
@@ -198,17 +159,73 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
-name|arm_mask_irqs
-parameter_list|(
 name|int
+name|arm_get_next_irq
+parameter_list|()
+block|{
+name|int
+name|irq
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|irq
+operator|=
+operator|(
+name|bus_space_read_4
+argument_list|(
+name|sc
+operator|->
+name|sc_iot
+argument_list|,
+name|sc
+operator|->
+name|sc_ioh
+argument_list|,
+name|SAIPIC_IP
+argument_list|)
+operator|&
+name|sa11x0_irq_mask
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ffs
+argument_list|(
+name|irq
+argument_list|)
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|arm_mask_irq
+parameter_list|(
+name|uintptr_t
 name|irq
 parameter_list|)
 block|{
 name|sa11x0_irq_mask
 operator|&=
 operator|~
+operator|(
+literal|1
+operator|<<
 name|irq
+operator|)
 expr_stmt|;
 asm|__asm __volatile("str	%0, [%1, #0x04]"
 comment|/* SAIPIC_MR */
@@ -228,9 +245,9 @@ end_function
 
 begin_macro
 unit|}  void
-name|arm_unmask_irqs
+name|arm_unmask_irq
 argument_list|(
-argument|int irq
+argument|uintptr_t irq
 argument_list|)
 end_macro
 
@@ -238,7 +255,11 @@ begin_block
 block|{
 name|sa11x0_irq_mask
 operator||=
+operator|(
+literal|1
+operator|<<
 name|irq
+operator|)
 expr_stmt|;
 asm|__asm __volatile("str	%0, [%1, #0x04]"
 comment|/* SAIPIC_MR */

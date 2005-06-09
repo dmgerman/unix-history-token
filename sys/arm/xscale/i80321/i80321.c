@@ -1280,18 +1280,38 @@ end_return
 
 begin_macro
 unit|}  int
-name|arm_get_irqnb
-argument_list|(
-argument|void *clockframe
-argument_list|)
+name|arm_get_next_irq
+argument_list|()
 end_macro
 
 begin_block
 block|{
-return|return
+name|int
+name|irq
+decl_stmt|;
+if|if
+condition|(
 operator|(
+name|irq
+operator|=
 name|i80321_iintsrc_read
 argument_list|()
+operator|)
+condition|)
+return|return
+operator|(
+name|ffs
+argument_list|(
+name|irq
+argument_list|)
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+operator|-
+literal|1
 operator|)
 return|;
 block|}
