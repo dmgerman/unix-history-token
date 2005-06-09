@@ -317,7 +317,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|get
 parameter_list|(
 name|char
@@ -367,13 +367,38 @@ specifier|static
 name|int
 name|get_ether_addr
 parameter_list|(
-name|u_int32_t
+name|in_addr_t
 name|ipaddr
 parameter_list|,
 name|struct
 name|ether_addr
 modifier|*
 name|hwaddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|sockaddr_inarp
+modifier|*
+name|getaddr
+parameter_list|(
+name|char
+modifier|*
+name|host
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|valid_type
+parameter_list|(
+name|int
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -697,6 +722,8 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|rtn
+operator|=
 name|get
 argument_list|(
 name|argv
@@ -732,6 +759,9 @@ name|func
 operator|==
 name|F_REPLACE
 condition|)
+operator|(
+name|void
+operator|)
 name|delete
 argument_list|(
 name|argv
@@ -1256,7 +1286,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|bcopy
@@ -1286,14 +1318,16 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 operator|&
 name|reply
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * returns true if the type is a valid one for ARP  */
+comment|/*  * Returns true if the type is a valid one for ARP.  */
 end_comment
 
 begin_function
@@ -1310,10 +1344,6 @@ condition|(
 name|type
 condition|)
 block|{
-default|default:
-return|return
-literal|0
-return|;
 case|case
 name|IFT_ETHER
 case|:
@@ -1333,7 +1363,15 @@ case|case
 name|IFT_L2VLAN
 case|:
 return|return
+operator|(
 literal|1
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -1948,7 +1986,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|get
 parameter_list|(
 name|char
@@ -1974,11 +2012,11 @@ name|addr
 operator|==
 name|NULL
 condition|)
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 literal|0
@@ -2025,7 +2063,17 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2078,7 +2126,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 name|dst
 operator|->
@@ -2647,7 +2697,9 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|found_entry
+operator|)
 return|;
 block|}
 end_function
@@ -3164,6 +3216,9 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|delete
 argument_list|(
 name|ip
@@ -3499,7 +3554,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if (s&& rtm->rtm_addrs& (w)) { \ 		bcopy(s, cp, sizeof(*s)); cp += SA_SIZE(s);}
+value|if ((s) != NULL&& rtm->rtm_addrs& (w)) { \ 		bcopy((s), cp, sizeof(*(s))); cp += SA_SIZE(s);}
 name|NEXTADDR
 argument_list|(
 name|RTA_DST
@@ -3596,7 +3651,9 @@ literal|"writing to routing socket"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 block|}
@@ -3655,7 +3712,9 @@ literal|"read from routing socket"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rtm
+operator|)
 return|;
 block|}
 end_function
@@ -3676,7 +3735,7 @@ specifier|static
 name|int
 name|get_ether_addr
 parameter_list|(
-name|u_int32_t
+name|in_addr_t
 name|ipaddr
 parameter_list|,
 name|struct
@@ -3696,7 +3755,7 @@ decl_stmt|,
 modifier|*
 name|ifp
 decl_stmt|;
-name|uint32_t
+name|in_addr_t
 name|ina
 decl_stmt|,
 name|mask
@@ -4106,7 +4165,9 @@ name|sock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
