@@ -151,7 +151,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|PAM_AUTH_ERR
+name|PAM_CRED_ERR
 operator|)
 return|;
 block|}
@@ -219,7 +219,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|PAM_AUTH_ERR
+name|PAM_AUTHTOK_ERR
 operator|)
 return|;
 block|}
@@ -253,7 +253,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|PAM_AUTH_ERR
+name|PAM_SESSION_ERR
 operator|)
 return|;
 block|}
@@ -287,7 +287,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|PAM_AUTH_ERR
+name|PAM_SESSION_ERR
 operator|)
 return|;
 block|}
