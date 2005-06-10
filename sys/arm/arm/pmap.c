@@ -6417,55 +6417,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *      Initialize the pmap module.  *      Called by vm_init, to initialize any structures that the pmap  *      system needs to map virtual memory.  *      pmap_init has been enhanced to support in a fairly consistant  *      way, discontiguous physical memory.  */
+comment|/*  *	Initialize a vm_page's machine-dependent fields.  */
 end_comment
 
 begin_function
 name|void
-name|pmap_init
+name|pmap_page_init
 parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|PDEBUG
-argument_list|(
-literal|1
-argument_list|,
-name|printf
-argument_list|(
-literal|"pmap_init: phys_start = %08x\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Allocate memory for random pmap data structures.  Includes the 	 * pv_head_table. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|vm_page_array_size
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|vm_page_t
 name|m
-decl_stmt|;
-name|m
-operator|=
-operator|&
-name|vm_page_array
-index|[
-name|i
-index|]
-expr_stmt|;
+parameter_list|)
+block|{
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -6485,6 +6447,29 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
+comment|/*  *      Initialize the pmap module.  *      Called by vm_init, to initialize any structures that the pmap  *      system needs to map virtual memory.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|PDEBUG
+argument_list|(
+literal|1
+argument_list|,
+name|printf
+argument_list|(
+literal|"pmap_init: phys_start = %08x\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * init the pv free list 	 */
 name|pvzone
 operator|=
@@ -10978,16 +10963,11 @@ argument_list|)
 comment|/* 	 * XXX this makes pmap_page_protect(NONE) illegal for non-managed 	 * pages! 	 */
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 block|{
 name|panic
@@ -15271,16 +15251,11 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 return|return
 operator|(

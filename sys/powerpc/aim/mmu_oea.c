@@ -5275,6 +5275,20 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_comment
+comment|/*  *	Initialize a vm_page's machine-dependent fields.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_page_init
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{ }
+end_function
+
 begin_function
 name|void
 name|pmap_init

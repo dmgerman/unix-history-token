@@ -541,19 +541,6 @@ comment|/* VA of last avail page (end of kernel AS) */
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|boolean_t
-name|pmap_initialized
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Has pmap_init completed? */
-end_comment
-
-begin_decl_stmt
 name|int
 name|pgeflag
 init|=
@@ -1756,6 +1743,39 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Initialize a vm_page's machine-dependent fields.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_page_init
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|m
+operator|->
+name|md
+operator|.
+name|pv_list
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|md
+operator|.
+name|pv_list_count
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1829,7 +1849,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *	Initialize the pmap module.  *	Called by vm_init, to initialize any structures that the pmap  *	system needs to map virtual memory.  *	pmap_init has been enhanced to support in a fairly consistant  *	way, discontiguous physical memory.  */
+comment|/*  *	Initialize the pmap module.  *	Called by vm_init, to initialize any structures that the pmap  *	system needs to map virtual memory.  */
 end_comment
 
 begin_function
@@ -1839,54 +1859,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-comment|/* 	 * Allocate memory for random pmap data structures.  Includes the 	 * pv_head_table. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|vm_page_array_size
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|vm_page_t
-name|m
-decl_stmt|;
-name|m
-operator|=
-operator|&
-name|vm_page_array
-index|[
-name|i
-index|]
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|m
-operator|->
-name|md
-operator|.
-name|pv_list
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|md
-operator|.
-name|pv_list_count
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* 	 * init the pv free list 	 */
 name|pvzone
 operator|=
@@ -1971,11 +1943,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
-name|pmap_initialized
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 end_function
 
@@ -6768,16 +6735,11 @@ argument_list|)
 comment|/* 	 * XXX This makes pmap_remove_all() illegal for non-managed pages! 	 */
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 block|{
 name|panic
@@ -7823,8 +7785,6 @@ expr_stmt|;
 comment|/* 	 * Enter on the PV list if part of our managed memory. Note that we 	 * raise IPL while manipulating pv_table since pmap_enter can be 	 * called at interrupt time. 	 */
 if|if
 condition|(
-name|pmap_initialized
-operator|&&
 operator|(
 name|m
 operator|->
@@ -9832,16 +9792,11 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 return|return
 name|FALSE
@@ -10302,16 +10257,11 @@ name|FALSE
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 return|return
 operator|(
@@ -10531,9 +10481,6 @@ name|pte
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
 operator|(
 name|m
 operator|->
@@ -10853,16 +10800,11 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 return|return
 operator|(

@@ -562,6 +562,11 @@ operator|)
 operator|&
 name|PQ_L2_MASK
 expr_stmt|;
+name|pmap_page_init
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_pageq_enqueue
 argument_list|(
 name|m

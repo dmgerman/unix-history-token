@@ -365,19 +365,6 @@ comment|/* VA of last avail page (end of kernel AS) */
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|boolean_t
-name|pmap_initialized
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Has pmap_init completed? */
-end_comment
-
-begin_decl_stmt
 name|vm_offset_t
 name|vhpt_base
 decl_stmt|,
@@ -1819,48 +1806,19 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/*  *	Initialize the pmap module.  *	Called by vm_init, to initialize any structures that the pmap  *	system needs to map virtual memory.  *	pmap_init has been enhanced to support in a fairly consistant  *	way, discontiguous physical memory.  */
+comment|/*  *	Initialize a vm_page's machine-dependent fields.  */
 end_comment
 
 begin_macro
 unit|void
-name|pmap_init
+name|pmap_page_init
 argument_list|(
-argument|void
+argument|vm_page_t m
 argument_list|)
 end_macro
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
-comment|/* 	 * Allocate memory for random pmap data structures.  Includes the 	 * pv_head_table. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|vm_page_array_size
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|vm_page_t
-name|m
-decl_stmt|;
-name|m
-operator|=
-operator|&
-name|vm_page_array
-index|[
-name|i
-index|]
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1880,6 +1838,19 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
+comment|/*  *	Initialize the pmap module.  *	Called by vm_init, to initialize any structures that the pmap  *	system needs to map virtual memory.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 comment|/* 	 * Init the pv free list and the PTE free list. 	 */
 name|pvzone
 operator|=
@@ -1949,13 +1920,8 @@ argument_list|,
 name|MINPV
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
-name|pmap_initialized
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize the address space (zone) for the pv_entries.  Set a  * high water mark so that the system can recover from excessive  * numbers of pv entries.  */
@@ -5395,16 +5361,11 @@ argument_list|)
 comment|/* 	 * XXX this makes pmap_page_protect(NONE) illegal for non-managed 	 * pages! 	 */
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 block|{
 name|panic
@@ -6101,8 +6062,6 @@ block|}
 comment|/* 	 * Enter on the PV list if part of our managed memory. 	 */
 if|if
 condition|(
-name|pmap_initialized
-operator|&&
 operator|(
 name|m
 operator|->
@@ -6358,8 +6317,6 @@ expr_stmt|;
 comment|/* 	 * Enter on the PV list since its part of our managed memory. 	 */
 if|if
 condition|(
-name|pmap_initialized
-operator|&&
 operator|(
 name|m
 operator|->
@@ -6844,16 +6801,11 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 return|return
 name|FALSE
@@ -7285,16 +7237,11 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 return|return
 literal|0
@@ -7411,7 +7358,7 @@ comment|/*  *	pmap_is_referenced:  *  *	Return whether or not the specified phys
 end_comment
 
 begin_endif
-unit|static boolean_t pmap_is_referenced(vm_page_t m) { 	pv_entry_t pv;  	if (!pmap_initialized || (m->flags& PG_FICTITIOUS)) 		return FALSE;  	TAILQ_FOREACH(pv,&m->md.pv_list, pv_list) { 		pmap_t oldpmap = pmap_install(pv->pv_pmap); 		struct ia64_lpte *pte = pmap_find_vhpt(pv->pv_va); 		pmap_install(oldpmap); 		KASSERT(pte != NULL, ("pte")); 		if (pmap_lpte_accessed(pte)) 			return 1; 	}  	return 0; }
+unit|static boolean_t pmap_is_referenced(vm_page_t m) { 	pv_entry_t pv;  	if (m->flags& PG_FICTITIOUS) 		return FALSE;  	TAILQ_FOREACH(pv,&m->md.pv_list, pv_list) { 		pmap_t oldpmap = pmap_install(pv->pv_pmap); 		struct ia64_lpte *pte = pmap_find_vhpt(pv->pv_va); 		pmap_install(oldpmap); 		KASSERT(pte != NULL, ("pte")); 		if (pmap_lpte_accessed(pte)) 			return 1; 	}  	return 0; }
 endif|#
 directive|endif
 end_endif
@@ -7448,16 +7395,11 @@ name|FALSE
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 return|return
 operator|(
@@ -7620,16 +7562,11 @@ name|pv
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 return|return;
 name|TAILQ_FOREACH
@@ -7752,16 +7689,11 @@ name|pv
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|pmap_initialized
-operator|||
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-operator|)
 condition|)
 return|return;
 name|TAILQ_FOREACH
