@@ -1185,6 +1185,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|bridge_dummynet
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|mbuf
 modifier|*

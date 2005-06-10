@@ -233,6 +233,10 @@ define|#
 directive|define
 name|DN_TO_IP6_OUT
 value|7
+define|#
+directive|define
+name|DN_TO_IFB_FWD
+value|8
 name|dn_key
 name|output_time
 decl_stmt|;
