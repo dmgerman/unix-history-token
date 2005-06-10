@@ -10345,8 +10345,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* XXX some stations use the privacy bit for handling APs 		       that suport both encrypted and unencrypted traffic */
-comment|/* NB: PRIVACY flag bits are assumed to match */
+comment|/* NB: 802.11 spec says to ignore station's privacy bit */
 if|if
 condition|(
 operator|(
@@ -10356,20 +10355,6 @@ name|IEEE80211_CAPINFO_ESS
 operator|)
 operator|==
 literal|0
-operator|||
-operator|(
-name|capinfo
-operator|&
-name|IEEE80211_CAPINFO_PRIVACY
-operator|)
-operator|^
-operator|(
-name|ic
-operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_F_PRIVACY
-operator|)
 condition|)
 block|{
 name|IEEE80211_DPRINTF
