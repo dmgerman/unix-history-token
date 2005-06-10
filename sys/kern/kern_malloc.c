@@ -2639,7 +2639,7 @@ name|uma_zfree
 argument_list|(
 name|mt_zone
 argument_list|,
-name|mtp
+name|mtip
 argument_list|)
 expr_stmt|;
 block|}
