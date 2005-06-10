@@ -4298,6 +4298,22 @@ name|ni_macaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * When 802.1x is not in use mark the port 		 * authorized at this point so traffic can flow. 		 */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_authmode
+operator|!=
+name|IEEE80211_AUTH_8021X
+condition|)
+name|ieee80211_node_authorize
+argument_list|(
+name|ic
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|IEEE80211_M_STA
@@ -5268,6 +5284,13 @@ name|ni
 operator|->
 name|ni_macaddr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ieee80211_node_authorize
+argument_list|(
+name|ic
+argument_list|,
+name|ni
 argument_list|)
 expr_stmt|;
 break|break;
