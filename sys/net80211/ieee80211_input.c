@@ -11543,6 +11543,12 @@ name|ic
 operator|->
 name|ic_state
 operator|!=
+name|IEEE80211_S_ASSOC
+operator|&&
+name|ic
+operator|->
+name|ic_state
+operator|!=
 name|IEEE80211_S_AUTH
 condition|)
 block|{
