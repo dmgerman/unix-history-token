@@ -252,6 +252,24 @@ literal|"VIA VT6202 USB 2.0 controller"
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|PCI_EHCI_DEVICEID_ICH4
+value|0x24cd8086
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ehci_device_ich4
+init|=
+literal|"Intel 82801DB/DBL/DBM (ICH4) USB 2.0 controller"
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -578,6 +596,14 @@ case|:
 return|return
 operator|(
 name|ehci_device_via
+operator|)
+return|;
+case|case
+name|PCI_EHCI_DEVICEID_ICH4
+case|:
+return|return
+operator|(
+name|ehci_device_ich4
 operator|)
 return|;
 default|default:
