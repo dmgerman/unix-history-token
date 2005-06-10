@@ -1153,6 +1153,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Instantiate a fictitious page.  Unlike physical memory pages, only  * the machine-independent fields must be initialized.  */
+end_comment
+
 begin_function
 specifier|static
 name|vm_page_t
