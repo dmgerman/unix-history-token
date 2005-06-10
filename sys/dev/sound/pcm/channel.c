@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/sound/pcm/sound.h>
 end_include
 
@@ -4001,6 +4007,9 @@ name|int
 name|dir
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 name|struct
 name|snd_dbuf
 modifier|*
@@ -4010,6 +4019,8 @@ name|c
 operator|->
 name|bufhard
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|r
 decl_stmt|;
@@ -4041,6 +4052,9 @@ operator|->
 name|direction
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 if|if
 condition|(
 operator|!
@@ -4060,6 +4074,8 @@ operator|->
 name|direction
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|r
 return|;
@@ -5584,6 +5600,9 @@ name|int
 name|go
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 name|struct
 name|snd_dbuf
 modifier|*
@@ -5593,6 +5612,8 @@ name|c
 operator|->
 name|bufhard
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ret
 decl_stmt|;
@@ -5601,6 +5622,9 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 if|if
 condition|(
 name|SND_DMA
@@ -5623,6 +5647,8 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ret
 operator|=
 name|CHANNEL_TRIGGER
