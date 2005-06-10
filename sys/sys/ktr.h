@@ -468,7 +468,7 @@ begin_define
 define|#
 directive|define
 name|KTR_VERSION
-value|1
+value|2
 end_define
 
 begin_define
