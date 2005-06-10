@@ -146,6 +146,8 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -416,6 +418,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|hdrlen
 parameter_list|)
 block|{
 name|struct

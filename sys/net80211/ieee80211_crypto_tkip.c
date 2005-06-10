@@ -184,6 +184,8 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1179,6 +1181,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|hdrlen
 parameter_list|)
 block|{
 name|struct
@@ -1208,9 +1213,6 @@ name|uint8_t
 modifier|*
 name|ivp
 decl_stmt|;
-name|int
-name|hdrlen
-decl_stmt|;
 comment|/* 	 * Header should have extended IV and sequence number; 	 * verify the former and validate the latter. 	 */
 name|wh
 operator|=
@@ -1221,13 +1223,6 @@ argument_list|,
 expr|struct
 name|ieee80211_frame
 operator|*
-argument_list|)
-expr_stmt|;
-name|hdrlen
-operator|=
-name|ieee80211_hdrsize
-argument_list|(
-name|wh
 argument_list|)
 expr_stmt|;
 name|ivp
@@ -1541,11 +1536,22 @@ name|ieee80211_frame
 operator|*
 argument_list|)
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ctx
+operator|->
+name|tc_ic
+decl_stmt|;
 name|int
 name|hdrlen
 init|=
-name|ieee80211_hdrsize
+name|ieee80211_hdrspace
 argument_list|(
+name|ic
+argument_list|,
 name|wh
 argument_list|)
 decl_stmt|;
@@ -1561,9 +1567,7 @@ index|[
 name|IEEE80211_WEP_MICLEN
 index|]
 decl_stmt|;
-name|ctx
-operator|->
-name|tc_ic
+name|ic
 operator|->
 name|ic_stats
 operator|.
@@ -1637,9 +1641,7 @@ block|{
 comment|/* NB: 802.11 layer handles statistic and debug msg */
 name|ieee80211_notify_michael_failure
 argument_list|(
-name|ctx
-operator|->
-name|tc_ic
+name|ic
 argument_list|,
 name|wh
 argument_list|,

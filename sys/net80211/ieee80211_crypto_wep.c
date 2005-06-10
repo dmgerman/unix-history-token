@@ -165,6 +165,9 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
+name|hdrlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -790,6 +793,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|hdrlen
 parameter_list|)
 block|{
 name|struct
@@ -806,9 +812,6 @@ name|ieee80211_frame
 modifier|*
 name|wh
 decl_stmt|;
-name|int
-name|hdrlen
-decl_stmt|;
 name|wh
 operator|=
 name|mtod
@@ -818,13 +821,6 @@ argument_list|,
 expr|struct
 name|ieee80211_frame
 operator|*
-argument_list|)
-expr_stmt|;
-name|hdrlen
-operator|=
-name|ieee80211_hdrsize
-argument_list|(
-name|wh
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if the device handled the decrypt in hardware. 	 * If so we just strip the header; otherwise we need to 	 * handle the decrypt in software. 	 */

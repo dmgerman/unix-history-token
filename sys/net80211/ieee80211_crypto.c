@@ -1864,6 +1864,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|hdrlen
 parameter_list|)
 block|{
 define|#
@@ -1898,9 +1901,6 @@ name|ivp
 decl_stmt|;
 name|u_int8_t
 name|keyid
-decl_stmt|;
-name|int
-name|hdrlen
 decl_stmt|;
 comment|/* NB: this minimum size data frame could be bigger */
 if|if
@@ -1953,13 +1953,6 @@ argument_list|,
 expr|struct
 name|ieee80211_frame
 operator|*
-argument_list|)
-expr_stmt|;
-name|hdrlen
-operator|=
-name|ieee80211_hdrsize
-argument_list|(
-name|wh
 argument_list|)
 expr_stmt|;
 name|ivp
@@ -2099,6 +2092,8 @@ argument_list|(
 name|k
 argument_list|,
 name|m
+argument_list|,
+name|hdrlen
 argument_list|)
 condition|?
 name|k

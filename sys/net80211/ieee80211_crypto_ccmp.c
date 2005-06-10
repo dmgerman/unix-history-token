@@ -190,6 +190,8 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -907,6 +909,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|hdrlen
 parameter_list|)
 block|{
 name|struct
@@ -930,9 +935,6 @@ decl_stmt|;
 name|uint64_t
 name|pn
 decl_stmt|;
-name|int
-name|hdrlen
-decl_stmt|;
 comment|/* 	 * Header should have extended IV and sequence number; 	 * verify the former and validate the latter. 	 */
 name|wh
 operator|=
@@ -943,13 +945,6 @@ argument_list|,
 expr|struct
 name|ieee80211_frame
 operator|*
-argument_list|)
-expr_stmt|;
-name|hdrlen
-operator|=
-name|ieee80211_hdrsize
-argument_list|(
-name|wh
 argument_list|)
 expr_stmt|;
 name|ivp
