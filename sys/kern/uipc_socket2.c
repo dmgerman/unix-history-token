@@ -526,10 +526,13 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-comment|/* 	 * XXXRW: This code separately acquires SOCK_LOCK(so) and 	 * SOCKBUF_LOCK(&so->so_rcv) even though they are the same mutex to 	 * avoid introducing the assumption  that they are the same. 	 */
-name|SOCK_LOCK
+comment|/* 	 * XXXRW: This code assumes that SOCK_LOCK(so) and 	 * SOCKBUF_LOCK(&so->so_rcv) are the same. 	 */
+name|SOCKBUF_LOCK
 argument_list|(
+operator|&
 name|so
+operator|->
+name|so_rcv
 argument_list|)
 expr_stmt|;
 name|so
@@ -544,19 +547,6 @@ operator|->
 name|so_state
 operator||=
 name|SS_ISDISCONNECTING
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|SOCKBUF_LOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
 expr_stmt|;
 name|so
 operator|->
@@ -616,11 +606,13 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-comment|/* 	 * XXXRW: This code separately acquires SOCK_LOCK(so) and 	 * SOCKBUF_LOCK(&so->so_rcv) even though they are the same mutex to 	 * avoid introducing the assumption  that they are the same. 	 */
-comment|/* XXXRW: so_state locking? */
-name|SOCK_LOCK
+comment|/* 	 * XXXRW: This code assumes that SOCK_LOCK(so) and 	 * SOCKBUF_LOCK(&so->so_rcv) are the same. 	 */
+name|SOCKBUF_LOCK
 argument_list|(
+operator|&
 name|so
+operator|->
+name|so_rcv
 argument_list|)
 expr_stmt|;
 name|so
@@ -641,19 +633,6 @@ operator|->
 name|so_state
 operator||=
 name|SS_ISDISCONNECTED
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|SOCKBUF_LOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
 expr_stmt|;
 name|so
 operator|->
