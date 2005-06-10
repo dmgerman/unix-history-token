@@ -4235,13 +4235,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|fxp_release
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -4774,13 +4772,6 @@ expr_stmt|;
 comment|/* Do same thing as we do for suspend */
 comment|/* 	 * Close down routes etc. 	 */
 name|ether_ifdetach
-argument_list|(
-name|sc
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
-name|if_free
 argument_list|(
 name|sc
 operator|->
