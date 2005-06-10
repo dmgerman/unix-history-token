@@ -306,7 +306,7 @@ parameter_list|(
 name|bo
 parameter_list|)
 define|\
-value|do { \ 		KASSERT (bo->bo_mtx != NULL, ("No lock in bufobj")); \ 		mtx_lock((bo)->bo_mtx); \ 	} while (0)
+value|do { \ 		KASSERT((bo)->bo_mtx != NULL, ("No lock in bufobj")); \ 		mtx_lock((bo)->bo_mtx); \ 	} while (0)
 end_define
 
 begin_define
@@ -317,7 +317,7 @@ parameter_list|(
 name|bo
 parameter_list|)
 define|\
-value|do { \ 		KASSERT (bo->bo_mtx != NULL, ("No lock in bufobj")); \ 		mtx_unlock((bo)->bo_mtx); \ 	} while (0)
+value|do { \ 		KASSERT((bo)->bo_mtx != NULL, ("No lock in bufobj")); \ 		mtx_unlock((bo)->bo_mtx); \ 	} while (0)
 end_define
 
 begin_define

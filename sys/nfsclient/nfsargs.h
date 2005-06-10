@@ -98,9 +98,9 @@ name|readahead
 decl_stmt|;
 comment|/* # of blocks to readahead */
 name|int
-name|__pad1
+name|wcommitsize
 decl_stmt|;
-comment|/* was "leaseterm" */
+comment|/* Max. write commit size in bytes */
 name|int
 name|deadthresh
 decl_stmt|;
@@ -252,8 +252,15 @@ begin_comment
 comment|/* Don't estimate rtt dynamically */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSMNT_WCOMMITSIZE
+value|0x00001000
+end_define
+
 begin_comment
-comment|/* 0x1000 free, was NFSMNT_LEASETERM */
+comment|/* set max write commit size */
 end_comment
 
 begin_define
