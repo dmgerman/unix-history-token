@@ -5621,12 +5621,14 @@ name|sc
 operator|==
 name|NULL
 condition|)
+block|{
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 name|bridge_enqueue
 argument_list|(
 name|sc
