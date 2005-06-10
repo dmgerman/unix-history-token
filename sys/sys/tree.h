@@ -559,6 +559,7 @@ name|RB_AUGMENT
 parameter_list|(
 name|x
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_endif
