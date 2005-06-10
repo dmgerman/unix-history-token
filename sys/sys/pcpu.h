@@ -204,6 +204,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|curcpu
+value|PCPU_GET(cpuid)
+end_define
+
+begin_define
+define|#
+directive|define
 name|curkse
 value|(curthread->td_kse)
 end_define
