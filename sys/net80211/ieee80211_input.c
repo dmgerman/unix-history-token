@@ -8419,6 +8419,25 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* record tsf of last beacon */
+name|memcpy
+argument_list|(
+name|ni
+operator|->
+name|ni_tstamp
+operator|.
+name|data
+argument_list|,
+name|tstamp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ni
+operator|->
+name|ni_tstamp
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ni
