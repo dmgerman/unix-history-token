@@ -86,25 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/kbd/atkbdreg.h>
+file|<dev/atkbdc/atkbdreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/kbd/atkbdcreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isa/isareg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isa/isavar.h>
+file|<dev/atkbdc/atkbdcreg.h>
 end_include
 
 begin_typedef
@@ -183,7 +171,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|atkbd_isa_intr
+name|atkbdintr
 parameter_list|(
 name|void
 modifier|*
@@ -543,7 +531,7 @@ name|intr
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
-name|atkbd_isa_intr
+name|atkbdintr
 argument_list|,
 name|kbd
 argument_list|,
@@ -711,7 +699,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|atkbd_isa_intr
+name|atkbdintr
 parameter_list|(
 name|void
 modifier|*

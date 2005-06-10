@@ -193,7 +193,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/kbd/atkbdcreg.h>
+file|<dev/atkbdc/atkbdcreg.h>
 end_include
 
 begin_include

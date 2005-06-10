@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_ATKBDCREG_H_
+name|_DEV_ATKBDC_ATKBDCREG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_DEV_KBD_ATKBDCREG_H_
+name|_DEV_ATKBDC_ATKBDCREG_H_
 end_define
 
 begin_include
@@ -1328,7 +1328,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_DEV_KBD_ATKBDCREG_H_ */
+comment|/* !_DEV_ATKBDC_ATKBDCREG_H_ */
 end_comment
 
 end_unit
