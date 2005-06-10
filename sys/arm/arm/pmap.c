@@ -745,19 +745,6 @@ name|allpmaps
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|boolean_t
-name|pmap_initialized
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Has pmap_init completed? */
-end_comment
-
 begin_comment
 comment|/* static pt_entry_t *msgbufmap;*/
 end_comment
@@ -1270,7 +1257,14 @@ expr_stmt|;
 comment|/* 	 * Copy the kernel's L1 entries to each new L1. 	 */
 if|if
 condition|(
-name|pmap_initialized
+name|l1pt
+operator|!=
+name|pmap_kernel
+argument_list|()
+operator|->
+name|pm_l1
+operator|->
+name|l1_kva
 condition|)
 name|memcpy
 argument_list|(
@@ -6506,10 +6500,6 @@ name|MINPV
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
-name|pmap_initialized
-operator|=
-name|TRUE
-expr_stmt|;
 name|PDEBUG
 argument_list|(
 literal|1
