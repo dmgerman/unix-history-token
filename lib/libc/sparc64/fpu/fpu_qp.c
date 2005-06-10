@@ -63,12 +63,14 @@ name|fname
 parameter_list|,
 name|ntype
 parameter_list|,
+name|signpos
+parameter_list|,
 name|atype
 parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|void _Qp_ ## qname ## toq(u_int *c, ntype n); \ void \ _Qp_ ## qname ## toq(u_int *c, ntype n) \ { \ 	struct fpemu fe; \ 	union { atype a[2]; ntype n; } u = { .n = n }; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	fe.fe_f1.fp_sign = u.a[0]>> 31; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_ ## fname ## tof(&fe.fe_f1, __VA_ARGS__); \ 	c[0] = __fpu_ftoq(&fe,&fe.fe_f1, c); \ }
+value|void _Qp_ ## qname ## toq(u_int *c, ntype n); \ void \ _Qp_ ## qname ## toq(u_int *c, ntype n) \ { \ 	struct fpemu fe; \ 	union { atype a[2]; ntype n; } u = { .n = n }; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	fe.fe_f1.fp_sign = (signpos>= 0) ? u.a[0]>> signpos : 0; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_ ## fname ## tof(&fe.fe_f1, __VA_ARGS__); \ 	c[0] = __fpu_ftoq(&fe,&fe.fe_f1, c); \ }
 end_define
 
 begin_define
@@ -319,6 +321,8 @@ argument|d
 argument_list|,
 argument|double
 argument_list|,
+literal|31
+argument_list|,
 argument|u_int
 argument_list|,
 argument|u.a[
@@ -340,6 +344,8 @@ argument|i
 argument_list|,
 argument|int
 argument_list|,
+literal|31
+argument_list|,
 argument|u_int
 argument_list|,
 argument|u.a[
@@ -356,6 +362,8 @@ argument_list|,
 argument|s
 argument_list|,
 argument|float
+argument_list|,
+literal|31
 argument_list|,
 argument|u_int
 argument_list|,
@@ -374,6 +382,8 @@ argument|x
 argument_list|,
 argument|long
 argument_list|,
+literal|63
+argument_list|,
 argument|u_long
 argument_list|,
 argument|u.a[
@@ -391,6 +401,9 @@ argument|i
 argument_list|,
 argument|u_int
 argument_list|,
+argument|-
+literal|1
+argument_list|,
 argument|u_int
 argument_list|,
 argument|u.a[
@@ -407,6 +420,9 @@ argument_list|,
 argument|x
 argument_list|,
 argument|u_long
+argument_list|,
+argument|-
+literal|1
 argument_list|,
 argument|u_long
 argument_list|,
