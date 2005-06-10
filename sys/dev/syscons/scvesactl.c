@@ -421,8 +421,19 @@ operator|)
 operator|+
 name|M_VESA_BASE
 expr_stmt|;
+comment|/* Only set graphics mode in non-pcvt case */
 if|if
 condition|(
+operator|(
+operator|(
+name|cmd
+operator|&
+name|IOC_DIRMASK
+operator|)
+operator|==
+name|IOC_VOID
+operator|)
+operator|&&
 operator|(
 name|mode
 operator|>
