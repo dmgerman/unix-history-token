@@ -157,7 +157,7 @@ name|MOPT_UPDATE
 block|,
 name|MOPT_SNAPSHOT
 block|,
-name|MOPT_NULL
+name|MOPT_END
 block|}
 decl_stmt|;
 end_decl_stmt

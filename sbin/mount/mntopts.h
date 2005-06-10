@@ -196,13 +196,13 @@ value|{ "auto",	0, 0, 0 }
 end_define
 
 begin_comment
-comment|/* A handy macro as terminator of MNT_ array */
+comment|/* A handy macro as terminator of MNT_ array. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MOPT_NULL
+name|MOPT_END
 value|{ NULL,		0, 0, 0 }
 end_define
 
