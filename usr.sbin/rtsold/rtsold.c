@@ -214,7 +214,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* protocol constatns */
+comment|/* protocol constants */
 end_comment
 
 begin_define
@@ -1065,7 +1065,7 @@ name|LOG_ERR
 argument_list|,
 name|__func__
 argument_list|,
-literal|"failed to initilizatoin interfaces"
+literal|"failed to initialize interfaces"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2837,7 +2837,7 @@ name|RTR_SOLICITATION_INTERVAL
 expr_stmt|;
 else|else
 block|{
-comment|/* 			 * After sending MAX_RTR_SOLICITATIONS solicitations, 			 * we're just waiting for possible replies; there 			 * will be no more solicatation.  Thus, we change 			 * the timer value to MAX_RTR_SOLICITATION_DELAY based 			 * on RFC 2461, Section 6.3.7. 			 */
+comment|/* 			 * After sending MAX_RTR_SOLICITATIONS solicitations, 			 * we're just waiting for possible replies; there 			 * will be no more solicitation.  Thus, we change 			 * the timer value to MAX_RTR_SOLICITATION_DELAY based 			 * on RFC 2461, Section 6.3.7. 			 */
 name|ifinfo
 operator|->
 name|timer
