@@ -8716,6 +8716,14 @@ name|wme
 operator|!=
 name|NULL
 operator|&&
+operator|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_QOS
+operator|)
+operator|&&
 name|ieee80211_parse_wmeparams
 argument_list|(
 name|ic
