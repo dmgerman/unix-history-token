@@ -769,6 +769,12 @@ argument_list|,
 name|priv
 argument_list|)
 expr_stmt|;
+comment|/* This node is not thread safe. */
+name|NG_NODE_FORCE_WRITER
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 comment|/* Done */
 return|return
 operator|(
