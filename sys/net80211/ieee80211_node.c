@@ -83,6 +83,49 @@ directive|include
 file|<net/bpf.h>
 end_include
 
+begin_comment
+comment|/*  * Association id's are managed with a bit vector.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AID_SET
+parameter_list|(
+name|b
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|((w)[IEEE80211_AID(b) / 32] |= (1<< (IEEE80211_AID(b) % 32)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AID_CLR
+parameter_list|(
+name|b
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|((w)[IEEE80211_AID(b) / 32]&= ~(1<< (IEEE80211_AID(b) % 32)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AID_ISSET
+parameter_list|(
+name|b
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|((w)[IEEE80211_AID(b) / 32]& (1<< (IEEE80211_AID(b) % 32)))
+end_define
+
 begin_function_decl
 specifier|static
 name|struct

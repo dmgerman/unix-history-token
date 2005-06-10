@@ -2520,45 +2520,6 @@ parameter_list|)
 value|((b)&~ 0xc000)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_AID_SET
-parameter_list|(
-name|b
-parameter_list|,
-name|w
-parameter_list|)
-define|\
-value|((w)[IEEE80211_AID(b) / 32] |= (1<< (IEEE80211_AID(b) % 32)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_AID_CLR
-parameter_list|(
-name|b
-parameter_list|,
-name|w
-parameter_list|)
-define|\
-value|((w)[IEEE80211_AID(b) / 32]&= ~(1<< (IEEE80211_AID(b) % 32)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_AID_ISSET
-parameter_list|(
-name|b
-parameter_list|,
-name|w
-parameter_list|)
-define|\
-value|((w)[IEEE80211_AID(b) / 32]& (1<< (IEEE80211_AID(b) % 32)))
-end_define
-
 begin_comment
 comment|/*   * RTS frame length parameters.  The default is specified in  * the 802.11 spec.  The max may be wrong for jumbo frames.  */
 end_comment
