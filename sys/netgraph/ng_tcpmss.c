@@ -957,7 +957,7 @@ name|M_CHECK
 parameter_list|(
 name|length
 parameter_list|)
-value|do {					\ 	pullup_len += length;					\ 	if ((m)->m_pkthdr.len< (pullup_len))			\ 		goto send;					\ 	if ((m)->m_len< (pullup_len)&&			\ 	   (((m) = m_pullup((m),(pullup_len))) == NULL))	\ 		ERROUT(ENOBUFS);				\ 	} while (0)
+value|do {					\ 	pullup_len += length;					\ 	if ((m)->m_pkthdr.len< pullup_len)			\ 		goto send;					\ 	if ((m)->m_len< pullup_len&&				\ 	   (((m) = m_pullup((m), pullup_len)) == NULL))		\ 		ERROUT(ENOBUFS);				\ 	} while (0)
 comment|/* Check mbuf packet size and arrange for IP header. */
 name|M_CHECK
 argument_list|(
@@ -1021,16 +1021,6 @@ argument_list|(
 name|EINVAL
 argument_list|)
 expr_stmt|;
-name|pullup_len
-operator|+=
-name|iphlen
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-expr_stmt|;
 comment|/* Check if it is TCP. */
 if|if
 condition|(
@@ -1049,6 +1039,14 @@ goto|;
 comment|/* Check mbuf packet size and arrange for IP+TCP header */
 name|M_CHECK
 argument_list|(
+name|iphlen
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1102,16 +1100,6 @@ argument_list|(
 name|EINVAL
 argument_list|)
 expr_stmt|;
-name|pullup_len
-operator|+=
-name|tcphlen
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tcphdr
-argument_list|)
-expr_stmt|;
 comment|/* Check SYN packet and has options. */
 if|if
 condition|(
@@ -1145,7 +1133,13 @@ operator|++
 expr_stmt|;
 name|M_CHECK
 argument_list|(
-literal|0
+name|tcphlen
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1183,14 +1177,7 @@ expr_stmt|;
 name|send
 label|:
 comment|/* Deliver frame out destination hook. */
-name|NGI_M
-argument_list|(
-name|item
-argument_list|)
-operator|=
-name|m
-expr_stmt|;
-name|NG_FWD_ITEM_HOOK
+name|NG_FWD_NEW_DATA
 argument_list|(
 name|error
 argument_list|,
@@ -1199,6 +1186,8 @@ argument_list|,
 name|priv
 operator|->
 name|outHook
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -1208,11 +1197,6 @@ operator|)
 return|;
 name|done
 label|:
-comment|/* Free mbuf if unfreed left. */
-if|if
-condition|(
-name|item
-condition|)
 name|NG_FREE_ITEM
 argument_list|(
 name|item
