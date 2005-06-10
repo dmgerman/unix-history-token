@@ -21,7 +21,8 @@ name|ifnet_en
 block|{
 name|struct
 name|ifnet
-name|ifen_ifnet
+modifier|*
+name|ifen_ifp
 decl_stmt|;
 name|struct
 name|route

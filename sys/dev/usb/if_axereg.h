@@ -453,8 +453,9 @@ value|(&(sc)->axe_mii)
 endif|#
 directive|endif
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|axe_ifp
 decl_stmt|;
 name|device_t
 name|axe_miibus

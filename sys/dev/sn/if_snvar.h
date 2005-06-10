@@ -21,19 +21,15 @@ directive|include
 file|<net/if_arp.h>
 end_include
 
-begin_comment
-comment|/*  * Ethernet software status per interface.  The first element MUST  * be the arpcom struct since the address of the arpcom struct is  * used as a backdoor to obtain the address of this whole structure  * in many cases.  */
-end_comment
-
 begin_struct
 struct|struct
 name|sn_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* Ethernet common part */
 name|bus_space_tag_t
 name|bst
 decl_stmt|;

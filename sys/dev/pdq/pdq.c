@@ -25,33 +25,6 @@ begin_comment
 comment|/*  * DEC PDQ FDDI Controller O/S independent code  *  * This module should work any on PDQ based board.  Note that changes for  * MIPS and Alpha architectures (or any other architecture which requires  * a flushing of memory or write buffers and/or has incoherent caches)  * have yet to be made.  *  * However, it is expected that the PDQ_CSR_WRITE macro will cause a   * flushing of the write buffers.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__KERNEL_RCSID
-argument_list|(
-literal|0
-argument_list|,
-literal|"$NetBSD: pdq.c,v 1.33 2001/11/13 13:14:43 lukem Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -61,15 +34,6 @@ end_define
 begin_comment
 comment|/* for pdq.h */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_comment
 comment|/*  * What a botch having to specific includes for FreeBSD!  */
@@ -86,28 +50,6 @@ include|#
 directive|include
 file|<dev/pdq/pdqreg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"pdqvar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pdqreg.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -609,44 +551,11 @@ literal|"0123456789abcdef"
 decl_stmt|;
 name|printf
 argument_list|(
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|PDQ_OS_PREFIX
-else|#
-directive|else
-literal|": "
-endif|#
-directive|endif
 literal|"DEC %s FDDI %s Controller\n"
 argument_list|,
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|PDQ_OS_PREFIX_ARGS
 argument_list|,
-endif|#
-directive|endif
 name|pdq_descriptions
 index|[
 name|pdq

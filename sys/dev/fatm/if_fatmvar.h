@@ -447,8 +447,9 @@ struct|struct
 name|fatm_softc
 block|{
 name|struct
-name|ifatm
-name|ifatm
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 comment|/* common part */
 name|struct

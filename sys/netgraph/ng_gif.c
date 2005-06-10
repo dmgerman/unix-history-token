@@ -120,7 +120,7 @@ name|IFP2NG
 parameter_list|(
 name|ifp
 parameter_list|)
-value|((struct ng_node *)((struct gif_softc *)(ifp))->gif_netgraph)
+value|((struct ng_node *)((struct gif_softc *)(ifp->if_softc))->gif_netgraph)
 end_define
 
 begin_define
@@ -132,7 +132,7 @@ name|ifp
 parameter_list|,
 name|val
 parameter_list|)
-value|(((struct gif_softc *)(ifp))->gif_netgraph = (val))
+value|(((struct gif_softc *)(ifp->if_softc))->gif_netgraph = (val))
 end_define
 
 begin_comment

@@ -1043,12 +1043,10 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
+name|ANIF2IFP
+argument_list|(
 name|nip
+argument_list|)
 decl_stmt|;
 name|struct
 name|in_ifaddr

@@ -1867,8 +1867,9 @@ struct|struct
 name|an_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|an_ifp
 decl_stmt|;
 name|int
 name|an_unit

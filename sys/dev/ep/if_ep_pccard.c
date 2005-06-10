@@ -345,11 +345,12 @@ name|u_char
 operator|*
 operator|)
 operator|&
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|ifp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ep_free

@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -1790,12 +1796,9 @@ name|XL_TIMEOUT
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"command never completed!\n"
 argument_list|)
@@ -2798,12 +2801,9 @@ name|bootverbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"found 10baseFL\n"
 argument_list|)
@@ -2868,12 +2868,9 @@ name|bootverbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"found AUI\n"
 argument_list|)
@@ -2908,12 +2905,9 @@ name|bootverbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"found BNC\n"
 argument_list|)
@@ -2995,12 +2989,9 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"eeprom failed to come ready\n"
 argument_list|)
@@ -3253,12 +3244,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|struct
 name|ifmultiaddr
@@ -3377,12 +3365,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|int
 name|h
@@ -3595,12 +3580,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|MGETHDR
 argument_list|(
@@ -3621,11 +3603,12 @@ return|return;
 name|bcopy
 argument_list|(
 operator|&
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|xl_ifp
+argument_list|)
 argument_list|,
 name|mtod
 argument_list|(
@@ -3644,11 +3627,12 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|xl_ifp
+argument_list|)
 argument_list|,
 name|mtod
 argument_list|(
@@ -4314,12 +4298,9 @@ argument_list|)
 expr_stmt|;
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"selecting %s, %s duplex\n"
 argument_list|,
@@ -4436,12 +4417,9 @@ name|XL_TIMEOUT
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"reset didn't complete\n"
 argument_list|)
@@ -4685,12 +4663,9 @@ else|else
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"bogus xcvr value in EEPROM (%x)\n"
 argument_list|,
@@ -4701,12 +4676,9 @@ argument_list|)
 expr_stmt|;
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"choosing new default based on card type\n"
 argument_list|)
@@ -4732,36 +4704,27 @@ condition|)
 return|return;
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"WARNING: no media options bits set in the media options register!!\n"
 argument_list|)
 expr_stmt|;
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"this could be a manufacturing defect in your adapter or system\n"
 argument_list|)
 expr_stmt|;
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"attempting to guess media type; you should probably consult your vendor\n"
 argument_list|)
@@ -4843,12 +4806,9 @@ name|verbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"guessing 10BaseT transceiver\n"
 argument_list|)
@@ -4884,12 +4844,9 @@ name|verbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"guessing COMBO (AUI/BNC/TP)\n"
 argument_list|)
@@ -4919,12 +4876,9 @@ name|verbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"guessing TPC (BNC/TP)\n"
 argument_list|)
@@ -4952,12 +4906,9 @@ name|verbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"guessing 10baseFL\n"
 argument_list|)
@@ -5029,12 +4980,9 @@ name|verbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"guessing MII\n"
 argument_list|)
@@ -5066,12 +5014,9 @@ name|verbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"guessing 100baseT4/MII\n"
 argument_list|)
@@ -5119,12 +5064,9 @@ name|verbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"guessing 10/100 internal\n"
 argument_list|)
@@ -5156,12 +5098,9 @@ name|verbose
 condition|)
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"guessing 10/100 plus BNC/AUI\n"
 argument_list|)
@@ -5170,12 +5109,9 @@ break|break;
 default|default:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"unknown device ID: %x -- defaulting to 10baseT\n"
 argument_list|,
@@ -5798,13 +5734,37 @@ block|}
 comment|/* Initialize interface name. */
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
+operator|=
+name|if_alloc
+argument_list|(
+name|IFT_ETHER
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"can not if_alloc()\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOSPC
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|ifp
 operator|->
 name|if_softc
@@ -5909,24 +5869,6 @@ argument_list|,
 name|xl_rxeof_task
 argument_list|,
 name|sc
-argument_list|)
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|eaddr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now allocate a tag for the DMA descriptor lists and a chunk 	 * of DMA-able memory based on the tag.  Also obtain the DMA 	 * addresses of the RX and TX ring, which we'll need later. 	 * All of our lists are allocated as a contiguous block 	 * of memory. 	 */
@@ -7219,6 +7161,11 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -7389,12 +7336,9 @@ break|break;
 default|default:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"unknown XCVR type: %d\n"
 argument_list|,
@@ -7458,12 +7402,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -7534,6 +7475,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -8660,12 +8606,9 @@ argument_list|)
 expr_stmt|;
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"can't map mbuf (error %d)\n"
 argument_list|,
@@ -8888,12 +8831,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|struct
 name|xl_chain_onefrag
@@ -9482,12 +9422,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|XL_LOCK_ASSERT
 argument_list|(
@@ -9703,12 +9640,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|int
 name|idx
@@ -9934,12 +9868,9 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"transmission error: %x\n"
 argument_list|,
@@ -10089,12 +10020,9 @@ name|XL_MIN_FRAMELEN
 expr_stmt|;
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 argument_list|,
 literal|"tx underrun, increasing tx start threshold to %d bytes\n"
 argument_list|,
@@ -10218,12 +10146,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|u_int16_t
 name|status
@@ -10944,12 +10869,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|struct
 name|xl_stats
@@ -11169,12 +11091,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|XL_LOCK_ASSERT
 argument_list|(
@@ -12301,12 +12220,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|int
 name|error
@@ -12424,11 +12340,12 @@ name|XL_W2_STATION_ADDR_LO
 operator|+
 name|i
 argument_list|,
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|xl_ifp
+argument_list|)
 index|[
 name|i
 index|]
@@ -14223,12 +14140,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 decl_stmt|;
 name|XL_LOCK_ASSERT
 argument_list|(
@@ -14795,12 +14709,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|xl_ifp
 expr_stmt|;
 name|XL_LOCK
 argument_list|(

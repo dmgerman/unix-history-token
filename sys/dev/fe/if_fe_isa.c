@@ -1028,7 +1028,7 @@ name|FE_FMV4
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -1040,7 +1040,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x00000E
 argument_list|)
@@ -1465,7 +1465,7 @@ literal|8
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -1477,7 +1477,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x0000F4
 argument_list|)
@@ -1919,7 +1919,7 @@ literal|4
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -1936,7 +1936,7 @@ literal|122
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -2354,7 +2354,7 @@ return|;
 comment|/* Get our station address from EEPROM.  Note that RATOC 	   stores it "byte-swapped" in each word.  (I don't know why.) 	   So, we just can't use bcopy().*/
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 literal|0
 index|]
@@ -2366,7 +2366,7 @@ index|]
 expr_stmt|;
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 literal|1
 index|]
@@ -2378,7 +2378,7 @@ index|]
 expr_stmt|;
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 literal|2
 index|]
@@ -2390,7 +2390,7 @@ index|]
 expr_stmt|;
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 literal|3
 index|]
@@ -2402,7 +2402,7 @@ index|]
 expr_stmt|;
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 literal|4
 index|]
@@ -2414,7 +2414,7 @@ index|]
 expr_stmt|;
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 literal|5
 index|]
@@ -2432,7 +2432,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x00C0D0
 argument_list|)
@@ -2621,7 +2621,7 @@ name|n
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -3294,7 +3294,7 @@ name|FE_SSI_EEP_ADDR
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -3527,7 +3527,7 @@ name|eeprom
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -3790,7 +3790,7 @@ literal|0x18
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -3803,7 +3803,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x000061
 argument_list|)
@@ -4008,7 +4008,7 @@ literal|0x18
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -4020,7 +4020,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x00DD01
 argument_list|)
@@ -4032,7 +4032,7 @@ if|#
 directive|if
 literal|0
 comment|/* Calculate checksum.  */
-block|sum = fe_inb(sc, 0x1e); 	for (i = 0; i< ETHER_ADDR_LEN; i++) { 		sum ^= sc->sc_enaddr[i]; 	} 	if (sum != 0) 		return ENXIO;
+block|sum = fe_inb(sc, 0x1e); 	for (i = 0; i< ETHER_ADDR_LEN; i++) { 		sum ^= sc->enaddr[i]; 	} 	if (sum != 0) 		return ENXIO;
 endif|#
 directive|endif
 comment|/* This looks like an AccessPC/ISA board.  It requires an 	   explicit IRQ setting in config.  Make sure we have one, 	   determining an appropriate value for the IRQ control 	   register.  */

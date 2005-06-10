@@ -2980,8 +2980,9 @@ struct|struct
 name|xl_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|xl_ifp
 decl_stmt|;
 comment|/* interface info */
 name|struct

@@ -513,10 +513,8 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING

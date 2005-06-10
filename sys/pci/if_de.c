@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -847,9 +853,12 @@ return|;
 comment|/*      * Construct a LLC TEST message which will point to ourselves.      */
 name|bcopy
 argument_list|(
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 argument_list|,
 name|mtod
 argument_list|(
@@ -867,9 +876,12 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 argument_list|,
 name|mtod
 argument_list|(
@@ -1043,7 +1055,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_SIAGEN_WATCHDOG
-value|(sc->tulip_if.if_mtu> ETHERMTU ? TULIP_WATCHDOG_RXDISABLE|TULIP_WATCHDOG_TXDISABLE : 0)
+value|(sc->tulip_ifp->if_mtu> ETHERMTU ? TULIP_WATCHDOG_RXDISABLE|TULIP_WATCHDOG_TXDISABLE : 0)
 end_define
 
 begin_else
@@ -1781,8 +1793,8 @@ name|TULIP_LINKUP
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -1792,7 +1804,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX how does with work with ifmedia? */
-block|if ((sc->tulip_flags& TULIP_DIDNWAY) == 0) { 	if (sc->tulip_if.if_flags& IFF_FULLDUPLEX) { 	    if (TULIP_CAN_MEDIA_FD(media)&& sc->tulip_mediums[TULIP_FD_MEDIA_OF(media)] != NULL) 		media = TULIP_FD_MEDIA_OF(media); 	} else { 	    if (TULIP_IS_MEDIA_FD(media)&& sc->tulip_mediums[TULIP_HD_MEDIA_OF(media)] != NULL) 		media = TULIP_HD_MEDIA_OF(media); 	}     }
+block|if ((sc->tulip_flags& TULIP_DIDNWAY) == 0) { 	if (sc->tulip_ifp->if_flags& IFF_FULLDUPLEX) { 	    if (TULIP_CAN_MEDIA_FD(media)&& sc->tulip_mediums[TULIP_FD_MEDIA_OF(media)] != NULL) 		media = TULIP_FD_MEDIA_OF(media); 	} else { 	    if (TULIP_IS_MEDIA_FD(media)&& sc->tulip_mediums[TULIP_HD_MEDIA_OF(media)] != NULL) 		media = TULIP_HD_MEDIA_OF(media); 	}     }
 endif|#
 directive|endif
 if|if
@@ -1961,6 +1973,15 @@ specifier|const
 name|sc
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|tulip_ifp
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1983,13 +2004,11 @@ operator|&
 name|TULIP_PRINTMEDIA
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: enabling %s port\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"enabling %s port\n"
 argument_list|,
 name|tulip_mediums
 index|[
@@ -2021,13 +2040,11 @@ operator|&
 name|TULIP_PRINTLINKUP
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: link up\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"link up\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2064,6 +2081,14 @@ specifier|const
 name|sc
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+name|sc
+operator|->
+name|tulip_ifp
+decl_stmt|;
 name|tulip_media_t
 name|maybe_media
 init|=
@@ -2180,13 +2205,11 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: gpr_media_sense: %s: 0x%02x& 0x%02x == 0x%02x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"gpr_media_sense: %s: 0x%02x& 0x%02x == 0x%02x\n"
 argument_list|,
 name|tulip_mediums
 index|[
@@ -2277,6 +2300,15 @@ specifier|const
 name|sc
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|tulip_ifp
+decl_stmt|;
 specifier|const
 name|tulip_media_info_t
 modifier|*
@@ -2460,9 +2492,9 @@ name|loudprintf
 argument_list|(
 literal|"%s(phy%d): autonegotiation changed: 0x%04x -> 0x%04x\n"
 argument_list|,
-name|sc
+name|ifp
 operator|->
-name|tulip_xname
+name|if_xname
 argument_list|,
 name|sc
 operator|->
@@ -2644,13 +2676,11 @@ name|tulip_probe_timeout
 operator|<=
 literal|0
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: sia status = 0x%08x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"sia status = 0x%08x\n"
 argument_list|,
 name|TULIP_CSR_READ
 argument_list|(
@@ -2717,13 +2747,11 @@ operator|&=
 operator|~
 name|TULIP_LINKUP
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: link down: cable problem?\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"link down: cable problem?\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2765,6 +2793,15 @@ name|tulip_mediapoll_event_t
 name|event
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|tulip_ifp
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -2885,8 +2922,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_UP
@@ -2925,8 +2962,8 @@ condition|)
 block|{
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_OACTIVE
@@ -3211,13 +3248,11 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: media_poll: gpr sensing = %s\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"media_poll: gpr sensing = %s\n"
 argument_list|,
 name|tulip_mediums
 index|[
@@ -3569,13 +3604,11 @@ operator|==
 name|TULIP_MEDIA_UNKNOWN
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: poll media unknown!\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"poll media unknown!\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3615,13 +3648,11 @@ operator|==
 literal|3
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: autosense failed: cable problem?\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"autosense failed: cable problem?\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3629,8 +3660,8 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_UP
@@ -3641,8 +3672,8 @@ condition|)
 block|{
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -3720,13 +3751,11 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: %s: probing %s\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"%s: probing %s\n"
 argument_list|,
 name|event
 operator|==
@@ -4059,8 +4088,8 @@ name|TULIP_CMD_BACKOFFCTR
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_baudrate
 operator|=
 literal|10000000
@@ -4602,8 +4631,8 @@ parameter_list|)
 block|{
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_baudrate
 operator|=
 literal|10000000
@@ -4718,8 +4747,8 @@ condition|)
 block|{
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_OACTIVE
@@ -5142,13 +5171,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: autosense failed: cable problem?\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"autosense failed: cable problem?\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5156,8 +5185,8 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_UP
@@ -5168,8 +5197,8 @@ condition|)
 block|{
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -6116,6 +6145,15 @@ name|unsigned
 name|phyaddr
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|tulip_ifp
+decl_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -6215,9 +6253,9 @@ name|printf
 argument_list|(
 literal|"%s(phy%d): error: reset of PHY never completed!\n"
 argument_list|,
-name|sc
+name|ifp
 operator|->
-name|tulip_xname
+name|if_xname
 argument_list|,
 name|phyaddr
 argument_list|)
@@ -6237,8 +6275,8 @@ name|TULIP_PROBE_FAILED
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -6282,9 +6320,9 @@ name|loudprintf
 argument_list|(
 literal|"%s(phy%d): autonegotiation disabled\n"
 argument_list|,
-name|sc
+name|ifp
 operator|->
-name|tulip_xname
+name|if_xname
 argument_list|,
 name|phyaddr
 argument_list|)
@@ -6390,9 +6428,9 @@ name|loudprintf
 argument_list|(
 literal|"%s(phy%d): oops: enable autonegotiation failed: 0x%04x\n"
 argument_list|,
-name|sc
+name|ifp
 operator|->
-name|tulip_xname
+name|if_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6404,9 +6442,9 @@ name|loudprintf
 argument_list|(
 literal|"%s(phy%d): autonegotiation restarted: 0x%04x\n"
 argument_list|,
-name|sc
+name|ifp
 operator|->
-name|tulip_xname
+name|if_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6492,9 +6530,9 @@ name|loudprintf
 argument_list|(
 literal|"%s(phy%d): autonegotiation timeout: sts=0x%04x, ctl=0x%04x\n"
 argument_list|,
-name|sc
+name|ifp
 operator|->
-name|tulip_xname
+name|if_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6548,9 +6586,9 @@ name|loudprintf
 argument_list|(
 literal|"%s(phy%d): autonegotiation complete: 0x%04x\n"
 argument_list|,
-name|sc
+name|ifp
 operator|->
-name|tulip_xname
+name|if_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6618,9 +6656,9 @@ name|loudprintf
 argument_list|(
 literal|"%s(phy%d): autonegotiation failure: state = %d\n"
 argument_list|,
-name|sc
+name|ifp
 operator|->
-name|tulip_xname
+name|if_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6825,13 +6863,13 @@ argument_list|)
 block|}
 else|else
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: preset: bad media %d!\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"preset: bad media %d!\n"
 argument_list|,
 name|media
 argument_list|)
@@ -6870,8 +6908,8 @@ name|TULIP_CMD_TXTHRSHLDCTL
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_baudrate
 operator|=
 literal|10000000
@@ -6898,8 +6936,8 @@ name|TULIP_CMD_TXTHRSHLDCTL
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_baudrate
 operator|=
 literal|10000000
@@ -6935,8 +6973,8 @@ name|TULIP_CMD_PORTSELECT
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_baudrate
 operator|=
 literal|100000000
@@ -6967,8 +7005,8 @@ name|TULIP_CMD_TXTHRSHLDCTL
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_baudrate
 operator|=
 literal|100000000
@@ -7042,13 +7080,13 @@ name|defined
 argument_list|(
 name|DIAGNOSTIC
 argument_list|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: botch(media_poll) at line %d\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"botch(media_poll) at line %d\n"
 argument_list|,
 name|__LINE__
 argument_list|)
@@ -11227,13 +11265,13 @@ operator|==
 name|TULIP_MII_NOPHY
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: can't find phy 0\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"can't find phy 0\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11533,7 +11571,9 @@ literal|"\nCannot find master device for %s interrupts"
 argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -12698,13 +12738,13 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: can't find phy %d\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"can't find phy %d\n"
 argument_list|,
 name|phyno
 argument_list|)
@@ -13460,13 +13500,13 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: can't find phy %d\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"can't find phy %d\n"
 argument_list|,
 name|phyno
 argument_list|)
@@ -15687,8 +15727,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_ALLMULTI
@@ -15709,7 +15749,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
-argument|&sc->tulip_if.if_multiaddrs
+argument|&sc->tulip_ifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
 argument_list|)
@@ -15730,8 +15770,8 @@ expr_stmt|;
 block|}
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_start
 operator|=
 name|tulip_ifstart
@@ -15796,7 +15836,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
-argument|&sc->tulip_if.if_multiaddrs
+argument|&sc->tulip_ifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
 argument_list|)
@@ -15892,8 +15932,8 @@ name|tulip_mchash
 argument_list|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_broadcastaddr
 argument_list|)
 expr_stmt|;
@@ -15952,9 +15992,12 @@ name|hash
 operator|=
 name|tulip_mchash
 argument_list|(
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -16017,9 +16060,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|0
@@ -16037,9 +16083,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|1
@@ -16057,9 +16106,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|2
@@ -16079,9 +16131,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|0
@@ -16097,9 +16152,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|1
@@ -16115,9 +16173,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|2
@@ -16176,7 +16237,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
-argument|&sc->tulip_if.if_multiaddrs
+argument|&sc->tulip_ifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
 argument_list|)
@@ -16397,9 +16458,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|0
@@ -16416,9 +16480,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|1
@@ -16435,9 +16502,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|2
@@ -16456,9 +16526,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|0
@@ -16473,9 +16546,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|1
@@ -16490,9 +16566,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|tulip_enaddr
+name|tulip_ifp
+argument_list|)
 operator|)
 index|[
 literal|2
@@ -16518,8 +16597,8 @@ name|TULIP_ALLMULTI
 condition|)
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_ALLMULTI
@@ -16635,8 +16714,8 @@ operator|)
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -16644,8 +16723,8 @@ name|IFF_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_start
 operator|=
 name|tulip_ifstart
@@ -17271,13 +17350,13 @@ operator|)
 operator|==
 name|TULIP_NEEDRESET
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: tulip_reset: additional reset needed?!?\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"tulip_reset: additional reset needed?!?\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -17376,8 +17455,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_UP
@@ -17388,8 +17467,8 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING
@@ -17407,8 +17486,8 @@ expr_stmt|;
 block|}
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_RUNNING
@@ -17417,8 +17496,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_PROMISC
@@ -17531,8 +17610,8 @@ else|else
 block|{
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_OACTIVE
@@ -17600,8 +17679,8 @@ else|else
 block|{
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -17650,10 +17729,9 @@ modifier|*
 specifier|const
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|tulip_if
+name|tulip_ifp
 decl_stmt|;
 name|int
 name|fillok
@@ -18143,8 +18221,8 @@ name|total_len
 operator|<=
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_mtu
 operator|+
 sizeof|sizeof
@@ -18272,8 +18350,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_bpf
 operator|!=
 name|NULL
@@ -18487,13 +18565,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: receive: %6D: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"receive: %6D: %s\n"
 argument_list|,
 name|mtod
 argument_list|(
@@ -18996,14 +19074,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: unable to load rx map, "
-literal|"error = %d\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"unable to load rx map, error = %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -19573,13 +19650,13 @@ argument_list|)
 block|}
 else|else
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: tx_intr: failed to dequeue mbuf?!?\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"tx_intr: failed to dequeue mbuf?!?\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -19680,8 +19757,8 @@ condition|)
 block|{
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
@@ -19787,8 +19864,8 @@ name|TULIP_DSTS_V_TxCOLLCNT
 decl_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_collisions
 operator|+=
 name|collisions
@@ -19889,8 +19966,8 @@ literal|0
 condition|)
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -19937,8 +20014,8 @@ name|TULIP_TXTIMER
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_opackets
 operator|+=
 name|xmits
@@ -20021,13 +20098,13 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: abnormal interrupt:"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"abnormal interrupt:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -20245,13 +20322,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: system error: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"system error: %s\n"
 argument_list|,
 name|tulip_system_errors
 index|[
@@ -20652,10 +20729,9 @@ literal|0
 condition|)
 name|tulip_ifstart
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|tulip_if
+name|tulip_ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -21594,13 +21670,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: txput%s: tx not running\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"txput%s: tx not running\n"
 argument_list|,
 operator|(
 name|sc
@@ -21867,14 +21943,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: unable to load tx map, "
-literal|"error = %d\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"unable to load tx map, error = %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -22479,10 +22554,9 @@ comment|/* TULIP_BUS_DMA */
 comment|/*      * bounce a copy to the bpf listener, if any.      */
 name|BPF_MTAP
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|tulip_if
+name|tulip_ifp
 argument_list|,
 name|m
 argument_list|)
@@ -22735,16 +22809,16 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_start
 operator|=
 name|tulip_ifstart
@@ -22834,16 +22908,16 @@ condition|)
 block|{
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_start
 operator|=
 name|tulip_ifstart
@@ -22991,13 +23065,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: txput_setup: tx not running\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"txput_setup: tx not running\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -23008,8 +23082,8 @@ name|TULIP_WANTTXSTART
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_start
 operator|=
 name|tulip_ifstart
@@ -23057,8 +23131,8 @@ name|TULIP_WANTTXSTART
 expr_stmt|;
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_start
 operator|=
 name|tulip_ifstart
@@ -23749,8 +23823,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING
@@ -23785,8 +23859,8 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_snd
 argument_list|)
 condition|)
@@ -23801,8 +23875,8 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_snd
 argument_list|,
 name|m
@@ -23836,8 +23910,8 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_snd
 argument_list|,
 name|m
@@ -23946,8 +24020,8 @@ directive|endif
 comment|/* TULIP_DEBUG */
 name|sc
 operator|->
-name|tulip_if
-operator|.
+name|tulip_ifp
+operator|->
 name|if_timer
 operator|=
 literal|1
@@ -23991,13 +24065,13 @@ operator|&
 name|TULIP_SYSTEMERROR
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: %d system errors: last was %s\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"%d system errors: last was %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -24072,13 +24146,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: transmission timeout\n"
-argument_list|,
 name|sc
 operator|->
-name|tulip_xname
+name|tulip_ifp
+argument_list|,
+literal|"transmission timeout\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -24310,28 +24384,36 @@ block|{
 name|struct
 name|ifnet
 modifier|*
-specifier|const
 name|ifp
-init|=
-operator|&
+decl_stmt|;
+name|ifp
+operator|=
 name|sc
 operator|->
-name|tulip_if
-decl_stmt|;
-comment|/* XXX: driver name/unit should be set some other way */
-name|ifp
-operator|->
-name|if_dname
+name|tulip_ifp
 operator|=
-literal|"de"
+name|if_alloc
+argument_list|(
+name|IFT_ETHER
+argument_list|)
 expr_stmt|;
+comment|/* XXX: driver name/unit should be set some other way */
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_dunit
-operator|=
+argument_list|,
+literal|"de"
+argument_list|,
 name|sc
 operator|->
 name|tulip_unit
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_softc
+operator|=
+name|sc
 expr_stmt|;
 name|ifp
 operator|->
@@ -24375,13 +24457,11 @@ name|if_init
 operator|=
 name|tulip_ifinit
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: %s%s pass %d.%d%s\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"%s%s pass %d.%d%s\n"
 argument_list|,
 name|sc
 operator|->
@@ -24432,13 +24512,11 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|__FreeBSD__
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: address %6D\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"address %6D\n"
 argument_list|,
 name|sc
 operator|->
@@ -24522,12 +24600,9 @@ argument_list|)
 expr_stmt|;
 name|ether_ifattach
 argument_list|(
-operator|&
-operator|(
 name|sc
-operator|)
 operator|->
-name|tulip_if
+name|tulip_ifp
 argument_list|,
 name|sc
 operator|->
@@ -25882,16 +25957,11 @@ operator|>=
 name|TULIP_MAX_DEVICES
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"de%d"
+name|dev
 argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|": not configured; limit of %d reached or exceeded\n"
+literal|"not configured; limit of %d reached or exceeded\n"
 argument_list|,
 name|TULIP_MAX_DEVICES
 argument_list|)
@@ -26058,16 +26128,11 @@ operator|<
 literal|0x20
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"de%d"
+name|dev
 argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|": not configured; 21040 pass 2.0 required (%d.%d found)\n"
+literal|"not configured; 21040 pass 2.0 required (%d.%d found)\n"
 argument_list|,
 name|revinfo
 operator|>>
@@ -26094,11 +26159,11 @@ operator|<
 literal|0x11
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"de%d: not configured; 21140 pass 1.1 required (%d.%d found)\n"
+name|dev
 argument_list|,
-name|unit
+literal|"not configured; 21140 pass 1.1 required (%d.%d found)\n"
 argument_list|,
 name|revinfo
 operator|>>
@@ -26422,34 +26487,11 @@ name|tulip_unit
 operator|=
 name|unit
 expr_stmt|;
-name|snprintf
-argument_list|(
-name|sc
-operator|->
-name|tulip_xname
-argument_list|,
-name|IFNAMSIZ
-argument_list|,
-literal|"de%d"
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|tulip_revinfo
 operator|=
 name|revinfo
-expr_stmt|;
-name|sc
-operator|->
-name|tulip_if
-operator|.
-name|if_softc
-operator|=
-name|sc
 expr_stmt|;
 if|#
 directive|if
@@ -26637,8 +26679,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"malloc failed\n"
 argument_list|)
 expr_stmt|;
@@ -26746,18 +26790,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|": can't read ENET ROM (why=%d) ("
+literal|"can't read ENET ROM (why=%d) ("
 argument_list|,
 name|retval
 argument_list|)
@@ -26792,13 +26829,11 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: %s%s pass %d.%d\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"%s%s pass %d.%d\n"
 argument_list|,
 name|sc
 operator|->
@@ -26828,13 +26863,11 @@ operator|&
 literal|0x0F
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: address unknown\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"address unknown\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -26927,13 +26960,11 @@ name|ih
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|tulip_xname
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|free

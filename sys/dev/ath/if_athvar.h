@@ -548,8 +548,9 @@ struct|struct
 name|ath_softc
 block|{
 name|struct
-name|arpcom
-name|sc_arp
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
 comment|/* interface common */
 name|struct
@@ -1061,13 +1062,6 @@ comment|/* callout handle for scan */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|sc_if
-value|sc_arp.ac_if
-end_define
 
 begin_define
 define|#

@@ -378,10 +378,10 @@ begin_struct
 struct|struct
 name|sppp
 block|{
-comment|/* NB: pp_if _must_ be first */
 name|struct
 name|ifnet
-name|pp_if
+modifier|*
+name|pp_ifp
 decl_stmt|;
 comment|/* network interface data */
 name|struct
@@ -653,6 +653,26 @@ comment|/* if_start () scheduler */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IFP2SP
+parameter_list|(
+name|ifp
+parameter_list|)
+value|((struct sppp *)(ifp)->if_l2com)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SP2IFP
+parameter_list|(
+name|sp
+parameter_list|)
+value|((sp)->pp_ifp)
+end_define
 
 begin_comment
 comment|/* bits for pp_flags */

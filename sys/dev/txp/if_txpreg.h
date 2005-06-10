@@ -3391,10 +3391,10 @@ struct|struct
 name|txp_softc
 block|{
 name|struct
-name|arpcom
-name|sc_arpcom
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
-comment|/* ethernet common */
 name|device_t
 name|sc_dev
 decl_stmt|;

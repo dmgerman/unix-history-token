@@ -2126,10 +2126,10 @@ struct|struct
 name|my_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|my_ifp
 decl_stmt|;
-comment|/* interface info */
 name|struct
 name|ifmedia
 name|ifmedia

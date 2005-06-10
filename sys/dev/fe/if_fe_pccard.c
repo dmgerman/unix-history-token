@@ -838,12 +838,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|ifp
 decl_stmt|;
 name|fe_stop
 argument_list|(
@@ -851,6 +848,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -1055,7 +1057,7 @@ name|FE_MBH10
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -1068,7 +1070,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0
 argument_list|)
@@ -1221,7 +1223,7 @@ name|dev
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|)
 expr_stmt|;
 comment|/* Make sure we got a valid station address.  */
@@ -1232,7 +1234,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0
 argument_list|)

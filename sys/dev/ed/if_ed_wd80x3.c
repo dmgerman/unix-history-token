@@ -1441,9 +1441,7 @@ name|i
 control|)
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 name|i
 index|]

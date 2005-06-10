@@ -548,12 +548,9 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 expr_stmt|;
 block|}
 else|else
@@ -649,10 +646,8 @@ operator|++
 expr_stmt|;
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
@@ -697,10 +692,8 @@ operator|++
 expr_stmt|;
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
@@ -1158,12 +1151,9 @@ operator|)
 condition|)
 name|BPF_MTAP
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 name|m
 argument_list|)
@@ -1216,15 +1206,13 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
 comment|/* this is in if_atmsubr.c */
-comment|/* sc->ifatm.ifnet.if_ibytes += len; */
+comment|/* sc->ifp->if_ibytes += len; */
 name|vcc
 operator|->
 name|ibytes
@@ -1244,12 +1232,9 @@ endif|#
 directive|endif
 name|atm_input
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 operator|&
 name|aph
@@ -1531,10 +1516,8 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING
@@ -1572,10 +1555,8 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING

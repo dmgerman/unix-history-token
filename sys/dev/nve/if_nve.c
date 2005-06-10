@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -2570,22 +2576,6 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
-name|bcopy
-argument_list|(
-name|eaddr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|sc
-operator|->
-name|sc_macaddr
-argument_list|,
-name|ETHER_ADDR_LEN
-argument_list|)
-expr_stmt|;
 comment|/* Display ethernet address ,... */
 name|device_printf
 argument_list|(
@@ -2593,9 +2583,7 @@ name|dev
 argument_list|,
 literal|"Ethernet address %6D\n"
 argument_list|,
-name|sc
-operator|->
-name|sc_macaddr
+name|eaddr
 argument_list|,
 literal|":"
 argument_list|)
@@ -2643,11 +2631,37 @@ block|}
 comment|/* Setup interface parameters */
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
+operator|=
+name|if_alloc
+argument_list|(
+name|IFT_ETHER
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"can not if_alloc()\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOSPC
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|ifp
 operator|->
 name|if_softc
@@ -2745,9 +2759,7 @@ name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
-name|sc
-operator|->
-name|sc_macaddr
+name|eaddr
 argument_list|)
 expr_stmt|;
 name|callout_handle_init
@@ -2884,12 +2896,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|ifp
 expr_stmt|;
 if|if
 condition|(
@@ -2905,6 +2914,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -3221,10 +3235,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 expr_stmt|;
 comment|/* Do nothing if already running */
 if|if
@@ -3314,9 +3327,12 @@ name|hwapi
 operator|->
 name|pADCX
 argument_list|,
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|sc_macaddr
+name|ifp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3435,10 +3451,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 expr_stmt|;
 name|ifp
 operator|->
@@ -5047,10 +5062,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 decl_stmt|;
 name|DEBUGOUT
 argument_list|(
@@ -5146,8 +5160,8 @@ literal|0
 condition|)
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_timer
 operator|=
 literal|0
@@ -5219,10 +5233,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 expr_stmt|;
 comment|/* Initialize filter */
 name|hwfilter
@@ -5687,10 +5700,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 expr_stmt|;
 name|nve_update_stats
 argument_list|(
@@ -5787,10 +5799,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 decl_stmt|;
 name|ADAPTER_STATS
 name|stats
@@ -7259,10 +7270,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 expr_stmt|;
 name|buf
 operator|=
@@ -7336,8 +7346,8 @@ name|TX_RING_SIZE
 condition|)
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -7449,10 +7459,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 expr_stmt|;
 name|readdata
 operator|=
@@ -7693,10 +7702,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 expr_stmt|;
 if|if
 condition|(

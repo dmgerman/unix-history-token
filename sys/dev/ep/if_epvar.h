@@ -36,10 +36,10 @@ struct|struct
 name|ep_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* Ethernet common part	 */
 name|struct
 name|ifmedia
 name|ifmedia

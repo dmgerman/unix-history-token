@@ -4044,10 +4044,10 @@ argument_list|)
 name|ti_links
 expr_stmt|;
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ti_ifp
 decl_stmt|;
-comment|/* interface info */
 name|bus_space_handle_t
 name|ti_bhandle
 decl_stmt|;

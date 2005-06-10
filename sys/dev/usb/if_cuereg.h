@@ -501,8 +501,9 @@ struct|struct
 name|cue_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|cue_ifp
 decl_stmt|;
 name|device_t
 name|cue_dev

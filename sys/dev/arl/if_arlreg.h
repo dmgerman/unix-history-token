@@ -947,10 +947,10 @@ struct|struct
 name|arl_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|arl_ifp
 decl_stmt|;
-comment|/* Ethernet common */
 name|int
 name|arl_unit
 decl_stmt|;

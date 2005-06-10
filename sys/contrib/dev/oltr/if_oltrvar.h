@@ -153,8 +153,9 @@ struct|struct
 name|oltr_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|struct
 name|ifmedia

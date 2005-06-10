@@ -132,7 +132,7 @@ name|IFP2NG
 parameter_list|(
 name|ifp
 parameter_list|)
-value|((struct ng_node *)((struct arpcom *)(ifp))->ac_netgraph)
+value|((struct ng_node *)IFP2AC((ifp))->ac_netgraph)
 end_define
 
 begin_define
@@ -144,7 +144,7 @@ name|ifp
 parameter_list|,
 name|val
 parameter_list|)
-value|(((struct arpcom *)(ifp))->ac_netgraph = (val))
+value|(IFP2AC((ifp))->ac_netgraph = (val))
 end_define
 
 begin_comment
@@ -1760,16 +1760,12 @@ break|break;
 block|}
 name|bcopy
 argument_list|(
-operator|(
-name|IFP2AC
+name|IFP2ENADDR
 argument_list|(
 name|priv
 operator|->
 name|ifp
 argument_list|)
-operator|)
-operator|->
-name|ac_enaddr
 argument_list|,
 name|resp
 operator|->
@@ -2567,14 +2563,10 @@ return|;
 comment|/* Overwrite source MAC address */
 name|bcopy
 argument_list|(
-operator|(
-name|IFP2AC
+name|IFP2ENADDR
 argument_list|(
 name|ifp
 argument_list|)
-operator|)
-operator|->
-name|ac_enaddr
 argument_list|,
 name|mtod
 argument_list|(

@@ -6040,12 +6040,12 @@ name|ifp
 decl_stmt|;
 name|ifp
 operator|=
-operator|&
+name|ANIF2IFP
+argument_list|(
 name|ap
 operator|->
 name|nif
-operator|->
-name|nif_if
+argument_list|)
 expr_stmt|;
 operator|(
 name|void

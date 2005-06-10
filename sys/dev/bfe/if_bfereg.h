@@ -3750,8 +3750,9 @@ struct|struct
 name|bfe_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|bfe_ifp
 decl_stmt|;
 comment|/* interface info */
 name|device_t
@@ -3882,6 +3883,12 @@ name|bfe_core_unit
 decl_stmt|;
 name|u_int8_t
 name|bfe_up
+decl_stmt|;
+name|u_char
+name|bfe_enaddr
+index|[
+literal|6
+index|]
 decl_stmt|;
 name|int
 name|bfe_if_flags

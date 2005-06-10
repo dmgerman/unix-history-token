@@ -224,12 +224,18 @@ name|fe_softc
 block|{
 comment|/* Used by "common" codes.  */
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* Ethernet common */
 name|int
 name|sc_unit
+decl_stmt|;
+name|u_char
+name|enaddr
+index|[
+literal|6
+index|]
 decl_stmt|;
 comment|/* Used by config codes.  */
 name|int
@@ -384,27 +390,6 @@ comment|/* media selector.  */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|sc_if
-value|arpcom.ac_if
-end_define
-
-begin_define
-define|#
-directive|define
-name|sc_xname
-value|arpcom.ac_if.if_xname
-end_define
-
-begin_define
-define|#
-directive|define
-name|sc_enaddr
-value|arpcom.ac_enaddr
-end_define
 
 begin_struct
 struct|struct

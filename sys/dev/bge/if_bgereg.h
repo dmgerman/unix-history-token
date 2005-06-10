@@ -12097,8 +12097,9 @@ struct|struct
 name|bge_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|bge_ifp
 decl_stmt|;
 comment|/* interface info */
 name|device_t

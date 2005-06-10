@@ -1711,10 +1711,9 @@ literal|1000
 argument_list|,
 name|ath_ratectl
 argument_list|,
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2223,10 +2222,9 @@ literal|1000
 argument_list|,
 name|ath_ratectl
 argument_list|,
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 argument_list|)
 expr_stmt|;
 block|}

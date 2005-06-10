@@ -269,9 +269,7 @@ operator|&&
 operator|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|2
 index|]

@@ -871,12 +871,9 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"%s -- bus_dmamap_create: %d\n"
 argument_list|,
@@ -933,12 +930,9 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"%s -- mbuf mapping failed %d\n"
 argument_list|,
@@ -1672,12 +1666,9 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"no mbuf clusters\n"
 argument_list|)
@@ -2914,10 +2905,8 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING
@@ -3210,12 +3199,9 @@ break|break;
 default|default:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"bad INTR RBPS%u\n"
 argument_list|,
@@ -3265,12 +3251,9 @@ break|break;
 default|default:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"bad INTR RBPL%u\n"
 argument_list|,
@@ -3362,12 +3345,9 @@ comment|/* FALLTHRU */
 default|default:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"bad INTR RBRQ%u\n"
 argument_list|,
@@ -3459,12 +3439,9 @@ comment|/* FALLTHRU */
 default|default:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"bad INTR RBRQT%u\n"
 argument_list|,
@@ -3512,12 +3489,9 @@ operator|++
 expr_stmt|;
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"bad interrupt\n"
 argument_list|)
@@ -3545,12 +3519,9 @@ name|HE_REGM_ITYPE_PERR
 case|:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"parity error\n"
 argument_list|)
@@ -3561,12 +3532,9 @@ name|HE_REGM_ITYPE_ABORT
 case|:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"abort interrupt "
 literal|"addr=0x%08x\n"
@@ -3583,12 +3551,9 @@ break|break;
 default|default:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"bad interrupt type %08x\n"
 argument_list|,
@@ -3710,12 +3675,9 @@ break|break;
 default|default:
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"bad interrupt type %08x\n"
 argument_list|,

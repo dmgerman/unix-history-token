@@ -1115,9 +1115,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 argument_list|)
 expr_stmt|;
 name|temp

@@ -922,12 +922,26 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|||
+end_if
+
+begin_define
+define|#
+directive|define
+name|GET_IFP
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->sc_ifp)
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
-end_if
+end_elif
 
 begin_define
 define|#
@@ -1081,10 +1095,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 name|struct
-name|arpcom
-name|sc_ac
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
-comment|/* struct ifnet must be top of softc */
 endif|#
 directive|endif
 name|USBBASEDEVICE

@@ -37,8 +37,9 @@ name|cs_softc
 block|{
 comment|/* Ethernet common code */
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 comment|/* Configuration words from EEPROM */
 name|int
@@ -57,6 +58,12 @@ name|int
 name|chip_type
 decl_stmt|;
 comment|/* Type of chip */
+name|u_char
+name|enaddr
+index|[
+literal|6
+index|]
+decl_stmt|;
 name|struct
 name|ifmedia
 name|media

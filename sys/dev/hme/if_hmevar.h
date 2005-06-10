@@ -204,8 +204,9 @@ struct|struct
 name|hme_softc
 block|{
 name|struct
-name|arpcom
-name|sc_arpcom
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ifmedia
@@ -223,6 +224,12 @@ modifier|*
 name|sc_mii
 decl_stmt|;
 comment|/* MII media control */
+name|u_char
+name|sc_enaddr
+index|[
+literal|6
+index|]
+decl_stmt|;
 name|struct
 name|callout
 name|sc_tick_ch

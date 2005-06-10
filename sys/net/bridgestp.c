@@ -151,13 +151,6 @@ directive|include
 file|<net/if_bridgevar.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|sc_if
-value|ifb_ac.ac_if
-end_define
-
 begin_comment
 comment|/* BPDU message types */
 end_comment
@@ -6073,8 +6066,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|sc_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING

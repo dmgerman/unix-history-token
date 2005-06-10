@@ -44,16 +44,11 @@ expr_stmt|;
 struct|struct
 name|fwe_eth_softc
 block|{
-comment|/* XXX this must be the first for if_ethersub.c */
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* ethernet common data      */
-define|#
-directive|define
-name|fwe_if
-value|eth_softc.arpcom.ac_if
 name|struct
 name|fwe_softc
 modifier|*

@@ -587,9 +587,9 @@ name|ifatm
 block|{
 name|struct
 name|ifnet
-name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* required by if_var.h */
 name|struct
 name|ifatm_mib
 name|mib
@@ -608,6 +608,16 @@ comment|/* netgraph link */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IFP2IFATM
+parameter_list|(
+name|ifp
+parameter_list|)
+value|((struct ifatm *)(ifp)->if_l2com)
+end_define
 
 begin_endif
 endif|#
@@ -1170,7 +1180,7 @@ parameter_list|,
 name|BUSY
 parameter_list|)
 define|\
-value|do {								\ 		struct atmev_flow_control _arg;				\ 		_arg.vpi = (VPI);					\ 		_arg.vci = (VCI);					\ 		_arg.busy = (BUSY);					\ 		atm_event(&(ATMIF)->ifnet, ATMEV_FLOW_CONTROL,&_arg);	\ 	} while (0)
+value|do {								\ 		struct atmev_flow_control _arg;				\ 		_arg.vpi = (VPI);					\ 		_arg.vci = (VCI);					\ 		_arg.busy = (BUSY);					\ 		atm_event((ATMIF)->ifp, ATMEV_FLOW_CONTROL,&_arg);	\ 	} while (0)
 end_define
 
 begin_define
@@ -1187,7 +1197,7 @@ parameter_list|,
 name|UP
 parameter_list|)
 define|\
-value|do {								\ 		struct atmev_vcc_changed _arg;				\ 		_arg.vpi = (VPI);					\ 		_arg.vci = (VCI);					\ 		_arg.up = (UP);						\ 		atm_event(&(ATMIF)->ifnet, ATMEV_VCC_CHANGED,&_arg);	\ 	} while (0)
+value|do {								\ 		struct atmev_vcc_changed _arg;				\ 		_arg.vpi = (VPI);					\ 		_arg.vci = (VCI);					\ 		_arg.up = (UP);						\ 		atm_event((ATMIF)->ifp, ATMEV_VCC_CHANGED,&_arg);	\ 	} while (0)
 end_define
 
 begin_define
@@ -1200,7 +1210,7 @@ parameter_list|,
 name|CARRIER
 parameter_list|)
 define|\
-value|do {								\ 		struct atmev_ifstate_changed _arg;			\ 		_arg.running = (((ATMIF)->ifnet.if_flags&		\ 		    IFF_RUNNING) != 0);					\ 		_arg.carrier = ((CARRIER) != 0);			\ 		atm_event(&(ATMIF)->ifnet, ATMEV_IFSTATE_CHANGED,&_arg); \ 	} while (0)
+value|do {								\ 		struct atmev_ifstate_changed _arg;			\ 		_arg.running = (((ATMIF)->ifp->if_flags&		\ 		    IFF_RUNNING) != 0);					\ 		_arg.carrier = ((CARRIER) != 0);			\ 		atm_event((ATMIF)->ifp, ATMEV_IFSTATE_CHANGED,&_arg); \ 	} while (0)
 end_define
 
 begin_define
@@ -1217,7 +1227,7 @@ parameter_list|,
 name|ACR
 parameter_list|)
 define|\
-value|do {								\ 		struct atmev_acr_changed _arg;				\ 		_arg.vpi = (VPI);					\ 		_arg.vci = (VCI);					\ 		_arg.acr= (ACR);					\ 		atm_event(&(ATMIF)->ifnet, ATMEV_ACR_CHANGED,&_arg);	\ 	} while (0)
+value|do {								\ 		struct atmev_acr_changed _arg;				\ 		_arg.vpi = (VPI);					\ 		_arg.vci = (VCI);					\ 		_arg.acr= (ACR);					\ 		atm_event((ATMIF)->ifp, ATMEV_ACR_CHANGED,&_arg);	\ 	} while (0)
 end_define
 
 begin_endif

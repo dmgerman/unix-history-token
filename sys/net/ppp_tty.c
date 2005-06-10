@@ -744,10 +744,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_flags
 operator||=
 name|IFF_RUNNING
@@ -755,17 +756,19 @@ expr_stmt|;
 name|getmicrotime
 argument_list|(
 operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_lastchange
 argument_list|)
 expr_stmt|;
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_baudrate
 operator|=
 name|tp
@@ -807,18 +810,20 @@ name|tp
 operator|->
 name|t_outq
 argument_list|,
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_mtu
 operator|+
 name|PPP_HIWAT
 argument_list|,
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_mtu
 operator|+
 name|PPP_HIWAT
@@ -1107,18 +1112,20 @@ name|tp
 operator|->
 name|t_outq
 argument_list|,
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_mtu
 operator|+
 name|PPP_HIWAT
 argument_list|,
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_mtu
 operator|+
 name|PPP_HIWAT
@@ -1523,10 +1530,11 @@ name|uio
 operator|->
 name|uio_resid
 operator|>
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_mtu
 operator|+
 name|PPP_HDRLEN
@@ -1734,10 +1742,10 @@ name|error
 operator|=
 name|pppoutput
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 name|m0
 argument_list|,
@@ -2833,10 +2841,11 @@ expr_stmt|;
 name|getmicrotime
 argument_list|(
 operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_lastchange
 argument_list|)
 expr_stmt|;
@@ -3838,10 +3847,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"no carrier\n"
 argument_list|)
@@ -3868,10 +3877,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"line error %x\n"
 argument_list|,
@@ -4179,10 +4188,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"bad fcs %x, pkt len %d\n"
 argument_list|,
@@ -4193,10 +4202,11 @@ argument_list|,
 name|ilen
 argument_list|)
 expr_stmt|;
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_ierrors
 operator|++
 expr_stmt|;
@@ -4253,10 +4263,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"too short (%d)\n"
 argument_list|,
@@ -4268,10 +4278,11 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_ierrors
 operator|++
 expr_stmt|;
@@ -4573,10 +4584,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"no input mbufs!\n"
 argument_list|)
@@ -4659,10 +4670,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"garbage received: 0x%x (need 0xFF)\n"
 argument_list|,
@@ -4726,10 +4737,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"missing UI (0x3), got 0x%x\n"
 argument_list|,
@@ -4806,10 +4817,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"bad protocol %x\n"
 argument_list|,
@@ -4859,10 +4870,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"packet too big\n"
 argument_list|)
@@ -4921,10 +4932,10 @@ name|SC_DEBUG
 condition|)
 name|if_printf
 argument_list|(
-operator|&
+name|PPP2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_if
+argument_list|)
 argument_list|,
 literal|"too few input mbufs!\n"
 argument_list|)
@@ -5020,10 +5031,11 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_ierrors
 operator|++
 expr_stmt|;
@@ -5140,10 +5152,11 @@ name|printf
 argument_list|(
 literal|"%s input: %*D"
 argument_list|,
+name|PPP2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|sc_if
-operator|.
 name|if_xname
 argument_list|,
 name|sc

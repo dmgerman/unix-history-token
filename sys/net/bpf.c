@@ -3905,12 +3905,6 @@ name|bp
 operator|->
 name|bif_driverp
 operator|!=
-operator|(
-expr|struct
-name|bpf_if
-operator|*
-operator|*
-operator|)
 operator|&
 name|ifp
 operator|->

@@ -1000,9 +1000,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 argument_list|)
 expr_stmt|;
 comment|/* Clear the interrupt latch just in case. */
@@ -2257,9 +2255,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|1
 index|]
@@ -2270,9 +2266,7 @@ literal|0xFF
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|0
 index|]
@@ -2295,9 +2289,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|3
 index|]
@@ -2308,9 +2300,7 @@ literal|0xFF
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|2
 index|]
@@ -2333,9 +2323,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|5
 index|]
@@ -2346,9 +2334,7 @@ literal|0xFF
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|4
 index|]
@@ -3307,9 +3293,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 argument_list|)
 expr_stmt|;
 break|break;

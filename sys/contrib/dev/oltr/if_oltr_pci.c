@@ -1211,12 +1211,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|ifp
 decl_stmt|;
 name|int
 name|s
@@ -1240,6 +1237,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|ISO88025_BPF_SUPPORTED
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 if|if

@@ -318,20 +318,6 @@ name|sc_ifmedia
 value|ifmedia
 end_define
 
-begin_define
-define|#
-directive|define
-name|sc_if
-value|arpcom.ac_if
-end_define
-
-begin_define
-define|#
-directive|define
-name|sc_bpf
-value|sc_if.if_bpf
-end_define
-
 begin_if
 if|#
 directive|if
@@ -370,8 +356,9 @@ struct|struct
 name|_pdq_os_ctx_t
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|struct
 name|ifmedia
@@ -640,7 +627,17 @@ name|sc
 parameter_list|,
 name|m
 parameter_list|)
-value|BPF_MTAP(&(sc)->arpcom.ac_if, m)
+value|BPF_MTAP((sc)->ifp, m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDQ_IFNET
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->ifp)
 end_define
 
 begin_endif

@@ -2363,8 +2363,9 @@ struct|struct
 name|ste_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ste_ifp
 decl_stmt|;
 name|bus_space_tag_t
 name|ste_btag

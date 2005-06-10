@@ -307,12 +307,9 @@ name|gif_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|gif_softc
-operator|*
-operator|)
 name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|struct
 name|sockaddr_in6
@@ -882,7 +879,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|sc->gif_if.if_mtu = GIF_MTU;
+block|GIF2IFP(sc)->if_mtu = GIF_MTU;
 endif|#
 directive|endif
 block|}
@@ -1017,10 +1014,11 @@ if|if
 condition|(
 operator|!
 operator|(
+name|GIF2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|gif_if
-operator|.
 name|if_flags
 operator|&
 name|IFF_LINK0
@@ -1539,10 +1537,11 @@ comment|/* ingress filters on outer source */
 if|if
 condition|(
 operator|(
+name|GIF2IFP
+argument_list|(
 name|sc
+argument_list|)
 operator|->
-name|gif_if
-operator|.
 name|if_flags
 operator|&
 name|IFF_LINK2
@@ -1636,7 +1635,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|log(LOG_WARNING, "%s: packet from %s dropped " 			    "due to ingress filter\n", if_name(&sc->gif_if), 			    ip6_sprintf(&sin6.sin6_addr));
+block|log(LOG_WARNING, "%s: packet from %s dropped " 			    "due to ingress filter\n", if_name(GIF2IFP(sc)), 			    ip6_sprintf(&sin6.sin6_addr));
 endif|#
 directive|endif
 if|if

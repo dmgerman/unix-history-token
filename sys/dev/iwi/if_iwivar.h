@@ -249,8 +249,9 @@ struct|struct
 name|iwi_softc
 block|{
 name|struct
-name|arpcom
-name|sc_arp
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ieee80211com

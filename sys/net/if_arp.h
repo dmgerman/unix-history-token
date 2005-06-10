@@ -283,30 +283,26 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Structure shared between the ethernet driver modules and  * the address resolution code.  For example, each ec_softc or il_softc  * begins with this structure.  * The code is written so that each *_softc _must_ begin with a  * struct arpcom, which in turn _must_ begin with a struct ifnet.  */
+comment|/*  * Structure shared between the ethernet driver modules and  * the address resolution code.  */
 end_comment
 
 begin_struct
 struct|struct
 name|arpcom
 block|{
-comment|/* 	 * The ifnet struct _must_ be at the head of this structure. 	 */
 name|struct
 name|ifnet
-name|ac_if
+modifier|*
+name|ac_ifp
 decl_stmt|;
 comment|/* network-visible interface */
 name|u_char
-name|ac_enaddr
+name|_ac_enaddr
 index|[
 literal|6
 index|]
 decl_stmt|;
 comment|/* ethernet hardware address */
-name|int
-name|now_unused
-decl_stmt|;
-comment|/* XXX was length of ac_multiaddrs list */
 name|void
 modifier|*
 name|ac_netgraph
@@ -323,7 +319,27 @@ name|IFP2AC
 parameter_list|(
 name|ifp
 parameter_list|)
-value|((struct arpcom *)(ifp))
+value|((struct arpcom *)(ifp->if_l2com))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFP2ENADDR
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(IFP2AC(ifp)->_ac_enaddr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC2IFP
+parameter_list|(
+name|ac
+parameter_list|)
+value|((ac)->ac_ifp)
 end_define
 
 begin_endif

@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -786,8 +792,9 @@ struct|struct
 name|adapter
 block|{
 name|struct
-name|arpcom
-name|interface_data
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|struct
 name|adapter

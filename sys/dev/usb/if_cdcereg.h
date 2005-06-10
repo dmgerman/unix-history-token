@@ -43,8 +43,9 @@ struct|struct
 name|cdce_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|cdce_ifp
 decl_stmt|;
 define|#
 directive|define
@@ -52,7 +53,7 @@ name|GET_IFP
 parameter_list|(
 name|sc
 parameter_list|)
-value|(&(sc)->arpcom.ac_if)
+value|((sc)->cdce_ifp)
 name|usbd_device_handle
 name|cdce_udev
 decl_stmt|;

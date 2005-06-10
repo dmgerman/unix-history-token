@@ -1023,10 +1023,10 @@ struct|struct
 name|hatm_softc
 block|{
 name|struct
-name|ifatm
-name|ifatm
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* common ATM stuff */
 name|struct
 name|mtx
 name|mtx

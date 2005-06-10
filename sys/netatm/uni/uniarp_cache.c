@@ -1455,14 +1455,14 @@ argument_list|(
 operator|*
 name|ip
 argument_list|,
-operator|&
+name|ANIF2IFP
+argument_list|(
 name|uip
 operator|->
 name|uip_ipnif
 operator|->
 name|inf_nif
-operator|->
-name|nif_if
+argument_list|)
 argument_list|)
 condition|)
 return|return

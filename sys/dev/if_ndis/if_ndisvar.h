@@ -139,24 +139,15 @@ struct|struct
 name|ndis_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|struct
 name|ieee80211com
 name|ic
 decl_stmt|;
 comment|/* interface info */
-ifdef|#
-directive|ifdef
-name|notdef
-name|struct
-name|ieee80211com
-name|arpcom
-decl_stmt|;
-comment|/* interface info */
-endif|#
-directive|endif
 name|struct
 name|ifmedia
 name|ifmedia

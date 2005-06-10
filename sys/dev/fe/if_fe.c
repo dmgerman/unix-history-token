@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -1537,13 +1543,13 @@ operator|+=
 literal|16
 control|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: EEPROM(JLI):%3x: %16D\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"EEPROM(JLI):%3x: %16D\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2109,13 +2115,13 @@ operator|+=
 literal|16
 control|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: EEPROM(SSI):%3x: %16D\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"EEPROM(SSI):%3x: %16D\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2552,13 +2558,13 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: no ACK received from EEPROM(LNX)\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"no ACK received from EEPROM(LNX)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2699,13 +2705,13 @@ operator|+=
 literal|16
 control|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: EEPROM(LNX):%3x: %16D\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"EEPROM(LNX):%3x: %16D\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2858,6 +2864,11 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|int
 name|flags
 init|=
@@ -2871,6 +2882,37 @@ name|b
 decl_stmt|,
 name|error
 decl_stmt|;
+name|ifp
+operator|=
+name|sc
+operator|->
+name|ifp
+operator|=
+name|if_alloc
+argument_list|(
+name|IFT_ETHER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"can not ifalloc\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
+block|}
 name|error
 operator|=
 name|bus_setup_intr
@@ -2908,20 +2950,17 @@ name|ENXIO
 return|;
 block|}
 comment|/* 	 * Initialize ifnet structure 	 */
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_softc
 operator|=
 name|sc
 expr_stmt|;
 name|if_initname
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -2934,42 +2973,32 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_start
 operator|=
 name|fe_start
 expr_stmt|;
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_ioctl
 operator|=
 name|fe_ioctl
 expr_stmt|;
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_watchdog
 operator|=
 name|fe_watchdog
 expr_stmt|;
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_init
 operator|=
 name|fe_init
 expr_stmt|;
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_linkmib
 operator|=
 operator|&
@@ -2977,10 +3006,8 @@ name|sc
 operator|->
 name|mibdata
 expr_stmt|;
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_linkmiblen
 operator|=
 sizeof|sizeof
@@ -2998,10 +3025,8 @@ block|sc->mibdata.dot3Compliance = DOT3COMPLIANCE_COLLS;
 endif|#
 directive|endif
 comment|/* 	 * Set fixed interface flags. 	 */
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_flags
 operator|=
 name|IFF_BROADCAST
@@ -3018,20 +3043,16 @@ literal|1
 comment|/* 	 * Set maximum size of output queue, if it has not been set. 	 * It is done here as this driver may be started after the 	 * system initialization (i.e., the interface is PCMCIA.) 	 * 	 * I'm not sure this is really necessary, but, even if it is, 	 * it should be done somewhere else, e.g., in if_attach(), 	 * since it must be a common workaround for all network drivers. 	 * FIXME. 	 */
 if|if
 condition|(
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_snd
 operator|.
 name|ifq_maxlen
 operator|==
 literal|0
 condition|)
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_snd
 operator|.
 name|ifq_maxlen
@@ -3120,13 +3141,13 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: strange TXBSIZ config; fixing\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"strange TXBSIZ config; fixing\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3271,16 +3292,13 @@ directive|endif
 comment|/* Attach and stop the interface. */
 name|ether_ifattach
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 argument_list|,
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 argument_list|)
 expr_stmt|;
 name|fe_stop
@@ -3834,8 +3852,8 @@ block|{
 comment|/* Record how many packets are lost by this accident.  */
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_oerrors
 operator|+=
 name|sc
@@ -3863,8 +3881,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_UP
@@ -3988,8 +4006,8 @@ expr_stmt|;
 comment|/* Reset transmitter variables and interface flags.  */
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -4001,8 +4019,8 @@ operator|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_timer
 operator|=
 literal|0
@@ -4079,12 +4097,9 @@ name|fe_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|fe_softc
-operator|*
-operator|)
 name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 comment|/* A "debug" message.  */
 name|if_printf
@@ -4118,16 +4133,16 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_opackets
 operator|==
 literal|0
 operator|&&
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_ipackets
 operator|==
 literal|0
@@ -4248,9 +4263,12 @@ name|sc
 argument_list|,
 name|FE_DLCR8
 argument_list|,
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|ifp
+argument_list|)
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -4495,13 +4513,13 @@ name|FE_D5_BUFEMP
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: receive buffer has some data after reset\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"receive buffer has some data after reset\n"
 argument_list|)
 expr_stmt|;
 name|fe_emptybuffer
@@ -4536,8 +4554,8 @@ directive|endif
 comment|/* Set 'running' flag, because we are now running.   */
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_RUNNING
@@ -4553,7 +4571,7 @@ directive|if
 literal|0
 comment|/* ...and attempt to start output queued packets.  */
 comment|/* TURNED OFF, because the semi-auto media prober wants to UP            the interface keeping it idle.  The upper layer will soon            start the interface anyway, and there are no significant            delay.  */
-block|fe_start(&sc->sc_if);
+block|fe_start(sc->ifp);
 endif|#
 directive|endif
 operator|(
@@ -4585,8 +4603,8 @@ block|{
 comment|/* 	 * Set a timer just in case we never hear from the board again. 	 * We use longer timeout for multiple packet transmission. 	 * I'm not sure this timer value is appropriate.  FIXME. 	 */
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_timer
 operator|=
 literal|1
@@ -4821,8 +4839,8 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_snd
 argument_list|,
 name|m
@@ -4879,8 +4897,8 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_PROMISC
@@ -4888,10 +4906,9 @@ operator|)
 condition|)
 name|BPF_MTAP
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 argument_list|,
 name|m
 argument_list|)
@@ -4907,8 +4924,8 @@ label|:
 comment|/* 	 * We are using the !OACTIVE flag to indicate to 	 * the outside world that we can accept an 	 * additional packet rather than that the 	 * transmitter is _actually_ active.  Indeed, the 	 * transmitter may be active, but if we haven't 	 * filled all the buffers with data then we still 	 * want to accept more. 	 */
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -4920,8 +4937,8 @@ label|:
 comment|/* 	 * The transmitter is active, and there are no room for 	 * more outgoing packets in the transmission buffer. 	 */
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_OACTIVE
@@ -5148,13 +5165,13 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|FE_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: emptying receive buffer\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"emptying receive buffer\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5291,13 +5308,13 @@ operator|&
 name|FE_D5_BUFEMP
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: could not empty receive buffer\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"could not empty receive buffer\n"
 argument_list|)
 expr_stmt|;
 comment|/* Hmm.  What should I do if this happens?  FIXME.  */
@@ -5362,13 +5379,13 @@ argument_list|,
 name|FE_BMPR10
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: excessive collision (%d/%d)\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"excessive collision (%d/%d)\n"
 argument_list|,
 name|left
 argument_list|,
@@ -5472,8 +5489,8 @@ expr_stmt|;
 block|}
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_collisions
 operator|+=
 name|col
@@ -5521,8 +5538,8 @@ name|tx_excolls
 expr_stmt|;
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_opackets
 operator|+=
 name|sc
@@ -5533,16 +5550,16 @@ name|col
 expr_stmt|;
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_oerrors
 operator|+=
 name|col
 expr_stmt|;
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_collisions
 operator|+=
 name|col
@@ -5577,8 +5594,8 @@ expr_stmt|;
 comment|/* 		 * The transmitter is no more active. 		 * Reset output active flag and watchdog timer. 		 */
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -5586,8 +5603,8 @@ name|IFF_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_timer
 operator|=
 literal|0
@@ -5702,8 +5719,8 @@ endif|#
 directive|endif
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
@@ -5860,19 +5877,19 @@ operator|-
 name|ETHER_CRC_LEN
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: RX buffer out-of-sync\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"RX buffer out-of-sync\n"
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
@@ -5906,8 +5923,8 @@ block|{
 comment|/* 			 * Negative return from fe_get_packet() 			 * indicates no available mbuf.  We stop 			 * receiving packets, even if there are more 			 * in the buffer.  We hope we can get more 			 * mbuf next time. 			 */
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
@@ -5930,20 +5947,20 @@ block|}
 comment|/* Successfully received a packet.  Update stat.  */
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
 block|}
 comment|/* Maximum number of frames has been received.  Something            strange is happening here... */
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: unusual receive flood\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"unusual receive flood\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -6105,8 +6122,8 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -6119,8 +6136,8 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_OACTIVE
@@ -6130,20 +6147,19 @@ literal|0
 condition|)
 name|fe_start
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: too many loops\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"too many loops\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6216,8 +6232,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_UP
@@ -6228,8 +6244,8 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING
@@ -6250,8 +6266,8 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING
@@ -6363,10 +6379,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|ifp
 decl_stmt|;
 name|struct
 name|ether_header
@@ -6672,13 +6687,13 @@ operator|.
 name|len
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: packet length mismatch? (%d/%d)\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"packet length mismatch? (%d/%d)\n"
 argument_list|,
 name|length
 argument_list|,
@@ -6720,21 +6735,21 @@ operator|-
 name|ETHER_CRC_LEN
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: got an out-of-spec packet (%u bytes) to send\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"got an out-of-spec packet (%u bytes) to send\n"
 argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
@@ -7179,7 +7194,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
-argument|&sc->arpcom.ac_if.if_multiaddrs
+argument|&sc->ifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
 argument_list|)
@@ -7219,13 +7234,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FE_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: hash(%6D) == %d\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"hash(%6D) == %d\n"
 argument_list|,
 name|enm
 operator|->
@@ -7284,8 +7299,8 @@ name|flags
 init|=
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 decl_stmt|;
 comment|/* 	 * If the interface is not running, we postpone the update 	 * process for receive modes and multicast address filter 	 * until the interface is restarted.  It reduces some 	 * complicated job on maintaining chip states.  (Earlier versions 	 * of this driver had a bug on that point...) 	 * 	 * To complete the trick, fe_init() calls fe_setmode() after 	 * restarting the interface. 	 */
@@ -7622,13 +7637,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: got an unsupported media request (0x%x)\n"
-argument_list|,
 name|sc
 operator|->
-name|sc_xname
+name|ifp
+argument_list|,
+literal|"got an unsupported media request (0x%x)\n"
 argument_list|,
 name|sc
 operator|->
@@ -7648,8 +7663,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_if
-operator|.
+name|ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_UP

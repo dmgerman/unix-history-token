@@ -437,14 +437,10 @@ struct|struct
 name|snc_softc
 block|{
 name|struct
-name|arpcom
-name|sc_ethercom
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
-define|#
-directive|define
-name|sc_if
-value|sc_ethercom.ac_if
-comment|/* network visible interface */
 name|device_t
 name|sc_dev
 decl_stmt|;

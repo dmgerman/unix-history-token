@@ -7955,8 +7955,9 @@ struct|struct
 name|sk_if_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|sk_ifp
 decl_stmt|;
 comment|/* interface info */
 name|device_t

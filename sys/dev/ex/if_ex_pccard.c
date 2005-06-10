@@ -757,9 +757,7 @@ name|ether_addr
 argument_list|,
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)

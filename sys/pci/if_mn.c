@@ -5902,7 +5902,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|for (i = 0; i< M32_CHAN; i++) { 				if (!sc->ch[i]) 					continue; 			        sp =&sc->ch[i]->ifsppp; 				if (!(sp->pp_if.if_flags& IFF_UP)) 					continue; 				if (s)  					timeout((timeout_t *)sp->pp_down, sp, 1 * hz); 				else  					timeout((timeout_t *)sp->pp_up, sp, 1 * hz); 			}
+block|for (i = 0; i< M32_CHAN; i++) { 				if (!sc->ch[i]) 					continue; 			        sp =&sc->ch[i]->ifsppp; 				if (!(SP2IFP(sp)->if_flags& IFF_UP)) 					continue; 				if (s)  					timeout((timeout_t *)sp->pp_down, sp, 1 * hz); 				else  					timeout((timeout_t *)sp->pp_up, sp, 1 * hz); 			}
 endif|#
 directive|endif
 name|sc

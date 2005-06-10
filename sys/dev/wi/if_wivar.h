@@ -153,8 +153,9 @@ struct|struct
 name|wi_softc
 block|{
 name|struct
-name|arpcom
-name|sc_arp
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ieee80211com
@@ -524,13 +525,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|sc_if
-value|sc_arp.ac_if
-end_define
 
 begin_define
 define|#

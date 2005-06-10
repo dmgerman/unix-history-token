@@ -33,7 +33,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-comment|/* also ((struct arpcom *)ifp)->ac_enaddr is the eth. addr */
 name|int
 name|flags
 decl_stmt|;

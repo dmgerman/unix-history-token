@@ -750,7 +750,7 @@ define|#
 directive|define
 name|STDDCL
 define|\
-value|struct ifnet *ifp =&sp->pp_if;				\ 	int debug = ifp->if_flags& IFF_DEBUG
+value|struct ifnet *ifp = SP2IFP(sp);				\ 	int debug = ifp->if_flags& IFF_DEBUG
 end_define
 
 begin_function_decl

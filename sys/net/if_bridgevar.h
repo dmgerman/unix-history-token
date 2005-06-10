@@ -882,8 +882,9 @@ struct|struct
 name|bridge_softc
 block|{
 name|struct
-name|arpcom
-name|ifb_ac
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
 comment|/* make this an interface */
 name|LIST_ENTRY

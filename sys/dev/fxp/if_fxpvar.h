@@ -400,8 +400,9 @@ struct|struct
 name|fxp_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 comment|/* per-interface network data */
 name|struct
@@ -791,13 +792,6 @@ name|val
 parameter_list|)
 define|\
 value|bus_space_write_4((sc)->sc_st, (sc)->sc_sh, (reg), (val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sc_if
-value|arpcom.ac_if
 end_define
 
 end_unit

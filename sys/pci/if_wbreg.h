@@ -1789,8 +1789,9 @@ struct|struct
 name|wb_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|wb_ifp
 decl_stmt|;
 comment|/* interface info */
 name|device_t

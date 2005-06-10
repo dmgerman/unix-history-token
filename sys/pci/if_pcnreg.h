@@ -2374,10 +2374,10 @@ struct|struct
 name|pcn_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|pcn_ifp
 decl_stmt|;
-comment|/* interface info */
 name|bus_space_handle_t
 name|pcn_bhandle
 decl_stmt|;

@@ -794,9 +794,7 @@ name|dev
 argument_list|,
 name|sc
 operator|->
-name|sc_arpcom
-operator|.
-name|ac_enaddr
+name|sc_enaddr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * call the main configure 	 */

@@ -436,12 +436,11 @@ begin_struct
 struct|struct
 name|en_softc
 block|{
-comment|/* bsd glue */
 name|struct
-name|ifatm
-name|ifatm
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* ATM network ifnet handle */
 name|device_t
 name|dev
 decl_stmt|;

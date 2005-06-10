@@ -631,11 +631,12 @@ name|bcopy
 argument_list|(
 name|ether_addr
 argument_list|,
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|ifp
+argument_list|)
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)

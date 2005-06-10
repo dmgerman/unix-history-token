@@ -28,14 +28,10 @@ struct|struct
 name|tap_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|tap_ifp
 decl_stmt|;
-comment|/* ethernet common data      */
-define|#
-directive|define
-name|tap_if
-value|arpcom.ac_if
 name|u_short
 name|tap_flags
 decl_stmt|;

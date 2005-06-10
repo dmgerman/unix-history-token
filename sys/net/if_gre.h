@@ -65,7 +65,8 @@ name|gre_softc
 block|{
 name|struct
 name|ifnet
-name|sc_if
+modifier|*
+name|sc_ifp
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
@@ -116,6 +117,16 @@ comment|/* version of the WCCP */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|GRE2IFP
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->sc_ifp)
+end_define
 
 begin_struct
 struct|struct

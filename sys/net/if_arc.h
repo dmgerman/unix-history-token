@@ -296,7 +296,8 @@ name|arccom
 block|{
 name|struct
 name|ifnet
-name|ac_if
+modifier|*
+name|ac_ifp
 decl_stmt|;
 comment|/* network-visible interface */
 name|u_int16_t

@@ -43,7 +43,8 @@ name|ppp_softc
 block|{
 name|struct
 name|ifnet
-name|sc_if
+modifier|*
+name|sc_ifp
 decl_stmt|;
 comment|/* network-visible interface */
 comment|/*hi*/
@@ -282,6 +283,16 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PPP2IFP
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->sc_ifp)
+end_define
 
 begin_function_decl
 name|struct

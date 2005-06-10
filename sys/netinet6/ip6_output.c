@@ -4525,12 +4525,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 name|ip6f
 operator|->

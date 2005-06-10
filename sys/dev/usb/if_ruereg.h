@@ -817,8 +817,9 @@ struct|struct
 name|rue_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|rue_ifp
 decl_stmt|;
 name|device_t
 name|rue_dev

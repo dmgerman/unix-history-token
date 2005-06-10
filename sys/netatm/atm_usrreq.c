@@ -1140,10 +1140,10 @@ control|)
 block|{
 if|if
 condition|(
-operator|&
+name|ANIF2IFP
+argument_list|(
 name|nip
-operator|->
-name|nif_if
+argument_list|)
 operator|==
 name|ifp2
 condition|)

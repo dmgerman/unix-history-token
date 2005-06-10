@@ -170,9 +170,9 @@ name|gif_softc
 block|{
 name|struct
 name|ifnet
-name|gif_if
+modifier|*
+name|gif_ifp
 decl_stmt|;
-comment|/* common area - must be at the top */
 name|struct
 name|sockaddr
 modifier|*
@@ -235,6 +235,16 @@ comment|/* all gif's are linked */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|GIF2IFP
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->gif_ifp)
+end_define
 
 begin_define
 define|#

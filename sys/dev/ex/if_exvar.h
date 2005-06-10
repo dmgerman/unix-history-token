@@ -8,13 +8,19 @@ struct|struct
 name|ex_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* Ethernet common data */
 name|struct
 name|ifmedia
 name|ifmedia
+decl_stmt|;
+name|u_char
+name|enaddr
+index|[
+literal|6
+index|]
 decl_stmt|;
 name|device_t
 name|dev

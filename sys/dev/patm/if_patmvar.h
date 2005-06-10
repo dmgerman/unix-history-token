@@ -450,7 +450,7 @@ parameter_list|,
 name|VCI
 parameter_list|)
 define|\
-value|(((VPI)<< (SC)->ifatm.mib.vci_bits) | (VCI))
+value|(((VPI)<< IFP2IFATM((SC)->ifp)->mib.vci_bits) | (VCI))
 end_define
 
 begin_comment
@@ -728,8 +728,9 @@ struct|struct
 name|patm_softc
 block|{
 name|struct
-name|ifatm
-name|ifatm
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 comment|/* common ATM stuff */
 name|struct
@@ -1176,7 +1177,7 @@ name|SC
 parameter_list|,
 modifier|...
 parameter_list|)
-value|if_printf(&(SC)->ifatm.ifnet, __VA_ARGS__);
+value|if_printf((SC)->ifp, __VA_ARGS__);
 end_define
 
 begin_ifdef
@@ -1260,7 +1261,7 @@ name|FLAG
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {					\ 	if((SC)->debug& DBG_##FLAG) { 					\ 		if_printf(&(SC)->ifatm.ifnet, "%s: ", __func__);	\ 		printf(__VA_ARGS__);					\ 		printf("\n");						\ 	}								\     } while (0)
+value|do {					\ 	if((SC)->debug& DBG_##FLAG) { 					\ 		if_printf((SC)->ifp, "%s: ", __func__);	\ 		printf(__VA_ARGS__);					\ 		printf("\n");						\ 	}								\     } while (0)
 end_define
 
 begin_else
@@ -2213,7 +2214,7 @@ parameter_list|,
 name|VPI
 parameter_list|)
 define|\
-value|(((VPI)& ~((1<< (SC)->ifatm.mib.vpi_bits) - 1)) == 0)
+value|(((VPI)& ~((1<< IFP2IFATM((SC)->ifp)->mib.vpi_bits) - 1)) == 0)
 end_define
 
 begin_define
@@ -2226,7 +2227,7 @@ parameter_list|,
 name|VCI
 parameter_list|)
 define|\
-value|(((VCI)& ~((1<< (SC)->ifatm.mib.vci_bits) - 1)) == 0)
+value|(((VCI)& ~((1<< IFP2IFATM((SC)->ifp)->mib.vci_bits) - 1)) == 0)
 end_define
 
 begin_decl_stmt

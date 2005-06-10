@@ -524,8 +524,9 @@ struct|struct
 name|kue_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|kue_ifp
 decl_stmt|;
 name|device_t
 name|kue_dev

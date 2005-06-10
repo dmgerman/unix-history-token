@@ -246,10 +246,10 @@ struct|struct
 name|tl_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|tl_ifp
 decl_stmt|;
-comment|/* interface info */
 name|struct
 name|ifmedia
 name|ifmedia

@@ -445,9 +445,7 @@ operator|+=
 operator|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 name|n
 index|]
@@ -1144,12 +1142,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|ifp
 decl_stmt|;
 name|int
 name|lan_page

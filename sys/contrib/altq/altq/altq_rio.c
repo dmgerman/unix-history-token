@@ -1231,7 +1231,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|do { (m)->m_pkthdr.rcvif = (struct ifnet *)((long)(idx)); } while (0)
+value|do { (m)->m_pkthdr.rcvif = (void *)((long)(idx)); } while (0)
 end_define
 
 begin_define

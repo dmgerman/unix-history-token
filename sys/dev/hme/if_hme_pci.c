@@ -993,9 +993,7 @@ name|dev
 argument_list|,
 name|sc
 operator|->
-name|sc_arpcom
-operator|.
-name|ac_enaddr
+name|sc_enaddr
 argument_list|)
 expr_stmt|;
 else|#
@@ -1530,9 +1528,7 @@ argument_list|)
 argument_list|,
 name|sc
 operator|->
-name|sc_arpcom
-operator|.
-name|ac_enaddr
+name|sc_enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)

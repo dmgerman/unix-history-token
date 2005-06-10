@@ -3397,10 +3397,10 @@ struct|struct
 name|nge_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|nge_ifp
 decl_stmt|;
-comment|/* interface info */
 name|bus_space_handle_t
 name|nge_bhandle
 decl_stmt|;

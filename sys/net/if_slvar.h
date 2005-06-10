@@ -31,7 +31,8 @@ name|sl_softc
 block|{
 name|struct
 name|ifnet
-name|sc_if
+modifier|*
+name|sc_ifp
 decl_stmt|;
 comment|/* network-visible interface */
 name|struct
@@ -122,6 +123,16 @@ comment|/* hang buffer for bpf here */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SL2IFP
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->sc_ifp)
+end_define
 
 begin_comment
 comment|/* internal flags */

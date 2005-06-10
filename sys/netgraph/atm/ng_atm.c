@@ -1187,7 +1187,7 @@ name|IFP2NG
 parameter_list|(
 name|IFP
 parameter_list|)
-value|((node_p)((struct ifatm *)(IFP))->ngpriv)
+value|((node_p)((struct ifatm *)(IFP)->if_softc)->ngpriv)
 end_define
 
 begin_define
@@ -1199,7 +1199,7 @@ name|IFP
 parameter_list|,
 name|val
 parameter_list|)
-value|(((struct ifatm *)(IFP))->ngpriv = (val))
+value|(((struct ifatm *)(IFP)->if_softc)->ngpriv = (val))
 end_define
 
 begin_define

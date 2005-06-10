@@ -3567,8 +3567,9 @@ struct|struct
 name|rl_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|rl_ifp
 decl_stmt|;
 comment|/* interface info */
 name|bus_space_handle_t

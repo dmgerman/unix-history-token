@@ -83,16 +83,11 @@ comment|/* version description IPv6 */
 struct|struct
 name|fwip_eth_softc
 block|{
-comment|/* XXX this must be the first for if_fwsubr.c */
 name|struct
-name|fw_com
-name|fwcom
+name|ifnet
+modifier|*
+name|fwip_ifp
 decl_stmt|;
-comment|/* firewire common data      */
-define|#
-directive|define
-name|fwip_if
-value|fw_softc.fwcom.fc_if
 name|struct
 name|fwip_softc
 modifier|*

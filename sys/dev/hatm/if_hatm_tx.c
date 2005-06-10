@@ -750,12 +750,9 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"TPDRQ full\n"
 argument_list|)
@@ -1090,14 +1087,11 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|arg
 operator|->
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"%s -- out of TPDs (need %d, "
 literal|"have %u)\n"
@@ -1177,12 +1171,14 @@ name|HE_VCC_FLOW_CTRL
 expr_stmt|;
 name|ATMEV_SEND_FLOW_CONTROL
 argument_list|(
-operator|&
+name|IFP2IFATM
+argument_list|(
 name|arg
 operator|->
 name|sc
 operator|->
-name|ifatm
+name|ifp
+argument_list|)
 argument_list|,
 name|arg
 operator|->
@@ -2213,10 +2209,8 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
@@ -2329,10 +2323,8 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
@@ -2376,12 +2368,9 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"mbuf loaded error=%d\n"
 argument_list|,
@@ -2397,10 +2386,8 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
@@ -2422,10 +2409,8 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
@@ -2448,10 +2433,8 @@ name|len
 expr_stmt|;
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
+name|ifp
+operator|->
 name|if_opackets
 operator|++
 expr_stmt|;
@@ -2649,10 +2632,12 @@ name|HE_VCC_FLOW_CTRL
 expr_stmt|;
 name|ATMEV_SEND_FLOW_CONTROL
 argument_list|(
-operator|&
+name|IFP2IFATM
+argument_list|(
 name|sc
 operator|->
-name|ifatm
+name|ifp
+argument_list|)
 argument_list|,
 name|HE_VPI
 argument_list|(
@@ -2805,7 +2790,7 @@ comment|/* verify that connection is closed */
 if|#
 directive|if
 literal|0
-block|v = READ_TSR(sc, cid, 4); 	if(!(v& HE_REGM_TSR4_SESS_END)) { 		if_printf(&sc->ifatm.ifnet, "cid=%#x not closed (TSR4)\n", cid); 		return (EBUSY); 	}
+block|v = READ_TSR(sc, cid, 4); 	if(!(v& HE_REGM_TSR4_SESS_END)) { 		if_printf(sc->ifp, "cid=%#x not closed (TSR4)\n", cid); 		return (EBUSY); 	}
 endif|#
 directive|endif
 name|v
@@ -2832,12 +2817,9 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|ifatm
-operator|.
-name|ifnet
+name|ifp
 argument_list|,
 literal|"cid=%#x not closed (TSR0=%#x)\n"
 argument_list|,

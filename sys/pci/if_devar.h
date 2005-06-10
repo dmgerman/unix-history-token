@@ -1620,10 +1620,16 @@ directive|endif
 endif|#
 directive|endif
 name|struct
-name|arpcom
-name|tulip_ac
+name|ifnet
+modifier|*
+name|tulip_ifp
 decl_stmt|;
-comment|/* XXX should be at start */
+name|u_char
+name|tulip_enaddr
+index|[
+literal|6
+index|]
+decl_stmt|;
 name|bus_space_tag_t
 name|tulip_csrs_bst
 decl_stmt|;
@@ -1823,27 +1829,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|tulip_if
-value|tulip_ac.ac_if
-end_define
-
-begin_define
-define|#
-directive|define
-name|tulip_xname
-value|tulip_if.if_xname
-end_define
-
-begin_define
-define|#
-directive|define
-name|tulip_enaddr
-value|tulip_ac.ac_enaddr
-end_define
 
 begin_define
 define|#

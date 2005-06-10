@@ -668,12 +668,11 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|utp
 operator|->
 name|ifatm
 operator|->
-name|ifnet
+name|ifp
 argument_list|,
 literal|"carrier detected\n"
 argument_list|)
@@ -707,12 +706,11 @@ condition|)
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|utp
 operator|->
 name|ifatm
 operator|->
-name|ifnet
+name|ifp
 argument_list|,
 literal|"carrier lost\n"
 argument_list|)
@@ -1580,12 +1578,11 @@ else|else
 block|{
 name|if_printf
 argument_list|(
-operator|&
 name|utp
 operator|->
 name|ifatm
 operator|->
-name|ifnet
+name|ifp
 argument_list|,
 literal|"unknown ATM-PHY chip %#x\n"
 argument_list|,

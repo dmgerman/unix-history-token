@@ -1440,12 +1440,10 @@ index|]
 operator|.
 name|etheraddr
 argument_list|,
-name|IFP2AC
+name|IFP2ENADDR
 argument_list|(
 name|ifp
 argument_list|)
-operator|->
-name|ac_enaddr
 argument_list|)
 expr_stmt|;
 name|c

@@ -333,14 +333,12 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
+name|ANIF2IFP
+argument_list|(
 name|inp
 operator|->
 name|inf_nif
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Finally, hand packet off to IP. 	 * 	 * NB: Since we're already in the softint kernel state, we 	 * just call IP directly to avoid the extra unnecessary  	 * kernel scheduling. 	 */
 name|netisr_dispatch

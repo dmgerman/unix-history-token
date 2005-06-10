@@ -643,10 +643,8 @@ literal|" shared irq with %s\n"
 argument_list|,
 name|master
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|ifp
+operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;

@@ -27,20 +27,28 @@ begin_struct
 struct|struct
 name|pflog_softc
 block|{
-name|struct
-name|ifnet
-name|sc_if
-decl_stmt|;
-comment|/* the interface */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+name|struct
+name|ifnet
+modifier|*
+name|sc_ifp
+decl_stmt|;
+comment|/* the interface */
 name|LIST_ENTRY
 argument_list|(
 argument|pflog_softc
 argument_list|)
 name|sc_next
 expr_stmt|;
+else|#
+directive|else
+name|struct
+name|ifnet
+name|sc_if
+decl_stmt|;
+comment|/* the interface */
 endif|#
 directive|endif
 block|}

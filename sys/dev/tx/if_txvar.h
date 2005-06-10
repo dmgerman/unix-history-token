@@ -215,8 +215,9 @@ typedef|typedef
 struct|struct
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|struct
 name|resource
@@ -382,20 +383,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|sc_if
-value|arpcom.ac_if
-end_define
-
-begin_define
-define|#
-directive|define
-name|sc_macaddr
-value|arpcom.ac_enaddr
-end_define
 
 begin_define
 define|#

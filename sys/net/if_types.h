@@ -2167,6 +2167,13 @@ begin_comment
 comment|/* Common Address Redundancy Protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFT_IPXIP
+value|0xf9
+end_define
+
 begin_endif
 endif|#
 directive|endif

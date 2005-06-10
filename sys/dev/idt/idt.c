@@ -9915,8 +9915,7 @@ operator|.
 name|rcvif
 operator|=
 operator|(
-expr|struct
-name|ifnet
+name|void
 operator|*
 operator|)
 name|connection
@@ -10075,8 +10074,7 @@ operator|.
 name|rcvif
 operator|==
 operator|(
-expr|struct
-name|ifnet
+name|void
 operator|*
 operator|)
 name|connection

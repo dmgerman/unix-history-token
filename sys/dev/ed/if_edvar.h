@@ -24,10 +24,10 @@ struct|struct
 name|ed_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* ethernet common */
 name|char
 modifier|*
 name|type_str
@@ -61,6 +61,12 @@ name|u_char
 name|xmit_busy
 decl_stmt|;
 comment|/* transmitter is busy */
+name|u_char
+name|enaddr
+index|[
+literal|6
+index|]
+decl_stmt|;
 name|int
 name|port_rid
 decl_stmt|;

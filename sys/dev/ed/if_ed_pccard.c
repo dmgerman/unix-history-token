@@ -2139,9 +2139,7 @@ name|enaddr
 argument_list|,
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -2458,9 +2456,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|0
 index|]
@@ -2474,9 +2470,7 @@ literal|0xff
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|1
 index|]
@@ -2490,9 +2484,7 @@ literal|8
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|2
 index|]
@@ -2506,9 +2498,7 @@ literal|0xff
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|3
 index|]
@@ -2522,9 +2512,7 @@ literal|8
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|4
 index|]
@@ -2538,9 +2526,7 @@ literal|0xff
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 literal|5
 index|]
@@ -2895,9 +2881,7 @@ operator|++
 control|)
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|enaddr
 index|[
 name|i
 index|]

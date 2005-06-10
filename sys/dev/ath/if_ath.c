@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -1562,7 +1568,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|((sc->sc_debug& (m)) || \ 	    (sc->sc_if.if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
+value|((sc->sc_debug& (m)) || \ 	    (sc->sc_ifp->if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
 end_define
 
 begin_define
@@ -1642,7 +1648,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|((sc->sc_if.if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
+value|((sc->sc_ifp->if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
 end_define
 
 begin_define
@@ -1707,11 +1713,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|sc_if
 decl_stmt|;
 name|struct
 name|ieee80211com
@@ -1727,6 +1728,8 @@ name|struct
 name|ath_hal
 modifier|*
 name|ah
+init|=
+name|NULL
 decl_stmt|;
 name|HAL_STATUS
 name|status
@@ -1751,6 +1754,41 @@ argument_list|,
 name|devid
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|=
+name|sc
+operator|->
+name|sc_ifp
+operator|=
+name|if_alloc
+argument_list|(
+name|IFT_ETHER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"can not if_alloc()\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOSPC
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/* set these up early for if_printf use */
 name|if_initname
 argument_list|(
@@ -3185,6 +3223,17 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_invalid
@@ -3212,10 +3261,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -3296,10 +3344,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -3339,10 +3386,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -3370,7 +3416,7 @@ condition|)
 block|{
 name|ath_init
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3440,10 +3486,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -3493,10 +3538,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ath_hal
@@ -3893,10 +3937,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|if_printf
 argument_list|(
@@ -3938,10 +3981,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|if_printf
 argument_list|(
@@ -4192,10 +4234,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ieee80211_node
@@ -5637,6 +5678,8 @@ condition|)
 name|ath_init
 argument_list|(
 name|ifp
+operator|->
+name|if_softc
 argument_list|)
 expr_stmt|;
 comment|/* XXX lose error */
@@ -7464,10 +7507,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|u_int32_t
 name|rfilt
@@ -7584,10 +7626,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|u_int32_t
 name|rfilt
@@ -7639,12 +7680,10 @@ name|ic
 operator|->
 name|ic_myaddr
 argument_list|,
-name|IFP2AC
+name|IFP2ENADDR
 argument_list|(
 name|ifp
 argument_list|)
-operator|->
-name|ac_enaddr
 argument_list|)
 expr_stmt|;
 name|ath_hal_setmac
@@ -9313,10 +9352,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|if_printf
 argument_list|(
@@ -10198,10 +10236,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ath_desc
@@ -12110,10 +12147,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ath_hal
@@ -14397,10 +14433,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 specifier|const
 name|struct
@@ -16987,10 +17022,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|ath_tx_processq
 argument_list|(
@@ -17077,10 +17111,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 comment|/* 	 * Process each active queue. 	 */
 name|ath_tx_processq
@@ -17207,10 +17240,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|int
 name|i
@@ -17584,10 +17616,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|int
 name|i
@@ -18572,10 +18603,9 @@ operator|++
 expr_stmt|;
 name|ath_reset
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -19462,10 +19492,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ath_hal
@@ -21664,7 +21693,7 @@ name|NULL
 condition|)
 name|ath_init
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* XXX lose error */
@@ -21810,7 +21839,7 @@ name|IEEE80211_ROAMING_MANUAL
 condition|)
 name|ath_init
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* XXX lose error */
@@ -22428,10 +22457,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|u_int32_t
 name|scale
@@ -23122,10 +23150,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|bpfattach2
 argument_list|(
@@ -23274,10 +23301,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 name|struct
 name|ath_hal

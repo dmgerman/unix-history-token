@@ -35,8 +35,9 @@ struct|struct
 name|ie_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|void
 function_decl|(
@@ -69,6 +70,12 @@ name|hard_vers
 decl_stmt|;
 name|int
 name|unit
+decl_stmt|;
+name|u_char
+name|enaddr
+index|[
+literal|6
+index|]
 decl_stmt|;
 name|device_t
 name|dev

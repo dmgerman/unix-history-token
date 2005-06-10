@@ -383,7 +383,8 @@ name|fw_com
 block|{
 name|struct
 name|ifnet
-name|fc_if
+modifier|*
+name|fc_ifp
 decl_stmt|;
 name|struct
 name|fw_hwaddr
@@ -413,6 +414,16 @@ comment|/* partial datagrams */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IFP2FWC
+parameter_list|(
+name|ifp
+parameter_list|)
+value|((struct fw_com *)(ifp)->if_l2com)
+end_define
 
 begin_function_decl
 specifier|extern

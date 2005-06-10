@@ -24,10 +24,6 @@ struct|struct
 name|xe_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
-decl_stmt|;
-name|struct
 name|ifmedia
 name|ifmedia
 decl_stmt|;
@@ -48,6 +44,12 @@ name|struct
 name|ifmedia
 modifier|*
 name|ifm
+decl_stmt|;
+name|u_char
+name|enaddr
+index|[
+literal|6
+index|]
 decl_stmt|;
 specifier|const
 name|char

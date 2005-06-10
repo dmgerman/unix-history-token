@@ -826,8 +826,9 @@ struct|struct
 name|adapter
 block|{
 name|struct
-name|arpcom
-name|interface_data
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|struct
 name|adapter

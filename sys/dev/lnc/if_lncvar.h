@@ -742,10 +742,10 @@ name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
-comment|/* see ../../net/if_arp.h */
 name|struct
 name|nic_info
 name|nic
@@ -963,6 +963,16 @@ begin_function_decl
 specifier|extern
 name|int
 name|lnc_attach_common
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|lnc_detach_common
 parameter_list|(
 name|device_t
 parameter_list|)

@@ -623,7 +623,8 @@ name|atm_nif
 block|{
 name|struct
 name|ifnet
-name|nif_if
+modifier|*
+name|nif_ifp
 decl_stmt|;
 comment|/* Network interface */
 name|struct
@@ -661,6 +662,26 @@ comment|/* Bytes sent to interface */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ANIF2IFP
+parameter_list|(
+name|an
+parameter_list|)
+value|((an)->nif_ifp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFP2ANIF
+parameter_list|(
+name|ifp
+parameter_list|)
+value|((struct atm_nif *)(ifp)->if_softc)
+end_define
 
 begin_comment
 comment|/*  * Common Device VCC Entry  *  * Contains the common information for each VCC which is opened  * through a particular device.  */

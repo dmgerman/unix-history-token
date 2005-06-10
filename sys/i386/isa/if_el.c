@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -213,10 +219,16 @@ struct|struct
 name|el_softc
 block|{
 name|struct
-name|arpcom
-name|arpcom
+name|ifnet
+modifier|*
+name|el_ifp
 decl_stmt|;
-comment|/* Ethernet common */
+name|u_char
+name|el_enaddr
+index|[
+literal|6
+index|]
+decl_stmt|;
 name|bus_space_handle_t
 name|el_bhandle
 decl_stmt|;
@@ -600,12 +612,6 @@ name|u_short
 name|base
 decl_stmt|;
 comment|/* Just for convenience */
-name|u_char
-name|station_addr
-index|[
-name|ETHER_ADDR_LEN
-index|]
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -842,7 +848,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|station_addr
+name|sc
+operator|->
+name|el_enaddr
 index|[
 name|i
 index|]
@@ -887,7 +895,9 @@ argument_list|(
 operator|(
 literal|"Address is %6D\n"
 operator|,
-name|station_addr
+name|sc
+operator|->
+name|el_enaddr
 operator|,
 literal|":"
 operator|)
@@ -897,7 +907,9 @@ comment|/* If the vendor code is ok, return a 1.  We'll assume that 	 * whoever 
 if|if
 condition|(
 operator|(
-name|station_addr
+name|sc
+operator|->
+name|el_enaddr
 index|[
 literal|0
 index|]
@@ -906,7 +918,9 @@ literal|0x02
 operator|)
 operator|||
 operator|(
-name|station_addr
+name|sc
+operator|->
+name|el_enaddr
 index|[
 literal|1
 index|]
@@ -915,7 +929,9 @@ literal|0x60
 operator|)
 operator|||
 operator|(
-name|station_addr
+name|sc
+operator|->
+name|el_enaddr
 index|[
 literal|2
 index|]
@@ -944,20 +960,6 @@ argument_list|(
 operator|(
 literal|"Vendor code ok.\n"
 operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Copy the station address into the arpcom structure */
-name|bcopy
-argument_list|(
-name|station_addr
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -1049,11 +1051,12 @@ name|sc
 argument_list|,
 name|j
 argument_list|,
+name|IFP2ENADDR
+argument_list|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|el_ifp
+argument_list|)
 index|[
 name|j
 index|]
@@ -1112,13 +1115,26 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|el_ifp
+operator|=
+name|if_alloc
+argument_list|(
+name|IFT_ETHER
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
 name|rid
 operator|=
 literal|0
@@ -1154,11 +1170,18 @@ name|el_res
 operator|==
 name|NULL
 condition|)
+block|{
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 name|rid
 operator|=
 literal|0
@@ -1190,6 +1213,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -1236,6 +1264,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -1268,19 +1301,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Now reset the board */
-name|dprintf
-argument_list|(
-operator|(
-literal|"Resetting board...\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|el_hardreset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Initialize ifnet structure */
 name|ifp
 operator|->
@@ -1367,9 +1387,20 @@ name|ifp
 argument_list|,
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
+name|el_enaddr
+argument_list|)
+expr_stmt|;
+comment|/* Now reset the board */
+name|dprintf
+argument_list|(
+operator|(
+literal|"Resetting board...\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|el_hardreset
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|dprintf
@@ -1417,12 +1448,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|el_ifp
 expr_stmt|;
 name|el_stop
 argument_list|(
@@ -1435,6 +1463,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -1655,12 +1688,9 @@ decl_stmt|;
 comment|/* Set up pointers */
 name|ifp
 operator|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|el_ifp
 expr_stmt|;
 comment|/* If address not known, do nothing. */
 if|if
@@ -1890,10 +1920,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_OACTIVE
@@ -1901,10 +1929,8 @@ condition|)
 return|return;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_flags
 operator||=
 name|IFF_OACTIVE
@@ -1921,10 +1947,8 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_snd
 argument_list|,
 name|m0
@@ -1940,10 +1964,8 @@ condition|)
 block|{
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_flags
 operator|&=
 operator|~
@@ -2050,12 +2072,9 @@ expr_stmt|;
 comment|/* Give the packet to the bpf, if any */
 name|BPF_TAP
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|el_ifp
 argument_list|,
 name|sc
 operator|->
@@ -2202,10 +2221,8 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
@@ -2260,10 +2277,8 @@ else|else
 block|{
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_opackets
 operator|++
 expr_stmt|;
@@ -2439,10 +2454,8 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
@@ -2501,12 +2514,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
+name|el_ifp
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2724,10 +2734,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_PROMISC
@@ -2891,10 +2899,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_flags
 operator|&
 name|IFF_PROMISC
@@ -2995,10 +3001,8 @@ return|return;
 block|}
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
+name|el_ifp
+operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;

@@ -38,8 +38,9 @@ struct|struct
 name|cm_softc
 block|{
 name|struct
-name|arccom
-name|sc_arccom
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
 comment|/* Common arcnet structures */
 name|int
