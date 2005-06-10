@@ -1136,6 +1136,12 @@ name|ktr_cpu
 operator|=
 name|cpu
 expr_stmt|;
+name|entry
+operator|->
+name|ktr_thread
+operator|=
+name|curthread
+expr_stmt|;
 if|if
 condition|(
 name|file
@@ -1570,11 +1576,15 @@ return|;
 block|}
 name|db_printf
 argument_list|(
-literal|"%d: "
+literal|"%d (%p"
 argument_list|,
 name|tstate
 operator|.
 name|cur
+argument_list|,
+name|kp
+operator|->
+name|ktr_thread
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1582,7 +1592,7 @@ directive|ifdef
 name|SMP
 name|db_printf
 argument_list|(
-literal|"cpu%d "
+literal|":cpu%d"
 argument_list|,
 name|kp
 operator|->
@@ -1591,6 +1601,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|db_printf
+argument_list|(
+literal|")"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|db_ktr_verbose
@@ -1598,7 +1613,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%10.10lld %s.%d\t"
+literal|" %10.10lld %s.%d"
 argument_list|,
 operator|(
 name|long
@@ -1618,6 +1633,11 @@ name|ktr_line
 argument_list|)
 expr_stmt|;
 block|}
+name|db_printf
+argument_list|(
+literal|": "
+argument_list|)
+expr_stmt|;
 name|db_printf
 argument_list|(
 name|kp

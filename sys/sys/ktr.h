@@ -507,6 +507,11 @@ name|char
 modifier|*
 name|ktr_desc
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|ktr_thread
+decl_stmt|;
 name|u_long
 name|ktr_parms
 index|[
