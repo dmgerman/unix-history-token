@@ -525,6 +525,19 @@ modifier|*
 name|sc_mbuf_net
 decl_stmt|;
 comment|/* current cumulative mbuf */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|struct
+name|ifqueue
+name|sc_ifq
+decl_stmt|;
+name|struct
+name|callout
+name|sc_send_tmo
+decl_stmt|;
+endif|#
+directive|endif
 name|union
 name|sc_statep
 name|sc_statep
