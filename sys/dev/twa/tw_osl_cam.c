@@ -605,6 +605,12 @@ argument_list|,
 literal|"entered"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -646,6 +652,12 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2068,6 +2080,12 @@ name|ccb
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xpt_create_path
@@ -2135,6 +2153,12 @@ expr_stmt|;
 name|xpt_action
 argument_list|(
 name|ccb
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
