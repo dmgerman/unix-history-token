@@ -36,13 +36,6 @@ name|fptrdiff_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|u_int
-name|uintfptr_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -142,10 +135,30 @@ define|\
 value|((pc>= (uintfptr_t)btrap&& pc< (uintfptr_t)eintr) ?	\ 	    ((pc>= (uintfptr_t)bintr) ? (uintfptr_t)bintr :	\ 		(uintfptr_t)btrap) : ~0U)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int
+name|uintfptr_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
