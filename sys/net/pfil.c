@@ -497,7 +497,6 @@ name|rv
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Prevent packet filtering from starving the modification of 	 * the packet filters. We would prefer a reader/writer locking 	 * mechanism with guaranteed ordering, though. 	 */
 if|if
 condition|(
 name|ph
@@ -506,7 +505,15 @@ name|ph_busy_count
 operator|==
 operator|-
 literal|1
-operator|||
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 	 * Prevent packet filtering from starving the modification of 	 * the packet filters. We would prefer a reader/writer locking 	 * mechanism with guaranteed ordering, though. 	 */
+if|if
+condition|(
 name|ph
 operator|->
 name|ph_want_write
