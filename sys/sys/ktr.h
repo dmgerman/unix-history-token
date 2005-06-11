@@ -224,12 +224,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_NFS
+name|KTR_VFS
 value|0x00040000
 end_define
 
 begin_comment
-comment|/* The obvious */
+comment|/* VFS events */
 end_comment
 
 begin_define
@@ -240,7 +240,7 @@ value|0x00080000
 end_define
 
 begin_comment
-comment|/* The obvious */
+comment|/* Auto-generated vop events */
 end_comment
 
 begin_define
