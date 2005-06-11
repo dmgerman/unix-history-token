@@ -2614,6 +2614,21 @@ operator|!
 name|vp
 condition|)
 break|break;
+name|VNASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_op
+operator|!=
+name|NULL
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"vnlru_free: vnode already reclaimed."
+operator|)
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3059,6 +3074,25 @@ name|v_bufobj
 expr_stmt|;
 name|VNASSERT
 argument_list|(
+operator|(
+name|vp
+operator|->
+name|v_iflag
+operator|&
+name|VI_FREE
+operator|)
+operator|==
+literal|0
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"cleaned vnode still on the free list."
+operator|)
+argument_list|)
+expr_stmt|;
+name|VNASSERT
+argument_list|(
 name|vp
 operator|->
 name|v_data
@@ -3069,6 +3103,21 @@ name|vp
 argument_list|,
 operator|(
 literal|"cleaned vnode isn't"
+operator|)
+argument_list|)
+expr_stmt|;
+name|VNASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_holdcnt
+operator|==
+literal|0
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"Non-zero hold count"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3236,6 +3285,18 @@ name|v_pollinfo
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+comment|/* XXX Elsewhere we can detect an already freed vnode via NULL v_op. */
+name|vp
+operator|->
+name|v_op
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|lockdestroy
 argument_list|(
 name|vp
@@ -3291,6 +3352,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vtryrecycle: trying vp %p"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -3485,6 +3555,15 @@ expr_stmt|;
 name|vn_finished_write
 argument_list|(
 name|vnmp
+argument_list|)
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vtryrecycle: recycled vp %p"
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -3901,6 +3980,17 @@ operator|.
 name|f_iosize
 expr_stmt|;
 block|}
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"getnewvnode: mp %p vp %p"
+argument_list|,
+name|mp
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -7855,6 +7945,21 @@ name|dev_unlock
 argument_list|()
 expr_stmt|;
 block|}
+name|CTR3
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"v_incr_usecount: vp %p delta %d holdcnt %d\n"
+argument_list|,
+name|vp
+argument_list|,
+name|delta
+argument_list|,
+name|vp
+operator|->
+name|v_holdcnt
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9024,6 +9129,15 @@ literal|0
 decl_stmt|,
 name|error
 decl_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vflush: mp %p"
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rootrefs
@@ -9713,6 +9827,15 @@ decl_stmt|;
 name|int
 name|doomed
 decl_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vgonel: vp %p"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
@@ -11935,6 +12058,15 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vfree vp %p"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -11946,6 +12078,21 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|vnode_free_list_mtx
+argument_list|)
+expr_stmt|;
+name|VNASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_op
+operator|!=
+name|NULL
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"vfree: vnode already reclaimed."
+operator|)
 argument_list|)
 expr_stmt|;
 name|VNASSERT
@@ -12134,6 +12281,15 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vbusy vp %p"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -12157,6 +12313,21 @@ name|vp
 argument_list|,
 operator|(
 literal|"vnode not free"
+operator|)
+argument_list|)
+expr_stmt|;
+name|VNASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_op
+operator|!=
+name|NULL
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"vbusy: vnode already reclaimed."
 operator|)
 argument_list|)
 expr_stmt|;
