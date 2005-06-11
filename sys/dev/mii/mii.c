@@ -619,11 +619,18 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that each NIC's softc must start with an ifnet structure. 	 */
+comment|/* 	 * Note that each NIC's softc must start with an ifnet pointer. 	 * XXX: EVIL HACK! 	 */
 name|mii
 operator|->
 name|mii_ifp
 operator|=
+operator|*
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|*
+operator|)
 name|device_get_softc
 argument_list|(
 name|device_get_parent
@@ -1032,9 +1039,16 @@ name|link_state
 operator|=
 name|LINK_STATE_UNKNOWN
 expr_stmt|;
-comment|/* 	 * Note that each NIC's softc must start with an ifnet structure. 	 */
+comment|/* 	 * Note that each NIC's softc must start with an ifnet pointer. 	 * XXX: EVIL HACK! 	 */
 name|if_link_state_change
 argument_list|(
+operator|*
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|*
+operator|)
 name|device_get_softc
 argument_list|(
 name|parent
