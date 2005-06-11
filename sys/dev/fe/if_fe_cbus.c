@@ -1536,7 +1536,7 @@ literal|0x18
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -1549,7 +1549,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x0000F4
 argument_list|)
@@ -1587,7 +1587,7 @@ name|sum
 operator|^=
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 name|i
 index|]
@@ -1831,7 +1831,7 @@ literal|8
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -1843,7 +1843,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x0000F4
 argument_list|)
@@ -2455,7 +2455,7 @@ literal|0x18
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -2468,7 +2468,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x00804C
 argument_list|)
@@ -2481,7 +2481,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 literal|3
 index|]
@@ -2834,7 +2834,7 @@ name|FE_SSI_EEP_ADDR
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -3099,7 +3099,7 @@ name|eeprom
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -3340,7 +3340,7 @@ literal|0x18
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -3352,7 +3352,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x000000
 argument_list|)
@@ -3373,7 +3373,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x000061
 argument_list|)
@@ -3597,7 +3597,7 @@ literal|0x18
 argument_list|,
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -3609,7 +3609,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x00DD01
 argument_list|)
@@ -3647,7 +3647,7 @@ name|sum
 operator|^=
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 name|i
 index|]
@@ -4195,7 +4195,7 @@ operator|++
 control|)
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 index|[
 name|i
 index|]
@@ -4215,7 +4215,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x00C0D0
 argument_list|)
@@ -4225,7 +4225,7 @@ name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
-name|sc_enaddr
+name|enaddr
 argument_list|,
 literal|0x00803D
 argument_list|)
