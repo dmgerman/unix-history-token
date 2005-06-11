@@ -460,6 +460,7 @@ parameter_list|,
 name|struct
 name|statfs
 modifier|*
+modifier|*
 name|buf
 parameter_list|,
 name|size_t
