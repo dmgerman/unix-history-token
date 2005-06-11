@@ -850,7 +850,7 @@ operator|/
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ostatfs
+name|osf1_statfs
 argument_list|)
 expr_stmt|;
 name|size
