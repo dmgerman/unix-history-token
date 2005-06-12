@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -4270,16 +4276,10 @@ case|case
 name|IFT_ISO88025
 case|:
 return|return
-operator|(
-call|(
-name|caddr_t
-call|)
+name|IF_LLADDR
 argument_list|(
 name|ifp
-operator|+
-literal|1
 argument_list|)
-operator|)
 return|;
 default|default:
 return|return
