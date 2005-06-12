@@ -1813,6 +1813,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|gem_stop
+argument_list|(
+name|ifp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|ifp
@@ -1821,13 +1828,6 @@ expr_stmt|;
 name|if_free
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-name|gem_stop
-argument_list|(
-name|ifp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|device_delete_child
