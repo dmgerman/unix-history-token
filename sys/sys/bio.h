@@ -330,11 +330,6 @@ name|bio
 modifier|*
 name|insert_point
 decl_stmt|;
-name|struct
-name|bio
-modifier|*
-name|switch_point
-decl_stmt|;
 block|}
 struct|;
 end_struct
