@@ -22,7 +22,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Interprocessor interrupts for SMP. The following values are indices  * into the IPI vector table. The SAL gives us the vector used for AP  * wake-up. We base the other vectors on that. Keep IPI_AP_WAKEUP at  * index 0 and IPI_MCA_RENDEZ at index 1. See sal.c for details.  */
+comment|/*  * Interprocessor interrupts for SMP. The following values are indices  * into the IPI vector table. The SAL gives us the vector used for AP  * wake-up. We base the other vectors on that. Keep IPI_AP_WAKEUP at  * index 0. See sal.c for details.  */
 end_comment
 
 begin_comment
@@ -92,8 +92,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_COUNT
+name|IPI_PREEMPT
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_COUNT
+value|9
 end_define
 
 begin_ifndef
