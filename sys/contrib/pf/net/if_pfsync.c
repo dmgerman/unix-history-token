@@ -1129,7 +1129,6 @@ argument_list|,
 name|MCLBYTES
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 *  The 2nd arg. 0 to callout_init(9) shoule be set to CALLOUT_MPSAFE 	 * if Gaint lock is removed from the network stack. 	 */
 name|callout_init
 argument_list|(
 operator|&
@@ -1137,7 +1136,7 @@ name|sc
 operator|->
 name|sc_tmo
 argument_list|,
-literal|0
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1147,7 +1146,7 @@ name|sc
 operator|->
 name|sc_bulk_tmo
 argument_list|,
-literal|0
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1157,7 +1156,7 @@ name|sc
 operator|->
 name|sc_bulkfail_tmo
 argument_list|,
-literal|0
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1167,7 +1166,7 @@ name|sc
 operator|->
 name|sc_send_tmo
 argument_list|,
-literal|0
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|mtx_init
