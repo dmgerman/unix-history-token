@@ -115,6 +115,13 @@ name|RegexExtended
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|UseINDEXOnly
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|int

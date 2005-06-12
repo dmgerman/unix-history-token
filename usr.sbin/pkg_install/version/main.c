@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"dhl:L:s:XtTv"
+literal|"dhIl:L:s:XtTv"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,14 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|RegexExtended
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|UseINDEXOnly
 init|=
 name|FALSE
 decl_stmt|;
@@ -251,6 +259,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'I'
+case|:
+name|UseINDEXOnly
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
 name|LimitChars
@@ -346,7 +362,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_version [-hv] [-l limchar] [-L limchar] [[-X] -s string] index"
+literal|"usage: pkg_version [-hIv] [-l limchar] [-L limchar] [[-X] -s string] index"
 argument_list|,
 literal|"       pkg_version -t v1 v2"
 argument_list|,

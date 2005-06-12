@@ -577,6 +577,9 @@ operator|.
 name|origin
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|UseINDEXOnly
 condition|)
 block|{
 name|snprintf
