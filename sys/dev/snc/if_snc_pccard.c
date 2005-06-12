@@ -252,10 +252,9 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|&
 name|sc
 operator|->
-name|sc_if
+name|sc_ifp
 decl_stmt|;
 if|if
 condition|(
