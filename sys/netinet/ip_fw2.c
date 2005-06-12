@@ -10497,6 +10497,8 @@ name|O_IP_SRC
 case|:
 name|match
 operator|=
+name|is_ipv4
+operator|&&
 operator|(
 name|hlen
 operator|>
@@ -10531,6 +10533,8 @@ condition|(
 name|hlen
 operator|>
 literal|0
+operator|&&
+name|is_ipv4
 condition|)
 block|{
 name|uint32_t
@@ -10614,6 +10618,8 @@ condition|(
 name|hlen
 operator|>
 literal|0
+operator|&&
+name|is_ipv4
 condition|)
 block|{
 name|uint32_t
@@ -10702,6 +10708,8 @@ condition|(
 name|hlen
 operator|>
 literal|0
+operator|&&
+name|is_ipv4
 condition|)
 block|{
 name|struct
@@ -10737,6 +10745,8 @@ condition|(
 name|hlen
 operator|>
 literal|0
+operator|&&
+name|is_ipv4
 condition|)
 block|{
 name|u_int32_t
@@ -10832,6 +10842,8 @@ name|O_IP_DST
 case|:
 name|match
 operator|=
+name|is_ipv4
+operator|&&
 operator|(
 name|hlen
 operator|>
@@ -10863,6 +10875,8 @@ condition|(
 name|hlen
 operator|>
 literal|0
+operator|&&
+name|is_ipv4
 condition|)
 block|{
 name|struct
@@ -11880,6 +11894,7 @@ case|case
 name|O_VERSRCREACH
 case|:
 comment|/* Outgoing packets automatically pass/match */
+comment|/* XXX: IPv6 missing!?! */
 name|match
 operator|=
 operator|(
@@ -11894,6 +11909,9 @@ operator|!=
 name|NULL
 operator|)
 operator|||
+operator|(
+name|is_ipv4
+operator|&&
 name|verify_path
 argument_list|(
 name|src_ip
@@ -11902,12 +11920,14 @@ name|NULL
 argument_list|)
 operator|)
 operator|)
+operator|)
 expr_stmt|;
 break|break;
 case|case
 name|O_ANTISPOOF
 case|:
 comment|/* Outgoing packets automatically pass/match */
+comment|/* XXX: IPv6 missing!?! */
 if|if
 condition|(
 name|oif
@@ -11918,10 +11938,14 @@ name|hlen
 operator|>
 literal|0
 operator|&&
+operator|(
+name|is_ipv4
+operator|&&
 name|in_localaddr
 argument_list|(
 name|src_ip
 argument_list|)
+operator|)
 condition|)
 name|match
 operator|=
@@ -12599,11 +12623,14 @@ case|case
 name|O_REJECT
 case|:
 comment|/* 				 * Drop the packet and send a reject notice 				 * if the packet is not ICMP (or is an ICMP 				 * query), and it is not multicast/broadcast. 				 */
+comment|/* XXX: IPv6 missing!?! */
 if|if
 condition|(
 name|hlen
 operator|>
 literal|0
+operator|&&
+name|is_ipv4
 operator|&&
 operator|(
 name|proto
