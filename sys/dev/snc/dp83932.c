@@ -754,7 +754,9 @@ literal|"%s: can not if_alloc()\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
