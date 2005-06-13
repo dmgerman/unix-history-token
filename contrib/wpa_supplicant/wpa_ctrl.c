@@ -483,17 +483,6 @@ argument_list|(
 name|ctrl
 operator|->
 name|local
-operator|.
-name|sun_family
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|ctrl
-operator|->
-name|local
-operator|.
-name|sun_path
 argument_list|)
 argument_list|)
 operator|<
