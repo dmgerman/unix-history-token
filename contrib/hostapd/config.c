@@ -2844,6 +2844,12 @@ operator|->
 name|wpa_passphrase
 operator|==
 name|NULL
+operator|&&
+name|conf
+operator|->
+name|wpa_psk_file
+operator|==
+name|NULL
 condition|)
 block|{
 name|printf

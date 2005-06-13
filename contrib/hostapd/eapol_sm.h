@@ -579,6 +579,10 @@ comment|/* currentId was removed in IEEE 802.1X-REV, but it is needed to filter 
 name|u8
 name|currentId
 decl_stmt|;
+name|Boolean
+name|initializing
+decl_stmt|;
+comment|/* in process of initializing state machines */
 comment|/* Somewhat nasty pointers to global hostapd and STA data to avoid 	 * passing these to every function */
 name|struct
 name|hostapd_data

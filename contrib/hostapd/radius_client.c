@@ -2436,7 +2436,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|0
+name|MSG_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
