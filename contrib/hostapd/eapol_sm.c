@@ -3623,6 +3623,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|sm
+operator|->
+name|initializing
+operator|&&
+operator|!
 name|eapol_sm_sta_entry_alive
 argument_list|(
 name|hapd
@@ -3638,6 +3643,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|sm
+operator|->
+name|initializing
+operator|&&
 operator|!
 name|eapol_sm_sta_entry_alive
 argument_list|(
@@ -3655,6 +3665,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|sm
+operator|->
+name|initializing
+operator|&&
+operator|!
 name|eapol_sm_sta_entry_alive
 argument_list|(
 name|hapd
@@ -3670,6 +3685,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|sm
+operator|->
+name|initializing
+operator|&&
 operator|!
 name|eapol_sm_sta_entry_alive
 argument_list|(
@@ -3687,6 +3707,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|sm
+operator|->
+name|initializing
+operator|&&
+operator|!
 name|eapol_sm_sta_entry_alive
 argument_list|(
 name|hapd
@@ -3702,6 +3727,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|sm
+operator|->
+name|initializing
+operator|&&
 operator|!
 name|eapol_sm_sta_entry_alive
 argument_list|(
@@ -3823,6 +3853,12 @@ modifier|*
 name|sm
 parameter_list|)
 block|{
+name|sm
+operator|->
+name|initializing
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* Initialize the state machines by asserting initialize and then 	 * deasserting it after one step */
 name|sm
 operator|->
@@ -3845,6 +3881,12 @@ name|eapol_sm_step
 argument_list|(
 name|sm
 argument_list|)
+expr_stmt|;
+name|sm
+operator|->
+name|initializing
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* Start one second tick for port timers state machine */
 name|eloop_cancel_timeout
