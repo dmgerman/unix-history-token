@@ -1146,6 +1146,17 @@ case|case
 name|RTM_IEEE80211_DISASSOC
 case|:
 comment|/* 			 * Clear existing state; transition to the init 			 * state and then wait for either a link down 			 * notification or an associate event. 			 */
+if|if
+condition|(
+name|ifi
+operator|->
+name|client
+operator|->
+name|active
+operator|!=
+name|NULL
+condition|)
+block|{
 name|script_init
 argument_list|(
 literal|"EXPIRE"
@@ -1186,6 +1197,7 @@ expr_stmt|;
 name|script_go
 argument_list|()
 expr_stmt|;
+block|}
 name|ifi
 operator|->
 name|client
