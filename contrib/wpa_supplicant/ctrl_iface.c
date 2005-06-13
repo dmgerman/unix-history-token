@@ -1228,13 +1228,29 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"CTRL_IFACE: field=%s id=%d value='%s'"
+literal|"CTRL_IFACE: field=%s id=%d"
 argument_list|,
 name|rsp
 argument_list|,
 name|id
+argument_list|)
+expr_stmt|;
+name|wpa_hexdump_ascii_key
+argument_list|(
+name|MSG_DEBUG
 argument_list|,
+literal|"CTRL_IFACE: value"
+argument_list|,
+operator|(
+name|u8
+operator|*
+operator|)
 name|pos
+argument_list|,
+name|strlen
+argument_list|(
+name|pos
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ssid
@@ -3318,6 +3334,28 @@ operator|->
 name|ctrl_sock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|->
+name|ctrl_dst
+condition|)
+block|{
+comment|/* 			 * Wait a second before closing the control socket if 			 * there are any attached monitors in order to allow 			 * them to receive any pending messages. 			 */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"CTRL_IFACE wait for attached "
+literal|"monitors to receive messages"
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|wpa_s

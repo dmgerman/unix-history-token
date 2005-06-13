@@ -1346,6 +1346,7 @@ name|buf
 expr_stmt|;
 while|while
 condition|(
+operator|*
 name|start
 operator|!=
 literal|'\0'
@@ -1595,6 +1596,7 @@ name|buf
 expr_stmt|;
 while|while
 condition|(
+operator|*
 name|start
 operator|!=
 literal|'\0'
@@ -1874,6 +1876,7 @@ name|buf
 expr_stmt|;
 while|while
 condition|(
+operator|*
 name|start
 operator|!=
 literal|'\0'
@@ -2341,6 +2344,7 @@ name|buf
 expr_stmt|;
 while|while
 condition|(
+operator|*
 name|start
 operator|!=
 literal|'\0'
@@ -2607,6 +2611,7 @@ name|buf
 expr_stmt|;
 while|while
 condition|(
+operator|*
 name|start
 operator|!=
 literal|'\0'

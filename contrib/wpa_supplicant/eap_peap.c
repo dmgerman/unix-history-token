@@ -1925,6 +1925,48 @@ literal|"EAP-PEAP: Pending Phase 2 request - "
 literal|"skip decryption and use old data"
 argument_list|)
 expr_stmt|;
+comment|/* Clear TLS reassembly state. */
+name|free
+argument_list|(
+name|data
+operator|->
+name|ssl
+operator|.
+name|tls_in
+argument_list|)
+expr_stmt|;
+name|data
+operator|->
+name|ssl
+operator|.
+name|tls_in
+operator|=
+name|NULL
+expr_stmt|;
+name|data
+operator|->
+name|ssl
+operator|.
+name|tls_in_len
+operator|=
+literal|0
+expr_stmt|;
+name|data
+operator|->
+name|ssl
+operator|.
+name|tls_in_left
+operator|=
+literal|0
+expr_stmt|;
+name|data
+operator|->
+name|ssl
+operator|.
+name|tls_in_total
+operator|=
+literal|0
+expr_stmt|;
 name|in_decrypted
 operator|=
 name|data
@@ -1982,6 +2024,47 @@ condition|)
 return|return
 name|res
 return|;
+if|if
+condition|(
+name|in_len
+operator|==
+literal|0
+operator|&&
+name|sm
+operator|->
+name|workaround
+operator|&&
+name|data
+operator|->
+name|phase2_success
+condition|)
+block|{
+comment|/* 		 * Cisco ACS seems to be using TLS ACK to terminate 		 * EAP-PEAPv0/GTC. Try to reply with TLS ACK. 		 */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP-PEAP: Received TLS ACK, but "
+literal|"expected data - acknowledge with TLS ACK since "
+literal|"Phase 2 has been completed"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|->
+name|decision
+operator|=
+name|DECISION_COND_SUCC
+expr_stmt|;
+name|ret
+operator|->
+name|methodState
+operator|=
+name|METHOD_DONE
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|buf_len
 operator|=
 name|in_len
@@ -3621,6 +3704,46 @@ argument_list|,
 literal|"EAP-PEAP: Failed to "
 literal|"derive key"
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sm
+operator|->
+name|workaround
+operator|&&
+name|data
+operator|->
+name|peap_version
+operator|==
+literal|1
+operator|&&
+name|data
+operator|->
+name|resuming
+condition|)
+block|{
+comment|/* 				 * At least one RADIUS server (Aegis v1.1.6; 				 * but not v1.1.4) seems to be terminating 				 * PEAPv1 session resumption with outer 				 * EAP-Success. This does not seem to follow 				 * draft-josefsson-pppext-eap-tls-eap-05.txt 				 * section 4.2, so only allow this if EAP 				 * workarounds are enabled. 				 */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP-PEAP: Workaround - "
+literal|"allow outer EAP-Success to "
+literal|"terminate PEAPv1 resumption"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|->
+name|decision
+operator|=
+name|DECISION_COND_SUCC
+expr_stmt|;
+name|data
+operator|->
+name|phase2_success
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|data

@@ -209,6 +209,9 @@ index|[
 name|ETH_ALEN
 index|]
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1439,8 +1442,7 @@ argument_list|)
 return|;
 block|}
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 end_function
