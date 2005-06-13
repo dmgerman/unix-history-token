@@ -995,6 +995,13 @@ operator|->
 name|i_addr3
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|type
+operator|!=
+name|IEEE80211_FC0_TYPE_DATA
+condition|)
+break|break;
 comment|/* 			 * Data frame, validate the bssid. 			 */
 if|if
 condition|(
@@ -1048,13 +1055,6 @@ goto|goto
 name|out
 goto|;
 block|}
-if|if
-condition|(
-name|type
-operator|!=
-name|IEEE80211_FC0_TYPE_DATA
-condition|)
-break|break;
 comment|/* 			 * For adhoc mode we cons up a node when it doesn't 			 * exist. This should probably done after an ACL check. 			 */
 if|if
 condition|(
