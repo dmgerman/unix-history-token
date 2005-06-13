@@ -2111,6 +2111,11 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|private_key_passwd
+condition|)
+block|{
 name|passwd
 operator|=
 name|strdup
@@ -2128,6 +2133,12 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
+else|else
+name|passwd
+operator|=
+name|NULL
+expr_stmt|;
 name|SSL_CTX_set_default_passwd_cb
 argument_list|(
 name|ssl_ctx

@@ -2316,13 +2316,14 @@ name|int
 name|lastId
 parameter_list|)
 block|{
-comment|/* At least Microsoft IAS and Meetinghouse Aegis seem to be sending 	 * EAP-Success/Failure with lastId + 1 even though RFC 3748 and 	 * draft-ietf-eap-statemachine-05.pdf require that reqId == lastId. 	 * Accept this kind of Id if EAP workarounds are enabled. These are 	 * unauthenticated plaintext messages, so this should have minimal 	 * security implications (bit easier to fake EAP-Success/Failure). */
+comment|/* 	 * At least Microsoft IAS and Meetinghouse Aegis seem to be sending 	 * EAP-Success/Failure with lastId + 1 even though RFC 3748 and 	 * draft-ietf-eap-statemachine-05.pdf require that reqId == lastId. 	 * In addition, it looks like Ringmaster v2.1.2.0 would be using 	 * lastId + 2 in EAP-Success. 	 * 	 * Accept this kind of Id if EAP workarounds are enabled. These are 	 * unauthenticated plaintext messages, so this should have minimal 	 * security implications (bit easier to fake EAP-Success/Failure). 	 */
 if|if
 condition|(
 name|sm
 operator|->
 name|workaround
 operator|&&
+operator|(
 name|reqId
 operator|==
 operator|(
@@ -2333,6 +2334,19 @@ literal|1
 operator|)
 operator|&
 literal|0xff
+operator|)
+operator|||
+name|reqId
+operator|==
+operator|(
+operator|(
+name|lastId
+operator|+
+literal|2
+operator|)
+operator|&
+literal|0xff
+operator|)
 operator|)
 condition|)
 block|{
@@ -2354,6 +2368,18 @@ return|return
 literal|1
 return|;
 block|}
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP: EAP-Success Id mismatch - reqId=%d "
+literal|"lastId=%d"
+argument_list|,
+name|reqId
+argument_list|,
+name|lastId
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

@@ -5753,6 +5753,11 @@ literal|"WPA: Failed to get "
 literal|"random data for SNonce"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|rbuf
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|wpa_s
@@ -6129,6 +6134,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|free
+argument_list|(
+name|rbuf
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -6159,6 +6169,11 @@ literal|"WPA: Master session has not yet "
 literal|"been received from the external IEEE "
 literal|"802.1X Supplicant - ignoring WPA "
 literal|"EAPOL-Key frame"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rbuf
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6199,6 +6214,11 @@ operator|)
 literal|""
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rbuf
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10749,7 +10769,7 @@ argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"WPA: Invalid EAPOL-Key frame - "
-literal|"key_data overflow (%d> %d)"
+literal|"key_data overflow (%d> %lu)"
 argument_list|,
 name|be_to_host16
 argument_list|(
@@ -10758,6 +10778,10 @@ operator|->
 name|key_data_length
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|extra_len
 argument_list|)
 expr_stmt|;
@@ -10941,6 +10965,25 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|->
+name|key_mgmt
+operator|==
+name|WPA_KEY_MGMT_NONE
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Ignored received EAPOL frame since "
+literal|"no key management is configured"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|wpa_s
@@ -12006,6 +12049,12 @@ expr_stmt|;
 name|ctx
 operator|->
 name|ctx
+operator|=
+name|wpa_s
+expr_stmt|;
+name|ctx
+operator|->
+name|msg_ctx
 operator|=
 name|wpa_s
 expr_stmt|;

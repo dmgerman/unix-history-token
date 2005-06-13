@@ -727,11 +727,6 @@ operator|->
 name|idleWhile
 argument_list|)
 expr_stmt|;
-name|eapol_sm_step
-argument_list|(
-name|sm
-argument_list|)
-expr_stmt|;
 name|eloop_register_timeout
 argument_list|(
 literal|1
@@ -742,6 +737,11 @@ name|eapol_port_timers_tick
 argument_list|,
 name|eloop_ctx
 argument_list|,
+name|sm
+argument_list|)
+expr_stmt|;
+name|eapol_sm_step
+argument_list|(
 name|sm
 argument_list|)
 expr_stmt|;
