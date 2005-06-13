@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -2015,6 +2021,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|hapd
+operator|->
+name|conf
+operator|->
+name|ctrl_interface
+operator|&&
 name|rmdir
 argument_list|(
 name|hapd
