@@ -2798,23 +2798,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vgonel
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vhold
 parameter_list|(
 name|struct
