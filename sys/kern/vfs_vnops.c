@@ -3753,6 +3753,27 @@ operator|&=
 operator|~
 name|LK_INTERLOCK
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|flags
+operator|&
+name|LK_RETRY
+operator|)
+operator|==
+literal|0
+operator|||
+name|error
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"LK_RETRY set with incompatible flags %d\n"
+operator|,
+name|flags
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Callers specify LK_RETRY if they wish to get dead vnodes. 		 * If RETRY is not set, we return ENOENT instead. 		 */
 if|if
 condition|(
