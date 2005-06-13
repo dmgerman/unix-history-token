@@ -2548,7 +2548,16 @@ name|B_REMFREE
 operator|)
 operator|==
 literal|0
-operator|&&
+argument_list|,
+operator|(
+literal|"bremfree: buffer %p already marked for delayed removal."
+operator|,
+name|bp
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|bp
 operator|->
 name|b_qindex
