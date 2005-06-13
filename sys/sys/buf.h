@@ -1205,6 +1205,25 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_REMFREE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"BUF_UNLOCK %p while B_REMFREE is still set."
+operator|,
+name|bp
+operator|)
+argument_list|)
+expr_stmt|;
 name|lockmgr
 argument_list|(
 operator|&
