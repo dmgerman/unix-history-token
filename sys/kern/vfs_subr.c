@@ -3065,6 +3065,15 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vdestroy vp %p"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|bo
 operator|=
 operator|&
@@ -4613,6 +4622,17 @@ name|int
 name|slptimeo
 parameter_list|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vinvalbuf vp %p flags %d"
+argument_list|,
+name|vp
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
@@ -4993,6 +5013,17 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vtruncbuf vp %p length %jd"
+argument_list|,
+name|vp
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Round up to the *next* lbn. 	 */
 name|trunclbn
 operator|=
@@ -12243,6 +12274,15 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"vfreehead vp %p"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
