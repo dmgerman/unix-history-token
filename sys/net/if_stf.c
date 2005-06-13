@@ -809,9 +809,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
+name|STF2IFP
+argument_list|(
 name|sc
-operator|->
-name|sc_ifp
+argument_list|)
 operator|=
 name|if_alloc
 argument_list|(
@@ -845,6 +846,12 @@ name|ENOSPC
 operator|)
 return|;
 block|}
+name|ifp
+operator|->
+name|if_softc
+operator|=
+name|sc
+expr_stmt|;
 comment|/* 	 * Set the name manually rather then using if_initname because 	 * we don't conform to the default naming convention for interfaces. 	 */
 name|strlcpy
 argument_list|(
