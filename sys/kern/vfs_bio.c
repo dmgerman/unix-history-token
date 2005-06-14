@@ -9527,7 +9527,9 @@ operator|==
 name|bo
 argument_list|,
 operator|(
-literal|"wrong b_bufobj %p should be %p"
+literal|"bp %p wrong b_bufobj %p should be %p"
+operator|,
+name|bp
 operator|,
 name|bp
 operator|->
