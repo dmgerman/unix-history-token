@@ -4466,6 +4466,17 @@ operator|->
 name|rcv_pps
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input: "
+literal|"after_listen: tcp_drop: head "
+literal|"not locked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_drop
@@ -5677,6 +5688,17 @@ name|thflags
 operator|&
 name|TH_ACK
 condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input: after_listen"
+literal|": tcp_drop.2: head not locked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_drop
@@ -5686,6 +5708,7 @@ argument_list|,
 name|ECONNREFUSED
 argument_list|)
 expr_stmt|;
+block|}
 goto|goto
 name|drop
 goto|;
@@ -7190,6 +7213,16 @@ operator|&
 name|TH_SYN
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input: tcp_drop: trimthenstep6: "
+literal|"head not locked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_drop
