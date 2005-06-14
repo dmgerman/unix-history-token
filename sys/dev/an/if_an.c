@@ -3358,6 +3358,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
+name|sc
+operator|->
+name|an_ifp
+operator|=
 name|if_alloc
 argument_list|(
 name|IFT_ETHER
