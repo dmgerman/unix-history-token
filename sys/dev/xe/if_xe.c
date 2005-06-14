@@ -860,10 +860,6 @@ name|scp
 operator|->
 name|ifp
 operator|=
-name|scp
-operator|->
-name|ifp
-operator|=
 name|if_alloc
 argument_list|(
 name|IFT_ETHER
