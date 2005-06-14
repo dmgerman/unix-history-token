@@ -192,8 +192,6 @@ parameter_list|(
 name|scr_stat
 modifier|*
 name|scp
-parameter_list|,
-modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -417,8 +415,6 @@ parameter_list|(
 name|scr_stat
 modifier|*
 name|scp
-parameter_list|,
-modifier|...
 parameter_list|)
 block|{ }
 end_function
