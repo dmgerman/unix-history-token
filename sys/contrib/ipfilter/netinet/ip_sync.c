@@ -2550,6 +2550,21 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|MUTEX_EXIT
+argument_list|(
+operator|&
+name|ipsl_mutex
+argument_list|)
+expr_stmt|;
+return|return
+name|EINTR
+return|;
+block|}
 name|spinunlock
 argument_list|(
 name|l
@@ -2583,6 +2598,13 @@ argument_list|,
 name|MS_LOCK_SIMPLE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
+name|EINTR
+return|;
 else|#
 directive|else
 name|MUTEX_EXIT
@@ -2601,27 +2623,25 @@ argument_list|,
 literal|"ipl sleep"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
+name|EINTR
+return|;
+name|MUTEX_ENTER
+argument_list|(
+operator|&
+name|ipsl_mutex
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* __osf__ */
 endif|#
 directive|endif
 comment|/* __hpux */
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|MUTEX_EXIT
-argument_list|(
-operator|&
-name|ipsl_mutex
-argument_list|)
-expr_stmt|;
-return|return
-name|err
-return|;
-block|}
 endif|#
 directive|endif
 comment|/* SOLARIS */
