@@ -637,6 +637,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PLIST_NOINST
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@noinst %s\n"
+else|:
+literal|"\tNot installed: %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PLIST_IGNORE
 case|:
 name|ign

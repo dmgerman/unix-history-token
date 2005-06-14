@@ -902,6 +902,20 @@ name|strcmp
 argument_list|(
 name|cmd
 argument_list|,
+literal|"noinst"
+argument_list|)
+condition|)
+return|return
+name|PLIST_NOINST
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cmd
+argument_list|,
 literal|"comment"
 argument_list|)
 condition|)
@@ -1559,6 +1573,23 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"%ccomment %s\n"
+argument_list|,
+name|CMD_CHAR
+argument_list|,
+name|plist
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_NOINST
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%cnoinst %s\n"
 argument_list|,
 name|CMD_CHAR
 argument_list|,

@@ -1261,6 +1261,10 @@ break|break;
 case|case
 name|PLIST_COMMENT
 case|:
+comment|/* FALLTHROUGH */
+case|case
+name|PLIST_NOINST
+case|:
 break|break;
 case|case
 name|PLIST_IGNORE

@@ -463,6 +463,8 @@ block|,
 name|PLIST_ORIGIN
 block|,
 name|PLIST_DEPORIGIN
+block|,
+name|PLIST_NOINST
 block|}
 enum|;
 end_enum
