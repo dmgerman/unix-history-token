@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhjvyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:S:o:b:"
+literal|"YNORhjvyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:S:o:b:"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,6 +227,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|PlistOnly
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Recursive
 init|=
 name|FALSE
 decl_stmt|;
@@ -573,6 +581,14 @@ block|}
 block|}
 break|break;
 case|case
+literal|'R'
+case|:
+name|Recursive
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -735,7 +751,7 @@ literal|"                  [-s srcdir] [-S basedir] "
 argument_list|,
 literal|"                  -c comment -d description -f packlist pkg-filename"
 argument_list|,
-literal|"       pkg_create [-YNhvyz] -b pkg-name [pkg-filename]"
+literal|"       pkg_create [-YNhvyzR] -b pkg-name [pkg-filename]"
 argument_list|)
 expr_stmt|;
 name|exit
