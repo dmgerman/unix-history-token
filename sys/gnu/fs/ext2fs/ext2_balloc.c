@@ -52,31 +52,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/inode.h>
+file|<gnu/fs/ext2fs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/ext2_fs.h>
+file|<gnu/fs/ext2fs/ext2_fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/ext2_fs_sb.h>
+file|<gnu/fs/ext2fs/ext2_fs_sb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/fs.h>
+file|<gnu/fs/ext2fs/fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/ext2_extern.h>
+file|<gnu/fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_comment

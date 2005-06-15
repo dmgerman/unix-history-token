@@ -166,7 +166,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/i386-bitops.h>
+file|<gnu/fs/ext2fs/i386-bitops.h>
 end_include
 
 begin_else
@@ -177,7 +177,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/ext2_bitops.h>
+file|<gnu/fs/ext2fs/ext2_bitops.h>
 end_include
 
 begin_endif
@@ -3094,7 +3094,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/ext2_fs.h>
+file|<gnu/fs/ext2fs/ext2_fs.h>
 end_include
 
 begin_define
