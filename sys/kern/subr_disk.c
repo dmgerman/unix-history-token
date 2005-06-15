@@ -796,6 +796,28 @@ operator|->
 name|queue
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_offset
+operator|<
+name|bq
+operator|->
+name|bio_offset
+condition|)
+block|{
+name|TAILQ_INSERT_BEFORE
+argument_list|(
+name|bq
+argument_list|,
+name|bp
+argument_list|,
+name|bio_queue
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Insertion sort */
 while|while
 condition|(
@@ -813,7 +835,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * We want to go after the current request if it is the end 		 * of the first request list, or if the next request is a 		 * larger cylinder than our request. 		 */
 if|if
 condition|(
 name|bp
