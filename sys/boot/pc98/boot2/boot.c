@@ -1554,16 +1554,6 @@ if|if
 condition|(
 name|c
 operator|==
-literal|'c'
-condition|)
-name|f
-operator||=
-name|RB_CONFIG
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|==
 literal|'D'
 condition|)
 name|f
