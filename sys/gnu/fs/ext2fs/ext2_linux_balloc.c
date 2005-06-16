@@ -4,7 +4,7 @@ comment|/*-  *  modified for Lites 1.1  *  *  Aug 1995, Godmar Back (gback@cs.ut
 end_comment
 
 begin_comment
-comment|/*-  *  linux/fs/ext2/balloc.c  *  * Copyright (C) 1992, 1993, 1994, 1995  * Remy Card (card@masi.ibp.fr)  * Laboratoire MASI - Institut Blaise Pascal  * Universite Pierre et Marie Curie (Paris VI)  *  *  Enhanced block allocation by Stephen Tweedie (sct@dcs.ed.ac.uk), 1993  */
+comment|/*-  *  linux/fs/ext2/balloc.c  *  * Copyright (C) 1992, 1993, 1994, 1995  * Remy Card (card@masi.ibp.fr)  * Laboratoire MASI - Institut Blaise Pascal  * Universite Pierre et Marie Curie (Paris VI)  *  *  Enhanced block allocation by Stephen Tweedie (sct@dcs.ed.ac.uk), 1993  *  *      This program is free software; you can redistribute it and/or modify  *      it under the terms of the GNU General Public License as published by  *      the Free Software Foundation; either version 2 of the License..  *  *      This program is distributed in the hope that it will be useful,  *      but WITHOUT ANY WARRANTY; without even the implied warranty of  *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *      GNU General Public License for more details.  *  *      You should have received a copy of the GNU General Public License  *      along with this program; if not, write to the Free Software  *      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  *  */
 end_comment
 
 begin_comment

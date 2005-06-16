@@ -4,7 +4,7 @@ comment|/*-  *  modified for EXT2FS support in Lites 1.1  *  *  Aug 1995, Godmar
 end_comment
 
 begin_comment
-comment|/*-  *  linux/include/linux/ext2_fs_sb.h  *  * Copyright (C) 1992, 1993, 1994, 1995  * Remy Card (card@masi.ibp.fr)  * Laboratoire MASI - Institut Blaise Pascal  * Universite Pierre et Marie Curie (Paris VI)  *  *  from  *  *  linux/include/linux/minix_fs_sb.h  *  *  Copyright (C) 1991, 1992  Linus Torvalds  */
+comment|/*-  *  linux/include/linux/ext2_fs_sb.h  *  * Copyright (C) 1992, 1993, 1994, 1995  * Remy Card (card@masi.ibp.fr)  * Laboratoire MASI - Institut Blaise Pascal  * Universite Pierre et Marie Curie (Paris VI)  *  *  from  *  *  linux/include/linux/minix_fs_sb.h  *  *  Copyright (C) 1991, 1992  Linus Torvalds  *  *      This program is free software; you can redistribute it and/or modify  *      it under the terms of the GNU General Public License as published by  *      the Free Software Foundation; either version 2 of the License.  *  *      This program is distributed in the hope that it will be useful,  *      but WITHOUT ANY WARRANTY; without even the implied warranty of  *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *      GNU General Public License for more details.  *  *      You should have received a copy of the GNU General Public License  *      along with this program; if not, write to the Free Software  *      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  *  */
 end_comment
 
 begin_ifndef
