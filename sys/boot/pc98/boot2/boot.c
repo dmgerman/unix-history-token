@@ -573,19 +573,19 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"boot.config: %s"
-argument_list|,
-name|boot_config
-argument_list|)
-expr_stmt|;
 name|getbootdev
 argument_list|(
 name|boot_config
 argument_list|,
 operator|&
 name|loadflags
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"boot.config: %s"
+argument_list|,
+name|boot_config
 argument_list|)
 expr_stmt|;
 if|if
