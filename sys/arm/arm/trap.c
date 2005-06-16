@@ -1350,8 +1350,6 @@ if|if
 condition|(
 name|pmap_fault_fixup
 argument_list|(
-name|user
-condition|?
 name|vmspace_pmap
 argument_list|(
 name|td
@@ -1360,8 +1358,6 @@ name|td_proc
 operator|->
 name|p_vmspace
 argument_list|)
-else|:
-name|kernel_pmap
 argument_list|,
 name|va
 argument_list|,
