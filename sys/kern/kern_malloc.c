@@ -3204,9 +3204,6 @@ name|int
 name|size
 decl_stmt|;
 name|int
-name|len
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
 name|bufsize
