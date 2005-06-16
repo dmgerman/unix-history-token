@@ -4086,6 +4086,10 @@ operator|&
 name|NMODIFIED
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* Needs matching nonblock semantics elsewhere, too. */
 comment|/* 			 * Require non-blocking, synchronous writes to 			 * dirty files to inform the program it needs 			 * to fsync(2) explicitly. 			 */
 if|if
 condition|(
@@ -4098,6 +4102,8 @@ operator|(
 name|EAGAIN
 operator|)
 return|;
+endif|#
+directive|endif
 name|flush_and_restart
 label|:
 name|np
