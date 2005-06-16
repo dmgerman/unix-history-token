@@ -5288,6 +5288,34 @@ block|,
 name|DIST_INFO
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__amd64__
+block|{
+literal|" lib32"
+block|,
+literal|"32-bit runtime compatibility libraries"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_LIB32
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|" man"
 block|,

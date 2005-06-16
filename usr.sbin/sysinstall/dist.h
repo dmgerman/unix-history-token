@@ -103,6 +103,24 @@ name|DIST_LOCAL
 value|0x00800
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DIST_LIB32
+value|0x01000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
