@@ -2666,9 +2666,10 @@ condition|(
 name|sa
 operator|->
 name|sa_family
-operator|==
+operator|!=
 name|AF_INET6
 condition|)
+return|return;
 name|in6_fillscopeid
 argument_list|(
 operator|&
@@ -2733,9 +2734,10 @@ condition|(
 name|sa
 operator|->
 name|sa_family
-operator|==
+operator|!=
 name|AF_INET6
 condition|)
+return|return;
 name|in6_fillscopeid
 argument_list|(
 operator|&
