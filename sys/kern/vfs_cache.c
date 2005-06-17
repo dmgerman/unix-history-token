@@ -2358,6 +2358,7 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* 		 * For dotdot lookups only cache the v_dd pointer if the 		 * directory has a link back to its parent via v_cache_dst. 		 * Without this an unlinked directory would keep a soft 		 * reference to its parent which could not be NULLd at 		 * cache_purge() time. 		 */
 if|if
 condition|(
 name|cnp
@@ -2376,11 +2377,28 @@ operator|==
 literal|'.'
 condition|)
 block|{
+name|CACHE_LOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|dvp
+operator|->
+name|v_cache_dst
+argument_list|)
+condition|)
 name|dvp
 operator|->
 name|v_dd
 operator|=
 name|vp
+expr_stmt|;
+name|CACHE_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
