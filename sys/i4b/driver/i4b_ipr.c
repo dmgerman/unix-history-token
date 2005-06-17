@@ -688,7 +688,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"if_ipr.c, ipr_attach: cannot if_alloc()"
+literal|"i4b_ipr.c, i4biprattach: cannot if_alloc()"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1024,7 +1024,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"if_ipr.c, ipr_attach: VJ malloc failed"
+literal|"i4b_ipr.c, i4biprattach: VJ malloc failed"
 argument_list|)
 expr_stmt|;
 block|}
