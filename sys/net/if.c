@@ -2025,7 +2025,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* XXX: This should fail it index it is too big */
+comment|/* XXX: This should fail if if_index is too big */
 name|ifp
 operator|->
 name|if_index
