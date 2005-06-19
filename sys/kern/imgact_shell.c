@@ -454,7 +454,7 @@ condition|(
 operator|--
 name|ihp
 operator|>
-name|interpe
+name|optb
 operator|&&
 operator|(
 operator|(
@@ -489,7 +489,7 @@ comment|/* interpreter */
 if|if
 condition|(
 name|opte
-operator|!=
+operator|>
 name|optb
 condition|)
 comment|/* options (if any) */
@@ -690,7 +690,7 @@ expr_stmt|;
 if|if
 condition|(
 name|opte
-operator|!=
+operator|>
 name|optb
 condition|)
 block|{
