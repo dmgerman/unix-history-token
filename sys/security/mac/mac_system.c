@@ -854,7 +854,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * XXXMAC: We're very much like to assert the SYSCTL_LOCK here, 	 * but since it's not exported from kern_sysctl.c, we can't. 	 */
+comment|/* 	 * XXXMAC: We would very much like to assert the SYSCTL_LOCK here, 	 * but since it's not exported from kern_sysctl.c, we can't. 	 */
 if|if
 condition|(
 operator|!
