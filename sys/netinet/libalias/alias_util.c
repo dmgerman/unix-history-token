@@ -131,6 +131,7 @@ name|struct
 name|libalias
 modifier|*
 name|la
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
@@ -145,11 +146,6 @@ name|sum
 decl_stmt|,
 name|oddbyte
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|la
-expr_stmt|;
 name|sum
 operator|=
 literal|0
@@ -264,8 +260,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|PacketAliasInternetChecksum
+name|LibAliasInternetChecksum
 argument_list|(
+name|NULL
+argument_list|,
 operator|(
 name|u_short
 operator|*
