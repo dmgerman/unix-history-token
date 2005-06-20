@@ -3289,7 +3289,8 @@ index|]
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|plen
 decl_stmt|,
 name|olen
