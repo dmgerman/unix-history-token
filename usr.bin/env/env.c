@@ -106,6 +106,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"envopts.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -146,6 +152,9 @@ parameter_list|)
 block|{
 name|char
 modifier|*
+name|altpath
+decl_stmt|,
+modifier|*
 modifier|*
 name|ep
 decl_stmt|,
@@ -168,6 +177,10 @@ name|ch
 decl_stmt|,
 name|want_clear
 decl_stmt|;
+name|altpath
+operator|=
+name|NULL
+expr_stmt|;
 name|want_clear
 operator|=
 literal|0
@@ -183,7 +196,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-iv"
+literal|"-iP:S:v"
 argument_list|)
 operator|)
 operator|!=
@@ -204,6 +217,36 @@ case|:
 name|want_clear
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|altpath
+operator|=
+name|strdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* 			 * The -S option, for "split string on spaces, with 			 * support for some simple substitutions"... 			 */
+name|split_spaces
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|optind
+argument_list|,
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -334,6 +377,17 @@ condition|)
 block|{
 if|if
 condition|(
+name|altpath
+condition|)
+name|search_paths
+argument_list|(
+name|altpath
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|env_verbosity
 condition|)
 block|{
@@ -461,7 +515,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: env [-iv] [name=value ...] [utility [argument ...]]\n"
+literal|"usage: env [-iv] [-P utilpath] [-S string] [name=value ...]"
+literal|" [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
