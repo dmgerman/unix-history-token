@@ -750,6 +750,8 @@ argument_list|,
 name|slot
 argument_list|,
 name|pin
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

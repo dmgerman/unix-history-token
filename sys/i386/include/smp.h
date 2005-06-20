@@ -634,6 +634,9 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1478,6 +1478,9 @@ parameter_list|(
 name|pcicfgregs
 modifier|*
 name|probe
+parameter_list|,
+name|device_t
+name|bus
 parameter_list|)
 block|{
 define|#
@@ -1759,6 +1762,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX: This actually ends up trying to route the IRQ 		 * even though the code below assumes it returns the raw 		 * value.  This is why 4.x is poo. 		 */
 name|cfg
 operator|->
 name|intline
@@ -1812,6 +1816,8 @@ argument_list|,
 name|cfg
 operator|->
 name|intpin
+argument_list|,
+name|bus
 argument_list|)
 expr_stmt|;
 if|if
@@ -6060,6 +6066,8 @@ name|pci_readcfg
 argument_list|(
 operator|&
 name|probe
+argument_list|,
+name|dev
 argument_list|)
 decl_stmt|;
 if|if
