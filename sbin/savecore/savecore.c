@@ -498,9 +498,11 @@ argument_list|,
 literal|"unable to open bounds file, using 0"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|newfile
-goto|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -529,9 +531,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-goto|goto
-name|newfile
-goto|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 name|errno
 operator|=
@@ -574,8 +578,27 @@ argument_list|,
 literal|"invalid value found in bounds, using 0"
 argument_list|)
 expr_stmt|;
-name|newfile
-label|:
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|writebounds
+parameter_list|(
+name|int
+name|bounds
+parameter_list|)
+block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -599,9 +622,7 @@ argument_list|,
 literal|"unable to write to bounds file: %m"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -611,7 +632,7 @@ name|printf
 argument_list|(
 literal|"bounds number: %d\n"
 argument_list|,
-name|ret
+name|bounds
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -620,11 +641,7 @@ name|fp
 argument_list|,
 literal|"%d\n"
 argument_list|,
-operator|(
-name|ret
-operator|+
-literal|1
-operator|)
+name|bounds
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -632,13 +649,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|done
-label|:
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 
@@ -1649,6 +1659,13 @@ goto|goto
 name|closefd
 goto|;
 block|}
+name|writebounds
+argument_list|(
+name|bounds
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|buf
