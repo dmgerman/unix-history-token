@@ -2414,8 +2414,6 @@ name|int
 name|count
 decl_stmt|,
 name|warned
-decl_stmt|,
-name|storming
 decl_stmt|;
 name|td
 operator|=
@@ -2463,10 +2461,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|warned
-operator|=
-literal|0
-expr_stmt|;
-name|storming
 operator|=
 literal|0
 expr_stmt|;
@@ -2739,9 +2733,6 @@ block|}
 comment|/* 			 * Interrupt storm handling: 			 * 			 * If this interrupt source is currently storming, 			 * then throttle it to only fire the handler once 			 * per clock tick. 			 * 			 * If this interrupt source is not currently 			 * storming, but the number of back to back 			 * interrupts exceeds the storm threshold, then 			 * enter storming mode. 			 */
 if|if
 condition|(
-operator|!
-name|storming
-operator|&&
 name|intr_storm_threshold
 operator|!=
 literal|0
@@ -2771,15 +2762,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|storming
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|storming
-condition|)
 name|tsleep
 argument_list|(
 operator|&
@@ -2794,6 +2776,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|count
 operator|++
@@ -2854,10 +2837,6 @@ name|td
 argument_list|)
 expr_stmt|;
 name|count
-operator|=
-literal|0
-expr_stmt|;
-name|storming
 operator|=
 literal|0
 expr_stmt|;
