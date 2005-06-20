@@ -1377,11 +1377,6 @@ operator|->
 name|inp_vflag
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|sock
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 if|if
