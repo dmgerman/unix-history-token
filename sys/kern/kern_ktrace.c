@@ -2986,9 +2986,17 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 if|if
 condition|(
 name|descend
