@@ -157,34 +157,6 @@ directive|include
 file|<geom/geom_vfs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<gnu/fs/ext2fs/i386-bitops.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<gnu/fs/ext2fs/ext2_bitops.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -3760,60 +3732,43 @@ value|2
 end_define
 
 begin_comment
-comment|/* 64 bit systems (and the S/390) need to be aligned explicitly -jdm */
+comment|/* Macro to map Linux' *_bit function to bitstring.h macros */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|BITS_PER_LONG
-operator|==
-literal|64
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
-name|ADDR_UNALIGNED_BITS
-value|(3)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ADDR_UNALIGNED_BITS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|aligned_address
+name|set_bit
 parameter_list|(
-name|addr
+name|bit
+parameter_list|,
+name|name
 parameter_list|)
-define|\
-value|((void *)((long)(addr)& ~((1UL<< ADDR_UNALIGNED_BITS) - 1)))
+value|bit_set((bitstr_t *)name, bit)
 end_define
 
 begin_define
 define|#
 directive|define
-name|unaligned_offset
+name|clear_bit
 parameter_list|(
-name|addr
+name|bit
+parameter_list|,
+name|name
 parameter_list|)
-define|\
-value|(((int)((long)(addr)& ((1<< ADDR_UNALIGNED_BITS) - 1)))<< 3)
+value|bit_clear((bitstr_t *)name, bit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|test_bit
+parameter_list|(
+name|bit
+parameter_list|,
+name|name
+parameter_list|)
+value|bit_test((bitstr_t *)name, bit)
 end_define
 
 begin_define
@@ -3821,12 +3776,11 @@ define|#
 directive|define
 name|set_bit_unaligned
 parameter_list|(
-name|nr
+name|bit
 parameter_list|,
-name|addr
+name|name
 parameter_list|)
-define|\
-value|set_bit((nr) + unaligned_offset(addr), aligned_address(addr))
+value|set_bit(bit, name)
 end_define
 
 begin_define
@@ -3834,12 +3788,11 @@ define|#
 directive|define
 name|clear_bit_unaligned
 parameter_list|(
-name|nr
+name|bit
 parameter_list|,
-name|addr
+name|name
 parameter_list|)
-define|\
-value|clear_bit((nr) + unaligned_offset(addr), aligned_address(addr))
+value|clear_bit(bit, name)
 end_define
 
 begin_define
@@ -3847,67 +3800,12 @@ define|#
 directive|define
 name|test_bit_unaligned
 parameter_list|(
-name|nr
+name|bit
 parameter_list|,
-name|addr
+name|name
 parameter_list|)
-define|\
-value|test_bit((nr) + unaligned_offset(addr), aligned_address(addr))
+value|test_bit(bit, name)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !defined ADDR_UNALIGNED_BITS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|set_bit_unaligned
-parameter_list|(
-name|nr
-parameter_list|,
-name|addr
-parameter_list|)
-value|set_bit(nr, addr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|clear_bit_unaligned
-parameter_list|(
-name|nr
-parameter_list|,
-name|addr
-parameter_list|)
-value|clear_bit(nr, addr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|test_bit_unaligned
-parameter_list|(
-name|nr
-parameter_list|,
-name|addr
-parameter_list|)
-value|test_bit(nr, addr)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined ADDR_UNALIGNED_BITS */
-end_comment
 
 begin_define
 define|#
@@ -4488,6 +4386,36 @@ parameter_list|)
 value|((path)->pos_in_item)
 end_define
 
+begin_if
+if|#
+directive|if
+operator|(
+name|_MACHINE_ARCH
+operator|==
+name|amd64
+operator|)
+end_if
+
+begin_comment
+comment|/* To workaround a bug in gcc. He generates a call to memset() which  * is a inline function; this causes a compile time error. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_PATH
+parameter_list|(
+name|var
+parameter_list|)
+define|\
+value|struct path var;							\     bzero(&var, sizeof(var));						\     var.path_length = ILLEGAL_PATH_ELEMENT_OFFSET;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -4498,6 +4426,11 @@ parameter_list|)
 define|\
 value|struct path var = { ILLEGAL_PATH_ELEMENT_OFFSET, }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Get path element by path and path position. */

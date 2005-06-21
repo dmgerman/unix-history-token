@@ -15,13 +15,6 @@ directive|define
 name|_GNU_REISERFS_REISERFS_MOUNT_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|REISERFS_FOR_FREEBSD_VERSION
-value|"0.1.6"
-end_define
-
 begin_if
 if|#
 directive|if
