@@ -153,6 +153,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|FCC_ID
+parameter_list|(
+name|fcc
+parameter_list|)
+value|(fcc)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_QP_CMP
 parameter_list|(
 name|name
@@ -162,7 +172,7 @@ parameter_list|,
 name|test
 parameter_list|)
 define|\
-value|int _Qp_f ## name(u_int *a, u_int *b) ; \ int \ _Qp_f ## name(u_int *a, u_int *b) \ { \ 	struct fpemu fe; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	fe.fe_f1.fp_sign = a[0]>> 31; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_qtof(&fe.fe_f1, a[0], a[1], a[2], a[3]); \ 	fe.fe_f2.fp_sign = b[0]>> 31; \ 	fe.fe_f2.fp_sticky = 0; \ 	fe.fe_f2.fp_class = __fpu_qtof(&fe.fe_f2, b[0], b[1], b[2], b[3]); \ 	__fpu_compare(&fe, cmpe, 0); \ 	return (test(FSR_GET_FCC0(fe.fe_fsr))); \ }
+value|int _Qp_ ## name(u_int *a, u_int *b) ; \ int \ _Qp_ ## name(u_int *a, u_int *b) \ { \ 	struct fpemu fe; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	fe.fe_f1.fp_sign = a[0]>> 31; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_qtof(&fe.fe_f1, a[0], a[1], a[2], a[3]); \ 	fe.fe_f2.fp_sign = b[0]>> 31; \ 	fe.fe_f2.fp_sticky = 0; \ 	fe.fe_f2.fp_class = __fpu_qtof(&fe.fe_f2, b[0], b[1], b[2], b[3]); \ 	__fpu_compare(&fe, cmpe, 0); \ 	return (test(FSR_GET_FCC0(fe.fe_fsr))); \ }
 end_define
 
 begin_function_decl
@@ -507,7 +517,7 @@ end_macro
 begin_macro
 name|_QP_CMP
 argument_list|(
-argument|eq
+argument|feq
 argument_list|,
 literal|0
 argument_list|,
@@ -518,7 +528,7 @@ end_macro
 begin_macro
 name|_QP_CMP
 argument_list|(
-argument|ge
+argument|fge
 argument_list|,
 literal|0
 argument_list|,
@@ -529,7 +539,7 @@ end_macro
 begin_macro
 name|_QP_CMP
 argument_list|(
-argument|gt
+argument|fgt
 argument_list|,
 literal|0
 argument_list|,
@@ -540,7 +550,7 @@ end_macro
 begin_macro
 name|_QP_CMP
 argument_list|(
-argument|le
+argument|fle
 argument_list|,
 literal|0
 argument_list|,
@@ -551,7 +561,7 @@ end_macro
 begin_macro
 name|_QP_CMP
 argument_list|(
-argument|lt
+argument|flt
 argument_list|,
 literal|0
 argument_list|,
@@ -562,11 +572,33 @@ end_macro
 begin_macro
 name|_QP_CMP
 argument_list|(
-argument|ne
+argument|fne
 argument_list|,
 literal|0
 argument_list|,
 argument|FCC_NE
+argument_list|)
+end_macro
+
+begin_macro
+name|_QP_CMP
+argument_list|(
+argument|cmp
+argument_list|,
+literal|0
+argument_list|,
+argument|FCC_ID
+argument_list|)
+end_macro
+
+begin_macro
+name|_QP_CMP
+argument_list|(
+argument|cmpe
+argument_list|,
+literal|1
+argument_list|,
+argument|FCC_ID
 argument_list|)
 end_macro
 
