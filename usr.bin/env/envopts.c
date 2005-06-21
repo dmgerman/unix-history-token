@@ -79,7 +79,9 @@ end_include
 
 begin_function_decl
 specifier|static
-name|void
+specifier|const
+name|char
+modifier|*
 name|expand_vars
 parameter_list|(
 name|char
@@ -461,10 +463,21 @@ modifier|*
 name|origv
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|nullarg
+init|=
+literal|""
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|bq_src
+decl_stmt|,
+modifier|*
+name|copystr
 decl_stmt|,
 modifier|*
 name|src
@@ -613,11 +626,16 @@ name|src
 operator|++
 control|)
 block|{
+comment|/* 		 * This switch will look at a character in *src, and decide 		 * what should be copied to *dest.  It only decides what 		 * character(s) to copy, it should not modify *dest.  In some 		 * cases, it will look at multiple characters from *src. 		 */
 name|copychar
 operator|=
 name|found_sep
 operator|=
 literal|0
+expr_stmt|;
+name|copystr
+operator|=
+name|NULL
 expr_stmt|;
 switch|switch
 condition|(
@@ -648,6 +666,11 @@ literal|0
 expr_stmt|;
 else|else
 block|{
+comment|/* 				 * Referencing nullarg ensures that a new 				 * argument is created, even if this quoted 				 * string ends up with zero characters. 				 */
+name|copystr
+operator|=
+name|nullarg
+expr_stmt|;
 name|in_dq
 operator|=
 literal|1
@@ -683,6 +706,8 @@ name|src
 expr_stmt|;
 else|else
 block|{
+name|copystr
+operator|=
 name|expand_vars
 argument_list|(
 operator|(
@@ -723,6 +748,11 @@ literal|0
 expr_stmt|;
 else|else
 block|{
+comment|/* 				 * Referencing nullarg ensures that a new 				 * argument is created, even if this quoted 				 * string ends up with zero characters. 				 */
+name|copystr
+operator|=
+name|nullarg
+expr_stmt|;
 name|in_sq
 operator|=
 literal|1
@@ -979,9 +1009,14 @@ name|src
 expr_stmt|;
 block|}
 block|}
+comment|/* 		 * Now that the switch has determined what (if anything) 		 * needs to be copied, copy whatever that is to *dest. 		 */
 if|if
 condition|(
 name|copychar
+operator|||
+name|copystr
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1005,6 +1040,10 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|copychar
+condition|)
 operator|*
 name|dest
 operator|++
@@ -1013,6 +1052,28 @@ operator|(
 name|char
 operator|)
 name|copychar
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|copystr
+operator|!=
+name|NULL
+condition|)
+while|while
+condition|(
+operator|*
+name|copystr
+operator|!=
+literal|'\0'
+condition|)
+operator|*
+name|dest
+operator|++
+operator|=
+operator|*
+name|copystr
+operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -1192,7 +1253,10 @@ comment|/**  * Routine to split expand any environment variables referenced in t
 end_comment
 
 begin_function
-name|void
+specifier|static
+specifier|const
+name|char
+modifier|*
 name|expand_vars
 parameter_list|(
 name|char
@@ -1224,9 +1288,6 @@ modifier|*
 name|vvalue
 decl_stmt|;
 name|char
-modifier|*
-name|edest
-decl_stmt|,
 modifier|*
 name|newstr
 decl_stmt|,
@@ -1390,7 +1451,11 @@ argument_list|,
 name|vname
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1409,12 +1474,7 @@ argument_list|,
 name|vvalue
 argument_list|)
 expr_stmt|;
-comment|/* 	 * There is some value to copy to the destination.  If the value is 	 * shorter than the ${VARNAME} reference that it replaces, then we 	 * can just copy the value to the existing destination. 	 */
-name|edest
-operator|=
-operator|*
-name|dest_p
-expr_stmt|;
+comment|/* 	 * There is some value to copy to the destination.  If the value is 	 * shorter than the ${VARNAME} reference that it replaces, then our 	 * caller can just copy the value to the existing destination. 	 */
 if|if
 condition|(
 name|strlen
@@ -1429,32 +1489,15 @@ argument_list|(
 name|vvalue
 argument_list|)
 condition|)
-block|{
-while|while
-condition|(
-operator|*
+return|return
+operator|(
 name|vvalue
-operator|!=
-literal|'\0'
-condition|)
+operator|)
+return|;
+comment|/* 	 * The value is longer than the string it replaces, which means the 	 * present destination area is too small to hold it.  Create a new 	 * destination area, copy the present 'thisarg' value to it, and 	 * update the caller's 'thisarg' and 'dest' variables to match. 	 * Note that it is still the caller which will copy vvalue to *dest. 	 */
 operator|*
-name|edest
-operator|++
-operator|=
-operator|*
-name|vvalue
-operator|++
-expr_stmt|;
 operator|*
 name|dest_p
-operator|=
-name|edest
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * The value is longer than the string it replaces, which means the 	 * present destination area is too small to hold it.  Create a new 	 * destination area, copy the present 'thisarg' value and the value 	 * of the referenced-variable to it, and then update the caller's 	 * 'thisarg' and 'dest' variables to match. 	 */
-operator|*
-name|edest
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1495,13 +1538,6 @@ operator|*
 name|thisarg_p
 argument_list|)
 expr_stmt|;
-name|strcat
-argument_list|(
-name|newstr
-argument_list|,
-name|vvalue
-argument_list|)
-expr_stmt|;
 operator|*
 name|thisarg_p
 operator|=
@@ -1517,6 +1553,11 @@ argument_list|,
 literal|'\0'
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|vvalue
+operator|)
+return|;
 block|}
 end_function
 
