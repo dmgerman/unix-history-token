@@ -4141,10 +4141,16 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * The presence of hardware performance counters on the AMD 	 * Athlon, Duron or later processors, is _not_ indicated by 	 * any of the processor feature flags set by the 'CPUID' 	 * instruction, so we only check the 'instruction family' 	 * field returned by CPUID for instruction family>= 6. 	 */
+name|class
+operator|=
 name|cputype
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|name
+operator|=
+name|NULL
 expr_stmt|;
 switch|switch
 condition|(
