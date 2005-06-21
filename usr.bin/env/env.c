@@ -317,14 +317,6 @@ operator|*
 name|argv
 operator|&&
 operator|(
-operator|*
-operator|*
-name|argv
-operator|!=
-literal|'/'
-operator|)
-operator|&&
-operator|(
 name|p
 operator|=
 name|strchr
