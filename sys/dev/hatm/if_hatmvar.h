@@ -1756,7 +1756,7 @@ name|FL
 parameter_list|,
 name|PRINT
 parameter_list|)
-value|do {						\ 	if((SC)->debug& DBG_##FL) { 					\ 		if_printf(&(SC)->ifatm.ifnet, "%s: ", __func__);	\ 		printf PRINT;						\ 		printf("\n");						\ 	}								\     } while (0)
+value|do {						\ 	if((SC)->debug& DBG_##FL) { 					\ 		if_printf((SC)->ifp, "%s: ", __func__);			\ 		printf PRINT;						\ 		printf("\n");						\ 	}								\     } while (0)
 end_define
 
 begin_enum
