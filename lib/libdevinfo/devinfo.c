@@ -1639,6 +1639,10 @@ name|devinfo_initted
 operator|=
 literal|0
 expr_stmt|;
+name|devinfo_generation
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
