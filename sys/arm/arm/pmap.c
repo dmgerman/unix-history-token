@@ -8177,6 +8177,13 @@ name|alloc_curaddr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|alloc_firstaddr
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -8848,6 +8855,8 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|alloc_firstaddr
+operator|=
 name|alloc_curaddr
 operator|=
 name|lastaddr
