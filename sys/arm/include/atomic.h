@@ -837,7 +837,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_smpset_rel_ptr
+name|atomic_cmpset_rel_ptr
 value|atomic_cmpset_ptr
 end_define
 
