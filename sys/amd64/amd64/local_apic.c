@@ -2771,7 +2771,7 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * Inter Processor Interrupt functions.  The lapic_ipi_*() functions are  * private to the sys/i386 code.  The public interface for the rest of the  * kernel is defined in mp_machdep.c.  */
+comment|/*  * Inter Processor Interrupt functions.  The lapic_ipi_*() functions are  * private to the sys/amd64 code.  The public interface for the rest of the  * kernel is defined in mp_machdep.c.  */
 end_comment
 
 begin_function

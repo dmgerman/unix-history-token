@@ -2736,7 +2736,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Initialize 386 and configure to run kernel  */
+comment|/*  * Initialize amd64 and configure to run kernel  */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2003 John Baldwin<jhb@FreeBSD.org>  * All rights re
 end_comment
 
 begin_comment
-comment|/*  * Machine dependent interrupt code for i386.  For the i386, we have to  * deal with different PICs.  Thus, we use the passed in vector to lookup  * an interrupt source associated with that vector.  The interrupt source  * describes which PIC the source belongs to and includes methods to handle  * that source.  */
+comment|/*  * Machine dependent interrupt code for amd64.  For amd64, we have to  * deal with different PICs.  Thus, we use the passed in vector to lookup  * an interrupt source associated with that vector.  The interrupt source  * describes which PIC the source belongs to and includes methods to handle  * that source.  */
 end_comment
 
 begin_include
