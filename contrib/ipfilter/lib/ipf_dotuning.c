@@ -220,6 +220,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|tu
+operator|.
+name|ipft_cookie
+operator|=
+name|NULL
+expr_stmt|;
 operator|*
 name|t
 operator|++
@@ -302,6 +308,12 @@ block|}
 block|}
 else|else
 block|{
+name|tu
+operator|.
+name|ipft_cookie
+operator|=
+name|NULL
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|tu
@@ -352,7 +364,18 @@ name|ipft_cookie
 operator|==
 name|NULL
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Null cookie for %s\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|tu
 operator|.
 name|ipft_name
