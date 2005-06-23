@@ -5330,7 +5330,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * There is something to report, and we own an upcall 		 * strucuture, we can go to userland. 		 * Turn ourself into an upcall thread. 		 */
+comment|/* 		 * There is something to report, and we own an upcall 		 * structure, we can go to userland. 		 * Turn ourself into an upcall thread. 		 */
 name|td
 operator|->
 name|td_pflags
