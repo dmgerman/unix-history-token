@@ -240,9 +240,12 @@ begin_comment
 comment|/* Meinberg clocks */
 end_comment
 
-begin_comment
-comment|/* #undef CLOCK_MEINBERG */
-end_comment
+begin_define
+define|#
+directive|define
+name|CLOCK_MEINBERG
+value|1
+end_define
 
 begin_comment
 comment|/* EES M201 MSF receiver */
