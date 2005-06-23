@@ -581,7 +581,7 @@ comment|/*  * We define our machine-independent (unoptimized) mutex micro-operat
 end_comment
 
 begin_comment
-comment|/* Actually obtain mtx_lock */
+comment|/* Try to obtain mtx_lock once. */
 end_comment
 
 begin_ifndef
@@ -609,7 +609,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Actually release mtx_lock */
+comment|/* Try to release mtx_lock if it is unrecursed and uncontested. */
 end_comment
 
 begin_ifndef
@@ -637,7 +637,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Actually release mtx_lock quickly, assuming we own it. */
+comment|/* Release mtx_lock quickly, assuming we own it. */
 end_comment
 
 begin_ifndef
