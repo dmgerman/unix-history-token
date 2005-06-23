@@ -179,7 +179,7 @@ name|architectureversion
 operator|=
 name|htod32
 argument_list|(
-name|KERNELDUMP_I386_VERSION
+name|KERNELDUMP_AMD64_VERSION
 argument_list|)
 expr_stmt|;
 name|kdh
