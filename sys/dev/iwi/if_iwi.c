@@ -7163,7 +7163,6 @@ name|sc_ic
 decl_stmt|;
 name|struct
 name|ieee80211_frame
-modifier|*
 name|wh
 decl_stmt|;
 name|struct
@@ -7199,8 +7198,8 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-name|wh
-operator|=
+name|bcopy
+argument_list|(
 name|mtod
 argument_list|(
 name|m0
@@ -7209,11 +7208,21 @@ expr|struct
 name|ieee80211_frame
 operator|*
 argument_list|)
+argument_list|,
+operator|&
+name|wh
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_frame
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|wh
-operator|->
+operator|.
 name|i_fc
 index|[
 literal|1
@@ -7242,18 +7251,6 @@ condition|)
 return|return
 name|ENOBUFS
 return|;
-comment|/* packet header may have moved, reset our local pointer */
-name|wh
-operator|=
-name|mtod
-argument_list|(
-name|m0
-argument_list|,
-expr|struct
-name|ieee80211_frame
-operator|*
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -7572,6 +7569,7 @@ name|desc
 operator|->
 name|wh
 argument_list|,
+operator|&
 name|wh
 argument_list|,
 sizeof|sizeof
@@ -7593,7 +7591,7 @@ operator|!
 name|IEEE80211_IS_MULTICAST
 argument_list|(
 name|wh
-operator|->
+operator|.
 name|i_addr1
 argument_list|)
 condition|)
@@ -7606,7 +7604,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (ic->ic_flags& IEEE80211_F_PRIVACY) { 		wh->i_fc[1] |= IEEE80211_FC1_WEP; 		desc->wep_txkey = ic->ic_crypto.cs_def_txkey; 	} else
+block|if (ic->ic_flags& IEEE80211_F_PRIVACY) { 		wh.i_fc[1] |= IEEE80211_FC1_WEP; 		desc->wep_txkey = ic->ic_crypto.cs_def_txkey; 	} else
 endif|#
 directive|endif
 name|desc
