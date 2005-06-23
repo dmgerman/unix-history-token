@@ -1747,19 +1747,12 @@ operator|-
 name|sack_blocks
 operator|>=
 literal|0
-condition|)
-block|{
-name|KASSERT
-argument_list|(
+operator|&&
 name|cur
 operator|!=
 name|NULL
-argument_list|,
-operator|(
-literal|"cur != NULL"
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
 if|if
 condition|(
 name|SEQ_GEQ
