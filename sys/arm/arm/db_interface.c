@@ -229,6 +229,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|db_varfcn_t
+name|db_frame
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -254,8 +261,8 @@ argument_list|(
 name|tf_spsr
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r0"
@@ -265,8 +272,8 @@ argument_list|(
 name|tf_r0
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r1"
@@ -276,8 +283,8 @@ argument_list|(
 name|tf_r1
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r2"
@@ -287,8 +294,8 @@ argument_list|(
 name|tf_r2
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r3"
@@ -298,8 +305,8 @@ argument_list|(
 name|tf_r3
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r4"
@@ -309,8 +316,8 @@ argument_list|(
 name|tf_r4
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r5"
@@ -320,8 +327,8 @@ argument_list|(
 name|tf_r5
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r6"
@@ -331,8 +338,8 @@ argument_list|(
 name|tf_r6
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r7"
@@ -342,8 +349,8 @@ argument_list|(
 name|tf_r7
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r8"
@@ -353,8 +360,8 @@ argument_list|(
 name|tf_r8
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r9"
@@ -364,8 +371,8 @@ argument_list|(
 name|tf_r9
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r10"
@@ -375,8 +382,8 @@ argument_list|(
 name|tf_r10
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r11"
@@ -386,8 +393,8 @@ argument_list|(
 name|tf_r11
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"r12"
@@ -397,8 +404,8 @@ argument_list|(
 name|tf_r12
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"usr_sp"
@@ -408,8 +415,8 @@ argument_list|(
 name|tf_usr_sp
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"usr_lr"
@@ -419,8 +426,8 @@ argument_list|(
 name|tf_usr_lr
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"svc_sp"
@@ -430,8 +437,8 @@ argument_list|(
 name|tf_svc_sp
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"svc_lr"
@@ -441,8 +448,8 @@ argument_list|(
 name|tf_svc_lr
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"pc"
@@ -452,8 +459,8 @@ argument_list|(
 name|tf_pc
 argument_list|)
 block|,
-name|FCN_NULL
-block|, }
+name|db_frame
+block|}
 block|,
 block|{
 literal|"und_sp"
@@ -531,6 +538,7 @@ name|rw
 operator|==
 name|DB_VAR_GET
 condition|)
+block|{
 operator|*
 name|valp
 operator|=
@@ -539,6 +547,12 @@ argument_list|(
 name|PSR_UND32_MODE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -570,6 +584,7 @@ name|rw
 operator|==
 name|DB_VAR_GET
 condition|)
+block|{
 operator|*
 name|valp
 operator|=
@@ -578,6 +593,12 @@ argument_list|(
 name|PSR_ABT32_MODE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -609,6 +630,7 @@ name|rw
 operator|==
 name|DB_VAR_GET
 condition|)
+block|{
 operator|*
 name|valp
 operator|=
@@ -619,7 +641,92 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|db_frame
+parameter_list|(
+name|struct
+name|db_variable
+modifier|*
+name|vp
+parameter_list|,
+name|db_expr_t
+modifier|*
+name|valp
+parameter_list|,
+name|int
+name|rw
+parameter_list|)
+block|{
+name|int
+modifier|*
+name|reg
+decl_stmt|;
+if|if
+condition|(
+name|kdb_frame
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|reg
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|kdb_frame
+operator|+
+operator|(
+name|db_expr_t
+operator|)
+name|vp
+operator|->
+name|valuep
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rw
+operator|==
+name|DB_VAR_GET
+condition|)
+operator|*
+name|valp
+operator|=
+operator|*
+name|reg
+expr_stmt|;
+else|else
+operator|*
+name|reg
+operator|=
+operator|*
+name|valp
+expr_stmt|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}
