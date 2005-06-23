@@ -2672,8 +2672,6 @@ name|struct
 name|proc_ldt
 modifier|*
 name|pldt
-init|=
-name|NULL
 decl_stmt|;
 name|union
 name|descriptor
@@ -3604,13 +3602,13 @@ name|NLDT
 operator|+
 literal|1
 expr_stmt|;
+comment|/* Allocate a user ldt. */
 name|pldt
 operator|=
 name|mdp
 operator|->
 name|md_ldt
 expr_stmt|;
-comment|/* allocate user ldt */
 if|if
 condition|(
 operator|!
@@ -3627,14 +3625,16 @@ name|struct
 name|proc_ldt
 modifier|*
 name|new_ldt
-init|=
+decl_stmt|;
+name|new_ldt
+operator|=
 name|user_ldt_alloc
 argument_list|(
 name|mdp
 argument_list|,
 name|len
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|new_ldt
@@ -3652,7 +3652,7 @@ name|mdp
 operator|->
 name|md_ldt
 expr_stmt|;
-comment|/* sched_lock was held by user_ldt_alloc */
+comment|/* sched_lock was acquired by user_ldt_alloc. */
 if|if
 condition|(
 name|pldt
@@ -3745,7 +3745,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * If other threads already did the work, 				 * do nothing 				 */
+comment|/* 				 * If other threads already did the work, 				 * do nothing. 				 */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
