@@ -8445,34 +8445,7 @@ operator|->
 name|p_siglist
 expr_stmt|;
 block|}
-comment|/* 	 * If proc is traced, always give parent a chance; 	 * if signal event is tracked by procfs, give *that* 	 * a chance, as well. 	 */
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TRACED
-operator|)
-operator|||
-operator|(
-name|p
-operator|->
-name|p_stops
-operator|&
-name|S_SIG
-operator|)
-condition|)
-block|{
-name|action
-operator|=
-name|SIG_DFL
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * If the signal is being ignored, 		 * then we forget about it immediately. 		 * (Note: we don't set SIGCONT in ps_sigignore, 		 * and if it is set to SIG_IGN, 		 * action will be SIG_DFL here.) 		 */
+comment|/* 	 * If the signal is being ignored, 	 * then we forget about it immediately. 	 * (Note: we don't set SIGCONT in ps_sigignore, 	 * and if it is set to SIG_IGN, 	 * action will be SIG_DFL here.) 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8555,7 +8528,6 @@ operator|->
 name|ps_mtx
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|prop
@@ -8931,26 +8903,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|p
 operator|->
 name|p_flag
 operator|&
 name|P_TRACED
-operator|)
 operator|||
-operator|(
 name|action
-operator|!=
-name|SIG_DFL
-operator|)
-operator|||
-operator|!
-operator|(
-name|prop
-operator|&
-name|SA_STOP
-operator|)
+operator|==
+name|SIG_CATCH
 condition|)
 block|{
 name|mtx_lock_spin
@@ -8978,6 +8939,13 @@ goto|goto
 name|out
 goto|;
 block|}
+name|MPASS
+argument_list|(
+name|action
+operator|==
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|prop
@@ -9297,27 +9265,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 		 * Process is sleeping and traced.  Make it runnable 		 * so it can discover the signal in issignal() and stop 		 * for its parent. 		 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TRACED
-condition|)
-block|{
-name|p
-operator|->
-name|p_flag
-operator|&=
-operator|~
-name|P_STOPPED_TRACE
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 			 * If SIGCONT is default (or ignored) and process is 			 * asleep, we are finished; the process should not 			 * be awakened. 			 */
+comment|/* 		 * If SIGCONT is default (or ignored) and process is 		 * asleep, we are finished; the process should not 		 * be awakened. 		 */
 if|if
 condition|(
 operator|(
@@ -9340,7 +9288,7 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-comment|/* 				 * It may be on either list in this state. 				 * Remove from both for now. 				 */
+comment|/* 			 * It may be on either list in this state. 			 * Remove from both for now. 			 */
 name|SIGDELSET
 argument_list|(
 name|td
@@ -9352,7 +9300,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 			 * Give low priority threads a better chance to run. 			 */
+comment|/* 		 * Give low priority threads a better chance to run. 		 */
 if|if
 condition|(
 name|td
@@ -9367,7 +9315,6 @@ name|td_priority
 operator|=
 name|PUSER
 expr_stmt|;
-block|}
 name|sleepq_abort
 argument_list|(
 name|td
