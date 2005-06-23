@@ -2368,7 +2368,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Should never happen. */
 name|bzero
 argument_list|(
 name|sp
