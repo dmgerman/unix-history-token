@@ -1446,7 +1446,7 @@ name|kp
 operator|->
 name|ki_tdev
 operator|=
-name|NULL
+name|NODEV
 expr_stmt|;
 endif|#
 directive|endif
