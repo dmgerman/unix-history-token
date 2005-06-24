@@ -363,6 +363,8 @@ argument_list|,
 name|PATH_MAX
 operator|+
 name|ARG_MAX
+operator|+
+name|MAXSHELLCMDLEN
 argument_list|)
 expr_stmt|;
 if|if
