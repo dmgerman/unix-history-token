@@ -125,8 +125,6 @@ argument_list|(
 name|DSPSI
 argument_list|,
 name|XJACK
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -134,14 +132,12 @@ argument_list|(
 name|NEWMEDIA
 argument_list|,
 name|BASICS
-argument_list|,
-literal|0
 argument_list|)
 block|,
 if|#
 directive|if
 literal|0
-block|PCMCIA_CARD(SMC, 8020BT, 0),
+block|PCMCIA_CARD(SMC, 8020BT),
 endif|#
 directive|endif
 block|{

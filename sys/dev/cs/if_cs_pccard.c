@@ -133,8 +133,6 @@ argument_list|(
 name|IBM
 argument_list|,
 name|ETHERJET
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

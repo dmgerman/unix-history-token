@@ -129,6 +129,13 @@ directive|include
 file|<net80211/ieee80211_radiotap.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|PCCARD_API_LEVEL
+value|6
+end_define
+
 begin_include
 include|#
 directive|include
@@ -352,8 +359,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3CRWE737A
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -361,8 +366,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3CRWE777A
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -370,8 +373,6 @@ argument_list|(
 name|ACTIONTEC
 argument_list|,
 name|PRISM
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -379,8 +380,6 @@ argument_list|(
 name|ADDTRON
 argument_list|,
 name|AWP100
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -388,8 +387,6 @@ argument_list|(
 name|AIRVAST
 argument_list|,
 name|WN_100
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -397,8 +394,6 @@ argument_list|(
 name|ALLIEDTELESIS
 argument_list|,
 name|WR211PCM
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -406,8 +401,6 @@ argument_list|(
 name|ARTEM
 argument_list|,
 name|ONAIR
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -415,8 +408,6 @@ argument_list|(
 name|ASUS
 argument_list|,
 name|WL100
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -424,8 +415,6 @@ argument_list|(
 name|BAY
 argument_list|,
 name|EMOBILITY_11B
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -433,8 +422,6 @@ argument_list|(
 name|BROMAX
 argument_list|,
 name|IWN
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -442,8 +429,6 @@ argument_list|(
 name|BROMAX
 argument_list|,
 name|IWN3
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -451,8 +436,6 @@ argument_list|(
 name|BROMAX
 argument_list|,
 name|WCF11
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -460,8 +443,6 @@ argument_list|(
 name|BUFFALO
 argument_list|,
 name|WLI_CF_S11G
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -469,8 +450,6 @@ argument_list|(
 name|BUFFALO
 argument_list|,
 name|WLI_PCM_S11
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -478,8 +457,6 @@ argument_list|(
 name|COMPAQ
 argument_list|,
 name|NC5004
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -487,8 +464,6 @@ argument_list|(
 name|CONTEC
 argument_list|,
 name|FX_DS110_PCC
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -496,8 +471,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|WIRELESS_LAN_PCC_11
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -505,8 +478,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|WIRELESS_LAN_PCCA_11
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -514,8 +485,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|WIRELESS_LAN_PCCB_11
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -523,8 +492,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|WIRELESS_LAN_PCCL_11
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -532,8 +499,6 @@ argument_list|(
 name|DLINK
 argument_list|,
 name|DWL650H
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -541,8 +506,6 @@ argument_list|(
 name|ELSA
 argument_list|,
 name|XI300_IEEE
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -550,8 +513,6 @@ argument_list|(
 name|ELSA
 argument_list|,
 name|XI325_IEEE
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -559,8 +520,13 @@ argument_list|(
 name|ELSA
 argument_list|,
 name|XI800_IEEE
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
+name|ELSA
 argument_list|,
-literal|0
+name|WIFI_FLASH
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -568,8 +534,6 @@ argument_list|(
 name|EMTAC
 argument_list|,
 name|WLAN
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -577,8 +541,6 @@ argument_list|(
 name|ERICSSON
 argument_list|,
 name|WIRELESSLAN
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -586,8 +548,6 @@ argument_list|(
 name|GEMTEK
 argument_list|,
 name|WLAN
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -595,8 +555,6 @@ argument_list|(
 name|HWN
 argument_list|,
 name|AIRWAY80211
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -604,8 +562,6 @@ argument_list|(
 name|INTEL
 argument_list|,
 name|PRO_WLAN_2011
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -613,8 +569,6 @@ argument_list|(
 name|INTERSIL
 argument_list|,
 name|ISL37100P
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -622,8 +576,6 @@ argument_list|(
 name|INTERSIL
 argument_list|,
 name|ISL37110P
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -631,8 +583,6 @@ argument_list|(
 name|INTERSIL
 argument_list|,
 name|ISL37300P
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -640,8 +590,6 @@ argument_list|(
 name|INTERSIL2
 argument_list|,
 name|PRISM2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -649,8 +597,6 @@ argument_list|(
 name|IODATA2
 argument_list|,
 name|WCF12
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -658,8 +604,6 @@ argument_list|(
 name|IODATA2
 argument_list|,
 name|WNB11PCM
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -667,8 +611,6 @@ argument_list|(
 name|FUJITSU
 argument_list|,
 name|WL110
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -676,8 +618,6 @@ argument_list|(
 name|LUCENT
 argument_list|,
 name|WAVELAN_IEEE
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -685,8 +625,6 @@ argument_list|(
 name|MICROSOFT
 argument_list|,
 name|MN_520
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -694,8 +632,6 @@ argument_list|(
 name|NOKIA
 argument_list|,
 name|C020_WLAN
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -703,8 +639,6 @@ argument_list|(
 name|NOKIA
 argument_list|,
 name|C110_WLAN
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -712,8 +646,6 @@ argument_list|(
 name|PLANEX
 argument_list|,
 name|GWNS11H
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -721,8 +653,6 @@ argument_list|(
 name|PROXIM
 argument_list|,
 name|HARMONY
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -730,8 +660,6 @@ argument_list|(
 name|PROXIM
 argument_list|,
 name|RANGELANDS_8430
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -739,8 +667,6 @@ argument_list|(
 name|SAMSUNG
 argument_list|,
 name|SWL_2000N
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -748,8 +674,6 @@ argument_list|(
 name|SIEMENS
 argument_list|,
 name|SS1021
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -757,8 +681,6 @@ argument_list|(
 name|SIMPLETECH
 argument_list|,
 name|SPECTRUM24_ALT
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -766,8 +688,6 @@ argument_list|(
 name|SOCKET
 argument_list|,
 name|LP_WLAN_CF
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -775,8 +695,6 @@ argument_list|(
 name|SYMBOL
 argument_list|,
 name|LA4100
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -784,8 +702,6 @@ argument_list|(
 name|TDK
 argument_list|,
 name|LAK_CD011WL
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

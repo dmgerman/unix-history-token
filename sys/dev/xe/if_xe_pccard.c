@@ -352,8 +352,6 @@ argument_list|(
 name|ACCTON
 argument_list|,
 name|EN2226
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x43
@@ -367,8 +365,6 @@ argument_list|(
 name|COMPAQ2
 argument_list|,
 name|CPQ_10_100
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x43
@@ -382,8 +378,6 @@ argument_list|(
 name|INTEL
 argument_list|,
 name|EEPRO100
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x43
@@ -397,8 +391,6 @@ argument_list|(
 name|INTEL
 argument_list|,
 name|PRO100LAN56
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x46
@@ -412,8 +404,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CE
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x41
@@ -427,8 +417,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CE2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x41
@@ -442,8 +430,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CE2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x42
@@ -457,8 +443,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CE2_2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x41
@@ -472,8 +456,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CE2_2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x42
@@ -487,8 +469,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CE3
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x43
@@ -502,8 +482,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CEM
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x41
@@ -517,8 +495,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CEM2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x42
@@ -532,8 +508,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CEM28
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x43
@@ -547,8 +521,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CEM33
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x44
@@ -562,8 +534,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CEM33_2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x44
@@ -577,8 +547,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CEM56
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x45
@@ -592,8 +560,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CEM56_2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x46
@@ -607,8 +573,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|REM56
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x46
@@ -622,8 +586,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|REM10
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x47
@@ -637,8 +599,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|XEM5600
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x56

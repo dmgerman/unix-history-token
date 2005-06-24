@@ -948,8 +948,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3C1
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -957,8 +955,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3C562
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -966,8 +962,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3C574
-argument_list|,
-literal|0
 argument_list|)
 block|,
 comment|/* ROADRUNNER */
@@ -976,8 +970,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3C589
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -985,8 +977,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3CCFEM556BI
-argument_list|,
-literal|0
 argument_list|)
 block|,
 comment|/* ROADRUNNER */
@@ -995,8 +985,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3CXEM556
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -1004,8 +992,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3CXEM556INT
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

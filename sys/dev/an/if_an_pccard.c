@@ -351,8 +351,6 @@ argument_list|(
 name|AIRONET
 argument_list|,
 name|PC4800
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -360,8 +358,6 @@ argument_list|(
 name|AIRONET
 argument_list|,
 name|PC4500
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -369,8 +365,6 @@ argument_list|(
 name|AIRONET
 argument_list|,
 literal|350
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -378,8 +372,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CWE1130
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

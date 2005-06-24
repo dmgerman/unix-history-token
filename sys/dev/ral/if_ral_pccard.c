@@ -245,8 +245,6 @@ argument_list|(
 name|RALINK
 argument_list|,
 name|RT2560
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

@@ -151,8 +151,6 @@ argument_list|(
 name|FREECOM
 argument_list|,
 name|PCCARDIDE
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -160,8 +158,6 @@ argument_list|(
 name|EXP
 argument_list|,
 name|EXPMULTIMEDIA
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -169,8 +165,6 @@ argument_list|(
 name|IODATA3
 argument_list|,
 name|CBIDE2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -178,8 +172,6 @@ argument_list|(
 name|OEM2
 argument_list|,
 name|CDROM1
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -187,8 +179,6 @@ argument_list|(
 name|OEM2
 argument_list|,
 name|IDE
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -196,8 +186,6 @@ argument_list|(
 name|PANASONIC
 argument_list|,
 name|KXLC005
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -205,8 +193,6 @@ argument_list|(
 name|TEAC
 argument_list|,
 name|IDECARDII
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

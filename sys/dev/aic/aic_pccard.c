@@ -172,8 +172,6 @@ argument_list|(
 name|ADAPTEC
 argument_list|,
 name|APA1460
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -181,8 +179,6 @@ argument_list|(
 name|ADAPTEC
 argument_list|,
 name|APA1460A
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -190,8 +186,6 @@ argument_list|(
 name|NEWMEDIA
 argument_list|,
 name|BUSTOASTER
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -199,8 +193,6 @@ argument_list|(
 name|NEWMEDIA
 argument_list|,
 name|BUSTOASTER2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -208,8 +200,6 @@ argument_list|(
 name|NEWMEDIA
 argument_list|,
 name|BUSTOASTER3
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

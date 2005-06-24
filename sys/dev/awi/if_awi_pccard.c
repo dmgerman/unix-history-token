@@ -206,8 +206,6 @@ argument_list|(
 name|AMD
 argument_list|,
 name|AM79C930
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -215,8 +213,6 @@ argument_list|(
 name|BAY
 argument_list|,
 name|STACK_650
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -224,8 +220,6 @@ argument_list|(
 name|BAY
 argument_list|,
 name|STACK_660
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -233,8 +227,6 @@ argument_list|(
 name|BAY
 argument_list|,
 name|SURFER_PRO
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -242,8 +234,6 @@ argument_list|(
 name|ICOM
 argument_list|,
 name|SL200
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -251,8 +241,6 @@ argument_list|(
 name|NOKIA
 argument_list|,
 name|C020_WLAN
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -260,8 +248,6 @@ argument_list|(
 name|FARALLON
 argument_list|,
 name|SKYLINE
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -269,8 +255,6 @@ argument_list|(
 name|ZOOM
 argument_list|,
 name|AIR_4000
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

@@ -190,8 +190,6 @@ argument_list|(
 name|IODATA3
 argument_list|,
 name|CBSC16
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -199,8 +197,6 @@ argument_list|(
 name|PANASONIC
 argument_list|,
 name|KME
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -208,8 +204,6 @@ argument_list|(
 name|WORKBIT2
 argument_list|,
 name|NINJA_SCSI3
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -217,8 +211,6 @@ argument_list|(
 name|WORKBIT
 argument_list|,
 name|ULTRA_NINJA_16
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

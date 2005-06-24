@@ -135,8 +135,6 @@ argument_list|(
 name|FUTUREDOMAIN
 argument_list|,
 name|SCSI2GO
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -144,8 +142,6 @@ argument_list|(
 name|IBM
 argument_list|,
 name|SCSICARD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -153,8 +149,6 @@ argument_list|(
 name|RATOC
 argument_list|,
 name|REX5536
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -162,8 +156,6 @@ argument_list|(
 name|RATOC
 argument_list|,
 name|REX5536AM
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|PCMCIA_CARD
@@ -171,8 +163,6 @@ argument_list|(
 name|RATOC
 argument_list|,
 name|REX5536M
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{

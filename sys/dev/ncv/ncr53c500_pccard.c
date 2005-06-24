@@ -197,8 +197,6 @@ argument_list|(
 name|EPSON
 argument_list|,
 name|SC200
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -210,8 +208,6 @@ argument_list|(
 name|PANASONIC
 argument_list|,
 name|KXLC002
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0xb4d00000
@@ -223,8 +219,6 @@ argument_list|(
 name|PANASONIC
 argument_list|,
 name|KXLC003
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0xb4d00000
@@ -237,8 +231,6 @@ argument_list|(
 name|PANASONIC
 argument_list|,
 name|KXLC004
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0xb4d00100
@@ -250,8 +242,6 @@ argument_list|(
 name|MACNICA
 argument_list|,
 name|MPS100
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0xb6250000
@@ -263,8 +253,6 @@ argument_list|(
 name|MACNICA
 argument_list|,
 name|MPS110
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -276,8 +264,6 @@ argument_list|(
 name|NEC
 argument_list|,
 name|PC9801N_J03R
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -289,8 +275,6 @@ argument_list|(
 name|NEWMEDIA
 argument_list|,
 name|BASICS_SCSI
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -302,8 +286,6 @@ argument_list|(
 name|QLOGIC
 argument_list|,
 name|PC05
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x84d00000
@@ -319,8 +301,6 @@ argument_list|(
 name|RATOC
 argument_list|,
 name|REX5572
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|FLAGS_REX5572
@@ -332,8 +312,6 @@ argument_list|(
 name|RATOC
 argument_list|,
 name|REX9530
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0x84d00000

@@ -222,8 +222,6 @@ argument_list|(
 name|FUJITSU2
 argument_list|,
 name|FMV_J181
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|MPP_MBH10302
@@ -235,8 +233,6 @@ argument_list|(
 name|FUJITSU2
 argument_list|,
 name|FMV_J182
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -248,8 +244,6 @@ argument_list|(
 name|FUJITSU2
 argument_list|,
 name|FMV_J182A
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -261,8 +255,6 @@ argument_list|(
 name|FUJITSU2
 argument_list|,
 name|ITCFJ182A
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -275,8 +267,6 @@ argument_list|(
 name|TDK
 argument_list|,
 name|LAK_CD021BX
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -288,8 +278,6 @@ argument_list|(
 name|TDK
 argument_list|,
 name|LAK_CF010
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -299,7 +287,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX 86960-based? */
-block|{ PCMCIA_CARD(TDK, LAK_DFL9610, 1), 0 },
+block|{ PCMCIA_CARD(TDK, LAK_DFL9610), 0 },
 endif|#
 directive|endif
 block|{
@@ -308,8 +296,6 @@ argument_list|(
 name|CONTEC
 argument_list|,
 name|CNETPC
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -321,8 +307,6 @@ argument_list|(
 name|FUJITSU
 argument_list|,
 name|LA501
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -334,8 +318,6 @@ argument_list|(
 name|FUJITSU
 argument_list|,
 name|LA10S
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -347,8 +329,6 @@ argument_list|(
 name|FUJITSU
 argument_list|,
 name|NE200T
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|MPP_MBH10302
@@ -361,8 +341,6 @@ argument_list|(
 name|RATOC
 argument_list|,
 name|REX_R280
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0

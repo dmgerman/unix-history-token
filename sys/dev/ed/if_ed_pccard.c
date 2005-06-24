@@ -443,8 +443,6 @@ argument_list|(
 name|ACCTON
 argument_list|,
 name|EN2212
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -456,8 +454,6 @@ argument_list|(
 name|ACCTON
 argument_list|,
 name|EN2216
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -469,8 +465,6 @@ argument_list|(
 name|ALLIEDTELESIS
 argument_list|,
 name|LA_PCM
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -482,8 +476,6 @@ argument_list|(
 name|AMBICOM
 argument_list|,
 name|AMB8002T
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -495,8 +487,6 @@ argument_list|(
 name|BILLIONTON
 argument_list|,
 name|LNT10TN
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -508,8 +498,6 @@ argument_list|(
 name|BILLIONTON
 argument_list|,
 name|CFLT10N
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -521,8 +509,6 @@ argument_list|(
 name|BUFFALO
 argument_list|,
 name|LPC3_CLT
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -534,8 +520,6 @@ argument_list|(
 name|BUFFALO
 argument_list|,
 name|LPC3_CLX
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_AX88X90
@@ -547,8 +531,6 @@ argument_list|(
 name|BUFFALO
 argument_list|,
 name|LPC_CF_CLT
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -560,8 +542,6 @@ argument_list|(
 name|CNET
 argument_list|,
 name|NE2000
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -573,8 +553,6 @@ argument_list|(
 name|COMPEX
 argument_list|,
 name|LINKPORT_ENET_B
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -586,8 +564,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|ETHER_II_PCC_T
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -599,8 +575,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|ETHER_II_PCC_TD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -612,8 +586,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|ETHER_PCC_T
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -625,8 +597,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|ETHER_PCC_TD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -638,8 +608,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|FAST_ETHER_PCC_TX
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_DL100XX
@@ -651,8 +619,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|FETHER_PCC_TXD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_AX88X90
@@ -664,8 +630,6 @@ argument_list|(
 name|COREGA
 argument_list|,
 name|FETHER_PCC_TXF
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_DL100XX
@@ -677,8 +641,6 @@ argument_list|(
 name|DAYNA
 argument_list|,
 name|COMMUNICARD_E_1
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -690,8 +652,6 @@ argument_list|(
 name|DAYNA
 argument_list|,
 name|COMMUNICARD_E_2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -703,8 +663,6 @@ argument_list|(
 name|DLINK
 argument_list|,
 name|DE650
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -716,8 +674,6 @@ argument_list|(
 name|DLINK
 argument_list|,
 name|DE660
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -729,8 +685,6 @@ argument_list|(
 name|DLINK
 argument_list|,
 name|DE660PLUS
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -742,8 +696,6 @@ argument_list|(
 name|DLINK
 argument_list|,
 name|DFE670TXD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_DL100XX
@@ -755,8 +707,6 @@ argument_list|(
 name|DYNALINK
 argument_list|,
 name|L10C
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -768,8 +718,6 @@ argument_list|(
 name|EDIMAX
 argument_list|,
 name|EP4000A
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -781,8 +729,6 @@ argument_list|(
 name|EPSON
 argument_list|,
 name|EEN10B
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -794,8 +740,6 @@ argument_list|(
 name|EXP
 argument_list|,
 name|THINLANCOMBO
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -807,8 +751,6 @@ argument_list|(
 name|GREY_CELL
 argument_list|,
 name|DMF650TX
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -820,8 +762,6 @@ argument_list|(
 name|IBM
 argument_list|,
 name|HOME_AND_AWAY
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -833,8 +773,6 @@ argument_list|(
 name|IBM
 argument_list|,
 name|INFOMOVER
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_ENADDR
@@ -848,8 +786,6 @@ argument_list|(
 name|IODATA3
 argument_list|,
 name|PCLAT
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -861,8 +797,6 @@ argument_list|(
 name|KINGSTON
 argument_list|,
 name|KNE2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -874,8 +808,6 @@ argument_list|(
 name|LANTECH
 argument_list|,
 name|FASTNETTX
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_AX88X90
@@ -887,8 +819,6 @@ argument_list|(
 name|LINKSYS
 argument_list|,
 name|COMBO_ECARD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_DL100XX
@@ -902,8 +832,6 @@ argument_list|(
 name|LINKSYS
 argument_list|,
 name|ECARD_1
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -915,8 +843,6 @@ argument_list|(
 name|LINKSYS
 argument_list|,
 name|ECARD_2
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -928,8 +854,6 @@ argument_list|(
 name|LINKSYS
 argument_list|,
 name|ETHERFAST
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_DL100XX
@@ -941,8 +865,6 @@ argument_list|(
 name|LINKSYS
 argument_list|,
 name|TRUST_COMBO_ECARD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -954,8 +876,6 @@ argument_list|(
 name|MACNICA
 argument_list|,
 name|ME1_JEIDA
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -967,8 +887,6 @@ argument_list|(
 name|MAGICRAM
 argument_list|,
 name|ETHER
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -980,8 +898,6 @@ argument_list|(
 name|MELCO
 argument_list|,
 name|LPC3_CLX
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_AX88X90
@@ -993,8 +909,6 @@ argument_list|(
 name|MELCO
 argument_list|,
 name|LPC3_TX
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_AX88X90
@@ -1006,8 +920,6 @@ argument_list|(
 name|NDC
 argument_list|,
 name|ND5100_E
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1019,8 +931,6 @@ argument_list|(
 name|NETGEAR
 argument_list|,
 name|FA410TXC
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_DL100XX
@@ -1032,8 +942,6 @@ argument_list|(
 name|NETGEAR
 argument_list|,
 name|FA411
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_AX88X90
@@ -1045,8 +953,6 @@ argument_list|(
 name|NEXTCOM
 argument_list|,
 name|NEXTHAWK
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1058,8 +964,6 @@ argument_list|(
 name|OEM2
 argument_list|,
 name|ETHERNET
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1071,8 +975,6 @@ argument_list|(
 name|PLANET
 argument_list|,
 name|SMARTCOM2000
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1084,8 +986,6 @@ argument_list|(
 name|PREMAX
 argument_list|,
 name|PE200
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1097,8 +997,6 @@ argument_list|(
 name|RACORE
 argument_list|,
 name|ETHERNET
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1110,8 +1008,6 @@ argument_list|(
 name|RACORE
 argument_list|,
 name|FASTENET
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_AX88X90
@@ -1123,8 +1019,6 @@ argument_list|(
 name|RPTI
 argument_list|,
 name|EP400
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1136,8 +1030,6 @@ argument_list|(
 name|RPTI
 argument_list|,
 name|EP401
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1149,8 +1041,6 @@ argument_list|(
 name|SMC
 argument_list|,
 name|EZCARD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1162,8 +1052,6 @@ argument_list|(
 name|SOCKET
 argument_list|,
 name|EA_ETHER
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1175,8 +1063,6 @@ argument_list|(
 name|SOCKET
 argument_list|,
 name|LP_ETHER
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1188,8 +1074,6 @@ argument_list|(
 name|SOCKET
 argument_list|,
 name|LP_ETHER_CF
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1201,8 +1085,6 @@ argument_list|(
 name|SOCKET
 argument_list|,
 name|LP_ETH_10_100_CF
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_DL100XX
@@ -1214,8 +1096,6 @@ argument_list|(
 name|SVEC
 argument_list|,
 name|COMBOCARD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1227,8 +1107,6 @@ argument_list|(
 name|SVEC
 argument_list|,
 name|LANCARD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1240,8 +1118,6 @@ argument_list|(
 name|TAMARACK
 argument_list|,
 name|ETHERNET
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1253,8 +1129,6 @@ argument_list|(
 name|TDK
 argument_list|,
 name|LAK_CD031
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1266,8 +1140,6 @@ argument_list|(
 name|TELECOMDEVICE
 argument_list|,
 name|TCD_HPC100
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|NE2000DVF_AX88X90
@@ -1279,8 +1151,6 @@ argument_list|(
 name|XIRCOM
 argument_list|,
 name|CFE_10
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0
@@ -1292,8 +1162,6 @@ argument_list|(
 name|ZONET
 argument_list|,
 name|ZEN
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|0

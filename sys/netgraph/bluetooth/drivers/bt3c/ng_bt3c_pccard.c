@@ -2125,8 +2125,6 @@ argument_list|(
 literal|3COM
 argument_list|,
 literal|3CRWB609
-argument_list|,
-literal|0
 argument_list|)
 block|,
 block|{
