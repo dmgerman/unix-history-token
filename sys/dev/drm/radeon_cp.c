@@ -9609,7 +9609,7 @@ literal|2
 argument_list|,
 name|_DRM_REGISTERS
 argument_list|,
-literal|0
+name|_DRM_READ_ONLY
 argument_list|)
 expr_stmt|;
 if|if
