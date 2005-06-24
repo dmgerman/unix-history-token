@@ -314,6 +314,9 @@ init|=
 literal|"Usage:\n"
 literal|"       "
 name|PMCC_PROGRAM_NAME
+literal|" -L\n"
+literal|"       "
+name|PMCC_PROGRAM_NAME
 literal|" -l\n"
 literal|"       "
 name|PMCC_PROGRAM_NAME
