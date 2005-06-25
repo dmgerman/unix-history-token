@@ -37,16 +37,16 @@ begin_comment
 comment|/* maximum length of converter name */
 end_comment
 
+begin_comment
+comment|/* maximum size of data associated with cs pair */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ICONV_CSMAXDATALEN
-value|(2048+262144)
+value|(sizeof(caddr_t) * 0x200 + sizeof(uint32_t) * 0x200 * 0x80)
 end_define
-
-begin_comment
-comment|/* maximum size of data associated with cs pair */
-end_comment
 
 begin_define
 define|#
