@@ -205,7 +205,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|get_e
+name|ep_get_e
 parameter_list|(
 name|struct
 name|ep_softc

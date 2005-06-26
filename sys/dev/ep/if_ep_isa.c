@@ -1476,7 +1476,7 @@ literal|0
 decl_stmt|;
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,
@@ -1515,7 +1515,7 @@ control|)
 block|{
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,

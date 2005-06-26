@@ -183,6 +183,12 @@ decl_stmt|;
 name|uint16_t
 name|result
 decl_stmt|;
+name|uint8_t
+name|enaddr
+index|[
+literal|6
+index|]
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -213,7 +219,7 @@ expr_stmt|;
 comment|/* XXX check return */
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,
@@ -270,7 +276,7 @@ expr_stmt|;
 comment|/* XXX check return */
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,
@@ -326,31 +332,19 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 	 * For reasons unknown, getting the MAC address here makes the 	 * 3C574 and 3C556 families get the right MAC address later. 	 * otherwise, the ID field is used for each of the words of the 	 * MAC address instead of the proper one.  It is unclear why 	 * ep_get_macaddr would have this side effect, or even what 	 * that side effect really is. 	 */
+name|ep_get_macaddr
+argument_list|(
+name|sc
+argument_list|,
+name|enaddr
+argument_list|)
+expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
 name|desc
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Newer cards supported by this device need to have their 	 * MAC address set. 	 */
-name|error
-operator|=
-name|ep_get_macaddr
-argument_list|(
-name|sc
-argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
-name|IFP2ENADDR
-argument_list|(
-name|sc
-operator|->
-name|ifp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ep_free
@@ -611,7 +605,7 @@ expr_stmt|;
 comment|/* XXX check return */
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,
@@ -651,7 +645,7 @@ literal|2
 expr_stmt|;
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,
@@ -671,7 +665,7 @@ name|result
 expr_stmt|;
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,
@@ -719,7 +713,7 @@ block|}
 block|}
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,

@@ -421,7 +421,7 @@ end_comment
 
 begin_function
 name|int
-name|get_e
+name|ep_get_e
 parameter_list|(
 name|struct
 name|ep_softc
@@ -557,7 +557,7 @@ control|)
 block|{
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,
@@ -783,7 +783,7 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,
@@ -810,7 +810,7 @@ name|result
 expr_stmt|;
 name|error
 operator|=
-name|get_e
+name|ep_get_e
 argument_list|(
 name|sc
 argument_list|,
