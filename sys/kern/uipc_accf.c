@@ -670,6 +670,12 @@ condition|(
 name|sopt
 operator|==
 name|NULL
+operator|||
+name|sopt
+operator|->
+name|sopt_val
+operator|==
+name|NULL
 condition|)
 block|{
 if|if

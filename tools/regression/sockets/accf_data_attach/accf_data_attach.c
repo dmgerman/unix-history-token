@@ -65,7 +65,7 @@ value|"dataready"
 end_define
 
 begin_comment
-comment|/*  * A number of small tests to confirm that attaching ACCF_DATA accept filters  * to inet4 ports works as expected.  We test:  *  * - That no accept filter is attached on a newly created socket.  * - That bind() has no affect on the accept filter state.  * - That we can't attach an accept filter to a socket that isn't in the  *   listen state.  * - That after we fail to attach the filter, querying the kernel shows no  *   filter attached.  * - That we can attach an accept filter to a socket that is in the listen  *   state.  * - That once an accept filter is attached, we can query to make sure it is  *   attached.  */
+comment|/*  * A number of small tests to confirm that attaching ACCF_DATA accept filters  * to inet4 ports works as expected.  We test:  *  * - That no accept filter is attached on a newly created socket.  * - That bind() has no affect on the accept filter state.  * - That we can't attach an accept filter to a socket that isn't in the  *   listen state.  * - That after we fail to attach the filter, querying the kernel shows no  *   filter attached.  * - That we can attach an accept filter to a socket that is in the listen  *   state.  * - That once an accept filter is attached, we can query to make sure it is  *   attached.  * - That once an accept filter is attached, we can remove it and query to  *   make sure it is removed.  */
 end_comment
 
 begin_function
@@ -99,7 +99,7 @@ name|ret
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"1..9\n"
+literal|"1..11\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 0. Open socket(). 	 */
@@ -526,7 +526,74 @@ argument_list|(
 literal|"ok 7 - listen\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Step 7: After listen().  This call to setsockopt() should succeed. 	 */
+comment|/* 	 * Step 7: Getsockopt() after listen().  Should fail with EINVAL, 	 * since we have not installed accept filter yet. 	 */
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|afa
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|getsockopt
+argument_list|(
+name|lso
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_ACCEPTFILTER
+argument_list|,
+operator|&
+name|afa
+argument_list|,
+operator|&
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 8 - getsockopt() after listen() but before "
+literal|"setsockopt() succeeded"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINVAL
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 8 - getsockopt() after listen() but before "
+literal|"setsockopt() failed with %d (%s)"
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 8 - getsockopt\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Step 8: After listen().  This call to setsockopt() should succeed. 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -577,7 +644,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 8 - setsockopt() after listen() failed with %d "
+literal|"not ok 9 - setsockopt() after listen() failed with %d "
 literal|"(%s)"
 argument_list|,
 name|errno
@@ -602,7 +669,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 8 - setsockopt() after listen() returned wrong "
+literal|"not ok 9 - setsockopt() after listen() returned wrong "
 literal|"size (%d vs expected %d)"
 argument_list|,
 name|len
@@ -615,10 +682,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ok 8 - setsockopt\n"
+literal|"ok 9 - setsockopt\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Step 8: After setsockopt().  Should succeed and identify 	 * ACCF_NAME. 	 */
+comment|/* 	 * Step 9: After setsockopt().  Should succeed and identify 	 * ACCF_NAME. 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -665,7 +732,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 9 - getsockopt() after listen() setsockopt() "
+literal|"not ok 10 - getsockopt() after listen() setsockopt() "
 literal|"failed with %d (%s)"
 argument_list|,
 name|errno
@@ -690,7 +757,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 9 - getsockopt() after setsockopet()  after "
+literal|"not ok 10 - getsockopt() after setsockopet()  after "
 literal|"listen() returned wrong size (got %d expected %d)"
 argument_list|,
 name|len
@@ -719,7 +786,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 9 - getsockopt() after setsockopt() after "
+literal|"not ok 10 - getsockopt() after setsockopt() after "
 literal|"listen() mismatch (got %s expected %s)"
 argument_list|,
 name|afa
@@ -731,7 +798,126 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ok 9 - getsockopt\n"
+literal|"ok 10 - getsockopt\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Step 10: Remove accept filter.  After removing the accept filter 	 * getsockopt() should fail with EINVAL. 	 */
+name|ret
+operator|=
+name|setsockopt
+argument_list|(
+name|lso
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_ACCEPTFILTER
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - setsockopt() after listen() "
+literal|"failed with %d (%s)"
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|afa
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|afa
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|afa
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|getsockopt
+argument_list|(
+name|lso
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_ACCEPTFILTER
+argument_list|,
+operator|&
+name|afa
+argument_list|,
+operator|&
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - getsockopt() after removing "
+literal|"the accept filter returns valid accept filter %s"
+argument_list|,
+name|afa
+operator|.
+name|af_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINVAL
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - getsockopt() after removing the accept"
+literal|"filter failed with %d (%s)"
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 11 - setsockopt\n"
 argument_list|)
 expr_stmt|;
 name|close
