@@ -135,6 +135,10 @@ name|nm_readahead
 decl_stmt|;
 comment|/* Num. of blocks to readahead */
 name|int
+name|nm_wcommitsize
+decl_stmt|;
+comment|/* Max size of commit for write */
+name|int
 name|nm_acdirmin
 decl_stmt|;
 comment|/* Directory attr cache min lifetime */
