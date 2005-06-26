@@ -1169,6 +1169,14 @@ argument_list|,
 name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ifq
+operator|.
+name|ifq_maxlen
+operator|=
+name|ifqmaxlen
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -9524,6 +9532,7 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
+operator|!
 name|IF_HANDOFF
 argument_list|(
 operator|&
