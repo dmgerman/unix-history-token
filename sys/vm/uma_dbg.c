@@ -177,7 +177,8 @@ name|p
 operator|!=
 name|uma_junk
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"Memory modified after free %p(%d) val=%x @ %p\n"
 argument_list|,
@@ -191,6 +192,12 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
