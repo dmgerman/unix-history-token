@@ -1239,7 +1239,7 @@ name|DLT_NULL
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int
+name|u_int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;

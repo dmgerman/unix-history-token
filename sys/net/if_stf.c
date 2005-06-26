@@ -971,7 +971,7 @@ name|DLT_NULL
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int
+name|u_int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1850,6 +1850,9 @@ name|in6_ifaddr
 modifier|*
 name|ia6
 decl_stmt|;
+name|u_int32_t
+name|af
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -2023,6 +2026,38 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
+comment|/* 	 * BPF writes need to be handled specially. 	 * This is a null operation, nothing here checks dst->sa_family. 	 */
+if|if
+condition|(
+name|dst
+operator|->
+name|sa_family
+operator|==
+name|AF_UNSPEC
+condition|)
+block|{
+name|bcopy
+argument_list|(
+name|dst
+operator|->
+name|sa_data
+argument_list|,
+operator|&
+name|af
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|af
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dst
+operator|->
+name|sa_family
+operator|=
+name|af
+expr_stmt|;
+block|}
 comment|/* 	 * Pickup the right outer dst addr from the list of candidates. 	 * ip6_dst has priority as it may be able to give us shorter IPv4 hops. 	 */
 name|ptr
 operator|=
@@ -2106,11 +2141,10 @@ name|if_bpf
 condition|)
 block|{
 comment|/* 		 * We need to prepend the address family as 		 * a four byte field.  Cons up a dummy header 		 * to pacify bpf.  This is safe because bpf 		 * will only read from the mbuf (i.e., it won't 		 * try to free it or keep a pointer a to it). 		 */
-name|u_int32_t
 name|af
-init|=
+operator|=
 name|AF_INET6
-decl_stmt|;
+expr_stmt|;
 name|bpf_mtap2
 argument_list|(
 name|ifp

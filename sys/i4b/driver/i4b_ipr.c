@@ -1069,7 +1069,7 @@ name|DLT_NULL
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int
+name|u_int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1128,6 +1128,9 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
+name|u_int32_t
+name|af
+decl_stmt|;
 name|s
 operator|=
 name|SPLI4B
@@ -1145,6 +1148,38 @@ name|ifp
 operator|->
 name|if_dunit
 expr_stmt|;
+comment|/* BPF writes need to be handled specially. */
+if|if
+condition|(
+name|dst
+operator|->
+name|sa_family
+operator|==
+name|AF_UNSPEC
+condition|)
+block|{
+name|bcopy
+argument_list|(
+name|dst
+operator|->
+name|sa_data
+argument_list|,
+operator|&
+name|af
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|af
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dst
+operator|->
+name|sa_family
+operator|=
+name|af
+expr_stmt|;
+block|}
 comment|/* check for IP */
 if|if
 condition|(
