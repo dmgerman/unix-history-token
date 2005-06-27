@@ -54,7 +54,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_function
@@ -72,7 +72,7 @@ modifier|*
 name|__restrict
 name|to
 parameter_list|,
-name|size_t
+name|ssize_t
 name|len
 parameter_list|)
 block|{

@@ -744,6 +744,46 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SWAB_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SWAB_DECLARED
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SSIZE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__ssize_t
+name|ssize_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SSIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SIZE_T_DECLARED */
+end_comment
+
 begin_function_decl
 name|void
 name|swab
@@ -751,11 +791,13 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|__restrict
 parameter_list|,
 name|void
 modifier|*
+name|__restrict
 parameter_list|,
-name|size_t
+name|ssize_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -764,6 +806,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _SWAB_DECLARED */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
 
 begin_macro
 name|__END_DECLS
