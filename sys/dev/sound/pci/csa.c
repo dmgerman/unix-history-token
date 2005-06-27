@@ -370,18 +370,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|csa_resetdsp
-parameter_list|(
-name|csa_res
-modifier|*
-name|resp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|csa_downloadimage
 parameter_list|(
@@ -1915,15 +1903,66 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* 	 * XXX: this cannot possibly work 	 * needs to be properly implemented 	 */
-block|csa_detach(dev); 	csa_attach(dev);
-endif|#
-directive|endif
+name|csa_res
+modifier|*
+name|resp
+decl_stmt|;
+name|sc_p
+name|scp
+decl_stmt|;
+name|scp
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|resp
+operator|=
+operator|&
+name|scp
+operator|->
+name|res
+expr_stmt|;
+comment|/* Initialize the chip. */
+if|if
+condition|(
+name|csa_initialize
+argument_list|(
+name|scp
+argument_list|)
+condition|)
 return|return
-literal|0
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Reset the Processor. */
+name|csa_resetdsp
+argument_list|(
+name|resp
+argument_list|)
+expr_stmt|;
+comment|/* Download the Processor Image to the processor. */
+if|if
+condition|(
+name|csa_downloadimage
+argument_list|(
+name|resp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+return|return
+operator|(
+name|bus_generic_resume
+argument_list|(
+name|dev
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3279,7 +3318,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|csa_resetdsp
 parameter_list|(
