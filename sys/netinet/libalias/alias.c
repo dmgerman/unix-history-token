@@ -3868,6 +3868,10 @@ argument_list|(
 name|pip
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|create
+condition|)
 name|proxy_type
 operator|=
 name|ProxyCheck
@@ -3882,6 +3886,11 @@ argument_list|,
 operator|&
 name|proxy_server_port
 argument_list|)
+expr_stmt|;
+else|else
+name|proxy_type
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
