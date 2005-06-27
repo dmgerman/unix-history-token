@@ -2883,7 +2883,7 @@ operator|->
 name|if_init
 call|)
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
