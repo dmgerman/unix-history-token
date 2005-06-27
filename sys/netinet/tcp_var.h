@@ -761,8 +761,14 @@ name|u_int8_t
 name|to_requested_s_scale
 decl_stmt|;
 name|u_int8_t
-name|to_pad
+name|to_nsacks
 decl_stmt|;
+comment|/* number of SACK blocks */
+name|u_char
+modifier|*
+name|to_sacks
+decl_stmt|;
+comment|/* pointer to the first SACK blocks */
 block|}
 struct|;
 end_struct
@@ -2481,21 +2487,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|tcp_sack_option
+name|void
+name|tcp_sack_doack
 parameter_list|(
 name|struct
 name|tcpcb
 modifier|*
 parameter_list|,
 name|struct
-name|tcphdr
+name|tcpopt
 modifier|*
 parameter_list|,
-name|u_char
-modifier|*
-parameter_list|,
-name|int
+name|tcp_seq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2514,21 +2517,6 @@ name|rcv_laststart
 parameter_list|,
 name|tcp_seq
 name|rcv_lastend
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|tcp_del_sackholes
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-parameter_list|,
-name|struct
-name|tcphdr
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
