@@ -1025,7 +1025,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-comment|/* if detach pending flag set, return error */
+comment|/* if detach pending, return error */
 if|if
 condition|(
 operator|(
@@ -1765,12 +1765,6 @@ operator|==
 name|ATA_OP_CONTINUES
 condition|)
 do|;
-name|ata_finish
-argument_list|(
-operator|&
-name|request
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1818,7 +1812,19 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* enable read caching */
+comment|/* enable readahead caching */
+if|if
+condition|(
+name|atadev
+operator|->
+name|param
+operator|.
+name|support
+operator|.
+name|command1
+operator|&
+name|ATA_SUPPORT_LOOKAHEAD
+condition|)
 name|ata_controlcmd
 argument_list|(
 name|dev
@@ -1832,7 +1838,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* enable write caching if enabled */
+comment|/* enable write caching if supported and configured */
+if|if
+condition|(
+name|atadev
+operator|->
+name|param
+operator|.
+name|support
+operator|.
+name|command1
+operator|&
+name|ATA_SUPPORT_WRITECACHE
+condition|)
+block|{
 if|if
 condition|(
 name|ata_wc
@@ -1864,6 +1883,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* use multiple sectors/interrupt if device supports it */
 if|if
 condition|(
