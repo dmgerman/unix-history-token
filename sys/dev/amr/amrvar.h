@@ -22,6 +22,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|LSI_DESC_PCI
+value|"LSILogic MegaRAID 1.51"
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -374,6 +381,10 @@ decl_stmt|;
 comment|/* map for s/g buffers */
 comment|/* controller limits and features */
 name|int
+name|amr_nextslot
+decl_stmt|;
+comment|/* Next slot to use for newly allocated commands */
+name|int
 name|amr_maxio
 decl_stmt|;
 comment|/* maximum number of I/O transactions */
@@ -417,6 +428,10 @@ define|#
 directive|define
 name|AMR_STATE_CRASHDUMP
 value|(1<<4)
+define|#
+directive|define
+name|AMR_STATE_QUEUE_FRZN
+value|(1<<5)
 comment|/* per-controller queues */
 name|struct
 name|bio_queue_head
@@ -479,6 +494,11 @@ argument|ccb_hdr
 argument_list|)
 name|amr_cam_ccbq
 expr_stmt|;
+name|struct
+name|cam_devq
+modifier|*
+name|amr_cam_devq
+decl_stmt|;
 comment|/* control device */
 name|dev_t
 name|amr_dev_t
@@ -544,6 +564,23 @@ modifier|*
 name|amr_poll_command
 function_decl|)
 parameter_list|(
+name|struct
+name|amr_command
+modifier|*
+name|ac
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|amr_poll_command1
+function_decl|)
+parameter_list|(
+name|struct
+name|amr_softc
+modifier|*
+name|sc
+parameter_list|,
 name|struct
 name|amr_command
 modifier|*

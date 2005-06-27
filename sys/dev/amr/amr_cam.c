@@ -405,7 +405,7 @@ operator|->
 name|amr_cam_ccbq
 argument_list|)
 expr_stmt|;
-comment|/*      * Allocate a devq for all our channels combined.  This should      * allow for the maximum number of SCSI commands we will accept      * at one time.      */
+comment|/*      * Allocate a devq for all our channels combined.  This should      * allow for the maximum number of SCSI commands we will accept      * at one time. Save the pointer in the softc so we can find it later      * during detach.      */
 if|if
 condition|(
 operator|(
@@ -424,6 +424,12 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|sc
+operator|->
+name|amr_cam_devq
+operator|=
+name|devq
+expr_stmt|;
 comment|/*      * Iterate over our channels, registering them with CAM      */
 for|for
 control|(
@@ -557,18 +563,12 @@ parameter_list|)
 block|{
 name|int
 name|chn
-decl_stmt|,
-name|first
 decl_stmt|;
 for|for
 control|(
 name|chn
 operator|=
 literal|0
-operator|,
-name|first
-operator|=
-literal|1
 init|;
 name|chn
 operator|<
@@ -615,19 +615,27 @@ index|[
 name|chn
 index|]
 argument_list|,
-name|first
-condition|?
-name|TRUE
-else|:
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|first
-operator|=
-literal|0
+block|}
+block|}
+comment|/* Now free the devq */
+if|if
+condition|(
+name|sc
+operator|->
+name|amr_cam_devq
+operator|!=
+name|NULL
+condition|)
+name|cam_simq_free
+argument_list|(
+name|sc
+operator|->
+name|amr_cam_devq
+argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -1828,6 +1836,8 @@ operator|->
 name|ac_flags
 operator||=
 name|AMR_CMD_DATAOUT
+operator||
+name|AMR_CMD_DATAIN
 expr_stmt|;
 name|ac
 operator|->
@@ -2129,7 +2139,7 @@ name|debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"status 0x%x  scsi_status 0x%x"
+literal|"status 0x%x  AP scsi_status 0x%x"
 argument_list|,
 name|ac
 operator|->
@@ -2427,7 +2437,7 @@ name|debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"status 0x%x  scsi_status 0x%x"
+literal|"status 0x%x  AEP scsi_status 0x%x"
 argument_list|,
 name|ac
 operator|->

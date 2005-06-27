@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|AMR_MAX_CHANNELS
-value|4
+value|8
 end_define
 
 begin_define
@@ -210,6 +210,27 @@ define|#
 directive|define
 name|AMR_CMD_CONFIG
 value|0xa1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMR_CONFIG_READ_NVRAM_CONFIG
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMR_CONFIG_WRITE_NVRAM_CONFIG
+value|0x0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMR_CONFIG_ENQ3_SOLICITED_NOTIFY
+value|0x01
 end_define
 
 begin_define
