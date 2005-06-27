@@ -2520,7 +2520,7 @@ name|ign_err
 condition|)
 name|warnx
 argument_list|(
-literal|"%s '%s' doesn't really exist"
+literal|"%s '%s' doesn't exist"
 argument_list|,
 name|isdir
 argument_list|(
@@ -2677,7 +2677,7 @@ argument_list|)
 condition|)
 name|warnx
 argument_list|(
-literal|"directory '%s' doesn't really exist"
+literal|"directory '%s' doesn't exist"
 argument_list|,
 name|dir
 argument_list|)
