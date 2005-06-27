@@ -1530,6 +1530,17 @@ name|th_sum
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|tc
+operator|->
+name|th_x2
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
 name|tc
 operator|->
 name|th_sum
@@ -1539,6 +1550,8 @@ argument_list|(
 name|pip
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 block|}

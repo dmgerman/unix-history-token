@@ -21,10 +21,6 @@ begin_comment
 comment|/*     Alias_util.c contains general utilities used by other functions     in the packet aliasing module.  At the moment, there are functions     for computing IP header and TCP packet checksums.      The checksum routines are based upon example code in a Unix networking     text written by Stevens (sorry, I can't remember the title -- but     at least this is a good author).      Initial Version:  August, 1996  (cjm)      Version 1.7:  January 9, 1997 	 Added differential checksum update function. */
 end_comment
 
-begin_comment
-comment|/* Note: the checksum routines assume that the actual checksum word has been zeroed out.  If the checksum word is filled with the proper value, then these routines will give a result of zero (useful for testing purposes); */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -122,6 +118,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Note: the checksum routines assume that the actual checksum word has  * been zeroed out.  If the checksum word is filled with the proper value,  * then these routines will give a result of zero (useful for testing  * purposes);  */
+end_comment
 
 begin_function
 name|u_short
@@ -247,6 +247,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function
 name|u_short
@@ -535,6 +541,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not _KERNEL */
+end_comment
 
 begin_function
 name|void

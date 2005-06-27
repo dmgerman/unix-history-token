@@ -339,8 +339,14 @@ comment|/* Prototypes */
 end_comment
 
 begin_comment
-comment|/* General utilities */
+comment|/*  * We do not calculate TCP checksums when libalias is a kernel  * module, since it has no idea about checksum offloading.  * If TCP data has changed, then we just set checksum to zero,  * and caller must recalculate it himself.  * In case if libalias will edit UDP data, the same approach  * should be used.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function_decl
 name|u_short
@@ -365,6 +371,11 @@ name|_pip
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
