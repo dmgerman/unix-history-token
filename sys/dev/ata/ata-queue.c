@@ -1971,6 +1971,12 @@ argument_list|)
 expr_stmt|;
 name|request
 operator|->
+name|donecount
+operator|=
+literal|0
+expr_stmt|;
+name|request
+operator|->
 name|transfersize
 operator|=
 sizeof|sizeof
