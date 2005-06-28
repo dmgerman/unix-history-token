@@ -75,7 +75,7 @@ comment|/* real group id */
 name|gid_t
 name|cr_svgid
 decl_stmt|;
-comment|/* saved user id */
+comment|/* saved group id */
 name|struct
 name|uidinfo
 modifier|*
