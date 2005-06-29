@@ -272,7 +272,7 @@ parameter_list|,
 name|uint64_t
 name|pa
 parameter_list|,
-name|u_long
+name|off_t
 modifier|*
 name|ofs
 parameter_list|,
@@ -788,7 +788,7 @@ parameter_list|,
 name|u_long
 name|va
 parameter_list|,
-name|u_long
+name|off_t
 modifier|*
 name|pa
 parameter_list|)

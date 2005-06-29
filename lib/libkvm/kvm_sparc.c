@@ -962,7 +962,7 @@ decl_stmt|;
 name|u_long
 name|va
 decl_stmt|;
-name|u_long
+name|uint64_t
 modifier|*
 name|pa
 decl_stmt|;

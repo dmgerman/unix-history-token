@@ -162,7 +162,7 @@ modifier|*
 parameter_list|,
 name|u_long
 parameter_list|,
-name|u_long
+name|off_t
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1798,7 +1798,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|u_long
+name|off_t
 name|pa
 decl_stmt|;
 name|cc
@@ -1847,9 +1847,6 @@ name|kd
 operator|->
 name|pmfd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|pa
 argument_list|,
 literal|0
