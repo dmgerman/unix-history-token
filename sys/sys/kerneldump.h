@@ -167,7 +167,7 @@ value|1
 define|#
 directive|define
 name|KERNELDUMP_I386_VERSION
-value|1
+value|2
 define|#
 directive|define
 name|KERNELDUMP_IA64_VERSION
@@ -176,6 +176,10 @@ define|#
 directive|define
 name|KERNELDUMP_SPARC64_VERSION
 value|1
+define|#
+directive|define
+name|KERNELDUMP_AMD64_VERSION
+value|2
 name|uint64_t
 name|dumplength
 decl_stmt|;

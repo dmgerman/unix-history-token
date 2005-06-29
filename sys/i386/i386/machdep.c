@@ -927,6 +927,15 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|vm_paddr_t
+name|dump_avail
+index|[
+literal|10
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* must be 2 less so 0 0 can signal end of chunks */
 end_comment
@@ -935,7 +944,14 @@ begin_define
 define|#
 directive|define
 name|PHYS_AVAIL_ARRAY_END
-value|((sizeof(phys_avail) / sizeof(vm_offset_t)) - 2)
+value|((sizeof(phys_avail) / sizeof(phys_avail[0])) - 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DUMP_AVAIL_ARRAY_END
+value|((sizeof(dump_avail) / sizeof(dump_avail[0])) - 2)
 end_define
 
 begin_decl_stmt
@@ -7453,6 +7469,8 @@ decl_stmt|,
 name|physmap_idx
 decl_stmt|,
 name|pa_indx
+decl_stmt|,
+name|da_indx
 decl_stmt|;
 name|int
 name|hasbrokenint12
@@ -8396,6 +8414,10 @@ name|pa_indx
 operator|=
 literal|0
 expr_stmt|;
+name|da_indx
+operator|=
+literal|1
+expr_stmt|;
 name|phys_avail
 index|[
 name|pa_indx
@@ -8410,6 +8432,16 @@ expr_stmt|;
 name|phys_avail
 index|[
 name|pa_indx
+index|]
+operator|=
+name|physmap
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|dump_avail
+index|[
+name|da_indx
 index|]
 operator|=
 name|physmap
@@ -8525,6 +8557,8 @@ name|int
 name|tmp
 decl_stmt|,
 name|page_bad
+decl_stmt|,
+name|full
 decl_stmt|;
 name|int
 modifier|*
@@ -8536,6 +8570,10 @@ operator|*
 operator|)
 name|CADDR1
 decl_stmt|;
+name|full
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* 			 * block out kernel memory as not available. 			 */
 if|if
 condition|(
@@ -8547,7 +8585,9 @@ name|pa
 operator|<
 name|first
 condition|)
-continue|continue;
+goto|goto
+name|do_dump_avail
+goto|;
 comment|/* 			 * block out dcons buffer 			 */
 if|if
 condition|(
@@ -8568,7 +8608,9 @@ name|dcons_addr
 operator|+
 name|dcons_size
 condition|)
-continue|continue;
+goto|goto
+name|do_dump_avail
+goto|;
 name|page_bad
 operator|=
 name|FALSE
@@ -8620,12 +8662,10 @@ name|ptr
 operator|!=
 literal|0xaaaaaaaa
 condition|)
-block|{
 name|page_bad
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 comment|/* 			 * Test for alternating 0's and 1's 			 */
 operator|*
 operator|(
@@ -8649,12 +8689,10 @@ name|ptr
 operator|!=
 literal|0x55555555
 condition|)
-block|{
 name|page_bad
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 comment|/* 			 * Test for all 1's 			 */
 operator|*
 operator|(
@@ -8678,12 +8716,10 @@ name|ptr
 operator|!=
 literal|0xffffffff
 condition|)
-block|{
 name|page_bad
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 comment|/* 			 * Test for all 0's 			 */
 operator|*
 operator|(
@@ -8707,12 +8743,10 @@ name|ptr
 operator|!=
 literal|0x0
 condition|)
-block|{
 name|page_bad
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 comment|/* 			 * Restore original value. 			 */
 operator|*
 operator|(
@@ -8730,9 +8764,7 @@ name|page_bad
 operator|==
 name|TRUE
 condition|)
-block|{
 continue|continue;
-block|}
 comment|/* 			 * If this good page is a continuation of the 			 * previous set of good pages, then just increase 			 * the end pointer. Otherwise start a new chunk. 			 * Note that "end" points one higher than end, 			 * making the range>= start and< end. 			 * If we're also doing a speculative memory 			 * test and we at or past the end, bump up Maxmem 			 * so that we keep going. The first bad page 			 * will terminate the loop. 			 */
 if|if
 condition|(
@@ -8772,7 +8804,13 @@ expr_stmt|;
 name|pa_indx
 operator|--
 expr_stmt|;
-break|break;
+name|full
+operator|=
+name|TRUE
+expr_stmt|;
+goto|goto
+name|do_dump_avail
+goto|;
 block|}
 name|phys_avail
 index|[
@@ -8797,6 +8835,72 @@ block|}
 name|physmem
 operator|++
 expr_stmt|;
+name|do_dump_avail
+label|:
+if|if
+condition|(
+name|dump_avail
+index|[
+name|da_indx
+index|]
+operator|==
+name|pa
+condition|)
+block|{
+name|dump_avail
+index|[
+name|da_indx
+index|]
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|da_indx
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|da_indx
+operator|==
+name|DUMP_AVAIL_ARRAY_END
+condition|)
+block|{
+name|da_indx
+operator|--
+expr_stmt|;
+goto|goto
+name|do_next
+goto|;
+block|}
+name|dump_avail
+index|[
+name|da_indx
+operator|++
+index|]
+operator|=
+name|pa
+expr_stmt|;
+comment|/* start */
+name|dump_avail
+index|[
+name|da_indx
+index|]
+operator|=
+name|pa
+operator|+
+name|PAGE_SIZE
+expr_stmt|;
+comment|/* end */
+block|}
+name|do_next
+label|:
+if|if
+condition|(
+name|full
+condition|)
+break|break;
 block|}
 block|}
 operator|*

@@ -1124,6 +1124,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|vm_paddr_t
+name|dump_avail
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|vm_offset_t
 name|virtual_avail
 decl_stmt|;
