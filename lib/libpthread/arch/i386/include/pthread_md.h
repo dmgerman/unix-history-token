@@ -76,13 +76,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_thr_using_setbase
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -160,9 +153,6 @@ modifier|*
 name|kcb_self
 decl_stmt|;
 comment|/* self reference */
-name|int
-name|kcb_ldt
-decl_stmt|;
 name|struct
 name|kse
 modifier|*
@@ -441,38 +431,11 @@ modifier|*
 name|kcb
 parameter_list|)
 block|{
-name|int
-name|val
-decl_stmt|;
-if|if
-condition|(
-name|_thr_using_setbase
-operator|==
-literal|1
-condition|)
-block|{
 name|i386_set_gsbase
 argument_list|(
 name|kcb
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|val
-operator|=
-operator|(
-name|kcb
-operator|->
-name|kcb_ldt
-operator|<<
-literal|3
-operator|)
-operator||
-literal|7
-expr_stmt|;
-asm|__asm __volatile("movl %0, %%gs" : : "r" (val));
-block|}
 block|}
 end_function
 
