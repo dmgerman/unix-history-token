@@ -1825,13 +1825,12 @@ operator|=
 literal|10
 expr_stmt|;
 comment|/* Expire interval */
-comment|/* 	 * XXX 	 *  The 2nd arg. 0 to callout_init(9) shoule be set to CALLOUT_MPSAFE 	 * if Gaint lock is removed from the network stack. 	 */
 name|callout_init
 argument_list|(
 operator|&
 name|pf_expire_to
 argument_list|,
-literal|0
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_reset
