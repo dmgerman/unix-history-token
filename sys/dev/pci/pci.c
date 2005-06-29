@@ -4028,6 +4028,16 @@ literal|", enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If base is 0, then we have problems.  It is best to ignore 	 * such entries for the moment.  These will be allocated later if 	 * the driver specifically requests them. 	 */
+if|if
+condition|(
+name|base
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
 comment|/* 	 * This code theoretically does the right thing, but has 	 * undesirable side effects in some cases where peripherals 	 * respond oddly to having these bits enabled.  Let the user 	 * be able to turn them off (since pci_enable_io_modes is 1 by 	 * default). 	 */
 if|if
 condition|(
@@ -4201,16 +4211,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * If base is 0, then we have problems.  It is best to ignore 	 * such entires for the moment.  These will be allocated later if 	 * the driver specifically requests them. 	 */
-if|if
-condition|(
-name|base
-operator|==
-literal|0
-condition|)
-return|return
-literal|1
-return|;
 name|start
 operator|=
 name|base
