@@ -2440,9 +2440,13 @@ begin_comment
 comment|/*---------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|/* Return  True iff data corruption is discovered.    Returns False if there is no problem. */
+end_comment
+
 begin_function
 specifier|static
-name|void
+name|Bool
 name|unRLE_obuf_to_output_FAST
 parameter_list|(
 name|DState
@@ -2481,7 +2485,9 @@ name|avail_out
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|False
+return|;
 if|if
 condition|(
 name|s
@@ -2578,7 +2584,25 @@ name|save_nblock
 operator|+
 literal|1
 condition|)
-return|return;
+return|return
+name|False
+return|;
+comment|/* Only caused by corrupt data stream? */
+if|if
+condition|(
+name|s
+operator|->
+name|nblock_used
+operator|>
+name|s
+operator|->
+name|save_nblock
+operator|+
+literal|1
+condition|)
+return|return
+name|True
+return|;
 name|s
 operator|->
 name|state_out_len
@@ -3000,6 +3024,16 @@ operator|--
 expr_stmt|;
 block|}
 block|}
+comment|/* Only caused by corrupt data stream? */
+if|if
+condition|(
+name|c_nblock_used
+operator|>
+name|s_save_nblockPP
+condition|)
+return|return
+name|True
+return|;
 comment|/* can a new run be started? */
 if|if
 condition|(
@@ -3248,6 +3282,9 @@ name|cs_avail_out
 expr_stmt|;
 comment|/* end save */
 block|}
+return|return
+name|False
+return|;
 block|}
 end_function
 
@@ -3333,9 +3370,13 @@ begin_comment
 comment|/*---------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|/* Return  True iff data corruption is discovered.    Returns False if there is no problem. */
+end_comment
+
 begin_function
 specifier|static
-name|void
+name|Bool
 name|unRLE_obuf_to_output_SMALL
 parameter_list|(
 name|DState
@@ -3374,7 +3415,9 @@ name|avail_out
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|False
+return|;
 if|if
 condition|(
 name|s
@@ -3471,7 +3514,25 @@ name|save_nblock
 operator|+
 literal|1
 condition|)
-return|return;
+return|return
+name|False
+return|;
+comment|/* Only caused by corrupt data stream? */
+if|if
+condition|(
+name|s
+operator|->
+name|nblock_used
+operator|>
+name|s
+operator|->
+name|save_nblock
+operator|+
+literal|1
+condition|)
+return|return
+name|True
+return|;
 name|s
 operator|->
 name|state_out_len
@@ -3713,7 +3774,9 @@ name|avail_out
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|False
+return|;
 if|if
 condition|(
 name|s
@@ -3810,7 +3873,25 @@ name|save_nblock
 operator|+
 literal|1
 condition|)
-return|return;
+return|return
+name|False
+return|;
+comment|/* Only caused by corrupt data stream? */
+if|if
+condition|(
+name|s
+operator|->
+name|nblock_used
+operator|>
+name|s
+operator|->
+name|save_nblock
+operator|+
+literal|1
+condition|)
+return|return
+name|True
+return|;
 name|s
 operator|->
 name|state_out_len
@@ -4016,6 +4097,9 @@ modifier|*
 name|strm
 parameter_list|)
 block|{
+name|Bool
+name|corrupt
+decl_stmt|;
 name|DState
 modifier|*
 name|s
@@ -4086,17 +4170,28 @@ name|s
 operator|->
 name|smallDecompress
 condition|)
+name|corrupt
+operator|=
 name|unRLE_obuf_to_output_SMALL
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
 else|else
+name|corrupt
+operator|=
 name|unRLE_obuf_to_output_FAST
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|corrupt
+condition|)
+return|return
+name|BZ_DATA_ERROR
+return|;
 if|if
 condition|(
 name|s
@@ -4133,7 +4228,7 @@ literal|3
 condition|)
 name|VPrintf2
 argument_list|(
-literal|" {0x%x, 0x%x}"
+literal|" {0x%08x, 0x%08x}"
 argument_list|,
 name|s
 operator|->
@@ -4246,7 +4341,7 @@ literal|3
 condition|)
 name|VPrintf2
 argument_list|(
-literal|"\n    combined CRCs: stored = 0x%x, computed = 0x%x"
+literal|"\n    combined CRCs: stored = 0x%08x, computed = 0x%08x"
 argument_list|,
 name|s
 operator|->
