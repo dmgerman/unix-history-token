@@ -7235,12 +7235,12 @@ literal|0
 end_if
 
 begin_comment
-unit|int freebsd32_xxx(struct thread *td, struct freebsd32_xxx_args *uap) { 	int error; 	caddr_t sg; 	struct yyy32 *p32, s32; 	struct yyy *p = NULL, s;  	p32 = uap->zzz; 	if (p32) { 		sg = stackgap_init(); 		p = stackgap_alloc(&sg, sizeof(struct yyy)); 		uap->zzz = (struct yyy32 *)p; 		error = copyin(p32,&s32, sizeof(s32)); 		if (error) 			return (error);
+unit|int freebsd32_xxx(struct thread *td, struct freebsd32_xxx_args *uap) { 	int error; 	struct yyy32 *p32, s32; 	struct yyy *p = NULL, s;  	if (uap->zzz) { 		error = copyin(uap->zzz,&s32, sizeof(s32)); 		if (error) 			return (error);
 comment|/* translate in */
 end_comment
 
 begin_comment
-unit|error = copyout(&s, p, sizeof(s)); 		if (error) 			return (error); 	} 	error = xxx(td, (struct xxx_args *) uap); 	if (error) 		return (error); 	if (p32) { 		error = copyin(p,&s, sizeof(s)); 		if (error) 			return (error);
+unit|p =&s; 	} 	error = kern_xxx(td, p); 	if (error) 		return (error); 	if (uap->zzz) {
 comment|/* translate out */
 end_comment
 
