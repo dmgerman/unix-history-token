@@ -7755,6 +7755,21 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|device_get_parent
+argument_list|(
+name|pcib
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* 	 * Do the swizzle thing. 	 * 	 * XXX: no error checking for the bus number here 	 * (valid, does it exist, etc.). 	 */
 name|bus
 operator|=
