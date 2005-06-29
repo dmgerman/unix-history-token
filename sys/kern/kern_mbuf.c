@@ -1492,6 +1492,20 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|trash_dtor
+argument_list|(
+name|mem
+argument_list|,
+name|size
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
