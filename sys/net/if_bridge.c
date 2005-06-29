@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_bridge.c,v 1.24 2004/04/21 19:10:31 itojun Exp $	*/
+comment|/*	$NetBSD: if_bridge.c,v 1.31 2005/06/01 19:45:34 jdc Exp $	*/
 end_comment
 
 begin_comment
@@ -8970,7 +8970,7 @@ name|ip
 decl_stmt|;
 name|struct
 name|llc
-name|llc
+name|llc1
 decl_stmt|;
 name|u_int16_t
 name|ether_type
@@ -9077,7 +9077,7 @@ block|{
 name|struct
 name|llc
 modifier|*
-name|llc
+name|llc2
 init|=
 operator|(
 expr|struct
@@ -9103,19 +9103,19 @@ name|ETHER_HDR_LEN
 operator|+
 literal|8
 operator|&&
-name|llc
+name|llc2
 operator|->
 name|llc_dsap
 operator|==
 name|LLC_SNAP_LSAP
 operator|&&
-name|llc
+name|llc2
 operator|->
 name|llc_ssap
 operator|==
 name|LLC_SNAP_LSAP
 operator|&&
-name|llc
+name|llc2
 operator|->
 name|llc_control
 operator|==
@@ -9126,7 +9126,7 @@ name|ether_type
 operator|=
 name|htons
 argument_list|(
-name|llc
+name|llc2
 operator|->
 name|llc_un
 operator|.
@@ -9233,7 +9233,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|llc
+name|llc1
 argument_list|)
 expr_stmt|;
 name|m_adj
@@ -9830,7 +9830,7 @@ return|;
 name|bcopy
 argument_list|(
 operator|&
-name|llc
+name|llc1
 argument_list|,
 name|mtod
 argument_list|(
