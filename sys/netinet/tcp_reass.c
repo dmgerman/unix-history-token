@@ -4534,9 +4534,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_SYN_SENT
+operator|&&
+operator|(
 name|thflags
 operator|&
 name|TH_SYN
+operator|)
 condition|)
 block|{
 if|if
