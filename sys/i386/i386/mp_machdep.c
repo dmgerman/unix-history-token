@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kstack_pages.h"
 end_include
 
