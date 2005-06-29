@@ -2456,6 +2456,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*--         Recompute the tables based on the accumulated frequencies.       --*/
+comment|/* maxLen was changed from 20 to 17 in bzip2-1.0.3.  See           comment in huffman.c for details. */
 for|for
 control|(
 name|t
@@ -2499,7 +2500,8 @@ operator|)
 argument_list|,
 name|alphaSize
 argument_list|,
-literal|20
+literal|17
+comment|/*20*/
 argument_list|)
 expr_stmt|;
 block|}
@@ -2746,7 +2748,8 @@ operator|!
 operator|(
 name|maxLen
 operator|>
-literal|20
+literal|17
+comment|/*20*/
 operator|)
 argument_list|,
 literal|3004
@@ -3814,8 +3817,8 @@ literal|2
 condition|)
 name|VPrintf4
 argument_list|(
-literal|"    block %d: crc = 0x%8x, "
-literal|"combined CRC = 0x%8x, size = %d\n"
+literal|"    block %d: crc = 0x%08x, "
+literal|"combined CRC = 0x%08x, size = %d\n"
 argument_list|,
 name|s
 operator|->
@@ -4079,7 +4082,7 @@ literal|2
 condition|)
 name|VPrintf1
 argument_list|(
-literal|"    final combined CRC = 0x%x\n   "
+literal|"    final combined CRC = 0x%08x\n   "
 argument_list|,
 name|s
 operator|->
