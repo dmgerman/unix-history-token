@@ -2147,7 +2147,7 @@ parameter_list|,
 name|u_long
 name|va
 parameter_list|,
-name|uint64_t
+name|off_t
 modifier|*
 name|pa
 parameter_list|)
