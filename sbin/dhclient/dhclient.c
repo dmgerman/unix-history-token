@@ -12226,9 +12226,6 @@ case|case
 name|DHO_HOST_NAME
 case|:
 case|case
-name|DHO_DOMAIN_NAME
-case|:
-case|case
 name|DHO_NIS_DOMAIN
 case|:
 if|if
@@ -12262,6 +12259,9 @@ operator|(
 literal|1
 operator|)
 return|;
+case|case
+name|DHO_DOMAIN_NAME
+case|:
 case|case
 name|DHO_PAD
 case|:
