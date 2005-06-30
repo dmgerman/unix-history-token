@@ -77,6 +77,20 @@ name|PMC_FN_DO_SAMPLES
 value|4
 end_define
 
+begin_struct
+struct|struct
+name|pmckern_procexec
+block|{
+name|int
+name|pm_credentialschanged
+decl_stmt|;
+name|uintptr_t
+name|pm_entryaddr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* hook */
 end_comment

@@ -2924,7 +2924,7 @@ name|pmc
 modifier|*
 name|_pm
 parameter_list|,
-name|intfptr_t
+name|uintfptr_t
 name|_pc
 parameter_list|,
 name|int

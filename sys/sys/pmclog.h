@@ -166,6 +166,9 @@ comment|/* 8 byte aligned */
 name|uint32_t
 name|pl_pmcid
 decl_stmt|;
+name|uint32_t
+name|pl_usermode
+decl_stmt|;
 block|}
 name|__packed
 struct|;
@@ -255,6 +258,13 @@ block|{
 name|PMCLOG_ENTRY_HEADER
 name|uint32_t
 name|pl_pid
+decl_stmt|;
+name|uintfptr_t
+name|pl_start
+decl_stmt|;
+comment|/* keep 8 byte aligned */
+name|uint32_t
+name|pl_pmcid
 decl_stmt|;
 name|char
 name|pl_pathname
@@ -643,8 +653,14 @@ name|pmc_owner
 modifier|*
 name|_po
 parameter_list|,
+name|pmc_id_t
+name|_pmid
+parameter_list|,
 name|pid_t
 name|_pid
+parameter_list|,
+name|uintfptr_t
+name|_startaddr
 parameter_list|,
 name|char
 modifier|*

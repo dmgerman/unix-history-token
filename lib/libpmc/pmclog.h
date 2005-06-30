@@ -103,6 +103,9 @@ decl_stmt|;
 name|pmc_id_t
 name|pl_pmcid
 decl_stmt|;
+name|uint32_t
+name|pl_usermode
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -186,6 +189,12 @@ name|pmclog_ev_procexec
 block|{
 name|pid_t
 name|pl_pid
+decl_stmt|;
+name|pmc_id_t
+name|pl_pmcid
+decl_stmt|;
+name|uintfptr_t
+name|pl_entryaddr
 decl_stmt|;
 name|char
 name|pl_pathname
