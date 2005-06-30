@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -278,25 +272,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_IA32
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|ia32_freebsd_sysvec
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -310,7 +285,7 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|SCTL_MASK32
 name|int
 name|i
 decl_stmt|;
@@ -325,14 +300,9 @@ if|if
 condition|(
 name|req
 operator|->
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_sysent
-operator|==
+name|flags
 operator|&
-name|ia32_freebsd_sysvec
+name|SCTL_MASK32
 condition|)
 block|{
 if|if
