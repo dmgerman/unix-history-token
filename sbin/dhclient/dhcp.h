@@ -4,6 +4,10 @@ comment|/*	$OpenBSD: dhcp.h,v 1.5 2004/05/04 15:49:49 deraadt Exp $	*/
 end_comment
 
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/* Protocol structures... */
 end_comment
 
@@ -685,6 +689,48 @@ define|#
 directive|define
 name|DHO_DHCP_CLIENT_IDENTIFIER
 value|61
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_SMTP_SERVER
+value|69
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_POP_SERVER
+value|70
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_NNTP_SERVER
+value|71
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_WWW_SERVER
+value|72
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_FINGER_SERVER
+value|73
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_IRC_SERVER
+value|74
 end_define
 
 begin_define
