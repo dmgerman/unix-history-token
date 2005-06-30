@@ -142,8 +142,20 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|cpu_feature
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|cpu_feature2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|amd_feature
 decl_stmt|;
 end_decl_stmt
 

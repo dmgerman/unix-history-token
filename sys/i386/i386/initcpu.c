@@ -363,6 +363,18 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|amd_feature
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Feature flags */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|cpu_high
 init|=
 literal|0

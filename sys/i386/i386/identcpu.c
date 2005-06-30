@@ -218,40 +218,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|static
-name|void
-name|print_AMD_features
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -860,6 +826,56 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
+comment|/* Detect AMD features (PTE no-execute bit, 3dnow, 64 bit mode etc) */
+if|if
+condition|(
+name|cpu_exthigh
+operator|>=
+literal|0x80000001
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"GenuineIntel"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"AuthenticAMD"
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|do_cpuid
+argument_list|(
+literal|0x80000001
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|amd_feature
+operator|=
+name|regs
+index|[
+literal|3
+index|]
+operator|&
+operator|~
+operator|(
+name|cpu_feature
+operator|&
+literal|0x0183f3ff
+operator|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2886,6 +2902,7 @@ name|cpu_feature2
 operator|!=
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\n  Features2=0x%b"
@@ -2937,6 +2954,89 @@ literal|"\037<b30>"
 literal|"\040<b31>"
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|amd_feature
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n  AMD Features=0x%b"
+argument_list|,
+name|amd_feature
+argument_list|,
+literal|"\020"
+comment|/* in hex */
+literal|"\001<s0>"
+comment|/* Same */
+literal|"\002<s1>"
+comment|/* Same */
+literal|"\003<s2>"
+comment|/* Same */
+literal|"\004<s3>"
+comment|/* Same */
+literal|"\005<s4>"
+comment|/* Same */
+literal|"\006<s5>"
+comment|/* Same */
+literal|"\007<s6>"
+comment|/* Same */
+literal|"\010<s7>"
+comment|/* Same */
+literal|"\011<s8>"
+comment|/* Same */
+literal|"\012<s9>"
+comment|/* Same */
+literal|"\013<b10>"
+comment|/* Undefined */
+literal|"\014SYSCALL"
+comment|/* Have SYSCALL/SYSRET */
+literal|"\015<s12>"
+comment|/* Same */
+literal|"\016<s13>"
+comment|/* Same */
+literal|"\017<s14>"
+comment|/* Same */
+literal|"\020<s15>"
+comment|/* Same */
+literal|"\021<s16>"
+comment|/* Same */
+literal|"\022<s17>"
+comment|/* Same */
+literal|"\023<b18>"
+comment|/* Reserved, unknown */
+literal|"\024MP"
+comment|/* Multiprocessor Capable */
+literal|"\025NX"
+comment|/* Has EFER.NXE, NX */
+literal|"\026<b21>"
+comment|/* Undefined */
+literal|"\027MMX+"
+comment|/* AMD MMX Extensions */
+literal|"\030<s23>"
+comment|/* Same */
+literal|"\031<s24>"
+comment|/* Same */
+literal|"\032<b25>"
+comment|/* Undefined */
+literal|"\033<b26>"
+comment|/* Undefined */
+literal|"\034<b27>"
+comment|/* Undefined */
+literal|"\035<b28>"
+comment|/* Undefined */
+literal|"\036LM"
+comment|/* 64 bit long mode */
+literal|"\0373DNow+"
+comment|/* AMD 3DNow! Extensions */
+literal|"\0403DNow"
+comment|/* AMD 3DNow! */
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 			 * If this CPU supports hyperthreading then mention 			 * the number of logical CPU's it contains. 			 */
 if|if
 condition|(
@@ -2968,24 +3068,6 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|cpu_vendor
-argument_list|,
-literal|"AuthenticAMD"
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|cpu_exthigh
-operator|>=
-literal|0x80000001
-condition|)
-name|print_AMD_features
-argument_list|()
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -4413,128 +4495,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
-begin_function
-specifier|static
-name|void
-name|print_AMD_features
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int
-name|regs
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* 	 * Values taken from AMD Processor Recognition 	 * http://www.amd.com/products/cpg/athlon/techdocs/pdf/20734.pdf 	 */
-name|do_cpuid
-argument_list|(
-literal|0x80000001
-argument_list|,
-name|regs
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n  AMD Features=0x%b"
-argument_list|,
-name|regs
-index|[
-literal|3
-index|]
-operator|&
-operator|~
-name|cpu_feature
-argument_list|,
-literal|"\020"
-comment|/* in hex */
-literal|"\001FPU"
-comment|/* Integral FPU */
-literal|"\002VME"
-comment|/* Extended VM86 mode support */
-literal|"\003DE"
-comment|/* Debug extensions */
-literal|"\004PSE"
-comment|/* 4MByte page tables */
-literal|"\005TSC"
-comment|/* Timestamp counter */
-literal|"\006MSR"
-comment|/* Machine specific registers */
-literal|"\007PAE"
-comment|/* Physical address extension */
-literal|"\010MCE"
-comment|/* Machine Check support */
-literal|"\011CX8"
-comment|/* CMPEXCH8 instruction */
-literal|"\012APIC"
-comment|/* SMP local APIC */
-literal|"\013<b10>"
-literal|"\014SYSCALL"
-comment|/* SYSENTER/SYSEXIT instructions */
-literal|"\015MTRR"
-comment|/* Memory Type Range Registers */
-literal|"\016PGE"
-comment|/* PG_G (global bit) support */
-literal|"\017MCA"
-comment|/* Machine Check Architecture */
-literal|"\020ICMOV"
-comment|/* CMOV instruction */
-literal|"\021PAT"
-comment|/* Page attributes table */
-literal|"\022PGE36"
-comment|/* 36 bit address space support */
-literal|"\023RSVD"
-comment|/* Reserved, unknown */
-literal|"\024MP"
-comment|/* Multiprocessor Capable */
-literal|"\025NX"
-comment|/* Has EFER.NXE, NX (no execute pte bit) */
-literal|"\026<b21>"
-literal|"\027AMIE"
-comment|/* AMD MMX Instruction Extensions */
-literal|"\030MMX"
-literal|"\031FXSAVE"
-comment|/* FXSAVE/FXRSTOR */
-literal|"\032<b25>"
-literal|"\033<b26>"
-literal|"\034<b27>"
-literal|"\035<b28>"
-literal|"\036LM"
-comment|/* Long mode */
-literal|"\037DSP"
-comment|/* AMD 3DNow! Instruction Extensions */
-literal|"\0403DNow!"
-comment|/* AMD 3DNow! Instructions */
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
