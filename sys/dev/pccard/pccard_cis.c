@@ -209,6 +209,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 name|int
 name|pccard_parse_cis_tuple
 parameter_list|(
@@ -418,19 +419,8 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
-function_decl|(
-modifier|*
+name|pccard_scan_t
 name|fct
-function_decl|)
-parameter_list|(
-name|struct
-name|pccard_tuple
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
 parameter_list|,
 name|void
 modifier|*
@@ -2672,6 +2662,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pccard_parse_cis_tuple
 parameter_list|(

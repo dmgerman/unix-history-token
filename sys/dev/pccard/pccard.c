@@ -7145,6 +7145,13 @@ argument_list|,
 name|pccard_do_product_lookup
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|card_cis_scan
+argument_list|,
+name|pccard_scan_cis
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
