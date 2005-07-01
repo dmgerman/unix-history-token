@@ -3816,7 +3816,7 @@ name|int
 name|error
 decl_stmt|;
 block|{
-name|u_int32_t
+name|bus_addr_t
 modifier|*
 name|addr
 decl_stmt|;
