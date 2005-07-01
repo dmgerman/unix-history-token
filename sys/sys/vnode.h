@@ -577,13 +577,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|VN_KNOTE_UNLOCKED
+name|VN_KNOTE_LOCKED
 parameter_list|(
 name|vp
 parameter_list|,
 name|b
 parameter_list|)
-value|VN_KNOTE(vp, b, 0)
+value|VN_KNOTE(vp, b, 1)
 end_define
 
 begin_define
