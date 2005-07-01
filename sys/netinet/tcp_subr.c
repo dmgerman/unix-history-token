@@ -3025,12 +3025,6 @@ name|sack_enable
 operator|=
 name|tcp_do_sack
 expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|sack_enable
-condition|)
 name|TAILQ_INIT
 argument_list|(
 operator|&
