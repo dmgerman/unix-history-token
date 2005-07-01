@@ -213,6 +213,7 @@ specifier|static
 name|int
 name|pccard_parse_cis_tuple
 parameter_list|(
+specifier|const
 name|struct
 name|pccard_tuple
 modifier|*
@@ -228,6 +229,7 @@ specifier|static
 name|int
 name|decode_funce
 parameter_list|(
+specifier|const
 name|struct
 name|pccard_tuple
 modifier|*
@@ -2666,6 +2668,7 @@ specifier|static
 name|int
 name|pccard_parse_cis_tuple
 parameter_list|(
+specifier|const
 name|struct
 name|pccard_tuple
 modifier|*
@@ -3514,7 +3517,6 @@ name|length
 operator|>=
 literal|2
 condition|)
-block|{
 name|decode_funce
 argument_list|(
 name|tuple
@@ -3524,7 +3526,6 @@ operator|->
 name|pf
 argument_list|)
 expr_stmt|;
-block|}
 name|DPRINTF
 argument_list|(
 operator|(
@@ -5512,6 +5513,7 @@ specifier|static
 name|int
 name|decode_funce
 parameter_list|(
+specifier|const
 name|struct
 name|pccard_tuple
 modifier|*

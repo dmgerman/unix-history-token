@@ -407,6 +407,7 @@ specifier|static
 name|int
 name|ep_pccard_mac
 parameter_list|(
+specifier|const
 name|struct
 name|pccard_tuple
 modifier|*

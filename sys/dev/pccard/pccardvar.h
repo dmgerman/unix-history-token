@@ -669,6 +669,7 @@ modifier|*
 name|pccard_scan_t
 function_decl|)
 parameter_list|(
+specifier|const
 name|struct
 name|pccard_tuple
 modifier|*
