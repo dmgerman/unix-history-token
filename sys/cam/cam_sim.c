@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam.h>
 end_include
 
@@ -65,6 +71,18 @@ directive|define
 name|CAM_PATH_ANY
 value|(u_int32_t)-1
 end_define
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CAMSIM
+argument_list|,
+literal|"CAM SIM"
+argument_list|,
+literal|"CAM SIM buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|struct
@@ -176,7 +194,7 @@ expr|struct
 name|cam_sim
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMSIM
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -197,7 +215,7 @@ expr|struct
 name|cam_sim
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMSIM
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -321,7 +339,7 @@ name|free
 argument_list|(
 name|sim
 argument_list|,
-name|M_DEVBUF
+name|M_CAMSIM
 argument_list|)
 expr_stmt|;
 block|}

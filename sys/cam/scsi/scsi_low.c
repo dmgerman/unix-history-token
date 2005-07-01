@@ -332,6 +332,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cam/cam_xpt_periph.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/scsi/scsi_all.h>
 end_include
 
@@ -478,6 +484,18 @@ directive|define
 name|SCSI_LOW_DISK_TFLAGS
 value|0xffff0000
 end_define
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SCSILOW
+argument_list|,
+literal|"SCSI low"
+argument_list|,
+literal|"SCSI low buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**************************************************************  * Declarations  **************************************************************/
@@ -2123,7 +2141,7 @@ name|SCSI_LOW_MALLOC
 parameter_list|(
 name|size
 parameter_list|)
-value|malloc((size), M_DEVBUF, M_NOWAIT)
+value|malloc((size), M_SCSILOW, M_NOWAIT)
 end_define
 
 begin_define
@@ -2133,7 +2151,7 @@ name|SCSI_LOW_FREE
 parameter_list|(
 name|pt
 parameter_list|)
-value|free((pt), M_DEVBUF)
+value|free((pt), M_SCSILOW)
 end_define
 
 begin_define
@@ -4401,7 +4419,7 @@ name|SCSI_LOW_MALLOC
 parameter_list|(
 name|size
 parameter_list|)
-value|malloc((size), M_DEVBUF, M_NOWAIT)
+value|malloc((size), M_SCSILOW, M_NOWAIT)
 end_define
 
 begin_define
@@ -4411,7 +4429,7 @@ name|SCSI_LOW_FREE
 parameter_list|(
 name|pt
 parameter_list|)
-value|free((pt), M_DEVBUF)
+value|free((pt), M_SCSILOW)
 end_define
 
 begin_define
@@ -4791,11 +4809,9 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|free
+name|xpt_free_ccb
 argument_list|(
 name|ccb
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
@@ -4824,18 +4840,8 @@ name|ccb
 modifier|*
 name|ccb
 init|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|union
-name|ccb
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_WAITOK
-argument_list|)
+name|xpt_alloc_ccb
+argument_list|()
 decl_stmt|;
 name|cam_status
 name|status
@@ -7085,7 +7091,7 @@ name|sl_si
 operator|.
 name|sim
 argument_list|,
-name|M_DEVBUF
+name|M_SCSILOW
 argument_list|)
 expr_stmt|;
 return|return

@@ -125,6 +125,18 @@ directive|include
 file|<cam/scsi/scsi_message.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SCSIBH
+argument_list|,
+literal|"SCSI bh"
+argument_list|,
+literal|"SCSI blackhole buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -1120,7 +1132,7 @@ operator|*
 name|atio
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1162,7 +1174,7 @@ name|free
 argument_list|(
 name|atio
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|)
 expr_stmt|;
 name|status
@@ -1240,7 +1252,7 @@ name|free
 argument_list|(
 name|atio
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1339,7 +1351,7 @@ operator|*
 name|inot
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1417,7 +1429,7 @@ name|free
 argument_list|(
 name|inot
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1820,7 +1832,7 @@ operator|*
 name|softc
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1989,7 +2001,7 @@ name|free
 argument_list|(
 name|softc
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2608,11 +2620,9 @@ argument_list|(
 name|descr
 argument_list|)
 expr_stmt|;
-name|free
+name|xpt_free_ccb
 argument_list|(
 name|done_ccb
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3246,7 +3256,7 @@ name|free
 argument_list|(
 name|atio
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|)
 expr_stmt|;
 block|}
@@ -3295,11 +3305,9 @@ argument_list|(
 literal|"Freed an immediate notify\n"
 argument_list|)
 expr_stmt|;
-name|free
+name|xpt_free_ccb
 argument_list|(
 name|done_ccb
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
@@ -3413,7 +3421,7 @@ operator|*
 name|descr
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3449,7 +3457,7 @@ name|malloc
 argument_list|(
 name|MAX_BUF_SIZE
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3467,7 +3475,7 @@ name|free
 argument_list|(
 name|descr
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|)
 expr_stmt|;
 return|return
@@ -3507,14 +3515,14 @@ name|descr
 operator|->
 name|backing_store
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|descr
 argument_list|,
-name|M_DEVBUF
+name|M_SCSIBH
 argument_list|)
 expr_stmt|;
 block|}

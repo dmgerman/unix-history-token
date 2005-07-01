@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/linker_set.h>
 end_include
 
@@ -317,6 +323,18 @@ modifier|*
 name|periph_drivers
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CAMPERIPH
+argument_list|,
+literal|"CAM periph"
+argument_list|,
+literal|"CAM peripheral buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -612,7 +630,7 @@ operator|*
 name|periph
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMPERIPH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -992,7 +1010,7 @@ name|free
 argument_list|(
 name|periph
 argument_list|,
-name|M_DEVBUF
+name|M_CAMPERIPH
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -2134,7 +2152,7 @@ name|free
 argument_list|(
 name|periph
 argument_list|,
-name|M_DEVBUF
+name|M_CAMPERIPH
 argument_list|)
 expr_stmt|;
 block|}

@@ -137,6 +137,18 @@ directive|include
 file|<opt_ses.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SCSISES
+argument_list|,
+literal|"SCSI SES"
+argument_list|,
+literal|"SCSI SES buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Platform Independent Driver Internal Definitions for SES devices.  */
 end_comment
@@ -574,7 +586,7 @@ name|SES_MALLOC
 parameter_list|(
 name|amt
 parameter_list|)
-value|malloc(amt, M_DEVBUF, M_NOWAIT)
+value|malloc(amt, M_SCSISES, M_NOWAIT)
 end_define
 
 begin_define
@@ -586,7 +598,7 @@ name|ptr
 parameter_list|,
 name|amt
 parameter_list|)
-value|free(ptr, M_DEVBUF)
+value|free(ptr, M_SCSISES)
 end_define
 
 begin_define
@@ -1213,7 +1225,7 @@ name|free
 argument_list|(
 name|softc
 argument_list|,
-name|M_DEVBUF
+name|M_SCSISES
 argument_list|)
 expr_stmt|;
 block|}
@@ -1492,7 +1504,7 @@ expr|struct
 name|ses_softc
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_SCSISES
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1687,7 +1699,7 @@ name|free
 argument_list|(
 name|softc
 argument_list|,
-name|M_DEVBUF
+name|M_SCSISES
 argument_list|)
 expr_stmt|;
 return|return

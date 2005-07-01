@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam.h>
 end_include
 
@@ -64,6 +70,42 @@ include|#
 directive|include
 file|<cam/cam_debug.h>
 end_include
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CAMQ
+argument_list|,
+literal|"CAM queue"
+argument_list|,
+literal|"CAM queue buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CAMDEVQ
+argument_list|,
+literal|"CAM dev queue"
+argument_list|,
+literal|"CAM dev queue buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CAMCCBQ
+argument_list|,
+literal|"CAM ccb queue"
+argument_list|,
+literal|"CAM ccb queue buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -170,7 +212,7 @@ operator|*
 name|camq
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMQ
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -198,7 +240,7 @@ name|free
 argument_list|(
 name|camq
 argument_list|,
-name|M_DEVBUF
+name|M_CAMQ
 argument_list|)
 expr_stmt|;
 name|camq
@@ -273,7 +315,7 @@ name|cam_pinfo
 operator|*
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMQ
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -343,7 +385,7 @@ name|free
 argument_list|(
 name|queue
 argument_list|,
-name|M_DEVBUF
+name|M_CAMQ
 argument_list|)
 expr_stmt|;
 block|}
@@ -381,7 +423,7 @@ name|queue
 operator|->
 name|queue_array
 argument_list|,
-name|M_DEVBUF
+name|M_CAMQ
 argument_list|)
 expr_stmt|;
 block|}
@@ -442,7 +484,7 @@ name|cam_pinfo
 operator|*
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMQ
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -501,7 +543,7 @@ name|queue
 operator|->
 name|queue_array
 argument_list|,
-name|M_DEVBUF
+name|M_CAMQ
 argument_list|)
 expr_stmt|;
 block|}
@@ -849,7 +891,7 @@ operator|*
 name|devq
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMDEVQ
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -890,7 +932,7 @@ name|free
 argument_list|(
 name|devq
 argument_list|,
-name|M_DEVBUF
+name|M_CAMDEVQ
 argument_list|)
 expr_stmt|;
 return|return
@@ -1046,7 +1088,7 @@ name|free
 argument_list|(
 name|devq
 argument_list|,
-name|M_DEVBUF
+name|M_CAMDEVQ
 argument_list|)
 expr_stmt|;
 block|}
@@ -1136,7 +1178,7 @@ operator|*
 name|ccbq
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMCCBQ
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1175,7 +1217,7 @@ name|free
 argument_list|(
 name|ccbq
 argument_list|,
-name|M_DEVBUF
+name|M_CAMCCBQ
 argument_list|)
 expr_stmt|;
 return|return
@@ -1219,7 +1261,7 @@ name|free
 argument_list|(
 name|ccbq
 argument_list|,
-name|M_DEVBUF
+name|M_CAMCCBQ
 argument_list|)
 expr_stmt|;
 block|}

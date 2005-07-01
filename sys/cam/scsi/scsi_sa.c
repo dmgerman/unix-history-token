@@ -345,6 +345,18 @@ begin_comment
 comment|/*  * Driver states  */
 end_comment
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SCSISA
+argument_list|,
+literal|"SCSI sa"
+argument_list|,
+literal|"SCSI sequential access buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -5571,7 +5583,7 @@ name|free
 argument_list|(
 name|softc
 argument_list|,
-name|M_DEVBUF
+name|M_SCSISA
 argument_list|)
 expr_stmt|;
 block|}
@@ -5821,7 +5833,7 @@ operator|*
 name|softc
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_SCSISA
 argument_list|,
 name|M_NOWAIT
 operator||

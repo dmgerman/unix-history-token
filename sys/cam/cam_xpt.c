@@ -198,6 +198,18 @@ begin_comment
 comment|/* Datastructures internal to the xpt layer */
 end_comment
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CAMXPT
+argument_list|,
+literal|"CAM XPT"
+argument_list|,
+literal|"CAM XPT buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Definition of an async handler callback block.  These are used to add  * SIMs and peripherals to the async callback lists.  */
 end_comment
@@ -14225,7 +14237,7 @@ name|free
 argument_list|(
 name|cur_entry
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 block|}
@@ -14253,7 +14265,7 @@ operator|*
 name|cur_entry
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -16771,7 +16783,7 @@ operator|*
 name|path
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -16819,7 +16831,7 @@ name|free
 argument_list|(
 name|path
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|path
@@ -17278,7 +17290,7 @@ name|free
 argument_list|(
 name|path
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 block|}
@@ -18243,7 +18255,7 @@ operator|*
 name|new_bus
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -20267,9 +20279,46 @@ operator|*
 name|new_ccb
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|new_ccb
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|union
+name|ccb
+modifier|*
+name|xpt_alloc_ccb_nowait
+parameter_list|()
+block|{
+name|union
+name|ccb
+modifier|*
+name|new_ccb
+decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+name|new_ccb
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|new_ccb
+argument_list|)
+argument_list|,
+name|M_CAMXPT
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 return|return
@@ -20294,7 +20343,7 @@ name|free
 argument_list|(
 name|free_ccb
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 block|}
@@ -20356,18 +20405,8 @@ condition|)
 block|{
 name|new_ccb
 operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|new_ccb
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
+name|xpt_alloc_ccb_nowait
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -20512,7 +20551,7 @@ name|free
 argument_list|(
 name|bus
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 block|}
@@ -20561,7 +20600,7 @@ operator|*
 name|target
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -20776,7 +20815,7 @@ name|free
 argument_list|(
 name|target
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|xpt_release_bus
@@ -20891,7 +20930,7 @@ operator|*
 name|device
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -20977,7 +21016,7 @@ name|free
 argument_list|(
 name|device
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 return|return
@@ -21017,7 +21056,7 @@ name|free
 argument_list|(
 name|device
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 return|return
@@ -21463,7 +21502,7 @@ name|free
 argument_list|(
 name|device
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|xpt_release_target
@@ -25124,7 +25163,7 @@ name|device
 operator|->
 name|serial_num
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|path
@@ -25201,7 +25240,7 @@ operator|+
 literal|1
 operator|)
 argument_list|,
-name|M_DEVBUF
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
