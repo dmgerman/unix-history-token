@@ -901,6 +901,12 @@ name|so
 operator|->
 name|so_rcv
 argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|knlist_init
@@ -921,6 +927,12 @@ name|so
 operator|->
 name|so_snd
 argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

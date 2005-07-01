@@ -1595,6 +1595,12 @@ operator|&
 name|d
 operator|->
 name|bd_mtx
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return

@@ -577,13 +577,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|VN_KNOTE_LOCKED
+name|VN_KNOTE_UNLOCKED
 parameter_list|(
 name|vp
 parameter_list|,
 name|b
 parameter_list|)
-value|VN_KNOTE(vp, b, 1)
+value|VN_KNOTE(vp, b, 0)
 end_define
 
 begin_define
@@ -3920,7 +3920,7 @@ parameter_list|,
 name|ret
 parameter_list|)
 define|\
-value|noffset = (ap)->a_uio->uio_offset;				\ 	if (noffset> ooffset&& !VN_KNLIST_EMPTY((ap)->a_vp)) {	\ 		VFS_SEND_KNOTE((ap)->a_vp, NOTE_WRITE			\ 		    | (noffset> osize ? NOTE_EXTEND : 0));		\ 	}
+value|noffset = (ap)->a_uio->uio_offset;				\ 	if (noffset> ooffset&& !VN_KNLIST_EMPTY((ap)->a_vp)) {	\ 		VFS_KNOTE_LOCKED((ap)->a_vp, NOTE_WRITE			\ 		    | (noffset> osize ? NOTE_EXTEND : 0));		\ 	}
 end_define
 
 begin_function_decl

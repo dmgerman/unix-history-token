@@ -2614,13 +2614,25 @@ end_define
 begin_define
 define|#
 directive|define
-name|VFS_SEND_KNOTE
+name|VFS_KNOTE_LOCKED
 parameter_list|(
 name|vp
 parameter_list|,
 name|hint
 parameter_list|)
-value|do					\ {									\ 	if ((vp)->v_mount&&						\ 	    ((vp)->v_mount->mnt_kern_flag& MNTK_NOKNOTE) == 0)		\ 		VN_KNOTE_UNLOCKED((vp), (hint));			\ } while (0)
+value|do					\ {									\ 	if ((vp)->v_mount&&						\ 	    ((vp)->v_mount->mnt_kern_flag& MNTK_NOKNOTE) == 0)		\ 		VN_KNOTE((vp), (hint), 1);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_KNOTE_UNLOCKED
+parameter_list|(
+name|vp
+parameter_list|,
+name|hint
+parameter_list|)
+value|do					\ {									\ 	if ((vp)->v_mount&&						\ 	    ((vp)->v_mount->mnt_kern_flag& MNTK_NOKNOTE) == 0)		\ 		VN_KNOTE((vp), (hint), 0);				\ } while (0)
 end_define
 
 begin_include

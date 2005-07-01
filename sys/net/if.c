@@ -1444,6 +1444,12 @@ operator|&
 name|ifklist
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|if_grow
@@ -2393,6 +2399,12 @@ operator|&
 name|ifp
 operator|->
 name|if_klist
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

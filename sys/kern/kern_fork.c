@@ -1023,6 +1023,12 @@ operator|&
 name|newproc
 operator|->
 name|p_mtx
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* We have to lock the process tree while we look for a pid. */

@@ -14218,6 +14218,12 @@ operator|&
 name|tp
 operator|->
 name|t_mtx
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|knlist_init
@@ -14233,6 +14239,12 @@ operator|&
 name|tp
 operator|->
 name|t_mtx
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
