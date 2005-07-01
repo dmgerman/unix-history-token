@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|MAXUSBDEV
-value|4
+value|40
 end_define
 
 begin_comment
