@@ -839,7 +839,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep: unknown ID 0x%08x\n"
+literal|"unknown ID 0x%08x\n"
 argument_list|,
 name|isa_id
 argument_list|)
@@ -928,7 +928,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep:<%s> at port 0x%03x in EISA mode!\n"
+literal|"<%s> at port 0x%03x in EISA mode!\n"
 argument_list|,
 name|desc
 argument_list|,
@@ -987,7 +987,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep:<%s> at 0x%03x "
+literal|"<%s> at 0x%03x "
 literal|"in PnP mode!\n"
 argument_list|,
 name|desc
@@ -1056,7 +1056,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep:<%s> at port 0x%03x in TEST mode!"
+literal|"<%s> at port 0x%03x in TEST mode!"
 literal|"  Erase pencil mark.\n"
 argument_list|,
 name|desc
@@ -1128,7 +1128,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep:<%s>"
+literal|"<%s>"
 literal|" at port 0x%03x-0x%03x irq %d\n"
 argument_list|,
 name|desc
@@ -1291,20 +1291,9 @@ name|dev
 argument_list|)
 operator|)
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ep_alloc() failed! (%d)\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 name|ep_get_media
 argument_list|(
 name|sc
@@ -1340,20 +1329,9 @@ name|sc
 argument_list|)
 operator|)
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ep_attach() failed! (%d)\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 name|error
 operator|=
 name|ep_eeprom_cksum

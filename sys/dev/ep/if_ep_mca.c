@@ -416,20 +416,9 @@ name|dev
 argument_list|)
 operator|)
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ep_alloc() failed! (%d)\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 name|sc
 operator|->
 name|stat
@@ -471,20 +460,9 @@ name|sc
 argument_list|)
 operator|)
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ep_attach() failed! (%d)\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 if|if
 condition|(
 operator|(

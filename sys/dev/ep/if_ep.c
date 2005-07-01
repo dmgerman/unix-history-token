@@ -1200,7 +1200,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"can not if_alloc()\n"
+literal|"if_alloc() failed\n"
 argument_list|)
 expr_stmt|;
 name|EP_LOCK_DESTORY
@@ -1558,20 +1558,11 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"already unloaded\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|bus_child_present
