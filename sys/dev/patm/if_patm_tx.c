@@ -1338,11 +1338,6 @@ name|patm_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|patm_softc
-operator|*
-operator|)
 name|ifp
 operator|->
 name|if_softc

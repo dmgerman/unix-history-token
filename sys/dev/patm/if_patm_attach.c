@@ -2660,11 +2660,6 @@ name|sc
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|patm_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev

@@ -10444,11 +10444,6 @@ name|vc
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|fatm_softc
-operator|*
-operator|)
 name|ifp
 operator|->
 name|if_softc
@@ -12770,11 +12765,6 @@ name|tx
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|fatm_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev

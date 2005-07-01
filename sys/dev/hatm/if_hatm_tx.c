@@ -1647,11 +1647,6 @@ name|hatm_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|hatm_softc
-operator|*
-operator|)
 name|ifp
 operator|->
 name|if_softc
