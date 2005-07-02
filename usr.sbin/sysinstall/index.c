@@ -3606,6 +3606,15 @@ return|return
 name|DITEM_SUCCESS
 return|;
 comment|/*      * Prompt user if the package is not available on the current volume.      */
+if|if
+condition|(
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_CDROM
+condition|)
+block|{
 while|while
 condition|(
 name|id
@@ -3668,6 +3677,7 @@ block|{
 return|return
 name|DITEM_FAILURE
 return|;
+block|}
 block|}
 block|}
 if|if
