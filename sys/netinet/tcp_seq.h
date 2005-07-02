@@ -86,6 +86,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|TSTMP_GT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((int)((a)-(b))> 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TSTMP_GEQ
 parameter_list|(
 name|a
