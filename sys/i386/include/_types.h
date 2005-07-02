@@ -32,6 +32,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|__NO_STRICT_ALIGNMENT
+end_define
+
 begin_comment
 comment|/*  * Basic types upon which most other types are built.  */
 end_comment
