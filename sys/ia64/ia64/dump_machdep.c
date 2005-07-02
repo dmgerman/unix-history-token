@@ -528,6 +528,10 @@ name|dumplo
 operator|+=
 name|DEV_BSIZE
 expr_stmt|;
+name|fragsz
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|error
