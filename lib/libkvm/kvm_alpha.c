@@ -443,7 +443,7 @@ decl_stmt|;
 name|u_long
 name|va
 decl_stmt|;
-name|u_long
+name|off_t
 modifier|*
 name|pa
 decl_stmt|;
