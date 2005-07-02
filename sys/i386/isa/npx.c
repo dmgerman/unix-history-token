@@ -237,7 +237,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|CPU_ENABLE_SSE
+name|CPU_DISABLE_SSE
 argument_list|)
 operator|&&
 name|defined
@@ -251,26 +251,6 @@ define|#
 directive|define
 name|CPU_ENABLE_SSE
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_DISABLE_SSE
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|CPU_ENABLE_SSE
-end_undef
 
 begin_endif
 endif|#
