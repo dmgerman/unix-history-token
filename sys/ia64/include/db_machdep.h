@@ -285,6 +285,28 @@ parameter_list|)
 value|pc
 end_define
 
+begin_comment
+comment|/* Function call support. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_MAXARGS
+value|8
+end_define
+
+begin_comment
+comment|/* Only support arguments in registers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_CALL
+value|db_fncall_ia64
+end_define
+
 begin_endif
 endif|#
 directive|endif
