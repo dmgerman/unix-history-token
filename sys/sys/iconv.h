@@ -254,7 +254,7 @@ name|__BEGIN_DECLS
 define|#
 directive|define
 name|ENCODING_UNICODE
-value|"ISO-10646-UCS-2"
+value|"UTF-16BE"
 define|#
 directive|define
 name|KICONV_VENDOR_MICSFT
