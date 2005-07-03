@@ -552,6 +552,11 @@ name|p
 operator|=
 name|avail
 expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 name|SET_FOREACH
 argument_list|(
 argument|iter
