@@ -458,6 +458,14 @@ block|,
 block|{
 name|BCOM_VENDORID
 block|,
+name|BCOM_DEVICEID_BCM5751M
+block|,
+literal|"Broadcom BCM5751M Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
 name|BCOM_DEVICEID_BCM5782
 block|,
 literal|"Broadcom BCM5782 Gigabit Ethernet"
@@ -469,6 +477,14 @@ block|,
 name|BCOM_DEVICEID_BCM5788
 block|,
 literal|"Broadcom BCM5788 Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
+name|BCOM_DEVICEID_BCM5789
+block|,
+literal|"Broadcom BCM5789 Gigabit Ethernet"
 block|}
 block|,
 block|{
