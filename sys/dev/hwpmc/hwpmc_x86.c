@@ -300,7 +300,7 @@ literal|0
 operator|&&
 name|model
 operator|<=
-literal|3
+literal|4
 condition|)
 comment|/* known models */
 name|cputype
