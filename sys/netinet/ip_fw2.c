@@ -8839,7 +8839,7 @@ name|retval
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * hlen	The length of the IPv4 header. 	 *	hlen>0 means we have an IPv4 packet. 	 */
+comment|/* 	 * hlen	The length of the IP header. 	 */
 name|u_int
 name|hlen
 init|=
@@ -9483,11 +9483,6 @@ argument_list|)
 operator|->
 name|ip6_flow
 argument_list|)
-expr_stmt|;
-comment|/* hlen != 0 is used to detect ipv4 packets, so clear it now */
-name|hlen
-operator|=
-literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -10582,10 +10577,6 @@ operator|=
 name|is_ipv4
 operator|&&
 operator|(
-name|hlen
-operator|>
-literal|0
-operator|&&
 operator|(
 operator|(
 name|ipfw_insn_ip
@@ -10612,10 +10603,6 @@ name|O_IP_DST_LOOKUP
 case|:
 if|if
 condition|(
-name|hlen
-operator|>
-literal|0
-operator|&&
 name|is_ipv4
 condition|)
 block|{
@@ -10697,10 +10684,6 @@ name|O_IP_DST_MASK
 case|:
 if|if
 condition|(
-name|hlen
-operator|>
-literal|0
-operator|&&
 name|is_ipv4
 condition|)
 block|{
@@ -10787,10 +10770,6 @@ name|O_IP_SRC_ME
 case|:
 if|if
 condition|(
-name|hlen
-operator|>
-literal|0
-operator|&&
 name|is_ipv4
 condition|)
 block|{
@@ -10824,10 +10803,6 @@ name|O_IP_SRC_SET
 case|:
 if|if
 condition|(
-name|hlen
-operator|>
-literal|0
-operator|&&
 name|is_ipv4
 condition|)
 block|{
@@ -10927,10 +10902,6 @@ operator|=
 name|is_ipv4
 operator|&&
 operator|(
-name|hlen
-operator|>
-literal|0
-operator|&&
 operator|(
 operator|(
 name|ipfw_insn_ip
@@ -10954,10 +10925,6 @@ name|O_IP_DST_ME
 case|:
 if|if
 condition|(
-name|hlen
-operator|>
-literal|0
-operator|&&
 name|is_ipv4
 condition|)
 block|{
@@ -11155,9 +11122,7 @@ case|:
 name|match
 operator|=
 operator|(
-name|hlen
-operator|>
-literal|0
+name|is_ipv4
 operator|&&
 name|ipopts_match
 argument_list|(
@@ -11181,9 +11146,7 @@ case|:
 name|match
 operator|=
 operator|(
-name|hlen
-operator|>
-literal|0
+name|is_ipv4
 operator|&&
 name|cmd
 operator|->
@@ -11213,9 +11176,7 @@ name|O_IPTTL
 case|:
 if|if
 condition|(
-name|hlen
-operator|>
-literal|0
+name|is_ipv4
 condition|)
 block|{
 comment|/* only for IP packets */
@@ -11362,9 +11323,7 @@ case|:
 name|match
 operator|=
 operator|(
-name|hlen
-operator|>
-literal|0
+name|is_ipv4
 operator|&&
 operator|(
 name|cmd
@@ -11395,9 +11354,7 @@ case|:
 name|match
 operator|=
 operator|(
-name|hlen
-operator|>
-literal|0
+name|is_ipv4
 operator|&&
 name|flags_match
 argument_list|(
@@ -11825,9 +11782,7 @@ name|qid
 expr_stmt|;
 if|if
 condition|(
-name|hlen
-operator|!=
-literal|0
+name|is_ipv4
 condition|)
 name|at
 operator|->
@@ -11863,6 +11818,9 @@ case|:
 if|if
 condition|(
 name|fw_verbose
+operator|&&
+operator|!
+name|is_ipv6
 condition|)
 name|ipfw_log
 argument_list|(
