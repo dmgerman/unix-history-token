@@ -8568,27 +8568,6 @@ name|ni
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX auto-add group key flag until applications are updated */
-if|if
-condition|(
-operator|(
-name|ik
-operator|.
-name|ik_flags
-operator|&
-name|IEEE80211_KEY_XMIT
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* XXX */
-name|ik
-operator|.
-name|ik_flags
-operator||=
-name|IEEE80211_KEY_GROUP
-expr_stmt|;
-comment|/* XXX */
 block|}
 name|error
 operator|=
