@@ -4613,7 +4613,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_mbuf_from_mbuf
+name|mac_copy_mbuf
 argument_list|(
 name|m
 argument_list|,
