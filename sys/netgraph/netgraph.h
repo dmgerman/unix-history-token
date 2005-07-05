@@ -3563,6 +3563,21 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|ng_apply_t
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|error
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ng_item
@@ -3620,6 +3635,15 @@ struct|;
 block|}
 name|body
 union|;
+comment|/* 	 * Optional callback called when item is being applied, 	 * and its context. 	 */
+name|ng_apply_t
+modifier|*
+name|apply
+decl_stmt|;
+name|void
+modifier|*
+name|context
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -5616,6 +5640,17 @@ end_define
 
 begin_comment
 comment|/* use M_WAITOK, etc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PROGRESS
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* return EINPROGRESS if queued */
 end_comment
 
 begin_comment

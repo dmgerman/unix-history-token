@@ -86,6 +86,15 @@ decl_stmt|;
 name|int
 name|refs
 decl_stmt|;
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/* mtx to wait on */
+name|int
+name|error
+decl_stmt|;
+comment|/* place to store error */
 block|}
 struct|;
 end_struct
