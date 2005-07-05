@@ -7947,11 +7947,6 @@ name|BO_ONWORKLST
 expr_stmt|;
 block|}
 block|}
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -8115,6 +8110,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
