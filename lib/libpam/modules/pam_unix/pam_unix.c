@@ -1688,7 +1688,9 @@ name|lc
 operator|=
 name|login_getclass
 argument_list|(
-name|NULL
+name|pwd
+operator|->
+name|pw_class
 argument_list|)
 expr_stmt|;
 if|if
