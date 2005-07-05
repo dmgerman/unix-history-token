@@ -2748,8 +2748,6 @@ if|if
 condition|(
 operator|!
 name|using_lapic_timer
-operator|||
-literal|1
 condition|)
 block|{
 name|intr_add_handler
