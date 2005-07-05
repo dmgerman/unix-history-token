@@ -1941,6 +1941,8 @@ operator|.
 name|ik_flags
 operator||=
 name|IEEE80211_KEY_DEFAULT
+operator||
+name|IEEE80211_KEY_GROUP
 expr_stmt|;
 block|}
 else|else
