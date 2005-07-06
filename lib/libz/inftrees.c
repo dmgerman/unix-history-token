@@ -728,16 +728,9 @@ name|type
 operator|==
 name|CODES
 operator|||
-operator|(
-name|codes
-operator|-
-name|count
-index|[
-literal|0
-index|]
+name|max
 operator|!=
 literal|1
-operator|)
 operator|)
 condition|)
 return|return
