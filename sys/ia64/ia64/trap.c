@@ -652,7 +652,7 @@ begin_struct
 struct|struct
 name|bitname
 block|{
-name|u_int64_t
+name|uint64_t
 name|mask
 decl_stmt|;
 specifier|const
@@ -669,7 +669,7 @@ specifier|static
 name|void
 name|printbits
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|mask
 parameter_list|,
 name|struct
@@ -688,7 +688,7 @@ name|first
 init|=
 literal|1
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|bit
 decl_stmt|;
 for|for
@@ -1019,7 +1019,7 @@ specifier|static
 name|void
 name|printpsr
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|psr
 parameter_list|)
 block|{
@@ -1139,7 +1139,7 @@ specifier|static
 name|void
 name|printisr
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|isr
 parameter_list|)
 block|{
@@ -1512,7 +1512,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ucode
 decl_stmt|;
 name|int
@@ -3761,7 +3761,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|args
 decl_stmt|;
