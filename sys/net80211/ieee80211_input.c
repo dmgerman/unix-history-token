@@ -11919,38 +11919,19 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/*  		 * If this is the last packet, turn off the TIM bit. 		 * If there are more packets, set the more packets bit 		 * in the packet dispatched to the station. 		 */
+comment|/*  		 * If this is the last packet, turn off the TIM bit. 		 * If there are more packets, set the more packets bit 		 * in the mbuf so ieee80211_encap will mark the 802.11 		 * head to indicate more data frames will follow. 		 */
 if|if
 condition|(
 name|qlen
 operator|!=
 literal|0
 condition|)
-block|{
-name|struct
-name|ieee80211_frame_min
-modifier|*
-name|wh
-init|=
-name|mtod
-argument_list|(
 name|m
-argument_list|,
-expr|struct
-name|ieee80211_frame_min
-operator|*
-argument_list|)
-decl_stmt|;
-name|wh
 operator|->
-name|i_fc
-index|[
-literal|1
-index|]
+name|m_flags
 operator||=
-name|IEEE80211_FC1_MORE_DATA
+name|M_MORE_DATA
 expr_stmt|;
-block|}
 comment|/* XXX need different driver interface */
 comment|/* XXX bypasses q max */
 name|IF_ENQUEUE

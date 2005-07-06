@@ -505,6 +505,17 @@ begin_comment
 comment|/* bypass PS handling */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_MORE_DATA
+value|M_PROTO5
+end_define
+
+begin_comment
+comment|/* more data frames to follow */
+end_comment
+
 begin_comment
 comment|/*  * Encode WME access control bits in the PROTO flags.  * This is safe since it's passed directly in to the  * driver and there's no chance someone else will clobber  * them on us.  */
 end_comment
