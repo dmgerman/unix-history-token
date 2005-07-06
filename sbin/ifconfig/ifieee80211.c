@@ -3253,6 +3253,32 @@ name|NULL
 argument_list|)
 block|; }
 specifier|static
+name|void
+name|set80211pureg
+argument_list|(
+argument|const char *val
+argument_list|,
+argument|int d
+argument_list|,
+argument|int s
+argument_list|,
+argument|const struct afswtch *rafp
+argument_list|)
+block|{
+name|set80211
+argument_list|(
+name|s
+argument_list|,
+name|IEEE80211_IOC_PUREG
+argument_list|,
+name|d
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+block|; }
+specifier|static
 name|int
 name|getmaxrate
 argument_list|(
@@ -8108,6 +8134,54 @@ name|ireq
 operator|.
 name|i_type
 operator|=
+name|IEEE80211_IOC_PUREG
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCG80211
+argument_list|,
+operator|&
+name|ireq
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|ireq
+operator|.
+name|i_val
+condition|)
+name|LINE_CHECK
+argument_list|(
+literal|"%cpureg"
+argument_list|,
+name|spacer
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|verbose
+condition|)
+name|LINE_CHECK
+argument_list|(
+literal|"%c-pureg"
+argument_list|,
+name|spacer
+argument_list|)
+expr_stmt|;
+block|}
+name|ireq
+operator|.
+name|i_type
+operator|=
 name|IEEE80211_IOC_PROTMODE
 expr_stmt|;
 if|if
@@ -9619,7 +9693,24 @@ literal|0
 block|DEF_CMD_ARG("mac:kick",		set80211kickmac),
 endif|#
 directive|endif
-block|}
+name|DEF_CMD
+argument_list|(
+literal|"pureg"
+argument_list|,
+literal|1
+argument_list|,
+name|set80211pureg
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"-pureg"
+argument_list|,
+literal|0
+argument_list|,
+name|set80211pureg
+argument_list|)
+block|, }
 decl_stmt|;
 end_decl_stmt
 
