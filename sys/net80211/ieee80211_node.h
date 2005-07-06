@@ -246,6 +246,11 @@ directive|define
 name|IEEE80211_NODE_PWR_MGT
 value|0x0010
 comment|/* power save mode enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_AREF
+value|0x0020
+comment|/* authentication ref held */
 name|u_int16_t
 name|ni_associd
 decl_stmt|;

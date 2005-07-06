@@ -3707,6 +3707,14 @@ name|ic_ps_sta
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Clear AREF flag that marks the authorization refcnt bump 	 * has happened.  This is probably not needed as the node 	 * should always be removed from the table so not found but 	 * do it just in case. 	 */
+name|ni
+operator|->
+name|ni_flags
+operator|&=
+operator|~
+name|IEEE80211_NODE_AREF
+expr_stmt|;
 comment|/* 	 * Drain power save queue and, if needed, clear TIM. 	 */
 name|IEEE80211_NODE_SAVEQ_DRAIN
 argument_list|(
@@ -6169,6 +6177,20 @@ name|ni_scangen
 operator|=
 name|gen
 expr_stmt|;
+comment|/* 		 * Ignore entries for which have yet to receive an 		 * authentication frame.  These are transient and 		 * will be reclaimed when the last reference to them 		 * goes away (when frame xmits complete). 		 */
+if|if
+condition|(
+operator|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_AREF
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 comment|/* 		 * Free fragment if not needed anymore 		 * (last fragment older than 1s). 		 * XXX doesn't belong here 		 */
 if|if
 condition|(

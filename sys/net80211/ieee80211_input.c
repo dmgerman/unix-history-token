@@ -4175,7 +4175,19 @@ name|NULL
 condition|)
 return|return;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_AREF
+operator|)
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -4183,6 +4195,13 @@ name|ieee80211_ref_node
 argument_list|(
 name|ni
 argument_list|)
+expr_stmt|;
+comment|/* 		 * Mark the node as referenced to reflect that it's 		 * reference count has been bumped to insure it remains 		 * after the transaction completes. 		 */
+name|ni
+operator|->
+name|ni_flags
+operator||=
+name|IEEE80211_NODE_AREF
 expr_stmt|;
 name|IEEE80211_SEND_MGMT
 argument_list|(
@@ -4984,6 +5003,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_AREF
+operator|)
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -4997,6 +5028,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 			 * Mark the node as referenced to reflect that it's 			 * reference count has been bumped to insure it remains 			 * after the transaction completes. 			 */
+name|ni
+operator|->
+name|ni_flags
+operator||=
+name|IEEE80211_NODE_AREF
+expr_stmt|;
 name|ni
 operator|->
 name|ni_rssi
