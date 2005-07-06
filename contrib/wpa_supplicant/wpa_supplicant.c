@@ -4696,6 +4696,12 @@ operator|->
 name|l2
 argument_list|)
 expr_stmt|;
+name|wpa_s
+operator|->
+name|l2
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
 block|}
 break|break;
