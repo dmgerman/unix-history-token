@@ -806,7 +806,7 @@ comment|/* ic_flags */
 end_comment
 
 begin_comment
-comment|/* NB: bits 0x6f available */
+comment|/* NB: bits 0x4f available */
 end_comment
 
 begin_comment
@@ -822,6 +822,17 @@ end_define
 
 begin_comment
 comment|/* CONF: privacy enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_PUREG
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* CONF: 11g w/o 11b sta's */
 end_comment
 
 begin_define

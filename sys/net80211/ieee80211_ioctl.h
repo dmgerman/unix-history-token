@@ -1681,6 +1681,17 @@ begin_comment
 comment|/* del sta from MAC ACL table */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_PUREG
+value|56
+end_define
+
+begin_comment
+comment|/* pure 11g (no 11b stations) */
+end_comment
+
 begin_comment
 comment|/*  * Scan result data returned for IEEE80211_IOC_SCAN_RESULTS.  */
 end_comment
