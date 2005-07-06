@@ -71,10 +71,6 @@ decl_stmt|;
 name|int
 name|port_rid
 decl_stmt|;
-name|int
-name|pccard_enaddr
-decl_stmt|;
-comment|/* MAC address in pccard CIS tupple */
 block|}
 struct|;
 end_struct
@@ -84,8 +80,6 @@ name|int
 name|sn_probe
 parameter_list|(
 name|device_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
