@@ -48,6 +48,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -381,6 +393,12 @@ name|len
 decl_stmt|,
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Wait for the TAILQ to be initialized.  Only the very first CPU 	 * will succeed on the atomic_cmpset().  The other CPU's will spin 	 * until the first one finishes the initialization.  Once the 	 * initialization is complete, the condition will always fail 	 * avoiding expensive atomic operations in the common case. 	 */
 while|while
 condition|(
@@ -493,6 +511,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -537,6 +561,12 @@ argument_list|,
 name|e
 argument_list|,
 name|entries
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|DPRINTF
