@@ -15995,6 +15995,12 @@ name|ctsduration
 comment|/* rts/cts duration */
 argument_list|)
 expr_stmt|;
+name|bf
+operator|->
+name|bf_flags
+operator|=
+name|flags
+expr_stmt|;
 comment|/* 	 * Setup the multi-rate retry state only when we're 	 * going to use it.  This assumes ath_hal_setuptxdesc 	 * initializes the descriptors (so we don't have to) 	 * when the hardware supports multi-rate retry and 	 * we don't use it. 	 */
 if|if
 condition|(
@@ -16906,6 +16912,30 @@ operator|+=
 name|lr
 expr_stmt|;
 comment|/* 			 * Hand the descriptor to the rate control algorithm. 			 */
+if|if
+condition|(
+operator|(
+name|ds
+operator|->
+name|ds_txstat
+operator|.
+name|ts_status
+operator|&
+name|HAL_TXERR_FILT
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|bf
+operator|->
+name|bf_flags
+operator|&
+name|HAL_TXDESC_NOACK
+operator|)
+operator|==
+literal|0
+condition|)
 name|ath_rate_tx_complete
 argument_list|(
 name|sc

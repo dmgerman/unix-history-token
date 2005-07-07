@@ -300,6 +300,10 @@ expr_stmt|;
 name|int
 name|bf_nseg
 decl_stmt|;
+name|int
+name|bf_flags
+decl_stmt|;
+comment|/* tx descriptor flags */
 name|struct
 name|ath_desc
 modifier|*
