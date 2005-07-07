@@ -775,20 +775,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 argument|slave
 argument_list|,
+argument|sizeof(slave)
+argument_list|,
 argument|_PATH_DEV PTS_PREFIX
-literal|"%c%c"
+literal|"%s"
 argument_list|,
-argument|PT_DEV1[minor(sbuf.st_rdev) /
-literal|32
-argument|]
-argument_list|,
-argument|PT_DEV2[minor(sbuf.st_rdev) %
-literal|32
-argument|]
+argument|devname(sbuf.st_rdev, S_IFCHR) + 				       strlen(PTM_PREFIX)
 argument_list|)
 expr_stmt|;
 name|retval
