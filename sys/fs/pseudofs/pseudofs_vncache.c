@@ -999,6 +999,11 @@ name|pvd
 operator|->
 name|pvd_vnode
 expr_stmt|;
+name|vhold
+argument_list|(
+name|vnp
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1026,6 +1031,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|curthread
+argument_list|)
+expr_stmt|;
+name|vdrop
+argument_list|(
+name|vnp
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -1140,6 +1150,11 @@ name|pvd
 operator|->
 name|pvd_vnode
 expr_stmt|;
+name|vhold
+argument_list|(
+name|vnp
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1167,6 +1182,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|curthread
+argument_list|)
+expr_stmt|;
+name|vdrop
+argument_list|(
+name|vnp
 argument_list|)
 expr_stmt|;
 name|mtx_lock
