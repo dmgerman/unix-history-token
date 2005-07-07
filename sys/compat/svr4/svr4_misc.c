@@ -4796,16 +4796,6 @@ block|}
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|syscallarg
-parameter_list|(
-name|x
-parameter_list|)
-value|union { x datum; register_t pad; }
-end_define
-
 begin_struct
 struct|struct
 name|svr4_hrtcntl_args
