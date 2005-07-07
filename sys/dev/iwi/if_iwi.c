@@ -7248,9 +7248,16 @@ name|k
 operator|==
 name|NULL
 condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOBUFS
 return|;
+block|}
 block|}
 if|if
 condition|(

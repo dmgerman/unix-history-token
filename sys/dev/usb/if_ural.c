@@ -6452,9 +6452,16 @@ name|k
 operator|==
 name|NULL
 condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOBUFS
 return|;
+block|}
 comment|/* packet header may have moved, reset our local pointer */
 name|wh
 operator|=
