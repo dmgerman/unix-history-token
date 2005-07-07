@@ -23,6 +23,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|CPP_OS_FREEBSD_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_OS_FREEBSD_SPEC
+value|"\   -D__PPC__ -D__ppc__ -D__PowerPC__ -D__powerpc__ \   -Acpu=powerpc -Amachine=powerpc \   %{fPIC|fpic|fPIE|fpie:-D__PIC__ -D__pic__} "
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|STARTFILE_DEFAULT_SPEC
 end_undef
 
