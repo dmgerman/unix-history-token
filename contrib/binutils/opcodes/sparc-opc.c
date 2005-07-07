@@ -29104,11 +29104,13 @@ value|3
 comment|/* v9 */
 define|#
 directive|define
-name|fmovicc
+name|fmoviccx
 parameter_list|(
 name|opcode
 parameter_list|,
 name|fpsize
+parameter_list|,
+name|args
 parameter_list|,
 name|cond
 parameter_list|,
@@ -29116,14 +29118,16 @@ name|flags
 parameter_list|)
 comment|/* v9 */
 define|\
-value|{ opcode, F3F(2, 0x35, 0x100+fpsize)|MCOND(cond,0),  F3F(~2, ~0x35, ~(0x100+fpsize))|MCOND(~cond,~0),  "z,f,g", flags, v9 }, \ { opcode, F3F(2, 0x35, 0x180+fpsize)|MCOND(cond,0),  F3F(~2, ~0x35, ~(0x180+fpsize))|MCOND(~cond,~0),  "Z,f,g", flags, v9 }
+value|{ opcode, F3F(2, 0x35, 0x100+fpsize)|MCOND(cond,0),  F3F(~2, ~0x35, ~(0x100+fpsize))|MCOND(~cond,~0),  "z," args, flags, v9 }, \ { opcode, F3F(2, 0x35, 0x180+fpsize)|MCOND(cond,0),  F3F(~2, ~0x35, ~(0x180+fpsize))|MCOND(~cond,~0),  "Z," args, flags, v9 }
 define|#
 directive|define
-name|fmovfcc
+name|fmovfccx
 parameter_list|(
 name|opcode
 parameter_list|,
 name|fpsize
+parameter_list|,
+name|args
 parameter_list|,
 name|fcond
 parameter_list|,
@@ -29131,16 +29135,18 @@ name|flags
 parameter_list|)
 comment|/* v9 */
 define|\
-value|{ opcode, F3F(2, 0x35, 0x000+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x000+fpsize))|MCOND(~fcond,~0), "6,f,g", flags, v9 }, \ { opcode, F3F(2, 0x35, 0x040+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x040+fpsize))|MCOND(~fcond,~0), "7,f,g", flags, v9 }, \ { opcode, F3F(2, 0x35, 0x080+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x080+fpsize))|MCOND(~fcond,~0), "8,f,g", flags, v9 }, \ { opcode, F3F(2, 0x35, 0x0c0+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x0c0+fpsize))|MCOND(~fcond,~0), "9,f,g", flags, v9 }
+value|{ opcode, F3F(2, 0x35, 0x000+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x000+fpsize))|MCOND(~fcond,~0), "6," args, flags, v9 }, \ { opcode, F3F(2, 0x35, 0x040+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x040+fpsize))|MCOND(~fcond,~0), "7," args, flags, v9 }, \ { opcode, F3F(2, 0x35, 0x080+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x080+fpsize))|MCOND(~fcond,~0), "8," args, flags, v9 }, \ { opcode, F3F(2, 0x35, 0x0c0+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x0c0+fpsize))|MCOND(~fcond,~0), "9," args, flags, v9 }
 comment|/* FIXME: use fmovicc/fmovfcc? */
 comment|/* v9 */
 define|#
 directive|define
-name|fmovcc
+name|fmovccx
 parameter_list|(
 name|opcode
 parameter_list|,
 name|fpsize
+parameter_list|,
+name|args
 parameter_list|,
 name|cond
 parameter_list|,
@@ -29150,13 +29156,52 @@ name|flags
 parameter_list|)
 comment|/* v9 */
 define|\
-value|{ opcode, F3F(2, 0x35, 0x100+fpsize)|MCOND(cond,0),  F3F(~2, ~0x35, ~(0x100+fpsize))|MCOND(~cond,~0),  "z,f,g", flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x000+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x000+fpsize))|MCOND(~fcond,~0), "6,f,g", flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x180+fpsize)|MCOND(cond,0),  F3F(~2, ~0x35, ~(0x180+fpsize))|MCOND(~cond,~0),  "Z,f,g", flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x040+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x040+fpsize))|MCOND(~fcond,~0), "7,f,g", flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x080+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x080+fpsize))|MCOND(~fcond,~0), "8,f,g", flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x0c0+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x0c0+fpsize))|MCOND(~fcond,~0), "9,f,g", flags | F_FLOAT, v9 }
+value|{ opcode, F3F(2, 0x35, 0x100+fpsize)|MCOND(cond,0),  F3F(~2, ~0x35, ~(0x100+fpsize))|MCOND(~cond,~0),  "z," args, flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x000+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x000+fpsize))|MCOND(~fcond,~0), "6," args, flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x180+fpsize)|MCOND(cond,0),  F3F(~2, ~0x35, ~(0x180+fpsize))|MCOND(~cond,~0),  "Z," args, flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x040+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x040+fpsize))|MCOND(~fcond,~0), "7," args, flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x080+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x080+fpsize))|MCOND(~fcond,~0), "8," args, flags | F_FLOAT, v9 }, \ { opcode, F3F(2, 0x35, 0x0c0+fpsize)|MCOND(fcond,0), F3F(~2, ~0x35, ~(0x0c0+fpsize))|MCOND(~fcond,~0), "9," args, flags | F_FLOAT, v9 }
+define|#
+directive|define
+name|fmovicc
+parameter_list|(
+name|suffix
+parameter_list|,
+name|cond
+parameter_list|,
+name|flags
+parameter_list|)
+comment|/* v9 */
+define|\
+value|fmoviccx("fmovd" suffix, FM_DF, "B,H", cond, flags),		\ fmoviccx("fmovq" suffix, FM_QF, "R,J", cond, flags),		\ fmoviccx("fmovs" suffix, FM_SF, "f,g", cond, flags)
+define|#
+directive|define
+name|fmovfcc
+parameter_list|(
+name|suffix
+parameter_list|,
+name|fcond
+parameter_list|,
+name|flags
+parameter_list|)
+comment|/* v9 */
+define|\
+value|fmovfccx("fmovd" suffix, FM_DF, "B,H", fcond, flags),		\ fmovfccx("fmovq" suffix, FM_QF, "R,J", fcond, flags),		\ fmovfccx("fmovs" suffix, FM_SF, "f,g", fcond, flags)
+define|#
+directive|define
+name|fmovcc
+parameter_list|(
+name|suffix
+parameter_list|,
+name|cond
+parameter_list|,
+name|fcond
+parameter_list|,
+name|flags
+parameter_list|)
+comment|/* v9 */
+define|\
+value|fmovccx("fmovd" suffix, FM_DF, "B,H", cond, fcond, flags),	\ fmovccx("fmovq" suffix, FM_QF, "R,J", cond, fcond, flags),	\ fmovccx("fmovs" suffix, FM_SF, "f,g", cond, fcond, flags)
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovda"
-argument_list|,
-name|FM_DF
+literal|"a"
 argument_list|,
 name|CONDA
 argument_list|,
@@ -29166,39 +29211,9 @@ literal|0
 argument_list|)
 block|,
 comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovqa"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDA
-argument_list|,
-name|FCONDA
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovsa"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|CONDA
-argument_list|,
-name|FCONDA
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovdcc"
-argument_list|,
-name|FM_DF
+literal|"cc"
 argument_list|,
 name|CONDCC
 argument_list|,
@@ -29208,57 +29223,7 @@ block|,
 comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovqcc"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDCC
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovscc"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|CONDCC
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovdcs"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDCS
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovqcs"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDCS
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovscs"
-argument_list|,
-name|FM_SF
+literal|"cs"
 argument_list|,
 name|CONDCS
 argument_list|,
@@ -29268,9 +29233,7 @@ block|,
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovde"
-argument_list|,
-name|FM_DF
+literal|"e"
 argument_list|,
 name|CONDE
 argument_list|,
@@ -29282,37 +29245,7 @@ block|,
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovqe"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDE
-argument_list|,
-name|FCONDE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovse"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|CONDE
-argument_list|,
-name|FCONDE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovdg"
-argument_list|,
-name|FM_DF
+literal|"g"
 argument_list|,
 name|CONDG
 argument_list|,
@@ -29324,65 +29257,7 @@ block|,
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovqg"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDG
-argument_list|,
-name|FCONDG
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovsg"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|CONDG
-argument_list|,
-name|FCONDG
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovdge"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDGE
-argument_list|,
-name|FCONDGE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovqge"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDGE
-argument_list|,
-name|FCONDGE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovsge"
-argument_list|,
-name|FM_SF
+literal|"ge"
 argument_list|,
 name|CONDGE
 argument_list|,
@@ -29394,9 +29269,7 @@ block|,
 comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovdgeu"
-argument_list|,
-name|FM_DF
+literal|"geu"
 argument_list|,
 name|CONDGEU
 argument_list|,
@@ -29406,57 +29279,7 @@ block|,
 comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovqgeu"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDGEU
-argument_list|,
-name|F_ALIAS
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovsgeu"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|CONDGEU
-argument_list|,
-name|F_ALIAS
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovdgu"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDGU
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovqgu"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDGU
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovsgu"
-argument_list|,
-name|FM_SF
+literal|"gu"
 argument_list|,
 name|CONDGU
 argument_list|,
@@ -29466,9 +29289,7 @@ block|,
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovdl"
-argument_list|,
-name|FM_DF
+literal|"l"
 argument_list|,
 name|CONDL
 argument_list|,
@@ -29480,65 +29301,7 @@ block|,
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovql"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDL
-argument_list|,
-name|FCONDL
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovsl"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|CONDL
-argument_list|,
-name|FCONDL
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovdle"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDLE
-argument_list|,
-name|FCONDLE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovqle"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDLE
-argument_list|,
-name|FCONDLE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovsle"
-argument_list|,
-name|FM_SF
+literal|"le"
 argument_list|,
 name|CONDLE
 argument_list|,
@@ -29550,33 +29313,7 @@ block|,
 comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovdleu"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDLEU
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovqleu"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDLEU
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovsleu"
-argument_list|,
-name|FM_SF
+literal|"leu"
 argument_list|,
 name|CONDLEU
 argument_list|,
@@ -29586,33 +29323,7 @@ block|,
 comment|/* v9 */
 name|fmovfcc
 argument_list|(
-literal|"fmovdlg"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|FCONDLG
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovqlg"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|FCONDLG
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovslg"
-argument_list|,
-name|FM_SF
+literal|"lg"
 argument_list|,
 name|FCONDLG
 argument_list|,
@@ -29622,33 +29333,7 @@ block|,
 comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovdlu"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDLU
-argument_list|,
-name|F_ALIAS
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovqlu"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDLU
-argument_list|,
-name|F_ALIAS
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovslu"
-argument_list|,
-name|FM_SF
+literal|"lu"
 argument_list|,
 name|CONDLU
 argument_list|,
@@ -29658,9 +29343,7 @@ block|,
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovdn"
-argument_list|,
-name|FM_DF
+literal|"n"
 argument_list|,
 name|CONDN
 argument_list|,
@@ -29672,65 +29355,7 @@ block|,
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovqn"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDN
-argument_list|,
-name|FCONDN
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovsn"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|CONDN
-argument_list|,
-name|FCONDN
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovdne"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDNE
-argument_list|,
-name|FCONDNE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovqne"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDNE
-argument_list|,
-name|FCONDNE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovsne"
-argument_list|,
-name|FM_SF
+literal|"ne"
 argument_list|,
 name|CONDNE
 argument_list|,
@@ -29742,33 +29367,7 @@ block|,
 comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovdneg"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDNEG
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovqneg"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDNEG
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovsneg"
-argument_list|,
-name|FM_SF
+literal|"neg"
 argument_list|,
 name|CONDNEG
 argument_list|,
@@ -29778,37 +29377,7 @@ block|,
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovdnz"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDNZ
-argument_list|,
-name|FCONDNZ
-argument_list|,
-name|F_ALIAS
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovqnz"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDNZ
-argument_list|,
-name|FCONDNZ
-argument_list|,
-name|F_ALIAS
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovsnz"
-argument_list|,
-name|FM_SF
+literal|"nz"
 argument_list|,
 name|CONDNZ
 argument_list|,
@@ -29820,33 +29389,7 @@ block|,
 comment|/* v9 */
 name|fmovfcc
 argument_list|(
-literal|"fmovdo"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|FCONDO
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovqo"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|FCONDO
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovso"
-argument_list|,
-name|FM_SF
+literal|"o"
 argument_list|,
 name|FCONDO
 argument_list|,
@@ -29856,33 +29399,7 @@ block|,
 comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovdpos"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDPOS
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovqpos"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDPOS
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovspos"
-argument_list|,
-name|FM_SF
+literal|"pos"
 argument_list|,
 name|CONDPOS
 argument_list|,
@@ -29892,9 +29409,7 @@ block|,
 comment|/* v9 */
 name|fmovfcc
 argument_list|(
-literal|"fmovdu"
-argument_list|,
-name|FM_DF
+literal|"u"
 argument_list|,
 name|FCONDU
 argument_list|,
@@ -29904,33 +29419,7 @@ block|,
 comment|/* v9 */
 name|fmovfcc
 argument_list|(
-literal|"fmovqu"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|FCONDU
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovsu"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|FCONDU
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovdue"
-argument_list|,
-name|FM_DF
+literal|"ue"
 argument_list|,
 name|FCONDUE
 argument_list|,
@@ -29940,33 +29429,7 @@ block|,
 comment|/* v9 */
 name|fmovfcc
 argument_list|(
-literal|"fmovque"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|FCONDUE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovsue"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|FCONDUE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovdug"
-argument_list|,
-name|FM_DF
+literal|"ug"
 argument_list|,
 name|FCONDUG
 argument_list|,
@@ -29976,33 +29439,7 @@ block|,
 comment|/* v9 */
 name|fmovfcc
 argument_list|(
-literal|"fmovqug"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|FCONDUG
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovsug"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|FCONDUG
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovduge"
-argument_list|,
-name|FM_DF
+literal|"uge"
 argument_list|,
 name|FCONDUGE
 argument_list|,
@@ -30012,33 +29449,7 @@ block|,
 comment|/* v9 */
 name|fmovfcc
 argument_list|(
-literal|"fmovquge"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|FCONDUGE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovsuge"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|FCONDUGE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovdul"
-argument_list|,
-name|FM_DF
+literal|"ul"
 argument_list|,
 name|FCONDUL
 argument_list|,
@@ -30048,57 +29459,7 @@ block|,
 comment|/* v9 */
 name|fmovfcc
 argument_list|(
-literal|"fmovqul"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|FCONDUL
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovsul"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|FCONDUL
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovdule"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|FCONDULE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovqule"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|FCONDULE
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovfcc
-argument_list|(
-literal|"fmovsule"
-argument_list|,
-name|FM_SF
+literal|"ule"
 argument_list|,
 name|FCONDULE
 argument_list|,
@@ -30108,9 +29469,7 @@ block|,
 comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovdvc"
-argument_list|,
-name|FM_DF
+literal|"vc"
 argument_list|,
 name|CONDVC
 argument_list|,
@@ -30120,57 +29479,7 @@ block|,
 comment|/* v9 */
 name|fmovicc
 argument_list|(
-literal|"fmovqvc"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDVC
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovsvc"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|CONDVC
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovdvs"
-argument_list|,
-name|FM_DF
-argument_list|,
-name|CONDVS
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovqvs"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDVS
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* v9 */
-name|fmovicc
-argument_list|(
-literal|"fmovsvs"
-argument_list|,
-name|FM_SF
+literal|"vs"
 argument_list|,
 name|CONDVS
 argument_list|,
@@ -30180,9 +29489,7 @@ block|,
 comment|/* v9 */
 name|fmovcc
 argument_list|(
-literal|"fmovdz"
-argument_list|,
-name|FM_DF
+literal|"z"
 argument_list|,
 name|CONDZ
 argument_list|,
@@ -30191,34 +29498,18 @@ argument_list|,
 name|F_ALIAS
 argument_list|)
 block|,
+undef|#
+directive|undef
+name|fmoviccx
 comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovqz"
-argument_list|,
-name|FM_QF
-argument_list|,
-name|CONDZ
-argument_list|,
-name|FCONDZ
-argument_list|,
-name|F_ALIAS
-argument_list|)
-block|,
+undef|#
+directive|undef
+name|fmovfccx
 comment|/* v9 */
-name|fmovcc
-argument_list|(
-literal|"fmovsz"
-argument_list|,
-name|FM_SF
-argument_list|,
-name|CONDZ
-argument_list|,
-name|FCONDZ
-argument_list|,
-name|F_ALIAS
-argument_list|)
-block|,
+undef|#
+directive|undef
+name|fmovccx
+comment|/* v9 */
 undef|#
 directive|undef
 name|fmovicc
