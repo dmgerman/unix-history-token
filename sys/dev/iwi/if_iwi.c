@@ -8001,7 +8001,14 @@ name|m0
 operator|==
 name|NULL
 condition|)
+block|{
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 name|ic

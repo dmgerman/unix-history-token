@@ -217,6 +217,12 @@ directive|include
 file|<dev/ral/if_ralvar.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|RAL_DEBUG
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5994,6 +6000,7 @@ name|ic_opmode
 operator|!=
 name|IEEE80211_M_MONITOR
 condition|)
+block|{
 name|ral_set_bssid
 argument_list|(
 name|sc
@@ -6005,6 +6012,14 @@ operator|->
 name|ni_bssid
 argument_list|)
 expr_stmt|;
+name|ral_update_slot
+argument_list|(
+name|ic
+operator|->
+name|ic_ifp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ic
@@ -11754,7 +11769,14 @@ name|m0
 operator|==
 name|NULL
 condition|)
+block|{
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 name|ic
