@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|G_GATE_VERSION
-value|0
+value|1
 end_define
 
 begin_comment
@@ -136,15 +136,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_GATE_CMD_CANCEL
+value|_IOWR('m', 2, struct g_gate_ctl_cancel)
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_GATE_CMD_START
-value|_IOWR('m', 2, struct g_gate_ctl_io)
+value|_IOWR('m', 3, struct g_gate_ctl_io)
 end_define
 
 begin_define
 define|#
 directive|define
 name|G_GATE_CMD_DONE
-value|_IOWR('m', 3, struct g_gate_ctl_io)
+value|_IOWR('m', 4, struct g_gate_ctl_io)
 end_define
 
 begin_define
@@ -329,6 +336,23 @@ name|gctl_unit
 decl_stmt|;
 name|int
 name|gctl_force
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|g_gate_ctl_cancel
+block|{
+name|u_int
+name|gctl_version
+decl_stmt|;
+name|int
+name|gctl_unit
+decl_stmt|;
+name|uintptr_t
+name|gctl_seq
 decl_stmt|;
 block|}
 struct|;
