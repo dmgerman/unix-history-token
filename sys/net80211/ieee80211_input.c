@@ -1156,7 +1156,10 @@ name|IEEE80211_QOS_TID
 expr_stmt|;
 if|if
 condition|(
+name|TID_TO_WME_AC
+argument_list|(
 name|tid
+argument_list|)
 operator|>=
 name|WME_AC_VI
 condition|)
