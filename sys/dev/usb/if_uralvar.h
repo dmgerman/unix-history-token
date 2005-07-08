@@ -190,10 +190,10 @@ decl_stmt|;
 name|usbd_interface_handle
 name|sc_iface
 decl_stmt|;
-name|uint8_t
+name|int
 name|sc_rx_no
 decl_stmt|;
-name|uint8_t
+name|int
 name|sc_tx_no
 decl_stmt|;
 name|uint32_t
