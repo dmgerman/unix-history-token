@@ -5639,7 +5639,7 @@ operator|)
 condition|)
 name|ral_init
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 return|return

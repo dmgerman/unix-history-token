@@ -4007,7 +4007,7 @@ operator|)
 condition|)
 name|ural_init
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 name|RAL_UNLOCK
