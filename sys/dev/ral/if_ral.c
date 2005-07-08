@@ -5598,6 +5598,15 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|struct
+name|ral_softc
+modifier|*
+name|sc
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
