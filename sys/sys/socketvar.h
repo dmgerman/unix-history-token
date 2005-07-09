@@ -345,7 +345,7 @@ name|void
 modifier|*
 name|so_emuldata
 decl_stmt|;
-comment|/* private data for emulators */
+comment|/* (b) private data for emulators */
 struct|struct
 name|so_accf
 block|{
