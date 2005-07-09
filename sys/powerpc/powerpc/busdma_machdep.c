@@ -1963,6 +1963,11 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
+operator|*
+name|nsegs
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|m0
