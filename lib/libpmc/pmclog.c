@@ -1576,6 +1576,9 @@ modifier|*
 name|ev
 parameter_list|)
 block|{
+name|int
+name|retval
+decl_stmt|;
 name|ssize_t
 name|nread
 decl_stmt|;
@@ -1639,6 +1642,8 @@ operator|!=
 name|PMCLOG_FD_NONE
 condition|)
 block|{
+name|refill
+label|:
 name|nread
 operator|=
 name|read
@@ -1722,8 +1727,9 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Retrieve one event from the byte stream. 	 */
-return|return
+comment|/* Retrieve one event from the byte stream. */
+name|retval
+operator|=
 name|pmclog_get_event
 argument_list|(
 name|ps
@@ -1740,6 +1746,43 @@ name|ps_len
 argument_list|,
 name|ev
 argument_list|)
+expr_stmt|;
+comment|/* 	 * If we need more data and we have a configured fd, try read 	 * from it. 	 */
+if|if
+condition|(
+name|retval
+operator|<
+literal|0
+operator|&&
+name|ev
+operator|->
+name|pl_state
+operator|==
+name|PMCLOG_REQUIRE_DATA
+operator|&&
+name|ps
+operator|->
+name|ps_fd
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|assert
+argument_list|(
+name|ps
+operator|->
+name|ps_len
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+goto|goto
+name|refill
+goto|;
+block|}
+return|return
+name|retval
 return|;
 block|}
 end_function
