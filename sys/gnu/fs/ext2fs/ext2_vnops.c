@@ -1435,6 +1435,19 @@ expr_stmt|;
 comment|/* 	 * Copy from inode table 	 */
 name|vap
 operator|->
+name|va_fsid
+operator|=
+name|dev2udev
+argument_list|(
+name|ip
+operator|->
+name|i_devvp
+operator|->
+name|v_rdev
+argument_list|)
+expr_stmt|;
+name|vap
+operator|->
 name|va_fileid
 operator|=
 name|ip
