@@ -1004,8 +1004,7 @@ name|void
 modifier|*
 name|k_sysarg2
 decl_stmt|;
-name|struct
-name|mtx
+name|void
 modifier|*
 name|k_lock
 decl_stmt|;
