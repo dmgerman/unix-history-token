@@ -47,6 +47,12 @@ name|defined
 argument_list|(
 name|KLD_MODULE
 argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__GNUCLIKE_ASM
+argument_list|)
 end_if
 
 begin_define
@@ -107,14 +113,8 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !KLD_MODULE */
+comment|/* !KLD_MODULE&& __GNUCLIKE_ASM */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
-end_ifdef
 
 begin_comment
 comment|/*  * For userland, assume the SMP case and use lock prefixes so that  * the binaries will run on both types of systems.  */
@@ -181,52 +181,9 @@ define|\
 value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(__XSTRING(MPLOCKED) OP		\ 			 : "+m" (*p)			\ 			 : CONS (V));			\ }							\ struct __hack
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__GNUCLIKE_ASM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_ASM
-parameter_list|(
-name|NAME
-parameter_list|,
-name|TYPE
-parameter_list|,
-name|OP
-parameter_list|,
-name|CONS
-parameter_list|,
-name|V
-parameter_list|)
-define|\
-value|extern void atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __GNUCLIKE_ASM */
-end_comment
-
 begin_comment
 comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == exp) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
-end_ifdef
 
 begin_if
 if|#
@@ -396,21 +353,6 @@ begin_comment
 comment|/* defined(CPU_DISABLE_CMPXCHG) */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __GNUCLIKE_ASM */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
-end_ifdef
-
 begin_if
 if|#
 directive|if
@@ -488,77 +430,28 @@ begin_comment
 comment|/* !defined(SMP) */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__GNUCLIKE_ASM */
-end_comment
-
-begin_function_decl
-unit|extern
-name|int
-name|atomic_cmpset_int
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_STORE_LOAD
-parameter_list|(
-name|TYPE
-parameter_list|,
-name|LOP
-parameter_list|,
-name|SOP
-parameter_list|)
-define|\
-value|extern u_##TYPE atomic_load_acq_##TYPE(volatile u_##TYPE *p);		\ extern void atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUCLIKE_ASM */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KLD_MODULE */
+comment|/* KLD_MODULE || !__GNUCLIKE_ASM */
 end_comment
 
 begin_expr_stmt
-name|ATOMIC_ASM
-argument_list|(
+unit|ATOMIC_ASM
+operator|(
 name|set
-argument_list|,
+operator|,
 name|char
-argument_list|,
+operator|,
 literal|"orb %b1,%0"
-argument_list|,
+operator|,
 literal|"iq"
-argument_list|,
+operator|,
 name|v
-argument_list|)
+operator|)
 expr_stmt|;
 end_expr_stmt
 
@@ -866,6 +759,209 @@ directive|undef
 name|ATOMIC_STORE_LOAD
 end_undef
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|WANT_FUNCTIONS
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|atomic_cmpset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|dst
+parameter_list|,
+name|u_long
+name|exp
+parameter_list|,
+name|u_long
+name|src
+parameter_list|)
+block|{
+return|return
+operator|(
+name|atomic_cmpset_int
+argument_list|(
+operator|(
+specifier|volatile
+name|u_int
+operator|*
+operator|)
+name|dst
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|exp
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|src
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Read the current value and store a zero in the destination. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline
+name|u_int
+name|atomic_readandclear_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|u_int
+name|result
+decl_stmt|;
+asm|__asm __volatile (
+literal|"	xorl	%0,%0 ;		"
+literal|"	xchgl	%1,%0 ;		"
+literal|"# atomic_readandclear_int"
+operator|:
+literal|"=&r"
+operator|(
+name|result
+operator|)
+comment|/* 0 (result) */
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* 1 (addr) */
+end_comment
+
+begin_return
+return|return
+operator|(
+name|result
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|u_long
+name|atomic_readandclear_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|u_long
+name|result
+decl_stmt|;
+asm|__asm __volatile (
+literal|"	xorl	%0,%0 ;		"
+literal|"	xchgl	%1,%0 ;		"
+literal|"# atomic_readandclear_long"
+operator|:
+literal|"=&r"
+operator|(
+name|result
+operator|)
+comment|/* 0 (result) */
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* 1 (addr) */
+end_comment
+
+begin_return
+return|return
+operator|(
+name|result
+operator|)
+return|;
+end_return
+
+begin_else
+unit|}
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__GNUCLIKE_ASM */
+end_comment
+
+begin_expr_stmt
+unit|u_int
+name|atomic_readandclear_int
+argument_list|(
+specifier|volatile
+name|u_int
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|u_long
+name|atomic_readandclear_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUCLIKE_ASM */
+end_comment
+
+begin_comment
+comment|/* Acquire and release variants are identical to the normal ones. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1107,22 +1203,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_cmpset_long
-value|atomic_cmpset_int
-end_define
-
-begin_define
-define|#
-directive|define
 name|atomic_cmpset_acq_long
-value|atomic_cmpset_acq_int
+value|atomic_cmpset_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_long
-value|atomic_cmpset_rel_int
+value|atomic_cmpset_long
 end_define
 
 begin_define
@@ -1138,6 +1227,10 @@ directive|define
 name|atomic_cmpset_rel_ptr
 value|atomic_cmpset_ptr
 end_define
+
+begin_comment
+comment|/* Operations on 8-bit bytes. */
+end_comment
 
 begin_define
 define|#
@@ -1237,6 +1330,10 @@ name|atomic_store_rel_8
 value|atomic_store_rel_char
 end_define
 
+begin_comment
+comment|/* Operations on 16-bit words. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1334,6 +1431,10 @@ directive|define
 name|atomic_store_rel_16
 value|atomic_store_rel_short
 end_define
+
+begin_comment
+comment|/* Operations on 32-bit double words. */
+end_comment
 
 begin_define
 define|#
@@ -1461,15 +1562,9 @@ name|atomic_readandclear_32
 value|atomic_readandclear_int
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|WANT_FUNCTIONS
-argument_list|)
-end_if
+begin_comment
+comment|/* Operations on pointers. */
+end_comment
 
 begin_function
 specifier|static
@@ -1632,149 +1727,6 @@ undef|#
 directive|undef
 name|ATOMIC_PTR
 end_undef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
-end_ifdef
-
-begin_function
-specifier|static
-name|__inline
-name|u_int
-name|atomic_readandclear_int
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-name|addr
-parameter_list|)
-block|{
-name|u_int
-name|result
-decl_stmt|;
-asm|__asm __volatile (
-literal|"	xorl	%0,%0 ;		"
-literal|"	xchgl	%1,%0 ;		"
-literal|"# atomic_readandclear_int"
-operator|:
-literal|"=&r"
-operator|(
-name|result
-operator|)
-comment|/* 0 (result) */
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|addr
-operator|)
-block|)
-function|;
-end_function
-
-begin_comment
-comment|/* 1 (addr) */
-end_comment
-
-begin_return
-return|return
-operator|(
-name|result
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|u_long
-name|atomic_readandclear_long
-parameter_list|(
-specifier|volatile
-name|u_long
-modifier|*
-name|addr
-parameter_list|)
-block|{
-name|u_long
-name|result
-decl_stmt|;
-asm|__asm __volatile (
-literal|"	xorl	%0,%0 ;		"
-literal|"	xchgl	%1,%0 ;		"
-literal|"# atomic_readandclear_int"
-operator|:
-literal|"=&r"
-operator|(
-name|result
-operator|)
-comment|/* 0 (result) */
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|addr
-operator|)
-block|)
-function|;
-end_function
-
-begin_comment
-comment|/* 1 (addr) */
-end_comment
-
-begin_return
-return|return
-operator|(
-name|result
-operator|)
-return|;
-end_return
-
-begin_else
-unit|}
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__GNUCLIKE_ASM */
-end_comment
-
-begin_function_decl
-unit|extern
-name|u_long
-name|atomic_readandclear_long
-parameter_list|(
-specifier|volatile
-name|u_long
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|atomic_readandclear_int
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __GNUCLIKE_ASM */
-end_comment
 
 begin_endif
 endif|#
