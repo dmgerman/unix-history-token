@@ -5904,11 +5904,12 @@ endif|#
 directive|endif
 name|len
 operator|=
+name|m_length
+argument_list|(
 name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
