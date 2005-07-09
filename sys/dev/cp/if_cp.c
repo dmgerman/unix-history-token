@@ -1608,6 +1608,17 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|d
+operator|||
+operator|!
+name|d
+operator|->
+name|running
+condition|)
+continue|continue;
 while|while
 condition|(
 name|_IF_QLEN
