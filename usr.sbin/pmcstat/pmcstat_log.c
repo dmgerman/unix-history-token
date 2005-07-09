@@ -5157,7 +5157,7 @@ comment|/*  * Process a log file in offline analysis mode.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|pmcstat_process_log
 parameter_list|(
 name|struct
@@ -5175,19 +5175,20 @@ name|pa_flags
 operator|&
 name|FLAG_DO_PRINT
 condition|)
+return|return
 name|pmcstat_print_log
 argument_list|(
 name|a
 argument_list|)
-expr_stmt|;
+return|;
 else|else
 comment|/* convert the log to gprof compatible profiles */
+return|return
 name|pmcstat_convert_log
 argument_list|(
 name|a
 argument_list|)
-expr_stmt|;
-return|return;
+return|;
 block|}
 end_function
 

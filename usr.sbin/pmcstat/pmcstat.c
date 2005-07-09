@@ -228,28 +228,6 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
-comment|/* de-configure the log file if present. */
-if|if
-condition|(
-name|a
-operator|->
-name|pa_flags
-operator|&
-operator|(
-name|FLAG_HAS_PIPE
-operator||
-name|FLAG_HAS_OUTPUT_LOGFILE
-operator|)
-condition|)
-operator|(
-name|void
-operator|)
-name|pmc_configure_logfile
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* release allocated PMCs. */
 name|STAILQ_FOREACH_SAFE
 argument_list|(
@@ -331,6 +309,28 @@ name|ev
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* de-configure the log file if present. */
+if|if
+condition|(
+name|a
+operator|->
+name|pa_flags
+operator|&
+operator|(
+name|FLAG_HAS_PIPE
+operator||
+name|FLAG_HAS_OUTPUT_LOGFILE
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|pmc_configure_logfile
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|a
@@ -3916,7 +3916,7 @@ case|:
 comment|/* log file data is present */
 name|runstate
 operator|=
-name|pmcstat_print_log
+name|pmcstat_process_log
 argument_list|(
 operator|&
 name|args
