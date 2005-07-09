@@ -3863,9 +3863,15 @@ condition|)
 name|pmc_x86_lapic_enable_pmc_interrupt
 argument_list|()
 expr_stmt|;
-else|else
 name|atomic_add_int
 argument_list|(
+name|retval
+condition|?
+operator|&
+name|pmc_stats
+operator|.
+name|pm_intr_processed
+else|:
 operator|&
 name|pmc_stats
 operator|.

@@ -5324,13 +5324,9 @@ expr_stmt|;
 comment|/* Stop hardware if not already stopped */
 if|if
 condition|(
-operator|(
 name|pm
 operator|->
-name|pm_flags
-operator|&
-name|PMC_F_IS_STALLED
-operator|)
+name|pm_stalled
 operator|==
 literal|0
 condition|)
@@ -7252,13 +7248,9 @@ name|pm_state
 operator|==
 name|PMC_STATE_RUNNING
 operator|&&
-operator|(
 name|pm
 operator|->
-name|pm_flags
-operator|&
-name|PMC_F_IS_STALLED
-operator|)
+name|pm_stalled
 operator|==
 literal|0
 condition|)
@@ -12547,7 +12539,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-comment|/* 	 * Flush the per-owner log file and Write a user-entry to the 	 * log file. 	 */
+comment|/* 	 * Write a user supplied value to the log file. 	 */
 case|case
 name|PMC_OP_WRITELOG
 case|:
@@ -12767,6 +12759,12 @@ name|ps_pc
 condition|)
 block|{
 comment|/* in use, reader hasn't caught up */
+name|pm
+operator|->
+name|pm_stalled
+operator|=
+literal|1
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -12775,16 +12773,6 @@ operator|.
 name|pm_intr_bufferfull
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|atomic_set_int
-argument_list|(
-operator|&
-name|pm
-operator|->
-name|pm_flags
-argument_list|,
-name|PMC_F_IS_STALLED
 argument_list|)
 expr_stmt|;
 name|PMCDBG
@@ -13325,7 +13313,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Restart any stalled sampling PMCs on this CPU. 	 * 	 * If the NMI handler sets PMC_F_IS_STALLED on a PMC after the 	 * check below, we'll end up processing the stalled PMC at the 	 * next hardclock tick. 	 */
+comment|/* 	 * Restart any stalled sampling PMCs on this CPU. 	 * 	 * If the NMI handler sets the pm_stalled field of a PMC after 	 * the check below, we'll end up processing the stalled PMC at 	 * the next hardclock tick. 	 */
 for|for
 control|(
 name|n
@@ -13384,13 +13372,9 @@ argument_list|)
 argument_list|)
 operator|||
 comment|/* !sampling */
-operator|(
 name|pm
 operator|->
-name|pm_flags
-operator|&
-name|PMC_F_IS_STALLED
-operator|)
+name|pm_stalled
 operator|==
 literal|0
 condition|)
@@ -13398,10 +13382,9 @@ comment|/* !stalled */
 continue|continue;
 name|pm
 operator|->
-name|pm_flags
-operator|&=
-operator|~
-name|PMC_F_IS_STALLED
+name|pm_stalled
+operator|=
+literal|0
 expr_stmt|;
 name|ri
 operator|=
@@ -13806,7 +13789,7 @@ name|pm_runcount
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Stopped the hardware only if it is actually on */
+comment|/* Stop hardware only if it is actually running */
 if|if
 condition|(
 name|pm
@@ -13815,13 +13798,9 @@ name|pm_state
 operator|==
 name|PMC_STATE_RUNNING
 operator|&&
-operator|(
 name|pm
 operator|->
-name|pm_flags
-operator|&
-name|PMC_F_IS_STALLED
-operator|)
+name|pm_stalled
 operator|==
 literal|0
 condition|)
@@ -13989,6 +13968,14 @@ operator|->
 name|pm_flags
 operator|&
 name|PMC_F_NEEDS_LOGFILE
+operator|&&
+name|PMC_IS_COUNTING_MODE
+argument_list|(
+name|PMC_TO_MODE
+argument_list|(
+name|pm
+argument_list|)
+argument_list|)
 condition|)
 name|pmclog_process_procexit
 argument_list|(

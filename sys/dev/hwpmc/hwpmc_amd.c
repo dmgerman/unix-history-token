@@ -3190,7 +3190,7 @@ name|INT
 argument_list|,
 literal|1
 argument_list|,
-literal|"cpu=%d eip=%p"
+literal|"cpu=%d eip=%p um=%d"
 argument_list|,
 name|cpu
 argument_list|,
@@ -3199,6 +3199,8 @@ name|void
 operator|*
 operator|)
 name|eip
+argument_list|,
+name|usermode
 argument_list|)
 expr_stmt|;
 name|retval
@@ -3419,14 +3421,15 @@ literal|1
 expr_stmt|;
 comment|/* found an interrupting PMC */
 block|}
-if|if
-condition|(
-name|retval
-operator|==
-literal|0
-condition|)
 name|atomic_add_int
 argument_list|(
+name|retval
+condition|?
+operator|&
+name|pmc_stats
+operator|.
+name|pm_intr_processed
+else|:
 operator|&
 name|pmc_stats
 operator|.

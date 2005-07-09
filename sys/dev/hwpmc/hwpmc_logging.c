@@ -285,6 +285,19 @@ begin_comment
 comment|/*  * Log file record constructors.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_PMCLOG_TO_HEADER
+parameter_list|(
+name|T
+parameter_list|,
+name|L
+parameter_list|)
+define|\
+value|((PMCLOG_HEADER_MAGIC<< 24) |					\ 	 (PMCLOG_TYPE_ ## T<< 16)   |					\ 	 ((L)& 0xFFFF))
+end_define
+
 begin_comment
 comment|/* reserve LEN bytes of space and initialize the entry header */
 end_comment
@@ -302,7 +315,7 @@ name|LEN
 parameter_list|,
 name|ACTION
 parameter_list|)
-value|do {			\ 		uint32_t *_le;						\ 		int _len = roundup((LEN), sizeof(uint32_t));		\ 		if ((_le = pmclog_reserve((PO), _len)) == NULL) {	\ 			ACTION;						\ 		}							\ 		*_le = (PMCLOG_HEADER_MAGIC<< 24) |			\ 		    (PMCLOG_TYPE_ ## TYPE<< 16) |			\ 		    (_len& 0xFFFF);					\ 		_le += 3
+value|do {			\ 		uint32_t *_le;						\ 		int _len = roundup((LEN), sizeof(uint32_t));		\ 		if ((_le = pmclog_reserve((PO), _len)) == NULL) {	\ 			ACTION;						\ 		}							\ 		*_le = _PMCLOG_TO_HEADER(TYPE,_len);			\ 		_le += 3
 end_define
 
 begin_comment
@@ -1704,11 +1717,9 @@ name|int
 name|length
 parameter_list|)
 block|{
-name|char
-modifier|*
+name|uintptr_t
 name|newptr
 decl_stmt|,
-modifier|*
 name|oldptr
 decl_stmt|;
 name|uint32_t
@@ -1862,6 +1873,9 @@ argument_list|)
 expr_stmt|;
 name|oldptr
 operator|=
+operator|(
+name|uintptr_t
+operator|)
 name|po
 operator|->
 name|po_curbuf
@@ -1878,6 +1892,9 @@ name|KASSERT
 argument_list|(
 name|oldptr
 operator|!=
+operator|(
+name|uintptr_t
+operator|)
 name|NULL
 argument_list|,
 operator|(
@@ -1894,6 +1911,9 @@ if|if
 condition|(
 name|newptr
 operator|<=
+operator|(
+name|uintptr_t
+operator|)
 name|po
 operator|->
 name|po_curbuf
@@ -1907,13 +1927,17 @@ name|po_curbuf
 operator|->
 name|plb_ptr
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|newptr
 expr_stmt|;
 goto|goto
 name|done
 goto|;
 block|}
-comment|/* otherwise, schedule the current buffer and get a fresh buffer */
+comment|/* 	 * Otherwise, schedule the current buffer for output and get a 	 * fresh buffer. 	 */
 name|pmclog_schedule_io
 argument_list|(
 name|po
@@ -2030,6 +2054,9 @@ argument_list|)
 expr_stmt|;
 name|oldptr
 operator|=
+operator|(
+name|uintptr_t
+operator|)
 name|po
 operator|->
 name|po_curbuf
@@ -2049,13 +2076,14 @@ expr_stmt|;
 name|lh
 operator|++
 expr_stmt|;
-comment|/* fill in the timestamp */
+comment|/* skip header */
 name|getnanotime
 argument_list|(
 operator|&
 name|ts
 argument_list|)
 expr_stmt|;
+comment|/* fill in the timestamp */
 operator|*
 name|lh
 operator|++
@@ -2293,7 +2321,7 @@ name|pmc_kthread_mtx
 argument_list|,
 name|PPAUSE
 argument_list|,
-literal|"pmcdcl"
+literal|"pmckstp"
 argument_list|,
 literal|0
 argument_list|)

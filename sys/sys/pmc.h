@@ -675,17 +675,6 @@ begin_comment
 comment|/*attached at least once */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PMC_F_IS_STALLED
-value|0x00080000
-end_define
-
-begin_comment
-comment|/*sampling is stalled*/
-end_comment
-
 begin_comment
 comment|/*  * Cookies used to denote allocated PMCs, and the values of PMCs.  */
 end_comment
@@ -1366,6 +1355,10 @@ comment|/* counting PMC modes */
 block|}
 name|pm_sc
 union|;
+name|uint32_t
+name|pm_stalled
+decl_stmt|;
+comment|/* true for stalled sampling PMCs */
 name|uint32_t
 name|pm_caps
 decl_stmt|;
@@ -2342,7 +2335,7 @@ name|F
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {					\ 	if (pmc_debugflags.pdb_ ## M& PMC_DEBUG_MIN_ ## N)		\ 		printf(#M ":" #N ":" #L  ": " F "\n", __VA_ARGS__);	\ } while (0)
+value|do {					\ 	if (pmc_debugflags.pdb_ ## M& (1<< PMC_DEBUG_MIN_ ## N))	\ 		printf(#M ":" #N ":" #L  ": " F "\n", __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_comment
