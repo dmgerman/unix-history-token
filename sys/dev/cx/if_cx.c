@@ -5064,6 +5064,14 @@ name|d
 operator|->
 name|tty
 operator|->
+name|t_oproc
+operator|=
+name|cx_oproc
+expr_stmt|;
+name|d
+operator|->
+name|tty
+operator|->
 name|t_sc
 operator|=
 name|d
