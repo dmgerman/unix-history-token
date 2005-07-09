@@ -147,13 +147,12 @@ argument_list|,
 name|GOLDCARD
 argument_list|)
 block|,
-name|PCMCIA_CARD
-argument_list|(
-name|SMC
-argument_list|,
-literal|8020BT
-argument_list|)
-block|,
+if|#
+directive|if
+literal|0
+block|PCMCIA_CARD(SMC, 8020BT),
+endif|#
+directive|endif
 name|PCMCIA_CARD
 argument_list|(
 name|SMC
