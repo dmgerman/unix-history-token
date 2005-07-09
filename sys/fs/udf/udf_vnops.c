@@ -4409,6 +4409,12 @@ operator|&
 name|tdp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|ISDOTDOT
+condition|)
 name|vn_lock
 argument_list|(
 name|dvp
