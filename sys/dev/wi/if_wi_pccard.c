@@ -377,6 +377,13 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|ADAPTEC2
+argument_list|,
+name|ANW8030
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|ADDTRON
 argument_list|,
 name|AWP100
