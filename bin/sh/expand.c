@@ -5363,7 +5363,7 @@ name|metaflag
 operator|==
 literal|0
 operator|||
-name|stat
+name|lstat
 argument_list|(
 name|expdir
 argument_list|,
