@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2000, 2001 by LSI Logic Corporation  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  *           Name:  MPI_TARG.H  *          Title:  MPI Target mode messages and structures  *  Creation Date:  June 22, 2000  *  *    MPI Version:  01.02.04  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-22-00  01.00.02  Added _MSG_TARGET_CMD_BUFFER_POST_REPLY structure.  *                      Corrected DECSRIPTOR typo to DESCRIPTOR.  *  11-02-00  01.01.01  Original release for post 1.0 work  *                      Modified target mode to use IoIndex instead of  *                      HostIndex and IocIndex. Added Alias.  *  01-09-01  01.01.02  Added defines for TARGET_ASSIST_FLAGS_REPOST_CMD_BUFFER  *                      and TARGET_STATUS_SEND_FLAGS_REPOST_CMD_BUFFER.  *  02-20-01  01.01.03  Started using MPI_POINTER.  *                      Added structures for MPI_TARGET_SCSI_SPI_CMD_BUFFER and  *                      MPI_TARGET_FCP_CMD_BUFFER.  *  03-27-01  01.01.04  Added structure offset comments.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  09-28-01  01.02.02  Added structure for MPI_TARGET_SCSI_SPI_STATUS_IU.  *                      Added PriorityReason field to some replies and  *                      defined more PriorityReason codes.  *                      Added some defines for to support previous version  *                      of MPI.  *  10-04-01  01.02.03  Added PriorityReason to MSG_TARGET_ERROR_REPLY.  *  11-01-01  01.02.04  Added define for TARGET_STATUS_SEND_FLAGS_HIGH_PRIORITY.  *  --------------------------------------------------------------------------  */
+comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  *           Name:  MPI_TARG.H  *          Title:  MPI Target mode messages and structures  *  Creation Date:  June 22, 2000  *  *    MPI_TARG.H Version:  01.02.09  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-22-00  01.00.02  Added _MSG_TARGET_CMD_BUFFER_POST_REPLY structure.  *                      Corrected DECSRIPTOR typo to DESCRIPTOR.  *  11-02-00  01.01.01  Original release for post 1.0 work  *                      Modified target mode to use IoIndex instead of  *                      HostIndex and IocIndex. Added Alias.  *  01-09-01  01.01.02  Added defines for TARGET_ASSIST_FLAGS_REPOST_CMD_BUFFER  *                      and TARGET_STATUS_SEND_FLAGS_REPOST_CMD_BUFFER.  *  02-20-01  01.01.03  Started using MPI_POINTER.  *                      Added structures for MPI_TARGET_SCSI_SPI_CMD_BUFFER and  *                      MPI_TARGET_FCP_CMD_BUFFER.  *  03-27-01  01.01.04  Added structure offset comments.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  09-28-01  01.02.02  Added structure for MPI_TARGET_SCSI_SPI_STATUS_IU.  *                      Added PriorityReason field to some replies and  *                      defined more PriorityReason codes.  *                      Added some defines for to support previous version  *                      of MPI.  *  10-04-01  01.02.03  Added PriorityReason to MSG_TARGET_ERROR_REPLY.  *  11-01-01  01.02.04  Added define for TARGET_STATUS_SEND_FLAGS_HIGH_PRIORITY.  *  03-14-02  01.02.05  Modified MPI_TARGET_FCP_RSP_BUFFER to get the proper  *                      byte ordering.  *  05-31-02  01.02.06  Modified TARGET_MODE_REPLY_ALIAS_MASK to only include  *                      one bit.  *                      Added AliasIndex field to MPI_TARGET_FCP_CMD_BUFFER.  *  09-16-02  01.02.07  Added flags for confirmed completion.  *                      Added PRIORITY_REASON_TARGET_BUSY.  *  11-15-02  01.02.08  Added AliasID field to MPI_TARGET_SCSI_SPI_CMD_BUFFER.  *  04-01-03  01.02.09  Added OptionalOxid field to MPI_TARGET_FCP_CMD_BUFFER.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -46,7 +46,7 @@ name|U64
 name|PhysicalAddress64
 decl_stmt|;
 block|}
-name|_u
+name|u
 union|;
 block|}
 name|CMD_BUFFER_DESCRIPTOR
@@ -389,6 +389,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PRIORITY_REASON_TARGET_BUSY
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PRIORITY_REASON_UNKNOWN
 value|(0xFF)
 end_define
@@ -489,6 +496,18 @@ name|U32
 name|FcpDl
 decl_stmt|;
 comment|/* 1Ch */
+name|U8
+name|AliasIndex
+decl_stmt|;
+comment|/* 20h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 21h */
+name|U16
+name|OptionalOxid
+decl_stmt|;
+comment|/* 22h */
 block|}
 name|MPI_TARGET_FCP_CMD_BUFFER
 operator|,
@@ -555,6 +574,19 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* 14h */
+comment|/* Alias ID */
+name|U8
+name|AliasID
+decl_stmt|;
+comment|/* 24h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 25h */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 26h */
 block|}
 name|MPI_TARGET_SCSI_SPI_CMD_BUFFER
 operator|,
@@ -675,6 +707,13 @@ define|#
 directive|define
 name|TARGET_ASSIST_FLAGS_HIGH_PRIORITY
 value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_FLAGS_CONFIRMED
+value|(0x08)
 end_define
 
 begin_define
@@ -848,9 +887,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_STATUS_SEND_FLAGS_CONFIRMED
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_STATUS_SEND_FLAGS_REPOST_CMD_BUFFER
 value|(0x80)
 end_define
+
+begin_comment
+comment|/*  * NOTE: FCP_RSP data is big-endian. When used on a little-endian system, this  * structure properly orders the bytes.  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -865,20 +915,20 @@ index|]
 decl_stmt|;
 comment|/* 00h */
 name|U8
-name|FcpStatus
-decl_stmt|;
-comment|/* 08h */
-name|U8
-name|FcpFlags
-decl_stmt|;
-comment|/* 09h */
-name|U8
 name|Reserved1
 index|[
 literal|2
 index|]
 decl_stmt|;
+comment|/* 08h */
+name|U8
+name|FcpFlags
+decl_stmt|;
 comment|/* 0Ah */
+name|U8
+name|FcpStatus
+decl_stmt|;
+comment|/* 0Bh */
 name|U32
 name|FcpResid
 decl_stmt|;
@@ -918,6 +968,10 @@ name|MPI_POINTER
 name|pMpiTargetFcpRspBuffer
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * NOTE: The SPI status IU is big-endian. When used on a little-endian system,  * this structure properly orders the bytes.  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -1177,7 +1231,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_MODE_REPLY_ALIAS_MASK
-value|(0x0C000000)
+value|(0x04000000)
 end_define
 
 begin_define

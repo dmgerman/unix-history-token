@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2000, 2001 by LSI Logic Corporation  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  *           Name:  MPI_CNFG.H  *          Title:  MPI Config message, structures, and Pages  *  Creation Date:  July 27, 2000  *  *    MPI_CNFG.H Version:  01.02.11  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-08-00  01.00.02  Added _PAGEVERSION definitions for all pages.  *                      Added FcPhLowestVersion, FcPhHighestVersion, Reserved2  *                      fields to FC_DEVICE_0 page, updated the page version.  *                      Changed _FREE_RUNNING_CLOCK to _PACING_TRANSFERS in  *                      SCSI_PORT_0, SCSI_DEVICE_0 and SCSI_DEVICE_1 pages  *                      and updated the page versions.  *                      Added _RESPONSE_ID_MASK definition to SCSI_PORT_1  *                      page and updated the page version.  *                      Added Information field and _INFO_PARAMS_NEGOTIATED  *                      definitionto SCSI_DEVICE_0 page.  *  06-22-00  01.00.03  Removed batch controls from LAN_0 page and updated the  *                      page version.  *                      Added BucketsRemaining to LAN_1 page, redefined the  *                      state values, and updated the page version.  *                      Revised bus width definitions in SCSI_PORT_0,  *                      SCSI_DEVICE_0 and SCSI_DEVICE_1 pages.  *  06-30-00  01.00.04  Added MaxReplySize to LAN_1 page and updated the page  *                      version.  *                      Moved FC_DEVICE_0 PageAddress description to spec.  *  07-27-00  01.00.05  Corrected the SubsystemVendorID and SubsystemID field  *                      widths in IOC_0 page and updated the page version.  *  11-02-00  01.01.01  Original release for post 1.0 work  *                      Added Manufacturing pages, IO Unit Page 2, SCSI SPI  *                      Port Page 2, FC Port Page 4, FC Port Page 5  *  11-15-00  01.01.02  Interim changes to match proposals  *  12-04-00  01.01.03  Config page changes to match MPI rev 1.00.01.  *  12-05-00  01.01.04  Modified config page actions.  *  01-09-01  01.01.05  Added defines for page address formats.  *                      Data size for Manufacturing pages 2 and 3 no longer  *                      defined here.  *                      Io Unit Page 2 size is fixed at 4 adapters and some  *                      flags were changed.  *                      SCSI Port Page 2 Device Settings modified.  *                      New fields added to FC Port Page 0 and some flags  *                      cleaned up.  *                      Removed impedance flash from FC Port Page 1.  *                      Added FC Port pages 6 and 7.  *  01-25-01  01.01.06  Added MaxInitiators field to FcPortPage0.  *  01-29-01  01.01.07  Changed some defines to make them 32 character unique.  *                      Added some LinkType defines for FcPortPage0.  *  02-20-01  01.01.08  Started using MPI_POINTER.  *  02-27-01  01.01.09  Replaced MPI_CONFIG_PAGETYPE_SCSI_LUN with  *                      MPI_CONFIG_PAGETYPE_RAID_VOLUME.  *                      Added definitions and structures for IOC Page 2 and  *                      RAID Volume Page 2.  *  03-27-01  01.01.10  Added CONFIG_PAGE_FC_PORT_8 and CONFIG_PAGE_FC_PORT_9.  *                      CONFIG_PAGE_FC_PORT_3 now supports persistent by DID.  *                      Added VendorId and ProductRevLevel fields to  *                      RAIDVOL2_IM_PHYS_ID struct.  *                      Modified values for MPI_FCPORTPAGE0_FLAGS_ATTACH_  *                      defines to make them compatible to MPI version 1.0.  *                      Added structure offset comments.  *  04-09-01  01.01.11  Added some new defines for the PageAddress field and  *                      removed some obsolete ones.  *                      Added IO Unit Page 3.  *                      Modified defines for Scsi Port Page 2.  *                      Modified RAID Volume Pages.  *  08-08-01  01.02.01  Original release for v1.2 work.  *                      Added SepID and SepBus to RVP2 IMPhysicalDisk struct.  *                      Added defines for the SEP bits in RVP2 VolumeSettings.  *                      Modified the DeviceSettings field in RVP2 to use the  *                      proper structure.  *                      Added defines for SES, SAF-TE, and cross channel for  *                      IOCPage2 CapabilitiesFlags.  *                      Removed define for MPI_IOUNITPAGE2_FLAGS_RAID_DISABLE.  *                      Removed define for  *                      MPI_SCSIPORTPAGE2_PORT_FLAGS_PARITY_ENABLE.  *                      Added define for MPI_CONFIG_PAGEATTR_RO_PERSISTENT.  *  08-29-01 01.02.02   Fixed value for MPI_MANUFACTPAGE_DEVID_53C1035.  *                      Added defines for MPI_FCPORTPAGE1_FLAGS_HARD_ALPA_ONLY  *                      and MPI_FCPORTPAGE1_FLAGS_IMMEDIATE_ERROR_REPLY.  *                      Removed MPI_SCSIPORTPAGE0_CAP_PACING_TRANSFERS,  *                      MPI_SCSIDEVPAGE0_NP_PACING_TRANSFERS, and  *                      MPI_SCSIDEVPAGE1_RP_PACING_TRANSFERS, and  *                      MPI_SCSIDEVPAGE1_CONF_PPR_ALLOWED.  *                      Added defines for MPI_SCSIDEVPAGE1_CONF_WDTR_DISALLOWED  *                      and MPI_SCSIDEVPAGE1_CONF_SDTR_DISALLOWED.  *                      Added OnBusTimerValue to CONFIG_PAGE_SCSI_PORT_1.  *                      Added rejected bits to SCSI Device Page 0 Information.  *                      Increased size of ALPA array in FC Port Page 2 by one  *                      and removed a one byte reserved field.  *  09-28-01 01.02.03   Swapped NegWireSpeedLow and NegWireSpeedLow in  *                      CONFIG_PAGE_LAN_1 to match preferred 64-bit ordering.  *                      Added structures for Manufacturing Page 4, IO Unit  *                      Page 3, IOC Page 3, IOC Page 4, RAID Volume Page 0, and  *                      RAID PhysDisk Page 0.  *  10-04-01 01.02.04   Added define for MPI_CONFIG_PAGETYPE_RAID_PHYSDISK.  *                      Modified some of the new defines to make them 32  *                      character unique.  *                      Modified how variable length pages (arrays) are defined.  *                      Added generic defines for hot spare pools and RAID  *                      volume types.  *  11-01-01 01.02.05   Added define for MPI_IOUNITPAGE1_DISABLE_IR.  *  03-14-02 01.02.06   Added PCISlotNum field to CONFIG_PAGE_IOC_1 along with  *                      related define, and bumped the page version define.  *  05-31-02 01.02.07   Added a Flags field to CONFIG_PAGE_IOC_2_RAID_VOL in a  *                      reserved byte and added a define.  *                      Added define for  *                      MPI_RAIDVOL0_STATUS_FLAG_VOLUME_INACTIVE.  *                      Added new config page: CONFIG_PAGE_IOC_5.  *                      Added MaxAliases, MaxHardAliases, and NumCurrentAliases  *                      fields to CONFIG_PAGE_FC_PORT_0.  *                      Added AltConnector and NumRequestedAliases fields to  *                      CONFIG_PAGE_FC_PORT_1.  *                      Added new config page: CONFIG_PAGE_FC_PORT_10.  *  07-12-02 01.02.08   Added more MPI_MANUFACTPAGE_DEVID_ defines.  *                      Added additional MPI_SCSIDEVPAGE0_NP_ defines.  *                      Added more MPI_SCSIDEVPAGE1_RP_ defines.  *                      Added define for  *                      MPI_SCSIDEVPAGE1_CONF_EXTENDED_PARAMS_ENABLE.  *                      Added new config page: CONFIG_PAGE_SCSI_DEVICE_3.  *                      Modified MPI_FCPORTPAGE5_FLAGS_ defines.  *  09-16-02 01.02.09   Added MPI_SCSIDEVPAGE1_CONF_FORCE_PPR_MSG define.  *  11-15-02 01.02.10   Added ConnectedID defines for CONFIG_PAGE_SCSI_PORT_0.  *                      Added more Flags defines for CONFIG_PAGE_FC_PORT_1.  *                      Added more Flags defines for CONFIG_PAGE_FC_DEVICE_0.  *  04-01-03 01.02.11   Added RR_TOV field and additional Flags defines for  *                      CONFIG_PAGE_FC_PORT_1.  *                      Added define MPI_FCPORTPAGE5_FLAGS_DISABLE to disable  *                      an alias.  *                      Added more device id defines.  *  --------------------------------------------------------------------------  */
+comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  *           Name:  MPI_CNFG.H  *          Title:  MPI Config message, structures, and Pages  *  Creation Date:  July 27, 2000  *  *    MPI_CNFG.H Version:  01.02.13  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-08-00  01.00.02  Added _PAGEVERSION definitions for all pages.  *                      Added FcPhLowestVersion, FcPhHighestVersion, Reserved2  *                      fields to FC_DEVICE_0 page, updated the page version.  *                      Changed _FREE_RUNNING_CLOCK to _PACING_TRANSFERS in  *                      SCSI_PORT_0, SCSI_DEVICE_0 and SCSI_DEVICE_1 pages  *                      and updated the page versions.  *                      Added _RESPONSE_ID_MASK definition to SCSI_PORT_1  *                      page and updated the page version.  *                      Added Information field and _INFO_PARAMS_NEGOTIATED  *                      definitionto SCSI_DEVICE_0 page.  *  06-22-00  01.00.03  Removed batch controls from LAN_0 page and updated the  *                      page version.  *                      Added BucketsRemaining to LAN_1 page, redefined the  *                      state values, and updated the page version.  *                      Revised bus width definitions in SCSI_PORT_0,  *                      SCSI_DEVICE_0 and SCSI_DEVICE_1 pages.  *  06-30-00  01.00.04  Added MaxReplySize to LAN_1 page and updated the page  *                      version.  *                      Moved FC_DEVICE_0 PageAddress description to spec.  *  07-27-00  01.00.05  Corrected the SubsystemVendorID and SubsystemID field  *                      widths in IOC_0 page and updated the page version.  *  11-02-00  01.01.01  Original release for post 1.0 work  *                      Added Manufacturing pages, IO Unit Page 2, SCSI SPI  *                      Port Page 2, FC Port Page 4, FC Port Page 5  *  11-15-00  01.01.02  Interim changes to match proposals  *  12-04-00  01.01.03  Config page changes to match MPI rev 1.00.01.  *  12-05-00  01.01.04  Modified config page actions.  *  01-09-01  01.01.05  Added defines for page address formats.  *                      Data size for Manufacturing pages 2 and 3 no longer  *                      defined here.  *                      Io Unit Page 2 size is fixed at 4 adapters and some  *                      flags were changed.  *                      SCSI Port Page 2 Device Settings modified.  *                      New fields added to FC Port Page 0 and some flags  *                      cleaned up.  *                      Removed impedance flash from FC Port Page 1.  *                      Added FC Port pages 6 and 7.  *  01-25-01  01.01.06  Added MaxInitiators field to FcPortPage0.  *  01-29-01  01.01.07  Changed some defines to make them 32 character unique.  *                      Added some LinkType defines for FcPortPage0.  *  02-20-01  01.01.08  Started using MPI_POINTER.  *  02-27-01  01.01.09  Replaced MPI_CONFIG_PAGETYPE_SCSI_LUN with  *                      MPI_CONFIG_PAGETYPE_RAID_VOLUME.  *                      Added definitions and structures for IOC Page 2 and  *                      RAID Volume Page 2.  *  03-27-01  01.01.10  Added CONFIG_PAGE_FC_PORT_8 and CONFIG_PAGE_FC_PORT_9.  *                      CONFIG_PAGE_FC_PORT_3 now supports persistent by DID.  *                      Added VendorId and ProductRevLevel fields to  *                      RAIDVOL2_IM_PHYS_ID struct.  *                      Modified values for MPI_FCPORTPAGE0_FLAGS_ATTACH_  *                      defines to make them compatible to MPI version 1.0.  *                      Added structure offset comments.  *  04-09-01  01.01.11  Added some new defines for the PageAddress field and  *                      removed some obsolete ones.  *                      Added IO Unit Page 3.  *                      Modified defines for Scsi Port Page 2.  *                      Modified RAID Volume Pages.  *  08-08-01  01.02.01  Original release for v1.2 work.  *                      Added SepID and SepBus to RVP2 IMPhysicalDisk struct.  *                      Added defines for the SEP bits in RVP2 VolumeSettings.  *                      Modified the DeviceSettings field in RVP2 to use the  *                      proper structure.  *                      Added defines for SES, SAF-TE, and cross channel for  *                      IOCPage2 CapabilitiesFlags.  *                      Removed define for MPI_IOUNITPAGE2_FLAGS_RAID_DISABLE.  *                      Removed define for  *                      MPI_SCSIPORTPAGE2_PORT_FLAGS_PARITY_ENABLE.  *                      Added define for MPI_CONFIG_PAGEATTR_RO_PERSISTENT.  *  08-29-01 01.02.02   Fixed value for MPI_MANUFACTPAGE_DEVID_53C1035.  *                      Added defines for MPI_FCPORTPAGE1_FLAGS_HARD_ALPA_ONLY  *                      and MPI_FCPORTPAGE1_FLAGS_IMMEDIATE_ERROR_REPLY.  *                      Removed MPI_SCSIPORTPAGE0_CAP_PACING_TRANSFERS,  *                      MPI_SCSIDEVPAGE0_NP_PACING_TRANSFERS, and  *                      MPI_SCSIDEVPAGE1_RP_PACING_TRANSFERS, and  *                      MPI_SCSIDEVPAGE1_CONF_PPR_ALLOWED.  *                      Added defines for MPI_SCSIDEVPAGE1_CONF_WDTR_DISALLOWED  *                      and MPI_SCSIDEVPAGE1_CONF_SDTR_DISALLOWED.  *                      Added OnBusTimerValue to CONFIG_PAGE_SCSI_PORT_1.  *                      Added rejected bits to SCSI Device Page 0 Information.  *                      Increased size of ALPA array in FC Port Page 2 by one  *                      and removed a one byte reserved field.  *  09-28-01 01.02.03   Swapped NegWireSpeedLow and NegWireSpeedLow in  *                      CONFIG_PAGE_LAN_1 to match preferred 64-bit ordering.  *                      Added structures for Manufacturing Page 4, IO Unit  *                      Page 3, IOC Page 3, IOC Page 4, RAID Volume Page 0, and  *                      RAID PhysDisk Page 0.  *  10-04-01 01.02.04   Added define for MPI_CONFIG_PAGETYPE_RAID_PHYSDISK.  *                      Modified some of the new defines to make them 32  *                      character unique.  *                      Modified how variable length pages (arrays) are defined.  *                      Added generic defines for hot spare pools and RAID  *                      volume types.  *  11-01-01 01.02.05   Added define for MPI_IOUNITPAGE1_DISABLE_IR.  *  03-14-02 01.02.06   Added PCISlotNum field to CONFIG_PAGE_IOC_1 along with  *                      related define, and bumped the page version define.  *  05-31-02 01.02.07   Added a Flags field to CONFIG_PAGE_IOC_2_RAID_VOL in a  *                      reserved byte and added a define.  *                      Added define for  *                      MPI_RAIDVOL0_STATUS_FLAG_VOLUME_INACTIVE.  *                      Added new config page: CONFIG_PAGE_IOC_5.  *                      Added MaxAliases, MaxHardAliases, and NumCurrentAliases  *                      fields to CONFIG_PAGE_FC_PORT_0.  *                      Added AltConnector and NumRequestedAliases fields to  *                      CONFIG_PAGE_FC_PORT_1.  *                      Added new config page: CONFIG_PAGE_FC_PORT_10.  *  07-12-02 01.02.08   Added more MPI_MANUFACTPAGE_DEVID_ defines.  *                      Added additional MPI_SCSIDEVPAGE0_NP_ defines.  *                      Added more MPI_SCSIDEVPAGE1_RP_ defines.  *                      Added define for  *                      MPI_SCSIDEVPAGE1_CONF_EXTENDED_PARAMS_ENABLE.  *                      Added new config page: CONFIG_PAGE_SCSI_DEVICE_3.  *                      Modified MPI_FCPORTPAGE5_FLAGS_ defines.  *  09-16-02 01.02.09   Added MPI_SCSIDEVPAGE1_CONF_FORCE_PPR_MSG define.  *  11-15-02 01.02.10   Added ConnectedID defines for CONFIG_PAGE_SCSI_PORT_0.  *                      Added more Flags defines for CONFIG_PAGE_FC_PORT_1.  *                      Added more Flags defines for CONFIG_PAGE_FC_DEVICE_0.  *  04-01-03 01.02.11   Added RR_TOV field and additional Flags defines for  *                      CONFIG_PAGE_FC_PORT_1.  *                      Added define MPI_FCPORTPAGE5_FLAGS_DISABLE to disable  *                      an alias.  *                      Added more device id defines.  *  06-26-03 01.02.12   Added MPI_IOUNITPAGE1_IR_USE_STATIC_VOLUME_ID define.  *                      Added TargetConfig and IDConfig fields to  *                      CONFIG_PAGE_SCSI_PORT_1.  *                      Added more PortFlags defines for CONFIG_PAGE_SCSI_PORT_2  *                      to control DV.  *                      Added more Flags defines for CONFIG_PAGE_FC_PORT_1.  *                      In CONFIG_PAGE_FC_DEVICE_0, replaced Reserved1 field  *                      with ADISCHardALPA.  *                      Added MPI_FC_DEVICE_PAGE0_PROT_FCP_RETRY define.  *  01-16-04 01.02.13   Added InitiatorDeviceTimeout and InitiatorIoPendTimeout  *                      fields and related defines to CONFIG_PAGE_FC_PORT_1.  *                      Added define for  *                      MPI_FCPORTPAGE1_FLAGS_SOFT_ALPA_FALLBACK.  *                      Added new fields to the substructures of  *                      CONFIG_PAGE_FC_PORT_10.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -1186,6 +1186,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI_IOUNITPAGE1_IR_USE_STATIC_VOLUME_ID
+value|(0x00000004)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI_IOUNITPAGE1_DISABLE_IR
 value|(0x00000040)
 end_define
@@ -2241,6 +2248,18 @@ name|U32
 name|OnBusTimerValue
 decl_stmt|;
 comment|/* 08h */
+name|U8
+name|TargetConfig
+decl_stmt|;
+comment|/* 0Ch */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0Dh */
+name|U16
+name|IDConfig
+decl_stmt|;
+comment|/* 0Eh */
 block|}
 name|CONFIG_PAGE_SCSI_PORT_1
 operator|,
@@ -2258,8 +2277,12 @@ begin_define
 define|#
 directive|define
 name|MPI_SCSIPORTPAGE1_PAGEVERSION
-value|(0x02)
+value|(0x03)
 end_define
+
+begin_comment
+comment|/* Configuration values */
+end_comment
 
 begin_define
 define|#
@@ -2273,6 +2296,24 @@ define|#
 directive|define
 name|MPI_SCSIPORTPAGE1_CFG_PORT_RESPONSE_ID_MASK
 value|(0xFFFF0000)
+end_define
+
+begin_comment
+comment|/* TargetConfig values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_SCSIPORTPAGE1_TARGCONFIG_TARG_ONLY
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SCSIPORTPAGE1_TARGCONFIG_INIT_TARG
+value|(0x02)
 end_define
 
 begin_typedef
@@ -2346,8 +2387,12 @@ begin_define
 define|#
 directive|define
 name|MPI_SCSIPORTPAGE2_PAGEVERSION
-value|(0x01)
+value|(0x02)
 end_define
+
+begin_comment
+comment|/* PortFlags values */
+end_comment
 
 begin_define
 define|#
@@ -2376,6 +2421,38 @@ directive|define
 name|MPI_SCSIPORTPAGE2_PORT_FLAGS_TERMINATION_DISABLE
 value|(0x00000010)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SCSIPORTPAGE2_PORT_FLAGS_DV_MASK
+value|(0x00000060)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SCSIPORTPAGE2_PORT_FLAGS_FULL_DV
+value|(0x00000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SCSIPORTPAGE2_PORT_FLAGS_BASIC_DV_ONLY
+value|(0x00000020)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SCSIPORTPAGE2_PORT_FLAGS_OFF_DV
+value|(0x00000060)
+end_define
+
+begin_comment
+comment|/* PortSettings values */
+end_comment
 
 begin_define
 define|#
@@ -3622,10 +3699,14 @@ name|U8
 name|RR_TOV
 decl_stmt|;
 comment|/* 1Dh */
-name|U16
-name|Reserved2
+name|U8
+name|InitiatorDeviceTimeout
 decl_stmt|;
 comment|/* 1Eh */
+name|U8
+name|InitiatorIoPendTimeout
+decl_stmt|;
+comment|/* 1Fh */
 block|}
 name|CONFIG_PAGE_FC_PORT_1
 operator|,
@@ -3643,7 +3724,7 @@ begin_define
 define|#
 directive|define
 name|MPI_FCPORTPAGE1_PAGEVERSION
-value|(0x05)
+value|(0x06)
 end_define
 
 begin_define
@@ -3684,8 +3765,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI_FCPORTPAGE1_FLAGS_PORT_OFFLINE
+value|(0x00400000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FCPORTPAGE1_FLAGS_SOFT_ALPA_FALLBACK
+value|(0x00200000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI_FCPORTPAGE1_FLAGS_MASK_RR_TOV_UNITS
 value|(0x00000070)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FCPORTPAGE1_FLAGS_SUPPRESS_PROT_REG
+value|(0x00000008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FCPORTPAGE1_FLAGS_PLOGI_ON_LOGO
+value|(0x00000004)
 end_define
 
 begin_define
@@ -3861,6 +3970,20 @@ define|#
 directive|define
 name|MPI_FCPORTPAGE1_ALT_CONN_UNKNOWN
 value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FCPORTPAGE1_INITIATOR_DEV_TIMEOUT_MASK
+value|(0x7F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FCPORTPAGE1_INITIATOR_DEV_UNIT_16
+value|(0x80)
 end_define
 
 begin_typedef
@@ -4628,11 +4751,11 @@ index|]
 decl_stmt|;
 comment|/* 48h */
 name|U16
-name|Reserved4
+name|Wavelength
 decl_stmt|;
 comment|/* 4Ch */
 name|U8
-name|Reserved5
+name|Reserved4
 decl_stmt|;
 comment|/* 4Eh */
 name|U8
@@ -4967,12 +5090,17 @@ index|]
 decl_stmt|;
 comment|/* 64h */
 name|U8
-name|Reserved5
-index|[
-literal|3
-index|]
+name|DiagMonitoringType
 decl_stmt|;
 comment|/* 6Ch */
+name|U8
+name|EnhancedOptions
+decl_stmt|;
+comment|/* 6Dh */
+name|U8
+name|SFF8472Compliance
+decl_stmt|;
+comment|/* 6Eh */
 name|U8
 name|CC_EXT
 decl_stmt|;
@@ -5086,7 +5214,7 @@ begin_define
 define|#
 directive|define
 name|MPI_FCPORTPAGE10_PAGEVERSION
-value|(0x00)
+value|(0x01)
 end_define
 
 begin_comment
@@ -5233,7 +5361,7 @@ name|MaxRxFrameSize
 decl_stmt|;
 comment|/* 1Ch */
 name|U8
-name|Reserved1
+name|ADISCHardALPA
 decl_stmt|;
 comment|/* 1Eh */
 name|U8
@@ -5273,7 +5401,7 @@ begin_define
 define|#
 directive|define
 name|MPI_FC_DEVICE_PAGE0_PAGEVERSION
-value|(0x02)
+value|(0x03)
 end_define
 
 begin_define
@@ -5316,6 +5444,13 @@ define|#
 directive|define
 name|MPI_FC_DEVICE_PAGE0_PROT_FCP_INITIATOR
 value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FC_DEVICE_PAGE0_PROT_FCP_RETRY
+value|(0x08)
 end_define
 
 begin_define
@@ -5372,6 +5507,13 @@ define|#
 directive|define
 name|MPI_FC_DEVICE_PAGE0_PGAD_TID_MASK
 value|(MPI_FC_DEVICE_PGAD_BT_TID_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FC_DEVICE_PAGE0_HARD_ALPA_UNKNOWN
+value|(0xFF)
 end_define
 
 begin_comment
@@ -5723,13 +5865,17 @@ name|NumPhysDisks
 decl_stmt|;
 comment|/* 24h */
 name|U8
-name|Reserved4
+name|DataScrubRate
 decl_stmt|;
 comment|/* 25h */
-name|U16
-name|Reserved5
+name|U8
+name|ResyncRate
 decl_stmt|;
 comment|/* 26h */
+name|U8
+name|InactiveStatus
+decl_stmt|;
+comment|/* 27h */
 name|RAID_VOL0_PHYS_DISK
 name|PhysDisk
 index|[
