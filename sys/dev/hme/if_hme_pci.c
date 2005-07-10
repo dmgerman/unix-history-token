@@ -1780,6 +1780,14 @@ operator|->
 name|hsc_sres
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
