@@ -1226,6 +1226,15 @@ name|int
 name|sc_fifo_cache
 decl_stmt|;
 name|int
+name|sc_fontinc_cache
+decl_stmt|;
+name|int
+name|sc_fontw_cache
+decl_stmt|;
+name|int
+name|sc_pmask_cache
+decl_stmt|;
+name|int
 name|sc_flags
 decl_stmt|;
 define|#

@@ -307,6 +307,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|ffb_map
 name|ffb_map
@@ -1399,6 +1400,7 @@ name|creator_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|const
 name|struct
 name|ffb_map
 modifier|*
