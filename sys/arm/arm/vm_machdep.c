@@ -1363,7 +1363,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|cpu_set_user_tls
 parameter_list|(
 name|struct
@@ -1409,6 +1409,11 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

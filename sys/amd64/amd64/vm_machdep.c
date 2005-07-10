@@ -1088,7 +1088,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|cpu_set_user_tls
 parameter_list|(
 name|struct
@@ -1101,6 +1101,20 @@ modifier|*
 name|tls_base
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|(
+name|u_int64_t
+operator|)
+name|tls_base
+operator|>=
+name|VM_MAXUSER_ADDRESS
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 name|td
@@ -1151,6 +1165,11 @@ operator|)
 name|tls_base
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

@@ -4576,7 +4576,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cpu_set_user_tls
 parameter_list|(
 name|struct
