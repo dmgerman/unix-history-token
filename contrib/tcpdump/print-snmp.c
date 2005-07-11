@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-snmp.c,v 1.62 2005/01/05 04:05:04 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-snmp.c,v 1.62.2.2 2005/05/06 07:57:19 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3032,18 +3032,27 @@ argument_list|(
 literal|'"'
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fn_print
+if|if
+condition|(
+name|fn_printn
 argument_list|(
 name|p
 argument_list|,
-name|p
-operator|+
 name|asnlen
+argument_list|,
+name|snapend
+argument_list|)
+condition|)
+block|{
+name|putchar
+argument_list|(
+literal|'"'
 argument_list|)
 expr_stmt|;
+goto|goto
+name|trunc
+goto|;
+block|}
 name|putchar
 argument_list|(
 literal|'"'
@@ -5418,7 +5427,7 @@ block|{
 name|char
 name|errbuf
 index|[
-literal|10
+literal|20
 index|]
 decl_stmt|;
 name|printf
@@ -5471,7 +5480,7 @@ block|{
 name|char
 name|errbuf
 index|[
-literal|10
+literal|20
 index|]
 decl_stmt|;
 name|printf
@@ -5925,7 +5934,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|10
+literal|20
 index|]
 decl_stmt|;
 name|printf

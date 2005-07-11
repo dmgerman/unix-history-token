@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-eigrp.c,v 1.5 2004/05/12 22:22:40 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-eigrp.c,v 1.5.2.2 2005/05/06 02:53:41 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -949,7 +949,7 @@ decl_stmt|,
 modifier|*
 name|tlv_tptr
 decl_stmt|;
-name|int
+name|u_int
 name|tlen
 decl_stmt|,
 name|eigrp_tlv_len
@@ -1186,10 +1186,7 @@ literal|0
 condition|)
 block|{
 comment|/* did we capture enough for fully decoding the object header ? */
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1200,10 +1197,7 @@ expr|struct
 name|eigrp_tlv_header
 argument_list|)
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|eigrp_tlv_header
 operator|=
 operator|(
@@ -1237,8 +1231,12 @@ expr_stmt|;
 if|if
 condition|(
 name|eigrp_tlv_len
-operator|==
-literal|0
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|eigrp_tlv_header
+argument_list|)
 operator|||
 name|eigrp_tlv_len
 operator|>
@@ -1304,20 +1302,14 @@ name|eigrp_tlv_header
 argument_list|)
 expr_stmt|;
 comment|/* did we capture enough for fully decoding the object ? */
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|TCHECK2
 argument_list|(
 operator|*
 name|tptr
 argument_list|,
 name|eigrp_tlv_len
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 switch|switch
 condition|(
 name|eigrp_tlv_type
@@ -1454,10 +1446,6 @@ expr_stmt|;
 if|if
 condition|(
 name|bit_length
-operator|<
-literal|0
-operator|||
-name|bit_length
 operator|>
 literal|32
 condition|)
@@ -1543,15 +1531,12 @@ literal|"%s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
-name|EXTRACT_32BITS
-argument_list|(
 operator|&
 name|tlv_ptr
 operator|.
 name|eigrp_tlv_ip_int
 operator|->
 name|nexthop
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1639,10 +1624,6 @@ expr_stmt|;
 if|if
 condition|(
 name|bit_length
-operator|<
-literal|0
-operator|||
-name|bit_length
 operator|>
 literal|32
 condition|)
@@ -1728,15 +1709,12 @@ literal|"%s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
-name|EXTRACT_32BITS
-argument_list|(
 operator|&
 name|tlv_ptr
 operator|.
 name|eigrp_tlv_ip_ext
 operator|->
 name|nexthop
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

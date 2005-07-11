@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igrp.c,v 1.20 2003/11/16 09:36:23 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igrp.c,v 1.20.2.1 2005/04/20 21:02:15 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,11 +331,11 @@ parameter_list|,
 name|u_int
 name|length
 parameter_list|,
-specifier|register
 specifier|const
 name|u_char
 modifier|*
 name|bp2
+name|_U_
 parameter_list|)
 block|{
 specifier|register
@@ -343,12 +343,6 @@ name|struct
 name|igrphdr
 modifier|*
 name|hdr
-decl_stmt|;
-specifier|register
-name|struct
-name|ip
-modifier|*
-name|ip
 decl_stmt|;
 specifier|register
 name|u_char
@@ -370,15 +364,6 @@ name|igrphdr
 operator|*
 operator|)
 name|bp
-expr_stmt|;
-name|ip
-operator|=
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-name|bp2
 expr_stmt|;
 name|cp
 operator|=

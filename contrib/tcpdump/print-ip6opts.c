@@ -34,7 +34,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6opts.c,v 1.17 2003/11/19 00:36:08 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6opts.c,v 1.17.2.1 2005/04/20 22:19:06 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1427,22 +1427,11 @@ operator|*
 operator|)
 name|bp
 decl_stmt|;
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|ep
-decl_stmt|;
 name|int
 name|hbhlen
 init|=
 literal|0
 decl_stmt|;
-comment|/* 'ep' points to the end of available data. */
-name|ep
-operator|=
-name|snapend
-expr_stmt|;
 name|TCHECK
 argument_list|(
 name|dp
@@ -1555,22 +1544,11 @@ operator|*
 operator|)
 name|bp
 decl_stmt|;
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|ep
-decl_stmt|;
 name|int
 name|dstoptlen
 init|=
 literal|0
 decl_stmt|;
-comment|/* 'ep' points to the end of available data. */
-name|ep
-operator|=
-name|snapend
-expr_stmt|;
 name|TCHECK
 argument_list|(
 name|dp

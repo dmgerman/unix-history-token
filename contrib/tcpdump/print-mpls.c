@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mpls.c,v 1.13 2005/04/06 21:32:41 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mpls.c,v 1.13.2.1 2005/07/05 09:39:29 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,7 +166,12 @@ modifier|*
 name|p
 decl_stmt|;
 name|u_int32_t
-name|v
+name|label_entry
+decl_stmt|;
+name|u_int16_t
+name|label_stack_depth
+init|=
+literal|0
 decl_stmt|;
 name|p
 operator|=
@@ -186,11 +191,11 @@ name|p
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|v
+name|label_entry
 operator|=
 name|EXTRACT_32BITS
 argument_list|(
@@ -199,19 +204,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" ("
-argument_list|)
-expr_stmt|;
-comment|/*)*/
-name|printf
-argument_list|(
-literal|"label %u"
+literal|"%s(label %u"
+argument_list|,
+name|label_stack_depth
+condition|?
+literal|"\n\t"
+else|:
+literal|" "
 argument_list|,
 name|MPLS_LABEL
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|label_stack_depth
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -219,7 +227,7 @@ name|vflag
 operator|&&
 name|MPLS_LABEL
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 operator|<
 sizeof|sizeof
@@ -243,7 +251,7 @@ name|mpls_labelname
 index|[
 name|MPLS_LABEL
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 index|]
 argument_list|)
@@ -254,7 +262,7 @@ literal|", exp %u"
 argument_list|,
 name|MPLS_EXP
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -262,7 +270,7 @@ if|if
 condition|(
 name|MPLS_STACK
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 condition|)
 name|printf
@@ -272,25 +280,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", ttl %u"
+literal|", ttl %u)"
 argument_list|,
 name|MPLS_TTL
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/*(*/
-name|printf
-argument_list|(
-literal|")"
 argument_list|)
 expr_stmt|;
 name|p
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 expr_stmt|;
 block|}
@@ -299,7 +301,7 @@ condition|(
 operator|!
 name|MPLS_STACK
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 condition|)
 do|;
@@ -307,7 +309,7 @@ switch|switch
 condition|(
 name|MPLS_LABEL
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 condition|)
 block|{
@@ -319,6 +321,18 @@ case|case
 literal|3
 case|:
 comment|/* IPv4 implicit NULL label */
+if|if
+condition|(
+name|vflag
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n\t"
+argument_list|)
+expr_stmt|;
 name|ip_print
 argument_list|(
 name|gndo
@@ -334,6 +348,15 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|", IP, length: %u"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
@@ -342,6 +365,18 @@ case|case
 literal|2
 case|:
 comment|/* IPv6 explicit NULL label */
+if|if
+condition|(
+name|vflag
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n\t"
+argument_list|)
+expr_stmt|;
 name|ip6_print
 argument_list|(
 name|p
@@ -355,6 +390,15 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|", IPv6, length: %u"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -364,7 +408,7 @@ if|if
 condition|(
 name|MPLS_STACK
 argument_list|(
-name|v
+name|label_entry
 argument_list|)
 condition|)
 block|{

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-frag6.c,v 1.19 2003/11/19 00:36:07 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-frag6.c,v 1.19.2.1 2005/04/20 22:33:21 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,12 +116,6 @@ name|ip6_hdr
 modifier|*
 name|ip6
 decl_stmt|;
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|ep
-decl_stmt|;
 name|dp
 operator|=
 operator|(
@@ -141,11 +135,6 @@ name|ip6_hdr
 operator|*
 operator|)
 name|bp2
-expr_stmt|;
-comment|/* 'ep' points to the end of available data. */
-name|ep
-operator|=
-name|snapend
 expr_stmt|;
 name|TCHECK
 argument_list|(

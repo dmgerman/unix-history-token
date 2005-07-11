@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Decode and print Zephyr packets.  *  * Copyright (c) 2001 Nickolai Zeldovich<kolya@MIT.EDU>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * The name of the author(s) may not be used to endorse or promote  * products derived from this software without specific prior written  * permission.  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE.  */
+comment|/*  * Decode and print Zephyr packets.  *  *	http://web.mit.edu/zephyr/doc/protocol  *  * Copyright (c) 2001 Nickolai Zeldovich<kolya@MIT.EDU>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * The name of the author(s) may not be used to endorse or promote  * products derived from this software without specific prior written  * permission.  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-zephyr.c,v 1.8 2003/11/16 09:36:42 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-zephyr.c,v 1.8.2.1 2005/04/21 06:51:24 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 

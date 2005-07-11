@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pppoe.c,v 1.30 2004/08/27 03:57:41 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pppoe.c,v 1.30.2.1 2005/04/26 19:48:56 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -584,58 +584,6 @@ argument_list|,
 name|pppoe_sessionid
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|pppoe_length
-operator|<
-name|length
-operator|&&
-name|length
-operator|+
-name|ETHER_HDRLEN
-operator|>
-literal|60
-condition|)
-block|{
-comment|/* (small packets are probably just padded up to the ethernet 		   minimum of 60 bytes of data + 4 bytes of CRC) */
-name|printf
-argument_list|(
-literal|" [length %u (%u extra bytes)]"
-argument_list|,
-name|pppoe_length
-argument_list|,
-name|length
-operator|-
-name|pppoe_length
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|RESPECT_PAYLOAD_LENGTH
-if|if
-condition|(
-name|snaplend
-operator|>
-name|pppoe_payload
-operator|+
-name|pppoe_length
-condition|)
-name|snapend
-operator|=
-name|pppoe_payload
-operator|+
-name|pppoe_length
-expr_stmt|;
-else|#
-directive|else
-comment|/* Actual PPPoE implementations appear to ignore the payload 		   length and use the full ethernet frame anyways */
-name|pppoe_length
-operator|=
-name|length
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(

@@ -34,7 +34,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/smbutil.c,v 1.36 2005/01/29 10:37:02 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/smbutil.c,v 1.36.2.1 2005/04/21 04:09:58 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2066,9 +2066,6 @@ name|attrib_fmt
 init|=
 literal|"READONLY|HIDDEN|SYSTEM|VOLUME|DIR|ARCHIVE|"
 decl_stmt|;
-name|int
-name|len
-decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -2871,6 +2868,9 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|u_int32_t
+name|len
+decl_stmt|;
 name|len
 operator|=
 literal|0
@@ -2933,6 +2933,9 @@ specifier|const
 name|char
 modifier|*
 name|s
+decl_stmt|;
+name|u_int32_t
+name|len
 decl_stmt|;
 name|TCHECK
 argument_list|(

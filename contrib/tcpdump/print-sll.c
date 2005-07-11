@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sll.c,v 1.16 2004/10/28 00:34:29 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sll.c,v 1.16.2.1 2005/04/26 00:16:43 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,9 @@ name|u_int
 name|length
 parameter_list|)
 block|{
+name|u_short
+name|ether_type
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"%3s "
@@ -220,12 +223,79 @@ condition|(
 operator|!
 name|qflag
 condition|)
+block|{
+name|ether_type
+operator|=
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|sllp
+operator|->
+name|sll_protocol
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ether_type
+operator|<=
+name|ETHERMTU
+condition|)
+block|{
+comment|/* 			 * Not an Ethernet type; what type is it? 			 */
+switch|switch
+condition|(
+name|ether_type
+condition|)
+block|{
+case|case
+name|LINUX_SLL_P_802_3
+case|:
+comment|/* 				 * Ethernet_802.3 IPX frame. 				 */
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"ethertype %s (0x%04x), length %u: "
+literal|"802.3"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LINUX_SLL_P_802_2
+case|:
+comment|/* 				 * 802.2. 				 */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"802.3"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* 				 * What is it? 				 */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"ethertype Unknown (0x%04x)"
+argument_list|,
+name|ether_type
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"ethertype %s (0x%04x)"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -233,26 +303,24 @@ name|ethertype_values
 argument_list|,
 literal|"Unknown"
 argument_list|,
-name|EXTRACT_16BITS
-argument_list|(
-operator|&
-name|sllp
-operator|->
-name|sll_protocol
-argument_list|)
+name|ether_type
 argument_list|)
 argument_list|,
-name|EXTRACT_16BITS
-argument_list|(
-operator|&
-name|sllp
-operator|->
-name|sll_protocol
+name|ether_type
 argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|", length %u: "
 argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

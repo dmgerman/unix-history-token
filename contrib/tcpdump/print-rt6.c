@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rt6.c,v 1.26 2003/11/19 00:36:08 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rt6.c,v 1.26.2.1 2005/04/20 22:35:11 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,11 +95,11 @@ name|u_char
 modifier|*
 name|bp
 parameter_list|,
-specifier|register
 specifier|const
 name|u_char
 modifier|*
 name|bp2
+name|_U_
 parameter_list|)
 block|{
 specifier|register
@@ -115,13 +115,6 @@ name|struct
 name|ip6_rthdr0
 modifier|*
 name|dp0
-decl_stmt|;
-specifier|register
-specifier|const
-name|struct
-name|ip6_hdr
-modifier|*
-name|ip
 decl_stmt|;
 specifier|register
 specifier|const
@@ -149,15 +142,6 @@ name|ip6_rthdr
 operator|*
 operator|)
 name|bp
-expr_stmt|;
-name|ip
-operator|=
-operator|(
-expr|struct
-name|ip6_hdr
-operator|*
-operator|)
-name|bp2
 expr_stmt|;
 name|len
 operator|=

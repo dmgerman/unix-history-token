@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-esp.c,v 1.55 2004/07/21 22:00:11 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-esp.c,v 1.55.2.1 2005/04/21 06:44:57 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,7 +238,7 @@ decl_stmt|;
 name|int
 name|authlen
 decl_stmt|;
-name|char
+name|u_char
 name|secret
 index|[
 literal|256
@@ -345,7 +345,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int
 name|hexdigit
 parameter_list|(
 name|netdissect_options
@@ -438,7 +438,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int
 name|hex2byte
 parameter_list|(
 name|netdissect_options
@@ -450,7 +450,7 @@ modifier|*
 name|hexstring
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|byte
 decl_stmt|;
 name|byte
@@ -926,7 +926,7 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|char
+name|u_char
 name|espsecret_key
 index|[
 literal|256
@@ -1582,7 +1582,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|secret
 decl_stmt|;
