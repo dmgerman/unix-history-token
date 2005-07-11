@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-getad.c,v 1.10 2004/11/04 07:26:04 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-getad.c,v 1.10.2.1 2005/04/10 18:04:49 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -373,6 +385,13 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|q
+decl_stmt|;
 comment|/* 	 * Get the list of interface addresses. 	 * 	 * Note: this won't return information about interfaces 	 * with no addresses; are there any such interfaces 	 * that would be capable of receiving packets? 	 * (Interfaces incapable of receiving packets aren't 	 * very interesting from libpcap's point of view.) 	 * 	 * LAN interfaces will probably have link-layer 	 * addresses; I don't know whether all implementations 	 * of "getifaddrs()" now, or in the future, will return 	 * those. 	 */
 if|if
 condition|(
@@ -568,6 +587,63 @@ name|dstaddr_size
 operator|=
 literal|0
 expr_stmt|;
+block|}
+comment|/* 		 * If this entry has a colon followed by a number at 		 * the end, we assume it's a logical interface.  Those 		 * are just the way you assign multiple IP addresses to 		 * a real interface on Linux, so an entry for a logical 		 * interface should be treated like the entry for the 		 * real interface; we do that by stripping off the ":" 		 * and the number. 		 * 		 * XXX - should we do this only on Linux? 		 */
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|ifa
+operator|->
+name|ifa_name
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 			 * We have a ":"; is it followed by a number? 			 */
+name|q
+operator|=
+name|p
+operator|+
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|isdigit
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|q
+argument_list|)
+condition|)
+name|q
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|q
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* 				 * All digits after the ":" until the end. 				 * Strip off the ":" and everything after 				 * it. 				 */
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 block|}
 comment|/* 		 * Add information for this address to the list. 		 */
 if|if

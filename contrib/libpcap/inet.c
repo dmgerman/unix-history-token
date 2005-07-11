@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/inet.c,v 1.66 2005/02/10 19:38:06 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/inet.c,v 1.66.2.1 2005/06/20 21:30:17 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1839,6 +1839,20 @@ argument_list|(
 name|device
 argument_list|,
 literal|"dag"
+argument_list|)
+operator|!=
+name|NULL
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_SEPTEL_API
+operator|||
+name|strstr
+argument_list|(
+name|device
+argument_list|,
+literal|"septel"
 argument_list|)
 operator|!=
 name|NULL

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap.c,v 1.88 2005/02/08 20:03:15 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap.c,v 1.88.2.3 2005/05/27 23:33:00 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1285,7 +1285,7 @@ name|DLT_CHOICE
 argument_list|(
 name|DLT_ATM_RFC1483
 argument_list|,
-literal|"RFC 1483 IP-over-ATM"
+literal|"RFC 1483 LLC-encapsulated ATM"
 argument_list|)
 block|,
 name|DLT_CHOICE
@@ -1545,6 +1545,34 @@ argument_list|(
 name|DLT_ERF_POS
 argument_list|,
 literal|"Packet-over-SONET with Endace ERF header"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_GGSN
+argument_list|,
+literal|"Juniper GGSN PIC"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_ES
+argument_list|,
+literal|"Juniper Encryption Services PIC"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_MONITOR
+argument_list|,
+literal|"Juniper Passive Monitor PIC"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_SERVICES
+argument_list|,
+literal|"Juniper Advanced Services PIC"
 argument_list|)
 block|,
 name|DLT_CHOICE_SENTINEL
@@ -3951,6 +3979,61 @@ argument_list|(
 name|p
 argument_list|,
 name|fp
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Set direction flag, which controls whether we accept only incoming  * packets, only outgoing packets, or both.  * Note that, depending on the platform, some or all direction arguments  * might not be supported.  */
+end_comment
+
+begin_function
+name|int
+name|pcap_setdirection
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|direction_t
+name|d
+parameter_list|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|setdirection_op
+operator|==
+name|NULL
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"Setting direction is not implemented on this platform"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|else
+return|return
+name|p
+operator|->
+name|setdirection_op
+argument_list|(
+name|p
+argument_list|,
+name|d
 argument_list|)
 return|;
 block|}

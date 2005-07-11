@@ -1,10 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/libpcap/gencode.h,v 1.60 2004/06/16 08:20:30 hannes Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/libpcap/gencode.h,v 1.60.2.5 2005/06/20 21:30:17 guy Exp $ (LBL)  */
 end_comment
 
 begin_comment
 comment|/*  * ATM support:  *  * Copyright (c) 1997 Yen Yen Lim and North Dakota State University  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Yen Yen Lim and  *      North Dakota State University  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE___ATTRIBUTE__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE___ATTRIBUTE__ */
 end_comment
 
 begin_comment
@@ -51,6 +75,13 @@ define|#
 directive|define
 name|Q_PROTOCHAIN
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_PORTRANGE
+value|7
 end_define
 
 begin_comment
@@ -336,6 +367,13 @@ define|#
 directive|define
 name|Q_ISIS_LSP
 value|39
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_RADIO
+value|40
 end_define
 
 begin_comment
@@ -628,6 +666,38 @@ end_define
 begin_comment
 comment|/* returns Q.2931 signalling messages for 				   establishing and destroying predefined 				   virtual circuits, such as broadcast 				   circuit, oamf4 segment circuit, oamf4 				   end-to-end circuits, ILMI circuits or 				   connection signalling circuit. */
 end_comment
+
+begin_comment
+comment|/*MTP3 field types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SIO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_OPC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DPC
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_SLS
+value|4
+end_define
 
 begin_struct_decl
 struct_decl|struct
@@ -1273,7 +1343,7 @@ parameter_list|(
 name|int
 name|atmfield
 parameter_list|,
-name|bpf_u_int32
+name|bpf_int32
 name|jvalue
 parameter_list|,
 name|bpf_u_int32
@@ -1305,6 +1375,27 @@ name|gen_atmmulti_abbrev
 parameter_list|(
 name|int
 name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|block
+modifier|*
+name|gen_mtp3field_code
+parameter_list|(
+name|int
+name|mtp3field
+parameter_list|,
+name|bpf_u_int32
+name|jvalue
+parameter_list|,
+name|bpf_u_int32
+name|jtype
+parameter_list|,
+name|int
+name|reverse
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1411,9 +1502,6 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-if|#
-directive|if
-name|HAVE___ATTRIBUTE__
 function_decl|__attribute__
 parameter_list|(
 function_decl|(noreturn
@@ -1427,13 +1515,8 @@ operator|,
 function_decl|2
 end_function_decl
 
-begin_endif
-unit|)))
-endif|#
-directive|endif
-end_endif
-
 begin_empty_stmt
+unit|)))
 empty_stmt|;
 end_empty_stmt
 

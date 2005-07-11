@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-linux.c,v 1.110 2004/10/19 07:06:12 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-linux.c,v 1.110.2.2 2005/06/20 21:30:18 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,27 @@ end_endif
 
 begin_comment
 comment|/* HAVE_DAG_API */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SEPTEL_API
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"pcap-septel.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SEPTEL_API */
 end_comment
 
 begin_include
@@ -451,6 +472,19 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|pcap_setdirection_linux
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|direction_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|pcap_close_linux
 parameter_list|(
@@ -764,6 +798,37 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_DAG_API */
+ifdef|#
+directive|ifdef
+name|HAVE_SEPTEL_API
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|device
+argument_list|,
+literal|"septel"
+argument_list|)
+condition|)
+block|{
+return|return
+name|septel_open_live
+argument_list|(
+name|device
+argument_list|,
+name|snaplen
+argument_list|,
+name|promisc
+argument_list|,
+name|to_ms
+argument_list|,
+name|ebuf
+argument_list|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_SEPTEL_API */
 comment|/* Allocate a handle for this session. */
 name|handle
 operator|=
@@ -1206,6 +1271,12 @@ name|pcap_setfilter_linux
 expr_stmt|;
 name|handle
 operator|->
+name|setdirection_op
+operator|=
+name|pcap_setdirection_linux
+expr_stmt|;
+name|handle
+operator|->
 name|set_datalink_op
 operator|=
 name|NULL
@@ -1505,7 +1576,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|HAVE_PF_PACKET_SOCKETS
-comment|/* 	 * If this is from the loopback device, reject outgoing packets; 	 * we'll see the packet as an incoming packet as well, and 	 * we don't want to see it twice. 	 * 	 * We can only do this if we're using PF_PACKET; the address 	 * returned for SOCK_PACKET is a "sockaddr_pkt" which lacks 	 * the relevant packet type information. 	 */
 if|if
 condition|(
 operator|!
@@ -1514,7 +1584,21 @@ operator|->
 name|md
 operator|.
 name|sock_packet
-operator|&&
+condition|)
+block|{
+comment|/* 		 * Do checks based on packet direction. 		 * We can only do this if we're using PF_PACKET; the 		 * address returned for SOCK_PACKET is a "sockaddr_pkt" 		 * which lacks the relevant packet type information. 		 */
+if|if
+condition|(
+name|from
+operator|.
+name|sll_pkttype
+operator|==
+name|PACKET_OUTGOING
+condition|)
+block|{
+comment|/* 			 * Outgoing packet. 			 * If this is from the loopback device, reject it; 			 * we'll see the packet as an incoming packet as well, 			 * and we don't want to see it twice. 			 */
+if|if
+condition|(
 name|from
 operator|.
 name|sll_ifindex
@@ -1524,16 +1608,39 @@ operator|->
 name|md
 operator|.
 name|lo_ifindex
-operator|&&
-name|from
-operator|.
-name|sll_pkttype
-operator|==
-name|PACKET_OUTGOING
 condition|)
 return|return
 literal|0
 return|;
+comment|/* 			 * If the user only wants incoming packets, reject it. 			 */
+if|if
+condition|(
+name|handle
+operator|->
+name|direction
+operator|==
+name|D_IN
+condition|)
+return|return
+literal|0
+return|;
+block|}
+else|else
+block|{
+comment|/* 			 * Incoming packet. 			 * If the user only wants outgoing packets, reject it. 			 */
+if|if
+condition|(
+name|handle
+operator|->
+name|direction
+operator|==
+name|D_OUT
+condition|)
+return|return
+literal|0
+return|;
+block|}
+block|}
 endif|#
 directive|endif
 ifdef|#
@@ -2218,6 +2325,29 @@ return|;
 endif|#
 directive|endif
 comment|/* HAVE_DAG_API */
+ifdef|#
+directive|ifdef
+name|HAVE_SEPTEL_API
+if|if
+condition|(
+name|septel_platform_finddevs
+argument_list|(
+name|alldevsp
+argument_list|,
+name|errbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_SEPTEL_API */
 return|return
 operator|(
 literal|0
@@ -2525,6 +2655,72 @@ directive|endif
 comment|/* SO_ATTACH_FILTER */
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Set direction flag: Which packets do we accept on a forwarding  * single device? IN, OUT or both?  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|pcap_setdirection_linux
+parameter_list|(
+name|pcap_t
+modifier|*
+name|handle
+parameter_list|,
+name|direction_t
+name|d
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_PF_PACKET_SOCKETS
+if|if
+condition|(
+operator|!
+name|handle
+operator|->
+name|md
+operator|.
+name|sock_packet
+condition|)
+block|{
+name|handle
+operator|->
+name|direction
+operator|=
+name|d
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* 	 * We're not using PF_PACKET sockets, so we can't determine 	 * the direction of the packet. 	 */
+name|snprintf
+argument_list|(
+name|handle
+operator|->
+name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|handle
+operator|->
+name|errbuf
+argument_list|)
+argument_list|,
+literal|"Setting direction is not supported on SOCK_PACKET sockets"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
 return|;
 block|}
 end_function

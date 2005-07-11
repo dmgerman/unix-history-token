@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dag.c,v 1.21 2005/04/03 23:56:47 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dag.c,v 1.21.2.1 2005/05/03 18:54:35 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2373,6 +2373,13 @@ name|setfilter_op
 operator|=
 name|dag_setfilter
 expr_stmt|;
+name|handle
+operator|->
+name|setdirection_op
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Not implemented.*/
 name|handle
 operator|->
 name|set_datalink_op
