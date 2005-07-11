@@ -940,7 +940,51 @@ value|138
 end_define
 
 begin_comment
-comment|/*  * 139 through 142 are reserved for SS7.  */
+comment|/*  * Various SS7 encapsulations, as per a request from Jeff Morriss  *<jeff.morriss[AT]ulticom.com> and subsequent discussions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_MTP2_WITH_PHDR
+value|139
+end_define
+
+begin_comment
+comment|/* pseudo-header with various info, followed by MTP2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_MTP2
+value|140
+end_define
+
+begin_comment
+comment|/* MTP2, without pseudo-header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_MTP3
+value|141
+end_define
+
+begin_comment
+comment|/* MTP3, without pseudo-header or MTP2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_SCCP
+value|142
+end_define
+
+begin_comment
+comment|/* SCCP, without pseudo-header or MTP2 or MTP3 */
 end_comment
 
 begin_comment
@@ -1270,6 +1314,17 @@ end_define
 begin_comment
 comment|/* Packet-over-SONET */
 end_comment
+
+begin_comment
+comment|/*  * Requested by Daniele Orlandi<daniele@orlandi.com> for raw LAPD  * for vISDN (http://www.orlandi.com/visdn/).  Its link-layer header  * includes additional information before the LAPD header, so it's  * not necessarily a generic LAPD header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LINUX_LAPD
+value|177
+end_define
 
 begin_comment
 comment|/*  * The instruction encodings.  */
