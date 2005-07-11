@@ -358,6 +358,14 @@ literal|"/packages-5.3-release"
 block|}
 block|,
 block|{
+literal|504000
+block|,
+literal|504099
+block|,
+literal|"/packages-5.4-release"
+block|}
+block|,
+block|{
 literal|300000
 block|,
 literal|399000
@@ -382,7 +390,7 @@ literal|"/packages-5-current"
 block|}
 block|,
 block|{
-literal|503000
+literal|503100
 block|,
 literal|599000
 block|,
