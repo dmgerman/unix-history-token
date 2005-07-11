@@ -43,6 +43,12 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_comment
 comment|/* The help file for the TCP/IP setup screen */
 end_comment
@@ -1308,12 +1314,36 @@ modifier|*
 name|devp
 parameter_list|)
 block|{
+name|char
+name|leasefile
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|leasefile
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|leasefile
+argument_list|)
+argument_list|,
+literal|"%sdhclient.leases.%s"
+argument_list|,
+name|_PATH_VARDB
+argument_list|,
+name|devp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 comment|/* If it fails, do it the old-fashioned way */
 if|if
 condition|(
 name|dhcpParseLeases
 argument_list|(
-literal|"/var/db/dhclient.leases"
+name|leasefile
 argument_list|,
 name|hostname
 argument_list|,
@@ -2151,22 +2181,15 @@ argument_list|(
 literal|"Scanning for DHCP servers..."
 argument_list|)
 expr_stmt|;
-name|vsystem
-argument_list|(
-literal|"dhclient -r %s"
-argument_list|,
-name|devp
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* XXX clear any existing lease */
+comment|/* XXX limit protocol to N tries */
 if|if
 condition|(
 literal|0
 operator|==
 name|vsystem
 argument_list|(
-literal|"dhclient -1 %s"
+literal|"dhclient %s"
 argument_list|,
 name|devp
 operator|->
