@@ -70,16 +70,6 @@ name|HAVE_NEW_RES_STATE
 end_undef
 
 begin_comment
-comment|/* define if<inttypes.h> defines PRI[doxu]64 macros */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|INTTYPES_H_DEFINES_FORMATS
-end_undef
-
-begin_comment
 comment|/*  * define if struct ether_header.ether_dhost is a struct with ether_addr_octet  */
 end_comment
 
@@ -290,6 +280,16 @@ name|HAVE_PCAP_DATALINK_VAL_TO_DESCRIPTION
 end_undef
 
 begin_comment
+comment|/* define if libpcap has pcap_dump_ftell() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PCAP_DUMP_FTELL
+end_undef
+
+begin_comment
 comment|/* define if you have getrpcbynumber() */
 end_comment
 
@@ -347,62 +347,6 @@ begin_undef
 undef|#
 directive|undef
 name|_SUN
-end_undef
-
-begin_comment
-comment|/* Workaround for missing sized types */
-end_comment
-
-begin_comment
-comment|/* XXX this should move to the more standard uint*_t */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|int8_t
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|int16_t
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|int32_t
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|int64_t
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|u_int8_t
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|u_int16_t
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|u_int32_t
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|u_int64_t
 end_undef
 
 begin_comment

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lspping.c,v 1.12 2004/11/11 12:02:31 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lspping.c,v 1.12.2.3 2005/05/03 08:12:31 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,7 +408,7 @@ begin_define
 define|#
 directive|define
 name|LSPPING_TLV_VENDOR_PRIVATE
-value|5
+value|0xfc00
 end_define
 
 begin_decl_stmt
@@ -1400,7 +1400,7 @@ name|len
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\tLSP-PINGv%u, msg-type: %s (%u), reply-mode: %s (%u)"
+literal|"\n\tLSP-PINGv%u, msg-type: %s (%u), length: %u\n\t  reply-mode: %s (%u)"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -1427,6 +1427,8 @@ argument_list|,
 name|lspping_com_header
 operator|->
 name|msg_type
+argument_list|,
+name|len
 argument_list|,
 name|tok2str
 argument_list|(
@@ -1485,7 +1487,7 @@ literal|12
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t  Return Code: %s %u (%u), Return Subcode: (%u)"
+literal|"\n\t  Return Code: %s %u (%u)\n\t  Return Subcode: (%u)"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -1514,7 +1516,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\n\t  Return Code: %s (%u), Return Subcode: (%u)"
+literal|"\n\t  Return Code: %s (%u)\n\t  Return Subcode: (%u)"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -2918,6 +2920,12 @@ expr_stmt|;
 name|tptr
 operator|+=
 name|lspping_tlv_len
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|lspping_tlv_header
+argument_list|)
 expr_stmt|;
 name|tlen
 operator|-=

@@ -25,7 +25,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cnfp.c,v 1.16 2003/11/16 09:36:16 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cnfp.c,v 1.16.2.1 2005/04/20 20:53:39 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,6 +200,7 @@ specifier|const
 name|u_char
 modifier|*
 name|bp
+name|_U_
 parameter_list|)
 block|{
 specifier|register
@@ -216,13 +217,6 @@ name|nfrec
 modifier|*
 name|nr
 decl_stmt|;
-specifier|register
-specifier|const
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
 name|struct
 name|protoent
 modifier|*
@@ -233,19 +227,12 @@ name|nrecs
 decl_stmt|,
 name|ver
 decl_stmt|;
-name|time_t
-name|t
-decl_stmt|;
-name|ip
-operator|=
-operator|(
-specifier|const
-expr|struct
-name|ip
-operator|*
-operator|)
-name|bp
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|time_t t;
+endif|#
+directive|endif
 name|nh
 operator|=
 operator|(
@@ -300,17 +287,13 @@ operator|)
 operator|>>
 literal|16
 expr_stmt|;
-name|t
-operator|=
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
-name|nh
-operator|->
-name|utc_sec
-argument_list|)
-expr_stmt|;
-comment|/*	(p = ctime(&t))[24] = '\0'; */
+if|#
+directive|if
+literal|0
+comment|/* 	 * This is seconds since the UN*X epoch, and is followed by 	 * nanoseconds.  XXX - format it, rather than just dumping the 	 * raw seconds-since-the-Epoch. 	 */
+block|t = EXTRACT_32BITS(&nh->utc_sec);
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"NetFlow v%x, %u.%03u uptime, %u.%09u, "

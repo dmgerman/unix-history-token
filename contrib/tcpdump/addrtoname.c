@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.108 2005/03/27 22:38:09 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.108.2.5 2005/04/25 08:43:05 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,15 +127,6 @@ begin_comment
 comment|/* NETINET_ETHER_H_DECLARES_ETHER_NTOHOST */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_ETHER_NTOHOST */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -148,6 +139,32 @@ operator|||
 operator|!
 name|HAVE_DECL_ETHER_NTOHOST
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRUCT_ETHER_ADDR
+end_ifndef
+
+begin_struct
+struct|struct
+name|ether_addr
+block|{
+name|unsigned
+name|char
+name|ether_addr_octet
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -169,6 +186,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_ETHER_NTOHOST */
+end_comment
 
 begin_include
 include|#
@@ -230,6 +256,18 @@ directive|include
 file|"setsignal.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"oui.h"
+end_include
+
 begin_comment
 comment|/*  * hash tables for whatever-to-name translations  *  * XXX there has to be error checks against strdup(3) failure  */
 end_comment
@@ -239,6 +277,13 @@ define|#
 directive|define
 name|HASHNAMESIZE
 value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUFSIZE
+value|128
 end_define
 
 begin_struct
@@ -718,12 +763,12 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-operator|&
 name|buf
-index|[
+operator|+
 sizeof|sizeof
+argument_list|(
 name|buf
-index|]
+argument_list|)
 expr_stmt|;
 operator|*
 operator|--
@@ -2335,6 +2380,8 @@ block|{
 specifier|register
 name|u_int
 name|i
+decl_stmt|,
+name|oui
 decl_stmt|;
 specifier|register
 name|char
@@ -2350,10 +2397,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-sizeof|sizeof
-argument_list|(
-literal|"00:00:00:00:00:00"
-argument_list|)
+name|BUFSIZE
 index|]
 decl_stmt|;
 name|tp
@@ -2388,7 +2432,7 @@ block|{
 name|char
 name|buf2
 index|[
-literal|128
+name|BUFSIZE
 index|]
 decl_stmt|;
 comment|/* 		 * We don't cast it to "const struct ether_addr *" 		 * because some systems don't modify the Ethernet 		 * address but fail to declare the second argument 		 * as a "const" pointer. 		 */
@@ -2432,6 +2476,13 @@ directive|endif
 name|cp
 operator|=
 name|buf
+expr_stmt|;
+name|oui
+operator|=
+name|EXTRACT_24BITS
+argument_list|(
+name|ep
+argument_list|)
 expr_stmt|;
 operator|*
 name|cp
@@ -2506,6 +2557,32 @@ literal|0xf
 index|]
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|nflag
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|cp
+argument_list|,
+name|BUFSIZE
+argument_list|,
+literal|" (oui %s)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|oui_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|oui
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 operator|*
 name|cp
 operator|=
@@ -3235,11 +3312,11 @@ name|nsap_length
 operator|>
 name|ISONSAP_MAX_LENGTH
 condition|)
-name|error
-argument_list|(
+return|return
+operator|(
 literal|"isonsap_string: illegal length"
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|tp
 operator|=
 name|lookup_nsap

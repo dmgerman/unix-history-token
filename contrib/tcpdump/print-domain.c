@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.89 2004/03/23 19:03:03 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.89.2.1 2005/04/20 20:59:00 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,12 +668,21 @@ operator|)
 operator|!=
 name|EDNS0_ELT_BITLABEL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"<ELT %d>"
+argument_list|,
+name|elt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|!

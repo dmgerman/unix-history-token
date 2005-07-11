@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/rpc_msg.h,v 1.1 2004/12/27 00:41:32 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/rpc_msg.h,v 1.1.2.1 2005/04/27 21:44:07 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -10,18 +10,6 @@ end_comment
 begin_comment
 comment|/*  * rpc_msg.h  * rpc message definition  *  * Copyright (C) 1984, Sun Microsystems, Inc.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__RPC_MSG_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__RPC_MSG_H_
-end_define
 
 begin_define
 define|#
@@ -262,15 +250,6 @@ directive|define
 name|rjcted_rply
 value|ru.RM_rmb.ru.RP_dr
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__RPC_MSG_H_ */
-end_comment
 
 end_unit
 

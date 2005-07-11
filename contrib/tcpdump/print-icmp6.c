@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp6.c,v 1.79 2005/01/14 10:41:50 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp6.c,v 1.79.2.4 2005/05/14 00:42:54 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,24 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip6.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"icmp6.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ipproto.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -101,6 +83,24 @@ begin_include
 include|#
 directive|include
 file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip6.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"icmp6.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipproto.h"
 end_include
 
 begin_include
@@ -341,25 +341,25 @@ block|,
 block|{
 name|MLD6_LISTENER_QUERY
 block|,
-literal|"multicast listener query "
+literal|"multicast listener query"
 block|}
 block|,
 block|{
 name|MLD6_LISTENER_REPORT
 block|,
-literal|"multicast listener report "
+literal|"multicast listener report"
 block|}
 block|,
 block|{
 name|MLD6_LISTENER_DONE
 block|,
-literal|"multicast listener done "
+literal|"multicast listener done"
 block|}
 block|,
 block|{
 name|ND_ROUTER_SOLICIT
 block|,
-literal|"router solicitation "
+literal|"router solicitation"
 block|}
 block|,
 block|{
@@ -407,7 +407,7 @@ block|,
 block|{
 name|MLDV2_LISTENER_REPORT
 block|,
-literal|"multicast listener report v2 "
+literal|"multicast listener report v2"
 block|}
 block|,
 block|{
@@ -1217,11 +1217,6 @@ modifier|*
 name|ip
 decl_stmt|;
 specifier|const
-name|char
-modifier|*
-name|str
-decl_stmt|;
-specifier|const
 name|struct
 name|ip6_hdr
 modifier|*
@@ -1240,12 +1235,6 @@ specifier|const
 name|u_char
 modifier|*
 name|ep
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|256
-index|]
 decl_stmt|;
 name|u_int
 name|prot
@@ -1280,10 +1269,6 @@ name|dp
 operator|+
 literal|1
 operator|)
-expr_stmt|;
-name|str
-operator|=
-name|buf
 expr_stmt|;
 comment|/* 'ep' points to the end of available data. */
 name|ep
@@ -2736,7 +2721,7 @@ while|while
 condition|(
 name|bp
 operator|<
-name|snapend
+name|ep
 condition|)
 block|{
 name|bp
@@ -5922,14 +5907,6 @@ name|icmp6_router_renum
 modifier|*
 name|rr6
 decl_stmt|;
-name|struct
-name|icmp6_hdr
-modifier|*
-name|dp
-decl_stmt|;
-name|size_t
-name|siz
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -5961,15 +5938,6 @@ operator|<
 name|bp
 condition|)
 return|return;
-name|dp
-operator|=
-operator|(
-expr|struct
-name|icmp6_hdr
-operator|*
-operator|)
-name|bp
-expr_stmt|;
 name|rr6
 operator|=
 operator|(
@@ -5977,12 +5945,6 @@ expr|struct
 name|icmp6_router_renum
 operator|*
 operator|)
-name|bp
-expr_stmt|;
-name|siz
-operator|=
-name|ep
-operator|-
 name|bp
 expr_stmt|;
 name|cp

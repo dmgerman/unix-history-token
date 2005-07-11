@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-stp.c,v 1.13 2003/11/16 09:36:38 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-stp.c,v 1.13.2.1 2005/04/26 07:27:17 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,7 +164,7 @@ if|if
 condition|(
 name|p
 index|[
-literal|7
+literal|4
 index|]
 operator|&
 literal|1
@@ -178,7 +178,7 @@ if|if
 condition|(
 name|p
 index|[
-literal|7
+literal|4
 index|]
 operator|&
 literal|0x80
@@ -192,7 +192,7 @@ name|stp_print_bridge_id
 argument_list|(
 name|p
 operator|+
-literal|20
+literal|17
 argument_list|)
 expr_stmt|;
 name|printf
@@ -201,12 +201,12 @@ literal|".%.2x%.2x "
 argument_list|,
 name|p
 index|[
-literal|28
+literal|25
 index|]
 argument_list|,
 name|p
 index|[
-literal|29
+literal|26
 index|]
 argument_list|)
 expr_stmt|;
@@ -219,7 +219,7 @@ name|stp_print_bridge_id
 argument_list|(
 name|p
 operator|+
-literal|8
+literal|5
 argument_list|)
 expr_stmt|;
 name|printf
@@ -229,7 +229,7 @@ argument_list|,
 operator|(
 name|p
 index|[
-literal|16
+literal|13
 index|]
 operator|<<
 literal|24
@@ -238,7 +238,7 @@ operator||
 operator|(
 name|p
 index|[
-literal|17
+literal|14
 index|]
 operator|<<
 literal|16
@@ -247,7 +247,7 @@ operator||
 operator|(
 name|p
 index|[
-literal|18
+literal|15
 index|]
 operator|<<
 literal|8
@@ -255,7 +255,7 @@ operator|)
 operator||
 name|p
 index|[
-literal|19
+literal|16
 index|]
 argument_list|)
 expr_stmt|;
@@ -265,7 +265,7 @@ literal|"age %i "
 argument_list|,
 name|p
 index|[
-literal|30
+literal|27
 index|]
 argument_list|)
 expr_stmt|;
@@ -275,7 +275,7 @@ literal|"max %i "
 argument_list|,
 name|p
 index|[
-literal|32
+literal|29
 index|]
 argument_list|)
 expr_stmt|;
@@ -285,7 +285,7 @@ literal|"hello %i "
 argument_list|,
 name|p
 index|[
-literal|34
+literal|31
 index|]
 argument_list|)
 expr_stmt|;
@@ -295,7 +295,7 @@ literal|"fdelay %i "
 argument_list|,
 name|p
 index|[
-literal|36
+literal|33
 index|]
 argument_list|)
 expr_stmt|;
@@ -339,7 +339,7 @@ if|if
 condition|(
 name|length
 operator|<
-literal|7
+literal|4
 condition|)
 goto|goto
 name|trunc
@@ -353,24 +353,17 @@ if|if
 condition|(
 name|p
 index|[
+literal|0
+index|]
+operator|||
+name|p
+index|[
+literal|1
+index|]
+operator|||
+name|p
+index|[
 literal|2
-index|]
-operator|!=
-literal|0x03
-operator|||
-name|p
-index|[
-literal|3
-index|]
-operator|||
-name|p
-index|[
-literal|4
-index|]
-operator|||
-name|p
-index|[
-literal|5
 index|]
 condition|)
 block|{
@@ -385,7 +378,7 @@ switch|switch
 condition|(
 name|p
 index|[
-literal|6
+literal|3
 index|]
 condition|)
 block|{
@@ -421,7 +414,7 @@ literal|"unknown type %i"
 argument_list|,
 name|p
 index|[
-literal|6
+literal|3
 index|]
 argument_list|)
 expr_stmt|;

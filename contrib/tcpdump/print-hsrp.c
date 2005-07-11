@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-hsrp.c,v 1.9 2003/11/16 09:36:22 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-hsrp.c,v 1.9.2.1 2005/05/06 07:57:17 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -422,6 +422,8 @@ argument_list|(
 literal|" auth=\""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fn_printn
 argument_list|(
 name|hp
@@ -435,9 +437,19 @@ operator|->
 name|hsrp_authdata
 argument_list|)
 argument_list|,
-name|NULL
+name|snapend
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\""
 argument_list|)
 expr_stmt|;
+goto|goto
+name|trunc
+goto|;
+block|}
 name|printf
 argument_list|(
 literal|"\""

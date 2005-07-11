@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/oui.c,v 1.4 2005/04/06 20:13:13 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/oui.c,v 1.4.2.1 2005/04/17 01:20:56 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,12 @@ literal|"Cisco"
 block|}
 block|,
 block|{
+name|OUI_NORTEL
+block|,
+literal|"Nortel Networks SONMP"
+block|}
+block|,
+block|{
 name|OUI_CISCO_90
 block|,
 literal|"Cisco bridged"
@@ -94,6 +100,18 @@ block|{
 name|OUI_RFC2684
 block|,
 literal|"Ethernet bridged"
+block|}
+block|,
+block|{
+name|OUI_ATM_FORUM
+block|,
+literal|"ATM Forum"
+block|}
+block|,
+block|{
+name|OUI_CABLE_BPDU
+block|,
+literal|"DOCSIS Spanning Tree"
 block|}
 block|,
 block|{
@@ -107,12 +125,24 @@ name|OUI_JUNIPER
 block|,
 literal|"Juniper"
 block|}
-block|, }
+block|,
+block|{
+name|OUI_HP
+block|,
+literal|"Hewlett-Packard"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* list taken from ethereal/packet-radius.c */
+comment|/*  * SMI Network Management Private Enterprise Codes for organizations.  *  * XXX - these also appear in FreeRadius dictionary files, with items such  * as  *  *	VENDOR          Cisco           9  *  * List taken from Ethereal's epan/sminmpec.c.  */
 end_comment
 
 begin_decl_stmt
@@ -122,6 +152,12 @@ name|smi_values
 index|[]
 init|=
 block|{
+block|{
+name|SMI_IETF
+block|,
+literal|"IETF (reserved)"
+block|}
+block|,
 block|{
 name|SMI_ACC
 block|,
@@ -135,21 +171,51 @@ literal|"Cisco"
 block|}
 block|,
 block|{
+name|SMI_HEWLETT_PACKARD
+block|,
+literal|"Hewlett Packard"
+block|}
+block|,
+block|{
+name|SMI_SUN_MICROSYSTEMS
+block|,
+literal|"Sun Microsystems"
+block|}
+block|,
+block|{
+name|SMI_MERIT
+block|,
+literal|"Merit"
+block|}
+block|,
+block|{
 name|SMI_SHIVA
 block|,
 literal|"Shiva"
 block|}
 block|,
 block|{
-name|SMI_MICROSOFT
+name|SMI_ERICSSON
 block|,
-literal|"Microsoft"
+literal|"Ericsson AB"
+block|}
+block|,
+block|{
+name|SMI_CISCO_VPN5000
+block|,
+literal|"Cisco VPN 5000"
 block|}
 block|,
 block|{
 name|SMI_LIVINGSTON
 block|,
 literal|"Livingston"
+block|}
+block|,
+block|{
+name|SMI_MICROSOFT
+block|,
+literal|"Microsoft"
 block|}
 block|,
 block|{
@@ -201,9 +267,21 @@ literal|"Aptis"
 block|}
 block|,
 block|{
+name|SMI_CISCO_VPN3000
+block|,
+literal|"Cisco VPN 3000"
+block|}
+block|,
+block|{
 name|SMI_COSINE
 block|,
 literal|"CoSine Communications"
+block|}
+block|,
+block|{
+name|SMI_NETSCREEN
+block|,
+literal|"Netscreen"
 block|}
 block|,
 block|{
@@ -219,9 +297,39 @@ literal|"Nomadix"
 block|}
 block|,
 block|{
+name|SMI_SIEMENS
+block|,
+literal|"Siemens"
+block|}
+block|,
+block|{
+name|SMI_CABLELABS
+block|,
+literal|"CableLabs"
+block|}
+block|,
+block|{
 name|SMI_UNISPHERE
 block|,
 literal|"Unisphere Networks"
+block|}
+block|,
+block|{
+name|SMI_CISCO_BBSM
+block|,
+literal|"Cisco BBSM"
+block|}
+block|,
+block|{
+name|SMI_THE3GPP2
+block|,
+literal|"3rd Generation Partnership Project 2 (3GPP2)"
+block|}
+block|,
+block|{
+name|SMI_IP_UNPLUGGED
+block|,
+literal|"ipUnplugged"
 block|}
 block|,
 block|{
@@ -234,6 +342,12 @@ block|{
 name|SMI_QUINTUM
 block|,
 literal|"Quintum"
+block|}
+block|,
+block|{
+name|SMI_INTERLINK
+block|,
+literal|"Interlink"
 block|}
 block|,
 block|{
@@ -252,6 +366,18 @@ block|{
 name|SMI_THE3GPP
 block|,
 literal|"3GPP"
+block|}
+block|,
+block|{
+name|SMI_GEMTEK_SYSTEMS
+block|,
+literal|"Gemtek-Systems"
+block|}
+block|,
+block|{
+name|SMI_WIFI_ALLIANCE
+block|,
+literal|"Wi-Fi Alliance"
 block|}
 block|,
 block|{

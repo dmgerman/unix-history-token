@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tcp.c,v 1.120 2005/04/06 18:53:56 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tcp.c,v 1.120.2.2 2005/04/21 06:36:05 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2872,14 +2872,6 @@ break|break;
 case|case
 name|TCPOPT_SACK
 case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"sack"
-argument_list|)
-expr_stmt|;
 name|datalen
 operator|=
 name|len
@@ -2900,7 +2892,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" malformed sack "
+literal|"malformed sack"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2916,7 +2908,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" sack %d "
+literal|"sack %d "
 argument_list|,
 name|datalen
 operator|/
@@ -3010,14 +3002,6 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -3906,7 +3890,7 @@ name|struct
 name|tcphdr
 name|tp1
 decl_stmt|;
-name|char
+name|u_char
 name|sig
 index|[
 name|TCP_SIGLEN

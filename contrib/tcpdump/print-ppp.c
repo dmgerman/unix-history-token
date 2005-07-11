@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ppp.c,v 1.108 2005/04/06 21:32:42 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ppp.c,v 1.108.2.4 2005/06/18 23:56:40 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1217,114 +1217,109 @@ begin_comment
 comment|/* RFC1962 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CCPOPT_MIN
-value|CCPOPT_OUI
-end_define
-
-begin_define
-define|#
-directive|define
-name|CCPOPT_MAX
-value|CCPOPT_DEFLATE
-end_define
-
-begin_comment
-comment|/* XXX: should be CCPOPT_RESV but... */
-end_comment
-
 begin_decl_stmt
-specifier|static
 specifier|const
-name|char
-modifier|*
-name|ccpconfopts
+name|struct
+name|tok
+name|ccpconfopts_values
 index|[]
 init|=
 block|{
+block|{
+name|CCPOPT_OUI
+block|,
 literal|"OUI"
+block|}
 block|,
-comment|/* (0) */
+block|{
+name|CCPOPT_PRED1
+block|,
 literal|"Pred-1"
+block|}
 block|,
-comment|/* (1) */
+block|{
+name|CCPOPT_PRED2
+block|,
 literal|"Pred-2"
+block|}
 block|,
-comment|/* (2) */
+block|{
+name|CCPOPT_PJUMP
+block|,
 literal|"Puddle"
+block|}
 block|,
-comment|/* (3) */
-literal|"unassigned(4)"
+block|{
+name|CCPOPT_HPPPC
 block|,
-comment|/* (4) */
-literal|"unassigned(5)"
-block|,
-comment|/* (5) */
-literal|"unassigned(6)"
-block|,
-comment|/* (6) */
-literal|"unassigned(7)"
-block|,
-comment|/* (7) */
-literal|"unassigned(8)"
-block|,
-comment|/* (8) */
-literal|"unassigned(9)"
-block|,
-comment|/* (9) */
-literal|"unassigned(10)"
-block|,
-comment|/* (10) */
-literal|"unassigned(11)"
-block|,
-comment|/* (11) */
-literal|"unassigned(12)"
-block|,
-comment|/* (12) */
-literal|"unassigned(13)"
-block|,
-comment|/* (13) */
-literal|"unassigned(14)"
-block|,
-comment|/* (14) */
-literal|"unassigned(15)"
-block|,
-comment|/* (15) */
 literal|"HP-PPC"
+block|}
 block|,
-comment|/* (16) */
+block|{
+name|CCPOPT_STACLZS
+block|,
 literal|"Stac-LZS"
+block|}
 block|,
-comment|/* (17) */
+block|{
+name|CCPOPT_MPPC
+block|,
 literal|"MPPC"
+block|}
 block|,
-comment|/* (18) */
+block|{
+name|CCPOPT_GFZA
+block|,
 literal|"Gand-FZA"
+block|}
 block|,
-comment|/* (19) */
+block|{
+name|CCPOPT_V42BIS
+block|,
 literal|"V.42bis"
+block|}
 block|,
-comment|/* (20) */
+block|{
+name|CCPOPT_BSDCOMP
+block|,
 literal|"BSD-Comp"
+block|}
 block|,
-comment|/* (21) */
-literal|"unassigned(22)"
+block|{
+name|CCPOPT_LZSDCP
 block|,
-comment|/* (22) */
 literal|"LZS-DCP"
+block|}
 block|,
-comment|/* (23) */
+block|{
+name|CCPOPT_MVRCA
+block|,
 literal|"MVRCA"
+block|}
 block|,
-comment|/* (24) */
+block|{
+name|CCPOPT_DEC
+block|,
 literal|"DEC"
+block|}
 block|,
-comment|/* (25) */
+block|{
+name|CCPOPT_DEFLATE
+block|,
 literal|"Deflate"
+block|}
 block|,
-comment|/* (26) */
+block|{
+name|CCPOPT_RESV
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1343,6 +1338,29 @@ end_define
 begin_comment
 comment|/* RFC2125 */
 end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|tok
+name|bacconfopts_values
+index|[]
+init|=
+block|{
+block|{
+name|BACPOPT_FPEER
+block|,
+literal|"Favored-Peer"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* SDCP - to be supported */
@@ -1779,6 +1797,58 @@ end_define
 begin_comment
 comment|/* Location is determined during CBCP nego */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|tok
+name|ppp_callback_values
+index|[]
+init|=
+block|{
+block|{
+name|CALLBACK_AUTH
+block|,
+literal|"UserAuth"
+block|}
+block|,
+block|{
+name|CALLBACK_DSTR
+block|,
+literal|"DialString"
+block|}
+block|,
+block|{
+name|CALLBACK_LID
+block|,
+literal|"LocalID"
+block|}
+block|,
+block|{
+name|CALLBACK_E164
+block|,
+literal|"E.164"
+block|}
+block|,
+block|{
+name|CALLBACK_X500
+block|,
+literal|"X.500"
+block|}
+block|,
+block|{
+name|CALLBACK_CBCP
+block|,
+literal|"CBCP"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* CHAP */
@@ -2266,7 +2336,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s (0x%02x), id %u"
+literal|"%s (0x%02x), id %u, length %u"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -2282,9 +2352,27 @@ argument_list|,
 operator|*
 name|tptr
 operator|++
+argument_list|,
+comment|/* ID */
+name|length
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
-comment|/* ID */
+if|if
+condition|(
+operator|!
+name|vflag
+condition|)
+return|return;
+if|if
+condition|(
+name|length
+operator|<=
+literal|4
+condition|)
+return|return;
+comment|/* there may be a NULL confreq etc. */
 name|TCHECK2
 argument_list|(
 operator|*
@@ -2304,16 +2392,34 @@ name|tptr
 operator|+=
 literal|2
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n\tencoded length %u (=Option(s) length %u)"
+argument_list|,
+name|len
+argument_list|,
+name|len
+operator|-
+literal|4
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|length
-operator|<=
-literal|4
+name|vflag
+operator|>
+literal|1
 condition|)
-goto|goto
-name|print_len_and_return
-goto|;
-comment|/* there may be a NULL confreq etc. */
+name|print_unknown_data
+argument_list|(
+name|pptr
+operator|-
+literal|2
+argument_list|,
+literal|"\n\t"
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|code
@@ -2339,7 +2445,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", Magic-Num 0x%08x"
+literal|"\n\t  Magic-Num 0x%08x"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2534,7 +2640,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", Rejected %s Protocol (0x%04x)"
+literal|"\n\t  Rejected %s Protocol (0x%04x)"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -2554,7 +2660,33 @@ name|tptr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX: need to decode Rejected-Information? */
+comment|/* XXX: need to decode Rejected-Information? - hexdump for now */
+if|if
+condition|(
+name|len
+operator|>
+literal|6
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n\t  Rejected Packet"
+argument_list|)
+expr_stmt|;
+name|print_unknown_data
+argument_list|(
+name|tptr
+operator|+
+literal|2
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|CPCODES_ECHO_REQ
@@ -2565,6 +2697,59 @@ case|:
 case|case
 name|CPCODES_DISC_REQ
 case|:
+if|if
+condition|(
+name|length
+operator|<
+literal|8
+condition|)
+break|break;
+name|TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n\t  Magic-Num 0x%08x"
+argument_list|,
+name|EXTRACT_32BITS
+argument_list|(
+name|tptr
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX: need to decode Data? - hexdump for now */
+if|if
+condition|(
+name|len
+operator|>
+literal|8
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n\t  Data"
+argument_list|)
+expr_stmt|;
+name|print_unknown_data
+argument_list|(
+name|tptr
+operator|+
+literal|4
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 case|case
 name|CPCODES_ID
 case|:
@@ -2585,7 +2770,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", Magic-Num 0x%08x"
+literal|"\n\t  Magic-Num 0x%08x"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2593,7 +2778,33 @@ name|tptr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX: need to decode Data? */
+comment|/* RFC 1661 says this is intended to be human readable */
+if|if
+condition|(
+name|len
+operator|>
+literal|8
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n\t  Message\n\t    "
+argument_list|)
+expr_stmt|;
+name|fn_printn
+argument_list|(
+name|tptr
+operator|+
+literal|4
+argument_list|,
+name|len
+operator|-
+literal|4
+argument_list|,
+name|snapend
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|CPCODES_TIME_REM
@@ -2615,7 +2826,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", Magic-Num 0x%08x"
+literal|"\n\t  Magic-Num 0x%08x"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2663,7 +2874,7 @@ name|pptr
 operator|-
 literal|2
 argument_list|,
-literal|"\n\t"
+literal|"\n\t  "
 argument_list|,
 name|length
 operator|+
@@ -2672,34 +2883,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|print_len_and_return
-label|:
-name|printf
-argument_list|(
-literal|", length %u"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vflag
-operator|>
-literal|1
-condition|)
-name|print_unknown_data
-argument_list|(
-name|pptr
-operator|-
-literal|2
-argument_list|,
-literal|"\n\t"
-argument_list|,
-name|length
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
 return|return;
 name|trunc
 label|:
@@ -2778,6 +2961,13 @@ literal|0
 return|;
 if|if
 condition|(
+name|len
+operator|<
+literal|2
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|opt
 operator|>=
@@ -2792,7 +2982,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|", %s (%u)"
+literal|"\n\t  %s Option (0x%02x), length %u (bogus, should be>= 2)"
 argument_list|,
 name|lcpconfopts
 index|[
@@ -2800,13 +2990,55 @@ name|opt
 index|]
 argument_list|,
 name|opt
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\n\tunknown LCP option 0x%02x"
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|opt
+operator|>=
+name|LCPOPT_MIN
+operator|)
+operator|&&
+operator|(
+name|opt
+operator|<=
+name|LCPOPT_MAX
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"\n\t  %s Option (0x%02x), length %u: "
+argument_list|,
+name|lcpconfopts
+index|[
+name|opt
+index|]
+argument_list|,
+name|opt
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 else|else
 block|{
 name|printf
 argument_list|(
-literal|", unknown LCP option 0x%02x"
+literal|"\n\tunknown LCP option 0x%02x"
 argument_list|,
 name|opt
 argument_list|)
@@ -2844,7 +3076,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" Vendor: %s (%u)"
+literal|"Vendor: %s (%u)"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -2900,7 +3132,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %u"
+literal|"%u"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -2936,7 +3168,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 0x%08x"
+literal|"0x%08x"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2972,7 +3204,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %s"
+literal|"%s"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -3125,7 +3357,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 0x%08x"
+literal|"0x%08x"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -3169,7 +3401,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 0x%04x"
+literal|"0x%04x"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -3199,73 +3431,21 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
+name|printf
+argument_list|(
+literal|"Callback Operation %s (%u)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|ppp_callback_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
 name|p
 index|[
 literal|2
 index|]
-condition|)
-block|{
-comment|/* Operation */
-case|case
-name|CALLBACK_AUTH
-case|:
-name|printf
-argument_list|(
-literal|" UserAuth"
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CALLBACK_DSTR
-case|:
-name|printf
-argument_list|(
-literal|" DialString"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CALLBACK_LID
-case|:
-name|printf
-argument_list|(
-literal|" LocalID"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CALLBACK_E164
-case|:
-name|printf
-argument_list|(
-literal|" E.164"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CALLBACK_X500
-case|:
-name|printf
-argument_list|(
-literal|" X.500"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CALLBACK_CBCP
-case|:
-name|printf
-argument_list|(
-literal|" CBCP"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|" unknown-operation=%u"
 argument_list|,
 name|p
 index|[
@@ -3273,8 +3453,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 break|break;
 case|case
 name|LCPOPT_MLMRRU
@@ -3300,7 +3478,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %u"
+literal|"%u"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -3344,7 +3522,7 @@ name|MEDCLASS_NULL
 case|:
 name|printf
 argument_list|(
-literal|" Null"
+literal|"Null"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3353,7 +3531,7 @@ name|MEDCLASS_LOCAL
 case|:
 name|printf
 argument_list|(
-literal|" Local"
+literal|"Local"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -3382,7 +3560,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" IPv4 %s"
+literal|"IPv4 %s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3413,7 +3591,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" MAC %02x:%02x:%02x:%02x:%02x:%02x"
+literal|"MAC %02x:%02x:%02x:%02x:%02x:%02x"
 argument_list|,
 name|p
 index|[
@@ -3452,7 +3630,7 @@ name|MEDCLASS_MNB
 case|:
 name|printf
 argument_list|(
-literal|" Magic-Num-Block"
+literal|"Magic-Num-Block"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -3462,7 +3640,7 @@ name|MEDCLASS_PSNDN
 case|:
 name|printf
 argument_list|(
-literal|" PSNDN"
+literal|"PSNDN"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -3476,7 +3654,52 @@ literal|0
 block|case LCPOPT_DEP6: 	case LCPOPT_FCSALT: 	case LCPOPT_SDP: 	case LCPOPT_NUMMODE: 	case LCPOPT_DEP12: 	case LCPOPT_DEP14: 	case LCPOPT_DEP15: 	case LCPOPT_DEP16:         case LCPOPT_MLSSNHF: 	case LCPOPT_PROP: 	case LCPOPT_DCEID: 	case LCPOPT_MPP: 	case LCPOPT_LCPAOPT: 	case LCPOPT_COBS: 	case LCPOPT_PE: 	case LCPOPT_MLHF: 	case LCPOPT_I18N: 	case LCPOPT_SDLOS: 	case LCPOPT_PPPMUX: 		break;
 endif|#
 directive|endif
+default|default:
+if|if
+condition|(
+name|vflag
+operator|<
+literal|2
+condition|)
+name|print_unknown_data
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|print_unknown_data
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* exclude TLV header */
 return|return
 name|len
 return|;
@@ -4070,6 +4293,49 @@ name|p
 operator|+=
 literal|2
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|len
+operator|>
+name|length
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|", length %u> packet size"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|length
+operator|=
+name|len
+expr_stmt|;
+if|if
+condition|(
+name|length
+operator|<
+operator|(
+name|p
+operator|-
+name|p0
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|", length %u< PAP header length"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 switch|switch
 condition|(
 name|code
@@ -4407,9 +4673,16 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|len
+operator|<
+literal|2
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|", %s (0x%02x) "
+literal|"\n\t  %s Option (0x%02x), length %u (bogus, should be>= 2)"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -4421,6 +4694,30 @@ name|opt
 argument_list|)
 argument_list|,
 name|opt
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"\n\t  %s Option (0x%02x), length %u: "
+argument_list|,
+name|tok2str
+argument_list|(
+name|ipcpopt_values
+argument_list|,
+literal|"unknown"
+argument_list|,
+name|opt
+argument_list|)
+argument_list|,
+name|opt
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -4584,15 +4881,51 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+if|if
+condition|(
+name|vflag
+operator|<
+literal|2
+condition|)
+name|print_unknown_data
 argument_list|(
-literal|", unknown-%d"
+operator|&
+name|p
+index|[
+literal|2
+index|]
 argument_list|,
-name|opt
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|print_unknown_data
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* exclude TLV header */
 return|return
 name|len
 return|;
@@ -4684,9 +5017,16 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|len
+operator|<
+literal|2
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|", %s (0x%02x) "
+literal|"\n\t  %s Option (0x%02x), length %u (bogus, should be>= 2)"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -4698,6 +5038,30 @@ name|opt
 argument_list|)
 argument_list|,
 name|opt
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"\n\t  %s Option (0x%02x), length %u: "
+argument_list|,
+name|tok2str
+argument_list|(
+name|ip6cpopt_values
+argument_list|,
+literal|"unknown"
+argument_list|,
+name|opt
+argument_list|)
+argument_list|,
+name|opt
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -4764,15 +5128,51 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+if|if
+condition|(
+name|vflag
+operator|<
+literal|2
+condition|)
+name|print_unknown_data
 argument_list|(
-literal|", unknown-%d"
+operator|&
+name|p
+index|[
+literal|2
+index|]
 argument_list|,
-name|opt
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|print_unknown_data
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* exclude TLV header */
 return|return
 name|len
 return|;
@@ -4866,35 +5266,148 @@ literal|0
 return|;
 if|if
 condition|(
-operator|(
-name|opt
-operator|>=
-name|CCPOPT_MIN
-operator|)
-operator|&&
-operator|(
-name|opt
-operator|<=
-name|CCPOPT_MAX
-operator|)
+name|len
+operator|<
+literal|2
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|", %s"
+literal|"\n\t  %s Option (0x%02x), length %u (bogus, should be>= 2)"
 argument_list|,
-name|ccpconfopts
-index|[
+name|tok2str
+argument_list|(
+name|ccpconfopts_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
 name|opt
-index|]
+argument_list|)
+argument_list|,
+name|opt
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+return|return
 literal|0
-comment|/* XXX */
-block|switch (opt) { 	case CCPOPT_OUI: 	case CCPOPT_PRED1: 	case CCPOPT_PRED2: 	case CCPOPT_PJUMP: 	case CCPOPT_HPPPC: 	case CCPOPT_STACLZS: 	case CCPOPT_MPPC: 	case CCPOPT_GFZA: 	case CCPOPT_V42BIS: 	case CCPOPT_BSDCOMP: 	case CCPOPT_LZSDCP: 	case CCPOPT_MVRCA: 	case CCPOPT_DEC: 	case CCPOPT_DEFLATE: 	case CCPOPT_RESV: 		break;  	default: 		printf(", unknown-%d", opt); 		break; 	}
-endif|#
-directive|endif
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"\n\t  %s Option (0x%02x), length %u:"
+argument_list|,
+name|tok2str
+argument_list|(
+name|ccpconfopts_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|opt
+argument_list|)
+argument_list|,
+name|opt
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|opt
+condition|)
+block|{
+comment|/* fall through --> default: nothing supported yet */
+case|case
+name|CCPOPT_OUI
+case|:
+case|case
+name|CCPOPT_PRED1
+case|:
+case|case
+name|CCPOPT_PRED2
+case|:
+case|case
+name|CCPOPT_PJUMP
+case|:
+case|case
+name|CCPOPT_HPPPC
+case|:
+case|case
+name|CCPOPT_STACLZS
+case|:
+case|case
+name|CCPOPT_MPPC
+case|:
+case|case
+name|CCPOPT_GFZA
+case|:
+case|case
+name|CCPOPT_V42BIS
+case|:
+case|case
+name|CCPOPT_BSDCOMP
+case|:
+case|case
+name|CCPOPT_LZSDCP
+case|:
+case|case
+name|CCPOPT_MVRCA
+case|:
+case|case
+name|CCPOPT_DEC
+case|:
+case|case
+name|CCPOPT_DEFLATE
+case|:
+case|case
+name|CCPOPT_RESV
+case|:
+default|default:
+if|if
+condition|(
+name|vflag
+operator|<
+literal|2
+condition|)
+name|print_unknown_data
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|print_unknown_data
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* exclude TLV header */
 return|return
 name|len
 return|;
@@ -4976,11 +5489,59 @@ literal|0
 return|;
 if|if
 condition|(
-name|opt
-operator|==
-name|BACPOPT_FPEER
+name|len
+operator|<
+literal|2
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"\n\t  %s Option (0x%02x), length %u (bogus, should be>= 2)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|bacconfopts_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|opt
+argument_list|)
+argument_list|,
+name|opt
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"\n\t  %s Option (0x%02x), length %u:"
+argument_list|,
+name|tok2str
+argument_list|(
+name|bacconfopts_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|opt
+argument_list|)
+argument_list|,
+name|opt
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|opt
+condition|)
+block|{
+case|case
+name|BACPOPT_FPEER
+case|:
 name|TCHECK2
 argument_list|(
 operator|*
@@ -4995,11 +5556,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", Favored-Peer"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|", Magic-Num 0x%08x"
 argument_list|,
 name|EXTRACT_32BITS
@@ -5010,17 +5566,53 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
+break|break;
+default|default:
+if|if
+condition|(
+name|vflag
+operator|<
+literal|2
+condition|)
+name|print_unknown_data
 argument_list|(
-literal|", unknown-option-%d"
+operator|&
+name|p
+index|[
+literal|2
+index|]
 argument_list|,
-name|opt
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|print_unknown_data
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+name|len
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* exclude TLV header */
 return|return
 name|len
 return|;

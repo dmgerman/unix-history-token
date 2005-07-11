@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.45 2005/04/06 21:32:42 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.45.2.2 2005/04/20 22:08:44 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -813,6 +813,7 @@ name|ngroups
 operator|--
 condition|)
 block|{
+comment|/* 		 * XXX - does the address have length "addrlen" and the 		 * mask length "maddrlen"? 		 */
 name|TCHECK2
 argument_list|(
 name|bp
@@ -2383,11 +2384,6 @@ block|{
 name|int
 name|af
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|afstr
-decl_stmt|;
 name|int
 name|len
 decl_stmt|,
@@ -2431,10 +2427,6 @@ name|af
 operator|=
 name|AF_INET
 expr_stmt|;
-name|afstr
-operator|=
-literal|"IPv4"
-expr_stmt|;
 name|len
 operator|=
 literal|4
@@ -2449,10 +2441,6 @@ case|:
 name|af
 operator|=
 name|AF_INET6
-expr_stmt|;
-name|afstr
-operator|=
-literal|"IPv6"
 expr_stmt|;
 name|len
 operator|=
@@ -2499,10 +2487,6 @@ name|af
 operator|=
 name|AF_INET
 expr_stmt|;
-name|afstr
-operator|=
-literal|"IPv4"
-expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
@@ -2513,10 +2497,6 @@ case|:
 name|af
 operator|=
 name|AF_INET6
-expr_stmt|;
-name|afstr
-operator|=
-literal|"IPv6"
 expr_stmt|;
 break|break;
 endif|#

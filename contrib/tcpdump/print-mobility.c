@@ -34,7 +34,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mobility.c,v 1.11 2003/11/16 09:36:28 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mobility.c,v 1.11.2.1 2005/04/20 22:21:16 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -714,6 +714,7 @@ specifier|const
 name|u_char
 modifier|*
 name|bp2
+name|_U_
 parameter_list|)
 block|{
 specifier|const
@@ -721,12 +722,6 @@ name|struct
 name|ip6_mobility
 modifier|*
 name|mh
-decl_stmt|;
-specifier|const
-name|struct
-name|ip6_hdr
-modifier|*
-name|ip6
 decl_stmt|;
 specifier|const
 name|u_char
@@ -748,15 +743,6 @@ name|ip6_mobility
 operator|*
 operator|)
 name|bp
-expr_stmt|;
-name|ip6
-operator|=
-operator|(
-expr|struct
-name|ip6_hdr
-operator|*
-operator|)
-name|bp2
 expr_stmt|;
 comment|/* 'ep' points to the end of available data. */
 name|ep

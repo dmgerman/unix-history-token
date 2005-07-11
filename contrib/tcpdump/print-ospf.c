@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.56 2004/09/29 16:49:31 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.56.2.2 2005/05/06 07:57:19 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4293,11 +4293,11 @@ specifier|register
 name|u_int
 name|length
 parameter_list|,
-specifier|register
 specifier|const
 name|u_char
 modifier|*
 name|bp2
+name|_U_
 parameter_list|)
 block|{
 specifier|register
@@ -4306,13 +4306,6 @@ name|struct
 name|ospfhdr
 modifier|*
 name|op
-decl_stmt|;
-specifier|register
-specifier|const
-name|struct
-name|ip
-modifier|*
-name|ip
 decl_stmt|;
 specifier|register
 specifier|const
@@ -4334,15 +4327,6 @@ name|ospfhdr
 operator|*
 operator|)
 name|bp
-expr_stmt|;
-name|ip
-operator|=
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-name|bp2
 expr_stmt|;
 comment|/* XXX Before we do anything else, strip off the MD5 trailer */
 name|TCHECK
@@ -4590,9 +4574,8 @@ break|break;
 case|case
 name|OSPF_AUTH_SIMPLE
 case|:
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fn_printn
 argument_list|(
 name|op
@@ -4606,9 +4589,19 @@ operator|->
 name|ospf_authdata
 argument_list|)
 argument_list|,
-name|NULL
+name|snapend
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\""
 argument_list|)
 expr_stmt|;
+goto|goto
+name|trunc
+goto|;
+block|}
 name|printf
 argument_list|(
 literal|"\""

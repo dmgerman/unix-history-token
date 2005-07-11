@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip6.h,v 1.6 2002/12/11 22:29:21 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip6.h,v 1.6.4.1 2005/04/20 10:04:37 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -124,20 +124,6 @@ define|#
 directive|define
 name|ip6_hops
 value|ip6_ctlun.ip6_un1.ip6_un1_hlim
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPV6_VERSION
-value|0x60
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPV6_VERSION_MASK
-value|0xf0
 end_define
 
 begin_comment

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rsvp.c,v 1.33 2005/01/13 07:08:54 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rsvp.c,v 1.33.2.3 2005/06/16 00:50:12 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2806,8 +2806,12 @@ decl_stmt|;
 while|while
 condition|(
 name|tlen
-operator|>
-literal|0
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rsvp_object_header
+argument_list|)
 condition|)
 block|{
 comment|/* did we capture enough for fully decoding the object header ? */
@@ -2859,7 +2863,24 @@ condition|(
 name|rsvp_obj_len
 operator|%
 literal|4
-operator|||
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sERROR: object header size %u not a multiple of 4"
+argument_list|,
+name|ident
+argument_list|,
+name|rsvp_obj_len
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
 name|rsvp_obj_len
 operator|<
 sizeof|sizeof
@@ -2985,6 +3006,25 @@ argument_list|,
 name|rsvp_obj_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tlen
+operator|<
+name|rsvp_obj_len
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sERROR: object goes past end of objects TLV"
+argument_list|,
+name|ident
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|obj_tptr
 operator|=
 name|tptr
@@ -5729,6 +5769,21 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
+operator|*
+operator|(
+name|obj_tptr
+operator|+
+literal|1
+operator|)
+operator|<
+literal|2
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|print_unknown_data
 argument_list|(
 name|obj_tptr
@@ -6355,6 +6410,24 @@ specifier|const
 expr|struct
 name|rsvp_common_header
 argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|tlen
+operator|<
+name|subtlen
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ERROR: common header too large %u> %u"
+argument_list|,
+name|subtlen
+argument_list|,
+name|tlen
 argument_list|)
 expr_stmt|;
 return|return;

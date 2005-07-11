@@ -34,7 +34,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bgp.c,v 1.91 2005/03/27 01:31:25 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bgp.c,v 1.91.2.6 2005/06/03 07:31:43 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4366,7 +4366,7 @@ end_endif
 begin_function
 specifier|static
 name|int
-name|decode_labeled_clnp_prefix
+name|decode_clnp_prefix
 parameter_list|(
 specifier|const
 name|u_char
@@ -4406,11 +4406,6 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* get prefix length */
-name|plen
-operator|-=
-literal|24
-expr_stmt|;
-comment|/* adjust prefixlen - labellength */
 if|if
 condition|(
 literal|152
@@ -4505,14 +4500,13 @@ literal|0xff
 operator|)
 expr_stmt|;
 block|}
-comment|/* the label may get offsetted by 4 bits so lets shift it right */
 name|snprintf
 argument_list|(
 name|buf
 argument_list|,
 name|buflen
 argument_list|,
-literal|"%s/%d, label:%u %s"
+literal|"%s/%d"
 argument_list|,
 name|isonsap_string
 argument_list|(
@@ -4525,41 +4519,13 @@ literal|7
 operator|)
 operator|/
 literal|8
-operator|-
-literal|1
 argument_list|)
 argument_list|,
 name|plen
-argument_list|,
-name|EXTRACT_24BITS
-argument_list|(
-name|pptr
-operator|+
-literal|1
-argument_list|)
-operator|>>
-literal|4
-argument_list|,
-operator|(
-operator|(
-name|pptr
-index|[
-literal|3
-index|]
-operator|&
-literal|1
-operator|)
-operator|==
-literal|0
-operator|)
-condition|?
-literal|"(BOGUS: Bottom of Stack NOT set!)"
-else|:
-literal|"(bottom)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|4
+literal|1
 operator|+
 operator|(
 name|plen
@@ -4751,8 +4717,6 @@ literal|7
 operator|)
 operator|/
 literal|8
-operator|-
-literal|1
 argument_list|)
 argument_list|,
 name|plen
@@ -4834,6 +4798,8 @@ name|u_int8_t
 name|safi
 decl_stmt|,
 name|snpa
+decl_stmt|,
+name|nhlen
 decl_stmt|;
 union|union
 block|{
@@ -5785,6 +5751,16 @@ operator|)
 case|:
 break|break;
 default|default:
+name|TCHECK2
+argument_list|(
+name|tptr
+index|[
+literal|0
+index|]
+argument_list|,
+name|tlen
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t    no AFI %u / SAFI %u decoder"
@@ -5826,12 +5802,16 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|tlen
+name|nhlen
 operator|=
 name|tptr
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|tlen
+operator|=
+name|nhlen
 expr_stmt|;
 name|tptr
 operator|++
@@ -6679,6 +6659,13 @@ break|break;
 block|}
 block|}
 block|}
+name|printf
+argument_list|(
+literal|", nh-length: %u"
+argument_list|,
+name|nhlen
+argument_list|)
+expr_stmt|;
 name|tptr
 operator|+=
 name|tlen
@@ -7403,7 +7390,7 @@ operator|)
 case|:
 name|advance
 operator|=
-name|decode_labeled_clnp_prefix
+name|decode_clnp_prefix
 argument_list|(
 name|tptr
 argument_list|,
@@ -7565,6 +7552,12 @@ name|len
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|advance
+operator|<
+literal|0
+condition|)
 break|break;
 name|tptr
 operator|+=
@@ -8199,7 +8192,7 @@ operator|)
 case|:
 name|advance
 operator|=
-name|decode_labeled_clnp_prefix
+name|decode_clnp_prefix
 argument_list|(
 name|tptr
 argument_list|,
@@ -8367,6 +8360,12 @@ name|len
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|advance
+operator|<
+literal|0
+condition|)
 break|break;
 name|tptr
 operator|+=
@@ -8746,6 +8745,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
 name|print_unknown_data
 argument_list|(
 name|tptr
@@ -9039,7 +9046,16 @@ literal|1
 operator|&&
 name|len
 condition|)
+block|{
 comment|/* omit zero length attributes*/
+name|TCHECK2
+argument_list|(
+operator|*
+name|pptr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|print_unknown_data
 argument_list|(
 name|pptr
@@ -9049,6 +9065,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
@@ -9081,9 +9098,6 @@ decl_stmt|;
 name|struct
 name|bgp_opt
 name|bgpopt
-decl_stmt|;
-name|int
-name|hlen
 decl_stmt|;
 specifier|const
 name|u_char
@@ -9131,15 +9145,6 @@ argument_list|,
 name|dat
 argument_list|,
 name|BGP_OPEN_SIZE
-argument_list|)
-expr_stmt|;
-name|hlen
-operator|=
-name|ntohs
-argument_list|(
-name|bgpo
-operator|.
-name|bgpo_len
 argument_list|)
 expr_stmt|;
 name|printf
@@ -9643,6 +9648,20 @@ name|BGP_CAPCODE_RR_CISCO
 case|:
 break|break;
 default|default:
+name|TCHECK2
+argument_list|(
+name|opt
+index|[
+name|i
+operator|+
+name|BGP_OPT_SIZE
+operator|+
+literal|2
+index|]
+argument_list|,
+name|cap_len
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t\tno decoder for Capability %u"
@@ -9681,6 +9700,21 @@ name|vflag
 operator|>
 literal|1
 condition|)
+block|{
+name|TCHECK2
+argument_list|(
+name|opt
+index|[
+name|i
+operator|+
+name|BGP_OPT_SIZE
+operator|+
+literal|2
+index|]
+argument_list|,
+name|cap_len
+argument_list|)
+expr_stmt|;
 name|print_unknown_data
 argument_list|(
 operator|&
@@ -9698,6 +9732,7 @@ argument_list|,
 name|cap_len
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|BGP_OPT_AUTH
@@ -9756,9 +9791,6 @@ name|struct
 name|bgp_attr
 name|bgpa
 decl_stmt|;
-name|int
-name|hlen
-decl_stmt|;
 specifier|const
 name|u_char
 modifier|*
@@ -9794,15 +9826,6 @@ argument_list|,
 name|dat
 argument_list|,
 name|BGP_SIZE
-argument_list|)
-expr_stmt|;
-name|hlen
-operator|=
-name|ntohs
-argument_list|(
-name|bgp
-operator|.
-name|bgp_len
 argument_list|)
 expr_stmt|;
 name|p
@@ -10308,9 +10331,6 @@ name|struct
 name|bgp_notification
 name|bgpn
 decl_stmt|;
-name|int
-name|hlen
-decl_stmt|;
 specifier|const
 name|u_char
 modifier|*
@@ -10346,15 +10366,6 @@ argument_list|,
 name|dat
 argument_list|,
 name|BGP_NOTIFICATION_SIZE
-argument_list|)
-expr_stmt|;
-name|hlen
-operator|=
-name|ntohs
-argument_list|(
-name|bgpn
-operator|.
-name|bgpn_len
 argument_list|)
 expr_stmt|;
 comment|/* some little sanity checking */
@@ -10694,6 +10705,24 @@ index|[
 name|TOKBUFSIZE
 index|]
 decl_stmt|;
+name|TCHECK2
+argument_list|(
+name|pptr
+index|[
+literal|0
+index|]
+argument_list|,
+name|BGP_ROUTE_REFRESH_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* some little sanity checking */
+if|if
+condition|(
+name|len
+operator|<
+name|BGP_ROUTE_REFRESH_SIZE
+condition|)
+return|return;
 name|bgp_route_refresh_header
 operator|=
 operator|(
@@ -10768,6 +10797,15 @@ name|vflag
 operator|>
 literal|1
 condition|)
+block|{
+name|TCHECK2
+argument_list|(
+operator|*
+name|pptr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|print_unknown_data
 argument_list|(
 name|pptr
@@ -10777,7 +10815,15 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
+name|trunc
+label|:
+name|printf
+argument_list|(
+literal|"[|BGP]"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -10911,6 +10957,14 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* we have no decoder for the BGP message */
+name|TCHECK2
+argument_list|(
+operator|*
+name|dat
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t  no Message %u decoder"
@@ -11072,7 +11126,7 @@ while|while
 condition|(
 name|p
 operator|<
-name|snapend
+name|ep
 condition|)
 block|{
 if|if

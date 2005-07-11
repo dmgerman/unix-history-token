@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/ipproto.c,v 1.3 2004/12/15 08:41:26 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/ipproto.c,v 1.3.2.2 2005/05/20 21:15:45 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ipproto.h"
+file|"interface.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"ipproto.h"
 end_include
 
 begin_decl_stmt
@@ -204,6 +204,12 @@ block|{
 name|IPPROTO_VRRP
 block|,
 literal|"VRRP"
+block|}
+block|,
+block|{
+name|IPPROTO_PGM
+block|,
+literal|"PGM"
 block|}
 block|,
 block|{

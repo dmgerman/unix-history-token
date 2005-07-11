@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.31 2004/11/04 07:35:53 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.31.2.1 2005/04/20 19:32:41 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -5187,6 +5187,11 @@ expr_stmt|;
 comment|/* extract the least significant bit that is set */
 name|bit
 operator|=
+operator|(
+expr|enum
+name|ieee80211_radiotap_type
+operator|)
+operator|(
 name|bit0
 operator|+
 name|BITNO_32
@@ -5195,6 +5200,7 @@ name|present
 operator|^
 name|next_present
 argument_list|)
+operator|)
 expr_stmt|;
 if|if
 condition|(

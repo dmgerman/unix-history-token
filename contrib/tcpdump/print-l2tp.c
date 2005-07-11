@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-l2tp.c,v 1.17 2003/12/26 23:20:58 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-l2tp.c,v 1.17.2.2 2005/04/20 21:50:16 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3057,8 +3057,6 @@ decl_stmt|,
 name|flag_s
 decl_stmt|,
 name|flag_o
-decl_stmt|,
-name|flag_p
 decl_stmt|;
 name|u_int16_t
 name|l2tp_len
@@ -3070,8 +3068,6 @@ operator|=
 name|flag_s
 operator|=
 name|flag_o
-operator|=
-name|flag_p
 operator|=
 name|FALSE
 expr_stmt|;
@@ -3229,17 +3225,11 @@ argument_list|)
 operator|&
 name|L2TP_FLAG_PRIORITY
 condition|)
-block|{
-name|flag_p
-operator|=
-name|TRUE
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"P"
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"]"
@@ -3431,9 +3421,64 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|flag_l
+condition|)
+block|{
+if|if
+condition|(
+name|length
+operator|<
+name|l2tp_len
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" Length %u larger than packet"
+argument_list|,
+name|l2tp_len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|length
+operator|=
+name|l2tp_len
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|length
+operator|<
+name|cnt
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" Length %u smaller than header length"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|flag_t
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|flag_l
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" No length"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|length
