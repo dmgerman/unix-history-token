@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.95 2005/04/06 21:32:39 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.95.2.2 2005/07/01 16:16:30 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,12 +85,6 @@ directive|include
 file|"ether.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llc.h"
-end_include
-
 begin_decl_stmt
 specifier|const
 name|struct
@@ -99,74 +93,6 @@ name|ethertype_values
 index|[]
 init|=
 block|{
-comment|/* not really ethertypes but PIDs that are used        in the SNAP printer - its more convenient        to put them into a single tokentable */
-block|{
-name|PID_RFC2684_ETH_FCS
-block|,
-literal|"Ethernet + FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_ETH_NOFCS
-block|,
-literal|"Ethernet no FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_802_4_FCS
-block|,
-literal|"802.4 + FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_802_4_NOFCS
-block|,
-literal|"w/o FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_802_5_FCS
-block|,
-literal|"Tokenring + FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_802_5_NOFCS
-block|,
-literal|"Tokenring no FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_FDDI_FCS
-block|,
-literal|"FDDI + FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_FDDI_NOFCS
-block|,
-literal|"FDDI no FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_802_6_FCS
-block|,
-literal|"802.6 + FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_802_6_NOFCS
-block|,
-literal|"802.6 no FCS"
-block|}
-block|,
-block|{
-name|PID_RFC2684_BPDU
-block|,
-literal|"BPDU"
-block|}
-block|,
-comment|/* the real Ethertypes */
 block|{
 name|ETHERTYPE_IP
 block|,
@@ -1373,7 +1299,7 @@ name|ETHERTYPE_LOOPBACK
 case|:
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 case|case

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6.c,v 1.47 2005/04/06 21:32:40 mcr Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6.c,v 1.47.2.2 2005/07/03 20:36:33 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -788,6 +788,46 @@ name|ip_print
 argument_list|(
 name|gndo
 argument_list|,
+name|cp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|IPPROTO_PGM
+case|:
+name|pgm_print
+argument_list|(
+name|cp
+argument_list|,
+name|len
+argument_list|,
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+name|ip6
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|IPPROTO_GRE
+case|:
+name|gre_print
+argument_list|(
+name|cp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|IPPROTO_RSVP
+case|:
+name|rsvp_print
+argument_list|(
 name|cp
 argument_list|,
 name|len

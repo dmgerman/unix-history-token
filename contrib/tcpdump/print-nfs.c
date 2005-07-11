@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-nfs.c,v 1.106 2005/01/05 08:16:45 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-nfs.c,v 1.106.2.2 2005/05/06 07:57:18 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1973,24 +1973,32 @@ operator|*
 name|dp
 argument_list|)
 expr_stmt|;
-comment|/* XXX seems like we should be checking the length */
 name|putchar
 argument_list|(
 literal|'"'
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fn_printn
 argument_list|(
 name|cp
 argument_list|,
 name|len
 argument_list|,
-name|NULL
+name|snapend
+argument_list|)
+condition|)
+block|{
+name|putchar
+argument_list|(
+literal|'"'
 argument_list|)
 expr_stmt|;
+goto|goto
+name|trunc
+goto|;
+block|}
 name|putchar
 argument_list|(
 literal|'"'
@@ -4770,6 +4778,10 @@ expr_stmt|;
 comment|/* 	 * now we can check the ar_stat field 	 */
 name|astat
 operator|=
+operator|(
+expr|enum
+name|sunrpc_accept_stat
+operator|)
 name|EXTRACT_32BITS
 argument_list|(
 name|dp

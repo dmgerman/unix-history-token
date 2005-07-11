@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipx.c,v 1.40 2004/05/26 19:57:57 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipx.c,v 1.40.2.2 2005/05/06 08:27:00 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -710,14 +710,12 @@ name|i
 operator|++
 control|)
 block|{
-name|TCHECK2
+name|TCHECK
 argument_list|(
 name|ipx
 index|[
-literal|25
+literal|0
 index|]
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 operator|(
@@ -743,7 +741,9 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fn_print
+if|if
+condition|(
+name|fn_printzp
 argument_list|(
 operator|(
 name|u_char
@@ -755,17 +755,29 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
+literal|48
+argument_list|,
+name|snapend
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"'"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|trunc
+goto|;
+block|}
+name|TCHECK2
+argument_list|(
 name|ipx
 index|[
-literal|1
+literal|25
 index|]
-operator|+
-literal|48
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 name|printf

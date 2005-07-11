@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.41 2004/01/28 14:54:50 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.41.2.1 2005/05/06 07:57:18 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,6 +544,8 @@ break|break;
 case|case
 name|PRIM_REF
 case|:
+if|if
+condition|(
 name|fn_printn
 argument_list|(
 operator|(
@@ -559,9 +561,12 @@ operator|)
 argument_list|,
 literal|4
 argument_list|,
-name|NULL
+name|snapend
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
 break|break;
 case|case
 name|INFO_QUERY

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sunrpc.c,v 1.46 2004/12/27 00:41:31 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sunrpc.c,v 1.46.2.1 2005/04/27 21:44:06 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,6 +156,12 @@ directive|include
 file|"rpc_msg.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pmap_prot.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -165,37 +171,37 @@ index|[]
 init|=
 block|{
 block|{
-name|PMAPPROC_NULL
+name|SUNRPC_PMAPPROC_NULL
 block|,
 literal|"null"
 block|}
 block|,
 block|{
-name|PMAPPROC_SET
+name|SUNRPC_PMAPPROC_SET
 block|,
 literal|"set"
 block|}
 block|,
 block|{
-name|PMAPPROC_UNSET
+name|SUNRPC_PMAPPROC_UNSET
 block|,
 literal|"unset"
 block|}
 block|,
 block|{
-name|PMAPPROC_GETPORT
+name|SUNRPC_PMAPPROC_GETPORT
 block|,
 literal|"getport"
 block|}
 block|,
 block|{
-name|PMAPPROC_DUMP
+name|SUNRPC_PMAPPROC_DUMP
 block|,
 literal|"dump"
 block|}
 block|,
 block|{
-name|PMAPPROC_CALLIT
+name|SUNRPC_PMAPPROC_CALLIT
 block|,
 literal|"call"
 block|}
@@ -367,7 +373,7 @@ argument_list|)
 argument_list|,
 literal|"0x%x"
 argument_list|,
-name|PMAPPORT
+name|SUNRPC_PMAPPORT
 argument_list|)
 expr_stmt|;
 block|}
@@ -548,16 +554,16 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|PMAPPROC_SET
+name|SUNRPC_PMAPPROC_SET
 case|:
 case|case
-name|PMAPPROC_UNSET
+name|SUNRPC_PMAPPROC_UNSET
 case|:
 case|case
-name|PMAPPROC_GETPORT
+name|SUNRPC_PMAPPROC_GETPORT
 case|:
 case|case
-name|PMAPPROC_CALLIT
+name|SUNRPC_PMAPPROC_CALLIT
 case|:
 name|x
 operator|=

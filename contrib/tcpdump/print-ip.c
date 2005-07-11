@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.149 2005/04/07 00:28:17 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.149.2.1 2005/05/20 21:15:46 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1938,6 +1938,30 @@ operator|->
 name|ip
 operator|->
 name|ip_ttl
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IPPROTO_PGM
+case|:
+name|pgm_print
+argument_list|(
+name|ipds
+operator|->
+name|cp
+argument_list|,
+name|ipds
+operator|->
+name|len
+argument_list|,
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+name|ipds
+operator|->
+name|ip
 argument_list|)
 expr_stmt|;
 break|break;

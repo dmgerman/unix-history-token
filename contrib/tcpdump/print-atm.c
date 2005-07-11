@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atm.c,v 1.38 2005/01/19 16:46:27 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atm.c,v 1.38.2.2 2005/06/20 07:45:06 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -893,6 +893,8 @@ argument_list|(
 name|p
 argument_list|,
 name|length
+argument_list|,
+name|ATM_OAM_HEC
 argument_list|)
 expr_stmt|;
 return|return;
@@ -971,6 +973,9 @@ name|p
 parameter_list|,
 name|u_int
 name|length
+parameter_list|,
+name|u_int
+name|hec
 parameter_list|)
 block|{
 name|u_int16_t
@@ -1004,6 +1009,8 @@ operator|(
 name|p
 operator|+
 literal|4
+operator|+
+name|hec
 operator|)
 operator|)
 operator|>>
@@ -1017,6 +1024,10 @@ operator|=
 operator|*
 operator|(
 name|p
+operator|+
+literal|4
+operator|+
+name|hec
 operator|)
 operator|&
 literal|0x0f
