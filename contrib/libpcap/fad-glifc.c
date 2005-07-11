@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-glifc.c,v 1.5 2005/01/29 10:34:04 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-glifc.c,v 1.5.2.1 2005/04/19 00:54:16 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1274,7 +1274,7 @@ name|strchr
 argument_list|(
 name|ifrp
 operator|->
-name|ifr_name
+name|lifr_name
 argument_list|,
 literal|':'
 argument_list|)

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.91 2005/02/26 21:58:06 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.91.2.2 2005/05/03 18:54:37 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -504,7 +504,7 @@ directive|ifdef
 name|PCAP_FDDIPAD
 name|pad
 operator|=
-name|p
+name|pc
 operator|->
 name|fddipad
 expr_stmt|;
@@ -791,7 +791,7 @@ name|md
 operator|.
 name|TotMissed
 expr_stmt|;
-comment|/* 		 * Short-circuit evaluation: if using BPF filter 		 * in kernel, no need to do it now. 		 * #ifdef PCAP_FDDIPAD 		 * Note: the filter code was generated assuming 		 * that p->fddipad was the amount of padding 		 * before the header, as that's what's required 		 * in the kernel, so we run the filter before 		 * skipping that padding. #endif 		 */
+comment|/* 		 * Short-circuit evaluation: if using BPF filter 		 * in kernel, no need to do it now. 		 * #ifdef PCAP_FDDIPAD 		 * Note: the filter code was generated assuming 		 * that pc->fddipad was the amount of padding 		 * before the header, as that's what's required 		 * in the kernel, so we run the filter before 		 * skipping that padding. #endif 		 */
 if|if
 condition|(
 name|fcode
@@ -1626,7 +1626,7 @@ operator|->
 name|fddipad
 operator|=
 name|PCAP_FDDIPAD
-operator|:
+expr_stmt|;
 comment|/* packetfilter includes the padding in the snapshot */
 name|snaplen
 operator|+=
@@ -1899,6 +1899,13 @@ name|setfilter_op
 operator|=
 name|pcap_setfilter_pf
 expr_stmt|;
+name|p
+operator|->
+name|setdirection_op
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Not implemented. */
 name|p
 operator|->
 name|set_datalink_op

@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-gifc.c,v 1.8 2005/01/29 10:34:04 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-gifc.c,v 1.8.2.2 2005/06/29 06:43:31 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,6 +257,17 @@ end_endif
 begin_comment
 comment|/* SA_LEN */
 end_comment
+
+begin_comment
+comment|/*  * This is also fun.  *  * There is no ioctl that returns the amount of space required for all  * the data that SIOCGIFCONF could return, and if a buffer is supplied  * that's not large enough for all the data SIOCGIFCONF could return,  * on at least some platforms it just returns the data that'd fit with  * no indication that there wasn't enough room for all the data, much  * less an indication of how much more room is required.  *  * The only way to ensure that we got all the data is to pass a buffer  * large enough that the amount of space in the buffer *not* filled in  * is greater than the largest possible entry.  *  * We assume that's "sizeof(ifreq.ifr_name)" plus 255, under the assumption  * that no address is more than 255 bytes (on systems where the "sa_len"  * field in a "struct sockaddr" is 1 byte, e.g. newer BSDs, that's the  * case, and addresses are unlikely to be bigger than that in any case).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_SA_LEN
+value|255
+end_define
 
 begin_ifdef
 ifdef|#
@@ -746,9 +757,17 @@ decl_stmt|;
 name|unsigned
 name|buf_size
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_SOLARIS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_HPUX10_20_OR_LATER
+argument_list|)
 name|char
 modifier|*
 name|p
@@ -834,7 +853,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Start with an 8K buffer, and keep growing the buffer until 	 * we get the entire interface list or fail to get it for some 	 * reason other than EINVAL (which is presumed here to mean 	 * "buffer is too small"). 	 */
+comment|/* 	 * Start with an 8K buffer, and keep growing the buffer until 	 * we have more than "sizeof(ifrp->ifr_name) + MAX_SA_LEN" 	 * bytes left over in the buffer or we fail to get the 	 * interface list for some reason other than EINVAL (which is 	 * presumed here to mean "buffer is too small"). 	 */
 name|buf_size
 operator|=
 literal|8192
@@ -979,6 +998,23 @@ operator|.
 name|ifc_len
 operator|<
 name|buf_size
+operator|&&
+operator|(
+name|buf_size
+operator|-
+name|ifc
+operator|.
+name|ifc_len
+operator|)
+operator|>
+sizeof|sizeof
+argument_list|(
+name|ifrp
+operator|->
+name|ifr_name
+argument_list|)
+operator|+
+name|MAX_SA_LEN
 condition|)
 break|break;
 name|free
@@ -1646,9 +1682,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_SOLARIS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_HPUX10_20_OR_LATER
+argument_list|)
 comment|/* 		 * If this entry has a colon followed by a number at 		 * the end, it's a logical interface.  Those are just 		 * the way you assign multiple IP addresses to a real 		 * interface, so an entry for a logical interface should 		 * be treated like the entry for the real interface; 		 * we do that by stripping off the ":" and the number. 		 */
 name|p
 operator|=

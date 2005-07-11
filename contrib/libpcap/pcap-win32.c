@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-win32.c,v 1.25 2005/02/26 21:58:06 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-win32.c,v 1.25.2.2 2005/06/10 03:48:56 risso Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1604,6 +1604,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Adapter detected but we are not able to open it. Return failure. */
 name|snprintf
 argument_list|(
@@ -2250,6 +2255,14 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_DAG_API */
+name|p
+operator|->
+name|setdirection_op
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Not implemented. */
+comment|/* XXX - can this be implemented on some versions of Windows? */
 name|p
 operator|->
 name|inject_op

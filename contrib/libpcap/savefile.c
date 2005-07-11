@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/savefile.c,v 1.126 2005/02/08 20:03:16 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/savefile.c,v 1.126.2.8 2005/06/03 20:36:57 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,7 +218,7 @@ name|SET_BINMODE
 parameter_list|(
 name|f
 parameter_list|)
-value|_setmode(fileno(f), O_BINARY)
+value|_setmode(_fileno(f), _O_BINARY)
 end_define
 
 begin_elif
@@ -824,40 +824,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINKTYPE_RAWSS7
+name|LINKTYPE_MTP2_WITH_PHDR
 value|139
 end_define
 
-begin_comment
-comment|/* see rawss7.h for */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|LINKTYPE_RAWSS7_MTP2
+name|LINKTYPE_MTP2
 value|140
 end_define
 
-begin_comment
-comment|/* information  on these */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|LINKTYPE_RAWSS7_MTP3
+name|LINKTYPE_MTP3
 value|141
 end_define
 
-begin_comment
-comment|/* definitions */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|LINKTYPE_RAWSS7_SCCP
+name|LINKTYPE_SCCP
 value|142
 end_define
 
@@ -1170,6 +1158,17 @@ end_define
 begin_comment
 comment|/* Packet-over-SONET */
 end_comment
+
+begin_comment
+comment|/*  * Requested by Daniele Orlandi<daniele@orlandi.com> for raw LAPD  * for vISDN (http://www.orlandi.com/visdn/).  Its link-layer header  * includes additional information before the LAPD header, so it's  * not necessarily a generic LAPD header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_LINUX_LAPD
+value|177
+end_define
 
 begin_struct
 specifier|static
@@ -1515,6 +1514,31 @@ block|,
 name|LINKTYPE_APPLE_IP_OVER_IEEE1394
 block|}
 block|,
+comment|/* SS7 */
+block|{
+name|DLT_MTP2_WITH_PHDR
+block|,
+name|LINKTYPE_MTP2_WITH_PHDR
+block|}
+block|,
+block|{
+name|DLT_MTP2
+block|,
+name|LINKTYPE_MTP2
+block|}
+block|,
+block|{
+name|DLT_MTP3
+block|,
+name|LINKTYPE_MTP3
+block|}
+block|,
+block|{
+name|DLT_SCCP
+block|,
+name|LINKTYPE_SCCP
+block|}
+block|,
 comment|/* DOCSIS MAC frames */
 block|{
 name|DLT_DOCSIS
@@ -1635,6 +1659,13 @@ block|{
 name|DLT_ERF_POS
 block|,
 name|LINKTYPE_ERF_POS
+block|}
+block|,
+comment|/* viSDN LAPD */
+block|{
+name|DLT_LINUX_LAPD
+block|,
+name|LINKTYPE_LINUX_LAPD
 block|}
 block|,
 block|{
@@ -2079,6 +2110,48 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Set direction flag: Which packets do we accept on a forwarding  * single device? IN, OUT or both?  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|sf_setdirection
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|direction_t
+name|d
+parameter_list|)
+block|{
+name|snprintf
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|)
+argument_list|,
+literal|"Setting direction is not supported on savefiles"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -2172,10 +2245,31 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+block|{
 name|fp
 operator|=
 name|stdin
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+comment|/* 		 * We're reading from the standard input, so put it in binary 		 * mode, as savefiles are binary files. 		 */
+name|SET_BINMODE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 else|else
 block|{
 if|#
@@ -2901,6 +2995,12 @@ name|install_bpf_program
 expr_stmt|;
 name|p
 operator|->
+name|setdirection_op
+operator|=
+name|sf_setdirection
+expr_stmt|;
+name|p
+operator|->
 name|set_datalink_op
 operator|=
 name|NULL
@@ -2930,31 +3030,6 @@ name|close_op
 operator|=
 name|sf_close
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|MSDOS
-argument_list|)
-comment|/* 	 * If we're reading from the standard input, put it in binary 	 * mode, as savefiles are binary files. 	 */
-if|if
-condition|(
-name|fp
-operator|==
-name|stdin
-condition|)
-name|SET_BINMODE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|p
@@ -4339,6 +4414,30 @@ name|FILE
 operator|*
 operator|)
 name|p
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|long
+name|pcap_dump_ftell
+parameter_list|(
+name|pcap_dumper_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ftell
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+name|p
+argument_list|)
 operator|)
 return|;
 block|}

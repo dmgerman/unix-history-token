@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * This code contributed by Atanu Ghosh (atanu@cs.ucl.ac.uk),  * University College London, and subsequently modified by  * Guy Harris (guy@alum.mit.edu) and Mark Pizzolato  *<List-tcpdump-workers@subscriptions.pizzolato.net>.  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * This code contributed by Atanu Ghosh (atanu@cs.ucl.ac.uk),  * University College London, and subsequently modified by  * Guy Harris (guy@alum.mit.edu), Mark Pizzolato  *<List-tcpdump-workers@subscriptions.pizzolato.net>,  * and Mark C. Brown (mbrown@hp.com).  */
 end_comment
 
 begin_comment
-comment|/*  * Packet capture routine for DLPI under SunOS 5, HP-UX 9/10/11, and AIX.  *  * Notes:  *  *    - The DLIOCRAW ioctl() is specific to SunOS.  *  *    - There is a bug in bufmod(7) such that setting the snapshot  *      length results in data being left of the front of the packet.  *  *    - It might be desirable to use pfmod(7) to filter packets in the  *      kernel when possible.  *  *    - The HP-UX 10.20 DLPI Programmer's Guide used to be available  *      at  *  *            http://docs.hp.com/hpux/onlinedocs/B2355-90093/B2355-90093.html  *  *      but is no longer available; it can still be found at  *  *            http://h21007.www2.hp.com/dspp/files/unprotected/Drivers/Docs/Refs/B2355-90093.pdf  *  *      in PDF form.  *  *    - The HP-UX 11.00 DLPI Programmer's Guide is available at  *  *            http://docs.hp.com/hpux/onlinedocs/B2355-90139/B2355-90139.html  *  *      and in PDF form at  *  *            http://h21007.www2.hp.com/dspp/files/unprotected/Drivers/Docs/Refs/B2355-90139.pdf  *  *    - Both of the HP documents describe raw-mode services, which are  *      what we use if DL_HP_RAWDLS is defined.  */
+comment|/*  * Packet capture routine for DLPI under SunOS 5, HP-UX 9/10/11, and AIX.  *  * Notes:  *  *    - The DLIOCRAW ioctl() is specific to SunOS.  *  *    - There is a bug in bufmod(7) such that setting the snapshot  *      length results in data being left of the front of the packet.  *  *    - It might be desirable to use pfmod(7) to filter packets in the  *      kernel when possible.  *  *    - An older version of the HP-UX DLPI Programmer's Guide, which  *      I think was advertised as the 10.20 version, used to be available  *      at  *  *            http://docs.hp.com/hpux/onlinedocs/B2355-90093/B2355-90093.html  *  *      but is no longer available; it can still be found at  *  *            http://h21007.www2.hp.com/dspp/files/unprotected/Drivers/Docs/Refs/B2355-90093.pdf  *  *      in PDF form.  *  *    - The HP-UX 10.x, 11.0, and 11i v1.6 version of the HP-UX DLPI  *      Programmer's Guide, which I think was once advertised as the  *      11.00 version is available at  *  *            http://docs.hp.com/en/B2355-90139/index.html  *  *    - The HP-UX 11i v2 version of the HP-UX DLPI Programmer's Guide  *      is available at  *  *            http://docs.hp.com/en/B2355-90871/index.html  *  *    - All of the HP documents describe raw-mode services, which are  *      what we use if DL_HP_RAWDLS is defined.  XXX - we use __hpux  *      in some places to test for HP-UX, but use DL_HP_RAWDLS in  *      other places; do we support any versions of HP-UX without  *      DL_HP_RAWDLS?  */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dlpi.c,v 1.108 2004/10/19 07:06:12 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dlpi.c,v 1.108.2.5 2005/05/03 18:54:35 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,6 +442,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DL_HP_RAWDLS
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|int
+name|dl_dohpuxbind
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -483,6 +507,9 @@ name|char
 modifier|*
 parameter_list|,
 name|char
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -596,6 +623,9 @@ name|char
 modifier|*
 parameter_list|,
 name|char
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2039,7 +2069,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DL_HP_RAWDLS
-comment|/* 	 * XXX - HP-UX 10.20 and 11.xx don't appear to support sending and 	 * receiving packets on the same descriptor - you have to bind the 	 * descriptor on which you receive to a SAP of 22 and bind the 	 * descriptor on which you send to a SAP of 24. 	 * 	 * If the open fails, we just leave -1 in "p->send_fd" and reject 	 * attempts to send packets, just as if, in pcap-bpf.c, we fail 	 * to open the BPF device for reading and writing, we just try 	 * to open it for reading only and, if that succeeds, just let 	 * the send attempts fail. 	 */
+comment|/* 	 * XXX - HP-UX 10.20 and 11.xx don't appear to support sending and 	 * receiving packets on the same descriptor - you need separate 	 * descriptors for sending and receiving, bound to different SAPs. 	 * 	 * If the open fails, we just leave -1 in "p->send_fd" and reject 	 * attempts to send packets, just as if, in pcap-bpf.c, we fail 	 * to open the BPF device for reading and writing, we just try 	 * to open it for reading only and, if that succeeds, just let 	 * the send attempts fail. 	 */
 name|p
 operator|->
 name|send_fd
@@ -2405,7 +2435,7 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* 	** Bind (defer if using HP-UX 9 or HP-UX 10.20, totally skip if 	** using SINIX) 	*/
+comment|/* 	** Bind (defer if using HP-UX 9 or HP-UX 10.20 or later, totally 	** skip if using SINIX) 	*/
 if|#
 directive|if
 operator|!
@@ -2417,7 +2447,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_HPUX10_20
+name|HAVE_HPUX10_20_OR_LATER
 argument_list|)
 operator|&&
 operator|!
@@ -2428,7 +2458,7 @@ argument_list|)
 ifdef|#
 directive|ifdef
 name|_AIX
-comment|/* According to IBM's AIX Support Line, the dl_sap value 	** should not be less than 0x600 (1536) for standard Ethernet. 	** However, we seem to get DL_BADADDR - "DLSAP addr in improper 	** format or invalid" - errors if we use 1537 on the "tr0" 	** device, which, given that its name starts with "tr" and that 	** it's IBM, probably means a Token Ring device.  (Perhaps we 	** need to use 1537 on "/dev/dlpi/en" because that device is for 	** D/I/X Ethernet, the "SAP" is actually an Ethernet type, and 	** it rejects invalid Ethernet types.) 	** 	** So if 1537 fails, we try 2, as Hyung Sik Yoon of IBM Korea 	** says that works on Token Ring (he says that 0 does *not* 	** work; perhaps that's considered an invalid LLC SAP value - I 	** assume the SAP value in a DLPI bind is an LLC SAP for network 	** types that use 802.2 LLC). 	*/
+comment|/* 	** AIX. 	** According to IBM's AIX Support Line, the dl_sap value 	** should not be less than 0x600 (1536) for standard Ethernet. 	** However, we seem to get DL_BADADDR - "DLSAP addr in improper 	** format or invalid" - errors if we use 1537 on the "tr0" 	** device, which, given that its name starts with "tr" and that 	** it's IBM, probably means a Token Ring device.  (Perhaps we 	** need to use 1537 on "/dev/dlpi/en" because that device is for 	** D/I/X Ethernet, the "SAP" is actually an Ethernet type, and 	** it rejects invalid Ethernet types.) 	** 	** So if 1537 fails, we try 2, as Hyung Sik Yoon of IBM Korea 	** says that works on Token Ring (he says that 0 does *not* 	** work; perhaps that's considered an invalid LLC SAP value - I 	** assume the SAP value in a DLPI bind is an LLC SAP for network 	** types that use 802.2 LLC). 	*/
 if|if
 condition|(
 operator|(
@@ -2472,6 +2502,8 @@ operator|)
 name|buf
 argument_list|,
 name|ebuf
+argument_list|,
+name|NULL
 argument_list|)
 operator|<
 literal|0
@@ -2485,33 +2517,14 @@ name|defined
 argument_list|(
 name|DL_HP_RAWDLS
 argument_list|)
-comment|/* 	** This is the descriptor on which we receive packets; we 	** bind it to 22, as that's INSAP, as per the HP-UX DLPI 	** Programmer's Guide. 	*/
+comment|/* 	** HP-UX 10.0x and 10.1x. 	*/
 if|if
 condition|(
-name|dlbindreq
+name|dl_dohpuxbind
 argument_list|(
 name|p
 operator|->
 name|fd
-argument_list|,
-literal|22
-argument_list|,
-name|ebuf
-argument_list|)
-operator|<
-literal|0
-operator|||
-name|dlbindack
-argument_list|(
-name|p
-operator|->
-name|fd
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|buf
 argument_list|,
 name|ebuf
 argument_list|)
@@ -2530,33 +2543,14 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* 		** This is the descriptor on which we send packets; we 		** bind it to 24, as that's OUTSAP, as per the HP-UX 		** DLPI Programmer's Guide. 		*/
+comment|/* 		** XXX - if this fails, just close send_fd and 		** set it to -1, so that you can't send but can 		** still receive? 		*/
 if|if
 condition|(
-name|dlbindreq
+name|dl_dohpuxbind
 argument_list|(
 name|p
 operator|->
 name|send_fd
-argument_list|,
-literal|24
-argument_list|,
-name|ebuf
-argument_list|)
-operator|<
-literal|0
-operator|||
-name|dlbindack
-argument_list|(
-name|p
-operator|->
-name|send_fd
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|buf
 argument_list|,
 name|ebuf
 argument_list|)
@@ -2570,6 +2564,7 @@ block|}
 else|#
 directive|else
 comment|/* neither AIX nor HP-UX */
+comment|/* 	** Not Sinix, and neither AIX nor HP-UX - Solaris, and any other 	** OS using DLPI. 	**/
 if|if
 condition|(
 name|dlbindreq
@@ -2598,6 +2593,8 @@ operator|)
 name|buf
 argument_list|,
 name|ebuf
+argument_list|,
+name|NULL
 argument_list|)
 operator|<
 literal|0
@@ -2607,10 +2604,10 @@ name|bad
 goto|;
 endif|#
 directive|endif
-comment|/* SAP to bind to */
+comment|/* AIX vs. HP-UX vs. other */
 endif|#
 directive|endif
-comment|/* HP-UX 9 or 10.20 or SINIX */
+comment|/* !HP-UX 9 and !HP-UX 10.20 or later and !SINIX */
 ifdef|#
 directive|ifdef
 name|HAVE_SOLARIS
@@ -2763,7 +2760,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	** Try to enable sap (when not in promiscuous mode when using 	** using HP-UX, when not doing SunATM on Solaris, and never 	** under SINIX) (Not necessary on send FD) 	*/
+comment|/* 	** Try to enable SAP promiscuity (when not in promiscuous mode 	** when using HP-UX, when not doing SunATM on Solaris, and never 	** under SINIX) (Not necessary on send FD) 	*/
 ifndef|#
 directive|ifndef
 name|sinix
@@ -2841,7 +2838,8 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* 	** HP-UX 9 and HP-UX 10.20 must bind after setting promiscuous 	** options) 	*/
+comment|/* sinix */
+comment|/* 	** HP-UX 9, and HP-UX 10.20 or later, must bind after setting 	** promiscuous options. 	*/
 if|#
 directive|if
 name|defined
@@ -2851,34 +2849,15 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_HPUX10_20
+name|HAVE_HPUX10_20_OR_LATER
 argument_list|)
 if|if
 condition|(
-name|dlbindreq
+name|dl_dohpuxbind
 argument_list|(
 name|p
 operator|->
 name|fd
-argument_list|,
-literal|0
-argument_list|,
-name|ebuf
-argument_list|)
-operator|<
-literal|0
-operator|||
-name|dlbindack
-argument_list|(
-name|p
-operator|->
-name|fd
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|buf
 argument_list|,
 name|ebuf
 argument_list|)
@@ -2888,6 +2867,34 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 	** We don't set promiscuous mode on the send FD, but we'll defer 	** binding it anyway, just to keep the HP-UX 9/10.20 or later 	** code together. 	*/
+if|if
+condition|(
+name|p
+operator|->
+name|send_fd
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* 		** XXX - if this fails, just close send_fd and 		** set it to -1, so that you can't send but can 		** still receive? 		*/
+if|if
+condition|(
+name|dl_dohpuxbind
+argument_list|(
+name|p
+operator|->
+name|send_fd
+argument_list|,
+name|ebuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+block|}
 endif|#
 directive|endif
 comment|/* 	** Determine link type 	** XXX - get SAP length and address length as well, for use 	** when sending packets. 	*/
@@ -3535,6 +3542,13 @@ expr_stmt|;
 comment|/* no kernel filtering */
 name|p
 operator|->
+name|setdirection_op
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Not implemented.*/
+name|p
+operator|->
 name|set_datalink_op
 operator|=
 name|NULL
@@ -3911,6 +3925,131 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DL_HP_RAWDLS
+end_ifdef
+
+begin_function
+specifier|static
+name|int
+name|dl_dohpuxbind
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|char
+modifier|*
+name|ebuf
+parameter_list|)
+block|{
+name|int
+name|hpsap
+decl_stmt|;
+name|int
+name|uerror
+decl_stmt|;
+name|bpf_u_int32
+name|buf
+index|[
+name|MAXDLBUF
+index|]
+decl_stmt|;
+comment|/* 	 * XXX - we start at 22 because we used to use only 22, but 	 * that was just because that was the value used in some 	 * sample code from HP.  With what value *should* we start? 	 * Does it matter, given that we're enabling SAP promiscuity 	 * on the input FD? 	 */
+name|hpsap
+operator|=
+literal|22
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|dlbindreq
+argument_list|(
+name|fd
+argument_list|,
+name|hpsap
+argument_list|,
+name|ebuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|dlbindack
+argument_list|(
+name|fd
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
+argument_list|,
+name|ebuf
+argument_list|,
+operator|&
+name|uerror
+argument_list|)
+operator|>=
+literal|0
+condition|)
+break|break;
+comment|/* 		 * For any error other than a UNIX EBUSY, give up. 		 */
+if|if
+condition|(
+name|uerror
+operator|!=
+name|EBUSY
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* 		 * For EBUSY, try the next SAP value; that means that 		 * somebody else is using that SAP.  Clear ebuf so 		 * that application doesn't report the "Device busy" 		 * error as a warning. 		 */
+operator|*
+name|ebuf
+operator|=
+literal|'\0'
+expr_stmt|;
+name|hpsap
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|hpsap
+operator|>
+literal|100
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|pcap_platform_finddevs
@@ -4219,6 +4358,10 @@ parameter_list|,
 name|char
 modifier|*
 name|ebuf
+parameter_list|,
+name|int
+modifier|*
+name|uerror
 parameter_list|)
 block|{
 name|union
@@ -4353,6 +4496,21 @@ block|{
 case|case
 name|DL_SYSERR
 case|:
+if|if
+condition|(
+name|uerror
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|uerror
+operator|=
+name|dlp
+operator|->
+name|error_ack
+operator|.
+name|dl_unix_errno
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|ebuf
@@ -4375,6 +4533,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|uerror
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|uerror
+operator|=
+literal|0
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|ebuf
@@ -4404,6 +4573,17 @@ literal|1
 operator|)
 return|;
 default|default:
+if|if
+condition|(
+name|uerror
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|uerror
+operator|=
+literal|0
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|ebuf
@@ -4438,6 +4618,17 @@ operator|<
 name|size
 condition|)
 block|{
+if|if
+condition|(
+name|uerror
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|uerror
+operator|=
+literal|0
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|ebuf
@@ -5117,9 +5308,13 @@ name|dl_primitive
 operator|=
 name|DL_BIND_REQ
 expr_stmt|;
-ifdef|#
-directive|ifdef
+comment|/* XXX - what if neither of these are defined? */
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DL_HP_RAWDLS
+argument_list|)
 name|req
 operator|.
 name|dl_max_conind
@@ -5127,30 +5322,18 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* XXX magic number */
-comment|/* 22 is INSAP as per the HP-UX DLPI Programmer's Guide */
-name|req
-operator|.
-name|dl_sap
-operator|=
-literal|22
-expr_stmt|;
 name|req
 operator|.
 name|dl_service_mode
 operator|=
 name|DL_HP_RAWDLS
 expr_stmt|;
-else|#
-directive|else
-name|req
-operator|.
-name|dl_sap
-operator|=
-name|sap
-expr_stmt|;
-ifdef|#
-directive|ifdef
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|DL_CLDLS
+argument_list|)
 name|req
 operator|.
 name|dl_service_mode
@@ -5159,8 +5342,12 @@ name|DL_CLDLS
 expr_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
+name|req
+operator|.
+name|dl_sap
+operator|=
+name|sap
+expr_stmt|;
 return|return
 operator|(
 name|send_request
@@ -5203,6 +5390,10 @@ parameter_list|,
 name|char
 modifier|*
 name|ebuf
+parameter_list|,
+name|int
+modifier|*
+name|uerror
 parameter_list|)
 block|{
 return|return
@@ -5218,6 +5409,8 @@ argument_list|,
 name|bufp
 argument_list|,
 name|ebuf
+argument_list|,
+name|uerror
 argument_list|)
 operator|)
 return|;
@@ -5317,6 +5510,8 @@ argument_list|,
 name|bufp
 argument_list|,
 name|ebuf
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -5402,6 +5597,8 @@ argument_list|,
 name|bufp
 argument_list|,
 name|ebuf
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  This file is part of DOS-libpcap  *  Ported to DOS/DOSX by G. Vanem<giva@bgnett.no>  *  *  pcap-dos.c: Interface to PKTDRVR, NDIS2 and 32-bit pmode  *              network drivers.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-dos.c,v 1.1 2004/12/18 08:52:10 guy Exp $ (LBL)  */
+comment|/*  *  This file is part of DOS-libpcap  *  Ported to DOS/DOSX by G. Vanem<giva@bgnett.no>  *  *  pcap-dos.c: Interface to PKTDRVR, NDIS2 and 32-bit pmode  *              network drivers.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-dos.c,v 1.1.2.1 2005/05/03 18:54:35 guy Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -1015,6 +1015,13 @@ name|setfilter_op
 operator|=
 name|pcap_setfilter_dos
 expr_stmt|;
+name|pcap
+operator|->
+name|setdirection_op
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Not implemented.*/
 name|pcap
 operator|->
 name|fd

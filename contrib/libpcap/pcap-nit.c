@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-nit.c,v 1.57 2004/10/19 07:06:13 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-nit.c,v 1.57.2.1 2005/05/03 18:54:37 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1450,6 +1450,13 @@ operator|=
 name|install_bpf_program
 expr_stmt|;
 comment|/* no kernel filtering */
+name|p
+operator|->
+name|setdirection_op
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Not implemented. */
 name|p
 operator|->
 name|set_datalink_op
