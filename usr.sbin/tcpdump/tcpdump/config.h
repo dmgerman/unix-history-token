@@ -283,6 +283,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if libpcap has pcap_dump_ftell() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PCAP_DUMP_FTELL
+value|1
+end_define
+
+begin_comment
 comment|/* define if you have getrpcbynumber() */
 end_comment
 
