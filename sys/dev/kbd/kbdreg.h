@@ -1108,6 +1108,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|kbd_find_keyboard2
+parameter_list|(
+name|char
+modifier|*
+name|driver
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|int
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|keyboard_t
 modifier|*
 name|kbd_get_keyboard

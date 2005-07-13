@@ -364,6 +364,32 @@ value|)
 end_define
 
 begin_comment
+comment|/* add/remove keyboard to/from mux */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KBADDKBD
+value|_IOW('K', 68, int)
+end_define
+
+begin_comment
+comment|/* add keyboard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KBRELKBD
+value|_IOW('K', 69, int)
+end_define
+
+begin_comment
+comment|/* release keyboard */
+end_comment
+
+begin_comment
 comment|/* see console.h for the definition of the following ioctl */
 end_comment
 
