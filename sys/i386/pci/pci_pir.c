@@ -1525,6 +1525,39 @@ operator|->
 name|pl_irq
 condition|)
 return|return;
+comment|/* Don't trust any BIOS IRQs greater than 15. */
+if|if
+condition|(
+name|irq
+operator|>=
+name|NUM_ISA_INTERRUPTS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"$PIR: Ignoring invalid BIOS IRQ %d from %d.%d.INT%c for link %#x\n"
+argument_list|,
+name|irq
+argument_list|,
+name|entry
+operator|->
+name|pe_bus
+argument_list|,
+name|entry
+operator|->
+name|pe_device
+argument_list|,
+name|pin
+operator|+
+literal|'A'
+argument_list|,
+name|pci_link
+operator|->
+name|pl_id
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * If we don't have an IRQ for this link yet, then we trust the 	 * BIOS, even if it seems invalid from the $PIR entries. 	 */
 if|if
 condition|(
@@ -1547,7 +1580,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"$PIR: Using invalid BIOS IRQ %d from %d.%d.INT%c is for link %#x\n"
+literal|"$PIR: Using invalid BIOS IRQ %d from %d.%d.INT%c for link %#x\n"
 argument_list|,
 name|irq
 argument_list|,
