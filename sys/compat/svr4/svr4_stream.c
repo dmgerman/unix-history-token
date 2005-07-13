@@ -21,12 +21,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|COMPAT_43
-value|1
-end_define
+begin_include
+include|#
+directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_ktrace.h"
+end_include
 
 begin_include
 include|#
