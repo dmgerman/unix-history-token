@@ -575,7 +575,7 @@ decl_stmt|;
 name|struct
 name|pccard_function
 modifier|*
-name|fcn
+name|pf
 decl_stmt|;
 block|}
 struct|;
