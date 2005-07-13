@@ -898,9 +898,13 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Page faults need interrupts diasabled until later, 			 * and we shouldn't enable interrupts while in a 			 * critical section. 			 */
+comment|/* 			 * Page faults need interrupts disabled until later, 			 * and we shouldn't enable interrupts while in a 			 * critical section or if servicing an NMI. 			 */
 if|if
 condition|(
+name|type
+operator|!=
+name|T_NMI
+operator|&&
 name|type
 operator|!=
 name|T_PAGEFLT
