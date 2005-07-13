@@ -309,6 +309,21 @@ decl_stmt|,
 modifier|*
 name|irqres
 decl_stmt|;
+comment|/* 	 * We don't know of any PnP ID's for these cards. 	 */
+if|if
+condition|(
+name|isa_get_logicalid
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* 	 * Default to scanning all possible device locations. 	 */
 name|port_index
 operator|=
