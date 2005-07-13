@@ -1219,15 +1219,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s %s, version 0x%02x/0x%02x%s%s\n"
-argument_list|,
-name|scp
-operator|->
-name|vendor
-argument_list|,
-name|scp
-operator|->
-name|card_type
+literal|"version 0x%02x/0x%02x%s%s\n"
 argument_list|,
 name|scp
 operator|->
@@ -7562,9 +7554,9 @@ name|start
 argument_list|,
 name|start
 operator|+
-literal|18
+literal|15
 argument_list|,
-literal|18
+literal|16
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
