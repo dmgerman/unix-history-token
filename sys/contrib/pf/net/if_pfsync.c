@@ -175,6 +175,12 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -507,6 +513,35 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet_pfsync
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRUCT
+argument_list|(
+name|_net_inet_pfsync
+argument_list|,
+literal|0
+argument_list|,
+name|stats
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pfsyncstats
+argument_list|,
+name|pfsyncstats
+argument_list|,
+literal|"PFSYNC statistics (struct pfsyncstats, net/if_pfsync.h)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Locking notes:  * Whenever we really touch/look at the state table we have to hold the  * PF_LOCK. Functions that do just the interface handling, grab the per  * softc lock instead.  *  */
