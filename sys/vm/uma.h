@@ -947,6 +947,146 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Exported statistics structures to be used by user space monitoring tools.  * Statistics stream consusts of a uma_stream_header, followed by a series of  * alternative uma_type_header and uma_type_stat structures.  Statistics  * structures  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_STREAM_VERSION
+value|0x00000001
+end_define
+
+begin_struct
+struct|struct
+name|uma_stream_header
+block|{
+name|u_int32_t
+name|ush_version
+decl_stmt|;
+comment|/* Stream format version. */
+name|u_int32_t
+name|ush_maxcpus
+decl_stmt|;
+comment|/* Value of MAXCPU for stream. */
+name|u_int32_t
+name|ush_count
+decl_stmt|;
+comment|/* Number of records. */
+name|u_int32_t
+name|_ush_pad
+decl_stmt|;
+comment|/* Pad/reserved field. */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|UMA_MAX_NAME
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|uma_type_header
+block|{
+comment|/* 	 * Static per-zone data, some extracted from the supporting keg. 	 */
+name|char
+name|uth_name
+index|[
+name|UMA_MAX_NAME
+index|]
+decl_stmt|;
+name|u_int32_t
+name|uth_align
+decl_stmt|;
+comment|/* Keg: alignment. */
+name|u_int32_t
+name|uth_size
+decl_stmt|;
+comment|/* Keg: requested size of item. */
+name|u_int32_t
+name|uth_rsize
+decl_stmt|;
+comment|/* Keg: real size of item. */
+name|u_int32_t
+name|uth_maxpages
+decl_stmt|;
+comment|/* Keg: maximum number of pages. */
+name|u_int32_t
+name|uth_limit
+decl_stmt|;
+comment|/* Keg: max items to allocate. */
+comment|/* 	 * Current dynamic zone/keg-derived statistics. 	 */
+name|u_int32_t
+name|uth_pages
+decl_stmt|;
+comment|/* Keg: pages allocated. */
+name|u_int32_t
+name|uth_keg_free
+decl_stmt|;
+comment|/* Keg: items free. */
+name|u_int32_t
+name|uth_zone_free
+decl_stmt|;
+comment|/* Zone: items free. */
+name|u_int32_t
+name|uth_bucketsize
+decl_stmt|;
+comment|/* Zone: desired bucket size. */
+name|u_int32_t
+name|_uth_reserved0
+decl_stmt|;
+comment|/* Reserved. */
+name|u_int64_t
+name|uth_allocs
+decl_stmt|;
+comment|/* Zone: number of allocations. */
+name|u_int64_t
+name|uth_frees
+decl_stmt|;
+comment|/* Zone: number of frees. */
+name|u_int64_t
+name|_uth_reserved1
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Reserved. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|uma_percpu_stat
+block|{
+name|u_int64_t
+name|ups_allocs
+decl_stmt|;
+comment|/* Cache: number of alloctions. */
+name|u_int64_t
+name|ups_frees
+decl_stmt|;
+comment|/* Cache: number of frees. */
+name|u_int64_t
+name|ups_cache_free
+decl_stmt|;
+comment|/* Cache: free items in cache. */
+name|u_int64_t
+name|_ups_reserved
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* Reserved. */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
