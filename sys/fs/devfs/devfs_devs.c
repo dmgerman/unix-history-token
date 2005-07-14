@@ -1728,6 +1728,10 @@ directive|ifdef
 name|MAC
 name|mac_create_devfs_device
 argument_list|(
+name|dev
+operator|->
+name|si_cred
+argument_list|,
 name|dm
 operator|->
 name|dm_mount

@@ -4121,6 +4121,11 @@ name|void
 name|mac_lomac_create_devfs_device
 parameter_list|(
 name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
 name|mount
 modifier|*
 name|mp
