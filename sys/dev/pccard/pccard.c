@@ -5203,7 +5203,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" (manufacturer=0x%04x, product=0x%04x) at function %d\n"
+literal|" (manufacturer=0x%04x, product=0x%04x, function_type=%d) "
+literal|"at function %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -5219,6 +5220,10 @@ name|product
 argument_list|,
 name|pf
 operator|->
+name|function
+argument_list|,
+name|pf
+operator|->
 name|number
 argument_list|)
 expr_stmt|;
@@ -5226,16 +5231,44 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"   CIS info: %s, %s, %s\n"
-argument_list|,
-name|sc
-operator|->
-name|card
-operator|.
-name|cis1_info
-index|[
+literal|"   CIS info: "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
+init|;
+name|sc
+operator|->
+name|card
+operator|.
+name|cis1_info
+index|[
+name|i
 index|]
+operator|!=
+name|NULL
+operator|&&
+name|i
+operator|<
+literal|4
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"%s%s"
+argument_list|,
+name|i
+operator|>
+literal|0
+condition|?
+literal|", "
+else|:
+literal|""
 argument_list|,
 name|sc
 operator|->
@@ -5243,17 +5276,13 @@ name|card
 operator|.
 name|cis1_info
 index|[
-literal|1
+name|i
 index|]
-argument_list|,
-name|sc
-operator|->
-name|card
-operator|.
-name|cis1_info
-index|[
-literal|2
-index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return;
