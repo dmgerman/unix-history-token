@@ -478,6 +478,13 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|smbios_detect
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|gateA20
 parameter_list|(
 name|void
