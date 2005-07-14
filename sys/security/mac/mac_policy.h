@@ -5011,7 +5011,7 @@ parameter_list|,
 name|privdata_wanted
 parameter_list|)
 define|\
-value|static struct mac_policy_conf mpname##_mac_policy_conf = {	\ 		#mpname,						\ 		mpfullname,						\ 		mpops,							\ 		mpflags,						\ 		privdata_wanted,					\ 		0,							\ 	};								\ 	static moduledata_t mpname##_mod = {				\ 		#mpname,						\ 		mac_policy_modevent,					\&mpname##_mac_policy_conf				\ 	};								\ 	MODULE_DEPEND(mpname, kernel_mac_support, 2, 2, 2);		\ 	DECLARE_MODULE(mpname, mpname##_mod, SI_SUB_MAC_POLICY,		\ 	    SI_ORDER_MIDDLE)
+value|static struct mac_policy_conf mpname##_mac_policy_conf = {	\ 		#mpname,						\ 		mpfullname,						\ 		mpops,							\ 		mpflags,						\ 		privdata_wanted,					\ 		0,							\ 	};								\ 	static moduledata_t mpname##_mod = {				\ 		#mpname,						\ 		mac_policy_modevent,					\&mpname##_mac_policy_conf				\ 	};								\ 	MODULE_DEPEND(mpname, kernel_mac_support, 3, 3, 3);		\ 	DECLARE_MODULE(mpname, mpname##_mod, SI_SUB_MAC_POLICY,		\ 	    SI_ORDER_MIDDLE)
 end_define
 
 begin_function_decl
