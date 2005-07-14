@@ -4613,6 +4613,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|usb
+argument_list|,
+name|slhci
+argument_list|,
+name|usb_driver
+argument_list|,
+name|usb_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|usb_cold_explore
