@@ -1595,7 +1595,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|pci_get_subvendor
+name|pci_get_vendor
 argument_list|(
 name|dev
 argument_list|)
@@ -1604,7 +1604,7 @@ literal|0x9005
 operator|)
 operator|||
 operator|(
-name|pci_get_subdevice
+name|pci_get_device
 argument_list|(
 name|dev
 argument_list|)
