@@ -8625,6 +8625,11 @@ argument_list|,
 name|slab
 argument_list|)
 expr_stmt|;
+name|zone
+operator|->
+name|uz_allocs
+operator|++
+expr_stmt|;
 name|ZONE_UNLOCK
 argument_list|(
 name|zone
@@ -11240,12 +11245,6 @@ operator|+=
 name|cache
 operator|->
 name|uc_allocs
-expr_stmt|;
-name|cache
-operator|->
-name|uc_allocs
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
