@@ -354,6 +354,46 @@ define|\
 value|do { \ 	int t1; \ 	t1 = nfsm_adv_xx((s),&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NO_STRICT_ALIGNMENT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|nfsm_aligned
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|)
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|nfsm_aligned
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|)
+value|((((u_long)(p))& (sizeof(t) - 1)) == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

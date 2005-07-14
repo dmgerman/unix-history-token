@@ -3711,11 +3711,8 @@ argument_list|(
 literal|"nfs_clnt_tcp_soupcall: Got empty mbuf chain from sorecv\n"
 argument_list|)
 expr_stmt|;
-name|len
-operator|=
-name|ntohl
+name|bcopy
 argument_list|(
-operator|*
 name|mtod
 argument_list|(
 name|mp
@@ -3723,6 +3720,21 @@ argument_list|,
 name|u_int32_t
 operator|*
 argument_list|)
+argument_list|,
+operator|&
+name|len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|len
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+name|ntohl
+argument_list|(
+name|len
 argument_list|)
 operator|&
 operator|~
