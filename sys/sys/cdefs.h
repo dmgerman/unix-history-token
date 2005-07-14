@@ -1622,7 +1622,7 @@ parameter_list|,
 name|aliassym
 parameter_list|)
 define|\
-value|extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)));
+value|extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
 end_define
 
 begin_endif
