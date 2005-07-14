@@ -363,58 +363,6 @@ comment|/*, int */
 value|)
 end_define
 
-begin_comment
-comment|/* add/remove keyboard to/from mux */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KBADDKBD
-value|_IOW('K', 68, int)
-end_define
-
-begin_comment
-comment|/* add keyboard */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KBRELKBD
-value|_IOW('K', 69, int)
-end_define
-
-begin_comment
-comment|/* release keyboard */
-end_comment
-
-begin_comment
-comment|/* see console.h for the definition of the following ioctl */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|notdef
-end_if
-
-begin_define
-define|#
-directive|define
-name|KDRASTER
-value|_IOW('K', 100, scr_size_t)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* get keyboard information */
-end_comment
-
 begin_struct
 struct|struct
 name|keyboard_info
@@ -457,6 +405,58 @@ name|keyboard_info
 name|keyboard_info_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* add/remove keyboard to/from mux */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KBADDKBD
+value|_IOW('K', 68, keyboard_info_t)
+end_define
+
+begin_comment
+comment|/* add keyboard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KBRELKBD
+value|_IOW('K', 69, keyboard_info_t)
+end_define
+
+begin_comment
+comment|/* release keyboard */
+end_comment
+
+begin_comment
+comment|/* see console.h for the definition of the following ioctl */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|notdef
+end_if
+
+begin_define
+define|#
+directive|define
+name|KDRASTER
+value|_IOW('K', 100, scr_size_t)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* get keyboard information */
+end_comment
 
 begin_define
 define|#
