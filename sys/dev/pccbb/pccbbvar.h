@@ -130,6 +130,10 @@ name|struct
 name|cv
 name|cv
 decl_stmt|;
+name|struct
+name|cv
+name|powercv
+decl_stmt|;
 name|u_int32_t
 name|flags
 decl_stmt|;
@@ -236,6 +240,10 @@ name|cbb_softc
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|volatile
+name|int
+name|powerintr
+decl_stmt|;
 block|}
 struct|;
 end_struct

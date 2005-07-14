@@ -1135,6 +1135,16 @@ argument_list|,
 literal|"cbb cv"
 argument_list|)
 expr_stmt|;
+name|cv_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|powercv
+argument_list|,
+literal|"cbb cv"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|chipset
