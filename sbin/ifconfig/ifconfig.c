@@ -307,6 +307,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|printkeys
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Print keying material for interfaces. */
+end_comment
+
+begin_decl_stmt
+name|int
 name|printname
 init|=
 literal|0
@@ -673,7 +685,7 @@ name|strlcpy
 argument_list|(
 name|options
 argument_list|,
-literal|"adlmuv"
+literal|"adklmuv"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -748,6 +760,13 @@ literal|'d'
 case|:
 comment|/* restrict scan to "down" interfaces */
 name|downonly
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|printkeys
 operator|++
 expr_stmt|;
 break|break;
