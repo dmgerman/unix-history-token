@@ -2985,6 +2985,11 @@ operator|)
 operator|/
 literal|1024
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mts_local
 operator|.
 name|mts_numallocs
