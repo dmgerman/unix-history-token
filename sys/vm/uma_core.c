@@ -586,6 +586,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Flags and enumerations to be passed to internal functions.  */
+end_comment
+
 begin_enum
 enum|enum
 name|zfreeskip
@@ -598,6 +602,17 @@ name|SKIP_FINI
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|ZFREE_STATFAIL
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Update zone failure statistic. */
+end_comment
 
 begin_comment
 comment|/* Prototypes.. */
@@ -943,6 +958,8 @@ modifier|*
 parameter_list|,
 name|enum
 name|zfreeskip
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1649,6 +1666,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2236,6 +2255,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -2388,6 +2409,8 @@ argument_list|,
 name|slab
 argument_list|,
 name|SKIP_DTOR
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2998,6 +3021,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3211,6 +3236,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ZONE_LOCK
@@ -3612,6 +3639,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|keg
@@ -5360,6 +5389,12 @@ literal|0
 expr_stmt|;
 name|zone
 operator|->
+name|uz_fails
+operator|=
+literal|0
+expr_stmt|;
+name|zone
+operator|->
 name|uz_fills
 operator|=
 name|zone
@@ -5961,6 +5996,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -7096,6 +7133,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -7426,6 +7465,8 @@ argument_list|,
 name|udata
 argument_list|,
 name|SKIP_DTOR
+argument_list|,
+name|ZFREE_STATFAIL
 argument_list|)
 expr_stmt|;
 return|return
@@ -8543,6 +8584,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_FINI
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -8703,6 +8746,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|zone
+operator|->
+name|uz_fails
+operator|++
+expr_stmt|;
 name|ZONE_UNLOCK
 argument_list|(
 name|zone
@@ -8770,6 +8818,8 @@ argument_list|,
 name|udata
 argument_list|,
 name|SKIP_FINI
+argument_list|,
+name|ZFREE_STATFAIL
 argument_list|)
 expr_stmt|;
 return|return
@@ -8817,6 +8867,8 @@ argument_list|,
 name|udata
 argument_list|,
 name|SKIP_DTOR
+argument_list|,
+name|ZFREE_STATFAIL
 argument_list|)
 expr_stmt|;
 return|return
@@ -9421,6 +9473,8 @@ argument_list|,
 name|udata
 argument_list|,
 name|SKIP_DTOR
+argument_list|,
+name|ZFREE_STATFAIL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9450,6 +9504,9 @@ parameter_list|,
 name|enum
 name|zfreeskip
 name|skip
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|uma_slab_t
@@ -9522,6 +9579,17 @@ name|ZONE_LOCK
 argument_list|(
 name|zone
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|ZFREE_STATFAIL
+condition|)
+name|zone
+operator|->
+name|uz_fails
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -10711,6 +10779,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|,
+name|ZFREE_STATFAIL
 argument_list|)
 expr_stmt|;
 block|}
@@ -10766,6 +10836,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -12135,6 +12207,14 @@ operator|=
 name|z
 operator|->
 name|uz_frees
+expr_stmt|;
+name|uth
+operator|.
+name|uth_fails
+operator|=
+name|z
+operator|->
+name|uz_fails
 expr_stmt|;
 name|ZONE_UNLOCK
 argument_list|(
