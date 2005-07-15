@@ -5194,6 +5194,9 @@ argument_list|(
 name|bus
 argument_list|)
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|device_printf
 argument_list|(
 name|bus
