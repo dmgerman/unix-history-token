@@ -726,6 +726,14 @@ name|uthp
 operator|->
 name|uth_frees
 expr_stmt|;
+name|mtp
+operator|->
+name|mt_failures
+operator|=
+name|uthp
+operator|->
+name|uth_fails
+expr_stmt|;
 for|for
 control|(
 name|j
