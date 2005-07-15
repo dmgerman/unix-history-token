@@ -194,7 +194,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kern.smp.maxcpus: wronge size"
+literal|"kern.smp.maxcpus: wrong size"
 argument_list|)
 expr_stmt|;
 name|errno
@@ -294,7 +294,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kern.malloc_count: wronge size"
+literal|"kern.malloc_count: wrong size"
 argument_list|)
 expr_stmt|;
 name|errno
