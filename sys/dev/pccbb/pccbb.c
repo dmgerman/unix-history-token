@@ -3607,7 +3607,7 @@ name|brdev
 argument_list|)
 decl_stmt|;
 name|int
-name|delay_us
+name|delay
 decl_stmt|;
 comment|/* 	 * 20ms is necessary for most bridges.  For some reason, the Ricoh 	 * RF5C47x bridges need 400ms. 	 */
 name|delay
