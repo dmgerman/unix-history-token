@@ -1260,6 +1260,17 @@ decl_stmt|;
 name|uint16_t
 name|prodext
 decl_stmt|;
+if|if
+condition|(
+name|vpfmatch
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|xpp
 operator|=
 operator|(
