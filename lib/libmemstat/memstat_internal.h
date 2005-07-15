@@ -85,41 +85,27 @@ name|uint64_t
 name|mt_failures
 decl_stmt|;
 comment|/* Number of allocation failures. */
-name|uint64_t
-name|_mt_spare_uint64
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* Spare. */
 comment|/* 	 * Caller-owned memory. 	 */
 name|void
 modifier|*
 name|mt_caller_pointer
 index|[
-literal|4
+name|MEMSTAT_MAXCALLER
 index|]
 decl_stmt|;
-comment|/* Caller-owned pointers. */
+comment|/* Pointers. */
 name|uint64_t
 name|mt_caller_uint64
 index|[
-literal|4
+name|MEMSTAT_MAXCALLER
 index|]
 decl_stmt|;
-comment|/* Caller-owned longs. */
+comment|/* Integers. */
 comment|/* 	 * For allocators making use of per-CPU caches, we also provide raw 	 * statistics from the central allocator and each per-CPU cache, 	 * which (combined) sometimes make up the above general statistics. 	 * 	 * First, central zone/type state, all numbers excluding any items 	 * cached in per-CPU caches. 	 * 	 * XXXRW: Might be desirable to separately expose allocation stats 	 * from zone, which should (combined with per-cpu) add up to the 	 * global stats above. 	 */
 name|uint64_t
 name|mt_zonefree
 decl_stmt|;
 comment|/* Free items in zone. */
-name|uint64_t
-name|_mt_spare_uint642
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* Spare. */
 comment|/* 	 * Per-CPU measurements fall into two categories: per-CPU allocation, 	 * and per-CPU cache state. 	 */
 struct|struct
 block|{
@@ -147,24 +133,15 @@ name|void
 modifier|*
 name|mtp_caller_pointer
 index|[
-literal|2
+name|MEMSTAT_MAXCALLER
 index|]
 decl_stmt|;
-comment|/* Caller data. */
 name|uint64_t
 name|mtp_caller_uint64
 index|[
-literal|2
+name|MEMSTAT_MAXCALLER
 index|]
 decl_stmt|;
-comment|/* Caller data. */
-name|uint64_t
-name|_mtp_spare_uint64
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* Per-CPU spare. */
 block|}
 name|mt_percpu_alloc
 index|[
@@ -177,13 +154,6 @@ name|uint64_t
 name|mtp_free
 decl_stmt|;
 comment|/* Per-CPU cache free items. */
-name|uint64_t
-name|_mtp_spare_uint64
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* Per-CPU spare. */
 block|}
 name|mt_percpu_cache
 index|[
