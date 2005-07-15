@@ -3609,7 +3609,8 @@ decl_stmt|;
 name|int
 name|delay_us
 decl_stmt|;
-name|delay_us
+comment|/* 	 * 20ms is necessary for most bridges.  For some reason, the Ricoh 	 * RF5C47x bridges need 400ms. 	 */
+name|delay
 operator|=
 name|sc
 operator|->
@@ -3618,12 +3619,8 @@ operator|==
 name|CB_RF5C47X
 condition|?
 literal|400
-operator|*
-literal|1000
 else|:
 literal|20
-operator|*
-literal|1000
 expr_stmt|;
 name|PCI_MASK_CONFIG
 argument_list|(
@@ -3637,9 +3634,19 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|tsleep
 argument_list|(
-name|delay_us
+name|sc
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"cbbP3"
+argument_list|,
+name|hz
+operator|*
+name|delay
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* If a card exists, unreset it! */
@@ -3669,9 +3676,19 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|tsleep
 argument_list|(
-name|delay_us
+name|sc
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"cbbP3"
+argument_list|,
+name|hz
+operator|*
+name|delay
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 block|}
