@@ -2447,7 +2447,7 @@ index|[
 literal|2
 index|]
 operator|==
-literal|'-'
+literal|'_'
 condition|)
 block|{
 name|dialect
@@ -2492,14 +2492,14 @@ index|[
 literal|2
 index|]
 operator|==
-literal|'-'
+literal|'_'
 condition|)
 name|lang_abk
 index|[
 literal|2
 index|]
 operator|=
-literal|'.'
+literal|'\0'
 expr_stmt|;
 name|fprintf
 argument_list|(
