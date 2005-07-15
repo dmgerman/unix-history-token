@@ -7485,6 +7485,11 @@ literal|"Cannot allocate I/O port for modem\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|xe_deactivate
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
@@ -7661,6 +7666,11 @@ name|dev
 operator|,
 literal|"Cannot allocate ioport\n"
 operator|)
+argument_list|)
+expr_stmt|;
+name|xe_deactivate
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
