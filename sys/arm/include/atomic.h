@@ -852,50 +852,28 @@ begin_define
 define|#
 directive|define
 name|atomic_clear_ptr
-parameter_list|(
-name|ptr
-parameter_list|,
-name|bit
-parameter_list|)
-value|atomic_clear_32( \     (volatile uint32_t *)ptr, (uint32_t)bit)
+value|atomic_clear_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_store_ptr
-parameter_list|(
-name|ptr
-parameter_list|,
-name|bit
-parameter_list|)
-value|atomic_store_32( \     (volatile uint32_t *)ptr, (uint32_t)bit)
+value|atomic_store_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_ptr
-parameter_list|(
-name|dst
-parameter_list|,
-name|exp
-parameter_list|,
-name|s
-parameter_list|)
-value|atomic_cmpset_32( \     (volatile uint32_t *)dst, (uint32_t)exp, (uint32_t)s)
+value|atomic_cmpset_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_ptr
-parameter_list|(
-name|ptr
-parameter_list|,
-name|src
-parameter_list|)
-value|atomic_set_32( \     (volatile uint32_t *)ptr,  (uint32_t)src)
+value|atomic_set_32
 end_define
 
 begin_endif

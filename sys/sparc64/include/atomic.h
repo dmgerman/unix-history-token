@@ -351,11 +351,10 @@ name|ATOMIC_GEN
 argument_list|(
 name|ptr
 argument_list|,
-name|void
+name|uintptr_t
 operator|*
 argument_list|,
-name|void
-operator|*
+name|uintptr_t
 argument_list|,
 name|uintptr_t
 argument_list|,

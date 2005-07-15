@@ -315,10 +315,8 @@ name|mtx
 modifier|*
 name|m
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
+name|uintptr_t
+name|tid
 parameter_list|,
 name|int
 name|opts
@@ -372,10 +370,8 @@ name|mtx
 modifier|*
 name|m
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
+name|uintptr_t
+name|tid
 parameter_list|,
 name|int
 name|opts
@@ -600,7 +596,7 @@ parameter_list|,
 name|tid
 parameter_list|)
 define|\
-value|atomic_cmpset_acq_ptr(&(mp)->mtx_lock, (void *)MTX_UNOWNED, (tid))
+value|atomic_cmpset_acq_ptr(&(mp)->mtx_lock, MTX_UNOWNED, (tid))
 end_define
 
 begin_endif
@@ -628,7 +624,7 @@ parameter_list|,
 name|tid
 parameter_list|)
 define|\
-value|atomic_cmpset_rel_ptr(&(mp)->mtx_lock, (tid), (void *)MTX_UNOWNED)
+value|atomic_cmpset_rel_ptr(&(mp)->mtx_lock, (tid), MTX_UNOWNED)
 end_define
 
 begin_endif
@@ -654,7 +650,7 @@ parameter_list|(
 name|mp
 parameter_list|)
 define|\
-value|atomic_store_rel_ptr(&(mp)->mtx_lock, (void *)MTX_UNOWNED)
+value|atomic_store_rel_ptr(&(mp)->mtx_lock, MTX_UNOWNED)
 end_define
 
 begin_endif
@@ -687,7 +683,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	struct thread *_tid = (tid);					\ 									\ 	if (!_obtain_lock((mp), _tid))					\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (!_obtain_lock((mp), _tid))					\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ } while (0)
 end_define
 
 begin_endif
@@ -726,7 +722,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	struct thread *_tid = (tid);					\ 									\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == (uintptr_t)_tid)			\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	}								\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	}								\ } while (0)
 end_define
 
 begin_else
@@ -753,7 +749,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	struct thread *_tid = (tid);					\ 									\ 	spinlock_enter();						\ 	if ((mp)->mtx_lock == (uintptr_t)_tid)				\ 		(mp)->mtx_recurse++;					\ 	else {								\ 		KASSERT((mp)->mtx_lock == MTX_UNOWNED, ("corrupt spinlock")); \ 		(mp)->mtx_lock = (uintptr_t)_tid;			\ 	}								\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if ((mp)->mtx_lock == _tid)					\ 		(mp)->mtx_recurse++;					\ 	else {								\ 		KASSERT((mp)->mtx_lock == MTX_UNOWNED, ("corrupt spinlock")); \ 		(mp)->mtx_lock = _tid;				\ 	}								\ } while (0)
 end_define
 
 begin_endif
@@ -795,7 +791,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	if (!_release_lock((mp), (tid)))				\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (!_release_lock((mp), _tid))					\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
 end_define
 
 begin_endif

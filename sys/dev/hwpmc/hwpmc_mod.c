@@ -3134,6 +3134,10 @@ argument_list|)
 expr_stmt|;
 name|atomic_store_rel_ptr
 argument_list|(
+operator|(
+name|uintptr_t
+operator|*
+operator|)
 operator|&
 name|pp
 operator|->
@@ -3144,6 +3148,9 @@ index|]
 operator|.
 name|pp_pmc
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|pm
 argument_list|)
 expr_stmt|;
