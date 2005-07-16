@@ -805,6 +805,18 @@ block|,
 name|TYPE_PL2303
 block|}
 block|,
+comment|/* I/O DATA USB-RSAQ3 */
+block|{
+name|USB_VENDOR_PROLIFIC
+block|,
+name|USB_PRODUCT_PROLIFIC_RSAQ3
+block|,
+operator|-
+literal|1
+block|,
+name|TYPE_PL2303X
+block|}
+block|,
 comment|/* PLANEX USB-RS232 URS-03 */
 block|{
 name|USB_VENDOR_ATEN
