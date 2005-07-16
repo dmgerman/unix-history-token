@@ -450,7 +450,7 @@ decl_stmt|;
 name|int
 name|align
 decl_stmt|;
-name|u_int16_t
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|}
@@ -476,7 +476,7 @@ decl_stmt|;
 name|int
 name|align
 decl_stmt|;
-name|u_int16_t
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|}
@@ -1089,7 +1089,7 @@ parameter_list|,
 name|int
 name|align
 parameter_list|,
-name|u_int16_t
+name|u_int32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -6825,7 +6825,7 @@ parameter_list|,
 name|int
 name|align
 parameter_list|,
-name|u_int16_t
+name|u_int32_t
 name|flags
 parameter_list|)
 block|{
@@ -6915,7 +6915,7 @@ parameter_list|,
 name|int
 name|align
 parameter_list|,
-name|u_int16_t
+name|u_int32_t
 name|flags
 parameter_list|)
 block|{
