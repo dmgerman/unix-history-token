@@ -2898,7 +2898,7 @@ block|{
 name|uint8_t
 name|reg
 decl_stmt|;
-comment|/* 	 * Issue #2: INT# not qualified with IRQ Routing Bit.  An 	 * unexpected PCI INT# may be generated during PC-Card 	 * initialization even with the IRQ Routing Bit Set with some 	 * PC-Cards. 	 * 	 * This is a two part issue.  The first part is that some of 	 * our older controllers have an issue in which the slot's PCI 	 * INT# is NOT qualified by the IRQ routing bit (PCI reg. 3Eh 	 * bit 7).  Regardless of the IRQ routing bit, if NO ISA IRQ 	 * is selected (ExCA register 03h bits 3:0, of the slot, are 	 * cleared) we will generate INT# if IREQ# is asserted.  The 	 * second part is because some PC-Cards prematurally assert 	 * IREQ# before the ExCA registers are fully programmed.  This 	 * in turn asserts INT# because ExCA register 03h bits 3:0 	 * (ISA IRQ Select) are not yet programmed. 	 * 	 * The fix for this issue, which will work for any controller 	 * (old or new), is to set ExCA register 03h bits 3:0 = 0001b 	 * (select IRQ1), of the slot, before turning on slot power. 	 * Selecting IRQ1 will result in INT# NOT being asserted 	 * (because IRQ1 is selected), and IRQ1 won't be asserted 	 * because our controllers don't generate IRQ1. 	 * 	 * Other, non O2Micro controllers will generate irq 1 in some 	 * situations, so we can't do this hack for everybody. 	 */
+comment|/* 	 * Issue #2: INT# not qualified with IRQ Routing Bit.  An 	 * unexpected PCI INT# may be generated during PC-Card 	 * initialization even with the IRQ Routing Bit Set with some 	 * PC-Cards. 	 * 	 * This is a two part issue.  The first part is that some of 	 * our older controllers have an issue in which the slot's PCI 	 * INT# is NOT qualified by the IRQ routing bit (PCI reg. 3Eh 	 * bit 7).  Regardless of the IRQ routing bit, if NO ISA IRQ 	 * is selected (ExCA register 03h bits 3:0, of the slot, are 	 * cleared) we will generate INT# if IREQ# is asserted.  The 	 * second part is because some PC-Cards prematurally assert 	 * IREQ# before the ExCA registers are fully programmed.  This 	 * in turn asserts INT# because ExCA register 03h bits 3:0 	 * (ISA IRQ Select) are not yet programmed. 	 * 	 * The fix for this issue, which will work for any controller 	 * (old or new), is to set ExCA register 03h bits 3:0 = 0001b 	 * (select IRQ1), of the slot, before turning on slot power. 	 * Selecting IRQ1 will result in INT# NOT being asserted 	 * (because IRQ1 is selected), and IRQ1 won't be asserted 	 * because our controllers don't generate IRQ1. 	 * 	 * Other, non O2Micro controllers will generate irq 1 in some 	 * situations, so we can't do this hack for everybody.  Reports of 	 * keyboard controller's interrupts being suppressed occurred when 	 * we did this. 	 */
 name|reg
 operator|=
 name|exca_getb
@@ -3171,7 +3171,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have to mask the card change detect interrupt while we're 	 * messing with the power.  It is allowed to bounce while we're 	 * messing with power as things settle down. 	 */
+comment|/* 	 * We have to mask the card change detect interrupt while we're 	 * messing with the power.  It is allowed to bounce while we're 	 * messing with power as things settle down.  In addition, we mask off 	 * the card's function interrupt by routing it via the ISA bus.  This 	 * bit generally only affects 16bit cards.  Some bridges allow one to 	 * set another bit to have it also affect 32bit cards.  Since 32bit 	 * cards are required to be better behaved, we don't bother to get 	 * into those bridge specific features. 	 */
 name|mask
 operator|=
 name|cbb_get
@@ -3197,6 +3197,18 @@ argument_list|,
 name|CBB_SOCKET_MASK
 argument_list|,
 name|mask
+argument_list|)
+expr_stmt|;
+name|PCI_MASK_CONFIG
+argument_list|(
+name|brdev
+argument_list|,
+name|CBBR_BRIDGECTRL
+argument_list|,
+operator||
+name|CBBM_BRIDGECTRL_INTR_IREQ_ISA_EN
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 name|cbb_set
@@ -3297,7 +3309,7 @@ literal|"power timeout, doom?\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * After the power is good, we can turn off the power 	 * interrupt.  However, the PC Card standard says that we must 	 * delay turning the CD bit back on for a bit to allow for 	 * bouncyness on power down (recall that we don't wait above 	 * for a power down, since we don't get an interrupt for 	 * that).  We're called either from the suspend code in which 	 * case we don't want to turn card change on again, or we're 	 * called from the card insertion code, in which case the cbb 	 * thread will turn it on for us before it waits to be woken 	 * by a change event. 	 */
+comment|/* 	 * After the power is good, we can turn off the power interrupt. 	 * However, the PC Card standard says that we must delay turning the 	 * CD bit back on for a bit to allow for bouncyness on power down 	 * (recall that we don't wait above for a power down, since we don't 	 * get an interrupt for that).  We're called either from the suspend 	 * code in which case we don't want to turn card change on again, or 	 * we're called from the card insertion code, in which case the cbb 	 * thread will turn it on for us before it waits to be woken by a 	 * change event. 	 */
 name|cbb_clrb
 argument_list|(
 name|sc
@@ -3362,6 +3374,19 @@ goto|goto
 name|done
 goto|;
 block|}
+name|PCI_MASK_CONFIG
+argument_list|(
+name|brdev
+argument_list|,
+name|CBBR_BRIDGECTRL
+argument_list|,
+operator|&
+operator|~
+name|CBBM_BRIDGECTRL_INTR_IREQ_ISA_EN
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|retval
 operator|=
 literal|1
