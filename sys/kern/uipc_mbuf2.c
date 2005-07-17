@@ -93,7 +93,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_PACKET_TAGS
 argument_list|,
-literal|"mbuf tags"
+name|MBUF_TAG_MEM_NAME
 argument_list|,
 literal|"packet-attached information"
 argument_list|)
