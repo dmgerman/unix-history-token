@@ -2055,7 +2055,7 @@ operator|~
 operator|(
 name|CBBM_BRIDGECTRL_MASTER_ABORT
 operator||
-name|CBBM_BRIDGECTRL_INTR_IREQ_EN
+name|CBBM_BRIDGECTRL_INTR_IREQ_ISA_EN
 operator|)
 argument_list|,
 operator||

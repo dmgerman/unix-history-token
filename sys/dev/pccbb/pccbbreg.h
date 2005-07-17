@@ -192,7 +192,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CBBM_BRIDGECTRL_INTR_IREQ_EN
+name|CBBM_BRIDGECTRL_INTR_IREQ_ISA_EN
 value|0x0080
 end_define
 
