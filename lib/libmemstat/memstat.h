@@ -100,11 +100,9 @@ name|memory_type_list
 struct_decl|;
 end_struct_decl
 
-begin_comment
-comment|/*  * Functions for managing memory type and statistics data.  */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
+comment|/*  * Functions for managing memory type and statistics data.  */
 name|struct
 name|memory_type_list
 modifier|*
@@ -674,6 +672,10 @@ name|cpu
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
