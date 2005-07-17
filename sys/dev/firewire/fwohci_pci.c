@@ -714,15 +714,15 @@ name|FW_DEVICE_CXD1947
 operator|)
 condition|)
 block|{
-name|device_set_desc
+name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Sony i.LINK (CXD1947)"
+literal|"Sony i.LINK (CXD1947) not supported"
 argument_list|)
 expr_stmt|;
 return|return
-name|BUS_PROBE_DEFAULT
+name|ENXIO
 return|;
 block|}
 if|if
