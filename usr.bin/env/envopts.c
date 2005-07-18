@@ -1457,6 +1457,11 @@ argument_list|,
 name|vname
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|vname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -1495,11 +1500,18 @@ argument_list|(
 name|vvalue
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|vname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|vvalue
 operator|)
 return|;
+block|}
 comment|/* 	 * The value is longer than the string it replaces, which means the 	 * present destination area is too small to hold it.  Create a new 	 * destination area, and update the caller's 'dest' variable to match. 	 * If the caller has already started copying some info for 'thisarg' 	 * into the present destination, then the new destination area must 	 * include a copy of that data, and the pointer to 'thisarg' must also 	 * be updated.  Note that it is still the caller which copies this 	 * vvalue to the new *dest. 	 */
 name|newlen
 operator|=
@@ -1580,6 +1592,11 @@ argument_list|(
 name|newstr
 argument_list|,
 literal|'\0'
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|vname
 argument_list|)
 expr_stmt|;
 return|return
