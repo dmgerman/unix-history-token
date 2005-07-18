@@ -1318,12 +1318,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|fs
 operator|.
-name|map
+name|first_object
 operator|->
-name|system_map
+name|flags
+operator|&
+name|OBJ_NEEDGIANT
 condition|)
 name|VM_UNLOCK_GIANT
 argument_list|()
