@@ -797,6 +797,13 @@ argument_list|)
 expr_stmt|;
 name|md
 operator|.
+name|md_id
+operator|=
+name|arc4random
+argument_list|()
+expr_stmt|;
+name|md
+operator|.
 name|md_all
 operator|=
 operator|*
