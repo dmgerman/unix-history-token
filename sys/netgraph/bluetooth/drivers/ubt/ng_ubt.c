@@ -981,13 +981,6 @@ index|[]
 init|=
 block|{
 block|{
-name|USB_VENDOR_AVM
-block|,
-literal|0x3800
-block|}
-block|,
-comment|/* AVM USB Bluetooth-Adapter BlueFritz! */
-block|{
 literal|0
 block|,
 literal|0
@@ -1004,6 +997,13 @@ name|ubt_broken_devices
 index|[]
 init|=
 block|{
+block|{
+name|USB_VENDOR_AVM
+block|,
+literal|0x3800
+block|}
+block|,
+comment|/* AVM USB Bluetooth-Adapter BlueFritz! v2.0 */
 block|{
 literal|0
 block|,
