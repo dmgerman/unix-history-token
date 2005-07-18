@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|MEMSTAT_MAXCALLER
-value|8
+value|16
 end_define
 
 begin_comment
