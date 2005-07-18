@@ -173,12 +173,9 @@ name|int
 name|op
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splimp
+name|NATM_LOCK_ASSERT
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -240,11 +237,6 @@ expr_stmt|;
 comment|/* kill it! */
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -283,12 +275,9 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* current pcb */
-name|int
-name|s
-init|=
-name|splimp
+name|NATM_LOCK_ASSERT
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * lookup required 	 */
 name|LIST_FOREACH
 argument_list|(
@@ -412,11 +401,6 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|cpcb

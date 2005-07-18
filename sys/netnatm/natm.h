@@ -267,6 +267,18 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
+name|mtx
+name|natm_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* global netnatm lock */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|npcblist
 name|natm_pcbs
 decl_stmt|;
@@ -328,6 +340,42 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* locking macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NATM_LOCK_INIT
+parameter_list|()
+value|mtx_init(&natm_mtx, "natm_mtx", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NATM_LOCK
+parameter_list|()
+value|mtx_lock(&natm_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NATM_UNLOCK
+parameter_list|()
+value|mtx_unlock(&natm_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NATM_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&natm_mtx, MA_OWNED)
+end_define
 
 begin_comment
 comment|/* external functions */

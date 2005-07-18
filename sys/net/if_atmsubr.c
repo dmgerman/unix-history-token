@@ -1088,14 +1088,6 @@ init|=
 name|ETHERTYPE_IP
 decl_stmt|;
 comment|/* default */
-ifdef|#
-directive|ifdef
-name|NATM
-name|int
-name|s
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -1211,26 +1203,21 @@ name|struct
 name|natmpcb
 modifier|*
 name|npcb
-init|=
-name|rxhand
 decl_stmt|;
-name|s
-operator|=
-name|splimp
+comment|/* 		 * XXXRW: this use of 'rxhand' is not a very good idea, and 		 * was subject to races even before SMPng due to the release 		 * of spl here. 		 */
+name|NATM_LOCK
 argument_list|()
 expr_stmt|;
-comment|/* in case 2 atm cards @ diff lvls */
+name|npcb
+operator|=
+name|rxhand
+expr_stmt|;
 name|npcb
 operator|->
 name|npcb_inq
 operator|++
 expr_stmt|;
 comment|/* count # in queue */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|isr
 operator|=
 name|NETISR_NATM
@@ -1244,6 +1231,9 @@ operator|=
 name|rxhand
 expr_stmt|;
 comment|/* XXX: overload */
+name|NATM_UNLOCK
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
 name|printf
