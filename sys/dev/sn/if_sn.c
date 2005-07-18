@@ -377,7 +377,7 @@ comment|/* 3 */
 literal|"SMC91C90/91C92"
 block|,
 comment|/* 4 */
-literal|"SMC91C94"
+literal|"SMC91C94/91C96"
 block|,
 comment|/* 5 */
 literal|"SMC91C95"
