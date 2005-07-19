@@ -4005,8 +4005,6 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|n
-decl_stmt|,
-name|s
 decl_stmt|;
 name|struct
 name|inpcb
@@ -4085,11 +4083,6 @@ name|EPERM
 operator|)
 return|;
 comment|/* 	 * OK, now we're committed to doing something. 	 */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -4112,11 +4105,6 @@ name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|error
@@ -4225,11 +4213,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -4351,11 +4334,6 @@ name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|n
@@ -4593,11 +4571,6 @@ name|error
 condition|)
 block|{
 comment|/* 		 * Give the user an updated idea of our state. 		 * If the generation differs from what we told 		 * her before, she knows that something happened 		 * while we were processing this request, and it 		 * might be necessary to retry. 		 */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -4630,11 +4603,6 @@ name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|error
@@ -4716,8 +4684,6 @@ name|inp
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|s
 decl_stmt|;
 name|error
 operator|=
@@ -4764,11 +4730,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -4901,11 +4862,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -5003,8 +4959,6 @@ name|inp
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|s
 decl_stmt|,
 name|mapped
 init|=
@@ -5156,11 +5110,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -5362,11 +5311,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -5510,8 +5454,6 @@ name|icmp_tcp_seq
 decl_stmt|;
 name|int
 name|mtu
-decl_stmt|,
-name|s
 decl_stmt|;
 name|faddr
 operator|=
@@ -5632,11 +5574,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|icp
 operator|=
 operator|(
@@ -5975,11 +5912,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}

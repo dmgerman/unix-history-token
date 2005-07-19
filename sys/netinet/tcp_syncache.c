@@ -2237,7 +2237,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-comment|/* we are called at splnet() here */
 name|sc
 operator|=
 name|syncache_lookup
