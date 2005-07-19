@@ -8550,6 +8550,8 @@ condition|(
 name|ifp
 operator|->
 name|if_resolvemulti
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error
@@ -8578,7 +8580,7 @@ else|else
 block|{
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|MALLOC
@@ -8701,7 +8703,7 @@ if|if
 condition|(
 name|llsa
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|TAILQ_FOREACH
@@ -8844,6 +8846,8 @@ condition|(
 name|ifp
 operator|->
 name|if_ioctl
+operator|!=
+name|NULL
 condition|)
 block|{
 name|s
@@ -8941,7 +8945,7 @@ if|if
 condition|(
 name|ifma
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENOENT
@@ -9067,7 +9071,7 @@ if|if
 condition|(
 name|sa
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
@@ -9097,7 +9101,7 @@ if|if
 condition|(
 name|ifma
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
@@ -9142,6 +9146,8 @@ condition|(
 name|ifp
 operator|->
 name|if_ioctl
+operator|!=
+name|NULL
 condition|)
 block|{
 name|IFF_LOCKGIANT
