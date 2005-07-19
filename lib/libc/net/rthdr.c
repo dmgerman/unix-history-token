@@ -1800,8 +1800,6 @@ modifier|*
 name|rh0
 decl_stmt|;
 name|int
-name|rthlen
-decl_stmt|,
 name|addrs
 decl_stmt|;
 switch|switch
@@ -1823,23 +1821,13 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
-name|rthlen
-operator|=
-operator|(
-name|rh0
-operator|->
-name|ip6r0_len
-operator|+
-literal|1
-operator|)
-operator|<<
-literal|3
-expr_stmt|;
 comment|/* 		 * Validation for a type-0 routing header. 		 * Is this too strict? 		 */
 if|if
 condition|(
 operator|(
-name|rthlen
+name|rh0
+operator|->
+name|ip6r0_len
 operator|%
 literal|2
 operator|)
@@ -1850,7 +1838,9 @@ operator|(
 name|addrs
 operator|=
 operator|(
-name|rthlen
+name|rh0
+operator|->
+name|ip6r0_len
 operator|>>
 literal|1
 operator|)
