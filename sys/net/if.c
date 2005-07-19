@@ -3834,7 +3834,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|equal
+name|sa_equal
 parameter_list|(
 name|a1
 parameter_list|,
@@ -3908,7 +3908,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|equal
+name|sa_equal
 argument_list|(
 name|addr
 argument_list|,
@@ -3943,7 +3943,7 @@ name|sa_len
 operator|!=
 literal|0
 operator|&&
-name|equal
+name|sa_equal
 argument_list|(
 name|ifa
 operator|->
@@ -4056,7 +4056,7 @@ name|ifa
 operator|->
 name|ifa_dstaddr
 operator|&&
-name|equal
+name|sa_equal
 argument_list|(
 name|addr
 argument_list|,
@@ -4253,7 +4253,7 @@ name|ifa_dstaddr
 operator|!=
 literal|0
 operator|&&
-name|equal
+name|sa_equal
 argument_list|(
 name|addr
 argument_list|,
@@ -4521,7 +4521,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|equal
+name|sa_equal
 argument_list|(
 name|addr
 argument_list|,
@@ -4535,7 +4535,7 @@ name|ifa
 operator|->
 name|ifa_dstaddr
 operator|&&
-name|equal
+name|sa_equal
 argument_list|(
 name|addr
 argument_list|,
@@ -4561,7 +4561,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|equal
+name|sa_equal
 argument_list|(
 name|addr
 argument_list|,
@@ -8515,7 +8515,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|equal
+name|sa_equal
 argument_list|(
 name|sa
 argument_list|,
@@ -8715,7 +8715,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|equal
+name|sa_equal
 argument_list|(
 name|ifma
 operator|->
@@ -8927,7 +8927,7 @@ argument|ifma_link
 argument_list|)
 if|if
 condition|(
-name|equal
+name|sa_equal
 argument_list|(
 name|sa
 argument_list|,
@@ -9083,7 +9083,7 @@ argument|ifma_link
 argument_list|)
 if|if
 condition|(
-name|equal
+name|sa_equal
 argument_list|(
 name|sa
 argument_list|,
@@ -9562,7 +9562,7 @@ argument|ifma_link
 argument_list|)
 if|if
 condition|(
-name|equal
+name|sa_equal
 argument_list|(
 name|ifma
 operator|->
