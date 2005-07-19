@@ -1172,7 +1172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * RFC3542 (2292bis) API  */
+comment|/*  * RFC3542 API  */
 end_comment
 
 begin_function
