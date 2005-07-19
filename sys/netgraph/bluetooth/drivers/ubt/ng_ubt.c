@@ -981,6 +981,13 @@ index|[]
 init|=
 block|{
 block|{
+name|USB_VENDOR_AVM
+block|,
+literal|0x2200
+block|}
+block|,
+comment|/* AVM USB Bluetooth-Adapter BlueFritz! v1.0 */
+block|{
 literal|0
 block|,
 literal|0
