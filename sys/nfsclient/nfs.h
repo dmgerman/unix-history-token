@@ -882,6 +882,17 @@ begin_comment
 comment|/* Probe for one reply only */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|R_REXMIT_INPROG
+value|0x100
+end_define
+
+begin_comment
+comment|/* Re-transmit in progress */
+end_comment
+
 begin_comment
 comment|/*  * Pointers to ops that differ from v3 to v4  */
 end_comment

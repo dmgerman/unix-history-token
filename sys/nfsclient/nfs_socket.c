@@ -4858,6 +4858,41 @@ operator|&
 name|nfs_reqq_mtx
 argument_list|)
 expr_stmt|;
+comment|/* 	 * nfs_timer() may be in the process of re-transmitting this request. 	 * nfs_timer() drops the nfs_reqq_mtx before the pru_send() (to avoid LORs). 	 * Wait till nfs_timer() completes the re-transmission. When the reply  	 * comes back, it will be discarded (since the req struct for it no longer  	 * exists). 	 */
+while|while
+condition|(
+name|rep
+operator|->
+name|r_flags
+operator|&
+name|R_REXMIT_INPROG
+condition|)
+block|{
+name|msleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|rep
+operator|->
+name|r_flags
+argument_list|,
+operator|&
+name|nfs_reqq_mtx
+argument_list|,
+operator|(
+name|PZERO
+operator|-
+literal|1
+operator|)
+argument_list|,
+literal|"nfsrxmt"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5383,7 +5418,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Nfs timer routine  * Scan the nfsreq list and retranmit any requests that have timed out  * To avoid retransmission attempts on STREAM sockets (in the future) make  * sure to set the r_retry field to 0 (implies nm_retry == 0).  *   * XXX -   * For now, since we don't register MPSAFE callouts for the NFS client -  * softclock() acquires Giant before calling us. That prevents req entries  * from being removed from the list (from nfs_request()). But we still   * acquire the nfs reqq mutex to make sure the state of individual req  * entries is not modified from RPC reply handling (from socket callback)  * while nfs_timer is walking the list of reqs.  * The nfs reqq lock cannot be held while we do the pru_send() because of a  * lock ordering violation. The NFS client socket callback acquires   * inp_lock->nfsreq mutex and pru_send acquires inp_lock. So we drop the   * reqq mutex (and reacquire it after the pru_send()). This won't work  * when we move to fine grained locking for NFS. When we get to that point,   * a rewrite of nfs_timer() will be needed.  */
+comment|/*  * Nfs timer routine  * Scan the nfsreq list and retranmit any requests that have timed out  * To avoid retransmission attempts on STREAM sockets (in the future) make  * sure to set the r_retry field to 0 (implies nm_retry == 0).  *   * The nfs reqq lock cannot be held while we do the pru_send() because of a  * lock ordering violation. The NFS client socket callback acquires   * inp_lock->nfsreq mutex and pru_send acquires inp_lock. So we drop the   * reqq mutex (and reacquire it after the pru_send()). The req structure  * (for the rexmit) is prevented from being removed by the R_REXMIT_INPROG flag.  */
 end_comment
 
 begin_function
@@ -5790,6 +5825,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* 			 * Mark the request to indicate that a XMIT is in progress 			 * to prevent the req structure being removed in nfs_request(). 			 */
+name|rep
+operator|->
+name|r_flags
+operator||=
+name|R_REXMIT_INPROG
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -5867,6 +5909,24 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|nfs_reqq_mtx
+argument_list|)
+expr_stmt|;
+name|rep
+operator|->
+name|r_flags
+operator|&=
+operator|~
+name|R_REXMIT_INPROG
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|rep
+operator|->
+name|r_flags
 argument_list|)
 expr_stmt|;
 if|if

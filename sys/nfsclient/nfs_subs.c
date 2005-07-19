@@ -1948,7 +1948,7 @@ argument_list|(
 operator|&
 name|nfs_callout
 argument_list|,
-literal|0
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|mtx_init
