@@ -7768,11 +7768,7 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-operator|(
 name|B_CACHE
-operator||
-name|B_DONE
-operator|)
 expr_stmt|;
 name|bufdone
 argument_list|(

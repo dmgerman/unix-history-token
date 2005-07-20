@@ -4221,12 +4221,6 @@ name|object
 init|=
 name|NULL
 decl_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_DONE
-expr_stmt|;
 comment|/* 	 * report error 	 */
 if|if
 condition|(
