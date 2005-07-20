@@ -2347,7 +2347,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|gn
+name|ENDNode
 argument_list|)
 expr_stmt|;
 block|}
