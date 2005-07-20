@@ -3684,6 +3684,22 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * The only type of node we should be creating here is a 	 * character device, for anything else return EOPNOTSUPP. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_vap
+operator|->
+name|va_type
+operator|!=
+name|VCHR
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 name|dvp
 operator|=
 name|ap
