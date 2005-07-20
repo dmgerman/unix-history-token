@@ -4736,12 +4736,6 @@ modifier|*
 name|fp
 decl_stmt|;
 name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
 name|IPQ_LOCK
@@ -4909,11 +4903,6 @@ block|}
 block|}
 name|IPQ_UNLOCK
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 end_function
