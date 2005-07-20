@@ -3120,6 +3120,9 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
+case|case
+name|IFT_L2VLAN
+case|:
 comment|/* 		 * Take the interface out of promiscuous mode. 		 */
 operator|(
 name|void
