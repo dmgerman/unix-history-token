@@ -1376,6 +1376,46 @@ begin_comment
 comment|/* !__FreeBSD__ */
 end_comment
 
+begin_comment
+comment|/* Capabilities taken from src/sys/dev/pci/pcireg.h. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCIY_AGP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCIY_AGP
+value|0x02
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCIY_EXPRESS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCIY_EXPRESS
+value|0x10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -4205,12 +4245,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* AGP/GART support (drm_agpsupport.c) */
+comment|/* AGP/PCI Express/GART support (drm_agpsupport.c) */
 end_comment
 
 begin_function_decl
 name|int
 name|drm_device_is_agp
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|drm_device_is_pcie
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -4375,6 +4426,9 @@ parameter_list|,
 name|dma_addr_t
 modifier|*
 name|bus_addr
+parameter_list|,
+name|int
+name|is_pcie
 parameter_list|)
 function_decl|;
 end_function_decl
