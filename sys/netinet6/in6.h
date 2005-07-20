@@ -1644,7 +1644,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* new socket options introduced in RFC2292bis */
+comment|/* new socket options introduced in RFC3542 */
 end_comment
 
 begin_define
@@ -1795,7 +1795,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* more new socket options introduced in RFC2292bis */
+comment|/* more new socket options introduced in RFC3542 */
 end_comment
 
 begin_define
@@ -1882,7 +1882,7 @@ comment|/* buf/cmsghdr; set/get IPv6 options */
 end_comment
 
 begin_comment
-comment|/* obsoleted by 2292bis */
+comment|/* obsoleted by RFC3542 */
 end_comment
 
 begin_endif

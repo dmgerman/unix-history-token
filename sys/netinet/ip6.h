@@ -413,7 +413,7 @@ value|0x05
 end_define
 
 begin_comment
-comment|/* 00 0 00101 (2292bis, recommended) */
+comment|/* 00 0 00101 (RFC3542, recommended) */
 end_comment
 
 begin_define
@@ -723,7 +723,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* maximun hoplimit */
+comment|/* maximum hoplimit */
 end_comment
 
 begin_define
@@ -756,7 +756,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* subtracted when forwaeding */
+comment|/* subtracted when forwarding */
 end_comment
 
 begin_define
