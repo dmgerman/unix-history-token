@@ -886,7 +886,11 @@ operator|=
 name|uthp
 operator|->
 name|uth_zone_free
-operator|+
+expr_stmt|;
+name|mtp
+operator|->
+name|mt_kegfree
+operator|=
 name|uthp
 operator|->
 name|uth_keg_free

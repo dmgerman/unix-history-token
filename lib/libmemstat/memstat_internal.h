@@ -106,6 +106,10 @@ name|uint64_t
 name|mt_zonefree
 decl_stmt|;
 comment|/* Free items in zone. */
+name|uint64_t
+name|mt_kegfree
+decl_stmt|;
+comment|/* Free items in keg. */
 comment|/* 	 * Per-CPU measurements fall into two categories: per-CPU allocation, 	 * and per-CPU cache state. 	 */
 struct|struct
 block|{
