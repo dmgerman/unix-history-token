@@ -614,6 +614,17 @@ begin_comment
 comment|/* Update zone failure statistic. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ZFREE_STATFREE
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Update zone free statistic. */
+end_comment
+
 begin_comment
 comment|/* Prototypes.. */
 end_comment
@@ -1667,7 +1678,7 @@ name|NULL
 argument_list|,
 name|SKIP_NONE
 argument_list|,
-literal|0
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2256,7 +2267,7 @@ name|NULL
 argument_list|,
 name|SKIP_NONE
 argument_list|,
-literal|0
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 else|else
@@ -3022,7 +3033,7 @@ name|NULL
 argument_list|,
 name|SKIP_NONE
 argument_list|,
-literal|0
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3237,7 +3248,7 @@ name|NULL
 argument_list|,
 name|SKIP_NONE
 argument_list|,
-literal|0
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 name|ZONE_LOCK
@@ -3640,7 +3651,7 @@ name|NULL
 argument_list|,
 name|SKIP_NONE
 argument_list|,
-literal|0
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 name|keg
@@ -5997,7 +6008,7 @@ name|NULL
 argument_list|,
 name|SKIP_NONE
 argument_list|,
-literal|0
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 block|}
@@ -7134,7 +7145,7 @@ name|NULL
 argument_list|,
 name|SKIP_NONE
 argument_list|,
-literal|0
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 block|}
@@ -7467,6 +7478,8 @@ argument_list|,
 name|SKIP_DTOR
 argument_list|,
 name|ZFREE_STATFAIL
+operator||
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 return|return
@@ -8820,6 +8833,8 @@ argument_list|,
 name|SKIP_FINI
 argument_list|,
 name|ZFREE_STATFAIL
+operator||
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 return|return
@@ -8869,6 +8884,8 @@ argument_list|,
 name|SKIP_DTOR
 argument_list|,
 name|ZFREE_STATFAIL
+operator||
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 return|return
@@ -9287,6 +9304,35 @@ name|zfree_start
 goto|;
 block|}
 block|}
+comment|/* Since we have locked the zone we may as well send back our stats */
+name|zone
+operator|->
+name|uz_allocs
+operator|+=
+name|cache
+operator|->
+name|uc_allocs
+expr_stmt|;
+name|cache
+operator|->
+name|uc_allocs
+operator|=
+literal|0
+expr_stmt|;
+name|zone
+operator|->
+name|uz_frees
+operator|+=
+name|cache
+operator|->
+name|uc_frees
+expr_stmt|;
+name|cache
+operator|->
+name|uc_frees
+operator|=
+literal|0
+expr_stmt|;
 name|bucket
 operator|=
 name|cache
@@ -9475,6 +9521,8 @@ argument_list|,
 name|SKIP_DTOR
 argument_list|,
 name|ZFREE_STATFAIL
+operator||
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9589,6 +9637,17 @@ condition|)
 name|zone
 operator|->
 name|uz_fails
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|ZFREE_STATFREE
+condition|)
+name|zone
+operator|->
+name|uz_frees
 operator|++
 expr_stmt|;
 if|if
@@ -9836,11 +9895,6 @@ comment|/* Zone statistics */
 name|keg
 operator|->
 name|uk_free
-operator|++
-expr_stmt|;
-name|zone
-operator|->
-name|uz_frees
 operator|++
 expr_stmt|;
 if|if
@@ -10781,6 +10835,8 @@ argument_list|,
 name|SKIP_NONE
 argument_list|,
 name|ZFREE_STATFAIL
+operator||
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 block|}
@@ -10837,7 +10893,7 @@ name|NULL
 argument_list|,
 name|SKIP_NONE
 argument_list|,
-literal|0
+name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
 block|}
