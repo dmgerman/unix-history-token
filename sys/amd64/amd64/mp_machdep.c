@@ -371,6 +371,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Temporary holder for double fault stack */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|doublefault_stack
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Hotwire a 0->4MB V==P mapping */
 end_comment
 
@@ -1660,6 +1671,22 @@ expr|struct
 name|amd64tss
 argument_list|)
 expr_stmt|;
+name|common_tss
+index|[
+name|cpu
+index|]
+operator|.
+name|tss_ist1
+operator|=
+operator|(
+name|long
+operator|)
+operator|&
+name|doublefault_stack
+index|[
+name|PAGE_SIZE
+index|]
+expr_stmt|;
 name|gdt_segs
 index|[
 name|GPROC0_SEL
@@ -2725,7 +2752,7 @@ name|cpu
 index|]
 operator|=
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|kmem_alloc
@@ -2734,6 +2761,19 @@ name|kernel_map
 argument_list|,
 name|KSTACK_PAGES
 operator|*
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|doublefault_stack
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
