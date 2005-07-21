@@ -12024,11 +12024,11 @@ if|if
 condition|(
 name|control
 operator|==
-literal|0
+name|NULL
 operator|||
 name|opt
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
