@@ -600,6 +600,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"gem"
+block|,
+literal|"Apple/Sun GMAC ethernet adapter"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"ie"
 block|,
 literal|"AT&T StarLAN 10 and EN100; 3Com 3C507; NI5210"
