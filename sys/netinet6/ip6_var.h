@@ -391,10 +391,6 @@ directive|define
 name|IP6PO_USECOA
 value|0x08
 comment|/* use care of address */
-name|int
-name|needfree
-decl_stmt|;
-comment|/* members dynamically allocated */
 block|}
 struct|;
 end_struct
@@ -1559,8 +1555,6 @@ operator|,
 expr|struct
 name|ip6_pktopts
 operator|*
-operator|,
-name|int
 operator|,
 name|int
 operator|,
