@@ -1857,6 +1857,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|ng_ether_output_p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ng_ether_output_p is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2828,6 +2839,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|ng_ether_input_p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ng_ether_input_p is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ng_ether_input_p
@@ -3818,6 +3840,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|ng_ether_input_orphan_p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ng_ether_input_orphan_p is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Put back the ethernet header so netgraph has a 		 * consistent view of inbound packets. 		 */
 name|M_PREPEND
 argument_list|(
@@ -4200,6 +4233,18 @@ name|ac_netgraph
 operator|!=
 name|NULL
 condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|ng_ether_detach_p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ng_ether_detach_p is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ng_ether_detach_p
@@ -4208,6 +4253,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 name|bpfdetach
 argument_list|(
 name|ifp
