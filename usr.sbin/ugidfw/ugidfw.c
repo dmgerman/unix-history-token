@@ -401,7 +401,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|rule_slots
 condition|;
 name|i
