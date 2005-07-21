@@ -397,7 +397,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ip6_setpktoption
+name|ip6_setpktopt
 name|__P
 argument_list|(
 operator|(
@@ -8997,7 +8997,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|ip6_setpktoptions
+name|ip6_setpktopts
 argument_list|(
 name|m
 argument_list|,
@@ -9061,7 +9061,7 @@ end_comment
 
 begin_function
 name|void
-name|init_ip6pktopts
+name|ip6_initpktopts
 parameter_list|(
 name|opt
 parameter_list|)
@@ -9180,7 +9180,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|init_ip6pktopts
+name|ip6_initpktopts
 argument_list|(
 operator|*
 name|pktopt
@@ -9203,7 +9203,7 @@ name|pktopt
 expr_stmt|;
 return|return
 operator|(
-name|ip6_setpktoption
+name|ip6_setpktopt
 argument_list|(
 name|optname
 argument_list|,
@@ -11972,7 +11972,7 @@ end_comment
 
 begin_function
 name|int
-name|ip6_setpktoptions
+name|ip6_setpktopts
 parameter_list|(
 name|control
 parameter_list|,
@@ -12086,7 +12086,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|init_ip6pktopts
+name|ip6_initpktopts
 argument_list|(
 name|opt
 argument_list|)
@@ -12201,7 +12201,7 @@ condition|)
 continue|continue;
 name|error
 operator|=
-name|ip6_setpktoption
+name|ip6_setpktopt
 argument_list|(
 name|cm
 operator|->
@@ -12257,7 +12257,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ip6_setpktoption
+name|ip6_setpktopt
 parameter_list|(
 name|optname
 parameter_list|,
@@ -12317,7 +12317,7 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"ip6_setpktoption: impossible case\n"
+literal|"ip6_setpktopt: impossible case\n"
 argument_list|)
 expr_stmt|;
 endif|#

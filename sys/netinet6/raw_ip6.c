@@ -1471,7 +1471,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|ip6_setpktoptions
+name|ip6_setpktopts
 argument_list|(
 name|control
 argument_list|,
@@ -1650,7 +1650,7 @@ name|in6_pktinfo
 modifier|*
 name|pi
 decl_stmt|;
-comment|/* 		 * XXX Boundary check is assumed to be already done in 		 * ip6_setpktoptions(). 		 */
+comment|/* 		 * XXX Boundary check is assumed to be already done in 		 * ip6_setpktopts(). 		 */
 if|if
 condition|(
 name|in6p

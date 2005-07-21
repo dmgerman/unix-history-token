@@ -300,7 +300,7 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|init_ip6pktopts
+name|ip6_initpktopts
 argument_list|(
 operator|&
 name|ip6_opts
