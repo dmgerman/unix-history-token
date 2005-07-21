@@ -350,8 +350,51 @@ operator|)
 return|;
 end_return
 
-begin_define
+begin_if
 unit|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * We assume that a = b will do atomic loads and stores.  However, on a  * PentiumPro or higher, reads may pass writes, so for that case we have  * to use a serializing instruction (i.e. with LOCK) to do the load in  * SMP kernels.  For UP kernels, however, the cache of the single processor  * is always consistent, so we don't need any memory barriers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_STORE_LOAD
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|LOP
+parameter_list|,
+name|SOP
+parameter_list|)
+define|\
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	*p = v;						\ }							\ struct __hack
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* defined(SMP) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ATOMIC_STORE_LOAD
@@ -375,6 +418,15 @@ value|\ 	  "+r" (v)
 comment|/* 1 */
 value|\ 	: : "memory");				 	\ }							\ struct __hack
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
 
 begin_endif
 endif|#
