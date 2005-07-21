@@ -6569,6 +6569,8 @@ name|printcontents
 decl_stmt|;
 name|printcontents
 operator|=
+name|printkeys
+operator|&&
 operator|(
 name|memcmp
 argument_list|(
