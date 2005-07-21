@@ -488,10 +488,10 @@ modifier|*
 name|if_spare3
 decl_stmt|;
 comment|/* spare pointer 3 */
-name|u_int
-name|if_spare_flags1
+name|int
+name|if_drv_flags
 decl_stmt|;
-comment|/* spare flags 1 */
+comment|/* driver-managed status flags */
 name|u_int
 name|if_spare_flags2
 decl_stmt|;
