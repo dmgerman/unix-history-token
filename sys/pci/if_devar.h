@@ -3546,18 +3546,9 @@ parameter_list|)
 value|do { \ 	    (sc)->tulip_curperfstats.perf_ ## name ## _cycles += TULIP_PERFDIFF(perfstart_ ## name, TULIP_PERFREAD()); \ 	    (sc)->tulip_curperfstats.perf_ ## name ++; \ 	} while (0)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_if
-
 begin_typedef
 typedef|typedef
-name|u_quad_t
+name|u_long
 name|tulip_cycle_t
 typedef|;
 end_typedef
@@ -3571,15 +3562,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|tulip_cycle_t
-name|x
-decl_stmt|;
-asm|__asm__
-specifier|volatile
-asm|(".byte 0x0f, 0x31":"=A" (x));
 return|return
 operator|(
-name|x
+name|get_cyclecount
+argument_list|()
 operator|)
 return|;
 block|}
@@ -3596,63 +3582,6 @@ name|f
 parameter_list|)
 value|((f) - (s))
 end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-end_elif
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|tulip_cycle_t
-typedef|;
-end_typedef
-
-begin_function
-specifier|static
-name|__inline
-name|tulip_cycle_t
-name|TULIP_PERFREAD
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|tulip_cycle_t
-name|x
-decl_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("rpcc %0":"=r" (x));
-return|return
-operator|(
-name|x
-operator|)
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|TULIP_PERFDIFF
-parameter_list|(
-name|s
-parameter_list|,
-name|f
-parameter_list|)
-value|((unsigned int) ((f) - (s)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
