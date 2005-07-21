@@ -102,6 +102,10 @@ file|<machine/pc/bios.h>
 end_include
 
 begin_comment
+comment|/*  * System Management BIOS Reference Specification, v2.4 Final  * http://www.dmtf.org/standards/published_documents/DSP0134.pdf  */
+end_comment
+
+begin_comment
 comment|/*  * SMBIOS Entry Point Structure  */
 end_comment
 
@@ -128,7 +132,7 @@ decl_stmt|;
 name|u_int8_t
 name|SMBIOS_Minor
 decl_stmt|;
-name|u_int8_t
+name|u_int16_t
 name|Max_Size
 decl_stmt|;
 name|u_int8_t
@@ -136,6 +140,9 @@ name|Revision
 decl_stmt|;
 name|u_int8_t
 name|Formatted_Area
+index|[
+literal|5
+index|]
 decl_stmt|;
 name|u_int8_t
 name|Intermediate_Anchor
@@ -389,6 +396,58 @@ argument_list|)
 operator|->
 name|Length
 expr_stmt|;
+if|if
+condition|(
+name|length
+operator|!=
+literal|0x1f
+condition|)
+block|{
+name|u_int8_t
+name|major
+decl_stmt|,
+name|minor
+decl_stmt|;
+name|major
+operator|=
+name|ADDR2EPS
+argument_list|(
+name|addr
+argument_list|)
+operator|->
+name|SMBIOS_Major
+expr_stmt|;
+name|minor
+operator|=
+name|ADDR2EPS
+argument_list|(
+name|addr
+argument_list|)
+operator|->
+name|SMBIOS_Minor
+expr_stmt|;
+comment|/* SMBIOS v2.1 implementation might use 0x1e. */
+if|if
+condition|(
+name|length
+operator|==
+literal|0x1e
+operator|&&
+name|major
+operator|==
+literal|2
+operator|&&
+name|minor
+operator|==
+literal|1
+condition|)
+name|length
+operator|=
+literal|0x1f
+expr_stmt|;
+else|else
+return|return;
+block|}
 name|child
 operator|=
 name|BUS_ADD_CHILD
@@ -647,7 +706,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Version: %d.%02d"
+literal|"Version: %u.%u"
 argument_list|,
 name|sc
 operator|->
@@ -675,7 +734,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|", Revision: %d.%02d"
+literal|", BCD Revision: %u.%u"
 argument_list|,
 name|bcd2bin
 argument_list|(
