@@ -24871,7 +24871,7 @@ begin_define
 define|#
 directive|define
 name|PCI_CBIO
-value|0x10
+value|PCIR_BAR(0)
 end_define
 
 begin_comment
@@ -24882,7 +24882,7 @@ begin_define
 define|#
 directive|define
 name|PCI_CBMA
-value|0x14
+value|PCIR_BAR(1)
 end_define
 
 begin_comment
@@ -25107,8 +25107,6 @@ name|u_int32_t
 name|revinfo
 decl_stmt|,
 name|cfdainfo
-decl_stmt|,
-name|cfcsinfo
 decl_stmt|;
 name|unsigned
 name|csroffset
@@ -25183,44 +25181,12 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|cfcsinfo
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
 comment|/* turn busmaster on in case BIOS doesn't set it */
-if|if
-condition|(
-operator|!
-operator|(
-name|cfcsinfo
-operator|&
-name|PCIM_CMD_BUSMASTEREN
-operator|)
-condition|)
-block|{
-name|cfcsinfo
-operator||=
-name|PCIM_CMD_BUSMASTEREN
-expr_stmt|;
-name|pci_write_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|cfcsinfo
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pci_get_vendor
