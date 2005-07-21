@@ -469,6 +469,109 @@ value|2
 end_define
 
 begin_comment
+comment|/*  * Various features and capabilities for the acpi_get_features() method.  * In particular, these are used for the ACPI 3.0 _PDC and _OSC methods.  * See the Intel document titled "Processor Driver Capabilities Bit  * Definitions", number 302223-002.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_PERF_MSRS
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Intel SpeedStep PERF_CTL MSRs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_C1_IO_HALT
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Intel C1 "IO then halt" sequence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_THR_MSRS
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Intel OnDemand throttling MSRs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_SMP_SAME
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* MP C1, Px, and Tx (all the same) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_SMP_SAME_C3
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* MP C2 and C3 (all the same) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_SMP_DIFF_PX
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* MP Px (different, using _PSD) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_SMP_DIFF_CX
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* MP Cx (different, using _CSD) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_SMP_DIFF_TX
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* MP Tx (different, using _TSD) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_SMP_C1_NATIVE
+value|(1<< 8)
+end_define
+
+begin_comment
+comment|/* MP C1 support other than halt */
+end_comment
+
+begin_comment
 comment|/*  * Quirk flags.  *  * ACPI_Q_BROKEN: Disables all ACPI support.  * ACPI_Q_TIMER: Disables support for the ACPI timer.  * ACPI_Q_MADT_IRQ0: Specifies that ISA IRQ 0 is wired up to pin 0 of the  *	first APIC and that the MADT should force that by ignoring the PC-AT  *	compatible flag and ignoring overrides that redirect IRQ 0 to pin 2.  */
 end_comment
 
