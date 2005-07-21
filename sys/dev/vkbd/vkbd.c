@@ -181,7 +181,7 @@ name|VKBD_LOCK_INIT
 parameter_list|(
 name|s
 parameter_list|)
-value|mtx_init(&(s)->ks_lock, NULL, NULL, MTX_DEF)
+value|mtx_init(&(s)->ks_lock, "vkbd_lock", NULL, MTX_DEF|MTX_RECURSE)
 end_define
 
 begin_define
