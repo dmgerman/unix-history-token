@@ -12269,8 +12269,10 @@ block|{
 name|mtx_assert
 argument_list|(
 operator|&
-name|ngq
+name|node
 operator|->
+name|nd_input_queue
+operator|.
 name|q_mtx
 argument_list|,
 name|MA_OWNED
