@@ -394,6 +394,9 @@ block|,
 literal|1
 block|,
 comment|/* refs always>= 1 */
+literal|0
+block|,
+comment|/* undefined data link type */
 operator|&
 name|ng_deadhook
 block|,
