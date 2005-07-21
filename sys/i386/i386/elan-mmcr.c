@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pc/bios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -223,6 +229,70 @@ end_endif
 begin_comment
 comment|/* CPU_ELAN_PPS */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_SOEKRIS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|bios_oem
+name|bios_soekris
+init|=
+block|{
+block|{
+literal|0xf0000
+block|,
+literal|0xf1000
+block|}
+block|,
+block|{
+block|{
+literal|"Soekris"
+block|,
+literal|0
+block|,
+literal|8
+block|}
+block|,
+comment|/* Soekris Engineering. */
+block|{
+literal|"net4"
+block|,
+literal|0
+block|,
+literal|8
+block|}
+block|,
+comment|/* net45xx */
+block|{
+literal|"comBIOS"
+block|,
+literal|0
+block|,
+literal|54
+block|}
+block|,
+comment|/* comBIOS ver. 1.26a  20040819 ... */
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|, 	}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1931,6 +2001,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_SOEKRIS
+define|#
+directive|define
+name|BIOS_OEM_MAXLEN
+value|72
+specifier|static
+name|u_char
+name|bios_oem
+index|[
+name|BIOS_OEM_MAXLEN
+index|]
+init|=
+literal|"\0"
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CPU_SOEKRIS */
 comment|/* If no elan found, just return */
 if|if
 condition|(
@@ -1975,6 +2064,27 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CPU_SOEKRIS
+if|if
+condition|(
+name|bios_oem_strings
+argument_list|(
+operator|&
+name|bios_soekris
+argument_list|,
+name|bios_oem
+argument_list|,
+name|BIOS_OEM_MAXLEN
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Elan-mmcr %s\n"
+argument_list|,
+name|bios_oem
+argument_list|)
+expr_stmt|;
 comment|/* Create the error LED on GPIO9 */
 name|led_cookie
 index|[
