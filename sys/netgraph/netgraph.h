@@ -366,6 +366,10 @@ name|int
 name|hk_refs
 decl_stmt|;
 comment|/* dont actually free this till 0 */
+name|int
+name|hk_type
+decl_stmt|;
+comment|/* tbd: hook data link type */
 name|struct
 name|ng_hook
 modifier|*
