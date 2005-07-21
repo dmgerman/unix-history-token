@@ -2428,6 +2428,9 @@ decl_stmt|;
 name|int
 name|separate_bars
 decl_stmt|;
+name|int
+name|num_datasets
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2450,6 +2453,9 @@ name|width
 parameter_list|,
 name|int
 name|separate
+parameter_list|,
+name|int
+name|num_datasets
 parameter_list|)
 block|{
 name|struct
@@ -2491,6 +2497,12 @@ operator|->
 name|separate_bars
 operator|=
 name|separate
+expr_stmt|;
+name|pl
+operator|->
+name|num_datasets
+operator|=
+name|num_datasets
 expr_stmt|;
 name|pl
 operator|->
@@ -2744,7 +2756,9 @@ name|char
 operator|*
 argument_list|)
 operator|*
-literal|2
+name|pl
+operator|->
+name|num_datasets
 argument_list|)
 expr_stmt|;
 name|memset
@@ -2761,7 +2775,9 @@ name|char
 operator|*
 argument_list|)
 operator|*
-literal|2
+name|pl
+operator|->
+name|num_datasets
 argument_list|)
 expr_stmt|;
 block|}
@@ -3367,7 +3383,9 @@ literal|0
 init|;
 name|i
 operator|<
-literal|2
+name|pl
+operator|->
+name|num_datasets
 condition|;
 name|i
 operator|++
@@ -4138,6 +4156,8 @@ argument_list|(
 literal|74
 argument_list|,
 name|flag_s
+argument_list|,
+name|nds
 argument_list|)
 expr_stmt|;
 for|for
