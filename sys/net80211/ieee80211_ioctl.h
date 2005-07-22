@@ -1692,6 +1692,17 @@ begin_comment
 comment|/* pure 11g (no 11b stations) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_FRAGTHRESHOLD
+value|73
+end_define
+
+begin_comment
+comment|/* tx fragmentation threshold */
+end_comment
+
 begin_comment
 comment|/*  * Scan result data returned for IEEE80211_IOC_SCAN_RESULTS.  */
 end_comment
