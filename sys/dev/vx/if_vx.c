@@ -2986,6 +2986,15 @@ expr_stmt|;
 comment|/*          * XXX: Some cards seem to be in promiscous mode all the time.          * we need to make sure we only get our own stuff always.          * bleah!          */
 if|if
 condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_PROMISC
+operator|)
+operator|&&
 operator|(
 name|eh
 operator|->
