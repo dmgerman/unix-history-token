@@ -1929,7 +1929,7 @@ define|#
 directive|define
 name|IEEE80211_WEP_MINLEN
 define|\
-value|(sizeof(struct ieee80211_frame) + ETHER_HDR_LEN + \ 	IEEE80211_WEP_HDRLEN + IEEE80211_WEP_CRCLEN)
+value|(sizeof(struct ieee80211_frame) + \ 	IEEE80211_WEP_HDRLEN + IEEE80211_WEP_CRCLEN)
 name|struct
 name|ieee80211_key
 modifier|*
