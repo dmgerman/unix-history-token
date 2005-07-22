@@ -2521,15 +2521,8 @@ value|((b)&~ 0xc000)
 end_define
 
 begin_comment
-comment|/*   * RTS frame length parameters.  The default is specified in  * the 802.11 spec.  The max may be wrong for jumbo frames.  */
+comment|/*   * RTS frame length parameters.  The default is specified in  * the 802.11 spec as 512; we treat it as implementation-dependent  * so it's defined in ieee80211_var.h.  The max may be wrong  * for jumbo frames.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_RTS_DEFAULT
-value|512
-end_define
 
 begin_define
 define|#
@@ -2542,7 +2535,25 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_RTS_MAX
-value|IEEE80211_MAX_LEN
+value|2346
+end_define
+
+begin_comment
+comment|/*   * TX fragmentation parameters.  As above for RTS, we treat  * default as implementation-dependent so define it elsewhere.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FRAG_MIN
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FRAG_MAX
+value|2346
 end_define
 
 begin_endif
