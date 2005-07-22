@@ -202,10 +202,6 @@ name|int
 name|ieee80211_send_nulldata
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|)

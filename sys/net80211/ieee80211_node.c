@@ -6453,8 +6453,6 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_send_nulldata
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
