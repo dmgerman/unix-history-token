@@ -427,6 +427,14 @@ name|is_tx_noheadroom
 decl_stmt|;
 comment|/* tx failed 'cuz no space */
 name|u_int32_t
+name|is_tx_fragframes
+decl_stmt|;
+comment|/* tx frames fragmented */
+name|u_int32_t
+name|is_tx_frags
+decl_stmt|;
+comment|/* tx fragments created */
+name|u_int32_t
 name|is_scan_active
 decl_stmt|;
 comment|/* active scans started */
@@ -522,6 +530,32 @@ name|u_int32_t
 name|is_ps_qempty
 decl_stmt|;
 comment|/* ps-poll w/ nothing to send */
+name|u_int32_t
+name|is_ff_badhdr
+decl_stmt|;
+comment|/* fast frame rx'd w/ bad hdr */
+name|u_int32_t
+name|is_ff_tooshort
+decl_stmt|;
+comment|/* fast frame rx decap error */
+name|u_int32_t
+name|is_ff_split
+decl_stmt|;
+comment|/* fast frame rx split error */
+name|u_int32_t
+name|is_ff_decap
+decl_stmt|;
+comment|/* fast frames decap'd */
+name|u_int32_t
+name|is_ff_encap
+decl_stmt|;
+comment|/* fast frames encap'd for tx */
+name|u_int32_t
+name|is_spare
+index|[
+literal|10
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
