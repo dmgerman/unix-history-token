@@ -520,6 +520,20 @@ argument_list|)
 expr_stmt|;
 name|STAT
 argument_list|(
+name|tx_fragframes
+argument_list|,
+literal|"tx frames fragmented"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
+name|tx_frags
+argument_list|,
+literal|"tx frags generated"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
 name|scan_active
 argument_list|,
 literal|"active scans started"
@@ -684,6 +698,41 @@ argument_list|(
 name|ps_qempty
 argument_list|,
 literal|"ps-poll received with nothing to send"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
+name|ff_badhdr
+argument_list|,
+literal|"fast frame rx'd w/ bad hdr"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
+name|ff_tooshort
+argument_list|,
+literal|"fast frame rx decap error"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
+name|ff_split
+argument_list|,
+literal|"fast frame rx split error"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
+name|ff_decap
+argument_list|,
+literal|"fast frames decap'd"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
+name|ff_encap
+argument_list|,
+literal|"fast frames encap'd for tx"
 argument_list|)
 expr_stmt|;
 undef|#
