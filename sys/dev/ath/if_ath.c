@@ -12020,8 +12020,6 @@ name|void
 operator|)
 name|ieee80211_ibss_merge
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
