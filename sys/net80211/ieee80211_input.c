@@ -12421,7 +12421,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|" %s frame, "
+literal|"%s frame, "
 argument_list|,
 name|type
 argument_list|)
@@ -12429,7 +12429,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" frame, "
+literal|"frame, "
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -12514,7 +12514,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|" %s information element, "
+literal|"%s information element, "
 argument_list|,
 name|type
 argument_list|)
@@ -12522,7 +12522,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" information element, "
+literal|"information element, "
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -12603,7 +12603,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|" %s frame, "
+literal|"%s frame, "
 argument_list|,
 name|type
 argument_list|)
@@ -12611,7 +12611,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" frame, "
+literal|"frame, "
 argument_list|)
 expr_stmt|;
 name|va_start
