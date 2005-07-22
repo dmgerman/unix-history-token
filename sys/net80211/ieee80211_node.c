@@ -6061,6 +6061,25 @@ decl_stmt|;
 name|u_int
 name|gen
 decl_stmt|;
+name|int
+name|isadhoc
+decl_stmt|;
+name|isadhoc
+operator|=
+operator|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_IBSS
+operator|||
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_AHDEMO
+operator|)
+expr_stmt|;
 name|IEEE80211_SCAN_LOCK
 argument_list|(
 name|nt
@@ -6199,6 +6218,8 @@ operator|->
 name|ni_associd
 operator|!=
 literal|0
+operator|||
+name|isadhoc
 condition|)
 block|{
 comment|/* 			 * Age frames on the power save queue. The 			 * aging interval is 4 times the listen 			 * interval specified by the station.  This 			 * number is factored into the age calculations 			 * when the frame is placed on the queue.  We 			 * store ages as time differences we can check 			 * and/or adjust only the head of the list. 			 */
@@ -6377,20 +6398,19 @@ operator|->
 name|ic_inact_probe
 condition|)
 block|{
-name|IEEE80211_DPRINTF
+name|IEEE80211_NOTE
 argument_list|(
 name|ic
 argument_list|,
+name|IEEE80211_MSG_INACT
+operator||
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"[%s] probe station due to inactivity\n"
-argument_list|,
-name|ether_sprintf
-argument_list|(
 name|ni
-operator|->
-name|ni_macaddr
-argument_list|)
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"probe station due to inactivity"
 argument_list|)
 expr_stmt|;
 name|IEEE80211_NODE_UNLOCK
@@ -6418,21 +6438,18 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|IEEE80211_DPRINTF
+name|IEEE80211_NOTE
 argument_list|(
 name|ic
 argument_list|,
+name|IEEE80211_MSG_INACT
+operator||
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"[%s] station timed out due to inactivity "
-literal|"(refcnt %u)\n"
-argument_list|,
-name|ether_sprintf
-argument_list|(
 name|ni
-operator|->
-name|ni_macaddr
-argument_list|)
+argument_list|,
+literal|"station timed out due to inactivity "
+literal|"(refcnt %u)"
 argument_list|,
 name|ieee80211_node_refcnt
 argument_list|(
