@@ -6072,8 +6072,6 @@ case|:
 name|ieee80211_node_authorize
 argument_list|(
 name|ic
-argument_list|,
-name|ic
 operator|->
 name|ic_bss
 argument_list|)

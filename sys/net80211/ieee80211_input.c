@@ -4372,8 +4372,6 @@ name|IEEE80211_AUTH_8021X
 condition|)
 name|ieee80211_node_authorize
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
@@ -5370,8 +5368,6 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_node_authorize
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;

@@ -858,16 +858,20 @@ name|void
 name|ieee80211_node_authorize
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-name|ic
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 name|ni
 parameter_list|)
 block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
 name|ni
 operator|->
 name|ni_flags
@@ -889,11 +893,6 @@ begin_function
 name|void
 name|ieee80211_node_unauthorize
 parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-parameter_list|,
 name|struct
 name|ieee80211_node
 modifier|*
@@ -4652,8 +4651,6 @@ expr_stmt|;
 comment|/* XXX not right for 802.1x/WPA */
 name|ieee80211_node_authorize
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;

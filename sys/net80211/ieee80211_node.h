@@ -612,10 +612,6 @@ name|void
 name|ieee80211_node_authorize
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|)
@@ -626,10 +622,6 @@ begin_function_decl
 name|void
 name|ieee80211_node_unauthorize
 parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
 name|struct
 name|ieee80211_node
 modifier|*
