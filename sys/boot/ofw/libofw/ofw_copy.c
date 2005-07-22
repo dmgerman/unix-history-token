@@ -57,6 +57,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAPMEM_PAGE_INC
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|roundup
 parameter_list|(
 name|x
@@ -185,7 +192,7 @@ name|dest
 operator|&
 name|PAGE_MASK
 expr_stmt|;
-comment|/* 	 * To avoid repeated mappings on small allocations, 	 * never map anything less than 16 pages at a time 	 */
+comment|/* 	 * To avoid repeated mappings on small allocations, 	 * never map anything less than MAPMEM_PAGE_INC pages at a time 	 */
 if|if
 condition|(
 operator|(
@@ -196,14 +203,14 @@ operator|)
 operator|<
 name|PAGE_SIZE
 operator|*
-literal|8
+name|MAPMEM_PAGE_INC
 condition|)
 block|{
 name|dlen
 operator|=
 name|PAGE_SIZE
 operator|*
-literal|8
+name|MAPMEM_PAGE_INC
 expr_stmt|;
 block|}
 else|else
