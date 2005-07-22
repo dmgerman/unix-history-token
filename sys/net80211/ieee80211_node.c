@@ -4639,8 +4639,6 @@ name|ic
 operator|->
 name|ic_newassoc
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 literal|1
@@ -7288,8 +7286,6 @@ name|ic
 operator|->
 name|ic_newassoc
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 name|newassoc

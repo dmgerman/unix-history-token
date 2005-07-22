@@ -411,10 +411,6 @@ name|ic_newassoc
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,
