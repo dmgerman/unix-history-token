@@ -31,18 +31,6 @@ directive|include
 file|<sys/_types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/_limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -288,10 +276,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Note: ai_addrlen used to be a size_t, per RFC 2553.  * In XNS5.2, and subsequently in POSIX-2001 and RFC 3493 it was  * changed to a socklen_t.  * To accomodate for this while preserving binary compatibility with the  * old interface, we prepend or append 32 bits of padding, depending on  * the (LP64) architecture's endianness.  *  * This should be deleted the next time the libc major number is  * incremented.  */
-end_comment
-
 begin_struct
 struct|struct
 name|addrinfo
@@ -312,40 +296,10 @@ name|int
 name|ai_protocol
 decl_stmt|;
 comment|/* 0 or IPPROTO_xxx for IPv4 and IPv6 */
-if|#
-directive|if
-name|__LONG_BIT
-operator|==
-literal|64
-operator|&&
-name|_BYTE_ORDER
-operator|==
-name|_BIG_ENDIAN
-name|uint32_t
-name|__ai_pad0
-decl_stmt|;
-comment|/* ABI compatibility */
-endif|#
-directive|endif
 name|socklen_t
 name|ai_addrlen
 decl_stmt|;
 comment|/* length of ai_addr */
-if|#
-directive|if
-name|__LONG_BIT
-operator|==
-literal|64
-operator|&&
-name|_BYTE_ORDER
-operator|==
-name|_LITTLE_ENDIAN
-name|uint32_t
-name|__ai_pad0
-decl_stmt|;
-comment|/* ABI compatibility */
-endif|#
-directive|endif
 name|char
 modifier|*
 name|ai_canonname
