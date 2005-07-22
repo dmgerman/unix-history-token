@@ -244,6 +244,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FIXED_RATE_NONE
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_MS_TO_TU
 parameter_list|(
 name|x

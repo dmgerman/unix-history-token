@@ -327,10 +327,8 @@ name|ic
 operator|->
 name|ic_fixed_rate
 operator|=
-operator|-
-literal|1
+name|IEEE80211_FIXED_RATE_NONE
 expr_stmt|;
-comment|/* no fixed rate */
 name|ic
 operator|->
 name|ic_protmode
@@ -1506,8 +1504,8 @@ operator|&&
 name|ic
 operator|->
 name|ic_fixed_rate
-operator|<
-literal|0
+operator|==
+name|IEEE80211_FIXED_RATE_NONE
 condition|)
 name|flags
 operator|&=

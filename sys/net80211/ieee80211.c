@@ -2937,8 +2937,7 @@ name|ic
 operator|->
 name|ic_fixed_rate
 operator|!=
-operator|-
-literal|1
+name|IEEE80211_FIXED_RATE_NONE
 condition|)
 block|{
 comment|/* 		 * A fixed rate is set, report that. 		 */

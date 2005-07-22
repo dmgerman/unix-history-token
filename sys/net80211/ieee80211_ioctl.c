@@ -1466,8 +1466,7 @@ name|ic
 operator|->
 name|ic_fixed_rate
 operator|==
-operator|-
-literal|1
+name|IEEE80211_FIXED_RATE_NONE
 condition|)
 name|wreq
 operator|.
@@ -3275,8 +3274,7 @@ name|ic
 operator|->
 name|ic_fixed_rate
 operator|=
-operator|-
-literal|1
+name|IEEE80211_FIXED_RATE_NONE
 expr_stmt|;
 break|break;
 block|}

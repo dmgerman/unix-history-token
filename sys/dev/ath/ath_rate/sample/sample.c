@@ -3692,8 +3692,7 @@ name|ic
 operator|->
 name|ic_fixed_rate
 operator|!=
-operator|-
-literal|1
+name|IEEE80211_FIXED_RATE_NONE
 condition|)
 block|{
 comment|/* 		 * A fixed rate is to be used; ic_fixed_rate is an 		 * index into the supported rate set.  Convert this 		 * to the index into the negotiated rate set for 		 * the node.  We know the rate is there because the 		 * rate set is checked when the station associates. 		 */

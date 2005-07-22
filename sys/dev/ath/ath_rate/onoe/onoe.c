@@ -1199,8 +1199,7 @@ name|ic
 operator|->
 name|ic_fixed_rate
 operator|==
-operator|-
-literal|1
+name|IEEE80211_FIXED_RATE_NONE
 condition|)
 block|{
 comment|/* 		 * No fixed rate is requested. For 11b start with 		 * the highest negotiated rate; otherwise, for 11g 		 * and 11a, we start "in the middle" at 24Mb or 36Mb. 		 */
@@ -1524,8 +1523,7 @@ name|ic
 operator|->
 name|ic_fixed_rate
 operator|==
-operator|-
-literal|1
+name|IEEE80211_FIXED_RATE_NONE
 operator|&&
 name|state
 operator|==
