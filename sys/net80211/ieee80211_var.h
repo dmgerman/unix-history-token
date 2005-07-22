@@ -813,6 +813,28 @@ begin_comment
 comment|/* NB: bits 0x4c available */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_FF
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* CONF: ATH FF enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_TURBOP
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* CONF: ATH Turbo enabled*/
+end_comment
+
 begin_comment
 comment|/* NB: this is intentionally setup to be IEEE80211_CAPINFO_PRIVACY */
 end_comment
