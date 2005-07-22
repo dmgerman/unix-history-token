@@ -286,6 +286,50 @@ begin_comment
 comment|/* WME protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_SUPERG
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Atheros SuperG protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_DOTH
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* 802.11h support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_INACT
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* inactivity handling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_ROAM
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* sta-mode roaming */
+end_comment
+
 begin_struct
 specifier|static
 struct|struct
@@ -427,6 +471,30 @@ block|{
 literal|"wme"
 block|,
 name|IEEE80211_MSG_WME
+block|}
+block|,
+block|{
+literal|"superg"
+block|,
+name|IEEE80211_MSG_SUPERG
+block|}
+block|,
+block|{
+literal|"doth"
+block|,
+name|IEEE80211_MSG_DOTH
+block|}
+block|,
+block|{
+literal|"inact"
+block|,
+name|IEEE80211_MSG_INACT
+block|}
+block|,
+block|{
+literal|"roam"
+block|,
+name|IEEE80211_MSG_ROAM
 block|}
 block|, }
 struct|;
