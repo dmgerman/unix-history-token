@@ -12834,7 +12834,13 @@ name|ap
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"[%s] discard "
+literal|"[%s:%s] discard "
+argument_list|,
+name|ic
+operator|->
+name|ic_ifp
+operator|->
+name|if_xname
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -12927,7 +12933,13 @@ name|ap
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"[%s] discard "
+literal|"[%s:%s] discard "
+argument_list|,
+name|ic
+operator|->
+name|ic_ifp
+operator|->
+name|if_xname
 argument_list|,
 name|ether_sprintf
 argument_list|(
