@@ -318,7 +318,7 @@ name|ioctl
 argument_list|(
 name|acpifd
 argument_list|,
-name|ACPIIO_CMBAT_GET_BIF
+name|ACPIIO_BATT_GET_BIF
 argument_list|,
 operator|&
 name|battio
@@ -572,7 +572,7 @@ name|ioctl
 argument_list|(
 name|acpifd
 argument_list|,
-name|ACPIIO_CMBAT_GET_BST
+name|ACPIIO_BATT_GET_BST
 argument_list|,
 operator|&
 name|battio
