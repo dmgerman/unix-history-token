@@ -1431,11 +1431,6 @@ name|int
 name|ieee80211_fix_rate
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-name|ic
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 name|ni
@@ -1451,6 +1446,15 @@ parameter_list|(
 name|v
 parameter_list|)
 value|((v)& IEEE80211_RATE_VAL)
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,

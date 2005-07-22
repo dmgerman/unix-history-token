@@ -2187,8 +2187,6 @@ name|rate
 operator|=
 name|ieee80211_fix_rate
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 name|IEEE80211_F_DONEGO
@@ -3423,8 +3421,6 @@ decl_stmt|;
 comment|/* 		 * Delete unusable rates; we've already checked 		 * that the negotiated rate set is acceptable. 		 */
 name|ieee80211_fix_rate
 argument_list|(
-name|ic
-argument_list|,
 name|selbs
 argument_list|,
 name|IEEE80211_F_DODEL

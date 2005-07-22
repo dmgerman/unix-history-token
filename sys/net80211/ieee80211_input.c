@@ -3919,24 +3919,20 @@ comment|/*  * Install received rate set information in the node's state block.  
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ieee80211_setup_rates
 parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-parameter_list|,
 name|struct
 name|ieee80211_node
 modifier|*
 name|ni
 parameter_list|,
+specifier|const
 name|u_int8_t
 modifier|*
 name|rates
 parameter_list|,
+specifier|const
 name|u_int8_t
 modifier|*
 name|xrates
@@ -3945,6 +3941,15 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
 name|struct
 name|ieee80211_rateset
 modifier|*
@@ -4088,8 +4093,6 @@ block|}
 return|return
 name|ieee80211_fix_rate
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 name|flags
@@ -9434,8 +9437,6 @@ expr_stmt|;
 comment|/* NB: must be after ni_chan is setup */
 name|ieee80211_setup_rates
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 name|rates
@@ -9721,8 +9722,6 @@ name|rate
 operator|=
 name|ieee80211_setup_rates
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 name|rates
@@ -10776,8 +10775,6 @@ name|rate
 operator|=
 name|ieee80211_setup_rates
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 name|rates
@@ -11280,8 +11277,6 @@ name|rate
 operator|=
 name|ieee80211_setup_rates
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 name|rates
