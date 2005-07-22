@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|DEVSTAT_USER_API_VER
-value|5
+value|6
 end_define
 
 begin_define
