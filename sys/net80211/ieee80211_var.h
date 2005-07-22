@@ -439,10 +439,6 @@ name|ic_set_tim
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,

@@ -251,10 +251,6 @@ name|void
 name|ieee80211_set_tim
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,
@@ -3734,8 +3730,6 @@ name|ic
 operator|->
 name|ic_set_tim
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 literal|0
@@ -6400,8 +6394,6 @@ name|ic
 operator|->
 name|ic_set_tim
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 literal|0
@@ -8046,11 +8038,6 @@ name|void
 name|ieee80211_set_tim
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-name|ic
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 name|ni
@@ -8059,6 +8046,15 @@ name|int
 name|set
 parameter_list|)
 block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
 name|u_int16_t
 name|aid
 decl_stmt|;
