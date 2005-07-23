@@ -376,7 +376,7 @@ name|u_int16_t
 name|uk_ipers
 decl_stmt|;
 comment|/* Items per slab */
-name|u_int16_t
+name|u_int32_t
 name|uk_flags
 decl_stmt|;
 comment|/* Internal flags */
@@ -714,7 +714,7 @@ begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_PRIVALLOC
-value|0x1000
+value|0x10000000
 end_define
 
 begin_comment
@@ -725,7 +725,7 @@ begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_INTERNAL
-value|0x2000
+value|0x20000000
 end_define
 
 begin_comment
@@ -736,7 +736,7 @@ begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_FULL
-value|0x4000
+value|0x40000000
 end_define
 
 begin_comment
@@ -747,7 +747,7 @@ begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_CACHEONLY
-value|0x8000
+value|0x80000000
 end_define
 
 begin_comment
