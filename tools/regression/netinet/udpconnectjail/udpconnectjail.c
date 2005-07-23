@@ -341,10 +341,7 @@ name|thejail
 operator|.
 name|ip_number
 operator|=
-name|htonl
-argument_list|(
 name|INADDR_LOOPBACK
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
