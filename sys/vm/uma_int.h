@@ -680,7 +680,7 @@ comment|/* Total number of allocations */
 name|u_int64_t
 name|uz_frees
 decl_stmt|;
-comment|/* total number of frees */
+comment|/* Total number of frees */
 name|uint16_t
 name|uz_fills
 decl_stmt|;
