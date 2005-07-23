@@ -968,6 +968,10 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* OK_TO_WRITE_DISK */
+name|struct
+name|timeval
+name|now
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1000,8 +1004,20 @@ expr_stmt|;
 name|init_prob
 argument_list|()
 expr_stmt|;
-name|srandomdev
-argument_list|()
+name|gettimeofday
+argument_list|(
+operator|&
+name|now
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|srandom
+argument_list|(
+name|now
+operator|.
+name|tv_usec
+argument_list|)
 expr_stmt|;
 do|do
 block|{
