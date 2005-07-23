@@ -6144,6 +6144,12 @@ expr_stmt|;
 comment|/* 		 * Ignore entries for which have yet to receive an 		 * authentication frame.  These are transient and 		 * will be reclaimed when the last reference to them 		 * goes away (when frame xmits complete). 		 */
 if|if
 condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_HOSTAP
+operator|&&
 operator|(
 name|ni
 operator|->
