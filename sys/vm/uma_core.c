@@ -12216,11 +12216,6 @@ name|z
 operator|->
 name|uz_fails
 expr_stmt|;
-name|ZONE_UNLOCK
-argument_list|(
-name|z
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sbuf_bcat
@@ -12240,6 +12235,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|ZONE_UNLOCK
+argument_list|(
+name|z
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -12254,7 +12254,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 			 * XXXRW: Should not access bucket fields from 			 * non-local CPU.  Instead need to modify the caches 			 * to directly maintain these statistics so we don't 			 * have to. 			 */
+comment|/* 			 * While it is not normally safe to access the cache 			 * bucket pointers while not on the CPU that owns the 			 * cache, we only allow the pointers to be exchanged 			 * without the zone lock held, not invalidated, so 			 * accept the possible race associated with bucket 			 * exchange during monitoring. 			 */
 for|for
 control|(
 name|i
@@ -12374,6 +12374,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|ZONE_UNLOCK
+argument_list|(
+name|z
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -12389,6 +12394,11 @@ name|out
 goto|;
 block|}
 block|}
+name|ZONE_UNLOCK
+argument_list|(
+name|z
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|mtx_unlock
