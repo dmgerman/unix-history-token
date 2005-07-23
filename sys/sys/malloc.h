@@ -124,35 +124,35 @@ begin_struct
 struct|struct
 name|malloc_type_stats
 block|{
-name|u_long
+name|uint64_t
 name|mts_memalloced
 decl_stmt|;
 comment|/* Bytes allocated on CPU. */
-name|u_long
+name|uint64_t
 name|mts_memfreed
 decl_stmt|;
 comment|/* Bytes freed on CPU. */
-name|u_long
+name|uint64_t
 name|mts_numallocs
 decl_stmt|;
 comment|/* Number of allocates on CPU. */
-name|u_long
+name|uint64_t
 name|mts_numfrees
 decl_stmt|;
 comment|/* number of frees on CPU. */
-name|u_long
+name|uint64_t
 name|mts_size
 decl_stmt|;
 comment|/* Bitmask of sizes allocated on CPU. */
-name|u_long
+name|uint64_t
 name|_mts_reserved1
 decl_stmt|;
 comment|/* Reserved field. */
-name|u_long
+name|uint64_t
 name|_mts_reserved2
 decl_stmt|;
 comment|/* Reserved field. */
-name|u_long
+name|uint64_t
 name|_mts_reserved3
 decl_stmt|;
 comment|/* Reserved field. */
@@ -252,6 +252,62 @@ name|_mtx_lock
 decl_stmt|;
 name|u_int
 name|_mtx_recurse
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Statistics structure headers for user space.  The kern.malloc sysctl  * exposes a structure stream consisting of a stream header, then a series of  * malloc type headers and statistics structures (quantity maxcpus).  For  * convenience, the kernel will provide the current value of maxcpus at the  * head of the stream.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MALLOC_TYPE_STREAM_VERSION
+value|0x00000001
+end_define
+
+begin_struct
+struct|struct
+name|malloc_type_stream_header
+block|{
+name|uint32_t
+name|mtsh_version
+decl_stmt|;
+comment|/* Stream format version. */
+name|uint32_t
+name|mtsh_maxcpus
+decl_stmt|;
+comment|/* Value of MAXCPU for stream. */
+name|uint32_t
+name|mtsh_count
+decl_stmt|;
+comment|/* Number of records. */
+name|uint32_t
+name|_mtsh_pad
+decl_stmt|;
+comment|/* Pad/reserved field. */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MALLOC_MAX_NAME
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|malloc_type_header
+block|{
+name|char
+name|mth_name
+index|[
+name|MALLOC_MAX_NAME
+index|]
 decl_stmt|;
 block|}
 struct|;
