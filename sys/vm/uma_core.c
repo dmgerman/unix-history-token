@@ -5276,6 +5276,12 @@ literal|0
 expr_stmt|;
 name|zone
 operator|->
+name|uz_frees
+operator|=
+literal|0
+expr_stmt|;
+name|zone
+operator|->
 name|uz_fills
 operator|=
 name|zone
@@ -7532,6 +7538,20 @@ name|uc_allocs
 operator|=
 literal|0
 expr_stmt|;
+name|zone
+operator|->
+name|uz_frees
+operator|+=
+name|cache
+operator|->
+name|uc_frees
+expr_stmt|;
+name|cache
+operator|->
+name|uc_frees
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Our old one is now a free bucket */
 if|if
 condition|(
@@ -8975,6 +8995,11 @@ operator|->
 name|ub_cnt
 operator|++
 expr_stmt|;
+name|cache
+operator|->
+name|uc_frees
+operator|++
+expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
@@ -9665,6 +9690,11 @@ comment|/* Zone statistics */
 name|keg
 operator|->
 name|uk_free
+operator|++
+expr_stmt|;
+name|zone
+operator|->
+name|uz_frees
 operator|++
 expr_stmt|;
 if|if

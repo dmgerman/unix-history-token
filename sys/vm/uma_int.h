@@ -233,6 +233,10 @@ name|u_int64_t
 name|uc_allocs
 decl_stmt|;
 comment|/* Count of allocations */
+name|u_int64_t
+name|uc_frees
+decl_stmt|;
+comment|/* Count of frees */
 block|}
 struct|;
 end_struct
@@ -673,6 +677,10 @@ name|u_int64_t
 name|uz_allocs
 decl_stmt|;
 comment|/* Total number of allocations */
+name|u_int64_t
+name|uz_frees
+decl_stmt|;
+comment|/* total number of frees */
 name|uint16_t
 name|uz_fills
 decl_stmt|;
