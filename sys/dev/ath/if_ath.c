@@ -2076,12 +2076,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 	 * Setup dynamic sysctl's now that country code and 	 * regdomain are available from the hal. 	 */
-name|ath_sysctlattach
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Setup rate tables for all potential media types. 	 */
 name|ath_rate_setup
 argument_list|(
@@ -3175,6 +3169,12 @@ name|ieee80211_media_status
 argument_list|)
 expr_stmt|;
 name|ath_bpfattach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Setup dynamic sysctl's now that country code and 	 * regdomain are available from the hal. 	 */
+name|ath_sysctlattach
 argument_list|(
 name|sc
 argument_list|)
@@ -8604,7 +8604,9 @@ expr_stmt|;
 comment|/* 		 * Let hardware handle antenna switching. 		 */
 name|antenna
 operator|=
-literal|0
+name|sc
+operator|->
+name|sc_txantenna
 expr_stmt|;
 block|}
 else|else
