@@ -190,22 +190,10 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|void
-name|memstat_mtl_free
-parameter_list|(
-name|struct
-name|memory_type_list
-modifier|*
-name|list
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|memory_type
 modifier|*
-name|memstat_mt_allocate
+name|_memstat_mt_allocate
 parameter_list|(
 name|struct
 name|memory_type_list
@@ -225,7 +213,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|memstat_mt_reset_stats
+name|_memstat_mt_reset_stats
 parameter_list|(
 name|struct
 name|memory_type

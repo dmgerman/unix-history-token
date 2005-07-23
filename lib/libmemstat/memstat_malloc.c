@@ -630,18 +630,6 @@ operator|->
 name|mth_name
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Reset the statistics on a reused node. 			 */
-if|if
-condition|(
-name|mtp
-operator|!=
-name|NULL
-condition|)
-name|memstat_mt_reset_stats
-argument_list|(
-name|mtp
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 name|mtp
@@ -656,7 +644,7 @@ name|NULL
 condition|)
 name|mtp
 operator|=
-name|memstat_mt_allocate
+name|_memstat_mt_allocate
 argument_list|(
 name|list
 argument_list|,
@@ -705,7 +693,7 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Reset the statistics on a current node. 		 */
-name|memstat_mt_reset_stats
+name|_memstat_mt_reset_stats
 argument_list|(
 name|mtp
 argument_list|)

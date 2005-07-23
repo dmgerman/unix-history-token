@@ -280,14 +280,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a new memory_type with the specificed allocator type and name,  * then insert into the list.  The structure will be zero'd.  */
+comment|/*  * Allocate a new memory_type with the specificed allocator type and name,  * then insert into the list.  The structure will be zero'd.  *  * libmemstat(3) internal function.  */
 end_comment
 
 begin_function
 name|struct
 name|memory_type
 modifier|*
-name|memstat_mt_allocate
+name|_memstat_mt_allocate
 parameter_list|(
 name|struct
 name|memory_type_list
@@ -376,12 +376,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset any libmemstat(3)-owned statistics in a memory_type record so that  * it can be reused without incremental addition problems.  Caller-owned  * memory is left "as-is", and must be updated by the caller if desired.  */
+comment|/*  * Reset any libmemstat(3)-owned statistics in a memory_type record so that  * it can be reused without incremental addition problems.  Caller-owned  * memory is left "as-is", and must be updated by the caller if desired.  *  * libmemstat(3) internal function.  */
 end_comment
 
 begin_function
 name|void
-name|memstat_mt_reset_stats
+name|_memstat_mt_reset_stats
 parameter_list|(
 name|struct
 name|memory_type
