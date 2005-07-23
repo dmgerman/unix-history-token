@@ -1050,9 +1050,13 @@ name|uth_frees
 decl_stmt|;
 comment|/* Zone: number of frees. */
 name|u_int64_t
+name|uth_fails
+decl_stmt|;
+comment|/* Zone: number of alloc failures. */
+name|u_int64_t
 name|_uth_reserved1
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* Reserved. */
