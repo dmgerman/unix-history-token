@@ -850,9 +850,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
-literal|"memstat_sysctl_all"
+literal|"memstat_sysctl_all: %s"
+argument_list|,
+name|memstat_strerror
+argument_list|(
+name|memstat_mtl_geterror
+argument_list|(
+name|mtlp
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
