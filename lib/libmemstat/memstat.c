@@ -58,6 +58,74 @@ file|"memstat_internal.h"
 end_include
 
 begin_function
+specifier|const
+name|char
+modifier|*
+name|memstat_strerror
+parameter_list|(
+name|int
+name|error
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|error
+condition|)
+block|{
+case|case
+name|MEMSTAT_ERROR_NOMEMORY
+case|:
+return|return
+operator|(
+literal|"Cannot allocate memory"
+operator|)
+return|;
+case|case
+name|MEMSTAT_ERROR_VERSION
+case|:
+return|return
+operator|(
+literal|"Version mismatch"
+operator|)
+return|;
+case|case
+name|MEMSTAT_ERROR_PERMISSION
+case|:
+return|return
+operator|(
+literal|"Permission denied"
+operator|)
+return|;
+case|case
+name|MEMSTAT_ERROR_TOOMANYCPUS
+case|:
+return|return
+operator|(
+literal|"Too many CPUs"
+operator|)
+return|;
+case|case
+name|MEMSTAT_ERROR_DATAERROR
+case|:
+return|return
+operator|(
+literal|"Data format error"
+operator|)
+return|;
+case|case
+name|MEMSTAT_ERROR_UNDEFINED
+case|:
+default|default:
+return|return
+operator|(
+literal|"Unknown error"
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_function
 name|struct
 name|memory_type_list
 modifier|*

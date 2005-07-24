@@ -172,7 +172,23 @@ end_struct_decl
 
 begin_function_decl
 name|__BEGIN_DECLS
+comment|/*  * Functions that operate without memory type or memory type list context.  */
+specifier|const
+name|char
+modifier|*
+name|memstat_strerror
+parameter_list|(
+name|int
+name|error
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Functions for managing memory type and statistics data.  */
+end_comment
+
+begin_function_decl
 name|struct
 name|memory_type_list
 modifier|*
