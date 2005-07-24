@@ -81,6 +81,76 @@ value|32
 end_define
 
 begin_comment
+comment|/*  * Library error conditions, mostly from the underlying data sources.  On  * failure, functions typically return (-1) or (NULL); on success, (0) or a  * valid data pointer.  The error from the last operation is stored in  * struct memory_type, and accessed via memstat_get_error(mtp).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMSTAT_ERROR_UNDEFINED
+value|0
+end_define
+
+begin_comment
+comment|/* Initialization value. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMSTAT_ERROR_NOMEMORY
+value|1
+end_define
+
+begin_comment
+comment|/* Out of memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMSTAT_ERROR_VERSION
+value|2
+end_define
+
+begin_comment
+comment|/* Unsupported version. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMSTAT_ERROR_PERMISSION
+value|3
+end_define
+
+begin_comment
+comment|/* Permission denied. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMSTAT_ERROR_TOOMANYCPUS
+value|4
+end_define
+
+begin_comment
+comment|/* Too many CPUs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMSTAT_ERROR_DATAERROR
+value|5
+end_define
+
+begin_comment
+comment|/* Error in stat data. */
+end_comment
+
+begin_comment
 comment|/*  * Forward declare struct memory_type, which holds per-type properties and  * statistics.  This is an opaque type, to be frobbed only from within the  * library, in order to avoid building ABI assumptions into the application.  * Accessor methods should be used to get and sometimes set the fields from  * consumers of the library.  */
 end_comment
 
@@ -175,6 +245,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|memstat_mtl_geterror
+parameter_list|(
+name|struct
+name|memory_type_list
+modifier|*
+name|list
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Functions to retrieve data from a live kernel using sysctl.  */
 end_comment
@@ -225,7 +307,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Accessor methods for struct memory_type_list.  */
+comment|/*  * Accessor methods for struct memory_type.  */
 end_comment
 
 begin_function_decl

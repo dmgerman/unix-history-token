@@ -95,8 +95,17 @@ operator|)
 return|;
 name|LIST_INIT
 argument_list|(
+operator|&
 name|mtlp
+operator|->
+name|mtl_list
 argument_list|)
+expr_stmt|;
+name|mtlp
+operator|->
+name|mtl_error
+operator|=
+name|MEMSTAT_ERROR_UNDEFINED
 expr_stmt|;
 return|return
 operator|(
@@ -122,7 +131,10 @@ return|return
 operator|(
 name|LIST_FIRST
 argument_list|(
+operator|&
 name|list
+operator|->
+name|mtl_list
 argument_list|)
 operator|)
 return|;
@@ -176,7 +188,10 @@ name|mtp
 operator|=
 name|LIST_FIRST
 argument_list|(
+operator|&
 name|list
+operator|->
+name|mtl_list
 argument_list|)
 operator|)
 condition|)
@@ -202,8 +217,28 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|memstat_mtl_geterror
+parameter_list|(
+name|struct
+name|memory_type_list
+modifier|*
+name|list
+parameter_list|)
+block|{
+return|return
+operator|(
+name|list
+operator|->
+name|mtl_error
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * Look for an existing memory_type entry in a memory_type list, based on the  * allocator and name of the type.  If not found, return NULL.  O(n).  */
+comment|/*  * Look for an existing memory_type entry in a memory_type list, based on the  * allocator and name of the type.  If not found, return NULL.  No errno or  * memstat error.  */
 end_comment
 
 begin_function
@@ -235,7 +270,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|mtp
 argument_list|,
-argument|list
+argument|&list->mtl_list
 argument_list|,
 argument|mt_list
 argument_list|)
@@ -360,7 +395,10 @@ argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
+operator|&
 name|list
+operator|->
+name|mtl_list
 argument_list|,
 name|mtp
 argument_list|,

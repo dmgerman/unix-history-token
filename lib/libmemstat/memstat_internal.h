@@ -179,15 +179,23 @@ begin_comment
 comment|/*  * Description of struct memory_type_list is in memstat.h.  */
 end_comment
 
-begin_expr_stmt
+begin_struct
+struct|struct
+name|memory_type_list
+block|{
 name|LIST_HEAD
 argument_list|(
-name|memory_type_list
 argument_list|,
-name|memory_type
+argument|memory_type
 argument_list|)
+name|mtl_list
 expr_stmt|;
-end_expr_stmt
+name|int
+name|mtl_error
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_function_decl
 name|struct
