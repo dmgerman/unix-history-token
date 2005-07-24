@@ -54,7 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -673,6 +685,16 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* XXX */
+name|GEM_LOCK_INIT
+argument_list|(
+name|sc
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|gsc
 operator|->
 name|gsc_srid
@@ -713,11 +735,9 @@ argument_list|,
 literal|"failed to allocate bus space resource\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+goto|goto
+name|fail_mtx
+goto|;
 block|}
 name|gsc
 operator|->
@@ -830,6 +850,8 @@ operator|->
 name|gsc_ires
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|gem_intr
 argument_list|,
@@ -899,6 +921,13 @@ operator|->
 name|gsc_sres
 argument_list|)
 expr_stmt|;
+name|fail_mtx
+label|:
+name|GEM_LOCK_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -938,11 +967,6 @@ name|gsc
 operator|->
 name|gsc_gem
 decl_stmt|;
-name|gem_detach
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|bus_teardown_intr
 argument_list|(
 name|dev
@@ -954,6 +978,11 @@ argument_list|,
 name|gsc
 operator|->
 name|gsc_ih
+argument_list|)
+expr_stmt|;
+name|gem_detach
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -984,6 +1013,11 @@ argument_list|,
 name|gsc
 operator|->
 name|gsc_sres
+argument_list|)
+expr_stmt|;
+name|GEM_LOCK_DESTROY
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
