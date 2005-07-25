@@ -486,7 +486,7 @@ name|zone_mbuf
 operator|=
 name|uma_zcreate
 argument_list|(
-literal|"Mbuf"
+name|MBUF_MEM_NAME
 argument_list|,
 name|MSIZE
 argument_list|,
@@ -533,7 +533,7 @@ name|zone_clust
 operator|=
 name|uma_zcreate
 argument_list|(
-literal|"MbufClust"
+name|MBUF_CLUSTER_MEM_NAME
 argument_list|,
 name|MCLBYTES
 argument_list|,
@@ -603,7 +603,7 @@ name|zone_pack
 operator|=
 name|uma_zsecond_create
 argument_list|(
-literal|"Packet"
+name|MBUF_PACKET_MEM_NAME
 argument_list|,
 name|mb_ctor_pack
 argument_list|,
