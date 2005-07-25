@@ -1328,6 +1328,7 @@ operator|&
 name|IFF_LOOPBACK
 operator|)
 condition|)
+block|{
 name|IF_AFDATA_UNLOCK
 argument_list|(
 name|ifp
@@ -1338,6 +1339,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 else|else
 block|{
 if|if
