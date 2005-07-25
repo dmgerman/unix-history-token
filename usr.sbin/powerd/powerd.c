@@ -1300,6 +1300,21 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* User must be root to control frequencies. */
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"must be root to run"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
