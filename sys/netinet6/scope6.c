@@ -1275,12 +1275,19 @@ name|struct
 name|scope6_id
 modifier|*
 name|sid
-init|=
+decl_stmt|;
+name|IF_AFDATA_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|sid
+operator|=
 name|SID
 argument_list|(
 name|ifp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -1321,6 +1328,11 @@ operator|&
 name|IFF_LOOPBACK
 operator|)
 condition|)
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1340,6 +1352,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* there's no ambiguity */
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1353,6 +1370,9 @@ name|in6_addrscope
 argument_list|(
 name|in6
 argument_list|)
+expr_stmt|;
+name|SCOPE6_LOCK
+argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
@@ -1420,6 +1440,14 @@ expr_stmt|;
 comment|/* XXX: treat as global. */
 break|break;
 block|}
+name|SCOPE6_UNLOCK
+argument_list|()
+expr_stmt|;
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret_id
