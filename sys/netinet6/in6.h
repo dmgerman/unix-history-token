@@ -2495,6 +2495,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPV6CTL_USE_DEFAULTZONE
+value|39
+end_define
+
+begin_comment
+comment|/* use default scope zone */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPV6CTL_MAXFRAGS
 value|41
 end_define

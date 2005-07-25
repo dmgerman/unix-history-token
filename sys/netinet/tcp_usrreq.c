@@ -202,6 +202,12 @@ directive|include
 file|<netinet6/ip6_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/scope6_var.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -3871,7 +3877,7 @@ return|return
 name|error
 return|;
 block|}
-comment|/* 	 * Cannot simply call in_pcbconnect, because there might be an 	 * earlier incarnation of this same connection still in 	 * TIME_WAIT state, creating an ADDRINUSE error. 	 */
+comment|/* 	 * Cannot simply call in_pcbconnect, because there might be an 	 * earlier incarnation of this same connection still in 	 * TIME_WAIT state, creating an ADDRINUSE error. 	 * in6_pcbladdr() also handles scope zone IDs. 	 */
 name|error
 operator|=
 name|in6_pcbladdr

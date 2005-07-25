@@ -1047,6 +1047,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|ip6_use_defzone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* whether to use the default scope zone 				    when unspecified */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|pfil_head
 name|inet6_pfil_hook
@@ -1871,6 +1882,11 @@ operator|*
 operator|,
 expr|struct
 name|in6_addr
+operator|*
+operator|,
+expr|struct
+name|ifnet
+operator|*
 operator|*
 operator|,
 name|int
