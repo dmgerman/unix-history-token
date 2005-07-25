@@ -862,6 +862,27 @@ name|uthp
 operator|->
 name|uth_zone_free
 expr_stmt|;
+comment|/* 		 * UMA secondary zones share a keg with the primary zone.  To 		 * avoid double-reporting of free items, report keg free 		 * items only in the primary zone. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|uthp
+operator|->
+name|uth_zone_flags
+operator|&
+name|UTH_ZONE_SECONDARY
+operator|)
+condition|)
+block|{
+name|mtp
+operator|->
+name|mt_free
+operator|+=
+name|mtp
+operator|->
+name|mt_kegfree
+expr_stmt|;
 name|mtp
 operator|->
 name|mt_kegfree
@@ -870,6 +891,7 @@ name|uthp
 operator|->
 name|uth_keg_free
 expr_stmt|;
+block|}
 name|mtp
 operator|->
 name|mt_free
