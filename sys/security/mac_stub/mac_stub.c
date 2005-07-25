@@ -4187,11 +4187,6 @@ operator|=
 name|stub_create_fragment
 block|,
 operator|.
-name|mpo_create_ipq
-operator|=
-name|stub_create_ipq
-block|,
-operator|.
 name|mpo_create_mbuf_from_inpcb
 operator|=
 name|stub_create_mbuf_from_inpcb
