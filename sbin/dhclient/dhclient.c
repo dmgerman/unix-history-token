@@ -1136,6 +1136,9 @@ block|{
 case|case
 name|RTM_IEEE80211_ASSOC
 case|:
+case|case
+name|RTM_IEEE80211_REASSOC
+case|:
 name|state_reboot
 argument_list|(
 name|ifi
