@@ -4,6 +4,10 @@ comment|/*	$OpenBSD: tables.c,v 1.4 2004/05/04 20:28:40 deraadt Exp $	*/
 end_comment
 
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/* Tables of information... */
 end_comment
 
@@ -172,7 +176,7 @@ block|,
 block|{
 literal|"host-name"
 block|,
-literal|"X"
+literal|"t"
 block|,
 operator|&
 name|dhcp_universe
