@@ -1276,6 +1276,15 @@ name|rbuf_len
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Skip over the BPF header... */
+name|interface
+operator|->
+name|rbuf_offset
+operator|+=
+name|hdr
+operator|.
+name|bh_hdrlen
+expr_stmt|;
 comment|/* 		 * If the captured data wasn't the whole packet, or if 		 * the packet won't fit in the input buffer, all we can 		 * do is drop it. 		 */
 if|if
 condition|(
@@ -1294,23 +1303,10 @@ name|rbuf_offset
 operator|+=
 name|hdr
 operator|.
-name|bh_hdrlen
-operator|=
-name|hdr
-operator|.
 name|bh_caplen
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Skip over the BPF header... */
-name|interface
-operator|->
-name|rbuf_offset
-operator|+=
-name|hdr
-operator|.
-name|bh_hdrlen
-expr_stmt|;
 comment|/* Decode the physical header... */
 name|offset
 operator|=
