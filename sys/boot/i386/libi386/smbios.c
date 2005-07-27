@@ -195,16 +195,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* export values from the SMBIOS */
-name|setenv
-argument_list|(
-literal|"hint.smbios.0.enabled"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|length
 operator|=
 operator|*
@@ -315,7 +305,7 @@ case|:
 comment|/* Type 0: BIOS */
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.bios.vendor"
+literal|"smbios.bios.vendor"
 argument_list|,
 name|dmi
 argument_list|,
@@ -324,7 +314,7 @@ argument_list|)
 expr_stmt|;
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.bios.version"
+literal|"smbios.bios.version"
 argument_list|,
 name|dmi
 argument_list|,
@@ -333,7 +323,7 @@ argument_list|)
 expr_stmt|;
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.bios.reldate"
+literal|"smbios.bios.reldate"
 argument_list|,
 name|dmi
 argument_list|,
@@ -347,7 +337,7 @@ case|:
 comment|/* Type 1: System */
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.system.maker"
+literal|"smbios.system.maker"
 argument_list|,
 name|dmi
 argument_list|,
@@ -356,7 +346,7 @@ argument_list|)
 expr_stmt|;
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.system.product"
+literal|"smbios.system.product"
 argument_list|,
 name|dmi
 argument_list|,
@@ -365,7 +355,7 @@ argument_list|)
 expr_stmt|;
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.system.version"
+literal|"smbios.system.version"
 argument_list|,
 name|dmi
 argument_list|,
@@ -379,7 +369,7 @@ case|:
 comment|/* Type 2: Base Board (or Module) */
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.planar.maker"
+literal|"smbios.planar.maker"
 argument_list|,
 name|dmi
 argument_list|,
@@ -388,7 +378,7 @@ argument_list|)
 expr_stmt|;
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.planar.product"
+literal|"smbios.planar.product"
 argument_list|,
 name|dmi
 argument_list|,
@@ -397,7 +387,7 @@ argument_list|)
 expr_stmt|;
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.planar.version"
+literal|"smbios.planar.version"
 argument_list|,
 name|dmi
 argument_list|,
@@ -411,7 +401,7 @@ case|:
 comment|/* Type 3: System Enclosure or Chassis */
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.chassis.maker"
+literal|"smbios.chassis.maker"
 argument_list|,
 name|dmi
 argument_list|,
@@ -420,7 +410,7 @@ argument_list|)
 expr_stmt|;
 name|smbios_setenv
 argument_list|(
-literal|"hint.smbios.0.chassis.version"
+literal|"smbios.chassis.version"
 argument_list|,
 name|dmi
 argument_list|,
