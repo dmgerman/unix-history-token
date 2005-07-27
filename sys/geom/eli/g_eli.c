@@ -161,7 +161,7 @@ begin_decl_stmt
 name|u_int
 name|g_eli_debug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
