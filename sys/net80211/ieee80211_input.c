@@ -3084,12 +3084,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* XXX this dups work done in ieee80211_encap */
-comment|/* check if destination is associated */
+comment|/* 			 * Check if the destination is known; if so 			 * and the port is authorized dispatch directly. 			 */
 name|struct
 name|ieee80211_node
 modifier|*
-name|ni1
+name|sta
 init|=
 name|ieee80211_find_node
 argument_list|(
@@ -3105,7 +3104,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|ni1
+name|sta
 operator|!=
 name|NULL
 condition|)
@@ -3114,8 +3113,18 @@ if|if
 condition|(
 name|ieee80211_node_is_authorized
 argument_list|(
-name|ni1
+name|sta
 argument_list|)
+condition|)
+block|{
+comment|/* 					 * Beware of sending to ourself; this 					 * needs to happen via the normal 					 * input path. 					 */
+if|if
+condition|(
+name|sta
+operator|!=
+name|ic
+operator|->
+name|ic_bss
 condition|)
 block|{
 name|m1
@@ -3127,10 +3136,27 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* XXX statistic? */
+block|}
+else|else
+block|{
+name|ic
+operator|->
+name|ic_stats
+operator|.
+name|is_rx_unauth
+operator|++
+expr_stmt|;
+name|IEEE80211_NODE_STAT
+argument_list|(
+name|sta
+argument_list|,
+name|rx_unauth
+argument_list|)
+expr_stmt|;
+block|}
 name|ieee80211_free_node
 argument_list|(
-name|ni1
+name|sta
 argument_list|)
 expr_stmt|;
 block|}
