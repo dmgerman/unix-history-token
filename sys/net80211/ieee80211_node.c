@@ -1979,6 +1979,21 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* XXX tunable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STA_FAILS_MAX
+value|2
+end_define
+
+begin_comment
+comment|/* assoc failures before ignored */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2220,6 +2235,18 @@ name|fail
 operator||=
 literal|0x20
 expr_stmt|;
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_fails
+operator|>=
+name|STA_FAILS_MAX
+condition|)
+name|fail
+operator||=
+literal|0x40
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IEEE80211_DEBUG
@@ -2235,6 +2262,18 @@ name|printf
 argument_list|(
 literal|" %c %s"
 argument_list|,
+name|fail
+operator|&
+literal|0x40
+condition|?
+literal|'='
+else|:
+name|fail
+operator|&
+literal|0x80
+condition|?
+literal|'^'
+else|:
 name|fail
 condition|?
 literal|'-'
@@ -2493,6 +2532,9 @@ name|rssia
 decl_stmt|,
 name|rssib
 decl_stmt|;
+name|int
+name|weight
+decl_stmt|;
 comment|/* privacy support preferred */
 if|if
 condition|(
@@ -2540,6 +2582,29 @@ condition|)
 return|return
 operator|-
 literal|1
+return|;
+comment|/* compare count of previous failures */
+name|weight
+operator|=
+name|b
+operator|->
+name|ni_fails
+operator|-
+name|a
+operator|->
+name|ni_fails
+expr_stmt|;
+if|if
+condition|(
+name|abs
+argument_list|(
+name|weight
+argument_list|)
+operator|>
+literal|1
+condition|)
+return|return
+name|weight
 return|;
 name|rssia
 operator|=
@@ -3003,6 +3068,36 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 		 * Decrement the failure counts so entries will be 		 * reconsidered the next time around.  We really want 		 * to do this only for sta's where we've previously 		 had some success. 		 */
+name|IEEE80211_NODE_LOCK
+argument_list|(
+name|nt
+argument_list|)
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|ni
+argument_list|,
+argument|&nt->nt_node
+argument_list|,
+argument|ni_list
+argument_list|)
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_fails
+condition|)
+name|ni
+operator|->
+name|ni_fails
+operator|--
+expr_stmt|;
+name|IEEE80211_NODE_UNLOCK
+argument_list|(
+name|nt
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Reset the list of channels to scan and start again. 		 */
 name|ieee80211_reset_scan
 argument_list|(
@@ -3051,49 +3146,6 @@ argument_list|,
 argument|ni_list
 argument_list|)
 block|{
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_fails
-condition|)
-block|{
-comment|/* 			 * The configuration of the access points may change 			 * during my scan.  So delete the entry for the AP 			 * and retry to associate if there is another beacon. 			 */
-name|IEEE80211_DPRINTF
-argument_list|(
-name|ic
-argument_list|,
-name|IEEE80211_MSG_SCAN
-argument_list|,
-literal|"%s: skip scan candidate %s, fails %u\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|ether_sprintf
-argument_list|(
-name|ni
-operator|->
-name|ni_macaddr
-argument_list|)
-argument_list|,
-name|ni
-operator|->
-name|ni_fails
-argument_list|)
-expr_stmt|;
-name|ni
-operator|->
-name|ni_fails
-operator|++
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (ni->ni_fails++> 2) 				ieee80211_free_node(ni);
-endif|#
-directive|endif
-continue|continue;
-block|}
 if|if
 condition|(
 name|ieee80211_match_bss
