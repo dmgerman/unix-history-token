@@ -578,7 +578,12 @@ argument_list|(
 name|nvp
 argument_list|)
 expr_stmt|;
-comment|/* XXX I wonder of nfs_reclaim will survive the unused vnode */
+comment|/* vrele() the duplicate allocated here, to get it recycled */
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
