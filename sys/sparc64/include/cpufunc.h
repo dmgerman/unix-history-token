@@ -182,7 +182,7 @@ name|rd
 parameter_list|,
 name|asi
 parameter_list|)
-value|({					\ 	u_int __rd = (uint32_t)(rd);					\ 	__asm __volatile("casa [%1] %2, %3, %0"				\ 	    : "+r" (__rd) : "r" (rs1), "n" (asi), "r" (rs2));		\ 	__rd;								\ })
+value|({					\ 	u_int __rd = (uint32_t)(rd);					\ 	__asm __volatile("casa [%2] %3, %4, %0"				\ 	    : "+r" (__rd), "=m" (*rs1)					\ 	    : "r" (rs1), "n" (asi), "r" (rs2), "m" (*rs1));		\ 	__rd;								\ })
 end_define
 
 begin_define
@@ -198,7 +198,7 @@ name|rd
 parameter_list|,
 name|asi
 parameter_list|)
-value|({					\ 	u_long __rd = (uint64_t)(rd);					\ 	__asm __volatile("casxa [%1] %2, %3, %0"			\ 	    : "+r" (__rd) : "r" (rs1), "n" (asi), "r" (rs2));		\ 	__rd;								\ })
+value|({					\ 	u_long __rd = (uint64_t)(rd);					\ 	__asm __volatile("casxa [%2] %3, %4, %0"			\ 	    : "+r" (__rd), "=m" (*rs1)					\ 	    : "r" (rs1), "n" (asi), "r" (rs2), "m" (*rs1));		\ 	__rd;								\ })
 end_define
 
 begin_define

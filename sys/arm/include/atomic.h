@@ -117,11 +117,17 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-asm|__asm __volatile("swp	%0, %1, [%2]"
+asm|__asm __volatile("swp	%0, %2, [%3]"
 block|:
 literal|"=&r"
 operator|(
 name|val
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|ptr
 operator|)
 operator|:
 literal|"r"
@@ -131,6 +137,12 @@ operator|)
 operator|,
 literal|"r"
 operator|(
+name|ptr
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
 name|ptr
 operator|)
 operator|:
