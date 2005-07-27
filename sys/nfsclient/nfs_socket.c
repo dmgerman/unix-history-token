@@ -5838,6 +5838,9 @@ operator|&
 name|nfs_reqq_mtx
 argument_list|)
 expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5904,6 +5907,9 @@ name|NULL
 argument_list|,
 name|curthread
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 name|mtx_lock
 argument_list|(
