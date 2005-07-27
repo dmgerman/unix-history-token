@@ -5311,6 +5311,30 @@ if|if
 condition|(
 name|did
 operator|==
+name|TC_DEVICEID_HURRICANE_575B
+operator|||
+name|did
+operator|==
+name|TC_DEVICEID_HURRICANE_575C
+operator|||
+name|did
+operator|==
+name|TC_DEVICEID_HURRICANE_656B
+operator|||
+name|did
+operator|==
+name|TC_DEVICEID_TORNADO_656C
+condition|)
+name|sc
+operator|->
+name|xl_flags
+operator||=
+name|XL_FLAG_FUNCREG
+expr_stmt|;
+if|if
+condition|(
+name|did
+operator|==
 name|TC_DEVICEID_HURRICANE_575A
 operator|||
 name|did
@@ -5333,8 +5357,6 @@ name|sc
 operator|->
 name|xl_flags
 operator||=
-name|XL_FLAG_FUNCREG
-operator||
 name|XL_FLAG_PHYOK
 operator||
 name|XL_FLAG_EEPROM_OFFSET_30
@@ -5650,7 +5672,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"couldn't map ports/memory\n"
+literal|"couldn't map funcreg memory\n"
 argument_list|)
 expr_stmt|;
 name|error
