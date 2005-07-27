@@ -420,16 +420,11 @@ name|v
 parameter_list|)
 block|{
 asm|__asm __volatile(
-literal|"mov    %0, %1, ror #8\n"
+literal|"mov    %0, %0, ror #8\n"
 literal|"orr    %0, %0, %0, lsr #16\n"
 literal|"bic    %0, %0, %0, lsl #16"
 operator|:
-literal|"=r"
-operator|(
-name|v
-operator|)
-operator|:
-literal|"0"
+literal|"+r"
 operator|(
 name|v
 operator|)
