@@ -985,8 +985,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|UMA_MAX_NAME
+name|UTH_MAX_NAME
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|UTH_ZONE_SECONDARY
+value|0x00000001
 end_define
 
 begin_struct
@@ -997,7 +1004,7 @@ comment|/* 	 * Static per-zone data, some extracted from the supporting keg. 	 *
 name|char
 name|uth_name
 index|[
-name|UMA_MAX_NAME
+name|UTH_MAX_NAME
 index|]
 decl_stmt|;
 name|u_int32_t
@@ -1038,9 +1045,9 @@ name|uth_bucketsize
 decl_stmt|;
 comment|/* Zone: desired bucket size. */
 name|u_int32_t
-name|_uth_reserved0
+name|uth_zone_flags
 decl_stmt|;
-comment|/* Reserved. */
+comment|/* Zone: flags. */
 name|u_int64_t
 name|uth_allocs
 decl_stmt|;
