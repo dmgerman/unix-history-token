@@ -719,7 +719,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"Remaining time:\tunknown\n"
+literal|"Remaining time:\t\tunknown\n"
 argument_list|)
 expr_stmt|;
 else|else
