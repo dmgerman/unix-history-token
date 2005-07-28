@@ -5160,10 +5160,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Query libmemstat(3) for information on malloc(9).  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -5233,11 +5229,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%13s %5s %6s %7s %8s  Size(s)\n"
@@ -5402,10 +5393,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Query libmemstat(3) for information on uma(9).  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -5478,11 +5465,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%-15s %-8s %-9s %-7s %-5s %-8s\n\n"
