@@ -1513,7 +1513,7 @@ name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"battery status and info"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -1545,7 +1545,7 @@ name|acpi_battery_sysctl
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"percent capacity remaining"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -1577,7 +1577,7 @@ name|acpi_battery_sysctl
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"remaining time in minutes"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -1609,7 +1609,7 @@ name|acpi_battery_sysctl
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"current status flags"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -1638,7 +1638,7 @@ name|acpi_battery_units_sysctl
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"number of batteries"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
@@ -1664,7 +1664,7 @@ name|acpi_battery_info_expire
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"time in seconds until info is refreshed"
 argument_list|)
 expr_stmt|;
 name|acpi_batteries_initted
