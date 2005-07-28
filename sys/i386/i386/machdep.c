@@ -9568,7 +9568,7 @@ argument_list|(
 name|nmi
 argument_list|)
 argument_list|,
-name|SDT_SYS386TGT
+name|SDT_SYS386IGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
