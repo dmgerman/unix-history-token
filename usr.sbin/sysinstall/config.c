@@ -915,6 +915,20 @@ operator|->
 name|next
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|__powerpc__
+if|if
+condition|(
+name|c1
+operator|->
+name|type
+operator|==
+name|apple
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|c1
@@ -924,6 +938,8 @@ operator|==
 name|freebsd
 condition|)
 block|{
+endif|#
+directive|endif
 for|for
 control|(
 name|c2
@@ -1252,13 +1268,7 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Do the work of sucking in a config file.  * config is the filename to read in.  * lines is a fixed (max) sized array of char*  * returns number of lines read.  line contents  * are malloc'd and must be freed by the caller.  */
-end_comment
-
-begin_function
 name|int
 name|readConfig
 parameter_list|(
@@ -1376,20 +1386,11 @@ return|return
 name|nlines
 return|;
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|MAX_LINES
 value|2000
-end_define
-
-begin_comment
 comment|/* Some big number we're not likely to ever reach - I'm being really lazy here, I know */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|readConfigFile
@@ -1583,13 +1584,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Load the environment from rc.conf file(s) */
-end_comment
-
-begin_function
 name|void
 name|configEnvironmentRC_conf
 parameter_list|(
@@ -1687,13 +1682,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Load the environment from a resolv.conf file */
-end_comment
-
-begin_function
 name|void
 name|configEnvironmentResolv
 parameter_list|(
@@ -1852,13 +1841,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Version of below for dispatch routines */
-end_comment
-
-begin_function
 name|int
 name|configRC
 parameter_list|(
@@ -1874,13 +1857,7 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Write out rc.conf  *  * rc.conf is sorted if running as init and the needed utilities are  * present  *  * If rc.conf is sorted, all variables in rc.conf which conflict with  * the variables in the environment are removed from the original  * rc.conf  */
-end_comment
-
-begin_function
 name|void
 name|configRC_conf
 parameter_list|(
@@ -2292,9 +2269,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|int
 name|configSaver
 parameter_list|(
@@ -2337,9 +2311,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configSaverTimeout
 parameter_list|(
@@ -2365,9 +2336,6 @@ name|DITEM_FAILURE
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configNTP
 parameter_list|(
@@ -2441,9 +2409,6 @@ return|return
 name|status
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configUsers
 parameter_list|(
@@ -2479,15 +2444,9 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|WITH_LINUX
-end_ifdef
-
-begin_function
 name|int
 name|configLinux
 parameter_list|(
@@ -2544,20 +2503,11 @@ return|return
 name|i
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|__alpha__
-end_ifdef
-
-begin_function
 name|int
 name|configOSF1
 parameter_list|(
@@ -2584,14 +2534,8 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
 name|int
 name|configSecurelevel
 parameter_list|(
@@ -2627,9 +2571,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configSecurelevelDisabled
 parameter_list|(
@@ -2651,9 +2592,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configSecurelevelSecure
 parameter_list|(
@@ -2684,9 +2622,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configSecurelevelHighlySecure
 parameter_list|(
@@ -2717,9 +2652,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configSecurelevelNetworkSecure
 parameter_list|(
@@ -2750,9 +2682,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configSecurity
 parameter_list|(
@@ -2788,9 +2717,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|write_root_xprofile
@@ -2895,9 +2821,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|gotit
@@ -2954,9 +2877,6 @@ name|tmp
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configResolv
 parameter_list|(
@@ -3325,9 +3245,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configRouter
 parameter_list|(
@@ -3533,22 +3450,13 @@ return|return
 name|ret
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Shared between us and index_initialize() */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|PkgNode
 name|Top
 decl_stmt|,
 name|Plist
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|int
 name|configPackages
 parameter_list|(
@@ -3784,13 +3692,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Load pcnfsd package */
-end_comment
-
-begin_function
 name|int
 name|configPCNFSD
 parameter_list|(
@@ -3842,9 +3744,6 @@ return|return
 name|ret
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configInetd
 parameter_list|(
@@ -3947,9 +3846,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configNFSServer
 parameter_list|(
@@ -4141,13 +4037,7 @@ operator||
 name|retval
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Extend the standard dmenuToggleVariable() method to also check and set  * the rpcbind variable if needed.  */
-end_comment
-
-begin_function
 name|int
 name|configRpcBind
 parameter_list|(
@@ -4236,9 +4126,6 @@ return|return
 name|retval
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configEtcTtys
 parameter_list|(
@@ -4310,15 +4197,9 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|__i386__
-end_ifdef
-
-begin_function
 name|int
 name|checkLoaderACPI
 parameter_list|(
@@ -4387,9 +4268,6 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configLoaderACPI
 parameter_list|(
@@ -4452,14 +4330,8 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
 name|int
 name|configMTAPostfix
 parameter_list|(
@@ -4660,9 +4532,6 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configMTAExim
 parameter_list|(
