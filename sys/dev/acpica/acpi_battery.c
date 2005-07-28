@@ -508,6 +508,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|bi
@@ -525,6 +527,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|bif
@@ -540,6 +544,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/*      * Pass 1:  for each battery that is present and valid, get its status,      * calculate percent capacity remaining, and sum all the current      * discharge rates.      */
