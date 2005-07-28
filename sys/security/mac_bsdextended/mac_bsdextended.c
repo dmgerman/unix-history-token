@@ -839,7 +839,6 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -855,19 +854,9 @@ name|temprule
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 return|return
 operator|(
 name|error
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
