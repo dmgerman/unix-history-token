@@ -2521,11 +2521,11 @@ name|kiconv_add_xlat16_cspairs
 argument_list|(
 name|ssn
 operator|->
-name|ioc_localcs
+name|ioc_servercs
 argument_list|,
 name|ssn
 operator|->
-name|ioc_servercs
+name|ioc_localcs
 argument_list|)
 expr_stmt|;
 if|if
