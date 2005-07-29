@@ -269,6 +269,13 @@ name|UNKNOWN_CAP
 value|0xffffffff
 end_define
 
+begin_define
+define|#
+directive|define
+name|UNKNOWN_VOLTAGE
+value|0xffffffff
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -286,6 +293,11 @@ specifier|const
 name|char
 modifier|*
 name|pwr_units
+decl_stmt|;
+name|int
+name|hours
+decl_stmt|,
+name|min
 decl_stmt|;
 if|if
 condition|(
@@ -306,6 +318,7 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
+comment|/* Print battery design information. */
 name|battio
 operator|.
 name|unit
@@ -318,7 +331,7 @@ name|ioctl
 argument_list|(
 name|acpifd
 argument_list|,
-name|ACPIIO_CMBAT_GET_BIF
+name|ACPIIO_BATT_GET_BIF
 argument_list|,
 operator|&
 name|battio
@@ -336,13 +349,6 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Battery %d information\n"
-argument_list|,
-name|num
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|battio
@@ -355,12 +361,12 @@ literal|0
 condition|)
 name|pwr_units
 operator|=
-literal|"mWh"
+literal|"mW"
 expr_stmt|;
 else|else
 name|pwr_units
 operator|=
-literal|"mAh"
+literal|"mA"
 expr_stmt|;
 if|if
 condition|(
@@ -374,13 +380,13 @@ name|UNKNOWN_CAP
 condition|)
 name|printf
 argument_list|(
-literal|"Design capacity:\tUnknown\n"
+literal|"Design capacity:\tunknown\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Design capacity:\t%d %s\n"
+literal|"Design capacity:\t%d %sh\n"
 argument_list|,
 name|battio
 operator|.
@@ -403,13 +409,13 @@ name|UNKNOWN_CAP
 condition|)
 name|printf
 argument_list|(
-literal|"Last full capacity:\tUnknown\n"
+literal|"Last full capacity:\tunknown\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Last full capacity:\t%d %s\n"
+literal|"Last full capacity:\t%d %sh\n"
 argument_list|,
 name|battio
 operator|.
@@ -449,7 +455,7 @@ name|UNKNOWN_CAP
 condition|)
 name|printf
 argument_list|(
-literal|"Design voltage:\t\tUnknown\n"
+literal|"Design voltage:\t\tunknown\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -466,7 +472,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Capacity (warn):\t%d %s\n"
+literal|"Capacity (warn):\t%d %sh\n"
 argument_list|,
 name|battio
 operator|.
@@ -479,7 +485,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Capacity (low):\t\t%d %s\n"
+literal|"Capacity (low):\t\t%d %sh\n"
 argument_list|,
 name|battio
 operator|.
@@ -492,7 +498,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Low/warn granularity:\t%d %s\n"
+literal|"Low/warn granularity:\t%d %sh\n"
 argument_list|,
 name|battio
 operator|.
@@ -505,7 +511,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Warn/full granularity:\t%d %s\n"
+literal|"Warn/full granularity:\t%d %sh\n"
 argument_list|,
 name|battio
 operator|.
@@ -560,6 +566,7 @@ operator|.
 name|oeminfo
 argument_list|)
 expr_stmt|;
+comment|/* Print current battery state information. */
 name|battio
 operator|.
 name|unit
@@ -572,7 +579,7 @@ name|ioctl
 argument_list|(
 name|acpifd
 argument_list|,
-name|ACPIIO_CMBAT_GET_BST
+name|ACPIIO_BATT_GET_BATTINFO
 argument_list|,
 operator|&
 name|battio
@@ -585,7 +592,7 @@ name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"get battery info (%d) failed"
+literal|"get battery user info (%d) failed"
 argument_list|,
 name|num
 argument_list|)
@@ -594,7 +601,7 @@ if|if
 condition|(
 name|battio
 operator|.
-name|bst
+name|battinfo
 operator|.
 name|state
 operator|!=
@@ -610,7 +617,22 @@ if|if
 condition|(
 name|battio
 operator|.
-name|bst
+name|battinfo
+operator|.
+name|state
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"high "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|battinfo
 operator|.
 name|state
 operator|&
@@ -618,14 +640,14 @@ name|ACPI_BATT_STAT_CRITICAL
 condition|)
 name|printf
 argument_list|(
-literal|"CRITICAL "
+literal|"critical "
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|battio
 operator|.
-name|bst
+name|battinfo
 operator|.
 name|state
 operator|&
@@ -633,14 +655,14 @@ name|ACPI_BATT_STAT_DISCHARG
 condition|)
 name|printf
 argument_list|(
-literal|"Discharging "
+literal|"discharging "
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|battio
 operator|.
-name|bst
+name|battinfo
 operator|.
 name|state
 operator|&
@@ -648,7 +670,7 @@ name|ACPI_BATT_STAT_CHARGING
 condition|)
 name|printf
 argument_list|(
-literal|"Charging"
+literal|"charging "
 argument_list|)
 expr_stmt|;
 name|printf
@@ -660,93 +682,182 @@ if|if
 condition|(
 name|battio
 operator|.
-name|bst
+name|battinfo
 operator|.
-name|rate
+name|cap
 operator|==
-name|UNKNOWN_CAP
+operator|-
+literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"Present Rate:\t\tUnknown\n"
+literal|"Remaining capacity:\tunknown\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Present Rate:\t\t%d %s\n"
+literal|"Remaining capacity:\t%d%%\n"
 argument_list|,
 name|battio
 operator|.
-name|bst
+name|battinfo
 operator|.
-name|rate
-argument_list|,
-name|pwr_units
+name|cap
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|battio
 operator|.
-name|bst
+name|battinfo
 operator|.
-name|cap
+name|min
 operator|==
-name|UNKNOWN_CAP
+operator|-
+literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"Remaining Capacity:\tUnknown\n"
+literal|"Remaining time:\t\tunknown\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
-argument_list|(
-literal|"Remaining Capacity:\t%d %s\n"
-argument_list|,
+block|{
+name|hours
+operator|=
 name|battio
 operator|.
-name|bst
+name|battinfo
 operator|.
-name|cap
+name|min
+operator|/
+literal|60
+expr_stmt|;
+name|min
+operator|=
+name|battio
+operator|.
+name|battinfo
+operator|.
+name|min
+operator|%
+literal|60
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Remaining time:\t\t%d:%02d\n"
 argument_list|,
-name|pwr_units
+name|hours
+argument_list|,
+name|min
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|battio
 operator|.
-name|bst
+name|battinfo
 operator|.
-name|volt
+name|rate
 operator|==
-name|UNKNOWN_CAP
+operator|-
+literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"Volt:\t\t\tUnknown\n"
+literal|"Present rate:\t\tunknown\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Volt:\t\t\t%d mV\n"
+literal|"Present rate:\t\t%d %s\n"
 argument_list|,
 name|battio
 operator|.
-name|bst
+name|battinfo
 operator|.
-name|volt
+name|rate
+argument_list|,
+name|pwr_units
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
-literal|"State:\t\t\tNot Present\n"
+literal|"State:\t\t\tnot present\n"
+argument_list|)
+expr_stmt|;
+comment|/* Print battery voltage information. */
+name|battio
+operator|.
+name|unit
+operator|=
+name|num
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|acpifd
+argument_list|,
+name|ACPIIO_BATT_GET_BST
+argument_list|,
+operator|&
+name|battio
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EX_IOERR
+argument_list|,
+literal|"get battery status (%d) failed"
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bst
+operator|.
+name|state
+operator|!=
+name|ACPI_BATT_STAT_NOT_PRESENT
+condition|)
+block|{
+if|if
+condition|(
+name|battio
+operator|.
+name|bst
+operator|.
+name|volt
+operator|==
+name|UNKNOWN_VOLTAGE
+condition|)
+name|printf
+argument_list|(
+literal|"Voltage:\t\tunknown\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Voltage:\t\t%d mV\n"
+argument_list|,
+name|battio
+operator|.
+name|bst
+operator|.
+name|volt
 argument_list|)
 expr_stmt|;
 block|}
