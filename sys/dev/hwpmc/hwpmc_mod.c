@@ -2662,6 +2662,8 @@ name|vn_lock
 argument_list|(
 name|v
 argument_list|,
+name|LK_CANRECURSE
+operator||
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
