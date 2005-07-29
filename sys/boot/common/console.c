@@ -992,7 +992,7 @@ expr_stmt|;
 if|if
 condition|(
 name|cons
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
