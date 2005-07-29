@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -858,12 +864,20 @@ name|freq
 argument_list|)
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EPERM
+condition|)
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1285,6 +1299,21 @@ name|apm_fd
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+comment|/* User must be root to control frequencies. */
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"must be root to run"
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
