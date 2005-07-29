@@ -3827,13 +3827,17 @@ name|ac
 parameter_list|)
 block|{
 name|struct
-name|amr_softc
+name|amrd_softc
 modifier|*
 name|sc
 init|=
 name|ac
 operator|->
-name|ac_sc
+name|ac_bio
+operator|->
+name|bio_disk
+operator|->
+name|d_drv1
 decl_stmt|;
 if|if
 condition|(
@@ -3865,7 +3869,7 @@ name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|amr_dev
+name|amrd_dev
 argument_list|,
 literal|"I/O error - 0x%x\n"
 argument_list|,
