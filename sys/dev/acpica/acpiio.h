@@ -28,36 +28,6 @@ end_define
 
 begin_struct
 struct|struct
-name|acpi_battdesc
-block|{
-name|int
-name|type
-decl_stmt|;
-comment|/* battery type */
-name|int
-name|phys_unit
-decl_stmt|;
-comment|/* physical unit of devclass */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|ACPI_BATT_TYPE_CMBAT
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BATT_TYPE_SMBAT
-value|0x0001
-end_define
-
-begin_struct
-struct|struct
 name|acpi_battinfo
 block|{
 name|int
@@ -72,6 +42,10 @@ name|int
 name|state
 decl_stmt|;
 comment|/* battery state */
+name|int
+name|rate
+decl_stmt|;
+comment|/* emptying rate */
 block|}
 struct|;
 end_struct
@@ -87,39 +61,39 @@ begin_struct
 struct|struct
 name|acpi_bif
 block|{
-name|u_int32_t
+name|uint32_t
 name|units
 decl_stmt|;
 comment|/* 0 for mWh, 1 for mAh */
-name|u_int32_t
+name|uint32_t
 name|dcap
 decl_stmt|;
 comment|/* Design Capacity */
-name|u_int32_t
+name|uint32_t
 name|lfcap
 decl_stmt|;
 comment|/* Last Full capacity */
-name|u_int32_t
+name|uint32_t
 name|btech
 decl_stmt|;
 comment|/* Battery Technology */
-name|u_int32_t
+name|uint32_t
 name|dvol
 decl_stmt|;
 comment|/* Design voltage (mV) */
-name|u_int32_t
+name|uint32_t
 name|wcap
 decl_stmt|;
 comment|/* WARN capacity */
-name|u_int32_t
+name|uint32_t
 name|lcap
 decl_stmt|;
 comment|/* Low capacity */
-name|u_int32_t
+name|uint32_t
 name|gra1
 decl_stmt|;
 comment|/* Granularity 1 (Warn to Low) */
-name|u_int32_t
+name|uint32_t
 name|gra2
 decl_stmt|;
 comment|/* Granularity 2 (Full to Warn) */
@@ -159,19 +133,19 @@ begin_struct
 struct|struct
 name|acpi_bst
 block|{
-name|u_int32_t
+name|uint32_t
 name|state
 decl_stmt|;
 comment|/* Battery State */
-name|u_int32_t
+name|uint32_t
 name|rate
 decl_stmt|;
 comment|/* Present Rate */
-name|u_int32_t
+name|uint32_t
 name|cap
 decl_stmt|;
 comment|/* Remaining Capacity */
-name|u_int32_t
+name|uint32_t
 name|volt
 decl_stmt|;
 comment|/* Present Voltage */
@@ -221,11 +195,7 @@ block|{
 name|int
 name|unit
 decl_stmt|;
-comment|/* argument: logical unit (-1 = overall) */
-name|struct
-name|acpi_battdesc
-name|battdesc
-decl_stmt|;
+comment|/* Device unit or ACPI_BATTERY_ALL_UNITS. */
 name|struct
 name|acpi_battinfo
 name|battinfo
@@ -242,6 +212,13 @@ block|}
 union|;
 end_union
 
+begin_define
+define|#
+directive|define
+name|ACPI_BATTERY_ALL_UNITS
+value|(-1)
+end_define
+
 begin_comment
 comment|/* Common battery ioctls */
 end_comment
@@ -256,22 +233,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPIIO_BATT_GET_TYPE
-value|_IOR('B', 0x02, union acpi_battery_ioctl_arg)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPIIO_BATT_GET_BATTINFO
 value|_IOWR('B', 0x03, union acpi_battery_ioctl_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPIIO_BATT_GET_BATTDESC
-value|_IOWR('B', 0x04, union acpi_battery_ioctl_arg)
 end_define
 
 begin_define
