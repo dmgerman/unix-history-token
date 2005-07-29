@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -4109,6 +4109,54 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|int
+name|any_interfaces
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|head
+parameter_list|)
+block|{
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+decl_stmt|;
+for|for
+control|(
+name|wpa_s
+operator|=
+name|head
+init|;
+name|wpa_s
+operator|!=
+name|NULL
+condition|;
+name|wpa_s
+operator|=
+name|wpa_s
+operator|->
+name|next
+control|)
+if|if
+condition|(
+operator|!
+name|wpa_s
+operator|->
+name|interface_removed
+condition|)
+return|return
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|wpa_supplicant_event
 parameter_list|(
@@ -4701,6 +4749,20 @@ operator|->
 name|l2
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* check if last interface */
+if|if
+condition|(
+operator|!
+name|any_interfaces
+argument_list|(
+name|wpa_s
+operator|->
+name|head
+argument_list|)
+condition|)
+name|eloop_terminate
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
