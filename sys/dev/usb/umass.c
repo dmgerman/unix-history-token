@@ -12801,6 +12801,22 @@ literal|0x44
 case|:
 comment|/* READ_HEADER */
 case|case
+literal|0x47
+case|:
+comment|/* PLAY_MSF (Play Minute/Second/Frame) */
+case|case
+literal|0x48
+case|:
+comment|/* PLAY_TRACK */
+case|case
+literal|0x49
+case|:
+comment|/* PLAY_TRACK_REL */
+case|case
+literal|0x4b
+case|:
+comment|/* PAUSE */
+case|case
 literal|0x51
 case|:
 comment|/* READ_DISK_INFO */
@@ -12832,6 +12848,10 @@ case|case
 literal|0xa1
 case|:
 comment|/* BLANK */
+case|case
+literal|0xa5
+case|:
+comment|/* PLAY_12 */
 case|case
 literal|0xa6
 case|:
