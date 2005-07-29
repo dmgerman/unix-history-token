@@ -887,7 +887,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|msg
+name|rsp
 operator|==
 name|NULL
 condition|)
