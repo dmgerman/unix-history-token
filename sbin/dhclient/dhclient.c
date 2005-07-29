@@ -1136,6 +1136,9 @@ block|{
 case|case
 name|RTM_IEEE80211_ASSOC
 case|:
+case|case
+name|RTM_IEEE80211_REASSOC
+case|:
 name|state_reboot
 argument_list|(
 name|ifi
@@ -4549,7 +4552,7 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* If the server name was filled out, copy it. */
+comment|/* If the server name was filled out, copy it. 	   Do not attempt to validate the server name as a host name. 	   RFC 2131 merely states that sname is NUL-terminated (which do 	   do not assume) and that it is the server's host name.  Since 	   the ISC client and server allow arbitrary characters, we do 	   as well. */
 if|if
 condition|(
 operator|(
@@ -4650,37 +4653,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|res_hnok
-argument_list|(
-name|lease
-operator|->
-name|server_name
-argument_list|)
-condition|)
-block|{
-name|warning
-argument_list|(
-literal|"Bogus server name %s"
-argument_list|,
-name|lease
-operator|->
-name|server_name
-argument_list|)
-expr_stmt|;
-name|free_client_lease
-argument_list|(
-name|lease
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 block|}
 comment|/* Ditto for the filename. */
 if|if
