@@ -244,6 +244,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FIXED_RATE_NONE
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RTS_DEFAULT
+value|IEEE80211_RTS_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FRAG_DEFAULT
+value|IEEE80211_FRAG_MAX
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_MS_TO_TU
 parameter_list|(
 name|x
@@ -390,10 +411,6 @@ name|ic_newassoc
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,
@@ -417,10 +434,6 @@ modifier|*
 name|ic_set_tim
 function_decl|)
 parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
 name|struct
 name|ieee80211_node
 modifier|*
@@ -481,6 +494,10 @@ name|u_int32_t
 name|ic_flags
 decl_stmt|;
 comment|/* state flags */
+name|u_int32_t
+name|ic_flags_ext
+decl_stmt|;
+comment|/* extended state flags */
 name|u_int32_t
 name|ic_caps
 decl_stmt|;
@@ -806,7 +823,29 @@ comment|/* ic_flags */
 end_comment
 
 begin_comment
-comment|/* NB: bits 0x4f available */
+comment|/* NB: bits 0x4c available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_FF
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* CONF: ATH FF enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_TURBOP
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* CONF: ATH Turbo enabled*/
 end_comment
 
 begin_comment
@@ -919,12 +958,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_F_ROAMING
+name|IEEE80211_F_BGSCAN
 value|0x00004000
 end_define
 
 begin_comment
-comment|/* CONF: roaming enabled (???)*/
+comment|/* CONF: bg scan enabled (???)*/
 end_comment
 
 begin_define
@@ -1104,6 +1143,36 @@ comment|/* STATUS: update beacon wme */
 end_comment
 
 begin_comment
+comment|/* ic_flags_ext */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_WDS
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* CONF: 4 addr allowed */
+end_comment
+
+begin_comment
+comment|/* 0x00000006 reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_BGSCAN
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* STATUS: enable full bgscan completion */
+end_comment
+
+begin_comment
 comment|/* ic_caps */
 end_comment
 
@@ -1160,6 +1229,28 @@ end_define
 
 begin_comment
 comment|/* CAPABILITY: CKIP available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_FF
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* CAPABILITY: ATH FF avail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_TURBOP
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* CAPABILITY: ATH Turbo avail*/
 end_comment
 
 begin_define
@@ -1325,6 +1416,43 @@ end_define
 
 begin_comment
 comment|/* CAPABILITY: WME avail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_WDS
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: 4-addr support */
+end_comment
+
+begin_comment
+comment|/* 0x10000000 reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_BGSCAN
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: bg scanning */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_TXFRAG
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: tx fragments */
 end_comment
 
 begin_comment
@@ -1980,6 +2108,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_MSG_SUPERG
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Atheros SuperG protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_DOTH
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* 802.11h support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_INACT
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* inactivity handling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_ROAM
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* sta-mode roaming */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_MSG_ANY
 value|0xffffffff
 end_define
@@ -1997,6 +2169,18 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|ieee80211_msg
+parameter_list|(
+name|_ic
+parameter_list|,
+name|_m
+parameter_list|)
+value|((_ic)->ic_debug& (_m))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_DPRINTF
 parameter_list|(
 name|_ic
@@ -2007,8 +2191,132 @@ name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {	\ 	if (_ic->ic_debug& (_m))			\ 		printf(_fmt, __VA_ARGS__);		\ } while (0)
+value|do {			\ 	if (ieee80211_msg(_ic, _m))					\ 		ieee80211_note(_ic, _fmt, __VA_ARGS__);		\ } while (0)
 end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NOTE
+parameter_list|(
+name|_ic
+parameter_list|,
+name|_m
+parameter_list|,
+name|_ni
+parameter_list|,
+name|_fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {			\ 	if (ieee80211_msg(_ic, _m))					\ 		ieee80211_note_mac(_ic, (_ni)->ni_macaddr, _fmt, __VA_ARGS__);\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NOTE_MAC
+parameter_list|(
+name|_ic
+parameter_list|,
+name|_m
+parameter_list|,
+name|_mac
+parameter_list|,
+name|_fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {		\ 	if (ieee80211_msg(_ic, _m))					\ 		ieee80211_note_mac(_ic, _mac, _fmt, __VA_ARGS__);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NOTE_FRAME
+parameter_list|(
+name|_ic
+parameter_list|,
+name|_m
+parameter_list|,
+name|_wh
+parameter_list|,
+name|_fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {		\ 	if (ieee80211_msg(_ic, _m))					\ 		ieee80211_note_frame(_ic, _wh, _fmt, __VA_ARGS__);	\ } while (0)
+end_define
+
+begin_function_decl
+name|void
+name|ieee80211_note
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_note_mac
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+specifier|const
+name|u_int8_t
+name|mac
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_note_frame
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame
+modifier|*
+name|wh
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -2087,6 +2395,17 @@ define|\
 value|((_ic)->ic_debug& IEEE80211_MSG_SCAN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ieee80211_msg_assoc
+parameter_list|(
+name|_ic
+parameter_list|)
+define|\
+value|((_ic)->ic_debug& IEEE80211_MSG_ASSOC)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -2105,6 +2424,62 @@ name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NOTE_FRAME
+parameter_list|(
+name|_ic
+parameter_list|,
+name|_m
+parameter_list|,
+name|_wh
+parameter_list|,
+name|_fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NOTE_MAC
+parameter_list|(
+name|_ic
+parameter_list|,
+name|_m
+parameter_list|,
+name|_mac
+parameter_list|,
+name|_fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ieee80211_msg_dumppkts
+parameter_list|(
+name|_ic
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ieee80211_msg
+parameter_list|(
+name|_ic
+parameter_list|,
+name|_m
+parameter_list|)
+value|0
 end_define
 
 begin_endif

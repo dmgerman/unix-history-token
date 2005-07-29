@@ -700,11 +700,6 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* enable MIB stats intr */
-name|sc_hasdiversity
-range|:
-literal|1
-decl_stmt|,
-comment|/* rx diversity available */
 name|sc_diversity
 range|:
 literal|1
@@ -715,11 +710,6 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* tx VEOL support */
-name|sc_hastpc
-range|:
-literal|1
-decl_stmt|,
-comment|/* per-packet TPC support */
 name|sc_ledstate
 range|:
 literal|1
