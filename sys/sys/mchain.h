@@ -364,7 +364,12 @@ name|caddr_t
 name|dst
 parameter_list|,
 name|size_t
-name|len
+modifier|*
+name|srclen
+parameter_list|,
+name|size_t
+modifier|*
+name|dstlen
 parameter_list|)
 function_decl|;
 end_typedef
