@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* writerec.c: The __opiewriterec() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-2001 by Craig Metz, All Rights Reserved. The Inner Net License Version 3 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Modified by cmetz for OPIE 2.4. Check that seed and sequence number are 		valid. 	Modified by cmetz for OPIE 2.31. Removed active attack protection 		support. Fixed passwd bug. 	Created by cmetz for OPIE 2.3 from passwd.c. */
+comment|/* writerec.c: The __opiewriterec() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-2001 by Craig Metz, All Rights Reserved. The Inner Net License Version 3 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Modified by cmetz for OPIE 2.4. Check that seed and sequence number are 		valid. 	Modified by cmetz for OPIE 2.31. Removed active attack protection 		support. Fixed passwd bug. 	Created by cmetz for OPIE 2.3 from passwd.c.  $FreeBSD$ */
 end_comment
 
 begin_include
@@ -334,7 +334,7 @@ name|KEY_FILE
 argument_list|,
 literal|1
 argument_list|,
-literal|0644
+literal|0600
 argument_list|)
 operator|)
 condition|)
@@ -375,7 +375,7 @@ name|KEY_FILE
 argument_list|,
 literal|2
 argument_list|,
-literal|0644
+literal|0600
 argument_list|)
 operator|)
 condition|)
