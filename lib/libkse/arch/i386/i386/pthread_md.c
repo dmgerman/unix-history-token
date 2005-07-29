@@ -213,10 +213,6 @@ modifier|*
 name|kse
 parameter_list|)
 block|{
-name|void
-modifier|*
-name|base
-decl_stmt|;
 name|struct
 name|kcb
 modifier|*
