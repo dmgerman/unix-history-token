@@ -2412,13 +2412,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ata_channel
-block|{}
-struct|;
-end_struct
-
 begin_comment
 comment|/* structure holding DMA related information */
 end_comment
