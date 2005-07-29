@@ -1708,9 +1708,6 @@ name|struct
 name|pmc_cpu
 name|pc_common
 decl_stmt|;
-name|uint32_t
-name|pc_state
-decl_stmt|;
 name|struct
 name|pmc_hw
 modifier|*
@@ -1725,6 +1722,9 @@ name|pc_p6pmcs
 index|[
 name|P6_NPMCS
 index|]
+decl_stmt|;
+name|uint32_t
+name|pc_state
 decl_stmt|;
 block|}
 struct|;
