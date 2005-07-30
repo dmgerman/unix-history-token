@@ -14504,6 +14504,41 @@ argument_list|,
 name|PMC_VERSION
 argument_list|)
 expr_stmt|;
+comment|/* check kernel version */
+if|if
+condition|(
+name|pmc_kernel_version
+operator|!=
+name|PMC_VERSION
+condition|)
+block|{
+if|if
+condition|(
+name|pmc_kernel_version
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"hwpmc: this kernel has not been compiled with "
+literal|"'options HWPMC_HOOKS'.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"hwpmc: kernel version (0x%x) does not match "
+literal|"module version (0x%x).\n"
+argument_list|,
+name|pmc_kernel_version
+argument_list|,
+name|PMC_VERSION
+argument_list|)
+expr_stmt|;
+return|return
+name|EPROGMISMATCH
+return|;
+block|}
 comment|/* 	 * check sysctl parameters 	 */
 if|if
 condition|(
