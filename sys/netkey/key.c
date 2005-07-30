@@ -4473,10 +4473,15 @@ name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in6
 name|sin6
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|s
 decl_stmt|;
@@ -4562,6 +4567,9 @@ argument_list|(
 name|sin
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|bzero
 argument_list|(
 operator|&
@@ -4588,6 +4596,8 @@ argument_list|(
 name|sin6
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * searching SAD. 	 * XXX: to be checked internal IP header somewhere.  Also when 	 * IPsec tunnel packet is received.  But ESP tunnel mode is 	 * encrypted so we can't check internal IP header. 	 */
 name|s
 operator|=
@@ -4715,7 +4725,14 @@ directive|if
 literal|0
 comment|/* don't check src */
 comment|/* check src address */
-block|switch (family) { 		case AF_INET: 			bcopy(src,&sin.sin_addr, sizeof(sin.sin_addr)); 			if (key_sockaddrcmp((struct sockaddr*)&sin, 			    (struct sockaddr *)&sav->sah->saidx.src, 0) != 0) 				continue;  			break; 		case AF_INET6: 			bcopy(src,&sin6.sin6_addr, sizeof(sin6.sin6_addr)); 			sin6.sin6_scope_id = 0; 			if (sa6_recoverscope(&sin6)) 				continue; 			if (key_sockaddrcmp((struct sockaddr *)&sin6, 			    (struct sockaddr *)&sav->sah->saidx.src, 0) != 0) 				continue; 			break; 		default: 			ipseclog((LOG_DEBUG, "key_allocsa: " 			    "unknown address family=%d.\n", 			    family)); 			continue; 		}
+block|switch (family) { 		case AF_INET: 			bcopy(src,&sin.sin_addr, sizeof(sin.sin_addr)); 			if (key_sockaddrcmp((struct sockaddr*)&sin, 			    (struct sockaddr *)&sav->sah->saidx.src, 0) != 0) 				continue;  			break;
+ifdef|#
+directive|ifdef
+name|INET6
+block|case AF_INET6: 			bcopy(src,&sin6.sin6_addr, sizeof(sin6.sin6_addr)); 			sin6.sin6_scope_id = 0; 			if (sa6_recoverscope(&sin6)) 				continue; 			if (key_sockaddrcmp((struct sockaddr *)&sin6, 			    (struct sockaddr *)&sav->sah->saidx.src, 0) != 0) 				continue; 			break;
+endif|#
+directive|endif
+block|default: 			ipseclog((LOG_DEBUG, "key_allocsa: " 			    "unknown address family=%d.\n", 			    family)); 			continue; 		}
 endif|#
 directive|endif
 comment|/* check dst address */
@@ -4777,6 +4794,9 @@ literal|0
 condition|)
 continue|continue;
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -4845,6 +4865,8 @@ literal|0
 condition|)
 continue|continue;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|ipseclog
 argument_list|(
