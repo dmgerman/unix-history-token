@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kdb.h>
 end_include
 
@@ -3455,6 +3461,8 @@ condition|(
 name|panicstr
 operator|!=
 name|NULL
+operator|||
+name|dumping
 condition|)
 return|return;
 switch|switch
