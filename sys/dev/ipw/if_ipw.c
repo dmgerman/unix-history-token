@@ -4584,8 +4584,6 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_node_authorize
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
