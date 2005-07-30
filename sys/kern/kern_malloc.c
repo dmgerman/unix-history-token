@@ -960,6 +960,13 @@ index|[
 name|curcpu
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+literal|0
+condition|)
+block|{
 name|mtsp
 operator|->
 name|mts_memalloced
@@ -971,6 +978,7 @@ operator|->
 name|mts_numallocs
 operator|++
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|zindx
@@ -1006,6 +1014,12 @@ name|long
 name|size
 parameter_list|)
 block|{
+if|if
+condition|(
+name|size
+operator|>
+literal|0
+condition|)
 name|malloc_type_zone_allocated
 argument_list|(
 name|mtp
