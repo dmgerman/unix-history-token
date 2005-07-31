@@ -1021,6 +1021,24 @@ operator|->
 name|irq
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|ep_intrhand
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|iobase
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|irq
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
