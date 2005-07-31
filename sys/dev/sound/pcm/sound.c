@@ -2914,12 +2914,13 @@ argument_list|,
 literal|"sound cdev"
 argument_list|)
 expr_stmt|;
-name|d
-operator|->
-name|flags
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
+comment|/* 	 * d->flags should be cleared by the allocator of the softc. 	 * We cannot clear this field here because several devices set 	 * this flag before calling pcm_register(). 	 */
+block|d->flags = 0;
+endif|#
+directive|endif
 name|d
 operator|->
 name|dev
@@ -3312,6 +3313,32 @@ name|EBUSY
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|mixer_uninit
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"unregister: mixer busy\n"
+argument_list|)
+expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|d
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+return|return
+name|EBUSY
+return|;
+block|}
 name|SLIST_FOREACH
 argument_list|(
 argument|sce
@@ -3355,32 +3382,6 @@ operator|->
 name|dspr_devt
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|mixer_uninit
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"unregister: mixer busy\n"
-argument_list|)
-expr_stmt|;
-name|snd_mtxunlock
-argument_list|(
-name|d
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-return|return
-name|EBUSY
-return|;
 block|}
 ifdef|#
 directive|ifdef
@@ -4668,12 +4669,6 @@ begin_comment
 comment|/************************************************************************/
 end_comment
 
-begin_if
-if|#
-directive|if
-name|notyet
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -4690,18 +4685,17 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|return (midi_modevent(mod, type, data));
+else|#
+directive|else
 return|return
-operator|(
-name|midi_modevent
-argument_list|(
-name|mod
-argument_list|,
-name|type
-argument_list|,
-name|data
-argument_list|)
-operator|)
+literal|0
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4716,32 +4710,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DEV_MODULE
-argument_list|(
-name|sound
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notyet */
-end_comment
 
 begin_expr_stmt
 name|MODULE_VERSION
