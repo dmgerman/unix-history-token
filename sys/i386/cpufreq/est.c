@@ -4552,14 +4552,6 @@ block|{
 name|printf
 argument_list|(
 literal|"est: CPU supports Enhanced Speedstep, but is not recognized.\n"
-literal|"est: Please update driver or contact the maintainer.\n"
-literal|"est: cpu_vendor %s, msr %0jx, bus_clk, %x\n"
-argument_list|,
-name|cpu_vendor
-argument_list|,
-name|msr
-argument_list|,
-name|INTEL_BUS_CLK
 argument_list|)
 expr_stmt|;
 return|return
