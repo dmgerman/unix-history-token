@@ -555,6 +555,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AFMT_S24_LE
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Little endian signed 24-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_S24_BE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Big endian signed 24-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_U24_LE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Little endian unsigned 24-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_U24_BE
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Big endian unsigned 24-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AFMT_STEREO
 value|0x10000000
 end_define
