@@ -1125,6 +1125,62 @@ comment|/* current value of the sample rate converter */
 end_comment
 
 begin_comment
+comment|/*  * S/PDIF specific  */
+end_comment
+
+begin_comment
+comment|/* Use ES1370_REG_CONTROL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RECEN_B
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Used to control mixing of analog with digital data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPDIFEN_B
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Reset to switch digital output mux to "THRU" mode */
+end_comment
+
+begin_comment
+comment|/* Use ES1370_REG_STATUS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_SPDIF
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Used to enable the S/PDIF circuitry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEST_SPDIF
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Used to put the S/PDIF module in "test mode" */
+end_comment
+
+begin_comment
 comment|/*  *  Sample rate converter addresses  */
 end_comment
 
