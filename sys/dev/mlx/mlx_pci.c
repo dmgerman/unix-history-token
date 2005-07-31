@@ -920,6 +920,7 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
 name|mlx_free
 argument_list|(
 name|sc
@@ -930,6 +931,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/*      * Start the controller.      */
 name|mlx_startup
 argument_list|(
