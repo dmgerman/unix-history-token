@@ -2192,6 +2192,12 @@ argument_list|)
 operator|>
 literal|0
 condition|)
+block|{
+name|sb_unlock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|sb
@@ -2201,6 +2207,12 @@ operator|.
 name|channel
 argument_list|)
 expr_stmt|;
+name|sb_lock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sndbuf_runsz
@@ -2214,6 +2226,12 @@ argument_list|)
 operator|>
 literal|0
 condition|)
+block|{
+name|sb_unlock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|sb
@@ -2223,6 +2241,12 @@ operator|.
 name|channel
 argument_list|)
 expr_stmt|;
+name|sb_lock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
+block|}
 name|sb_rd
 argument_list|(
 name|sb
@@ -2674,13 +2698,20 @@ name|sb
 argument_list|)
 expr_stmt|;
 else|else
-name|sb_cmd
+block|{
+if|#
+directive|if
+literal|0
+comment|/* 		 * NOTE: DSP_CMD_DMAEXIT_8 does not work with old 		 * soundblaster. 		 */
+block|sb_cmd(sb, DSP_CMD_DMAEXIT_8);
+endif|#
+directive|endif
+name|sb_reset_dsp
 argument_list|(
 name|sb
-argument_list|,
-name|DSP_CMD_DMAEXIT_8
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|play
