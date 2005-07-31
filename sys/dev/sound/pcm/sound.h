@@ -536,6 +536,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AFMT_24BIT
+value|(AFMT_S24_LE | AFMT_S24_BE | AFMT_U24_LE | AFMT_U24_BE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AFMT_16BIT
 value|(AFMT_S16_LE | AFMT_S16_BE | AFMT_U16_LE | AFMT_U16_BE)
 end_define
@@ -551,14 +558,14 @@ begin_define
 define|#
 directive|define
 name|AFMT_SIGNED
-value|(AFMT_S16_LE | AFMT_S16_BE | AFMT_S8)
+value|(AFMT_S32_LE | AFMT_S32_BE | AFMT_S24_LE | AFMT_S24_BE | \ 			AFMT_S16_LE | AFMT_S16_BE | AFMT_S8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AFMT_BIGENDIAN
-value|(AFMT_S16_BE | AFMT_U16_BE)
+value|(AFMT_S32_BE | AFMT_U32_BE | AFMT_S24_BE | AFMT_U24_BE | \ 			AFMT_S16_BE | AFMT_U16_BE)
 end_define
 
 begin_function_decl
