@@ -4552,6 +4552,11 @@ block|{
 name|printf
 argument_list|(
 literal|"est: CPU supports Enhanced Speedstep, but is not recognized.\n"
+literal|"est: cpu_vendor %s, msr %0jx\n"
+argument_list|,
+name|cpu_vendor
+argument_list|,
+name|msr
 argument_list|)
 expr_stmt|;
 return|return
