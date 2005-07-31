@@ -6471,6 +6471,12 @@ argument_list|,
 literal|"probe station due to inactivity"
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Grab a reference before unlocking the table 				 * so the node cannot be reclaimed before we 				 * send the frame. ieee80211_send_nulldata 				 * understands we've done this and reclaims the 				 * ref for us as needed. 				 */
+name|ieee80211_ref_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|IEEE80211_NODE_UNLOCK
 argument_list|(
 name|nt

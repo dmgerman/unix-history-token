@@ -12389,7 +12389,10 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_send_nulldata
 argument_list|(
+name|ieee80211_ref_node
+argument_list|(
 name|ni
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ic

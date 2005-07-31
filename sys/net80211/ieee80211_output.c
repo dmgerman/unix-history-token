@@ -788,7 +788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a null data frame to the specified node.  */
+comment|/*  * Send a null data frame to the specified node.  *  * NB: the caller is assumed to have setup a node reference  *     for use; this is necessary to deal with a race condition  *     when probing for inactive stations.  */
 end_comment
 
 begin_function
@@ -853,6 +853,12 @@ operator|.
 name|is_tx_nobuf
 operator|++
 expr_stmt|;
+name|ieee80211_unref_node
+argument_list|(
+operator|&
+name|ni
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
@@ -867,10 +873,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|ieee80211_ref_node
-argument_list|(
 name|ni
-argument_list|)
 expr_stmt|;
 name|wh
 operator|=
