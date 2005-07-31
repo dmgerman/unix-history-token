@@ -514,7 +514,7 @@ value|0x17
 end_define
 
 begin_comment
-comment|/**************************************************************************  *										  *  * These are the registers for the 3Com 3c509 and their bit patterns when *  * applicable.  They have been taken out the the "EtherLink III Parallel  *  * Tasking EISA and ISA Technical Reference" "Beta Draft 10/30/92" manual *  * from 3com.								  *  *										  *  **************************************************************************/
+comment|/**************************************************************************  *									  *  * These are the registers for the 3Com 3c509 and their bit patterns when *  * applicable.  They have been taken out the the "EtherLink III Parallel  *  * Tasking EISA and ISA Technical Reference" "Beta Draft 10/30/92" manual *  * from 3com.								  *  *									  *  **************************************************************************/
 end_comment
 
 begin_define
@@ -1222,6 +1222,41 @@ define|#
 directive|define
 name|STOP_TRANSCEIVER
 value|(u_short) (0x17<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_PLL_ENABLE
+value|(u_short) (0x18<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_PLL_DISABLE
+value|(u_short) (0x19<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POWER_UP
+value|(u_short) (0x1b<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POWER_DOWN
+value|(u_short) (0x1b<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POWER_AUTO
+value|(u_short) (0x1b<<11)
 end_define
 
 begin_comment
