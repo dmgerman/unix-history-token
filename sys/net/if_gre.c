@@ -8,11 +8,11 @@ comment|/*	 $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Heiko W.Rupp<hwr@pilhuhn.de>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Heiko W.Rupp<hwr@pilhuhn.de>  *  * IPv6-over-GRE contributed by Gert Doering<gert@greenie.muc.de>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * Encapsulate L3 protocols into IP  * See RFC 1701 and 1702 for more details.  * If_gre is compatible with Cisco GRE tunnels, so you can  * have a NetBSD box as the other end of a tunnel interface of a Cisco  * router. See gre(4) for more details.  * Also supported:  IP in IP encaps (proto 55) as of RFC 2004  */
+comment|/*  * Encapsulate L3 protocols into IP  * See RFC 2784 (successor of RFC 1701 and 1702) for more details.  * If_gre is compatible with Cisco GRE tunnels, so you can  * have a NetBSD box as the other end of a tunnel interface of a Cisco  * router. See gre(4) for more details.  * Also supported:  IP in IP encaps (proto 55) as of RFC 2004  */
 end_comment
 
 begin_include
@@ -1024,6 +1024,16 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
+name|u_short
+name|ip_id
+init|=
+literal|0
+decl_stmt|;
+name|uint8_t
+name|ip_tos
+init|=
+literal|0
+decl_stmt|;
 name|u_int16_t
 name|etype
 init|=
@@ -1688,11 +1698,41 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
+name|ip_tos
+operator|=
+name|ip
+operator|->
+name|ip_tos
+expr_stmt|;
+name|ip_id
+operator|=
+name|ip
+operator|->
+name|ip_id
+expr_stmt|;
 name|etype
 operator|=
 name|ETHERTYPE_IP
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
+name|ip_id
+operator|=
+name|ip_newid
+argument_list|()
+expr_stmt|;
+name|etype
+operator|=
+name|ETHERTYPE_IPV6
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NETATALK
@@ -1928,8 +1968,6 @@ operator|)
 operator|->
 name|ip_tos
 operator|=
-name|ip
-operator|->
 name|ip_tos
 expr_stmt|;
 operator|(
@@ -1943,8 +1981,6 @@ operator|)
 operator|->
 name|ip_id
 operator|=
-name|ip
-operator|->
 name|ip_id
 expr_stmt|;
 name|gh
@@ -2319,6 +2355,15 @@ directive|ifdef
 name|INET
 case|case
 name|AF_INET
+case|:
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
 case|:
 break|break;
 endif|#
