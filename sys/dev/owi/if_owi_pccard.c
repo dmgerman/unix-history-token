@@ -109,18 +109,18 @@ directive|include
 file|<dev/owi/if_ieee80211.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/pccard/pccardvar.h>
-end_include
-
 begin_define
 define|#
 directive|define
 name|PCCARD_API_LEVEL
 value|5
 end_define
+
+begin_include
+include|#
+directive|include
+file|<dev/pccard/pccardvar.h>
+end_include
 
 begin_include
 include|#
