@@ -425,6 +425,8 @@ name|error
 operator|==
 literal|0
 condition|)
+name|error
+operator|=
 name|kern_execve
 argument_list|(
 name|td
