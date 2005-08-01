@@ -656,7 +656,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|memstat_mtl_free
+name|_memstat_mtl_empty
 argument_list|(
 name|list
 argument_list|)
