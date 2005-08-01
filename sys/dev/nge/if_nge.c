@@ -4614,13 +4614,6 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|m_new
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|m
@@ -4628,7 +4621,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|m_new
+name|m
 operator|=
 name|m_getcl
 argument_list|(
@@ -4641,7 +4634,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m_new
+name|m
 operator|==
 name|NULL
 condition|)
@@ -4650,10 +4643,6 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-name|m
-operator|=
-name|m_new
-expr_stmt|;
 block|}
 else|else
 name|m
@@ -4680,7 +4669,7 @@ name|MCLBYTES
 expr_stmt|;
 name|m_adj
 argument_list|(
-name|m_new
+name|m
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4692,7 +4681,7 @@ name|c
 operator|->
 name|nge_mbuf
 operator|=
-name|m_new
+name|m
 expr_stmt|;
 name|c
 operator|->
@@ -4702,7 +4691,7 @@ name|vtophys
 argument_list|(
 name|mtod
 argument_list|(
-name|m_new
+name|m
 argument_list|,
 name|caddr_t
 argument_list|)
@@ -4712,7 +4701,7 @@ name|c
 operator|->
 name|nge_ctl
 operator|=
-name|m_new
+name|m
 operator|->
 name|m_len
 expr_stmt|;
@@ -6798,7 +6787,7 @@ name|arpcom
 operator|.
 name|ac_if
 argument_list|,
-name|m
+name|m_head
 argument_list|)
 expr_stmt|;
 if|if
