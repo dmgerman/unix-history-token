@@ -236,7 +236,7 @@ end_function
 
 begin_function
 name|void
-name|memstat_mtl_free
+name|_memstat_mtl_empty
 parameter_list|(
 name|struct
 name|memory_type_list
@@ -277,6 +277,24 @@ name|mtp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|memstat_mtl_free
+parameter_list|(
+name|struct
+name|memory_type_list
+modifier|*
+name|list
+parameter_list|)
+block|{
+name|_memstat_mtl_empty
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|list
