@@ -2711,13 +2711,12 @@ name|buf_priv
 operator|->
 name|age
 operator|=
+operator|++
 name|dev_priv
 operator|->
 name|sarea_priv
 operator|->
 name|last_dispatch
-operator|+
-literal|1
 expr_stmt|;
 name|buf
 operator|->
@@ -3280,13 +3279,6 @@ name|emit_dispatch_age
 condition|)
 block|{
 name|RING_LOCALS
-expr_stmt|;
-name|dev_priv
-operator|->
-name|sarea_priv
-operator|->
-name|last_dispatch
-operator|++
 expr_stmt|;
 comment|/* Emit the vertex buffer age */
 name|BEGIN_RING
