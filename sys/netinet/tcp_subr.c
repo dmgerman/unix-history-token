@@ -10114,6 +10114,10 @@ argument_list|,
 name|ip6_use_defzone
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 return|return
 operator|(
 name|error
