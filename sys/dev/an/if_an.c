@@ -4272,11 +4272,6 @@ name|sc
 operator|->
 name|an_ifp
 decl_stmt|;
-name|AN_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4284,11 +4279,6 @@ operator|->
 name|an_gone
 condition|)
 block|{
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -4302,6 +4292,11 @@ literal|0
 operator|)
 return|;
 block|}
+name|AN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|an_stop
 argument_list|(
 name|sc
