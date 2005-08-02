@@ -2288,23 +2288,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|ifmultiaddr
-modifier|*
-name|ifmaof_ifpforaddr
-parameter_list|(
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|if_simloop
 parameter_list|(
