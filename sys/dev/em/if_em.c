@@ -7701,6 +7701,16 @@ argument_list|(
 literal|"em_stop: begin"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|ether_poll_deregister
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|em_disable_intr
 argument_list|(
 name|adapter
