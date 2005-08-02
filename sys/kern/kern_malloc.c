@@ -1145,7 +1145,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|INVARIANTS
-comment|/* 	 * To make sure that WAITOK or NOWAIT is set, but not more than 	 * one, and check against the API botches that are common. 	 */
+comment|/* 	 * Check that exactly one of M_WAITOK or M_NOWAIT is specified. 	 */
 name|indx
 operator|=
 name|flags
@@ -1154,10 +1154,6 @@ operator|(
 name|M_WAITOK
 operator||
 name|M_NOWAIT
-operator||
-name|M_DONTWAIT
-operator||
-name|M_TRYWAIT
 operator|)
 expr_stmt|;
 if|if
