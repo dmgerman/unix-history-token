@@ -554,6 +554,11 @@ name|task
 name|if_linktask
 decl_stmt|;
 comment|/* task for link change events */
+name|struct
+name|mtx
+name|if_addr_mtx
+decl_stmt|;
+comment|/* mutex to protect address lists */
 block|}
 struct|;
 end_struct
@@ -758,6 +763,50 @@ define|#
 directive|define
 name|if_list
 value|if_link
+end_define
+
+begin_comment
+comment|/*  * Locks for address lists on the network interface.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_LOCK_INIT
+parameter_list|(
+define|if)	mtx_init(&(if)->if_addr_mtx,		\ 				    "if_addr_mtx", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_LOCK_DESTROY
+parameter_list|(
+define|if)	mtx_destroy(&(if)->if_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_LOCK
+parameter_list|(
+define|if)	mtx_lock(&(if)->if_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_UNLOCK
+parameter_list|(
+define|if)	mtx_unlock(&(if)->if_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_LOCK_ASSERT
+parameter_list|(
+define|if)	mtx_assert(&(if)->if_addr_mtx, MA_OWNED)
 end_define
 
 begin_comment
