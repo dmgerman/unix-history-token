@@ -1946,6 +1946,15 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+comment|/* 	 * When converting tar archives to cpio archives, it is 	 * essential that each distinct file have a distinct inode 	 * number.  To simplify this, we keep a static count here to 	 * assign fake dev/inode numbers to each tar entry.  Note that 	 * pax format archives may overwrite this with something more 	 * useful. 	 * 	 * Ideally, we would track every file read from the archive so 	 * that we could assign the same dev/ino pair to hardlinks, 	 * but the memory required to store a complete lookup table is 	 * probably not worthwhile just to support the relatively 	 * obscure tar->cpio conversion case. 	 */
+specifier|static
+name|int
+name|default_inode
+decl_stmt|;
+specifier|static
+name|int
+name|default_dev
+decl_stmt|;
 name|struct
 name|stat
 name|st
@@ -1979,6 +1988,40 @@ name|st
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Assign default device/inode values. */
+name|st
+operator|.
+name|st_dev
+operator|=
+literal|1
+operator|+
+name|default_dev
+expr_stmt|;
+comment|/* Don't use zero. */
+name|st
+operator|.
+name|st_ino
+operator|=
+operator|++
+name|default_inode
+expr_stmt|;
+comment|/* Don't use zero. */
+comment|/* Limit generated st_ino number to 16 bits. */
+if|if
+condition|(
+name|default_inode
+operator|>=
+literal|0xffff
+condition|)
+block|{
+operator|++
+name|default_dev
+expr_stmt|;
+name|default_inode
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|tar
 operator|=
 operator|*
