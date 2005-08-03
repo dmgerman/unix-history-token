@@ -1432,7 +1432,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is purly a NetBSD compatability interface.  The NetBSD  * iterface is too inflexable, but it's there so we'll support it since  * it's not all that hard.  */
+comment|/*  * This function is purely a NetBSD compatability interface.  The NetBSD  * interface is too inflexible, but it's there so we'll support it since  * it's not all that hard.  */
 end_comment
 
 begin_function
@@ -3948,7 +3948,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* unalligned little endian access */
+comment|/* unaligned little endian access */
 end_comment
 
 begin_define
@@ -7188,7 +7188,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* If we can't get the SSID, the this isn't an 802.11 device. */
+comment|/* If we can't get the SSID, this isn't an 802.11 device. */
 return|return;
 block|}
 name|num
