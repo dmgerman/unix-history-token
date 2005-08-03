@@ -5470,6 +5470,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Now program new ones. */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -5531,6 +5536,11 @@ literal|0x1F
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i

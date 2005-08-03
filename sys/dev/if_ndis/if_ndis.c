@@ -1425,6 +1425,11 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -1480,6 +1485,11 @@ operator|>
 name|mclistsz
 condition|)
 block|{
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|ndis_filter
@@ -1498,6 +1508,11 @@ name|out
 goto|;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|len

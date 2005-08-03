@@ -3306,6 +3306,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -3316,6 +3321,11 @@ argument|ifma_link
 argument_list|)
 name|mcnt
 operator|++
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3466,6 +3476,11 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* now program new ones */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -3525,6 +3540,11 @@ name|mcnt
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mcnt
