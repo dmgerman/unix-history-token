@@ -574,6 +574,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|usleep
+value|_usleep
+end_define
+
+begin_define
+define|#
+directive|define
 name|wait4
 value|_wait4
 end_define

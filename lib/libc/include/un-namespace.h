@@ -474,6 +474,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|usleep
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|wait4
 end_undef
 
