@@ -870,7 +870,7 @@ name|INKERNEL
 parameter_list|(
 name|va
 parameter_list|)
-value|(((vm_offset_t)(va))>= USRSTACK)
+value|(((va)>= DMAP_MIN_ADDRESS&& (va)< DMAP_MAX_ADDRESS) \ 	    || (va)>= KERNBASE)
 end_define
 
 begin_struct
