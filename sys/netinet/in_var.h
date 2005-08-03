@@ -446,6 +446,42 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Lock macros for IPv4 layer multicast address lists.  IPv4 lock goes  * before link layer multicast locks in the lock order.  In most cases,  * consumers of IN_*_MULTI() macros should acquire the locks before  * calling them; users of the in_{add,del}multi() functions should not.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|in_multi_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IN_MULTI_LOCK
+parameter_list|()
+value|mtx_lock(&in_multi_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_MULTI_UNLOCK
+parameter_list|()
+value|mtx_unlock(&in_multi_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_MULTI_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&in_multi_mtx, MA_OWNED)
+end_define
+
+begin_comment
 comment|/*  * Structure used by macros below to remember position when stepping through  * all of the in_multi records.  */
 end_comment
 
@@ -484,7 +520,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	struct ifmultiaddr *ifma; \ \ 	IF_ADDR_LOCK(ifp); \ 	TAILQ_FOREACH(ifma,&((ifp)->if_multiaddrs), ifma_link) { \ 		if (ifma->ifma_addr->sa_family == AF_INET \&& ((struct sockaddr_in *)ifma->ifma_addr)->sin_addr.s_addr == \ 		    (addr).s_addr) \ 			break; \ 	} \ 	(inm) = ifma ? ifma->ifma_protospec : 0; \ 	IF_ADDR_UNLOCK(ifp); \ } while(0)
+value|do { \ 	struct ifmultiaddr *ifma; \ \ 	IN_MULTI_LOCK_ASSERT(); \ 	IF_ADDR_LOCK(ifp); \ 	TAILQ_FOREACH(ifma,&((ifp)->if_multiaddrs), ifma_link) { \ 		if (ifma->ifma_addr->sa_family == AF_INET \&& ((struct sockaddr_in *)ifma->ifma_addr)->sin_addr.s_addr == \ 		    (addr).s_addr) \ 			break; \ 	} \ 	(inm) = ifma ? ifma->ifma_protospec : 0; \ 	IF_ADDR_UNLOCK(ifp); \ } while(0)
 end_define
 
 begin_comment
@@ -505,7 +541,7 @@ comment|/* struct in_multistep  step; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	if (((inm) = (step).i_inm) != NULL) \ 		(step).i_inm = LIST_NEXT((step).i_inm, inm_link); \ } while(0)
+value|do { \ 	IN_MULTI_LOCK_ASSERT(); \ 	if (((inm) = (step).i_inm) != NULL) \ 		(step).i_inm = LIST_NEXT((step).i_inm, inm_link); \ } while(0)
 end_define
 
 begin_define
@@ -522,7 +558,7 @@ comment|/* struct in_multistep step; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	(step).i_inm = LIST_FIRST(&in_multihead); \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
+value|do { \ 	IN_MULTI_LOCK_ASSERT(); \ 	(step).i_inm = LIST_FIRST(&in_multihead); \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
 end_define
 
 begin_struct_decl
