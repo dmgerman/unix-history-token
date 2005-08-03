@@ -869,7 +869,7 @@ argument_list|(
 operator|&
 name|lkp
 operator|->
-name|stack
+name|lk_stack
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1200,7 +1200,7 @@ argument_list|(
 operator|&
 name|lkp
 operator|->
-name|stack
+name|lk_stack
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1453,7 +1453,7 @@ argument_list|(
 operator|&
 name|lkp
 operator|->
-name|stack
+name|lk_stack
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1659,7 +1659,7 @@ argument_list|(
 operator|&
 name|lkp
 operator|->
-name|stack
+name|lk_stack
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2146,7 +2146,7 @@ argument_list|(
 operator|&
 name|lkp
 operator|->
-name|stack
+name|lk_stack
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2417,6 +2417,19 @@ operator|->
 name|lk_waitcount
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_LOCKS
+name|stack_print
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lk_stack
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

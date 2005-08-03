@@ -103,7 +103,7 @@ directive|ifdef
 name|DEBUG_LOCKS
 name|struct
 name|stack
-name|stack
+name|lk_stack
 decl_stmt|;
 endif|#
 directive|endif
