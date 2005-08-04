@@ -754,6 +754,12 @@ begin_comment
 comment|/* Don't ask VM for buckets. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/* Internal prototypes */
 end_comment
@@ -1101,6 +1107,15 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
