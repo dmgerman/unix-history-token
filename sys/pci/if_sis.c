@@ -5813,7 +5813,7 @@ name|sis_tx_tag
 argument_list|,
 name|sc
 operator|->
-name|sis_rx_dmamap
+name|sis_tx_dmamap
 argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
