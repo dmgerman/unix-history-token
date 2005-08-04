@@ -37,12 +37,16 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|int
-name|drm_device_is_agp
+name|drm_device_find_capability
 parameter_list|(
 name|drm_device_t
 modifier|*
 name|dev
+parameter_list|,
+name|int
+name|cap
 parameter_list|)
 block|{
 ifdef|#
@@ -129,7 +133,7 @@ argument_list|(
 name|capid
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If this capability entry ID is 2, then we are done. 		 */
+comment|/* 		 * If this capability entry ID is cap, then we are done. 		 */
 if|if
 condition|(
 name|AGP_CAPID_GET_CAP_ID
@@ -137,7 +141,7 @@ argument_list|(
 name|capid
 argument_list|)
 operator|==
-literal|2
+name|cap
 condition|)
 return|return
 literal|1
@@ -154,6 +158,50 @@ literal|1
 return|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_function
+name|int
+name|drm_device_is_agp
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|drm_device_find_capability
+argument_list|(
+name|dev
+argument_list|,
+name|PCIY_AGP
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|drm_device_is_pcie
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|drm_device_find_capability
+argument_list|(
+name|dev
+argument_list|,
+name|PCIY_EXPRESS
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

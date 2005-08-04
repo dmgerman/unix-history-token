@@ -3343,6 +3343,8 @@ operator|&
 name|dev_priv
 operator|->
 name|bus_pci_gart
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
