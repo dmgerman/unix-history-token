@@ -2147,6 +2147,11 @@ operator|)
 return|;
 block|}
 block|}
+name|IF_ADDR_LOCK_INIT
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ifp
@@ -2368,11 +2373,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 name|IF_AFDATA_LOCK_INIT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|IF_ADDR_LOCK_INIT
 argument_list|(
 name|ifp
 argument_list|)
