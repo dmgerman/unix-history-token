@@ -18338,12 +18338,6 @@ operator|->
 name|max_iosize
 argument_list|)
 expr_stmt|;
-name|request
-operator|->
-name|transfersize
-operator|=
-name|DEV_BSIZE
-expr_stmt|;
 if|if
 condition|(
 name|request
@@ -19058,6 +19052,10 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ATA PseudoRAID loaded\n"
@@ -19179,6 +19177,10 @@ name|disk
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ATA PseudoRAID unloaded\n"
