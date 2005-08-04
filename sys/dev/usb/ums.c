@@ -409,14 +409,14 @@ value|0x01
 comment|/* z direction available */
 define|#
 directive|define
-name|UMS_T
-value|0x02
-comment|/* aa direction available (tilt) */
-define|#
-directive|define
 name|UMS_SPUR_BUT_UP
 value|0x02
 comment|/* spurious button up events */
+define|#
+directive|define
+name|UMS_T
+value|0x04
+comment|/* aa direction available (tilt) */
 name|int
 name|nbuttons
 decl_stmt|;
@@ -1968,6 +1968,13 @@ name|device_get_unit
 argument_list|(
 name|self
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|usb_callout_init
+argument_list|(
+name|sc
+operator|->
+name|callout_handle
 argument_list|)
 expr_stmt|;
 if|if
