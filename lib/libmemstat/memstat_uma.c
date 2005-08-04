@@ -15,8 +15,14 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|LIBMEMSTAT
+end_define
+
 begin_comment
-comment|/*  * XXX: Grubbing around in UMA(9) using libkvm requires internal knowledge of  * a number of VM-related bits.  The ifdefs around those bits are not  * designed with a nosy user-space consumer in mind.  */
+comment|/* Cause vm_page.h not to include opt_vmpage.h */
 end_comment
 
 begin_include
@@ -25,43 +31,11 @@ directive|include
 file|<vm/vm.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_KERNEL
-end_define
-
-begin_comment
-comment|/* XXX: vm_page.h confusion. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KLD_MODULE
-end_define
-
-begin_comment
-comment|/* XXX: vm_page.h shouldn't include opt_vmpage.h. */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<vm/vm_page.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|KLD_MODULE
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|_KERNEL
-end_undef
 
 begin_include
 include|#
