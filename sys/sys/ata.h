@@ -2211,7 +2211,7 @@ begin_define
 define|#
 directive|define
 name|IOCATARAIDSTATUS
-value|_IOR('a', 202, struct ata_ioc_raid_config)
+value|_IOWR('a', 202, struct ata_ioc_raid_config)
 end_define
 
 begin_define
