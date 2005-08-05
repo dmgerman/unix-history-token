@@ -1415,7 +1415,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|static struct mtx_args name##_args = {				\ 		(mtx),							\ 		(desc),							\ 		(opts)							\ 	};								\ 	SYSINIT(name##_mtx_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    mtx_sysinit,&name##_args)
+value|static struct mtx_args name##_args = {				\ 		(mtx),							\ 		(desc),							\ 		(opts)							\ 	};								\ 	SYSINIT(name##_mtx_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    mtx_sysinit,&name##_args);					\ 	SYSUNINIT(name##_mtx_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    mtx_destroy, (mtx))
 end_define
 
 begin_comment
