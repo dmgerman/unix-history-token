@@ -139,7 +139,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|vm_offset_t
+name|daddr_t
 name|vnode_pager_addr
 parameter_list|(
 name|struct
@@ -1320,7 +1320,7 @@ end_comment
 
 begin_function
 specifier|static
-name|vm_offset_t
+name|daddr_t
 name|vnode_pager_addr
 parameter_list|(
 name|vp
@@ -1342,7 +1342,7 @@ modifier|*
 name|run
 decl_stmt|;
 block|{
-name|int
+name|daddr_t
 name|rtaddress
 decl_stmt|;
 name|int
@@ -1357,7 +1357,7 @@ decl_stmt|;
 name|daddr_t
 name|vblock
 decl_stmt|;
-name|int
+name|daddr_t
 name|voffset
 decl_stmt|;
 name|GIANT_REQUIRED
@@ -1523,7 +1523,7 @@ name|sf_buf
 modifier|*
 name|sf
 decl_stmt|;
-name|int
+name|daddr_t
 name|fileaddr
 decl_stmt|;
 name|vm_offset_t
@@ -2481,7 +2481,8 @@ decl_stmt|,
 name|bsize
 decl_stmt|,
 name|first
-decl_stmt|,
+decl_stmt|;
+name|daddr_t
 name|firstaddr
 decl_stmt|;
 name|struct
@@ -2890,8 +2891,11 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"vnode_pager_getpages: unexpected missing page: firstaddr: %d, foff: 0x%jx%08jx, vnp_size: 0x%jx%08jx"
+literal|"vnode_pager_getpages: unexpected missing page: firstaddr: %jd, foff: 0x%jx%08jx, vnp_size: 0x%jx%08jx"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|firstaddr
 argument_list|,
 call|(
