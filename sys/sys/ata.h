@@ -2197,7 +2197,7 @@ begin_define
 define|#
 directive|define
 name|IOCATARAIDCREATE
-value|_IOW('a', 200, struct ata_ioc_raid_config)
+value|_IOWR('a', 200, struct ata_ioc_raid_config)
 end_define
 
 begin_define
