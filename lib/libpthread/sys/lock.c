@@ -781,6 +781,11 @@ condition|)
 block|{
 name|atomic_store_rel_ptr
 argument_list|(
+operator|(
+specifier|volatile
+name|uintptr_t
+operator|*
+operator|)
 operator|&
 name|lu
 operator|->
@@ -788,6 +793,9 @@ name|lu_watchreq
 operator|->
 name|lr_watcher
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|lu
 argument_list|)
 expr_stmt|;
@@ -1003,11 +1011,19 @@ condition|)
 block|{
 name|atomic_store_rel_ptr
 argument_list|(
+operator|(
+specifier|volatile
+name|uintptr_t
+operator|*
+operator|)
 operator|&
 name|lck
 operator|->
 name|l_tail
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|lu
 operator|->
 name|lu_myreq
@@ -1015,6 +1031,11 @@ argument_list|)
 expr_stmt|;
 name|atomic_store_rel_ptr
 argument_list|(
+operator|(
+specifier|volatile
+name|uintptr_t
+operator|*
+operator|)
 operator|&
 name|lu
 operator|->
@@ -1022,6 +1043,9 @@ name|lu_myreq
 operator|->
 name|lr_owner
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1031,6 +1055,11 @@ block|{
 comment|/* Remove ourselves from the list. */
 name|atomic_store_rel_ptr
 argument_list|(
+operator|(
+specifier|volatile
+name|uintptr_t
+operator|*
+operator|)
 operator|&
 name|lu
 operator|->
@@ -1038,6 +1067,9 @@ name|lu_myreq
 operator|->
 name|lr_owner
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|lu
 operator|->
 name|lu_watchreq
@@ -1047,6 +1079,11 @@ argument_list|)
 expr_stmt|;
 name|atomic_store_rel_ptr
 argument_list|(
+operator|(
+specifier|volatile
+name|uintptr_t
+operator|*
+operator|)
 operator|&
 name|lu
 operator|->
@@ -1056,6 +1093,9 @@ name|lr_owner
 operator|->
 name|lu_myreq
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|lu
 operator|->
 name|lu_myreq
