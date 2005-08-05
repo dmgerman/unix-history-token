@@ -629,14 +629,8 @@ operator|=
 name|p
 expr_stmt|;
 else|else
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"need string after -%s"
-argument_list|,
-name|c
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 name|S
 operator|=
@@ -677,14 +671,8 @@ operator|*
 name|p
 expr_stmt|;
 else|else
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"need character after -%s"
-argument_list|,
-name|c
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 name|T
 operator|=
@@ -853,27 +841,14 @@ name|fmtp
 expr_stmt|;
 block|}
 else|else
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"need string after -%s"
-argument_list|,
-name|c
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"what do you mean by -%s?"
-argument_list|,
-name|c
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-break|break;
 block|}
 block|}
 name|ip
