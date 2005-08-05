@@ -188,6 +188,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|iftraceinit
+parameter_list|(
+name|struct
+name|interface
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|ifdebug
+modifier|*
+name|ifd
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|traceinit
@@ -201,11 +219,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|iftraceinit
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|iftraceinit
