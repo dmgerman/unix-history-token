@@ -1187,6 +1187,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPX
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|protox
@@ -1253,6 +1259,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|protox
@@ -1277,8 +1288,13 @@ name|pfkeyprotox
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|IPX
 name|ipxprotox
 block|,
+endif|#
+directive|endif
 name|atalkprotox
 block|,
 name|NULL
@@ -2639,6 +2655,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*IPSEC*/
+ifdef|#
+directive|ifdef
+name|IPX
 if|if
 condition|(
 name|af
@@ -2682,6 +2701,9 @@ name|pr_name
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* IPX */
 if|if
 condition|(
 name|af
