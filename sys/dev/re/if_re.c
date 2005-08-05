@@ -269,6 +269,16 @@ index|[]
 init|=
 block|{
 block|{
+name|DLINK_VENDORID
+block|,
+name|DLINK_DEVICEID_528T
+block|,
+name|RL_HWREV_8169S
+block|,
+literal|"D-Link DGE-528(T) Gigabit Ethernet Adapter"
+block|}
+block|,
+block|{
 name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8139
