@@ -1741,6 +1741,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|cmd
 operator|=
 operator|(
@@ -1916,7 +1920,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|RunningAsInit
+name|stat
+argument_list|(
+literal|"/stand/sh"
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|execl
 argument_list|(
