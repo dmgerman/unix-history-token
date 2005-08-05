@@ -1432,7 +1432,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is purly a NetBSD compatability interface.  The NetBSD  * iterface is too inflexable, but it's there so we'll support it since  * it's not all that hard.  */
+comment|/*  * This function is purely a NetBSD compatability interface.  The NetBSD  * interface is too inflexible, but it's there so we'll support it since  * it's not all that hard.  */
 end_comment
 
 begin_function
@@ -2840,7 +2840,7 @@ name|DECL_CMD_FUNC
 argument_list|(
 argument|set80211acm
 argument_list|,
-argument|val
+argument|ac
 argument_list|,
 argument|d
 argument_list|)
@@ -2851,9 +2851,38 @@ name|s
 argument_list|,
 name|IEEE80211_IOC_WME_ACM
 argument_list|,
-name|d
+literal|1
 argument_list|,
-name|WME_AC_BE
+name|getac
+argument_list|(
+name|ac
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|)
+block|; }
+specifier|static
+name|DECL_CMD_FUNC
+argument_list|(
+argument|set80211noacm
+argument_list|,
+argument|ac
+argument_list|,
+argument|d
+argument_list|)
+block|{
+name|set80211
+argument_list|(
+name|s
+argument_list|,
+name|IEEE80211_IOC_WME_ACM
+argument_list|,
+literal|0
+argument_list|,
+name|getac
+argument_list|(
+name|ac
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
@@ -2863,7 +2892,7 @@ name|DECL_CMD_FUNC
 argument_list|(
 argument|set80211ackpolicy
 argument_list|,
-argument|val
+argument|ac
 argument_list|,
 argument|d
 argument_list|)
@@ -2874,9 +2903,38 @@ name|s
 argument_list|,
 name|IEEE80211_IOC_WME_ACKPOLICY
 argument_list|,
-name|d
+literal|1
 argument_list|,
-name|WME_AC_BE
+name|getac
+argument_list|(
+name|ac
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|)
+block|; }
+specifier|static
+name|DECL_CMD_FUNC
+argument_list|(
+argument|set80211noackpolicy
+argument_list|,
+argument|ac
+argument_list|,
+argument|d
+argument_list|)
+block|{
+name|set80211
+argument_list|(
+name|s
+argument_list|,
+name|IEEE80211_IOC_WME_ACKPOLICY
+argument_list|,
+literal|0
+argument_list|,
+name|getac
+argument_list|(
+name|ac
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
@@ -3890,7 +3948,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* unalligned little endian access */
+comment|/* unaligned little endian access */
 end_comment
 
 begin_define
@@ -7130,7 +7188,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* If we can't get the SSID, the this isn't an 802.11 device. */
+comment|/* If we can't get the SSID, this isn't an 802.11 device. */
 return|return;
 block|}
 name|num
@@ -9636,40 +9694,32 @@ argument_list|,
 name|set80211txoplimit
 argument_list|)
 block|,
-name|DEF_CMD
+name|DEF_CMD_ARG
 argument_list|(
 literal|"acm"
 argument_list|,
-literal|1
-argument_list|,
 name|set80211acm
 argument_list|)
 block|,
-name|DEF_CMD
+name|DEF_CMD_ARG
 argument_list|(
 literal|"-acm"
 argument_list|,
-literal|0
-argument_list|,
-name|set80211acm
+name|set80211noacm
 argument_list|)
 block|,
-name|DEF_CMD
+name|DEF_CMD_ARG
 argument_list|(
 literal|"ack"
 argument_list|,
-literal|1
-argument_list|,
 name|set80211ackpolicy
 argument_list|)
 block|,
-name|DEF_CMD
+name|DEF_CMD_ARG
 argument_list|(
 literal|"-ack"
 argument_list|,
-literal|0
-argument_list|,
-name|set80211ackpolicy
+name|set80211noackpolicy
 argument_list|)
 block|,
 name|DEF_CMD_ARG2
