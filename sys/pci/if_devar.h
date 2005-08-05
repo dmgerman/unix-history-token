@@ -349,7 +349,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The 21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we need to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a flood of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the recevive space.  This  * is so that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can  * treat it as virtually contiguous.  *  * The above used to be true (the stupid restriction is still true)  * but we gone to directly DMA'ing into MBUFs (unless it's on an  * architecture which can't handle unaligned accesses) because with  * 100Mb/s cards the copying is just too much of a hit.  */
+comment|/*  * The 21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we need to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a flood of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the receive space.  This  * is so that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can  * treat it as virtually contiguous.  *  * The above used to be true (the stupid restriction is still true)  * but we gone to directly DMA'ing into MBUFs (unless it's on an  * architecture which can't handle unaligned accesses) because with  * 100Mb/s cards the copying is just too much of a hit.  */
 end_comment
 
 begin_if
@@ -930,8 +930,7 @@ name|chipid
 parameter_list|,
 name|media
 parameter_list|)
-define|\
-value|do {									\ 	(mi)->mi_type = TULIP_MEDIAINFO_SIA;				\ 	sc->tulip_mediums[TULIP_MEDIA_ ## media] = (mi);		\ 	(mi)->mi_sia_connectivity = TULIP_ ## chipid ## _SIACONN_ ## media; \ 	(mi)->mi_sia_tx_rx = TULIP_ ## chipid ## _SIATXRX_ ## media;	\ 	(mi)->mi_sia_general = TULIP_ ## chipid ## _SIAGEN_ ## media;	\ } while (0)
+value|do {		\ 	(mi)->mi_type = TULIP_MEDIAINFO_SIA;				\ 	sc->tulip_mediums[TULIP_MEDIA_ ## media] = (mi);		\ 	(mi)->mi_sia_connectivity = TULIP_ ## chipid ## _SIACONN_ ## media; \ 	(mi)->mi_sia_tx_rx = TULIP_ ## chipid ## _SIATXRX_ ## media;	\ 	(mi)->mi_sia_general = TULIP_ ## chipid ## _SIAGEN_ ## media;	\ } while (0)
 end_define
 
 begin_define
@@ -945,8 +944,7 @@ name|mi
 parameter_list|,
 name|media
 parameter_list|)
-define|\
-value|do {	\ 	if ((sc)->tulip_mediums[TULIP_MEDIA_ ## media] == NULL		\&& ((mi)->mi_capabilities& PHYSTS_ ## media)) {		\ 		(sc)->tulip_mediums[TULIP_MEDIA_ ## media] = (mi);	\ 		(mi)->mi_mediamask |= TULIP_BIT(TULIP_MEDIA_ ## media);	\ 	}								\ } while (0)
+value|do {		\ 	if ((sc)->tulip_mediums[TULIP_MEDIA_ ## media] == NULL		\&& ((mi)->mi_capabilities& PHYSTS_ ## media)) {		\ 		(sc)->tulip_mediums[TULIP_MEDIA_ ## media] = (mi);	\ 		(mi)->mi_mediamask |= TULIP_BIT(TULIP_MEDIA_ ## media);	\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1825,6 +1823,14 @@ decl_stmt|;
 name|tulip_desc_t
 modifier|*
 name|tulip_txdescs
+decl_stmt|;
+name|struct
+name|callout
+name|tulip_callout
+decl_stmt|;
+name|struct
+name|mtx
+name|tulip_mutex
 decl_stmt|;
 block|}
 struct|;
@@ -2832,56 +2838,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|TULIP_USE_SOFTINTR
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|TULIP_HDR_DATA
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-name|u_int32_t
-name|tulip_softintr_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tulip_softintr_last_unit
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tulip_softintr_max_unit
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|void
-name|tulip_softintr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|TULIP_BUS_DMA
 argument_list|)
 operator|&&
@@ -3387,30 +3343,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_USE_SOFTINTR
-argument_list|)
-end_if
-
-begin_expr_stmt
-name|NETISR_SET
-argument_list|(
-name|NETISR_DE
-argument_list|,
-name|tulip_softintr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -3548,18 +3480,9 @@ parameter_list|)
 value|do { \ 	    (sc)->tulip_curperfstats.perf_ ## name ## _cycles += TULIP_PERFDIFF(perfstart_ ## name, TULIP_PERFREAD()); \ 	    (sc)->tulip_curperfstats.perf_ ## name ++; \ 	} while (0)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_if
-
 begin_typedef
 typedef|typedef
-name|u_quad_t
+name|u_long
 name|tulip_cycle_t
 typedef|;
 end_typedef
@@ -3573,15 +3496,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|tulip_cycle_t
-name|x
-decl_stmt|;
-asm|__asm__
-specifier|volatile
-asm|(".byte 0x0f, 0x31":"=A" (x));
 return|return
 operator|(
-name|x
+name|get_cyclecount
+argument_list|()
 operator|)
 return|;
 block|}
@@ -3598,63 +3516,6 @@ name|f
 parameter_list|)
 value|((f) - (s))
 end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-end_elif
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|tulip_cycle_t
-typedef|;
-end_typedef
-
-begin_function
-specifier|static
-name|__inline
-name|tulip_cycle_t
-name|TULIP_PERFREAD
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|tulip_cycle_t
-name|x
-decl_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("rpcc %0":"=r" (x));
-return|return
-operator|(
-name|x
-operator|)
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|TULIP_PERFDIFF
-parameter_list|(
-name|s
-parameter_list|,
-name|f
-parameter_list|)
-value|((unsigned int) ((f) - (s)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -3741,6 +3602,46 @@ name|a1
 parameter_list|)
 define|\
 value|(((u_int16_t *)a1)[0] == 0xFFFFU \&& ((u_int16_t *)a1)[1] == 0xFFFFU \&& ((u_int16_t *)a1)[2] == 0xFFFFU)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_MUTEX
+parameter_list|(
+name|sc
+parameter_list|)
+value|(&(sc)->tulip_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(TULIP_MUTEX(sc))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(TULIP_MUTEX(sc))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(TULIP_MUTEX(sc), MA_OWNED)
 end_define
 
 begin_endif
