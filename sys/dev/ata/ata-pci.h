@@ -675,6 +675,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_IT8211F
+value|0x82111283
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_IT8212F
 value|0x82121283
 end_define
