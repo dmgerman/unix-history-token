@@ -1893,9 +1893,6 @@ name|tmp
 decl_stmt|,
 name|val
 decl_stmt|;
-name|size_t
-name|flagslen
-decl_stmt|;
 name|errno
 operator|=
 literal|0
@@ -1955,13 +1952,6 @@ name|val
 operator|)
 return|;
 block|}
-name|flagslen
-operator|=
-name|strlen
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 comment|/* Check for values represented by strings. */
 if|if
 condition|(

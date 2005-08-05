@@ -186,9 +186,6 @@ modifier|*
 name|fs_name
 decl_stmt|,
 modifier|*
-name|options
-decl_stmt|,
-modifier|*
 name|fspec
 decl_stmt|,
 name|mntpath
@@ -196,10 +193,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|options
-operator|=
-name|NULL
-expr_stmt|;
 name|mntflags
 operator|=
 literal|0
