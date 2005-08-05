@@ -1639,6 +1639,7 @@ name|error
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -1646,6 +1647,11 @@ argument_list|,
 literal|"mac read failed (all zeros)\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+block|}
 name|wi_free
 argument_list|(
 name|dev
