@@ -1801,7 +1801,14 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have to wait until after acquiring all locks before 	 * changing p_state.  We need to avoid all possible context 	 * switches (including ones from blocking on a mutex) while 	 * marked as a zombie. 	 */
+comment|/* 	 * We have to wait until after acquiring all locks before 	 * changing p_state.  We need to avoid all possible context 	 * switches (including ones from blocking on a mutex) while 	 * marked as a zombie.  We also have to set the zombie state 	 * before we release the parent process' proc lock to avoid 	 * a lost wakeup.  So, we first call wakeup, then we grab the 	 * sched lock, update the state, and release the parent process' 	 * proc lock. 	 */
+name|wakeup
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1814,37 +1821,12 @@ name|p_state
 operator|=
 name|PRS_ZOMBIE
 expr_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|p
-operator|->
-name|p_pptr
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
 operator|->
 name|p_pptr
 argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-name|critical_exit
-argument_list|()
 expr_stmt|;
 comment|/* Do the same timestamp bookkeeping that mi_switch() would do. */
 name|binuptime
@@ -2370,6 +2352,19 @@ operator|==
 name|PRS_ZOMBIE
 condition|)
 block|{
+comment|/* 			 * It is possible that the last thread of this 			 * process is still running on another CPU 			 * in thread_exit() after having dropped the process 			 * lock via PROC_UNLOCK() but before it has completed 			 * cpu_throw().  In that case, the other thread must 			 * still hold sched_lock, so simply by acquiring 			 * sched_lock once we will wait long enough for the 			 * thread to exit in that case. 			 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_retval
