@@ -263,7 +263,8 @@ decl_stmt|;
 name|void
 modifier|*
 name|data
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|p
 decl_stmt|;
@@ -702,7 +703,7 @@ decl_stmt|;
 name|iconv_t
 name|cd
 decl_stmt|;
-name|void
+name|char
 modifier|*
 name|p
 decl_stmt|;
@@ -1376,6 +1377,10 @@ name|size
 operator|=
 name|p
 operator|-
+operator|(
+name|char
+operator|*
+operator|)
 name|xt
 operator|.
 name|data
