@@ -552,14 +552,15 @@ name|struct
 name|sockaddr_storage
 name|ss
 decl_stmt|;
+name|socklen_t
+name|sslen
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|len
 decl_stmt|,
 name|len2
-decl_stmt|,
-name|sslen
 decl_stmt|;
 name|argoff
 operator|=

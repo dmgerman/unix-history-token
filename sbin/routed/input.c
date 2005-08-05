@@ -159,9 +159,10 @@ name|interface
 modifier|*
 name|aifp
 decl_stmt|;
-name|int
+name|socklen_t
 name|fromlen
-decl_stmt|,
+decl_stmt|;
+name|int
 name|cc
 decl_stmt|;
 ifdef|#
@@ -281,6 +282,9 @@ literal|1
 argument_list|,
 literal|"impossible recvfrom(rip) fromlen=%d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fromlen
 argument_list|)
 expr_stmt|;

@@ -416,7 +416,7 @@ name|struct
 name|sockaddr_storage
 name|from
 decl_stmt|;
-name|int
+name|socklen_t
 name|fromlen
 decl_stmt|;
 name|FILE
@@ -1044,7 +1044,7 @@ name|struct
 name|sockaddr_storage
 name|from
 decl_stmt|;
-name|int
+name|socklen_t
 name|fromlen
 decl_stmt|;
 name|FILE
