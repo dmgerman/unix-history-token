@@ -267,12 +267,11 @@ begin_comment
 comment|/*  * Defined if we are using threads.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|ISC_PLATFORM_USETHREADS
-value|1
-end_define
+end_undef
 
 begin_comment
 comment|/*  * Defined if unistd.h does not cause fd_set to be delared.  */

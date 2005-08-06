@@ -216,5 +216,43 @@ name|HAVE_STRLCAT
 value|1
 end_define
 
+begin_comment
+comment|/* Shut up warnings about missing braces */
+end_comment
+
+begin_comment
+comment|/* #undef SHUTUP_MUTEX_INITIALIZER */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHUTUP_MUTEX_INITIALIZER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LIBBIND_MUTEX_INITIALIZER
+value|{ PTHREAD_MUTEX_INITIALIZER }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LIBBIND_MUTEX_INITIALIZER
+value|PTHREAD_MUTEX_INITIALIZER
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

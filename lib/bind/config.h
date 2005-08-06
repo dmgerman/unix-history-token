@@ -51,12 +51,9 @@ begin_comment
 comment|/* define if your system has sigwait() */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SIGWAIT
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SIGWAIT */
+end_comment
 
 begin_comment
 comment|/* define if sigwait() is the UnixWare flavor */
@@ -86,12 +83,9 @@ begin_comment
 comment|/* define if sysconf() is available */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SYSCONF
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SYSCONF */
+end_comment
 
 begin_comment
 comment|/* define if sysctlbyname() is available */
@@ -399,23 +393,17 @@ begin_comment
 comment|/* define if pthread_attr_getstacksize() is available */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_PTHREAD_ATTR_GETSTACKSIZE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_PTHREAD_ATTR_GETSTACKSIZE */
+end_comment
 
 begin_comment
 comment|/* define if pthread_attr_setstacksize() is available */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_PTHREAD_ATTR_SETSTACKSIZE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_PTHREAD_ATTR_SETSTACKSIZE */
+end_comment
 
 begin_comment
 comment|/* define if you have strerror in the C library. */
@@ -464,6 +452,14 @@ end_comment
 
 begin_comment
 comment|/* #undef NEED_PTHREAD_SCOPE_SYSTEM */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<dlfcn.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DLFCN_H */
 end_comment
 
 begin_comment
@@ -516,12 +512,9 @@ begin_comment
 comment|/* Define to 1 if you have the `pthread' library (-lpthread). */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LIBPTHREAD
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LIBPTHREAD */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `scf' library (-lscf). */
@@ -808,12 +801,23 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
-comment|/* Define as `__inline' if that's what the C compiler calls it, or to nothing    if it is not supported. */
+comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
 
 begin_comment
 comment|/* #undef inline */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> does not define. */
