@@ -734,7 +734,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern_ipc
 argument_list|,
@@ -757,7 +757,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern_ipc
 argument_list|,
@@ -780,7 +780,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern_ipc
 argument_list|,
@@ -803,7 +803,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern_ipc
 argument_list|,
@@ -826,7 +826,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern_ipc
 argument_list|,
@@ -4976,7 +4976,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|TUNABLE_INT_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.ipc.shmmaxpgs"
 argument_list|,
@@ -5022,7 +5022,7 @@ name|shmall
 condition|)
 break|break;
 block|}
-name|TUNABLE_INT_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.ipc.shmmin"
 argument_list|,
@@ -5032,7 +5032,7 @@ operator|.
 name|shmmin
 argument_list|)
 expr_stmt|;
-name|TUNABLE_INT_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.ipc.shmmni"
 argument_list|,
@@ -5042,7 +5042,7 @@ operator|.
 name|shmmni
 argument_list|)
 expr_stmt|;
-name|TUNABLE_INT_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.ipc.shmseg"
 argument_list|,

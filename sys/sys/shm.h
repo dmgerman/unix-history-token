@@ -264,19 +264,23 @@ begin_struct
 struct|struct
 name|shminfo
 block|{
-name|int
+name|u_long
 name|shmmax
-decl_stmt|,
+decl_stmt|;
 comment|/* max shared memory segment size (bytes) */
+name|u_long
 name|shmmin
-decl_stmt|,
-comment|/* min shared memory segment size (bytes) */
+decl_stmt|;
+comment|/* max shared memory segment size (bytes) */
+name|u_long
 name|shmmni
-decl_stmt|,
+decl_stmt|;
 comment|/* max number of shared memory identifiers */
+name|u_long
 name|shmseg
-decl_stmt|,
+decl_stmt|;
 comment|/* max shared memory segments per process */
+name|u_long
 name|shmall
 decl_stmt|;
 comment|/* max amount of shared memory (pages) */

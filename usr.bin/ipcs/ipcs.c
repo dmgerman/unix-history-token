@@ -383,7 +383,7 @@ define|#
 directive|define
 name|SHMINFO_XVEC
 define|\
-value|X(shmmax, sizeof(int))				\ X(shmmin, sizeof(int))				\ X(shmmni, sizeof(int))				\ X(shmseg, sizeof(int))				\ X(shmall, sizeof(int))
+value|X(shmmax, sizeof(u_long))				\ X(shmmin, sizeof(u_long))				\ X(shmmni, sizeof(u_long))				\ X(shmseg, sizeof(u_long))				\ X(shmall, sizeof(u_long))
 end_define
 
 begin_define
