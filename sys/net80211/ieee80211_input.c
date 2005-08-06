@@ -4552,12 +4552,9 @@ condition|)
 block|{
 name|ni
 operator|=
-name|ieee80211_dup_bss
+name|ieee80211_tmp_node
 argument_list|(
-operator|&
 name|ic
-operator|->
-name|ic_sta
 argument_list|,
 name|mac
 argument_list|)
@@ -9683,12 +9680,9 @@ block|}
 else|else
 name|ni
 operator|=
-name|ieee80211_dup_bss
+name|ieee80211_tmp_node
 argument_list|(
-operator|&
 name|ic
-operator|->
-name|ic_sta
 argument_list|,
 name|wh
 operator|->
