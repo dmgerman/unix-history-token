@@ -906,7 +906,7 @@ name|u_int64_t
 name|v
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.e %0;; srlz.d;;" :: "r"(v));
+asm|__asm __volatile("ptc.e %0;; srlz.i;;" :: "r"(v));
 block|}
 end_function
 
@@ -927,7 +927,7 @@ name|u_int64_t
 name|log2size
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.g %0,%1;; srlz.d;;" :: "r"(va), "r"(log2size));
+asm|__asm __volatile("ptc.g %0,%1;; srlz.i;;" :: "r"(va), "r"(log2size));
 block|}
 end_function
 
@@ -948,7 +948,7 @@ name|u_int64_t
 name|log2size
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.ga %0,%1;; srlz.d;;" :: "r"(va), "r"(log2size));
+asm|__asm __volatile("ptc.ga %0,%1;; srlz.i;;" :: "r"(va), "r"(log2size));
 block|}
 end_function
 
@@ -969,7 +969,7 @@ name|u_int64_t
 name|log2size
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.l %0,%1;; srlz.d;;" :: "r"(va), "r"(log2size));
+asm|__asm __volatile("ptc.l %0,%1;; srlz.i;;" :: "r"(va), "r"(log2size));
 block|}
 end_function
 
