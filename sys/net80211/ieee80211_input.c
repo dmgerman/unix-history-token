@@ -11812,7 +11812,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_ASSOC
 argument_list|,
-literal|"[%s] recv disassociated (reason %d)\n"
+literal|"[%s] recv disassociate (reason %d)\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
