@@ -877,7 +877,7 @@ name|parentlen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|parentlen
+name|parent
 argument_list|)
 expr_stmt|;
 if|if
