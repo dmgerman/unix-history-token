@@ -752,6 +752,17 @@ begin_comment
 comment|/* vnode is process dependent */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VV_NOKNOTE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* don't activate knotes on this vnode */
+end_comment
+
 begin_comment
 comment|/*  * Vnode attributes.  A field value of VNOVAL represents a field whose value  * is unavailable (getattr) or which is not to be changed (setattr).  */
 end_comment
