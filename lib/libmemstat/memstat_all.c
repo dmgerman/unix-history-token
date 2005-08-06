@@ -94,9 +94,6 @@ modifier|*
 name|kvm_handle
 parameter_list|)
 block|{
-if|#
-directive|if
-name|NOTYET
 if|if
 condition|(
 name|memstat_kvm_malloc
@@ -114,8 +111,6 @@ operator|-
 literal|1
 operator|)
 return|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|memstat_kvm_uma

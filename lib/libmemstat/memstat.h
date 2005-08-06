@@ -377,6 +377,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|memstat_kvm_malloc
+parameter_list|(
+name|struct
+name|memory_type_list
+modifier|*
+name|list
+parameter_list|,
+name|void
+modifier|*
+name|kvm_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|memstat_kvm_uma
 parameter_list|(
 name|struct
