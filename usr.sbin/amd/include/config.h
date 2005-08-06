@@ -1243,6 +1243,12 @@ begin_comment
 comment|/* #undef HAVE_HASMNTOPT */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YES_HESIOD
+end_ifdef
+
 begin_comment
 comment|/* Define to 1 if you have the<hesiod.h> header file. */
 end_comment
@@ -1294,6 +1300,68 @@ directive|define
 name|HAVE_HES_INIT
 value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* YES_HESIOD */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<hesiod.h> header file. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_HESIOD_H
+end_undef
+
+begin_comment
+comment|/* Define to 1 if you have the `hesiod_init' function. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_HESIOD_INIT
+end_undef
+
+begin_comment
+comment|/* Define to 1 if you have the `hesiod_reload' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_HESIOD_RELOAD */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `hesiod_to_bind' function. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_HESIOD_TO_BIND
+end_undef
+
+begin_comment
+comment|/* Define to 1 if you have the `hes_init' function. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_HES_INIT
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<hsfs/hsfs.h> header file. */
@@ -1567,6 +1635,12 @@ name|HAVE_MAP_FILE
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YES_HESIOD
+end_ifdef
+
 begin_comment
 comment|/* Define if have HESIOD maps */
 end_comment
@@ -1577,6 +1651,22 @@ directive|define
 name|HAVE_MAP_HESIOD
 value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_MAP_HESIOD
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if have LDAP maps */
