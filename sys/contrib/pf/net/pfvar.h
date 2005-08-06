@@ -2842,6 +2842,15 @@ define|#
 directive|define
 name|PFSTATE_FROMSYNC
 value|0x02
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+define|#
+directive|define
+name|PFSTATE_EXPIRING
+value|0x10
+endif|#
+directive|endif
 name|u_int8_t
 name|pad
 decl_stmt|;
