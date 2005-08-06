@@ -109,6 +109,12 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_struct_decl
+struct_decl|struct
+name|pcpu
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -141,7 +147,7 @@ begin_function_decl
 name|void
 name|ipi_selected
 parameter_list|(
-name|u_int64_t
+name|cpumask_t
 name|cpus
 parameter_list|,
 name|int
@@ -164,8 +170,9 @@ begin_function_decl
 name|void
 name|ipi_send
 parameter_list|(
-name|u_int64_t
-name|lid
+name|struct
+name|pcpu
+modifier|*
 parameter_list|,
 name|int
 name|ipi

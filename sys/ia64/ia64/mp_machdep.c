@@ -204,16 +204,22 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|uint64_t
 name|vhpt_base
-decl_stmt|,
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
 name|vhpt_size
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_int64_t
+name|uint64_t
 name|ia64_lapic_address
 decl_stmt|;
 end_decl_stmt
@@ -266,8 +272,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Variables used by os_boot_rendez */
+comment|/* Variables used by os_boot_rendez and ia64_ap_startup */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|pcpu
+modifier|*
+name|ap_pcpu
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -277,10 +291,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|pcpu
-modifier|*
-name|ap_pcpu
+name|uint64_t
+name|ap_vhpt
 decl_stmt|;
 end_decl_stmt
 
@@ -323,18 +335,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ap_awake
+name|pcpup
 operator|=
-literal|1
+name|ap_pcpu
 expr_stmt|;
-name|ap_delay
-operator|=
-literal|0
+name|ia64_set_k4
+argument_list|(
+operator|(
+name|intptr_t
+operator|)
+name|pcpup
+argument_list|)
 expr_stmt|;
 asm|__asm __volatile("mov cr.pta=%0;; srlz.i;;" ::
 literal|"r"
 operator|(
-name|vhpt_base
+name|ap_vhpt
 operator|+
 operator|(
 literal|1
@@ -355,20 +371,16 @@ function|;
 end_function
 
 begin_expr_stmt
-name|pcpup
+name|ap_awake
 operator|=
-name|ap_pcpu
+literal|1
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|ia64_set_k4
-argument_list|(
-operator|(
-name|intptr_t
-operator|)
-name|pcpup
-argument_list|)
+name|ap_delay
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -401,8 +413,11 @@ while|while
 condition|(
 name|ap_spin
 condition|)
-comment|/* spin */
-empty_stmt|;
+name|DELAY
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 end_while
 
 begin_asm
@@ -475,8 +490,11 @@ condition|(
 operator|!
 name|smp_started
 condition|)
-comment|/* spin */
-empty_stmt|;
+name|DELAY
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 end_while
 
 begin_expr_stmt
@@ -915,6 +933,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|ap_pcpu
+operator|=
+name|pc
+expr_stmt|;
 name|ap_stack
 operator|=
 name|malloc
@@ -928,9 +950,14 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|ap_pcpu
+name|ap_vhpt
 operator|=
+name|vhpt_base
+index|[
 name|pc
+operator|->
+name|pc_cpuid
+index|]
 expr_stmt|;
 name|ap_delay
 operator|=
@@ -956,8 +983,6 @@ expr_stmt|;
 name|ipi_send
 argument_list|(
 name|pc
-operator|->
-name|pc_lid
 argument_list|,
 name|IPI_AP_WAKEUP
 argument_list|)
@@ -1097,8 +1122,11 @@ name|ap_awake
 operator|!=
 name|smp_cpus
 condition|)
-comment|/* spin */
-empty_stmt|;
+name|DELAY
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|smp_cpus
@@ -1141,7 +1169,7 @@ begin_function
 name|void
 name|ipi_selected
 parameter_list|(
-name|u_int64_t
+name|cpumask_t
 name|cpus
 parameter_list|,
 name|int
@@ -1173,8 +1201,6 @@ condition|)
 name|ipi_send
 argument_list|(
 name|pc
-operator|->
-name|pc_lid
 argument_list|,
 name|ipi
 argument_list|)
@@ -1212,8 +1238,6 @@ block|{
 name|ipi_send
 argument_list|(
 name|pc
-operator|->
-name|pc_lid
 argument_list|,
 name|ipi
 argument_list|)
@@ -1257,8 +1281,6 @@ condition|)
 name|ipi_send
 argument_list|(
 name|pc
-operator|->
-name|pc_lid
 argument_list|,
 name|ipi
 argument_list|)
@@ -1281,8 +1303,7 @@ parameter_list|)
 block|{
 name|ipi_send
 argument_list|(
-name|ia64_get_lid
-argument_list|()
+name|pcpup
 argument_list|,
 name|ipi
 argument_list|)
@@ -1298,19 +1319,21 @@ begin_function
 name|void
 name|ipi_send
 parameter_list|(
-name|u_int64_t
-name|lid
+name|struct
+name|pcpu
+modifier|*
+name|cpu
 parameter_list|,
 name|int
 name|ipi
 parameter_list|)
 block|{
 specifier|volatile
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|pipi
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|vector
 decl_stmt|;
 name|pipi
@@ -1321,7 +1344,9 @@ name|ia64_lapic_address
 operator||
 operator|(
 operator|(
-name|lid
+name|cpu
+operator|->
+name|pc_lid
 operator|&
 name|LID_SAPIC_MASK
 operator|)
@@ -1333,7 +1358,7 @@ expr_stmt|;
 name|vector
 operator|=
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 name|ipi_vector
@@ -1343,6 +1368,11 @@ index|]
 operator|&
 literal|0xff
 argument_list|)
+expr_stmt|;
+operator|*
+name|pipi
+operator|=
+name|vector
 expr_stmt|;
 name|CTR3
 argument_list|(
@@ -1359,11 +1389,6 @@ argument_list|(
 name|cpuid
 argument_list|)
 argument_list|)
-expr_stmt|;
-operator|*
-name|pipi
-operator|=
-name|vector
 expr_stmt|;
 block|}
 end_function

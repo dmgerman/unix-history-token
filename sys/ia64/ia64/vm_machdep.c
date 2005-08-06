@@ -262,6 +262,22 @@ expr|struct
 name|trapframe
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_highfp_mtx
+argument_list|,
+literal|"High FP lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
