@@ -2170,6 +2170,11 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|IF_ADDR_LOCK_DESTROY
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|if_free_type
 argument_list|(
 name|ifp
@@ -2177,11 +2182,6 @@ argument_list|,
 name|ifp
 operator|->
 name|if_type
-argument_list|)
-expr_stmt|;
-name|IF_ADDR_LOCK_DESTROY
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
