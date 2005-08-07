@@ -927,20 +927,34 @@ name|struct
 name|atapi_xpt_softc
 modifier|*
 name|scp
-init|=
+decl_stmt|;
+comment|/*      * We might not be properly set up yet if the bus is being      * reinitialised during the boot-up sequence, before the ATAPI      * bus is registered.      */
+if|if
+condition|(
+operator|(
+name|mtx_initialized
+argument_list|(
+operator|&
+name|atapicam_softc_mtx
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|scp
+operator|=
 name|get_softc
 argument_list|(
 name|ata_ch
 argument_list|)
-decl_stmt|;
-comment|/*      * scp might be null if the bus is being reinitialised during      * the boot-up sequence, before the ATAPI bus is registered.      */
-if|if
-condition|(
-name|scp
-operator|!=
+operator|)
+operator|==
 name|NULL
+operator|)
 condition|)
-block|{
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -960,7 +974,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
