@@ -219,18 +219,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|el_reallocf
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|reallocf(a, b)
-end_define
-
-begin_define
-define|#
-directive|define
 name|el_free
 parameter_list|(
 name|a

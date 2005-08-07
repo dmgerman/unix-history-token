@@ -6177,7 +6177,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|el_reallocf
+name|el_realloc
 argument_list|(
 name|el
 operator|->
@@ -6219,7 +6219,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|el_reallocf
+name|el_realloc
 argument_list|(
 name|el
 operator|->
