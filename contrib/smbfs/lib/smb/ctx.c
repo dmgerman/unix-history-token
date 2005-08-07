@@ -545,7 +545,7 @@ name|error
 operator|=
 name|nls_setlocale
 argument_list|(
-name|optarg
+name|arg
 argument_list|)
 expr_stmt|;
 if|if
