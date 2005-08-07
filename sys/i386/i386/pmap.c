@@ -7123,16 +7123,6 @@ operator||
 name|PG_RW
 operator|)
 expr_stmt|;
-name|pmap
-operator|->
-name|pm_stats
-operator|.
-name|resident_count
-operator|-=
-name|NBPDR
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
 name|anychanged
 operator|=
 literal|1
