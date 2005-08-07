@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: key.c,v 1.11 2001/01/23 15:55:30 jdolecek Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: key.c,v 1.16 2005/07/06 21:13:02 christos Exp $  */
 end_comment
 
 begin_if
@@ -55,12 +55,6 @@ end_expr_stmt
 begin_comment
 comment|/*  * key.c: This module contains the procedures for maintaining  *	  the extended-key map.  *  *      An extended-key (key) is a sequence of keystrokes introduced  *	with a sequence introducer and consisting of an arbitrary  *	number of characters.  This module maintains a map (the el->el_key.map)  *	to convert these extended-key sequences into input strs  *	(XK_STR), editor functions (XK_CMD), or unix commands (XK_EXE).  *  *      Warning:  *	  If key is a substr of some other keys, then the longer  *	  keys are lost!!  That is, if the keys "abcd" and "abcef"  *	  are in el->el_key.map, adding the key "abc" will cause the first two  *	  definitions to be lost.  *  *      Restrictions:  *      -------------  *      1) It is not possible to have one key that is a  *	   substr of another.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"sys.h"
-end_include
 
 begin_include
 include|#
@@ -174,6 +168,17 @@ end_function_decl
 begin_function_decl
 name|private
 name|void
+name|node__free
+parameter_list|(
+name|key_node_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|private
+name|void
 name|node__put
 parameter_list|(
 name|EditLine
@@ -197,6 +202,7 @@ name|key_node_t
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -211,6 +217,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -360,14 +367,14 @@ name|buf
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX: provide a function to clear the keys */
+name|node__free
+argument_list|(
 name|el
 operator|->
 name|el_key
 operator|.
 name|map
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -683,6 +690,7 @@ name|el_action_t
 modifier|*
 name|map
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|in
@@ -784,6 +792,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|key
@@ -871,6 +880,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|key
@@ -1330,19 +1340,29 @@ case|:
 case|case
 name|XK_EXE
 case|:
+if|if
+condition|(
+operator|(
 name|ptr
 operator|->
 name|val
 operator|.
 name|str
 operator|=
-name|strdup
+name|el_strdup
 argument_list|(
 name|val
 operator|->
 name|str
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 break|break;
 default|default:
 name|EL_ABORT
@@ -1428,6 +1448,7 @@ modifier|*
 modifier|*
 name|inptr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1871,6 +1892,48 @@ return|;
 block|}
 end_function
 
+begin_function
+name|private
+name|void
+name|node__free
+parameter_list|(
+name|key_node_t
+modifier|*
+name|k
+parameter_list|)
+block|{
+if|if
+condition|(
+name|k
+operator|==
+name|NULL
+condition|)
+return|return;
+name|node__free
+argument_list|(
+name|k
+operator|->
+name|sibling
+argument_list|)
+expr_stmt|;
+name|node__free
+argument_list|(
+name|k
+operator|->
+name|next
+argument_list|)
+expr_stmt|;
+name|el_free
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|k
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* node_lookup():  *	look for the str starting at node ptr.  *	Print if last node  */
 end_comment
@@ -1884,6 +1947,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2378,6 +2442,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|key
@@ -2832,6 +2897,7 @@ name|char
 modifier|*
 name|key__decode_str
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2840,6 +2906,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|sep
@@ -2848,7 +2915,9 @@ block|{
 name|char
 modifier|*
 name|b
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|p
 decl_stmt|;

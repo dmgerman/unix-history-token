@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)el.h	8.1 (Berkeley) 6/4/93  *	$NetBSD: el.h,v 1.7 2000/11/11 22:18:57 christos Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)el.h	8.1 (Berkeley) 6/4/93  *	$NetBSD: el.h,v 1.16 2003/10/18 23:48:42 christos Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -68,21 +68,28 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SIGNALS
-value|1<<0
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|NO_TTY
-value|1<<1
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|EDIT_DISABLED
-value|1<<2
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNBUFFERED
+value|0x08
 end_define
 
 begin_typedef
@@ -185,6 +192,14 @@ name|el_action_t
 name|lastcmd
 decl_stmt|;
 comment|/* Previous command		*/
+name|el_action_t
+name|thiscmd
+decl_stmt|;
+comment|/* this command 		*/
+name|char
+name|thisch
+decl_stmt|;
+comment|/* char that generated it	*/
 block|}
 name|el_state_t
 typedef|;
@@ -193,6 +208,16 @@ end_typedef
 begin_comment
 comment|/*  * Until we come up with something better...  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|el_strdup
+parameter_list|(
+name|a
+parameter_list|)
+value|strdup(a)
+end_define
 
 begin_define
 define|#
@@ -304,6 +329,12 @@ directive|include
 file|"help.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"read.h"
+end_include
+
 begin_struct
 struct|struct
 name|editline
@@ -347,6 +378,11 @@ modifier|*
 name|el_vdisplay
 decl_stmt|;
 comment|/* Virtual screen image = what we see */
+name|void
+modifier|*
+name|el_data
+decl_stmt|;
+comment|/* Client data			*/
 name|el_line_t
 name|el_line
 decl_stmt|;
@@ -399,11 +435,10 @@ name|el_signal_t
 name|el_signal
 decl_stmt|;
 comment|/* Signal handling stuff	*/
-name|void
-modifier|*
-name|data
+name|el_read_t
+name|el_read
 decl_stmt|;
-comment|/* user data */
+comment|/* Character reading stuff	*/
 block|}
 struct|;
 end_struct
@@ -418,6 +453,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -438,7 +474,9 @@ name|EL_ABORT
 parameter_list|(
 name|a
 parameter_list|)
-value|(void) (fprintf(el->el_errfile, "%s, %d: ", \ 				__FILE__, __LINE__), fprintf a, abort())
+value|do { \ 				fprintf(el->el_errfile, "%s, %d: ", \ 					 __FILE__, __LINE__); \ 				fprintf a; \ 				abort(); \ 			} while(
+comment|/*CONSTCOND*/
+value|0);
 end_define
 
 begin_else

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: map.c,v 1.13 2001/01/04 15:56:32 christos Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: map.c,v 1.20 2004/08/13 12:10:39 mycroft Exp $  */
 end_comment
 
 begin_if
@@ -92,6 +92,7 @@ parameter_list|,
 name|el_action_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -194,7 +195,7 @@ name|ED_UNASSIGNED
 block|,
 comment|/* ^G */
 comment|/*   8 */
-name|ED_DELETE_PREV_CHAR
+name|EM_DELETE_PREV_CHAR
 block|,
 comment|/* ^H */
 comment|/*   9 */
@@ -670,7 +671,7 @@ name|ED_INSERT
 block|,
 comment|/* ~ */
 comment|/* 127 */
-name|ED_DELETE_PREV_CHAR
+name|EM_DELETE_PREV_CHAR
 block|,
 comment|/* ^? */
 comment|/* 128 */
@@ -1373,7 +1374,7 @@ name|ED_UNASSIGNED
 block|,
 comment|/* ^G */
 comment|/*   8 */
-name|ED_DELETE_PREV_CHAR
+name|VI_DELETE_PREV_CHAR
 block|,
 comment|/* ^H */
 comment|/* BackSpace key */
@@ -1854,519 +1855,519 @@ name|ED_INSERT
 block|,
 comment|/* ~ */
 comment|/* 127 */
-name|ED_DELETE_PREV_CHAR
+name|VI_DELETE_PREV_CHAR
 block|,
 comment|/* ^? */
 comment|/* 128 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^@ */
 comment|/* 129 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^A */
 comment|/* 130 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^B */
 comment|/* 131 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^C */
 comment|/* 132 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^D */
 comment|/* 133 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^E */
 comment|/* 134 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^F */
 comment|/* 135 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^G */
 comment|/* 136 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^H */
 comment|/* 137 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^I */
 comment|/* 138 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^J */
 comment|/* 139 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^K */
 comment|/* 140 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^L */
 comment|/* 141 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^M */
 comment|/* 142 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^N */
 comment|/* 143 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^O */
 comment|/* 144 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^P */
 comment|/* 145 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^Q */
 comment|/* 146 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^R */
 comment|/* 147 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^S */
 comment|/* 148 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^T */
 comment|/* 149 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^U */
 comment|/* 150 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^V */
 comment|/* 151 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^W */
 comment|/* 152 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^X */
 comment|/* 153 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^Y */
 comment|/* 154 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^Z */
 comment|/* 155 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^[ */
 comment|/* 156 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^\ */
 comment|/* 157 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^] */
 comment|/* 158 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^^ */
 comment|/* 159 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^_ */
 comment|/* 160 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-SPACE */
 comment|/* 161 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-! */
 comment|/* 162 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-" */
 comment|/* 163 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-# */
 comment|/* 164 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-$ */
 comment|/* 165 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-% */
 comment|/* 166 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-& */
 comment|/* 167 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-' */
 comment|/* 168 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-( */
 comment|/* 169 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-) */
 comment|/* 170 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-* */
 comment|/* 171 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-+ */
 comment|/* 172 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-, */
 comment|/* 173 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-- */
 comment|/* 174 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-. */
 comment|/* 175 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-/ */
 comment|/* 176 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-0 */
 comment|/* 177 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-1 */
 comment|/* 178 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-2 */
 comment|/* 179 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-3 */
 comment|/* 180 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-4 */
 comment|/* 181 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-5 */
 comment|/* 182 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-6 */
 comment|/* 183 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-7 */
 comment|/* 184 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-8 */
 comment|/* 185 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-9 */
 comment|/* 186 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-: */
 comment|/* 187 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-; */
 comment|/* 188 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-< */
 comment|/* 189 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-= */
 comment|/* 190 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-> */
 comment|/* 191 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-? */
 comment|/* 192 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-@ */
 comment|/* 193 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-A */
 comment|/* 194 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-B */
 comment|/* 195 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-C */
 comment|/* 196 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-D */
 comment|/* 197 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-E */
 comment|/* 198 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-F */
 comment|/* 199 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-G */
 comment|/* 200 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-H */
 comment|/* 201 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-I */
 comment|/* 202 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-J */
 comment|/* 203 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-K */
 comment|/* 204 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-L */
 comment|/* 205 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-M */
 comment|/* 206 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-N */
 comment|/* 207 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-O */
 comment|/* 208 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-P */
 comment|/* 209 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-Q */
 comment|/* 210 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-R */
 comment|/* 211 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-S */
 comment|/* 212 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-T */
 comment|/* 213 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-U */
 comment|/* 214 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-V */
 comment|/* 215 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-W */
 comment|/* 216 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-X */
 comment|/* 217 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-Y */
 comment|/* 218 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-Z */
 comment|/* 219 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-[ */
 comment|/* 220 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-\ */
 comment|/* 221 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-] */
 comment|/* 222 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-^ */
 comment|/* 223 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-_ */
 comment|/* 224 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-` */
 comment|/* 225 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-a */
 comment|/* 226 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-b */
 comment|/* 227 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-c */
 comment|/* 228 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-d */
 comment|/* 229 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-e */
 comment|/* 230 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-f */
 comment|/* 231 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-g */
 comment|/* 232 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-h */
 comment|/* 233 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-i */
 comment|/* 234 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-j */
 comment|/* 235 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-k */
 comment|/* 236 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-l */
 comment|/* 237 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-m */
 comment|/* 238 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-n */
 comment|/* 239 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-o */
 comment|/* 240 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-p */
 comment|/* 241 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-q */
 comment|/* 242 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-r */
 comment|/* 243 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-s */
 comment|/* 244 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-t */
 comment|/* 245 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-u */
 comment|/* 246 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-v */
 comment|/* 247 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-w */
 comment|/* 248 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-x */
 comment|/* 249 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-y */
 comment|/* 250 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-z */
 comment|/* 251 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-{ */
 comment|/* 252 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-| */
 comment|/* 253 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-} */
 comment|/* 254 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* M-~ */
 comment|/* 255 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 comment|/* M-^? */
 block|}
 decl_stmt|;
@@ -2413,7 +2414,7 @@ name|ED_UNASSIGNED
 block|,
 comment|/* ^G */
 comment|/*   8 */
-name|ED_PREV_CHAR
+name|ED_DELETE_PREV_CHAR
 block|,
 comment|/* ^H */
 comment|/*   9 */
@@ -2521,7 +2522,7 @@ name|ED_UNASSIGNED
 block|,
 comment|/* " */
 comment|/*  35 */
-name|ED_UNASSIGNED
+name|VI_COMMENT_OUT
 block|,
 comment|/* # */
 comment|/*  36 */
@@ -2529,7 +2530,7 @@ name|ED_MOVE_TO_END
 block|,
 comment|/* $ */
 comment|/*  37 */
-name|ED_UNASSIGNED
+name|VI_MATCH
 block|,
 comment|/* % */
 comment|/*  38 */
@@ -2565,7 +2566,7 @@ name|ED_PREV_HISTORY
 block|,
 comment|/* - */
 comment|/*  46 */
-name|ED_UNASSIGNED
+name|VI_REDO
 block|,
 comment|/* . */
 comment|/*  47 */
@@ -2637,7 +2638,7 @@ name|VI_SEARCH_NEXT
 block|,
 comment|/* ? */
 comment|/*  64 */
-name|ED_UNASSIGNED
+name|VI_ALIAS
 block|,
 comment|/* @ */
 comment|/*  65 */
@@ -2645,7 +2646,7 @@ name|VI_ADD_AT_EOL
 block|,
 comment|/* A */
 comment|/*  66 */
-name|VI_PREV_SPACE_WORD
+name|VI_PREV_BIG_WORD
 block|,
 comment|/* B */
 comment|/*  67 */
@@ -2657,7 +2658,7 @@ name|ED_KILL_LINE
 block|,
 comment|/* D */
 comment|/*  69 */
-name|VI_TO_END_WORD
+name|VI_END_BIG_WORD
 block|,
 comment|/* E */
 comment|/*  70 */
@@ -2665,7 +2666,7 @@ name|VI_PREV_CHAR
 block|,
 comment|/* F */
 comment|/*  71 */
-name|ED_UNASSIGNED
+name|VI_TO_HISTORY_LINE
 block|,
 comment|/* G */
 comment|/*  72 */
@@ -2729,7 +2730,7 @@ name|ED_UNASSIGNED
 block|,
 comment|/* V */
 comment|/*  87 */
-name|VI_NEXT_SPACE_WORD
+name|VI_NEXT_BIG_WORD
 block|,
 comment|/* W */
 comment|/*  88 */
@@ -2737,7 +2738,7 @@ name|ED_DELETE_PREV_CHAR
 block|,
 comment|/* X */
 comment|/*  89 */
-name|ED_UNASSIGNED
+name|VI_YANK_END
 block|,
 comment|/* Y */
 comment|/*  90 */
@@ -2761,7 +2762,7 @@ name|ED_MOVE_TO_BEG
 block|,
 comment|/* ^ */
 comment|/*  95 */
-name|ED_UNASSIGNED
+name|VI_HISTORY_WORD
 block|,
 comment|/* _ */
 comment|/*  96 */
@@ -2853,7 +2854,7 @@ name|VI_UNDO
 block|,
 comment|/* u */
 comment|/* 118 */
-name|ED_UNASSIGNED
+name|VI_HISTEDIT
 block|,
 comment|/* v */
 comment|/* 119 */
@@ -2865,7 +2866,7 @@ name|ED_DELETE_NEXT_CHAR
 block|,
 comment|/* x */
 comment|/* 121 */
-name|ED_UNASSIGNED
+name|VI_YANK
 block|,
 comment|/* y */
 comment|/* 122 */
@@ -2877,7 +2878,7 @@ name|ED_UNASSIGNED
 block|,
 comment|/* { */
 comment|/* 124 */
-name|ED_UNASSIGNED
+name|VI_TO_COLUMN
 block|,
 comment|/* | */
 comment|/* 125 */
@@ -4635,6 +4636,7 @@ name|el_action_t
 modifier|*
 name|map
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|in
@@ -5347,6 +5349,7 @@ parameter_list|,
 name|int
 name|argc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -5362,6 +5365,7 @@ name|ntype
 decl_stmt|,
 name|rem
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -5378,6 +5382,7 @@ index|[
 name|EL_BUFSIZ
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|in

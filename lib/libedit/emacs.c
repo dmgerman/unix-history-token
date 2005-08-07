@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: emacs.c,v 1.8 2000/09/04 22:06:29 lukem Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: emacs.c,v 1.19 2004/10/28 21:14:52 dsl Exp $  */
 end_comment
 
 begin_if
@@ -84,6 +84,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -154,6 +155,14 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|el
+operator|->
+name|el_state
+operator|.
+name|doingarg
+condition|)
 name|c_delafter
 argument_list|(
 name|el
@@ -165,7 +174,12 @@ operator|.
 name|argument
 argument_list|)
 expr_stmt|;
-comment|/* delete after dot */
+else|else
+name|c_delafter1
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|el
@@ -218,6 +232,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -384,6 +399,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -411,23 +427,11 @@ name|c_kill
 operator|.
 name|buf
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|ch_enlargebufs
-argument_list|(
-name|el
-argument_list|,
-literal|1
-argument_list|)
-condition|)
 return|return
 operator|(
-name|CC_ERROR
+name|CC_NORM
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|el
@@ -585,6 +589,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -690,6 +695,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -901,6 +907,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -912,6 +919,7 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|el
 operator|->
 name|el_chared
@@ -1053,13 +1061,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* em_gosmacs_traspose():  *	Exchange the two characters before the cursor  *	Gosling emacs transpose chars [^T]  */
+comment|/* em_gosmacs_transpose():  *	Exchange the two characters before the cursor  *	Gosling emacs transpose chars [^T]  */
 end_comment
 
 begin_function
 name|protected
 name|el_action_t
-name|em_gosmacs_traspose
+name|em_gosmacs_transpose
 parameter_list|(
 name|EditLine
 modifier|*
@@ -1164,6 +1172,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -1233,8 +1242,8 @@ operator|.
 name|c_vcmd
 operator|.
 name|action
-operator|&
-name|DELETE
+operator|!=
+name|NOP
 condition|)
 block|{
 name|cv_delfini
@@ -1272,6 +1281,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1406,6 +1416,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1595,6 +1606,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1729,6 +1741,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|el
@@ -1769,6 +1782,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1831,6 +1845,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 comment|/* multiply current argument by 4 */
@@ -1889,6 +1904,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|el
@@ -1923,6 +1939,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|el
@@ -1969,6 +1986,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -2104,6 +2122,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|el
@@ -2143,6 +2162,7 @@ name|el
 parameter_list|,
 name|int
 name|c
+name|__unused
 parameter_list|)
 block|{
 name|el
@@ -2161,6 +2181,115 @@ name|el
 argument_list|,
 name|ED_SEARCH_PREV_HISTORY
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* em_delete_prev_char():  *	Delete the character to the left of the cursor  *	[^?]  */
+end_comment
+
+begin_function
+name|protected
+name|el_action_t
+comment|/*ARGSUSED*/
+name|em_delete_prev_char
+parameter_list|(
+name|EditLine
+modifier|*
+name|el
+parameter_list|,
+name|int
+name|c
+name|__unused
+parameter_list|)
+block|{
+if|if
+condition|(
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|<=
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+condition|)
+return|return
+operator|(
+name|CC_ERROR
+operator|)
+return|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_state
+operator|.
+name|doingarg
+condition|)
+name|c_delbefore
+argument_list|(
+name|el
+argument_list|,
+name|el
+operator|->
+name|el_state
+operator|.
+name|argument
+argument_list|)
+expr_stmt|;
+else|else
+name|c_delbefore1
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|-=
+name|el
+operator|->
+name|el_state
+operator|.
+name|argument
+expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|<
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+condition|)
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|=
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+expr_stmt|;
+return|return
+operator|(
+name|CC_REFRESH
 operator|)
 return|;
 block|}
