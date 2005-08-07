@@ -5082,22 +5082,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-name|LIST_FOREACH
-argument_list|(
-argument|maddr
-argument_list|,
-argument|&ifp->if_multiaddrs
-argument_list|,
-argument|ifma_link
-argument_list|)
-block|{
-else|#
-directive|else
 name|TAILQ_FOREACH
 argument_list|(
 argument|maddr
@@ -5107,8 +5091,6 @@ argument_list|,
 argument|ifma_link
 argument_list|)
 block|{
-endif|#
-directive|endif
 if|if
 condition|(
 name|maddr
@@ -5515,7 +5497,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Copy the Ethernet multicast address in addr to the on-chip registers for  * Individual Address idx.  Assumes that addr is really a multicast address  * and that idx> 0 (slot 0 is always used for the card MAC address).  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|xe_set_addr
@@ -5703,7 +5691,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Set the appropriate bit in the multicast hash table for the supplied  * Ethernet multicast address addr.  Assumes that addr is really a multicast  * address.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|xe_mchash
@@ -5794,7 +5788,13 @@ name|bit
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Write an outgoing packet to the card using programmed I/O.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|xe_pio_write_packet
@@ -6189,8 +6189,17 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**************************************************************  *                                                            *  *                  M I I  F U N C T I O N S                  *  *                                                            *  **************************************************************/
+end_comment
+
+begin_comment
 comment|/*  * Alternative MII/PHY handling code adapted from the xl driver.  It doesn't  * seem to work any better than the xirc2_ps stuff, but it's cleaner code.  * XXX - this stuff shouldn't be here.  It should all be abstracted off to  * XXX - some kind of common MII-handling code, shared by all drivers.  But  * XXX - that's a whole other mission.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|XE_MII_SET
@@ -6198,6 +6207,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|XE_OUTB(XE_GPR2, (XE_INB(XE_GPR2) | 0x04) | (x))
+end_define
+
+begin_define
 define|#
 directive|define
 name|XE_MII_CLR
@@ -6205,7 +6217,13 @@ parameter_list|(
 name|x
 parameter_list|)
 value|XE_OUTB(XE_GPR2, (XE_INB(XE_GPR2) | 0x04)& ~(x))
+end_define
+
+begin_comment
 comment|/*  * Sync the PHYs by setting data bit and strobing the clock 32 times.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|xe_mii_sync
@@ -6268,7 +6286,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Look for a MII-compliant PHY.  If we find one, reset it.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|xe_mii_init
@@ -6373,7 +6397,13 @@ literal|1
 return|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Clock a series of bits through the MII.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|xe_mii_send
@@ -6467,7 +6497,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Read an PHY register through the MII.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|xe_mii_readreg
@@ -6797,7 +6833,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Write to a PHY register through the MII.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|xe_mii_writereg
@@ -6960,7 +7002,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Read a register from the PHY.  */
+end_comment
+
+begin_function
 specifier|static
 name|u_int16_t
 name|xe_phy_readreg
@@ -7021,7 +7069,13 @@ name|mii_data
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Write to a PHY register.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|xe_phy_writereg
@@ -7085,7 +7139,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/*  * A bit of debugging code.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|xe_mii_dump
@@ -7187,12 +7247,21 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_if
 if|#
 directive|if
 literal|0
-block|void xe_reg_dump(struct xe_softc *scp) {   int page, i, s;    s = splimp();    device_printf(scp->dev, "Common registers: ");   for (i = 0; i< 8; i++) {     printf(" %2.2x", XE_INB(i));   }   printf("\n");    for (page = 0; page<= 8; page++) {     device_printf(scp->dev, "Register page %2.2x: ", page);     XE_SELECT_PAGE(page);     for (i = 8; i< 16; i++) {       printf(" %2.2x", XE_INB(i));     }     printf("\n");   }    for (page = 0x10; page< 0x5f; page++) {     if ((page>= 0x11&& page<= 0x3f) || 	(page == 0x41) || 	(page>= 0x43&& page<= 0x4f) || 	(page>= 0x59))       continue;     device_printf(scp->dev, "Register page %2.2x: ", page);     XE_SELECT_PAGE(page);     for (i = 8; i< 16; i++) {       printf(" %2.2x", XE_INB(i));     }     printf("\n");   }    (void)splx(s); }
+end_if
+
+begin_endif
+unit|void xe_reg_dump(struct xe_softc *scp) {   int page, i, s;    s = splimp();    device_printf(scp->dev, "Common registers: ");   for (i = 0; i< 8; i++) {     printf(" %2.2x", XE_INB(i));   }   printf("\n");    for (page = 0; page<= 8; page++) {     device_printf(scp->dev, "Register page %2.2x: ", page);     XE_SELECT_PAGE(page);     for (i = 8; i< 16; i++) {       printf(" %2.2x", XE_INB(i));     }     printf("\n");   }    for (page = 0x10; page< 0x5f; page++) {     if ((page>= 0x11&& page<= 0x3f) || 	(page == 0x41) || 	(page>= 0x43&& page<= 0x4f) || 	(page>= 0x59))       continue;     device_printf(scp->dev, "Register page %2.2x: ", page);     XE_SELECT_PAGE(page);     for (i = 8; i< 16; i++) {       printf(" %2.2x", XE_INB(i));     }     printf("\n");   }    (void)splx(s); }
 endif|#
 directive|endif
+end_endif
+
+begin_function
 name|int
 name|xe_activate
 parameter_list|(
@@ -7805,6 +7874,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|xe_deactivate
 parameter_list|(
