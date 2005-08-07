@@ -182,6 +182,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|kobj_mutex_inited
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|kobj_next_id
 init|=
 literal|1
@@ -219,6 +226,12 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|kobj_mutex_inited
+condition|)
+block|{
 name|mtx_init
 argument_list|(
 operator|&
@@ -231,6 +244,11 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|kobj_mutex_inited
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -249,6 +267,21 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|void
+name|kobj_machdep_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|kobj_init_mutex
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * This method structure is used to initialise new caches. Since the  * desc pointer is NULL, it is guaranteed never to match any read  * descriptors.  */
