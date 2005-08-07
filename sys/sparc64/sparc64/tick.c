@@ -661,7 +661,7 @@ name|CPU_IMPL_ULTRASPARCIII
 condition|)
 name|wr
 argument_list|(
-name|asr24
+name|asr25
 argument_list|,
 literal|1L
 operator|<<
