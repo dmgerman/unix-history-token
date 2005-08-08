@@ -4822,7 +4822,7 @@ name|t
 operator|++
 control|)
 block|{
-comment|/* XXX: some systems tgetstr needs non const */
+comment|/* XXX: some systems' tgetstr needs non const */
 name|term_alloc
 argument_list|(
 name|el
@@ -8427,7 +8427,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX: some systems tgetstr needs non const */
+comment|/* XXX: some systems' tgetstr needs non const */
 name|scap
 operator|=
 name|tgetstr

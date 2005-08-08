@@ -3464,7 +3464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_comment_out():  *	Vi comment out current command  *	[c]  */
+comment|/* vi_comment_out():  *	Vi comment out current command  *	[#]  */
 end_comment
 
 begin_function
@@ -3526,7 +3526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_alias():  *	Vi include shell alias  *	[@]  * NB: posix impiles that we should enter insert mode, however  * this is against historical precedent...  */
+comment|/* vi_alias():  *	Vi include shell alias  *	[@]  * NB: posix implies that we should enter insert mode, however  * this is against historical precedent...  */
 end_comment
 
 begin_function
