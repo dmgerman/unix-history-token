@@ -1701,7 +1701,7 @@ name|ni_intval
 operator|=
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 expr_stmt|;
 if|if
 condition|(
@@ -1968,7 +1968,7 @@ name|ni_intval
 operator|=
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 expr_stmt|;
 name|ieee80211_free_node
 argument_list|(

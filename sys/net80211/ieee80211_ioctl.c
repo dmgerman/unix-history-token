@@ -12630,7 +12630,7 @@ condition|)
 block|{
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 operator|=
 name|ireq
 operator|->

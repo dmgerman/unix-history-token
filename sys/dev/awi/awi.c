@@ -3481,7 +3481,7 @@ name|ni_intval
 operator|=
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 expr_stmt|;
 name|ni
 operator|->

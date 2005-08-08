@@ -7964,7 +7964,7 @@ name|ni_intval
 operator|*
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 operator|)
 operator|<<
 literal|2
@@ -7995,7 +7995,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_POWER
 argument_list|,
-literal|"[%s] save frame, %u now queued\n"
+literal|"[%s] save frame with age %d, %u now queued\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -8003,6 +8003,8 @@ name|ni
 operator|->
 name|ni_macaddr
 argument_list|)
+argument_list|,
+name|age
 argument_list|,
 name|qlen
 argument_list|)

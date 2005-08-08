@@ -551,9 +551,13 @@ name|is_ff_encap
 decl_stmt|;
 comment|/* fast frames encap'd for tx */
 name|u_int32_t
+name|is_rx_badbintval
+decl_stmt|;
+comment|/* rx frame w/ bogus bintval */
+name|u_int32_t
 name|is_spare
 index|[
-literal|10
+literal|9
 index|]
 decl_stmt|;
 block|}

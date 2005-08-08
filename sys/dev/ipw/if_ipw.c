@@ -10695,7 +10695,7 @@ name|htole32
 argument_list|(
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 argument_list|)
 expr_stmt|;
 name|DPRINTF

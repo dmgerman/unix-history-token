@@ -726,13 +726,13 @@ if|if
 condition|(
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 operator|==
 literal|0
 condition|)
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 operator|=
 name|IEEE80211_BINTVAL_DEFAULT
 expr_stmt|;
@@ -744,7 +744,7 @@ literal|7
 operator|*
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 expr_stmt|;
 comment|/* default 7 beacons */
 name|ic
@@ -759,6 +759,22 @@ name|ic
 argument_list|,
 literal|"beacon"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_lintval
+operator|==
+literal|0
+condition|)
+name|ic
+operator|->
+name|ic_lintval
+operator|=
+name|ic
+operator|->
+name|ic_bintval
 expr_stmt|;
 name|ic
 operator|->
