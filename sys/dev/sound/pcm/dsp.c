@@ -5211,6 +5211,11 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
 name|char
 modifier|*
 name|name

@@ -1497,6 +1497,10 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,

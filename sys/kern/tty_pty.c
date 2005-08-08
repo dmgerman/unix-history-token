@@ -3719,7 +3719,7 @@ parameter_list|)
 block|{
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|dev_clone_cred
+name|dev_clone
 argument_list|,
 name|pty_clone
 argument_list|,

@@ -409,6 +409,10 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -592,6 +596,11 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|,
 name|char
 modifier|*
