@@ -4748,13 +4748,14 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * If we have not wired the user supplied buffer and we are currently 	 * holding locks, drop a witness warning, as it's possible that 	 * write operations to the user page can sleep. 	 */
 if|if
 condition|(
 name|req
 operator|->
 name|lock
-operator|==
-name|REQ_LOCKED
+operator|!=
+name|REQ_WIRED
 condition|)
 name|WITNESS_WARN
 argument_list|(
