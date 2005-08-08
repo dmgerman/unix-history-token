@@ -84,7 +84,6 @@ name|tolower
 argument_list|(
 operator|*
 name|us2
-operator|++
 argument_list|)
 condition|)
 block|{
@@ -101,6 +100,9 @@ operator|(
 literal|0
 operator|)
 return|;
+name|us2
+operator|++
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -113,7 +115,6 @@ operator|-
 name|tolower
 argument_list|(
 operator|*
-operator|--
 name|us2
 argument_list|)
 operator|)
@@ -184,7 +185,6 @@ name|tolower
 argument_list|(
 operator|*
 name|us2
-operator|++
 argument_list|)
 condition|)
 return|return
@@ -198,7 +198,6 @@ operator|-
 name|tolower
 argument_list|(
 operator|*
-operator|--
 name|us2
 argument_list|)
 operator|)
@@ -212,6 +211,9 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
+name|us2
+operator|++
+expr_stmt|;
 block|}
 do|while
 condition|(
