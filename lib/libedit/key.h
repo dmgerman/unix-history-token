@@ -98,6 +98,12 @@ name|XK_EXE
 value|3
 end_define
 
+begin_include
+include|#
+directive|include
+file|<term.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
