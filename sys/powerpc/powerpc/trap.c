@@ -890,6 +890,19 @@ operator||=
 name|PSL_VEC
 expr_stmt|;
 break|break;
+else|#
+directive|else
+case|case
+name|EXC_VEC
+case|:
+case|case
+name|EXC_VECAST
+case|:
+name|sig
+operator|=
+name|SIGILL
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 comment|/* ALTIVEC */
