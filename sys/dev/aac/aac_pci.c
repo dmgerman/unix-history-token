@@ -615,6 +615,22 @@ block|,
 block|{
 literal|0x9005
 block|,
+literal|0x0285
+block|,
+literal|0x103c
+block|,
+literal|0x3227
+block|,
+name|AAC_HWIF_I960RX
+block|,
+name|AAC_FLAGS_NO4GB
+block|,
+literal|"HP ML110 G2 (Adaptec 2610SA)"
+block|}
+block|,
+block|{
+literal|0x9005
+block|,
 literal|0x0286
 block|,
 literal|0x9005
