@@ -9131,14 +9131,9 @@ name|ENOENT
 return|;
 block|}
 comment|/* XXX error return */
-name|ieee80211_crypto_delkey
+name|ieee80211_node_delucastkey
 argument_list|(
-name|ic
-argument_list|,
-operator|&
 name|ni
-operator|->
-name|ni_ucastkey
 argument_list|)
 expr_stmt|;
 name|ieee80211_free_node

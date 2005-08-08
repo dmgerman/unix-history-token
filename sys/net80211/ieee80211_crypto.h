@@ -69,16 +69,15 @@ begin_comment
 comment|/*  * Crypto key state.  There is sufficient room for all supported  * ciphers (see below).  The underlying ciphers are handled  * separately through loadable cipher modules that register with  * the generic crypto support.  A key has a reference to an instance  * of the cipher; any per-key state is hung off wk_private by the  * cipher when it is attached.  Ciphers are automatically called  * to detach and cleanup any such state when the key is deleted.  *  * The generic crypto support handles encap/decap of cipher-related  * frame contents for both hardware- and software-based implementations.  * A key requiring software crypto support is automatically flagged and  * the cipher is expected to honor this and do the necessary work.  * Ciphers such as TKIP may also support mixed hardware/software  * encrypt/decrypt and MIC processing.  */
 end_comment
 
-begin_comment
-comment|/* XXX need key index typedef */
-end_comment
+begin_typedef
+typedef|typedef
+name|u_int16_t
+name|ieee80211_keyix
+typedef|;
+end_typedef
 
 begin_comment
-comment|/* XXX pack better? */
-end_comment
-
-begin_comment
-comment|/* XXX 48-bit rsc/tsc */
+comment|/* h/w key index */
 end_comment
 
 begin_struct
@@ -90,6 +89,9 @@ name|wk_keylen
 decl_stmt|;
 comment|/* key length in bytes */
 name|u_int8_t
+name|wk_pad
+decl_stmt|;
+name|u_int16_t
 name|wk_flags
 decl_stmt|;
 define|#
@@ -117,10 +119,14 @@ directive|define
 name|IEEE80211_KEY_SWMIC
 value|0x20
 comment|/* host-based enmic/demic */
-name|u_int16_t
+name|ieee80211_keyix
 name|wk_keyix
 decl_stmt|;
-comment|/* key index */
+comment|/* h/w key index */
+name|ieee80211_keyix
+name|wk_rxkeyix
+decl_stmt|;
+comment|/* optional h/w rx key index */
 name|u_int8_t
 name|wk_key
 index|[
@@ -232,7 +238,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_KEYIX_NONE
-value|((u_int16_t) -1)
+value|((ieee80211_keyix) -1)
 end_define
 
 begin_if
@@ -282,10 +288,14 @@ index|[
 name|IEEE80211_WEP_NKID
 index|]
 decl_stmt|;
-name|u_int16_t
+name|ieee80211_keyix
 name|cs_def_txkey
 decl_stmt|;
 comment|/* default/group tx key index */
+name|u_int16_t
+name|cs_max_keyix
+decl_stmt|;
+comment|/* max h/w key index */
 name|int
 function_decl|(
 modifier|*
@@ -299,6 +309,12 @@ parameter_list|,
 specifier|const
 name|struct
 name|ieee80211_key
+modifier|*
+parameter_list|,
+name|ieee80211_keyix
+modifier|*
+parameter_list|,
+name|ieee80211_keyix
 modifier|*
 parameter_list|)
 function_decl|;
@@ -834,7 +850,7 @@ name|ieee80211_key
 modifier|*
 name|k
 parameter_list|,
-name|u_int16_t
+name|ieee80211_keyix
 name|ix
 parameter_list|)
 block|{
@@ -864,6 +880,10 @@ expr_stmt|;
 name|k
 operator|->
 name|wk_keyix
+operator|=
+name|k
+operator|->
+name|wk_rxkeyix
 operator|=
 name|ix
 expr_stmt|;

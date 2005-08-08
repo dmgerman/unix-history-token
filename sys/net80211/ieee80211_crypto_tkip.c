@@ -1647,6 +1647,16 @@ name|wh
 argument_list|,
 name|k
 operator|->
+name|wk_rxkeyix
+operator|!=
+name|IEEE80211_KEYIX_NONE
+condition|?
+name|k
+operator|->
+name|wk_rxkeyix
+else|:
+name|k
+operator|->
 name|wk_keyix
 argument_list|)
 expr_stmt|;
