@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/amr/amr_compat.h>
+file|<sys/bio.h>
 end_include
 
 begin_include
@@ -609,7 +609,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|AMR_BIO_FINISH
+name|biodone
 argument_list|(
 name|bio
 argument_list|)

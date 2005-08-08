@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/amr/amr_compat.h>
+file|<sys/bio.h>
 end_include
 
 begin_include
@@ -4031,10 +4031,11 @@ name|bio_bcount
 expr_stmt|;
 if|if
 condition|(
-name|BIO_IS_READ
-argument_list|(
 name|bio
-argument_list|)
+operator|->
+name|bio_cmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 name|ac
