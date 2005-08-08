@@ -86,6 +86,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -1188,7 +1194,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 literal|"null"
 argument_list|,
@@ -1202,9 +1208,10 @@ operator|(
 name|CRYPTO_NULL_CBC
 operator|)
 return|;
+elseif|else
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 literal|"aes"
 argument_list|,
@@ -1221,7 +1228,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 literal|"blowfish"
 argument_list|,
@@ -1238,7 +1245,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 literal|"3des"
 argument_list|,
