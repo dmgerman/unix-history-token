@@ -563,6 +563,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KEF_PREEMPTED
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Thread was preempted */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KEF_DIDRUN
 value|0x02000
 end_define
@@ -853,7 +864,7 @@ parameter_list|,
 name|ke
 parameter_list|)
 define|\
-value|((ke->ke_thread->td_flags& TDF_BORROWING) || SCHED_INTERACTIVE(kg))
+value|((ke->ke_thread->td_flags& TDF_BORROWING) ||			\      (ke->ke_flags& KEF_PREEMPTED) || SCHED_INTERACTIVE(kg))
 end_define
 
 begin_comment
@@ -1751,6 +1762,18 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|ke
+operator|->
+name|ke_flags
+operator|&
+name|KEF_PREEMPTED
+condition|)
+name|flags
+operator||=
+name|SRQ_PREEMPTED
+expr_stmt|;
 name|runq_add
 argument_list|(
 name|ke
@@ -7506,6 +7529,13 @@ name|ke_state
 operator|=
 name|KES_THREAD
 expr_stmt|;
+name|ke
+operator|->
+name|ke_flags
+operator|&=
+operator|~
+name|KEF_PREEMPTED
+expr_stmt|;
 return|return
 operator|(
 name|ke
@@ -7762,6 +7792,18 @@ operator|,
 name|ke
 operator|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|SRQ_PREEMPTED
+condition|)
+name|ke
+operator|->
+name|ke_flags
+operator||=
+name|KEF_PREEMPTED
 expr_stmt|;
 switch|switch
 condition|(
@@ -8171,6 +8213,13 @@ name|td
 operator|->
 name|td_ksegrp
 argument_list|)
+expr_stmt|;
+name|ke
+operator|->
+name|ke_flags
+operator|&=
+operator|~
+name|KEF_PREEMPTED
 expr_stmt|;
 if|if
 condition|(
