@@ -3616,7 +3616,11 @@ argument_list|(
 name|el_bindings_t
 argument_list|)
 operator|*
+operator|(
 name|EL_NUM_FCNS
+operator|+
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3654,7 +3658,11 @@ argument_list|(
 name|el_bindings_t
 argument_list|)
 operator|*
+operator|(
 name|EL_NUM_FCNS
+operator|+
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 name|el
