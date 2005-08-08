@@ -52,61 +52,11 @@ begin_comment
 comment|/********************************************************************************  ********************************************************************************                                                       Cross-version Compatibility  ********************************************************************************  ********************************************************************************/
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500005
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/taskqueue.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<=
-literal|500014
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_undef
-undef|#
-directive|undef
-name|offsetof
-end_undef
-
-begin_define
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|type
-parameter_list|,
-name|field
-parameter_list|)
-value|((size_t)(&((type *)0)->field))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -745,19 +695,12 @@ name|int
 name|mly_cam_channels
 decl_stmt|;
 comment|/* total channel count */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500005
 comment|/* command-completion task */
 name|struct
 name|task
 name|mly_task_complete
 decl_stmt|;
 comment|/* deferred-completion task */
-endif|#
-directive|endif
 name|int
 name|mly_qfrzn_cnt
 decl_stmt|;

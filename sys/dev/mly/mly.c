@@ -1476,11 +1476,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500005
 comment|/*      * Initialise command-completion task.      */
 name|TASK_INIT
 argument_list|(
@@ -1496,8 +1491,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* disable interrupts before we start talking to the controller */
 name|MLY_MASK_INTERRUPTS
 argument_list|(
@@ -7475,11 +7468,6 @@ condition|(
 name|worked
 condition|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500005
 if|if
 condition|(
 name|sc
@@ -7499,8 +7487,6 @@ name|mly_task_complete
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|mly_complete
 argument_list|(
 name|sc
