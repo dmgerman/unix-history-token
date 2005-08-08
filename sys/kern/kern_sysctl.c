@@ -4902,6 +4902,17 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|WITNESS_WARN
+argument_list|(
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"sysctl_new_user()"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyin
