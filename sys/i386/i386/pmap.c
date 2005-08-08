@@ -7396,7 +7396,8 @@ name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|pbits
+operator|*
+name|pte
 argument_list|)
 expr_stmt|;
 name|vm_page_flag_set
@@ -7438,7 +7439,8 @@ name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|pbits
+operator|*
+name|pte
 argument_list|)
 expr_stmt|;
 name|vm_page_dirty
