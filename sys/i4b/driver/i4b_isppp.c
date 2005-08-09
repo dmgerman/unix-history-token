@@ -1062,7 +1062,7 @@ operator|!=
 name|ST_CONNECTED
 condition|)
 return|return;
-comment|/* 	 * s = splimp(); 	 * ifp->if_flags |= IFF_OACTIVE; // - need to clear this somewhere 	 * splx(s); 	 */
+comment|/* 	 * s = splimp(); 	 * ifp->if_drv_flags |= IFF_DRV_OACTIVE; // - need to clear this somewhere 	 * splx(s); 	 */
 while|while
 condition|(
 operator|(

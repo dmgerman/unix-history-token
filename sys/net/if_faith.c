@@ -1268,8 +1268,12 @@ operator|->
 name|if_flags
 operator||=
 name|IFF_UP
-operator||
-name|IFF_RUNNING
+expr_stmt|;
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ifa
 operator|=

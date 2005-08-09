@@ -1296,9 +1296,9 @@ operator|&&
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{
@@ -1311,10 +1311,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 comment|/* IFF_UP is not set, try to release the bus anyway */
 name|ppb_release_bus
@@ -1343,9 +1343,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|)
 condition|)
@@ -1486,9 +1486,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 block|}
 break|break;
@@ -2499,10 +2499,10 @@ name|sc
 operator|->
 name|sc_ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|sc
 operator|->
@@ -2688,9 +2688,9 @@ operator|++
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|err
 operator|=

@@ -3353,10 +3353,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|lookahead
 operator|++
@@ -4772,18 +4772,18 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|lnc_start
 argument_list|(
@@ -4903,18 +4903,18 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|lnc_start
 argument_list|(
@@ -5106,9 +5106,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 condition|)
 name|lnc_start
@@ -5282,7 +5282,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/*  * IFF_OACTIVE and IFF_RUNNING are checked in ether_output so it's redundant  * to check them again since we wouldn't have got here if they were not  * appropriately set. This is also called from lnc_init and lncintr but the  * flags should be ok at those points too.  */
+comment|/*  * IFF_DRV_OACTIVE and IFF_DRV_RUNNING are checked in ether_output so it's  * redundant to check them again since we wouldn't have got here if they were  * not appropriately set. This is also called from lnc_init and lncintr but the  * flags should be ok at those points too.  */
 end_comment
 
 begin_function
@@ -5968,14 +5968,14 @@ name|ntdre
 argument_list|)
 condition|)
 do|;
-comment|/* 	 * Transmit ring is full so set IFF_OACTIVE 	 * since we can't buffer any more packets. 	 */
+comment|/* 	 * Transmit ring is full so set IFF_DRV_OACTIVE 	 * since we can't buffer any more packets. 	 */
 name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|LNCSTATS
 argument_list|(
@@ -6202,9 +6202,9 @@ operator|&&
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|!=
 literal|0
@@ -6218,10 +6218,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 block|}
 elseif|else
@@ -6240,9 +6240,9 @@ operator|&&
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0

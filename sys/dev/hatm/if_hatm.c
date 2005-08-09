@@ -11598,9 +11598,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 return|return;
 name|hatm_init_bus_width
@@ -13364,9 +13364,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|sc
 operator|->
@@ -13505,9 +13505,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 return|return;
@@ -13515,10 +13515,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ATMEV_SEND_IFSTATE_CHANGED
 argument_list|(
@@ -13701,7 +13701,7 @@ operator|->
 name|utopia
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Give any waiters on closing a VCC a chance. They will stop 	 * to wait if they see that IFF_RUNNING disappeared. 	 */
+comment|/* 	 * Give any waiters on closing a VCC a chance. They will stop 	 * to wait if they see that IFF_DRV_RUNNING disappeared. 	 */
 name|cv_broadcast
 argument_list|(
 operator|&

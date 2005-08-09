@@ -1210,7 +1210,7 @@ parameter_list|,
 name|CARRIER
 parameter_list|)
 define|\
-value|do {								\ 		struct atmev_ifstate_changed _arg;			\ 		_arg.running = (((ATMIF)->ifp->if_flags&		\ 		    IFF_RUNNING) != 0);					\ 		_arg.carrier = ((CARRIER) != 0);			\ 		atm_event((ATMIF)->ifp, ATMEV_IFSTATE_CHANGED,&_arg); \ 	} while (0)
+value|do {								\ 		struct atmev_ifstate_changed _arg;			\ 		_arg.running = (((ATMIF)->ifp->if_drv_flags&		\ 		    IFF_DRV_RUNNING) != 0);				\ 		_arg.carrier = ((CARRIER) != 0);			\ 		atm_event((ATMIF)->ifp, ATMEV_IFSTATE_CHANGED,&_arg); \ 	} while (0)
 end_define
 
 begin_define

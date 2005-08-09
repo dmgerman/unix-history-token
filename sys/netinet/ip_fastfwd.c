@@ -302,9 +302,9 @@ name|rt
 operator|->
 name|rt_ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{

@@ -1518,9 +1518,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|&&
 operator|(
@@ -1557,9 +1557,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 return|return;

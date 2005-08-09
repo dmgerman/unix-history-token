@@ -3426,9 +3426,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 comment|/* same as DSF_RUNNING */
 comment|/*  	 * OACTIVE is used by upper-level routines 	 * and must be set 	 */
@@ -3436,10 +3436,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 comment|/* same as tbusy below */
 name|sc
@@ -4286,10 +4286,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 comment|/* 	     * This is probably just a race.  The xmt'r is just 	     * became idle but WE have masked interrupts so ... 	     */
 ifdef|#
@@ -4451,9 +4451,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
@@ -4476,10 +4476,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 name|WL_UNLOCK
@@ -4588,22 +4588,23 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|!
+operator|(
 operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
 name|IFF_UP
-operator||
-name|IFF_RUNNING
 operator|)
-operator|)
-operator|!=
+operator|&&
 operator|(
-name|IFF_UP
-operator||
-name|IFF_RUNNING
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
 operator|)
 condition|)
 block|{
@@ -6977,10 +6978,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|wlstart
 argument_list|(

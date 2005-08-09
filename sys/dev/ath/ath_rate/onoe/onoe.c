@@ -1998,9 +1998,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 block|{
 name|sc

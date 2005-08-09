@@ -749,9 +749,9 @@ argument_list|(
 name|sc
 argument_list|)
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|getmicrotime
 argument_list|(

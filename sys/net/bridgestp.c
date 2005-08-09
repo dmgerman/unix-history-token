@@ -1233,9 +1233,9 @@ condition|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0
@@ -2145,9 +2145,9 @@ condition|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0
@@ -6064,9 +6064,9 @@ name|sc
 operator|->
 name|sc_ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 name|callout_reset
 argument_list|(

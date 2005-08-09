@@ -3403,9 +3403,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 name|ath_start
 argument_list|(
@@ -3567,22 +3567,23 @@ comment|/* shared irq, not for us */
 return|return;
 if|if
 condition|(
+operator|!
+operator|(
 operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
-name|IFF_RUNNING
-operator||
 name|IFF_UP
 operator|)
-operator|)
-operator|!=
+operator|&&
 operator|(
-name|IFF_RUNNING
-operator||
-name|IFF_UP
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
 operator|)
 condition|)
 block|{
@@ -4410,9 +4411,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ic
 operator|->
@@ -4560,9 +4561,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 block|{
 comment|/* 		 * Shutdown the hardware and driver: 		 *    reset 802.11 state machine 		 *    turn off timers 		 *    disable interrupts 		 *    turn off the radio 		 *    clear transmit machinery 		 *    clear receive machinery 		 *    drain and release tx queues 		 *    reclaim beacon resources 		 *    power down hardware 		 * 		 * Note that some of this work is not possible if the 		 * hardware is gone (invalid). 		 */
@@ -4578,10 +4579,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
@@ -5029,9 +5030,9 @@ condition|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0
@@ -5111,9 +5112,9 @@ operator|++
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 break|break;
 block|}
@@ -5649,7 +5650,7 @@ parameter_list|(
 name|ifp
 parameter_list|)
 define|\
-value|((ifp->if_flags& (IFF_RUNNING|IFF_UP)) == (IFF_RUNNING|IFF_UP))
+value|((ifp->if_flags& IFF_UP)&& (ifp->if_drv_flags& IFF_DRV_RUNNING))
 name|int
 name|error
 decl_stmt|;
@@ -16958,10 +16959,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
@@ -17087,10 +17088,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
@@ -17194,10 +17195,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
@@ -17652,10 +17653,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
@@ -21165,9 +21166,9 @@ condition|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0
@@ -21535,7 +21536,7 @@ parameter_list|(
 name|ifp
 parameter_list|)
 define|\
-value|((ifp->if_flags& (IFF_RUNNING|IFF_UP)) == (IFF_RUNNING|IFF_UP))
+value|((ifp->if_flags& IFF_UP)&& (ifp->if_drv_flags& IFF_DRV_RUNNING))
 name|struct
 name|ath_softc
 modifier|*
@@ -21649,9 +21650,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 name|ath_mode_init
 argument_list|(

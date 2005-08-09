@@ -714,7 +714,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* Check IFF_RUNNING	*/
+comment|/* Check IFF_DRV_RUNNING*/
 end_comment
 
 begin_define
@@ -943,7 +943,7 @@ value|do {			\     (error) = ray_com_runq_add((sc), (com), (ncom), (mesg));		\  
 end_define
 
 begin_comment
-comment|/*  * There are a number of entry points into the ray_init_xxx routines.  * These can be classed into two types: a) those that happen as a result  * of a change to the cards operating parameters (e.g. BSSID change), and  * b) those that happen as a result of a change to the interface parameters  * (e.g. a change to the IP address). The second set of entries need not  * send a command to the card when the card is IFF_RUNNING. The  * RAY_COM_FCHKRUNNING flags indicates when the RUNNING flag should be  * checked, and this macro does the necessary check and command abort.  */
+comment|/*  * There are a number of entry points into the ray_init_xxx routines.  * These can be classed into two types: a) those that happen as a result  * of a change to the cards operating parameters (e.g. BSSID change), and  * b) those that happen as a result of a change to the interface parameters  * (e.g. a change to the IP address). The second set of entries need not  * send a command to the card when the card is IFF_DRV_RUNNING. The  * RAY_COM_FCHKRUNNING flags indicates when the RUNNING flag should be  * checked, and this macro does the necessary check and command abort.  */
 end_comment
 
 begin_define
@@ -957,7 +957,7 @@ name|com
 parameter_list|,
 name|ifp
 parameter_list|)
-value|do {				\     if (((com)->c_flags& RAY_COM_FCHKRUNNING)&&			\ 	((ifp)->if_flags& IFF_RUNNING)) {				\ 	    ray_com_runq_done(sc);					\ 	    return;							\ } } while (0)
+value|do {				\     if (((com)->c_flags& RAY_COM_FCHKRUNNING)&&			\ 	((ifp)->if_drv_flags& IFF_DRV_RUNNING)) {			\ 	    ray_com_runq_done(sc);					\ 	    return;							\ } } while (0)
 end_define
 
 begin_define
