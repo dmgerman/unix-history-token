@@ -272,7 +272,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Interface flags are of two types: network stack owned flags, and driver  * owned flags.  Historically, these values were stored in the same ifnet  * flags field, but with the advent of fine-grained locking, they have been  * broken out such that the network stack is responsible for synchronizing  * the stack-owned fields, and the device driver the device-owned fields.  * Both halves can perform lockless reads of the other half's field, subject  * to accepting the involved races.  *  * Both sets of flags come from the same number space, and should not be  * permitted to conflict, as they are exposed to user space via a single  * field.  *  * For historical reasons, the old flag names for driver flags are exposed to  * user space.  */
+comment|/*-  * Interface flags are of two types: network stack owned flags, and driver  * owned flags.  Historically, these values were stored in the same ifnet  * flags field, but with the advent of fine-grained locking, they have been  * broken out such that the network stack is responsible for synchronizing  * the stack-owned fields, and the device driver the device-owned fields.  * Both halves can perform lockless reads of the other half's field, subject  * to accepting the involved races.  *  * Both sets of flags come from the same number space, and should not be  * permitted to conflict, as they are exposed to user space via a single  * field.  *  * The following symbols identify read and write requirements for fields:  *  * (i) if_flags field set by device driver before attach, read-only there  *     after.  * (n) if_flags field written only by the network stack, read by either the  *     stack or driver.  * (d) if_drv_flags field written only by the device driver, read by either  *     the stack or driver.  */
 end_comment
 
 begin_define
@@ -283,7 +283,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* interface is up */
+comment|/* (n) interface is up */
 end_comment
 
 begin_define
@@ -294,7 +294,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* broadcast address valid */
+comment|/* (i) broadcast address valid */
 end_comment
 
 begin_define
@@ -305,7 +305,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* turn on debugging */
+comment|/* (n) turn on debugging */
 end_comment
 
 begin_define
@@ -316,7 +316,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* is a loopback net */
+comment|/* (i) is a loopback net */
 end_comment
 
 begin_define
@@ -327,7 +327,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* interface is point-to-point link */
+comment|/* (i) is a point-to-point link */
 end_comment
 
 begin_define
@@ -338,7 +338,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* interface manages own routes */
+comment|/* (i) interface manages own routes */
 end_comment
 
 begin_define
@@ -349,7 +349,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* resources allocated */
+comment|/* (d) resources allocated */
 end_comment
 
 begin_define
@@ -360,7 +360,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* no address resolution protocol */
+comment|/* (n) no address resolution protocol */
 end_comment
 
 begin_define
@@ -371,7 +371,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* receive all packets */
+comment|/* (n) receive all packets */
 end_comment
 
 begin_define
@@ -382,7 +382,7 @@ value|0x200
 end_define
 
 begin_comment
-comment|/* receive all multicast packets */
+comment|/* (n) receive all multicast packets */
 end_comment
 
 begin_define
@@ -393,7 +393,7 @@ value|0x400
 end_define
 
 begin_comment
-comment|/* tx hardware queue is full */
+comment|/* (d) tx hardware queue is full */
 end_comment
 
 begin_define
@@ -404,7 +404,7 @@ value|0x800
 end_define
 
 begin_comment
-comment|/* can't hear own transmissions */
+comment|/* (i) can't hear own transmissions */
 end_comment
 
 begin_define
@@ -459,7 +459,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* supports multicast */
+comment|/* (i) supports multicast */
 end_comment
 
 begin_define
@@ -470,7 +470,7 @@ value|0x10000
 end_define
 
 begin_comment
-comment|/* Interface is in polling mode. */
+comment|/* (n) Interface is in polling mode. */
 end_comment
 
 begin_define
@@ -481,7 +481,7 @@ value|0x20000
 end_define
 
 begin_comment
-comment|/* user-requested promisc mode */
+comment|/* (n) user-requested promisc mode */
 end_comment
 
 begin_define
@@ -492,7 +492,7 @@ value|0x40000
 end_define
 
 begin_comment
-comment|/* user-requested monitor mode */
+comment|/* (n) user-requested monitor mode */
 end_comment
 
 begin_define
@@ -503,7 +503,7 @@ value|0x80000
 end_define
 
 begin_comment
-comment|/* static ARP */
+comment|/* (n) static ARP */
 end_comment
 
 begin_define
@@ -514,11 +514,11 @@ value|0x100000
 end_define
 
 begin_comment
-comment|/* hold Giant over if_start calls */
+comment|/* (i) hold Giant over if_start calls */
 end_comment
 
 begin_comment
-comment|/*  * Old names for driver flags so that user space tools can continue to use  * the old names.  */
+comment|/*  * Old names for driver flags so that user space tools can continue to use  * the old (portable) names.  */
 end_comment
 
 begin_ifndef
