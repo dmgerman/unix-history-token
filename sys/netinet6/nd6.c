@@ -7639,9 +7639,6 @@ modifier|*
 name|desten
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|sockaddr_dl
 modifier|*
@@ -7652,6 +7649,9 @@ name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|m
@@ -7661,6 +7661,9 @@ operator|&
 name|M_MCAST
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
 switch|switch
 condition|(
 name|ifp
@@ -7769,7 +7772,7 @@ operator|)
 return|;
 block|}
 block|}
-name|i
+name|error
 operator|=
 name|rt_check
 argument_list|(
@@ -7784,26 +7787,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|error
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-name|i
-return|;
-block|}
-if|if
-condition|(
-name|rt
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* this could happen, if we could not allocate memory */
 name|m_freem
 argument_list|(
 name|m
@@ -7811,7 +7797,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENOMEM
+name|error
 operator|)
 return|;
 block|}
