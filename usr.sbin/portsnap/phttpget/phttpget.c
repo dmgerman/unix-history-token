@@ -1708,8 +1708,8 @@ block|{
 if|if
 condition|(
 name|contentlength
-operator|>
-name|INT_MAX
+operator|>=
+name|OFF_MAX
 operator|/
 literal|10
 condition|)
@@ -1995,8 +1995,8 @@ block|{
 if|if
 condition|(
 name|clen
-operator|>
-name|INT_MAX
+operator|>=
+name|OFF_MAX
 operator|/
 literal|16
 condition|)
@@ -2188,7 +2188,7 @@ name|sd
 argument_list|,
 name|fd
 argument_list|,
-name|INT_MAX
+name|OFF_MAX
 argument_list|,
 name|resbuf
 argument_list|,
