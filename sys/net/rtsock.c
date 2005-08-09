@@ -4373,6 +4373,10 @@ operator|=
 name|ifp
 operator|->
 name|if_flags
+operator||
+name|ifp
+operator|->
+name|if_drv_flags
 expr_stmt|;
 name|ifm
 operator|->
@@ -5917,6 +5921,10 @@ operator|=
 name|ifp
 operator|->
 name|if_flags
+operator||
+name|ifp
+operator|->
+name|if_drv_flags
 expr_stmt|;
 name|ifm
 operator|->
