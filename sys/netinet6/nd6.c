@@ -7801,6 +7801,11 @@ name|error
 operator|)
 return|;
 block|}
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt

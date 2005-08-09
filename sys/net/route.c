@@ -5120,15 +5120,16 @@ operator|.
 name|rmx_expire
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|RT_UNLOCK
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 name|senderr
 argument_list|(
 name|rt
@@ -5141,12 +5142,12 @@ name|EHOSTUNREACH
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 operator|*
 name|lrt
 operator|=
 name|rt
 expr_stmt|;
-comment|/* NB: return unlocked */
 operator|*
 name|lrt0
 operator|=

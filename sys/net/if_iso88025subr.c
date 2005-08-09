@@ -958,6 +958,11 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt
