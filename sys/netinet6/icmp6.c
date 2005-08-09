@@ -500,7 +500,8 @@ name|ifnet
 operator|*
 operator|*
 operator|,
-name|char
+expr|struct
+name|in6_addr
 operator|*
 operator|)
 argument_list|)
@@ -5662,6 +5663,11 @@ argument_list|,
 operator|&
 name|ifp
 argument_list|,
+operator|(
+expr|struct
+name|in6_addr
+operator|*
+operator|)
 name|subj
 argument_list|)
 expr_stmt|;
@@ -7025,7 +7031,8 @@ modifier|*
 modifier|*
 name|ifpp
 decl_stmt|;
-name|char
+name|struct
+name|in6_addr
 modifier|*
 name|subj
 decl_stmt|;
@@ -7045,14 +7052,6 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|struct
-name|sockaddr_in6
-modifier|*
-name|subj_ip6
-init|=
-name|NULL
-decl_stmt|;
-comment|/* XXX pedant */
 name|int
 name|addrs
 init|=
@@ -7104,15 +7103,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|subj_ip6
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-name|subj
-expr_stmt|;
 break|break;
 default|default:
 comment|/* 			 * XXX: we only support IPv6 subject address for 			 * this Qtype. 			 */
@@ -7193,10 +7183,7 @@ literal|0
 operator|&&
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
-operator|&
-name|subj_ip6
-operator|->
-name|sin6_addr
+name|subj
 argument_list|,
 operator|&
 name|ifa6
