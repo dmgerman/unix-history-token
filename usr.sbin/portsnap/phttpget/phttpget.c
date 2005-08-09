@@ -212,6 +212,26 @@ name|strchr
 argument_list|(
 name|env_HTTP_PROXY
 argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|env_HTTP_PROXY
+argument_list|,
 literal|':'
 argument_list|)
 expr_stmt|;
@@ -941,13 +961,19 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: %s"
+literal|"%s: host = %s, port = %s"
 argument_list|,
 name|env_HTTP_PROXY
 condition|?
 name|env_HTTP_PROXY
 else|:
 name|servername
+argument_list|,
+name|env_HTTP_PROXY
+condition|?
+name|proxyport
+else|:
+literal|"http"
 argument_list|,
 name|gai_strerror
 argument_list|(
