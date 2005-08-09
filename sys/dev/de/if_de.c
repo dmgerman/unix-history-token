@@ -20772,11 +20772,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|tulip_ifstart
+name|tulip_start
 argument_list|(
 name|sc
-operator|->
-name|tulip_ifp
 argument_list|)
 expr_stmt|;
 block|}
