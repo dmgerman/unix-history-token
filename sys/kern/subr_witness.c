@@ -1309,7 +1309,14 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* 	 * Multicast - protocol locks before interface locks. 	 */
+comment|/* 	 * Multicast - protocol locks before interface locks, after UDP locks. 	 */
+block|{
+literal|"udpinp"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
 block|{
 literal|"in_multi_mtx"
 block|,
