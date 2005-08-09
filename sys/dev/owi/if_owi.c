@@ -1970,6 +1970,11 @@ name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
+operator|(
+specifier|const
+name|u_int8_t
+operator|*
+operator|)
 name|mac
 operator|.
 name|wi_mac_addr
