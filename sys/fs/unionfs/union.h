@@ -606,14 +606,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|vfsops
-name|union_vfsops
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|uniondebug
 decl_stmt|;

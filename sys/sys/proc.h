@@ -3571,17 +3571,6 @@ name|ps_arg_cache_limit
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sched_quantum
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Scheduling quantum in ticks. */
-end_comment
-
 begin_expr_stmt
 name|LIST_HEAD
 argument_list|(

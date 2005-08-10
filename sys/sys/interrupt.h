@@ -355,14 +355,6 @@ begin_decl_stmt
 specifier|extern
 name|void
 modifier|*
-name|net_ih
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
 name|softclock_ih
 decl_stmt|;
 end_decl_stmt

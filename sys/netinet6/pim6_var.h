@@ -82,14 +82,6 @@ operator|)
 end_if
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|pim6stat
-name|pim6stat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|pim6_input
 name|__P

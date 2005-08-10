@@ -1260,14 +1260,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|cdevsw
-name|gpib_l_cdevsw
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cdevsw
 name|gpib_ib_cdevsw
 decl_stmt|;
 end_decl_stmt
