@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|_NG_ABI_VERSION
-value|10
+value|11
 end_define
 
 begin_ifdef
@@ -366,6 +366,10 @@ name|int
 name|hk_refs
 decl_stmt|;
 comment|/* dont actually free this till 0 */
+name|int
+name|hk_type
+decl_stmt|;
+comment|/* tbd: hook data link type */
 name|struct
 name|ng_hook
 modifier|*
