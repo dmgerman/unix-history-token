@@ -1679,6 +1679,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* used for stubbing out/in pim stuff */
+name|callout_init
+argument_list|(
+operator|&
+name|expire_upcalls_ch
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
