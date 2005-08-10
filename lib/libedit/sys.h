@@ -19,6 +19,12 @@ directive|define
 name|_h_sys
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -86,12 +92,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_ifndef
 ifndef|#
