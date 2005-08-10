@@ -1290,16 +1290,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The dummy protocol specific user requests function pointer array is  * initialized to the functions below.  All functions return EOPNOTSUPP.  */
+comment|/*  * below.  All functions return EOPNOTSUPP.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pr_usrreqs
-name|nousrreqs
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int

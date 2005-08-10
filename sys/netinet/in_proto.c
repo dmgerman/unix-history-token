@@ -192,6 +192,14 @@ begin_comment
 comment|/*  * TCP/IP protocol family: IP, ICMP, UDP, TCP.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|pr_usrreqs
+name|nousrreqs
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
