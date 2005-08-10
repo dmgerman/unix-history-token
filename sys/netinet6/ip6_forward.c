@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ipstealth.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -537,6 +543,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+if|if
+condition|(
+operator|!
+name|ip6stealth
+condition|)
+block|{
+endif|#
+directive|endif
 if|if
 condition|(
 name|ip6
@@ -566,6 +583,12 @@ name|ip6_hlim
 operator|-=
 name|IPV6_HLIMDEC
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+block|}
+endif|#
+directive|endif
 comment|/* 	 * Save at most ICMPV6_PLD_MAXLEN (= the min IPv6 MTU - 	 * size of IPv6 + ICMPv6 headers) bytes of the packet in case 	 * we need to generate an ICMP6 message to the src. 	 * Thanks to M_EXT, in most cases copy will not occur. 	 * 	 * It is important to save it before IPsec processing as IPsec 	 * processing may modify the mbuf. 	 */
 name|mcopy
 operator|=

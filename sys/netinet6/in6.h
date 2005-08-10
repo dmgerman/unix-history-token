@@ -2522,11 +2522,22 @@ begin_comment
 comment|/* to define items, should talk with KAME guys first, for *BSD compatibility */
 end_comment
 
+begin_comment
+comment|/* 42-44 is already used in KAME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_STEALTH
+value|45
+end_define
+
 begin_define
 define|#
 directive|define
 name|IPV6CTL_MAXID
-value|42
+value|46
 end_define
 
 begin_endif
