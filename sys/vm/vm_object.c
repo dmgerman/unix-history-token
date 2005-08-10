@@ -848,6 +848,7 @@ argument_list|,
 name|kmem_object
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The lock portion of struct vm_object must be type stable due 	 * to vm_pageout_fallback_object_lock locking a vm object 	 * without holding any references to it. 	 */
 name|obj_zone
 operator|=
 name|uma_zcreate
