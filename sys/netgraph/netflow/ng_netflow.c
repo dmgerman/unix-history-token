@@ -2017,7 +2017,23 @@ name|bypass
 goto|;
 break|break;
 block|}
-comment|/* 	 * In case of IP header with options, we haven't pulled 	 * up enough, yet. 	 */
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|ip_off
+operator|&
+name|htons
+argument_list|(
+name|IP_OFFMASK
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * In case of IP header with options, we haven't pulled 		 * up enough, yet. 		 */
 name|pullup_len
 operator|+=
 operator|(
@@ -2067,6 +2083,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 switch|switch
 condition|(
