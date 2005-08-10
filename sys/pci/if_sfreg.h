@@ -4581,10 +4581,6 @@ comment|/* Starfire adapter info */
 name|device_t
 name|sf_miibus
 decl_stmt|;
-name|u_int8_t
-name|sf_unit
-decl_stmt|;
-comment|/* interface number */
 name|struct
 name|sf_list_data
 modifier|*

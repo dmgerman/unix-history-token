@@ -2600,13 +2600,13 @@ name|i
 operator|==
 name|SF_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"sf%d: reset never completed!\n"
-argument_list|,
 name|sc
 operator|->
-name|sf_unit
+name|sf_ifp
+argument_list|,
+literal|"reset never completed!\n"
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little while for the chip to get its brains in order. */
@@ -2834,8 +2834,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|rid
 decl_stmt|,
 name|error
@@ -2851,13 +2849,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2916,11 +2907,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sf%d: couldn't map ports\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2985,11 +2976,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sf%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3044,12 +3035,6 @@ operator|-
 name|i
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sf_unit
-operator|=
-name|unit
-expr_stmt|;
 comment|/* Allocate the descriptor queues. */
 name|sc
 operator|->
@@ -3085,11 +3070,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sf%d: no memory for list buffers!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"no memory for list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3131,13 +3116,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sf%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|sf_unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3166,13 +3149,11 @@ name|sf_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sf%d: MII without any phy!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|sf_unit
+literal|"MII without any phy!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3338,11 +3319,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sf%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -4616,14 +4597,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-name|printf
+name|if_printf
 argument_list|(
-literal|"sf%d: tx underrun, increasing "
-literal|"tx threshold to %d bytes\n"
-argument_list|,
 name|sc
 operator|->
-name|sf_unit
+name|sf_ifp
+argument_list|,
+literal|"tx underrun, increasing "
+literal|"tx threshold to %d bytes\n"
 argument_list|,
 name|txthresh
 operator|*
@@ -5401,14 +5382,13 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sf%d: initialization failed: no "
-literal|"memory for rx buffers\n"
-argument_list|,
 name|sc
 operator|->
-name|sf_unit
+name|sf_ifp
+argument_list|,
+literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|SF_UNLOCK
@@ -5955,13 +5935,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sf%d: no memory for tx list\n"
-argument_list|,
 name|sc
 operator|->
-name|sf_unit
+name|sf_ifp
+argument_list|,
+literal|"no memory for tx list\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6005,13 +5985,13 @@ argument_list|(
 name|m_new
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"sf%d: no memory for tx list\n"
-argument_list|,
 name|sc
 operator|->
-name|sf_unit
+name|sf_ifp
+argument_list|,
+literal|"no memory for tx list\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6274,13 +6254,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sf%d: TX ring full, resetting\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|sf_unit
+literal|"TX ring full, resetting\n"
 argument_list|)
 expr_stmt|;
 name|sf_init
@@ -7055,13 +7033,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"sf%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|sf_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|sf_stop
