@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -196,12 +202,23 @@ name|bytes_written
 operator|<
 literal|0
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|errno
+argument_list|,
+literal|"Write error"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|output_offset
 operator|+=
 name|bytes_written
