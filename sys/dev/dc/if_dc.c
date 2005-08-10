@@ -3887,13 +3887,11 @@ name|DC_AL_ANER
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: phy_read: bad phy register %x\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"phy_read: bad phy register %x\n"
 argument_list|,
 name|reg
 argument_list|)
@@ -4232,13 +4230,11 @@ name|DC_AL_ANER
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: phy_write: bad phy register %x\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"phy_write: bad phy register %x\n"
 argument_list|,
 name|reg
 argument_list|)
@@ -6559,14 +6555,13 @@ name|i
 operator|==
 name|DC_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: failed to force tx and "
-literal|"rx to idle state\n"
-argument_list|,
 name|sc
 operator|->
-name|dc_unit
+name|dc_ifp
+argument_list|,
+literal|"failed to force tx and rx to idle state\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7396,13 +7391,13 @@ name|i
 operator|==
 name|DC_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: reset never completed!\n"
-argument_list|,
 name|sc
 operator|->
-name|dc_unit
+name|dc_ifp
+argument_list|,
+literal|"reset never completed!\n"
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little while for the chip to get its brains in order. */
@@ -8743,8 +8738,6 @@ name|u_int32_t
 name|revision
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -8763,13 +8756,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -8828,11 +8814,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -8897,11 +8883,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9478,13 +9464,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: unknown device: %x\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"unknown device: %x\n"
 argument_list|,
 name|sc
 operator|->
@@ -9938,12 +9922,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|sc
-operator|->
-name|dc_unit
-operator|=
-name|unit
-expr_stmt|;
 comment|/* Allocate a busdma tag and DMA safe memory for TX/RX descriptors. */
 name|error
 operator|=
@@ -9994,11 +9972,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate busdma tag\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate busdma tag\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10042,11 +10020,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate DMA safe memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate DMA safe memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10094,11 +10072,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: cannot get address of the descriptors\n"
+name|dev
 argument_list|,
-name|unit
+literal|"cannot get address of the descriptors\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10155,11 +10133,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate busdma tag\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate busdma tag\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10203,11 +10181,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate DMA safe memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate DMA safe memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10253,11 +10231,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: cannot get address of the descriptors\n"
+name|dev
 argument_list|,
-name|unit
+literal|"cannot get address of the descriptors\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10310,11 +10288,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate busdma tag\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate busdma tag\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10366,11 +10344,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to init TX ring\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to init TX ring\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10422,11 +10400,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to init RX ring\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to init RX ring\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10459,11 +10437,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to init RX ring\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to init RX ring\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10492,11 +10470,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10789,13 +10767,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: MII without any PHY!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"MII without any PHY!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -11028,11 +11004,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -13978,13 +13954,13 @@ operator|==
 name|DC_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: failed to force tx to idle state\n"
-argument_list|,
 name|sc
 operator|->
-name|dc_unit
+name|dc_ifp
+argument_list|,
+literal|"failed to force tx to idle state\n"
 argument_list|)
 expr_stmt|;
 name|dc_init
@@ -13994,13 +13970,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: TX underrun -- "
-argument_list|,
 name|sc
 operator|->
-name|dc_unit
+name|dc_ifp
+argument_list|,
+literal|"TX underrun -- "
 argument_list|)
 expr_stmt|;
 name|sc
@@ -14361,13 +14337,11 @@ operator|&
 name|DC_ISR_BUS_ERR
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc_poll: dc%d bus error\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"dc_poll: bus error\n"
 argument_list|)
 expr_stmt|;
 name|dc_reset
@@ -16184,14 +16158,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: initialization failed: no "
-literal|"memory for rx buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|dc_stop
@@ -17007,13 +16978,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|dc_stop

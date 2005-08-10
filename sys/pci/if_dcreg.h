@@ -3871,10 +3871,6 @@ name|device_t
 name|dc_miibus
 decl_stmt|;
 name|u_int8_t
-name|dc_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|dc_type
 decl_stmt|;
 name|u_int8_t
