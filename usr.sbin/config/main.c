@@ -145,6 +145,12 @@ directive|include
 file|"config.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"configvers.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -332,7 +338,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:gp"
+literal|"d:gpV"
 argument_list|)
 operator|)
 operator|!=
@@ -344,6 +350,21 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'V'
+case|:
+name|printf
+argument_list|(
+literal|"%d\n"
+argument_list|,
+name|CONFIGVERS
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 case|case
 literal|'d'
 case|:
