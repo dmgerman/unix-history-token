@@ -746,11 +746,6 @@ decl_stmt|;
 comment|/* Pointer to "\r\n" within resbuf */
 name|char
 modifier|*
-name|hln0
-decl_stmt|;
-comment|/* Pointer to start of header line */
-name|char
-modifier|*
 name|hln
 decl_stmt|;
 comment|/* Pointer within header line */
@@ -1449,8 +1444,6 @@ condition|)
 goto|goto
 name|conndied
 goto|;
-name|hln0
-operator|=
 name|hln
 operator|=
 name|resbuf
