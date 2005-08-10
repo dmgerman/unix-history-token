@@ -141,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|DDD
-value|printf("%s: %d\n", __FUNCTION__, __LINE__)
+value|printf("%s: %d\n", __func__, __LINE__)
 end_define
 
 begin_ifdef

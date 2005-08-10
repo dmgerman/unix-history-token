@@ -4708,7 +4708,7 @@ argument_list|,
 operator|(
 literal|"%s: xwin %d full but rack timer %s running"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|i
 operator|,
@@ -5270,7 +5270,7 @@ argument_list|,
 operator|(
 literal|"%s: peer_win is zero"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5851,7 +5851,7 @@ argument_list|,
 operator|(
 literal|"%s: nack=%d> %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|nack
 operator|,
@@ -7084,7 +7084,7 @@ name|CHECK
 parameter_list|(
 name|p
 parameter_list|)
-value|KASSERT((p), ("%s: not: %s", __FUNCTION__, #p))
+value|KASSERT((p), ("%s: not: %s", __func__, #p))
 name|CHECK
 argument_list|(
 name|seq

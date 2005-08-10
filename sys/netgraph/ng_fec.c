@@ -1093,7 +1093,7 @@ argument_list|,
 operator|(
 literal|"%s: word=%d bit=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|ng_fec_units
 index|[
@@ -1190,7 +1190,7 @@ argument_list|,
 operator|(
 literal|"%s: unit=%d len=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|unit
 operator|,
@@ -1218,7 +1218,7 @@ argument_list|,
 operator|(
 literal|"%s: unit=%d is free"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|unit
 operator|)

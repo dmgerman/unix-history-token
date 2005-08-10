@@ -5537,7 +5537,7 @@ argument_list|,
 operator|(
 literal|"%s: node alreay exists?"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5561,7 +5561,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: can't create node for %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ifp
 operator|->
@@ -5600,7 +5600,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: can't allocate memory for %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ifp
 operator|->
@@ -5662,7 +5662,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"%s: can't name node %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ifp
 operator|->

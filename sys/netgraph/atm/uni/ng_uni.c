@@ -2075,7 +2075,7 @@ name|printf
 argument_list|(
 literal|"%s: bogus hook %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|NG_HOOK_NAME
 argument_list|(
@@ -2254,7 +2254,7 @@ name|printf
 argument_list|(
 literal|"%s: packet too short\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|uni_msg_destroy
@@ -2305,7 +2305,7 @@ name|printf
 argument_list|(
 literal|"%s: bogus signal\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|uni_msg_destroy
@@ -2898,7 +2898,7 @@ name|printf
 argument_list|(
 literal|"%s: packet too short\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -2949,7 +2949,7 @@ name|printf
 argument_list|(
 literal|"%s: bogus signal\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
