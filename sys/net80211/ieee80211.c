@@ -669,6 +669,29 @@ literal|1
 operator|<<
 name|IEEE80211_MODE_TURBO_G
 expr_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_curchan
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* arbitrarily pick the first channel */
+name|ic
+operator|->
+name|ic_curchan
+operator|=
+operator|&
+name|ic
+operator|->
+name|ic_channels
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* validate ic->ic_curmode */

@@ -174,6 +174,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_saveie
+parameter_list|(
+name|u_int8_t
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|u_int8_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee80211_recv_mgmt
 parameter_list|(
 name|struct

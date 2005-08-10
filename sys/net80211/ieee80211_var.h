@@ -603,6 +603,12 @@ name|ieee80211_channel
 modifier|*
 name|ic_ibss_chan
 decl_stmt|;
+name|struct
+name|ieee80211_channel
+modifier|*
+name|ic_curchan
+decl_stmt|;
+comment|/* current channel */
 name|int
 name|ic_fixed_rate
 decl_stmt|;

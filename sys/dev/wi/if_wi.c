@@ -14458,6 +14458,14 @@ index|]
 expr_stmt|;
 name|ic
 operator|->
+name|ic_curchan
+operator|=
+name|ni
+operator|->
+name|ni_chan
+expr_stmt|;
+name|ic
+operator|->
 name|ic_ibss_chan
 operator|=
 name|ni
