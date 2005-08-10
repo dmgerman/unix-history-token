@@ -10205,14 +10205,7 @@ name|v_iflag
 operator|&
 name|VI_DOOMED
 condition|)
-block|{
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|vp
 operator|->
 name|v_iflag
