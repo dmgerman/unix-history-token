@@ -1962,13 +1962,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: autonegotiation not supported\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"autonegotiation not supported\n"
 argument_list|)
 expr_stmt|;
 name|ifm
@@ -2084,20 +2082,13 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: invalid autoneg flag: %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"invalid autoneg flag: %d\n"
 argument_list|,
 name|flag
-argument_list|)
-expr_stmt|;
-name|MY_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2118,13 +2109,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: autoneg complete, "
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"autoneg complete, "
 argument_list|)
 expr_stmt|;
 name|phy_sts
@@ -2143,13 +2132,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: autoneg not complete, "
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"autoneg not complete, "
 argument_list|)
 expr_stmt|;
 block|}
@@ -2179,13 +2166,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: link status good. "
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"link status good. "
 argument_list|)
 expr_stmt|;
 name|advert
@@ -2534,13 +2519,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: no carrier\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"no carrier\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2630,13 +2613,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: PHY status word: %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"PHY status word: %x\n"
 argument_list|,
 name|bmsr
 argument_list|)
@@ -2665,13 +2646,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: 10Mbps half-duplex mode supported\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"10Mbps half-duplex mode supported\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -2720,13 +2699,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: 10Mbps full-duplex mode supported\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"10Mbps full-duplex mode supported\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -2771,13 +2748,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: 100Mbps half-duplex mode supported\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"100Mbps half-duplex mode supported\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2844,13 +2819,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: 100Mbps full-duplex mode supported\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"100Mbps full-duplex mode supported\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2902,13 +2875,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: 100baseT4 mode supported\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"100baseT4 mode supported\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2950,13 +2921,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: forcing on autoneg support for BT4\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"forcing on autoneg support for BT4\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -2991,7 +2960,7 @@ if|#
 directive|if
 literal|0
 comment|/* this version did not support 1000M, */
-block|if (sc->my_pinfo->my_vid == MarvellPHYID0) { 		if (bootverbose) 			printf("my%d: 1000Mbps half-duplex mode supported\n", 			       sc->my_unit);  		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T, 0, NULL); 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_HDX, 		    0, NULL); 		if (bootverbose) 			printf("my%d: 1000Mbps full-duplex mode supported\n", 			   sc->my_unit); 		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_FDX, 		    0, NULL); 		sc->ifmedia.ifm_media = IFM_ETHER | IFM_1000_T | IFM_FDX; 	}
+block|if (sc->my_pinfo->my_vid == MarvellPHYID0) { 		if (bootverbose) 			if_printf(ifp, "1000Mbps half-duplex mode supported\n");  		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T, 0, NULL); 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_HDX, 		    0, NULL); 		if (bootverbose) 			if_printf(ifp, "1000Mbps full-duplex mode supported\n"); 		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_FDX, 		    0, NULL); 		sc->ifmedia.ifm_media = IFM_ETHER | IFM_1000_T | IFM_FDX; 	}
 endif|#
 directive|endif
 if|if
@@ -3005,13 +2974,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: autoneg supported\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"autoneg supported\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -3095,13 +3062,11 @@ operator|->
 name|my_autoneg
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: canceling autoneg session\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"canceling autoneg session\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -3142,13 +3107,11 @@ name|bmcr
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: selecting MII, "
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"selecting MII, "
 argument_list|)
 expr_stmt|;
 name|bmcr
@@ -3415,13 +3378,13 @@ name|i
 operator|==
 name|MY_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: failed to force tx and rx to idle \n"
-argument_list|,
 name|sc
 operator|->
-name|my_unit
+name|my_ifp
+argument_list|,
+literal|"failed to force tx and rx to idle \n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3596,13 +3559,13 @@ name|i
 operator|==
 name|MY_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"m0x%d: reset never completed!\n"
-argument_list|,
 name|sc
 operator|->
-name|my_unit
+name|my_ifp
+argument_list|,
+literal|"reset never completed!\n"
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little while for the chip to get its brains in order. */
@@ -3779,8 +3742,6 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|,
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -3795,24 +3756,6 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|my_softc
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -3937,18 +3880,11 @@ name|PCIM_CMD_PORTEN
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: failed to enable I/O ports!\n"
+name|dev
 argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sc
-argument_list|,
-name|M_DEVBUF
+literal|"failed to enable I/O ports!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3962,7 +3898,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (!pci_map_port(config_id, MY_PCI_LOIO, (u_int16_t *)& (sc->my_bhandle))) { 			printf("my%d: couldn't map ports\n", unit); 			error = ENXIO; 			goto fail; 		} 		   		sc->my_btag = I386_BUS_SPACE_IO;
+block|if (!pci_map_port(config_id, MY_PCI_LOIO, (u_int16_t *)& (sc->my_bhandle))) { 			device_printf(dev, "couldn't map ports\n"); 			error = ENXIO; 			goto fail; 		} 		   		sc->my_btag = I386_BUS_SPACE_IO;
 endif|#
 directive|endif
 block|}
@@ -3978,11 +3914,11 @@ name|PCIM_CMD_MEMEN
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: failed to enable memory mapping!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to enable memory mapping!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3996,7 +3932,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (!pci_map_mem(config_id, MY_PCI_LOMEM,&vbase,&pbase)) { 			printf ("my%d: couldn't map memory\n", unit); 			error = ENXIO; 			goto fail; 		} 		sc->my_btag = I386_BUS_SPACE_MEM; 		sc->my_bhandle = vbase;
+block|if (!pci_map_mem(config_id, MY_PCI_LOMEM,&vbase,&pbase)) { 			device_printf(dev, "couldn't map memory\n"); 			error = ENXIO; 			goto fail; 		} 		sc->my_btag = I386_BUS_SPACE_MEM; 		sc->my_bhandle = vbase;
 endif|#
 directive|endif
 block|}
@@ -4029,11 +3965,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4097,11 +4033,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -4178,11 +4114,11 @@ operator|->
 name|my_res
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4239,12 +4175,6 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|my_unit
-operator|=
-name|unit
-expr_stmt|;
-name|sc
-operator|->
 name|my_ldata_ptr
 operator|=
 name|malloc
@@ -4271,18 +4201,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|device_printf
 argument_list|(
-name|sc
+name|dev
 argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"my%d: no memory for list buffers!\n"
-argument_list|,
-name|unit
+literal|"no memory for list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4508,13 +4431,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: probing for a PHY\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"probing for a PHY\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4537,13 +4458,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: checking address: %d\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"checking address: %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -4612,13 +4531,11 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: found PHY at address %d, "
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"found PHY at address %d, "
 argument_list|,
 name|sc
 operator|->
@@ -4689,13 +4606,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: PHY type: %s\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"PHY type: %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -4707,13 +4622,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"my%d: MII without any phy!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"MII without any phy!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4956,13 +4869,6 @@ literal|0
 block|contigfree(sc->my_cdata.my_rx_buf, MY_RXBUFLEN + 32, M_DEVBUF);
 endif|#
 directive|endif
-name|free
-argument_list|(
-name|sc
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 name|MY_UNLOCK
 argument_list|(
 name|sc
@@ -5427,13 +5333,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: no memory for rx list -- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|my_unit
+name|my_ifp
+argument_list|,
+literal|"no memory for rx list -- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 name|MY_UNLOCK
@@ -5466,13 +5372,13 @@ name|M_EXT
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: no memory for rx list -- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|my_unit
+name|my_ifp
+argument_list|,
+literal|"no memory for rx list -- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -6641,13 +6547,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: no memory for tx list"
-argument_list|,
 name|sc
 operator|->
-name|my_unit
+name|my_ifp
+argument_list|,
+literal|"no memory for tx list"
 argument_list|)
 expr_stmt|;
 name|MY_UNLOCK
@@ -6696,13 +6602,13 @@ argument_list|(
 name|m_new
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: no memory for tx list"
-argument_list|,
 name|sc
 operator|->
-name|my_unit
+name|my_ifp
+argument_list|,
+literal|"no memory for tx list"
 argument_list|)
 expr_stmt|;
 name|MY_UNLOCK
@@ -7346,13 +7252,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: init failed: no memory for rx buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"init failed: no memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|my_stop
@@ -8189,13 +8093,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -8212,13 +8114,11 @@ operator|&
 name|PHY_BMSR_LINKSTAT
 operator|)
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"my%d: no carrier - transceiver cable problem?\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|my_unit
+literal|"no carrier - transceiver cable problem?\n"
 argument_list|)
 expr_stmt|;
 name|my_stop

@@ -2168,10 +2168,6 @@ modifier|*
 name|my_intrhand
 decl_stmt|;
 name|u_int8_t
-name|my_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|my_phy_addr
 decl_stmt|;
 comment|/* PHY address */
