@@ -2016,6 +2016,12 @@ name|el
 argument_list|,
 name|argc
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
 name|argv
 argument_list|)
 operator|)
