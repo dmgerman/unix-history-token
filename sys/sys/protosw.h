@@ -1290,7 +1290,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * below.  All functions return EOPNOTSUPP.  */
+comment|/*  * All nonvoid pru_*() functions below return EOPNOTSUPP.  */
 end_comment
 
 begin_function_decl
