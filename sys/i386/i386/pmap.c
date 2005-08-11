@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kstack_pages.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -10251,33 +10245,6 @@ name|pv_va
 argument_list|)
 condition|)
 continue|continue;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PMAP_DIAGNOSTIC
-argument_list|)
-if|if
-condition|(
-operator|!
-name|pv
-operator|->
-name|pv_pmap
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Null pmap (tb) at va: 0x%x\n"
-argument_list|,
-name|pv
-operator|->
-name|pv_va
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-endif|#
-directive|endif
 name|PMAP_LOCK
 argument_list|(
 name|pv
