@@ -884,7 +884,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: config [-gp] [-d destdir] sysname\n"
+literal|"usage: config [-Vgp] [-d destdir] sysname\n"
 argument_list|)
 expr_stmt|;
 name|exit
