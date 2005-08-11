@@ -265,6 +265,8 @@ name|struct
 name|rtentry
 modifier|*
 name|rt
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|m_tag
@@ -358,6 +360,13 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|rt0
+operator|!=
+name|NULL
+condition|)
+block|{
 name|error
 operator|=
 name|rt_check
@@ -383,6 +392,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * For unicast, we make a tag to store the lladdr of the 	 * destination. This might not be the first time we have seen 	 * the packet (for instance, the arp code might be trying to 	 * re-send it after receiving an arp reply) so we only 	 * allocate a tag if there isn't one there already. For 	 * multicast, we will eventually use a different tag to store 	 * the channel number. 	 */
 name|unicast
 operator|=

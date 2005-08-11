@@ -7772,6 +7772,25 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|rt0
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* this could happen, if we could not allocate memory */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|error
 operator|=
 name|rt_check
