@@ -621,7 +621,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|pmap_remove_entry
 parameter_list|(
 name|struct
@@ -634,9 +634,6 @@ name|m
 parameter_list|,
 name|vm_offset_t
 name|va
-parameter_list|,
-name|pd_entry_t
-name|ptepde
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5875,7 +5872,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|pmap_remove_entry
 parameter_list|(
 name|pmap_t
@@ -5886,16 +5883,10 @@ name|m
 parameter_list|,
 name|vm_offset_t
 name|va
-parameter_list|,
-name|pd_entry_t
-name|ptepde
 parameter_list|)
 block|{
 name|pv_entry_t
 name|pv
-decl_stmt|;
-name|int
-name|rtval
 decl_stmt|;
 name|PMAP_LOCK_ASSERT
 argument_list|(
@@ -5975,24 +5966,15 @@ condition|)
 break|break;
 block|}
 block|}
-name|rtval
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|pv
-condition|)
-block|{
-name|rtval
-operator|=
-name|pmap_unuse_pt
+name|KASSERT
 argument_list|(
-name|pmap
+name|pv
+operator|!=
+name|NULL
 argument_list|,
-name|va
-argument_list|,
-name|ptepde
+operator|(
+literal|"pmap_remove_entry: pv not found"
+operator|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -6018,7 +6000,7 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-name|TAILQ_FIRST
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|m
@@ -6027,8 +6009,6 @@ name|md
 operator|.
 name|pv_list
 argument_list|)
-operator|==
-name|NULL
 condition|)
 name|vm_page_flag_clear
 argument_list|(
@@ -6054,10 +6034,6 @@ argument_list|(
 name|pv
 argument_list|)
 expr_stmt|;
-block|}
-return|return
-name|rtval
-return|;
 block|}
 end_function
 
@@ -6308,7 +6284,6 @@ argument_list|,
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
-return|return
 name|pmap_remove_entry
 argument_list|(
 name|pmap
@@ -6316,14 +6291,11 @@ argument_list|,
 name|m
 argument_list|,
 name|va
-argument_list|,
-name|ptepde
 argument_list|)
-return|;
+expr_stmt|;
 block|}
-else|else
-block|{
 return|return
+operator|(
 name|pmap_unuse_pt
 argument_list|(
 name|pmap
@@ -6332,8 +6304,8 @@ name|va
 argument_list|,
 name|ptepde
 argument_list|)
+operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -7817,8 +7789,6 @@ argument_list|(
 name|opa
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
 name|pmap_remove_entry
 argument_list|(
 name|pmap
@@ -7826,12 +7796,9 @@ argument_list|,
 name|om
 argument_list|,
 name|va
-argument_list|,
-name|ptepde
 argument_list|)
 expr_stmt|;
 block|}
-else|else
 name|err
 operator|=
 name|pmap_unuse_pt
