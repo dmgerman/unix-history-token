@@ -2237,23 +2237,25 @@ argument_list|,
 name|rnh
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
-argument_list|(
-name|rnh
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rt
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* XXX looks bogus */
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|senderr
 argument_list|(
 name|ESRCH
 argument_list|)
 expr_stmt|;
+block|}
 name|RT_LOCK
 argument_list|(
 name|rt
@@ -2262,6 +2264,11 @@ expr_stmt|;
 name|RT_ADDREF
 argument_list|(
 name|rt
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
 argument_list|)
 expr_stmt|;
 comment|/*  		 * Fix for PR: 82974 		 * 		 * RTM_CHANGE/LOCK need a perfect match, rn_lookup() 		 * returns a perfect match in case a netmask is 		 * specified.  For host routes only a longest prefix 		 * match is returned so it is necessary to compare the 		 * existence of the netmask.  If both have a netmask 		 * rnh_lookup() did a perfect match and if none of them 		 * have a netmask both are host routes which is also a 		 * perfect match. 		 */
