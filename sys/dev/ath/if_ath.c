@@ -15558,7 +15558,7 @@ name|rt
 operator|->
 name|info
 index|[
-name|cix
+name|rix
 index|]
 operator|.
 name|spAckDuration
@@ -15616,7 +15616,7 @@ name|rt
 operator|->
 name|info
 index|[
-name|cix
+name|rix
 index|]
 operator|.
 name|lpAckDuration
