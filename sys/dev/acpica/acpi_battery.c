@@ -864,6 +864,19 @@ index|]
 operator|.
 name|min
 expr_stmt|;
+comment|/* If this battery is not present, don't use its capacity. */
+if|if
+condition|(
+name|bi
+index|[
+name|i
+index|]
+operator|.
+name|cap
+operator|!=
+operator|-
+literal|1
+condition|)
 name|total_cap
 operator|+=
 name|bi
