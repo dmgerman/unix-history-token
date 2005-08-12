@@ -1150,7 +1150,7 @@ operator|->
 name|total_set
 operator|.
 name|freq
-operator|<=
+operator|<
 name|cf_lowest_freq
 condition|)
 block|{
@@ -2718,7 +2718,7 @@ operator|->
 name|total_set
 operator|.
 name|freq
-operator|<=
+operator|<
 name|cf_lowest_freq
 condition|)
 block|{
