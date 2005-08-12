@@ -789,6 +789,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SA300
+value|0x48
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_DMA_MAX
 value|0x4f
 end_define
