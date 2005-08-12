@@ -1606,6 +1606,19 @@ name|mode
 parameter_list|)
 block|{
 name|struct
+name|ata_pci_controller
+modifier|*
+name|ctlr
+init|=
+name|device_get_softc
+argument_list|(
+name|GRANDPARENT
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|struct
 name|ata_device
 modifier|*
 name|atadev
@@ -1662,7 +1675,11 @@ name|atadev
 operator|->
 name|mode
 operator|=
-name|ATA_SA150
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|max_dma
 expr_stmt|;
 block|}
 else|else
@@ -14605,6 +14622,34 @@ block|,
 name|ATA_SA150
 block|,
 literal|"Promise PDC40519"
+block|}
+block|,
+block|{
+name|ATA_PDC40718
+block|,
+literal|0
+block|,
+name|PRMIO
+block|,
+name|PRSATA2
+block|,
+name|ATA_SA300
+block|,
+literal|"Promise PDC40718"
+block|}
+block|,
+block|{
+name|ATA_PDC40719
+block|,
+literal|0
+block|,
+name|PRMIO
+block|,
+name|PRSATA2
+block|,
+name|ATA_SA300
+block|,
+literal|"Promise PDC40719"
 block|}
 block|,
 block|{
