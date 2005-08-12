@@ -438,6 +438,14 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Parse and verify the link level address as 		 * an open request 		 */
+ifdef|#
+directive|ifdef
+name|NATM
+name|NATM_LOCK
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|bzero
 argument_list|(
 operator|&
@@ -1130,6 +1138,14 @@ name|rt_ifp
 operator|->
 name|if_index
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NATM
+name|NATM_UNLOCK
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 name|failed
 label|:
@@ -1162,6 +1178,9 @@ operator|~
 name|RTF_LLINFO
 expr_stmt|;
 block|}
+name|NATM_UNLOCK
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* mark as invalid. We cannot RTM_DELETE the route from 		 * here, because the recursive call to rtrequest1 does 		 * not really work. */
@@ -1188,6 +1207,9 @@ operator|&
 name|RTF_LLINFO
 condition|)
 block|{
+name|NATM_LOCK
+argument_list|()
+expr_stmt|;
 name|npcb_free
 argument_list|(
 operator|(
@@ -1214,6 +1236,9 @@ name|rt_flags
 operator|&=
 operator|~
 name|RTF_LLINFO
+expr_stmt|;
+name|NATM_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 endif|#
