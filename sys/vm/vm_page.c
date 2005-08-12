@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -63,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -187,6 +199,47 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|boot_pages
+init|=
+name|UMA_BOOT_PAGES
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vm.boot_pages"
+argument_list|,
+operator|&
+name|boot_pages
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|boot_pages
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|boot_pages
+argument_list|,
+literal|0
+argument_list|,
+literal|"number of pages allocated for bootstrapping the VM system"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  *	vm_set_page_size:  *  *	Sets the page size, perhaps based upon the memory  *	size.  Must be called before any use of page-size  *	dependent functions.  */
 end_comment
@@ -286,9 +339,6 @@ name|biggestone
 decl_stmt|;
 name|vm_paddr_t
 name|total
-decl_stmt|;
-name|vm_size_t
-name|bootpages
 decl_stmt|;
 name|total
 operator|=
@@ -460,17 +510,15 @@ name|vm_pageq_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Allocate memory for use when boot strapping the kernel memory 	 * allocator. 	 */
-name|bootpages
-operator|=
-name|UMA_BOOT_PAGES
-operator|*
-name|UMA_SLAB_SIZE
-expr_stmt|;
 name|new_end
 operator|=
 name|end
 operator|-
-name|bootpages
+operator|(
+name|boot_pages
+operator|*
+name|UMA_SLAB_SIZE
+operator|)
 expr_stmt|;
 name|new_end
 operator|=
