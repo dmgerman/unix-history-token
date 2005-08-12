@@ -1851,7 +1851,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * we do not have to check nor get the route for 			 * multicast. 			 */
+comment|/* 			 * we do not have to check or get the route for 			 * multicast. 			 */
 goto|goto
 name|done
 goto|;

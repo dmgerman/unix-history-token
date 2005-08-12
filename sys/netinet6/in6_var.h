@@ -1705,7 +1705,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Macros for looking up the in6_multi record for a given IP6 multicast  * address on a given interface. If no matching record is found, "in6m"  * returns NLL.  */
+comment|/*  * Macros for looking up the in6_multi record for a given IP6 multicast  * address on a given interface. If no matching record is found, "in6m"  * returns NULL.  */
 end_comment
 
 begin_define

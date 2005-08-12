@@ -3800,7 +3800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Upper-layer reachability hint for Neighbor Unreachability Detection.  *  * XXX cost-effective metods?  */
+comment|/*  * Upper-layer reachability hint for Neighbor Unreachability Detection.  *  * XXX cost-effective methods?  */
 end_comment
 
 begin_function
@@ -6875,7 +6875,7 @@ condition|)
 goto|goto
 name|sendpkt
 goto|;
-comment|/* 	 * next hop determination.  This routine is derived from ether_outpout. 	 */
+comment|/* 	 * next hop determination.  This routine is derived from ether_output. 	 */
 name|again
 label|:
 if|if

@@ -364,7 +364,7 @@ comment|/* max # of *tries* to transmit DAD packet */
 end_comment
 
 begin_comment
-comment|/*  * Input a Neighbor Solicitation Message.  *  * Based on RFC 2461  * Based on RFC 2462 (duplicated address detection)  */
+comment|/*  * Input a Neighbor Solicitation Message.  *  * Based on RFC 2461  * Based on RFC 2462 (duplicate address detection)  */
 end_comment
 
 begin_function
@@ -639,7 +639,7 @@ name|saddr6
 argument_list|)
 condition|)
 block|{
-comment|/* dst has to be solicited node multicast address. */
+comment|/* dst has to be a solicited node multicast address. */
 if|if
 condition|(
 name|daddr6
@@ -1211,7 +1211,7 @@ condition|(
 name|tentative
 condition|)
 block|{
-comment|/* 		 * If source address is unspecified address, it is for 		 * duplicated address detection. 		 * 		 * If not, the packet is for addess resolution; 		 * silently ignore it. 		 */
+comment|/* 		 * If source address is unspecified address, it is for 		 * duplicate address detection. 		 * 		 * If not, the packet is for addess resolution; 		 * silently ignore it. 		 */
 if|if
 condition|(
 name|IN6_IS_ADDR_UNSPECIFIED
@@ -1441,7 +1441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Output a Neighbor Solicitation Message. Caller specifies:  *	- ICMP6 header source IP6 address  *	- ND6 header target IP6 address  *	- ND6 header source datalink address  *  * Based on RFC 2461  * Based on RFC 2462 (duplicated address detection)  */
+comment|/*  * Output a Neighbor Solicitation Message. Caller specifies:  *	- ICMP6 header source IP6 address  *	- ND6 header target IP6 address  *	- ND6 header source datalink address  *  * Based on RFC 2461  * Based on RFC 2462 (duplicate address detection)  */
 end_comment
 
 begin_function
@@ -1493,7 +1493,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* duplicated address detection */
+comment|/* duplicate address detection */
 end_comment
 
 begin_block
@@ -1931,6 +1931,7 @@ operator|->
 name|ln_hold
 condition|)
 block|{
+comment|/* 			 * assuming every packet in ln_hold has the same IP 			 * header 			 */
 name|hip6
 operator|=
 name|mtod
@@ -2403,7 +2404,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Neighbor advertisement input handling.  *  * Based on RFC 2461  * Based on RFC 2462 (duplicated address detection)  *  * the following items are not implemented yet:  * - proxy advertisement delay rule (RFC2461 7.2.8, last paragraph, SHOULD)  * - anycast advertisement delay rule (RFC2461 7.2.7, SHOULD)  */
+comment|/*  * Neighbor advertisement input handling.  *  * Based on RFC 2461  * Based on RFC 2462 (duplicate address detection)  *  * the following items are not implemented yet:  * - proxy advertisement delay rule (RFC2461 7.2.8, last paragraph, SHOULD)  * - anycast advertisement delay rule (RFC2461 7.2.7, SHOULD)  */
 end_comment
 
 begin_function
@@ -4737,7 +4738,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start Duplicated Address Detection (DAD) for specified interface address.  */
+comment|/*  * Start Duplicate Address Detection (DAD) for specified interface address.  */
 end_comment
 
 begin_function
@@ -5541,25 +5542,10 @@ operator|->
 name|dad_ns_icount
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* heuristics */
-comment|/* 			 * if 			 * - we have sent many(?) DAD NS, and 			 * - the number of NS we sent equals to the 			 *   number of NS we've got, and 			 * - we've got no NA 			 * we may have a faulty network card/driver which 			 * loops back multicasts to myself. 			 */
-block|if (3< dp->dad_count&& dp->dad_ns_icount == dp->dad_count&& dp->dad_na_icount == 0) { 				log(LOG_INFO, "DAD questionable for %s(%s): " 				    "network card loops back multicast?\n", 				    ip6_sprintf(&ia->ia_addr.sin6_addr), 				    if_name(ifa->ifa_ifp));
-comment|/* XXX consider it a duplicate or not? */
-comment|/* duplicate++; */
-block|} else {
-comment|/* We've seen NS, means DAD has failed. */
-block|duplicate++; 			}
-else|#
-directive|else
 comment|/* We've seen NS, means DAD has failed. */
 name|duplicate
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -5579,7 +5565,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * We are done with DAD.  No NA came, no NS came. 			 * duplicated address found. 			 */
+comment|/* 			 * We are done with DAD.  No NA came, no NS came. 			 * No duplicate address found. 			 */
 name|ia
 operator|->
 name|ia6_flags
@@ -5758,7 +5744,7 @@ name|ia6_flags
 operator||=
 name|IN6_IFF_DUPLICATED
 expr_stmt|;
-comment|/* We are done with DAD, with duplicated address found. (failure) */
+comment|/* We are done with DAD, with duplicate address found. (failure) */
 name|nd6_dad_stoptimer
 argument_list|(
 name|dp
