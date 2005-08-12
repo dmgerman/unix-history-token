@@ -297,6 +297,12 @@ block|,
 operator|&
 name|g_label_msdosfs
 block|,
+operator|&
+name|g_label_ext2fs
+block|,
+operator|&
+name|g_label_reiserfs
+block|,
 name|NULL
 block|}
 decl_stmt|;
