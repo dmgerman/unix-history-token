@@ -67,6 +67,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"mail.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"var.h"
 end_include
 
