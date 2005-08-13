@@ -6593,13 +6593,9 @@ condition|(
 name|sc
 operator|->
 name|wi_gone
-operator|||
-operator|!
-name|sc
-operator|->
-name|sc_enabled
 condition|)
 block|{
+comment|/* hardware gone (e.g. ejected) */
 name|imr
 operator|->
 name|ifm_active
@@ -6628,6 +6624,29 @@ name|ifm_active
 operator|=
 name|IFM_IEEE80211
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_enabled
+condition|)
+block|{
+comment|/* port !enabled, have no status */
+name|imr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_NONE
+expr_stmt|;
+name|imr
+operator|->
+name|ifm_status
+operator|=
+name|IFM_AVALID
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|ic
