@@ -1967,7 +1967,9 @@ begin_function_decl
 name|MKINIT
 name|void
 name|shprocvar
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
