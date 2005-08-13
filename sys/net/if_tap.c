@@ -254,6 +254,10 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -982,6 +986,8 @@ name|tapclone
 parameter_list|(
 name|arg
 parameter_list|,
+name|cred
+parameter_list|,
 name|name
 parameter_list|,
 name|namelen
@@ -991,6 +997,11 @@ parameter_list|)
 name|void
 modifier|*
 name|arg
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 name|char
 modifier|*

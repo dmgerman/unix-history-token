@@ -3287,6 +3287,10 @@ name|EVENTHANDLER_INVOKE
 argument_list|(
 name|dev_clone
 argument_list|,
+name|td
+operator|->
+name|td_ucred
+argument_list|,
 name|pname
 argument_list|,
 name|strlen
