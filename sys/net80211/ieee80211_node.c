@@ -9035,12 +9035,6 @@ operator|->
 name|ic_curmode
 operator|==
 name|IEEE80211_MODE_11G
-operator|||
-name|ic
-operator|->
-name|ic_curmode
-operator|==
-name|IEEE80211_MODE_TURBO_G
 condition|)
 name|ieee80211_node_join_11g
 argument_list|(
@@ -9225,12 +9219,11 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
-name|IEEE80211_IS_CHAN_ANYG
-argument_list|(
-name|ni
+name|ic
 operator|->
-name|ni_chan
-argument_list|)
+name|ic_curmode
+operator|==
+name|IEEE80211_MODE_11G
 argument_list|,
 operator|(
 literal|"not in 11g, bss %u:0x%x, curmode %u"
@@ -9619,14 +9612,11 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-name|IEEE80211_IS_CHAN_ANYG
-argument_list|(
 name|ic
 operator|->
-name|ic_bss
-operator|->
-name|ni_chan
-argument_list|)
+name|ic_curmode
+operator|==
+name|IEEE80211_MODE_11G
 condition|)
 name|ieee80211_node_leave_11g
 argument_list|(
