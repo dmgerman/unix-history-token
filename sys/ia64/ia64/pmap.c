@@ -216,7 +216,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|pmap_lpte_accessed
+name|pmap_accessed
 parameter_list|(
 name|lpte
 parameter_list|)
@@ -226,7 +226,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|pmap_lpte_dirty
+name|pmap_dirty
 parameter_list|(
 name|lpte
 parameter_list|)
@@ -236,7 +236,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|pmap_lpte_managed
+name|pmap_managed
 parameter_list|(
 name|lpte
 parameter_list|)
@@ -246,7 +246,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|pmap_lpte_ppn
+name|pmap_ppn
 parameter_list|(
 name|lpte
 parameter_list|)
@@ -256,7 +256,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|pmap_lpte_present
+name|pmap_present
 parameter_list|(
 name|lpte
 parameter_list|)
@@ -266,7 +266,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|pmap_lpte_prot
+name|pmap_prot
 parameter_list|(
 name|lpte
 parameter_list|)
@@ -276,7 +276,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|pmap_lpte_wired
+name|pmap_wired
 parameter_list|(
 name|lpte
 parameter_list|)
@@ -3741,14 +3741,14 @@ name|pte
 operator|!=
 name|NULL
 operator|&&
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
 condition|)
 name|pa
 operator|=
-name|pmap_lpte_ppn
+name|pmap_ppn
 argument_list|(
 name|pte
 argument_list|)
@@ -3832,13 +3832,13 @@ name|pte
 operator|!=
 name|NULL
 operator|&&
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
 operator|&&
 operator|(
-name|pmap_lpte_prot
+name|pmap_prot
 argument_list|(
 name|pte
 argument_list|)
@@ -3853,7 +3853,7 @@ name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|pmap_lpte_ppn
+name|pmap_ppn
 argument_list|(
 name|pte
 argument_list|)
@@ -4355,7 +4355,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_wired
+name|pmap_wired
 argument_list|(
 name|pte
 argument_list|)
@@ -4378,7 +4378,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_managed
+name|pmap_managed
 argument_list|(
 name|pte
 argument_list|)
@@ -4388,7 +4388,7 @@ name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|pmap_lpte_ppn
+name|pmap_ppn
 argument_list|(
 name|pte
 argument_list|)
@@ -4396,7 +4396,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_dirty
+name|pmap_dirty
 argument_list|(
 name|pte
 argument_list|)
@@ -4415,7 +4415,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_accessed
+name|pmap_accessed
 argument_list|(
 name|pte
 argument_list|)
@@ -4587,7 +4587,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
@@ -4599,7 +4599,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|pmap_lpte_ppn
+name|pmap_ppn
 argument_list|(
 name|pte
 argument_list|)
@@ -4664,7 +4664,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
@@ -4766,7 +4766,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
@@ -4827,7 +4827,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
@@ -4898,7 +4898,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
@@ -5375,7 +5375,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_ppn
+name|pmap_ppn
 argument_list|(
 name|pte
 argument_list|)
@@ -5556,7 +5556,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|pmap_lpte_prot
+name|pmap_prot
 argument_list|(
 name|pte
 argument_list|)
@@ -5566,7 +5566,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pmap_lpte_managed
+name|pmap_managed
 argument_list|(
 name|pte
 argument_list|)
@@ -5575,7 +5575,7 @@ block|{
 name|vm_offset_t
 name|pa
 init|=
-name|pmap_lpte_ppn
+name|pmap_ppn
 argument_list|(
 name|pte
 argument_list|)
@@ -5590,7 +5590,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|pmap_lpte_dirty
+name|pmap_dirty
 argument_list|(
 name|pte
 argument_list|)
@@ -5616,7 +5616,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|pmap_lpte_accessed
+name|pmap_accessed
 argument_list|(
 name|pte
 argument_list|)
@@ -5809,7 +5809,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
@@ -5831,7 +5831,7 @@ block|}
 else|else
 name|opa
 operator|=
-name|pmap_lpte_ppn
+name|pmap_ppn
 argument_list|(
 name|pte
 argument_list|)
@@ -5861,7 +5861,7 @@ condition|(
 name|wired
 operator|&&
 operator|!
-name|pmap_lpte_wired
+name|pmap_wired
 argument_list|(
 operator|&
 name|origpte
@@ -5880,7 +5880,7 @@ condition|(
 operator|!
 name|wired
 operator|&&
-name|pmap_lpte_wired
+name|pmap_wired
 argument_list|(
 operator|&
 name|origpte
@@ -5896,7 +5896,7 @@ expr_stmt|;
 name|managed
 operator|=
 operator|(
-name|pmap_lpte_managed
+name|pmap_managed
 argument_list|(
 operator|&
 name|origpte
@@ -5912,7 +5912,7 @@ if|if
 condition|(
 name|managed
 operator|&&
-name|pmap_lpte_dirty
+name|pmap_dirty
 argument_list|(
 operator|&
 name|origpte
@@ -6194,7 +6194,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
@@ -6412,7 +6412,7 @@ condition|(
 name|wired
 operator|&&
 operator|!
-name|pmap_lpte_wired
+name|pmap_wired
 argument_list|(
 name|pte
 argument_list|)
@@ -6437,7 +6437,7 @@ condition|(
 operator|!
 name|wired
 operator|&&
-name|pmap_lpte_wired
+name|pmap_wired
 argument_list|(
 name|pte
 argument_list|)
@@ -6897,7 +6897,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pmap_lpte_wired
+name|pmap_wired
 argument_list|(
 name|pte
 argument_list|)
@@ -7178,7 +7178,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_accessed
+name|pmap_accessed
 argument_list|(
 name|pte
 argument_list|)
@@ -7222,22 +7222,6 @@ name|count
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  *	pmap_is_referenced:  *  *	Return whether or not the specified physical page was referenced  *	in any physical maps.  */
-end_comment
-
-begin_endif
-unit|static boolean_t pmap_is_referenced(vm_page_t m) { 	pv_entry_t pv;  	if (m->flags& PG_FICTITIOUS) 		return FALSE;  	TAILQ_FOREACH(pv,&m->md.pv_list, pv_list) { 		pmap_t oldpmap = pmap_install(pv->pv_pmap); 		struct ia64_lpte *pte = pmap_find_vhpt(pv->pv_va); 		pmap_install(oldpmap); 		KASSERT(pte != NULL, ("pte")); 		if (pmap_lpte_accessed(pte)) 			return 1; 	}  	return 0; }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	pmap_is_modified:  *  *	Return whether or not the specified physical page was modified  *	in any physical maps.  */
@@ -7334,7 +7318,7 @@ argument_list|)
 expr_stmt|;
 name|rv
 operator|=
-name|pmap_lpte_dirty
+name|pmap_dirty
 argument_list|(
 name|pte
 argument_list|)
@@ -7395,7 +7379,7 @@ if|if
 condition|(
 name|pte
 operator|&&
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
@@ -7492,7 +7476,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_dirty
+name|pmap_dirty
 argument_list|(
 name|pte
 argument_list|)
@@ -7610,7 +7594,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_lpte_accessed
+name|pmap_accessed
 argument_list|(
 name|pte
 argument_list|)
@@ -7784,7 +7768,7 @@ literal|0
 return|;
 if|if
 condition|(
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 name|pte
 argument_list|)
@@ -7803,7 +7787,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pmap_lpte_managed
+name|pmap_managed
 argument_list|(
 name|pte
 argument_list|)
@@ -7813,7 +7797,7 @@ name|val
 return|;
 name|pa
 operator|=
-name|pmap_lpte_ppn
+name|pmap_ppn
 argument_list|(
 name|pte
 argument_list|)
@@ -7828,7 +7812,7 @@ expr_stmt|;
 comment|/* 		 * Modified by us 		 */
 if|if
 condition|(
-name|pmap_lpte_dirty
+name|pmap_dirty
 argument_list|(
 name|pte
 argument_list|)
@@ -7863,7 +7847,7 @@ block|}
 comment|/* 		 * Referenced by us 		 */
 if|if
 condition|(
-name|pmap_lpte_accessed
+name|pmap_accessed
 argument_list|(
 name|pte
 argument_list|)
@@ -8615,7 +8599,7 @@ operator|>>
 literal|7
 argument_list|,
 operator|(
-name|pmap_lpte_dirty
+name|pmap_dirty
 argument_list|(
 operator|&
 name|buf
@@ -8627,7 +8611,7 @@ else|:
 literal|0
 argument_list|,
 operator|(
-name|pmap_lpte_accessed
+name|pmap_accessed
 argument_list|(
 operator|&
 name|buf
@@ -8652,7 +8636,7 @@ literal|2
 index|]
 argument_list|,
 operator|(
-name|pmap_lpte_present
+name|pmap_present
 argument_list|(
 operator|&
 name|buf
