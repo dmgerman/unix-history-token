@@ -1409,6 +1409,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|wchar_t
+modifier|*
+name|wcsdup
+parameter_list|(
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|size_t
 name|wcsnrtombs
 parameter_list|(
