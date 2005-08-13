@@ -812,7 +812,7 @@ begin_define
 define|#
 directive|define
 name|OUT
-value|(-2)
+value|(CHAR_MIN - 1)
 end_define
 
 begin_comment
