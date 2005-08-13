@@ -1369,6 +1369,19 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vector
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"IPI %d is not assigned a vector"
+operator|,
+name|ipi
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|pipi
 operator|=
