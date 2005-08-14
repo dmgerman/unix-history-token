@@ -4597,6 +4597,9 @@ name|group
 modifier|*
 name|grp
 decl_stmt|;
+name|gid_t
+name|gid
+decl_stmt|;
 name|int
 name|entries
 decl_stmt|;
@@ -4621,16 +4624,29 @@ argument_list|(
 literal|"operator"
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|errx
+block|{
+name|gid
+operator|=
+name|grp
+operator|->
+name|gr_gid
+expr_stmt|;
+block|}
+else|else
+block|{
+name|warnx
 argument_list|(
-literal|35
-argument_list|,
-literal|"Cannot retrieve operator gid"
+literal|"Cannot retrieve operator gid."
 argument_list|)
 expr_stmt|;
+name|gid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|entries
 operator|=
 operator|(
@@ -4805,9 +4821,7 @@ name|dp1
 operator|.
 name|di_gid
 operator|=
-name|grp
-operator|->
-name|gr_gid
+name|gid
 expr_stmt|;
 name|node
 operator|.
@@ -5072,9 +5086,7 @@ name|dp2
 operator|.
 name|di_gid
 operator|=
-name|grp
-operator|->
-name|gr_gid
+name|gid
 expr_stmt|;
 name|node
 operator|.
