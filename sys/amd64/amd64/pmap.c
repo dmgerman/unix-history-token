@@ -7475,9 +7475,6 @@ decl_stmt|;
 name|vm_paddr_t
 name|opa
 decl_stmt|;
-name|pd_entry_t
-name|ptepde
-decl_stmt|;
 name|pt_entry_t
 name|origpte
 decl_stmt|,
@@ -7577,14 +7574,11 @@ endif|#
 directive|endif
 name|pte
 operator|=
-name|pmap_pte_pde
+name|pmap_pte
 argument_list|(
 name|pmap
 argument_list|,
 name|va
-argument_list|,
-operator|&
-name|ptepde
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Page Directory table entry not valid, we need a new PT page 	 */
@@ -7753,9 +7747,6 @@ condition|(
 name|opa
 condition|)
 block|{
-name|int
-name|err
-decl_stmt|;
 if|if
 condition|(
 name|origpte
@@ -7793,28 +7784,35 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
-name|err
-operator|=
-name|pmap_unuse_pt
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|,
-name|ptepde
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|err
+name|mpte
+operator|!=
+name|NULL
 condition|)
-name|panic
+block|{
+name|mpte
+operator|->
+name|wire_count
+operator|--
+expr_stmt|;
+name|KASSERT
 argument_list|(
-literal|"pmap_enter: pte vanished, va: 0x%lx"
+name|mpte
+operator|->
+name|wire_count
+operator|>
+literal|0
 argument_list|,
+operator|(
+literal|"pmap_enter: missing reference to page table page,"
+literal|" va: 0x%lx"
+operator|,
 name|va
+operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|pmap
@@ -7824,7 +7822,7 @@ operator|.
 name|resident_count
 operator|++
 expr_stmt|;
-comment|/* 	 * Enter on the PV list if part of our managed memory. Note that we 	 * raise IPL while manipulating pv_table since pmap_enter can be 	 * called at interrupt time. 	 */
+comment|/* 	 * Enter on the PV list if part of our managed memory. 	 */
 if|if
 condition|(
 operator|(
