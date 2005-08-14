@@ -2377,6 +2377,37 @@ argument_list|,
 name|class_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|access
+argument_list|(
+name|path
+argument_list|,
+name|F_OK
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+block|{
+comment|/* 			 * If we cannot find library, that's ok, standard 			 * commands can still be used. 			 */
+return|return;
+block|}
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Cannot access library"
+argument_list|)
+expr_stmt|;
+block|}
 name|dlh
 operator|=
 name|dlopen
@@ -2392,16 +2423,16 @@ name|dlh
 operator|==
 name|NULL
 condition|)
-block|{
-if|#
-directive|if
-literal|0
-block|fprintf(stderr, "Cannot open library %s, but continuing " 		    "anyway.\n", path);
-endif|#
-directive|endif
-comment|/* 		 * Even if library cannot be loaded, standard commands are 		 * available, so don't panic! 		 */
-return|return;
-block|}
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Cannot open library: %s."
+argument_list|,
+name|dlerror
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|lib_version
 operator|=
 name|dlsym
