@@ -1452,6 +1452,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_comment
 comment|/*  * IPv6 specific variables  */
 end_comment
@@ -1481,14 +1487,14 @@ name|ip6_fw_sysctl_tree
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|fw_deny_unknown_exthdrs
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET6 */
+end_comment
 
 begin_endif
 endif|#
@@ -1498,6 +1504,15 @@ end_endif
 begin_comment
 comment|/* SYSCTL_NODE */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fw_deny_unknown_exthdrs
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * L3HDR maps an ipv4 pointer into a layer3 header pointer of type T  * Other macros just cast void * into the appropriate type  */
@@ -18213,6 +18228,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 comment|/* Setup IPv6 fw sysctl tree. */
 name|sysctl_ctx_init
 argument_list|(
@@ -18271,6 +18289,8 @@ argument_list|,
 literal|"Deny packets with unknown IPv6 Extension Headers"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|layer3_chain
 operator|.
 name|rules
@@ -18666,6 +18686,9 @@ operator|&
 name|layer3_chain
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 comment|/* Free IPv6 fw sysctl tree. */
 name|sysctl_ctx_free
 argument_list|(
@@ -18673,6 +18696,8 @@ operator|&
 name|ip6_fw_sysctl_ctx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"IP firewall unloaded\n"
