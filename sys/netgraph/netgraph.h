@@ -989,8 +989,8 @@ end_function_decl
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|_chkhook
 parameter_list|(
 name|hook_p
@@ -2339,8 +2339,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
 name|__inline
+name|void
 name|_chknode
 parameter_list|(
 name|node_p
@@ -2629,8 +2629,8 @@ end_function_decl
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|_chknode
 parameter_list|(
 name|node_p
