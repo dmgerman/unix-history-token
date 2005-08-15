@@ -499,13 +499,25 @@ literal|"gv_save_config: null sc"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We can't save the config on a drive that isn't up, but drives that 	 * were just created aren't officially up yet, so we check a special 	 * flag. 	 */
 if|if
 condition|(
+operator|(
 name|d
 operator|->
 name|state
 operator|!=
 name|GV_DRIVE_UP
+operator|)
+operator|&&
+operator|!
+operator|(
+name|d
+operator|->
+name|flags
+operator|&&
+name|GV_DRIVE_NEWBORN
+operator|)
 condition|)
 return|return;
 if|if

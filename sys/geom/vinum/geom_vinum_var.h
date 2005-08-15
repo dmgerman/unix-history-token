@@ -597,6 +597,11 @@ directive|define
 name|GV_DRIVE_THREAD_DEAD
 value|0x04
 comment|/* The worker thread has died. */
+define|#
+directive|define
+name|GV_DRIVE_NEWBORN
+value|0x08
+comment|/* The drive was just created. */
 name|struct
 name|gv_hdr
 modifier|*
