@@ -3909,6 +3909,15 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
+else|else
+name|runstate
+operator|=
+name|PMCSTAT_FINISHED
+expr_stmt|;
+name|do_print
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|EVFILT_READ
