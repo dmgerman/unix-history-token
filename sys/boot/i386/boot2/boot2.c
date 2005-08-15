@@ -345,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|PATH_KERNEL
-value|"/kernel"
+value|"/boot/kernel/kernel"
 end_define
 
 begin_define
