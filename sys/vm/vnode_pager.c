@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1795,11 +1801,15 @@ name|bp
 operator|->
 name|b_bufsize
 expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
 name|runningbufspace
-operator|+=
+argument_list|,
 name|bp
 operator|->
 name|b_runningbufspace
+argument_list|)
 expr_stmt|;
 comment|/* do the input */
 name|bp
@@ -3355,11 +3365,15 @@ name|bp
 operator|->
 name|b_bufsize
 expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
 name|runningbufspace
-operator|+=
+argument_list|,
 name|bp
 operator|->
 name|b_runningbufspace
+argument_list|)
 expr_stmt|;
 name|cnt
 operator|.
