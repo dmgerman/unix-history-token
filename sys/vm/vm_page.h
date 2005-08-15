@@ -27,6 +27,12 @@ name|defined
 argument_list|(
 name|KLD_MODULE
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|LIBMEMSTAT
+argument_list|)
 end_if
 
 begin_include
