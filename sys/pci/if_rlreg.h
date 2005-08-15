@@ -3967,6 +3967,17 @@ value|0x1300
 end_define
 
 begin_comment
+comment|/*  * D-Link DFE-5280T device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLINK_DEVICEID_528T
+value|0x4300
+end_define
+
+begin_comment
 comment|/*  * D-Link DFE-690TXD device ID  */
 end_comment
 
