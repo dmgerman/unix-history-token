@@ -71,6 +71,15 @@ decl_stmt|;
 name|int
 name|port_rid
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|modem_res
+decl_stmt|;
+comment|/* Extra resource for modem */
+name|int
+name|modem_rid
+decl_stmt|;
 block|}
 struct|;
 end_struct

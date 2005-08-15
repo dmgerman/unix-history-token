@@ -552,7 +552,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|" unsupported chip"
+literal|" unsupported chip: rev %d "
+argument_list|,
+name|rev
 argument_list|)
 expr_stmt|;
 name|SMC_SELECT_BANK
@@ -3923,6 +3925,33 @@ if|if
 condition|(
 name|sc
 operator|->
+name|modem_res
+condition|)
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+name|sc
+operator|->
+name|modem_rid
+argument_list|,
+name|sc
+operator|->
+name|modem_res
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|modem_res
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
 name|irq_res
 condition|)
 name|bus_release_resource
@@ -3951,7 +3980,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function: sn_probe( device_t dev)  *  * Purpose:  *      Tests to see if a given ioaddr points to an SMC9xxx chip.  *      Tries to cause as little damage as possible if it's not a SMC chip.  *      Returns a 0 on success  *  * Algorithm:  *      (1) see if the high byte of BANK_SELECT is 0x33  *      (2) compare the ioaddr with the base register's address  *      (3) see if I recognize the chip ID in the appropriate register  *  *  */
+comment|/*  * Function: sn_probe(device_t dev)  *  * Purpose:  *      Tests to see if a given ioaddr points to an SMC9xxx chip.  *      Tries to cause as little damage as possible if it's not a SMC chip.  *      Returns a 0 on success  *  * Algorithm:  *      (1) see if the high byte of BANK_SELECT is 0x33  *      (2) compare the ioaddr with the base register's address  *      (3) see if I recognize the chip ID in the appropriate register  *  *  */
 end_comment
 
 begin_function
