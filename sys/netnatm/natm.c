@@ -4,7 +4,7 @@ comment|/*	$NetBSD: natm.c,v 1.5 1996/11/09 03:26:26 chuck Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  *  * Copyright (c) 1996 Charles D. Cranor and Washington University.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Charles D. Cranor and  *      Washington University.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  *  * Copyright (c) 1996 Charles D. Cranor and Washington University.  * Copyright (c) 2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Charles D. Cranor and  *      Washington University.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -184,6 +184,13 @@ init|=
 literal|16
 operator|*
 literal|1024
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|natm_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -418,12 +425,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s
-init|=
-name|SPLSOFTNET
-argument_list|()
-decl_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -435,19 +436,17 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|npcb
-condition|)
-block|{
-name|error
-operator|=
-name|EISCONN
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"natm_usr_attach: so_pcb != NULL"
+operator|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 name|so
@@ -528,11 +527,6 @@ name|so
 expr_stmt|;
 name|out
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -562,12 +556,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s
-init|=
-name|SPLSOFTNET
+name|NATM_LOCK
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -586,6 +577,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* XXXRW: Does this case ever actually happen? */
 name|error
 operator|=
 name|EINVAL
@@ -624,10 +616,8 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|NATM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -682,14 +672,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|s2
-decl_stmt|,
-name|s
-init|=
-name|SPLSOFTNET
-argument_list|()
-decl_stmt|;
-name|int
 name|proto
 init|=
 name|so
@@ -698,6 +680,9 @@ name|so_proto
 operator|->
 name|pr_protocol
 decl_stmt|;
+name|NATM_LOCK
+argument_list|()
+expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -716,6 +701,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* XXXRW: Does this case ever actually happen? */
 name|error
 operator|=
 name|EINVAL
@@ -875,6 +861,9 @@ goto|goto
 name|out
 goto|;
 block|}
+name|NATM_UNLOCK
+argument_list|()
+expr_stmt|;
 comment|/*      * open the channel      */
 name|bzero
 argument_list|(
@@ -961,10 +950,10 @@ name|traffic
 operator|=
 name|ATMIO_TRAFFIC_UBR
 expr_stmt|;
-name|s2
-operator|=
-name|splimp
-argument_list|()
+name|IFF_LOCKGIANT
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -992,10 +981,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|splx
+name|IFF_UNLOCKGIANT
 argument_list|(
-name|s2
+name|ifp
 argument_list|)
+expr_stmt|;
+name|NATM_LOCK
+argument_list|()
 expr_stmt|;
 name|npcb_free
 argument_list|(
@@ -1012,10 +1004,13 @@ goto|goto
 name|out
 goto|;
 block|}
-name|splx
+name|IFF_UNLOCKGIANT
 argument_list|(
-name|s2
+name|ifp
 argument_list|)
+expr_stmt|;
+name|NATM_LOCK
+argument_list|()
 expr_stmt|;
 name|soisconnected
 argument_list|(
@@ -1024,10 +1019,8 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|NATM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1067,14 +1060,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s2
-decl_stmt|,
-name|s
-init|=
-name|SPLSOFTNET
+name|NATM_LOCK
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -1093,6 +1081,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* XXXRW: Does this case ever actually happen? */
 name|error
 operator|=
 name|EINVAL
@@ -1150,9 +1139,7 @@ name|npcb
 operator|->
 name|npcb_vci
 expr_stmt|;
-name|s2
-operator|=
-name|splimp
+name|NATM_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -1163,6 +1150,12 @@ name|if_ioctl
 operator|!=
 name|NULL
 condition|)
+block|{
+name|IFF_LOCKGIANT
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_ioctl
@@ -1178,10 +1171,14 @@ operator|&
 name|cl
 argument_list|)
 expr_stmt|;
-name|splx
+name|IFF_UNLOCKGIANT
 argument_list|(
-name|s2
+name|ifp
 argument_list|)
+expr_stmt|;
+block|}
+name|NATM_LOCK
+argument_list|()
 expr_stmt|;
 name|npcb_free
 argument_list|(
@@ -1197,10 +1194,8 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|NATM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1283,12 +1278,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|s
-init|=
-name|SPLSOFTNET
-argument_list|()
-decl_stmt|;
-name|int
 name|proto
 init|=
 name|so
@@ -1297,6 +1286,9 @@ name|so_proto
 operator|->
 name|pr_protocol
 decl_stmt|;
+name|NATM_LOCK
+argument_list|()
+expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -1315,6 +1307,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* XXXRW: Does this case ever actually happen? */
 name|error
 operator|=
 name|EINVAL
@@ -1361,7 +1354,7 @@ operator|*
 name|aph
 argument_list|)
 argument_list|,
-name|M_TRYWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1440,10 +1433,8 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|NATM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1482,17 +1473,9 @@ name|snatm
 decl_stmt|,
 name|ssnatm
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|s
-init|=
-name|SPLSOFTNET
+name|NATM_LOCK
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -1511,13 +1494,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
-operator|=
-name|EINVAL
+comment|/* XXXRW: Does this case ever actually happen? */
+name|NATM_UNLOCK
+argument_list|()
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 name|snatm
 operator|=
@@ -1587,6 +1572,9 @@ name|npcb
 operator|->
 name|npcb_vpi
 expr_stmt|;
+name|NATM_UNLOCK
+argument_list|()
+expr_stmt|;
 operator|*
 name|nam
 operator|=
@@ -1599,19 +1587,12 @@ operator|*
 operator|)
 name|snatm
 argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-name|out
-label|:
-name|splx
-argument_list|(
-name|s
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -1650,15 +1631,8 @@ name|npcb
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
-name|int
-name|s
-init|=
-name|SPLSOFTNET
-argument_list|()
-decl_stmt|;
+comment|/*      * XXXRW: Does this case ever actually happen?  And does it even matter      * given that npcb is unused?      */
 name|npcb
 operator|=
 operator|(
@@ -1676,20 +1650,11 @@ name|npcb
 operator|==
 name|NULL
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|ifp
@@ -1702,16 +1667,18 @@ name|if_ioctl
 operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+name|IFF_LOCKGIANT
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-return|return
 operator|(
 call|(
 modifier|*
@@ -1727,12 +1694,10 @@ argument_list|,
 name|arg
 argument_list|)
 operator|)
-return|;
-name|out
-label|:
-name|splx
+expr_stmt|;
+name|IFF_UNLOCKGIANT
 argument_list|(
-name|s
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1894,6 +1859,12 @@ end_else
 begin_comment
 comment|/* !FREEBSD_USRREQS */
 end_comment
+
+begin_error
+error|#
+directive|error
+literal|"!FREEBSD_USRREQS not implemented - locking"
+end_error
 
 begin_if
 if|#
@@ -3092,9 +3063,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -3105,8 +3073,6 @@ name|natmpcb
 modifier|*
 name|npcb
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -3117,6 +3083,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|NATM_LOCK
+argument_list|()
+expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -3137,21 +3106,10 @@ name|npcb
 operator|->
 name|npcb_socket
 expr_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-comment|/* could have atm devs @ different levels */
 name|npcb
 operator|->
 name|npcb_inq
 operator|--
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3162,11 +3120,6 @@ operator|&
 name|NPCB_DRAIN
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|npcb
@@ -3183,6 +3136,14 @@ name|M_PCB
 argument_list|)
 expr_stmt|;
 comment|/* done! */
+name|NATM_UNLOCK
+argument_list|()
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -3194,6 +3155,9 @@ operator|&
 name|NPCB_FREE
 condition|)
 block|{
+name|NATM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -3281,6 +3245,9 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|NATM_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3300,6 +3267,9 @@ name|len
 expr_stmt|;
 endif|#
 directive|endif
+name|NATM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m

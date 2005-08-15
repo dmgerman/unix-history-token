@@ -103,14 +103,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|NET_NEEDS_GIANT
-argument_list|(
-literal|"netnatm"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -458,6 +450,9 @@ name|ifq_maxlen
 operator|=
 name|natmqmaxlen
 expr_stmt|;
+name|NATM_LOCK_INIT
+argument_list|()
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -481,7 +476,7 @@ argument_list|,
 operator|&
 name|natmintrq
 argument_list|,
-literal|0
+name|NETISR_MPSAFE
 argument_list|)
 expr_stmt|;
 block|}
