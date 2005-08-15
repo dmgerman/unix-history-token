@@ -1636,7 +1636,7 @@ name|dk
 argument_list|,
 name|dm
 operator|->
-name|dm_basedir
+name|dm_rootdir
 argument_list|)
 expr_stmt|;
 block|}

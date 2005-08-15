@@ -1447,7 +1447,7 @@ name|dd
 operator|=
 name|dm
 operator|->
-name|dm_basedir
+name|dm_rootdir
 expr_stmt|;
 name|s
 operator|=

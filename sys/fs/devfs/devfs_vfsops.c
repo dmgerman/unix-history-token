@@ -315,14 +315,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|fmp
-operator|->
-name|dm_basedir
-operator|=
-name|fmp
-operator|->
-name|dm_rootdir
-expr_stmt|;
 name|devfs_rules_newmount
 argument_list|(
 name|fmp

@@ -428,11 +428,6 @@ name|devfs_dirent
 modifier|*
 name|dm_rootdir
 decl_stmt|;
-name|struct
-name|devfs_dirent
-modifier|*
-name|dm_basedir
-decl_stmt|;
 name|unsigned
 name|dm_generation
 decl_stmt|;

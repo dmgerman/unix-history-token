@@ -923,7 +923,7 @@ name|de
 operator|!=
 name|dmp
 operator|->
-name|dm_basedir
+name|dm_rootdir
 condition|)
 block|{
 name|i
