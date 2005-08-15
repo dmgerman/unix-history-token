@@ -309,17 +309,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Number of physical bufs (pbufs) this subsystem is allowed.  * Manipulated by vm_pager.c  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cluster_pbuf_freecnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Read data to a buf, including read-ahead if we find this to be beneficial.  * cluster_read replaces bread.  */
 end_comment
 

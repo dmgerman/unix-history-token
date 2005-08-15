@@ -1972,6 +1972,28 @@ begin_comment
 comment|/* Number of swap I/O buffer headers. */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|cluster_pbuf_freecnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of pbufs for clusters */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vnode_pbuf_freecnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of pbufs for vnode pager */
+end_comment
+
 begin_function_decl
 name|caddr_t
 name|kern_vfs_bio_buffer_alloc
