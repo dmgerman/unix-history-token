@@ -435,6 +435,20 @@ argument_list|,
 name|pageq
 argument_list|)
 expr_stmt|;
+comment|/* Skip marker pages */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_MARKER
+operator|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
 name|KASSERT
 argument_list|(
 name|m
