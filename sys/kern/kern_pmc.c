@@ -20,6 +20,24 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pmc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pmckern.h>
 end_include
 
@@ -29,10 +47,42 @@ directive|include
 file|<sys/smp.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|HWPMC_HOOKS
+end_if
+
+begin_define
+define|#
+directive|define
+name|PMC_KERNEL_VERSION
+value|PMC_VERSION
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PMC_KERNEL_VERSION
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
-name|struct
-name|sx
-name|pmc_sx
+specifier|const
+name|int
+name|pmc_kernel_version
+init|=
+name|PMC_KERNEL_VERSION
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +139,10 @@ name|NULL
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Bitmask of CPUs requiring servicing at hardclock time */
+end_comment
+
 begin_decl_stmt
 specifier|volatile
 name|cpumask_t
@@ -111,6 +165,13 @@ begin_comment
 comment|/*  * Since PMC(4) may not be loaded in the current kernel, the  * convention followed is that a non-NULL value of 'pmc_hook' implies  * the presence of this kernel module.  *  * This requires us to protect 'pmc_hook' with a  * shared (sx) lock -- thus making the process of calling into PMC(4)  * somewhat more expensive than a simple 'if' check and indirect call.  */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|sx
+name|pmc_sx
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SX_SYSINIT
 argument_list|(
@@ -125,7 +186,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * pmc_cpu_is_disabled  *  * return TRUE if the cpu specified has been disabled.  */
+comment|/*  * Helper functions  */
 end_comment
 
 begin_function

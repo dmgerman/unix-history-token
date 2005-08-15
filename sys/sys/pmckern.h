@@ -175,6 +175,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* kernel version number */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|pmc_kernel_version
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Hook invocation; for use within the kernel */
 end_comment
 
