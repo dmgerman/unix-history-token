@@ -817,7 +817,7 @@ name|head2
 parameter_list|,
 name|field
 parameter_list|)
-value|do {				\ 	if (!TAILQ_EMPTY(head2)) {					\ 		*(head1)->tqh_last = (head2)->tqh_first;		\ 		(head2)->tqh_first->field.tqe_prev = (head1)->tqh_last;	\ 		(head1)->tqh_last = (head2)->tqh_last;			\ 		TAILQ_INIT((head2));					\ 		QMD_TRACE_HEAD(head);					\ 		QMD_TRACE_HEAD(head2);					\ 	}								\ } while (0)
+value|do {				\ 	if (!TAILQ_EMPTY(head2)) {					\ 		*(head1)->tqh_last = (head2)->tqh_first;		\ 		(head2)->tqh_first->field.tqe_prev = (head1)->tqh_last;	\ 		(head1)->tqh_last = (head2)->tqh_last;			\ 		TAILQ_INIT((head2));					\ 		QMD_TRACE_HEAD(head1);					\ 		QMD_TRACE_HEAD(head2);					\ 	}								\ } while (0)
 end_define
 
 begin_define
