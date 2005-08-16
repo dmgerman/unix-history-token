@@ -93,6 +93,12 @@ directive|include
 file|<fs/devfs/devfs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<fs/devfs/devfs_int.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
