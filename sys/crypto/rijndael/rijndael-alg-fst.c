@@ -5423,6 +5423,27 @@ decl_stmt|;
 name|u32
 name|temp
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|keyBits
+operator|==
+literal|128
+operator|||
+name|keyBits
+operator|==
+literal|192
+operator|||
+name|keyBits
+operator|==
+literal|256
+argument_list|,
+operator|(
+literal|"Invalid key size (%d)."
+operator|,
+name|keyBits
+operator|)
+argument_list|)
+expr_stmt|;
 name|rk
 index|[
 literal|0
