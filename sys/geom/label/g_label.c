@@ -276,7 +276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * To add a new file system where you want to look for volume labels,  * you have to:  * 1. Add a file which implements looking for volume labels.  * 2. Add an 'extern const struct g_label_desc g_label_<your file system>;'.  * 3. Add an element to the table below '&g_label_<your_file_system>,'.  */
+comment|/*  * To add a new file system where you want to look for volume labels,  * you have to:  * 1. Add a file g_label_<file system>.c which implements labels recognition.  * 2. Add an 'extern const struct g_label_desc g_label_<file system>;' into  *    g_label.h file.  * 3. Add an element to the table below '&g_label_<file system>,'.  * 4. Add your file to sys/conf/files.  * 5. Add your file to sys/modules/geom/geom_label/Makefile.  * 6. Add your file system to manual page sbin/geom/class/label/glabel.8.  */
 end_comment
 
 begin_decl_stmt
@@ -296,6 +296,12 @@ name|g_label_iso9660
 block|,
 operator|&
 name|g_label_msdosfs
+block|,
+operator|&
+name|g_label_ext2fs
+block|,
+operator|&
+name|g_label_reiserfs
 block|,
 name|NULL
 block|}
@@ -1238,6 +1244,10 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
@@ -1271,6 +1281,35 @@ operator|==
 literal|'\0'
 condition|)
 continue|continue;
+comment|/* 		 * Don't allow / in labels. 		 */
+for|for
+control|(
+name|p
+operator|=
+name|label
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'/'
+condition|)
+operator|*
+name|p
+operator|=
+literal|'_'
+expr_stmt|;
+block|}
 name|g_label_create
 argument_list|(
 name|NULL
