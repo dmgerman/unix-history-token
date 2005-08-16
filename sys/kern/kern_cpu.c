@@ -1592,6 +1592,10 @@ name|CPUFREQ_VAL_UNKNOWN
 operator|&&
 name|priority
 operator|>
+name|CPUFREQ_PRIO_USER
+operator|&&
+name|priority
+operator|>
 name|sc
 operator|->
 name|curr_priority
