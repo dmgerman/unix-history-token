@@ -1141,16 +1141,6 @@ name|flags
 parameter_list|)
 block|{
 name|struct
-name|gv_drive
-modifier|*
-name|d
-decl_stmt|;
-name|struct
-name|g_geom
-modifier|*
-name|gp
-decl_stmt|;
-name|struct
 name|g_provider
 modifier|*
 name|pp
@@ -1166,40 +1156,6 @@ literal|"gv_rm_sd: NULL s"
 operator|)
 argument_list|)
 expr_stmt|;
-name|d
-operator|=
-name|s
-operator|->
-name|drive_sc
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|d
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"gv_rm_sd: NULL d"
-operator|)
-argument_list|)
-expr_stmt|;
-name|gp
-operator|=
-name|d
-operator|->
-name|geom
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|gp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"gv_rm_sd: NULL gp"
-operator|)
-argument_list|)
-expr_stmt|;
 name|pp
 operator|=
 name|s
@@ -1207,6 +1163,12 @@ operator|->
 name|provider
 expr_stmt|;
 comment|/* Clean up. */
+if|if
+condition|(
+name|s
+operator|->
+name|plex_sc
+condition|)
 name|LIST_REMOVE
 argument_list|(
 name|s
@@ -1214,6 +1176,12 @@ argument_list|,
 name|in_plex
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|drive_sc
+condition|)
 name|LIST_REMOVE
 argument_list|(
 name|s
@@ -1832,17 +1800,13 @@ name|s
 operator|->
 name|drive_sc
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|d
-operator|!=
+operator|==
 name|NULL
-argument_list|,
-operator|(
-literal|"gv_free_sd: NULL d"
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 comment|/* 	 * First, find the free slot that's immediately before or after this 	 * subdisk. 	 */
 name|fl
 operator|=
