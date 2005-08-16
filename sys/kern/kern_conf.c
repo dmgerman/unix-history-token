@@ -138,10 +138,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* Built at compile time from sys/conf/majors */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
