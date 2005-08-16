@@ -135,16 +135,6 @@ end_include
 
 begin_function_decl
 specifier|static
-name|void
-name|vnode_pager_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|daddr_t
 name|vnode_pager_addr
 parameter_list|(
@@ -263,11 +253,6 @@ name|vnodepagerops
 init|=
 block|{
 operator|.
-name|pgo_init
-operator|=
-name|vnode_pager_init
-block|,
-operator|.
 name|pgo_alloc
 operator|=
 name|vnode_pager_alloc
@@ -300,25 +285,6 @@ name|int
 name|vnode_pbuf_freecnt
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|vnode_pager_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|vnode_pbuf_freecnt
-operator|=
-name|nswbuf
-operator|/
-literal|2
-operator|+
-literal|1
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Allocate (or lookup) pager for a vnode.  * Handle is a vnode pointer.  *  * MPSAFE  */
