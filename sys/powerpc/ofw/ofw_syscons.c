@@ -3024,8 +3024,6 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
 return|return
 operator|(
 literal|0
