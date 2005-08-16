@@ -224,7 +224,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Report an error back to the user in ascii format.  Return whatever copyout  * returned, or EINVAL if it succeeded.  * XXX: should not be static.  * XXX: should take printf like args.  */
+comment|/*  * Report an error back to the user in ascii format.  Return whatever copyout  * returned, or EINVAL if it succeeded.  */
 end_comment
 
 begin_function
