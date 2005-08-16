@@ -2170,11 +2170,7 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|IF_ADDR_LOCK_DESTROY
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
+comment|/* Do not add code to this function!  Add it to if_free_type(). */
 name|if_free_type
 argument_list|(
 name|ifp
@@ -2223,6 +2219,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|IF_ADDR_LOCK_DESTROY
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ifnet_byindex
 argument_list|(
 name|ifp
