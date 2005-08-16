@@ -630,7 +630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The function is called afer reading encrypted data from the provider.  */
+comment|/*  * The function is called afer reading encrypted data from the provider.  *  * g_eli_start -> g_io_request -> G_ELI_READ_DONE -> g_eli_crypto_run -> g_eli_crypto_read_done -> g_io_deliver  */
 end_comment
 
 begin_function
@@ -845,7 +845,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The function is called after we read and decrypt data.  */
+comment|/*  * The function is called after we read and decrypt data.  *  * g_eli_start -> g_io_request -> g_eli_read_done -> g_eli_crypto_run -> G_ELI_CRYPTO_READ_DONE -> g_io_deliver  */
 end_comment
 
 begin_function
@@ -1054,7 +1054,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The function is called after we encrypt and write data.  */
+comment|/*  * The function is called after we encrypt and write data.  *  * g_eli_start -> g_eli_crypto_run -> g_eli_crypto_write_done -> g_io_request -> G_ELI_WRITE_DONE -> g_io_deliver  */
 end_comment
 
 begin_function
@@ -1176,7 +1176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The function is called after data encryption.  */
+comment|/*  * The function is called after data encryption.  *  * g_eli_start -> g_eli_crypto_run -> G_ELI_CRYPTO_WRITE_DONE -> g_io_request -> g_eli_write_done -> g_io_deliver  */
 end_comment
 
 begin_function
@@ -1547,6 +1547,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * BIO_READ : G_ELI_START -> g_io_request -> g_eli_read_done -> g_eli_crypto_run -> g_eli_crypto_read_done -> g_io_deliver  * BIO_WRITE: G_ELI_START -> g_eli_crypto_run -> g_eli_crypto_write_done -> g_io_request -> g_eli_write_done -> g_io_deliver  */
+end_comment
 
 begin_function
 specifier|static
@@ -5821,22 +5825,6 @@ argument_list|(
 name|geom_eli
 argument_list|,
 name|crypto
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|geom_eli
-argument_list|,
-name|cryptodev
 argument_list|,
 literal|1
 argument_list|,
