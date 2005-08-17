@@ -763,17 +763,6 @@ operator|(
 name|ENOSPC
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|fwip
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|fwip_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* XXX */
 name|fwip
 operator|->
