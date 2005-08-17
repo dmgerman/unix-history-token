@@ -72,34 +72,6 @@ define|\
 value|bus_space_write_4((sc)->tulip_csrs_bst,		\ 			  (sc)->tulip_csrs_bsh,		\ 			  (sc)->tulip_csrs.csr, val)
 end_define
 
-begin_define
-define|#
-directive|define
-name|TULIP_CSR_READBYTE
-parameter_list|(
-name|sc
-parameter_list|,
-name|csr
-parameter_list|)
-define|\
-value|bus_space_read_1((sc)->tulip_csrs_bst,	\ 			 (sc)->tulip_csrs_bsh,	\ 			 (sc)->tulip_csrs.csr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_CSR_WRITEBYTE
-parameter_list|(
-name|sc
-parameter_list|,
-name|csr
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|bus_space_write_1((sc)->tulip_csrs_bst,		\ 			  (sc)->tulip_csrs_bsh,		\ 			  (sc)->tulip_csrs.csr, val)
-end_define
-
 begin_comment
 comment|/*  * This structure contains "pointers" for the registers on  * the various 21x4x chips.  CSR0 through CSR8 are common  * to all chips.  After that, it gets messy...  */
 end_comment
