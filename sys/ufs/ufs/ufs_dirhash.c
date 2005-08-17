@@ -932,6 +932,20 @@ literal|1
 operator|)
 return|;
 block|}
+name|mtx_init
+argument_list|(
+operator|&
+name|dh
+operator|->
+name|dh_mtx
+argument_list|,
+literal|"dirhash"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|dh
@@ -1064,20 +1078,6 @@ name|DIRHASH_EMPTY
 expr_stmt|;
 block|}
 comment|/* Initialise the hash table and block statistics. */
-name|mtx_init
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|,
-literal|"dirhash"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|dh
 operator|->
 name|dh_narrays
@@ -1509,6 +1509,14 @@ operator|->
 name|dh_blkfree
 argument_list|,
 name|M_DIRHASH
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|dh
+operator|->
+name|dh_mtx
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -2077,7 +2085,7 @@ operator|->
 name|dh_seqoff
 condition|)
 block|{
-comment|/* 			 * We found an entry with the expected offset. This 			 * is probably the entry we want, but if not, the 			 * code below will turn off seqoff and retry. 			 */
+comment|/* 			 * We found an entry with the expected offset. This 			 * is probably the entry we want, but if not, the 			 * code below will turn off seqopt and retry. 			 */
 name|slot
 operator|=
 name|i
