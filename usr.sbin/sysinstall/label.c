@@ -206,28 +206,28 @@ begin_define
 define|#
 directive|define
 name|ROOT_DEFAULT_SIZE
-value|256
+value|512
 end_define
 
 begin_define
 define|#
 directive|define
 name|USR_DEFAULT_SIZE
-value|3072
+value|8192
 end_define
 
 begin_define
 define|#
 directive|define
 name|VAR_DEFAULT_SIZE
-value|256
+value|1024
 end_define
 
 begin_define
 define|#
 directive|define
 name|TMP_DEFAULT_SIZE
-value|256
+value|512
 end_define
 
 begin_define
@@ -245,28 +245,28 @@ begin_define
 define|#
 directive|define
 name|ROOT_NOMINAL_SIZE
-value|192
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
 name|USR_NOMINAL_SIZE
-value|512
+value|1536
 end_define
 
 begin_define
 define|#
 directive|define
 name|VAR_NOMINAL_SIZE
-value|64
+value|128
 end_define
 
 begin_define
 define|#
 directive|define
 name|TMP_NOMINAL_SIZE
-value|64
+value|128
 end_define
 
 begin_define
@@ -6586,7 +6586,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to auto-label the disk.  'perc' (0-100) scales  * the size of the various partitions within appropriate  * bounds (NOMINAL through DEFAULT sizes).  The procedure  * succeeds of NULL is returned.  A non-null return message  * is either a failure-status message (*req == 0), or   * a confirmation requestor (*req == 1).  *req is 0 on  * entry to this call.  *  * We autolabel the following partitions:  /, swap, /var, /tmp, /usr,  * and /home.  /home receives any extra left over disk space.   */
+comment|/*  * Attempt to auto-label the disk.  'perc' (0-100) scales  * the size of the various partitions within appropriate  * bounds (NOMINAL through DEFAULT sizes).  The procedure  * succeeds of NULL is returned.  A non-null return message  * is either a failure-status message (*req == 0), or   * a confirmation requestor (*req == 1).  *req is 0 on  * entry to this call.  *  * As a special exception to the usual sizing rules, /var is given  * additional space equal to the amount of physical memory present  * if perc == 100 in order to ensure that users with large hard drives  * will have enough space to store a crashdump in /var/crash.  *  * We autolabel the following partitions:  /, swap, /var, /tmp, /usr,  * and /home.  /home receives any extra left over disk space.   */
 end_comment
 
 begin_function
@@ -7137,6 +7137,73 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Work out how much extra space we want for a crash dump */
+name|unsigned
+name|long
+name|crashdumpsz
+decl_stmt|;
+name|mib
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_HW
+expr_stmt|;
+name|mib
+index|[
+literal|1
+index|]
+operator|=
+name|HW_PHYSMEM
+expr_stmt|;
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|physmem
+argument_list|)
+expr_stmt|;
+name|sysctl
+argument_list|(
+name|mib
+argument_list|,
+literal|2
+argument_list|,
+operator|&
+name|physmem
+argument_list|,
+operator|&
+name|size
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|size_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|perc
+operator|==
+literal|100
+condition|)
+name|crashdumpsz
+operator|=
+name|physmem
+operator|/
+literal|1048576
+expr_stmt|;
+else|else
+name|crashdumpsz
+operator|=
+literal|0
+expr_stmt|;
 name|sz
 operator|=
 name|requested_part_size
@@ -7144,8 +7211,10 @@ argument_list|(
 name|VAR_VAR_SIZE
 argument_list|,
 name|VAR_NOMINAL_SIZE
-argument_list|,
+argument_list|,	\
 name|VAR_DEFAULT_SIZE
+operator|+
+name|crashdumpsz
 argument_list|,
 name|perc
 argument_list|)
