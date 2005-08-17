@@ -4918,10 +4918,16 @@ name|m
 operator|->
 name|endp
 condition|)
+block|{
+name|clen
+operator|=
+literal|0
+expr_stmt|;
 name|c
 operator|=
 name|OUT
 expr_stmt|;
+block|}
 else|else
 name|clen
 operator|=
@@ -4932,7 +4938,9 @@ name|c
 argument_list|,
 name|p
 argument_list|,
-name|stop
+name|m
+operator|->
+name|endp
 operator|-
 name|p
 argument_list|,
@@ -5238,6 +5246,12 @@ operator|||
 name|p
 operator|==
 name|stop
+operator|||
+name|clen
+operator|>
+name|stop
+operator|-
+name|p
 condition|)
 break|break;
 comment|/* NOTE BREAK OUT */
@@ -5589,7 +5603,9 @@ name|c
 argument_list|,
 name|p
 argument_list|,
-name|stop
+name|m
+operator|->
+name|endp
 operator|-
 name|p
 argument_list|,
@@ -5895,6 +5911,12 @@ operator|||
 name|p
 operator|==
 name|stop
+operator|||
+name|clen
+operator|>
+name|stop
+operator|-
+name|p
 condition|)
 break|break;
 comment|/* NOTE BREAK OUT */
