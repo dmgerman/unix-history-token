@@ -5423,6 +5423,9 @@ decl_stmt|;
 name|u32
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
 name|KASSERT
 argument_list|(
 name|keyBits
@@ -5444,6 +5447,8 @@ name|keyBits
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rk
 index|[
 literal|0
