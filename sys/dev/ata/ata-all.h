@@ -2742,6 +2742,10 @@ define|#
 directive|define
 name|ATA_ATAPI_DMA_RO
 value|0x04
+define|#
+directive|define
+name|ATA_NO_48BIT_DMA
+value|0x08
 name|int
 name|devices
 decl_stmt|;
@@ -2991,7 +2995,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int8_t
+name|void
 name|ata_modify_if_48bit
 parameter_list|(
 name|struct

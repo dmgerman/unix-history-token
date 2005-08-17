@@ -1279,9 +1279,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|atadev
+name|request
 operator|->
-name|max_iosize
+name|transfersize
 operator|>
 name|DEV_BSIZE
 condition|)
@@ -1345,9 +1345,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|atadev
+name|request
 operator|->
-name|max_iosize
+name|transfersize
 operator|>
 name|DEV_BSIZE
 condition|)
