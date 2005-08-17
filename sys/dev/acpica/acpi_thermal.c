@@ -394,6 +394,9 @@ decl_stmt|;
 name|int
 name|tz_cooling_updated
 decl_stmt|;
+name|int
+name|tz_cooling_saved_freq
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -4103,7 +4106,7 @@ operator|->
 name|tz_dev
 argument_list|)
 argument_list|,
-literal|"temperature %d.%dC: resuming previous clock speed\n"
+literal|"temperature %d.%dC: resuming previous clock speed (%d MHz)\n"
 argument_list|,
 name|TZ_KELVTOC
 argument_list|(
@@ -4111,6 +4114,10 @@ name|sc
 operator|->
 name|tz_temperature
 argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|tz_cooling_saved_freq
 argument_list|)
 expr_stmt|;
 name|error
@@ -4361,7 +4368,7 @@ expr_stmt|;
 if|if
 condition|(
 name|desired_freq
-operator|<=
+operator|<
 name|freq
 condition|)
 block|{
@@ -4406,6 +4413,40 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* If we didn't decrease frequency yet, don't increase it. */
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|tz_cooling_updated
+condition|)
+block|{
+name|sc
+operator|->
+name|tz_cooling_active
+operator|=
+name|FALSE
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/* Use saved cpu frequency as maximum value. */
+if|if
+condition|(
+name|desired_freq
+operator|>
+name|sc
+operator|->
+name|tz_cooling_saved_freq
+condition|)
+name|desired_freq
+operator|=
+name|sc
+operator|->
+name|tz_cooling_saved_freq
+expr_stmt|;
 comment|/* Find the closest available frequency, rounding up. */
 for|for
 control|(
@@ -4447,13 +4488,18 @@ condition|)
 name|i
 operator|++
 expr_stmt|;
-block|}
 comment|/* If we're going to the highest frequency, restore the old setting. */
 if|if
 condition|(
 name|i
 operator|==
 literal|0
+operator|||
+name|desired_freq
+operator|==
+name|sc
+operator|->
+name|tz_cooling_saved_freq
 condition|)
 block|{
 name|error
@@ -4478,6 +4524,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 comment|/* If we are going to a new frequency, activate it. */
 if|if
@@ -4566,13 +4613,26 @@ condition|(
 name|error
 operator|==
 literal|0
+operator|&&
+operator|!
+name|sc
+operator|->
+name|tz_cooling_updated
 condition|)
+block|{
+name|sc
+operator|->
+name|tz_cooling_saved_freq
+operator|=
+name|freq
+expr_stmt|;
 name|sc
 operator|->
 name|tz_cooling_updated
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 name|out
 label|:
