@@ -5396,9 +5396,7 @@ endif|#
 directive|endif
 name|ic
 operator|->
-name|ic_bss
-operator|->
-name|ni_chan
+name|ic_curchan
 operator|=
 operator|&
 name|ic
