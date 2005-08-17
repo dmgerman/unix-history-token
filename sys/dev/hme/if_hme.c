@@ -1890,6 +1890,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_tick_ch
+argument_list|)
+expr_stmt|;
 name|device_delete_child
 argument_list|(
 name|sc

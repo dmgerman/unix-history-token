@@ -4784,6 +4784,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|stat_ch
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Close down routes etc. 	 */
 name|ether_ifdetach
 argument_list|(
