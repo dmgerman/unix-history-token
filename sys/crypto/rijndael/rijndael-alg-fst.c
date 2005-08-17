@@ -56,6 +56,24 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|KASSERT
+parameter_list|(
+name|exp
+parameter_list|,
+name|msg
+parameter_list|)
+value|assert(exp)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -5423,9 +5441,6 @@ decl_stmt|;
 name|u32
 name|temp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
 name|KASSERT
 argument_list|(
 name|keyBits
@@ -5447,8 +5462,6 @@ name|keyBits
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|rk
 index|[
 literal|0
