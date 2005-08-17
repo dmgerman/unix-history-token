@@ -851,6 +851,11 @@ expr_stmt|;
 name|int
 name|d_spare3
 decl_stmt|;
+name|struct
+name|cdevsw
+modifier|*
+name|d_gianttrick
+decl_stmt|;
 block|}
 struct|;
 end_struct
