@@ -2222,13 +2222,13 @@ name|i
 operator|==
 name|STE_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ste%d: command never completed!\n"
-argument_list|,
 name|sc
 operator|->
-name|ste_unit
+name|ste_ifp
+argument_list|,
+literal|"command never completed!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2300,13 +2300,13 @@ operator|==
 literal|100
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ste%d: eeprom failed to come ready\n"
-argument_list|,
 name|sc
 operator|->
-name|ste_unit
+name|ste_ifp
+argument_list|,
+literal|"eeprom failed to come ready\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3578,13 +3578,11 @@ name|STE_RXSTAT_DMADONE
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ste%d: bad receive status -- packet dropped\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|ste_unit
+literal|"bad receive status -- packet dropped\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -3775,13 +3773,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ste%d: transmission error: %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|ste_unit
+literal|"transmission error: %x\n"
 argument_list|,
 name|txstat
 argument_list|)
@@ -3815,14 +3811,12 @@ name|ste_tx_thresh
 operator|+=
 name|STE_MIN_FRAMELEN
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ste%d: tx underrun, increasing tx"
-literal|" start threshold to %d bytes\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|ste_unit
+literal|"tx underrun, increasing tx"
+literal|" start threshold to %d bytes\n"
 argument_list|,
 name|sc
 operator|->
@@ -4282,8 +4276,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -4299,13 +4291,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4400,11 +4385,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ste%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4469,11 +4454,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ste%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4515,11 +4500,11 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ste%d: failed to read station address\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to read station address\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4531,12 +4516,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|sc
-operator|->
-name|ste_unit
-operator|=
-name|unit
-expr_stmt|;
 comment|/* Allocate the descriptor queues. */
 name|sc
 operator|->
@@ -4572,11 +4551,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ste%d: no memory for list buffers!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"no memory for list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4618,13 +4597,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ste%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ste_unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4653,13 +4630,11 @@ name|ste_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ste%d: MII without any phy!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ste_unit
+literal|"MII without any phy!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4849,11 +4824,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ste%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -5779,14 +5754,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ste%d: initialization failed: no "
-literal|"memory for RX buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|ste_unit
+literal|"initialization failed: no memory for RX buffers\n"
 argument_list|)
 expr_stmt|;
 name|ste_stop
@@ -6551,13 +6523,13 @@ name|i
 operator|==
 name|STE_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ste%d: global reset never completed\n"
-argument_list|,
 name|sc
 operator|->
-name|ste_unit
+name|ste_ifp
+argument_list|,
+literal|"global reset never completed\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7464,13 +7436,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ste%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|ste_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|ste_txeoc
