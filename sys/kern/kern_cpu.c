@@ -1215,14 +1215,8 @@ operator|.
 name|freq
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|curr_priority
-operator|=
-name|priority
-expr_stmt|;
 goto|goto
-name|out
+name|skip
 goto|;
 block|}
 comment|/* First, set the absolute frequency via its driver. */
@@ -1540,6 +1534,8 @@ name|out
 goto|;
 block|}
 block|}
+name|skip
+label|:
 comment|/* If we were restoring a saved state, reset it to "unused". */
 if|if
 condition|(
@@ -1653,10 +1649,6 @@ operator|->
 name|curr_priority
 operator|=
 name|priority
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 name|out
 label|:
