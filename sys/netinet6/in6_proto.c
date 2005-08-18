@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ipstealth.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_carp.h"
 end_include
 
@@ -1405,6 +1411,25 @@ literal|0L
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|ip6stealth
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* icmp6 */
 end_comment
@@ -2388,6 +2413,38 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_STEALTH
+argument_list|,
+name|stealth
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ip6stealth
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* net.inet6.icmp6 */
