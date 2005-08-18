@@ -4596,8 +4596,8 @@ name|int
 name|sf_if_flags
 decl_stmt|;
 name|struct
-name|callout_handle
-name|sf_stat_ch
+name|callout
+name|sf_stat_callout
 decl_stmt|;
 name|struct
 name|mtx
