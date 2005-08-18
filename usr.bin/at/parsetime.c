@@ -2564,7 +2564,7 @@ argument_list|(
 name|EOF
 argument_list|)
 expr_stmt|;
-comment|/* adjust for daylight savings time      */
+comment|/* convert back to time_t      */
 name|runtime
 operator|.
 name|tm_isdst
@@ -2579,18 +2579,6 @@ argument_list|(
 operator|&
 name|runtime
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|runtime
-operator|.
-name|tm_isdst
-operator|>
-literal|0
-condition|)
-name|runtimer
-operator|-=
-literal|3600
 expr_stmt|;
 if|if
 condition|(
