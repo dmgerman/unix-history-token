@@ -817,6 +817,11 @@ name|ip6s_delivered
 operator|--
 expr_stmt|;
 comment|/* do not inject data into pcb */
+name|INP_UNLOCK
+argument_list|(
+name|last
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 endif|#
