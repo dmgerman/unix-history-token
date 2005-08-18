@@ -10207,6 +10207,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Mark interface as down since otherwise we will panic if 	 * interrupt comes in later on, which can happen in some 	 * cases. Another option is to call re_detach() instead of 	 * re_stop(), like ve(4) does. 	 */
+name|sc
+operator|->
+name|rl_ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_UP
+expr_stmt|;
 name|RL_UNLOCK
 argument_list|(
 name|sc
