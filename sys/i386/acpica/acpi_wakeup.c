@@ -169,9 +169,9 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|region_descriptor
-name|r_idt
+name|saved_idt
 decl_stmt|,
-name|r_gdt
+name|saved_gdt
 decl_stmt|,
 modifier|*
 name|p_gdt
@@ -181,7 +181,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint16_t
-name|r_ldt
+name|saved_ldt
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +317,7 @@ name|__GNUCLIKE_ASM
 end_ifdef
 
 begin_asm
-asm|__asm__("				\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_restorecpu, @function\n\ acpi_restorecpu:			\n\ 	.align 4			\n\ 	movl	r_eax,%eax		\n\ 	movl	r_ebx,%ebx		\n\ 	movl	r_ecx,%ecx		\n\ 	movl	r_edx,%edx		\n\ 	movl	r_ebp,%ebp		\n\ 	movl	r_esi,%esi		\n\ 	movl	r_edi,%edi		\n\ 	movl	r_esp,%esp		\n\ 					\n\ 	pushl	r_efl			\n\ 	popfl				\n\ 					\n\ 	movl	ret_addr,%eax		\n\ 	movl	%eax,(%esp)		\n\ 	xorl	%eax,%eax		\n\ 	ret				\n\ 					\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_savecpu, @function	\n\ acpi_savecpu:				\n\ 	movw	%cs,r_cs		\n\ 	movw	%ds,r_ds		\n\ 	movw	%es,r_es		\n\ 	movw	%fs,r_fs		\n\ 	movw	%gs,r_gs		\n\ 	movw	%ss,r_ss		\n\ 					\n\ 	movl	%eax,r_eax		\n\ 	movl	%ebx,r_ebx		\n\ 	movl	%ecx,r_ecx		\n\ 	movl	%edx,r_edx		\n\ 	movl	%ebp,r_ebp		\n\ 	movl	%esi,r_esi		\n\ 	movl	%edi,r_edi		\n\ 					\n\ 	movl	%cr0,%eax		\n\ 	movl	%eax,r_cr0		\n\ 	movl	%cr2,%eax		\n\ 	movl	%eax,r_cr2		\n\ 	movl	%cr3,%eax		\n\ 	movl	%eax,r_cr3		\n\ 	movl	%cr4,%eax		\n\ 	movl	%eax,r_cr4		\n\ 					\n\ 	pushfl				\n\ 	popl	r_efl			\n\ 					\n\ 	movl	%esp,r_esp		\n\ 					\n\ 	sgdt	r_gdt			\n\ 	sidt	r_idt			\n\ 	sldt	r_ldt			\n\ 	str	r_tr			\n\ 					\n\ 	movl	(%esp),%eax		\n\ 	movl	%eax,ret_addr		\n\ 	movl	$1,%eax			\n\ 	ret				\n\ ");
+asm|__asm__("				\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_restorecpu, @function\n\ acpi_restorecpu:			\n\ 	.align 4			\n\ 	movl	r_eax,%eax		\n\ 	movl	r_ebx,%ebx		\n\ 	movl	r_ecx,%ecx		\n\ 	movl	r_edx,%edx		\n\ 	movl	r_ebp,%ebp		\n\ 	movl	r_esi,%esi		\n\ 	movl	r_edi,%edi		\n\ 	movl	r_esp,%esp		\n\ 					\n\ 	pushl	r_efl			\n\ 	popfl				\n\ 					\n\ 	movl	ret_addr,%eax		\n\ 	movl	%eax,(%esp)		\n\ 	xorl	%eax,%eax		\n\ 	ret				\n\ 					\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_savecpu, @function	\n\ acpi_savecpu:				\n\ 	movw	%cs,r_cs		\n\ 	movw	%ds,r_ds		\n\ 	movw	%es,r_es		\n\ 	movw	%fs,r_fs		\n\ 	movw	%gs,r_gs		\n\ 	movw	%ss,r_ss		\n\ 					\n\ 	movl	%eax,r_eax		\n\ 	movl	%ebx,r_ebx		\n\ 	movl	%ecx,r_ecx		\n\ 	movl	%edx,r_edx		\n\ 	movl	%ebp,r_ebp		\n\ 	movl	%esi,r_esi		\n\ 	movl	%edi,r_edi		\n\ 					\n\ 	movl	%cr0,%eax		\n\ 	movl	%eax,r_cr0		\n\ 	movl	%cr2,%eax		\n\ 	movl	%eax,r_cr2		\n\ 	movl	%cr3,%eax		\n\ 	movl	%eax,r_cr3		\n\ 	movl	%cr4,%eax		\n\ 	movl	%eax,r_cr4		\n\ 					\n\ 	pushfl				\n\ 	popl	r_efl			\n\ 					\n\ 	movl	%esp,r_esp		\n\ 					\n\ 	sgdt	saved_gdt		\n\ 	sidt	saved_idt		\n\ 	sldt	saved_ldt		\n\ 	str	r_tr			\n\ 					\n\ 	movl	(%esp),%eax		\n\ 	movl	%eax,ret_addr		\n\ 	movl	$1,%eax			\n\ 	ret				\n\ ");
 end_asm
 
 begin_endif
@@ -346,23 +346,23 @@ name|printf
 argument_list|(
 literal|"gdt[%04x:%08x] idt[%04x:%08x] ldt[%04x] tr[%04x] efl[%08x]\n"
 argument_list|,
-name|r_gdt
+name|saved_gdt
 operator|.
 name|rd_limit
 argument_list|,
-name|r_gdt
+name|saved_gdt
 operator|.
 name|rd_base
 argument_list|,
-name|r_idt
+name|saved_idt
 operator|.
 name|rd_limit
 argument_list|,
-name|r_idt
+name|saved_idt
 operator|.
 name|rd_base
 argument_list|,
-name|r_ldt
+name|saved_ldt
 argument_list|,
 name|r_tr
 argument_list|,
@@ -644,7 +644,7 @@ name|p_gdt
 operator|->
 name|rd_limit
 operator|=
-name|r_gdt
+name|saved_gdt
 operator|.
 name|rd_limit
 expr_stmt|;
@@ -654,7 +654,7 @@ name|rd_base
 operator|=
 name|vtophys
 argument_list|(
-name|r_gdt
+name|saved_gdt
 operator|.
 name|rd_base
 argument_list|)
@@ -732,7 +732,7 @@ argument_list|,
 expr|struct
 name|region_descriptor
 argument_list|,
-name|r_gdt
+name|saved_gdt
 argument_list|)
 expr_stmt|;
 name|WAKECODE_FIXUP
@@ -741,7 +741,7 @@ name|previous_ldt
 argument_list|,
 name|uint16_t
 argument_list|,
-name|r_ldt
+name|saved_ldt
 argument_list|)
 expr_stmt|;
 name|WAKECODE_BCOPY
@@ -751,7 +751,7 @@ argument_list|,
 expr|struct
 name|region_descriptor
 argument_list|,
-name|r_idt
+name|saved_idt
 argument_list|)
 expr_stmt|;
 name|WAKECODE_FIXUP
