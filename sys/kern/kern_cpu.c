@@ -1215,6 +1215,12 @@ operator|.
 name|freq
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|curr_priority
+operator|=
+name|priority
+expr_stmt|;
 goto|goto
 name|out
 goto|;
