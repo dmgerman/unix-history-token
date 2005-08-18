@@ -2026,7 +2026,6 @@ name|i
 decl_stmt|,
 name|ack
 decl_stmt|;
-comment|/*XL_LOCK_ASSERT(sc);*/
 comment|/* Set up frame for RX. */
 name|frame
 operator|->
@@ -2293,7 +2292,6 @@ modifier|*
 name|frame
 parameter_list|)
 block|{
-comment|/*XL_LOCK_ASSERT(sc);*/
 comment|/* Set up frame for TX. */
 name|frame
 operator|->
@@ -2658,7 +2656,6 @@ operator|->
 name|xl_miibus
 argument_list|)
 expr_stmt|;
-comment|/*XL_LOCK_ASSERT(sc);*/
 name|xl_setcfg
 argument_list|(
 name|sc
@@ -2765,7 +2762,6 @@ name|mii
 operator|->
 name|mii_media
 expr_stmt|;
-comment|/*XL_LOCK_ASSERT(sc);*/
 if|if
 condition|(
 name|sc
@@ -3052,11 +3048,6 @@ decl_stmt|,
 modifier|*
 name|ptr
 decl_stmt|;
-name|XL_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|EEPROM_5BIT_OFFSET
@@ -3885,7 +3876,11 @@ name|dmsg
 init|=
 literal|""
 decl_stmt|;
-comment|/*XL_LOCK_ASSERT(sc);*/
+name|XL_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|XL_SEL_WIN
 argument_list|(
 literal|4
@@ -4649,11 +4644,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|XL_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If some of the media options bits are set, assume they are 	 * correct. If not, try to figure it out down below. 	 * XXX I should check for 10baseFL, but I don't have an adapter 	 * to test with. 	 */
 if|if
 condition|(
@@ -5828,13 +5818,18 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Reset the adapter. */
 name|XL_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Reset the adapter. */
 name|xl_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|XL_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5871,32 +5866,29 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-name|XL_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
 block|}
-name|XL_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|xl_unit
 operator|=
 name|unit
 expr_stmt|;
-name|callout_handle_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|xl_stat_ch
+name|xl_stat_callout
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|xl_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|TASK_INIT
@@ -6415,11 +6407,6 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|XL_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Figure out the card type. 3c905B adapters have the 	 * 'supportsNoTxLength' bit set in the capabilities 	 * word in the EEPROM. 	 * Note: my 3c575C cardbus card lies. It returns a value 	 * of 0x1578 for its capabilities word, which is somewhat 	 * nonsensical. Another way to distinguish a 3c90x chip 	 * from a 3c90xB/C chip is to check for the 'supportsLargePackets' 	 * bit. This will only be set for 3c90x boomerage chips. 	 */
 name|xl_read_eeprom
 argument_list|(
@@ -6690,12 +6677,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* XXX Downcalls to ifmedia, miibus about to happen. */
-name|XL_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -6778,13 +6759,6 @@ name|xl_xcvr
 operator|==
 name|XL_XCVR_AUTO
 condition|)
-block|{
-comment|/* XXX Direct hardware access needs lock coverage. */
-name|XL_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|xl_choose_xcvr
 argument_list|(
 name|sc
@@ -6792,12 +6766,6 @@ argument_list|,
 name|bootverbose
 argument_list|)
 expr_stmt|;
-name|XL_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Do ifmedia setup. 	 */
 if|if
 condition|(
@@ -7092,7 +7060,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX: Unlocked, leaf will take lock. */
 name|media
 operator|=
 name|IFM_ETHER
@@ -7129,7 +7096,6 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-comment|/* XXX: Unlocked hardware access, narrow race. */
 if|if
 condition|(
 name|sc
@@ -7232,7 +7198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Choose a default media.  * XXX This is a leaf function only called by xl_attach() and  *     acquires/releases the non-recursible driver mutex.  */
+comment|/*  * Choose a default media.  * XXX This is a leaf function only called by xl_attach() and  *     acquires/releases the non-recursible driver mutex to  *     satisfy lock assertions.  */
 end_comment
 
 begin_function
@@ -7463,11 +7429,6 @@ literal|"xl mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
-name|XL_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -7506,6 +7467,11 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|XL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|xl_reset
 argument_list|(
 name|sc
@@ -7514,6 +7480,29 @@ expr_stmt|;
 name|xl_stop
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|XL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_swi
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|xl_task
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|xl_stat_callout
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -7769,11 +7758,6 @@ name|xl_tx_tag
 argument_list|)
 expr_stmt|;
 block|}
-name|XL_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -9310,6 +9294,19 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If we are running from the taskqueue, the interface 		 * might have been stopped while we were passing the last 		 * packet up the network stack. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+condition|)
+return|return;
 block|}
 comment|/* 	 * Handle the 'end of channel' condition. When the upload 	 * engine hits the end of the RX ring, it will stall. This 	 * is our cue to flush the RX ring, reload the uplist pointer 	 * register and unstall the engine. 	 * XXX This is actually a little goofy. With the ThunderLAN 	 * chip, you get an interrupt when the receiver hits the end 	 * of the receive ring, which tells you exactly when you 	 * you need to reload the ring pointer. Here we have to 	 * fake it. I'm mad at myself for not being clever enough 	 * to avoid the use of a goto here. 	 */
 if|if
@@ -9429,6 +9426,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|xl_ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
 name|xl_rxeof
 argument_list|(
 name|sc
@@ -10883,17 +10890,12 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
-name|XL_LOCK
+name|XL_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 name|xl_stats_update_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|XL_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -11087,17 +11089,18 @@ name|sc
 operator|->
 name|xl_stats_no_timeout
 condition|)
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|xl_stat_ch
-operator|=
-name|timeout
-argument_list|(
+name|xl_stat_callout
+argument_list|,
+name|hz
+argument_list|,
 name|xl_stats_update
 argument_list|,
 name|sc
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -13132,17 +13135,18 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|xl_stat_ch
-operator|=
-name|timeout
-argument_list|(
+name|xl_stat_callout
+argument_list|,
+name|hz
+argument_list|,
 name|xl_stats_update
 argument_list|,
 name|sc
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -13186,7 +13190,11 @@ name|mii
 init|=
 name|NULL
 decl_stmt|;
-comment|/*XL_LOCK_ASSERT(sc);*/
+name|XL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -13286,12 +13294,11 @@ operator|&
 name|XL_MEDIAOPT_BT4
 condition|)
 block|{
-name|xl_init
+name|xl_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 block|}
 else|else
 block|{
@@ -13305,6 +13312,11 @@ name|ifm_media
 argument_list|)
 expr_stmt|;
 block|}
+name|XL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -13357,7 +13369,11 @@ name|mii
 init|=
 name|NULL
 decl_stmt|;
-comment|/*XL_LOCK_ASSERT(sc);*/
+name|XL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -13615,6 +13631,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|XL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -13901,8 +13922,6 @@ case|:
 case|case
 name|SIOCSIFMEDIA
 case|:
-comment|/* XXX Downcall from ifmedia possibly with locks held. */
-comment|/*XL_LOCK(sc);*/
 if|if
 condition|(
 name|sc
@@ -13959,7 +13978,6 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
-comment|/*XL_UNLOCK(sc);*/
 break|break;
 case|case
 name|SIOCSIFCAP
@@ -14214,16 +14232,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
-name|taskqueue_drain
-argument_list|(
-name|taskqueue_swi
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|xl_task
-argument_list|)
-expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -14378,15 +14386,12 @@ literal|0x8000
 argument_list|)
 expr_stmt|;
 comment|/* Stop the stats updater. */
-name|untimeout
+name|callout_stop
 argument_list|(
-name|xl_stats_update
-argument_list|,
-name|sc
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_stat_ch
+name|xl_stat_callout
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free data in the RX lists. 	 */

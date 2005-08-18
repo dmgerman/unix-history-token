@@ -3060,8 +3060,8 @@ name|xl_chain_data
 name|xl_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
-name|xl_stat_ch
+name|callout
+name|xl_stat_callout
 decl_stmt|;
 name|int
 name|xl_flags
