@@ -7740,6 +7740,28 @@ argument_list|(
 name|ke
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't migrate running threads here.  Force the long term balancer 	 * to do it. 	 */
+if|if
+condition|(
+name|ke
+operator|->
+name|ke_flags
+operator|&
+name|KEF_HOLD
+condition|)
+block|{
+name|ke
+operator|->
+name|ke_flags
+operator|&=
+operator|~
+name|KEF_HOLD
+expr_stmt|;
+name|canmigrate
+operator|=
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|KASSERT
@@ -7924,28 +7946,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* 	 * Don't migrate running threads here.  Force the long term balancer 	 * to do it. 	 */
-if|if
-condition|(
-name|ke
-operator|->
-name|ke_flags
-operator|&
-name|KEF_HOLD
-condition|)
-block|{
-name|ke
-operator|->
-name|ke_flags
-operator|&=
-operator|~
-name|KEF_HOLD
-expr_stmt|;
-name|canmigrate
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* 	 * If this thread is pinned or bound, notify the target cpu. 	 */
 if|if
 condition|(
