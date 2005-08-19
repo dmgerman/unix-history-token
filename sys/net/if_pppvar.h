@@ -417,18 +417,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|ppp_softc
-modifier|*
-name|ppp_for_tty
-parameter_list|(
-name|struct
-name|tty
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 end_unit
 
