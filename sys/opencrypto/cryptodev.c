@@ -1481,7 +1481,16 @@ condition|(
 name|cse
 operator|->
 name|txform
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|cop
+operator|->
+name|len
+operator|==
+literal|0
+operator|||
 operator|(
 name|cop
 operator|->
@@ -1501,6 +1510,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|cse
 operator|->
 name|uio
