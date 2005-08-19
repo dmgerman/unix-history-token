@@ -389,7 +389,6 @@ parameter_list|(
 name|void
 function_decl|(
 modifier|*
-name|prepare
 function_decl|)
 parameter_list|(
 name|void
@@ -398,7 +397,6 @@ parameter_list|,
 name|void
 function_decl|(
 modifier|*
-name|parent
 function_decl|)
 parameter_list|(
 name|void
@@ -407,7 +405,6 @@ parameter_list|,
 name|void
 function_decl|(
 modifier|*
-name|child
 function_decl|)
 parameter_list|(
 name|void
@@ -439,12 +436,10 @@ name|void
 modifier|*
 modifier|*
 name|__restrict
-name|stackaddr
 parameter_list|,
 name|size_t
 modifier|*
 name|__restrict
-name|stacksize
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -686,7 +681,6 @@ parameter_list|)
 parameter_list|,
 name|void
 modifier|*
-name|routine_arg
 parameter_list|)
 function_decl|;
 end_function_decl
