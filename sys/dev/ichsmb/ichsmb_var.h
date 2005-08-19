@@ -34,6 +34,10 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/* this device */
+name|device_t
+name|smb
+decl_stmt|;
+comment|/* smb device */
 name|struct
 name|resource
 modifier|*
@@ -236,6 +240,17 @@ begin_function_decl
 specifier|extern
 name|int
 name|ichsmb_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ichsmb_detach
 parameter_list|(
 name|device_t
 name|dev

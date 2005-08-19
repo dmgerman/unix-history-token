@@ -210,6 +210,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*Use generic one for now*/
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static int	ichsmb_pci_detach(device_t dev);
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Device methods */
 end_comment
 
@@ -233,6 +249,13 @@ argument_list|(
 name|device_attach
 argument_list|,
 name|ichsmb_pci_attach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|ichsmb_detach
 argument_list|)
 block|,
 comment|/* Bus methods */
@@ -503,8 +526,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|2
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 comment|/* XXX */
@@ -899,6 +921,48 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ichsmb
+argument_list|,
+name|pci
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ichsmb
+argument_list|,
+name|smbus
+argument_list|,
+name|SMBUS_MINVER
+argument_list|,
+name|SMBUS_PREFVER
+argument_list|,
+name|SMBUS_MAXVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ichsmb
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
