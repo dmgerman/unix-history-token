@@ -476,37 +476,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BITCOUNT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|BITCOUNT
-parameter_list|(
-name|x
-parameter_list|)
-value|(((BX_(x) + (BX_(x)>> 4))& 0x0F0F0F0F) % 255)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BX_
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) - (((x)>> 1)& 0x77777777) -		\ 			 (((x)>> 2)& 0x33333333) - (((x)>> 3)& 0x11111111))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
