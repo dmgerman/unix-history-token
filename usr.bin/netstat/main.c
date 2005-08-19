@@ -1396,6 +1396,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|hflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show counters in human readable format */
+end_comment
+
+begin_decl_stmt
+name|int
 name|iflag
 decl_stmt|;
 end_decl_stmt
@@ -1585,7 +1595,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabcdf:gI:iLlM:mN:np:rSstuWw:z"
+literal|"Aabcdf:ghI:iLlM:mN:np:rSstuWw:z"
 argument_list|)
 operator|)
 operator|!=
@@ -1797,6 +1807,14 @@ case|case
 literal|'g'
 case|:
 name|gflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|hflag
 operator|=
 literal|1
 expr_stmt|;
@@ -3457,7 +3475,7 @@ argument_list|,
 literal|"usage: netstat [-AaLnSW] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -i | -I interface [-abdnt] [-f address_family]\n"
+literal|"       netstat -i | -I interface [-abdhnt] [-f address_family]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -w wait [-I interface] [-d] [-M core] [-N system]"

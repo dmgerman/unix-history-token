@@ -67,6 +67,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|hflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show counters in human readable format */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|iflag
 decl_stmt|;
 end_decl_stmt
