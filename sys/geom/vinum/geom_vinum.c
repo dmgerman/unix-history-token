@@ -1395,6 +1395,12 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+name|d
+operator|->
+name|flags
+operator||=
+name|GV_DRIVE_NEWBORN
+expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -2157,6 +2163,13 @@ name|d
 argument_list|,
 name|sc
 argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|flags
+operator|&=
+operator|~
+name|GV_DRIVE_NEWBORN
 expr_stmt|;
 block|}
 return|return

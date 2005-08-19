@@ -597,6 +597,11 @@ directive|define
 name|GV_DRIVE_THREAD_DEAD
 value|0x04
 comment|/* The worker thread has died. */
+define|#
+directive|define
+name|GV_DRIVE_NEWBORN
+value|0x08
+comment|/* The drive was just created. */
 name|struct
 name|gv_hdr
 modifier|*
@@ -1085,6 +1090,11 @@ argument_list|)
 name|volume
 expr_stmt|;
 comment|/* Entry in vinum config. */
+name|struct
+name|gv_plex
+modifier|*
+name|last_read_plex
+decl_stmt|;
 name|struct
 name|g_geom
 modifier|*

@@ -3320,17 +3320,28 @@ operator|->
 name|plex
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|p
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"gv_plex_taste: NULL p for '%s'\n"
 argument_list|,
-operator|(
-literal|"gv_plex_taste: NULL p"
-operator|)
+name|s
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* 	 * Add this subdisk to this plex.  Since we trust the on-disk 	 * configuration, we don't check the given value (should we?). 	 * XXX: shouldn't be done here 	 */
 name|gv_sd_to_plex
 argument_list|(
