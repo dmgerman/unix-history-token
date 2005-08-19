@@ -89,6 +89,18 @@ directive|include
 file|<regcache.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sparc-tdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sparc64-tdep.h>
+end_include
+
 begin_function
 name|void
 name|kgdb_trgt_fetch_registers
@@ -106,9 +118,6 @@ decl_stmt|;
 name|struct
 name|pcb
 name|pcb
-decl_stmt|;
-name|uint64_t
-name|r
 decl_stmt|;
 name|kt
 operator|=
@@ -176,33 +185,35 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 0-7: global registers (g0-g7) */
-comment|/* 8-15: output registers (o0-o7) */
-name|r
-operator|=
+name|supply_register
+argument_list|(
+name|SPARC_SP_REGNUM
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|pcb
 operator|.
 name|pcb_sp
+argument_list|)
+expr_stmt|;
+name|sparc_supply_rwindow
+argument_list|(
+name|current_regcache
+argument_list|,
+name|pcb
+operator|.
+name|pcb_sp
+argument_list|,
 operator|-
-name|CCFSZ
-expr_stmt|;
-name|supply_register
-argument_list|(
-literal|14
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|r
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 16-23: local registers (l0-l7) */
-comment|/* 24-31: input registers (i0-i7) */
 name|supply_register
 argument_list|(
-literal|30
+name|SPARC64_PC_REGNUM
 argument_list|,
 operator|(
 name|char
@@ -211,14 +222,18 @@ operator|)
 operator|&
 name|pcb
 operator|.
-name|pcb_sp
+name|pcb_pc
 argument_list|)
 expr_stmt|;
-comment|/* 32-63: single precision FP (f0-f31) */
-comment|/* 64-79: double precision FP (f32-f62) */
+name|pcb
+operator|.
+name|pcb_pc
+operator|+=
+literal|4
+expr_stmt|;
 name|supply_register
 argument_list|(
-literal|80
+name|SPARC64_NPC_REGNUM
 argument_list|,
 operator|(
 name|char
