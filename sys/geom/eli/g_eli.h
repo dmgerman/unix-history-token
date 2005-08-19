@@ -486,7 +486,7 @@ comment|/* Available keys. */
 name|int32_t
 name|md_iterations
 decl_stmt|;
-comment|/* Number of iterations for PKCS#5v2 */
+comment|/* Number of iterations for PKCS#5v2. */
 name|uint8_t
 name|md_salt
 index|[
@@ -1543,7 +1543,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"        Salt: %s\n"
+literal|"      Salt: %s\n"
 argument_list|,
 name|str
 argument_list|)
@@ -1692,7 +1692,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"    MD5 hash: %s\n"
+literal|"  MD5 hash: %s\n"
 argument_list|,
 name|str
 argument_list|)
