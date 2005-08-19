@@ -4569,6 +4569,11 @@ decl_stmt|,
 modifier|*
 name|mif
 decl_stmt|;
+name|BRIDGE_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mif
 operator|=
 name|NULL

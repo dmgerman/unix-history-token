@@ -2876,6 +2876,11 @@ name|IFF_UP
 condition|)
 block|{
 comment|/* 			 * If interface is marked up and it is stopped, then 			 * start it. 			 */
+name|BRIDGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -5363,6 +5368,11 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+name|BRIDGE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
@@ -5370,6 +5380,11 @@ operator||=
 name|IFF_RUNNING
 expr_stmt|;
 name|bstp_initialization
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|BRIDGE_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5404,6 +5419,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|BRIDGE_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
