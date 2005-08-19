@@ -11001,8 +11001,6 @@ name|fctx
 decl_stmt|;
 name|isc_result_t
 name|result
-init|=
-name|ISC_R_SUCCESS
 decl_stmt|;
 name|isc_result_t
 name|iresult
@@ -11136,9 +11134,15 @@ name|info
 operator|==
 name|NULL
 condition|)
+block|{
+name|result
+operator|=
+name|ISC_R_NOMEMORY
+expr_stmt|;
 goto|goto
 name|cleanup_fetch
 goto|;
+block|}
 name|FCTXTRACE
 argument_list|(
 literal|"create"
