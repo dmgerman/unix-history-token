@@ -4897,6 +4897,7 @@ name|slen
 operator|!=
 literal|0
 condition|)
+block|{
 name|d
 operator|->
 name|bd_fcount
@@ -4937,6 +4938,7 @@ argument_list|,
 name|bpf_mcopy
 argument_list|)
 expr_stmt|;
+block|}
 name|BPFD_UNLOCK
 argument_list|(
 name|d
@@ -5111,6 +5113,7 @@ name|slen
 operator|!=
 literal|0
 condition|)
+block|{
 name|d
 operator|->
 name|bd_fcount
@@ -5152,6 +5155,7 @@ argument_list|,
 name|bpf_mcopy
 argument_list|)
 expr_stmt|;
+block|}
 name|BPFD_UNLOCK
 argument_list|(
 name|d
