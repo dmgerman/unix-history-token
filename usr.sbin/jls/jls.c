@@ -136,11 +136,9 @@ name|sxp
 operator|=
 name|xp
 operator|=
-name|calloc
+name|malloc
 argument_list|(
 name|len
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
