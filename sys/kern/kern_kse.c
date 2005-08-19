@@ -5903,7 +5903,9 @@ argument_list|(
 name|p
 argument_list|)
 argument_list|,
+operator|(
 literal|"process not stopped"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
