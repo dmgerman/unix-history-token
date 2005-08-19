@@ -329,7 +329,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Mutex types (Single UNIX Specification, Version 2, 1997).  *  * Note that a mutex attribute with one of the following types:  *  *	PTHREAD_MUTEX_NORMAL  *	PTHREAD_MUTEX_RECURSIVE  *      MUTEX_TYPE_FAST (deprecated)  *	MUTEX_TYPE_COUNTING_FAST (deprecated)  *  * will deviate from POSIX specified semantics.  */
+comment|/*  * Mutex types (Single UNIX Specification, Version 2, 1997).  *  * Note that a mutex attribute with one of the following types:  *  *	PTHREAD_MUTEX_NORMAL  *	PTHREAD_MUTEX_RECURSIVE  *  * will deviate from POSIX specified semantics.  */
 end_comment
 
 begin_enum
@@ -351,7 +351,7 @@ init|=
 literal|3
 block|,
 comment|/* No error checking */
-name|MUTEX_TYPE_MAX
+name|PTHREAD_MUTEX_TYPE_MAX
 block|}
 enum|;
 end_enum
@@ -361,20 +361,6 @@ define|#
 directive|define
 name|PTHREAD_MUTEX_DEFAULT
 value|PTHREAD_MUTEX_ERRORCHECK
-end_define
-
-begin_define
-define|#
-directive|define
-name|MUTEX_TYPE_FAST
-value|PTHREAD_MUTEX_NORMAL
-end_define
-
-begin_define
-define|#
-directive|define
-name|MUTEX_TYPE_COUNTING_FAST
-value|PTHREAD_MUTEX_RECURSIVE
 end_define
 
 begin_comment

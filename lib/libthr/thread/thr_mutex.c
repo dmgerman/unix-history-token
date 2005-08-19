@@ -460,7 +460,7 @@ operator|)
 operator|->
 name|m_type
 operator|>=
-name|MUTEX_TYPE_MAX
+name|PTHREAD_MUTEX_TYPE_MAX
 operator|)
 condition|)
 comment|/* Return an invalid argument error: */
