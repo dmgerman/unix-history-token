@@ -244,7 +244,7 @@ comment|/* min value for an off_t */
 end_comment
 
 begin_comment
-comment|/* Quads and longs are the same on the alpha.  Ensure they stay in sync. */
+comment|/* Quads and longs are the same size.  Ensure they stay in sync. */
 end_comment
 
 begin_define
