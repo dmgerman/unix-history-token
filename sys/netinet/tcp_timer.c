@@ -1455,9 +1455,6 @@ name|tcptemp
 modifier|*
 name|t_template
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -1477,11 +1474,6 @@ name|t_state
 expr_stmt|;
 endif|#
 directive|endif
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -1504,11 +1496,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1545,11 +1532,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1757,11 +1739,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 name|dropit
 label|:
@@ -1841,11 +1818,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1867,9 +1839,6 @@ name|tp
 init|=
 name|xtp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -1889,11 +1858,6 @@ name|t_state
 expr_stmt|;
 endif|#
 directive|endif
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -1916,11 +1880,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1957,11 +1916,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2120,11 +2074,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2145,9 +2094,6 @@ modifier|*
 name|tp
 init|=
 name|xtp
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|int
 name|rexmt
@@ -2174,11 +2120,6 @@ name|t_state
 expr_stmt|;
 endif|#
 directive|endif
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -2205,11 +2146,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2246,11 +2182,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2703,11 +2634,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
