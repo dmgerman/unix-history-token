@@ -11520,12 +11520,6 @@ name|b_iodone
 operator|=
 name|NULL
 expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_DONE
-expr_stmt|;
 call|(
 modifier|*
 name|biodone

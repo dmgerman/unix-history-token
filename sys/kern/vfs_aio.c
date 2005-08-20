@@ -10387,6 +10387,12 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_DONE
+expr_stmt|;
 name|wakeup
 argument_list|(
 name|bp
