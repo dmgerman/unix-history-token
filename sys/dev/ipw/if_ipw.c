@@ -1663,8 +1663,6 @@ operator||
 name|IEEE80211_C_IBSS
 operator||
 name|IEEE80211_C_MONITOR
-operator||
-name|IEEE80211_C_WPA
 expr_stmt|;
 comment|/* read MAC address from EEPROM */
 name|val
