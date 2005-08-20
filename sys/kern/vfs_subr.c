@@ -12050,6 +12050,23 @@ argument_list|,
 name|mnt_list
 argument_list|)
 expr_stmt|;
+comment|/* 			 * XXX: Due to the way in which we mount the root 			 * file system off of devfs, devfs will generate a 			 * "busy" warning when we try to unmount it before 			 * the root.  Don't print a warning as a result in 			 * order to avoid false positive errors that may 			 * cause needless upset. 			 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|mp
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_name
+argument_list|,
+literal|"devfs"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"unmount of %s failed ("
@@ -12080,6 +12097,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
