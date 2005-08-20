@@ -252,6 +252,9 @@ block|,
 comment|/* copy to ng_ipfw		*/
 name|O_IP4
 block|,
+name|O_UNREACH6
+block|,
+comment|/* arg1=icmpv6 code arg (deny)  */
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -295,6 +298,13 @@ define|#
 directive|define
 name|EXT_ESP
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT_DSTOPTS
+value|0x20
 end_define
 
 begin_comment
@@ -828,6 +838,9 @@ decl_stmt|;
 name|u_int32_t
 name|flow_id6
 decl_stmt|;
+name|u_int32_t
+name|frag_id6
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1001,6 +1014,17 @@ end_define
 
 begin_comment
 comment|/* fake ICMP code (send a TCP RST) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_UNREACH_RST
+value|0x100
+end_define
+
+begin_comment
+comment|/* fake ICMPv6 code (send a TCP RST) */
 end_comment
 
 begin_comment
