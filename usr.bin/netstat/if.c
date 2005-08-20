@@ -3052,6 +3052,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|interface
+operator|&&
+name|interesting
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: unknown interface"
+argument_list|,
+name|interface
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|total
 operator|=
