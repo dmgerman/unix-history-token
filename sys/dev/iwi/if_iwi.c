@@ -969,12 +969,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IWI_DEBUG
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -984,11 +978,6 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -2256,9 +2245,6 @@ argument_list|,
 literal|"radio transmitter switch state (0=off, 1=on)"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IWI_DEBUG
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|device_get_sysctl_ctx
@@ -2293,8 +2279,6 @@ argument_list|,
 literal|"statistics"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
@@ -12585,12 +12569,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IWI_DEBUG
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -12692,11 +12670,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
