@@ -174,6 +174,12 @@ decl_stmt|;
 name|bus_addr_t
 name|physaddr
 decl_stmt|;
+name|bus_addr_t
+name|csr_ridx
+decl_stmt|;
+name|bus_addr_t
+name|csr_widx
+decl_stmt|;
 name|struct
 name|iwi_tx_desc
 modifier|*
@@ -310,6 +316,9 @@ decl_stmt|;
 name|struct
 name|iwi_tx_ring
 name|txq
+index|[
+name|WME_NUM_AC
+index|]
 decl_stmt|;
 name|struct
 name|iwi_rx_ring
