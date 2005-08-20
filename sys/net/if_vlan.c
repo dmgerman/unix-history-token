@@ -2013,9 +2013,11 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
+name|if_free_type
 argument_list|(
 name|ifp
+argument_list|,
+name|IFT_ETHER
 argument_list|)
 expr_stmt|;
 name|free
