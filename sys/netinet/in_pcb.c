@@ -860,7 +860,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * in_pcb.c: manage the Protocol Control Blocks.  *  * NOTE: It is assumed that most of these functions will be called at  * splnet(). XXX - There are, unfortunately, a few exceptions to this  * rule that should be fixed.  */
+comment|/*  * in_pcb.c: manage the Protocol Control Blocks.  *  * NOTE: It is assumed that most of these functions will be called with  * the pcbinfo lock held, and often, the inpcb lock held, as these utility  * functions often modify hash chains or addresses in pcbs.  */
 end_comment
 
 begin_comment
@@ -3847,9 +3847,6 @@ modifier|*
 name|pcbinfo
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 specifier|register
 name|struct
 name|inpcb
@@ -3863,11 +3860,6 @@ decl_stmt|;
 name|in_port_t
 name|port
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 name|pcbinfo
@@ -3889,11 +3881,6 @@ block|{
 name|INP_INFO_RUNLOCK
 argument_list|(
 name|pcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -3925,11 +3912,6 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 name|pcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3980,9 +3962,6 @@ modifier|*
 name|pcbinfo
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 specifier|register
 name|struct
 name|inpcb
@@ -3996,11 +3975,6 @@ decl_stmt|;
 name|in_port_t
 name|port
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 name|pcbinfo
@@ -4022,11 +3996,6 @@ block|{
 name|INP_INFO_RUNLOCK
 argument_list|(
 name|pcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -4058,11 +4027,6 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 name|pcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4147,14 +4111,6 @@ name|inpcbhead
 modifier|*
 name|head
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 name|pcbinfo
@@ -4272,11 +4228,6 @@ argument_list|(
 name|pcbinfo
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -4314,7 +4265,6 @@ name|i
 decl_stmt|,
 name|gap
 decl_stmt|;
-comment|/* why no splnet here? XXX */
 name|INP_INFO_RLOCK
 argument_list|(
 name|pcbinfo
