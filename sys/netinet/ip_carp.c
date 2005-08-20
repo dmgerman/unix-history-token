@@ -6005,9 +6005,12 @@ block|}
 comment|/* this should be a hash, like pf_hash() */
 name|index
 operator|=
+name|ntohl
+argument_list|(
 name|isaddr
 operator|->
 name|s_addr
+argument_list|)
 operator|%
 name|count
 expr_stmt|;
