@@ -42,28 +42,6 @@ name|sig_atomic_t
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|__XSI_VISIBLE
-end_if
-
-begin_comment
-comment|/*  * Minimum signal stack size. The current signal frame  * for Alpha is 808 bytes large.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MINSIGSTKSZ
-value|(1024 * 4)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Only the kernel should need these old type definitions.  */
 end_comment

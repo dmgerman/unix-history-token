@@ -302,6 +302,17 @@ name|__WORD_BIT
 value|32
 end_define
 
+begin_comment
+comment|/* Minimum signal stack size. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__MINSIGSTKSZ
+value|(3072 * 4)
+end_define
+
 begin_endif
 endif|#
 directive|endif

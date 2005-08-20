@@ -36,6 +36,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/_limits.h>
+end_include
+
+begin_comment
+comment|/* __MINSIGSTKSZ */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<machine/signal.h>
 end_include
 
@@ -1285,6 +1295,11 @@ directive|define
 name|SS_DISABLE
 value|0x0004
 comment|/* disable taking signals on alternate stack */
+define|#
+directive|define
+name|MINSIGSTKSZ
+value|__MINSIGSTKSZ
+comment|/* minimum stack size */
 define|#
 directive|define
 name|SIGSTKSZ

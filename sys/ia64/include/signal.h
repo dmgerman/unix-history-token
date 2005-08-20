@@ -156,28 +156,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__XSI_VISIBLE
-end_if
-
-begin_comment
-comment|/* Minimum signal stack size. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MINSIGSTKSZ
-value|(3072 * 4)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to restore state properly if  * a non-standard exit is performed.  */
 end_comment

@@ -316,6 +316,17 @@ name|__WORD_BIT
 value|32
 end_define
 
+begin_comment
+comment|/*  * Minimum signal stack size. The current signal frame  * for Alpha is 808 bytes large.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__MINSIGSTKSZ
+value|(1024 * 4)
+end_define
+
 begin_endif
 endif|#
 directive|endif

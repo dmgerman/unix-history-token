@@ -21,24 +21,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__XSI_VISIBLE
-end_if
-
-begin_define
-define|#
-directive|define
-name|MINSIGSTKSZ
-value|(512 * 4)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|int

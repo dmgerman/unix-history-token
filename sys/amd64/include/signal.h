@@ -41,28 +41,6 @@ end_typedef
 begin_if
 if|#
 directive|if
-name|__XSI_VISIBLE
-end_if
-
-begin_comment
-comment|/*  * Minimum signal stack size. The current signal frame  * for i386 is 408 bytes large.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MINSIGSTKSZ
-value|(512 * 4)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|__BSD_VISIBLE
 end_if
 
