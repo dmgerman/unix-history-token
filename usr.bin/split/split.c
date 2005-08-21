@@ -1521,25 +1521,11 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hack to increase max files; original code wandered through 	 * magic characters. 	 */
 if|if
 condition|(
 name|fnum
 operator|==
 name|maxfiles
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|defname
-operator|||
-name|fname
-index|[
-literal|0
-index|]
-operator|==
-literal|'z'
 condition|)
 name|errx
 argument_list|(
@@ -1548,17 +1534,6 @@ argument_list|,
 literal|"too many files"
 argument_list|)
 expr_stmt|;
-operator|++
-name|fname
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|fnum
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* Generate suffix of sufflen letters */
 name|tfnum
 operator|=
