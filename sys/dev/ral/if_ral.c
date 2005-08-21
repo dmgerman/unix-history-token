@@ -632,6 +632,10 @@ specifier|static
 name|int
 name|ral_ack_rate
 parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -5912,6 +5916,62 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+comment|/* update basic rate set */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_curmode
+operator|==
+name|IEEE80211_MODE_11B
+condition|)
+block|{
+comment|/* 11b basic rates: 1, 2Mbps */
+name|RAL_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|RAL_ARSP_PLCP_1
+argument_list|,
+literal|0x3
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_5GHZ
+argument_list|(
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+condition|)
+block|{
+comment|/* 11a basic rates: 6, 12, 24Mbps */
+name|RAL_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|RAL_ARSP_PLCP_1
+argument_list|,
+literal|0x150
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 11g basic rates: 1, 2, 5.5, 11, 6, 12, 24Mbps */
+name|RAL_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|RAL_ARSP_PLCP_1
+argument_list|,
+literal|0x15f
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ic
@@ -8727,6 +8787,21 @@ value|10
 end_define
 
 begin_comment
+comment|/* us */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAL_TXRX_TURNAROUND
+value|10
+end_define
+
+begin_comment
+comment|/* us */
+end_comment
+
+begin_comment
 comment|/*  * Return the expected ack rate for a frame transmitted at rate `rate'.  * XXX: this should depend on the destination node basic rate set.  */
 end_comment
 
@@ -8735,6 +8810,11 @@ specifier|static
 name|int
 name|ral_ack_rate
 parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
 name|int
 name|rate
 parameter_list|)
@@ -8761,7 +8841,17 @@ case|case
 literal|22
 case|:
 return|return
+operator|(
+name|ic
+operator|->
+name|ic_curmode
+operator|==
+name|IEEE80211_MODE_11B
+operator|)
+condition|?
 literal|4
+else|:
+name|rate
 return|;
 comment|/* OFDM rates */
 case|case
@@ -9175,19 +9265,19 @@ name|wme
 operator|=
 name|htole16
 argument_list|(
-name|RAL_LOGCWMAX
-argument_list|(
-literal|8
-argument_list|)
-operator||
-name|RAL_LOGCWMIN
+name|RAL_AIFSN
 argument_list|(
 literal|3
 argument_list|)
 operator||
-name|RAL_AIFSN
+name|RAL_LOGCWMIN
 argument_list|(
-literal|2
+literal|4
+argument_list|)
+operator||
+name|RAL_LOGCWMAX
+argument_list|(
+literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10612,6 +10702,8 @@ name|ackrate
 operator|=
 name|ral_ack_rate
 argument_list|(
+name|ic
+argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
@@ -11231,6 +11323,8 @@ name|RAL_ACK_SIZE
 argument_list|,
 name|ral_ack_rate
 argument_list|(
+name|ic
+argument_list|,
 name|rate
 argument_list|)
 argument_list|,
@@ -13441,11 +13535,11 @@ name|uint8_t
 name|slottime
 decl_stmt|;
 name|uint16_t
-name|sifs
+name|tx_sifs
 decl_stmt|,
-name|pifs
+name|tx_pifs
 decl_stmt|,
-name|difs
+name|tx_difs
 decl_stmt|,
 name|eifs
 decl_stmt|;
@@ -13467,19 +13561,21 @@ else|:
 literal|20
 expr_stmt|;
 comment|/* update the MAC slot boundaries */
-name|sifs
+name|tx_sifs
 operator|=
 name|RAL_SIFS
+operator|-
+name|RAL_TXRX_TURNAROUND
 expr_stmt|;
-name|pifs
+name|tx_pifs
 operator|=
-name|sifs
+name|tx_sifs
 operator|+
 name|slottime
 expr_stmt|;
-name|difs
+name|tx_difs
 operator|=
-name|sifs
+name|tx_sifs
 operator|+
 literal|2
 operator|*
@@ -13487,28 +13583,17 @@ name|slottime
 expr_stmt|;
 name|eifs
 operator|=
-name|sifs
-operator|+
-name|ral_txtime
-argument_list|(
-name|RAL_ACK_SIZE
-argument_list|,
 operator|(
 name|ic
 operator|->
 name|ic_curmode
 operator|==
-name|IEEE80211_MODE_11A
+name|IEEE80211_MODE_11B
 operator|)
 condition|?
-literal|12
+literal|364
 else|:
-literal|2
-argument_list|,
-literal|0
-argument_list|)
-operator|+
-name|difs
+literal|60
 expr_stmt|;
 name|tmp
 operator|=
@@ -13543,11 +13628,11 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|pifs
+name|tx_pifs
 operator|<<
 literal|16
 operator||
-name|sifs
+name|tx_sifs
 expr_stmt|;
 name|RAL_WRITE
 argument_list|(
@@ -13564,7 +13649,7 @@ name|eifs
 operator|<<
 literal|16
 operator||
-name|difs
+name|tx_difs
 expr_stmt|;
 name|RAL_WRITE
 argument_list|(
@@ -14854,7 +14939,7 @@ operator|->
 name|ic_myaddr
 argument_list|)
 expr_stmt|;
-comment|/* set supported basic rates (1, 2, 6, 12, 24) */
+comment|/* set basic rate set (will be updated later) */
 name|RAL_WRITE
 argument_list|(
 name|sc
