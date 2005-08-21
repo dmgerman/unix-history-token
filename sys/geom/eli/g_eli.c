@@ -3714,7 +3714,6 @@ goto|goto
 name|failed
 goto|;
 block|}
-comment|/* 		 * If we cannot get hardware acceleration, create dedicated 		 * thread(s) and do the crypto work in there. 		 */
 name|error
 operator|=
 name|kthread_create
