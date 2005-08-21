@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uio.h>
 end_include
 
@@ -313,7 +319,7 @@ specifier|static
 name|u_int
 name|g_eli_threads
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1748,6 +1754,27 @@ argument_list|(
 name|curthread
 argument_list|,
 name|PRIBIO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_crypto
+operator|==
+name|G_ELI_CRYPTO_SW
+operator|&&
+name|g_eli_threads
+operator|==
+literal|0
+condition|)
+name|sched_bind
+argument_list|(
+name|curthread
+argument_list|,
+name|wr
+operator|->
+name|w_number
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -3533,26 +3560,37 @@ name|threads
 operator|=
 name|g_eli_threads
 expr_stmt|;
-comment|/* There is really no need for too many worker threads. */
+if|if
+condition|(
+name|threads
+operator|==
+literal|0
+condition|)
+name|threads
+operator|=
+name|mp_ncpus
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|threads
 operator|>
-name|MAXCPU
+name|mp_ncpus
 condition|)
 block|{
+comment|/* There is really no need for too many worker threads. */
+name|threads
+operator|=
+name|mp_ncpus
+expr_stmt|;
 name|G_ELI_DEBUG
 argument_list|(
 literal|0
 argument_list|,
 literal|"Reducing number of threads to %u."
 argument_list|,
-name|MAXCPU
-argument_list|)
-expr_stmt|;
 name|threads
-operator|=
-name|MAXCPU
+argument_list|)
 expr_stmt|;
 block|}
 for|for
