@@ -853,7 +853,7 @@ name|max
 argument_list|(
 literal|8
 argument_list|,
-name|icmp_quote
+name|icmp_quotelen
 argument_list|)
 argument_list|,
 name|oip
