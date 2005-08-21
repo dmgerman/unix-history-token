@@ -13302,17 +13302,28 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|c
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return
+argument_list|,
 operator|(
-literal|0
+literal|"ng_uncallout: NULL callout"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|node
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ng_uncallout: NULL node"
+operator|)
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 name|callout_stop
