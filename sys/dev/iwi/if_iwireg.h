@@ -1417,13 +1417,13 @@ struct|struct
 name|iwi_wme_params
 block|{
 name|uint16_t
-name|logcwmin
+name|cwmin
 index|[
 name|WME_NUM_AC
 index|]
 decl_stmt|;
 name|uint16_t
-name|logcwmax
+name|cwmax
 index|[
 name|WME_NUM_AC
 index|]
@@ -1441,7 +1441,7 @@ name|WME_NUM_AC
 index|]
 decl_stmt|;
 name|uint16_t
-name|txopLimit
+name|burst
 index|[
 name|WME_NUM_AC
 index|]
