@@ -1766,6 +1766,24 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+comment|/* Check the minimum TTL for socket. */
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_ip_minttl
+operator|&&
+name|inp
+operator|->
+name|inp_ip_minttl
+operator|>
+name|ip
+operator|->
+name|ip_ttl
+condition|)
+goto|goto
+name|badheadlocked
+goto|;
 name|udp_append
 argument_list|(
 name|inp

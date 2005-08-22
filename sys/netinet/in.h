@@ -2485,6 +2485,17 @@ begin_comment
 comment|/* bool; receive IP TTL w/dgram */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_MINTTL
+value|66
+end_define
+
+begin_comment
+comment|/* minimum TTL for packet or drop */
+end_comment
+
 begin_comment
 comment|/*  * Defaults and limits for options  */
 end_comment
