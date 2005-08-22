@@ -22795,11 +22795,7 @@ comment|/* check SA values to be mature. */
 if|if
 condition|(
 operator|(
-name|mhp
-operator|->
-name|msg
-operator|->
-name|sadb_msg_errno
+name|error
 operator|=
 name|key_mature
 argument_list|(
@@ -22822,7 +22818,7 @@ name|so
 argument_list|,
 name|m
 argument_list|,
-literal|0
+name|error
 argument_list|)
 return|;
 block|}
