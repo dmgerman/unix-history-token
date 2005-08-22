@@ -6261,7 +6261,7 @@ name|dep
 argument_list|(
 literal|"S"
 argument_list|,
-literal|"powersleep"
+literal|"powersavesleep"
 argument_list|)
 expr_stmt|;
 name|wi_setword
