@@ -98,9 +98,15 @@ comment|/* Read timeout in 'ticks' */
 name|struct
 name|bpf_insn
 modifier|*
-name|bd_filter
+name|bd_rfilter
 decl_stmt|;
-comment|/* filter code */
+comment|/* read filter code */
+name|struct
+name|bpf_insn
+modifier|*
+name|bd_wfilter
+decl_stmt|;
+comment|/* write filter code */
 name|u_long
 name|bd_rcount
 decl_stmt|;
@@ -206,6 +212,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|int
+name|bd_locked
+decl_stmt|;
+comment|/* true if descriptor is locked */
 block|}
 struct|;
 end_struct
@@ -405,6 +415,9 @@ name|MAXCOMLEN
 operator|+
 literal|1
 index|]
+decl_stmt|;
+name|int
+name|bd_locked
 decl_stmt|;
 block|}
 struct|;
