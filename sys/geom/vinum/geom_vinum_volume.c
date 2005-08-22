@@ -1197,6 +1197,12 @@ operator|||
 operator|(
 name|p
 operator|->
+name|org
+operator|!=
+name|GV_PLEX_RAID5
+operator|&&
+name|p
+operator|->
 name|state
 operator|<=
 name|GV_PLEX_DEGRADED
