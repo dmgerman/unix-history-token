@@ -1026,11 +1026,9 @@ expr|struct
 name|ip
 argument_list|)
 condition|)
-name|panic
-argument_list|(
-literal|"icmp_error: bad length"
-argument_list|)
-expr_stmt|;
+goto|goto
+name|freeit
+goto|;
 if|if
 condition|(
 name|icmplen
@@ -1045,6 +1043,7 @@ argument_list|)
 operator|>
 name|MHLEN
 condition|)
+block|{
 name|MCLGET
 argument_list|(
 name|m
@@ -1066,6 +1065,7 @@ condition|)
 goto|goto
 name|freeit
 goto|;
+block|}
 name|m
 operator|->
 name|m_len
