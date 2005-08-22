@@ -15038,9 +15038,10 @@ condition|;
 name|n
 operator|++
 control|)
+block|{
 name|printf
 argument_list|(
-literal|" %s(%d)"
+literal|" %s/%d/0x%b"
 argument_list|,
 name|pmc_name_of_pmcclass
 index|[
@@ -15060,8 +15061,23 @@ name|pmd_nclasspmcs
 index|[
 name|n
 index|]
+argument_list|,
+name|md
+operator|->
+name|pmd_classes
+index|[
+name|n
+index|]
+operator|.
+name|pm_caps
+argument_list|,
+literal|"\20"
+literal|"\1INT\2USR\3SYS\4EDG\5THR"
+literal|"\6REA\7WRI\10INV\11QUA\12PRC"
+literal|"\13TAG\14CSC"
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
