@@ -30,6 +30,25 @@ end_comment
 
 begin_function_decl
 name|void
+name|c_link
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|off_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|off_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|c_regular
 parameter_list|(
 name|int
