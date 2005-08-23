@@ -540,7 +540,7 @@ literal|7
 argument_list|,
 literal|"netif"
 argument_list|,
-literal|6
+literal|7
 argument_list|,
 literal|"flags"
 argument_list|,
@@ -643,7 +643,7 @@ name|bd
 operator|->
 name|bd_ifname
 argument_list|,
-literal|6
+literal|7
 argument_list|,
 name|flagbuf
 argument_list|,
@@ -767,6 +767,18 @@ operator|->
 name|bd_async
 condition|?
 literal|'a'
+else|:
+literal|'-'
+expr_stmt|;
+operator|*
+name|flagbuf
+operator|++
+operator|=
+name|bd
+operator|->
+name|bd_locked
+condition|?
+literal|'l'
 else|:
 literal|'-'
 expr_stmt|;
