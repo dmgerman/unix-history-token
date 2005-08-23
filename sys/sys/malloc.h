@@ -331,7 +331,7 @@ parameter_list|,
 name|longdesc
 parameter_list|)
 define|\
-value|struct malloc_type type[1] = {					\ 		{ NULL, 0, 0, 0, 0, 0, M_MAGIC, shortdesc, NULL, NULL,	\ 		    NULL, 0, NULL, NULL, 0, 0 }				\ 	};								\ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init,	\ 	    type);							\ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY,		\ 	    malloc_uninit, type);
+value|struct malloc_type type[1] = {					\ 		{ NULL, 0, 0, 0, 0, 0, M_MAGIC, shortdesc, NULL, NULL,	\ 		    NULL, 0, NULL, NULL, 0, 0 }				\ 	};								\ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init,	\ 	    type);							\ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY,		\ 	    malloc_uninit, type)
 end_define
 
 begin_define
