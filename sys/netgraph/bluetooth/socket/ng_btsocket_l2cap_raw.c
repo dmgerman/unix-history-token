@@ -2062,7 +2062,7 @@ argument_list|(
 operator|&
 name|ng_btsocket_l2cap_raw_queue_mtx
 argument_list|,
-literal|"btsocks_l2cap_queue_mtx"
+literal|"btsocks_l2cap_raw_queue_mtx"
 argument_list|,
 name|NULL
 argument_list|,
@@ -2093,7 +2093,7 @@ argument_list|(
 operator|&
 name|ng_btsocket_l2cap_raw_sockets_mtx
 argument_list|,
-literal|"btsocks_l2cap_sockets_mtx"
+literal|"btsocks_l2cap_raw_sockets_mtx"
 argument_list|,
 name|NULL
 argument_list|,
@@ -2110,7 +2110,7 @@ argument_list|(
 operator|&
 name|ng_btsocket_l2cap_raw_token_mtx
 argument_list|,
-literal|"btsocks_l2cap_token_mtx"
+literal|"btsocks_l2cap_raw_token_mtx"
 argument_list|,
 name|NULL
 argument_list|,
@@ -2129,7 +2129,7 @@ argument_list|(
 operator|&
 name|ng_btsocket_l2cap_raw_rt_mtx
 argument_list|,
-literal|"btsocks_l2cap_rt_mtx"
+literal|"btsocks_l2cap_raw_rt_mtx"
 argument_list|,
 name|NULL
 argument_list|,
