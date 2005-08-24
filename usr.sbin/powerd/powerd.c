@@ -1243,6 +1243,8 @@ name|struct
 name|pidfh
 modifier|*
 name|pfh
+init|=
+name|NULL
 decl_stmt|;
 specifier|const
 name|char
