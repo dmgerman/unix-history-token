@@ -386,8 +386,11 @@ block|{
 if|if
 condition|(
 name|lpos
-operator|<=
-literal|81
+operator|<
+sizeof|sizeof
+argument_list|(
+name|line1
+argument_list|)
 condition|)
 block|{
 name|cur_line
