@@ -3501,6 +3501,9 @@ argument_list|)
 operator|)
 operator|)
 operator|&&
+operator|*
+name|p
+operator|&&
 operator|(
 name|purl
 operator|=
