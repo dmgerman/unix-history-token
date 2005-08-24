@@ -8585,6 +8585,20 @@ block|,
 block|{
 literal|"Australia"
 block|,
+literal|"au.pool.ntp.org"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=au.pool.ntp.org"
+block|}
+block|,
+block|{
+literal|"Australia #2"
+block|,
 literal|"augean.eleceng.adelaide.edu.au"
 block|,
 name|dmenuVarsCheck
@@ -8597,7 +8611,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=augean.eleceng.adelaide.edu.au"
 block|}
 block|,
 block|{
-literal|"Australia #2"
+literal|"Australia #3"
 block|,
 literal|"ntp.adelaide.edu.au"
 block|,
@@ -8611,7 +8625,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.adelaide.edu.au"
 block|}
 block|,
 block|{
-literal|"Australia #3"
+literal|"Australia #4"
 block|,
 literal|"ntp.saard.net"
 block|,
@@ -8625,7 +8639,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.saard.net"
 block|}
 block|,
 block|{
-literal|"Australia #4"
+literal|"Australia #5"
 block|,
 literal|"time.deakin.edu.au"
 block|,
@@ -8636,20 +8650,6 @@ block|,
 name|NULL
 block|,
 literal|"ntpdate_enable=YES,ntpdate_flags=time.deakin.edu.au"
-block|}
-block|,
-block|{
-literal|"Australia #5"
-block|,
-literal|"time.esec.com.au"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.esec.com.au"
 block|}
 block|,
 block|{
@@ -8739,6 +8739,20 @@ block|,
 block|{
 literal|"Canada"
 block|,
+literal|"ca.pool.ntp.org"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=ca.pool.ntp.org"
+block|}
+block|,
+block|{
+literal|"Canada #2"
+block|,
 literal|"ntp.cpsc.ucalgary.ca"
 block|,
 name|dmenuVarsCheck
@@ -8751,7 +8765,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cpsc.ucalgary.ca"
 block|}
 block|,
 block|{
-literal|"Canada #2"
+literal|"Canada #3"
 block|,
 literal|"ntp1.cmc.ec.gc.ca"
 block|,
@@ -8765,7 +8779,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.cmc.ec.gc.ca"
 block|}
 block|,
 block|{
-literal|"Canada #3"
+literal|"Canada #4"
 block|,
 literal|"ntp2.cmc.ec.gc.ca"
 block|,
@@ -8779,7 +8793,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.cmc.ec.gc.ca"
 block|}
 block|,
 block|{
-literal|"Canada #4"
+literal|"Canada #5"
 block|,
 literal|"tick.utoronto.ca"
 block|,
@@ -8793,7 +8807,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=tick.utoronto.ca"
 block|}
 block|,
 block|{
-literal|"Canada #5"
+literal|"Canada #6"
 block|,
 literal|"time.chu.nrc.ca"
 block|,
@@ -8807,7 +8821,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=time.chu.nrc.ca"
 block|}
 block|,
 block|{
-literal|"Canada #6"
+literal|"Canada #7"
 block|,
 literal|"time.nrc.ca"
 block|,
@@ -8821,7 +8835,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=time.nrc.ca"
 block|}
 block|,
 block|{
-literal|"Canada #7"
+literal|"Canada #8"
 block|,
 literal|"timelord.uregina.ca"
 block|,
@@ -8835,7 +8849,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=timelord.uregina.ca"
 block|}
 block|,
 block|{
-literal|"Canada #8"
+literal|"Canada #9"
 block|,
 literal|"tock.utoronto.ca"
 block|,
@@ -9061,7 +9075,7 @@ block|,
 block|{
 literal|"Indonesia"
 block|,
-literal|"ntp.incaf.net"
+literal|"ntp.kim.lipi.go.id"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9069,7 +9083,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.incaf.net"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp.kim.lipi.go.id"
 block|}
 block|,
 block|{
@@ -9089,7 +9103,7 @@ block|,
 block|{
 literal|"Italy"
 block|,
-literal|"ntps.net4u.it"
+literal|"it.pool.ntp.org"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9097,7 +9111,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags="
+literal|"ntpdate_enable=YES,ntpdate_flags=it.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -9145,7 +9159,7 @@ block|,
 block|{
 literal|"Mexico"
 block|,
-literal|"ntp2a.audiotel.com.mx"
+literal|"mx.pool.ntp.org"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9153,49 +9167,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2a.audiotel.com.mx"
-block|}
-block|,
-block|{
-literal|"Mexico #2"
-block|,
-literal|"ntp2b.audiotel.com.mx"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2b.audiotel.com.mx"
-block|}
-block|,
-block|{
-literal|"Mexico #3"
-block|,
-literal|"ntp2c.audiotel.com.mx"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2c.audiotel.com.mx"
-block|}
-block|,
-block|{
-literal|"Nigeria"
-block|,
-literal|"ntp.supernet300.com"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.supernet300.com"
+literal|"ntpdate_enable=YES,ntpdate_flags=mx.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -9339,20 +9311,6 @@ literal|"ntpdate_enable=YES,ntpdate_flags=info.cyf-kr.edu.pl"
 block|}
 block|,
 block|{
-literal|"Portugal"
-block|,
-literal|"bug.fe.up.pt"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=bug.fe.up.pt"
-block|}
-block|,
-block|{
 literal|"Romania"
 block|,
 literal|"ticks.roedu.net"
@@ -9369,6 +9327,20 @@ block|,
 block|{
 literal|"Russia"
 block|,
+literal|"ru.pool.ntp.org"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=ru.pool.ntp.org"
+block|}
+block|,
+block|{
+literal|"Russia #2"
+block|,
 literal|"ntp.psn.ru"
 block|,
 name|dmenuVarsCheck
@@ -9381,9 +9353,9 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.psn.ru"
 block|}
 block|,
 block|{
-literal|"Russia #2"
+literal|"Sweden"
 block|,
-literal|"sign.chg.ru"
+literal|"se.pool.ntp.org"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9391,11 +9363,11 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=sign.chg.ru"
+literal|"ntpdate_enable=YES,ntpdate_flags=se.pool.ntp.org"
 block|}
 block|,
 block|{
-literal|"Sweden"
+literal|"Sweden #2"
 block|,
 literal|"ntp.lth.se"
 block|,
@@ -9409,9 +9381,9 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.lth.se"
 block|}
 block|,
 block|{
-literal|"Singapore"
+literal|"Sweden #3"
 block|,
-literal|"ntp.shim.org"
+literal|"ntp1.sp.se"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9419,13 +9391,55 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.shim.org"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.sp.se"
+block|}
+block|,
+block|{
+literal|"Sweden #4"
+block|,
+literal|"ntp2.sp.se"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.sp.se"
+block|}
+block|,
+block|{
+literal|"Sweden #5"
+block|,
+literal|"ntp.kth.se"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp.kth.se"
+block|}
+block|,
+block|{
+literal|"Singapore"
+block|,
+literal|"sg.pool.ntp.org"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=sg.pool.ntp.org"
 block|}
 block|,
 block|{
 literal|"Slovenia"
 block|,
-literal|"calvus.rzs-hm.si"
+literal|"si.pool.ntp.org"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9433,7 +9447,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=calvus.rzs-hm.si"
+literal|"ntpdate_enable=YES,ntpdate_flags=si.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -9509,6 +9523,20 @@ block|,
 block|{
 literal|"United Kingdom"
 block|,
+literal|"uk.pool.ntp.org"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=uk.pool.ntp.org"
+block|}
+block|,
+block|{
+literal|"United Kingdom #2"
+block|,
 literal|"ntp.exnet.com"
 block|,
 name|dmenuVarsCheck
@@ -9521,7 +9549,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.exnet.com"
 block|}
 block|,
 block|{
-literal|"United Kingdom #2"
+literal|"United Kingdom #3"
 block|,
 literal|"ntp0.uk.uu.net"
 block|,
@@ -9535,7 +9563,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.uk.uu.net"
 block|}
 block|,
 block|{
-literal|"United Kingdom #3"
+literal|"United Kingdom #4"
 block|,
 literal|"ntp1.uk.uu.net"
 block|,
@@ -9549,7 +9577,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.uk.uu.net"
 block|}
 block|,
 block|{
-literal|"United Kingdom #4"
+literal|"United Kingdom #5"
 block|,
 literal|"ntp2.uk.uu.net"
 block|,
@@ -9563,7 +9591,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.uk.uu.net"
 block|}
 block|,
 block|{
-literal|"United Kingdom #5"
+literal|"United Kingdom #6"
 block|,
 literal|"ntp2a.mcc.ac.uk"
 block|,
@@ -9577,7 +9605,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp2a.mcc.ac.uk"
 block|}
 block|,
 block|{
-literal|"United Kingdom #6"
+literal|"United Kingdom #7"
 block|,
 literal|"ntp2b.mcc.ac.uk"
 block|,
@@ -9591,7 +9619,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp2b.mcc.ac.uk"
 block|}
 block|,
 block|{
-literal|"United Kingdom #7"
+literal|"United Kingdom #8"
 block|,
 literal|"ntp2c.mcc.ac.uk"
 block|,
@@ -9605,7 +9633,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp2c.mcc.ac.uk"
 block|}
 block|,
 block|{
-literal|"United Kingdom #8"
+literal|"United Kingdom #9"
 block|,
 literal|"ntp2d.mcc.ac.uk"
 block|,
@@ -9619,9 +9647,9 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp2d.mcc.ac.uk"
 block|}
 block|,
 block|{
-literal|"United Kingdom #9"
+literal|"U.S."
 block|,
-literal|"tick.tanac.net"
+literal|"us.pool.ntp.org"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9629,13 +9657,13 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.tanac.net"
+literal|"ntpdate_enable=YES,ntpdate_flags=us.pool.ntp.org"
 block|}
 block|,
 block|{
 literal|"U.S. AR"
 block|,
-literal|"sushi.compsci.lyon.edu"
+literal|"sushi.lyon.edu"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -10097,34 +10125,6 @@ block|,
 block|{
 literal|"U.S. NY"
 block|,
-literal|"clock.linuxshell.net"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock.linuxshell.net"
-block|}
-block|,
-block|{
-literal|"U.S. NY #2"
-block|,
-literal|"ntp.ctr.columbia.edu"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.ctr.columbia.edu"
-block|}
-block|,
-block|{
-literal|"U.S. NY #3"
-block|,
 literal|"ntp0.cornell.edu"
 block|,
 name|dmenuVarsCheck
@@ -10137,35 +10137,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.cornell.edu"
 block|}
 block|,
 block|{
-literal|"U.S. NY #4"
-block|,
-literal|"ntp1.mpis.net"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.mpis.net"
-block|}
-block|,
-block|{
-literal|"U.S. NY #5"
-block|,
-literal|"ntp2.mpis.net"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.mpis.net"
-block|}
-block|,
-block|{
-literal|"U.S. NY #6"
+literal|"U.S. NY #2"
 block|,
 literal|"sundial.columbia.edu"
 block|,
@@ -10179,7 +10151,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=sundial.columbia.edu"
 block|}
 block|,
 block|{
-literal|"U.S. NY #7"
+literal|"U.S. NY #3"
 block|,
 literal|"timex.cs.columbia.edu"
 block|,
@@ -10190,20 +10162,6 @@ block|,
 name|NULL
 block|,
 literal|"ntpdate_enable=YES,ntpdate_flags=timex.cs.columbia.edu"
-block|}
-block|,
-block|{
-literal|"U.S. OK"
-block|,
-literal|"constellation.ecn.uoknor.edu"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=constellation.ecn.uoknor.edu"
 block|}
 block|,
 block|{
@@ -10293,20 +10251,6 @@ block|,
 block|{
 literal|"U.S. TX"
 block|,
-literal|"ntp.cox.smu.edu"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cox.smu.edu"
-block|}
-block|,
-block|{
-literal|"U.S. TX #2"
-block|,
 literal|"ntp.fnbhs.com"
 block|,
 name|dmenuVarsCheck
@@ -10319,7 +10263,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.fnbhs.com"
 block|}
 block|,
 block|{
-literal|"U.S. TX #3"
+literal|"U.S. TX #2"
 block|,
 literal|"ntp.tmc.edu"
 block|,
@@ -10333,7 +10277,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.tmc.edu"
 block|}
 block|,
 block|{
-literal|"U.S. TX #4"
+literal|"U.S. TX #3"
 block|,
 literal|"ntp5.tamu.edu"
 block|,
@@ -10347,7 +10291,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp5.tamu.edu"
 block|}
 block|,
 block|{
-literal|"U.S. TX #5"
+literal|"U.S. TX #4"
 block|,
 literal|"tick.greyware.com"
 block|,
@@ -10361,7 +10305,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=tick.greyware.com"
 block|}
 block|,
 block|{
-literal|"U.S. TX #6"
+literal|"U.S. TX #5"
 block|,
 literal|"tock.greyware.com"
 block|,
@@ -10461,20 +10405,6 @@ block|,
 block|{
 literal|"U.S. WA"
 block|,
-literal|"clock.tricity.wsu.edu"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock.tricity.wsu.edu"
-block|}
-block|,
-block|{
-literal|"U.S. WA #2"
-block|,
 literal|"ntp.tcp-udp.net"
 block|,
 name|dmenuVarsCheck
@@ -10512,20 +10442,6 @@ block|,
 name|NULL
 block|,
 literal|"ntpdate_enable=YES,ntpdate_flags=ntp3.cs.wisc.edu"
-block|}
-block|,
-block|{
-literal|"Venezuela"
-block|,
-literal|"ntp.linux.org.ve"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.linux.org.ve"
 block|}
 block|,
 block|{
