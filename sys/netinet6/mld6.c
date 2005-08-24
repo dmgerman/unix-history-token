@@ -840,6 +840,11 @@ name|if_index
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -983,6 +988,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|IN6_IS_ADDR_MC_LINKLOCAL
