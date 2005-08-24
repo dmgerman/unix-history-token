@@ -1517,6 +1517,11 @@ operator|&=
 operator|~
 name|AXE_RXCMD_ALLMULTI
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -1591,6 +1596,11 @@ literal|8
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|axe_cmd
 argument_list|(
 name|sc

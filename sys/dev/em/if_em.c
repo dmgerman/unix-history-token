@@ -7203,6 +7203,11 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -7277,6 +7282,11 @@ name|mcnt
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mcnt

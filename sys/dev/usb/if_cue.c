@@ -1583,6 +1583,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* now program new ones */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -1655,6 +1660,11 @@ literal|0x7
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Also include the broadcast address in the filter 	 * so we can receive broadcast frames.  	 */
 if|if
 condition|(

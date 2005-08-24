@@ -5085,6 +5085,11 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -5181,6 +5186,11 @@ else|else
 comment|/* Nowhere else to put them on CE2 */
 break|break;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|DEVPRINTF
 argument_list|(
 literal|2
