@@ -853,11 +853,19 @@ name|ENOSPC
 operator|)
 return|;
 comment|/* 	 * HME common initialization. 	 * 	 * hme_softc fields that must be initialized by the front-end: 	 * 	 * the DMA bus tag: 	 *	sc_dmatag 	 * 	 * the bus handles, tags and offsets (splitted for SBus compatability): 	 *	sc_seb{t,h,o}	(Shared Ethernet Block registers) 	 *	sc_erx{t,h,o}	(Receiver Unit registers) 	 *	sc_etx{t,h,o}	(Transmitter Unit registers) 	 *	sc_mac{t,h,o}	(MAC registers) 	 *	sc_mif{t,h,o}	(Management Interface registers) 	 * 	 * the maximum bus burst size: 	 *	sc_burst 	 * 	 */
-name|HME_LOCK_ASSERT
+name|callout_init_mtx
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|sc_tick_ch
 argument_list|,
-name|MA_NOTOWNED
+operator|&
+name|sc
+operator|->
+name|sc_lock
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Make sure the chip is stopped. */
@@ -874,21 +882,6 @@ expr_stmt|;
 name|HME_UNLOCK
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|callout_init_mtx
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_tick_ch
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_lock
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate DMA capable memory 	 * Buffer descriptors must be aligned on a 2048 byte boundary; 	 * take this into account when calculating the size. Note that 	 * the maximum number of descriptors (256) occupies 2048 bytes, 	 * so we allocate that much regardless of HME_N*DESC. 	 */
@@ -1858,13 +1851,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|HME_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|ifp
