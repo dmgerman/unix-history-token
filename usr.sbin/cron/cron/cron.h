@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -998,14 +1004,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|,
-name|acquire_daemonlock
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|,
 name|skip_comments
 name|__P
 argument_list|(
@@ -1559,6 +1557,15 @@ begin_decl_stmt
 specifier|extern
 name|time_t
 name|TargetTime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pidfh
+modifier|*
+name|pfh
 decl_stmt|;
 end_decl_stmt
 
