@@ -102,14 +102,14 @@ name|strlen
 argument_list|(
 name|from
 argument_list|)
-operator|>
+operator|>=
 name|ICONV_CSNMAXLEN
 operator|||
 name|strlen
 argument_list|(
 name|to
 argument_list|)
-operator|>
+operator|>=
 name|ICONV_CSNMAXLEN
 condition|)
 return|return
