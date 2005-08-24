@@ -7385,21 +7385,6 @@ operator|->
 name|sack_enable
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|tp
-operator|->
-name|sackhint
-operator|.
-name|sack_bytes_rexmit
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"sackhint rexmit == 0"
-operator|)
-argument_list|)
-expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_sack_recovery_episode
