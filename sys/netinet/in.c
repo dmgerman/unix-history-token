@@ -246,6 +246,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * The IPv4 multicast list (in_multihead and associated structures) are  * protected by the global in_multi_mtx.  See in_var.h for more details.  For  * now, in_multi_mtx is marked as recursible due to IGMP's calling back into  * ip_output() to send IGMP packets while holding the lock; this probably is  * not quite desirable.  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|in_multihead
@@ -256,6 +260,30 @@ end_decl_stmt
 begin_comment
 comment|/* XXX BSS initialization */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|in_multi_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|in_multi_mtx
+argument_list|,
+operator|&
+name|in_multi_mtx
+argument_list|,
+literal|"in_multi_mtx"
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -4492,12 +4520,9 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
+name|IN_MULTI_LOCK
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * Call generic routine to add membership or increment 	 * refcount.  It wants addresses in the form of a sockaddr, 	 * so we build one here (being careful to zero the unused bytes). 	 */
 name|bzero
 argument_list|(
@@ -4551,10 +4576,8 @@ condition|(
 name|error
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|IN_MULTI_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 literal|0
@@ -4570,10 +4593,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|IN_MULTI_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|ifma
@@ -4581,7 +4602,6 @@ operator|->
 name|ifma_protospec
 return|;
 block|}
-comment|/* XXX - if_addmulti uses M_WAITOK.  Can this really be called 	   at interrupt time?  If so, need to fix if_addmulti. XXX */
 name|inm
 operator|=
 operator|(
@@ -4611,10 +4631,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|IN_MULTI_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -4663,10 +4681,8 @@ argument_list|(
 name|inm
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|IN_MULTI_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -4697,21 +4713,20 @@ name|struct
 name|ifmultiaddr
 modifier|*
 name|ifma
-init|=
-name|inm
-operator|->
-name|inm_ifma
 decl_stmt|;
 name|struct
 name|in_multi
 name|my_inm
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
+name|IN_MULTI_LOCK
 argument_list|()
-decl_stmt|;
+expr_stmt|;
+name|ifma
+operator|=
+name|inm
+operator|->
+name|inm_ifma
+expr_stmt|;
 name|my_inm
 operator|.
 name|inm_ifp
@@ -4781,10 +4796,8 @@ operator|&
 name|my_inm
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|IN_MULTI_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function

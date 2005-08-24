@@ -1309,6 +1309,34 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * Multicast - protocol locks before interface locks. 	 */
+block|{
+literal|"in_multi_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"igmp_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"if_addr_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * UNIX Domain Sockets 	 */
 block|{
 literal|"unp"

@@ -1312,6 +1312,9 @@ operator|->
 name|sin_addr
 expr_stmt|;
 block|}
+name|IN_MULTI_LOCK
+argument_list|()
+expr_stmt|;
 name|IN_LOOKUP_MULTI
 argument_list|(
 name|ip
@@ -1340,6 +1343,9 @@ name|imo_multicast_loop
 operator|)
 condition|)
 block|{
+name|IN_MULTI_UNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 			 * If we belong to the destination multicast group 			 * on the outgoing interface, and the caller did not 			 * forbid loopback, loop back a copy. 			 */
 name|ip_mloopback
 argument_list|(
@@ -1355,6 +1361,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|IN_MULTI_UNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 			 * If we are acting as a multicast router, perform 			 * multicast forwarding as if the packet had just 			 * arrived on the interface to which we are about 			 * to send.  The multicast forwarding function 			 * recursively calls this function, using the 			 * IP_FORWARDING flag to prevent infinite recursion. 			 * 			 * Multicasts that are looped back by ip_mloopback(), 			 * above, will be forwarded by the ip_input() routine, 			 * if necessary. 			 */
 if|if
 condition|(
