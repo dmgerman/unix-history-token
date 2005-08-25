@@ -271,6 +271,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Interface flags are of two types: network stack owned flags, and driver  * owned flags.  Historically, these values were stored in the same ifnet  * flags field, but with the advent of fine-grained locking, they have been  * broken out such that the network stack is responsible for synchronizing  * the stack-owned fields, and the device driver the device-owned fields.  * Both halves can perform lockless reads of the other half's field, subject  * to accepting the involved races.  *  * Both sets of flags come from the same number space, and should not be  * permitted to conflict, as they are exposed to user space via a single  * field.  *  * For historical reasons, the old flag names for driver flags are exposed to  * user space.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -340,7 +344,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 value|0x40
 end_define
 
@@ -384,7 +388,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 value|0x400
 end_define
 
@@ -514,6 +518,35 @@ comment|/* hold Giant over if_start calls */
 end_comment
 
 begin_comment
+comment|/*  * Old names for driver flags so that user space tools can continue to use  * the old names.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IFF_RUNNING
+value|IFF_DRV_RUNNING
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFF_OACTIVE
+value|IFF_DRV_OACTIVE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* flags set internally only: */
 end_comment
 
@@ -522,7 +555,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_POLLING)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_POLLING)
 end_define
 
 begin_comment

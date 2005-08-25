@@ -4593,6 +4593,17 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|flag
+operator|==
+name|IFF_UP
+argument_list|,
+operator|(
+literal|"if_unroute: flag != IFF_UP"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
@@ -4701,6 +4712,17 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|flag
+operator|==
+name|IFF_UP
+argument_list|,
+operator|(
+literal|"if_route: flag != IFF_UP"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
@@ -5441,6 +5463,8 @@ literal|0
 decl_stmt|;
 name|int
 name|new_flags
+decl_stmt|,
+name|temp_flags
 decl_stmt|;
 name|size_t
 name|namelen
@@ -5492,13 +5516,21 @@ break|break;
 case|case
 name|SIOCGIFFLAGS
 case|:
-name|ifr
-operator|->
-name|ifr_flags
+name|temp_flags
 operator|=
 name|ifp
 operator|->
 name|if_flags
+operator||
+name|ifp
+operator|->
+name|if_drv_flags
+expr_stmt|;
+name|ifr
+operator|->
+name|ifr_flags
+operator|=
+name|temp_flags
 operator|&
 literal|0xffff
 expr_stmt|;
@@ -5506,9 +5538,7 @@ name|ifr
 operator|->
 name|ifr_flagshigh
 operator|=
-name|ifp
-operator|->
-name|if_flags
+name|temp_flags
 operator|>>
 literal|16
 expr_stmt|;
@@ -5610,6 +5640,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 		 * Currently, no driver owned flags pass the IFF_CANTCHANGE 		 * check, so we don't need special handling here yet. 		 */
 name|new_flags
 operator|=
 operator|(
@@ -7241,7 +7272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The code common to hadling reference counted flags,  * e.g., in ifpromisc() and if_allmulti().  * The "pflag" argument can specify a permanent mode flag,  * such as IFF_PPROMISC for promiscuous mode; should be 0 if none.  */
+comment|/*  * The code common to handling reference counted flags,  * e.g., in ifpromisc() and if_allmulti().  * The "pflag" argument can specify a permanent mode flag,  * such as IFF_PPROMISC for promiscuous mode; should be 0 if none.  *  * Only to be used on stack-owned flags, not driver-owned flags.  */
 end_comment
 
 begin_function
@@ -7280,6 +7311,27 @@ name|oldflags
 decl_stmt|,
 name|oldcount
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|flag
+operator|&
+operator|(
+name|IFF_DRV_OACTIVE
+operator||
+name|IFF_DRV_RUNNING
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"if_setflag: setting driver-ownded flag %d"
+operator|,
+name|flag
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Sanity checks to catch programming errors */
 if|if
 condition|(
@@ -9840,9 +9892,9 @@ name|active
 operator|=
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 name|_IF_ENQUEUE

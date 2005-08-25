@@ -1412,6 +1412,10 @@ parameter_list|)
 value|((ifq)->ifq_maxlen = (len))
 end_define
 
+begin_comment
+comment|/*  * The IFF_DRV_OACTIVE test should really occur in the device driver, not in  * the handoff logic, as that flag is locked by the device driver.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1426,7 +1430,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|do {									\ 	int len;							\ 	short mflags;							\ 									\ 	len = (m)->m_pkthdr.len;					\ 	mflags = (m)->m_flags;						\ 	IFQ_ENQUEUE(&(ifp)->if_snd, m, err);				\ 	if ((err) == 0) {						\ 		(ifp)->if_obytes += len + (adj);			\ 		if (mflags& M_MCAST)					\ 			(ifp)->if_omcasts++;				\ 		if (((ifp)->if_flags& IFF_OACTIVE) == 0)		\ 			if_start(ifp);					\ 	}								\ } while (0)
+value|do {									\ 	int len;							\ 	short mflags;							\ 									\ 	len = (m)->m_pkthdr.len;					\ 	mflags = (m)->m_flags;						\ 	IFQ_ENQUEUE(&(ifp)->if_snd, m, err);				\ 	if ((err) == 0) {						\ 		(ifp)->if_obytes += len + (adj);			\ 		if (mflags& M_MCAST)					\ 			(ifp)->if_omcasts++;				\ 		if (((ifp)->if_drv_flags& IFF_DRV_OACTIVE) == 0)	\ 			if_start(ifp);					\ 	}								\ } while (0)
 end_define
 
 begin_define
