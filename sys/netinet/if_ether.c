@@ -4289,6 +4289,25 @@ directive|endif
 block|}
 else|else
 block|{
+comment|/* 			 * Return proxied ARP replies only on the interface 			 * where this network resides. Otherwise we may 			 * conflict with the host we are proxying for. 			 */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_ifp
+operator|!=
+name|ifp
+condition|)
+block|{
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+goto|goto
+name|drop
+goto|;
+block|}
 name|sdl
 operator|=
 name|SDL
