@@ -1028,6 +1028,12 @@ name|tcp_syncache
 operator|.
 name|hashsize
 argument_list|)
+operator|||
+name|tcp_syncache
+operator|.
+name|hashsize
+operator|==
+literal|0
 condition|)
 block|{
 name|printf
@@ -1039,9 +1045,8 @@ name|tcp_syncache
 operator|.
 name|hashsize
 operator|=
-literal|512
+name|TCP_SYNCACHE_HASHSIZE
 expr_stmt|;
-comment|/* safe default */
 block|}
 name|tcp_syncache
 operator|.
