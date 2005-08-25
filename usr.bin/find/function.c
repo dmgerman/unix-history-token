@@ -3728,6 +3728,12 @@ name|save
 index|[
 literal|2
 index|]
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
 decl_stmt|;
 if|if
 condition|(
