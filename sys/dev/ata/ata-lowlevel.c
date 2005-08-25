@@ -337,6 +337,12 @@ operator|&=
 operator|~
 name|ATA_R_DMA
 expr_stmt|;
+comment|/* check for 48 bit access and convert if needed */
+name|ata_modify_if_48bit
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|request
@@ -3613,14 +3619,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|u_int8_t
-name|command
-init|=
-name|ata_modify_if_48bit
-argument_list|(
-name|request
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|atadev
@@ -3810,16 +3808,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|command
-operator|=
-name|request
-operator|->
-name|u
-operator|.
-name|ata
-operator|.
-name|command
-expr_stmt|;
 name|ATA_IDX_OUTB
 argument_list|(
 name|ch
@@ -4109,6 +4097,12 @@ name|ch
 argument_list|,
 name|ATA_COMMAND
 argument_list|,
+name|request
+operator|->
+name|u
+operator|.
+name|ata
+operator|.
 name|command
 argument_list|)
 expr_stmt|;

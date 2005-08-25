@@ -311,6 +311,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_ALI_1533
+value|0x153310b9
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ALI_5229
 value|0x522910b9
 end_define
@@ -1013,6 +1020,20 @@ define|#
 directive|define
 name|ATA_PDC40519
 value|0x3519105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC40718
+value|0x3d17105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC40719
+value|0x3515105a
 end_define
 
 begin_define
