@@ -4446,7 +4446,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*   * You should no-longer "just call" a netgraph node function  * from an external asynchronous event.  * This is because in doing so you are ignoring the locking on the netgraph  * nodes. Instead call your function via   * "int ng_send_fn(node_p node, hook_p hook, ng_item_fn *fn,  *	 void *arg1, int arg2);"  * this will call the function you chose, but will first do all the   * locking rigmarole. Your function MAY only be called at some distant future  * time (several millisecs away) so don't give it any arguments  * that may be revoked soon (e.g. on your stack).  * In this case even the 'so' argument is doubtful.   * While the function request is being processed the node  * has an extra reference and as such will not disappear until  * the request has at least been done, but the 'so' may not be so lucky.  * handle this by checking the validity of the node in the target function  * before dereferencing the socket pointer.  *  * To decouple stack, we use queue version of ng_send_fn().  */
+comment|/*   * You should no-longer "just call" a netgraph node function  * from an external asynchronous event.  * This is because in doing so you are ignoring the locking on the netgraph  * nodes. Instead call your function via   * "int ng_send_fn(node_p node, hook_p hook, ng_item_fn *fn,  *	 void *arg1, int arg2);"  * this will call the function you chose, but will first do all the   * locking rigmarole. Your function MAY only be called at some distant future  * time (several millisecs away) so don't give it any arguments  * that may be revoked soon (e.g. on your stack).  * In this case even the 'so' argument is doubtful.   * While the function request is being processed the node  * has an extra reference and as such will not disappear until  * the request has at least been done, but the 'so' may not be so lucky.  * handle this by checking the validity of the node in the target function  * before dereferencing the socket pointer.  */
 end_comment
 
 begin_function
@@ -4502,8 +4502,6 @@ argument_list|,
 name|waitflag
 argument_list|,
 name|wait
-operator||
-name|NG_QUEUE
 argument_list|)
 expr_stmt|;
 block|}
