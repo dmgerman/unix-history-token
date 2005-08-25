@@ -1909,10 +1909,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ether_ifdetach
 argument_list|(

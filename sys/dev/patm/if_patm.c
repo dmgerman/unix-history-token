@@ -1044,9 +1044,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 comment|/* enable interrupts, Tx and Rx paths */
 name|cfg
@@ -1230,10 +1230,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|sc
 operator|->
@@ -1298,7 +1298,7 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Give any waiters on closing a VCC a chance. They will stop 	 * to wait if they see that IFF_RUNNING disappeared. 	 */
+comment|/* 	 * Give any waiters on closing a VCC a chance. They will stop 	 * to wait if they see that IFF_DRV_RUNNING disappeared. 	 */
 name|cv_broadcast
 argument_list|(
 operator|&

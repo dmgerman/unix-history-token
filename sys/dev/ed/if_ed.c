@@ -1490,10 +1490,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ether_ifdetach
 argument_list|(
@@ -2279,16 +2279,16 @@ directive|endif
 comment|/* 	 * Set 'running' flag, and clear output active flag. 	 */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 comment|/* 	 * ...and attempt to start output 	 */
 name|ed_start
@@ -2491,7 +2491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start output on interface.  * We make two assumptions here:  *  1) that the current priority is set to splimp _before_ this code  *     is called *and* is returned to the appropriate priority after  *     return  *  2) that the IFF_OACTIVE flag is checked before this code is called  *     (i.e. that the output part of the interface is idle)  */
+comment|/*  * Start output on interface.  * We make two assumptions here:  *  1) that the current priority is set to splimp _before_ this code  *     is called *and* is returned to the appropriate priority after  *     return  *  2) that the IFF_DRV_OACTIVE flag is checked before this code is called  *     (i.e. that the output part of the interface is idle)  */
 end_comment
 
 begin_function
@@ -2588,9 +2588,9 @@ block|{
 comment|/* 		 * No room. Indicate this to the outside world and exit. 		 */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 block|}
@@ -2614,10 +2614,10 @@ block|{
 comment|/* 		 * We are using the !OACTIVE flag to indicate to the outside 		 * world that we can accept an additional packet rather than 		 * that the transmitter is _actually_ active. Indeed, the 		 * transmitter may be active, but if we haven't filled all the 		 * buffers with data then we still want to accept more. 		 */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 block|}
@@ -3719,10 +3719,10 @@ literal|0
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 comment|/* 			 * clear watchdog timer 			 */
 name|ifp
@@ -3972,9 +3972,9 @@ condition|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 operator|==
 literal|0
@@ -4113,10 +4113,10 @@ condition|)
 block|{
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 return|return
 name|ENXIO
@@ -4150,9 +4150,9 @@ condition|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0
@@ -4169,9 +4169,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 block|{
 name|ed_stop
@@ -4181,10 +4181,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 block|}
 block|}

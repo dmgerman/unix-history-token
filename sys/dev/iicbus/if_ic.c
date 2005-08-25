@@ -707,19 +707,19 @@ operator|&&
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{
 comment|/* XXX disable PCF */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 comment|/* IFF_UP is not set, try to release the bus anyway */
 name|iicbus_release_bus
@@ -748,9 +748,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|)
 condition|)
@@ -866,9 +866,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 block|}
 break|break;
@@ -1494,9 +1494,9 @@ name|sa_family
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|s
 operator|=

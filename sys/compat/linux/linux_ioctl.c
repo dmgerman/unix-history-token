@@ -11968,9 +11968,15 @@ name|flags
 decl_stmt|;
 name|flags
 operator|=
+operator|(
 name|ifp
 operator|->
 name|if_flags
+operator||
+name|ifp
+operator|->
+name|if_drv_flags
+operator|)
 operator|&
 literal|0xffff
 expr_stmt|;
@@ -11981,7 +11987,7 @@ operator|~
 operator|(
 name|IFF_SMART
 operator||
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator||
 name|IFF_SIMPLEX
 operator||

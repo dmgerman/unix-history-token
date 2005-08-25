@@ -4008,13 +4008,13 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
 operator|(
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator||
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 expr_stmt|;
 name|sc
@@ -4556,9 +4556,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 comment|/* 	 * At this point, the interface is running properly, 	 * except that it receives *no* packets.  we then call 	 * fe_setmode() to tell the chip what packets to be 	 * received, based on the if_flags and multicast group 	 * list.  It completes the initialization process. 	 */
 name|fe_setmode
@@ -4660,7 +4660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start output on interface.  * We make two assumptions here:  *  1) that the current priority is set to splimp _before_ this code  *     is called *and* is returned to the appropriate priority after  *     return  *  2) that the IFF_OACTIVE flag is checked before this code is called  *     (i.e. that the output part of the interface is idle)  */
+comment|/*  * Start output on interface.  * We make two assumptions here:  *  1) that the current priority is set to splimp _before_ this code  *     is called *and* is returned to the appropriate priority after  *     return  *  2) that the IFF_DRV_OACTIVE flag is checked before this code is called  *     (i.e. that the output part of the interface is idle)  */
 end_comment
 
 begin_function
@@ -4926,10 +4926,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 name|indicate_active
@@ -4939,9 +4939,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 block|}
@@ -5596,10 +5596,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|sc
 operator|->
@@ -6124,10 +6124,10 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 comment|/* 		 * If it looks like the transmitter can take more data, 		 * attempt to start output on the interface. This is done 		 * after handling the receiver interrupt to give the 		 * receive operation priority. 		 * 		 * BTW, I'm not sure in what case the OACTIVE is on at 		 * this point.  Is the following test redundant? 		 * 		 * No.  This routine polls for both transmitter and 		 * receiver interrupts.  86960 can raise a receiver 		 * interrupt when the transmission buffer is full. 		 */
@@ -6138,9 +6138,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 operator|==
 literal|0
@@ -6246,9 +6246,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0
@@ -6268,9 +6268,9 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|!=
 literal|0
@@ -7308,30 +7308,29 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|flags
-init|=
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_flags
-decl_stmt|;
 comment|/* 	 * If the interface is not running, we postpone the update 	 * process for receive modes and multicast address filter 	 * until the interface is restarted.  It reduces some 	 * complicated job on maintaining chip states.  (Earlier versions 	 * of this driver had a bug on that point...) 	 * 	 * To complete the trick, fe_init() calls fe_setmode() after 	 * restarting the interface. 	 */
 if|if
 condition|(
 operator|!
 operator|(
-name|flags
+name|sc
+operator|->
+name|ifp
+operator|->
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 return|return;
 comment|/* 	 * Promiscuous mode is handled separately. 	 */
 if|if
 condition|(
-name|flags
+name|sc
+operator|->
+name|ifp
+operator|->
+name|if_flags
 operator|&
 name|IFF_PROMISC
 condition|)
@@ -7377,7 +7376,11 @@ expr_stmt|;
 comment|/* 	 * Find the new multicast filter value. 	 */
 if|if
 condition|(
-name|flags
+name|sc
+operator|->
+name|ifp
+operator|->
+name|if_flags
 operator|&
 name|IFF_ALLMULTI
 condition|)

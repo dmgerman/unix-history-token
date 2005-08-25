@@ -165,7 +165,7 @@ parameter_list|(
 name|_ic
 parameter_list|)
 define|\
-value|(((_ic)->ic_ifp->if_flags& (IFF_RUNNING|IFF_UP)) == (IFF_RUNNING|IFF_UP))
+value|(((_ic)->ic_ifp->if_flags& IFF_UP)&&			\ 	    ((_ic)->ic_ifp->if_drv_flags& IFF_DRV_RUNNING))
 end_define
 
 begin_define

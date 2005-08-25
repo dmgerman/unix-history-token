@@ -1834,16 +1834,16 @@ expr_stmt|;
 comment|/* Set flags appropriately */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 comment|/* And start output. */
 name|el_start
@@ -1922,18 +1922,18 @@ name|sc
 operator|->
 name|el_ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 condition|)
 return|return;
 name|sc
 operator|->
 name|el_ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 comment|/* The main loop.  They warned me against endless loops, but 	 * would I listen?  NOOO.... 	 */
 while|while
@@ -1966,10 +1966,10 @@ name|sc
 operator|->
 name|el_ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|EL_UNLOCK
 argument_list|(
@@ -3571,9 +3571,9 @@ operator|&&
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{
@@ -3586,10 +3586,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 block|}
 else|else
@@ -3609,9 +3609,9 @@ operator|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0

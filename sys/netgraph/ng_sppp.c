@@ -890,16 +890,17 @@ name|if_softc
 decl_stmt|;
 comment|/* Check interface flags */
 comment|/* 	 * This has side effects. It is not good idea to stop sending if we 	 * are not UP. If we are not running we still want to send LCP term 	 * packets. 	 */
-comment|/*	if ((ifp->if_flags& (IFF_UP|IFF_RUNNING)) != (IFF_UP|IFF_RUNNING)) {*/
+comment|/*	if (!((ifp->if_flags& IFF_UP)&& */
+comment|/*	    (ifp->if_drv_flags& IFF_DRV_RUNNING))) { */
 comment|/*		return;*/
 comment|/*	}*/
 if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 condition|)
 return|return;
 if|if
@@ -912,9 +913,9 @@ condition|)
 return|return;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 while|while
 condition|(
@@ -969,20 +970,20 @@ condition|)
 block|{
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 block|}
 block|}
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 end_function

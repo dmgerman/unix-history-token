@@ -3154,13 +3154,13 @@ expr_stmt|;
 comment|/* 	 * Mark the interface down and cancel the watchdog timer. 	 */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
 operator|(
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator||
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
 name|ifp
@@ -4462,16 +4462,16 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|ifp
 operator|->
@@ -5386,16 +5386,16 @@ condition|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
 operator|(
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator||
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 operator|)
 operator|!=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 return|return;
 comment|/* 	 * Remember the previous number of free descriptors and 	 * the first descriptor we'll use. 	 */
@@ -5604,9 +5604,9 @@ block|{
 comment|/* No more slots left; notify upper layer. */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 if|if
@@ -6252,10 +6252,10 @@ expr_stmt|;
 comment|/* Freed some descriptors, so reset IFF_OACTIVE and restart. */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|gem_start
 argument_list|(
@@ -8368,9 +8368,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 name|gem_stop
 argument_list|(

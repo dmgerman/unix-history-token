@@ -140,7 +140,7 @@ comment|/* polling while in trap	*/
 end_comment
 
 begin_comment
-comment|/*  * Polling support for [network] device drivers.  *  * Drivers which support this feature try to register with the  * polling code.  *  * If registration is successful, the driver must disable interrupts,  * and further I/O is performed through the handler, which is invoked  * (at least once per clock tick) with 3 arguments: the "arg" passed at  * register time (a struct ifnet pointer), a command, and a "count" limit.  *  * The command can be one of the following:  *  POLL_ONLY: quick move of "count" packets from input/output queues.  *  POLL_AND_CHECK_STATUS: as above, plus check status registers or do  *	other more expensive operations. This command is issued periodically  *	but less frequently than POLL_ONLY.  *  POLL_DEREGISTER: deregister and return to interrupt mode.  *  * The first two commands are only issued if the interface is marked as  * 'IFF_UP and IFF_RUNNING', the last one only if IFF_RUNNING is set.  *  * The count limit specifies how much work the handler can do during the  * call -- typically this is the number of packets to be received, or  * transmitted, etc. (drivers are free to interpret this number, as long  * as the max time spent in the function grows roughly linearly with the  * count).  *  * Deregistration can be requested by the driver itself (typically in the  * *_stop() routine), or by the polling code, by invoking the handler.  *  * Polling can be globally enabled or disabled with the sysctl variable  * kern.polling.enable (default is 0, disabled)  *  * A second variable controls the sharing of CPU between polling/kernel  * network processing, and other activities (typically userlevel tasks):  * kern.polling.user_frac (between 0 and 100, default 50) sets the share  * of CPU allocated to user tasks. CPU is allocated proportionally to the  * shares, by dynamically adjusting the "count" (poll_burst).  *  * Other parameters can should be left to their default values.  * The following constraints hold  *  *	1<= poll_each_burst<= poll_burst<= poll_burst_max  *	0<= poll_in_trap<= poll_each_burst  *	MIN_POLL_BURST_MAX<= poll_burst_max<= MAX_POLL_BURST_MAX  */
+comment|/*  * Polling support for [network] device drivers.  *  * Drivers which support this feature try to register with the  * polling code.  *  * If registration is successful, the driver must disable interrupts,  * and further I/O is performed through the handler, which is invoked  * (at least once per clock tick) with 3 arguments: the "arg" passed at  * register time (a struct ifnet pointer), a command, and a "count" limit.  *  * The command can be one of the following:  *  POLL_ONLY: quick move of "count" packets from input/output queues.  *  POLL_AND_CHECK_STATUS: as above, plus check status registers or do  *	other more expensive operations. This command is issued periodically  *	but less frequently than POLL_ONLY.  *  POLL_DEREGISTER: deregister and return to interrupt mode.  *  * The first two commands are only issued if the interface is marked as  * 'IFF_UP and IFF_DRV_RUNNING', the last one only if IFF_DRV_RUNNING is set.  *  * The count limit specifies how much work the handler can do during the  * call -- typically this is the number of packets to be received, or  * transmitted, etc. (drivers are free to interpret this number, as long  * as the max time spent in the function grows roughly linearly with the  * count).  *  * Deregistration can be requested by the driver itself (typically in the  * *_stop() routine), or by the polling code, by invoking the handler.  *  * Polling can be globally enabled or disabled with the sysctl variable  * kern.polling.enable (default is 0, disabled)  *  * A second variable controls the sharing of CPU between polling/kernel  * network processing, and other activities (typically userlevel tasks):  * kern.polling.user_frac (between 0 and 100, default 50) sets the share  * of CPU allocated to user tasks. CPU is allocated proportionally to the  * shares, by dynamically adjusting the "count" (poll_burst).  *  * Other parameters can should be left to their default values.  * The following constraints hold  *  *	1<= poll_each_burst<= poll_burst<= poll_burst_max  *	0<= poll_in_trap<= poll_each_burst  *	MIN_POLL_BURST_MAX<= poll_burst_max<= MAX_POLL_BURST_MAX  */
 end_comment
 
 begin_define
@@ -978,12 +978,6 @@ operator|.
 name|handler
 operator|&&
 operator|(
-name|IFF_UP
-operator||
-name|IFF_RUNNING
-operator|)
-operator|==
-operator|(
 name|pr
 index|[
 name|i
@@ -993,11 +987,20 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
 name|IFF_UP
-operator||
-name|IFF_RUNNING
 operator|)
+operator|&&
+operator|(
+name|pr
+index|[
+name|i
+index|]
+operator|.
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 name|pr
@@ -1415,12 +1418,6 @@ operator|.
 name|handler
 operator|&&
 operator|(
-name|IFF_UP
-operator||
-name|IFF_RUNNING
-operator|)
-operator|==
-operator|(
 name|pr
 index|[
 name|i
@@ -1430,11 +1427,20 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
 name|IFF_UP
-operator||
-name|IFF_RUNNING
 operator|)
+operator|&&
+operator|(
+name|pr
+index|[
+name|i
+index|]
+operator|.
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 name|pr
@@ -1490,9 +1496,9 @@ index|]
 operator|.
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 block|{
 name|pr

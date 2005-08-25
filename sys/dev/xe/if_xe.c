@@ -1767,18 +1767,18 @@ name|scp
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|scp
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 operator|(
 name|void
@@ -1792,7 +1792,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start output on interface.  Should be called at splimp() priority.  Check  * that the output is idle (ie, IFF_OACTIVE is not set) before calling this  * function.  If media selection is in progress we set IFF_OACTIVE ourselves  * and return immediately.  */
+comment|/*  * Start output on interface.  Should be called at splimp() priority.  Check  * that the output is idle (ie, IFF_DRV_OACTIVE is not set) before calling this  * function.  If media selection is in progress we set IFF_DRV_OACTIVE ourselves  * and return immediately.  */
 end_comment
 
 begin_function
@@ -1831,9 +1831,9 @@ condition|)
 block|{
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 block|}
@@ -1877,10 +1877,10 @@ block|{
 comment|/*        * We are using the !OACTIVE flag to indicate to the outside world that        * we can accept an additional packet rather than that the transmitter        * is _actually_ active. Indeed, the transmitter may be active, but if        * we haven't filled all the buffers with data then we still want to        * accept more.        */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 block|}
@@ -1909,9 +1909,9 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 block|}
@@ -2032,9 +2032,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{
@@ -2056,9 +2056,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 name|xe_stop
 argument_list|(
@@ -2497,10 +2497,10 @@ literal|0
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 comment|/* Handle most MAC interrupts */
@@ -3642,9 +3642,9 @@ name|scp
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|scp
 operator|->
@@ -4567,10 +4567,10 @@ name|scp
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|xe_start
 argument_list|(
@@ -4766,24 +4766,24 @@ name|XE_GPR0_GP1_OUT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * ~IFF_RUNNING == interface down.    */
+comment|/*    * ~IFF_DRV_RUNNING == interface down.    */
 name|scp
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|scp
 operator|->
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|scp
 operator|->

@@ -753,9 +753,9 @@ name|IFT_XETHER
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|EFDEBUG
 argument_list|(
@@ -1017,9 +1017,9 @@ name|error
 decl_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|p
 operator|=
@@ -1091,10 +1091,10 @@ expr_stmt|;
 block|}
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 block|}

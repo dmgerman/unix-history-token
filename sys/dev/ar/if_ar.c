@@ -2898,7 +2898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function will be called from the upper level when a user add a  * packet to be send, and from the interrupt handler after a finished  * transmit.  *  * NOTE: it should run at spl_imp().  *  * This function only place the data in the oncard buffers. It does not  * start the transmition. ar_xmit() does that.  *  * Transmitter idle state is indicated by the IFF_OACTIVE flag. The function  * that clears that should ensure that the transmitter and its DMA is  * in a "good" idle state.  */
+comment|/*  * This function will be called from the upper level when a user add a  * packet to be send, and from the interrupt handler after a finished  * transmit.  *  * NOTE: it should run at spl_imp().  *  * This function only place the data in the oncard buffers. It does not  * start the transmition. ar_xmit() does that.  *  * Transmitter idle state is indicated by the IFF_DRV_OACTIVE flag. The  * function that clears that should ensure that the transmitter and its  * DMA is in a "good" idle state.  */
 end_comment
 
 begin_ifndef
@@ -2977,9 +2977,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 return|return;
@@ -3007,16 +3007,16 @@ directive|ifndef
 name|NETGRAPH
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 comment|/* yes, mark active */
 else|#
 directive|else
 comment|/* NETGRAPH */
 comment|/*XXX*/
-comment|/*ifp->if_flags |= IFF_OACTIVE;*/
+comment|/*ifp->if_drv_flags |= IFF_DRV_OACTIVE;*/
 comment|/* yes, mark active */
 endif|#
 directive|endif
@@ -3536,9 +3536,9 @@ name|was_up
 operator|=
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|error
 operator|=
@@ -3604,9 +3604,9 @@ name|should_be_up
 operator|=
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 if|if
 condition|(
@@ -3723,9 +3723,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 return|return;
@@ -3831,15 +3831,15 @@ directive|ifndef
 name|NETGRAPH
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 else|#
 directive|else
 comment|/* NETGRAPH */
-comment|/* XXX ifp->if_flags&= ~IFF_OACTIVE; */
+comment|/* XXX ifp->if_drv_flags&= ~IFF_DRV_OACTIVE; */
 endif|#
 directive|endif
 comment|/* NETGRAPH */
@@ -8878,7 +8878,7 @@ operator|&
 name|SCA_DSR_EOT
 condition|)
 block|{
-comment|/* 				 * This should be the most common case. 				 * 				 * Clear the IFF_OACTIVE flag. 				 * 				 * Call arstart to start a new transmit if 				 * there is data to transmit. 				 */
+comment|/* 				 * This should be the most common case. 				 * 				 * Clear the IFF_DRV_OACTIVE flag. 				 * 				 * Call arstart to start a new transmit if 				 * there is data to transmit. 				 */
 name|sc
 operator|->
 name|xmit_busy
@@ -8893,10 +8893,10 @@ argument_list|(
 name|sc
 argument_list|)
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|SC2IFP
 argument_list|(
@@ -8910,7 +8910,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* NETGRAPH */
-comment|/* XXX 	SC2IFP(sc)->if_flags&= ~IFF_OACTIVE; */
+comment|/* XXX 	SC2IFP(sc)->if_drv_flags&= ~IFF_DRV_OACTIVE; */
 name|sc
 operator|->
 name|out_dog

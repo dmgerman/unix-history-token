@@ -295,7 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This currently uses 2 bufs for tx, 2 for rx  *  * New rx protocol:  *  * rx has a fillcount variable. If fillcount> (NRXBUF-1),  * rx can be switched off from rx hard int.  * Else rx is restarted on the other receiver.  * rx soft int counts down. if it is == (NRXBUF-1), it restarts  * the receiver.  * To ensure packet ordering (we need that for 1201 later), we have a counter  * which is incremented modulo 256 on each receive and a per buffer  * variable, which is set to the counter on filling. The soft int can  * compare both values to determine the older packet.  *  * Transmit direction:  *  * cm_start checks tx_fillcount  * case 2: return  *  * else fill tx_act ^ 1&& inc tx_fillcount  *  * check tx_fillcount again.  * case 2: set IFF_OACTIVE to stop arc_output from filling us.  * case 1: start tx  *  * tint clears IFF_OCATIVE, decrements and checks tx_fillcount  * case 1: start tx on tx_act ^ 1, softcall cm_start  * case 0: softcall cm_start  *  * #define fill(i) get mbuf&& copy mbuf to chip(i)  */
+comment|/*  * This currently uses 2 bufs for tx, 2 for rx  *  * New rx protocol:  *  * rx has a fillcount variable. If fillcount> (NRXBUF-1),  * rx can be switched off from rx hard int.  * Else rx is restarted on the other receiver.  * rx soft int counts down. if it is == (NRXBUF-1), it restarts  * the receiver.  * To ensure packet ordering (we need that for 1201 later), we have a counter  * which is incremented modulo 256 on each receive and a per buffer  * variable, which is set to the counter on filling. The soft int can  * compare both values to determine the older packet.  *  * Transmit direction:  *  * cm_start checks tx_fillcount  * case 2: return  *  * else fill tx_act ^ 1&& inc tx_fillcount  *  * check tx_fillcount again.  * case 2: set IFF_DRV_OACTIVE to stop arc_output from filling us.  * case 1: start tx  *  * tint clears IFF_OCATIVE, decrements and checks tx_fillcount  * case 1: start tx on tx_act ^ 1, softcall cm_start  * case 0: softcall cm_start  *  * #define fill(i) get mbuf&& copy mbuf to chip(i)  */
 end_comment
 
 begin_function_decl
@@ -1276,9 +1276,9 @@ condition|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0
@@ -1291,9 +1291,9 @@ argument_list|()
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|cm_reset
 argument_list|(
@@ -1578,16 +1578,16 @@ literal|0
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|cm_start
 argument_list|(
@@ -1726,9 +1726,9 @@ condition|(
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0
@@ -2110,9 +2110,9 @@ block|{
 comment|/* 		 * We are filled up to the rim. No more bufs for the moment, 		 * please. 		 */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 else|else
@@ -2138,7 +2138,7 @@ name|sc_tx_act
 operator|=
 name|buffer
 expr_stmt|;
-comment|/* 		 * We still can accept another buf, so don't: 		 * ifp->if_flags |= IFF_OACTIVE; 		 */
+comment|/* 		 * We still can accept another buf, so don't: 		 * ifp->if_drv_flags |= IFF_DRV_OACTIVE; 		 */
 name|sc
 operator|->
 name|sc_intmask
@@ -2739,10 +2739,10 @@ expr_stmt|;
 comment|/* We know we can accept another buffer at this point. */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 if|if
 condition|(
@@ -3557,9 +3557,9 @@ operator|&&
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|!=
 literal|0
@@ -3573,10 +3573,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 block|}
 elseif|else
@@ -3595,9 +3595,9 @@ operator|&&
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0

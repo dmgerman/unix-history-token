@@ -2637,13 +2637,13 @@ literal|0
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
 operator|(
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator||
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
 name|ether_ifdetach
@@ -3346,7 +3346,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * User land entry to network initialisation and changes in interface flags.  *   * We do a very little work here, just creating runq entries to  * processes the actions needed to cope with interface flags. We do it  * this way in case there are runq entries outstanding from earlier  * ioctls that modify the interface flags.  *  * Returns values are either 0 for success, a varity of resource allocation  * failures or errors in the command sent to the card.  *  * Note, IFF_RUNNING is eventually set by init_sj_done or init_assoc_done  */
+comment|/*  * User land entry to network initialisation and changes in interface flags.  *   * We do a very little work here, just creating runq entries to  * processes the actions needed to cope with interface flags. We do it  * this way in case there are runq entries outstanding from earlier  * ioctls that modify the interface flags.  *  * Returns values are either 0 for success, a varity of resource allocation  * failures or errors in the command sent to the card.  *  * Note, IFF_DRV_RUNNING is eventually set by init_sj_done or init_assoc_done  */
 end_comment
 
 begin_function
@@ -3384,7 +3384,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create the following runq entries to bring the card up. 	 * 	 *		init_download	- download the network to the card 	 *		init_mcast	- reset multicast list 	 *		init_sj		- find or start a BSS 	 *		init_auth	- authenticate with an ESSID if needed 	 *		init_assoc	- associate with an ESSID if needed 	 * 	 * They are only actually executed if the card is not running. 	 * We may enter this routine from a simple change of IP 	 * address and do not need to get the card to do these things. 	 * However, we cannot perform the check here as there may be 	 * commands in the runq that change the IFF_RUNNING state of 	 * the interface. 	 */
+comment|/* 	 * Create the following runq entries to bring the card up. 	 * 	 *		init_download	- download the network to the card 	 *		init_mcast	- reset multicast list 	 *		init_sj		- find or start a BSS 	 *		init_auth	- authenticate with an ESSID if needed 	 *		init_assoc	- associate with an ESSID if needed 	 * 	 * They are only actually executed if the card is not running. 	 * We may enter this routine from a simple change of IP 	 * address and do not need to get the card to do these things. 	 * However, we cannot perform the check here as there may be 	 * commands in the runq that change the IFF_DRV_RUNNING state of 	 * the interface. 	 */
 name|ncom
 operator|=
 literal|0
@@ -5332,7 +5332,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Hurrah! The network is now active. 	 * 	 * Clearing IFF_OACTIVE will ensure that the system will send us 	 * packets. Just before we return from the interrupt context 	 * we check to see if packets have been queued. 	 */
+comment|/* 	 * Hurrah! The network is now active. 	 * 	 * Clearing IFF_DRV_OACTIVE will ensure that the system will send us 	 * packets. Just before we return from the interrupt context 	 * we check to see if packets have been queued. 	 */
 if|if
 condition|(
 name|SRAM_READ_FIELD_1
@@ -5371,16 +5371,16 @@ name|np_framing
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 name|ray_com_ecf_done
@@ -5889,7 +5889,7 @@ name|if_oerrors
 argument_list|)
 expr_stmt|;
 comment|/* XXX error counter */
-comment|/* 	 * Hurrah! The network is now active. 	 * 	 * Clearing IFF_OACTIVE will ensure that the system will send us 	 * packets. Just before we return from the interrupt context 	 * we check to see if packets have been queued. 	 */
+comment|/* 	 * Hurrah! The network is now active. 	 * 	 * Clearing IFF_DRV_OACTIVE will ensure that the system will send us 	 * packets. Just before we return from the interrupt context 	 * we check to see if packets have been queued. 	 */
 name|sc
 operator|->
 name|sc_c
@@ -5912,16 +5912,16 @@ name|np_framing
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|ray_com_ecf_done
 argument_list|(
@@ -6065,13 +6065,13 @@ expr_stmt|;
 comment|/* 	 * Mark as not running and drain output queue 	 */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
 operator|(
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator||
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
 name|ifp
@@ -6181,7 +6181,7 @@ comment|/*  * Transmit packet handling  */
 end_comment
 
 begin_comment
-comment|/*  * Send a packet.  *  * We make two assumptions here:  *  1) That the current priority is set to splimp _before_ this code  *     is called *and* is returned to the appropriate priority after  *     return  *  2) That the IFF_OACTIVE flag is checked before this code is called  *     (i.e. that the output part of the interface is idle)  *  * A simple one packet at a time TX routine is used - we don't bother  * chaining TX buffers. Performance is sufficient to max out the  * wireless link on a P75.  *  * AST J30 Windows 95A (100MHz Pentium) to  *   Libretto 50CT FreeBSD-3.1 (75MHz Pentium)		167.37kB/s  *   Nonname box FreeBSD-3.4 (233MHz AMD K6)		161.82kB/s  *  * Libretto 50CT FreeBSD-3.1 (75MHz Pentium) to  *   AST J30 Windows 95A (100MHz Pentium) 		167.37kB/s  *   Nonname box FreeBSD-3.4 (233MHz AMD K6)		161.38kB/s  *  * Given that 160kB/s is saturating the 2Mb/s wireless link we  * are about there.  *  * In short I'm happy that the added complexity of chaining TX  * packets together isn't worth it for my machines.  */
+comment|/*  * Send a packet.  *  * We make two assumptions here:  *  1) That the current priority is set to splimp _before_ this code  *     is called *and* is returned to the appropriate priority after  *     return  *  2) That the IFF_DRV_OACTIVE flag is checked before this code is called  *     (i.e. that the output part of the interface is idle)  *  * A simple one packet at a time TX routine is used - we don't bother  * chaining TX buffers. Performance is sufficient to max out the  * wireless link on a P75.  *  * AST J30 Windows 95A (100MHz Pentium) to  *   Libretto 50CT FreeBSD-3.1 (75MHz Pentium)		167.37kB/s  *   Nonname box FreeBSD-3.4 (233MHz AMD K6)		161.82kB/s  *  * Libretto 50CT FreeBSD-3.1 (75MHz Pentium) to  *   AST J30 Windows 95A (100MHz Pentium) 		167.37kB/s  *   Nonname box FreeBSD-3.4 (233MHz AMD K6)		161.38kB/s  *  * Given that 160kB/s is saturating the 2Mb/s wireless link we  * are about there.  *  * In short I'm happy that the added complexity of chaining TX  * packets together isn't worth it for my machines.  */
 end_comment
 
 begin_function
@@ -6270,9 +6270,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{
@@ -6384,9 +6384,9 @@ condition|)
 block|{
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 return|return;
 block|}
@@ -7006,9 +7006,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 operator|&&
 operator|(
@@ -7574,16 +7574,16 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 condition|)
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 end_function
@@ -10902,9 +10902,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 operator|&&
 operator|(
@@ -11682,9 +11682,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{
@@ -11990,9 +11990,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 operator|||
 operator|(
@@ -14479,7 +14479,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* XXX what about error on completion then? deal with when i fix 	 * XXX the status checking 	 * 	 * XXX all the runq_done calls from IFF_RUNNING checks in runq 	 * XXX routines should return EIO but shouldn't abort the runq 	 */
+comment|/* XXX what about error on completion then? deal with when i fix 	 * XXX the status checking 	 * 	 * XXX all the runq_done calls from IFF_DRV_RUNNING checks in runq 	 * XXX routines should return EIO but shouldn't abort the runq 	 */
 block|}
 end_function
 

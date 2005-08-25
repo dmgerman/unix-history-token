@@ -2018,9 +2018,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 name|arl_init
@@ -2035,9 +2035,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 name|arl_stop
 argument_list|(
@@ -3101,9 +3101,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 condition|)
 block|{
 if|if
@@ -3193,9 +3193,9 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator|)
 condition|)
 return|return;
@@ -3305,16 +3305,16 @@ expr_stmt|;
 comment|/* set flags */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|arl_start
 argument_list|(
@@ -3624,9 +3624,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 condition|)
 return|return;
 comment|/* Dequeue the next datagram */
@@ -3650,9 +3650,9 @@ condition|)
 block|{
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator||=
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 comment|/* Copy the datagram to the buffer. */
 name|sc
@@ -3832,13 +3832,13 @@ expr_stmt|;
 comment|/* disable timer */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
 operator|(
-name|IFF_RUNNING
+name|IFF_DRV_RUNNING
 operator||
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
 comment|/*  arl_hwreset(unit);  */
@@ -4693,10 +4693,10 @@ expr_stmt|;
 comment|/* disable timer */
 name|ifp
 operator|->
-name|if_flags
+name|if_drv_flags
 operator|&=
 operator|~
-name|IFF_OACTIVE
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|arl_start
 argument_list|(
