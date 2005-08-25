@@ -539,6 +539,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -583,6 +585,9 @@ name|p
 decl_stmt|,
 modifier|*
 name|q
+decl_stmt|,
+modifier|*
+name|pidfile
 decl_stmt|;
 specifier|const
 name|char
@@ -607,6 +612,8 @@ decl_stmt|,
 name|criteria
 decl_stmt|,
 name|pidfromfile
+decl_stmt|,
+name|pidfilelock
 decl_stmt|;
 name|size_t
 name|jsz
@@ -811,10 +818,13 @@ name|debug_opt
 operator|=
 literal|0
 expr_stmt|;
-name|pidfromfile
+name|pidfile
 operator|=
-operator|-
-literal|1
+name|NULL
+expr_stmt|;
+name|pidfilelock
+operator|=
+literal|0
 expr_stmt|;
 name|execf
 operator|=
@@ -833,7 +843,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"DF:G:M:N:P:SU:d:fg:ij:lnos:t:u:vx"
+literal|"DF:G:LM:N:P:SU:d:fg:ij:lnos:t:u:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -855,12 +865,9 @@ break|break;
 case|case
 literal|'F'
 case|:
-name|pidfromfile
+name|pidfile
 operator|=
-name|takepid
-argument_list|(
 name|optarg
-argument_list|)
 expr_stmt|;
 name|criteria
 operator|=
@@ -881,6 +888,14 @@ name|optarg
 argument_list|)
 expr_stmt|;
 name|criteria
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+name|pidfilelock
 operator|=
 literal|1
 expr_stmt|;
@@ -1176,6 +1191,40 @@ argument_list|,
 literal|"-n and -o are mutually exclusive"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pidfile
+operator|!=
+name|NULL
+condition|)
+name|pidfromfile
+operator|=
+name|takepid
+argument_list|(
+name|pidfile
+argument_list|,
+name|pidfilelock
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|pidfilelock
+condition|)
+name|errx
+argument_list|(
+name|STATUS_ERROR
+argument_list|,
+literal|"-L doesn't make sense without -F"
+argument_list|)
+expr_stmt|;
+name|pidfromfile
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 name|mypid
 operator|=
 name|getpid
@@ -2347,12 +2396,12 @@ name|pgrep
 condition|)
 name|ustr
 operator|=
-literal|"[-Sfilnovx] [-d delim]"
+literal|"[-LSfilnovx] [-d delim]"
 expr_stmt|;
 else|else
 name|ustr
 operator|=
-literal|"[-signal] [-finovx]"
+literal|"[-signal] [-Lfinovx]"
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -3016,6 +3065,9 @@ specifier|const
 name|char
 modifier|*
 name|pidfile
+parameter_list|,
+name|int
+name|pidfilelock
 parameter_list|)
 block|{
 name|char
@@ -3058,7 +3110,12 @@ argument_list|,
 name|pidfile
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we can lock pidfile, this means that daemon is not running, 	 * so better don't kill the process from the pidfile. 	 */
+if|if
+condition|(
+name|pidfilelock
+condition|)
+block|{
+comment|/* 		 * If we can lock pidfile, this means that daemon is not 		 * running, so would be better not to kill some random process. 		 */
 if|if
 condition|(
 name|flock
@@ -3112,6 +3169,7 @@ argument_list|,
 name|pidfile
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
