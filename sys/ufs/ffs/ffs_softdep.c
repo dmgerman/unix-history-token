@@ -19775,12 +19775,6 @@ operator|&=
 operator|~
 name|IOSTARTED
 expr_stmt|;
-name|inodedep
-operator|->
-name|id_state
-operator||=
-name|COMPLETE
-expr_stmt|;
 if|if
 condition|(
 name|inodedep
@@ -19922,6 +19916,12 @@ literal|1
 operator|)
 return|;
 block|}
+name|inodedep
+operator|->
+name|id_state
+operator||=
+name|COMPLETE
+expr_stmt|;
 comment|/* 	 * Roll forward anything that had to be rolled back before  	 * the inode could be updated. 	 */
 name|hadchanges
 operator|=
