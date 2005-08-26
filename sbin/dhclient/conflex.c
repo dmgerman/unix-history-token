@@ -932,6 +932,9 @@ name|bs
 operator|=
 literal|0
 expr_stmt|;
+name|i
+operator|--
+expr_stmt|;
 name|tokbuf
 index|[
 name|i
