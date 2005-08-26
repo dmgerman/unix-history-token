@@ -779,6 +779,15 @@ literal|"Intel 82801BA/CAM (ICH2/3) Pro/100 Ethernet"
 block|}
 block|,
 block|{
+literal|0x27dc
+block|,
+operator|-
+literal|1
+block|,
+literal|"Intel 82801GB (ICH7) 10/100 Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 operator|-
