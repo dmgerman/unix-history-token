@@ -787,6 +787,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|dc_start_locked
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|dc_ioctl
 parameter_list|(
@@ -807,6 +819,18 @@ name|void
 name|dc_init
 parameter_list|(
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|dc_init_locked
+parameter_list|(
+name|struct
+name|dc_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1713,13 +1737,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|DC_CLRBIT(sc, DC_SIO, (x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_MPSAFE
-value|0
 end_define
 
 begin_function
@@ -3196,11 +3213,6 @@ name|i
 decl_stmt|,
 name|ack
 decl_stmt|;
-name|DC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set up frame for RX. 	 */
 name|frame
 operator|->
@@ -3383,11 +3395,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|DC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ack
@@ -3425,11 +3432,6 @@ modifier|*
 name|frame
 parameter_list|)
 block|{
-name|DC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set up frame for TX. 	 */
 name|frame
 operator|->
@@ -3534,11 +3536,6 @@ argument_list|(
 name|sc
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|DC_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -3887,13 +3884,11 @@ name|DC_AL_ANER
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: phy_read: bad phy register %x\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"phy_read: bad phy register %x\n"
 argument_list|,
 name|reg
 argument_list|)
@@ -4232,13 +4227,11 @@ name|DC_AL_ANER
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: phy_write: bad phy register %x\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"phy_write: bad phy register %x\n"
 argument_list|,
 name|reg
 argument_list|)
@@ -6559,14 +6552,13 @@ name|i
 operator|==
 name|DC_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: failed to force tx and "
-literal|"rx to idle state\n"
-argument_list|,
 name|sc
 operator|->
-name|dc_unit
+name|dc_ifp
+argument_list|,
+literal|"failed to force tx and rx to idle state\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7396,13 +7388,13 @@ name|i
 operator|==
 name|DC_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: reset never completed!\n"
-argument_list|,
 name|sc
 operator|->
-name|dc_unit
+name|dc_ifp
+argument_list|,
+literal|"reset never completed!\n"
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little while for the chip to get its brains in order. */
@@ -8743,8 +8735,6 @@ name|u_int32_t
 name|revision
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -8767,13 +8757,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -8789,8 +8772,6 @@ argument_list|,
 name|MTX_NETWORK_LOCK
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Map control/status registers. 	 */
@@ -8828,11 +8809,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -8897,11 +8878,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9478,13 +9459,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: unknown device: %x\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"unknown device: %x\n"
 argument_list|,
 name|sc
 operator|->
@@ -9938,12 +9917,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|sc
-operator|->
-name|dc_unit
-operator|=
-name|unit
-expr_stmt|;
 comment|/* Allocate a busdma tag and DMA safe memory for TX/RX descriptors. */
 name|error
 operator|=
@@ -9994,11 +9967,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate busdma tag\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate busdma tag\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10042,11 +10015,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate DMA safe memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate DMA safe memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10094,11 +10067,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: cannot get address of the descriptors\n"
+name|dev
 argument_list|,
-name|unit
+literal|"cannot get address of the descriptors\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10155,11 +10128,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate busdma tag\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate busdma tag\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10203,11 +10176,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate DMA safe memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate DMA safe memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10253,11 +10226,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: cannot get address of the descriptors\n"
+name|dev
 argument_list|,
-name|unit
+literal|"cannot get address of the descriptors\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10310,11 +10283,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to allocate busdma tag\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate busdma tag\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10366,11 +10339,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to init TX ring\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to init TX ring\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10422,11 +10395,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to init RX ring\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to init RX ring\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10459,11 +10432,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: failed to init RX ring\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to init RX ring\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10492,11 +10465,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10544,17 +10517,6 @@ operator||
 name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|IS_MPSAFE
-condition|)
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_NEEDSGIANT
 expr_stmt|;
 name|ifp
 operator|->
@@ -10789,13 +10751,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: MII without any PHY!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"MII without any PHY!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10859,17 +10819,18 @@ name|ifp
 operator|->
 name|if_capabilities
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|dc_stat_ch
 argument_list|,
-name|IS_MPSAFE
-condition|?
-name|CALLOUT_MPSAFE
-else|:
+operator|&
+name|sc
+operator|->
+name|dc_mtx
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -11005,13 +10966,7 @@ name|dc_irq
 argument_list|,
 name|INTR_TYPE_NET
 operator||
-operator|(
-name|IS_MPSAFE
-condition|?
 name|INTR_MPSAFE
-else|:
-literal|0
-operator|)
 argument_list|,
 name|dc_intr
 argument_list|,
@@ -11028,11 +10983,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dc%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -11121,11 +11076,6 @@ literal|"dc mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|sc
@@ -11141,9 +11091,27 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|dc_stop
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|dc_stat_ch
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -11441,11 +11409,6 @@ operator|->
 name|dc_srom
 argument_list|,
 name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|DC_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -12942,7 +12905,7 @@ continue|continue;
 block|}
 else|else
 block|{
-name|dc_init
+name|dc_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -13411,7 +13374,7 @@ name|DC_TXSTAT_UNDERRUN
 operator|)
 condition|)
 block|{
-name|dc_init
+name|dc_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -13604,7 +13567,7 @@ name|sc
 operator|=
 name|xsc
 expr_stmt|;
-name|DC_LOCK
+name|DC_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -13826,7 +13789,7 @@ operator|->
 name|if_snd
 argument_list|)
 condition|)
-name|dc_start
+name|dc_start_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -13876,11 +13839,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|DC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -13912,7 +13870,7 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-name|dc_init
+name|dc_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -13978,29 +13936,29 @@ operator|==
 name|DC_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: failed to force tx to idle state\n"
-argument_list|,
 name|sc
 operator|->
-name|dc_unit
+name|dc_ifp
+argument_list|,
+literal|"failed to force tx to idle state\n"
 argument_list|)
 expr_stmt|;
-name|dc_init
+name|dc_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: TX underrun -- "
-argument_list|,
 name|sc
 operator|->
-name|dc_unit
+name|dc_ifp
+argument_list|,
+literal|"TX underrun -- "
 argument_list|)
 expr_stmt|;
 name|sc
@@ -14203,7 +14161,7 @@ operator|&
 name|IFF_DRV_OACTIVE
 operator|)
 condition|)
-name|dc_start
+name|dc_start_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -14361,13 +14319,11 @@ operator|&
 name|DC_ISR_BUS_ERR
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc_poll: dc%d bus error\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"dc_poll: bus error\n"
 argument_list|)
 expr_stmt|;
 name|dc_reset
@@ -14375,7 +14331,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|dc_init
+name|dc_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -14760,7 +14716,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|dc_init
+name|dc_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -14788,7 +14744,7 @@ operator|->
 name|if_snd
 argument_list|)
 condition|)
-name|dc_start
+name|dc_start_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -15467,6 +15423,46 @@ name|dc_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|sc
+operator|=
+name|ifp
+operator|->
+name|if_softc
+expr_stmt|;
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|dc_start_locked
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dc_start_locked
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|struct
+name|dc_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -15492,7 +15488,7 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
-name|DC_LOCK
+name|DC_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -15512,14 +15508,7 @@ name|ifq_len
 operator|<
 literal|10
 condition|)
-block|{
-name|DC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 if|if
 condition|(
 name|ifp
@@ -15528,14 +15517,7 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_OACTIVE
 condition|)
-block|{
-name|DC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|idx
 operator|=
 name|sc
@@ -15748,11 +15730,6 @@ operator|=
 literal|5
 expr_stmt|;
 block|}
-name|DC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -15773,6 +15750,103 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|dc_init_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SRM_MEDIA
+if|if
+condition|(
+name|sc
+operator|->
+name|dc_srm_media
+condition|)
+block|{
+name|struct
+name|ifreq
+name|ifr
+decl_stmt|;
+name|struct
+name|mii_data
+modifier|*
+name|mii
+decl_stmt|;
+name|ifr
+operator|.
+name|ifr_media
+operator|=
+name|sc
+operator|->
+name|dc_srm_media
+expr_stmt|;
+name|sc
+operator|->
+name|dc_srm_media
+operator|=
+literal|0
+expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|mii
+operator|=
+name|device_get_softc
+argument_list|(
+name|sc
+operator|->
+name|dc_miibus
+argument_list|)
+expr_stmt|;
+name|ifmedia_ioctl
+argument_list|(
+name|sc
+operator|->
+name|dc_ifp
+argument_list|,
+operator|&
+name|ifr
+argument_list|,
+operator|&
+name|mii
+operator|->
+name|mii_media
+argument_list|,
+name|SIOCSIFMEDIA
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dc_init_locked
+parameter_list|(
+name|struct
+name|dc_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
 name|struct
 name|ifnet
 modifier|*
@@ -15787,7 +15861,7 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
-name|DC_LOCK
+name|DC_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -16184,22 +16258,14 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: initialization failed: no "
-literal|"memory for rx buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|dc_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|DC_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -16441,57 +16507,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SRM_MEDIA
-if|if
-condition|(
-name|sc
-operator|->
-name|dc_srm_media
-condition|)
-block|{
-name|struct
-name|ifreq
-name|ifr
-decl_stmt|;
-name|ifr
-operator|.
-name|ifr_media
-operator|=
-name|sc
-operator|->
-name|dc_srm_media
-expr_stmt|;
-name|ifmedia_ioctl
-argument_list|(
-name|ifp
-argument_list|,
-operator|&
-name|ifr
-argument_list|,
-operator|&
-name|mii
-operator|->
-name|mii_media
-argument_list|,
-name|SIOCSIFMEDIA
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|dc_srm_media
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-name|DC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -16540,6 +16555,11 @@ operator|->
 name|dc_miibus
 argument_list|)
 expr_stmt|;
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mii_mediachg
 argument_list|(
 name|mii
@@ -16583,6 +16603,11 @@ operator|->
 name|dc_link
 operator|=
 literal|0
+expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -16640,6 +16665,11 @@ argument_list|(
 name|sc
 operator|->
 name|dc_miibus
+argument_list|)
+expr_stmt|;
+name|DC_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|mii_pollstat
@@ -16707,6 +16737,11 @@ name|mii
 operator|->
 name|mii_media_status
 expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -16758,11 +16793,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|DC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|command
@@ -16771,6 +16801,11 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -16826,7 +16861,7 @@ name|dc_txthresh
 operator|=
 literal|0
 expr_stmt|;
-name|dc_init
+name|dc_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -16857,6 +16892,11 @@ name|ifp
 operator|->
 name|if_flags
 expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -16868,7 +16908,17 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|dc_setfilt
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|DC_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -16912,6 +16962,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SRM_MEDIA
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -16924,12 +16979,22 @@ name|dc_srm_media
 operator|=
 literal|0
 expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 break|break;
 case|case
 name|SIOCSIFCAP
 case|:
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
@@ -16947,6 +17012,11 @@ name|ifr_reqcap
 operator|&
 name|IFCAP_POLLING
 expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|error
@@ -16962,11 +17032,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|DC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -17007,13 +17072,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"dc%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|dc_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|dc_stop
@@ -17026,7 +17089,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|dc_init
+name|dc_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -17042,7 +17105,7 @@ operator|->
 name|if_snd
 argument_list|)
 condition|)
-name|dc_start
+name|dc_start_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -17091,7 +17154,7 @@ decl_stmt|;
 name|u_int32_t
 name|ctl
 decl_stmt|;
-name|DC_LOCK
+name|DC_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -17377,11 +17440,6 @@ name|dc_tx_list
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -17403,19 +17461,16 @@ name|dc_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|DC_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|dc_stop
@@ -17429,9 +17484,9 @@ name|suspended
 operator|=
 literal|1
 expr_stmt|;
-name|splx
+name|DC_UNLOCK
 argument_list|(
-name|s
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -17465,14 +17520,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -17487,6 +17534,11 @@ operator|->
 name|dc_ifp
 expr_stmt|;
 comment|/* reinitialize interface if necessary */
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -17495,7 +17547,7 @@ name|if_flags
 operator|&
 name|IFF_UP
 condition|)
-name|dc_init
+name|dc_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -17506,9 +17558,9 @@ name|suspended
 operator|=
 literal|0
 expr_stmt|;
-name|splx
+name|DC_UNLOCK
 argument_list|(
-name|s
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -17544,7 +17596,17 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|dc_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|DC_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
