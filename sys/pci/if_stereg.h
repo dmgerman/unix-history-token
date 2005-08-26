@@ -2399,9 +2399,6 @@ name|device_t
 name|ste_dev
 decl_stmt|;
 name|int
-name|ste_unit
-decl_stmt|;
-name|int
 name|ste_tx_thresh
 decl_stmt|;
 name|u_int8_t
