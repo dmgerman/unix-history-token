@@ -2254,6 +2254,11 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|ACPI_FUNCTION_NAME
+argument_list|(
+literal|"acpi_tz_get_temperature"
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|acpi_GetInteger
