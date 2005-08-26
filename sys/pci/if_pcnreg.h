@@ -2426,8 +2426,8 @@ name|pcn_ring_data
 name|pcn_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
-name|pcn_stat_ch
+name|callout
+name|pcn_stat_callout
 decl_stmt|;
 name|struct
 name|mtx
