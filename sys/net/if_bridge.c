@@ -2462,6 +2462,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_UP
+expr_stmt|;
 while|while
 condition|(
 operator|(
