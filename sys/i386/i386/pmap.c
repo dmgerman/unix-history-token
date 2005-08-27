@@ -4698,6 +4698,16 @@ name|ptepa
 operator|=
 literal|0
 expr_stmt|;
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|resident_count
+operator|-=
+name|NBPDR
+operator|/
+name|PAGE_SIZE
+expr_stmt|;
 name|pmap_invalidate_all
 argument_list|(
 name|kernel_pmap
