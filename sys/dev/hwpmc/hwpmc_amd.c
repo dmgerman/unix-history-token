@@ -2226,23 +2226,6 @@ return|;
 block|}
 if|#
 directive|if
-name|__amd64__
-if|if
-condition|(
-name|pd
-operator|->
-name|pd_caps
-operator|&
-name|PMC_CAP_INTERRUPT
-condition|)
-return|return
-name|EOPNOTSUPP
-return|;
-comment|/* XXX avoid a processor double fault */
-endif|#
-directive|endif
-if|#
-directive|if
 name|DEBUG
 name|KASSERT
 argument_list|(
