@@ -12007,9 +12007,12 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
+name|PTRIN
+argument_list|(
 name|ifc
 operator|.
 name|ifc_buf
+argument_list|)
 argument_list|,
 name|sbuf_data
 argument_list|(
