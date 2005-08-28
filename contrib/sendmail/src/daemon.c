@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.653 2004/11/18 23:45:01 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.658 2005/02/02 18:19:28 ca Exp $"
 argument_list|)
 end_macro
 
@@ -368,6 +368,25 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* MILTER */
+if|#
+directive|if
+name|_FFR_SS_PER_DAEMON
+name|int
+name|d_supersafe
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_SS_PER_DAEMON */
+if|#
+directive|if
+name|_FFR_DM_PER_DAEMON
+name|int
+name|d_dm
+decl_stmt|;
+comment|/* DeliveryMode */
+endif|#
+directive|endif
+comment|/* _FFR_DM_PER_DAEMON */
 block|}
 struct|;
 end_struct
@@ -379,6 +398,36 @@ name|daemon
 name|DAEMON_T
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|SAFE_NOTSET
+value|(-1)
+end_define
+
+begin_comment
+comment|/* SuperSafe (per daemon) option not set */
+end_comment
+
+begin_comment
+comment|/* see also sendmail.h: SuperSafe values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_NOTSET
+value|(-1)
+end_define
+
+begin_comment
+comment|/* DeliveryMode (per daemon) option not set */
+end_comment
+
+begin_comment
+comment|/* see also sendmail.h: values for e_sendmode -- send modes */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2854,6 +2903,61 @@ name|QueueIntvl
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_SS_PER_DAEMON
+if|if
+condition|(
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_supersafe
+operator|!=
+name|SAFE_NOTSET
+condition|)
+name|SuperSafe
+operator|=
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_supersafe
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_SS_PER_DAEMON */
+if|#
+directive|if
+name|_FFR_DM_PER_DAEMON
+if|if
+condition|(
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_dm
+operator|!=
+name|DM_NOTSET
+condition|)
+name|set_delivery_mode
+argument_list|(
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_dm
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DM_PER_DAEMON */
 name|sm_setproctitle
 argument_list|(
 name|true
@@ -5606,12 +5710,93 @@ operator|*
 name|f
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_SS_PER_DAEMON
+name|d
+operator|->
+name|d_supersafe
+operator|=
+name|SAFE_NOTSET
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_SS_PER_DAEMON */
+if|#
+directive|if
+name|_FFR_DM_PER_DAEMON
+name|d
+operator|->
+name|d_dm
+operator|=
+name|DM_NOTSET
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DM_PER_DAEMON */
 switch|switch
 condition|(
 operator|*
 name|f
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+comment|/* address */
+name|addr
+operator|=
+name|v
+expr_stmt|;
+break|break;
+if|#
+directive|if
+name|_FFR_DM_PER_DAEMON
+case|case
+literal|'D'
+case|:
+comment|/* DeliveryMode */
+switch|switch
+condition|(
+operator|*
+name|v
+condition|)
+block|{
+case|case
+name|SM_QUEUE
+case|:
+case|case
+name|SM_DEFER
+case|:
+case|case
+name|SM_DELIVER
+case|:
+case|case
+name|SM_FORK
+case|:
+name|d
+operator|->
+name|d_dm
+operator|=
+operator|*
+name|v
+expr_stmt|;
+break|break;
+default|default:
+name|syserr
+argument_list|(
+literal|"554 5.3.5 Unknown delivery mode %c"
+argument_list|,
+operator|*
+name|v
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_DM_PER_DAEMON */
 case|case
 literal|'F'
 case|:
@@ -5835,15 +6020,6 @@ name|v
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'A'
-case|:
-comment|/* address */
-name|addr
-operator|=
-name|v
-expr_stmt|;
-break|break;
 if|#
 directive|if
 name|MILTER
@@ -5860,15 +6036,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* MILTER */
-case|case
-literal|'P'
-case|:
-comment|/* port */
-name|port
-operator|=
-name|v
-expr_stmt|;
-break|break;
 case|case
 literal|'L'
 case|:
@@ -5902,17 +6069,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'S'
+literal|'N'
 case|:
-comment|/* send buffer size */
+comment|/* name */
 name|d
 operator|->
-name|d_tcpsndbufsize
+name|d_name
 operator|=
-name|atoi
-argument_list|(
 name|v
-argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+comment|/* port */
+name|port
+operator|=
+name|v
 expr_stmt|;
 break|break;
 case|case
@@ -5930,16 +6103,98 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'N'
+literal|'S'
 case|:
-comment|/* name */
+comment|/* send buffer size */
 name|d
 operator|->
-name|d_name
+name|d_tcpsndbufsize
 operator|=
+name|atoi
+argument_list|(
 name|v
+argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_SS_PER_DAEMON
+case|case
+literal|'T'
+case|:
+comment|/* SuperSafe */
+if|if
+condition|(
+name|tolower
+argument_list|(
+operator|*
+name|v
+argument_list|)
+operator|==
+literal|'i'
+condition|)
+name|d
+operator|->
+name|d_supersafe
+operator|=
+name|SAFE_INTERACTIVE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|tolower
+argument_list|(
+operator|*
+name|v
+argument_list|)
+operator|==
+literal|'p'
+condition|)
+if|#
+directive|if
+name|MILTER
+name|d
+operator|->
+name|d_supersafe
+operator|=
+name|SAFE_REALLY_POSTMILTER
+expr_stmt|;
+else|#
+directive|else
+comment|/* MILTER */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"Warning: SuperSafe=PostMilter requires Milter support (-DMILTER)\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MILTER */
+else|else
+name|d
+operator|->
+name|d_supersafe
+operator|=
+name|atobool
+argument_list|(
+name|v
+argument_list|)
+condition|?
+name|SAFE_REALLY
+else|:
+name|SAFE_NO
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_SS_PER_DAEMON */
 default|default:
 name|syserr
 argument_list|(

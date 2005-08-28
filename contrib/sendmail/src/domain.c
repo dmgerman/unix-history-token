@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.195 2004/08/04 21:11:31 ca Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.197 2005/03/04 00:54:42 ca Exp $ (with name server)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.195 2004/08/04 21:11:31 ca Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.197 2005/03/04 00:54:42 ca Exp $ (without name server)"
 argument_list|)
 end_macro
 
@@ -750,6 +750,22 @@ argument_list|,
 name|droplocalhost
 argument_list|)
 expr_stmt|;
+operator|*
+name|rcode
+operator|=
+name|EX_OK
+expr_stmt|;
+if|if
+condition|(
+name|pttl
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|pttl
+operator|=
+name|SM_DEFAULT_TTL
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -787,11 +803,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-operator|*
-name|rcode
-operator|=
-name|EX_OK
-expr_stmt|;
 if|if
 condition|(
 name|mxprefs

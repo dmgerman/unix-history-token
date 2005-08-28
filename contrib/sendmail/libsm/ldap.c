@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001-2005 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.60 2004/08/03 20:42:21 ca Exp $"
+literal|"@(#)$Id: ldap.c,v 1.62 2005/02/24 00:30:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2299,6 +2299,14 @@ name|delim
 operator|==
 literal|'\0'
 operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|SM_LDAP_SINGLEMATCH
+argument_list|,
+name|flags
+argument_list|)
+operator|&&
 operator|*
 name|result
 operator|!=
@@ -2845,8 +2853,6 @@ name|NULL
 condition|)
 block|{
 comment|/* already have a value */
-break|break;
-block|}
 if|if
 condition|(
 name|bitset
@@ -2855,11 +2861,6 @@ name|SM_LDAP_SINGLEMATCH
 argument_list|,
 name|flags
 argument_list|)
-operator|&&
-operator|*
-name|result
-operator|!=
-name|NULL
 condition|)
 block|{
 comment|/* only wanted one match */
@@ -2873,6 +2874,8 @@ expr_stmt|;
 return|return
 name|EX_NOTFOUND
 return|;
+block|}
+break|break;
 block|}
 if|if
 condition|(
@@ -3611,6 +3614,14 @@ operator|)
 name|delim
 operator|==
 literal|'\0'
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|SM_LDAP_SINGLEMATCH
+argument_list|,
+name|flags
+argument_list|)
 operator|&&
 operator|*
 name|result
