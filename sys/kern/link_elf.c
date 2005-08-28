@@ -3512,6 +3512,8 @@ ifdef|#
 directive|ifdef
 name|SPARSE_MAPPING
 comment|/* 	 * Wire down the pages 	 */
+name|error
+operator|=
 name|vm_map_wire
 argument_list|(
 name|kernel_map
@@ -3538,6 +3540,21 @@ operator||
 name|VM_MAP_WIRE_NOHOLES
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+name|KERN_SUCCESS
+condition|)
+block|{
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 endif|#
 directive|endif
 block|}
