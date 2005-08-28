@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.983 2005/01/07 17:43:22 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.986 2005/03/05 02:28:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -17065,6 +17065,53 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_LOG_NTRIES
+comment|/* ntries */
+if|if
+condition|(
+name|e
+operator|->
+name|e_ntries
+operator|>=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
+argument_list|,
+literal|", ntries=%d"
+argument_list|,
+name|e
+operator|->
+name|e_ntries
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_LOG_NTRIES */
 define|#
 directive|define
 name|STATLEN
@@ -22928,6 +22975,17 @@ operator|)
 condition|)
 return|return
 literal|"localhost"
+return|;
+comment|/* an empty host does not have MX records */
+if|if
+condition|(
+operator|*
+name|host
+operator|==
+literal|'\0'
+condition|)
+return|return
+literal|"_empty_"
 return|;
 comment|/* 	**  Check to see if this uses IPC -- if not, it can't have MX records. 	*/
 if|if

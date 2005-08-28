@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.379 2004/08/06 22:19:36 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.381 2005/02/04 22:01:45 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9750,18 +9750,13 @@ name|evp
 condition|)
 break|break;
 block|}
-comment|/* Don't silently truncate long strings */
-if|if
-condition|(
-name|sz
-operator|<=
+if|#
+directive|if
 literal|0
-condition|)
-name|usrerr
-argument_list|(
-literal|"cataddr: string too long"
-argument_list|)
-expr_stmt|;
+comment|/* 	**  Silently truncate long strings: even though this doesn't 	**  seem like a good idea it is necessary because header checks 	**  send the whole header value to rscheck() and hence rewrite(). 	**  The latter however sometimes uses a "short" buffer (e.g., 	**  cbuf[MAXNAME + 1]) to call cataddr() which then triggers this 	**  error function.  One possible fix to the problem is to pass 	**  flags to rscheck() and rewrite() to distinguish the various 	**  calls and only trigger the error if necessary.  For now just 	**  undo the change from 8.13.0. 	*/
+block|if (sz<= 0) 		usrerr("cataddr: string too long");
+endif|#
+directive|endif
 operator|*
 name|p
 operator|=

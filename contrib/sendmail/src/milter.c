@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.228 2004/11/09 18:54:55 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.229 2005/03/02 02:32:34 ca Exp $"
 argument_list|)
 end_macro
 
@@ -802,6 +802,47 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|mf_sock
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|0
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter_read(%s): socket closed"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
+name|milter_error
+argument_list|(
+name|m
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 operator|*
 name|rlen
 operator|=
@@ -1352,6 +1393,47 @@ operator|(
 name|long
 operator|)
 name|len
+argument_list|)
+expr_stmt|;
+name|milter_error
+argument_list|(
+name|m
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
+name|m
+operator|->
+name|mf_sock
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|0
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter_write(%s): socket closed"
+argument_list|,
+name|m
+operator|->
+name|mf_name
 argument_list|)
 expr_stmt|;
 name|milter_error
@@ -7018,7 +7100,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 block|}
 end_function
 
@@ -14127,6 +14208,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
+block|{
 name|milter_send_macros
 argument_list|(
 name|m
@@ -14138,6 +14220,10 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|MILTER_CHECK_RESULTS
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* send the final body chunk */
 operator|(
 name|void

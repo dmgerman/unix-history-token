@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.990 2004/11/09 19:45:46 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.993 2005/03/07 18:03:17 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -19010,6 +19010,9 @@ operator|,
 name|bool
 operator|,
 name|bool
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -19022,11 +19025,13 @@ name|updfs
 parameter_list|(
 name|e
 parameter_list|,
-name|delete
+name|count
 parameter_list|,
-name|avail
+name|space
+parameter_list|,
+name|where
 parameter_list|)
-value|upd_qs(e, delete, avail)
+value|upd_qs(e, count, space, where)
 end_define
 
 begin_else
@@ -19045,9 +19050,26 @@ name|updfs
 parameter_list|(
 name|e
 parameter_list|,
-name|delete
+name|count
 parameter_list|,
-name|avail
+name|space
+parameter_list|,
+name|where
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|upd_qs
+parameter_list|(
+name|e
+parameter_list|,
+name|count
+parameter_list|,
+name|space
+parameter_list|,
+name|where
 parameter_list|)
 end_define
 

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.460 2005/01/11 00:24:19 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.463 2005/03/16 00:36:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6458,12 +6458,6 @@ name|ssp
 argument_list|)
 expr_stmt|;
 comment|/* XXX should these be options settable via .cf ? */
-if|#
-directive|if
-name|STARTTLS
-endif|#
-directive|endif
-comment|/* STARTTLS */
 block|{
 name|ssp
 operator|.
