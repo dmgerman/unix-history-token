@@ -553,10 +553,6 @@ name|sc
 operator|->
 name|mem_start
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 literal|8192
 operator|+
 name|sc
@@ -786,7 +782,7 @@ name|msize
 init|=
 literal|0
 decl_stmt|;
-name|long
+name|bus_size_t
 name|mstart
 init|=
 literal|0
@@ -1136,8 +1132,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Cannot find any RAM, start : %ld, x = %d.\n"
+literal|"Cannot find any RAM, start : %d, x = %d.\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|mstart
 argument_list|,
 name|x
@@ -1149,12 +1148,19 @@ name|ENXIO
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"RAM start at %ld, size : %d.\n"
+literal|"RAM start at %d, size : %d.\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|mstart
 argument_list|,
 name|msize
@@ -1170,29 +1176,15 @@ name|sc
 operator|->
 name|mem_start
 operator|=
-operator|(
-name|caddr_t
-operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|mstart
 expr_stmt|;
 name|sc
 operator|->
 name|mem_end
 operator|=
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|uintptr_t
-argument_list|)
-argument_list|(
 name|msize
 operator|+
 name|mstart
-argument_list|)
 expr_stmt|;
 name|sc
 operator|->

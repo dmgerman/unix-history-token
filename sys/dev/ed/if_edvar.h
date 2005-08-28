@@ -28,6 +28,18 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|struct
+name|ifmedia
+name|ifmedia
+decl_stmt|;
+comment|/* Media info */
+name|device_t
+name|dev
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
 name|char
 modifier|*
 name|type_str
@@ -45,10 +57,6 @@ name|u_char
 name|chip_type
 decl_stmt|;
 comment|/* the type of chip (one of ED_CHIP_TYPE_*) */
-name|u_char
-name|gone
-decl_stmt|;
-comment|/* HW missing, presumed having a good time */
 name|u_char
 name|isa16bit
 decl_stmt|;
@@ -155,10 +163,31 @@ name|int
 parameter_list|)
 function_decl|;
 name|struct
-name|callout_handle
+name|callout
 name|tick_ch
 decl_stmt|;
-comment|/* Callout handle for ed_tick */
+name|void
+function_decl|(
+modifier|*
+name|readmem
+function_decl|)
+parameter_list|(
+name|struct
+name|ed_softc
+modifier|*
+name|sc
+parameter_list|,
+name|bus_size_t
+name|src
+parameter_list|,
+name|uint8_t
+modifier|*
+name|dst
+parameter_list|,
+name|uint16_t
+name|amount
+parameter_list|)
+function_decl|;
 name|int
 name|nic_offset
 decl_stmt|;
@@ -187,11 +216,11 @@ name|caddr_t
 name|hpp_mem_start
 decl_stmt|;
 comment|/* Memory-mapped IO register address */
-name|caddr_t
+name|bus_size_t
 name|mem_start
 decl_stmt|;
 comment|/* NIC memory start address */
-name|caddr_t
+name|bus_size_t
 name|mem_end
 decl_stmt|;
 comment|/* NIC memory end address */
@@ -199,7 +228,7 @@ name|uint32_t
 name|mem_size
 decl_stmt|;
 comment|/* total NIC memory size */
-name|caddr_t
+name|bus_size_t
 name|mem_ring
 decl_stmt|;
 comment|/* start of RX ring-buffer (in NIC mem) */
@@ -807,13 +836,49 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ed_shmem_readmem16
+parameter_list|(
+name|struct
+name|ed_softc
+modifier|*
+parameter_list|,
+name|bus_size_t
+parameter_list|,
+name|uint8_t
+modifier|*
+parameter_list|,
+name|uint16_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ed_shmem_readmem8
+parameter_list|(
+name|struct
+name|ed_softc
+modifier|*
+parameter_list|,
+name|bus_size_t
+parameter_list|,
+name|uint8_t
+modifier|*
+parameter_list|,
+name|uint16_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ed_pio_readmem
 parameter_list|(
 name|struct
 name|ed_softc
 modifier|*
 parameter_list|,
-name|long
+name|bus_size_t
 parameter_list|,
 name|uint8_t
 modifier|*
@@ -946,7 +1011,7 @@ name|struct
 name|ed_softc
 modifier|*
 parameter_list|,
-name|long
+name|bus_size_t
 parameter_list|,
 name|uint8_t
 modifier|*
@@ -1167,6 +1232,77 @@ parameter_list|(
 name|flg
 parameter_list|)
 value|((flg)& 0xff0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_MUTEX
+parameter_list|(
+name|_sc
+parameter_list|)
+value|(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(ED_MUTEX(_sc))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(ED_MUTEX(_sc))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_init(ED_MUTEX(_sc), device_get_nameunit(_sc->dev), \ 	    MTX_NETWORK_LOCK, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(ED_MUTEX(_sc));
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_ASSERT_LOCKED
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(ED_MUTEX(_sc), MA_OWNED);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_ASSERT_UNLOCKED
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(ED_MUTEX(_sc), MA_NOTOWNED);
 end_define
 
 begin_endif

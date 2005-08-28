@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_mib.h>
 end_include
 
@@ -371,6 +377,8 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|edintr
 argument_list|,
