@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2003 Andre Oppermann, Internet Business Solutions A
 end_comment
 
 begin_comment
-comment|/*  * ip_fastforward gets its speed from processing the forwarded packet to  * completion (if_output on the other side) without any queues or netisr's.  * The receiving interface DMAs the packet into memory, the upper half of  * driver calls ip_fastforward, we do our routing table lookup and directly  * send it off to the outgoing interface which DMAs the packet to the  * network card. The only part of the packet we touch with the CPU is the  * IP header (unless there are complex firewall rules touching other parts  * of the packet, but that is up to you). We are essentially limited by bus  * bandwidth and how fast the network card/driver can set up receives and  * transmits.  *  * We handle basic errors, ip header errors, checksum errors,  * destination unreachable, fragmentation and fragmentation needed and  * report them via icmp to the sender.  *  * Else if something is not pure IPv4 unicast forwarding we fall back to  * the normal ip_input processing path. We should only be called from  * interfaces connected to the outside world.  *  * Firewalling is fully supported including divert, ipfw fwd and ipfilter  * ipnat and address rewrite.  *  * IPSEC is not supported if this host is a tunnel broker. IPSEC is  * supported for connections to/from local host.  *  * We try to do the least expensive (in CPU ops) checks and operations  * first to catch junk with as little overhead as possible.  *   * We take full advantage of hardware support for ip checksum and  * fragmentation offloading.  *  * We don't do ICMP redirect in the fast forwarding path. I have had my own  * cases where two core routers with Zebra routing suite would send millions  * ICMP redirects to connected hosts if the router to dest was not the default  * gateway. In one case it was filling the routing table of a host with close  * 300'000 cloned redirect entries until it ran out of kernel memory. However  * the networking code proved very robust and it didn't crash or went ill  * otherwise.  */
+comment|/*  * ip_fastforward gets its speed from processing the forwarded packet to  * completion (if_output on the other side) without any queues or netisr's.  * The receiving interface DMAs the packet into memory, the upper half of  * driver calls ip_fastforward, we do our routing table lookup and directly  * send it off to the outgoing interface, which DMAs the packet to the  * network card. The only part of the packet we touch with the CPU is the  * IP header (unless there are complex firewall rules touching other parts  * of the packet, but that is up to you). We are essentially limited by bus  * bandwidth and how fast the network card/driver can set up receives and  * transmits.  *  * We handle basic errors, IP header errors, checksum errors,  * destination unreachable, fragmentation and fragmentation needed and  * report them via ICMP to the sender.  *  * Else if something is not pure IPv4 unicast forwarding we fall back to  * the normal ip_input processing path. We should only be called from  * interfaces connected to the outside world.  *  * Firewalling is fully supported including divert, ipfw fwd and ipfilter  * ipnat and address rewrite.  *  * IPSEC is not supported if this host is a tunnel broker. IPSEC is  * supported for connections to/from local host.  *  * We try to do the least expensive (in CPU ops) checks and operations  * first to catch junk with as little overhead as possible.  *   * We take full advantage of hardware support for IP checksum and  * fragmentation offloading.  *  * We don't do ICMP redirect in the fast forwarding path. I have had my own  * cases where two core routers with Zebra routing suite would send millions  * ICMP redirects to connected hosts if the destination router was not the  * default gateway. In one case it was filling the routing table of a host  * with approximately 300.000 cloned redirect entries until it ran out of  * kernel memory. However the networking code proved very robust and it didn't  * crash or fail in other ways.  */
 end_comment
 
 begin_comment
@@ -410,20 +410,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|in_ifaddr
-modifier|*
-name|ia
-init|=
-name|NULL
-decl_stmt|;
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-init|=
-name|NULL
-decl_stmt|;
-name|struct
 name|ifnet
 modifier|*
 name|ifp
@@ -728,7 +714,7 @@ goto|goto
 name|drop
 goto|;
 block|}
-comment|/* 	 * Remeber that we have checked the IP header and found it valid. 	 */
+comment|/* 	 * Remember that we have checked the IP header and found it valid. 	 */
 name|m
 operator|->
 name|m_pkthdr
@@ -957,6 +943,18 @@ condition|(
 operator|(
 name|m
 operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_BCAST
+operator||
+name|M_MCAST
+operator|)
+operator|)
+operator|||
+operator|(
+name|m
+operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
@@ -1020,6 +1018,14 @@ argument_list|)
 operator|||
 name|ip
 operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|==
+name|INADDR_ANY
+operator|||
+name|ip
+operator|->
 name|ip_dst
 operator|.
 name|s_addr
@@ -1042,99 +1048,6 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 	 * Or is it for a local IP broadcast address on this host? 	 */
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_BCAST
-operator|)
-operator|&&
-operator|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|->
-name|if_flags
-operator|&
-name|IFF_BROADCAST
-operator|)
-condition|)
-block|{
-name|TAILQ_FOREACH
-argument_list|(
-argument|ifa
-argument_list|,
-argument|&m->m_pkthdr.rcvif->if_addrhead
-argument_list|,
-argument|ifa_link
-argument_list|)
-block|{
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|->
-name|sa_family
-operator|!=
-name|AF_INET
-condition|)
-continue|continue;
-name|ia
-operator|=
-name|ifatoia
-argument_list|(
-name|ifa
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ia
-operator|->
-name|ia_netbroadcast
-operator|.
-name|s_addr
-operator|==
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-condition|)
-return|return
-literal|0
-return|;
-if|if
-condition|(
-name|satosin
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_broadaddr
-argument_list|)
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|==
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-condition|)
-return|return
-literal|0
-return|;
-block|}
-block|}
 name|ipstat
 operator|.
 name|ips_total
@@ -1821,7 +1734,7 @@ goto|goto
 name|consumed
 goto|;
 block|}
-comment|/* 	 * Check if packet fits MTU or if hardware will fragement for us 	 */
+comment|/* 	 * Check if packet fits MTU or if hardware will fragment for us 	 */
 if|if
 condition|(
 name|ro
@@ -1969,7 +1882,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 			 * We have to fragement the packet 			 */
+comment|/* 			 * We have to fragment the packet 			 */
 name|m
 operator|->
 name|m_pkthdr
