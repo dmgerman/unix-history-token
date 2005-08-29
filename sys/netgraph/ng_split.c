@@ -542,6 +542,15 @@ name|out
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|item
+condition|)
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
