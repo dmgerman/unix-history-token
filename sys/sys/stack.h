@@ -162,6 +162,8 @@ name|struct
 name|stack
 modifier|*
 parameter_list|,
+name|u_int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -176,9 +178,11 @@ name|m
 parameter_list|,
 name|st
 parameter_list|,
+name|depth
+parameter_list|,
 name|cheap
 parameter_list|)
-value|do {					\ 	if (KTR_COMPILE& (m))						\ 		stack_ktr((m), __FILE__, __LINE__, st, cheap);		\ 	} while(0)
+value|do {				\ 	if (KTR_COMPILE& (m))						\ 		stack_ktr((m), __FILE__, __LINE__, st, depth, cheap);	\ 	} while(0)
 end_define
 
 begin_else
@@ -194,6 +198,8 @@ parameter_list|(
 name|m
 parameter_list|,
 name|st
+parameter_list|,
+name|depth
 parameter_list|,
 name|cheap
 parameter_list|)
