@@ -4482,6 +4482,13 @@ name|mode
 condition|)
 block|{
 case|case
+operator|-
+literal|1
+case|:
+return|return
+literal|"UNSUPPORTED"
+return|;
+case|case
 name|ATA_PIO0
 case|:
 return|return
