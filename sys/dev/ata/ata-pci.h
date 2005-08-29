@@ -1985,6 +1985,13 @@ name|VIABUG
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIABAR
+value|0x40
+end_define
+
 begin_comment
 comment|/* global prototypes ata-pci.c */
 end_comment
