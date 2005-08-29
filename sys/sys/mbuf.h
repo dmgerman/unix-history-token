@@ -2359,6 +2359,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|m_demote
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|mbuf
 modifier|*
