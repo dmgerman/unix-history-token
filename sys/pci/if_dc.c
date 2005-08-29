@@ -282,7 +282,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* "device miibus" required.  See GENERIC if you get errors here. */
+comment|/*  * "device miibus" is required in kernel config.  See GENERIC if you get  * errors here.  */
 end_comment
 
 begin_include
