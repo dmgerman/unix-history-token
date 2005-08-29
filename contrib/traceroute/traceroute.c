@@ -4037,6 +4037,17 @@ operator|!=
 name|lastaddr
 condition|)
 block|{
+if|if
+condition|(
+name|probe
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\n   "
+argument_list|)
+expr_stmt|;
 name|print
 argument_list|(
 name|packet
