@@ -12906,9 +12906,6 @@ name|wi_gone
 operator|=
 literal|1
 expr_stmt|;
-name|count
-operator|--
-expr_stmt|;
 return|return
 operator|(
 name|ETIMEDOUT
@@ -13025,9 +13022,6 @@ operator|&
 name|WI_STAT_CMD_RESULT
 condition|)
 block|{
-name|count
-operator|--
-expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -13042,9 +13036,6 @@ name|WI_DELAY
 argument_list|)
 expr_stmt|;
 block|}
-name|count
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|i
