@@ -12831,13 +12831,6 @@ name|s
 init|=
 literal|0
 decl_stmt|;
-specifier|static
-specifier|volatile
-name|int
-name|count
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|sc
@@ -12849,20 +12842,6 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-if|if
-condition|(
-name|count
-operator|>
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"Hey partner, hold on there!"
-argument_list|)
-expr_stmt|;
-name|count
-operator|++
-expr_stmt|;
 comment|/* wait for the busy bit to clear */
 for|for
 control|(
