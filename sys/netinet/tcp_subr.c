@@ -1767,7 +1767,7 @@ name|m_get
 argument_list|(
 name|M_DONTWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
