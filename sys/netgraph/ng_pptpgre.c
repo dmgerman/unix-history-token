@@ -38,13 +38,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -572,6 +584,11 @@ name|ng_pptpgre_stats
 name|stats
 decl_stmt|;
 comment|/* node statistics */
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/* node mutex */
 block|}
 struct|;
 end_struct
@@ -1063,7 +1080,21 @@ name|priv
 argument_list|)
 expr_stmt|;
 comment|/* Initialize state */
-name|ng_callout_init
+name|mtx_init
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|mtx
+argument_list|,
+literal|"ng_pptp"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|ng_callout_init_mtx
 argument_list|(
 operator|&
 name|priv
@@ -1071,9 +1102,14 @@ operator|->
 name|ackp
 operator|.
 name|sackTimer
+argument_list|,
+operator|&
+name|priv
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
-name|ng_callout_init
+name|ng_callout_init_mtx
 argument_list|(
 operator|&
 name|priv
@@ -1081,6 +1117,11 @@ operator|->
 name|ackp
 operator|.
 name|rackTimer
+argument_list|,
+operator|&
+name|priv
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* Done */
@@ -1544,6 +1585,9 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
 comment|/* If not configured, reject */
 if|if
 condition|(
@@ -1566,6 +1610,14 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
 comment|/* Treat as xmit or recv data */
 if|if
 condition|(
@@ -1575,14 +1627,16 @@ name|priv
 operator|->
 name|upper
 condition|)
-return|return
+name|rval
+operator|=
 name|ng_pptpgre_xmit
 argument_list|(
 name|node
 argument_list|,
 name|item
 argument_list|)
-return|;
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|hook
@@ -1591,14 +1645,16 @@ name|priv
 operator|->
 name|lower
 condition|)
-return|return
+name|rval
+operator|=
 name|ng_pptpgre_recv
 argument_list|(
 name|node
 argument_list|,
 name|item
 argument_list|)
-return|;
+expr_stmt|;
+else|else
 name|panic
 argument_list|(
 literal|"%s: weird hook"
@@ -1606,6 +1662,19 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rval
+operator|)
+return|;
 block|}
 end_function
 
@@ -1635,6 +1704,14 @@ comment|/* Reset node (stops timers) */
 name|ng_pptpgre_reset
 argument_list|(
 name|node
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -4064,6 +4141,14 @@ name|priv
 operator|->
 name|ackp
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
 comment|/* Reset adaptive timeout state */
 name|a
 operator|->
@@ -4223,6 +4308,14 @@ expr_stmt|;
 name|ng_pptpgre_stop_recv_ack_timer
 argument_list|(
 name|node
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 block|}
