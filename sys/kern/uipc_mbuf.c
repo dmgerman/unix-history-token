@@ -1316,7 +1316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sanity checks on mbuf (chain).  * Returns 0 bad, 1 good, panic worse.  * sanitize, 0 run M_SANITY_ACTION, 1 garble things so they blow up later.  */
+comment|/*  * Sanity checks on mbuf (chain) for use in KASSERT() and general  * debugging.  * Returns 0 or panics when bad and 1 on all tests passed.  * Sanitize, 0 to run M_SANITY_ACTION, 1 to garble things so they  * blow up later.  */
 end_comment
 
 begin_function
@@ -1355,24 +1355,34 @@ name|s
 parameter_list|)
 value|return (0)
 comment|/* #define	M_SANITY_ACTION(s)	panic("mbuf %p: " s, m) */
+for|for
+control|(
 name|m
 operator|=
 name|m0
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|m
-condition|)
+operator|!=
+name|NULL
+condition|;
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+control|)
 block|{
 comment|/* 		 * Basic pointer checks.  If any of these fails then some 		 * unrelated kernel memory before or after us is trashed. 		 * No way to recover from that. 		 */
 name|a
 operator|=
+operator|(
 operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_EXT
+operator|)
 condition|?
 name|m
 operator|->
@@ -1381,11 +1391,13 @@ operator|.
 name|ext_buf
 else|:
 operator|(
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_PKTHDR
+operator|)
 condition|?
 call|(
 name|caddr_t
@@ -1431,11 +1443,13 @@ operator|.
 name|ext_size
 else|:
 operator|(
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_PKTHDR
+operator|)
 condition|?
 name|MHLEN
 else|:
@@ -1498,11 +1512,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_PKTHDR
+operator|)
 operator|&&
 name|m
 operator|->
@@ -1551,6 +1567,8 @@ operator|&&
 name|m
 operator|->
 name|m_nextpkt
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1731,20 +1749,18 @@ literal|"M_PKTHDR on in-chain mbuf"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|m
 operator|=
-name|m
-operator|->
-name|m_next
+name|m0
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pktlen
 operator|&&
 name|pktlen
 operator|!=
-name|m0
+name|m
 operator|->
 name|m_pkthdr
 operator|.
@@ -1755,7 +1771,7 @@ if|if
 condition|(
 name|sanitize
 condition|)
-name|m0
+name|m
 operator|->
 name|m_pkthdr
 operator|.
@@ -1770,12 +1786,12 @@ literal|"m_pkthdr.len != mbuf chain length"
 argument_list|)
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|M_SANITY_ACTION
 return|return
 literal|1
 return|;
+undef|#
+directive|undef
+name|M_SANITY_ACTION
 block|}
 end_function
 
