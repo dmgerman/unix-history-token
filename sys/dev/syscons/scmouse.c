@@ -596,6 +596,12 @@ operator|->
 name|font_size
 operator|<=
 literal|0
+operator|||
+name|scp
+operator|->
+name|font_width
+operator|<=
+literal|0
 condition|)
 name|scp
 operator|->
