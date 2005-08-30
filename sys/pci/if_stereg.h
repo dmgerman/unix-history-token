@@ -2422,8 +2422,8 @@ name|ste_chain_data
 name|ste_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
-name|ste_stat_ch
+name|callout
+name|ste_stat_callout
 decl_stmt|;
 name|struct
 name|mtx
