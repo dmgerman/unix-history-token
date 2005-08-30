@@ -344,7 +344,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-0123456789a:b:l:p:"
+literal|"0123456789a:b:l:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -475,25 +475,6 @@ name|optarg
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-literal|'-'
-case|:
-comment|/* Undocumented: historic stdin flag. */
-if|if
-condition|(
-name|ifd
-operator|!=
-operator|-
-literal|1
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-name|ifd
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 literal|'a'
@@ -742,13 +723,6 @@ operator|*
 name|argv
 operator|!=
 name|NULL
-condition|)
-if|if
-condition|(
-name|ifd
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 comment|/* Input file. */
