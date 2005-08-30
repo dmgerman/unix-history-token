@@ -29,6 +29,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint32_t
+name|bitcount32
+parameter_list|(
+name|uint32_t
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|off_t
 name|g_get_mediasize
 parameter_list|(

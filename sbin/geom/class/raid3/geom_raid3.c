@@ -689,28 +689,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifndef|#
-directive|ifndef
-name|BITCOUNT
-define|#
-directive|define
-name|BITCOUNT
-parameter_list|(
-name|x
-parameter_list|)
-value|(((BX_(x) + (BX_(x)>> 4))& 0x0F0F0F0F) % 255)
-define|#
-directive|define
-name|BX_
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) - (((x)>> 1)& 0x77777777) -		\ 			 (((x)>> 2)& 0x33333333) - (((x)>> 3)& 0x11111111))
-endif|#
-directive|endif
 if|if
 condition|(
-name|BITCOUNT
+name|bitcount32
 argument_list|(
 operator|*
 name|nargs
