@@ -1619,6 +1619,17 @@ operator|!=
 operator|-
 literal|1
 operator|)
+operator|&&
+name|m_tag_find
+argument_list|(
+name|m
+argument_list|,
+name|PACKET_TAG_PF_ROUTED
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|int
