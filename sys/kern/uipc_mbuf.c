@@ -1179,7 +1179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clean up mbuf (chain) from any tags and packet headers.  * If "all" is set then the first mbuf in the chain will be  * cleaned too.  */
+comment|/*  * Clean up mbuf (chain) from any tags and packet headers.  */
 end_comment
 
 begin_function
@@ -1190,9 +1190,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
-parameter_list|,
-name|int
-name|all
 parameter_list|)
 block|{
 name|struct
@@ -1266,7 +1263,7 @@ condition|(
 name|m
 operator|->
 name|m_type
-operator|&
+operator|==
 name|MT_HEADER
 condition|)
 name|m
@@ -1284,6 +1281,8 @@ operator|&&
 name|m
 operator|->
 name|m_nextpkt
+operator|!=
+name|NULL
 condition|)
 name|m
 operator|->
