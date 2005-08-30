@@ -5884,7 +5884,7 @@ name|bridge_iflist
 modifier|*
 name|bif
 decl_stmt|;
-name|BRIDGE_LOCK
+name|BRIDGE_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -6084,11 +6084,6 @@ name|hz
 argument_list|,
 name|bstp_tick
 argument_list|,
-name|sc
-argument_list|)
-expr_stmt|;
-name|BRIDGE_UNLOCK
-argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
