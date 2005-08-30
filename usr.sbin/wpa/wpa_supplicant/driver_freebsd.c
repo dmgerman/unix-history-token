@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211.h>
 end_include
 
@@ -1135,6 +1141,20 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|struct
+name|ether_addr
+name|ea
+decl_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|ea
+argument_list|,
+name|addr
+argument_list|,
+name|IEEE80211_ADDR_LEN
+argument_list|)
+expr_stmt|;
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -1145,7 +1165,8 @@ name|__func__
 argument_list|,
 name|ether_ntoa
 argument_list|(
-name|addr
+operator|&
+name|ea
 argument_list|)
 argument_list|,
 name|key_idx
@@ -1263,6 +1284,10 @@ name|struct
 name|ieee80211req_key
 name|wk
 decl_stmt|;
+name|struct
+name|ether_addr
+name|ea
+decl_stmt|;
 name|char
 modifier|*
 name|alg_name
@@ -1344,11 +1369,21 @@ operator|-
 literal|1
 return|;
 block|}
+name|memcpy
+argument_list|(
+operator|&
+name|ea
+argument_list|,
+name|addr
+argument_list|,
+name|IEEE80211_ADDR_LEN
+argument_list|)
+expr_stmt|;
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"%s: alg=%s addr=%s key_idx=%d set_tx=%d seq_len=%d key_len=%d"
+literal|"%s: alg=%s addr=%s key_idx=%d set_tx=%d seq_len=%zu key_len=%zu"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1356,7 +1391,8 @@ name|alg_name
 argument_list|,
 name|ether_ntoa
 argument_list|(
-name|addr
+operator|&
+name|ea
 argument_list|)
 argument_list|,
 name|key_idx
@@ -1382,7 +1418,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"%s: seq_len %d too big"
+literal|"%s: seq_len %zu too big"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1410,7 +1446,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"%s: key length %d too big"
+literal|"%s: key length %zu too big"
 argument_list|,
 name|__func__
 argument_list|,
