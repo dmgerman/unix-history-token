@@ -1179,7 +1179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clean up mbuf (chain) from any tags and packet headers.  */
+comment|/*  * Clean up mbuf (chain) from any tags and packet headers.  * If "all" is set then the first mbuf in the chain will be  * cleaned too.  */
 end_comment
 
 begin_function
@@ -1190,6 +1190,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
+parameter_list|,
+name|int
+name|all
 parameter_list|)
 block|{
 name|struct
