@@ -3910,7 +3910,7 @@ name|sc
 operator|->
 name|sc_stripebits
 operator|=
-name|BITCOUNT
+name|bitcount32
 argument_list|(
 name|sc
 operator|->
