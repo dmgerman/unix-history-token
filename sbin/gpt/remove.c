@@ -175,8 +175,6 @@ decl_stmt|;
 name|unsigned
 name|int
 name|i
-decl_stmt|,
-name|removed
 decl_stmt|;
 name|gpt
 operator|=
@@ -258,10 +256,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|removed
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Remove all matching entries in the map. */
 for|for
 control|(
@@ -605,19 +599,7 @@ operator|->
 name|map_index
 argument_list|)
 expr_stmt|;
-name|removed
-operator|++
-expr_stmt|;
 block|}
-name|warnx
-argument_list|(
-literal|"%s: %d partition(s) removed"
-argument_list|,
-name|device_name
-argument_list|,
-name|removed
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
