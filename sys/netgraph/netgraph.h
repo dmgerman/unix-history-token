@@ -5609,6 +5609,18 @@ parameter_list|)
 value|callout_init(c, CALLOUT_MPSAFE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ng_callout_init_mtx
+parameter_list|(
+name|c
+parameter_list|,
+name|mtx
+parameter_list|)
+value|callout_init_mtx(c, mtx, 0)
+end_define
+
 begin_comment
 comment|/* Flags for netgraph functions. */
 end_comment
