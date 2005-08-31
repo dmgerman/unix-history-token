@@ -71,6 +71,24 @@ directive|include
 file|"gpt.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|show_label
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|show_uuid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -83,7 +101,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s device ...\n"
+literal|"usage: %s [-lu] device ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -168,6 +186,13 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|show_uuid
+condition|)
+goto|goto
+name|unfriendly
+goto|;
 if|if
 condition|(
 name|uuid_equal
@@ -304,6 +329,8 @@ operator|(
 literal|"Windows reserved"
 operator|)
 return|;
+name|unfriendly
+label|:
 name|uuid_to_string
 argument_list|(
 name|t
@@ -671,6 +698,26 @@ name|m
 operator|->
 name|map_data
 expr_stmt|;
+if|if
+condition|(
+name|show_label
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"- \"%s\""
+argument_list|,
+name|utf16_to_utf8
+argument_list|(
+name|ent
+operator|->
+name|ent_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|le_uuid_dec
 argument_list|(
 operator|&
@@ -693,6 +740,7 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MAP_TYPE_PMBR
@@ -748,7 +796,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|""
+literal|"lu"
 argument_list|)
 operator|)
 operator|!=
@@ -761,6 +809,22 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'l'
+case|:
+name|show_label
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|show_uuid
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 name|usage_show
 argument_list|()

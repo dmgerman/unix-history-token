@@ -397,13 +397,13 @@ operator|&
 name|swap
 argument_list|)
 expr_stmt|;
-name|unicode16
+name|utf8_to_utf16
 argument_list|(
+literal|"FreeBSD swap partition"
+argument_list|,
 name|ent
 operator|->
 name|ent_name
-argument_list|,
-literal|L"FreeBSD swap partition"
 argument_list|,
 literal|36
 argument_list|)
@@ -430,13 +430,13 @@ operator|&
 name|ufs
 argument_list|)
 expr_stmt|;
-name|unicode16
+name|utf8_to_utf16
 argument_list|(
+literal|"FreeBSD UFS partition"
+argument_list|,
 name|ent
 operator|->
 name|ent_name
-argument_list|,
-literal|L"FreeBSD UFS partition"
 argument_list|,
 literal|36
 argument_list|)
@@ -463,13 +463,13 @@ operator|&
 name|vinum
 argument_list|)
 expr_stmt|;
-name|unicode16
+name|utf8_to_utf16
 argument_list|(
+literal|"FreeBSD vinum partition"
+argument_list|,
 name|ent
 operator|->
 name|ent_name
-argument_list|,
-literal|L"FreeBSD vinum partition"
 argument_list|,
 literal|36
 argument_list|)
@@ -1343,13 +1343,13 @@ operator|-
 literal|1LL
 argument_list|)
 expr_stmt|;
-name|unicode16
+name|utf8_to_utf16
 argument_list|(
+literal|"FreeBSD disklabel partition"
+argument_list|,
 name|ent
 operator|->
 name|ent_name
-argument_list|,
-literal|L"FreeBSD disklabel partition"
 argument_list|,
 literal|36
 argument_list|)
@@ -1418,13 +1418,13 @@ operator|-
 literal|1LL
 argument_list|)
 expr_stmt|;
-name|unicode16
+name|utf8_to_utf16
 argument_list|(
+literal|"EFI system partition"
+argument_list|,
 name|ent
 operator|->
 name|ent_name
-argument_list|,
-literal|L"EFI system partition"
 argument_list|,
 literal|36
 argument_list|)
