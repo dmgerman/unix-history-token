@@ -1347,7 +1347,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"atmresolve: BCAST/MCAST packet detected/dumped"
+literal|"atmresolve: BCAST/MCAST packet detected/dumped\n"
 argument_list|)
 expr_stmt|;
 goto|goto
