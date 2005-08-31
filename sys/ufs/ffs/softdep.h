@@ -847,6 +847,11 @@ name|worklist
 name|fb_list
 decl_stmt|;
 comment|/* id_inowait or delayed worklist */
+define|#
+directive|define
+name|fb_state
+value|fb_list.wk_state
+comment|/* inode and dirty block state */
 name|ino_t
 name|fb_previousinum
 decl_stmt|;
