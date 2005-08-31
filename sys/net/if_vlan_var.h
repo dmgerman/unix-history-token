@@ -157,6 +157,20 @@ begin_comment
 comment|/* tag of VLAN interface */
 end_comment
 
+begin_comment
+comment|/*  * This macro must expand to a lvalue so that it can be used  * to set a tag with a simple assignment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VLAN_TAG_VALUE
+parameter_list|(
+name|_mt
+parameter_list|)
+value|(*(u_int *)((_mt) + 1))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -170,7 +184,7 @@ name|_t
 parameter_list|,
 name|_errcase
 parameter_list|)
-value|do {		\ 	struct m_tag *mtag;					\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,		\ 			   sizeof (u_int), M_NOWAIT);		\ 	if (mtag == NULL) {					\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_errcase;					\ 	}							\ 	*(u_int *)(mtag+1) = (_t);				\ 	m_tag_prepend((_m), mtag);				\ 	(_m)->m_flags |= M_VLANTAG;				\ } while (0)
+value|do {		\ 	struct m_tag *mtag;					\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,		\ 			   sizeof (u_int), M_NOWAIT);		\ 	if (mtag == NULL) {					\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_errcase;					\ 	}							\ 	VLAN_TAG_VALUE(mtag) = (_t);				\ 	m_tag_prepend((_m), mtag);				\ 	(_m)->m_flags |= M_VLANTAG;				\ } while (0)
 end_define
 
 begin_define
@@ -184,16 +198,6 @@ name|_m
 parameter_list|)
 define|\
 value|((_m)->m_flags& M_VLANTAG ?				\ 		m_tag_locate((_m), MTAG_VLAN, MTAG_VLAN_TAG, NULL) : NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VLAN_TAG_VALUE
-parameter_list|(
-name|_mt
-parameter_list|)
-value|(*(u_int *)((_mt)+1))
 end_define
 
 begin_endif
