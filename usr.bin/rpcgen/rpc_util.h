@@ -371,16 +371,23 @@ begin_comment
 comment|/* flag for generating tirpc code */
 end_comment
 
-begin_extern
-extern|extern int
-specifier|inline
-namespace|;
+begin_decl_stmt
+specifier|extern
+name|int
+name|inline_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* if this is 0, then do not generate inline code */
-namespace|extern
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|mtflag
-namespace|;
-end_extern
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Other flags related with inetd jumpstart.  */

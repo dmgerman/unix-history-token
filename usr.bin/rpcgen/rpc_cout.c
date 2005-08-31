@@ -606,7 +606,7 @@ expr_stmt|;
 comment|/* Now add Inline support */
 if|if
 condition|(
-specifier|inline
+name|inline_size
 operator|==
 literal|0
 condition|)
@@ -2179,10 +2179,10 @@ name|NULL
 operator|&&
 name|size
 operator|<
-specifier|inline
+name|inline_size
 condition|)
 block|{
-comment|/* 					 * don't expand into inline code 					 * if size< inline 					 */
+comment|/* 					 * don't expand into inline code 					 * if size< inline_size 					 */
 while|while
 condition|(
 name|cur
@@ -2418,10 +2418,10 @@ name|NULL
 operator|&&
 name|size
 operator|<
-specifier|inline
+name|inline_size
 condition|)
 block|{
-comment|/* don't expand into inline code if size< inline */
+comment|/* don't expand into inline code if size< inline_size */
 while|while
 condition|(
 name|cur
@@ -2615,7 +2615,7 @@ name|can_inline
 decl_stmt|;
 if|if
 condition|(
-specifier|inline
+name|inline_size
 operator|==
 literal|0
 condition|)
@@ -2812,7 +2812,7 @@ if|if
 condition|(
 name|size
 operator|>=
-specifier|inline
+name|inline_size
 condition|)
 block|{
 name|can_inline
@@ -2831,7 +2831,7 @@ if|if
 condition|(
 name|size
 operator|>=
-specifier|inline
+name|inline_size
 condition|)
 name|can_inline
 operator|=

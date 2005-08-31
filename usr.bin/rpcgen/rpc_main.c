@@ -751,13 +751,13 @@ begin_comment
 comment|/* length at which to start doing an inline */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
-specifier|inline
-operator|=
+name|inline_size
+init|=
 name|INLINE
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Length at which to start doing an inline. INLINE = default  * if 0, no xdr_inline code  */
@@ -5585,7 +5585,7 @@ literal|0
 operator|)
 return|;
 block|}
-specifier|inline
+name|inline_size
 operator|=
 name|atoi
 argument_list|(
