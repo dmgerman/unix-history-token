@@ -1824,10 +1824,6 @@ name|wb_info
 decl_stmt|;
 comment|/* Winbond adapter info */
 name|u_int8_t
-name|wb_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|wb_type
 decl_stmt|;
 name|u_int16_t
