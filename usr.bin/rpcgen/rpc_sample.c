@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"rpc_scan.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rpc_util.h"
 end_include
 

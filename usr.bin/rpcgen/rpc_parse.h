@@ -498,7 +498,9 @@ begin_function_decl
 name|definition
 modifier|*
 name|get_definition
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
