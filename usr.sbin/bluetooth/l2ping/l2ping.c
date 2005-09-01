@@ -1312,7 +1312,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -f         No delay (soft of flood)\n"
+literal|"  -f         No delay (sort of flood)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
