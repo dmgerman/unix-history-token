@@ -16205,6 +16205,11 @@ argument_list|(
 name|fvp
 argument_list|)
 expr_stmt|;
+name|vn_finished_write
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out1
 goto|;
@@ -16515,13 +16520,13 @@ operator|.
 name|ni_startdir
 argument_list|)
 expr_stmt|;
-name|out1
-label|:
 name|vn_finished_write
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+name|out1
+label|:
 if|if
 condition|(
 name|fromnd
