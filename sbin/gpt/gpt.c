@@ -3309,6 +3309,12 @@ literal|"help"
 block|}
 block|,
 block|{
+name|cmd_label
+block|,
+literal|"label"
+block|}
+block|,
+block|{
 name|cmd_migrate
 block|,
 literal|"migrate"
@@ -3365,7 +3371,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-rv] [-p nparts] command [options] device\n"
+literal|"usage: %s [-rv] [-p nparts] command [options] device ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
