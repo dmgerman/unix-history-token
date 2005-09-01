@@ -28,37 +28,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/_pthreadtypes.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<machine/_limits.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<machine/_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<sys/_sigset.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_comment
@@ -83,14 +83,14 @@ begin_define
 define|#
 directive|define
 name|PTHREAD_STACK_MIN
-value|MINSIGSTKSZ
+value|__MINSIGSTKSZ
 end_define
 
 begin_define
 define|#
 directive|define
 name|PTHREAD_THREADS_MAX
-value|ULONG_MAX
+value|__ULONG_MAX
 end_define
 
 begin_define
@@ -1223,10 +1223,10 @@ parameter_list|(
 name|int
 parameter_list|,
 specifier|const
-name|sigset_t
+name|__sigset_t
 modifier|*
 parameter_list|,
-name|sigset_t
+name|__sigset_t
 modifier|*
 parameter_list|)
 function_decl|;
