@@ -802,6 +802,9 @@ parameter_list|(
 name|definition
 modifier|*
 name|def
+parameter_list|,
+name|int
+name|headeronly
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -813,6 +816,9 @@ parameter_list|(
 name|definition
 modifier|*
 name|def
+parameter_list|,
+name|int
+name|headeronly
 parameter_list|)
 function_decl|;
 end_function_decl
