@@ -403,6 +403,7 @@ name|NULL
 argument_list|)
 condition|)
 continue|continue;
+comment|/* Remove the entry by clearing the partition type. */
 name|uuid_create_nil
 argument_list|(
 operator|&
