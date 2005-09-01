@@ -107,7 +107,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-b lba] [-i index] [-s lba] [-t uuid] device\n"
+literal|"usage: %s [-b lba] [-i index] [-s lba] [-t uuid] device ...\n"
 argument_list|,
 name|getprogname
 argument_list|()

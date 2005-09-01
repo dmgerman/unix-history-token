@@ -143,7 +143,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-fs] device\n"
+literal|"usage: %s [-fs] device ...\n"
 argument_list|,
 name|getprogname
 argument_list|()

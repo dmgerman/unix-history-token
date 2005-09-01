@@ -114,8 +114,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s -a device\n"
-literal|"       %s [-b lba] [-i index] [-s lba] [-t uuid] device\n"
+literal|"usage: %s -a device ...\n"
+literal|"       %s [-b lba] [-i index] [-s lba] [-t uuid] device ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -403,7 +403,7 @@ name|NULL
 argument_list|)
 condition|)
 continue|continue;
-comment|/* Remove the entry by clearing the partition type. */
+comment|/* Remove the primary entry by clearing the partition type. */
 name|uuid_create_nil
 argument_list|(
 operator|&
@@ -512,6 +512,7 @@ name|hdr_entsz
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* Remove the secundary entry. */
 name|uuid_create_nil
 argument_list|(
 operator|&
