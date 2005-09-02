@@ -11602,12 +11602,12 @@ name|fn
 operator|.
 name|fn_fn
 argument_list|,
-name|NGI_NODE
+name|_NGI_NODE
 argument_list|(
 name|item
 argument_list|)
 argument_list|,
-name|NGI_HOOK
+name|_NGI_HOOK
 argument_list|(
 name|item
 argument_list|)
@@ -11663,7 +11663,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NGI_NODE
+name|_NGI_NODE
 argument_list|(
 name|item
 argument_list|)
@@ -11673,14 +11673,14 @@ name|printf
 argument_list|(
 literal|"node %p ([%x])\n"
 argument_list|,
-name|NGI_NODE
+name|_NGI_NODE
 argument_list|(
 name|item
 argument_list|)
 argument_list|,
 name|ng_node2ID
 argument_list|(
-name|NGI_NODE
+name|_NGI_NODE
 argument_list|(
 name|item
 argument_list|)
