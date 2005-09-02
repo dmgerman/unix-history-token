@@ -3258,7 +3258,7 @@ operator|||
 operator|(
 name|fd
 operator|->
-name|flags
+name|options
 operator|&
 name|FDOPT_NORETRY
 operator|)
