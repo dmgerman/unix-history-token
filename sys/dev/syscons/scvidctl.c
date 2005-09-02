@@ -364,6 +364,9 @@ name|ysize
 parameter_list|,
 name|int
 name|fontsize
+parameter_list|,
+name|int
+name|fontwidth
 parameter_list|)
 block|{
 name|video_info_t
@@ -771,6 +774,12 @@ operator|->
 name|font_size
 operator|=
 name|fontsize
+expr_stmt|;
+name|scp
+operator|->
+name|font_width
+operator|=
+name|fontwidth
 expr_stmt|;
 comment|/* allocate buffers */
 name|sc_alloc_scr_buffer
@@ -1335,6 +1344,9 @@ name|ysize
 parameter_list|,
 name|int
 name|fontsize
+parameter_list|,
+name|int
+name|fontwidth
 parameter_list|)
 block|{
 ifndef|#
@@ -1805,6 +1817,12 @@ operator|->
 name|font_size
 operator|=
 name|fontsize
+expr_stmt|;
+name|scp
+operator|->
+name|font_width
+operator|=
+name|fontwidth
 expr_stmt|;
 comment|/* allocate buffers */
 name|sc_alloc_scr_buffer
@@ -2588,6 +2606,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 return|;
 endif|#
@@ -3091,6 +3111,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 return|;
 comment|/* GRAPHICS MODES */
@@ -3439,6 +3461,10 @@ argument_list|,
 name|scp
 operator|->
 name|font_size
+argument_list|,
+name|scp
+operator|->
+name|font_width
 argument_list|)
 return|;
 name|s
@@ -3668,6 +3694,8 @@ operator|)
 index|[
 literal|2
 index|]
+argument_list|,
+literal|8
 argument_list|)
 return|;
 endif|#

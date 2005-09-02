@@ -2125,6 +2125,8 @@ argument_list|,
 name|ROW
 argument_list|,
 literal|16
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2993,6 +2995,8 @@ argument_list|,
 name|ROW
 argument_list|,
 literal|16
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 block|}
