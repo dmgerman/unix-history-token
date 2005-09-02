@@ -540,7 +540,7 @@ modifier|*
 name|cmp
 function_decl|)
 parameter_list|(
-name|char
+name|definition
 modifier|*
 parameter_list|,
 name|char
