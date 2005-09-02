@@ -1312,7 +1312,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"(struct svc_req *rqstp, register SVCXPRT *transp);\n"
+literal|"(struct svc_req *rqstp, SVCXPRT *transp);\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -2073,7 +2073,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"register SVCXPRT *%s)\n"
+literal|"SVCXPRT *%s)\n"
 argument_list|,
 name|TRANSP
 argument_list|)

@@ -479,7 +479,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"register XDR *xdrs, "
+literal|"XDR *xdrs, "
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -3187,7 +3187,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"register %s *genp;\n\n"
+literal|"%s *genp;\n\n"
 argument_list|,
 name|decl
 operator|->
