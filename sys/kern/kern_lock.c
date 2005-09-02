@@ -88,6 +88,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
+end_include
+
 begin_comment
 comment|/*  * Locking primitives implementation.  * Locks provide shared/exclusive sychronization.  */
 end_comment
@@ -1574,6 +1580,19 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"lockmgr: thread %p unlocking unheld lock\n"
+argument_list|,
+name|thr
+argument_list|)
+expr_stmt|;
+name|kdb_backtrace
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|lkp
