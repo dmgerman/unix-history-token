@@ -695,6 +695,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKLEAF
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -738,9 +740,18 @@ operator|&
 name|err
 argument_list|)
 condition|)
-goto|goto
-name|error_2
-goto|;
+block|{
+name|vput
+argument_list|(
+name|devvp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
 comment|/* 	 ******************** 	 * NEW MOUNT 	 ******************** 	 */
 comment|/* 	 * Since this is a new mount, we want the names for 	 * the device and the mount point copied in.  If an 	 * error occurs, the mountpoint is discarded by the 	 * upper level code.  Note that vfs_omount() handles 	 * copying the mountpoint f_mntonname for us, so we 	 * don't have to do it here unless we want to set it 	 * to something other than "path" for some rason. 	 */
 comment|/* Save "mounted from" info for mount point (NULL pad)*/
@@ -772,15 +783,6 @@ goto|;
 goto|goto
 name|success
 goto|;
-name|error_2
-label|:
-comment|/* error with devvp held*/
-comment|/* release devvp before failing*/
-name|vrele
-argument_list|(
-name|devvp
-argument_list|)
-expr_stmt|;
 name|error_1
 label|:
 comment|/* no state to back out*/

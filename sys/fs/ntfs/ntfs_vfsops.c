@@ -820,6 +820,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKLEAF
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -871,9 +873,18 @@ operator|&
 name|err
 argument_list|)
 condition|)
-goto|goto
-name|error_2
-goto|;
+block|{
+name|vput
+argument_list|(
+name|devvp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|mp
@@ -889,7 +900,7 @@ literal|0
 comment|/* 		 ******************** 		 * UPDATE 		 ******************** 		 */
 block|if (devvp != ntmp->um_devvp) 			err = EINVAL;
 comment|/* needs translation */
-block|else 			vrele(devvp);
+block|vput(devvp); 		if (err) 			return (err);
 endif|#
 directive|endif
 block|}
@@ -922,22 +933,20 @@ condition|(
 name|err
 condition|)
 block|{
-goto|goto
-name|error_2
-goto|;
-block|}
-goto|goto
-name|success
-goto|;
-name|error_2
-label|:
-comment|/* error with devvp held*/
-comment|/* release devvp before failing*/
 name|vrele
 argument_list|(
 name|devvp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
+goto|goto
+name|success
+goto|;
 name|error_1
 label|:
 comment|/* no state to back out*/

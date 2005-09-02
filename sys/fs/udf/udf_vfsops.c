@@ -831,6 +831,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKLEAF
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -881,7 +883,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vrele
+name|vput
 argument_list|(
 name|devvp
 argument_list|)
@@ -893,17 +895,6 @@ operator|)
 return|;
 block|}
 comment|/* Check the access rights on the mount device */
-name|vn_lock
-argument_list|(
-name|devvp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|VOP_ACCESS
@@ -946,15 +937,6 @@ name|error
 operator|)
 return|;
 block|}
-name|VOP_UNLOCK
-argument_list|(
-name|devvp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
