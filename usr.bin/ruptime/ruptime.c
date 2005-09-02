@@ -167,7 +167,7 @@ name|LEFTEARTH
 parameter_list|(
 name|h
 parameter_list|)
-value|(now - (h)->hs_wd->wd_recvtime> 4*24*60*60)
+value|(now - (h)> 4*24*60*60)
 end_define
 
 begin_define
@@ -1068,6 +1068,23 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|LEFTEARTH
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|whod
+operator|*
+operator|)
+name|buf
+operator|)
+operator|->
+name|wd_recvtime
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
 name|nhosts
 operator|==
 name|hspace
@@ -1328,14 +1345,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|LEFTEARTH
-argument_list|(
-name|hsp
-argument_list|)
-condition|)
-continue|continue;
 if|if
 condition|(
 name|ISDOWN
