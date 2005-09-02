@@ -721,7 +721,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\tint asize = sizeof (saddr);\n\n"
+literal|"\tsocklen_t asize = sizeof (saddr);\n\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3104,7 +3104,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\tint asize = sizeof (saddr);\n"
+literal|"\tsocklen_t asize = sizeof (saddr);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -3125,7 +3125,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t\tint ssize = sizeof (int);\n\n"
+literal|"\t\tsocklen_t ssize = sizeof (int);\n\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -3960,7 +3960,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t\tint ssize = sizeof (int);\n"
+literal|"\t\tsocklen_t ssize = sizeof (int);\n"
 argument_list|)
 expr_stmt|;
 block|}
