@@ -1231,6 +1231,7 @@ name|order_lists
 index|[]
 init|=
 block|{
+comment|/* 	 * sx locks 	 */
 block|{
 literal|"proctree"
 block|,
@@ -1245,6 +1246,13 @@ operator|&
 name|lock_class_sx
 block|}
 block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+comment|/* 	 * Various mutexes 	 */
 block|{
 literal|"Giant"
 block|,
@@ -3985,7 +3993,6 @@ continue|continue;
 comment|/* 			 * If we are locking a sleepable lock and this lock 			 * isn't sleepable, we want to treat it as a lock 			 * order violation to enfore a general lock order of 			 * sleepable locks before non-sleepable locks. 			 */
 if|if
 condition|(
-operator|!
 operator|(
 operator|(
 name|lock
@@ -4010,7 +4017,10 @@ operator|==
 literal|0
 operator|)
 condition|)
-comment|/* 			     * Check the lock order hierarchy for a reveresal. 			     */
+goto|goto
+name|reversal
+goto|;
+comment|/* 			 * Check the lock order hierarchy for a reveresal. 			 */
 if|if
 condition|(
 operator|!
@@ -4022,6 +4032,8 @@ name|w1
 argument_list|)
 condition|)
 continue|continue;
+name|reversal
+label|:
 comment|/* 			 * We have a lock order violation, check to see if it 			 * is allowed or has already been yelled about. 			 */
 name|mtx_unlock_spin
 argument_list|(
