@@ -972,7 +972,7 @@ name|argptr
 operator|++
 control|)
 name|i
-operator|=
+operator||=
 name|unalias
 argument_list|(
 operator|*
