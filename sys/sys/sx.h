@@ -354,7 +354,7 @@ parameter_list|,
 name|desc
 parameter_list|)
 define|\
-value|static struct sx_args name##_args = {				\ 		sxa,							\ 		desc							\ 	};								\ 	SYSINIT(name##_sx_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    sx_sysinit,&name##_args)
+value|static struct sx_args name##_args = {				\ 		(sxa),							\ 		(desc)							\ 	};								\ 	SYSINIT(name##_sx_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    sx_sysinit,&name##_args);					\ 	SYSUNINIT(name##_sx_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    sx_destroy, (sxa))
 end_define
 
 begin_define
