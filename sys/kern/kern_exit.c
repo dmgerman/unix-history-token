@@ -1783,6 +1783,22 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|WITNESS_WARN
+argument_list|(
+name|WARN_PANIC
+argument_list|,
+operator|&
+name|proctree_lock
+operator|.
+name|sx_object
+argument_list|,
+literal|"process (pid %d) exiting"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
