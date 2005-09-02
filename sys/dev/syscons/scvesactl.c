@@ -212,6 +212,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 return|;
 comment|/* text modes */
@@ -266,6 +268,8 @@ argument_list|,
 name|tp
 argument_list|,
 name|mode
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

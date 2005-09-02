@@ -2842,6 +2842,9 @@ name|ysize
 parameter_list|,
 name|int
 name|fontsize
+parameter_list|,
+name|int
+name|font_width
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2886,6 +2889,9 @@ name|ysize
 parameter_list|,
 name|int
 name|fontsize
+parameter_list|,
+name|int
+name|font_width
 parameter_list|)
 function_decl|;
 end_function_decl
