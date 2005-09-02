@@ -466,11 +466,6 @@ argument_list|,
 literal|"bool_t\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
-block|{
 name|f_print
 argument_list|(
 name|fout
@@ -514,53 +509,6 @@ argument_list|,
 literal|"objp)\n{\n\n"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"xdr_%s(xdrs, objp)\n"
-argument_list|,
-name|procname
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tregister XDR *xdrs;\n"
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t%s "
-argument_list|,
-name|procname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pointerp
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"*"
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"objp;\n{\n\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 

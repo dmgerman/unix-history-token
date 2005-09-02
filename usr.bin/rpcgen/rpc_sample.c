@@ -272,23 +272,11 @@ operator|->
 name|vers_num
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
 name|f_print
 argument_list|(
 name|fout
 argument_list|,
 literal|"(char *host)\n{\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"(host)\n\tchar *host;\n{\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -1109,25 +1097,7 @@ argument_list|,
 literal|"bool_t\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-operator|||
-name|mtflag
-condition|)
 name|pvname_svc
-argument_list|(
-name|proc
-operator|->
-name|proc_name
-argument_list|,
-name|vp
-operator|->
-name|vers_num
-argument_list|)
-expr_stmt|;
-else|else
-name|pvname
 argument_list|(
 name|proc
 operator|->
@@ -1284,10 +1254,6 @@ operator|->
 name|vers_num
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
 name|f_print
 argument_list|(
 name|fout
@@ -1295,37 +1261,6 @@ argument_list|,
 literal|"_freeresult(SVCXPRT *transp, xdrproc_t xdr_result, caddr_t result)\n"
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"_freeresult(transp, xdr_result, result)\n"
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tSVCXPRT *transp;\n"
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\txdrproc_t xdr_result;\n"
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tcaddr_t result;\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|f_print
 argument_list|(
 name|fout
@@ -1454,23 +1389,11 @@ argument_list|,
 literal|"\n\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
 name|f_print
 argument_list|(
 name|fout
 argument_list|,
 literal|"main(int argc, char *argv[])\n{\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"main(argc, argv)\n\tint argc;\n\tchar *argv[];\n{\n"
 argument_list|)
 expr_stmt|;
 name|f_print

@@ -463,8 +463,6 @@ expr_stmt|;
 comment|/* routine to invoke */
 if|if
 condition|(
-name|Cflag
-operator|&&
 operator|!
 name|newstyle
 condition|)

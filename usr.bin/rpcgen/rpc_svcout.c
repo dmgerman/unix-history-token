@@ -360,30 +360,11 @@ modifier|*
 name|typename
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|Cflag
-condition|)
 name|f_print
 argument_list|(
 name|fout
 argument_list|,
 literal|"\t\txdr_%s = (xdrproc_t) xdr_%s;\n"
-argument_list|,
-name|rname
-argument_list|,
-name|stringfix
-argument_list|(
-name|typename
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t\txdr_%s = xdr_%s;\n"
 argument_list|,
 name|rname
 argument_list|,
@@ -1476,13 +1457,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t\t(void) signal(SIGALRM, %s closedown);\n"
-argument_list|,
-name|Cflag
-condition|?
-literal|"(SIG_PF)"
-else|:
-literal|"(void(*)())"
+literal|"\t\t(void) signal(SIGALRM, closedown);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -1779,11 +1754,6 @@ operator|->
 name|vers_num
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
-block|{
 name|f_print
 argument_list|(
 name|fout
@@ -1864,121 +1834,6 @@ argument_list|,
 name|RQSTP
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|mtflag
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"(argp, %s, %s)\n"
-argument_list|,
-name|RESULT
-argument_list|,
-name|RQSTP
-argument_list|)
-expr_stmt|;
-else|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"(argp, %s)\n"
-argument_list|,
-name|RQSTP
-argument_list|)
-expr_stmt|;
-comment|/* arg name */
-if|if
-condition|(
-name|proc
-operator|->
-name|arg_num
-operator|>
-literal|1
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t%s *argp;\n"
-argument_list|,
-name|proc
-operator|->
-name|args
-operator|.
-name|argname
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t"
-argument_list|)
-expr_stmt|;
-name|ptype
-argument_list|(
-name|proc
-operator|->
-name|args
-operator|.
-name|decls
-operator|->
-name|decl
-operator|.
-name|prefix
-argument_list|,
-name|proc
-operator|->
-name|args
-operator|.
-name|decls
-operator|->
-name|decl
-operator|.
-name|type
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|" *argp;\n"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|mtflag
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tvoid *%s;\n"
-argument_list|,
-name|RESULT
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tstruct svc_req *%s;\n"
-argument_list|,
-name|RQSTP
-argument_list|)
-expr_stmt|;
-block|}
 name|f_print
 argument_list|(
 name|fout
@@ -1993,26 +1848,7 @@ argument_list|,
 literal|"\treturn ("
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-operator|||
-name|mtflag
-condition|)
-comment|/* for mtflag, arguments are different */
 name|pvname_svc
-argument_list|(
-name|proc
-operator|->
-name|proc_name
-argument_list|,
-name|vp
-operator|->
-name|vers_num
-argument_list|)
-expr_stmt|;
-else|else
-name|pvname
 argument_list|(
 name|proc
 operator|->
@@ -2224,11 +2060,6 @@ operator|->
 name|vers_num
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
-block|{
 name|f_print
 argument_list|(
 name|fout
@@ -2247,39 +2078,6 @@ argument_list|,
 name|TRANSP
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"(%s, %s)\n"
-argument_list|,
-name|RQSTP
-argument_list|,
-name|TRANSP
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"	struct svc_req *%s;\n"
-argument_list|,
-name|RQSTP
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"	register SVCXPRT *%s;\n"
-argument_list|,
-name|TRANSP
-argument_list|)
-expr_stmt|;
-block|}
 name|f_print
 argument_list|(
 name|fout
@@ -2570,11 +2368,6 @@ argument_list|,
 name|RESULT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
-block|{
 name|f_print
 argument_list|(
 name|fout
@@ -2609,44 +2402,6 @@ argument_list|,
 name|ROUTINE
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tbool_t (*xdr_%s)(), (*xdr_%s)();\n"
-argument_list|,
-name|ARG
-argument_list|,
-name|RESULT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mtflag
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tbool_t (*%s)();\n"
-argument_list|,
-name|ROUTINE
-argument_list|)
-expr_stmt|;
-else|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tchar *(*%s)();\n"
-argument_list|,
-name|ROUTINE
-argument_list|)
-expr_stmt|;
-block|}
 name|f_print
 argument_list|(
 name|fout
@@ -2720,11 +2475,8 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-name|Cflag
-condition|?
-literal|"\t\t(void) svc_sendreply(%s,\n\t\t\t\ (xdrproc_t) xdr_void, (char *)NULL);\n"
-else|:
-literal|"\t\t(void) svc_sendreply(%s, xdr_void,\n\t\t\t\ (char *)NULL);\n"
+literal|"\t\t(void) svc_sendreply(%s,\n\t\t\t"
+literal|"(xdrproc_t) xdr_void, (char *)NULL);\n"
 argument_list|,
 name|TRANSP
 argument_list|)
@@ -2823,10 +2575,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Cflag
-condition|)
-if|if
-condition|(
 name|mtflag
 condition|)
 name|f_print
@@ -2848,30 +2596,6 @@ argument_list|,
 name|ROUTINE
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|mtflag
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t\t%s = (bool_t (*)()) "
-argument_list|,
-name|ROUTINE
-argument_list|)
-expr_stmt|;
-else|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t\t%s = (char *(*)()) "
-argument_list|,
-name|ROUTINE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|newstyle
@@ -2888,12 +2612,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|Cflag
-operator|||
-name|mtflag
-operator|)
-operator|&&
 operator|!
 name|newstyle
 condition|)
@@ -2972,10 +2690,6 @@ argument_list|,
 name|ARG
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
 name|printif
 argument_list|(
 literal|"getargs"
@@ -2983,18 +2697,6 @@ argument_list|,
 name|TRANSP
 argument_list|,
 literal|"(caddr_t)&"
-argument_list|,
-name|ARG
-argument_list|)
-expr_stmt|;
-else|else
-name|printif
-argument_list|(
-literal|"getargs"
-argument_list|,
-name|TRANSP
-argument_list|,
-literal|"&"
 argument_list|,
 name|ARG
 argument_list|)
@@ -3023,10 +2725,6 @@ condition|(
 operator|!
 name|mtflag
 condition|)
-if|if
-condition|(
-name|Cflag
-condition|)
 name|f_print
 argument_list|(
 name|fout
@@ -3047,45 +2745,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t%s = (*%s)(&%s, %s);\n"
-argument_list|,
-name|RESULT
-argument_list|,
-name|ROUTINE
-argument_list|,
-name|ARG
-argument_list|,
-name|RQSTP
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|Cflag
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
 literal|"\t%s = (bool_t) (*%s)((char *)&%s, (void *)&%s, %s);\n"
-argument_list|,
-name|RETVAL
-argument_list|,
-name|ROUTINE
-argument_list|,
-name|ARG
-argument_list|,
-name|RESULT
-argument_list|,
-name|RQSTP
-argument_list|)
-expr_stmt|;
-else|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t%s = (bool_t) (*%s)(&%s,&%s, %s);\n"
 argument_list|,
 name|RETVAL
 argument_list|,
@@ -3147,10 +2807,6 @@ argument_list|,
 literal|"\t}\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
 name|printif
 argument_list|(
 literal|"freeargs"
@@ -3158,18 +2814,6 @@ argument_list|,
 name|TRANSP
 argument_list|,
 literal|"(caddr_t)&"
-argument_list|,
-name|ARG
-argument_list|)
-expr_stmt|;
-else|else
-name|printif
-argument_list|(
-literal|"freeargs"
-argument_list|,
-name|TRANSP
-argument_list|,
-literal|"&"
 argument_list|,
 name|ARG
 argument_list|)
@@ -3890,29 +3534,6 @@ argument_list|,
 literal|"static\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Cflag
-condition|)
-block|{
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"void _msgout(msg)\n"
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tchar *msg;\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|f_print
 argument_list|(
 name|fout
@@ -3920,7 +3541,6 @@ argument_list|,
 literal|"void _msgout(const char* msg)\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|f_print
 argument_list|(
 name|fout
@@ -4032,28 +3652,6 @@ argument_list|,
 literal|"static void\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Cflag
-condition|)
-block|{
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"closedown(sig)\n"
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\tint sig;\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 name|f_print
 argument_list|(
 name|fout
@@ -4293,13 +3891,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t(void) signal(SIGALRM, %s closedown);\n"
-argument_list|,
-name|Cflag
-condition|?
-literal|"(SIG_PF)"
-else|:
-literal|"(void(*)())"
+literal|"\t(void) signal(SIGALRM, closedown);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -4880,13 +4472,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t\t\t(void) signal(SIGALRM, %s closedown);\n"
-argument_list|,
-name|Cflag
-condition|?
-literal|"(SIG_PF)"
-else|:
-literal|"(void(*)())"
+literal|"\t\t\t(void) signal(SIGALRM, closedown);\n"
 argument_list|)
 expr_stmt|;
 name|f_print

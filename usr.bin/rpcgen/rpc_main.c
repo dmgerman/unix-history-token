@@ -807,18 +807,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|Cflag
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ANSI C syntax */
-end_comment
-
-begin_decl_stmt
-name|int
 name|CCflag
 init|=
 literal|0
@@ -2676,9 +2664,6 @@ name|xdrfunc
 modifier|*
 name|xdrfuncp
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|open_input
 argument_list|(
 name|infile
@@ -2765,8 +2750,6 @@ expr_stmt|;
 comment|/* put the C++ support */
 if|if
 condition|(
-name|Cflag
-operator|&&
 operator|!
 name|CCflag
 condition|)
@@ -2890,12 +2873,6 @@ literal|"#endif\n"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|Cflag
-condition|)
-block|{
 name|xdrfuncp
 operator|=
 name|xdrfunc_head
@@ -2916,8 +2893,6 @@ argument_list|,
 name|xdrfuncp
 operator|->
 name|pointerp
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 name|xdrfuncp
@@ -2925,84 +2900,6 @@ operator|=
 name|xdrfuncp
 operator|->
 name|next
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-literal|3
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|i
-operator|==
-literal|1
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\n#if defined(__STDC__) || defined(__cplusplus)\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\n#else /* K&R C */\n"
-argument_list|)
-expr_stmt|;
-name|xdrfuncp
-operator|=
-name|xdrfunc_head
-expr_stmt|;
-while|while
-condition|(
-name|xdrfuncp
-operator|!=
-name|NULL
-condition|)
-block|{
-name|print_xdr_func_def
-argument_list|(
-name|xdrfuncp
-operator|->
-name|name
-argument_list|,
-name|xdrfuncp
-operator|->
-name|pointerp
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|xdrfuncp
-operator|=
-name|xdrfuncp
-operator|->
-name|next
-expr_stmt|;
-block|}
-block|}
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\n#endif /* K&R C */\n"
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3041,11 +2938,6 @@ name|rpcgen_table_dcl
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|Cflag
-condition|)
-block|{
 name|f_print
 argument_list|(
 name|fout
@@ -3067,7 +2959,6 @@ argument_list|,
 literal|"#endif\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|f_print
 argument_list|(
 name|fout
@@ -3235,11 +3126,6 @@ argument_list|,
 literal|"#include<stdlib.h> /* getenv, exit */\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
-block|{
 name|f_print
 argument_list|(
 name|fout
@@ -3254,7 +3140,6 @@ argument_list|,
 literal|"#include<string.h> /* strcmp */\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|tirpcflag
@@ -3333,13 +3218,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Cflag
-operator|&&
-operator|(
 name|inetdflag
 operator|||
 name|pmflag
-operator|)
 condition|)
 block|{
 name|f_print
@@ -3469,18 +3350,6 @@ argument_list|(
 name|fout
 argument_list|,
 literal|"#include<syslog.h>\n"
-argument_list|)
-expr_stmt|;
-comment|/* for ANSI-C */
-if|if
-condition|(
-name|Cflag
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\n#ifndef SIG_PF\n#define	SIG_PF void(*)\ (int)\n#endif\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -3671,10 +3540,6 @@ expr_stmt|;
 name|add_warning
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|Cflag
-condition|)
 name|f_print
 argument_list|(
 name|fout
@@ -5464,10 +5329,6 @@ case|case
 literal|'C'
 case|:
 comment|/* ANSI C syntax */
-name|Cflag
-operator|=
-literal|1
-expr_stmt|;
 name|ch
 operator|=
 name|argv

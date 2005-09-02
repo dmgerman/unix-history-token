@@ -341,17 +341,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|Cflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ANSI-C/C++ flag */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|CCflag
 decl_stmt|;
 end_decl_stmt
@@ -833,9 +822,6 @@ name|name
 parameter_list|,
 name|int
 name|pointerp
-parameter_list|,
-name|int
-name|i
 parameter_list|)
 function_decl|;
 end_function_decl
