@@ -3992,13 +3992,6 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|" !strcmp(mname, \"timod\"))) {\n"
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
 literal|"\t\tchar *netid;\n"
 argument_list|)
 expr_stmt|;
