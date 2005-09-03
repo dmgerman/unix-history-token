@@ -12491,7 +12491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap exists.  * 2. Not wired.  * 3. Read access.  * 4. No page table pages.  * 6. Page IS managed.  * but is *MUCH* faster than pmap_enter...  */
+comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap exists.  * 2. Not wired.  * 3. Read access.  * 4. No page table pages.  * but is *MUCH* faster than pmap_enter...  */
 end_comment
 
 begin_function
@@ -12506,6 +12506,9 @@ name|va
 parameter_list|,
 name|vm_page_t
 name|m
+parameter_list|,
+name|vm_prot_t
+name|prot
 parameter_list|,
 name|vm_page_t
 name|mpte
@@ -12540,9 +12543,13 @@ name|va
 argument_list|,
 name|m
 argument_list|,
+name|prot
+operator|&
+operator|(
 name|VM_PROT_READ
 operator||
 name|VM_PROT_EXECUTE
+operator|)
 argument_list|,
 name|FALSE
 argument_list|)

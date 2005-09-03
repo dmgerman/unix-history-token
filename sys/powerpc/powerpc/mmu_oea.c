@@ -4974,6 +4974,9 @@ parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|,
+name|vm_prot_t
+name|prot
+parameter_list|,
 name|vm_page_t
 name|mpte
 parameter_list|)
@@ -5007,9 +5010,13 @@ name|va
 argument_list|,
 name|m
 argument_list|,
+name|prot
+operator|&
+operator|(
 name|VM_PROT_READ
 operator||
 name|VM_PROT_EXECUTE
+operator|)
 argument_list|,
 name|FALSE
 argument_list|)

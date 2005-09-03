@@ -181,6 +181,9 @@ parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|,
+name|vm_prot_t
+name|prot
+parameter_list|,
 name|vm_page_t
 name|mpte
 parameter_list|)

@@ -3508,6 +3508,10 @@ name|addr
 argument_list|,
 name|m
 argument_list|,
+name|entry
+operator|->
+name|protection
+argument_list|,
 name|mpte
 argument_list|)
 expr_stmt|;
