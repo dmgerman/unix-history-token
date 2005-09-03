@@ -344,6 +344,21 @@ name|virtual_end
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|uint64_t
+name|pmap_vhpt_base
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pmap_vhpt_log2size
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
