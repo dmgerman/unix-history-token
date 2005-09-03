@@ -777,9 +777,16 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
+name|vrele
+argument_list|(
+name|devvp
+argument_list|)
+expr_stmt|;
 goto|goto
-name|error_2
+name|error_1
 goto|;
+block|}
 goto|goto
 name|success
 goto|;
