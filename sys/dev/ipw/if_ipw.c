@@ -795,12 +795,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPW_DEBUG
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -810,11 +804,6 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1674,8 +1663,6 @@ operator||
 name|IEEE80211_C_IBSS
 operator||
 name|IEEE80211_C_MONITOR
-operator||
-name|IEEE80211_C_WPA
 expr_stmt|;
 comment|/* read MAC address from EEPROM */
 name|val
@@ -2051,9 +2038,6 @@ argument_list|,
 literal|"radio transmitter switch state (0=off, 1=on)"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPW_DEBUG
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|device_get_sysctl_ctx
@@ -2088,8 +2072,6 @@ argument_list|,
 literal|"statistics"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
@@ -5324,9 +5306,7 @@ endif|#
 directive|endif
 name|ic
 operator|->
-name|ic_bss
-operator|->
-name|ni_chan
+name|ic_curchan
 operator|=
 operator|&
 name|ic
@@ -10691,7 +10671,7 @@ name|htole32
 argument_list|(
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -11327,12 +11307,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPW_DEBUG
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -11458,11 +11432,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

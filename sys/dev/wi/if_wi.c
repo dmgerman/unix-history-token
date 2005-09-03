@@ -1639,6 +1639,7 @@ name|error
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -1646,6 +1647,11 @@ argument_list|,
 literal|"mac read failed (all zeros)\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+block|}
 name|wi_free
 argument_list|(
 name|dev
@@ -3855,7 +3861,7 @@ name|WI_RID_OWN_BEACON_INT
 argument_list|,
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 argument_list|)
 expr_stmt|;
 name|wi_write_val
@@ -6587,13 +6593,9 @@ condition|(
 name|sc
 operator|->
 name|wi_gone
-operator|||
-operator|!
-name|sc
-operator|->
-name|sc_enabled
 condition|)
 block|{
+comment|/* hardware gone (e.g. ejected) */
 name|imr
 operator|->
 name|ifm_active
@@ -6622,6 +6624,29 @@ name|ifm_active
 operator|=
 name|IFM_IEEE80211
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_enabled
+condition|)
+block|{
+comment|/* port !enabled, have no status */
+name|imr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_NONE
+expr_stmt|;
+name|imr
+operator|->
+name|ifm_status
+operator|=
+name|IFM_AVALID
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|ic
@@ -14449,6 +14474,14 @@ argument_list|(
 name|val
 argument_list|)
 index|]
+expr_stmt|;
+name|ic
+operator|->
+name|ic_curchan
+operator|=
+name|ni
+operator|->
+name|ni_chan
 expr_stmt|;
 name|ic
 operator|->

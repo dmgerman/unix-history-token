@@ -969,12 +969,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IWI_DEBUG
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -984,11 +978,6 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -2256,9 +2245,6 @@ argument_list|,
 literal|"radio transmitter switch state (0=off, 1=on)"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IWI_DEBUG
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|device_get_sysctl_ctx
@@ -2293,8 +2279,6 @@ argument_list|,
 literal|"statistics"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
@@ -5396,9 +5380,7 @@ endif|#
 directive|endif
 name|ic
 operator|->
-name|ic_bss
-operator|->
-name|ni_chan
+name|ic_curchan
 operator|=
 operator|&
 name|ic
@@ -8320,6 +8302,14 @@ operator|->
 name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
+operator|)
+operator|&&
+operator|(
+name|ic
+operator|->
+name|ic_roaming
+operator|!=
+name|IEEE80211_ROAMING_MANUAL
 operator|)
 condition|)
 name|iwi_init
@@ -12397,25 +12387,35 @@ condition|(
 name|ic
 operator|->
 name|ic_opmode
-operator|==
+operator|!=
 name|IEEE80211_M_MONITOR
+condition|)
+block|{
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_roaming
+operator|!=
+name|IEEE80211_ROAMING_MANUAL
 condition|)
 name|ieee80211_new_state
 argument_list|(
 name|ic
 argument_list|,
-name|IEEE80211_S_RUN
+name|IEEE80211_S_SCAN
 argument_list|,
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|ieee80211_new_state
 argument_list|(
 name|ic
 argument_list|,
-name|IEEE80211_S_SCAN
+name|IEEE80211_S_RUN
 argument_list|,
 operator|-
 literal|1
@@ -12569,12 +12569,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IWI_DEBUG
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -12676,11 +12670,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

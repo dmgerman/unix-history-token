@@ -817,15 +817,6 @@ name|ATH_KEYBYTES
 index|]
 decl_stmt|;
 comment|/* key use bit map */
-name|struct
-name|ieee80211_node
-modifier|*
-name|sc_keyixmap
-index|[
-name|ATH_KEYMAX
-index|]
-decl_stmt|;
-comment|/* key ix->node map */
 name|u_int
 name|sc_ledpin
 decl_stmt|;
