@@ -2123,6 +2123,10 @@ name|char
 name|padc
 decl_stmt|;
 name|int
+name|stop
+init|=
+literal|0
+decl_stmt|,
 name|retval
 init|=
 literal|0
@@ -2201,6 +2205,8 @@ operator|++
 operator|)
 operator|!=
 literal|'%'
+operator|||
+name|stop
 condition|)
 block|{
 if|if
@@ -3623,6 +3629,11 @@ operator|*
 name|percent
 operator|++
 argument_list|)
+expr_stmt|;
+comment|/* 			 * Since we ignore an formatting argument it is no  			 * longer safe to obey the remaining formatting 			 * arguments as the arguments will no longer match 			 * the format specs. 			 */
+name|stop
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
