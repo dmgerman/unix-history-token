@@ -8,7 +8,7 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.181 2005/02/25 23:07:38 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.183 2005/07/07 10:33:36 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -303,14 +303,6 @@ comment|/* #undef HAVE_NEXT */
 end_comment
 
 begin_comment
-comment|/* Define if you are on NEWS-OS */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_NEWS4 */
-end_comment
-
-begin_comment
 comment|/* Define if you want to enable PAM support */
 end_comment
 
@@ -569,14 +561,6 @@ end_comment
 
 begin_comment
 comment|/* #undef NO_SSH_LASTLOG */
-end_comment
-
-begin_comment
-comment|/* Define if have krb5_init_ets */
-end_comment
-
-begin_comment
-comment|/* #undef KRB5_INIT_ETS */
 end_comment
 
 begin_comment
@@ -1388,6 +1372,38 @@ comment|/* #undef AIX_GETNAMEINFO_HACK */
 end_comment
 
 begin_comment
+comment|/* getgroups(0,NULL) will return -1 */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_GETGROUPS */
+end_comment
+
+begin_comment
+comment|/* ia_uinfo routines not supported by OS yet */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_LIBIAF */
+end_comment
+
+begin_comment
+comment|/* Ultrix mmap can't map files */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_MMAP */
+end_comment
+
+begin_comment
+comment|/* LynxOS has broken setvbuf() implementation */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_SETVBUF */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if the `getpgrp' function requires zero arguments. */
 end_comment
 
@@ -1416,6 +1432,14 @@ directive|define
 name|HAVE_ARC4RANDOM
 value|1
 end_define
+
+begin_comment
+comment|/* OpenBSD's gcc has sentinel */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ATTRIBUTE__SENTINEL__ */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `b64_ntop' function. */
@@ -1569,6 +1593,28 @@ comment|/* #undef HAVE_DECL_SETAUTHDB */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `_getlong', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL__GETLONG
+value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `_getshort', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL__GETSHORT
+value|0
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<dirent.h> header file. */
 end_comment
 
@@ -1621,17 +1667,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_ENDUTXENT */
 end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `fchdir' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FCHDIR
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `fchmod' function. */
@@ -1976,6 +2011,14 @@ comment|/* #undef HAVE_GSSAPI_KRB5_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<iaf.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_IAF_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<ia.h> header file. */
 end_comment
 
@@ -2091,6 +2134,14 @@ directive|define
 name|HAVE_LIBGEN_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `iaf' library (-liaf). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBIAF */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `nsl' library (-lnsl). */
@@ -2834,6 +2885,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strdup' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRDUP
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `strerror' function. */
 end_comment
 
@@ -2928,6 +2990,25 @@ directive|define
 name|HAVE_STRSEP
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strtoll' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOLL
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strtonum' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRTONUM */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `strtoul' function. */
@@ -3106,6 +3187,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_SYS_STRTIO_H */
+end_comment
+
+begin_comment
+comment|/* Force use of sys/syslog.h on Ultrix */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_SYSLOG_H */
 end_comment
 
 begin_comment
@@ -3439,6 +3528,30 @@ value|1
 end_define
 
 begin_comment
+comment|/* max value of long long calculated by configure */
+end_comment
+
+begin_comment
+comment|/* #undef LLONG_MAX */
+end_comment
+
+begin_comment
+comment|/* min value of long long calculated by configure */
+end_comment
+
+begin_comment
+comment|/* #undef LLONG_MIN */
+end_comment
+
+begin_comment
+comment|/* Need setpgrp to acquire controlling tty */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_SETPRGP */
+end_comment
+
+begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
 end_comment
 
@@ -3446,7 +3559,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|""
+value|"des@freebsd.org"
 end_define
 
 begin_comment
@@ -3574,6 +3687,14 @@ directive|define
 name|STDC_HEADERS
 value|1
 end_define
+
+begin_comment
+comment|/* Support passwords> 8 chars */
+end_comment
+
+begin_comment
+comment|/* #undef UNIXWARE_LONG_PASSWORDS */
+end_comment
 
 begin_comment
 comment|/* Use BSM audit module */
