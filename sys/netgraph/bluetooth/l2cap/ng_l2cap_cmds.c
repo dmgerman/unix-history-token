@@ -861,6 +861,13 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+comment|/* Connection is dying */
+name|con
+operator|->
+name|flags
+operator||=
+name|NG_L2CAP_CON_DYING
+expr_stmt|;
 comment|/* Clean command queue */
 while|while
 condition|(
