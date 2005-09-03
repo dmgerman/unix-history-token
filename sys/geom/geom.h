@@ -441,7 +441,7 @@ name|g_ctl_destroy_geom_t
 modifier|*
 name|destroy_geom
 decl_stmt|;
-comment|/* 	 * Defaults values for geom methods 	 */
+comment|/* 	 * Default values for geom methods 	 */
 name|g_start_t
 modifier|*
 name|start
