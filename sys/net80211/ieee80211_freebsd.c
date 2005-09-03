@@ -1221,7 +1221,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] %s replay detected<rsc %ju, csc %ju, keyix %u>\n"
+literal|"[%s] %s replay detected<rsc %ju, csc %ju, keyix %u rxkeyix %u>\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -1251,6 +1251,10 @@ argument_list|,
 name|k
 operator|->
 name|wk_keyix
+argument_list|,
+name|k
+operator|->
+name|wk_rxkeyix
 argument_list|)
 expr_stmt|;
 if|if
@@ -1297,6 +1301,23 @@ name|wk_cipher
 operator|->
 name|ic_cipher
 expr_stmt|;
+if|if
+condition|(
+name|k
+operator|->
+name|wk_rxkeyix
+operator|!=
+name|IEEE80211_KEYIX_NONE
+condition|)
+name|iev
+operator|.
+name|iev_keyix
+operator|=
+name|k
+operator|->
+name|wk_rxkeyix
+expr_stmt|;
+else|else
 name|iev
 operator|.
 name|iev_keyix

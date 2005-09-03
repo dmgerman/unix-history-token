@@ -82,7 +82,7 @@ value|mtx_assert(&(_ic)->ic_beaconlock, MA_OWNED)
 end_define
 
 begin_comment
-comment|/*  * Node locking definitions.  */
+comment|/*  * Node locking definitions.  * NB: MTX_DUPOK is because we don't generate per-interface strings.  */
 end_comment
 
 begin_typedef
@@ -103,7 +103,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_nt)->nt_nodelock, _name, "802.11 node table", MTX_DEF)
+value|mtx_init(&(_nt)->nt_nodelock, _name, "802.11 node table", \ 		MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define
@@ -124,6 +124,16 @@ parameter_list|(
 name|_nt
 parameter_list|)
 value|mtx_lock(&(_nt)->nt_nodelock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_IS_LOCKED
+parameter_list|(
+name|_nt
+parameter_list|)
+value|mtx_owned(&(_nt)->nt_nodelock)
 end_define
 
 begin_define

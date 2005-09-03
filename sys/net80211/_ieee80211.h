@@ -499,6 +499,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_IS_CHAN_ANYG
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(IEEE80211_IS_CHAN_PUREG(_c) || IEEE80211_IS_CHAN_G(_c))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IS_CHAN_T
 parameter_list|(
 name|_c

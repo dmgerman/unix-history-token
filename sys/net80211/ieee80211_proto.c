@@ -4566,9 +4566,9 @@ name|IEEE80211_F_ASCAN
 operator|)
 operator|&&
 operator|(
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 operator|->
 name|ic_flags
 operator|&
@@ -5065,9 +5065,9 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 argument_list|,
 name|IEEE80211_RATE2MBS

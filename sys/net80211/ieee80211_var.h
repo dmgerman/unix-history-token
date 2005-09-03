@@ -186,11 +186,15 @@ begin_comment
 comment|/* default DTIM period */
 end_comment
 
+begin_comment
+comment|/* NB: min+max come from WiFi requirements */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IEEE80211_BINTVAL_MAX
-value|500
+value|1000
 end_define
 
 begin_comment
@@ -599,6 +603,12 @@ name|ieee80211_channel
 modifier|*
 name|ic_ibss_chan
 decl_stmt|;
+name|struct
+name|ieee80211_channel
+modifier|*
+name|ic_curchan
+decl_stmt|;
+comment|/* current channel */
 name|int
 name|ic_fixed_rate
 decl_stmt|;
@@ -660,6 +670,10 @@ name|u_int16_t
 name|ic_lintval
 decl_stmt|;
 comment|/* listen interval */
+name|u_int16_t
+name|ic_bintval
+decl_stmt|;
+comment|/* beacon interval */
 name|u_int16_t
 name|ic_holdover
 decl_stmt|;

@@ -551,9 +551,13 @@ name|is_ff_encap
 decl_stmt|;
 comment|/* fast frames encap'd for tx */
 name|u_int32_t
+name|is_rx_badbintval
+decl_stmt|;
+comment|/* rx frame w/ bogus bintval */
+name|u_int32_t
 name|is_spare
 index|[
-literal|10
+literal|9
 index|]
 decl_stmt|;
 block|}
@@ -744,9 +748,33 @@ init|=
 literal|4
 block|,
 comment|/* detach ACL policy */
+name|IEEE80211_MACCMD_POLICY
+init|=
+literal|5
+block|,
+comment|/* get ACL policy */
+name|IEEE80211_MACCMD_LIST
+init|=
+literal|6
+block|,
+comment|/* get ACL database */
 block|}
 enum|;
 end_enum
+
+begin_struct
+struct|struct
+name|ieee80211req_maclist
+block|{
+name|u_int8_t
+name|ml_macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Set the active channel list.  Note this list is  * intersected with the available channel list in  * calculating the set of channels actually used in  * scanning.  */

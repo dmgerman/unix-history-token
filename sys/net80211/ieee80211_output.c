@@ -744,9 +744,9 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -788,7 +788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a null data frame to the specified node.  */
+comment|/*  * Send a null data frame to the specified node.  *  * NB: the caller is assumed to have setup a node reference  *     for use; this is necessary to deal with a race condition  *     when probing for inactive stations.  */
 end_comment
 
 begin_function
@@ -853,6 +853,12 @@ operator|.
 name|is_tx_nobuf
 operator|++
 expr_stmt|;
+name|ieee80211_unref_node
+argument_list|(
+operator|&
+name|ni
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
@@ -867,10 +873,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|ieee80211_ref_node
-argument_list|(
 name|ni
-argument_list|)
 expr_stmt|;
 name|wh
 operator|=
@@ -978,9 +981,9 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 argument_list|,
 name|wh
@@ -4458,9 +4461,9 @@ name|ieee80211_chan2mode
 argument_list|(
 name|ic
 argument_list|,
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 expr_stmt|;
 name|frm
@@ -4649,9 +4652,9 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4950,9 +4953,9 @@ operator|)
 operator|&&
 name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 condition|)
 name|capinfo
@@ -5073,9 +5076,9 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5089,9 +5092,9 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5126,9 +5129,9 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 expr_stmt|;
 block|}
@@ -5793,9 +5796,9 @@ operator|)
 operator|&&
 name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 condition|)
 name|capinfo
@@ -6091,9 +6094,9 @@ operator|)
 operator|&&
 name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
-name|ni
+name|ic
 operator|->
-name|ni_chan
+name|ic_curchan
 argument_list|)
 condition|)
 name|capinfo
@@ -7961,7 +7964,7 @@ name|ni_intval
 operator|*
 name|ic
 operator|->
-name|ic_lintval
+name|ic_bintval
 operator|)
 operator|<<
 literal|2
@@ -7992,7 +7995,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_POWER
 argument_list|,
-literal|"[%s] save frame, %u now queued\n"
+literal|"[%s] save frame with age %d, %u now queued\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -8000,6 +8003,8 @@ name|ni
 operator|->
 name|ni_macaddr
 argument_list|)
+argument_list|,
+name|age
 argument_list|,
 name|qlen
 argument_list|)
