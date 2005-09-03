@@ -172,7 +172,7 @@ parameter_list|(
 name|cmd
 parameter_list|)
 define|\
-value|do { \ 	NG_FREE_M((cmd)->aux); \ 	bzero((cmd), sizeof(*(cmd))); \ 	FREE((cmd), M_NETGRAPH_L2CAP); \ } while (0)
+value|do { \ 	KASSERT(!callout_pending(&(cmd)->timo), ("Pending callout!")); \ 	NG_FREE_M((cmd)->aux); \ 	bzero((cmd), sizeof(*(cmd))); \ 	FREE((cmd), M_NETGRAPH_L2CAP); \ } while (0)
 end_define
 
 begin_function_decl

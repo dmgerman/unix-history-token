@@ -2388,6 +2388,17 @@ begin_comment
 comment|/* auto discon. timeout */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_CON_DYING
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* connection is dying */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
