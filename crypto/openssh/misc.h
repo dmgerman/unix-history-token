@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: misc.h,v 1.21 2005/03/01 10:09:52 djm Exp $	*/
+comment|/*	$OpenBSD: misc.h,v 1.25 2005/07/14 04:00:43 dtucker Exp $	*/
 end_comment
 
 begin_comment
@@ -118,6 +118,55 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|tilde_expand_filename
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|uid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|percent_expand
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__sentinel__
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|tohex
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|passwd
 modifier|*
@@ -184,24 +233,6 @@ begin_empty_stmt
 unit|)))
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|/* tildexpand.c */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|tilde_expand_filename
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|uid_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* readpass.c */

@@ -597,6 +597,74 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Encode a special character into SSH line format.  */
+end_comment
+
+begin_function
+specifier|static
+name|u_int
+name|special_char_encode
+parameter_list|(
+name|cc_t
+name|c
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|_POSIX_VDISABLE
+if|if
+condition|(
+name|c
+operator|==
+name|_POSIX_VDISABLE
+condition|)
+return|return
+literal|255
+return|;
+endif|#
+directive|endif
+comment|/* _POSIX_VDISABLE */
+return|return
+name|c
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Decode a special character from SSH line format.  */
+end_comment
+
+begin_function
+specifier|static
+name|cc_t
+name|special_char_decode
+parameter_list|(
+name|u_int
+name|c
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|_POSIX_VDISABLE
+if|if
+condition|(
+name|c
+operator|==
+literal|255
+condition|)
+return|return
+name|_POSIX_VDISABLE
+return|;
+endif|#
+directive|endif
+comment|/* _POSIX_VDISABLE */
+return|return
+name|c
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Encodes terminal modes for the terminal referenced by fd  * or tiop in a portable manner, and appends the modes to a packet  * being constructed.  */
 end_comment
 
@@ -812,7 +880,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|debug3("tty_make_modes: %d %d", OP, tio.c_cc[NAME]); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, tio.c_cc[NAME]);
+value|debug3("tty_make_modes: %d %d", OP, tio.c_cc[NAME]); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, special_char_encode(tio.c_cc[NAME]));
 define|#
 directive|define
 name|TTYMODE
@@ -1155,7 +1223,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|case OP: \ 	  n_bytes += arg_size; \ 	  tio.c_cc[NAME] = get_arg(); \ 	  debug3("tty_parse_modes: %d %d", OP, tio.c_cc[NAME]); \ 	  break;
+value|case OP: \ 	  n_bytes += arg_size; \ 	  tio.c_cc[NAME] = special_char_decode(get_arg()); \ 	  debug3("tty_parse_modes: %d %d", OP, tio.c_cc[NAME]); \ 	  break;
 define|#
 directive|define
 name|TTYMODE

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: channels.c,v 1.214 2005/03/14 11:46:56 markus Exp $"
+literal|"$OpenBSD: channels.c,v 1.223 2005/07/17 07:17:54 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -237,6 +237,20 @@ directive|define
 name|MAX_DISPLAYS
 value|1000
 end_define
+
+begin_comment
+comment|/* Saved X11 local (client) display. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|x11_saved_display
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Saved X11 authentication protocol name. */
@@ -3935,7 +3949,7 @@ decl_stmt|,
 modifier|*
 name|host
 decl_stmt|;
-name|int
+name|u_int
 name|len
 decl_stmt|,
 name|have
@@ -4490,10 +4504,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|int
-name|i
-decl_stmt|,
+name|u_int
 name|have
+decl_stmt|,
+name|i
 decl_stmt|,
 name|found
 decl_stmt|,
@@ -5159,9 +5173,10 @@ name|u_char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|u_int
 name|have
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|have
@@ -5665,7 +5680,7 @@ operator|->
 name|sock
 argument_list|)
 decl_stmt|;
-name|u_short
+name|int
 name|remote_port
 init|=
 name|get_peer_port
@@ -5816,6 +5831,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|remote_port
 argument_list|)
 expr_stmt|;
@@ -10703,7 +10721,7 @@ literal|"No forward host name."
 argument_list|)
 expr_stmt|;
 return|return
-name|success
+literal|0
 return|;
 block|}
 if|if
@@ -10724,7 +10742,7 @@ literal|"Forward host name too long."
 argument_list|)
 expr_stmt|;
 return|return
-name|success
+literal|0
 return|;
 block|}
 comment|/* 	 * Determine whether or not a port forward listens to loopback, 	 * specified address or wildcard. On the client, a specified bind 	 * address will always override gateway_ports. On the server, a 	 * gateway_ports of 1 (``yes'') will override the client's 	 * specification and force a wildcard bind, whereas a value of 2 	 * (``clientspecified'') will bind to whatever address the client 	 * asked for. 	 * 	 * Special-case listen_addrs are: 	 * 	 * "0.0.0.0"               -> wildcard v4/v6 if SSH_OLD_FORWARD_ADDR 	 * "" (empty string), "*"  -> wildcard v4/v6 	 * "localhost"             -> loopback v4/v6 	 */
@@ -10930,20 +10948,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|verbose
-argument_list|(
-literal|"channel_setup_fwd_listener: "
-literal|"getaddrinfo(%.64s): %s"
-argument_list|,
-name|addr
-argument_list|,
-name|gai_strerror
-argument_list|(
-name|r
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|packet_send_debug
+name|error
 argument_list|(
 literal|"channel_setup_fwd_listener: "
 literal|"getaddrinfo(%.64s): %s"
@@ -10957,10 +10962,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|aitop
-operator|=
-name|NULL
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 for|for
 control|(
@@ -12792,6 +12796,11 @@ parameter_list|,
 name|u_int
 modifier|*
 name|display_numberp
+parameter_list|,
+name|int
+modifier|*
+modifier|*
+name|chanids
 parameter_list|)
 block|{
 name|Channel
@@ -13293,6 +13302,31 @@ return|;
 block|}
 block|}
 comment|/* Allocate a channel for each socket. */
+if|if
+condition|(
+name|chanids
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|chanids
+operator|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+operator|*
+name|chanids
+argument_list|)
+operator|*
+operator|(
+name|num_socks
+operator|+
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|n
@@ -13346,7 +13380,44 @@ name|single_connection
 operator|=
 name|single_connection
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|chanids
+operator|!=
+name|NULL
+condition|)
+operator|(
+operator|*
+name|chanids
+operator|)
+index|[
+name|n
+index|]
+operator|=
+name|nc
+operator|->
+name|self
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|*
+name|chanids
+operator|!=
+name|NULL
+condition|)
+operator|(
+operator|*
+name|chanids
+operator|)
+index|[
+name|n
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* Return the display number for the DISPLAY environment variable. */
 operator|*
 name|display_numberp
@@ -14209,6 +14280,11 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|disp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|proto
 parameter_list|,
 specifier|const
@@ -14234,8 +14310,6 @@ name|u_int
 name|i
 decl_stmt|,
 name|value
-decl_stmt|,
-name|len
 decl_stmt|;
 name|char
 modifier|*
@@ -14254,22 +14328,53 @@ name|rnd
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|x11_saved_display
+operator|==
+name|NULL
+condition|)
+name|x11_saved_display
+operator|=
+name|xstrdup
+argument_list|(
+name|disp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|disp
+argument_list|,
+name|x11_saved_display
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"x11_request_forwarding_with_spoofing: different "
+literal|"$DISPLAY already forwarded"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|cp
 operator|=
-name|getenv
-argument_list|(
-literal|"DISPLAY"
-argument_list|)
+name|disp
 expr_stmt|;
 if|if
 condition|(
-name|cp
+name|disp
 condition|)
 name|cp
 operator|=
 name|strchr
 argument_list|(
-name|cp
+name|disp
 argument_list|,
 literal|':'
 argument_list|)
@@ -14305,6 +14410,13 @@ name|screen_number
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|x11_saved_proto
+operator|==
+name|NULL
+condition|)
+block|{
 comment|/* Save protocol name. */
 name|x11_saved_proto
 operator|=
@@ -14313,7 +14425,7 @@ argument_list|(
 name|proto
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Extract real authentication data and generate fake data of the 	 * same length. 	 */
+comment|/* 		 * Extract real authentication data and generate fake data 		 * of the same length. 		 */
 name|x11_saved_data
 operator|=
 name|xmalloc
@@ -14362,7 +14474,8 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"x11_request_forwarding: bad authentication data: %.100s"
+literal|"x11_request_forwarding: bad "
+literal|"authentication data: %.100s"
 argument_list|,
 name|data
 argument_list|)
@@ -14409,58 +14522,15 @@ name|x11_fake_data_len
 operator|=
 name|data_len
 expr_stmt|;
+block|}
 comment|/* Convert the fake data into hex. */
-name|len
-operator|=
-literal|2
-operator|*
-name|data_len
-operator|+
-literal|1
-expr_stmt|;
 name|new_data
 operator|=
-name|xmalloc
+name|tohex
 argument_list|(
-name|len
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|data_len
-condition|;
-name|i
-operator|++
-control|)
-name|snprintf
-argument_list|(
-name|new_data
-operator|+
-literal|2
-operator|*
-name|i
-argument_list|,
-name|len
-operator|-
-literal|2
-operator|*
-name|i
-argument_list|,
-literal|"%02x"
-argument_list|,
-operator|(
-name|u_char
-operator|)
 name|x11_fake_data
-index|[
-name|i
-index|]
+argument_list|,
+name|data_len
 argument_list|)
 expr_stmt|;
 comment|/* Send the request packet. */

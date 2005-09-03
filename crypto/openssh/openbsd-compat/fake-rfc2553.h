@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: fake-rfc2553.h,v 1.10 2005/02/11 07:32:13 dtucker Exp $ */
+comment|/* $Id: fake-rfc2553.h,v 1.12 2005/08/03 05:36:21 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -377,28 +377,61 @@ begin_define
 define|#
 directive|define
 name|EAI_NODATA
-value|1
+value|(INT_MAX - 1)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EAI_MEMORY
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|EAI_MEMORY
-value|2
+value|(INT_MAX - 2)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EAI_NONAME
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|EAI_NONAME
-value|3
+value|(INT_MAX - 3)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EAI_SYSTEM
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|EAI_SYSTEM
-value|4
+value|(INT_MAX - 4)
 end_define
 
 begin_endif

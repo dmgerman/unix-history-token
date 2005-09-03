@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfile.c,v 1.60 2004/12/11 01:48:56 dtucker Exp $"
+literal|"$OpenBSD: authfile.c,v 1.61 2005/06/17 02:44:32 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"atomicio.h"
 end_include
 
 begin_comment
@@ -581,8 +587,10 @@ return|;
 block|}
 if|if
 condition|(
-name|write
+name|atomicio
 argument_list|(
+name|vwrite
+argument_list|,
 name|fd
 argument_list|,
 name|buffer_ptr
@@ -1026,7 +1034,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|size_t
@@ -1113,21 +1121,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|fd
 argument_list|,
 name|cp
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|len
 argument_list|)
 operator|!=
-operator|(
-name|size_t
-operator|)
 name|len
 condition|)
 block|{
@@ -1429,9 +1433,10 @@ modifier|*
 name|commentp
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|check1
 decl_stmt|,
 name|check2
@@ -1560,21 +1565,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|fd
 argument_list|,
 name|cp
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|len
 argument_list|)
 operator|!=
-operator|(
-name|size_t
-operator|)
 name|len
 condition|)
 block|{

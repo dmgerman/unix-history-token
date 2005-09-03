@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.308 2005/02/08 22:24:57 dtucker Exp $"
+literal|"$OpenBSD: sshd.c,v 1.312 2005/07/25 11:59:40 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1274,9 +1274,10 @@ name|int
 name|sock_out
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|mismatch
 decl_stmt|;
 name|int
@@ -2660,6 +2661,10 @@ name|monitor_apply_keystate
 argument_list|(
 name|pmonitor
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Tell the packet layer that authentication was successful, since 	 * this information is not part of the key state. 	 */
+name|packet_set_authenticated
+argument_list|()
 expr_stmt|;
 block|}
 specifier|static
@@ -7018,12 +7023,26 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Register our connection.  This turns encryption off because we do 	 * not have a key. 	 */
+name|packet_set_connection
+argument_list|(
+name|sock_in
+argument_list|,
+name|sock_out
+argument_list|)
+expr_stmt|;
+name|packet_set_server
+argument_list|()
+expr_stmt|;
 comment|/* Set SO_KEEPALIVE if requested. */
 if|if
 condition|(
 name|options
 operator|.
 name|tcp_keep_alive
+operator|&&
+name|packet_connection_is_on_socket
+argument_list|()
 operator|&&
 name|setsockopt
 argument_list|(
@@ -7054,19 +7073,29 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Register our connection.  This turns encryption off because we do 	 * not have a key. 	 */
-name|packet_set_connection
-argument_list|(
-name|sock_in
-argument_list|,
-name|sock_out
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|(
 name|remote_port
 operator|=
 name|get_remote_port
 argument_list|()
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"get_remote_port failed"
+argument_list|)
 expr_stmt|;
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
+expr_stmt|;
+block|}
 name|remote_ip
 operator|=
 name|get_remote_ipaddr
@@ -8085,6 +8114,9 @@ name|len
 operator|<
 literal|0
 operator|||
+operator|(
+name|u_int
+operator|)
 name|len
 operator|>
 sizeof|sizeof
@@ -8507,10 +8539,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|options
 operator|.
 name|compression
+operator|==
+name|COMP_NONE
 condition|)
 block|{
 name|myproposal
@@ -8524,6 +8557,29 @@ name|PROPOSAL_COMP_ALGS_STOC
 index|]
 operator|=
 literal|"none"
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|options
+operator|.
+name|compression
+operator|==
+name|COMP_DELAYED
+condition|)
+block|{
+name|myproposal
+index|[
+name|PROPOSAL_COMP_ALGS_CTOS
+index|]
+operator|=
+name|myproposal
+index|[
+name|PROPOSAL_COMP_ALGS_STOC
+index|]
+operator|=
+literal|"none,zlib@openssh.com"
 expr_stmt|;
 block|}
 name|myproposal

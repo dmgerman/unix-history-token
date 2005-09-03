@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: bufaux.c,v 1.35 2005/03/10 22:01:05 deraadt Exp $"
+literal|"$OpenBSD: bufaux.c,v 1.36 2005/06/17 02:44:32 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -558,6 +558,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|oi
+operator|<
+literal|0
+operator|||
+operator|(
+name|u_int
+operator|)
 name|oi
 operator|!=
 name|bytes

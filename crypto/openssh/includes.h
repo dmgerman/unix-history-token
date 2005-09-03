@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: includes.h,v 1.18 2004/06/13 15:03:02 djm Exp $	*/
+comment|/*	$OpenBSD: includes.h,v 1.19 2005/05/19 02:42:26 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -29,13 +29,19 @@ parameter_list|)
 define|\
 value|static
 comment|/**/
-value|const char *const rcsid[] = { (char *)rcsid, "\100(#)" msg }
+value|const char *const rcsid[] = { (const char *)rcsid, "\100(#)" msg }
 end_define
 
 begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_include
@@ -947,6 +953,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_IAF_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<iaf.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_TMPDIR_H
 end_ifdef
 
@@ -1006,6 +1029,26 @@ begin_include
 include|#
 directive|include
 file|<kafs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SYS_SYSLOG_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
 end_include
 
 begin_endif

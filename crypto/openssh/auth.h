@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth.h,v 1.50 2004/05/23 23:59:53 dtucker Exp $	*/
+comment|/*	$OpenBSD: auth.h,v 1.51 2005/06/06 11:20:36 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -953,22 +953,6 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|expand_filename
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|passwd
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 name|authorized_keys_file
 parameter_list|(
 name|struct
@@ -1170,6 +1154,44 @@ directive|define
 name|SKEY_PROMPT
 value|"\nS/Key Password: "
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HEIMDAL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<krb5.h>
+end_include
+
+begin_function_decl
+name|krb5_error_code
+name|ssh_krb5_cc_gen
+parameter_list|(
+name|krb5_context
+parameter_list|,
+name|krb5_ccache
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

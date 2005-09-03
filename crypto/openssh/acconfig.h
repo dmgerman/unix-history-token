@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.181 2005/02/25 23:07:38 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.183 2005/07/07 10:33:36 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -148,10 +148,6 @@ comment|/* Define if you are on NeXT */
 undef|#
 directive|undef
 name|HAVE_NEXT
-comment|/* Define if you are on NEWS-OS */
-undef|#
-directive|undef
-name|HAVE_NEWS4
 comment|/* Define if you want to enable PAM support */
 undef|#
 directive|undef
@@ -288,10 +284,6 @@ comment|/* Define if you don't want to use lastlog in session.c */
 undef|#
 directive|undef
 name|NO_SSH_LASTLOG
-comment|/* Define if have krb5_init_ets */
-undef|#
-directive|undef
-name|KRB5_INIT_ETS
 comment|/* Define if you don't want to use utmp */
 undef|#
 directive|undef

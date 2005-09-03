@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp.c,v 1.63 2005/03/10 22:01:05 deraadt Exp $"
+literal|"$OpenBSD: sftp.c,v 1.66 2005/08/08 13:22:48 jaredy Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1992,7 +1992,7 @@ decl_stmt|;
 name|char
 name|quot
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|,
 name|j
@@ -3446,7 +3446,8 @@ parameter_list|)
 block|{
 name|int
 name|n
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|c
 init|=
 literal|1
@@ -3497,7 +3498,7 @@ name|LS_SHORT_VIEW
 operator|)
 condition|)
 block|{
-name|int
+name|u_int
 name|m
 init|=
 literal|0
@@ -3950,7 +3951,7 @@ block|{
 name|glob_t
 name|g
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|,
 name|c
@@ -4157,7 +4158,7 @@ name|LS_SHORT_VIEW
 operator|)
 condition|)
 block|{
-name|int
+name|u_int
 name|m
 init|=
 literal|0
@@ -6466,6 +6467,8 @@ name|conn
 decl_stmt|;
 name|int
 name|err
+decl_stmt|,
+name|interactive
 decl_stmt|;
 name|EditLine
 modifier|*
@@ -6819,7 +6822,16 @@ expr_stmt|;
 block|}
 if|#
 directive|if
+name|defined
+argument_list|(
 name|HAVE_SETVBUF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BROKEN_SETVBUF
+argument_list|)
 name|setvbuf
 argument_list|(
 name|stdout
@@ -6856,6 +6868,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|interactive
+operator|=
+operator|!
+name|batchmode
+operator|&&
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 literal|0
@@ -6884,6 +6906,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|interactive
+condition|)
 name|printf
 argument_list|(
 literal|"sftp> "
@@ -6906,6 +6932,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|interactive
+condition|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -6915,16 +6945,45 @@ break|break;
 block|}
 if|if
 condition|(
-name|batchmode
+operator|!
+name|interactive
 condition|)
+block|{
 comment|/* Echo command */
 name|printf
 argument_list|(
-literal|"%s"
+literal|"sftp> %s"
 argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|cmd
+argument_list|)
+operator|>
+literal|0
+operator|&&
+name|cmd
+index|[
+name|strlen
+argument_list|(
+name|cmd
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\n'
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -6961,7 +7020,14 @@ name|count
 operator|<=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|history
 argument_list|(
 name|hl
@@ -7064,6 +7130,23 @@ argument_list|(
 name|pwd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_LIBEDIT
+if|if
+condition|(
+name|el
+operator|!=
+name|NULL
+condition|)
+name|el_end
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_LIBEDIT */
 comment|/* err == 1 signifies normal "quit" exit */
 return|return
 operator|(

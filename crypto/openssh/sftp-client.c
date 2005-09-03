@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.53 2005/03/10 22:01:05 deraadt Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.57 2005/07/27 10:39:03 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -226,8 +226,11 @@ argument_list|(
 name|mlen
 argument_list|)
 argument_list|)
-operator|<=
-literal|0
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|mlen
+argument_list|)
 condition|)
 name|fatal
 argument_list|(
@@ -257,8 +260,11 @@ argument_list|(
 name|m
 argument_list|)
 argument_list|)
-operator|<=
-literal|0
+operator|!=
+name|buffer_len
+argument_list|(
+name|m
+argument_list|)
 condition|)
 name|fatal
 argument_list|(
@@ -291,9 +297,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|ssize_t
-name|len
-decl_stmt|;
 name|u_int
 name|msg_len
 decl_stmt|;
@@ -304,8 +307,8 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|len
-operator|=
+if|if
+condition|(
 name|atomicio
 argument_list|(
 name|read
@@ -319,26 +322,22 @@ argument_list|)
 argument_list|,
 literal|4
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|4
+condition|)
+block|{
 if|if
 condition|(
-name|len
+name|errno
 operator|==
-literal|0
+name|EPIPE
 condition|)
 name|fatal
 argument_list|(
 literal|"Connection closed"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|len
-operator|==
-operator|-
-literal|1
-condition|)
+else|else
 name|fatal
 argument_list|(
 literal|"Couldn't read packet: %s"
@@ -349,6 +348,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|msg_len
 operator|=
 name|buffer_get_int
@@ -376,8 +376,8 @@ argument_list|,
 name|msg_len
 argument_list|)
 expr_stmt|;
-name|len
-operator|=
+if|if
+condition|(
 name|atomicio
 argument_list|(
 name|read
@@ -391,26 +391,22 @@ argument_list|)
 argument_list|,
 name|msg_len
 argument_list|)
-expr_stmt|;
+operator|!=
+name|msg_len
+condition|)
+block|{
 if|if
 condition|(
-name|len
+name|errno
 operator|==
-literal|0
+name|EPIPE
 condition|)
 name|fatal
 argument_list|(
 literal|"Connection closed"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|len
-operator|==
-operator|-
-literal|1
-condition|)
+else|else
 name|fatal
 argument_list|(
 literal|"Read packet: %s"
@@ -421,6 +417,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1476,6 +1473,8 @@ name|Buffer
 name|msg
 decl_stmt|;
 name|u_int
+name|count
+decl_stmt|,
 name|type
 decl_stmt|,
 name|id
@@ -1614,9 +1613,6 @@ name|interrupted
 condition|;
 control|)
 block|{
-name|int
-name|count
-decl_stmt|;
 name|id
 operator|=
 name|expected_id
@@ -3750,10 +3746,8 @@ name|int
 name|local_fd
 decl_stmt|,
 name|status
-decl_stmt|,
-name|num_req
-decl_stmt|,
-name|max_req
+init|=
+literal|0
 decl_stmt|,
 name|write_error
 decl_stmt|;
@@ -3777,6 +3771,10 @@ decl_stmt|,
 name|id
 decl_stmt|,
 name|buflen
+decl_stmt|,
+name|num_req
+decl_stmt|,
+name|max_req
 decl_stmt|;
 name|off_t
 name|progress_counter

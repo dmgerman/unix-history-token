@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-shadow.c,v 1.6 2005/02/16 03:20:06 dtucker Exp $"
+literal|"$Id: auth-shadow.c,v 1.7 2005/07/17 07:04:47 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

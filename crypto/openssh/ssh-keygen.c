@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keygen.c,v 1.122 2005/03/11 14:59:06 markus Exp $"
+literal|"$OpenBSD: ssh-keygen.c,v 1.128 2005/07/17 07:17:55 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -129,10 +129,10 @@ comment|/* Number of bits in the RSA/DSA key.  This value can be changed on the 
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int32_t
 name|bits
 init|=
-literal|1024
+literal|2048
 decl_stmt|;
 end_decl_stmt
 
@@ -361,9 +361,9 @@ parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
-name|int
+name|u_int32_t
 parameter_list|,
-name|int
+name|u_int32_t
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -5288,7 +5288,28 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"  -a trials   Number of trials for screening DH-GEX moduli.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -B          Show bubblebabble digest of key file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"  -b bits     Number of bits in the key to create.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -C comment  Provide new comment.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5298,11 +5319,31 @@ argument_list|,
 literal|"  -c          Change comment in private and public key files.\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMARTCARD
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -D reader   Download public key from smartcard.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SMARTCARD */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"  -e          Convert OpenSSH to IETF SECSH key file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -F hostname Find hostname in known hosts file.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5316,7 +5357,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"  -G file     Generate candidates for DH-GEX moduli.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"  -g          Use generic DNS resource record format.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -H          Hash names in known_hosts file.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5337,56 +5392,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -p          Change passphrase of private key file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -q          Quiet.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -y          Read private key file and print public key.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -t type     Specify type of key to create.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -B          Show bubblebabble digest of key file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -H          Hash names in known_hosts file\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -F hostname Find hostname in known hosts file\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -C comment  Provide new comment.\n"
+literal|"  -M memory   Amount of memory (MB) to use for generating DH-GEX moduli.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5407,19 +5413,54 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"  -p          Change passphrase of private key file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -q          Quiet.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -R hostname Remove host from known_hosts file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"  -r hostname Print DNS resource record.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -S start    Start point (hex) for generating DH-GEX moduli.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -T file     Screen candidates for DH-GEX moduli.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -t type     Specify type of key to create.\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMARTCARD
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -D reader   Download public key from smartcard.\n"
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -5434,14 +5475,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -G file     Generate candidates for DH-GEX moduli\n"
+literal|"  -v          Verbose.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -T file     Screen candidates for DH-GEX moduli\n"
+literal|"  -W gen      Generator to use for generating DH-GEX moduli.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -y          Read private key file and print public key.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5529,12 +5577,12 @@ decl_stmt|,
 name|download
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|u_int32_t
 name|memory
 init|=
 literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|generator_wanted
 init|=
 literal|0
@@ -5566,6 +5614,11 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|f
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errstr
 decl_stmt|;
 specifier|extern
 name|int
@@ -5690,33 +5743,31 @@ literal|'b'
 case|:
 name|bits
 operator|=
-name|atoi
+name|strtonum
 argument_list|(
 name|optarg
+argument_list|,
+literal|512
+argument_list|,
+literal|32768
+argument_list|,
+operator|&
+name|errstr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bits
-operator|<
-literal|512
-operator|||
-name|bits
-operator|>
-literal|32768
+name|errstr
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"Bits has bad value.\n"
+literal|"Bits has bad value %s (%s)"
+argument_list|,
+name|optarg
+argument_list|,
+name|errstr
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'F'
@@ -5785,6 +5836,8 @@ break|break;
 case|case
 literal|'f'
 case|:
+if|if
+condition|(
 name|strlcpy
 argument_list|(
 name|identity_file
@@ -5795,6 +5848,16 @@ sizeof|sizeof
 argument_list|(
 name|identity_file
 argument_list|)
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|identity_file
+argument_list|)
+condition|)
+name|fatal
+argument_list|(
+literal|"Identity filename too long"
 argument_list|)
 expr_stmt|;
 name|have_identity
@@ -5948,20 +6011,29 @@ literal|'W'
 case|:
 name|generator_wanted
 operator|=
-name|atoi
+name|strtonum
 argument_list|(
 name|optarg
+argument_list|,
+literal|1
+argument_list|,
+name|UINT_MAX
+argument_list|,
+operator|&
+name|errstr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|generator_wanted
-operator|<
-literal|1
+name|errstr
 condition|)
 name|fatal
 argument_list|(
-literal|"Desired generator has bad value."
+literal|"Desired generator has bad value: %s (%s)"
+argument_list|,
+name|optarg
+argument_list|,
+name|errstr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5970,9 +6042,29 @@ literal|'a'
 case|:
 name|trials
 operator|=
-name|atoi
+name|strtonum
 argument_list|(
 name|optarg
+argument_list|,
+literal|1
+argument_list|,
+name|UINT_MAX
+argument_list|,
+operator|&
+name|errstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+condition|)
+name|fatal
+argument_list|(
+literal|"Invalid number of trials: %s (%s)"
+argument_list|,
+name|optarg
+argument_list|,
+name|errstr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5981,11 +6073,33 @@ literal|'M'
 case|:
 name|memory
 operator|=
-name|atoi
+name|strtonum
 argument_list|(
+name|optarg
+argument_list|,
+literal|1
+argument_list|,
+name|UINT_MAX
+argument_list|,
+operator|&
+name|errstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"Memory limit is %s: %s"
+argument_list|,
+name|errstr
+argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'G'
@@ -5994,6 +6108,8 @@ name|do_gen_candidates
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
 name|strlcpy
 argument_list|(
 name|out_file
@@ -6004,6 +6120,16 @@ sizeof|sizeof
 argument_list|(
 name|out_file
 argument_list|)
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|out_file
+argument_list|)
+condition|)
+name|fatal
+argument_list|(
+literal|"Output filename too long"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6014,6 +6140,8 @@ name|do_screen_candidates
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
 name|strlcpy
 argument_list|(
 name|out_file
@@ -6024,6 +6152,16 @@ sizeof|sizeof
 argument_list|(
 name|out_file
 argument_list|)
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|out_file
+argument_list|)
+condition|)
+name|fatal
+argument_list|(
+literal|"Output filename too long"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: monitor_wrap.c,v 1.39 2004/07/17 05:31:41 dtucker Exp $"
+literal|"$OpenBSD: monitor_wrap.c,v 1.40 2005/05/24 17:32:43 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -388,9 +388,14 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: write"
+literal|"%s: write: %s"
 argument_list|,
 name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -413,9 +418,14 @@ name|mlen
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: write"
+literal|"%s: write: %s"
 argument_list|,
 name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -442,9 +452,6 @@ decl_stmt|;
 name|u_int
 name|msg_len
 decl_stmt|;
-name|ssize_t
-name|res
-decl_stmt|;
 name|debug3
 argument_list|(
 literal|"%s entering"
@@ -452,8 +459,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
+if|if
+condition|(
 name|atomicio
 argument_list|(
 name|read
@@ -467,10 +474,6 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|res
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -480,9 +483,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|res
+name|errno
 operator|==
-literal|0
+name|EPIPE
 condition|)
 name|cleanup_exit
 argument_list|(
@@ -491,14 +494,14 @@ argument_list|)
 expr_stmt|;
 name|fatal
 argument_list|(
-literal|"%s: read: %ld"
+literal|"%s: read: %s"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
-name|long
-operator|)
-name|res
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -538,8 +541,8 @@ argument_list|,
 name|msg_len
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
+if|if
+condition|(
 name|atomicio
 argument_list|(
 name|read
@@ -553,23 +556,19 @@ argument_list|)
 argument_list|,
 name|msg_len
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|res
 operator|!=
 name|msg_len
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: read: %ld != msg_len"
+literal|"%s: read: %s"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
-name|long
-operator|)
-name|res
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4076,9 +4075,10 @@ block|{
 name|Buffer
 name|m
 decl_stmt|;
-name|int
+name|u_int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|debug3
@@ -4290,9 +4290,10 @@ block|{
 name|Buffer
 name|m
 decl_stmt|;
-name|int
+name|u_int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|debug3

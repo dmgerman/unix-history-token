@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-chall.c,v 1.22 2005/01/19 13:11:47 dtucker Exp $"
+literal|"$OpenBSD: auth2-chall.c,v 1.24 2005/07/17 07:17:54 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1090,10 +1090,9 @@ modifier|*
 modifier|*
 name|prompts
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|u_int
+name|i
+decl_stmt|,
 modifier|*
 name|echo_on
 decl_stmt|;
@@ -1279,8 +1278,6 @@ modifier|*
 name|kbdintctxt
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|authenticated
 init|=
 literal|0
@@ -1290,6 +1287,8 @@ decl_stmt|,
 name|len
 decl_stmt|;
 name|u_int
+name|i
+decl_stmt|,
 name|nresp
 decl_stmt|;
 name|char
