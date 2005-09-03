@@ -3735,6 +3735,9 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
+name|int
+name|barlen
+decl_stmt|;
 name|map
 operator|=
 name|PCIB_READ_CONFIG
@@ -3842,6 +3845,16 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+name|barlen
+operator|=
+name|ln2range
+operator|==
+literal|64
+condition|?
+literal|2
+else|:
+literal|1
+expr_stmt|;
 comment|/* 	 * For I/O registers, if bottom bit is set, and the next bit up 	 * isn't clear, we know we have a BAR that doesn't conform to the 	 * spec, so ignore it.  Also, sanity check the size of the data 	 * areas to the type of memory involved.  Memory must be at least 	 * 32 bytes in size, while I/O ranges must be at least 4. 	 */
 if|if
 condition|(
@@ -3863,7 +3876,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|1
+name|barlen
 operator|)
 return|;
 if|if
@@ -3890,7 +3903,7 @@ operator|)
 condition|)
 return|return
 operator|(
-literal|1
+name|barlen
 operator|)
 return|;
 if|if
@@ -4017,7 +4030,9 @@ operator|==
 name|testval
 condition|)
 return|return
-literal|1
+operator|(
+name|barlen
+operator|)
 return|;
 comment|/* 	 * This code theoretically does the right thing, but has 	 * undesirable side effects in some cases where peripherals 	 * respond oddly to having these bits enabled.  Let the user 	 * be able to turn them off (since pci_enable_io_modes is 1 by 	 * default). 	 */
 if|if
@@ -4165,7 +4180,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|1
+name|barlen
 operator|)
 return|;
 if|if
@@ -4188,7 +4203,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|1
+name|barlen
 operator|)
 return|;
 block|}
@@ -4254,15 +4269,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|ln2range
-operator|==
-literal|64
-operator|)
-condition|?
-literal|2
-else|:
-literal|1
+name|barlen
 operator|)
 return|;
 block|}
