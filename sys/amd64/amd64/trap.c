@@ -772,6 +772,10 @@ if|if
 condition|(
 name|type
 operator|!=
+name|T_NMI
+operator|&&
+name|type
+operator|!=
 name|T_BPTFLT
 operator|&&
 name|type

@@ -1594,6 +1594,15 @@ literal|"fork_trampoline"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"nmi_calltrap"
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|frame_type
 operator|=
