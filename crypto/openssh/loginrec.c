@@ -112,7 +112,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: loginrec.c,v 1.67 2005/02/15 11:19:28 dtucker Exp $"
+literal|"$Id: loginrec.c,v 1.70 2005/07/17 07:26:44 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -831,7 +831,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * login_set_current_time(struct logininfo *)    - set the current time  *  * Set the current time in a logininfo structure. This function is  * meant to eliminate the need to deal with system dependencies for  * time handling.  */
+comment|/*  * login_set_current_time(struct logininfo *)    - set the current time  *  * Set the current time in a logininfo structure. This function is  * meant to eliminate the need to deal with system dependencies for  * time handling.  */
 end_comment
 
 begin_function
@@ -1360,7 +1360,7 @@ name|char
 modifier|*
 name|src
 parameter_list|,
-name|int
+name|u_int
 name|dstsize
 parameter_list|)
 block|{
@@ -1513,7 +1513,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * line_abbrevname(): Return the abbreviated (usually four-character)  * form of the line (Just use the last<dstsize> characters of the  * full name.)  *  * NOTE: use strncpy because we do NOT necessarily want zero  * termination  */
+comment|/*  * line_abbrevname(): Return the abbreviated (usually four-character)  * form of the line (Just use the last<dstsize> characters of the  * full name.)  *  * NOTE: use strncpy because we do NOT necessarily want zero  * termination  */
 end_comment
 
 begin_function
@@ -2655,7 +2655,7 @@ comment|/* UTMP_USE_LIBRARY */
 end_comment
 
 begin_comment
-comment|/*   * Write a utmp entry direct to the file  * This is a slightly modification of code in OpenBSD's login.c  */
+comment|/*  * Write a utmp entry direct to the file  * This is a slightly modification of code in OpenBSD's login.c  */
 end_comment
 
 begin_function
@@ -3764,7 +3764,7 @@ name|USE_WTMP
 end_ifdef
 
 begin_comment
-comment|/*   * Write a wtmp entry direct to the end of the file  * This is a slight modification of code in OpenBSD's logwtmp.c  */
+comment|/*  * Write a wtmp entry direct to the end of the file  * This is a slight modification of code in OpenBSD's logwtmp.c  */
 end_comment
 
 begin_function
@@ -4042,7 +4042,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Notes on fetching login data from wtmp/wtmpx  *  * Logouts are usually recorded with (amongst other things) a blank  * username on a given tty line.  However, some systems (HP-UX is one)  * leave all fields set, but change the ut_type field to DEAD_PROCESS.  *  * Since we're only looking for logins here, we know that the username  * must be set correctly. On systems that leave it in, we check for  * ut_type==USER_PROCESS (indicating a login.)  *  * Portability: Some systems may set something other than USER_PROCESS  * to indicate a login process. I don't know of any as I write. Also,  * it's possible that some systems may both leave the username in  * place and not have ut_type.  */
+comment|/*  * Notes on fetching login data from wtmp/wtmpx  *  * Logouts are usually recorded with (amongst other things) a blank  * username on a given tty line.  However, some systems (HP-UX is one)  * leave all fields set, but change the ut_type field to DEAD_PROCESS.  *  * Since we're only looking for logins here, we know that the username  * must be set correctly. On systems that leave it in, we check for  * ut_type==USER_PROCESS (indicating a login.)  *  * Portability: Some systems may set something other than USER_PROCESS  * to indicate a login process. I don't know of any as I write. Also,  * it's possible that some systems may both leave the username in  * place and not have ut_type.  */
 end_comment
 
 begin_comment
@@ -5079,7 +5079,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * Logouts are recorded as a blank username on a particular  		 * line. So, we just need to find the username in struct utmpx 		 */
+comment|/* 		 * Logouts are recorded as a blank username on a particular 		 * line. So, we just need to find the username in struct utmpx 		 */
 if|if
 condition|(
 name|wtmpx_islogin

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: session.h,v 1.23 2004/07/17 05:31:41 dtucker Exp $	*/
+comment|/*	$OpenBSD: session.h,v 1.25 2005/07/17 06:49:04 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -114,9 +114,13 @@ name|int
 name|chanid
 decl_stmt|;
 name|int
-name|is_subsystem
+modifier|*
+name|x11_chanids
 decl_stmt|;
 name|int
+name|is_subsystem
+decl_stmt|;
+name|u_int
 name|num_env
 decl_stmt|;
 struct|struct

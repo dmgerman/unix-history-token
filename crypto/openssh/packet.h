@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: packet.h,v 1.41 2004/05/11 19:01:43 deraadt Exp $	*/
+comment|/*	$OpenBSD: packet.h,v 1.43 2005/07/25 11:59:40 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -136,6 +136,24 @@ end_function_decl
 begin_function_decl
 name|int
 name|packet_is_interactive
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_set_server
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_set_authenticated
 parameter_list|(
 name|void
 parameter_list|)
@@ -354,7 +372,7 @@ name|void
 modifier|*
 name|packet_get_raw
 parameter_list|(
-name|int
+name|u_int
 modifier|*
 name|length_ptr
 parameter_list|)

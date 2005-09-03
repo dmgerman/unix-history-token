@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.66 2005/03/01 10:40:27 djm Exp $	*/
+comment|/*	$OpenBSD: readconf.h,v 1.67 2005/06/08 11:25:09 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -350,6 +350,41 @@ block|}
 name|Options
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|SSHCTL_MASTER_NO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSHCTL_MASTER_YES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSHCTL_MASTER_AUTO
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSHCTL_MASTER_ASK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSHCTL_MASTER_AUTO_ASK
+value|4
+end_define
 
 begin_function_decl
 name|void
