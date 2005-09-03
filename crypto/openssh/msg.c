@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: msg.c,v 1.7 2003/11/17 09:45:39 djm Exp $"
+literal|"$OpenBSD: msg.c,v 1.8 2005/05/24 17:32:43 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -197,9 +197,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|ssize_t
-name|res
-decl_stmt|;
 name|u_int
 name|msg_len
 decl_stmt|;
@@ -208,8 +205,8 @@ argument_list|(
 literal|"ssh_msg_recv entering"
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
+if|if
+condition|(
 name|atomicio
 argument_list|(
 name|read
@@ -223,10 +220,6 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|res
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -236,18 +229,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|res
+name|errno
 operator|!=
-literal|0
+name|EPIPE
 condition|)
 name|error
 argument_list|(
-literal|"ssh_msg_recv: read: header %ld"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|res
+literal|"ssh_msg_recv: read: header"
 argument_list|)
 expr_stmt|;
 return|return
@@ -299,8 +287,8 @@ argument_list|,
 name|msg_len
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
+if|if
+condition|(
 name|atomicio
 argument_list|(
 name|read
@@ -314,22 +302,18 @@ argument_list|)
 argument_list|,
 name|msg_len
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|res
 operator|!=
 name|msg_len
 condition|)
 block|{
 name|error
 argument_list|(
-literal|"ssh_msg_recv: read: %ld != msg_len"
+literal|"ssh_msg_recv: read: %s"
 argument_list|,
-operator|(
-name|long
-operator|)
-name|res
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

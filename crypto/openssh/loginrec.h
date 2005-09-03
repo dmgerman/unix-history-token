@@ -44,7 +44,7 @@ file|<sys/socket.h>
 end_include
 
 begin_comment
-comment|/* RCSID("$Id: loginrec.h,v 1.9 2005/02/02 06:10:11 dtucker Exp $"); */
+comment|/* RCSID("$Id: loginrec.h,v 1.10 2005/06/19 00:19:44 djm Exp $"); */
 end_comment
 
 begin_comment
@@ -487,7 +487,7 @@ name|char
 modifier|*
 name|src
 parameter_list|,
-name|int
+name|u_int
 name|dstsize
 parameter_list|)
 function_decl|;

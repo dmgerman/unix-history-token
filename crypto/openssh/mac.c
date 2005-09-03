@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: mac.c,v 1.6 2003/09/18 13:02:21 miod Exp $"
+literal|"$OpenBSD: mac.c,v 1.7 2005/06/17 02:44:32 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -160,6 +160,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|evp_len
 decl_stmt|;
 for|for
 control|(
@@ -218,6 +220,30 @@ operator|)
 operator|(
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|evp_len
+operator|=
+name|EVP_MD_size
+argument_list|(
+name|mac
+operator|->
+name|md
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"mac %s len %d"
+argument_list|,
+name|name
+argument_list|,
+name|evp_len
+argument_list|)
+expr_stmt|;
 name|mac
 operator|->
 name|key_len
@@ -226,12 +252,10 @@ name|mac
 operator|->
 name|mac_len
 operator|=
-name|EVP_MD_size
-argument_list|(
-name|mac
-operator|->
-name|md
-argument_list|)
+operator|(
+name|u_int
+operator|)
+name|evp_len
 expr_stmt|;
 if|if
 condition|(
@@ -339,9 +363,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
 name|mac
 operator|->
 name|mac_len

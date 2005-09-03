@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: atomicio.h,v 1.5 2003/06/28 16:23:06 deraadt Exp $	*/
+comment|/*	$OpenBSD: atomicio.h,v 1.6 2005/05/24 17:32:43 avsm Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Ensure all of data on socket comes through. f==read || f==vwrite  
 end_comment
 
 begin_function_decl
-name|ssize_t
+name|size_t
 name|atomicio
 parameter_list|(
 name|ssize_t

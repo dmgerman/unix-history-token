@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cipher-acss.c,v 1.2 2004/02/06 04:26:11 dtucker Exp $"
+literal|"$Id: cipher-acss.c,v 1.3 2005/07/17 07:04:47 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

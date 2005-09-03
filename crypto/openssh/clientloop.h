@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: clientloop.h,v 1.12 2004/11/07 00:01:46 djm Exp $	*/
+comment|/*	$OpenBSD: clientloop.h,v 1.14 2005/07/04 00:58:43 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -24,6 +24,31 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|client_x11_get_proto
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -74,6 +99,17 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Multiplexing protocol version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_VER
+value|1
+end_define
 
 begin_comment
 comment|/* Multiplexing control protocol flags */
@@ -132,6 +168,28 @@ end_define
 
 begin_comment
 comment|/* Subsystem request on open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_FLAG_X11_FWD
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* Request X11 forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_FLAG_AGENT_FWD
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/* Request agent forwarding */
 end_comment
 
 end_unit

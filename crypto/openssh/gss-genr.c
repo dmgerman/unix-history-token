@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: gss-genr.c,v 1.3 2003/11/21 11:57:03 djm Exp $	*/
+comment|/*	$OpenBSD: gss-genr.c,v 1.4 2005/07/17 07:17:55 djm Exp $	*/
 end_comment
 
 begin_comment
