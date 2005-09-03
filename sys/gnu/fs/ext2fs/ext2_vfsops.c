@@ -1312,11 +1312,19 @@ name|ump
 operator|->
 name|um_devvp
 condition|)
-name|error
-operator|=
-name|EINVAL
+block|{
+name|vput
+argument_list|(
+name|devvp
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* needs translation */
+block|}
 else|else
 name|vput
 argument_list|(

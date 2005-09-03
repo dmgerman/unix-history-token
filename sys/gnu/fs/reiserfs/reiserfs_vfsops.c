@@ -782,12 +782,16 @@ block|}
 else|else
 block|{
 comment|/* TODO Handle MNT_UPDATE */
-name|error
-operator|=
+name|vput
+argument_list|(
+name|devvp
+argument_list|)
+expr_stmt|;
+return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
-expr_stmt|;
+return|;
 block|}
 if|if
 condition|(
@@ -2304,17 +2308,6 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-name|vn_lock
-argument_list|(
-name|devvp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|vinvalbuf

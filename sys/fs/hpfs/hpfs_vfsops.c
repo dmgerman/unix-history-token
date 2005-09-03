@@ -920,17 +920,6 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
-name|vn_lock
-argument_list|(
-name|devvp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 comment|/* XXX: use VOP_ACCESS to check FS perms */
 name|DROP_GIANT
 argument_list|()
