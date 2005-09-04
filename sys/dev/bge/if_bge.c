@@ -16673,6 +16673,14 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
+comment|/* 		 * If we are called from bge_detach(), mii is already NULL. 		 */
+if|if
+condition|(
+name|mii
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ifm
 operator|=
 name|mii
@@ -16706,6 +16714,7 @@ name|ifm_media
 operator|=
 name|mtmp
 expr_stmt|;
+block|}
 name|ifp
 operator|->
 name|if_flags
