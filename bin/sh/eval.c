@@ -732,10 +732,11 @@ directive|endif
 name|TRACE
 argument_list|(
 operator|(
-literal|"evaltree(0x%lx: %d) called\n"
+literal|"evaltree(%p: %d) called\n"
 operator|,
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|n
 operator|,
@@ -1985,10 +1986,11 @@ decl_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"evalpipe(0x%lx) called\n"
+literal|"evalpipe(%p) called\n"
 operator|,
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|n
 operator|)
@@ -2705,10 +2707,11 @@ comment|/* First expand the arguments. */
 name|TRACE
 argument_list|(
 operator|(
-literal|"evalcommand(0x%lx, %d) called\n"
+literal|"evalcommand(%p, %d) called\n"
 operator|,
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|cmd
 operator|,
