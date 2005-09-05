@@ -5089,14 +5089,25 @@ name|fd
 argument_list|,
 name|mode
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't set permissions"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_OK
+name|ARCHIVE_WARN
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 if|if
