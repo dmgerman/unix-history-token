@@ -4028,12 +4028,16 @@ literal|", enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If base is 0, then we have problems.  It is best to ignore 	 * such entries for the moment.  These will be allocated later if 	 * the driver specifically requests them. 	 */
+comment|/* 	 * If base is 0, then we have problems.  It is best to ignore 	 * such entries for the moment.  These will be allocated later if 	 * the driver specifically requests them. 	 * 	 * Similarly treat maps whose values is the same as the test value 	 * read back.  These maps have had all f's written to them by the 	 * BIOS in an attempt to disable the resources. 	 */
 if|if
 condition|(
 name|base
 operator|==
 literal|0
+operator|||
+name|map
+operator|==
+name|testval
 condition|)
 return|return
 literal|1
