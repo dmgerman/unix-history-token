@@ -2608,8 +2608,8 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -C, -o and -W require at least "
-literal|"one counting mode PMC to be specified."
+literal|"ERROR: options -C, -W, -o and -w require at "
+literal|"least one counting mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check for sampling mode options without a sampling PMC spec */
