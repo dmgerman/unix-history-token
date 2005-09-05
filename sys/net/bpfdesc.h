@@ -204,14 +204,6 @@ name|pid_t
 name|bd_pid
 decl_stmt|;
 comment|/* PID which created descriptor */
-name|char
-name|bd_pcomm
-index|[
-name|MAXCOMLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
 name|int
 name|bd_locked
 decl_stmt|;
@@ -406,14 +398,6 @@ name|char
 name|bd_ifname
 index|[
 name|IFNAMSIZ
-index|]
-decl_stmt|;
-name|char
-name|bd_pcomm
-index|[
-name|MAXCOMLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|int
