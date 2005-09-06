@@ -4103,8 +4103,6 @@ if|if
 condition|(
 name|ifsset
 argument_list|()
-operator|!=
-literal|0
 condition|)
 name|sep
 operator|=
@@ -4684,12 +4682,6 @@ operator|&&
 name|start
 operator|>
 name|string
-operator|&&
-operator|(
-name|nulonly
-operator|||
-literal|1
-operator|)
 operator|)
 condition|)
 block|{
@@ -5636,10 +5628,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|char
-modifier|*
-name|q
-decl_stmt|;
 for|for
 control|(
 name|p

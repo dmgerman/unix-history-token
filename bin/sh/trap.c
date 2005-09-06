@@ -1555,6 +1555,7 @@ operator|!=
 name|NULL
 operator|&&
 operator|!
+operator|(
 name|trap
 index|[
 name|signo
@@ -1564,6 +1565,7 @@ literal|0
 index|]
 operator|==
 literal|'\0'
+operator|)
 operator|&&
 operator|!
 operator|(
