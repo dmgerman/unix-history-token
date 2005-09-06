@@ -2375,6 +2375,14 @@ value|0x44
 name|u_int8_t
 name|disk_index
 decl_stmt|;
+define|#
+directive|define
+name|VIA_D_MASK
+value|0x0f
+define|#
+directive|define
+name|VIA_D_DEGRADED
+value|0x10
 name|u_int8_t
 name|stripe_layout
 decl_stmt|;
