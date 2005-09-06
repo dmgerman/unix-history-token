@@ -2375,15 +2375,17 @@ name|pg_seq
 index|[]
 init|=
 block|{
+comment|/* Select Page0 */
 block|{
 name|ED_P0_CR
 block|,
 name|ED_CR_RD2
 operator||
 name|ED_CR_STP
+operator||
+name|ED_CR_PAGE_0
 block|}
 block|,
-comment|/* Select Page0 */
 block|{
 name|ED_P0_DCR
 block|,
@@ -2462,9 +2464,12 @@ block|,
 name|ED_CR_RD0
 operator||
 name|ED_CR_STA
+operator||
+name|ED_CR_PAGE_0
 block|}
 block|, 	}
 struct|;
+comment|/* XXX The Linux axnet_cs driver does the following differently */
 comment|/* Reset Card */
 name|tmp
 operator|=
@@ -2498,6 +2503,8 @@ argument_list|,
 name|ED_CR_RD2
 operator||
 name|ED_CR_STP
+operator||
+name|ED_CR_PAGE_0
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -3121,7 +3128,7 @@ name|chip_type
 operator|=
 name|ED_CHIP_TYPE_AX88190
 expr_stmt|;
-comment|/* 	 * Set Attribute Memory IOBASE Register.  Is this a deficiency in 	 * the PC Card layer, or an ax88190 specific issue? xxx 	 */
+comment|/* XXX 	 * Set Attribute Memory IOBASE Register.  Is this a deficiency in 	 * the PC Card layer, or an ax88190 specific issue?  The card 	 * definitely doesn't work without it. 	 */
 name|iobase
 operator|=
 name|rman_get_start
