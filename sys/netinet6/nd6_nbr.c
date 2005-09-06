@@ -4518,6 +4518,9 @@ case|:
 endif|#
 directive|endif
 case|case
+name|IFT_BRIDGE
+case|:
+case|case
 name|IFT_ISO88025
 case|:
 return|return

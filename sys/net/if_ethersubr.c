@@ -3156,6 +3156,13 @@ operator|)
 operator|&&
 operator|!
 operator|(
+name|ifp
+operator|->
+name|if_bridge
+operator|)
+operator|&&
+operator|!
+operator|(
 operator|(
 name|ether_type
 operator|==

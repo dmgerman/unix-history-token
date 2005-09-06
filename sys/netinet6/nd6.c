@@ -7585,6 +7585,9 @@ case|case
 name|IFT_GIF
 case|:
 comment|/* XXX need more cases? */
+case|case
+name|IFT_BRIDGE
+case|:
 return|return
 operator|(
 literal|1
@@ -7693,6 +7696,9 @@ name|IFT_IEEE80211
 case|:
 endif|#
 directive|endif
+case|case
+name|IFT_BRIDGE
+case|:
 case|case
 name|IFT_ISO88025
 case|:
