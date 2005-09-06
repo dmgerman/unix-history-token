@@ -130,6 +130,10 @@ modifier|*
 name|irq_handle
 decl_stmt|;
 comment|/* handle for irq handler */
+name|int
+name|modem_rid
+decl_stmt|;
+comment|/* resource ID for modem part of device */
 name|device_t
 name|miibus
 decl_stmt|;
