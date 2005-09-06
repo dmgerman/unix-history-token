@@ -129,17 +129,17 @@ directive|include
 file|<sys/acl.h>
 end_include
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_ACL
-argument_list|,
-literal|"acl"
-argument_list|,
-literal|"access control list"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
+begin_decl_stmt
+name|uma_zone_t
+name|acl_zone
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -4383,6 +4383,64 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* ARGUSED */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|aclinit
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+name|__unused
+parameter_list|)
+block|{
+name|acl_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"ACL UMA zone"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|acl
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|acls
+argument_list|,
+argument|SI_SUB_ACL
+argument_list|,
+argument|SI_ORDER_FIRST
+argument_list|,
+argument|aclinit
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
 
 end_unit
 

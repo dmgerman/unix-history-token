@@ -362,6 +362,11 @@ init|=
 literal|0x2800001
 block|,
 comment|/* start soft interrupt thread */
+name|SI_SUB_ACL
+init|=
+literal|0x2900000
+block|,
+comment|/* start for filesystem ACLs */
 name|SI_SUB_DEVFS
 init|=
 literal|0x2F00000
