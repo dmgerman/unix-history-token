@@ -716,6 +716,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+comment|/* 	 * Flags of polling record (protected by poll_mtx). 	 * PRF_RUNNING means that the handler is now executing. 	 * PRF_LEAVING means that the handler is now deregistering. 	 */
 define|#
 directive|define
 name|PRF_RUNNING
