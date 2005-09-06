@@ -419,6 +419,18 @@ return|;
 comment|/* adjust argument values */
 if|if
 condition|(
+name|fontwidth
+operator|<=
+literal|0
+condition|)
+name|fontwidth
+operator|=
+name|info
+operator|.
+name|vi_cwidth
+expr_stmt|;
+if|if
+condition|(
 name|fontsize
 operator|<=
 literal|0
