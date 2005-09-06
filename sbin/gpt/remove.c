@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2004 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -114,8 +114,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s -a device\n"
-literal|"       %s [-b lba] [-i index] [-s lba] [-t uuid] device\n"
+literal|"usage: %s -a device ...\n"
+literal|"       %s [-b lba] [-i index] [-s lba] [-t uuid] device ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -175,8 +175,6 @@ decl_stmt|;
 name|unsigned
 name|int
 name|i
-decl_stmt|,
-name|removed
 decl_stmt|;
 name|gpt
 operator|=
@@ -258,10 +256,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|removed
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Remove all matching entries in the map. */
 for|for
 control|(
@@ -409,6 +403,7 @@ name|NULL
 argument_list|)
 condition|)
 continue|continue;
+comment|/* Remove the primary entry by clearing the partition type. */
 name|uuid_create_nil
 argument_list|(
 operator|&
@@ -517,6 +512,7 @@ name|hdr_entsz
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* Remove the secundary entry. */
 name|uuid_create_nil
 argument_list|(
 operator|&
@@ -605,19 +601,7 @@ operator|->
 name|map_index
 argument_list|)
 expr_stmt|;
-name|removed
-operator|++
-expr_stmt|;
 block|}
-name|warnx
-argument_list|(
-literal|"%s: %d partition(s) removed"
-argument_list|,
-name|device_name
-argument_list|,
-name|removed
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

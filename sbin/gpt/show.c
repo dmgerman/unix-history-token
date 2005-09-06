@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -71,6 +71,24 @@ directive|include
 file|"gpt.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|show_label
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|show_uuid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -83,7 +101,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s device ...\n"
+literal|"usage: %s [-lu] device ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -168,6 +186,13 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|show_uuid
+condition|)
+goto|goto
+name|unfriendly
+goto|;
 if|if
 condition|(
 name|uuid_equal
@@ -304,6 +329,8 @@ operator|(
 literal|"Windows reserved"
 operator|)
 return|;
+name|unfriendly
+label|:
 name|uuid_to_string
 argument_list|(
 name|t
@@ -671,6 +698,26 @@ name|m
 operator|->
 name|map_data
 expr_stmt|;
+if|if
+condition|(
+name|show_label
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"- \"%s\""
+argument_list|,
+name|utf16_to_utf8
+argument_list|(
+name|ent
+operator|->
+name|ent_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|le_uuid_dec
 argument_list|(
 operator|&
@@ -693,6 +740,7 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MAP_TYPE_PMBR
@@ -748,7 +796,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|""
+literal|"lu"
 argument_list|)
 operator|)
 operator|!=
@@ -761,6 +809,22 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'l'
+case|:
+name|show_label
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|show_uuid
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 name|usage_show
 argument_list|()
