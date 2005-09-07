@@ -3617,7 +3617,7 @@ name|free
 argument_list|(
 name|imm
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|)
 expr_stmt|;
 block|}

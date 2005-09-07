@@ -1549,7 +1549,7 @@ end_ifdef
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|)
 expr_stmt|;
 end_expr_stmt
