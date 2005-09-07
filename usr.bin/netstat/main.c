@@ -1410,6 +1410,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Bflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show information about bpf consumers */
+end_comment
+
+begin_decl_stmt
+name|int
 name|bflag
 decl_stmt|;
 end_decl_stmt
@@ -1639,7 +1649,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabdf:ghI:iLlM:mN:np:rSstuWw:z"
+literal|"AaBbdf:ghI:iLlM:mN:np:rSstuWw:z"
 argument_list|)
 operator|)
 operator|!=
@@ -1663,6 +1673,14 @@ case|case
 literal|'a'
 case|:
 name|aflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+name|Bflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2163,6 +2181,22 @@ name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Bflag
+condition|)
+block|{
+name|bpf_stats
+argument_list|(
+name|interface
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mflag
