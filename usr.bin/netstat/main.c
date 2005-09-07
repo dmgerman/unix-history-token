@@ -3554,7 +3554,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: netstat [-AaLnSW] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
@@ -3570,6 +3570,8 @@ literal|"       netstat -i | -I interface -s [-f protocol_family | -p protocol]\
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -m [-M core] [-N system]"
+argument_list|,
+literal|"       netstat -B [ -I interface]"
 argument_list|,
 literal|"       netstat -r [-AenW] [-f address_family] [-M core] [-N system]"
 argument_list|,
