@@ -1840,11 +1840,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|ed_release_resources
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -3301,7 +3296,9 @@ name|ed_probe_Novell
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|port_rid
 argument_list|,
 name|flags
 argument_list|)
