@@ -3773,7 +3773,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MIIBUS
+name|ED_DL10XX_MIIBUS
 value|0x0c
 end_define
 
@@ -3784,49 +3784,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_RESET1
+name|ED_DL10XX_MII_RESET1
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_RESET2
+name|ED_DL10XX_MII_RESET2
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_DATATIN
+name|ED_DL10XX_MII_DATATIN
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_DIROUT_22
+name|ED_DL10XX_MII_DIROUT_22
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_DIROUT_19
+name|ED_DL10XX_MII_DIROUT_19
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_DATAOUT
+name|ED_DL10XX_MII_DATAOUT
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_CLK
+name|ED_DL10XX_MII_CLK
 value|0x80
 end_define
 
