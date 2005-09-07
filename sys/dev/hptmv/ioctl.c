@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003-2004 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004-2005 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -30,6 +30,62 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysproto.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__KERNEL__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__KERNEL__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -606,7 +662,7 @@ condition|(
 operator|(
 name|id
 operator|==
-name|HPT_NULL_ID
+literal|0
 operator|)
 operator|||
 name|check_VDevice_valid
@@ -786,7 +842,6 @@ block|{}
 end_function
 
 begin_function
-specifier|static
 name|intrmask_t
 name|lock_driver_idle
 parameter_list|(
@@ -845,6 +900,31 @@ argument_list|(
 name|oldspl
 argument_list|)
 expr_stmt|;
+comment|/*Schedule out*/
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+name|YIELD_THREAD
+expr_stmt|;
+else|#
+directive|else
+name|tsleep
+argument_list|(
+name|lock_driver_idle
+argument_list|,
+name|PPAUSE
+argument_list|,
+literal|"switch"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|oldspl
 operator|=
 name|lock_driver
@@ -979,7 +1059,7 @@ condition|(
 operator|(
 name|idArray
 operator|==
-name|HPT_NULL_ID
+literal|0
 operator|)
 operator|||
 name|check_VDevice_valid
@@ -1067,7 +1147,7 @@ operator|&&
 name|periph
 operator|->
 name|refcount
-operator|==
+operator|>=
 literal|1
 condition|)
 block|{
@@ -1793,7 +1873,7 @@ name|array
 operator|.
 name|rf_rebuilding
 operator|==
-name|HPT_NULL_ID
+literal|0
 condition|)
 block|{
 name|DWORD
@@ -1983,7 +2063,7 @@ if|if
 condition|(
 name|idArray
 operator|==
-name|HPT_NULL_ID
+literal|0
 operator|||
 name|check_VDevice_valid
 argument_list|(
@@ -2221,7 +2301,7 @@ index|[
 name|i
 index|]
 operator|!=
-name|NULL
+literal|0
 operator|&&
 name|pVDevice
 operator|->
@@ -2716,7 +2796,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|HPTLIBAPI
 name|R1ControlSgl
@@ -3097,7 +3176,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|void
 name|HPTLIBAPI
 name|thread_io_done
@@ -3394,6 +3472,11 @@ directive|define
 name|MAX_REBUILD_SECTORS
 value|0x40
 comment|/* take care for discontinuous buffer in R1ControlSgl */
+name|unlock_driver
+argument_list|(
+name|oldspl
+argument_list|)
+expr_stmt|;
 name|buffer
 operator|=
 name|malloc
@@ -3407,6 +3490,11 @@ name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
 argument_list|)
+expr_stmt|;
+name|oldspl
+operator|=
+name|lock_driver
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3773,11 +3861,15 @@ argument_list|(
 argument|_VBUS_P pCmd
 argument_list|)
 empty_stmt|;
+name|unlock_driver
+argument_list|(
+name|oldspl
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|buffer
 condition|)
-block|{
 name|free
 argument_list|(
 name|buffer
@@ -3785,12 +3877,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* beware of goto retry_cmd below */
-name|buffer
+name|oldspl
 operator|=
-name|NULL
+name|lock_driver
+argument_list|()
 expr_stmt|;
-block|}
 name|KdPrintI
 argument_list|(
 operator|(
@@ -4478,6 +4569,31 @@ argument_list|(
 name|oldspl
 argument_list|)
 expr_stmt|;
+comment|/*Schedule out*/
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+name|YIELD_THREAD
+expr_stmt|;
+else|#
+directive|else
+name|tsleep
+argument_list|(
+name|hpt_rebuild_data_block
+argument_list|,
+name|PPAUSE
+argument_list|,
+literal|"switch"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|oldspl
 operator|=
 name|lock_driver

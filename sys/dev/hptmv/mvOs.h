@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2004 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004-2005 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -13,56 +13,6 @@ begin_define
 define|#
 directive|define
 name|__INCmvOsBsdh
-end_define
-
-begin_comment
-comment|/* Taken out of the Makefile magic */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__KERNEL__
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|_KERNEL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|_FREEBSD_
-value|1
-end_define
-
-begin_comment
-comment|/*  * This binary object core for this driver is only for x86, so this constant  * will not change.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_LONG
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRIVER_VERSION
-value|"1.1"
 end_define
 
 begin_if
@@ -98,17 +48,26 @@ begin_comment
 comment|/* Typedefs    */
 end_comment
 
+begin_comment
+comment|/*#define HPTLIBAPI __attribute__((regparm(0))) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HPTLIBAPI
-value|__attribute__((regparm(0)))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FAR
+end_define
+
+begin_define
+define|#
+directive|define
+name|SS_SEG
 end_define
 
 begin_ifdef
@@ -144,21 +103,24 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|u_short
+name|unsigned
+name|short
 name|USHORT
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_char
+name|unsigned
+name|char
 name|UCHAR
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|PUCHAR
 typedef|;
@@ -166,7 +128,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_short
+name|unsigned
+name|short
 modifier|*
 name|PUSHORT
 typedef|;
@@ -174,21 +137,24 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_char
+name|unsigned
+name|char
 name|BOOLEAN
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_short
+name|unsigned
+name|short
 name|WORD
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int
+name|unsigned
+name|int
 name|UINT
 typedef|,
 name|BOOL
@@ -197,7 +163,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_char
+name|unsigned
+name|char
 name|BYTE
 typedef|;
 end_typedef
@@ -269,6 +236,15 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|unsigned
+name|long
+name|long
+name|HPT_U64
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 enum|enum
 name|mvBoolean
 block|{
@@ -294,6 +270,24 @@ name|TRUE
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NULL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* System dependant typedefs */
 end_comment
@@ -307,21 +301,24 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|uint32_t
+name|unsigned
+name|int
 name|MV_U32
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|uint16_t
+name|unsigned
+name|short
 name|MV_U16
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|uint8_t
+name|unsigned
+name|char
 name|MV_U8
 typedef|;
 end_typedef
@@ -569,68 +566,34 @@ begin_comment
 comment|/* Semaphore init, take and release */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|int
+begin_define
+define|#
+directive|define
 name|mvOsSemInit
 parameter_list|(
-name|MV_OS_SEMAPHORE
-modifier|*
 name|p
 parameter_list|)
-block|{
-return|return
-operator|(
-name|MV_TRUE
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|mvOsSemTake
-parameter_list|(
-name|MV_OS_SEMAPHORE
-modifier|*
-name|p
-parameter_list|)
-block|{
-return|return
-operator|(
-name|MV_TRUE
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|mvOsSemRelease
-parameter_list|(
-name|MV_OS_SEMAPHORE
-modifier|*
-name|p
-parameter_list|)
-block|{
-return|return
-operator|(
-name|MV_TRUE
-operator|)
-return|;
-block|}
-end_function
+value|(MV_TRUE)
+end_define
 
 begin_define
 define|#
 directive|define
-name|MV_MAX_SEGMENTS
-value|255
+name|mvOsSemTake
+parameter_list|(
+name|p
+parameter_list|)
+value|(MV_TRUE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mvOsSemRelease
+parameter_list|(
+name|p
+parameter_list|)
+value|(MV_TRUE)
 end_define
 
 begin_comment
@@ -713,11 +676,11 @@ begin_comment
 comment|/*************************************************************************  * Debug support  *************************************************************************/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|DEBUG
-end_ifdef
+end_if
 
 begin_define
 define|#
@@ -726,8 +689,7 @@ name|HPT_ASSERT
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|KASSERT((x), ("ASSERT fail at %s line %d", __FILE__, __LINE__))
+value|do { if (!(x)) { \ 						printf("ASSERT fail at %s line %d", __FILE__, __LINE__); \ 						while (1); \ 					  }} while (0)
 end_define
 
 begin_decl_stmt
@@ -836,10 +798,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __INCmvOsBsdh */
-end_comment
 
 end_unit
 
