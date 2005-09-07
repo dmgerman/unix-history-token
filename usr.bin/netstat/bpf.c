@@ -544,6 +544,11 @@ name|pname
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|bd
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
