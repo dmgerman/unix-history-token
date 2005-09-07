@@ -421,7 +421,7 @@ comment|/* -B argument */
 end_comment
 
 begin_decl_stmt
-name|Boolean
+name|int
 name|debug
 decl_stmt|;
 end_decl_stmt
