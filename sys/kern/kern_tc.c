@@ -180,7 +180,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|timehands
 name|th0

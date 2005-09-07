@@ -90,14 +90,6 @@ file|<netipx/spx.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|domain
-name|ipxdomain
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|pr_usrreqs
@@ -108,6 +100,14 @@ end_decl_stmt
 begin_comment
 comment|/*  * IPX protocol family: IPX, ERR, PXP, SPX, ROUTE.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|domain
+name|ipxdomain
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

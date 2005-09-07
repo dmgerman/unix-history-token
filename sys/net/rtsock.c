@@ -6657,7 +6657,7 @@ comment|/*  * Definitions of protocols supported in the ROUTE domain.  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|domain
 name|routedomain
