@@ -24813,6 +24813,8 @@ name|reason
 decl_stmt|;
 name|u_int16_t
 name|icmpid
+init|=
+literal|0
 decl_stmt|,
 name|bport
 decl_stmt|,
@@ -25190,6 +25192,9 @@ name|off
 argument_list|,
 name|ICMP_MINLEN
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|pd
 operator|->
 name|hdr
@@ -33352,6 +33357,9 @@ name|off
 argument_list|,
 name|ICMP_MINLEN
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|pd
 operator|->
 name|hdr
@@ -33524,6 +33532,9 @@ name|off
 argument_list|,
 name|ICMP_MINLEN
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|pd
 operator|->
 name|hdr
