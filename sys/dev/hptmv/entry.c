@@ -10605,7 +10605,7 @@ argument_list|(
 name|ccb
 operator|->
 name|ccb_h
-operator|->
+operator|.
 name|path
 argument_list|,
 name|CAM_DEBUG_TRACE
