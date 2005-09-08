@@ -1473,7 +1473,7 @@ comment|/*  * New interface; clients allocate their own callout structures.  *  
 end_comment
 
 begin_decl_stmt
-name|void
+name|int
 name|callout_reset
 argument_list|(
 name|c
@@ -1519,6 +1519,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|cancelled
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|notyet
@@ -1567,6 +1572,8 @@ operator|&&
 operator|!
 name|curr_cancelled
 condition|)
+name|cancelled
+operator|=
 name|curr_cancelled
 operator|=
 literal|1
@@ -1583,7 +1590,11 @@ operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|cancelled
+operator|)
+return|;
 block|}
 block|}
 if|if
@@ -1632,6 +1643,10 @@ name|c_links
 operator|.
 name|tqe
 argument_list|)
+expr_stmt|;
+name|cancelled
+operator|=
+literal|1
 expr_stmt|;
 comment|/* 		 * Part of the normal "stop a pending callout" process 		 * is to clear the CALLOUT_ACTIVE and CALLOUT_PENDING 		 * flags.  We're not going to bother doing that here, 		 * because we're going to be setting those flags ten lines 		 * after this point, and we're holding callout_lock 		 * between now and then. 		 */
 block|}
@@ -1701,6 +1716,11 @@ operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|cancelled
+operator|)
+return|;
 block|}
 end_block
 
