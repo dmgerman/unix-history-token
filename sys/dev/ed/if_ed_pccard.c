@@ -229,7 +229,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * PC Cards should be using a network specific FUNCE in the CIS to  * communicate their MAC address to the driver.  However, there are a  * large number of NE-2000ish PC Cards that don't do this.  Nearly all  * of them store the MAC address at a fixed offset into attribute  * memory, without any reference at all appearing in the CIS.  And  * nearly all of those store it at the same location.  */
+comment|/*  * PC Cards should be using a network specific FUNCE in the CIS to  * communicate their MAC address to the driver.  However, there are a  * large number of NE-2000ish PC Cards that don't do this.  Nearly all  * of them store the MAC address at a fixed offset into attribute  * memory, without any reference at all appearing in the CIS.  And  * nearly all of those store it at the same location.  *  * This applies only to the older, NE-2000 compatbile cards.  The newer  * cards based on the AX88x90 or DL100XX chipsets have a specific place  * to look for MAC information.  */
 end_comment
 
 begin_define
