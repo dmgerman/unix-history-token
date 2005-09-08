@@ -483,7 +483,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|static DEFINE_CLASS(iconv_ ## name, iconv_ ## name ## _methods, (size)); \     static moduledata_t iconv_ ## name ## _mod = {	\ 	"iconv_"#name, iconv_converter_handler,		\ 	(void*)&iconv_ ## name ## _class		\     };							\     DECLARE_MODULE(iconv_ ## name, iconv_ ## name ## _mod, SI_SUB_DRIVERS, SI_ORDER_ANY);
+value|static struct iconv_converter_class iconv_ ## name ## _class = { \ 	"iconv_"#name, iconv_ ## name ## _methods, size, NULL \     };							\     static moduledata_t iconv_ ## name ## _mod = {	\ 	"iconv_"#name, iconv_converter_handler,		\ 	(void*)&iconv_ ## name ## _class		\     };							\     DECLARE_MODULE(iconv_ ## name, iconv_ ## name ## _mod, SI_SUB_DRIVERS, SI_ORDER_ANY);
 end_define
 
 begin_define
