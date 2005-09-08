@@ -5699,12 +5699,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* XXX is this right? */
-name|ED_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|sc
@@ -5817,12 +5811,6 @@ argument_list|,
 name|ED_MII_IDLE_BITS
 argument_list|)
 expr_stmt|;
-comment|/* XXX is this right? */
-name|ED_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|failed
@@ -5862,12 +5850,6 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-comment|/* XXX is this right? */
-name|ED_LOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 call|(
@@ -5980,12 +5962,6 @@ argument_list|,
 name|ED_MII_IDLE
 argument_list|,
 name|ED_MII_IDLE_BITS
-argument_list|)
-expr_stmt|;
-comment|/* XXX is this right? */
-name|ED_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
