@@ -521,6 +521,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* XXX this likely should live in a header file */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
