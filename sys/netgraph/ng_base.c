@@ -1485,7 +1485,7 @@ name|CHECK_DATA_MBUF
 parameter_list|(
 name|m
 parameter_list|)
-value|do {					\ 		struct mbuf *n;						\ 		int total;						\ 									\ 		M_ASSERTPKTHDR(m);					\ 		for (total = 0, n = (m); n != NULL; n = n->m_next)	\ 			total += n->m_len;				\ 		if ((m)->m_pkthdr.len != total) {			\ 			panic("%s: %d != %d",				\ 			    __func__, (m)->m_pkthdr.len, total);	\ 		}							\ 	} while (0)
+value|do {					\ 		struct mbuf *n;						\ 		int total;						\ 									\ 		M_ASSERTPKTHDR(m);					\ 		for (total = 0, n = (m); n != NULL; n = n->m_next) {	\ 			total += n->m_len;				\ 			if (n->m_nextpkt != NULL)			\ 				panic("%s: m_nextpkt", __func__);	\ 		}							\ 									\ 		if ((m)->m_pkthdr.len != total) {			\ 			panic("%s: %d != %d",				\ 			    __func__, (m)->m_pkthdr.len, total);	\ 		}							\ 	} while (0)
 end_define
 
 begin_else
@@ -11639,12 +11639,12 @@ name|fn
 operator|.
 name|fn_fn
 argument_list|,
-name|NGI_NODE
+name|_NGI_NODE
 argument_list|(
 name|item
 argument_list|)
 argument_list|,
-name|NGI_HOOK
+name|_NGI_HOOK
 argument_list|(
 name|item
 argument_list|)
@@ -11700,7 +11700,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NGI_NODE
+name|_NGI_NODE
 argument_list|(
 name|item
 argument_list|)
@@ -11710,14 +11710,14 @@ name|printf
 argument_list|(
 literal|"node %p ([%x])\n"
 argument_list|,
-name|NGI_NODE
+name|_NGI_NODE
 argument_list|(
 name|item
 argument_list|)
 argument_list|,
 name|ng_node2ID
 argument_list|(
-name|NGI_NODE
+name|_NGI_NODE
 argument_list|(
 name|item
 argument_list|)
