@@ -1148,10 +1148,8 @@ name|error
 argument_list|(
 literal|"Illegal number: %s"
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+operator|*
+name|argptr
 argument_list|)
 expr_stmt|;
 name|mask
