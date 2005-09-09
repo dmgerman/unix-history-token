@@ -2495,7 +2495,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|thr
@@ -2532,7 +2532,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|thr
@@ -2547,7 +2547,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|td
@@ -2579,7 +2579,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|td
@@ -2609,7 +2609,7 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|td
@@ -2686,7 +2686,7 @@ operator|~
 name|IA64_PSR_DFH
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|td

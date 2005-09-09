@@ -275,7 +275,7 @@ literal|"High FP lock"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_DEF
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}

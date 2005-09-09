@@ -6355,7 +6355,7 @@ name|thread
 modifier|*
 name|thr
 decl_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|td
@@ -6384,7 +6384,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|td
@@ -6418,7 +6418,7 @@ name|pc_fpcurthread
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|td
@@ -6498,7 +6498,7 @@ name|td
 argument_list|)
 operator|)
 return|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|td
@@ -6527,7 +6527,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|td
@@ -6562,7 +6562,7 @@ operator|!=
 name|pcpup
 condition|)
 block|{
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|td
@@ -6657,7 +6657,7 @@ name|pc_fpcurthread
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|td
