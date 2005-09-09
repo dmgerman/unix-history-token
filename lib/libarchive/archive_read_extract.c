@@ -5082,7 +5082,10 @@ condition|(
 name|fd
 operator|>=
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|fchmod
 argument_list|(
 name|fd
@@ -5108,6 +5111,8 @@ name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
+block|}
+elseif|else
 endif|#
 directive|endif
 if|if
