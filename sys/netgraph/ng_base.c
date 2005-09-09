@@ -6217,7 +6217,7 @@ begin_define
 define|#
 directive|define
 name|READER_MASK
-value|0xfffffff0
+value|0xfffffff8
 end_define
 
 begin_comment
