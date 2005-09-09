@@ -4446,7 +4446,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*   * You should no-longer "just call" a netgraph node function  * from an external asynchronous event.  * This is because in doing so you are ignoring the locking on the netgraph  * nodes. Instead call your function via   * "int ng_send_fn(node_p node, hook_p hook, ng_item_fn *fn,  *	 void *arg1, int arg2);"  * this will call the function you chose, but will first do all the   * locking rigmarole. Your function MAY only be called at some distant future  * time (several millisecs away) so don't give it any arguments  * that may be revoked soon (e.g. on your stack).  * In this case even the 'so' argument is doubtful.   * While the function request is being processed the node  * has an extra reference and as such will not disappear until  * the request has at least been done, but the 'so' may not be so lucky.  * handle this by checking the validity of the node in the target function  * before dereferencing the socket pointer.  */
+comment|/*   * You should no-longer "just call" a netgraph node function  * from an external asynchronous event.  * This is because in doing so you are ignoring the locking on the netgraph  * nodes. Instead call your function via   * "int ng_send_fn(node_p node, hook_p hook, ng_item_fn *fn,  *	 void *arg1, int arg2);"  * this will call the function you chose, but will first do all the   * locking rigmarole. Your function MAY only be called at some distant future  * time (several millisecs away) so don't give it any arguments  * that may be revoked soon (e.g. on your stack).  * In this case even the 'so' argument is doubtful.   * While the function request is being processed the node  * has an extra reference and as such will not disappear until  * the request has at least been done, but the 'so' may not be so lucky.  * handle this by checking the validity of the node in the target function  * before dereferencing the socket pointer.  *  * To decouple stack, we use queue version of ng_send_fn().  */
 end_comment
 
 begin_function
@@ -4473,7 +4473,7 @@ name|node
 init|=
 name|arg
 decl_stmt|;
-name|ng_send_fn
+name|ng_queue_fn
 argument_list|(
 name|node
 argument_list|,
@@ -4885,7 +4885,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* Don't trust the various socket layers to get the 		   packet header and length correct (eg. kern/15175) */
+comment|/* 		 * Don't trust the various socket layers to get the 		 * packet header and length correct (e.g. kern/15175). 		 * 		 * Also, do not trust that soreceive() will clear m_nextpkt 		 * for us (e.g. kern/84952, kern/82413). 		 */
 for|for
 control|(
 name|n
@@ -4910,6 +4910,7 @@ name|n
 operator|->
 name|m_next
 control|)
+block|{
 name|m
 operator|->
 name|m_pkthdr
@@ -4920,6 +4921,13 @@ name|n
 operator|->
 name|m_len
 expr_stmt|;
+name|n
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* Put peer's socket address (if any) into a tag */
 if|if
 condition|(
