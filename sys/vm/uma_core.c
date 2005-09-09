@@ -351,15 +351,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Count of free boottime pages */
+comment|/* This mutex protects the boot time pages list */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|uma_boot_free
-init|=
-literal|0
+name|struct
+name|mtx
+name|uma_boot_pages_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -3757,6 +3756,9 @@ block|{
 name|uma_keg_t
 name|keg
 decl_stmt|;
+name|uma_slab_t
+name|tmps
+decl_stmt|;
 name|keg
 operator|=
 name|zone
@@ -3767,19 +3769,12 @@ comment|/* 	 * Check our small startup cache to see if it has pages remaining. 	
 name|mtx_lock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_boot_pages_mtx
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|uma_boot_free
-operator|!=
-literal|0
-condition|)
-block|{
-name|uma_slab_t
-name|tmps
-decl_stmt|;
+operator|(
 name|tmps
 operator|=
 name|LIST_FIRST
@@ -3787,7 +3782,11 @@ argument_list|(
 operator|&
 name|uma_boot_pages
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|LIST_REMOVE
 argument_list|(
 name|tmps
@@ -3795,13 +3794,10 @@ argument_list|,
 name|us_link
 argument_list|)
 expr_stmt|;
-name|uma_boot_free
-operator|--
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_boot_pages_mtx
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3822,7 +3818,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_boot_pages_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -6131,7 +6127,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * The general UMA lock is a recursion-allowed lock because 	 * there is a code path where, while we're still configured 	 * to use startup_alloc() for backend page allocations, we 	 * may end up in uma_reclaim() which calls zone_foreach(zone_drain), 	 * which grabs uma_mtx, only to later call into startup_alloc() 	 * because while freeing we needed to allocate a bucket.  Since 	 * startup_alloc() also takes uma_mtx, we need to be able to 	 * recurse on it. 	 */
 name|mtx_init
 argument_list|(
 operator|&
@@ -6142,8 +6137,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Figure out the maximum number of items-per-slab we'll have if 	 * we're using the OFFPAGE slab header to track free items, given 	 * all possible object sizes and the maximum desired wastage 	 * (UMA_MAX_WASTE). 	 * 	 * We iterate until we find an object size for 	 * which the calculated wastage in zone_small_init() will be 	 * enough to warrant OFFPAGE.  Since wastedspace versus objsize 	 * is an overall increasing see-saw function, we find the smallest 	 * objsize such that the wastage is always acceptable for objects 	 * with that objsize or smaller.  Since a smaller objsize always 	 * generates a larger possible uma_max_ipers, we use this computed 	 * objsize to calculate the largest ipers possible.  Since the 	 * ipers calculated for OFFPAGE slab headers is always larger than 	 * the ipers initially calculated in zone_small_init(), we use 	 * the former's equation (UMA_SLAB_SIZE / keg->uk_rsize) to 	 * obtain the maximum ipers possible for offpage slab headers. 	 * 	 * It should be noted that ipers versus objsize is an inversly 	 * proportional function which drops off rather quickly so as 	 * long as our UMA_MAX_WASTE is such that the objsize we calculate 	 * falls into the portion of the inverse relation AFTER the steep 	 * falloff, then uma_max_ipers shouldn't be too high (~10 on i386). 	 * 	 * Note that we have 8-bits (1 byte) to use as a freelist index 	 * inside the actual slab header itself and this is enough to 	 * accomodate us.  In the worst case, a UMA_SMALLEST_UNIT sized 	 * object with offpage slab header would have ipers = 	 * UMA_SLAB_SIZE / UMA_SMALLEST_UNIT (currently = 256), which is 	 * 1 greater than what our byte-integer freelist index can 	 * accomodate, but we know that this situation never occurs as 	 * for UMA_SMALLEST_UNIT-sized objects, we will never calculate 	 * that we need to go to offpage slab headers.  Or, if we do, 	 * then we trap that condition below and panic in the INVARIANTS case. 	 */
@@ -6477,10 +6470,19 @@ argument_list|,
 name|us_link
 argument_list|)
 expr_stmt|;
-name|uma_boot_free
-operator|++
-expr_stmt|;
 block|}
+name|mtx_init
+argument_list|(
+operator|&
+name|uma_boot_pages_mtx
+argument_list|,
+literal|"UMA boot pages"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UMA_DEBUG
