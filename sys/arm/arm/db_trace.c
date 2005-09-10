@@ -121,41 +121,6 @@ parameter_list|)
 value|(((vm_offset_t)(va))>= VM_MIN_KERNEL_ADDRESS)
 end_define
 
-begin_function_decl
-name|int
-name|db_md_set_watchpoint
-parameter_list|(
-name|db_expr_t
-name|addr
-parameter_list|,
-name|db_expr_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|db_md_clr_watchpoint
-parameter_list|(
-name|db_expr_t
-name|addr
-parameter_list|,
-name|db_expr_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|db_md_list_watchpoints
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * APCS stack frames are awkward beasts, so I don't think even trying to use  * a structure to represent them is a good idea.  *  * Here's the diagram from the APCS.  Increasing address is _up_ the page.  *   *          save code pointer       [fp]<- fp points to here  *          return link value       [fp, #-4]  *          return sp value         [fp, #-8]  *          return fp value         [fp, #-12]  *          [saved v7 value]  *          [saved v6 value]  *          [saved v5 value]  *          [saved v4 value]  *          [saved v3 value]  *          [saved v2 value]  *          [saved v1 value]  *          [saved a4 value]  *          [saved a3 value]  *          [saved a2 value]  *          [saved a1 value]  *  * The save code pointer points twelve bytes beyond the start of the   * code sequence (usually a single STM) that created the stack frame.    * We have to disassemble it if we want to know which of the optional   * fields are actually present.  */
 end_comment
