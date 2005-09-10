@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<frame-unwind.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"kgdb.h"
 end_include
 

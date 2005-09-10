@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<frame-unwind.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<inferior.h>
 end_include
 
@@ -208,6 +214,14 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|frame_unwind_sniffer_ftype
+modifier|*
+name|kgdb_sniffer_kluge
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -2201,6 +2215,10 @@ expr_stmt|;
 name|init_ui_hook
 operator|=
 name|kgdb_init
+expr_stmt|;
+name|kgdb_sniffer_kluge
+operator|=
+name|kgdb_trgt_trapframe_sniffer
 expr_stmt|;
 return|return
 operator|(

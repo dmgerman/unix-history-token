@@ -103,6 +103,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|frame_unwind_sniffer_ftype
+name|kgdb_trgt_trapframe_sniffer
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|struct
 name|kthr
