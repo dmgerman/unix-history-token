@@ -5681,8 +5681,9 @@ name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* IFNET_RLOCK(); */
-comment|/* could sleep XXX */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -6045,8 +6046,9 @@ expr_stmt|;
 block|}
 name|done
 label|:
-comment|/* IFNET_RUNLOCK(); */
-comment|/* XXX */
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -6108,8 +6110,9 @@ name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* IFNET_RLOCK(); */
-comment|/* could sleep XXX */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -6158,7 +6161,11 @@ name|ifa_addr
 else|:
 name|NULL
 expr_stmt|;
-comment|/* 		 * XXXRW: Can't acquire IF_ADDR_LOCK() due to call 	 	 * to SYSCTL_OUT(). 		 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -6320,16 +6327,29 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
 block|}
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
 name|done
 label|:
-comment|/* IFNET_RUNLOCK(); */
-comment|/* XXX */
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -6370,8 +6390,6 @@ name|int
 name|i
 decl_stmt|,
 name|lim
-decl_stmt|,
-name|s
 decl_stmt|,
 name|error
 init|=
@@ -6473,11 +6491,24 @@ name|w_req
 operator|=
 name|req
 expr_stmt|;
-name|s
+name|error
 operator|=
-name|splnet
-argument_list|()
+name|sysctl_wire_old_buffer
+argument_list|(
+name|req
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 switch|switch
 condition|(
 name|w
@@ -6547,7 +6578,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* RADIX_NODE_HEAD_LOCK(rnh); */
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|rnh
@@ -6562,8 +6597,11 @@ operator|&
 name|w
 argument_list|)
 expr_stmt|;
-comment|/* could sleep XXX */
-comment|/* RADIX_NODE_HEAD_UNLOCK(rnh); */
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -6606,11 +6644,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|w
