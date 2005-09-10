@@ -551,7 +551,7 @@ begin_define
 define|#
 directive|define
 name|AFMT_8BIT
-value|(AFMT_U8 | AFMT_S8)
+value|(AFMT_MU_LAW | AFMT_A_LAW | AFMT_U8 | AFMT_S8)
 end_define
 
 begin_define
