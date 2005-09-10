@@ -363,6 +363,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AC97_F_RDCD_BUG
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
 name|AC97_DECLARE
 parameter_list|(
 name|name
