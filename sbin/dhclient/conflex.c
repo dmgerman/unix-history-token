@@ -14,6 +14,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -372,8 +386,11 @@ block|{
 if|if
 condition|(
 name|lpos
-operator|<=
-literal|81
+operator|<
+sizeof|sizeof
+argument_list|(
+name|line1
+argument_list|)
 condition|)
 block|{
 name|cur_line
@@ -914,6 +931,9 @@ block|{
 name|bs
 operator|=
 literal|0
+expr_stmt|;
+name|i
+operator|--
 expr_stmt|;
 name|tokbuf
 index|[
