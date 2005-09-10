@@ -18,13 +18,17 @@ end_define
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stddef.h>
 end_include
+
+begin_comment
+comment|/* for wchar_t */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<wchar.h>
+file|<unistd.h>
 end_include
 
 begin_ifdef
