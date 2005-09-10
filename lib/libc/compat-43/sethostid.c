@@ -63,8 +63,14 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function
-name|long
+name|void
 name|sethostid
 parameter_list|(
 name|long
@@ -91,8 +97,6 @@ index|]
 operator|=
 name|KERN_HOSTID
 expr_stmt|;
-if|if
-condition|(
 name|sysctl
 argument_list|(
 name|mib
@@ -109,21 +113,7 @@ argument_list|,
 sizeof|sizeof
 name|hostid
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
