@@ -342,6 +342,8 @@ parameter_list|(
 name|union
 name|node
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -354,6 +356,8 @@ parameter_list|(
 name|union
 name|node
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1016,6 +1020,11 @@ case|:
 name|evalloop
 argument_list|(
 name|n
+argument_list|,
+name|flags
+operator|&
+operator|~
+name|EV_EXIT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1025,6 +1034,11 @@ case|:
 name|evalfor
 argument_list|(
 name|n
+argument_list|,
+name|flags
+operator|&
+operator|~
+name|EV_EXIT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1189,6 +1203,9 @@ name|union
 name|node
 modifier|*
 name|n
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -1295,7 +1312,7 @@ name|nbinary
 operator|.
 name|ch2
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 name|status
@@ -1329,6 +1346,9 @@ name|union
 name|node
 modifier|*
 name|n
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -1463,7 +1483,7 @@ name|nfor
 operator|.
 name|body
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
