@@ -2573,6 +2573,12 @@ name|crd_next
 operator|=
 name|NULL
 expr_stmt|;
+name|crp
+operator|->
+name|crp_etype
+operator|=
+literal|0
+expr_stmt|;
 name|err
 operator|=
 name|crypto_dispatch
