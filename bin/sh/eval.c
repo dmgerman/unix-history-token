@@ -771,7 +771,10 @@ name|nbinary
 operator|.
 name|ch1
 argument_list|,
-literal|0
+name|flags
+operator|&
+operator|~
+name|EV_EXIT
 argument_list|)
 expr_stmt|;
 if|if
