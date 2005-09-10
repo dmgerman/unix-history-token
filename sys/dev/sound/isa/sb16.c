@@ -2168,8 +2168,6 @@ name|arg
 decl_stmt|;
 name|int
 name|reason
-init|=
-literal|3
 decl_stmt|,
 name|c
 decl_stmt|;
@@ -2538,6 +2536,7 @@ operator|&
 name|BD_F_SB16X
 condition|)
 block|{
+comment|/* full-duplex doesn't work! */
 name|pprio
 operator|=
 name|sb
@@ -2564,7 +2563,9 @@ name|sb
 operator|->
 name|drq1
 else|:
-name|NULL
+name|sb
+operator|->
+name|drq2
 argument_list|)
 expr_stmt|;
 name|sb
