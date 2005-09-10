@@ -938,6 +938,11 @@ name|FREAD
 condition|)
 block|{
 comment|/* open for read */
+name|pcm_unlock
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|devtype
@@ -990,11 +995,6 @@ name|rdch
 condition|)
 block|{
 comment|/* no channel available, exit */
-name|pcm_unlock
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1026,11 +1026,6 @@ name|si_drv1
 operator|=
 name|NULL
 expr_stmt|;
-name|pcm_unlock
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1040,6 +1035,11 @@ return|return
 name|ENODEV
 return|;
 block|}
+name|pcm_lock
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1078,6 +1078,11 @@ name|FWRITE
 condition|)
 block|{
 comment|/* open for write */
+name|pcm_unlock
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|wrch
 operator|=
 name|pcm_chnalloc
@@ -1123,6 +1128,11 @@ condition|)
 name|error
 operator|=
 name|ENODEV
+expr_stmt|;
+name|pcm_lock
+argument_list|(
+name|d
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4476,6 +4486,11 @@ operator|*
 name|arg_i
 operator|=
 literal|32
+expr_stmt|;
+else|else
+name|ret
+operator|=
+name|EINVAL
 expr_stmt|;
 name|CHN_UNLOCK
 argument_list|(
