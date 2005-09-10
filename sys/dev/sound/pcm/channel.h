@@ -825,6 +825,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHN_F_HAS_VCHAN
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHN_F_VIRTUAL
 value|0x10000000
 end_define
@@ -837,7 +844,7 @@ begin_define
 define|#
 directive|define
 name|CHN_F_RESET
-value|(CHN_F_BUSY | CHN_F_DEAD | CHN_F_VIRTUAL)
+value|(CHN_F_BUSY | CHN_F_DEAD | \ 					CHN_F_HAS_VCHAN | CHN_F_VIRTUAL)
 end_define
 
 begin_define
