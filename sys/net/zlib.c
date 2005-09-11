@@ -364,7 +364,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 specifier|const
 name|char
 modifier|*
