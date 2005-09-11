@@ -23386,7 +23386,7 @@ call|)
 argument_list|(
 name|right
 operator|*
-literal|256
+literal|255
 argument_list|)
 operator|/
 literal|100
@@ -23410,7 +23410,7 @@ call|)
 argument_list|(
 name|left
 operator|*
-literal|256
+literal|255
 argument_list|)
 operator|/
 literal|100
