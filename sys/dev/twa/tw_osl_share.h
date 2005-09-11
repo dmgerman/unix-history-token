@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tw_osl_types.h"
+file|<dev/twa/tw_osl_types.h>
 end_include
 
 begin_include

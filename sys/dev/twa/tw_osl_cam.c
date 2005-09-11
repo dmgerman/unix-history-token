@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"tw_osl_includes.h"
+file|<dev/twa/tw_osl_includes.h>
 end_include
 
 begin_include
