@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: dns.c,v 1.10 2004/06/21 17:36:31 avsm Exp $	*/
+comment|/*	$OpenBSD: dns.c,v 1.12 2005/06/17 02:44:32 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ end_decl_stmt
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dns.c,v 1.10 2004/06/21 17:36:31 avsm Exp $"
+literal|"$OpenBSD: dns.c,v 1.12 2005/06/17 02:44:32 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -491,6 +491,87 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check if hostname is numerical.  * Returns -1 if hostname is numeric, 0 otherwise  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|is_numeric_hostname
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|hostname
+parameter_list|)
+block|{
+name|struct
+name|addrinfo
+name|hints
+decl_stmt|,
+modifier|*
+name|ai
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|hints
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hints
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_DGRAM
+expr_stmt|;
+name|hints
+operator|.
+name|ai_flags
+operator|=
+name|AI_NUMERICHOST
+expr_stmt|;
+if|if
+condition|(
+name|getaddrinfo
+argument_list|(
+name|hostname
+argument_list|,
+literal|"0"
+argument_list|,
+operator|&
+name|hints
+argument_list|,
+operator|&
+name|ai
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|freeaddrinfo
+argument_list|(
+name|ai
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Verify the given hostname, address and host key using DNS.  * Returns 0 if lookup succeeds, -1 otherwise  */
 end_comment
 
@@ -518,7 +599,7 @@ modifier|*
 name|flags
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|counter
 decl_stmt|;
 name|int
@@ -578,6 +659,24 @@ argument_list|(
 literal|"No key to look up!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_numeric_hostname
+argument_list|(
+name|hostname
+argument_list|)
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"skipped DNS lookup for numerical hostname"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|result
 operator|=
 name|getrrsetbyname
@@ -882,7 +981,7 @@ decl_stmt|;
 name|u_int
 name|rdata_digest_len
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|int

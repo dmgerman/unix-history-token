@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.26 2004/08/15 08:41:00 djm Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.30 2005/08/26 20:15:20 tim Exp $ */
 end_comment
 
 begin_comment
@@ -849,6 +849,40 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_STRTONUM
+end_ifndef
+
+begin_function_decl
+name|long
+name|long
+name|strtonum
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|long
+name|long
+parameter_list|,
+name|long
+name|long
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_VSNPRINTF
 end_ifndef
 
@@ -953,6 +987,12 @@ begin_include
 include|#
 directive|include
 file|"port-aix.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"port-uw.h"
 end_include
 
 begin_endif

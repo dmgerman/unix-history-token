@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rsa.c,v 1.62 2004/12/11 01:48:56 dtucker Exp $"
+literal|"$OpenBSD: auth-rsa.c,v 1.63 2005/06/17 02:44:32 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -800,6 +800,9 @@ name|char
 modifier|*
 name|key_options
 decl_stmt|;
+name|int
+name|keybits
+decl_stmt|;
 comment|/* Skip leading whitespace, empty and comment lines. */
 for|for
 control|(
@@ -972,10 +975,8 @@ literal|0
 condition|)
 continue|continue;
 comment|/* check the real bits  */
-if|if
-condition|(
-name|bits
-operator|!=
+name|keybits
+operator|=
 name|BN_num_bits
 argument_list|(
 name|key
@@ -984,6 +985,19 @@ name|rsa
 operator|->
 name|n
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|keybits
+operator|<
+literal|0
+operator|||
+name|bits
+operator|!=
+operator|(
+name|u_int
+operator|)
+name|keybits
 condition|)
 name|logit
 argument_list|(

@@ -569,7 +569,7 @@ directive|endif
 comment|/* TIOCSCTTY */
 ifdef|#
 directive|ifdef
-name|HAVE_NEWS4
+name|NEED_SETPGRP
 if|if
 condition|(
 name|setpgrp
@@ -593,7 +593,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_NEWS4 */
+comment|/* NEED_SETPGRP */
 ifdef|#
 directive|ifdef
 name|USE_VHANGUP

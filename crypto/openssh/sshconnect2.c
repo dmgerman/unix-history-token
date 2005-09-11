@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect2.c,v 1.138 2004/06/13 12:53:24 djm Exp $"
+literal|"$OpenBSD: sshconnect2.c,v 1.142 2005/08/30 22:08:05 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -398,7 +398,7 @@ index|[
 name|PROPOSAL_COMP_ALGS_STOC
 index|]
 operator|=
-literal|"zlib,none"
+literal|"zlib@openssh.com,zlib,none"
 expr_stmt|;
 block|}
 else|else
@@ -413,7 +413,7 @@ index|[
 name|PROPOSAL_COMP_ALGS_STOC
 index|]
 operator|=
-literal|"none,zlib"
+literal|"none,zlib@openssh.com,zlib"
 expr_stmt|;
 block|}
 if|if
@@ -2310,7 +2310,7 @@ init|=
 name|NULL
 decl_stmt|;
 specifier|static
-name|int
+name|u_int
 name|mech
 init|=
 literal|0
@@ -2605,9 +2605,12 @@ init|=
 name|GSS_C_EMPTY_BUFFER
 decl_stmt|;
 name|gss_buffer_desc
-name|gssbuf
-decl_stmt|,
 name|mic
+init|=
+name|GSS_C_EMPTY_BUFFER
+decl_stmt|;
+name|gss_buffer_desc
+name|gssbuf
 decl_stmt|;
 name|OM_uint32
 name|status

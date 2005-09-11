@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: acss.c,v 1.2 2004/02/06 04:22:43 dtucker Exp $ */
+comment|/*	$Id: acss.c,v 1.3 2005/07/17 07:04:47 djm Exp $ */
 end_comment
 
 begin_comment

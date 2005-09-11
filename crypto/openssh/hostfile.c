@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: hostfile.c,v 1.34 2005/03/10 22:01:05 deraadt Exp $"
+literal|"$OpenBSD: hostfile.c,v 1.35 2005/07/27 10:39:03 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1315,6 +1315,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|hashed_host
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(

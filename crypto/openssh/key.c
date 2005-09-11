@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: key.c,v 1.57 2004/10/29 23:57:05 djm Exp $"
+literal|"$OpenBSD: key.c,v 1.58 2005/06/17 02:44:32 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1079,7 +1079,7 @@ name|char
 modifier|*
 name|retval
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|retval

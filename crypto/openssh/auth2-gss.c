@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth2-gss.c,v 1.8 2004/06/21 17:36:31 avsm Exp $	*/
+comment|/*	$OpenBSD: auth2-gss.c,v 1.10 2005/07/17 07:17:54 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -199,7 +199,7 @@ decl_stmt|;
 name|u_int
 name|len
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|doid
 init|=

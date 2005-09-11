@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-passwd.c,v 1.33 2005/01/24 11:47:13 dtucker Exp $"
+literal|"$OpenBSD: auth-passwd.c,v 1.34 2005/07/19 15:32:26 otto Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -662,6 +662,17 @@ operator|)
 name|password
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|as
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|auth_getstate

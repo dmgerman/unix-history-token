@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-server.c,v 1.47 2004/06/25 05:38:48 dtucker Exp $"
+literal|"$OpenBSD: sftp-server.c,v 1.48 2005/06/17 02:44:33 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -421,7 +421,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for
@@ -478,7 +478,7 @@ modifier|*
 name|dirp
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for
@@ -583,6 +583,9 @@ name|i
 operator|>=
 literal|0
 operator|&&
+operator|(
+name|u_int
+operator|)
 name|i
 operator|<
 sizeof|sizeof
@@ -2230,9 +2233,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|error
@@ -2251,6 +2253,9 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|ret
 operator|==
 name|len

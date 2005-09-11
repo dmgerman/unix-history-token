@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.10 2005/01/17 03:25:46 dtucker Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.12 2005/07/17 07:17:55 djm Exp $ */
 end_comment
 
 begin_comment
@@ -267,7 +267,7 @@ value|(QSIZE_MINIMUM + 1)
 end_define
 
 begin_comment
-comment|/* real TEST_MINIMUM    (1UL<< (SHIFT_WORD - TEST_POWER)) */
+comment|/* real TEST_MINIMUM	(1UL<< (SHIFT_WORD - TEST_POWER)) */
 end_comment
 
 begin_define
@@ -416,9 +416,9 @@ parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
-name|int
+name|u_int32_t
 parameter_list|,
-name|int
+name|u_int32_t
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -808,10 +808,10 @@ name|FILE
 modifier|*
 name|out
 parameter_list|,
-name|int
+name|u_int32_t
 name|memory
 parameter_list|,
-name|int
+name|u_int32_t
 name|power
 parameter_list|,
 name|BIGNUM
@@ -851,9 +851,10 @@ name|time_start
 decl_stmt|,
 name|time_stop
 decl_stmt|;
-name|int
+name|u_int32_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ret
 init|=
 literal|0
@@ -2074,6 +2075,9 @@ block|}
 comment|/* 		 * due to earlier inconsistencies in interpretation, check 		 * the proposed bit size. 		 */
 if|if
 condition|(
+operator|(
+name|u_int32_t
+operator|)
 name|BN_num_bits
 argument_list|(
 name|p

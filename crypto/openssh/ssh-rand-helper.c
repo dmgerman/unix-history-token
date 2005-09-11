@@ -85,7 +85,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh-rand-helper.c,v 1.23 2005/02/16 02:32:30 dtucker Exp $"
+literal|"$Id: ssh-rand-helper.c,v 1.26 2005/07/17 07:26:44 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -457,7 +457,7 @@ name|rval
 decl_stmt|,
 name|errors
 decl_stmt|;
-name|char
+name|u_char
 name|msg
 index|[
 literal|2
@@ -538,12 +538,18 @@ expr_stmt|;
 if|if
 condition|(
 name|len
+operator|<=
+literal|0
+operator|||
+name|len
 operator|>
 literal|255
 condition|)
 name|fatal
 argument_list|(
-literal|"Too many bytes to read from PRNGD"
+literal|"Too many bytes (%d) to read from PRNGD"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 name|memset
@@ -847,6 +853,9 @@ argument_list|,
 name|len
 argument_list|)
 operator|!=
+operator|(
+name|size_t
+operator|)
 name|len
 condition|)
 block|{

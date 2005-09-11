@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.42 2005/02/18 03:05:53 djm Exp $"
+literal|"$OpenBSD: canohost.c,v 1.44 2005/06/17 02:44:32 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -605,9 +605,10 @@ decl_stmt|;
 name|socklen_t
 name|option_size
 decl_stmt|;
-name|int
+name|u_int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ipproto
 decl_stmt|;
 name|struct
@@ -1546,11 +1547,10 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|255
-argument_list|)
-expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 block|}
 comment|/* Work around Linux IPv6 weirdness */

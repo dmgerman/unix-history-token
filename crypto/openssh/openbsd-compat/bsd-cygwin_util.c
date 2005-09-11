@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-cygwin_util.c,v 1.13.4.1 2005/05/25 09:42:40 dtucker Exp $"
+literal|"$Id: bsd-cygwin_util.c,v 1.14 2005/05/25 09:42:11 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

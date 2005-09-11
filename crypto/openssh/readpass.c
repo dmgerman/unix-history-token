@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: readpass.c,v 1.31 2004/10/29 22:53:56 djm Exp $"
+literal|"$OpenBSD: readpass.c,v 1.33 2005/05/02 21:13:22 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -509,10 +509,17 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|)
 condition|)
+block|{
+name|debug
+argument_list|(
+literal|"read_passphrase: stdin is not a tty"
+argument_list|)
+expr_stmt|;
 name|use_askpass
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -541,10 +548,24 @@ name|ttyfd
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|debug
+argument_list|(
+literal|"read_passphrase: can't open %s: %s"
+argument_list|,
+name|_PATH_TTY
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|use_askpass
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kex.c,v 1.60 2004/06/21 17:36:31 avsm Exp $"
+literal|"$OpenBSD: kex.c,v 1.64 2005/07/25 11:59:39 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -161,7 +161,7 @@ name|PROPOSAL_MAX
 index|]
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|buffer_clear
@@ -422,7 +422,7 @@ modifier|*
 name|proposal
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for
@@ -611,7 +611,7 @@ name|u_char
 modifier|*
 name|cookie
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if
@@ -777,11 +777,10 @@ name|char
 modifier|*
 name|ptr
 decl_stmt|;
-name|int
-name|dlen
-decl_stmt|;
-name|int
+name|u_int
 name|i
+decl_stmt|,
+name|dlen
 decl_stmt|;
 name|Kex
 modifier|*
@@ -1332,6 +1331,26 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
+literal|"zlib@openssh.com"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|comp
+operator|->
+name|type
+operator|=
+name|COMP_DELAYED
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
 literal|"zlib"
 argument_list|)
 operator|==
@@ -1342,7 +1361,7 @@ name|comp
 operator|->
 name|type
 operator|=
-literal|1
+name|COMP_ZLIB
 expr_stmt|;
 block|}
 elseif|else
@@ -1362,7 +1381,7 @@ name|comp
 operator|->
 name|type
 operator|=
-literal|0
+name|COMP_NONE
 expr_stmt|;
 block|}
 else|else
@@ -1786,14 +1805,11 @@ name|nmac
 decl_stmt|,
 name|ncomp
 decl_stmt|;
-name|int
+name|u_int
 name|mode
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ctos
-decl_stmt|;
-comment|/* direction: if true client-to-server */
-name|int
+decl_stmt|,
 name|need
 decl_stmt|;
 name|int
@@ -2211,7 +2227,7 @@ parameter_list|,
 name|int
 name|id
 parameter_list|,
-name|int
+name|u_int
 name|need
 parameter_list|,
 name|u_char
@@ -2242,7 +2258,7 @@ name|c
 init|=
 name|id
 decl_stmt|;
-name|int
+name|u_int
 name|have
 decl_stmt|;
 name|int
@@ -2256,7 +2272,20 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|digest
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|mdsz
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"derive_key: mdsz< 0"
+argument_list|)
+expr_stmt|;
+name|digest
+operator|=
 name|xmalloc
 argument_list|(
 name|roundup
@@ -2266,7 +2295,7 @@ argument_list|,
 name|mdsz
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|buffer_init
 argument_list|(
 operator|&
@@ -2522,7 +2551,7 @@ index|[
 name|NKEYS
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|,
 name|mode
@@ -2793,6 +2822,9 @@ operator|/
 literal|8
 operator|)
 operator|||
+operator|(
+name|u_int
+operator|)
 name|len
 operator|>
 sizeof|sizeof
@@ -2843,6 +2875,9 @@ operator|/
 literal|8
 operator|)
 operator|||
+operator|(
+name|u_int
+operator|)
 name|len
 operator|>
 sizeof|sizeof
@@ -2975,7 +3010,7 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|fprintf

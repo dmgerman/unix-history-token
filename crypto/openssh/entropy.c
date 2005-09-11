@@ -64,7 +64,7 @@ end_comment
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: entropy.c,v 1.48 2003/11/21 12:56:47 djm Exp $"
+literal|"$Id: entropy.c,v 1.49 2005/07/17 07:26:44 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

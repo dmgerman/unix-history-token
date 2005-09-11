@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: kex.h,v 1.35 2004/06/13 12:53:24 djm Exp $	*/
+comment|/*	$OpenBSD: kex.h,v 1.37 2005/07/25 11:59:39 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -62,6 +62,27 @@ define|#
 directive|define
 name|KEX_DHGEX
 value|"diffie-hellman-group-exchange-sha1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMP_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMP_ZLIB
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMP_DELAYED
+value|2
 end_define
 
 begin_enum
@@ -217,14 +238,14 @@ name|EVP_MD
 modifier|*
 name|md
 decl_stmt|;
-name|int
+name|u_int
 name|mac_len
 decl_stmt|;
 name|u_char
 modifier|*
 name|key
 decl_stmt|;
-name|int
+name|u_int
 name|key_len
 decl_stmt|;
 block|}
@@ -284,7 +305,7 @@ index|[
 name|MODE_MAX
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|we_need
 decl_stmt|;
 name|int

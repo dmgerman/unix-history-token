@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfd.c,v 1.64 2004/08/11 21:44:31 avsm Exp $"
+literal|"$OpenBSD: authfd.c,v 1.66 2005/06/17 02:44:32 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -352,10 +352,9 @@ modifier|*
 name|reply
 parameter_list|)
 block|{
-name|int
-name|l
-decl_stmt|;
 name|u_int
+name|l
+decl_stmt|,
 name|len
 decl_stmt|;
 name|char
@@ -515,8 +514,8 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|l
-operator|=
+if|if
+condition|(
 name|atomicio
 argument_list|(
 name|read
@@ -529,12 +528,8 @@ name|buf
 argument_list|,
 name|l
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|!=
 name|l
-operator|<=
-literal|0
 condition|)
 block|{
 name|error
@@ -1067,6 +1062,9 @@ name|int
 name|version
 parameter_list|)
 block|{
+name|int
+name|keybits
+decl_stmt|;
 name|u_int
 name|bits
 decl_stmt|;
@@ -1162,10 +1160,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bits
-operator|!=
+name|keybits
+operator|=
 name|BN_num_bits
 argument_list|(
 name|key
@@ -1174,6 +1170,19 @@ name|rsa
 operator|->
 name|n
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|keybits
+operator|<
+literal|0
+operator|||
+name|bits
+operator|!=
+operator|(
+name|u_int
+operator|)
+name|keybits
 condition|)
 name|logit
 argument_list|(

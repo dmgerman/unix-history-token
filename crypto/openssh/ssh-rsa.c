@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-rsa.c,v 1.31 2003/11/10 16:23:41 jakob Exp $"
+literal|"$OpenBSD: ssh-rsa.c,v 1.32 2005/06/17 02:44:33 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1294,6 +1294,13 @@ goto|;
 block|}
 if|if
 condition|(
+name|len
+operator|<
+literal|0
+operator|||
+operator|(
+name|u_int
+operator|)
 name|len
 operator|!=
 name|hlen

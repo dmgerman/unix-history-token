@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect1.c,v 1.60 2004/07/28 09:40:29 markus Exp $"
+literal|"$OpenBSD: sshconnect1.c,v 1.61 2005/06/17 02:44:33 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -585,6 +585,9 @@ name|len
 operator|<=
 literal|0
 operator|||
+operator|(
+name|u_int
+operator|)
 name|len
 operator|>
 sizeof|sizeof
