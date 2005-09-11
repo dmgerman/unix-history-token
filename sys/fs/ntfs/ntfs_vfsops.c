@@ -1186,6 +1186,11 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ntmp
 operator|->
 name|ntm_bootfile
