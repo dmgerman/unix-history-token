@@ -58,7 +58,7 @@ file|<netatalk/at_extern.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|domain
 name|atalkdomain
