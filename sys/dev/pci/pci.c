@@ -1039,7 +1039,7 @@ name|pci_do_powerstate
 argument_list|,
 literal|1
 argument_list|,
-literal|"Power down devices into D3 state when no driver attaches to them.\n\ Otherwise, leave the device in D0 state when no driver attaches."
+literal|"Controls the behvior of the pci driver when it encounters\n\ devices which no driver claims.  Set to 0 causes the pci to leave\n\ the device in D0.  Set to 1 causes pci to conservatively devices\n\ into D3 state.  These are devices which have had issues in the past.\n\ Set to 2 causes the bus driver to agressively place devices into D3 state.\n\ The only devices it excludes are devices for which no drivers generally\n\ exist in FreeBSD.  Set to 3 causes the bus driver to place all unattached\n\ devices into D3 state."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10159,22 +10159,59 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|setstate
-operator|&&
-name|cls
-operator|!=
-name|PCIC_DISPLAY
-operator|&&
-name|cls
-operator|!=
-name|PCIC_MEMORY
-operator|&&
-name|cls
-operator|!=
-name|PCIC_BASEPERIPH
+condition|)
+return|return;
+switch|switch
+condition|(
+name|pci_do_powerstate
 condition|)
 block|{
-comment|/* 		 * PCI spec says we can only go into D3 state from D0 state. 		 * Transition from D[12] into D0 before going to D3 state. 		 */
+case|case
+literal|0
+case|:
+comment|/* NO powerdown at all */
+return|return;
+case|case
+literal|1
+case|:
+comment|/* Conservative about what to power down */
+if|if
+condition|(
+name|cls
+operator|==
+name|PCIC_STORAGE
+condition|)
+return|return;
+comment|/*FALLTHROUGH*/
+case|case
+literal|2
+case|:
+comment|/* Agressive about what to power down */
+if|if
+condition|(
+name|cls
+operator|==
+name|PCIC_DISPLAY
+operator|||
+name|cls
+operator|==
+name|PCIC_MEMORY
+operator|||
+name|cls
+operator|==
+name|PCIC_BASEPERIPH
+condition|)
+return|return;
+comment|/*FALLTHROUGH*/
+case|case
+literal|3
+case|:
+comment|/* Power down everything */
+break|break;
+block|}
+comment|/* 	 * PCI spec says we can only go into D3 state from D0 state. 	 * Transition from D[12] into D0 before going to D3 state. 	 */
 name|ps
 operator|=
 name|pci_get_powerstate
@@ -10192,7 +10229,6 @@ name|ps
 operator|!=
 name|PCI_POWERSTATE_D3
 condition|)
-block|{
 name|pci_set_powerstate
 argument_list|(
 name|dev
@@ -10200,7 +10236,6 @@ argument_list|,
 name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pci_get_powerstate
@@ -10210,7 +10245,6 @@ argument_list|)
 operator|!=
 name|PCI_POWERSTATE_D3
 condition|)
-block|{
 name|pci_set_powerstate
 argument_list|(
 name|dev
@@ -10218,8 +10252,6 @@ argument_list|,
 name|PCI_POWERSTATE_D3
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
