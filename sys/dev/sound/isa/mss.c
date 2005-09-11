@@ -7026,6 +7026,9 @@ operator|=
 name|MD_AD1848
 expr_stmt|;
 comment|/* AD1848 or CS4248 */
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|opti_detect
@@ -7082,6 +7085,8 @@ goto|goto
 name|gotit
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/*      	* Check that the I/O address is in use.      	*      	* bit 7 of the base I/O port is known to be 0 after the chip has      	* performed its power on initialization. Just assume this has      	* happened before the OS is starting.      	*      	* If the I/O address is unused, it typically returns 0xff.      	*/
 for|for
 control|(
