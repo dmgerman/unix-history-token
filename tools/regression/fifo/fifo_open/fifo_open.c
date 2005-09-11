@@ -1738,6 +1738,25 @@ argument_list|,
 literal|"mkdtemp"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|temp_dir
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"chdir: %s"
+argument_list|,
+name|temp_dir
+argument_list|)
+expr_stmt|;
 name|atexit
 argument_list|(
 name|atexit_temp_dir
