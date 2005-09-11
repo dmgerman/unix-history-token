@@ -5320,11 +5320,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|FULL_DUPLEX
+name|ad_read
 argument_list|(
 name|mss
+argument_list|,
+literal|12
 argument_list|)
+operator|&
+literal|0x40
 condition|)
+comment|/* mode2? */
 name|ad_write
 argument_list|(
 name|mss
