@@ -5169,6 +5169,13 @@ operator||
 name|sel
 argument_list|)
 expr_stmt|;
+name|ad_wait_init
+argument_list|(
+name|mss
+argument_list|,
+literal|10000
+argument_list|)
+expr_stmt|;
 block|}
 name|ad_leave_MCE
 argument_list|(
@@ -5318,6 +5325,13 @@ operator||
 name|arg
 argument_list|)
 expr_stmt|;
+name|ad_wait_init
+argument_list|(
+name|mss
+argument_list|,
+literal|10000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ad_read
@@ -5329,6 +5343,7 @@ argument_list|)
 operator|&
 literal|0x40
 condition|)
+block|{
 comment|/* mode2? */
 name|ad_write
 argument_list|(
@@ -5340,6 +5355,14 @@ name|arg
 argument_list|)
 expr_stmt|;
 comment|/* capture mode */
+name|ad_wait_init
+argument_list|(
+name|mss
+argument_list|,
+literal|10000
+argument_list|)
+expr_stmt|;
+block|}
 name|ad_leave_MCE
 argument_list|(
 name|mss
