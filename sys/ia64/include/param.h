@@ -284,46 +284,6 @@ name|NPTEPG
 value|(PAGE_SIZE/(sizeof (pt_entry_t)))
 end_define
 
-begin_define
-define|#
-directive|define
-name|CLSIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLSIZELOG2
-value|0
-end_define
-
-begin_comment
-comment|/* NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSIZE
-value|1
-end_define
-
-begin_comment
-comment|/* initial stack size/NBPG */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SINCR
-value|1
-end_define
-
-begin_comment
-comment|/* increment of stack/NBPG */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
