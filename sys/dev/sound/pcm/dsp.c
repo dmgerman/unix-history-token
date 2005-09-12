@@ -1310,11 +1310,6 @@ argument_list|(
 name|i_dev
 argument_list|)
 expr_stmt|;
-name|pcm_lock
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|rdch
 operator|=
 name|i_dev
@@ -1397,6 +1392,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|pcm_lock
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pcm_getfakechan
@@ -1529,12 +1529,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-name|pcm_unlock
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s

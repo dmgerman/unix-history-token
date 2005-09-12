@@ -528,13 +528,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|snd_mtxassert
-argument_list|(
-name|d
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 comment|/* scan for a free channel */
 name|SLIST_FOREACH
 argument_list|(
