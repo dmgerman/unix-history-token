@@ -7300,16 +7300,6 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
-name|cbb_power_disable_socket
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|self
-argument_list|)
-argument_list|,
-name|self
-argument_list|)
-expr_stmt|;
 name|cbb_set
 argument_list|(
 name|sc
