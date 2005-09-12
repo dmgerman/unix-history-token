@@ -1200,7 +1200,7 @@ break|break;
 default|default:
 return|return
 operator|(
-literal|1
+name|EINVAL
 operator|)
 return|;
 block|}
