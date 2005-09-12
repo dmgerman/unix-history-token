@@ -343,7 +343,7 @@ value|VOP_UNLOCK(devvp, 0, curthread)
 end_define
 
 begin_comment
-comment|/*  * Historically, ext2fs kept it's metadata buffers on the LOCKED queue.  Now,  * we simply change the lock owner to kern so that it may be released from  * another context.  Later, we release the buffer, and conditionally write it  * when we're done.  */
+comment|/*  * Historically, ext2fs kept it's metadata buffers on the LOCKED queue.  Now,  * we change the lock owner to kern so that we may use it from contexts other  * than the one that originally locked it.  When we are finished with the  * buffer, we release it, writing it first if it was dirty.  */
 end_comment
 
 begin_define
@@ -353,7 +353,7 @@ name|LCK_BUF
 parameter_list|(
 name|bp
 parameter_list|)
-value|BUF_KERNPROC(bp);
+value|{ \ 	(bp)->b_flags |= B_PERSISTENT; \ 	BUF_KERNPROC(bp); \ }
 end_define
 
 begin_define
@@ -363,7 +363,7 @@ name|ULCK_BUF
 parameter_list|(
 name|bp
 parameter_list|)
-value|{ \ 	long flags; \ 	int s; \ 	s = splbio(); \ 	flags = (bp)->b_flags; \ 	(bp)->b_flags&= ~(B_DIRTY); \ 	splx(s); \ 	if (flags& B_DIRTY) \ 		bwrite(bp); \ 	else \ 		brelse(bp); \ }
+value|{ \ 	long flags; \ 	flags = (bp)->b_flags; \ 	(bp)->b_flags&= ~(B_DIRTY | B_PERSISTENT); \ 	if (flags& B_DIRTY) \ 		bwrite(bp); \ 	else \ 		brelse(bp); \ }
 end_define
 
 end_unit
