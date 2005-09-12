@@ -499,6 +499,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|u_char
@@ -514,6 +520,11 @@ name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -10894,6 +10905,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|PC98
 name|u_char
 name|opti_read
 parameter_list|(
@@ -11039,6 +11053,8 @@ operator|-
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
 specifier|static
 name|device_method_t
 name|pnpmss_methods
