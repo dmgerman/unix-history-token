@@ -5792,7 +5792,7 @@ name|strcpy
 argument_list|(
 name|temp_dir
 argument_list|,
-literal|"/tmp/fifo_create.XXXXXXXXXXX"
+literal|"/tmp/fifo_io.XXXXXXXXXXX"
 argument_list|)
 expr_stmt|;
 if|if
