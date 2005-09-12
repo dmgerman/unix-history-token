@@ -1541,9 +1541,9 @@ name|char
 modifier|*
 name|devname
 parameter_list|(
-name|int
+name|__dev_t
 parameter_list|,
-name|int
+name|__mode_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1553,9 +1553,9 @@ name|char
 modifier|*
 name|devname_r
 parameter_list|(
-name|int
+name|__dev_t
 parameter_list|,
-name|int
+name|__mode_t
 parameter_list|,
 name|char
 modifier|*
