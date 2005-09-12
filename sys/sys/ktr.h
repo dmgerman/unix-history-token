@@ -441,7 +441,7 @@ begin_define
 define|#
 directive|define
 name|KTR_COMPILE
-value|(KTR_GEN)
+value|(KTR_ALL)
 end_define
 
 begin_endif
