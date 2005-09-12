@@ -301,7 +301,7 @@ value|((c)->c_flags& CALLOUT_PENDING)
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|callout_reset
 parameter_list|(
 name|struct
