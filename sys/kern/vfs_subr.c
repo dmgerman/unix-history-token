@@ -7373,7 +7373,7 @@ name|SYNCER_RUNNING
 expr_stmt|;
 name|starttime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
@@ -7445,7 +7445,7 @@ name|SYNCER_RUNNING
 operator|&&
 name|starttime
 operator|!=
-name|time_second
+name|time_uptime
 condition|)
 block|{
 if|if
@@ -7473,7 +7473,7 @@ expr_stmt|;
 block|}
 name|starttime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 comment|/* 		 * Push files whose dirty time has expired.  Be careful 		 * of interrupt race on slp queue. 		 * 		 * Skip over empty worklist slots when shutting down. 		 */
 do|do
@@ -7718,7 +7718,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|time_second
+name|time_uptime
 operator|==
 name|starttime
 condition|)
