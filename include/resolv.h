@@ -802,27 +802,19 @@ define|#
 directive|define
 name|_res
 value|(*___res())
+comment|/* for INET6 */
 define|#
 directive|define
 name|_res_ext
 value|(*___res_ext())
-comment|/* for INET6 */
-specifier|extern
-expr|struct
-name|__res_state_ext
-name|_res_ext
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 specifier|extern
 specifier|const
-name|struct
+expr|struct
 name|res_sym
 name|__p_class_syms
 index|[]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
