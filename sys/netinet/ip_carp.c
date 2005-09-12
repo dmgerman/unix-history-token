@@ -2547,6 +2547,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_carpdev
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{
