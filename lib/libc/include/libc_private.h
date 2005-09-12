@@ -271,6 +271,23 @@ name|__malloc_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Function to clean up streams, called from abort() and exit().  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|__cleanup
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

@@ -81,13 +81,21 @@ directive|include
 file|"atexit.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_function_decl
 name|void
 function_decl|(
 modifier|*
 name|__cleanup
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
