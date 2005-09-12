@@ -63,6 +63,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * This is unlikely to change over the running time of any  * program, so we cache the result to save some syscalls.  *  * NB: This function may be called from malloc(3) at initialization  * NB: so must not result in a malloc(3) related call!  */
 end_comment

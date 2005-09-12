@@ -51,6 +51,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
 begin_comment
 comment|/*  * ldexp(value, exp): return value * (2 ** exp).  *  * Written by Sean Eric Fagan (sef@kithrup.COM)  * Sun Mar 11 20:27:09 PST 1990  */
 end_comment

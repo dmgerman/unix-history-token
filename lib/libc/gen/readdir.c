@@ -99,6 +99,12 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"telldir.h"
+end_include
+
 begin_comment
 comment|/*  * get next entry in a directory.  */
 end_comment
