@@ -440,8 +440,6 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* Check for dirty mmap, pending writes and dirty buffers */
 name|spl
 operator|=
@@ -855,8 +853,6 @@ decl_stmt|;
 name|ufs2_daddr_t
 name|blkno
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|bsize
 operator|=
 name|vp
@@ -1279,8 +1275,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|td
 operator|=
 name|uio
