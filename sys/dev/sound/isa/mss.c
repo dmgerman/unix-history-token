@@ -277,6 +277,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -292,6 +298,11 @@ name|mss
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -7838,6 +7849,9 @@ return|return
 name|ENXIO
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|PC98
 specifier|static
 name|int
 name|opti_detect
@@ -8136,6 +8150,8 @@ return|return
 literal|0
 return|;
 block|}
+endif|#
+directive|endif
 specifier|static
 name|char
 modifier|*
