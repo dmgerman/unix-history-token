@@ -212,6 +212,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2157,14 +2174,6 @@ operator|)
 condition|)
 block|{
 comment|/*  * FreeBSD-current integrated ncurses. Since then it is no longer possible  * to write to the last column in the logfilewindow without causing an  * automatic newline to occur resulting in a blank line in that window.  */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-include|#
-directive|include
-file|<osreldate.h>
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
