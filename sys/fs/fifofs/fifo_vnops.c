@@ -1648,6 +1648,10 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Currently fifo_kqfilter() isn't reachable beause vop_kqfilter() is only  * called for open files, in which case the fifo code has redirected the  * caller to fifo_kqfilter_f() via the file descriptor operations vector.  * This implementation should be garbage collected.  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -2774,6 +2778,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Because fifos are now a file descriptor layer object, EVFILT_VNODE is not  * implemented.  Likely, fifo_kqfilter() should be removed, and  * fifo_kqfilter_f() should know how to forward the request to the underling  * vnode using f_vnode in the file descriptor here.  */
+end_comment
 
 begin_function
 specifier|static
