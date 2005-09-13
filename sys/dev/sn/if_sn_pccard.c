@@ -976,17 +976,16 @@ literal|1
 return|;
 comment|/* 	 * If that fails, try the special CIS tuple 0x81 that the 	 * '3288 and '3336 cards have.  That tuple specifies an ASCII 	 * string, ala CIS3 or CIS4 in the 'normal' cards. 	 */
 return|return
-name|CARD_CIS_SCAN
-argument_list|(
-name|device_get_parent
+operator|(
+name|pccard_cis_scan
 argument_list|(
 name|dev
-argument_list|)
 argument_list|,
 name|sn_pccard_megahertz_mac
 argument_list|,
 name|eaddr
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
