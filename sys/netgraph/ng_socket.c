@@ -4784,6 +4784,7 @@ name|NULL
 block|,
 operator|.
 name|pru_sockaddr
+operator|=
 name|ng_setsockaddr
 block|, }
 decl_stmt|;
