@@ -2891,15 +2891,6 @@ operator|->
 name|if_type
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IFT_BRIDGE
-comment|/* OpenBSD 2.8, NetBSD 1.6 */
-case|case
-name|IFT_BRIDGE
-case|:
-endif|#
-directive|endif
 case|case
 name|IFT_PFLOG
 case|:
@@ -3010,6 +3001,12 @@ comment|/* 	 * assign a link-local address, if there's none. 	 */
 if|if
 condition|(
 name|ip6_auto_linklocal
+operator|&&
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_BRIDGE
 condition|)
 block|{
 name|ia
