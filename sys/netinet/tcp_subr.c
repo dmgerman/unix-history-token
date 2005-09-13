@@ -5858,7 +5858,7 @@ operator|->
 name|icmp_nextmtu
 argument_list|)
 expr_stmt|;
-comment|/* 					     * If no alternative MTU was 					     * proposed, try the next smaller 					     * one. 					     */
+comment|/* 					     * If no alternative MTU was 					     * proposed, try the next smaller 					     * one.  ip->ip_len has already 					     * been swapped in icmp_input(). 					     */
 if|if
 condition|(
 operator|!
@@ -5868,12 +5868,9 @@ name|mtu
 operator|=
 name|ip_next_mtu
 argument_list|(
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_len
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
