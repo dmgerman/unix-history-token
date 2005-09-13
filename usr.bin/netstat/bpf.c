@@ -194,6 +194,12 @@ name|error
 operator|<
 literal|0
 condition|)
+block|{
+name|warn
+argument_list|(
+literal|"kern.proc.pid failed"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|strdup
@@ -202,6 +208,7 @@ literal|"??????"
 argument_list|)
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|strdup
