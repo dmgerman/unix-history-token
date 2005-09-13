@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Transform a hwpmc(4) log into human readable form and into gprof(1)  * compatible profiles.  */
+comment|/*  * Transform a hwpmc(4) log into human readable form and into gprof(1)  * compatible profiles.  *  * Each executable object encountered in the log gets one 'gmon.out'  * profile per PMC.  We currently track:  * 	- program executables  *	- shared libraries loaded by the runtime loader  *	- the runtime loader itself  *	- the kernel.  * We do not track shared objects mapped in by dlopen() yet (this  * needs additional support from hwpmc(4)).  *  * 'gmon.out' profiles generated for a given sampling PMC are  * aggregates of all the samples for that particular executable  * object.  */
 end_comment
 
 begin_include
@@ -240,7 +240,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * 'pmcstat_pmcs' is a mapping for PMC ids to their human-readable  * names.  */
+comment|/*  * 'pmcstat_pmcrecord' is a mapping from PMC ids to human-readable  * names.  */
 end_comment
 
 begin_struct
@@ -282,6 +282,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * struct pmcstat_gmonfile tracks a given 'gmon.out' file.  These  * files are mmap()'ed in as needed.  */
+end_comment
+
 begin_struct
 struct|struct
 name|pmcstat_gmonfile
@@ -298,15 +302,15 @@ name|pgf_pmcid
 decl_stmt|;
 comment|/* id of the associated pmc */
 name|size_t
-name|pgf_nsamples
+name|pgf_nbuckets
 decl_stmt|;
-comment|/* number of samples in this gmon.out */
+comment|/* #buckets in this gmon.out */
 specifier|const
 name|char
 modifier|*
 name|pgf_name
 decl_stmt|;
-comment|/* name of gmon.out file */
+comment|/* pathname of gmon.out file */
 name|size_t
 name|pgf_ndatabytes
 decl_stmt|;
@@ -335,16 +339,6 @@ name|pmcstat_gmonfiles
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|GM_TO_BUCKETS
-parameter_list|(
-name|GM
-parameter_list|)
-value|((uint16_t *) ((char *) (GM) + sizeof(*(GM))))
-end_define
 
 begin_comment
 comment|/*  * A 'pmcstat_image' structure describes an executable program on  * disk.  'pi_internedpath' is a cookie representing the pathname of  * the executable.  'pi_start' and 'pi_end' are the least and greatest  * virtual addresses for the text segments in the executable.  * 'pi_gmonlist' contains a linked list of gmon.out files associated  * with this image.  */
@@ -956,9 +950,22 @@ name|gm
 operator|.
 name|ncnt
 operator|=
+operator|(
 name|pgf
 operator|->
-name|pgf_nsamples
+name|pgf_nbuckets
+operator|*
+sizeof|sizeof
+argument_list|(
+name|HISTCOUNTER
+argument_list|)
+operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|gmonhdr
+argument_list|)
 expr_stmt|;
 name|gm
 operator|.
@@ -2447,7 +2454,7 @@ name|pmcid
 expr_stmt|;
 name|pgf
 operator|->
-name|pgf_nsamples
+name|pgf_nbuckets
 operator|=
 operator|(
 name|image
@@ -2474,7 +2481,7 @@ argument_list|)
 operator|+
 name|pgf
 operator|->
-name|pgf_nsamples
+name|pgf_nbuckets
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -2533,7 +2540,7 @@ name|bucket
 operator|<
 name|pgf
 operator|->
-name|pgf_nsamples
+name|pgf_nbuckets
 argument_list|)
 expr_stmt|;
 name|hc
@@ -2557,6 +2564,16 @@ name|gmonhdr
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* saturating add */
+if|if
+condition|(
+name|hc
+index|[
+name|bucket
+index|]
+operator|<
+literal|0xFFFF
+condition|)
 name|hc
 index|[
 name|bucket
