@@ -146,6 +146,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_MEM_PAGE_SIZE
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCCARD_CFE_MWAIT_REQUIRED
 value|0x0001
 end_define
