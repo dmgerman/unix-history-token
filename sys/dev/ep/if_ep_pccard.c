@@ -762,12 +762,9 @@ expr_stmt|;
 comment|/* 	 * The 3C562 (a-c revisions) stores the MAC in the CIS in a 	 * way that's unique to 3com.  If we have one of these cards, 	 * scan the CIS for that MAC address, and use it if we find 	 * it.  The NetBSD driver says that the ROADRUNNER chips also 	 * do this, which may be true, but none of the cards that I 	 * have include this TUPLE.  Always prefer the MAC addr in the 	 * CIS tuple to the one returned by the card, as it appears that 	 * only those cards that need it have this special tuple. 	 */
 if|if
 condition|(
-name|CARD_CIS_SCAN
-argument_list|(
-name|device_get_parent
+name|pccard_cis_scan
 argument_list|(
 name|dev
-argument_list|)
 argument_list|,
 name|ep_pccard_mac
 argument_list|,
