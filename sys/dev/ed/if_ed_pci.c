@@ -134,49 +134,49 @@ block|{
 block|{
 literal|0x802910ec
 block|,
-literal|"NE2000 PCI Ethernet (RealTek 8029)"
+literal|"RealTek 8029"
 block|}
 block|,
 block|{
 literal|0x50004a14
 block|,
-literal|"NE2000 PCI Ethernet (NetVin 5000)"
+literal|"NetVin 5000"
 block|}
 block|,
 block|{
 literal|0x09401050
 block|,
-literal|"NE2000 PCI Ethernet (ProLAN)"
+literal|"ProLAN"
 block|}
 block|,
 block|{
 literal|0x140111f6
 block|,
-literal|"NE2000 PCI Ethernet (Compex)"
+literal|"Compex"
 block|}
 block|,
 block|{
 literal|0x30008e2e
 block|,
-literal|"NE2000 PCI Ethernet (KTI)"
+literal|"KTI"
 block|}
 block|,
 block|{
 literal|0x19808c4a
 block|,
-literal|"NE2000 PCI Ethernet (Winbond W89C940)"
+literal|"Winbond W89C940"
 block|}
 block|,
 block|{
 literal|0x0e3410bd
 block|,
-literal|"NE2000 PCI Ethernet (Surecom NE-34)"
+literal|"Surecom NE-34"
 block|}
 block|,
 block|{
 literal|0x09261106
 block|,
-literal|"NE2000 PCI Ethernet (VIA VT86C926)"
+literal|"VIA VT86C926"
 block|}
 block|,
 block|{
