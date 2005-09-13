@@ -954,18 +954,6 @@ name|kev_set
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Trying %s\n"
-argument_list|,
-name|bad_filter_types
-index|[
-name|i
-index|]
-operator|.
-name|fe_name
-argument_list|)
-expr_stmt|;
 name|EV_SET
 argument_list|(
 operator|&
