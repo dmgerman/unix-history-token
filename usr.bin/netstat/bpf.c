@@ -366,6 +366,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+return|return;
 name|bd
 operator|=
 name|malloc
