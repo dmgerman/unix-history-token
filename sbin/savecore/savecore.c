@@ -491,11 +491,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|syslog
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
 argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"unable to open bounds file, using 0"
+literal|"unable to open bounds file, using 0\n"
 argument_list|)
 expr_stmt|;
 return|return
