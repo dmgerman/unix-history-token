@@ -1871,7 +1871,7 @@ name|cm
 operator|->
 name|cm_timestamp
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|cm
 operator|->
