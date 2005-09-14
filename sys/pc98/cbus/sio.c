@@ -4815,19 +4815,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|epson_machine_id
-operator|==
-literal|0x20
-condition|)
-block|{
-comment|/* XXX */
-name|result
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -19886,6 +19873,9 @@ decl_stmt|;
 name|int
 name|previnterrupt
 decl_stmt|;
+name|int
+name|tmp
+decl_stmt|;
 name|u_int
 name|count
 decl_stmt|;
@@ -20020,17 +20010,6 @@ name|cfcr
 operator||=
 name|MOD8251_CLKX16
 expr_stmt|;
-if|if
-condition|(
-name|epson_machine_id
-operator|!=
-literal|0x20
-condition|)
-block|{
-comment|/* XXX */
-name|int
-name|tmp
-decl_stmt|;
 while|while
 condition|(
 operator|!
@@ -20050,7 +20029,6 @@ name|STS8251_TxEMP
 operator|)
 condition|)
 empty_stmt|;
-block|}
 comment|/* set baud rate from ospeed */
 name|pc98_set_baud_rate
 argument_list|(

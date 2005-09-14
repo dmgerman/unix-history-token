@@ -41,18 +41,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/epsonio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/pc98_machdep.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -99,24 +87,6 @@ argument_list|,
 literal|"NMI PC98 port = %x\n"
 argument_list|,
 name|port
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|epson_machine_id
-operator|==
-literal|0x20
-condition|)
-name|epson_outb
-argument_list|(
-literal|0xc16
-argument_list|,
-name|epson_inb
-argument_list|(
-literal|0xc16
-argument_list|)
-operator||
-literal|0x1
 argument_list|)
 expr_stmt|;
 if|if
