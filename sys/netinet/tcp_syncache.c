@@ -4271,7 +4271,7 @@ condition|)
 name|sc
 operator|->
 name|sc_flags
-operator|=
+operator||=
 name|SCF_SIGNATURE
 expr_stmt|;
 endif|#
