@@ -1283,7 +1283,7 @@ name|RT_ADDREF
 parameter_list|(
 name|_rt
 parameter_list|)
-value|do {					\ 	RT_LOCK_ASSERT(_rt);					\ 	KASSERT((_rt)->rt_refcnt>= 0,				\ 		("negative refcnt %ld", (_rt)->rt_refcnt));	\ 	(_rt)->rt_refcnt++;					\ } while (0);
+value|do {					\ 	RT_LOCK_ASSERT(_rt);					\ 	KASSERT((_rt)->rt_refcnt>= 0,				\ 		("negative refcnt %ld", (_rt)->rt_refcnt));	\ 	(_rt)->rt_refcnt++;					\ } while (0)
 end_define
 
 begin_define
@@ -1293,7 +1293,7 @@ name|RT_REMREF
 parameter_list|(
 name|_rt
 parameter_list|)
-value|do {					\ 	RT_LOCK_ASSERT(_rt);					\ 	KASSERT((_rt)->rt_refcnt> 0,				\ 		("bogus refcnt %ld", (_rt)->rt_refcnt));	\ 	(_rt)->rt_refcnt--;					\ } while (0);
+value|do {					\ 	RT_LOCK_ASSERT(_rt);					\ 	KASSERT((_rt)->rt_refcnt> 0,				\ 		("bogus refcnt %ld", (_rt)->rt_refcnt));	\ 	(_rt)->rt_refcnt--;					\ } while (0)
 end_define
 
 begin_define
