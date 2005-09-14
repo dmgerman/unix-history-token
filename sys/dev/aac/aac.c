@@ -4050,7 +4050,7 @@ name|cm
 operator|->
 name|cm_timestamp
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|cm
 operator|->
@@ -6489,7 +6489,7 @@ expr_stmt|;
 comment|/* 	 * First wait for the adapter to come ready. 	 */
 name|then
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 do|do
 block|{
@@ -6546,7 +6546,7 @@ return|;
 block|}
 if|if
 condition|(
-name|time_second
+name|time_uptime
 operator|>
 operator|(
 name|then
@@ -7146,7 +7146,7 @@ name|ip
 operator|->
 name|HostElapsedSeconds
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 comment|/* reset later if invalid */
 comment|/* 	 * Initialise FIB queues.  Note that it appears that the layout of the 	 * indexes and the segmentation of the entries may be mandated by the 	 * adapter, which is only told about the base of the queue index fields. 	 * 	 * The initial values of the indices are assumed to inform the adapter 	 * of the sizes of the respective queues, and theoretically it could  	 * work out the entire layout of the queue structures from this.  We 	 * take the easy route and just lay this area out like everyone else 	 * does. 	 * 	 * The Linux driver uses a much more complex scheme whereby several  	 * header records are kept for each queue.  We use a couple of generic  	 * list manipulation functions which 'know' the size of each list by 	 * virtue of a table. 	 */
@@ -7742,13 +7742,13 @@ expr_stmt|;
 comment|/* spin waiting for the command to complete */
 name|then
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 do|do
 block|{
 if|if
 condition|(
-name|time_second
+name|time_uptime
 operator|>
 operator|(
 name|then
@@ -8896,7 +8896,7 @@ literal|0
 expr_stmt|;
 name|deadline
 operator|=
-name|time_second
+name|time_uptime
 operator|-
 name|AAC_CMD_TIMEOUT
 expr_stmt|;
@@ -8941,7 +8941,7 @@ call|(
 name|int
 call|)
 argument_list|(
-name|time_second
+name|time_uptime
 operator|-
 name|cm
 operator|->
@@ -11456,7 +11456,7 @@ name|cm
 operator|->
 name|cm_timestamp
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 comment|/* 	 * Pass the FIB to the controller, wait for it to complete. 	 */
 if|if
