@@ -6727,7 +6727,7 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_attach
+name|device_detach
 argument_list|,
 name|ed_detach
 argument_list|)
