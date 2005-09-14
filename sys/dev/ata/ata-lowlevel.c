@@ -511,7 +511,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"timeout waiting for write DRQ"
+literal|"timeout waiting for write DRQ\n"
 argument_list|)
 expr_stmt|;
 name|request
@@ -1438,7 +1438,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"timeout waiting for read DRQ"
+literal|"timeout waiting for read DRQ\n"
 argument_list|)
 expr_stmt|;
 name|request
@@ -1539,7 +1539,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"timeout waiting for write DRQ"
+literal|"timeout waiting for write DRQ\n"
 argument_list|)
 expr_stmt|;
 name|request
