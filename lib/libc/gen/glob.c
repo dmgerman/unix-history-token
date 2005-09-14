@@ -1395,6 +1395,9 @@ modifier|*
 name|pm
 decl_stmt|,
 modifier|*
+name|pm1
+decl_stmt|,
+modifier|*
 name|pl
 decl_stmt|;
 name|Char
@@ -1590,7 +1593,7 @@ case|:
 comment|/* Ignore everything between [] */
 for|for
 control|(
-name|pl
+name|pm1
 operator|=
 name|pm
 operator|++
@@ -1620,7 +1623,7 @@ block|{
 comment|/* 				 * We could not find a matching RBRACKET. 				 * Ignore and just look for RBRACE 				 */
 name|pm
 operator|=
-name|pl
+name|pm1
 expr_stmt|;
 block|}
 break|break;
