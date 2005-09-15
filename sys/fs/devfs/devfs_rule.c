@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/devfs/devfs.h>
 end_include
 
@@ -440,6 +446,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|sx_rules
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|SLIST_HEAD
@@ -475,6 +489,12 @@ name|devfs_ruleset
 modifier|*
 name|ds
 decl_stmt|;
+name|sx_slock
+argument_list|(
+operator|&
+name|sx_rules
+argument_list|)
+expr_stmt|;
 name|ds
 operator|=
 name|devfs_ruleset_bynum
@@ -504,6 +524,12 @@ argument_list|,
 name|devfs_rule_depth
 argument_list|)
 expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|sx_rules
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -527,6 +553,14 @@ name|devfs_ruleset
 modifier|*
 name|ds
 decl_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|sx_rules
+argument_list|,
+literal|"devfsrules"
+argument_list|)
+expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -643,6 +677,12 @@ operator|(
 name|error
 operator|)
 return|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|sx_rules
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -1219,6 +1259,12 @@ break|break;
 block|}
 name|out
 label|:
+name|sx_xunlock
+argument_list|(
+operator|&
+name|sx_rules
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1252,6 +1298,12 @@ modifier|*
 name|ds
 decl_stmt|;
 comment|/* 	 * We can't use devfs_ruleset_use() since it will try to 	 * decrement the refcount for the old ruleset, and there is no 	 * old ruleset.  Making some value of ds_ruleset "special" to 	 * mean "don't decrement refcount" is uglier than this. 	 */
+name|sx_slock
+argument_list|(
+operator|&
+name|sx_rules
+argument_list|)
+expr_stmt|;
 name|ds
 operator|=
 name|devfs_ruleset_bynum
@@ -1280,6 +1332,12 @@ operator|->
 name|dm_ruleset
 operator|=
 literal|0
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|sx_rules
+argument_list|)
 expr_stmt|;
 block|}
 end_function
