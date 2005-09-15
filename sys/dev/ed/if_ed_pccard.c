@@ -3222,7 +3222,7 @@ argument_list|(
 literal|5000
 argument_list|)
 expr_stmt|;
-name|ed_asic_outb
+name|ed_nic_outb
 argument_list|(
 name|sc
 argument_list|,
