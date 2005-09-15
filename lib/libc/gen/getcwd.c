@@ -276,7 +276,7 @@ name|malloc
 argument_list|(
 name|ptsize
 operator|=
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|)
 operator|)
 operator|==
@@ -375,7 +375,7 @@ name|bpt
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Allocate MAXPATHLEN bytes for the string of "../"'s. 	 * Should always be enough (it's 340 levels).  If it's not, allocate 	 * as necessary.  Special case the first stat, it's ".", not "..". 	 */
+comment|/* 	 * Allocate 1024 bytes for the string of "../"'s. 	 * Should always be enough.  If it's not, allocate 	 * as necessary.  Special case the first stat, it's ".", not "..". 	 */
 if|if
 condition|(
 operator|(
@@ -385,7 +385,7 @@ name|malloc
 argument_list|(
 name|upsize
 operator|=
-name|MAXPATHLEN
+literal|1024
 argument_list|)
 operator|)
 operator|==
