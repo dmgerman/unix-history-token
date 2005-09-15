@@ -507,9 +507,9 @@ name|int
 name|devfs_rules_ioctl
 parameter_list|(
 name|struct
-name|mount
+name|devfs_mount
 modifier|*
-name|mp
+name|dm
 parameter_list|,
 name|u_long
 name|cmd
