@@ -300,36 +300,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Shutdown(2) on not connected socket has to return ENOTCONN. */
-if|if
-condition|(
-operator|(
-name|shutdown
-argument_list|(
-name|listen_sock
-argument_list|,
-name|SHUT_RDWR
-argument_list|)
-operator|!=
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|errno
-operator|!=
-name|ENOTCONN
-operator|)
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"shutdown(2) for not connected socket does not "
-literal|"return ENOTCONN"
-argument_list|)
-expr_stmt|;
 name|connect_sock
 operator|=
 name|socket
@@ -547,35 +517,6 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|shutdown
-argument_list|(
-name|connect_sock
-argument_list|,
-name|SHUT_RDWR
-argument_list|)
-operator|!=
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|errno
-operator|!=
-name|ENOTCONN
-operator|)
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"shutdown(2) for not connected socket does not "
-literal|"return ENOTCONN"
 argument_list|)
 expr_stmt|;
 name|close
