@@ -2564,6 +2564,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|THREAD_NO_SLEEPING
+argument_list|()
+expr_stmt|;
 name|restart
 label|:
 name|TAILQ_FOREACH
@@ -2730,6 +2733,9 @@ name|Giant
 argument_list|)
 expr_stmt|;
 block|}
+name|THREAD_SLEEPING_OK
+argument_list|()
+expr_stmt|;
 comment|/* 			 * Interrupt storm handling: 			 * 			 * If this interrupt source is currently storming, 			 * then throttle it to only fire the handler once 			 * per clock tick. 			 * 			 * If this interrupt source is not currently 			 * storming, but the number of back to back 			 * interrupts exceeds the storm threshold, then 			 * enter storming mode. 			 */
 if|if
 condition|(
