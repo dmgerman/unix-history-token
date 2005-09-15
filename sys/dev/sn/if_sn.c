@@ -833,7 +833,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|SN_LOCK_DESTORY
+name|SN_LOCK_DESTROY
 argument_list|(
 name|sc
 argument_list|)
