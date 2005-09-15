@@ -3809,6 +3809,26 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|md
+operator|->
+name|md_keys
+operator|==
+literal|0
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"No valid keys on %s."
+argument_list|,
+name|prov
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Generate key for Master Key decryption. */
 if|if
 condition|(
@@ -4376,26 +4396,6 @@ operator|-
 literal|1
 condition|)
 return|return;
-if|if
-condition|(
-name|md
-operator|.
-name|md_keys
-operator|==
-literal|0
-condition|)
-block|{
-name|gctl_error
-argument_list|(
-name|req
-argument_list|,
-literal|"No valid keys on %s."
-argument_list|,
-name|prov
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|eli_is_attached
