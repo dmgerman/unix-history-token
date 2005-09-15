@@ -3214,13 +3214,17 @@ index|[
 name|cpu
 index|]
 expr_stmt|;
-comment|/* 	 * look for all PMCs that have interrupted: 	 * - skip over the TSC [PMC#0] 	 * - look for a running, sampling PMC which has overflowed 	 *   and which has a valid 'struct pmc' association 	 * 	 * If found, we call a helper to process the interrupt. 	 */
+comment|/* 	 * look for all PMCs that have interrupted: 	 * - skip over the TSC [PMC#0] 	 * - look for a running, sampling PMC which has overflowed 	 *   and which has a valid 'struct pmc' association 	 * 	 * If found, we call a helper to process the interrupt. 	 * 	 * If multiple PMCs interrupt at the same time, the AMD64 	 * processor appears to deliver as many NMIs as there are 	 * outstanding PMC interrupts.  Thus we need to only process 	 * one interrupt at a time. 	 */
 for|for
 control|(
 name|i
 operator|=
 literal|0
 init|;
+name|retval
+operator|==
+literal|0
+operator|&&
 name|i
 operator|<
 name|AMD_NPMCS
@@ -3299,6 +3303,11 @@ condition|)
 block|{
 continue|continue;
 block|}
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+comment|/* found an interrupting PMC */
 comment|/* stop the PMC, reload count */
 name|evsel
 operator|=
@@ -3386,7 +3395,7 @@ name|v
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* restart if there was no error during logging */
+comment|/* restart the counter if there was no error during logging */
 name|error
 operator|=
 name|pmc_process_interrupt
@@ -3415,11 +3424,6 @@ operator||
 name|AMD_PMC_ENABLE
 argument_list|)
 expr_stmt|;
-name|retval
-operator|=
-literal|1
-expr_stmt|;
-comment|/* found an interrupting PMC */
 block|}
 name|atomic_add_int
 argument_list|(
