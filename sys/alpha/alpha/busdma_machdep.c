@@ -3912,6 +3912,18 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* Ensure any pending writes have drained. */
+if|if
+condition|(
+name|op
+operator|&
+operator|(
+name|BUS_DMASYNC_PREWRITE
+operator|)
+condition|)
+name|alpha_mb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
