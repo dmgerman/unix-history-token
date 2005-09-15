@@ -5196,11 +5196,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -5243,11 +5238,6 @@ name|unit
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -5300,9 +5290,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
-name|attached
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -5331,34 +5318,15 @@ literal|"re mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
-name|attached
-operator|=
+comment|/* These should only be active if attach succeeded */
+if|if
+condition|(
 name|device_is_attached
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-comment|/* These should only be active if attach succeeded */
-if|if
-condition|(
-name|attached
 condition|)
-name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|==
-name|NULL
-condition|)
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
+block|{
 name|RL_LOCK
 argument_list|(
 name|sc
@@ -5370,13 +5338,12 @@ literal|0
 block|sc->suspended = 1;
 endif|#
 directive|endif
-comment|/* These should only be active if attach succeeded */
-if|if
-condition|(
-name|attached
-condition|)
-block|{
 name|re_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|RL_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5388,6 +5355,11 @@ name|if_flags
 operator|&=
 operator|~
 name|IFF_UP
+expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -5411,9 +5383,15 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The rest is resource deallocation, so we should already be 	 * stopped here. 	 */
-name|RL_UNLOCK
+if|if
+condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
 argument_list|(
-name|sc
+name|ifp
 argument_list|)
 expr_stmt|;
 if|if
