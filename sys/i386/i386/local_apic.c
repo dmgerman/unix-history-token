@@ -1456,7 +1456,7 @@ name|lapic_timer_enable_intr
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* XXX: Performance counter, error, and thermal LVTs */
+comment|/* XXX: Error and thermal LVTs */
 name|intr_restore
 argument_list|(
 name|eflags
@@ -3876,11 +3876,21 @@ argument_list|(
 name|BEFORE_SPIN
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return;
+else|else
 name|panic
 argument_list|(
 literal|"APIC: Previous IPI is stuck"
 argument_list|)
 expr_stmt|;
+block|}
 name|lapic_ipi_raw
 argument_list|(
 name|icrlo
