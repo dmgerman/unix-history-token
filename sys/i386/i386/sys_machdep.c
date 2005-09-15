@@ -1348,15 +1348,11 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|td
-operator|->
-name|td_proc
 operator|==
 name|curthread
-operator|->
-name|td_proc
 argument_list|,
 operator|(
-literal|"giving TSS to !curproc"
+literal|"giving TSS to !curthread"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1375,6 +1371,7 @@ literal|"already have a TSS!"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Switch to the new TSS. */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1389,12 +1386,32 @@ name|pcb_ext
 operator|=
 name|ext
 expr_stmt|;
-comment|/* switch to the new TSS after syscall completes */
-name|td
-operator|->
-name|td_flags
+name|private_tss
 operator||=
-name|TDF_NEEDRESCHED
+name|PCPU_GET
+argument_list|(
+name|cpumask
+argument_list|)
+expr_stmt|;
+operator|*
+name|PCPU_GET
+argument_list|(
+name|tss_gdt
+argument_list|)
+operator|=
+name|ext
+operator|->
+name|ext_tssd
+expr_stmt|;
+name|ltr
+argument_list|(
+name|GSEL
+argument_list|(
+name|GPROC0_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
