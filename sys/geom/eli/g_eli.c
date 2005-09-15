@@ -1076,7 +1076,7 @@ literal|0
 argument_list|,
 name|pbp
 argument_list|,
-literal|"Crypto READ request failed (error=%d)."
+literal|"Crypto WRITE request failed (error=%d)."
 argument_list|,
 name|pbp
 operator|->
@@ -2572,6 +2572,12 @@ operator|->
 name|crd_next
 operator|=
 name|NULL
+expr_stmt|;
+name|crp
+operator|->
+name|crp_etype
+operator|=
+literal|0
 expr_stmt|;
 name|err
 operator|=
