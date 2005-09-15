@@ -283,7 +283,7 @@ name|bd_seesent
 condition|?
 literal|'s'
 else|:
-literal|'.'
+literal|'-'
 expr_stmt|;
 operator|*
 name|flagbuf
