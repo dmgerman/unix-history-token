@@ -3673,6 +3673,7 @@ operator|->
 name|if_capabilities
 expr_stmt|;
 comment|/* 	 * Do MII setup. 	 */
+comment|/* XXX: leaked on error */
 if|if
 condition|(
 name|mii_phy_probe
@@ -3905,6 +3906,11 @@ operator|->
 name|nge_unit
 argument_list|)
 expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -3989,6 +3995,11 @@ name|error
 condition|)
 block|{
 comment|/* XXX: resource leaks */
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
