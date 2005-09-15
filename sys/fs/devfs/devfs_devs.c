@@ -977,14 +977,10 @@ operator|&
 name|d
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|de
-argument_list|,
-expr|struct
-name|devfs_dirent
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|i
 argument_list|,
 name|M_DEVFS
@@ -1295,7 +1291,7 @@ operator|->
 name|de_symlink
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|de
 operator|->
@@ -1347,7 +1343,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|FREE
+name|free
 argument_list|(
 name|de
 argument_list|,
@@ -1414,7 +1410,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|devfs_populate
 parameter_list|(
 name|struct
@@ -1465,11 +1461,7 @@ name|dm_generation
 operator|==
 name|devfs_generation
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|lockmgr
 argument_list|(
 operator|&
@@ -2001,11 +1993,6 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
