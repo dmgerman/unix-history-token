@@ -1790,7 +1790,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"couldn't set up irq\n"
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
