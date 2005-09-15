@@ -6767,7 +6767,7 @@ if|if
 condition|(
 name|sysctlbyname
 argument_list|(
-literal|"kern.shutdown_timeout"
+literal|"kern.init_shutdown_timeout"
 argument_list|,
 operator|&
 name|shutdowntimeout
