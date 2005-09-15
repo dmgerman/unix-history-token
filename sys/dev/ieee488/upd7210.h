@@ -76,6 +76,9 @@ decl_stmt|;
 name|int
 name|dmachan
 decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
 comment|/* private stuff */
 name|struct
 name|mtx
@@ -148,6 +151,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|upd7210attach
+parameter_list|(
+name|struct
+name|upd7210
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|upd7210detach
 parameter_list|(
 name|struct
 name|upd7210
