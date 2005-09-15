@@ -203,7 +203,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(__XSTRING(MPLOCKED) OP		\ 			 : "+m" (*p)			\ 			 : CONS (V));			\ }							\ struct __hack
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(__XSTRING(MPLOCKED) OP		\ 			 : "=m" (*p)			\ 			 : CONS (V), "m" (*p));		\ }							\ struct __hack
 end_define
 
 begin_comment
@@ -240,7 +240,7 @@ argument_list|(
 name|MPLOCKED
 argument_list|)
 literal|"	"
-literal|"	cmpxchgl %1,%2 ;	"
+literal|"	cmpxchgl %2,%1 ;	"
 literal|"       setz	%%al ;		"
 literal|"	movzbl	%%al,%0 ;	"
 literal|"1:				"
@@ -250,22 +250,27 @@ literal|"+a"
 operator|(
 name|res
 operator|)
+operator|,
 comment|/* 0 (result) */
+literal|"=m"
+operator|(
+operator|*
+name|dst
+operator|)
+comment|/* 1 */
 operator|:
 literal|"r"
 operator|(
 name|src
 operator|)
 operator|,
-comment|/* 1 */
+comment|/* 2 */
 literal|"m"
 operator|(
 operator|*
-operator|(
 name|dst
 operator|)
-operator|)
-comment|/* 2 */
+comment|/* 3 */
 operator|:
 literal|"memory"
 block|)
@@ -310,7 +315,7 @@ argument_list|(
 name|MPLOCKED
 argument_list|)
 literal|"	"
-literal|"	cmpxchgq %1,%2 ;	"
+literal|"	cmpxchgq %2,%1 ;	"
 literal|"       setz	%%al ;		"
 literal|"	movzbq	%%al,%0 ;	"
 literal|"1:				"
@@ -320,22 +325,27 @@ literal|"+a"
 operator|(
 name|res
 operator|)
+operator|,
 comment|/* 0 (result) */
+literal|"=m"
+operator|(
+operator|*
+name|dst
+operator|)
+comment|/* 1 */
 operator|:
 literal|"r"
 operator|(
 name|src
 operator|)
 operator|,
-comment|/* 1 */
+comment|/* 2 */
 literal|"m"
 operator|(
 operator|*
-operator|(
 name|dst
 operator|)
-operator|)
-comment|/* 2 */
+comment|/* 3 */
 operator|:
 literal|"memory"
 block|)
@@ -408,15 +418,19 @@ parameter_list|)
 define|\
 value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(__XSTRING(MPLOCKED) LOP	\ 	: "=a" (res),
 comment|/* 0 (result) */
-value|\ 	  "+m" (*p)
+value|\ 	  "=m" (*p)
 comment|/* 1 */
-value|\ 	: : "memory");				 	\ 							\ 	return (res);					\ }							\ 							\
+value|\ 	: "m" (*p)
+comment|/* 2 */
+value|\ 	: "memory");				 	\ 							\ 	return (res);					\ }							\ 							\
 comment|/*							\  * The XCHG instruction asserts LOCK automagically.	\  */
-value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(SOP				\ 	: "+m" (*p),
+value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(SOP				\ 	: "=m" (*p),
 comment|/* 0 */
 value|\ 	  "+r" (v)
 comment|/* 1 */
-value|\ 	: : "memory");				 	\ }							\ struct __hack
+value|\ 	: "m" (*p));
+comment|/* 2 */
+value|\ }							\ struct __hack
 end_define
 
 begin_endif
@@ -800,16 +814,26 @@ block|{
 name|u_int
 name|result
 decl_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
 asm|__asm __volatile (
-literal|"	xorl	%0,%0 ;		"
 literal|"	xchgl	%1,%0 ;		"
 literal|"# atomic_readandclear_int"
 operator|:
-literal|"=&r"
+literal|"+r"
 operator|(
 name|result
 operator|)
+operator|,
 comment|/* 0 (result) */
+literal|"=m"
+operator|(
+operator|*
+name|addr
+operator|)
+comment|/* 1 (addr) */
 operator|:
 literal|"m"
 operator|(
@@ -819,10 +843,6 @@ operator|)
 block|)
 function|;
 end_function
-
-begin_comment
-comment|/* 1 (addr) */
-end_comment
 
 begin_return
 return|return
@@ -847,16 +867,26 @@ block|{
 name|u_long
 name|result
 decl_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
 asm|__asm __volatile (
-literal|"	xorq	%0,%0 ;		"
 literal|"	xchgq	%1,%0 ;		"
 literal|"# atomic_readandclear_long"
 operator|:
-literal|"=&r"
+literal|"+r"
 operator|(
 name|result
 operator|)
+operator|,
 comment|/* 0 (result) */
+literal|"=m"
+operator|(
+operator|*
+name|addr
+operator|)
+comment|/* 1 (addr) */
 operator|:
 literal|"m"
 operator|(
@@ -866,10 +896,6 @@ operator|)
 block|)
 function|;
 end_function
-
-begin_comment
-comment|/* 1 (addr) */
-end_comment
 
 begin_return
 return|return
