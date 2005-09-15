@@ -457,6 +457,13 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|devfs_rule_depth
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This is what we fill in dm_dirent[N] for a deleted entry.  */
 end_comment

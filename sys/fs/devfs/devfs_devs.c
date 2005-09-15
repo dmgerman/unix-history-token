@@ -311,6 +311,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|unsigned
+name|devfs_rule_depth
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vfs_devfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rule_depth
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|devfs_rule_depth
+argument_list|,
+literal|0
+argument_list|,
+literal|"Max depth of ruleset include"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Helper sysctl for devname(3).  We're given a struct cdev * and return  * the name, if any, registered by the device driver.  */
 end_comment
