@@ -2685,7 +2685,9 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|bad
+goto|;
 comment|/* XXX: impossible */
 if|if
 condition|(
