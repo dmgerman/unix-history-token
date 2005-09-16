@@ -2522,6 +2522,21 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|sc
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9477,13 +9492,6 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|sc
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
 name|hatm_destroy
 argument_list|(
 name|sc
@@ -9558,13 +9566,11 @@ argument_list|,
 literal|"could not if_alloc()\n"
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|ENOSPC
-expr_stmt|;
-goto|goto
-name|failed
-goto|;
+operator|)
+return|;
 block|}
 name|sc
 operator|->

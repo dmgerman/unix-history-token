@@ -4855,12 +4855,16 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|ifp
+condition|)
 name|if_free
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc

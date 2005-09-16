@@ -1059,6 +1059,19 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|ifp
+condition|)
+name|if_free
+argument_list|(
+name|sc
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1609,11 +1622,6 @@ name|tick_ch
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|if_free
 argument_list|(
 name|ifp
 argument_list|)
