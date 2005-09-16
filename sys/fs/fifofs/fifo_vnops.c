@@ -1382,7 +1382,7 @@ name|sorwakeup
 argument_list|(
 name|fip
 operator|->
-name|fi_writesock
+name|fi_readsock
 argument_list|)
 expr_stmt|;
 block|}
