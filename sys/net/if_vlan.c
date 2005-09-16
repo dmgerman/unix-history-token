@@ -2494,6 +2494,16 @@ decl_stmt|;
 name|u_int
 name|tag
 decl_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_VLANTAG
+condition|)
+block|{
+comment|/* 		 * Packet is tagged, m contains a normal 		 * Ethernet frame; the tag is stored out-of-band. 		 */
 name|mtag
 operator|=
 name|m_tag_locate
@@ -2507,14 +2517,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|mtag
 operator|!=
 name|NULL
-condition|)
-block|{
-comment|/* 		 * Packet is tagged, m contains a normal 		 * Ethernet frame; the tag is stored out-of-band. 		 */
+argument_list|,
+operator|(
+literal|"%s: M_VLANTAG without m_tag"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|tag
 operator|=
 name|EVL_VLANOFTAG
@@ -2542,6 +2557,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|mtag
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|ifp
