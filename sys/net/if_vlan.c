@@ -2401,6 +2401,8 @@ name|printf
 argument_list|(
 literal|"%s: %*D\n"
 argument_list|,
+name|__func__
+argument_list|,
 operator|(
 name|int
 operator|)
@@ -2409,8 +2411,6 @@ argument_list|(
 operator|*
 name|evl
 argument_list|)
-argument_list|,
-name|__func__
 argument_list|,
 operator|(
 name|unsigned
