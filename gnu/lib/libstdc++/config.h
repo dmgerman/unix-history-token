@@ -1891,6 +1891,14 @@ name|HAVE_VFWPRINTF
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
+
 begin_comment
 comment|/* Define to 1 if you have the `vfwscanf' function. */
 end_comment
@@ -1901,6 +1909,11 @@ directive|define
 name|HAVE_VFWSCANF
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `vswprintf' function. */
@@ -1913,6 +1926,14 @@ name|HAVE_VSWPRINTF
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
+
 begin_comment
 comment|/* Define to 1 if you have the `vswscanf' function. */
 end_comment
@@ -1923,6 +1944,11 @@ directive|define
 name|HAVE_VSWSCANF
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `vwprintf' function. */
@@ -1935,6 +1961,14 @@ name|HAVE_VWPRINTF
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
+
 begin_comment
 comment|/* Define to 1 if you have the `vwscanf' function. */
 end_comment
@@ -1945,6 +1979,11 @@ directive|define
 name|HAVE_VWSCANF
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<wchar.h> header file. */
@@ -2155,6 +2194,14 @@ name|HAVE_WCSTOD
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
+
 begin_comment
 comment|/* Define to 1 if you have the `wcstof' function. */
 end_comment
@@ -2165,6 +2212,11 @@ directive|define
 name|HAVE_WCSTOF
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `wcstok' function. */
