@@ -2503,7 +2503,7 @@ operator|&
 name|M_VLANTAG
 condition|)
 block|{
-comment|/* 		 * Packet is tagged, m contains a normal 		 * Ethernet frame; the tag is stored out-of-band. 		 */
+comment|/* 		 * Packet is tagged, but m contains a normal 		 * Ethernet frame; the tag is stored out-of-band. 		 */
 name|mtag
 operator|=
 name|m_tag_locate
@@ -2557,6 +2557,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Packet is tagged in-band as specified by 802.1q. 		 */
 name|mtag
 operator|=
 name|NULL
