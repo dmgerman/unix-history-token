@@ -2399,7 +2399,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"vlan_start: %*D\n"
+literal|"%s: %*D\n"
 argument_list|,
 operator|(
 name|int
@@ -2409,6 +2409,8 @@ argument_list|(
 operator|*
 name|evl
 argument_list|)
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|unsigned
@@ -2634,7 +2636,9 @@ operator|==
 name|ETHERTYPE_VLAN
 argument_list|,
 operator|(
-literal|"vlan_input: bad encapsulated protocols (%u)"
+literal|"%s: bad encapsulation protocol (%u)"
+operator|,
+name|__func__
 operator|,
 name|ntohs
 argument_list|(
@@ -2678,10 +2682,12 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 name|panic
 argument_list|(
-literal|"vlan_input: unsupported if type %u"
+literal|"%s: unsupported if_type (%u)"
+argument_list|,
+name|__func__
 argument_list|,
 name|ifp
 operator|->
@@ -2756,7 +2762,9 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"vlan_input: tag %d, no interface\n"
+literal|"%s: tag %d, no interface\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|tag
 argument_list|)
@@ -2774,7 +2782,9 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"vlan_input: tag %d, parent %s\n"
+literal|"%s: tag %d, parent %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|tag
 argument_list|,
