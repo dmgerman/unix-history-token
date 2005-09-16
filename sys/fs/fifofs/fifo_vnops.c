@@ -1170,6 +1170,19 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_fifoinfo
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"fifo_open: v_fifoinfo race"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_fifoinfo
