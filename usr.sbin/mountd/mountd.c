@@ -1573,7 +1573,7 @@ name|pidfile_open
 argument_list|(
 name|_PATH_MOUNTDPID
 argument_list|,
-literal|0644
+literal|0600
 argument_list|,
 operator|&
 name|otherpid
