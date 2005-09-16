@@ -2940,6 +2940,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|fe_release_resource
 argument_list|(
 name|dev
