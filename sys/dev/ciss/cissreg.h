@@ -1370,15 +1370,6 @@ comment|/* "CISS" */
 name|u_int32_t
 name|valence
 decl_stmt|;
-define|#
-directive|define
-name|CISS_MIN_VALENCE
-value|1
-comment|/* only value currently supported */
-define|#
-directive|define
-name|CISS_MAX_VALENCE
-value|1
 name|u_int32_t
 name|supported_methods
 decl_stmt|;
