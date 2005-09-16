@@ -4180,11 +4180,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 block|}
 name|fail
 label|:
@@ -4228,9 +4223,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
-name|attached
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -4259,17 +4251,13 @@ literal|"rl mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
-name|attached
-operator|=
+comment|/* These should only be active if attach succeeded */
+if|if
+condition|(
 name|device_is_attached
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-comment|/* These should only be active if attach succeeded */
-if|if
-condition|(
-name|attached
 condition|)
 block|{
 name|RL_LOCK
@@ -4292,11 +4280,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 block|}
 if|#
 directive|if
@@ -4304,6 +4287,15 @@ literal|0
 block|sc->suspended = 1;
 endif|#
 directive|endif
+if|if
+condition|(
+name|ifp
+condition|)
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
