@@ -251,7 +251,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_alloc_resource
 argument_list|,
-name|bus_generic_alloc_resource
+name|legacy_pcib_alloc_resource
 argument_list|)
 block|,
 name|DEVMETHOD

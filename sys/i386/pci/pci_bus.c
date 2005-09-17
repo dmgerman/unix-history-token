@@ -1696,7 +1696,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-specifier|static
 name|struct
 name|resource
 modifier|*
