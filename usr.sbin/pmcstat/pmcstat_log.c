@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Transform a hwpmc(4) log into human readable form and into gprof(1)  * compatible profiles.  */
+comment|/*  * Transform a hwpmc(4) log into human readable form and into gprof(1)  * compatible profiles.  *  * Each executable object encountered in the log gets one 'gmon.out'  * profile per PMC.  We currently track:  * 	- program executables  *	- shared libraries loaded by the runtime loader  *	- the runtime loader itself  *	- the kernel.  * We do not track shared objects mapped in by dlopen() yet (this  * needs additional support from hwpmc(4)).  *  * 'gmon.out' profiles generated for a given sampling PMC are  * aggregates of all the samples for that particular executable  * object.  */
 end_comment
 
 begin_include
@@ -196,7 +196,7 @@ value|((A)> (B) ? (A) : (B))
 end_define
 
 begin_comment
-comment|/*  * A simple implementation to intern strings.  Each interned string is  * assigned a unique address, so that subsequent string compares can  * be done by a simple pointer comparision.  */
+comment|/*  * A simple implementation of interned strings.  Each interned string  * is assigned a unique address, so that subsequent string compares  * can be done by a simple pointer comparision instead of with  * strcmp().  */
 end_comment
 
 begin_struct
@@ -240,7 +240,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * 'pmcstat_pmcs' is a mapping for PMC ids to their human-readable  * names.  */
+comment|/*  * 'pmcstat_pmcrecord' is a mapping from PMC ids to human-readable  * names.  */
 end_comment
 
 begin_struct
@@ -282,6 +282,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * struct pmcstat_gmonfile tracks a given 'gmon.out' file.  These  * files are mmap()'ed in as needed.  */
+end_comment
+
 begin_struct
 struct|struct
 name|pmcstat_gmonfile
@@ -298,15 +302,15 @@ name|pgf_pmcid
 decl_stmt|;
 comment|/* id of the associated pmc */
 name|size_t
-name|pgf_nsamples
+name|pgf_nbuckets
 decl_stmt|;
-comment|/* number of samples in this gmon.out */
+comment|/* #buckets in this gmon.out */
 specifier|const
 name|char
 modifier|*
 name|pgf_name
 decl_stmt|;
-comment|/* name of gmon.out file */
+comment|/* pathname of gmon.out file */
 name|size_t
 name|pgf_ndatabytes
 decl_stmt|;
@@ -335,16 +339,6 @@ name|pmcstat_gmonfiles
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|GM_TO_BUCKETS
-parameter_list|(
-name|GM
-parameter_list|)
-value|((uint16_t *) ((char *) (GM) + sizeof(*(GM))))
-end_define
 
 begin_comment
 comment|/*  * A 'pmcstat_image' structure describes an executable program on  * disk.  'pi_internedpath' is a cookie representing the pathname of  * the executable.  'pi_start' and 'pi_end' are the least and greatest  * virtual addresses for the text segments in the executable.  * 'pi_gmonlist' contains a linked list of gmon.out files associated  * with this image.  */
@@ -394,7 +388,7 @@ name|char
 modifier|*
 name|pi_samplename
 decl_stmt|;
-comment|/* sample file name */
+comment|/* sample path name */
 name|enum
 name|pmcstat_image_type
 name|pi_type
@@ -408,10 +402,20 @@ name|uintfptr_t
 name|pi_end
 decl_stmt|;
 comment|/* end address (exclusive) */
+name|uintfptr_t
+name|pi_entry
+decl_stmt|;
+comment|/* entry address */
 name|int
 name|pi_isdynamic
 decl_stmt|;
 comment|/* whether a dynamic object */
+specifier|const
+name|char
+modifier|*
+name|pi_dynlinkerpath
+decl_stmt|;
+comment|/* path in .interp section */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -501,6 +505,10 @@ name|int
 name|pp_isactive
 decl_stmt|;
 comment|/* whether active */
+name|uintfptr_t
+name|pp_entryaddr
+decl_stmt|;
+comment|/* entry address */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -649,18 +657,6 @@ name|struct
 name|pmcstat_image
 modifier|*
 name|_image
-parameter_list|,
-name|uintfptr_t
-modifier|*
-name|_minp
-parameter_list|,
-name|uintfptr_t
-modifier|*
-name|_maxp
-parameter_list|,
-name|int
-modifier|*
-name|_isdyn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -761,6 +757,30 @@ specifier|const
 name|char
 modifier|*
 name|_path
+parameter_list|,
+name|uintfptr_t
+name|_entryaddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pmcstat_process_exec
+parameter_list|(
+name|struct
+name|pmcstat_process
+modifier|*
+name|_pp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_path
+parameter_list|,
+name|uintfptr_t
+name|_entryaddr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -795,24 +815,6 @@ name|_p
 parameter_list|,
 name|uintfptr_t
 name|_pc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pmcstat_process_new_image
-parameter_list|(
-name|struct
-name|pmcstat_process
-modifier|*
-name|_pp
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|_path
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -956,9 +958,22 @@ name|gm
 operator|.
 name|ncnt
 operator|=
+operator|(
 name|pgf
 operator|->
-name|pgf_nsamples
+name|pgf_nbuckets
+operator|*
+sizeof|sizeof
+argument_list|(
+name|HISTCOUNTER
+argument_list|)
+operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|gmonhdr
+argument_list|)
 expr_stmt|;
 name|gm
 operator|.
@@ -1361,18 +1376,6 @@ name|struct
 name|pmcstat_image
 modifier|*
 name|image
-parameter_list|,
-name|uintfptr_t
-modifier|*
-name|minp
-parameter_list|,
-name|uintfptr_t
-modifier|*
-name|maxp
-parameter_list|,
-name|int
-modifier|*
-name|is_dynamic
 parameter_list|)
 block|{
 name|int
@@ -1413,6 +1416,15 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
+name|assert
+argument_list|(
+name|image
+operator|->
+name|pi_type
+operator|==
+name|PMCSTAT_IMAGE_UNKNOWN
+argument_list|)
+expr_stmt|;
 name|minva
 operator|=
 operator|~
@@ -1583,7 +1595,7 @@ operator|==
 name|ET_DYN
 condition|)
 block|{
-comment|/* 		 * Some kind of shared object: find the min,max va for 		 * its executable sections. 		 */
+comment|/* 		 * Some kind of executable object: find the min,max va 		 * for its executable sections. 		 */
 for|for
 control|(
 name|i
@@ -1661,10 +1673,43 @@ operator|->
 name|pi_internedpath
 argument_list|)
 expr_stmt|;
-operator|*
-name|is_dynamic
+name|image
+operator|->
+name|pi_type
+operator|=
+name|PMCSTAT_IMAGE_ELF
+expr_stmt|;
+name|image
+operator|->
+name|pi_start
+operator|=
+name|minva
+expr_stmt|;
+name|image
+operator|->
+name|pi_entry
+operator|=
+name|h
+operator|->
+name|e_entry
+expr_stmt|;
+name|image
+operator|->
+name|pi_end
+operator|=
+name|maxva
+expr_stmt|;
+name|image
+operator|->
+name|pi_isdynamic
 operator|=
 literal|0
+expr_stmt|;
+name|image
+operator|->
+name|pi_dynlinkerpath
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1722,10 +1767,35 @@ block|{
 case|case
 name|PT_DYNAMIC
 case|:
-operator|*
-name|is_dynamic
+name|image
+operator|->
+name|pi_isdynamic
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+name|PT_INTERP
+case|:
+name|image
+operator|->
+name|pi_dynlinkerpath
+operator|=
+name|pmcstat_string_intern
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|mapbase
+operator|+
+name|ph
+index|[
+name|i
+index|]
+operator|.
+name|p_offset
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1753,21 +1823,11 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-operator|*
-name|minp
-operator|=
-name|minva
-expr_stmt|;
-operator|*
-name|maxp
-operator|=
-name|maxva
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Locate an image descriptor given an interned path.  */
+comment|/*  * Locate an image descriptor given an interned path, adding a fresh  * descriptor to the cache if necessary.  This function also finds a  * suitable name for this image's sample file.  */
 end_comment
 
 begin_function
@@ -1812,7 +1872,7 @@ argument_list|(
 name|internedpath
 argument_list|)
 expr_stmt|;
-comment|/* look for an existing entry */
+comment|/* Look for an existing entry. */
 name|LIST_FOREACH
 argument_list|(
 argument|pi
@@ -1855,7 +1915,7 @@ return|return
 name|pi
 return|;
 block|}
-comment|/* 	 * allocate a new entry and place at the head of the hash and 	 * LRU lists 	 */
+comment|/* 	 * Allocate a new entry and place at the head of the hash and 	 * LRU lists. 	 */
 name|pi
 operator|=
 name|malloc
@@ -1897,11 +1957,18 @@ literal|0
 expr_stmt|;
 name|pi
 operator|->
+name|pi_entry
+operator|=
+operator|~
+literal|0
+expr_stmt|;
+name|pi
+operator|->
 name|pi_end
 operator|=
 literal|0
 expr_stmt|;
-comment|/* look for a suitable name for the sample files */
+comment|/* 	 * Look for a suitable name for the sample files associated 	 * with this image: if `basename(path)`+".gmon" is available, 	 * we use that, otherwise we try iterating through 	 * `basename(path)`+ "~" + NNN + ".gmon" till we get a free 	 * entry. 	 */
 if|if
 condition|(
 operator|(
@@ -2445,9 +2512,20 @@ name|pgf_pmcid
 operator|=
 name|pmcid
 expr_stmt|;
+name|assert
+argument_list|(
+name|image
+operator|->
+name|pi_end
+operator|>
+name|image
+operator|->
+name|pi_start
+argument_list|)
+expr_stmt|;
 name|pgf
 operator|->
-name|pgf_nsamples
+name|pgf_nbuckets
 operator|=
 operator|(
 name|image
@@ -2474,7 +2552,7 @@ argument_list|)
 operator|+
 name|pgf
 operator|->
-name|pgf_nsamples
+name|pgf_nbuckets
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -2533,7 +2611,7 @@ name|bucket
 operator|<
 name|pgf
 operator|->
-name|pgf_nsamples
+name|pgf_nbuckets
 argument_list|)
 expr_stmt|;
 name|hc
@@ -2557,6 +2635,16 @@ name|gmonhdr
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* saturating add */
+if|if
+condition|(
+name|hc
+index|[
+name|bucket
+index|]
+operator|<
+literal|0xFFFF
+condition|)
 name|hc
 index|[
 name|bucket
@@ -3016,11 +3104,11 @@ specifier|const
 name|char
 modifier|*
 name|path
+parameter_list|,
+name|uintfptr_t
+name|entryaddr
 parameter_list|)
 block|{
-name|int
-name|isdynamic
-decl_stmt|;
 name|size_t
 name|linelen
 decl_stmt|;
@@ -3032,11 +3120,6 @@ name|char
 modifier|*
 name|line
 decl_stmt|;
-name|uintfptr_t
-name|minva
-decl_stmt|,
-name|maxva
-decl_stmt|;
 name|uintmax_t
 name|libstart
 decl_stmt|;
@@ -3044,6 +3127,9 @@ name|struct
 name|pmcstat_image
 modifier|*
 name|image
+decl_stmt|,
+modifier|*
+name|rtldimage
 decl_stmt|;
 name|char
 name|libpath
@@ -3064,25 +3150,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|minva
-operator|=
-operator|~
-operator|(
-name|uintfptr_t
-operator|)
-literal|0
-expr_stmt|;
-name|maxva
-operator|=
-operator|(
-name|uintfptr_t
-operator|)
-literal|0
-expr_stmt|;
-name|isdynamic
-operator|=
-literal|0
-expr_stmt|;
+comment|/* Look up path in the cache. */
 if|if
 condition|(
 operator|(
@@ -3105,58 +3173,28 @@ name|pi_type
 operator|==
 name|PMCSTAT_IMAGE_UNKNOWN
 condition|)
-block|{
 name|pmcstat_image_get_elf_params
 argument_list|(
 name|image
-argument_list|,
-operator|&
-name|minva
-argument_list|,
-operator|&
-name|maxva
-argument_list|,
-operator|&
-name|isdynamic
 argument_list|)
 expr_stmt|;
-name|image
-operator|->
-name|pi_type
-operator|=
-name|PMCSTAT_IMAGE_ELF
-expr_stmt|;
-name|image
-operator|->
-name|pi_start
-operator|=
-name|minva
-expr_stmt|;
-name|image
-operator|->
-name|pi_end
-operator|=
-name|maxva
-expr_stmt|;
-name|image
-operator|->
-name|pi_isdynamic
-operator|=
-name|isdynamic
-expr_stmt|;
-block|}
-comment|/* create a map entry for the base executable */
+comment|/* Create a map entry for the base executable. */
 name|pmcstat_image_link
 argument_list|(
 name|pp
 argument_list|,
 name|image
 argument_list|,
-name|minva
+name|image
+operator|->
+name|pi_start
 argument_list|,
-name|maxva
+name|image
+operator|->
+name|pi_end
 argument_list|)
 expr_stmt|;
+comment|/* 	 * For dynamically linked executables we need to: 	 * (a) find where the dynamic linker was mapped to for this 	 *     process, 	 * (b) find all the executable objects that the dynamic linker 	 *     brought in. 	 */
 if|if
 condition|(
 name|image
@@ -3164,6 +3202,75 @@ operator|->
 name|pi_isdynamic
 condition|)
 block|{
+comment|/* 		 * The runtime loader gets loaded just after the maximum 		 * possible heap address.  Like so: 		 * 		 * [  TEXT DATA BSS HEAP -->*RTLD  SHLIBS<--STACK] 		 * ^					            ^ 		 * 0				   VM_MAXUSER_ADDRESS 		 * 		 * The exact address where the loader gets mapped in 		 * will vary according to the size of the executable 		 * and the limits on the size of the process'es data 		 * segment at the time of exec().  The entry address 		 * recorded at process exec time corresponds to the 		 * 'start' address inside the dynamic linker.  From 		 * this we can figure out the address where the 		 * runtime loader's file object had been mapped to. 		 */
+name|rtldimage
+operator|=
+name|pmcstat_image_from_path
+argument_list|(
+name|image
+operator|->
+name|pi_dynlinkerpath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rtldimage
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot find image for "
+literal|"\"%s\""
+argument_list|,
+name|image
+operator|->
+name|pi_dynlinkerpath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rtldimage
+operator|->
+name|pi_type
+operator|==
+name|PMCSTAT_IMAGE_UNKNOWN
+condition|)
+name|pmcstat_image_get_elf_params
+argument_list|(
+name|rtldimage
+argument_list|)
+expr_stmt|;
+name|libstart
+operator|=
+name|entryaddr
+operator|-
+name|rtldimage
+operator|->
+name|pi_entry
+expr_stmt|;
+name|pmcstat_image_link
+argument_list|(
+name|pp
+argument_list|,
+name|rtldimage
+argument_list|,
+name|libstart
+argument_list|,
+name|libstart
+operator|+
+name|rtldimage
+operator|->
+name|pi_end
+operator|-
+name|rtldimage
+operator|->
+name|pi_start
+argument_list|)
+expr_stmt|;
+comment|/* Process all other objects loaded by this executable. */
 operator|(
 name|void
 operator|)
@@ -3308,46 +3415,11 @@ name|pi_type
 operator|==
 name|PMCSTAT_IMAGE_UNKNOWN
 condition|)
-block|{
 name|pmcstat_image_get_elf_params
 argument_list|(
 name|image
-argument_list|,
-operator|&
-name|minva
-argument_list|,
-operator|&
-name|maxva
-argument_list|,
-operator|&
-name|isdynamic
 argument_list|)
 expr_stmt|;
-name|image
-operator|->
-name|pi_type
-operator|=
-name|PMCSTAT_IMAGE_ELF
-expr_stmt|;
-name|image
-operator|->
-name|pi_start
-operator|=
-name|minva
-expr_stmt|;
-name|image
-operator|->
-name|pi_end
-operator|=
-name|maxva
-expr_stmt|;
-name|image
-operator|->
-name|pi_isdynamic
-operator|=
-name|isdynamic
-expr_stmt|;
-block|}
 name|pmcstat_image_link
 argument_list|(
 name|pp
@@ -3578,69 +3650,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the map entry associated with process 'p' at PC value 'pc'.  */
-end_comment
-
-begin_function
-specifier|static
-name|struct
-name|pmcstat_pcmap
-modifier|*
-name|pmcstat_process_find_map
-parameter_list|(
-name|struct
-name|pmcstat_process
-modifier|*
-name|p
-parameter_list|,
-name|uintfptr_t
-name|pc
-parameter_list|)
-block|{
-name|struct
-name|pmcstat_pcmap
-modifier|*
-name|ppm
-decl_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|ppm
-argument_list|,
-argument|&p->pp_map
-argument_list|,
-argument|ppm_next
-argument_list|)
-if|if
-condition|(
-name|pc
-operator|>=
-name|ppm
-operator|->
-name|ppm_lowpc
-operator|&&
-name|pc
-operator|<
-name|ppm
-operator|->
-name|ppm_highpc
-condition|)
-return|return
-name|ppm
-return|;
-return|return
-name|NULL
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Associate an image and a process.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|pmcstat_process_new_image
+name|pmcstat_process_exec
 parameter_list|(
 name|struct
 name|pmcstat_process
@@ -3651,6 +3667,9 @@ specifier|const
 name|char
 modifier|*
 name|path
+parameter_list|,
+name|uintfptr_t
+name|entryaddr
 parameter_list|)
 block|{
 name|enum
@@ -3711,6 +3730,8 @@ argument_list|(
 name|pp
 argument_list|,
 name|path
+argument_list|,
+name|entryaddr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3723,12 +3744,69 @@ name|err
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-literal|"ERROR: Unsupported executable type \"%s\""
+literal|"ERROR: Unsupported executable type for "
+literal|"\"%s\""
 argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Find the map entry associated with process 'p' at PC value 'pc'.  */
+end_comment
+
+begin_function
+specifier|static
+name|struct
+name|pmcstat_pcmap
+modifier|*
+name|pmcstat_process_find_map
+parameter_list|(
+name|struct
+name|pmcstat_process
+modifier|*
+name|p
+parameter_list|,
+name|uintfptr_t
+name|pc
+parameter_list|)
+block|{
+name|struct
+name|pmcstat_pcmap
+modifier|*
+name|ppm
+decl_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|ppm
+argument_list|,
+argument|&p->pp_map
+argument_list|,
+argument|ppm_next
+argument_list|)
+if|if
+condition|(
+name|pc
+operator|>=
+name|ppm
+operator|->
+name|ppm_lowpc
+operator|&&
+name|pc
+operator|<
+name|ppm
+operator|->
+name|ppm_highpc
+condition|)
+return|return
+name|ppm
+return|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
@@ -4288,11 +4366,19 @@ name|pl_pathname
 argument_list|)
 expr_stmt|;
 comment|/* link to the new image */
-name|pmcstat_process_new_image
+name|pmcstat_process_exec
 argument_list|(
 name|pp
 argument_list|,
 name|image_path
+argument_list|,
+name|ev
+operator|.
+name|pl_u
+operator|.
+name|pl_x
+operator|.
+name|pl_entryaddr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5204,8 +5290,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|isdynamic
 decl_stmt|;
 specifier|const
 name|char
@@ -5216,11 +5300,6 @@ name|struct
 name|pmcstat_image
 modifier|*
 name|img
-decl_stmt|;
-name|uintfptr_t
-name|minva
-decl_stmt|,
-name|maxva
 decl_stmt|;
 comment|/* use a convenient format for 'ldd' output */
 if|if
@@ -5333,34 +5412,7 @@ expr_stmt|;
 name|pmcstat_image_get_elf_params
 argument_list|(
 name|img
-argument_list|,
-operator|&
-name|minva
-argument_list|,
-operator|&
-name|maxva
-argument_list|,
-operator|&
-name|isdynamic
 argument_list|)
-expr_stmt|;
-name|img
-operator|->
-name|pi_type
-operator|=
-name|PMCSTAT_IMAGE_ELF
-expr_stmt|;
-name|img
-operator|->
-name|pi_start
-operator|=
-name|minva
-expr_stmt|;
-name|img
-operator|->
-name|pi_end
-operator|=
-name|maxva
 expr_stmt|;
 name|pmcstat_image_link
 argument_list|(
@@ -5368,9 +5420,13 @@ name|pmcstat_kernproc
 argument_list|,
 name|img
 argument_list|,
-name|minva
+name|img
+operator|->
+name|pi_start
 argument_list|,
-name|maxva
+name|img
+operator|->
+name|pi_end
 argument_list|)
 expr_stmt|;
 return|return;
