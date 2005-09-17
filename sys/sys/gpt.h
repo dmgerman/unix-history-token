@@ -112,13 +112,13 @@ define|#
 directive|define
 name|GPT_ENT_ATTR_PLATFORM
 value|(1ULL<< 0)
-name|short
+name|uint16_t
 name|ent_name
 index|[
 literal|36
 index|]
 decl_stmt|;
-comment|/* UNICODE-16. */
+comment|/* UTF-16. */
 block|}
 struct|;
 end_struct
