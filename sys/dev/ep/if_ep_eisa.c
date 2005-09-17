@@ -302,7 +302,7 @@ name|EISA_DEVICE_ID_3COM_3C509_TP
 case|:
 return|return
 operator|(
-literal|"3Com 3C509-TP Network Adapter"
+literal|"3Com 3C509-TP"
 operator|)
 return|;
 case|case
@@ -310,7 +310,7 @@ name|EISA_DEVICE_ID_3COM_3C509_BNC
 case|:
 return|return
 operator|(
-literal|"3Com 3C509-BNC Network Adapter"
+literal|"3Com 3C509-BNC"
 operator|)
 return|;
 case|case
@@ -318,7 +318,7 @@ name|EISA_DEVICE_ID_3COM_3C579_TP
 case|:
 return|return
 operator|(
-literal|"3Com 3C579-TP EISA Network Adapter"
+literal|"3Com 3C579-TP"
 operator|)
 return|;
 case|case
@@ -326,7 +326,7 @@ name|EISA_DEVICE_ID_3COM_3C579_BNC
 case|:
 return|return
 operator|(
-literal|"3Com 3C579-BNC EISA Network Adapter"
+literal|"3Com 3C579-BNC"
 operator|)
 return|;
 case|case
@@ -334,7 +334,7 @@ name|EISA_DEVICE_ID_3COM_3C509_COMBO
 case|:
 return|return
 operator|(
-literal|"3Com 3C509-Combo Network Adapter"
+literal|"3Com 3C509-Combo"
 operator|)
 return|;
 case|case
@@ -342,7 +342,7 @@ name|EISA_DEVICE_ID_3COM_3C509_TPO
 case|:
 return|return
 operator|(
-literal|"3Com 3C509-TPO Network Adapter"
+literal|"3Com 3C509-TPO"
 operator|)
 return|;
 default|default:

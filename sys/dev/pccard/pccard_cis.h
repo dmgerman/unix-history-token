@@ -904,17 +904,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCCARD_TPLFE_TYPE_LAN_OLD_NID
-value|0x00
-end_define
-
-begin_comment
-comment|/* Old way? */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PCCARD_TPLFE_TYPE_LAN_TECH
 value|0x01
 end_define

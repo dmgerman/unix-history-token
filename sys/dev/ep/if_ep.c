@@ -1021,6 +1021,24 @@ operator|->
 name|irq
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|ep_intrhand
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|iobase
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|irq
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -1155,7 +1173,7 @@ argument_list|,
 literal|"Unable to get MAC address!\n"
 argument_list|)
 expr_stmt|;
-name|EP_LOCK_DESTORY
+name|EP_LOCK_DESTROY
 argument_list|(
 name|sc
 argument_list|)
@@ -1203,7 +1221,7 @@ argument_list|,
 literal|"if_alloc() failed\n"
 argument_list|)
 expr_stmt|;
-name|EP_LOCK_DESTORY
+name|EP_LOCK_DESTROY
 argument_list|(
 name|sc
 argument_list|)
@@ -1603,7 +1621,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|EP_LOCK_DESTORY
+name|EP_LOCK_DESTROY
 argument_list|(
 name|sc
 argument_list|)

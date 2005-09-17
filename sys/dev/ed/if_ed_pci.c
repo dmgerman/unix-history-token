@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_mib.h>
 end_include
 
@@ -128,49 +134,49 @@ block|{
 block|{
 literal|0x802910ec
 block|,
-literal|"NE2000 PCI Ethernet (RealTek 8029)"
+literal|"RealTek 8029"
 block|}
 block|,
 block|{
 literal|0x50004a14
 block|,
-literal|"NE2000 PCI Ethernet (NetVin 5000)"
+literal|"NetVin 5000"
 block|}
 block|,
 block|{
 literal|0x09401050
 block|,
-literal|"NE2000 PCI Ethernet (ProLAN)"
+literal|"ProLAN"
 block|}
 block|,
 block|{
 literal|0x140111f6
 block|,
-literal|"NE2000 PCI Ethernet (Compex)"
+literal|"Compex"
 block|}
 block|,
 block|{
 literal|0x30008e2e
 block|,
-literal|"NE2000 PCI Ethernet (KTI)"
+literal|"KTI"
 block|}
 block|,
 block|{
 literal|0x19808c4a
 block|,
-literal|"NE2000 PCI Ethernet (Winbond W89C940)"
+literal|"Winbond W89C940"
 block|}
 block|,
 block|{
 literal|0x0e3410bd
 block|,
-literal|"NE2000 PCI Ethernet (Surecom NE-34)"
+literal|"Surecom NE-34"
 block|}
 block|,
 block|{
 literal|0x09261106
 block|,
-literal|"NE2000 PCI Ethernet (VIA VT86C926)"
+literal|"VIA VT86C926"
 block|}
 block|,
 block|{
@@ -371,6 +377,8 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|edintr
 argument_list|,
@@ -446,7 +454,7 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_attach
+name|device_detach
 argument_list|,
 name|ed_detach
 argument_list|)

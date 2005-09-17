@@ -1264,7 +1264,7 @@ name|ed_softc
 modifier|*
 name|sc
 parameter_list|,
-name|long
+name|bus_size_t
 name|src
 parameter_list|,
 name|uint8_t
@@ -1372,7 +1372,7 @@ operator|>>
 literal|2
 operator|)
 decl_stmt|;
-comment|/* Copy out NIC data.  We could probably write this 			   as a `movsl'. The currently generated code is lousy. 			   */
+comment|/* 			 * Copy out NIC data.  We could probably write this 			 * as a `movsl'. The currently generated code is lousy. 			 */
 while|while
 condition|(
 name|dl

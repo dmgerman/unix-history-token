@@ -750,15 +750,7 @@ name|sc
 operator|->
 name|mem_start
 operator|=
-operator|(
-name|caddr_t
-operator|)
-name|rman_get_virtual
-argument_list|(
-name|sc
-operator|->
-name|mem_res
-argument_list|)
+literal|0
 expr_stmt|;
 name|sc
 operator|->

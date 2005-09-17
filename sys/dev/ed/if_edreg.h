@@ -3625,42 +3625,6 @@ value|0x04
 end_define
 
 begin_comment
-comment|/*  * AX88190 configuration status register.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_AX88790_CSR
-value|0x3c2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_AX88790_CSR_PWRDWN
-value|0x04
-end_define
-
-begin_comment
-comment|/*  * AX88190 IOBASE registers, I'm pretty sure these don't need to be written  * to to make the card work by ed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_AX88190_IOBASE0
-value|0x3ca
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_AX88190_IOBASE1
-value|0x3cc
-end_define
-
-begin_comment
 comment|/*  * Test for AX88790 vs 88190 cards.  */
 end_comment
 
@@ -3672,7 +3636,7 @@ value|0x05
 end_define
 
 begin_comment
-comment|/*  * MII bus definitions.  */
+comment|/*  * MII bus definitions.  These are common to both DL100xx and AX88x90  * MII definitions, most likely because they are standards based.  */
 end_comment
 
 begin_define
@@ -3773,7 +3737,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MIIBUS
+name|ED_DL100XX_MIIBUS
 value|0x0c
 end_define
 
@@ -3784,50 +3748,93 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_RESET1
+name|ED_DL100XX_MII_RESET1
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_RESET2
+name|ED_DL100XX_MII_RESET2
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_DATATIN
+name|ED_DL100XX_MII_DATATIN
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_DIROUT_22
+name|ED_DL100XX_MII_DIROUT_22
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_DIROUT_19
+name|ED_DL100XX_MII_DIROUT_19
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_DATAOUT
+name|ED_DL100XX_MII_DATAOUT
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_CLK
+name|ED_DL100XX_MII_CLK
 value|0x80
+end_define
+
+begin_comment
+comment|/* AX88x90 based miibus defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_AX88X90_MIIBUS
+value|0x04
+end_define
+
+begin_comment
+comment|/* MII bus register on ASIC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_AX88X90_MII_DATAOUT
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_AX88X90_MII_DATATIN
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_AX88X90_MII_DIROUT
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_AX88X90_MII_CLK
+value|0x01
 end_define
 
 end_unit

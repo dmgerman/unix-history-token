@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_mib.h>
 end_include
 
@@ -99,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ed/if_edvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ed/if_edreg.h>
 end_include
 
 begin_function_decl
@@ -610,6 +622,8 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|edintr
 argument_list|,
@@ -637,6 +651,31 @@ name|error
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|ED_HPP
+if|if
+condition|(
+name|sc
+operator|->
+name|vendor
+operator|==
+name|ED_VENDOR_HP
+operator|&&
+name|sc
+operator|->
+name|type
+operator|==
+name|ED_TYPE_HP_PCLANPLUS
+condition|)
+name|sc
+operator|->
+name|readmem
+operator|=
+name|ed_hpp_readmem
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|ed_attach
 argument_list|(
