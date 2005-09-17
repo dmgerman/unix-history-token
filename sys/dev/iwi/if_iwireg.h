@@ -241,6 +241,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWI_CSR_NODE_BASE
+value|0x0c0c
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWI_CSR_CMD_WIDX
 value|0x0f80
 end_define
@@ -1050,6 +1057,31 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* node information (IBSS) */
+end_comment
+
+begin_struct
+struct|struct
+name|iwi_node
+block|{
+name|uint8_t
+name|bssid
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/* constants for 'mode' fields */
 end_comment
 
@@ -1270,8 +1302,16 @@ name|IWI_SCAN_TYPE_PASSIVE
 value|1
 define|#
 directive|define
+name|IWI_SCAN_TYPE_DIRECTED
+value|2
+define|#
+directive|define
 name|IWI_SCAN_TYPE_BROADCAST
 value|3
+define|#
+directive|define
+name|IWI_SCAN_TYPE_BDIRECTED
+value|4
 name|uint16_t
 name|dwelltime
 decl_stmt|;
@@ -1637,6 +1677,23 @@ name|val
 parameter_list|)
 define|\
 value|bus_space_write_4((sc)->sc_st, (sc)->sc_sh, (reg), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_REGION_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|offset
+parameter_list|,
+name|datap
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|bus_space_write_region_1((sc)->sc_st, (sc)->sc_sh, (offset),	\ 	    (datap), (count))
 end_define
 
 begin_comment
