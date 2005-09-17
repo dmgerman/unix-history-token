@@ -1831,21 +1831,46 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-if|if
+switch|switch
 condition|(
 name|p
 operator|->
 name|recursed
-operator|!=
-literal|0
 condition|)
-return|return;
+block|{
+case|case
+literal|0
+case|:
+comment|/* First time we've seen this port */
 name|p
 operator|->
 name|recursed
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+comment|/* We're in the middle of recursing this port */
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Circular dependency loop found: %s"
+literal|" depends upon itself.\n"
+argument_list|,
+name|p
+operator|->
+name|pkgname
+argument_list|)
+expr_stmt|;
+case|case
+literal|2
+case|:
+comment|/* This port has already been recursed */
+return|return;
+block|}
 name|p
 operator|->
 name|edep
@@ -1925,6 +1950,13 @@ name|p
 operator|->
 name|n_rdep
 argument_list|)
+expr_stmt|;
+comment|/* Finished recursing on this port */
+name|p
+operator|->
+name|recursed
+operator|=
+literal|2
 expr_stmt|;
 block|}
 end_function
