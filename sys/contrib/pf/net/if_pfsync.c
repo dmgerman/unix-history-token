@@ -5867,6 +5867,14 @@ name|imo_multicast_loop
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -5884,14 +5892,6 @@ name|INADDR_PFSYNC_GROUP
 condition|)
 block|{
 comment|/* Request a full state table update. */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|PF_LOCK
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|sc_ureq_sent
