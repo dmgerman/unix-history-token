@@ -7088,6 +7088,8 @@ argument_list|,
 name|LOCKPARENT
 operator||
 name|SAVENAME
+operator||
+name|MPSAFE
 argument_list|,
 name|segflg
 argument_list|,

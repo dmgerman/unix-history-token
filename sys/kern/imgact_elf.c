@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -2375,6 +2381,8 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|vfslocked
+decl_stmt|,
 name|error
 decl_stmt|,
 name|i
@@ -2475,6 +2483,8 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
+name|MPSAFE
+operator||
 name|LOCKLEAF
 operator||
 name|FOLLOW
@@ -2485,6 +2495,10 @@ name|file
 argument_list|,
 name|curthread
 argument_list|)
+expr_stmt|;
+name|vfslocked
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2510,6 +2524,13 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|vfslocked
+operator|=
+name|NDHASGIANT
+argument_list|(
+name|nd
+argument_list|)
+expr_stmt|;
 name|NDFREE
 argument_list|(
 name|nd
@@ -2964,6 +2985,11 @@ argument_list|(
 name|nd
 operator|->
 name|ni_vp
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|free
