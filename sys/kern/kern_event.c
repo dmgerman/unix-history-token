@@ -6008,11 +6008,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|KN_LIST_UNLOCK
-argument_list|(
-name|kn
-argument_list|)
-expr_stmt|;
 name|KQ_LOCK
 argument_list|(
 name|kq
@@ -6035,6 +6030,11 @@ name|kq
 operator|->
 name|kq_count
 operator|--
+expr_stmt|;
+name|KN_LIST_UNLOCK
+argument_list|(
+name|kn
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -6101,11 +6101,6 @@ argument_list|,
 name|kn_tqe
 argument_list|)
 expr_stmt|;
-name|KN_LIST_UNLOCK
-argument_list|(
-name|kn
-argument_list|)
-expr_stmt|;
 name|kn
 operator|->
 name|kn_status
@@ -6114,6 +6109,11 @@ operator|~
 operator|(
 name|KN_INFLUX
 operator|)
+expr_stmt|;
+name|KN_LIST_UNLOCK
+argument_list|(
+name|kn
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* we are returning a copy to the user */
