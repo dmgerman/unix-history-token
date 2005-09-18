@@ -39,14 +39,14 @@ file|<sys/ioccom.h>
 end_include
 
 begin_comment
-comment|/*  * These are snoop io controls  * SNPSTTY accepts 'struct snptty' as input.  * If ever type or  unit set to -1,snoop device  * detached from its current tty.  */
+comment|/*  * These are snoop io controls  * SNPSTTY accepts a file descriptor as input.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SNPSTTY
-value|_IOW('T', 90, dev_t)
+value|_IOW('T', 90, int)
 end_define
 
 begin_define
