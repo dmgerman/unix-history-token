@@ -530,7 +530,7 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Build pointer to the parent directory, allocating memory 		 * as necessary.  Max length is 3 for "../", the largest 		 * possible component name, plus a trailing NUL. 		 */
-if|if
+while|while
 condition|(
 name|bup
 operator|+
@@ -765,7 +765,7 @@ condition|)
 break|break;
 block|}
 comment|/* 		 * Check for length of the current name, preceding slash, 		 * leading slash. 		 */
-if|if
+while|while
 condition|(
 name|bpt
 operator|-
