@@ -1696,7 +1696,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-specifier|static
 name|struct
 name|resource
 modifier|*
@@ -1747,6 +1746,25 @@ condition|)
 name|start
 operator|=
 name|legacy_host_mem_start
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|SYS_RES_IOPORT
+operator|&&
+name|start
+operator|==
+literal|0UL
+operator|&&
+name|end
+operator|==
+operator|~
+literal|0UL
+condition|)
+name|start
+operator|=
+literal|0x1000
 expr_stmt|;
 return|return
 operator|(
