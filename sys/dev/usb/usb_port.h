@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: usb_port.h,v 1.18 2000/09/06 22:42:10 rahnds Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: usb_port.h,v 1.54 2002/03/28 21:49:19 ichiro Exp $	*/
+comment|/*	$NetBSD: usb_port.h,v 1.68 2005/07/30 06:14:50 skrll Exp $	*/
 end_comment
 
 begin_comment
@@ -53,6 +53,50 @@ include|#
 directive|include
 file|"opt_usbverbose.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/mallocvar.h>
+end_include
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_USB
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_USBDEV
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_USBHC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -243,7 +287,9 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|int
+name|struct
+name|malloc_type
+modifier|*
 name|usb_malloc_type
 typedef|;
 end_typedef
@@ -458,7 +504,7 @@ parameter_list|,
 name|sub
 parameter_list|)
 define|\
-value|(config_found_sm(parent, args, print, sub))
+value|(config_found_sm_loc(parent, (args)->port == 0 ? "usb" : "uhub", \ 			     NULL, args, print, sub))
 end_define
 
 begin_elif
@@ -711,6 +757,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|usb_lockmgr
+parameter_list|(
+name|lk
+parameter_list|,
+name|mode
+parameter_list|,
+name|ptr
+parameter_list|)
+value|lockmgr(lk, mode, ptr, curproc)
+end_define
+
+begin_define
+define|#
+directive|define
 name|config_pending_incr
 parameter_list|()
 end_define
@@ -781,13 +841,6 @@ define|#
 directive|define
 name|ugenpoll
 value|ugenselect
-end_define
-
-begin_define
-define|#
-directive|define
-name|uriopoll
-value|urioselect
 end_define
 
 begin_define
@@ -1632,6 +1685,13 @@ parameter_list|,
 name|d
 parameter_list|)
 value|callout_stop(&(h))
+end_define
+
+begin_define
+define|#
+directive|define
+name|usb_lockmgr
+value|lockmgr
 end_define
 
 begin_define
