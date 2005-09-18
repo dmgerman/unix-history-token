@@ -85,6 +85,21 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
+name|struct
+name|uuid
+modifier|*
+name|kern_uuidgen
+parameter_list|(
+name|struct
+name|uuid
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|snprintf_uuid
 parameter_list|(
