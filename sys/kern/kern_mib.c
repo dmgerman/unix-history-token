@@ -2041,36 +2041,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_sizeof
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|cdev
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|cdev
-argument_list|)
-argument_list|,
-literal|"sizeof(struct cdev)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_include
-include|#
-directive|include
 file|<sys/bio.h>
 end_include
 
