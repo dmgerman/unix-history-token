@@ -6507,7 +6507,6 @@ comment|/**  * @internal  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|device_probe_child
 parameter_list|(

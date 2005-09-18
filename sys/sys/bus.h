@@ -1892,6 +1892,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|device_probe_child
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|device_quiesce
 parameter_list|(
 name|device_t
