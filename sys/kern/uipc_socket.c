@@ -1327,7 +1327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * solisten() transitions a socket from a non-listening state to a listening  * state, but can also be used to update the listen queue depth on an  * existing listen socket.  The protocol will call back into the sockets  * layer using solisten_proto_check() and solisten_proto() to check and set  * socket-layer listen state.  Call backs are used so that the protocol can  * acquire both protocol and socket layer locks in whatever order is reuiqred  * by the protocol.  *  * Protocol implementors are advised to hold the socket lock across the  * socket-layer test and set to avoid races at the socket layer.  */
+comment|/*  * solisten() transitions a socket from a non-listening state to a listening  * state, but can also be used to update the listen queue depth on an  * existing listen socket.  The protocol will call back into the sockets  * layer using solisten_proto_check() and solisten_proto() to check and set  * socket-layer listen state.  Call backs are used so that the protocol can  * acquire both protocol and socket layer locks in whatever order is required  * by the protocol.  *  * Protocol implementors are advised to hold the socket lock across the  * socket-layer test and set to avoid races at the socket layer.  */
 end_comment
 
 begin_function
