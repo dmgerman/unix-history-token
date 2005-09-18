@@ -4132,7 +4132,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Compress mbuf chain m into the socket  * buffer sb following mbuf n.  If n  * is null, the buffer is presumed empty.  */
+comment|/*  * Append the data in mbuf chain (m) into the socket buffer sb following mbuf  * (n).  If (n) is NULL, the buffer is presumed empty.  *  * When the data is compressed, mbufs in the chain may be handled in one of  * three ways:  *  * (1) The mbuf may simply be dropped, if it contributes nothing (no data, no  *     record boundary, and no change in data type).  *  * (2) The mbuf may be coalesced -- i.e., data in the mbuf may be copied into  *     an mbuf already in the socket buffer.  This can occur if an  *     appropriate mbuf exists, there is room, and no merging of data types  *     will occur.  *  * (3) The mbuf may be appended to the end of the existing mbuf chain.  *  * If any of the new mbufs is marked as M_EOR, mark the last mbuf appended as  * end-of-record.  */
 end_comment
 
 begin_function
@@ -4447,21 +4447,22 @@ condition|(
 name|eor
 condition|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|n
-condition|)
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"sbcompress: eor&& n == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|n
 operator|->
 name|m_flags
 operator||=
 name|eor
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"semi-panic: sbcompress\n"
-argument_list|)
 expr_stmt|;
 block|}
 name|SBLASTMBUFCHK
