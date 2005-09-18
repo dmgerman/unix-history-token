@@ -428,8 +428,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|dev_t
+name|int
 name|snp_tty
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -942,6 +944,17 @@ argument_list|(
 name|snp_io
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|snp_tty
+operator|!=
+literal|0
+condition|)
+name|close
+argument_list|(
+name|snp_tty
+argument_list|)
+expr_stmt|;
 name|unset_tty
 argument_list|()
 expr_stmt|;
@@ -1248,11 +1261,38 @@ argument_list|,
 literal|"must be a character device"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|snp_tty
+operator|!=
+literal|0
+condition|)
+name|close
+argument_list|(
+name|snp_tty
+argument_list|)
+expr_stmt|;
 name|snp_tty
 operator|=
-name|sb
-operator|.
-name|st_rdev
+name|open
+argument_list|(
+name|buf
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|snp_tty
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"can't open device"
+argument_list|)
 expr_stmt|;
 name|attach_snp
 argument_list|()
