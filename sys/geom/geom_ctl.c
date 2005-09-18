@@ -1897,13 +1897,6 @@ name|cp
 operator|)
 return|;
 block|}
-name|gctl_error
-argument_list|(
-name|req
-argument_list|,
-literal|"Class not found"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2170,6 +2163,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|mp
+operator|->
+name|ctlreq
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Class takes no requests"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|verb
 operator|=
 name|gctl_get_param
@@ -2183,20 +2194,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mp
-operator|->
-name|ctlreq
+name|verb
 operator|==
 name|NULL
 condition|)
+block|{
 name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Class takes no requests"
+literal|"Verb missing"
 argument_list|)
 expr_stmt|;
-else|else
+return|return;
+block|}
 name|mp
 operator|->
 name|ctlreq
