@@ -428,11 +428,6 @@ name|devfs_dirent
 modifier|*
 name|dm_rootdir
 decl_stmt|;
-name|struct
-name|devfs_dirent
-modifier|*
-name|dm_basedir
-decl_stmt|;
 name|unsigned
 name|dm_generation
 decl_stmt|;
@@ -461,6 +456,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|devfs_rule_depth
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * This is what we fill in dm_dirent[N] for a deleted entry.  */
@@ -505,9 +507,9 @@ name|int
 name|devfs_rules_ioctl
 parameter_list|(
 name|struct
-name|mount
+name|devfs_mount
 modifier|*
-name|mp
+name|dm
 parameter_list|,
 name|u_long
 name|cmd
@@ -600,7 +602,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|devfs_populate
 parameter_list|(
 name|struct
