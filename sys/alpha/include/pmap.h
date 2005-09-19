@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_PMAP_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -26,6 +32,11 @@ include|#
 directive|include
 file|<sys/systm.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Define meanings for a few software bits in the pte  */
