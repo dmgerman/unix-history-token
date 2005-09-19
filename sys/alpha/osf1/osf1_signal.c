@@ -53,6 +53,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -648,6 +660,13 @@ if|if
 condition|(
 name|osf1_sigdbg
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"%s(%d): handler @0x%lx \n"
@@ -665,6 +684,13 @@ operator|->
 name|osa_handler
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 name|osf1_to_bsd_sigset
 argument_list|(
 operator|&
@@ -1124,6 +1150,13 @@ name|uap
 operator|->
 name|sigtramp
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"osf1_sigaction: trampoline handler at %p\n"
@@ -1133,6 +1166,13 @@ operator|->
 name|sigtramp
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 name|td
 operator|->
 name|td_md
@@ -1625,11 +1665,23 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"signal: sigaction failed: %d\n"
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|td
@@ -1789,6 +1841,13 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -1796,6 +1855,13 @@ literal|"sigignore: sigaction failed\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -2700,11 +2766,25 @@ if|if
 condition|(
 name|osf1_sigdbg
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"attempting to call osf1 sigtramp\n"
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 name|frame
 operator|->
 name|tf_regs
@@ -3068,7 +3148,7 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-comment|/*	uprintf("osf1_osigstack: oss = %p, nss = %p",uap->oss, uap->nss); 	uprintf(" stack ptr = %p\n",p->p_sigacts->ps_sigstk.ss_sp);*/
+comment|/*	mtx_lock(&Giant); 	uprintf("osf1_osigstack: oss = %p, nss = %p",uap->oss, uap->nss); 	uprintf(" stack ptr = %p\n",p->p_sigacts->ps_sigstk.ss_sp); 	mtx_unlock(&Giant); */
 return|return
 operator|(
 name|osigstack

@@ -5464,6 +5464,13 @@ operator|&
 name|R_TPRINTFMSG
 operator|)
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|rpcclnt_msg
 argument_list|(
 name|task
@@ -5479,6 +5486,13 @@ argument_list|,
 literal|"is alive again"
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* free request header (leaving mrest) */
 name|mheadend
 operator|->
@@ -6134,6 +6148,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* rpc_msg -> tprintf */
 name|TAILQ_FOREACH
 argument_list|(
 argument|rep
@@ -6627,6 +6648,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* rpc_msg -> tprintf */
 name|splx
 argument_list|(
 name|s
@@ -7593,6 +7621,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|GIANT_REQUIRED
+expr_stmt|;
 name|tprintf
 argument_list|(
 name|p

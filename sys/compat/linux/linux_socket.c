@@ -5132,6 +5132,12 @@ argument_list|)
 operator|)
 return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"LINUX: 'socket' typ=%d not implemented\n"
@@ -5139,6 +5145,12 @@ argument_list|,
 name|args
 operator|->
 name|what
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return

@@ -2128,6 +2128,12 @@ operator|<=
 name|MAX_TRAP_MSG
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"fatal process exception: %s"
@@ -2165,6 +2171,12 @@ expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}

@@ -4465,6 +4465,12 @@ condition|(
 name|doprint
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"pid %d (%s): unaligned access: va=0x%lx pc=0x%lx ra=0x%lx op="
@@ -4508,6 +4514,12 @@ expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}

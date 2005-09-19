@@ -1754,7 +1754,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/*	        uprintf("svr4_open(%s, 0x%0x, 0%o): %d\n", uap->path, 			uap->flags, uap->mode, error);*/
+comment|/*	        mtx_lock(&Giant); 			uprintf("svr4_open(%s, 0x%0x, 0%o): %d\n", uap->path, 			    uap->flags, uap->mode, error); 			mtx_unlock(&Giant);*/
 return|return
 name|error
 return|;

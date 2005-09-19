@@ -930,6 +930,12 @@ operator|<
 name|rpb_size
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"nbytes = %ld, sizeof(struct rpb) = %ld\n"
@@ -939,6 +945,12 @@ operator|->
 name|nbytes
 argument_list|,
 name|rpb_size
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|error
@@ -1111,6 +1123,12 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"osf1_setsysinfo called with op=%ld\n"
@@ -1118,6 +1136,12 @@ argument_list|,
 name|uap
 operator|->
 name|op
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 comment|/*error = EINVAL;*/
