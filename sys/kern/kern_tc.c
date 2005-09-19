@@ -652,7 +652,7 @@ begin_decl_stmt
 name|time_t
 name|time_uptime
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
