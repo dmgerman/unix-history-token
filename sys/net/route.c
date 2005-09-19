@@ -5116,7 +5116,7 @@ name|rmx_expire
 operator|==
 literal|0
 operator|||
-name|time_second
+name|time_uptime
 operator|<
 name|rt
 operator|->

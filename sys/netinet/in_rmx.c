@@ -705,7 +705,7 @@ name|rt_rmx
 operator|.
 name|rmx_expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|rtq_reallyold
 expr_stmt|;
@@ -816,7 +816,7 @@ name|rt_rmx
 operator|.
 name|rmx_expire
 operator|<=
-name|time_second
+name|time_uptime
 condition|)
 block|{
 if|if
@@ -903,7 +903,7 @@ name|rt_rmx
 operator|.
 name|rmx_expire
 operator|-
-name|time_second
+name|time_uptime
 operator|>
 name|rtq_reallyold
 operator|)
@@ -915,7 +915,7 @@ name|rt_rmx
 operator|.
 name|rmx_expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|rtq_reallyold
 expr_stmt|;

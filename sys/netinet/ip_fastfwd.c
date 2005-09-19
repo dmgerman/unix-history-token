@@ -1644,7 +1644,7 @@ name|rt_rmx
 operator|.
 name|rmx_expire
 operator|>=
-name|time_second
+name|time_uptime
 condition|)
 block|{
 name|icmp_error
