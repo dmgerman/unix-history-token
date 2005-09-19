@@ -2112,24 +2112,6 @@ expr_stmt|;
 name|vfs_mountroot
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAC
-name|mac_create_root_mount
-argument_list|(
-name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|mountlist
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Need just enough stack to hold the faked-up "execve()" arguments. 	 */
 name|addr
 operator|=
