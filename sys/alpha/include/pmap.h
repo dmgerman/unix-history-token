@@ -15,6 +15,18 @@ directive|define
 name|_MACHINE_PMAP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/chipset.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
 begin_comment
 comment|/*  * Define meanings for a few software bits in the pte  */
 end_comment
@@ -425,13 +437,6 @@ parameter_list|)
 value|pmap_kextract(((vm_offset_t) (va)))
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|alpha_XXX_dmamap_or
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|__inline
@@ -442,14 +447,48 @@ name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-return|return
-operator|(
+name|vm_offset_t
+name|pa
+init|=
 name|pmap_kextract
 argument_list|(
 name|va
 argument_list|)
-operator||
-name|alpha_XXX_dmamap_or
+decl_stmt|;
+if|if
+condition|(
+name|pa
+operator|>=
+name|chipset
+operator|.
+name|dmsize
+condition|)
+name|panic
+argument_list|(
+literal|"driver uses alpha_XXX_dmamap() for an address that"
+literal|"is not within direct map"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chipset
+operator|.
+name|pci_sgmap
+operator|!=
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"driver uses alpha_XXX_dmamap() on largemem system"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|pa
+operator|+
+name|chipset
+operator|.
+name|dmoffset
 operator|)
 return|;
 block|}

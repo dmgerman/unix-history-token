@@ -1002,6 +1002,12 @@ argument_list|,
 name|sgtable
 argument_list|)
 expr_stmt|;
+name|chipset
+operator|.
+name|pci_sgmap
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -1100,7 +1106,21 @@ name|pci_intr_disable
 operator|=
 name|tsunami_intr_disable
 expr_stmt|;
-name|alpha_XXX_dmamap_or
+name|chipset
+operator|.
+name|dmsize
+operator|=
+literal|2UL
+operator|*
+literal|1024UL
+operator|*
+literal|1024UL
+operator|*
+literal|1024UL
+expr_stmt|;
+name|chipset
+operator|.
+name|dmoffset
 operator|=
 literal|2UL
 operator|*

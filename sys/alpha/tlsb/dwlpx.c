@@ -3304,8 +3304,40 @@ literal|0
 comment|/* XXX NOT DONE YET XXX */
 comment|/* 	 * Initialize the SGMAP for window C: 	 * 	 *	Size: 256M or 1GB 	 *	Window base: 1GB 	 *	SGVA base: 0 	 */
 block|chipset.sgmap = sgmap_map_create(sgwbase, sgwend, dwlpx_sgmap_map, tbl);
+else|#
+directive|else
+name|chipset
+operator|.
+name|sgmap
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
+name|chipset
+operator|.
+name|pci_sgmap
+operator|=
+name|NULL
+expr_stmt|;
+name|chipset
+operator|.
+name|dmsize
+operator|=
+literal|2UL
+operator|*
+literal|1024UL
+operator|*
+literal|1024UL
+operator|*
+literal|1024UL
+expr_stmt|;
+name|chipset
+operator|.
+name|dmoffset
+operator|=
+name|DWLPx_DIRECT_MAPPED_BASE
+expr_stmt|;
 comment|/* 	 * Set up DMA windows for this DWLPx. 	 */
 for|for
 control|(
@@ -3459,17 +3491,6 @@ block|}
 name|alpha_mb
 argument_list|()
 expr_stmt|;
-comment|/* XXX XXX BEGIN XXX XXX */
-block|{
-comment|/* XXX */
-name|alpha_XXX_dmamap_or
-operator|=
-name|DWLPx_DIRECT_MAPPED_BASE
-expr_stmt|;
-comment|/* XXX */
-block|}
-comment|/* XXX */
-comment|/* XXX XXX END XXX XXX */
 block|}
 end_function
 

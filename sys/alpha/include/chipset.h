@@ -61,6 +61,19 @@ name|sgmap
 modifier|*
 name|sgmap
 decl_stmt|;
+comment|/*      * Scatter-Gather map for PCI dma.      */
+name|struct
+name|sgmap
+modifier|*
+name|pci_sgmap
+decl_stmt|;
+comment|/*      * direct map      */
+name|long
+name|dmsize
+decl_stmt|;
+name|long
+name|dmoffset
+decl_stmt|;
 block|}
 name|alpha_chipset_t
 typedef|;
