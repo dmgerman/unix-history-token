@@ -2474,7 +2474,7 @@ name|hdr
 operator|.
 name|ref_cnt
 expr_stmt|;
-name|m_extadd
+name|MEXTADD
 argument_list|(
 name|m
 argument_list|,
@@ -2658,7 +2658,7 @@ name|hdr
 operator|.
 name|ref_cnt
 expr_stmt|;
-name|m_extadd
+name|MEXTADD
 argument_list|(
 name|m
 argument_list|,

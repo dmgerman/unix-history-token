@@ -2025,7 +2025,7 @@ operator|==
 name|MBUF_VHANDLE
 condition|)
 block|{
-name|m_extadd
+name|MEXTADD
 argument_list|(
 name|m
 argument_list|,
@@ -2056,7 +2056,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|m_extadd
+name|MEXTADD
 argument_list|(
 name|m
 argument_list|,
