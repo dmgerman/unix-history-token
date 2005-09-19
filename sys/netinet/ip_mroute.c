@@ -6147,12 +6147,12 @@ if|if
 condition|(
 name|last_log
 operator|!=
-name|time_second
+name|time_uptime
 condition|)
 block|{
 name|last_log
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|log
 argument_list|(

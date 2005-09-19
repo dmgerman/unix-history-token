@@ -7944,7 +7944,7 @@ name|la
 operator|->
 name|timeStamp
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 else|#
 directive|else
@@ -9025,13 +9025,13 @@ name|la
 operator|->
 name|timeStamp
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|la
 operator|->
 name|lastCleanupTime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 else|#
 directive|else

@@ -3822,7 +3822,7 @@ name|fs
 operator|->
 name|last_expired
 operator|==
-name|time_second
+name|time_uptime
 condition|)
 return|return
 literal|0
@@ -3831,7 +3831,7 @@ name|fs
 operator|->
 name|last_expired
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 for|for
 control|(
