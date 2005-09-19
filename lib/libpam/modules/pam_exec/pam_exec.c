@@ -244,9 +244,10 @@ literal|1
 operator|)
 operator|*
 sizeof|sizeof
-expr|*
+argument_list|(
 operator|*
 name|envlist
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
