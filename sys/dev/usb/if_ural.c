@@ -456,12 +456,6 @@ name|USB_PRODUCT_RALINK_RT2570_2
 block|}
 block|,
 block|{
-name|USB_VENDOR_SMC
-block|,
-name|USB_PRODUCT_SMC_2862WG
-block|}
-block|,
-block|{
 name|USB_VENDOR_VTECH
 block|,
 name|USB_PRODUCT_VTECH_RT2570
