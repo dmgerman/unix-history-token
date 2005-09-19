@@ -8430,6 +8430,20 @@ name|num
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Disable the interrupt request. */
+name|bus_teardown_intr
+argument_list|(
+name|dev
+argument_list|,
+name|bd
+operator|->
+name|cp_irq
+argument_list|,
+name|bd
+operator|->
+name|cp_intrhand
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|c
@@ -8596,20 +8610,6 @@ expr_stmt|;
 name|CP_UNLOCK
 argument_list|(
 name|bd
-argument_list|)
-expr_stmt|;
-comment|/* Disable the interrupt request. */
-name|bus_teardown_intr
-argument_list|(
-name|dev
-argument_list|,
-name|bd
-operator|->
-name|cp_irq
-argument_list|,
-name|bd
-operator|->
-name|cp_intrhand
 argument_list|)
 expr_stmt|;
 name|bus_deactivate_resource

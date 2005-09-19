@@ -1716,6 +1716,18 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|ixgb_free_pci_resources
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|if_free
 argument_list|(
 name|adapter
@@ -1725,11 +1737,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ixgb_free_pci_resources
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 comment|/* Free Transmit Descriptor ring */
 if|if
 condition|(

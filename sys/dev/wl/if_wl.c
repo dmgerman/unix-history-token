@@ -2253,11 +2253,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|WL_LOCK
 argument_list|(
 name|sc
@@ -2330,6 +2325,11 @@ expr_stmt|;
 name|WL_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|mtx_destroy

@@ -1329,13 +1329,6 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|sc
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Deallocate resources. 	 */
 name|bus_teardown_intr
 argument_list|(
@@ -1380,6 +1373,13 @@ comment|/* 	 * Free all the driver internal resources 	 */
 name|en_destroy
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|sc
+operator|->
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return

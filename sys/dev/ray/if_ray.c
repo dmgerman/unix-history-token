@@ -2651,11 +2651,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Stop the runq and wake up anyone sleeping for us. 	 */
 name|untimeout
 argument_list|(
@@ -2760,6 +2755,11 @@ comment|/* 	 * Release resources 	 */
 name|ray_res_release
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|RAY_DPRINTF

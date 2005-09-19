@@ -341,11 +341,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -362,6 +357,11 @@ argument_list|,
 name|sc
 operator|->
 name|irq_handle
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|cm_release_resources

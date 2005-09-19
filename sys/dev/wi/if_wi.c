@@ -2821,13 +2821,6 @@ operator|->
 name|sc_ic
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|sc
-operator|->
-name|sc_ifp
-argument_list|)
-expr_stmt|;
 name|WI_UNLOCK
 argument_list|(
 name|sc
@@ -2844,6 +2837,13 @@ argument_list|,
 name|sc
 operator|->
 name|wi_intrhand
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
 argument_list|)
 expr_stmt|;
 name|wi_free

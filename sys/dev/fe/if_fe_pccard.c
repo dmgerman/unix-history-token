@@ -830,11 +830,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|bus_teardown_intr
 argument_list|(
 name|dev
@@ -846,6 +841,11 @@ argument_list|,
 name|sc
 operator|->
 name|irq_handle
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|fe_release_resource

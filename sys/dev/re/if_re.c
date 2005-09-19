@@ -5385,17 +5385,6 @@ expr_stmt|;
 comment|/* 	 * The rest is resource deallocation, so we should already be 	 * stopped here. 	 */
 if|if
 condition|(
-name|ifp
-operator|!=
-name|NULL
-condition|)
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|sc
 operator|->
 name|rl_intrhand
@@ -5411,6 +5400,17 @@ argument_list|,
 name|sc
 operator|->
 name|rl_intrhand
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 if|if

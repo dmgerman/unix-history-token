@@ -4858,15 +4858,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ifp
-condition|)
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|sc
 operator|->
 name|vge_miibus
@@ -4940,6 +4931,15 @@ argument_list|,
 name|sc
 operator|->
 name|vge_res
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* Unload and free the RX DMA ring memory and map */

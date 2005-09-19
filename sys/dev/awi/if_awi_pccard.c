@@ -707,11 +707,6 @@ literal|0
 argument_list|,
 literal|16
 argument_list|,
-name|rman_make_alignment_flags
-argument_list|(
-literal|64
-argument_list|)
-operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
@@ -812,7 +807,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-comment|/* 	 * XXX: awi needs to access memory with 8bit, 	 * but pccardd apparently maps memory with MDF_16BITS flag. 	 * So memory mapped access is disabled and use IO port instead. 	 * Also, memory mapping is not yet supported on pccard. 	 */
+comment|/* 	 * XXX: awi needs to access memory with 8bit, 	 * but pccardd apparently maps memory with MDF_16BITS flag. 	 * So memory mapped access is disabled and use IO port instead. 	 */
 name|psc
 operator|->
 name|sc_mem_res

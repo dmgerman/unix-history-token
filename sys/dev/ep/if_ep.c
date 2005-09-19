@@ -1605,11 +1605,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|gone
@@ -1619,6 +1614,11 @@ expr_stmt|;
 name|ep_free
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|EP_LOCK_DESTROY

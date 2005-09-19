@@ -3420,11 +3420,6 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ral_free_tx_ring
 argument_list|(
 name|sc
@@ -3486,6 +3481,11 @@ argument_list|,
 name|sc
 operator|->
 name|sc_ih
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|ral_free
