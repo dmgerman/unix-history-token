@@ -1062,7 +1062,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|iwi_node
+name|iwi_ibssnode
 block|{
 name|uint8_t
 name|bssid
