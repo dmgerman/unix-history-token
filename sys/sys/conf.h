@@ -71,6 +71,11 @@ begin_struct
 struct|struct
 name|cdev
 block|{
+name|struct
+name|cdev_priv
+modifier|*
+name|si_priv
+decl_stmt|;
 name|u_int
 name|si_flags
 decl_stmt|;
@@ -167,13 +172,6 @@ expr_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|devfs_dirent
-argument_list|)
-name|si_alist
-expr_stmt|;
-name|LIST_HEAD
-argument_list|(
-argument_list|,
 argument|cdev
 argument_list|)
 name|si_children
@@ -188,9 +186,6 @@ name|struct
 name|cdev
 modifier|*
 name|si_parent
-decl_stmt|;
-name|u_int
-name|si_inode
 decl_stmt|;
 name|char
 modifier|*
