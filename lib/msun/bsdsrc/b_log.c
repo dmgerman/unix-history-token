@@ -67,23 +67,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|endian
-value|(((*(int *)&one)) ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUNC
-parameter_list|(
-name|x
-parameter_list|)
-value|*(((int *)&x) + endian)&= 0xf8000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|N
 value|128
 end_define
@@ -884,10 +867,6 @@ decl_stmt|,
 name|v
 decl_stmt|,
 name|u2
-decl_stmt|,
-name|one
-init|=
-literal|1.0
 decl_stmt|;
 specifier|volatile
 name|double

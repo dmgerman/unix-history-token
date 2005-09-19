@@ -352,27 +352,6 @@ literal|1e-300
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|endian
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * TRUNC sets trailing bits in a floating-point number to zero.  * is a temporary variable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TRUNC
-parameter_list|(
-name|x
-parameter_list|)
-value|*(((int *)&x) + endian)&= 0xf8000000
-end_define
-
 begin_function
 name|double
 name|tgamma
@@ -387,22 +366,6 @@ name|struct
 name|Double
 name|u
 decl_stmt|;
-name|endian
-operator|=
-operator|(
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|one
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|x
