@@ -1065,12 +1065,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|dev_t
-name|dev
+name|int
+name|fd
 decl_stmt|;
-name|dev
+name|fd
 operator|=
-name|NODEV
+operator|-
+literal|1
 expr_stmt|;
 name|ioctl
 argument_list|(
@@ -1079,7 +1080,7 @@ argument_list|,
 name|SNPSTTY
 argument_list|,
 operator|&
-name|dev
+name|fd
 argument_list|)
 expr_stmt|;
 block|}
