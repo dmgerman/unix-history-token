@@ -1508,7 +1508,7 @@ name|sc
 operator|->
 name|sc_last_recv
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 return|return
 name|sc
@@ -2705,7 +2705,7 @@ argument_list|()
 expr_stmt|;
 name|t
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 operator|(
 operator|(
@@ -4125,7 +4125,7 @@ name|sc
 operator|->
 name|sc_last_sent
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 operator|*
 name|mtod
@@ -4145,7 +4145,7 @@ name|sc
 operator|->
 name|sc_last_sent
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 endif|#
 directive|endif
@@ -7094,7 +7094,7 @@ name|sc
 operator|->
 name|sc_last_recv
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 operator|*
 name|mtod
@@ -7114,7 +7114,7 @@ name|sc
 operator|->
 name|sc_last_recv
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 endif|#
 directive|endif
@@ -7273,7 +7273,7 @@ name|sc
 operator|->
 name|sc_last_recv
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 comment|/* update time of last pkt rcvd */
 break|break;

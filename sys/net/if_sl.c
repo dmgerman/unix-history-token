@@ -3652,7 +3652,7 @@ name|sc
 operator|->
 name|sc_abortcount
 operator|&&
-name|time_second
+name|time_uptime
 operator|>=
 name|sc
 operator|->
@@ -3669,7 +3669,7 @@ expr_stmt|;
 comment|/* 			 * If we see an abort after "idle" time, count it; 			 * record when the first abort escape arrived. 			 */
 if|if
 condition|(
-name|time_second
+name|time_uptime
 operator|>=
 name|sc
 operator|->
@@ -3691,7 +3691,7 @@ name|sc
 operator|->
 name|sc_starttime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 if|if
 condition|(
@@ -3726,7 +3726,7 @@ name|sc
 operator|->
 name|sc_lasttime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 block|}
 switch|switch

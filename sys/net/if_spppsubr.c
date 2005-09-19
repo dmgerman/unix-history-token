@@ -4683,7 +4683,7 @@ name|sp
 operator|->
 name|pp_last_recv
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 block|}
 end_function
@@ -5725,7 +5725,7 @@ name|sp
 operator|->
 name|pp_last_sent
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 return|return
 operator|(
@@ -5995,7 +5995,7 @@ name|sp
 operator|->
 name|pp_last_sent
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|sp
 operator|->
