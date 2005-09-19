@@ -254,11 +254,9 @@ specifier|static
 name|int
 name|sio_pccard_attach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|err
