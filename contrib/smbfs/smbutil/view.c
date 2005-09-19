@@ -6,6 +6,26 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -67,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<cflib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mchain.h>
 end_include
 
 begin_include
@@ -448,7 +462,7 @@ control|)
 block|{
 name|type
 operator|=
-name|letohs
+name|le16toh
 argument_list|(
 name|ep
 operator|->

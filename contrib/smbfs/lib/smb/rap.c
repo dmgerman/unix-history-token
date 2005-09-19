@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -61,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mchain.h>
 end_include
 
 begin_include
@@ -1138,7 +1138,7 @@ case|:
 operator|*
 name|value
 operator|=
-name|letohs
+name|le16toh
 argument_list|(
 operator|*
 operator|(
@@ -1302,7 +1302,7 @@ name|rap
 operator|->
 name|r_result
 operator|=
-name|letohs
+name|le16toh
 argument_list|(
 operator|*
 name|rp
@@ -1311,7 +1311,7 @@ argument_list|)
 expr_stmt|;
 name|conv
 operator|=
-name|letohs
+name|le16toh
 argument_list|(
 operator|*
 name|rp
@@ -1368,7 +1368,7 @@ name|r_entries
 operator|=
 name|entries
 operator|=
-name|letohs
+name|le16toh
 argument_list|(
 operator|*
 operator|(

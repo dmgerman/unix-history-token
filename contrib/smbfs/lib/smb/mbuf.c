@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mchain.h>
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -993,7 +993,7 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-name|htobeq
+name|htobe64
 argument_list|(
 name|x
 argument_list|)
@@ -1025,7 +1025,7 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-name|htoleq
+name|htole64
 argument_list|(
 name|x
 argument_list|)
@@ -1483,7 +1483,7 @@ decl_stmt|;
 operator|*
 name|x
 operator|=
-name|letohs
+name|le16toh
 argument_list|(
 name|v
 argument_list|)
@@ -1525,7 +1525,7 @@ decl_stmt|;
 operator|*
 name|x
 operator|=
-name|betohs
+name|be16toh
 argument_list|(
 name|v
 argument_list|)
@@ -1600,7 +1600,7 @@ expr_stmt|;
 operator|*
 name|x
 operator|=
-name|betohl
+name|be32toh
 argument_list|(
 name|v
 argument_list|)
@@ -1644,7 +1644,7 @@ expr_stmt|;
 operator|*
 name|x
 operator|=
-name|letohl
+name|le32toh
 argument_list|(
 name|v
 argument_list|)
@@ -1719,7 +1719,7 @@ expr_stmt|;
 operator|*
 name|x
 operator|=
-name|betohq
+name|be64toh
 argument_list|(
 name|v
 argument_list|)
@@ -1763,7 +1763,7 @@ expr_stmt|;
 operator|*
 name|x
 operator|=
-name|letohq
+name|le64toh
 argument_list|(
 name|v
 argument_list|)

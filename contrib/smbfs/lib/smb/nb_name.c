@@ -6,7 +6,27 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -14,16 +34,6 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mchain.h>
-end_include
-
-begin_comment
-comment|/* for endiand macros */
-end_comment
 
 begin_include
 include|#
@@ -504,7 +514,7 @@ name|NBENCODE
 parameter_list|(
 name|c
 parameter_list|)
-value|(htoles((u_short)(((u_char)(c)>> 4) | \ 			 (((u_char)(c)& 0xf)<< 8)) + 0x4141))
+value|(htole16((u_short)(((u_char)(c)>> 4) | \ 			 (((u_char)(c)& 0xf)<< 8)) + 0x4141))
 end_define
 
 begin_function
