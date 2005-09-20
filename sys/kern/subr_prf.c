@@ -425,7 +425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Uprintf prints to the controlling terminal for the current process.  * It may block if the tty queue is overfull.  No message is printed if  * the queue does not clear in a reasonable time.  */
+comment|/*  * Uprintf prints to the controlling terminal for the current process.  */
 end_comment
 
 begin_function
@@ -467,17 +467,6 @@ name|int
 name|retval
 decl_stmt|;
 name|GIANT_REQUIRED
-expr_stmt|;
-name|WITNESS_WARN
-argument_list|(
-name|WARN_GIANTOK
-operator||
-name|WARN_SLEEPOK
-argument_list|,
-name|NULL
-argument_list|,
-literal|"uprintf"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -617,7 +606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * tprintf prints on the controlling terminal associated  * with the given session, possibly to the log as well.  */
+comment|/*  * tprintf prints on the controlling terminal associated with the given  * session, possibly to the log as well.  */
 end_comment
 
 begin_function
@@ -667,17 +656,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|GIANT_REQUIRED
-expr_stmt|;
-name|WITNESS_WARN
-argument_list|(
-name|WARN_GIANTOK
-operator||
-name|WARN_SLEEPOK
-argument_list|,
-name|NULL
-argument_list|,
-literal|"tprintf"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
