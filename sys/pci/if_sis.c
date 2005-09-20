@@ -245,6 +245,81 @@ directive|include
 file|"miibus_if.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|SIS_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sis_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sis_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sis_mtx, MA_OWNED)
+end_define
+
+begin_comment
+comment|/*  * register space access macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_4(sc->sis_btag, sc->sis_bhandle, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_4(sc->sis_btag, sc->sis_bhandle, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_2(sc->sis_btag, sc->sis_bhandle, reg)
+end_define
+
 begin_comment
 comment|/*  * Various supported device vendors/types and their names.  */
 end_comment
