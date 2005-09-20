@@ -701,6 +701,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|domain_init_status
@@ -717,6 +720,8 @@ operator|->
 name|dom_name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|mtx_unlock
