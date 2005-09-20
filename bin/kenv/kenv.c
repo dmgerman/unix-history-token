@@ -133,6 +133,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|qflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|uflag
 init|=
 literal|0
@@ -156,11 +165,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: kenv [-h]"
+literal|"usage: kenv [-hq]"
 argument_list|,
-literal|"       kenv variable[=value]"
+literal|"       kenv [-q] variable[=value]"
 argument_list|,
-literal|"       kenv -u variable"
+literal|"       kenv [-q] -u variable"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -222,7 +231,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hu"
+literal|"hqu"
 argument_list|)
 operator|)
 operator|!=
@@ -239,6 +248,13 @@ case|case
 literal|'h'
 case|:
 name|hflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|qflag
 operator|++
 expr_stmt|;
 break|break;
@@ -360,6 +376,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+operator|!
+name|qflag
 condition|)
 name|warn
 argument_list|(
@@ -390,6 +409,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+operator|!
+name|qflag
 condition|)
 name|warnx
 argument_list|(
@@ -411,6 +433,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+operator|!
+name|qflag
 condition|)
 name|warnx
 argument_list|(
@@ -435,6 +460,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+operator|!
+name|qflag
 condition|)
 name|warnx
 argument_list|(
