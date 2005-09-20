@@ -3155,15 +3155,6 @@ operator|->
 name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
-operator|&&
-operator|!
-name|IFQ_DRV_IS_EMPTY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
 condition|)
 name|em_start_locked
 argument_list|(
