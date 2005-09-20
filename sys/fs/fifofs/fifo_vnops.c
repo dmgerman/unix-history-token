@@ -2744,12 +2744,6 @@ name|ap
 operator|->
 name|a_cred
 expr_stmt|;
-if|if
-condition|(
-name|filetmp
-operator|.
-name|f_data
-condition|)
 name|revents
 operator||=
 name|soo_poll
@@ -2849,13 +2843,6 @@ name|ap
 operator|->
 name|a_cred
 expr_stmt|;
-if|if
-condition|(
-name|filetmp
-operator|.
-name|f_data
-condition|)
-block|{
 name|revents
 operator||=
 name|soo_poll
@@ -2876,7 +2863,6 @@ operator|->
 name|a_td
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
