@@ -2985,7 +2985,7 @@ condition|(
 name|sp
 operator|->
 name|state
-operator||=
+operator|!=
 name|PPPOE_SNONE
 condition|)
 block|{
