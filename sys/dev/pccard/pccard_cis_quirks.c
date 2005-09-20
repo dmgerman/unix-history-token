@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pccard/pccardvarp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pccarddevs.h"
 end_include
 
