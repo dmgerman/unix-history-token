@@ -9576,6 +9576,30 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Another process might be in initiate_write_inodeblock 	 * trying to allocate memory without holding "Softdep Lock". 	 */
+if|if
+condition|(
+operator|(
+name|inodedep
+operator|->
+name|id_state
+operator|&
+name|IOSTARTED
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|inodedep
+operator|->
+name|id_savedino
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|inodedep
 operator|->
 name|id_state
@@ -13457,6 +13481,47 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Helper function which unlinks marker element from work list and returns  * the next element on the list.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|worklist
+operator|*
+name|markernext
+argument_list|(
+argument|struct worklist *marker
+argument_list|)
+block|{ 	struct
+name|worklist
+operator|*
+name|next
+block|;
+name|next
+operator|=
+name|LIST_NEXT
+argument_list|(
+name|marker
+argument_list|,
+name|wk_list
+argument_list|)
+block|;
+name|LIST_REMOVE
+argument_list|(
+name|marker
+argument_list|,
+name|wk_list
+argument_list|)
+block|;
+return|return
+name|next
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/*  * Disk writes.  *   * The dependency structures constructed above are most actively used when file  * system blocks are written to disk.  No constraints are placed on when a  * block can be written, but unsatisfied update dependencies are made safe by  * modifying (or replacing) the source memory for the duration of the disk  * write.  When the disk write completes, the memory block is again brought  * up-to-date.  *  * In-core inode structure reclamation.  *   * Because there are a finite number of "in-core" inode structures, they are  * reused regularly.  By transferring all inode-related dependencies to the  * in-memory inode block and indexing them separately (via "inodedep"s), we  * can allow "in-core" inode structures to be reused at any time and avoid  * any increase in contention.  *  * Called just before entering the device driver to initiate a new disk I/O.  * The buffer must be locked, thus, no I/O completion operations can occur  * while we are manipulating its associated dependencies.  */
 end_comment
 
@@ -13478,9 +13543,10 @@ name|struct
 name|worklist
 modifier|*
 name|wk
-decl_stmt|,
-modifier|*
-name|nextwk
+decl_stmt|;
+name|struct
+name|worklist
+name|marker
 decl_stmt|;
 name|struct
 name|indirdep
@@ -13501,6 +13567,21 @@ argument_list|(
 literal|"softdep_disk_io_initiation: read"
 argument_list|)
 expr_stmt|;
+name|marker
+operator|.
+name|wk_type
+operator|=
+name|D_LAST
+operator|+
+literal|1
+expr_stmt|;
+comment|/* Not a normal workitem */
+name|PHOLD
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
+comment|/* Don't swap out kernel stack */
 comment|/* 	 * Do any necessary pre-I/O processing. 	 */
 for|for
 control|(
@@ -13515,17 +13596,24 @@ name|b_dep
 argument_list|)
 init|;
 name|wk
+operator|!=
+name|NULL
 condition|;
 name|wk
 operator|=
-name|nextwk
+name|markernext
+argument_list|(
+operator|&
+name|marker
+argument_list|)
 control|)
 block|{
-name|nextwk
-operator|=
-name|LIST_NEXT
+name|LIST_INSERT_AFTER
 argument_list|(
 name|wk
+argument_list|,
+operator|&
+name|marker
 argument_list|,
 name|wk_list
 argument_list|)
@@ -13748,6 +13836,12 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
+name|PRELE
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
+comment|/* Allow swapout of kernel stack */
 block|}
 end_function
 
@@ -14110,6 +14204,16 @@ expr|struct
 name|dinode
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|di_gen
+operator|=
+name|inodedep
+operator|->
+name|id_savedino
+operator|->
+name|di_gen
 expr_stmt|;
 return|return;
 block|}
