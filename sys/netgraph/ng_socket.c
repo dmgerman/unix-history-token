@@ -3535,6 +3535,11 @@ decl_stmt|;
 name|int
 name|msglen
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 comment|/* Copy the message itself into an mbuf chain */
 name|msglen
 operator|=
@@ -3621,11 +3626,14 @@ argument_list|(
 name|mdata
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
+name|so
+operator|->
+name|so_error
+operator|=
 name|ENOBUFS
-operator|)
-return|;
+expr_stmt|;
 block|}
 name|sorwakeup
 argument_list|(
@@ -3634,7 +3642,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
