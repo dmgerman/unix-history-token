@@ -1965,6 +1965,13 @@ name|vp
 operator|->
 name|v_fifoinfo
 decl_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"fifo_close"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ap
