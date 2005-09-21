@@ -954,6 +954,19 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|utf8_value
+operator|==
+name|NULL
+condition|)
+name|__archive_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Not enough memory for attributes"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|wp
