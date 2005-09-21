@@ -2685,14 +2685,13 @@ name|i
 operator|==
 name|WB_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"wb%d: failed to force tx and "
-literal|"rx to idle state\n"
-argument_list|,
 name|sc
 operator|->
-name|wb_unit
+name|wb_ifp
+argument_list|,
+literal|"failed to force tx and rx to idle state\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2889,13 +2888,13 @@ name|i
 operator|==
 name|WB_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"wb%d: reset never completed!\n"
-argument_list|,
 name|sc
 operator|->
-name|wb_unit
+name|wb_ifp
+argument_list|,
+literal|"reset never completed!\n"
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little while for the chip to get its brains in order. */
@@ -3202,8 +3201,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -3213,13 +3210,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3278,11 +3268,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"wb%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3347,11 +3337,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"wb%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3404,12 +3394,6 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|wb_unit
-operator|=
-name|unit
-expr_stmt|;
-name|sc
-operator|->
 name|wb_ldata
 operator|=
 name|contigmalloc
@@ -3444,11 +3428,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"wb%d: no memory for list buffers!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"no memory for list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3490,11 +3474,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"wb%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3646,11 +3630,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"wb%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -4669,14 +4653,12 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"wb%x: receiver babbling: possible chip "
-literal|"bug, forcing reset\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|wb_unit
+literal|"receiver babbling: possible chip "
+literal|"bug, forcing reset\n"
 argument_list|)
 expr_stmt|;
 name|wb_fixmedia
@@ -6629,14 +6611,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"wb%d: initialization failed: no "
-literal|"memory for rx buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|wb_unit
+literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|wb_stop
@@ -7208,13 +7187,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"wb%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|wb_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -7234,13 +7211,11 @@ operator|&
 name|PHY_BMSR_LINKSTAT
 operator|)
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"wb%d: no carrier - transceiver cable problem?\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|wb_unit
+literal|"no carrier - transceiver cable problem?\n"
 argument_list|)
 expr_stmt|;
 endif|#
