@@ -8049,6 +8049,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|M3_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The volume buttons can be wired up via two different sets of pins. 	 * This presents a problem since we can't tell which way it's 	 * configured.  Allow the user to set a hint in order to twiddle 	 * the proper bits. 	 */
 if|if
 condition|(
@@ -8092,6 +8097,11 @@ else|else
 name|hv_cfg
 operator|=
 name|HV_BUTTON_FROM_GD
+expr_stmt|;
+name|M3_LOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|data
 operator|=
