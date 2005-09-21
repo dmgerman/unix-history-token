@@ -187,6 +187,8 @@ expr_stmt|;
 if|if
 condition|(
 name|env_HTTP_PROXY
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
