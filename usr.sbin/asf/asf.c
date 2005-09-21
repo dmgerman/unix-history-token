@@ -1161,6 +1161,13 @@ argument_list|,
 name|MAXTOKEN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tokens
+operator|<
+literal|4
+condition|)
+continue|continue;
 name|base
 operator|=
 name|strtoll
