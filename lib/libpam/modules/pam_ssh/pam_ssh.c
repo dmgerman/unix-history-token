@@ -591,27 +591,6 @@ operator|(
 name|PAM_AUTH_ERR
 operator|)
 return|;
-comment|/* switch to user credentials */
-name|pam_err
-operator|=
-name|openpam_borrow_cred
-argument_list|(
-name|pamh
-argument_list|,
-name|pwd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pam_err
-operator|!=
-name|PAM_SUCCESS
-condition|)
-return|return
-operator|(
-name|pam_err
-operator|)
-return|;
 name|pass
 operator|=
 operator|(
@@ -657,18 +636,32 @@ name|pam_err
 operator|!=
 name|PAM_SUCCESS
 condition|)
-block|{
-name|openpam_restore_cred
-argument_list|(
-name|pamh
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pam_err
 operator|)
 return|;
-block|}
+comment|/* switch to user credentials */
+name|pam_err
+operator|=
+name|openpam_borrow_cred
+argument_list|(
+name|pamh
+argument_list|,
+name|pwd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pam_err
+operator|!=
+name|PAM_SUCCESS
+condition|)
+return|return
+operator|(
+name|pam_err
+operator|)
+return|;
 comment|/* try to load keys from all keyfiles we know of */
 name|nkeys
 operator|=
@@ -727,6 +720,12 @@ name|nkeys
 expr_stmt|;
 block|}
 block|}
+comment|/* switch back to arbitrator credentials */
+name|openpam_restore_cred
+argument_list|(
+name|pamh
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we tried an old token and didn't get anything, and 	 * try_first_pass was specified, try again after prompting the 	 * user for a new passphrase. 	 */
 if|if
 condition|(
@@ -765,12 +764,6 @@ goto|goto
 name|load_keys
 goto|;
 block|}
-comment|/* switch back to arbitrator credentials before returning */
-name|openpam_restore_cred
-argument_list|(
-name|pamh
-argument_list|)
-expr_stmt|;
 comment|/* no keys? */
 if|if
 condition|(
@@ -1059,18 +1052,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|openpam_restore_cred
-argument_list|(
-name|pamh
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|PAM_SYSTEM_ERR
 operator|)
 return|;
-block|}
 comment|/* start the agent */
 name|openpam_log
 argument_list|(
