@@ -377,12 +377,6 @@ name|client_data
 operator|=
 name|client_data
 expr_stmt|;
-name|a
-operator|->
-name|state
-operator|=
-name|ARCHIVE_STATE_HEADER
-expr_stmt|;
 comment|/* Open data source. */
 if|if
 condition|(
@@ -517,6 +511,18 @@ name|buffer
 operator|,
 name|bytes_read
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|==
+name|ARCHIVE_OK
+condition|)
+name|a
+operator|->
+name|state
+operator|=
+name|ARCHIVE_STATE_HEADER
 expr_stmt|;
 return|return
 operator|(
