@@ -357,7 +357,7 @@ literal|2
 operator|+
 name|tuple
 operator|->
-name|code
+name|length
 operator|>
 sizeof|sizeof
 argument_list|(
