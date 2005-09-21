@@ -5378,6 +5378,20 @@ operator|->
 name|kg_completed
 argument_list|)
 expr_stmt|;
+name|WITNESS_WARN
+argument_list|(
+name|WARN_PANIC
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_mtx
+operator|.
+name|mtx_object
+argument_list|,
+literal|"thread exiting in userret"
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
