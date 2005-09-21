@@ -8248,7 +8248,6 @@ name|bp
 operator|->
 name|b_bufobj
 condition|)
-comment|/* XXX: should always be true /phk */
 name|bufobj_wdrop
 argument_list|(
 name|bp
@@ -8265,6 +8264,26 @@ name|v_bufobj
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bp
+operator|->
+name|b_bufobj
+operator|!=
+operator|&
+name|vp2
+operator|->
+name|v_bufobj
+condition|)
+name|bp
+operator|->
+name|b_bufobj
+operator|=
+operator|&
+name|vp2
+operator|->
+name|v_bufobj
+expr_stmt|;
 name|bp
 operator|->
 name|b_vp
