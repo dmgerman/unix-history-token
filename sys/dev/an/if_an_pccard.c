@@ -615,11 +615,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 goto|goto
 name|fail
 goto|;
-block|}
 comment|/* 	 * Must setup the interrupt after the an_attach to prevent racing. 	 */
 name|error
 operator|=
@@ -643,15 +641,6 @@ operator|->
 name|irq_handle
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-goto|goto
-name|fail
-goto|;
-block|}
 name|fail
 label|:
 if|if
