@@ -313,7 +313,7 @@ begin_define
 define|#
 directive|define
 name|RBX_MASK
-value|0x2005ffff
+value|0x2011ffff
 end_define
 
 begin_define
@@ -348,7 +348,7 @@ begin_define
 define|#
 directive|define
 name|NOPT
-value|12
+value|11
 end_define
 
 begin_define
