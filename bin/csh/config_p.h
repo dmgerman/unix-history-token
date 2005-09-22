@@ -180,6 +180,13 @@ name|MCLoadBySet
 value|NL_CAT_LOCALE
 end_define
 
+begin_define
+define|#
+directive|define
+name|BUFSIZE
+value|8192
+end_define
+
 begin_endif
 endif|#
 directive|endif
