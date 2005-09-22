@@ -587,6 +587,10 @@ argument_list|,
 literal|"Defaulting to MEMIO on\n"
 argument_list|)
 expr_stmt|;
+name|allow_memio
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
