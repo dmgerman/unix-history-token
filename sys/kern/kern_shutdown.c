@@ -1167,8 +1167,7 @@ literal|0
 expr_stmt|;
 name|sync
 argument_list|(
-operator|&
-name|thread0
+name|curthread
 argument_list|,
 name|NULL
 argument_list|)
@@ -1276,8 +1275,7 @@ name|nbusy
 expr_stmt|;
 name|sync
 argument_list|(
-operator|&
-name|thread0
+name|curthread
 argument_list|,
 name|NULL
 argument_list|)
