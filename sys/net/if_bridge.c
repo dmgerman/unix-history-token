@@ -7294,7 +7294,7 @@ argument_list|)
 expr_stmt|;
 name|mc2
 operator|=
-name|m_dup
+name|m_copypacket
 argument_list|(
 name|m
 argument_list|,
