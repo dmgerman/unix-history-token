@@ -528,10 +528,25 @@ decl_stmt|;
 name|int
 name|nkeys
 decl_stmt|,
+name|nullok
+decl_stmt|,
 name|pam_err
 decl_stmt|,
 name|pass
 decl_stmt|;
+name|nullok
+operator|=
+operator|(
+name|openpam_get_option
+argument_list|(
+name|pamh
+argument_list|,
+literal|"nullok"
+argument_list|)
+operator|!=
+name|NULL
+operator|)
+expr_stmt|;
 comment|/* PEM is not loaded by default */
 name|OpenSSL_add_all_algorithms
 argument_list|()
@@ -591,6 +606,10 @@ operator|(
 name|PAM_AUTH_ERR
 operator|)
 return|;
+name|nkeys
+operator|=
+literal|0
+expr_stmt|;
 name|pass
 operator|=
 operator|(
@@ -641,6 +660,19 @@ operator|(
 name|pam_err
 operator|)
 return|;
+if|if
+condition|(
+operator|*
+name|passphrase
+operator|==
+literal|'\0'
+operator|&&
+operator|!
+name|nullok
+condition|)
+goto|goto
+name|skip_keys
+goto|;
 comment|/* switch to user credentials */
 name|pam_err
 operator|=
@@ -663,10 +695,6 @@ name|pam_err
 operator|)
 return|;
 comment|/* try to load keys from all keyfiles we know of */
-name|nkeys
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|kfn
@@ -726,6 +754,8 @@ argument_list|(
 name|pamh
 argument_list|)
 expr_stmt|;
+name|skip_keys
+label|:
 comment|/* 	 * If we tried an old token and didn't get anything, and 	 * try_first_pass was specified, try again after prompting the 	 * user for a new passphrase. 	 */
 if|if
 condition|(
