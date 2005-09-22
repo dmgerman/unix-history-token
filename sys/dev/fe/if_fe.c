@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC Card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -174,7 +174,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Maximum loops when interrupt.  * This option prevents an infinite loop due to hardware failure.  * (Some laptops make an infinite loop after PC-Card is ejected.)  */
+comment|/*  * Maximum loops when interrupt.  * This option prevents an infinite loop due to hardware failure.  * (Some laptops make an infinite loop after PC Card is ejected.)  */
 end_comment
 
 begin_ifndef
@@ -4502,7 +4502,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-comment|/* 	 * Make sure to empty the receive buffer. 	 * 	 * This may be redundant, but *if* the receive buffer were full 	 * at this point, then the driver would hang.  I have experienced 	 * some strange hang-up just after UP.  I hope the following 	 * code solve the problem. 	 * 	 * I have changed the order of hardware initialization. 	 * I think the receive buffer cannot have any packets at this 	 * point in this version.  The following code *must* be 	 * redundant now.  FIXME. 	 * 	 * I've heard a rumore that on some PC card implementation of 	 * 8696x, the receive buffer can have some data at this point. 	 * The following message helps discovering the fact.  FIXME. 	 */
+comment|/* 	 * Make sure to empty the receive buffer. 	 * 	 * This may be redundant, but *if* the receive buffer were full 	 * at this point, then the driver would hang.  I have experienced 	 * some strange hang-up just after UP.  I hope the following 	 * code solve the problem. 	 * 	 * I have changed the order of hardware initialization. 	 * I think the receive buffer cannot have any packets at this 	 * point in this version.  The following code *must* be 	 * redundant now.  FIXME. 	 * 	 * I've heard a rumore that on some PC Card implementation of 	 * 8696x, the receive buffer can have some data at this point. 	 * The following message helps discovering the fact.  FIXME. 	 */
 if|if
 condition|(
 operator|!
