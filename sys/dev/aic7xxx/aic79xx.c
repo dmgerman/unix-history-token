@@ -40094,7 +40094,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Kernel Free SCB list: "
+literal|"Kernel Free SCB lists: "
 argument_list|)
 expr_stmt|;
 name|i
@@ -40115,6 +40115,18 @@ name|scb
 modifier|*
 name|list_scb
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"\n  COLIDX[%d]: "
+argument_list|,
+name|AHD_GET_SCB_COL_IDX
+argument_list|(
+name|ahd
+argument_list|,
+name|scb
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|list_scb
 operator|=
 name|scb
@@ -40152,6 +40164,11 @@ name|AHD_SCB_MAX
 condition|)
 do|;
 block|}
+name|printf
+argument_list|(
+literal|"\n  Any Device: "
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|scb
