@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  *	National Semiconductor  DP8393X SONIC Driver  *  *	This is the PC-Card attachment on FreeBSD  *		written by Motomichi Matsuzaki<mzaki@e-mail.ne.jp> and  *			   Hiroshi Yamashita<bluemoon@msj.biglobe.ne.jp>  */
+comment|/*  *	National Semiconductor  DP8393X SONIC Driver  *  *	This is the PC Card attachment on FreeBSD  *		written by Motomichi Matsuzaki<mzaki@e-mail.ne.jp> and  *			   Hiroshi Yamashita<bluemoon@msj.biglobe.ne.jp>  */
 end_comment
 
 begin_include
@@ -100,7 +100,7 @@ file|<dev/snc/if_sncreg.h>
 end_include
 
 begin_comment
-comment|/*  *      PC-Card (PCMCIA) specific code.  */
+comment|/*  *      PC Card (PCMCIA) specific code.  */
 end_comment
 
 begin_function_decl

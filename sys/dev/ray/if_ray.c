@@ -1587,7 +1587,7 @@ comment|/* RAY_DEBUG& RAY_DBG_MBUF */
 end_comment
 
 begin_comment
-comment|/*  * PC-Card (PCMCIA) driver definition  */
+comment|/*  * PC Card (PCMCIA) driver definition  */
 end_comment
 
 begin_decl_stmt

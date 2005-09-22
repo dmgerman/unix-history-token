@@ -2617,7 +2617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset the card.  Ideally, we'd do a lot of this via interrupts.  * However, many PC Cards will deassert the ready signal.  This means  * that they are asserting an interrupt.  This makes it hard to   * do anything but a busy wait here.  One could argue that these  * such cards are broken, or that the bridge that allows this sort  * of interrupt through isn't quite what you'd want (and may be a standards  * violation).  However, such arguing would leave a huge class of pc cards  * and bridges out of reach for use in the system.  *  * Maybe I should reevaluate the above based on the power bug I fixed  * in OLDCARD.  */
+comment|/*  * Reset the card.  Ideally, we'd do a lot of this via interrupts.  * However, many PC Cards will deassert the ready signal.  This means  * that they are asserting an interrupt.  This makes it hard to   * do anything but a busy wait here.  One could argue that these  * such cards are broken, or that the bridge that allows this sort  * of interrupt through isn't quite what you'd want (and may be a standards  * violation).  However, such arguing would leave a huge class of PC Cards  * and bridges out of reach for use in the system.  *  * Maybe I should reevaluate the above based on the power bug I fixed  * in OLDCARD.  */
 end_comment
 
 begin_function
@@ -2673,7 +2673,7 @@ argument_list|,
 name|EXCA_INTR_RESET
 argument_list|)
 expr_stmt|;
-comment|/* wait 20ms as per pc card standard (r2.01) section 4.3.6 */
+comment|/* wait 20ms as per PC Card standard (r2.01) section 4.3.6 */
 name|DELAY
 argument_list|(
 literal|20

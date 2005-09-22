@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * uvscom: SUNTAC Slipper U VS-10U driver.  * Slipper U is a PC card to USB converter for data communication card  * adapter.  It supports DDI Pocket's Air H" C@rd, C@rd H" 64, NTT's P-in,  * P-in m@ater and various data communication card adapters.  */
+comment|/*  * uvscom: SUNTAC Slipper U VS-10U driver.  * Slipper U is a PC Card to USB converter for data communication card  * adapter.  It supports DDI Pocket's Air H" C@rd, C@rd H" 64, NTT's P-in,  * P-in m@ater and various data communication card adapters.  */
 end_comment
 
 begin_include
@@ -3964,7 +3964,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* check PC card was inserted */
+comment|/* check PC Card was inserted */
 if|if
 condition|(
 name|ISSET
