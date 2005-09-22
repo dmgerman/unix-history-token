@@ -363,6 +363,12 @@ index|[
 name|IEEE80211_NWID_LEN
 index|]
 decl_stmt|;
+name|uint8_t
+name|sc_hintmacaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|int
 name|sc_buflen
 decl_stmt|;
