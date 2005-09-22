@@ -4889,7 +4889,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * PC-Card (PCMCIA) driver  */
+comment|/*  * PC Card (PCMCIA) driver  */
 end_comment
 
 begin_decl_stmt
@@ -4904,14 +4904,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|pccard_compat_probe
+name|bt3c_pccard_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|pccard_compat_attach
+name|bt3c_pccard_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -4919,28 +4919,6 @@ argument_list|(
 name|device_detach
 argument_list|,
 name|bt3c_pccard_detach
-argument_list|)
-block|,
-comment|/* Card interface */
-name|DEVMETHOD
-argument_list|(
-name|card_compat_match
-argument_list|,
-name|bt3c_pccard_match
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|card_compat_probe
-argument_list|,
-name|bt3c_pccard_probe
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|card_compat_attach
-argument_list|,
-name|bt3c_pccard_attach
 argument_list|)
 block|,
 block|{
