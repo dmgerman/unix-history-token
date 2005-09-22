@@ -1214,7 +1214,7 @@ argument_list|)
 block|{
 name|aic_scb_timer_reset
 argument_list|(
-name|scb
+name|list_scb
 argument_list|,
 name|aic_get_timeout
 argument_list|(
