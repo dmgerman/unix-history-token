@@ -217,16 +217,6 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|bt3c_pccard_match
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|bt3c_pccard_probe
 parameter_list|(
 name|device_t
@@ -2100,13 +2090,13 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * PC-Card (PCMCIA) match routine  */
+comment|/*  * PC Card (PCMCIA) probe routine  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|bt3c_pccard_match
+name|bt3c_pccard_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -2192,32 +2182,7 @@ comment|/* bt3c_pccacd_match */
 end_comment
 
 begin_comment
-comment|/*  * PC-Card (PCMCIA) probe routine  * XXX FIXME  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|bt3c_pccard_probe
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* bt3c_pccacd_probe */
-end_comment
-
-begin_comment
-comment|/*  * PC-Card (PCMCIA) attach routine  */
+comment|/*  * PC Card (PCMCIA) attach routine  */
 end_comment
 
 begin_function
@@ -2758,7 +2723,7 @@ comment|/* bt3c_pccacd_attach */
 end_comment
 
 begin_comment
-comment|/*  * PC-Card (PCMCIA) detach routine  */
+comment|/*  * PC Card (PCMCIA) detach routine  */
 end_comment
 
 begin_function
