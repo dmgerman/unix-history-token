@@ -2178,7 +2178,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* bt3c_pccacd_match */
+comment|/* bt3c_pccard_probe */
 end_comment
 
 begin_comment
