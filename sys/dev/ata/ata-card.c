@@ -335,6 +335,8 @@ name|int
 name|i
 decl_stmt|,
 name|rid
+decl_stmt|,
+name|err
 decl_stmt|;
 comment|/* allocate the io range to get start and length */
 name|rid
@@ -368,7 +370,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 comment|/* setup the resource vectors */
 for|for
@@ -522,7 +526,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 name|ch
@@ -575,11 +581,29 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-return|return
+name|err
+operator|=
 name|ata_probe
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
+return|return
+operator|(
+name|ata_attach
+argument_list|(
+name|dev
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
