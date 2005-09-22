@@ -1492,32 +1492,6 @@ parameter_list|)
 value|{ CSR_READ_2(sc, RECV_CONTROL_REG_W); \                         CSR_READ_2(sc, RECV_CONTROL_REG_W); \                         CSR_READ_2(sc, RECV_CONTROL_REG_W); }
 end_define
 
-begin_comment
-comment|/* Define flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SN_FLAGS_PCCARD
-value|0x0001
-end_define
-
-begin_comment
-comment|/* PCMCIA (PC-card) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SN_FLAGS_XJBT10
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Megahertz XJ-BT10 (PCMCIA) */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
