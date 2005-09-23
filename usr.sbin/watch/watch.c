@@ -428,12 +428,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|dev_t
-name|snp_tty
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|std_in
 init|=
@@ -1052,12 +1046,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|dev_t
-name|dev
+name|int
+name|fd
 decl_stmt|;
-name|dev
+name|fd
 operator|=
-name|NODEV
+operator|-
+literal|1
 expr_stmt|;
 name|ioctl
 argument_list|(
@@ -1066,7 +1061,7 @@ argument_list|,
 name|SNPSTTY
 argument_list|,
 operator|&
-name|dev
+name|fd
 argument_list|)
 expr_stmt|;
 block|}
@@ -1080,6 +1075,33 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|snp_tty
+decl_stmt|;
+name|snp_tty
+operator|=
+name|open
+argument_list|(
+name|dev_name
+argument_list|,
+name|O_RDONLY
+operator||
+name|O_NONBLOCK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|snp_tty
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"can't open device"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -1099,6 +1121,11 @@ argument_list|(
 name|EX_UNAVAILABLE
 argument_list|,
 literal|"cannot attach to tty"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|snp_tty
 argument_list|)
 expr_stmt|;
 if|if
@@ -1248,11 +1275,14 @@ argument_list|,
 literal|"must be a character device"
 argument_list|)
 expr_stmt|;
-name|snp_tty
-operator|=
-name|sb
-operator|.
-name|st_rdev
+name|strncpy
+argument_list|(
+name|dev_name
+argument_list|,
+name|buf
+argument_list|,
+name|DEV_NAME_LEN
+argument_list|)
 expr_stmt|;
 name|attach_snp
 argument_list|()
