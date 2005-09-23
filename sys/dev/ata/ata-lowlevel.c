@@ -511,7 +511,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"timeout waiting for write DRQ"
+literal|"timeout waiting for write DRQ\n"
 argument_list|)
 expr_stmt|;
 name|request
@@ -1414,6 +1414,27 @@ operator|&
 name|ATA_R_READ
 condition|)
 block|{
+name|int
+name|flags
+init|=
+name|ATA_S_DRQ
+decl_stmt|;
+if|if
+condition|(
+name|request
+operator|->
+name|u
+operator|.
+name|ata
+operator|.
+name|command
+operator|!=
+name|ATA_ATAPI_IDENTIFY
+condition|)
+name|flags
+operator||=
+name|ATA_S_READY
+expr_stmt|;
 if|if
 condition|(
 name|ata_wait
@@ -1422,11 +1443,7 @@ name|ch
 argument_list|,
 name|atadev
 argument_list|,
-operator|(
-name|ATA_S_READY
-operator||
-name|ATA_S_DRQ
-operator|)
+name|flags
 argument_list|)
 operator|<
 literal|0
@@ -1438,7 +1455,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"timeout waiting for read DRQ"
+literal|"timeout waiting for read DRQ\n"
 argument_list|)
 expr_stmt|;
 name|request
@@ -1539,7 +1556,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"timeout waiting for write DRQ"
+literal|"timeout waiting for write DRQ\n"
 argument_list|)
 expr_stmt|;
 name|request
