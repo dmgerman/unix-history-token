@@ -5969,6 +5969,8 @@ block|}
 block|,
 comment|/* 354 = __acl_aclcheck_fd */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattrctl_args
@@ -5985,6 +5987,8 @@ block|}
 block|,
 comment|/* 355 = extattrctl */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_set_file_args
@@ -6001,6 +6005,8 @@ block|}
 block|,
 comment|/* 356 = extattr_set_file */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_get_file_args
@@ -6017,6 +6023,8 @@ block|}
 block|,
 comment|/* 357 = extattr_get_file */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_delete_file_args
@@ -6212,6 +6220,8 @@ block|}
 block|,
 comment|/* 370 = lkmressys */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_set_fd_args
@@ -6228,6 +6238,8 @@ block|}
 block|,
 comment|/* 371 = extattr_set_fd */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_get_fd_args
@@ -6244,6 +6256,8 @@ block|}
 block|,
 comment|/* 372 = extattr_get_fd */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_delete_fd_args
@@ -6927,6 +6941,8 @@ block|}
 block|,
 comment|/* 411 = __mac_set_link */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_set_link_args
@@ -6943,6 +6959,8 @@ block|}
 block|,
 comment|/* 412 = extattr_set_link */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_get_link_args
@@ -6959,6 +6977,8 @@ block|}
 block|,
 comment|/* 413 = extattr_get_link */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_delete_link_args
@@ -7356,6 +7376,8 @@ block|}
 block|,
 comment|/* 436 = jail_attach */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_list_fd_args
@@ -7372,6 +7394,8 @@ block|}
 block|,
 comment|/* 437 = extattr_list_fd */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_list_file_args
@@ -7388,6 +7412,8 @@ block|}
 block|,
 comment|/* 438 = extattr_list_file */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|extattr_list_link_args
