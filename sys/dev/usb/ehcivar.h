@@ -389,10 +389,15 @@ decl_stmt|;
 name|u_int
 name|sc_flsize
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|u_int
 name|sc_rand
 decl_stmt|;
 comment|/* XXX need proper intr scheduling */
+endif|#
+directive|endif
 name|struct
 name|ehci_soft_islot
 name|sc_islots
