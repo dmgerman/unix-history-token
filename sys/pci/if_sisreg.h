@@ -2081,21 +2081,13 @@ modifier|*
 name|sis_ifp
 decl_stmt|;
 comment|/* interface info */
-name|bus_space_handle_t
-name|sis_bhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|sis_btag
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|sis_res
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|sis_irq
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|void
 modifier|*
