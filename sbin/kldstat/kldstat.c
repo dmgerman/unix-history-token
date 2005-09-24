@@ -277,7 +277,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       kldstat [-m modname]\n"
+literal|"       kldstat [-q] [-m modname]\n"
 argument_list|)
 expr_stmt|;
 name|exit
