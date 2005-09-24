@@ -533,6 +533,8 @@ directive|if
 name|HAVE_SYS_ACL_H
 operator|&&
 name|HAVE_ACL_PERMSET_T
+operator|&&
+name|HAVE_ACL_USER
 end_if
 
 begin_if
