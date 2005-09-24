@@ -554,7 +554,6 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* { PCMCIA_CARD(EPSON, EEN10B), NE2000DVF_ENADDR, 0xff0}, */
 block|{
 name|PCMCIA_CARD
 argument_list|(
@@ -563,7 +562,9 @@ argument_list|,
 name|EEN10B
 argument_list|)
 block|,
-literal|0
+name|NE2000DVF_ENADDR
+block|,
+literal|0xff0
 block|}
 block|,
 block|{
