@@ -1301,6 +1301,15 @@ name|vm_page_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|struct
+name|device
+modifier|*
+name|device_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define

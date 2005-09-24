@@ -195,19 +195,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Forward declarations  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|device
-modifier|*
-name|device_t
-typedef|;
-end_typedef
-
-begin_comment
 comment|/**  * @brief A device driver (included mainly for compatibility with  * FreeBSD 4.x).  */
 end_comment
 
@@ -1156,6 +1143,65 @@ end_function_decl
 begin_comment
 comment|/*  * Wrapper functions for the BUS_*_RESOURCE methods to make client code  * a little simpler.  */
 end_comment
+
+begin_struct
+struct|struct
+name|resource_spec
+block|{
+name|int
+name|type
+decl_stmt|;
+name|int
+name|rid
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|bus_alloc_resources
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|resource_spec
+modifier|*
+name|rs
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+modifier|*
+name|res
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bus_release_resources
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|resource_spec
+modifier|*
+name|rs
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+modifier|*
+name|res
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|struct
