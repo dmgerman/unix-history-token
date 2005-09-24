@@ -302,13 +302,6 @@ argument_list|,
 name|DEVFS_ROOTINO
 argument_list|)
 expr_stmt|;
-name|devfs_rules_newmount
-argument_list|(
-name|fmp
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|devfs_root
@@ -453,6 +446,11 @@ name|dm_lock
 argument_list|)
 expr_stmt|;
 name|devfs_cleanup
+argument_list|(
+name|fmp
+argument_list|)
+expr_stmt|;
+name|devfs_rules_cleanup
 argument_list|(
 name|fmp
 argument_list|)
