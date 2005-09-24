@@ -515,17 +515,6 @@ name|PCMCIA_CARD
 argument_list|(
 name|DLINK
 argument_list|,
-name|DE650
-argument_list|)
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|PCMCIA_CARD
-argument_list|(
-name|DLINK
-argument_list|,
 name|DE660
 argument_list|)
 block|,
