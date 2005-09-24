@@ -288,6 +288,31 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/*  * The public (kernel) view of struct resource  *  * NB: Changing the offset/size/type of existing fields in struct resource  * NB: breaks the device driver ABI and is strongly FORBIDDEN.  * NB: Appending new fields is probably just misguided.  */
+end_comment
+
+begin_struct
+struct|struct
+name|resource
+block|{
+name|struct
+name|resource_i
+modifier|*
+name|__r_i
+decl_stmt|;
+name|bus_space_tag_t
+name|r_bustag
+decl_stmt|;
+comment|/* bus_space tag */
+name|bus_space_handle_t
+name|r_bushandle
+decl_stmt|;
+comment|/* bus_space handle */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * We use a linked list rather than a bitmap because we need to be able to  * represent potentially huge objects (like all of a processor's physical  * address space).  That is also why the indices are defined to have type  * `unsigned long' -- that being the largest integral type in ISO C (1990).  * The 1999 version of C allows `long long'; we may need to switch to that  * at some point in the future, particularly if we want to support 36-bit  * addresses on IA32 hardware.  */
 end_comment
 
@@ -296,7 +321,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|resource_head
 argument_list|,
-name|resource
+name|resource_i
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -309,23 +334,27 @@ end_ifdef
 
 begin_struct
 struct|struct
-name|resource
+name|resource_i
 block|{
+name|struct
+name|resource
+name|r_r
+decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|resource
+argument|resource_i
 argument_list|)
 name|r_link
 expr_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|resource
+argument|resource_i
 argument_list|)
 name|r_sharelink
 expr_stmt|;
 name|LIST_HEAD
 argument_list|(,
-name|resource
+name|resource_i
 argument_list|)
 operator|*
 name|r_sharehead
@@ -346,14 +375,6 @@ modifier|*
 name|r_virtual
 decl_stmt|;
 comment|/* virtual address of this resource */
-name|bus_space_tag_t
-name|r_bustag
-decl_stmt|;
-comment|/* bus_space tag */
-name|bus_space_handle_t
-name|r_bushandle
-decl_stmt|;
-comment|/* bus_space handle */
 name|struct
 name|device
 modifier|*
@@ -388,12 +409,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_struct_decl
-struct_decl|struct
-name|resource
-struct_decl|;
-end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
