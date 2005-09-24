@@ -125,6 +125,23 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOTYET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"spinlock.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* #define DEBUG_THREAD_KERN */
 end_comment
@@ -1056,12 +1073,17 @@ name|pthread
 modifier|*
 name|thread
 decl_stmt|;
-name|kse_critical_t
-name|crit
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
+name|_thr_spinlock_init
+argument_list|()
+expr_stmt|;
+operator|*
+name|__malloc_lock
+operator|=
+operator|(
+name|spinlock_t
+operator|)
+name|_SPINLOCK_INITIALIZER
+expr_stmt|;
 if|if
 condition|(
 name|__isthreaded
@@ -1197,35 +1219,7 @@ name|sigpend
 argument_list|)
 expr_stmt|;
 comment|/* clear pending signals */
-if|if
-condition|(
-name|curthread
-operator|->
-name|specific
-operator|!=
-name|NULL
-condition|)
-block|{
-name|free
-argument_list|(
-name|curthread
-operator|->
-name|specific
-argument_list|)
-expr_stmt|;
-name|curthread
-operator|->
-name|specific
-operator|=
-name|NULL
-expr_stmt|;
-name|curthread
-operator|->
-name|specific_data_count
-operator|=
-literal|0
-expr_stmt|;
-block|}
+comment|/* Don't free thread-specific data as the caller may require it */
 comment|/* Free the free KSEs: */
 while|while
 condition|(
@@ -1500,6 +1494,13 @@ operator|.
 name|flags
 operator||=
 name|PTHREAD_SCOPE_PROCESS
+expr_stmt|;
+comment|/* We're no longer part of any lists */
+name|curthread
+operator|->
+name|tlflags
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * After a fork, we are still operating on the thread's original 	 * stack.  Don't clear the THR_FLAGS_USER from the thread's 	 * attribute flags. 	 */
 comment|/* Initialize the threads library. */
