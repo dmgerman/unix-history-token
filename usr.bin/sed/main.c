@@ -413,18 +413,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|inplace_edit
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|usage
 parameter_list|(
