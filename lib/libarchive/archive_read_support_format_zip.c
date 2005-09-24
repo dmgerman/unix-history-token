@@ -2993,7 +2993,7 @@ operator|&
 name|ZIP_LENGTH_AT_END
 condition|)
 block|{
-name|ssize_t
+name|size_t
 name|size
 decl_stmt|;
 name|off_t

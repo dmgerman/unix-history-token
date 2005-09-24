@@ -70,6 +70,7 @@ name|skip_file_ino
 decl_stmt|;
 comment|/* Utility:  Pointer to a block of nulls. */
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|nulls

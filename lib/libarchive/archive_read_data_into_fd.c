@@ -83,12 +83,12 @@ name|void
 modifier|*
 name|buff
 decl_stmt|;
-name|ssize_t
+name|size_t
 name|size
-decl_stmt|,
-name|bytes_to_write
 decl_stmt|;
 name|ssize_t
+name|bytes_to_write
+decl_stmt|,
 name|bytes_written
 decl_stmt|,
 name|total_written

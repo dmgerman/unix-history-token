@@ -7581,6 +7581,12 @@ name|char
 modifier|*
 name|p
 init|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
 name|_p
 decl_stmt|;
 name|upper_limit
