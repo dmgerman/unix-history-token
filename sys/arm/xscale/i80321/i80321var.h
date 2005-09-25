@@ -31,6 +31,12 @@ directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
 begin_comment
 comment|/*  * There are roughly 32 interrupt sources.  */
 end_comment
@@ -136,6 +142,10 @@ name|uint8_t
 name|sc_gpio_val
 decl_stmt|;
 comment|/* GPIO output pin value */
+name|struct
+name|rman
+name|sc_irq_rman
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -19,11 +19,11 @@ directive|define
 name|_IQ80321_OBIOVAR_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__RMAN_RESOURCE_VISIBLE
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
 
 begin_struct
 struct|struct
@@ -53,18 +53,13 @@ name|struct
 name|rman
 name|oba_rman
 decl_stmt|;
+name|struct
+name|rman
+name|oba_irq_rman
+decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __RMAN_RESOURCE_VISIBLE */
-end_comment
 
 begin_decl_stmt
 specifier|extern

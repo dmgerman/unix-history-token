@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -174,11 +180,11 @@ operator|=
 operator|(
 name|bus_space_read_4
 argument_list|(
-name|sc
+name|sa11x0_softc
 operator|->
 name|sc_iot
 argument_list|,
-name|sc
+name|sa11x0_softc
 operator|->
 name|sc_ioh
 argument_list|,

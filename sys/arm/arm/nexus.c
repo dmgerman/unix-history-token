@@ -21,12 +21,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -536,9 +530,10 @@ name|intr
 argument_list|,
 name|arg
 argument_list|,
+name|rman_get_start
+argument_list|(
 name|res
-operator|->
-name|r_start
+argument_list|)
 argument_list|,
 name|flags
 argument_list|,
@@ -579,9 +574,10 @@ name|error
 decl_stmt|;
 name|arm_mask_irq
 argument_list|(
+name|rman_get_start
+argument_list|(
 name|r
-operator|->
-name|r_start
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -880,9 +876,10 @@ name|rman_set_bushandle
 argument_list|(
 name|rv
 argument_list|,
+name|rman_get_start
+argument_list|(
 name|rv
-operator|->
-name|r_start
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

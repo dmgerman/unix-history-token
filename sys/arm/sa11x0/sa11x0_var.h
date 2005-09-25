@@ -37,6 +37,12 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
 begin_struct
 struct|struct
 name|sa11x0_softc
@@ -64,6 +70,10 @@ name|sc_reseth
 decl_stmt|;
 name|u_int32_t
 name|sc_intrmask
+decl_stmt|;
+name|struct
+name|rman
+name|sa11x0_rman
 decl_stmt|;
 block|}
 struct|;
