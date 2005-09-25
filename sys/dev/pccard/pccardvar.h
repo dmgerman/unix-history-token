@@ -210,7 +210,6 @@ name|char
 modifier|*
 name|pp_name
 decl_stmt|;
-comment|/* NULL if end of table */
 define|#
 directive|define
 name|PCCARD_VENDOR_ANY
@@ -218,6 +217,7 @@ value|(0xffffffff)
 name|uint32_t
 name|pp_vendor
 decl_stmt|;
+comment|/* 0 == end of table */
 define|#
 directive|define
 name|PCCARD_PRODUCT_ANY
