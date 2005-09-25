@@ -673,6 +673,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|rman_is_region_manager
+parameter_list|(
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|,
+name|struct
+name|rman
+modifier|*
+name|rm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|rman_release_resource
 parameter_list|(
 name|struct

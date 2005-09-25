@@ -3244,6 +3244,35 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|rman_is_region_manager
+parameter_list|(
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|,
+name|struct
+name|rman
+modifier|*
+name|rm
+parameter_list|)
+block|{
+return|return
+operator|(
+name|r
+operator|->
+name|__r_i
+operator|->
+name|r_rm
+operator|==
+name|rm
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Sysctl interface for scanning the resource lists.  *  * We take two input parameters; the index into the list of resource  * managers, and the resource offset into the list.  */
 end_comment
