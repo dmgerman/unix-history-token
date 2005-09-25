@@ -1574,12 +1574,7 @@ argument_list|,
 operator|&
 name|sb
 argument_list|,
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-literal|0
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -1699,12 +1694,7 @@ argument_list|,
 operator|&
 name|sb
 argument_list|,
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-literal|0
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
