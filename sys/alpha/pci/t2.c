@@ -21,12 +21,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -2199,6 +2193,8 @@ decl_stmt|,
 name|vector
 decl_stmt|,
 name|stdio_irq
+decl_stmt|,
+name|start
 decl_stmt|;
 specifier|const
 name|char
@@ -2217,11 +2213,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|start
+operator|=
 name|stdio_irq
 operator|=
+name|rman_get_start
+argument_list|(
 name|irq
-operator|->
-name|r_start
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2389,9 +2388,7 @@ argument_list|,
 operator|&
 name|intrcnt
 index|[
-name|irq
-operator|->
-name|r_start
+name|start
 index|]
 argument_list|,
 name|t2_disable_vec
@@ -2424,12 +2421,7 @@ name|child
 argument_list|,
 literal|"interrupting at T2 irq %d (stdio irq %d)\n"
 argument_list|,
-operator|(
-name|int
-operator|)
-name|irq
-operator|->
-name|r_start
+name|start
 argument_list|,
 name|stdio_irq
 argument_list|)
@@ -2468,9 +2460,10 @@ name|mask
 operator|=
 name|irq_to_mask
 index|[
+name|rman_get_start
+argument_list|(
 name|irq
-operator|->
-name|r_start
+argument_list|)
 index|]
 expr_stmt|;
 comment|/* Disable interrupt */

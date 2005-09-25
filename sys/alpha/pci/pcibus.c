@@ -23,12 +23,6 @@ directive|include
 file|"opt_isa.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -722,12 +716,14 @@ name|DEV_ISA
 comment|/* 	 * XXX - If we aren't the resource manager for this IRQ, assume that 	 * it is actually handled by the ISA PIC. 	 */
 if|if
 condition|(
+operator|!
+name|rman_is_region_manager
+argument_list|(
 name|irq
-operator|->
-name|r_rm
-operator|!=
+argument_list|,
 operator|&
 name|irq_rman
+argument_list|)
 condition|)
 return|return
 name|isa_setup_intr
@@ -797,12 +793,14 @@ name|DEV_ISA
 comment|/* 	 * XXX - If we aren't the resource manager for this IRQ, assume that 	 * it is actually handled by the ISA PIC. 	 */
 if|if
 condition|(
+operator|!
+name|rman_is_region_manager
+argument_list|(
 name|irq
-operator|->
-name|r_rm
-operator|!=
+argument_list|,
 operator|&
 name|irq_rman
+argument_list|)
 condition|)
 return|return
 name|isa_teardown_intr
@@ -1045,6 +1043,9 @@ name|void
 modifier|*
 name|va
 decl_stmt|;
+name|int
+name|rstart
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1146,6 +1147,13 @@ condition|)
 return|return
 literal|0
 return|;
+name|rstart
+operator|=
+name|rman_get_start
+argument_list|(
+name|rv
+argument_list|)
+expr_stmt|;
 name|rman_set_bustag
 argument_list|(
 name|rv
@@ -1162,9 +1170,7 @@ name|rman_set_bushandle
 argument_list|(
 name|rv
 argument_list|,
-name|rv
-operator|->
-name|r_start
+name|rstart
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1191,9 +1197,7 @@ name|ALPHAPCI_CVT_DENSE
 argument_list|(
 name|bus
 argument_list|,
-name|rv
-operator|->
-name|r_start
+name|rstart
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1209,9 +1213,7 @@ name|ALPHAPCI_CVT_BWX
 argument_list|(
 name|bus
 argument_list|,
-name|rv
-operator|->
-name|r_start
+name|rstart
 argument_list|)
 expr_stmt|;
 else|else
@@ -1223,9 +1225,7 @@ operator|*
 operator|)
 name|ALPHA_PHYS_TO_K0SEG
 argument_list|(
-name|rv
-operator|->
-name|r_start
+name|rstart
 argument_list|)
 expr_stmt|;
 name|rman_set_virtual

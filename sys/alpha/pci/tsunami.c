@@ -23,12 +23,6 @@ directive|include
 file|"opt_cpu.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1440,6 +1434,8 @@ parameter_list|)
 block|{
 name|int
 name|error
+decl_stmt|,
+name|start
 decl_stmt|;
 name|error
 operator|=
@@ -1455,6 +1451,13 @@ condition|)
 return|return
 name|error
 return|;
+name|start
+operator|=
+name|rman_get_start
+argument_list|(
+name|irq
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|alpha_setup_intr
@@ -1471,9 +1474,7 @@ argument_list|,
 literal|0x900
 operator|+
 operator|(
-name|irq
-operator|->
-name|r_start
+name|start
 operator|<<
 literal|4
 operator|)
@@ -1491,9 +1492,7 @@ name|intrcnt
 index|[
 name|INTRCNT_EB164_IRQ
 operator|+
-name|irq
-operator|->
-name|r_start
+name|start
 index|]
 argument_list|,
 name|tsunami_disable_intr_vec
@@ -1519,9 +1518,7 @@ name|platform
 operator|.
 name|pci_intr_enable
 argument_list|(
-name|irq
-operator|->
-name|r_start
+name|start
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -1536,12 +1533,7 @@ name|child
 argument_list|,
 literal|"interrupting at TSUNAMI irq %d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
-name|irq
-operator|->
-name|r_start
+name|start
 argument_list|)
 expr_stmt|;
 return|return

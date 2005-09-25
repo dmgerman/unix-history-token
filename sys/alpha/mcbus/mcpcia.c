@@ -17,12 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1908,9 +1902,10 @@ name|h
 decl_stmt|;
 name|irq
 operator|=
+name|rman_get_start
+argument_list|(
 name|ir
-operator|->
-name|r_start
+argument_list|)
 expr_stmt|;
 name|mid
 operator|=
@@ -2093,9 +2088,10 @@ name|mcpcia_disable_intr
 argument_list|(
 name|sc
 argument_list|,
+name|rman_get_start
+argument_list|(
 name|i
-operator|->
-name|r_start
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
