@@ -17,12 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1579,9 +1573,10 @@ name|ii
 operator|->
 name|irq
 operator|=
+name|rman_get_start
+argument_list|(
 name|irq
-operator|->
-name|r_start
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -1599,9 +1594,9 @@ argument_list|,
 literal|0x800
 operator|+
 operator|(
-name|irq
+name|ii
 operator|->
-name|r_start
+name|irq
 operator|<<
 literal|4
 operator|)
@@ -1632,9 +1627,9 @@ name|intrcnt
 index|[
 name|INTRCNT_ISA_IRQ
 operator|+
-name|irq
+name|ii
 operator|->
-name|r_start
+name|irq
 index|]
 argument_list|,
 name|isa_disable_intr
@@ -1666,9 +1661,9 @@ argument_list|)
 expr_stmt|;
 name|isa_intr_enable
 argument_list|(
-name|irq
+name|ii
 operator|->
-name|r_start
+name|irq
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -1695,9 +1690,9 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|irq
+name|ii
 operator|->
-name|r_start
+name|irq
 argument_list|)
 expr_stmt|;
 return|return
@@ -1807,9 +1802,9 @@ argument_list|)
 expr_stmt|;
 name|isa_intr_disable
 argument_list|(
-name|irq
+name|ii
 operator|->
-name|r_start
+name|irq
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
