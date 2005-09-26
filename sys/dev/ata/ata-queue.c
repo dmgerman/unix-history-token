@@ -1828,6 +1828,12 @@ argument_list|)
 expr_stmt|;
 name|request
 operator|->
+name|donecount
+operator|=
+literal|0
+expr_stmt|;
+name|request
+operator|->
 name|timeout
 operator|=
 literal|5
