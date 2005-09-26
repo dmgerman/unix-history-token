@@ -3158,6 +3158,14 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
 name|em_start_locked
 argument_list|(
 name|ifp
