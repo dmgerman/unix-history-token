@@ -2496,6 +2496,17 @@ begin_comment
 comment|/* minimum TTL for packet or drop */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_DONTFRAG
+value|67
+end_define
+
+begin_comment
+comment|/* don't fragment packet */
+end_comment
+
 begin_comment
 comment|/*  * Defaults and limits for options  */
 end_comment

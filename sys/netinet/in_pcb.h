@@ -1018,6 +1018,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_DONTFRAG
+value|0x800
+end_define
+
+begin_comment
+comment|/* don't fragment packet */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN6P_IPV6_V6ONLY
 value|0x008000
 end_define
