@@ -307,8 +307,8 @@ name|int
 name|tl_if_flags
 decl_stmt|;
 name|struct
-name|callout_handle
-name|tl_stat_ch
+name|callout
+name|tl_stat_callout
 decl_stmt|;
 name|struct
 name|mtx
