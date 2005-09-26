@@ -909,6 +909,23 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* If this thread is not allowed to sleep, die a horrible death. */
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_NOSLEEPING
+operator|)
+argument_list|,
+operator|(
+literal|"trying to sleep while sleeping is prohibited"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Look up the sleep queue associated with the wait channel 'wchan'. */
 name|sq
 operator|=

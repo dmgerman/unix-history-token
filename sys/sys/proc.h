@@ -1144,12 +1144,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED8
+name|TDP_NOSLEEPING
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* --available -- */
+comment|/* Thread is not allowed to sleep on a sq. */
 end_comment
 
 begin_define
@@ -3356,6 +3356,26 @@ parameter_list|(
 name|td
 parameter_list|)
 value|(TD_IS_SLEEPING(td) || TD_IS_SUSPENDED(td))
+end_define
+
+begin_comment
+comment|/* Control whether or not it is safe for curthread to sleep. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THREAD_NO_SLEEPING
+parameter_list|()
+value|do {					\ 	KASSERT(!(curthread->td_pflags& TDP_NOSLEEPING),		\ 	    ("nested no sleeping"));					\ 	curthread->td_pflags |= TDP_NOSLEEPING;				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_SLEEPING_OK
+parameter_list|()
+value|do {					\ 	KASSERT((curthread->td_pflags& TDP_NOSLEEPING),		\ 	    ("nested sleeping ok"));					\ 	curthread->td_pflags&= ~TDP_NOSLEEPING;			\ } while (0)
 end_define
 
 begin_comment
