@@ -2100,9 +2100,6 @@ name|device_t
 name|sis_miibus
 decl_stmt|;
 name|u_int8_t
-name|sis_unit
-decl_stmt|;
-name|u_int8_t
 name|sis_type
 decl_stmt|;
 name|u_int8_t

@@ -2050,14 +2050,7 @@ name|int
 name|i
 decl_stmt|,
 name|ack
-decl_stmt|,
-name|s
 decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Set up frame for RX. 	 */
 name|frame
 operator|->
@@ -2332,11 +2325,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ack
@@ -2374,14 +2362,6 @@ modifier|*
 name|frame
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 comment|/*  	 * Set up frame for TX.  	 */
 name|frame
 operator|->
@@ -2503,11 +2483,6 @@ comment|/*  	 * Turn off xmit.  	 */
 name|SIO_CLR
 argument_list|(
 name|SIS_MII_DIR
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -2701,13 +2676,13 @@ operator|==
 name|SIS_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sis%d: PHY failed to come ready\n"
-argument_list|,
 name|sc
 operator|->
-name|sis_unit
+name|sis_ifp
+argument_list|,
+literal|"PHY failed to come ready\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2973,13 +2948,13 @@ name|i
 operator|==
 name|SIS_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"sis%d: PHY failed to come ready\n"
-argument_list|,
 name|sc
 operator|->
-name|sis_unit
+name|sis_ifp
+argument_list|,
+literal|"PHY failed to come ready\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3785,13 +3760,13 @@ name|i
 operator|==
 name|SIS_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"sis%d: reset never completed\n"
-argument_list|,
 name|sc
 operator|->
-name|sis_unit
+name|sis_ifp
+argument_list|,
+literal|"reset never completed\n"
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little while for the chip to get its brains in order. */
@@ -3946,8 +3921,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -3963,13 +3936,6 @@ expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3995,6 +3961,21 @@ argument_list|,
 name|MTX_NETWORK_LOCK
 argument_list|,
 name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|callout_init_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sis_stat_ch
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sis_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4078,11 +4059,18 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"couldn't allocate resources\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* Reset the adapter. */
 name|sis_reset
 argument_list|(
@@ -4552,37 +4540,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|sc
-operator|->
-name|sis_unit
-operator|=
-name|unit
-expr_stmt|;
-if|if
-condition|(
-name|debug_mpsafenet
-condition|)
-name|callout_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sis_stat_ch
-argument_list|,
-name|CALLOUT_MPSAFE
-argument_list|)
-expr_stmt|;
-else|else
-name|callout_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sis_stat_ch
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate the parent bus DMA tag appropriate for PCI. 	 */
 define|#
 directive|define
@@ -4730,11 +4687,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sis%d: no memory for rx list buffers!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"no memory for rx list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|bus_dma_tag_destroy
@@ -4797,11 +4754,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sis%d: cannot get address of the rx ring!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"cannot get address of the rx ring!\n"
 argument_list|)
 expr_stmt|;
 name|bus_dmamem_free
@@ -4925,11 +4882,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sis%d: no memory for tx list buffers!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"no memory for tx list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|bus_dma_tag_destroy
@@ -4992,11 +4949,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sis%d: cannot get address of the tx ring!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"cannot get address of the tx ring!\n"
 argument_list|)
 expr_stmt|;
 name|bus_dmamem_free
@@ -5106,13 +5063,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sis%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|sis_unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5238,13 +5193,11 @@ name|sis_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sis%d: MII without any PHY!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|sis_unit
+literal|"MII without any PHY!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5334,11 +5287,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"sis%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -5414,11 +5367,6 @@ literal|"sis mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SIS_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|sc
@@ -5434,6 +5382,11 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|SIS_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sis_reset
 argument_list|(
 name|sc
@@ -5442,6 +5395,19 @@ expr_stmt|;
 name|sis_stop
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|SIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sis_stat_ch
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -5618,11 +5584,6 @@ argument_list|(
 name|sc
 operator|->
 name|sis_tag
-argument_list|)
-expr_stmt|;
-name|SIS_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -6728,7 +6689,7 @@ name|sc
 operator|=
 name|xsc
 expr_stmt|;
-name|SIS_LOCK
+name|SIS_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -6823,11 +6784,6 @@ operator|->
 name|in_tick
 operator|=
 literal|0
-expr_stmt|;
-name|SIS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -8233,14 +8189,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sis%d: initialization failed: no "
-literal|"memory for rx buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|sis_unit
+literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|sis_stop
@@ -8932,6 +8885,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
+name|SIS_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mii
 operator|=
 name|device_get_softc
@@ -8978,6 +8936,11 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
+name|SIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -9022,6 +8985,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
+name|SIS_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mii
 operator|=
 name|device_get_softc
@@ -9034,6 +9002,11 @@ expr_stmt|;
 name|mii_pollstat
 argument_list|(
 name|mii
+argument_list|)
+expr_stmt|;
+name|SIS_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|ifmr
@@ -9111,6 +9084,11 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
+name|SIS_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -9120,7 +9098,7 @@ operator|&
 name|IFF_UP
 condition|)
 block|{
-name|sis_init
+name|sis_initl
 argument_list|(
 name|sc
 argument_list|)
@@ -9136,22 +9114,17 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-name|SIS_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sis_stop
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 name|SIS_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 name|error
 operator|=
 literal|0
@@ -9212,11 +9185,6 @@ operator|->
 name|sis_miibus
 argument_list|)
 expr_stmt|;
-name|SIS_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ifmedia_ioctl
@@ -9233,15 +9201,15 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
-name|SIS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|SIOCSIFCAP
 case|:
+name|SIS_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
@@ -9258,6 +9226,11 @@ operator|->
 name|ifr_reqcap
 operator|&
 name|IFCAP_POLLING
+expr_stmt|;
+name|SIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -9328,13 +9301,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"sis%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|sis_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|sis_stop
