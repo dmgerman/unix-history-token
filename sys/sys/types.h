@@ -1258,6 +1258,15 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|struct
+name|device
+modifier|*
+name|device_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|__intfptr_t
 name|intfptr_t
 typedef|;
@@ -1298,15 +1307,6 @@ name|struct
 name|vm_page
 modifier|*
 name|vm_page_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|device
-modifier|*
-name|device_t
 typedef|;
 end_typedef
 
