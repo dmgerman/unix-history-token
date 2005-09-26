@@ -1604,6 +1604,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|bus_generic_detach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
