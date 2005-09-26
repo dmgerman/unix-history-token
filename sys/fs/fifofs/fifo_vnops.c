@@ -2003,6 +2003,17 @@ argument_list|,
 literal|"fifo_close"
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|fip
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"fifo_close: no v_fifoinfo"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ap
