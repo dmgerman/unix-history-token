@@ -230,8 +230,7 @@ block|}
 comment|/* 		 * Writable mbufs are left alone (for now). 		 */
 if|if
 condition|(
-operator|!
-name|MEXT_IS_REF
+name|M_WRITABLE
 argument_list|(
 name|m
 argument_list|)
