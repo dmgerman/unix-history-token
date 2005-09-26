@@ -70,6 +70,13 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|private_tss
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|i386_extend_pcb
