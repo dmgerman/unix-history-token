@@ -954,13 +954,6 @@ name|m
 operator|->
 name|m_dat
 expr_stmt|;
-name|mbstat
-operator|.
-name|m_mbufs
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 literal|0
@@ -1037,13 +1030,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mbstat
-operator|.
-name|m_mbufs
-operator|-=
-literal|1
-expr_stmt|;
-comment|/* XXX */
 block|}
 end_function
 
@@ -1119,20 +1105,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mbstat
-operator|.
-name|m_mbufs
-operator|-=
-literal|1
-expr_stmt|;
-comment|/* XXX */
-name|mbstat
-operator|.
-name|m_mclusts
-operator|-=
-literal|1
-expr_stmt|;
-comment|/* XXX */
 block|}
 end_function
 
@@ -1258,13 +1230,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Lazy counter assign. */
-name|mbstat
-operator|.
-name|m_mclusts
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 literal|0
@@ -1308,13 +1273,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mbstat
-operator|.
-name|m_mclusts
-operator|-=
-literal|1
-expr_stmt|;
-comment|/* XXX */
 block|}
 end_function
 
@@ -1402,13 +1360,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mbstat
-operator|.
-name|m_mclusts
-operator|-=
-literal|1
-expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 literal|0
@@ -1485,13 +1436,6 @@ name|ext_buf
 operator|=
 name|NULL
 expr_stmt|;
-name|mbstat
-operator|.
-name|m_mclusts
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -1742,20 +1686,6 @@ return|;
 endif|#
 directive|endif
 block|}
-name|mbstat
-operator|.
-name|m_mbufs
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* XXX */
-name|mbstat
-operator|.
-name|m_mclusts
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 literal|0
@@ -1800,11 +1730,6 @@ name|NULL
 argument_list|,
 literal|"mb_reclaim()"
 argument_list|)
-expr_stmt|;
-name|mbstat
-operator|.
-name|m_drain
-operator|++
 expr_stmt|;
 for|for
 control|(
