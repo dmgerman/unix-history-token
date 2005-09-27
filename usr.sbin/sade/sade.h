@@ -183,31 +183,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PC98
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PCCARD_ARCH
-value|1
-end_define
-
-begin_comment
-comment|/* Support PCCARD installations */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* device limits */
 end_comment
