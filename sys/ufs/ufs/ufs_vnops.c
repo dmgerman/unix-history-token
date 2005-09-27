@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -6549,11 +6555,15 @@ name|cr_uid
 condition|)
 block|{
 comment|/* 				 * Make sure the correct user gets charged 				 * for the space. 				 * Make a dummy credential for the victim. 				 * XXX This seems to never be accessed out of 				 * our context so a stack variable is ok. 				 */
+name|refcount_init
+argument_list|(
+operator|&
 name|ucred
 operator|.
 name|cr_ref
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|ucred
 operator|.
@@ -10295,11 +10305,15 @@ ifdef|#
 directive|ifdef
 name|QUOTA
 comment|/* 			 * Make sure the correct user gets charged 			 * for the space. 			 * Quickly knock up a dummy credential for the victim. 			 * XXX This seems to never be accessed out of our 			 * context so a stack variable is ok. 			 */
+name|refcount_init
+argument_list|(
+operator|&
 name|ucred
 operator|.
 name|cr_ref
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|ucred
 operator|.

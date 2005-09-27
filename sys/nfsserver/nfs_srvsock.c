@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -1469,7 +1475,7 @@ operator|*
 name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: This credential should be managed using crget(9) 		 * and related calls.  Right now, this tramples on any 		 * extensible data in the ucred, fails to initialize the 		 * mutex, and worse.  This must be fixed before FreeBSD 		 * 5.3-RELEASE. 		 */
+comment|/* 		 * XXX: This credential should be managed using crget(9) 		 * and related calls.  Right now, this tramples on any 		 * extensible data in the ucred, and worse.  This wasn't 		 * fixed before FreeBSD 5.3-RELEASE. 		 */
 name|bzero
 argument_list|(
 operator|(
@@ -1487,13 +1493,17 @@ name|ucred
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|refcount_init
+argument_list|(
+operator|&
 name|nd
 operator|->
 name|nd_cr
 operator|.
 name|cr_ref
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|nd
 operator|->

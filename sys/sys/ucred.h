@@ -104,12 +104,6 @@ modifier|*
 name|cr_label
 decl_stmt|;
 comment|/* MAC label */
-name|struct
-name|mtx
-modifier|*
-name|cr_mtxp
-decl_stmt|;
-comment|/* protect refcount */
 block|}
 struct|;
 end_struct
