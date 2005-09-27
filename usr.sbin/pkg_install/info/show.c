@@ -1338,7 +1338,7 @@ argument_list|)
 condition|)
 name|warnx
 argument_list|(
-literal|"%s doesn't exist\n"
+literal|"%s doesn't exist"
 argument_list|,
 name|tmp
 argument_list|)
