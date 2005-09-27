@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bdg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mac.h"
 end_include
 
@@ -131,12 +125,6 @@ begin_include
 include|#
 directive|include
 file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bridge.h>
 end_include
 
 begin_include
@@ -2935,8 +2923,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|do_bridge
-operator|||
 name|ifp
 operator|->
 name|if_bridge

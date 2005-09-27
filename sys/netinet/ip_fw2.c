@@ -9761,7 +9761,7 @@ name|divinput_flags
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * oif | args->oif	If NULL, ipfw_chk has been called on the 	 *	inbound path (ether_input, bdg_forward, ip_input). 	 *	If non-NULL, ipfw_chk has been called on the outbound path 	 *	(ether_output, ip_output). 	 */
+comment|/* 	 * oif | args->oif	If NULL, ipfw_chk has been called on the 	 *	inbound path (ether_input, ip_input). 	 *	If non-NULL, ipfw_chk has been called on the outbound path 	 *	(ether_output, ip_output). 	 */
 name|struct
 name|ifnet
 modifier|*

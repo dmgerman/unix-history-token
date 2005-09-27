@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bdg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mac.h"
 end_include
 
@@ -169,12 +163,6 @@ begin_include
 include|#
 directive|include
 file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bridge.h>
 end_include
 
 begin_include
@@ -531,41 +519,6 @@ end_function_decl
 begin_comment
 comment|/* bridge support */
 end_comment
-
-begin_decl_stmt
-name|int
-name|do_bridge
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bridge_in_t
-modifier|*
-name|bridge_in_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bdg_forward_t
-modifier|*
-name|bdg_forward_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bdgtakeifaces_t
-modifier|*
-name|bdgtakeifaces_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|bdg_softc
-modifier|*
-name|ifp2sc
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|struct
@@ -1996,53 +1949,6 @@ directive|endif
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|rule
-operator|==
-name|NULL
-operator|&&
-name|BDG_ACTIVE
-argument_list|(
-name|ifp
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * Beware, the bridge code notices the null rcvif and 		 * uses that identify that it's being called from 		 * ether_output as opposd to ether_input.  Yech. 		 */
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-name|NULL
-expr_stmt|;
-name|m
-operator|=
-name|bdg_forward_ptr
-argument_list|(
-name|m
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 if|#
 directive|if
 name|defined
@@ -2138,7 +2044,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * ipfw processing for ethernet packets (in and out).  * The second parameter is NULL from ether_demux, and ifp from  * ether_output_frame. This section of code could be used from  * bridge.c as well as long as we use some extra info  * to distinguish that case from ether_output_frame();  */
+comment|/*  * ipfw processing for ethernet packets (in and out).  * The second parameter is NULL from ether_demux, and ifp from  * ether_output_frame.  */
 end_comment
 
 begin_function
@@ -2972,30 +2878,6 @@ operator|.
 name|rcvif
 expr_stmt|;
 block|}
-comment|/* Check for bridging mode */
-if|if
-condition|(
-name|BDG_ACTIVE
-argument_list|(
-name|ifp
-argument_list|)
-condition|)
-if|if
-condition|(
-operator|(
-name|m
-operator|=
-name|bridge_in_ptr
-argument_list|(
-name|ifp
-argument_list|,
-name|m
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* First chunk of an mbuf contains good entropy */
 if|if
 condition|(
@@ -3146,14 +3028,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
-operator|(
-name|BDG_ACTIVE
-argument_list|(
-name|ifp
-argument_list|)
-operator|)
-operator|&&
 operator|!
 operator|(
 name|ifp
@@ -4151,13 +4025,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|BDG_LOADED
-condition|)
-name|bdgtakeifaces_ptr
-argument_list|()
-expr_stmt|;
 comment|/* Announce Ethernet MAC address if non-zero. */
 for|for
 control|(
@@ -4282,13 +4149,6 @@ name|if_detach
 argument_list|(
 name|ifp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|BDG_LOADED
-condition|)
-name|bdgtakeifaces_ptr
-argument_list|()
 expr_stmt|;
 block|}
 end_function

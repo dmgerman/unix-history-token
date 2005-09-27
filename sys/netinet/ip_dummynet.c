@@ -167,12 +167,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<net/bridge.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip6.h>
 end_include
 
@@ -2067,76 +2061,6 @@ else|else
 name|printf
 argument_list|(
 literal|"dummynet: if_bridge not loaded\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|DN_TO_BDG_FWD
-case|:
-comment|/* 	     * The bridge requires/assumes the Ethernet header is 	     * contiguous in the first mbuf header.  Insure this is true. 	     */
-if|if
-condition|(
-name|BDG_LOADED
-condition|)
-block|{
-if|if
-condition|(
-name|m
-operator|->
-name|m_len
-operator|<
-name|ETHER_HDR_LEN
-operator|&&
-operator|(
-name|m
-operator|=
-name|m_pullup
-argument_list|(
-name|m
-argument_list|,
-name|ETHER_HDR_LEN
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dummynet/bridge: pullup fail, dropping pkt\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|m
-operator|=
-name|bdg_forward_ptr
-argument_list|(
-name|m
-argument_list|,
-name|pkt
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* somebody unloaded the bridge module. Drop pkt */
-comment|/* XXX rate limit */
-name|printf
-argument_list|(
-literal|"dummynet: dropping bridged packet trapped in pipe\n"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|m
-condition|)
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5689,7 +5613,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  *		real_dst in bdg_forward  * rule		matching rule, in case of multiple passes  * flags	flags from the caller, only used in ip_output  *  */
+comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  * rule		matching rule, in case of multiple passes  * flags	flags from the caller, only used in ip_output  *  */
 end_comment
 
 begin_function

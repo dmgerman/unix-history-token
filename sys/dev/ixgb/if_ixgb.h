@@ -250,12 +250,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bdg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ixgb/ixgb_hw.h>
 end_include
 

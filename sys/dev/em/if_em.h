@@ -226,12 +226,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bdg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/em/if_em_hw.h>
 end_include
 

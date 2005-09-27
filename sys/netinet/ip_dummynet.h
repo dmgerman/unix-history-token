@@ -213,10 +213,7 @@ define|#
 directive|define
 name|DN_TO_IP_IN
 value|2
-define|#
-directive|define
-name|DN_TO_BDG_FWD
-value|3
+comment|/* Obsolete: #define DN_TO_BDG_FWD	3 */
 define|#
 directive|define
 name|DN_TO_ETH_DEMUX
