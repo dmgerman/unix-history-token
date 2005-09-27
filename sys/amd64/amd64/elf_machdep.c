@@ -687,6 +687,10 @@ case|case
 name|R_X86_64_GLOB_DAT
 case|:
 comment|/* S */
+case|case
+name|R_X86_64_JMP_SLOT
+case|:
+comment|/* XXX need addend + offset */
 name|addr
 operator|=
 name|lookup
