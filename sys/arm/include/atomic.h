@@ -311,6 +311,37 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|atomic_fetchadd_32
+parameter_list|(
+specifier|volatile
+name|uint32_t
+modifier|*
+name|p
+parameter_list|,
+name|uint32_t
+name|v
+parameter_list|)
+block|{
+name|uint32_t
+name|value
+decl_stmt|;
+name|__with_interrupts_disabled
+argument_list|(
+argument|{ 	    	value = *p; 		*p += v; 	}
+argument_list|)
+empty_stmt|;
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
 begin_else
 else|#
 directive|else
@@ -626,6 +657,72 @@ block|)
 function|;
 end_function
 
+begin_function
+unit|}  static
+name|__inline
+name|uint32_t
+name|atomic_fetchadd_32
+parameter_list|(
+specifier|volatile
+name|uint32_t
+modifier|*
+name|p
+parameter_list|,
+name|uint32_t
+name|v
+parameter_list|)
+block|{
+name|uint32_t
+name|ras_start
+decl_stmt|,
+name|start
+decl_stmt|;
+asm|__asm __volatile("1:\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"adr	%1, 2f\n"
+literal|"str	%1, [%0]\n"
+literal|"adr	%1, 1b\n"
+literal|"mov	%0, #0xe0000004\n"
+literal|"str	%1, [%0]\n"
+literal|"ldr	%1, %2\n"
+literal|"add	%3, %1, %3\n"
+literal|"str	%3, %2\n"
+literal|"2:\n"
+literal|"mov	%3, #0\n"
+literal|"str	%3, [%0]\n"
+operator|:
+literal|"=r"
+operator|(
+name|ras_start
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|start
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|v
+operator|)
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|start
+operator|)
+return|;
+end_return
+
 begin_endif
 unit|}
 endif|#
@@ -886,6 +983,13 @@ define|#
 directive|define
 name|atomic_set_ptr
 value|atomic_set_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fetchadd_int
+value|atomic_fetchadd_32
 end_define
 
 begin_endif

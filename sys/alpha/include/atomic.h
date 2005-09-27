@@ -1257,6 +1257,87 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Atomically add the value of v to the integer pointed to by p and return  * the previous value of *p.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int
+name|atomic_fetchadd_32
+parameter_list|(
+specifier|volatile
+name|u_int32_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int32_t
+name|v
+parameter_list|)
+block|{
+name|u_int32_t
+name|value
+decl_stmt|,
+name|temp
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+asm|__asm __volatile (
+literal|"1:\tldl_l %0, %1\n\t"
+comment|/* load old value */
+literal|"addl %0, %3, %2\n\t"
+comment|/* calculate new value */
+literal|"stl_c %2, %1\n\t"
+comment|/* attempt to store */
+literal|"beq %2, 1b\n"
+comment|/* spin if failed */
+operator|:
+literal|"=&r"
+operator|(
+name|value
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|temp
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+block|)
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_return
+return|return
+operator|(
+name|value
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/* Operations on chars. */
 end_comment
 
@@ -1560,6 +1641,13 @@ define|#
 directive|define
 name|atomic_readandclear_int
 value|atomic_readandclear_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fetchadd_int
+value|atomic_fetchadd_32
 end_define
 
 begin_comment
