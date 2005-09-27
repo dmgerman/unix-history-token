@@ -822,14 +822,14 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"real memory  = %ju (%ju MB)\n"
+literal|"usable memory  = %ju (%ju MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|Maxmem
+name|physmem
 argument_list|)
 argument_list|,
 name|ptoa
@@ -837,7 +837,7 @@ argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|Maxmem
+name|physmem
 argument_list|)
 operator|/
 literal|1048576
