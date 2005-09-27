@@ -1809,10 +1809,7 @@ name|cfg
 operator|.
 name|intline
 operator|=
-name|rman_get_start
-argument_list|(
-name|res
-argument_list|)
+name|start
 expr_stmt|;
 name|pci_write_config
 argument_list|(
@@ -1820,10 +1817,7 @@ name|child
 argument_list|,
 name|PCIR_INTLINE
 argument_list|,
-name|rman_get_start
-argument_list|(
-name|res
-argument_list|)
+name|start
 argument_list|,
 literal|1
 argument_list|)
