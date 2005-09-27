@@ -30,12 +30,6 @@ struct|struct
 name|pcb
 block|{
 name|register_t
-name|padxx
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|register_t
 name|pcb_cr3
 decl_stmt|;
 name|register_t
