@@ -149,46 +149,9 @@ name|int
 name|pl_refcnt
 decl_stmt|;
 comment|/* number of references */
-name|struct
-name|mtx
-modifier|*
-name|pl_mtx
-decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|LIM_LOCK
-parameter_list|(
-name|lim
-parameter_list|)
-value|mtx_lock((lim)->pl_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIM_UNLOCK
-parameter_list|(
-name|lim
-parameter_list|)
-value|mtx_unlock((lim)->pl_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIM_LOCK_ASSERT
-parameter_list|(
-name|lim
-parameter_list|,
-name|f
-parameter_list|)
-value|mtx_assert((lim)->pl_mtx, (f))
-end_define
 
 begin_comment
 comment|/*-  * Per uid resource consumption  *  * Locking guide:  * (a) Constant from inception  * (b) Locked by ui_mtxp  * (c) Locked by global uihashtbl_mtx  */
