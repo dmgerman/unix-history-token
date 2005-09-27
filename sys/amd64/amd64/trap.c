@@ -791,9 +791,13 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We shouldn't enable interrupts while in a critical 			 * section. 			 */
+comment|/* 			 * We shouldn't enable interrupts while in a critical 			 * section or servicing an NMI. 			 */
 if|if
 condition|(
+name|type
+operator|!=
+name|T_NMI
+operator|&&
 name|td
 operator|->
 name|td_critnest
