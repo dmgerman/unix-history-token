@@ -544,20 +544,6 @@ name|register_t
 operator|)
 name|fork_trampoline
 expr_stmt|;
-name|pcb2
-operator|->
-name|pcb_rflags
-operator|=
-name|td2
-operator|->
-name|td_frame
-operator|->
-name|tf_rflags
-operator|&
-operator|~
-name|PSL_I
-expr_stmt|;
-comment|/* ints disabled */
 comment|/*- 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase:	cloned above 	 */
 comment|/* Setup to release sched_lock in fork_exit(). */
 name|td2
@@ -946,14 +932,7 @@ name|register_t
 operator|)
 name|fork_trampoline
 expr_stmt|;
-name|pcb2
-operator|->
-name|pcb_rflags
-operator|=
-name|PSL_KERNEL
-expr_stmt|;
-comment|/* ints disabled */
-comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_rflags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase: cloned above 	 */
+comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase: cloned above 	 */
 comment|/* Setup to release sched_lock in fork_exit(). */
 name|td
 operator|->

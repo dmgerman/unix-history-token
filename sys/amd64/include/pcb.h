@@ -63,9 +63,6 @@ name|register_t
 name|pcb_rip
 decl_stmt|;
 name|register_t
-name|pcb_rflags
-decl_stmt|;
-name|register_t
 name|pcb_fsbase
 decl_stmt|;
 name|register_t
