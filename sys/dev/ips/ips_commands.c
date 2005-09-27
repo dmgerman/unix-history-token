@@ -159,7 +159,7 @@ name|EIO
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ips: io error, status= \n"
+literal|"ips: io error, status= 0x%x\n"
 argument_list|,
 name|command
 operator|->
