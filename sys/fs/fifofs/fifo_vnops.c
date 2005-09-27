@@ -232,7 +232,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This structure is associated with the FIFO vnode and stores the state  * associated with the FIFO.  *  * XXXRW: The presence of an sx lock here is undesirable, and exists to avoid  * exposing threading race conditions in the socket code that have not yet  * been resolved.  Once those problems are resolved, the sx lock here should  * be removed.  */
+comment|/*  * This structure is associated with the FIFO vnode and stores  * the state associated with the FIFO.  */
 end_comment
 
 begin_struct
@@ -254,10 +254,6 @@ name|fi_readers
 decl_stmt|;
 name|long
 name|fi_writers
-decl_stmt|;
-name|struct
-name|sx
-name|fi_sx
 decl_stmt|;
 block|}
 struct|;
@@ -687,14 +683,6 @@ operator|->
 name|fi_writesock
 argument_list|)
 expr_stmt|;
-name|sx_destroy
-argument_list|(
-operator|&
-name|fip
-operator|->
-name|fi_sx
-argument_list|)
-expr_stmt|;
 name|FREE
 argument_list|(
 name|fip
@@ -813,8 +801,6 @@ argument_list|,
 name|M_VNODE
 argument_list|,
 name|M_WAITOK
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|error
@@ -935,16 +921,6 @@ operator|->
 name|fi_writers
 operator|=
 literal|0
-expr_stmt|;
-name|sx_init
-argument_list|(
-operator|&
-name|fip
-operator|->
-name|fi_sx
-argument_list|,
-literal|"fifo_sx"
-argument_list|)
 expr_stmt|;
 name|wso
 operator|->
@@ -3103,14 +3079,6 @@ name|MSG_NBIO
 else|:
 literal|0
 expr_stmt|;
-name|sx_xlock
-argument_list|(
-operator|&
-name|fip
-operator|->
-name|fi_sx
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|soreceive
@@ -3129,14 +3097,6 @@ name|NULL
 argument_list|,
 operator|&
 name|sflags
-argument_list|)
-expr_stmt|;
-name|sx_xunlock
-argument_list|(
-operator|&
-name|fip
-operator|->
-name|fi_sx
 argument_list|)
 expr_stmt|;
 return|return
@@ -3264,14 +3224,6 @@ name|MSG_NBIO
 else|:
 literal|0
 expr_stmt|;
-name|sx_xlock
-argument_list|(
-operator|&
-name|fip
-operator|->
-name|fi_sx
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|sosend
@@ -3291,14 +3243,6 @@ argument_list|,
 name|sflags
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|sx_xunlock
-argument_list|(
-operator|&
-name|fip
-operator|->
-name|fi_sx
 argument_list|)
 expr_stmt|;
 return|return
