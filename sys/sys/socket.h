@@ -619,6 +619,39 @@ begin_comment
 comment|/* socket's peer's MAC label */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_LISTENQLIMIT
+value|0x1011
+end_define
+
+begin_comment
+comment|/* socket's backlog limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_LISTENQLEN
+value|0x1012
+end_define
+
+begin_comment
+comment|/* socket's complete queue length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_LISTENINCQLEN
+value|0x1013
+end_define
+
+begin_comment
+comment|/* socket's incomplete queue length */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
