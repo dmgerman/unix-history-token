@@ -1006,7 +1006,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|pci_do_powerstate
+name|pci_do_power_nodriver
 init|=
 literal|0
 decl_stmt|;
@@ -1015,10 +1015,10 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.pci.do_powerstate"
+literal|"hw.pci.do_power_nodriver"
 argument_list|,
 operator|&
-name|pci_do_powerstate
+name|pci_do_power_nodriver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1030,16 +1030,57 @@ name|_hw_pci
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|do_powerstate
+name|do_power_nodriver
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|pci_do_powerstate
+name|pci_do_power_nodriver
 argument_list|,
 literal|0
 argument_list|,
-literal|"Power down devices into D3 state when no driver attaches to them.\n\ Otherwise, leave the device in D0 state when no driver attaches."
+literal|"Place a function into D3 state when no driver attaches to it.  0 means\n\ disable.  1 means conservatively place devices into D3 state.  2 means\n\ agressively place devices into D3 state.  3 means put absolutely everything\n\ in D3 state."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pci_do_power_resume
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pci.do_power_resume"
+argument_list|,
+operator|&
+name|pci_do_power_resume
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|do_power_resume
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pci_do_power_resume
+argument_list|,
+literal|1
+argument_list|,
+literal|"Transition from D3 -> D0 on resume."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5397,7 +5438,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|pci_do_powerstate
+name|pci_do_power_resume
 condition|)
 name|acpi_dev
 operator|=
@@ -5614,7 +5655,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|pci_do_powerstate
+name|pci_do_power_resume
 condition|)
 name|acpi_dev
 operator|=
@@ -6997,7 +7038,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_do_powerstate
+name|pci_do_power_nodriver
 condition|)
 name|pci_cfg_save
 argument_list|(
@@ -10085,22 +10126,59 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|setstate
-operator|&&
-name|cls
-operator|!=
-name|PCIC_DISPLAY
-operator|&&
-name|cls
-operator|!=
-name|PCIC_MEMORY
-operator|&&
-name|cls
-operator|!=
-name|PCIC_BASEPERIPH
+condition|)
+return|return;
+switch|switch
+condition|(
+name|pci_do_power_nodriver
 condition|)
 block|{
-comment|/* 		 * PCI spec says we can only go into D3 state from D0 state. 		 * Transition from D[12] into D0 before going to D3 state. 		 */
+case|case
+literal|0
+case|:
+comment|/* NO powerdown at all */
+return|return;
+case|case
+literal|1
+case|:
+comment|/* Conservative about what to power down */
+if|if
+condition|(
+name|cls
+operator|==
+name|PCIC_STORAGE
+condition|)
+return|return;
+comment|/*FALLTHROUGH*/
+case|case
+literal|2
+case|:
+comment|/* Agressive about what to power down */
+if|if
+condition|(
+name|cls
+operator|==
+name|PCIC_DISPLAY
+operator|||
+name|cls
+operator|==
+name|PCIC_MEMORY
+operator|||
+name|cls
+operator|==
+name|PCIC_BASEPERIPH
+condition|)
+return|return;
+comment|/*FALLTHROUGH*/
+case|case
+literal|3
+case|:
+comment|/* Power down everything */
+break|break;
+block|}
+comment|/* 	 * PCI spec says we can only go into D3 state from D0 state. 	 * Transition from D[12] into D0 before going to D3 state. 	 */
 name|ps
 operator|=
 name|pci_get_powerstate
@@ -10118,7 +10196,6 @@ name|ps
 operator|!=
 name|PCI_POWERSTATE_D3
 condition|)
-block|{
 name|pci_set_powerstate
 argument_list|(
 name|dev
@@ -10126,7 +10203,6 @@ argument_list|,
 name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pci_get_powerstate
@@ -10136,7 +10212,6 @@ argument_list|)
 operator|!=
 name|PCI_POWERSTATE_D3
 condition|)
-block|{
 name|pci_set_powerstate
 argument_list|(
 name|dev
@@ -10144,8 +10219,6 @@ argument_list|,
 name|PCI_POWERSTATE_D3
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
