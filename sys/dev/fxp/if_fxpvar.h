@@ -300,23 +300,18 @@ comment|/* per-interface network data */
 name|struct
 name|resource
 modifier|*
-name|mem
+name|fxp_res
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* resource descriptor for registers */
-name|int
-name|rtp
-decl_stmt|;
-comment|/* register resource type */
-name|int
-name|rgd
-decl_stmt|;
-comment|/* register descriptor in use */
+comment|/* I/O and IRQ resources */
 name|struct
-name|resource
+name|resource_spec
 modifier|*
-name|irq
+name|fxp_spec
 decl_stmt|;
-comment|/* resource descriptor for interrupt */
+comment|/* the resource spec we used */
 name|void
 modifier|*
 name|ih
@@ -326,14 +321,6 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
-name|bus_space_tag_t
-name|sc_st
-decl_stmt|;
-comment|/* bus space tag */
-name|bus_space_handle_t
-name|sc_sh
-decl_stmt|;
-comment|/* bus space handle */
 name|bus_dma_tag_t
 name|fxp_mtag
 decl_stmt|;
@@ -611,8 +598,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_1((sc)->sc_st, (sc)->sc_sh, (reg))
+value|bus_read_1(sc->fxp_res[0], reg)
 end_define
 
 begin_define
@@ -624,8 +610,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_2((sc)->sc_st, (sc)->sc_sh, (reg))
+value|bus_read_2(sc->fxp_res[0], reg)
 end_define
 
 begin_define
@@ -637,8 +622,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_4((sc)->sc_st, (sc)->sc_sh, (reg))
+value|bus_read_4(sc->fxp_res[0], reg)
 end_define
 
 begin_define
@@ -652,8 +636,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_1((sc)->sc_st, (sc)->sc_sh, (reg), (val))
+value|bus_write_1(sc->fxp_res[0], reg, val)
 end_define
 
 begin_define
@@ -667,8 +650,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_2((sc)->sc_st, (sc)->sc_sh, (reg), (val))
+value|bus_write_2(sc->fxp_res[0], reg, val)
 end_define
 
 begin_define
@@ -682,8 +664,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_4((sc)->sc_st, (sc)->sc_sh, (reg), (val))
+value|bus_write_4(sc->fxp_res[0], reg, val)
 end_define
 
 end_unit
