@@ -3378,30 +3378,6 @@ parameter_list|()
 value|do {					\ 	KASSERT((curthread->td_pflags& TDP_NOSLEEPING),		\ 	    ("nested sleeping ok"));					\ 	curthread->td_pflags&= ~TDP_NOSLEEPING;			\ } while (0)
 end_define
 
-begin_comment
-comment|/* Lock and unlock process arguments. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PARGS_LOCK
-parameter_list|(
-name|p
-parameter_list|)
-value|mtx_lock(&pargs_ref_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PARGS_UNLOCK
-parameter_list|(
-name|p
-parameter_list|)
-value|mtx_unlock(&pargs_ref_lock)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -3475,14 +3451,6 @@ specifier|extern
 name|struct
 name|sx
 name|proctree_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|pargs_ref_lock
 decl_stmt|;
 end_decl_stmt
 
