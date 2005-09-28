@@ -1342,7 +1342,7 @@ argument_list|(
 operator|&
 name|fip
 operator|->
-name|fi_writesock
+name|fi_readsock
 operator|->
 name|so_rcv
 argument_list|)
@@ -1363,7 +1363,7 @@ argument_list|(
 operator|&
 name|fip
 operator|->
-name|fi_writesock
+name|fi_readsock
 operator|->
 name|so_rcv
 argument_list|)
