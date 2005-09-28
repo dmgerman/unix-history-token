@@ -776,6 +776,9 @@ case|case
 name|K_ADD
 case|:
 case|case
+name|K_DEL
+case|:
+case|case
 name|K_DELETE
 case|:
 name|newroute
