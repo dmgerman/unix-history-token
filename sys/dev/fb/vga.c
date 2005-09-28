@@ -10357,6 +10357,9 @@ parameter_list|,
 name|int
 name|fontsize
 parameter_list|,
+name|int
+name|fontwidth
+parameter_list|,
 name|u_char
 modifier|*
 name|data
@@ -10461,6 +10464,10 @@ literal|0
 operator|||
 name|page
 operator|>=
+literal|8
+operator|||
+name|fontwidth
+operator|!=
 literal|8
 condition|)
 return|return
@@ -10754,6 +10761,9 @@ parameter_list|,
 name|int
 name|fontsize
 parameter_list|,
+name|int
+name|fontwidth
+parameter_list|,
 name|u_char
 modifier|*
 name|data
@@ -10858,6 +10868,10 @@ literal|0
 operator|||
 name|page
 operator|>=
+literal|8
+operator|||
+name|fontwidth
+operator|!=
 literal|8
 condition|)
 return|return

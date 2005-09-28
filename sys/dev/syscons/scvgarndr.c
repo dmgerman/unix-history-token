@@ -1633,6 +1633,8 @@ literal|0
 operator|,
 name|h
 operator|,
+literal|8
+operator|,
 name|font
 operator|,
 name|sc
@@ -2555,6 +2557,8 @@ operator|,
 literal|0
 operator|,
 literal|32
+operator|,
+literal|8
 operator|,
 name|font_buf
 operator|,

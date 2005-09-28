@@ -3305,7 +3305,7 @@ directive|ifndef
 name|SC_NO_FONT_LOADING
 block|if (ISFONTAVAIL(adp->va_flags)&& !(scp->status& (GRAPHICS_MODE | PIXEL_MODE)))
 comment|/* 		 * FONT KLUDGE 		 * Don't load fonts for now... XXX 		 */
-block|if (scp->sc->fonts_loaded& FONT_8) 		    sc_load_font(scp, 0, 8, scp->sc->font_8, 0, 256); 		if (scp->sc->fonts_loaded& FONT_14) 		    sc_load_font(scp, 0, 14, scp->sc->font_14, 0, 256); 		if (scp->sc->fonts_loaded& FONT_16) 		    sc_load_font(scp, 0, 16, scp->sc->font_16, 0, 256); 	    }
+block|if (scp->sc->fonts_loaded& FONT_8) 		    sc_load_font(scp, 0, 8, 8, scp->sc->font_8, 0, 256); 		if (scp->sc->fonts_loaded& FONT_14) 		    sc_load_font(scp, 0, 14, 8, scp->sc->font_14, 0, 256); 		if (scp->sc->fonts_loaded& FONT_16) 		    sc_load_font(scp, 0, 16, 8, scp->sc->font_16, 0, 256); 	    }
 endif|#
 directive|endif
 comment|/* SC_NO_FONT_LOADING */
