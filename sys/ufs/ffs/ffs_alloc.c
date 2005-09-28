@@ -844,12 +844,6 @@ argument_list|,
 literal|"filesystem full"
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"\n%s: write failed, filesystem is full\n"
@@ -857,12 +851,6 @@ argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -1910,12 +1898,6 @@ argument_list|,
 literal|"filesystem full"
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"\n%s: write failed, filesystem is full\n"
@@ -1923,12 +1905,6 @@ argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -4978,12 +4954,6 @@ argument_list|,
 literal|"out of inodes"
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"\n%s: create/symlink failed, no inodes free\n"
@@ -4991,12 +4961,6 @@ argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return

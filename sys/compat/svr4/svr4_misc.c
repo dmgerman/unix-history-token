@@ -2322,21 +2322,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"svr4_sys_getdents64: dir offset too large for emulated program"
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|error

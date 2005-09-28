@@ -537,9 +537,6 @@ argument_list|,
 literal|"file system full"
 argument_list|)
 expr_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* uprintf */
 name|uprintf
 argument_list|(
 literal|"\n%s: write failed, file system is full\n"
@@ -1696,9 +1693,6 @@ argument_list|,
 literal|"out of inodes"
 argument_list|)
 expr_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* uprintf */
 name|uprintf
 argument_list|(
 literal|"\n%s: create/symlink failed, no inodes free\n"

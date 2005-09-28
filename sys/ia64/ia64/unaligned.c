@@ -24,18 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1885,12 +1873,6 @@ condition|(
 name|ia64_unaligned_print
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"pid %d (%s): unaligned access: va=0x%lx, pc=0x%lx\n"
@@ -1920,12 +1902,6 @@ operator|.
 name|iip
 operator|+
 name|slot
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}

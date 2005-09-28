@@ -80,7 +80,7 @@ name|DPRINTF
 parameter_list|(
 name|a
 parameter_list|)
-value|do {							\ 	mtx_lock(&Giant);						\ 	uprintf a;							\ } while (0)
+value|uprintf a;
 end_define
 
 begin_else

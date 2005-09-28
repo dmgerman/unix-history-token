@@ -34,18 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -402,12 +390,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|IOCTL_DEBUG
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"OSF/1 IOCTL: group = %c, cmd = %d, len = %d, dir = %s\n"
@@ -419,12 +401,6 @@ argument_list|,
 name|len
 argument_list|,
 name|dirstr
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 endif|#

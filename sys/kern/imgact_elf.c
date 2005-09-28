@@ -1844,21 +1844,9 @@ operator|>
 name|memsz
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"elf_load_section: truncated ELF file\n"
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -3335,12 +3323,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"ELF binary type \"%u\" not known.\n"
@@ -3351,12 +3333,6 @@ name|e_ident
 index|[
 name|EI_OSABI
 index|]
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|error
@@ -4039,23 +4015,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"ELF interpreter %s not found\n"
 argument_list|,
 name|interp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 goto|goto
