@@ -484,6 +484,16 @@ block|}
 block|,
 name|CDCE_NO_UNION
 block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_NETCHIP
+block|,
+name|USB_PRODUCT_NETCHIP_ETHERNETGADGET
+block|}
+block|,
+name|CDCE_NO_UNION
+block|}
 block|, }
 expr_stmt|;
 end_expr_stmt
