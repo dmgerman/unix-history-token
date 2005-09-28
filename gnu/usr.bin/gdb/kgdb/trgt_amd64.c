@@ -303,20 +303,6 @@ operator|.
 name|pcb_rip
 argument_list|)
 expr_stmt|;
-name|supply_register
-argument_list|(
-name|AMD64_EFLAGS_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|pcb
-operator|.
-name|pcb_rflags
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
