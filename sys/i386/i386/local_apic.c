@@ -1402,10 +1402,12 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"lapic%d: timer"
+literal|"cpu%d: timer"
 argument_list|,
-name|lapic_id
-argument_list|()
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|intrcnt_add
