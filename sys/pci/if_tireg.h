@@ -2734,7 +2734,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * NOTE!  On the Alpha, we have an alignment constraint.  * The first thing in the packet is a 14-byte Ethernet header.  * This means that the packet is misaligned.  To compensate,  * we actually offset the data 2 bytes into the cluster.  This  * alignes the packet after the Ethernet header at a 32-bit  * boundary.  */
+comment|/*  * NOTE!  On the Alpha, we have an alignment constraint.  * The first thing in the packet is a 14-byte Ethernet header.  * This means that the packet is misaligned.  To compensate,  * we actually offset the data 2 bytes into the cluster.  This  * aligns the packet after the Ethernet header at a 32-bit  * boundary.  */
 end_comment
 
 begin_define
