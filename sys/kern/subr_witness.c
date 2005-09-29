@@ -1562,6 +1562,13 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|"rm.mutex_mtx"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"sio"
 block|,
 operator|&
