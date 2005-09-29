@@ -283,7 +283,7 @@ begin_define
 define|#
 directive|define
 name|PCI_CBMA
-value|0x10
+value|PCIR_BAR(0)
 end_define
 
 begin_comment
@@ -732,9 +732,6 @@ name|en_pci_softc
 modifier|*
 name|scp
 decl_stmt|;
-name|u_long
-name|val
-decl_stmt|;
 name|int
 name|rid
 decl_stmt|,
@@ -809,34 +806,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable bus mastering. 	 */
-name|val
-operator|=
-name|pci_read_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|val
-operator||=
-operator|(
-name|PCIM_CMD_MEMEN
-operator||
-name|PCIM_CMD_BUSMASTEREN
-operator|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|val
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Map control/status registers. 	 */
@@ -1171,13 +1143,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|atm_ifdetach
-argument_list|(
-name|sc
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
-name|if_free
 argument_list|(
 name|sc
 operator|->
