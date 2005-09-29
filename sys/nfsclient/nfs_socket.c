@@ -4912,6 +4912,13 @@ condition|(
 operator|!
 name|error
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|nfs_up
 argument_list|(
 name|rep
@@ -4927,6 +4934,13 @@ argument_list|,
 name|NFSSTA_TIMEO
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 name|mrep
 operator|=
 name|rep
@@ -5426,6 +5440,13 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* nfs_down -> tprintf */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5983,6 +6004,13 @@ operator|&
 name|nfs_reqq_mtx
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* nfs_down -> tprintf */
 name|splx
 argument_list|(
 name|s
@@ -7433,6 +7461,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* tprintf */
 name|p
 operator|=
 name|td
@@ -7530,6 +7561,9 @@ decl_stmt|,
 name|flags
 decl_stmt|;
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* nfs_msg */
 if|if
 condition|(
 name|nmp
@@ -7692,6 +7726,9 @@ name|int
 name|flags
 decl_stmt|;
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* nfs_msg */
 if|if
 condition|(
 name|nmp
