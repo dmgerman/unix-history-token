@@ -1607,13 +1607,13 @@ name|EEPROM_CTL_WRITE
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: failed to send write command, status: %x\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"failed to send write command, status: %x\n"
 argument_list|,
 name|CSR_READ_4
 argument_list|(
@@ -1646,13 +1646,13 @@ literal|0xFF
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: failed to send address, status: %x\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"failed to send address, status: %x\n"
 argument_list|,
 name|CSR_READ_4
 argument_list|(
@@ -1681,13 +1681,13 @@ literal|0xFF
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: failed to send address, status: %x\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"failed to send address, status: %x\n"
 argument_list|,
 name|CSR_READ_4
 argument_list|(
@@ -1718,13 +1718,13 @@ name|EEPROM_CTL_READ
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: failed to send read command, status: %x\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"failed to send read command, status: %x\n"
 argument_list|,
 name|CSR_READ_4
 argument_list|(
@@ -2191,26 +2191,26 @@ literal|0x3
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: ti_copy_mem: tigon address %#x isn't "
-literal|"word-aligned\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"ti_copy_mem: tigon address %#x isn't "
+literal|"word-aligned\n"
 argument_list|,
 name|tigon_addr
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: ti_copy_mem: unaligned writes aren't yet "
-literal|"supported\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"ti_copy_mem: unaligned writes aren't "
+literal|"yet supported\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2809,14 +2809,14 @@ operator|&
 literal|0x3
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: ti_copy_scratch: tigon address %#x isn't "
-literal|"word-aligned\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"ti_copy_scratch: tigon address %#x "
+literal|"isn't word-aligned\n"
 argument_list|,
 name|tigon_addr
 argument_list|)
@@ -2834,14 +2834,14 @@ operator|&
 literal|0x3
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: ti_copy_scratch: transfer length %d isn't "
-literal|"word-aligned\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"ti_copy_scratch: transfer length %d "
+literal|"isn't word-aligned\n"
 argument_list|,
 name|len
 argument_list|)
@@ -2921,14 +2921,14 @@ name|tmpval2
 operator|==
 literal|0xc0017c
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: found 0xc0017c at %#x "
-literal|"(tmpval2)\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"found 0xc0017c at %#x "
+literal|"(tmpval2)\n"
 argument_list|,
 name|segptr
 argument_list|)
@@ -2939,14 +2939,14 @@ name|tmpval
 operator|==
 literal|0xc0017c
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: found 0xc0017c at %#x "
-literal|"(tmpval)\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"found 0xc0017c at %#x "
+literal|"(tmpval)\n"
 argument_list|,
 name|segptr
 argument_list|)
@@ -3237,14 +3237,14 @@ operator|!=
 name|TI_FIRMWARE_FIX
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: firmware revision mismatch; want "
-literal|"%d.%d.%d, got %d.%d.%d\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"firmware revision mismatch; "
+literal|"want %d.%d.%d, got %d.%d.%d\n"
 argument_list|,
 name|TI_FIRMWARE_MAJOR
 argument_list|,
@@ -3353,14 +3353,14 @@ operator|!=
 name|TI_FIRMWARE_FIX
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: firmware revision mismatch; want "
-literal|"%d.%d.%d, got %d.%d.%d\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"firmware revision mismatch; "
+literal|"want %d.%d.%d, got %d.%d.%d\n"
 argument_list|,
 name|TI_FIRMWARE_MAJOR
 argument_list|,
@@ -3452,13 +3452,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: can't load firmware: unknown hardware rev\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"can't load firmware: unknown hardware rev\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3798,13 +3798,13 @@ name|ti_code
 operator|==
 name|TI_EV_CODE_LINK_UP
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: 10/100 link up\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"10/100 link up\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3816,13 +3816,13 @@ name|ti_code
 operator|==
 name|TI_EV_CODE_GIG_LINK_UP
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: gigabit link up\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"gigabit link up\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3834,13 +3834,13 @@ name|ti_code
 operator|==
 name|TI_EV_CODE_LINK_DOWN
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: link down\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"link down\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3855,13 +3855,13 @@ name|ti_code
 operator|==
 name|TI_EV_CODE_ERR_INVAL_CMD
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: invalid command\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"invalid command\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3873,13 +3873,13 @@ name|ti_code
 operator|==
 name|TI_EV_CODE_ERR_UNIMP_CMD
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: unknown command\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"unknown command\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3891,13 +3891,13 @@ name|ti_code
 operator|==
 name|TI_EV_CODE_ERR_BADCFG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: bad config data\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"bad config data\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3928,13 +3928,13 @@ case|:
 comment|/* Who cares. */
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: unknown event: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"unknown event: %d\n"
 argument_list|,
 name|e
 operator|->
@@ -4038,13 +4038,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: no memory for jumbo buffers!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"no memory for jumbo buffers!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4150,14 +4150,14 @@ name|ti_jumbo_buf
 operator|=
 name|NULL
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: no memory for jumbo "
-literal|"buffer queue!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"no memory for jumbo "
+literal|"buffer queue!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4233,13 +4233,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: no free jumbo buffers\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"no free jumbo buffers\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4991,14 +4991,14 @@ argument_list|(
 name|m_new
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: jumbo allocation failed "
-literal|"-- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"jumbo allocation failed "
+literal|"-- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5403,14 +5403,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: mbuf allocation failed "
-literal|"-- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"mbuf allocation failed "
+literal|"-- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5439,14 +5439,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: cluster mbuf allocation failed "
-literal|"-- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"cluster mbuf allocation failed "
+literal|"-- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5479,14 +5479,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: mbuf allocation failed "
-literal|"-- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"mbuf allocation failed "
+literal|"-- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5538,14 +5538,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: mbuf allocation failed "
-literal|"-- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"mbuf allocation failed "
+literal|"-- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5575,14 +5575,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: buffer allocation failed "
-literal|"-- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"buffer allocation "
+literal|"failed -- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -5638,14 +5638,14 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: buffer allocation failed "
-literal|"-- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"buffer allocation "
+literal|"failed -- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6933,13 +6933,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: unknown hwrev\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"unknown hwrev\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7123,13 +7123,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: unknown hwrev\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"unknown hwrev\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7635,13 +7635,13 @@ operator|&
 name|TI_CPUSTATE_ROMFAIL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: board self-diagnostics failed!\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"board self-diagnostics failed!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7694,13 +7694,13 @@ name|TI_HWREV_TIGON_II
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: unsupported chip revision\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"unsupported chip revision\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7766,13 +7766,13 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: can't do header splitting on a Tigon I board\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"can't do header splitting on a Tigon I board\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7878,14 +7878,14 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: cache line size %d not "
-literal|"supported; disabling PCI MWI\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"cache line size %d not "
+literal|"supported; disabling PCI MWI\n"
 argument_list|,
 name|cacheline
 argument_list|)
@@ -8062,14 +8062,14 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: bios thinks we're in a 64 bit slot, "
-literal|"but we aren't"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"bios thinks we're in a 64 bit slot, "
+literal|"but we aren't"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9113,8 +9113,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -9134,18 +9132,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|unit
+name|sc
+operator|->
+name|ti_unit
 operator|=
 name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|ti_unit
-operator|=
-name|unit
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -9198,13 +9192,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ti_unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9276,11 +9268,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: couldn't map memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9359,11 +9351,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9382,13 +9374,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: chip initialization failed\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ti_unit
+literal|"chip initialization failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9422,13 +9412,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: chip initialization failed\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ti_unit
+literal|"chip initialization failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9456,11 +9444,11 @@ name|ETHER_ADDR_LEN
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: failed to read station address\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to read station address\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9521,13 +9509,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: Failed to allocate parent dmat\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ti_unit
+literal|"Failed to allocate parent dmat\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9597,13 +9583,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: Failed to allocate rdata dmat\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ti_unit
+literal|"Failed to allocate rdata dmat\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9643,13 +9627,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: Failed to allocate rdata memory\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ti_unit
+literal|"Failed to allocate rdata memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9692,13 +9674,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: Failed to load rdata segments\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ti_unit
+literal|"Failed to load rdata segments\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9734,13 +9714,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: jumbo buffer allocation failed\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ti_unit
+literal|"jumbo buffer allocation failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9888,7 +9866,9 @@ name|IFF_NEEDSGIANT
 expr_stmt|;
 name|tis
 index|[
-name|unit
+name|sc
+operator|->
+name|ti_unit
 index|]
 operator|=
 name|sc
@@ -10183,11 +10163,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ti%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -12580,13 +12560,13 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: initialization failure\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"initialization failure\n"
 argument_list|)
 expr_stmt|;
 name|TI_UNLOCK
@@ -14494,7 +14474,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("ti%d: trace_start = %#x, cur_trace_ptr = %#x, " 		       "trace_len = %d\n", sc->ti_unit, trace_start, 		       cur_trace_ptr, trace_len); 		printf("ti%d: trace_buf->buf_len = %d\n", sc->ti_unit, 		       trace_buf->buf_len);
+block|if_printf(sc->ti_ifp, "trace_start = %#x, cur_trace_ptr = %#x, " 		       "trace_len = %d\n", trace_start, 		       cur_trace_ptr, trace_len); 		if_printf(sc->ti_ifp, "trace_buf->buf_len = %d\n", 		       trace_buf->buf_len);
 endif|#
 directive|endif
 name|error
@@ -14786,14 +14766,13 @@ operator|==
 name|TI_HWREV_TIGON
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d:  invalid memory range for "
-literal|"Tigon I\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"invalid memory range for Tigon I\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -14840,14 +14819,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: memory address %#x len %d is out of "
-literal|"supported range\n"
-argument_list|,
 name|sc
 operator|->
-name|ti_unit
+name|ti_ifp
+argument_list|,
+literal|"memory address %#x len %d is "
+literal|"out of supported range\n"
 argument_list|,
 name|mem_param
 operator|->
@@ -14944,7 +14923,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if ((regs->addr == TI_CPU_STATE) 			 || (regs->addr == TI_CPU_CTL_B)) { 				printf("ti%d: register %#x = %#x\n", 				       sc->ti_unit, regs->addr, tmpval); 			}
+block|if ((regs->addr == TI_CPU_STATE) 			 || (regs->addr == TI_CPU_CTL_B)) { 				if_printf(sc->ti_ifp, "register %#x = %#x\n", 				       regs->addr, tmpval); 			}
 endif|#
 directive|endif
 block|}
@@ -15043,13 +15022,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|if_printf
 argument_list|(
-literal|"ti%d: watchdog timeout -- resetting\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|ti_unit
+literal|"watchdog timeout -- resetting\n"
 argument_list|)
 expr_stmt|;
 name|ti_stop
