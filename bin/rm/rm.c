@@ -1932,7 +1932,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.	Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 * Also skip this check if the -P option was specified because 		 * we will not be able to overwrite file contents and will 		 * barf later. 		 */
+comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.	Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 */
 if|if
 condition|(
 operator|!
@@ -1944,8 +1944,6 @@ name|sp
 operator|->
 name|st_mode
 argument_list|)
-operator|||
-name|Pflag
 operator|||
 operator|(
 operator|!
@@ -2022,6 +2020,19 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"fflagstostr"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Pflag
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: -P was specified, but file is not writable"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 operator|(
