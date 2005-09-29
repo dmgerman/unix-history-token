@@ -1015,12 +1015,6 @@ argument_list|(
 name|hpcap
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* We can not lock bpf devices ... yet */
-else|#
-directive|else
 comment|/* lock */
 if|if
 condition|(
@@ -1056,8 +1050,6 @@ literal|1
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
