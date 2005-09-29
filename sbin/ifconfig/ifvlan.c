@@ -540,6 +540,17 @@ name|struct
 name|vlanreq
 name|vreq
 decl_stmt|;
+if|if
+condition|(
+name|val
+operator|!=
+name|NULL
+condition|)
+name|warnx
+argument_list|(
+literal|"argument to -vlandev is useless and hence deprecated"
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -667,7 +678,8 @@ argument_list|,
 name|setvlandev
 argument_list|)
 block|,
-name|DEF_CMD_ARG
+comment|/* XXX For compatibility.  Should become DEF_CMD() some day. */
+name|DEF_CMD_OPTARG
 argument_list|(
 literal|"-vlandev"
 argument_list|,
