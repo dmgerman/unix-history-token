@@ -2918,6 +2918,17 @@ begin_comment
 comment|/* in libkern */
 end_comment
 
+begin_function_decl
+name|void
+name|in_ifdetach
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define

@@ -3004,7 +3004,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detach an interface, removing it from the  * list of "active" interfaces and freeing the struct ifnet.  */
+comment|/*  * Detach an interface, removing it from the  * list of "active" interfaces and freeing the struct ifnet.  *  * XXXRW: There are some significant questions about event ordering, and  * how to prevent things from starting to use the interface during detach.  */
 end_comment
 
 begin_function
@@ -3131,6 +3131,16 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+name|in_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
