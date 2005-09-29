@@ -210,7 +210,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_ID_OZ711EC1
-value|0x71121217uk
+value|0x71121217ul
 end_define
 
 begin_comment

@@ -804,11 +804,12 @@ block|}
 block|,
 comment|/* SMC */
 block|{
-name|PCIC_ID_SMC34C90
+name|PCIC_ID_SMC_34C90
 block|,
 literal|"SMC 34C90 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
+block|}
 block|,
 comment|/* sentinel */
 block|{
@@ -820,23 +821,41 @@ block|,
 name|CB_UNKNOWN
 block|}
 block|, }
-block|;
+struct|;
+end_struct
+
+begin_comment
 comment|/************************************************************************/
+end_comment
+
+begin_comment
 comment|/* Probe/Attach								*/
+end_comment
+
+begin_comment
 comment|/************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|cbb_chipset
-argument_list|(
-argument|uint32_t pci_id
-argument_list|,
-argument|const char **namep
-argument_list|)
-block|{ 	struct
+parameter_list|(
+name|uint32_t
+name|pci_id
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|namep
+parameter_list|)
+block|{
+name|struct
 name|yenta_chipinfo
-operator|*
+modifier|*
 name|ycp
-block|;
+decl_stmt|;
 for|for
 control|(
 name|ycp
@@ -872,9 +891,6 @@ name|ycp
 operator|->
 name|yc_name
 expr_stmt|;
-end_struct
-
-begin_return
 return|return
 operator|(
 name|ycp
@@ -882,10 +898,11 @@ operator|->
 name|yc_chiptype
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|cbb_pci_probe
 parameter_list|(
