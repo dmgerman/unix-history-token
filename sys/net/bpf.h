@@ -305,6 +305,20 @@ name|BIOCGDLTLIST
 value|_IOWR('B',121, struct bpf_dltlist)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIOCLOCK
+value|_IO('B', 122)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCSETWF
+value|_IOW('B',123, struct bpf_program)
+end_define
+
 begin_comment
 comment|/*  * Structure prepended to each packet.  */
 end_comment
