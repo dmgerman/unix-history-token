@@ -4211,13 +4211,6 @@ goto|goto
 name|keeporig
 goto|;
 block|}
-comment|/* XXX: VFS_LOCK_GIANT? */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * We know that there is a / somewhere in this pathname. 	 * Search backwards for it, to find the file's parent dir 	 * to see if it exists in the alternate tree. If it does, 	 * and we want to create a file (cflag is set). We don't 	 * need to worry about the root comparison in this case. 	 */
 if|if
 condition|(
@@ -4258,6 +4251,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -4286,7 +4281,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|nd_failed
+name|keeporig
 goto|;
 block|}
 else|else
@@ -4299,6 +4294,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -4322,7 +4319,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|nd_failed
+name|keeporig
 goto|;
 comment|/* 		 * We now compare the vnode of the prefix to the one 		 * vnode asked. If they resolve to be the same, then we 		 * ignore the match so that the real root gets used. 		 * This avoids the problem of traversing "../.." to find the 		 * root directory and never finding it, because "/" resolves 		 * to the emulation root directory. This is expensive :-( 		 */
 name|NDINIT
@@ -4333,6 +4330,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -4386,6 +4385,15 @@ operator|.
 name|ni_vp
 argument_list|)
 expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|NDHASGIANT
+argument_list|(
+operator|&
+name|ndroot
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|NDFREE
@@ -4403,13 +4411,13 @@ operator|.
 name|ni_vp
 argument_list|)
 expr_stmt|;
-name|nd_failed
-label|:
-comment|/* XXX: VFS_UNLOCK_GIANT? */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|NDHASGIANT
 argument_list|(
 operator|&
-name|Giant
+name|nd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|keeporig
