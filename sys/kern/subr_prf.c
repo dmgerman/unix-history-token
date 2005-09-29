@@ -425,7 +425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Uprintf prints to the controlling terminal for the current process.  * It may block if the tty queue is overfull.  No message is printed if  * the queue does not clear in a reasonable time.  */
+comment|/*  * Uprintf prints to the controlling terminal for the current process.  */
 end_comment
 
 begin_function
@@ -484,6 +484,12 @@ operator|(
 literal|0
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|td
@@ -513,11 +519,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|retval
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|SESS_LOCK
 argument_list|(
@@ -556,11 +564,15 @@ name|tty
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|retval
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|pca
 operator|.
 name|flags
@@ -595,6 +607,14 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+name|out
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|retval
@@ -604,7 +624,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * tprintf prints on the controlling terminal associated  * with the given session, possibly to the log as well.  */
+comment|/*  * tprintf prints on the controlling terminal associated with the given  * session, possibly to the log as well.  */
 end_comment
 
 begin_function
@@ -653,6 +673,12 @@ name|sess
 init|=
 name|NULL
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pri
@@ -819,6 +845,12 @@ block|}
 name|msgbuftrigger
 operator|=
 literal|1
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 block|}
 end_function
