@@ -763,12 +763,52 @@ name|CB_O2MICRO
 block|}
 block|,
 block|{
+name|PCIC_ID_OZ711EC1
+block|,
+literal|"O2Micro OZ711EC1/M1 PCI-CardBus Bridge"
+block|,
+name|CB_O2MICRO
+block|}
+block|,
+block|{
+name|PCIC_ID_OZ711E2
+block|,
+literal|"O2Micro OZ711E2 PCI-CardBus Bridge"
+block|,
+name|CB_O2MICRO
+block|}
+block|,
+block|{
 name|PCIC_ID_OZ711M1
 block|,
 literal|"O2Micro OZ711M1 PCI-CardBus Bridge"
 block|,
 name|CB_O2MICRO
 block|}
+block|,
+block|{
+name|PCIC_ID_OZ711M2
+block|,
+literal|"O2Micro OZ711M2 PCI-CardBus Bridge"
+block|,
+name|CB_O2MICRO
+block|}
+block|,
+block|{
+name|PCIC_ID_OZ711M3
+block|,
+literal|"O2Micro OZ711M3 PCI-CardBus Bridge"
+block|,
+name|CB_O2MICRO
+block|}
+block|,
+comment|/* SMC */
+block|{
+name|PCIC_ID_SMC34C90
+block|,
+literal|"SMC 34C90 PCI-CardBus Bridge"
+block|,
+name|CB_CIRRUS
 block|,
 comment|/* sentinel */
 block|{
@@ -780,41 +820,23 @@ block|,
 name|CB_UNKNOWN
 block|}
 block|, }
-struct|;
-end_struct
-
-begin_comment
+block|;
 comment|/************************************************************************/
-end_comment
-
-begin_comment
 comment|/* Probe/Attach								*/
-end_comment
-
-begin_comment
 comment|/************************************************************************/
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|cbb_chipset
-parameter_list|(
-name|uint32_t
-name|pci_id
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|namep
-parameter_list|)
-block|{
-name|struct
+argument_list|(
+argument|uint32_t pci_id
+argument_list|,
+argument|const char **namep
+argument_list|)
+block|{ 	struct
 name|yenta_chipinfo
-modifier|*
+operator|*
 name|ycp
-decl_stmt|;
+block|;
 for|for
 control|(
 name|ycp
@@ -850,6 +872,9 @@ name|ycp
 operator|->
 name|yc_name
 expr_stmt|;
+end_struct
+
+begin_return
 return|return
 operator|(
 name|ycp
@@ -857,11 +882,10 @@ operator|->
 name|yc_chiptype
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|int
 name|cbb_pci_probe
 parameter_list|(

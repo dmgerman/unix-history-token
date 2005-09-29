@@ -141,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_ID_OZ6730
-value|0x673A1217ul
+value|0x673a1217ul
 end_define
 
 begin_comment
@@ -209,6 +209,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIC_ID_OZ711EC1
+value|0x71121217uk
+end_define
+
+begin_comment
+comment|/* O2Micro 711EC1/M1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_ID_OZ711E1
 value|0x71131217ul
 end_define
@@ -227,6 +238,27 @@ end_define
 begin_comment
 comment|/* O2Micro 711M1 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_OZ711E2
+value|0x71e21217ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_OZ711M2
+value|0x72121217ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_OZ711M3
+value|0x72231217ul
+end_define
 
 begin_define
 define|#
@@ -276,10 +308,6 @@ directive|define
 name|PCIC_ID_SMC_34C90
 value|0xb10610b3ul
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_define
 define|#
