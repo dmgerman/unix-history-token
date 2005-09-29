@@ -477,6 +477,78 @@ block|,
 name|CB_TI12XX
 block|}
 block|,
+block|{
+name|PCIC_ID_TI6411
+block|,
+literal|"TI6411 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI6420
+block|,
+literal|"TI6420 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI6420SC
+block|,
+literal|"TI6420 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7410
+block|,
+literal|"TI7410 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7510
+block|,
+literal|"TI7510 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7610
+block|,
+literal|"TI7610 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7610M
+block|,
+literal|"TI7610 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7610SD
+block|,
+literal|"TI7610 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7610MS
+block|,
+literal|"TI7610 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
 comment|/* ENE */
 block|{
 name|PCIC_ID_ENE_CB710
