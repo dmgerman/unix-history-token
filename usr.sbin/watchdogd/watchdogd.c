@@ -558,14 +558,6 @@ name|watchdog_patpat
 argument_list|()
 operator|<
 literal|0
-operator|&&
-operator|(
-name|timeout
-operator|&
-name|WD_INTERVAL
-operator|)
-operator|!=
-name|WD_TO_NEVER
 condition|)
 name|err
 argument_list|(
@@ -1105,6 +1097,19 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
+if|if
+condition|(
+name|argc
+operator|!=
+name|optind
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"extra arguments."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|is_daemon
