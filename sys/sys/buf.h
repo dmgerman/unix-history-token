@@ -2006,6 +2006,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|waitrunningbufspace
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|caddr_t
 name|kern_vfs_bio_buffer_alloc
 parameter_list|(

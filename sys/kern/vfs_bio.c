@@ -1670,8 +1670,6 @@ comment|/*  *	waitrunningbufspace()  *  *	runningbufspace is a measure of the am
 end_comment
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|waitrunningbufspace
 parameter_list|(

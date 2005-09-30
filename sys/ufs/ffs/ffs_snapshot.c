@@ -11647,6 +11647,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|launched_async_io
+decl_stmt|,
+name|prev_norunningbuf
+decl_stmt|;
 if|if
 condition|(
 name|td
@@ -11792,6 +11797,18 @@ literal|0
 operator|)
 return|;
 block|}
+name|launched_async_io
+operator|=
+literal|0
+expr_stmt|;
+name|prev_norunningbuf
+operator|=
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_NORUNNINGBUF
+expr_stmt|;
 comment|/* 	 * Since I/O on bp isn't yet in progress and it may be blocked 	 * for a long time waiting on snaplk, back it out of 	 * runningbufspace, possibly waking other threads waiting for space. 	 */
 name|runningbufwakeup
 argument_list|(
@@ -12244,6 +12261,11 @@ argument_list|,
 name|MNT_WAIT
 argument_list|)
 expr_stmt|;
+else|else
+name|launched_async_io
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Otherwise, read the old block contents into the buffer. 		 */
@@ -12301,6 +12323,11 @@ argument_list|,
 name|MNT_WAIT
 argument_list|)
 expr_stmt|;
+else|else
+name|launched_async_io
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 block|}
 name|savedcbp
@@ -12348,6 +12375,11 @@ argument_list|,
 name|MNT_WAIT
 argument_list|)
 expr_stmt|;
+else|else
+name|launched_async_io
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -12370,9 +12402,17 @@ expr_stmt|;
 name|td
 operator|->
 name|td_pflags
-operator|&=
+operator|=
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
 operator|~
 name|TDP_NORUNNINGBUF
+operator|)
+operator||
+name|prev_norunningbuf
 expr_stmt|;
 block|}
 else|else
@@ -12380,6 +12420,21 @@ name|VI_UNLOCK
 argument_list|(
 name|devvp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|launched_async_io
+operator|&&
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_NORUNNINGBUF
+operator|)
+condition|)
+name|waitrunningbufspace
+argument_list|()
 expr_stmt|;
 comment|/* 	 * I/O on bp will now be started, so count it in runningbufspace. 	 */
 if|if
