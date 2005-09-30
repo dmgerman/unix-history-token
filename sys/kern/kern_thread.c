@@ -1746,21 +1746,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 			 * as we are exiting there is room for another 			 * to be created. 			 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_maxthrwaits
-condition|)
-name|wakeup
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_numthreads
-argument_list|)
-expr_stmt|;
 comment|/* 			 * The test below is NOT true if we are the 			 * sole exiting thread. P_STOPPED_SNGL is unset 			 * in exit1() after it is the only survivor. 			 */
 if|if
 condition|(
