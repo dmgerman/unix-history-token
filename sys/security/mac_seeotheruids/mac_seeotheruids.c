@@ -225,6 +225,40 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Exception: allow the root user to be aware of other credentials by virtue  * of privilege.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|suser_privileged
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_mac_seeotheruids
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|suser_privileged
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|suser_privileged
+argument_list|,
+literal|0
+argument_list|,
+literal|"Make an exception for superuser"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Exception: allow processes with a specific gid to be exempt from the  * policy.  One sysctl enables this functionality; the other sets the  * exempt gid.  */
 end_comment
 
@@ -379,6 +413,11 @@ operator|)
 return|;
 if|if
 condition|(
+name|suser_privileged
+condition|)
+block|{
+if|if
+condition|(
 name|suser_cred
 argument_list|(
 name|u1
@@ -393,6 +432,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|ESRCH
