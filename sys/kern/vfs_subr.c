@@ -7126,6 +7126,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|proc
 modifier|*
@@ -7454,6 +7455,12 @@ expr_stmt|;
 name|starttime
 operator|=
 name|time_uptime
+expr_stmt|;
+name|td
+operator|->
+name|td_pflags
+operator||=
+name|TDP_NORUNNINGBUF
 expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(

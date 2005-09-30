@@ -1533,8 +1533,6 @@ comment|/*  * runningbufwakeup() - in-progress I/O accounting.  *  */
 end_comment
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|runningbufwakeup
 parameter_list|(
@@ -3465,17 +3463,15 @@ block|{
 comment|/* 		 * don't allow the async write to saturate the I/O 		 * system.  We will not deadlock here because 		 * we are blocking waiting for I/O that is already in-progress 		 * to complete. We do not block here if it is the update 		 * or syncer daemon trying to clean up as that can lead 		 * to deadlock. 		 */
 if|if
 condition|(
+operator|(
 name|curthread
 operator|->
-name|td_proc
-operator|!=
-name|bufdaemonproc
-operator|&&
-name|curthread
-operator|->
-name|td_proc
-operator|!=
-name|updateproc
+name|td_pflags
+operator|&
+name|TDP_NORUNNINGBUF
+operator|)
+operator|==
+literal|0
 condition|)
 name|waitrunningbufspace
 argument_list|()
@@ -7522,6 +7518,12 @@ name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This process is allowed to take the buffer cache to the limit 	 */
+name|curthread
+operator|->
+name|td_pflags
+operator||=
+name|TDP_NORUNNINGBUF
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&

@@ -1995,6 +1995,17 @@ comment|/* Number of pbufs for vnode pager */
 end_comment
 
 begin_function_decl
+name|void
+name|runningbufwakeup
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|caddr_t
 name|kern_vfs_bio_buffer_alloc
 parameter_list|(

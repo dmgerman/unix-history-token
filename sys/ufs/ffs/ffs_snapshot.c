@@ -11792,6 +11792,12 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Since I/O on bp isn't yet in progress and it may be blocked 	 * for a long time waiting on snaplk, back it out of 	 * runningbufspace, possibly waking other threads waiting for space. 	 */
+name|runningbufwakeup
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Not in the precomputed list, so check the snapshots. 	 */
 name|retry
 label|:
@@ -11891,6 +11897,8 @@ operator|->
 name|td_pflags
 operator||=
 name|TDP_COWINPROGRESS
+operator||
+name|TDP_NORUNNINGBUF
 expr_stmt|;
 name|error
 operator|=
@@ -12073,6 +12081,8 @@ operator|->
 name|td_pflags
 operator||=
 name|TDP_COWINPROGRESS
+operator||
+name|TDP_NORUNNINGBUF
 expr_stmt|;
 name|error
 operator|=
@@ -12343,6 +12353,7 @@ if|if
 condition|(
 name|snapshot_locked
 condition|)
+block|{
 name|lockmgr
 argument_list|(
 name|vp
@@ -12356,10 +12367,35 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_NORUNNINGBUF
+expr_stmt|;
+block|}
 else|else
 name|VI_UNLOCK
 argument_list|(
 name|devvp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * I/O on bp will now be started, so count it in runningbufspace. 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_runningbufspace
+condition|)
+name|atomic_add_int
+argument_list|(
+operator|&
+name|runningbufspace
+argument_list|,
+name|bp
+operator|->
+name|b_runningbufspace
 argument_list|)
 expr_stmt|;
 return|return
