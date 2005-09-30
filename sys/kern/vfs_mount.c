@@ -6092,13 +6092,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|vfs_unbusy
-argument_list|(
-name|mp
-argument_list|,
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Iterate over all currently mounted file systems and use 		 * the time stamp found to check and/or initialize the RTC. 		 * Typically devfs has no time stamp and the only other FS 		 * is the actual / FS. 		 */
 do|do
 block|{
