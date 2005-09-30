@@ -3170,15 +3170,27 @@ operator|&
 name|CNFG_BWEN
 operator|)
 condition|)
+block|{
 name|chipset
 operator|=
 name|cia_swiz_chipset
 expr_stmt|;
+name|chipset_bwx
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
+block|{
 name|chipset
 operator|=
 name|cia_bwx_chipset
 expr_stmt|;
+name|chipset_bwx
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|cia_hae_mem
 operator|=
 name|REGVAL
@@ -3191,7 +3203,7 @@ directive|if
 literal|0
 block|chipset = cia_swiz_chipset;
 comment|/* XXX */
-block|cia_ispyxis = 0;
+block|cia_ispyxis = 0; 	chipset_bwx = 0;
 endif|#
 directive|endif
 if|if
@@ -3279,14 +3291,6 @@ decl_stmt|;
 name|cia_init
 argument_list|()
 expr_stmt|;
-name|name
-operator|=
-name|cia_ispyxis
-condition|?
-literal|"Pyxis"
-else|:
-literal|"ALCOR/ALCOR2"
-expr_stmt|;
 if|if
 condition|(
 name|cia_ispyxis
@@ -3305,7 +3309,11 @@ else|else
 block|{
 name|name
 operator|=
-literal|"ALCOR/ALCOR2"
+name|chipset_bwx
+condition|?
+literal|"Alcor 2"
+else|:
+literal|"Alcor"
 expr_stmt|;
 name|pass
 operator|=
@@ -3417,9 +3425,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cia_ispyxis
+name|chipset_bwx
 condition|)
 block|{
+if|if
+condition|(
+name|cia_ispyxis
+condition|)
 name|snprintf
 argument_list|(
 name|chipset_type
@@ -3432,9 +3444,18 @@ argument_list|,
 literal|"pyxis"
 argument_list|)
 expr_stmt|;
-name|chipset_bwx
-operator|=
-literal|1
+else|else
+name|snprintf
+argument_list|(
+name|chipset_type
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|chipset_type
+argument_list|)
+argument_list|,
+literal|"alcor2"
+argument_list|)
 expr_stmt|;
 name|chipset_ports
 operator|=
@@ -3462,10 +3483,6 @@ argument_list|)
 argument_list|,
 literal|"cia"
 argument_list|)
-expr_stmt|;
-name|chipset_bwx
-operator|=
-literal|0
 expr_stmt|;
 name|chipset_ports
 operator|=
