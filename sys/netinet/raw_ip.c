@@ -680,6 +680,25 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Check the minimum TTL for socket. */
+if|if
+condition|(
+name|last
+operator|->
+name|inp_ip_minttl
+operator|&&
+name|last
+operator|->
+name|inp_ip_minttl
+operator|>
+name|ip
+operator|->
+name|ip_ttl
+condition|)
+name|policyfail
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!

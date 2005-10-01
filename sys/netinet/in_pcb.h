@@ -365,6 +365,10 @@ name|u_char
 name|inp_ip_p
 decl_stmt|;
 comment|/* protocol proto */
+name|u_char
+name|inp_ip_minttl
+decl_stmt|;
+comment|/* minimum TTL or drop */
 comment|/* protocol dependent part; options */
 struct|struct
 block|{
