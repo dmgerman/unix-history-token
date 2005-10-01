@@ -84,6 +84,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<langinfo.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3850,6 +3856,17 @@ decl_stmt|;
 name|time_t
 name|when
 decl_stmt|;
+name|char
+modifier|*
+name|ptbuf
+decl_stmt|;
+specifier|static
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|mode_string
 argument_list|(
 name|file_hdr
@@ -3873,16 +3890,23 @@ name|file_hdr
 operator|->
 name|c_mtime
 expr_stmt|;
-name|strcpy
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
 argument_list|(
-name|tbuf
-argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|when
+name|D_MD_ORDER
 argument_list|)
-argument_list|)
+operator|==
+literal|'d'
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -3906,30 +3930,48 @@ name|when
 operator|<
 literal|0L
 condition|)
-block|{
-comment|/* The file is older than 6 months, or in the future. 	 Show the year instead of the time of day.  */
-name|strcpy
+name|ptbuf
+operator|=
+name|d_first
+condition|?
+literal|"%e %b  %Y"
+else|:
+literal|"%b %e  %Y"
+expr_stmt|;
+else|else
+name|ptbuf
+operator|=
+name|d_first
+condition|?
+literal|"%e %b %R"
+else|:
+literal|"%b %e %R"
+expr_stmt|;
+name|strftime
 argument_list|(
 name|tbuf
-operator|+
-literal|11
 argument_list|,
+sizeof|sizeof
+argument_list|(
 name|tbuf
-operator|+
-literal|19
+argument_list|)
+argument_list|,
+name|ptbuf
+argument_list|,
+name|localtime
+argument_list|(
+operator|&
+name|when
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-name|tbuf
-index|[
-literal|16
-index|]
+name|ptbuf
 operator|=
-literal|'\0'
+name|tbuf
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s %3u "
+literal|"%s %3lu "
 argument_list|,
 name|mbuf
 argument_list|,
@@ -4007,7 +4049,7 @@ name|CP_IFBLK
 condition|)
 name|printf
 argument_list|(
-literal|"%3u, %3u "
+literal|"%3lu, %3lu "
 argument_list|,
 name|file_hdr
 operator|->
@@ -4032,9 +4074,7 @@ name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
-name|tbuf
-operator|+
-literal|4
+name|ptbuf
 argument_list|)
 expr_stmt|;
 name|print_name_with_quoting
@@ -4176,13 +4216,10 @@ break|break;
 default|default:
 if|if
 condition|(
+name|isprint
+argument_list|(
 name|c
-operator|>
-literal|040
-operator|&&
-name|c
-operator|<
-literal|0177
+argument_list|)
 condition|)
 name|putchar
 argument_list|(
