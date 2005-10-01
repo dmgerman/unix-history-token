@@ -1402,7 +1402,7 @@ argument_list|)
 expr_stmt|;
 name|PRINT
 argument_list|(
-literal|"interrupts dropped due to lack of space:"
+literal|"sampling stalls due to space shortages:"
 argument_list|,
 name|intr_bufferfull
 argument_list|)
