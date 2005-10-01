@@ -817,7 +817,7 @@ name|mp
 operator|->
 name|mnt_optnew
 argument_list|,
-literal|"nwfw_args"
+literal|"nwfs_args"
 argument_list|,
 operator|&
 name|args
