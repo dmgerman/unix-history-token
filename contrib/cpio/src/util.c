@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* util.c - Several utility routines for cpio.    Copyright (C) 1990, 1991, 1992, 2001, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation, Inc.,    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
@@ -3261,7 +3265,7 @@ name|tty_out
 argument_list|,
 name|_
 argument_list|(
-literal|"Found end of tape.  Load next tape and press RETURN. "
+literal|"Found end of volume.  Load next volume and press RETURN. "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3272,7 +3276,7 @@ name|tty_out
 argument_list|,
 name|_
 argument_list|(
-literal|"Found end of tape.  To continue, type device/file name when ready.\n"
+literal|"Found end of volume.  To continue, type device/file name when ready.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
