@@ -2230,7 +2230,7 @@ name|errno
 argument_list|,
 name|_
 argument_list|(
-literal|"cannot link %s to %s"
+literal|"cannot link %s to %s (will copy instead)"
 argument_list|)
 argument_list|,
 name|link_target
