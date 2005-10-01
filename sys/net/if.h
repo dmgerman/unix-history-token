@@ -462,15 +462,8 @@ begin_comment
 comment|/* (i) supports multicast */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IFF_POLLING
-value|0x10000
-end_define
-
 begin_comment
-comment|/* (n) Interface is in polling mode. */
+comment|/*			0x10000		*/
 end_comment
 
 begin_define
@@ -555,7 +548,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_POLLING)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC)
 end_define
 
 begin_comment

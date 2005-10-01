@@ -2398,8 +2398,6 @@ block|{
 name|POLL_ONLY
 block|,
 name|POLL_AND_CHECK_STATUS
-block|,
-name|POLL_DEREGISTER
 block|}
 enum|;
 end_enum
