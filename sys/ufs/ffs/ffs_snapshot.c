@@ -12432,6 +12432,8 @@ name|td_pflags
 operator|&
 name|TDP_NORUNNINGBUF
 operator|)
+operator|==
+literal|0
 condition|)
 name|waitrunningbufspace
 argument_list|()
