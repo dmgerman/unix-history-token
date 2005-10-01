@@ -2774,6 +2774,17 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/*  	 * Refresh PID associated with this descriptor. 	 */
+name|d
+operator|->
+name|bd_pid
+operator|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+expr_stmt|;
 name|BPFD_LOCK
 argument_list|(
 name|d
@@ -4331,6 +4342,17 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 	 * Refresh PID associated with this descriptor. 	 */
+name|d
+operator|->
+name|bd_pid
+operator|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+expr_stmt|;
 name|revents
 operator|=
 name|events
@@ -4490,6 +4512,17 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/*  	 * Refresh PID associated with this descriptor. 	 */
+name|d
+operator|->
+name|bd_pid
+operator|=
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+expr_stmt|;
 name|kn
 operator|->
 name|kn_fop
