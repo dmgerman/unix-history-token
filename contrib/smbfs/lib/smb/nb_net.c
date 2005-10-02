@@ -173,6 +173,9 @@ name|sockaddr
 modifier|*
 modifier|*
 name|dest
+parameter_list|,
+name|long
+name|smbtcpport
 parameter_list|)
 block|{
 name|struct
@@ -324,7 +327,7 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-name|SMB_TCP_PORT
+name|smbtcpport
 argument_list|)
 expr_stmt|;
 operator|*
@@ -595,7 +598,7 @@ comment|/*int nbns_resolvename(const char *name, struct sockaddr **dest) { 	prin
 end_comment
 
 begin_comment
-comment|/* int nb_hostlookup(struct nb_name *np, const char *server, const char *hint, 	struct sockaddr_nb **dst) { 	struct sockaddr_nb *snb; 	int error;  	error = nb_sockaddr(NULL, np,&snb); 	if (error) 		return error; 	do { 		if (hint) { 			error = nb_resolvehost_in(host, snb); 			if (error) 				break; 		} else { 			error = nb_resolvename(server); 		} 	} while(0); 	if (!error) { 		*dst = snb; 	} else 		nb_snbfree(snb); 	return error; } */
+comment|/* int nb_hostlookup(struct nb_name *np, const char *server, const char *hint, 	struct sockaddr_nb **dst) { 	struct sockaddr_nb *snb; 	int error;  	error = nb_sockaddr(NULL, np,&snb); 	if (error) 		return error; 	do { 		if (hint) { 			error = nb_resolvehost_in(host, snb, SMB_TCP_PORT); 			if (error) 				break; 		} else { 			error = nb_resolvename(server); 		} 	} while(0); 	if (!error) { 		*dst = snb; 	} else 		nb_snbfree(snb); 	return error; } */
 end_comment
 
 end_unit
