@@ -85,5 +85,46 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|cmi9739_patch
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+block|{
+comment|/* 	 * Few laptops (notably ASUS W1000N) need extra register 	 * initialization to power up the internal speakers. 	 */
+name|ac97_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|AC97_REG_POWER
+argument_list|,
+literal|0x000f
+argument_list|)
+expr_stmt|;
+name|ac97_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|AC97_MIXEXT_CLFE
+argument_list|,
+literal|0x0000
+argument_list|)
+expr_stmt|;
+name|ac97_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x64
+argument_list|,
+literal|0x7110
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
