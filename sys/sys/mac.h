@@ -1316,23 +1316,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_root_mount
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|mac_relabel_vnode
 parameter_list|(
 name|struct
