@@ -1119,7 +1119,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|start_blk
-operator|<=
+operator|<
 name|sc
 operator|->
 name|nblocks
@@ -1132,7 +1132,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|end_blk
-operator|<
+operator|<=
 name|sc
 operator|->
 name|nblocks
@@ -1650,6 +1650,19 @@ literal|"g_uzip_access but no consumer"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|acw
+operator|+
+name|dw
+operator|>
+literal|0
+condition|)
+return|return
+name|EROFS
+return|;
 return|return
 operator|(
 name|g_access
