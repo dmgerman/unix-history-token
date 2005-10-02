@@ -420,7 +420,7 @@ specifier|static
 name|int
 name|kdb_stop_cpus_with_nmi
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
