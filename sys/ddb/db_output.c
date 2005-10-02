@@ -608,6 +608,21 @@ name|int
 name|maxlines
 parameter_list|)
 block|{
+if|if
+condition|(
+name|db_page_callout
+operator|==
+name|NULL
+operator|||
+name|callout
+operator|==
+name|NULL
+operator|||
+name|arg
+operator|==
+name|db_page_callout_arg
+condition|)
+block|{
 name|db_page_callout
 operator|=
 name|callout
@@ -624,6 +639,7 @@ name|db_newlines
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 end_function
 
