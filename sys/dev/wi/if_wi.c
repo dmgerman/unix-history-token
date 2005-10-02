@@ -3890,7 +3890,9 @@ name|sc
 argument_list|,
 name|WI_RID_DTIM_PERIOD
 argument_list|,
-literal|1
+name|ic
+operator|->
+name|ic_dtim_period
 argument_list|)
 expr_stmt|;
 block|}
