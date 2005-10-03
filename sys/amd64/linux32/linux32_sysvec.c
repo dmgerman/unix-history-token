@@ -4346,6 +4346,11 @@ operator||
 name|CR0_TS
 argument_list|)
 expr_stmt|;
+name|fpstate_drop
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* Return via doreti so that we can change to a different %cs */
 name|pcb
 operator|->
