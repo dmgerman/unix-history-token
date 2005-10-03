@@ -7311,7 +7311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The code common to handling reference counted flags,  * e.g., in ifpromisc() and if_allmulti().  * The "pflag" argument can specify a permanent mode flag,  * such as IFF_PPROMISC for promiscuous mode; should be 0 if none.  *  * Only to be used on stack-owned flags, not driver-owned flags.  */
+comment|/*  * The code common to handling reference counted flags,  * e.g., in ifpromisc() and if_allmulti().  * The "pflag" argument can specify a permanent mode flag to check,  * such as IFF_PPROMISC for promiscuous mode; should be 0 if none.  *  * Only to be used on stack-owned flags, not driver-owned flags.  */
 end_comment
 
 begin_function
@@ -7350,6 +7350,7 @@ name|oldflags
 decl_stmt|,
 name|oldcount
 decl_stmt|;
+comment|/* Sanity checks to catch programming errors */
 name|KASSERT
 argument_list|(
 operator|(
@@ -7365,76 +7366,57 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"if_setflag: setting driver-ownded flag %d"
+literal|"%s: setting driver-owned flag %d"
+operator|,
+name|__func__
 operator|,
 name|flag
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Sanity checks to catch programming errors */
 if|if
 condition|(
 name|onswitch
 condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|refcount
-operator|<
-literal|0
-condition|)
-block|{
-name|if_printf
+name|KASSERT
 argument_list|(
-name|ifp
-argument_list|,
-literal|"refusing to increment negative refcount %d "
-literal|"for interface flag %d\n"
-argument_list|,
 operator|*
 name|refcount
+operator|>=
+literal|0
 argument_list|,
+operator|(
+literal|"%s: increment negative refcount %d for flag %d"
+operator|,
+name|__func__
+operator|,
+operator|*
+name|refcount
+operator|,
 name|flag
+operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-block|}
 else|else
-block|{
-if|if
-condition|(
-operator|*
-name|refcount
-operator|<=
-literal|0
-condition|)
-block|{
-name|if_printf
+name|KASSERT
 argument_list|(
-name|ifp
-argument_list|,
-literal|"refusing to decrement non-positive refcount %d"
-literal|"for interface flag %d\n"
-argument_list|,
 operator|*
 name|refcount
+operator|>
+literal|0
 argument_list|,
+operator|(
+literal|"%s: decrement non-positive refcount %d for flag %d"
+operator|,
+name|__func__
+operator|,
+operator|*
+name|refcount
+operator|,
 name|flag
+operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-block|}
 comment|/* In case this mode is permanent, just touch refcount */
 if|if
 condition|(
