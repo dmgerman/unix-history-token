@@ -544,6 +544,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vm_paddr_t
+name|dump_avail
+index|[
+literal|4
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_paddr_t
 name|physical_start
 decl_stmt|;
 end_decl_stmt
@@ -1947,6 +1956,11 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
+name|dump_avail
+index|[
+literal|0
+index|]
+operator|=
 name|phys_avail
 index|[
 literal|0
@@ -1957,6 +1971,11 @@ argument_list|(
 name|virtual_avail
 argument_list|)
 expr_stmt|;
+name|dump_avail
+index|[
+literal|1
+index|]
+operator|=
 name|phys_avail
 index|[
 literal|1
@@ -1968,6 +1987,11 @@ literal|0x02000000
 operator|-
 literal|1
 expr_stmt|;
+name|dump_avail
+index|[
+literal|2
+index|]
+operator|=
 name|phys_avail
 index|[
 literal|2
@@ -1975,6 +1999,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|dump_avail
+index|[
+literal|3
+index|]
+operator|=
 name|phys_avail
 index|[
 literal|3

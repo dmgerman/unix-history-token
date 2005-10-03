@@ -2181,6 +2181,14 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|dump_avail
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
