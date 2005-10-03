@@ -218,6 +218,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syscallsubr.h>
 end_include
 
@@ -5380,7 +5386,7 @@ comment|/* 	 * Vector through to semsys if it is loaded. 	 */
 return|return
 name|sysent
 index|[
-literal|169
+name|SYS_semsys
 index|]
 operator|.
 name|sy_call
@@ -5412,7 +5418,7 @@ comment|/* 	 * Vector through to msgsys if it is loaded. 	 */
 return|return
 name|sysent
 index|[
-literal|170
+name|SYS_msgsys
 index|]
 operator|.
 name|sy_call
@@ -5444,7 +5450,7 @@ comment|/* 	 * Vector through to shmsys if it is loaded. 	 */
 return|return
 name|sysent
 index|[
-literal|171
+name|SYS_shmsys
 index|]
 operator|.
 name|sy_call
