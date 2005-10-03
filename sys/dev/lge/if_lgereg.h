@@ -2894,9 +2894,6 @@ name|device_t
 name|lge_miibus
 decl_stmt|;
 name|u_int8_t
-name|lge_unit
-decl_stmt|;
-name|u_int8_t
 name|lge_type
 decl_stmt|;
 name|u_int8_t

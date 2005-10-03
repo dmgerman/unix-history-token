@@ -1027,13 +1027,13 @@ operator|==
 name|LGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: EEPROM read timed out\n"
-argument_list|,
 name|sc
 operator|->
-name|lge_unit
+name|lge_ifp
+argument_list|,
+literal|"EEPROM read timed out\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1294,13 +1294,13 @@ operator|==
 name|LGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: PHY read timed out\n"
-argument_list|,
 name|sc
 operator|->
-name|lge_unit
+name|lge_ifp
+argument_list|,
+literal|"PHY read timed out\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1421,13 +1421,13 @@ operator|==
 name|LGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: PHY write timed out\n"
-argument_list|,
 name|sc
 operator|->
-name|lge_unit
+name|lge_ifp
+argument_list|,
+literal|"PHY write timed out\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1883,13 +1883,13 @@ name|i
 operator|==
 name|LGE_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: reset never completed\n"
-argument_list|,
 name|sc
 operator|->
-name|lge_unit
+name|lge_ifp
+argument_list|,
+literal|"reset never completed\n"
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little while for the chip to get its brains in order. */
@@ -2020,10 +2020,10 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+init|=
+name|NULL
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -2040,24 +2040,6 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|lge_softc
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Map control/status registers. 	 */
@@ -2095,11 +2077,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"lge%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2164,24 +2146,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"lge%d: couldn't map interrupt\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
+name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-name|LGE_RES
-argument_list|,
-name|LGE_RID
-argument_list|,
-name|sc
-operator|->
-name|lge_res
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2219,37 +2188,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|bus_release_resource
+name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|lge_irq
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|LGE_RES
-argument_list|,
-name|LGE_RID
-argument_list|,
-name|sc
-operator|->
-name|lge_res
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"lge%d: couldn't set up irq\n"
-argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2323,12 +2266,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|lge_unit
-operator|=
-name|unit
-expr_stmt|;
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -2371,50 +2308,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"lge%d: no memory for list buffers!\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|bus_teardown_intr
+name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|lge_irq
-argument_list|,
-name|sc
-operator|->
-name|lge_intrhand
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|lge_irq
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|LGE_RES
-argument_list|,
-name|LGE_RID
-argument_list|,
-name|sc
-operator|->
-name|lge_res
+literal|"no memory for list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2447,67 +2345,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"lge%d: jumbo buffer allocation failed\n"
-argument_list|,
-name|sc
-operator|->
-name|lge_unit
-argument_list|)
-expr_stmt|;
-name|contigfree
-argument_list|(
-name|sc
-operator|->
-name|lge_ldata
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|lge_list_data
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|bus_teardown_intr
+name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|lge_irq
-argument_list|,
-name|sc
-operator|->
-name|lge_intrhand
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|lge_irq
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|LGE_RES
-argument_list|,
-name|LGE_RID
-argument_list|,
-name|sc
-operator|->
-name|lge_res
+literal|"jumbo buffer allocation failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2536,72 +2378,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"lge%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|lge_unit
-argument_list|)
-expr_stmt|;
-name|contigfree
-argument_list|(
-name|sc
-operator|->
-name|lge_ldata
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|lge_list_data
-argument_list|)
-argument_list|,
-name|M_DEVBUF
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|lge_free_jumbo_mem
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|bus_teardown_intr
-argument_list|(
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|lge_irq
-argument_list|,
-name|sc
-operator|->
-name|lge_intrhand
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|lge_irq
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|LGE_RES
-argument_list|,
-name|LGE_RID
-argument_list|,
-name|sc
-operator|->
-name|lge_res
 argument_list|)
 expr_stmt|;
 name|error
@@ -2747,77 +2533,16 @@ name|lge_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"lge%d: MII without any PHY!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|lge_unit
-argument_list|)
-expr_stmt|;
-name|contigfree
-argument_list|(
-name|sc
-operator|->
-name|lge_ldata
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|lge_list_data
-argument_list|)
-argument_list|,
-name|M_DEVBUF
+literal|"MII without any PHY!\n"
 argument_list|)
 expr_stmt|;
 name|lge_free_jumbo_mem
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|bus_teardown_intr
-argument_list|(
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|lge_irq
-argument_list|,
-name|sc
-operator|->
-name|lge_intrhand
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|lge_irq
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|LGE_RES
-argument_list|,
-name|LGE_RID
-argument_list|,
-name|sc
-operator|->
-name|lge_res
-argument_list|)
-expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 name|error
@@ -2836,16 +2561,100 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
-name|callout_handle_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|lge_stat_ch
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|fail
 label|:
+if|if
+condition|(
+name|sc
+operator|->
+name|lge_ldata
+condition|)
+name|contigfree
+argument_list|(
+name|sc
+operator|->
+name|lge_ldata
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|lge_list_data
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|lge_intrhand
+condition|)
+name|bus_teardown_intr
+argument_list|(
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|lge_irq
+argument_list|,
+name|sc
+operator|->
+name|lge_intrhand
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|lge_irq
+condition|)
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|0
+argument_list|,
+name|sc
+operator|->
+name|lge_irq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|lge_res
+condition|)
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|LGE_RES
+argument_list|,
+name|LGE_RID
+argument_list|,
+name|sc
+operator|->
+name|lge_res
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -3301,14 +3110,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: no memory for rx list "
-literal|"-- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|lge_unit
+name|lge_ifp
+argument_list|,
+literal|"no memory for rx list "
+literal|"-- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3335,14 +3144,14 @@ block|{
 ifdef|#
 directive|ifdef
 name|LGE_VERBOSE
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: jumbo allocation failed "
-literal|"-- packet dropped!\n"
-argument_list|,
 name|sc
 operator|->
-name|lge_unit
+name|lge_ifp
+argument_list|,
+literal|"jumbo allocation failed "
+literal|"-- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3588,13 +3397,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: no memory for jumbo buffers!\n"
-argument_list|,
 name|sc
 operator|->
-name|lge_unit
+name|lge_ifp
+argument_list|,
+literal|"no memory for jumbo buffers!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3679,14 +3488,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: no memory for jumbo "
-literal|"buffer queue!\n"
-argument_list|,
 name|sc
 operator|->
-name|lge_unit
+name|lge_ifp
+argument_list|,
+literal|"no memory for jumbo "
+literal|"buffer queue!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3845,13 +3654,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|LGE_VERBOSE
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: no free jumbo buffers\n"
-argument_list|,
 name|sc
 operator|->
-name|lge_unit
+name|lge_ifp
+argument_list|,
+literal|"no free jumbo buffers\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4268,14 +4077,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: no receive buffers "
-literal|"available -- packet dropped!\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|lge_unit
+literal|"no receive buffers "
+literal|"available -- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -4783,13 +4590,11 @@ operator|==
 name|IFM_1000_T
 operator|)
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: gigabit link up\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|lge_unit
+literal|"gigabit link up\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5532,14 +5337,12 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: initialization failed: no "
-literal|"memory for rx buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|lge_unit
+literal|"initialization failed: no "
+literal|"memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|lge_stop
@@ -6401,13 +6204,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"lge%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|lge_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|lge_stop
