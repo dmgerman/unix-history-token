@@ -4867,13 +4867,13 @@ operator|&
 name|my_inm
 argument_list|)
 expr_stmt|;
+name|IN_MULTI_UNLOCK
+argument_list|()
+expr_stmt|;
 name|IFF_UNLOCKGIANT
 argument_list|(
 name|ifp
 argument_list|)
-expr_stmt|;
-name|IN_MULTI_UNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 end_function
