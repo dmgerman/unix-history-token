@@ -178,7 +178,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int32_t
+name|uint32_t
 name|last
 init|=
 operator|-
@@ -675,7 +675,7 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
-name|int32_t
+name|uint32_t
 name|cur
 init|=
 name|tcr0_read
