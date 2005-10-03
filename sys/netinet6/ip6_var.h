@@ -711,6 +711,42 @@ begin_comment
 comment|/* use minimum MTU (IPV6_USE_MIN_MTU) */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NO_STRICT_ALIGNMENT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IP6_HDR_ALIGNED_P
+parameter_list|(
+name|ip
+parameter_list|)
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IP6_HDR_ALIGNED_P
+parameter_list|(
+name|ip
+parameter_list|)
+value|((((intptr_t) (ip))& 3) == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|struct

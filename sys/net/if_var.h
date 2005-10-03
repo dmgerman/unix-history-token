@@ -489,9 +489,9 @@ parameter_list|)
 function_decl|;
 name|void
 modifier|*
-name|if_spare1
+name|if_bridge
 decl_stmt|;
-comment|/* spare pointer 1 */
+comment|/* bridge glue */
 name|void
 modifier|*
 name|if_spare2

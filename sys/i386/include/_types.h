@@ -178,6 +178,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|__NO_STRICT_ALIGNMENT
+end_define
+
 begin_comment
 comment|/*  * Standard type definitions.  */
 end_comment

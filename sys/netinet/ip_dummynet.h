@@ -225,6 +225,11 @@ define|#
 directive|define
 name|DN_TO_ETH_OUT
 value|5
+comment|/* Reserved for DN_TO_IP6_IN, DN_TO_IP6_OUT */
+define|#
+directive|define
+name|DN_TO_IFB_FWD
+value|8
 name|dn_key
 name|output_time
 decl_stmt|;

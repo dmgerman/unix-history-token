@@ -1590,6 +1590,9 @@ case|:
 case|case
 name|IFT_L2VLAN
 case|:
+case|case
+name|IFT_BRIDGE
+case|:
 name|snprintf
 argument_list|(
 name|eaddr
@@ -8534,6 +8537,9 @@ name|IFT_ISO88025
 case|:
 case|case
 name|IFT_L2VLAN
+case|:
+case|case
+name|IFT_BRIDGE
 case|:
 name|bcopy
 argument_list|(

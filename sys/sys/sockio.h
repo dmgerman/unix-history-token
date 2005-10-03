@@ -688,6 +688,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCSDRVSPEC
+value|_IOW('i', 123, struct ifdrv)
+end_define
+
+begin_comment
+comment|/* set driver-specific 								  parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGDRVSPEC
+value|_IOWR('i', 123, struct ifdrv)
+end_define
+
+begin_comment
+comment|/* get driver-specific 								  parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCIFCREATE
 value|_IOWR('i', 122, struct ifreq)
 end_define
