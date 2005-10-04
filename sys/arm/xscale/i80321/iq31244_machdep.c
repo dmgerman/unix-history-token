@@ -737,6 +737,9 @@ decl_stmt|;
 name|vm_offset_t
 name|lastaddr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 name|vm_offset_t
 name|zstart
 init|=
@@ -746,6 +749,8 @@ name|zend
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 init|=
