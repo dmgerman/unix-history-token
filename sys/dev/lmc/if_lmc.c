@@ -13392,6 +13392,9 @@ literal|"%s: DMA descriptor array> PAGE_SIZE (%d)\n"
 argument_list|,
 name|NAME_UNIT
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -20104,7 +20107,7 @@ directive|if
 operator|(
 name|__FreeBSD_version
 operator|<
-literal|500000
+literal|700000
 operator|)
 if|if
 condition|(
