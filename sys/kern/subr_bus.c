@@ -2649,6 +2649,12 @@ name|NULL
 condition|)
 return|return;
 comment|/* Drop it on the floor */
+if|if
+condition|(
+name|data
+operator|!=
+name|NULL
+condition|)
 name|snprintf
 argument_list|(
 name|msg
@@ -2664,6 +2670,22 @@ argument_list|,
 name|type
 argument_list|,
 name|data
+argument_list|)
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|msg
+argument_list|,
+name|len
+argument_list|,
+literal|"!system=%s subsystem=%s type=%s\n"
+argument_list|,
+name|system
+argument_list|,
+name|subsystem
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 name|devctl_queue_data
