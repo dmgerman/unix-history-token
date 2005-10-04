@@ -2574,7 +2574,7 @@ operator|&=
 operator|~
 name|AFORK
 expr_stmt|;
-comment|/* 	 * Free any previous argument cache and it with 	 * the new argument cache, if any. 	 */
+comment|/* 	 * Free any previous argument cache and replace it with 	 * the new argument cache, if any. 	 */
 name|oldargs
 operator|=
 name|p
