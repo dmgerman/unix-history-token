@@ -5982,8 +5982,6 @@ name|kd
 parameter_list|)
 block|{
 name|int
-name|error
-decl_stmt|,
 name|i
 decl_stmt|,
 name|wp
@@ -6031,10 +6029,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|KREADNL
