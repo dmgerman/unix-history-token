@@ -1344,6 +1344,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+comment|/* XXXCSJP We need to lock the object before walking 		 * the backing object list. 		 */
 while|while
 condition|(
 name|object
@@ -1353,17 +1354,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|object
-operator|=
-name|object
-operator|->
-name|backing_object
-expr_stmt|;
 name|offset
 operator|+=
 name|object
 operator|->
 name|backing_object_offset
+expr_stmt|;
+name|object
+operator|=
+name|object
+operator|->
+name|backing_object
 expr_stmt|;
 block|}
 comment|/* 		 * At the moment, vm_maps and objects aren't considered 		 * by the MAC system, so only things with backing by a 		 * normal object (read: vnodes) are checked. 		 */
