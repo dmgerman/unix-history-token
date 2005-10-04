@@ -30,7 +30,11 @@ name|CPUSTOP_ON_DDBBREAK
 end_define
 
 begin_comment
-comment|/*  * Misc. counters.  * #define COUNT_XINVLTLB_HITS  */
+comment|/*  * TLB counters.  * #define COUNT_XINVLTLB_HITS  */
+end_comment
+
+begin_comment
+comment|/*  * Per-CPU IPI interrupt counters.  * #define	COUNT_IPIS  */
 end_comment
 
 begin_comment
