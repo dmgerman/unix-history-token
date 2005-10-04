@@ -18,30 +18,36 @@ end_define
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stddef.h>
 end_include
+
+begin_comment
+comment|/* for wchar_t */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<wchar.h>
+file|<unistd.h>
 end_include
 
-begin_comment
-comment|/*  * Description of an archive entry.  *  * Basically, a "struct stat" with a few text fields added in.  *  * TODO: Add "comment", "charset", and possibly other entries that are  * supported by "pax interchange" format.  However, GNU, ustar, cpio,  * and other variants don't support these features, so they're not an  * excruciatingly high priority right now.  *  * TODO: "pax interchange" format allows essentially arbitrary  * key/value attributes to be attached to any entry.  Supporting  * such extensions may make this library useful for special  * applications (e.g., a package manager could attach special  * package-management attributes to each entry).  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_struct_decl
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/*  * Description of an archive entry.  *  * Basically, a "struct stat" with a few text fields added in.  *  * TODO: Add "comment", "charset", and possibly other entries that are  * supported by "pax interchange" format.  However, GNU, ustar, cpio,  * and other variants don't support these features, so they're not an  * excruciatingly high priority right now.  *  * TODO: "pax interchange" format allows essentially arbitrary  * key/value attributes to be attached to any entry.  Supporting  * such extensions may make this library useful for special  * applications (e.g., a package manager could attach special  * package-management attributes to each entry).  */
 struct_decl|struct
 name|archive_entry
 struct_decl|;
-end_struct_decl
-
-begin_comment
 comment|/*  * Basic object manipulation  */
-end_comment
-
-begin_function_decl
 name|struct
 name|archive_entry
 modifier|*
@@ -52,13 +58,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* The 'clone' function does a deep copy; all of the strings are copied too. */
-end_comment
-
-begin_function_decl
 name|struct
 name|archive_entry
 modifier|*
@@ -69,9 +69,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_free
 parameter_list|(
@@ -80,9 +77,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|archive_entry
 modifier|*
@@ -91,13 +85,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Retrieve fields from an archive_entry.  */
-end_comment
-
-begin_function_decl
 name|time_t
 name|archive_entry_atime
 parameter_list|(
@@ -106,9 +94,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|long
 name|archive_entry_atime_nsec
 parameter_list|(
@@ -117,9 +102,22 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
+name|time_t
+name|archive_entry_ctime
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|long
+name|archive_entry_ctime_nsec
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
 name|dev_t
 name|archive_entry_dev
 parameter_list|(
@@ -128,9 +126,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_fflags
 parameter_list|(
@@ -149,9 +144,6 @@ modifier|*
 name|clear
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -162,9 +154,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|gid_t
 name|archive_entry_gid
 parameter_list|(
@@ -173,9 +162,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -186,9 +172,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -199,9 +182,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ino_t
 name|archive_entry_ino
 parameter_list|(
@@ -210,9 +190,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|mode_t
 name|archive_entry_mode
 parameter_list|(
@@ -221,9 +198,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|time_t
 name|archive_entry_mtime
 parameter_list|(
@@ -232,9 +206,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|long
 name|archive_entry_mtime_nsec
 parameter_list|(
@@ -243,9 +214,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -256,9 +224,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|wchar_t
 modifier|*
@@ -269,9 +234,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|dev_t
 name|archive_entry_rdev
 parameter_list|(
@@ -280,9 +242,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|dev_t
 name|archive_entry_rdevmajor
 parameter_list|(
@@ -291,9 +250,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|dev_t
 name|archive_entry_rdevminor
 parameter_list|(
@@ -302,9 +258,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int64_t
 name|archive_entry_size
 parameter_list|(
@@ -313,9 +266,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|struct
 name|stat
@@ -327,9 +277,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -340,9 +287,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|uid_t
 name|archive_entry_uid
 parameter_list|(
@@ -351,9 +295,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -364,13 +305,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Set fields in an archive_entry.  *  * Note that string 'set' functions do not copy the string, only the pointer.  * In contrast, 'copy' functions do copy the object pointed to.  */
-end_comment
-
-begin_function_decl
 name|void
 name|archive_entry_copy_stat
 parameter_list|(
@@ -384,9 +319,30 @@ name|stat
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
+name|void
+name|archive_entry_set_atime
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|time_t
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+name|void
+name|archive_entry_set_ctime
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|time_t
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
 name|void
 name|archive_entry_set_fflags
 parameter_list|(
@@ -403,17 +359,8 @@ name|long
 name|clear
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Returns pointer to start of first invalid token, or NULL if none. */
-end_comment
-
-begin_comment
 comment|/* Note that all recognized tokens are processed, regardless. */
-end_comment
-
-begin_function_decl
 specifier|const
 name|wchar_t
 modifier|*
@@ -428,9 +375,6 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_gid
 parameter_list|(
@@ -441,9 +385,6 @@ parameter_list|,
 name|gid_t
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_gname
 parameter_list|(
@@ -456,9 +397,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_copy_gname_w
 parameter_list|(
@@ -471,9 +409,6 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_hardlink
 parameter_list|(
@@ -486,9 +421,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_copy_hardlink
 parameter_list|(
@@ -501,9 +433,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_copy_hardlink_w
 parameter_list|(
@@ -516,9 +445,6 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_link
 parameter_list|(
@@ -531,9 +457,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_mode
 parameter_list|(
@@ -544,9 +467,6 @@ parameter_list|,
 name|mode_t
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_mtime
 parameter_list|(
@@ -559,9 +479,6 @@ parameter_list|,
 name|long
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_pathname
 parameter_list|(
@@ -574,9 +491,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_copy_pathname
 parameter_list|(
@@ -589,9 +503,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_copy_pathname_w
 parameter_list|(
@@ -604,9 +515,6 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_rdevmajor
 parameter_list|(
@@ -617,9 +525,6 @@ parameter_list|,
 name|dev_t
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_rdevminor
 parameter_list|(
@@ -630,9 +535,6 @@ parameter_list|,
 name|dev_t
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_size
 parameter_list|(
@@ -643,9 +545,6 @@ parameter_list|,
 name|int64_t
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_symlink
 parameter_list|(
@@ -658,9 +557,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_copy_symlink_w
 parameter_list|(
@@ -673,9 +569,6 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_uid
 parameter_list|(
@@ -686,9 +579,6 @@ parameter_list|,
 name|uid_t
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_set_uname
 parameter_list|(
@@ -701,9 +591,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_copy_uname_w
 parameter_list|(
@@ -716,130 +603,61 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * ACL routines.  This used to simply store and return text-format ACL  * strings, but that proved insufficient for a number of reasons:  *   = clients need control over uname/uid and gname/gid mappings  *   = there are many different ACL text formats  *   = would like to be able to read/convert archives containing ACLs  *     on platforms that lack ACL libraries  */
-end_comment
-
-begin_comment
 comment|/*  * Permission bits mimic POSIX.1e.  Note that I've not followed POSIX.1e's  * "permset"/"perm" abstract type nonsense.  A permset is just a simple  * bitmap, following long-standing Unix tradition.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_EXECUTE
 value|1
-end_define
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_WRITE
 value|2
-end_define
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_READ
 value|4
-end_define
-
-begin_comment
 comment|/* We need to be able to specify either or both of these. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 value|256
-end_define
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
 value|512
-end_define
-
-begin_comment
 comment|/* Tag values mimic POSIX.1e */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_USER
 value|10001
-end_define
-
-begin_comment
 comment|/* Specified user. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_USER_OBJ
 value|10002
-end_define
-
-begin_comment
 comment|/* User who owns the file. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_GROUP
 value|10003
-end_define
-
-begin_comment
 comment|/* Specified group. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_GROUP_OBJ
 value|10004
-end_define
-
-begin_comment
 comment|/* Group who owns the file. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_MASK
 value|10005
-end_define
-
-begin_comment
 comment|/* Modify group access. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_OTHER
 value|10006
-end_define
-
-begin_comment
 comment|/* Public. */
-end_comment
-
-begin_comment
 comment|/*  * Set the ACL by clearing it and adding entries one at a time.  * Unlike the POSIX.1e ACL routines, you must specify the type  * (access/default) for each entry.  Internally, the ACL data is just  * a soup of entries.  API calls here allow you to retrieve just the  * entries of interest.  This design (which goes against the spirit of  * POSIX.1e) is useful for handling archive formats that combine  * default and access information in a single ACL list.  */
-end_comment
-
-begin_function_decl
 name|void
 name|archive_entry_acl_clear
 parameter_list|(
@@ -848,9 +666,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_acl_add_entry
 parameter_list|(
@@ -876,9 +691,6 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_acl_add_entry_w
 parameter_list|(
@@ -904,13 +716,7 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * To retrieve the ACL, first "reset", then repeatedly ask for the  * "next" entry.  The want_type parameter allows you to request only  * access entries or only default entries.  */
-end_comment
-
-begin_function_decl
 name|int
 name|archive_entry_acl_reset
 parameter_list|(
@@ -922,9 +728,6 @@ name|int
 name|want_type
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|archive_entry_acl_next
 parameter_list|(
@@ -958,9 +761,6 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|archive_entry_acl_next_w
 parameter_list|(
@@ -994,27 +794,15 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include access entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include default entries.  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  (As used by 'star'.)  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
 value|1024
-end_define
-
-begin_define
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT
 value|2048
-end_define
-
-begin_function_decl
 specifier|const
 name|wchar_t
 modifier|*
@@ -1028,13 +816,7 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Return a count of entries matching 'want_type' */
-end_comment
-
-begin_function_decl
 name|int
 name|archive_entry_acl_count
 parameter_list|(
@@ -1046,13 +828,7 @@ name|int
 name|want_type
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Private ACL parser.  This is private because it handles some  * very weird formats that clients should not be messing with.  * Clients should only deal with their platform-native formats.  * Because of the need to support many formats cleanly, new arguments  * are likely to get added on a regular basis.  Clients who try to use  * this interface are likely to be surprised when it changes.  *  * You were warned!  */
-end_comment
-
-begin_function_decl
 name|int
 name|__archive_entry_acl_parse_w
 parameter_list|(
@@ -1068,7 +844,16 @@ name|int
 name|type
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

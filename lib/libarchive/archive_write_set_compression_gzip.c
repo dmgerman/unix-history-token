@@ -187,13 +187,15 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|archive_check_magic
+name|__archive_check_magic
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_WRITE_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_NEW
+argument_list|,
+literal|"archive_write_set_compression_gzip"
 argument_list|)
 expr_stmt|;
 name|a

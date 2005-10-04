@@ -572,6 +572,28 @@ name|zip
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zip
+operator|==
+name|NULL
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Can't allocate zip data"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|memset
 argument_list|(
 name|zip
@@ -2971,7 +2993,7 @@ operator|&
 name|ZIP_LENGTH_AT_END
 condition|)
 block|{
-name|ssize_t
+name|size_t
 name|size
 decl_stmt|;
 name|off_t

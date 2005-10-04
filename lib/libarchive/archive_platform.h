@@ -71,7 +71,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_ACL_SET_FD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ACL_SET_FD_NP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ACL_SET_FILE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ACL_USER
 value|1
 end_define
 
@@ -132,6 +153,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_FCHFLAGS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCHMOD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCHOWN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_FCNTL_H
 value|1
 end_define
@@ -139,7 +181,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_FUTIMES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_INTTYPES_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_LCHFLAGS
 value|1
 end_define
 
@@ -508,7 +564,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * If this platform has<sys/acl.h>, acl_create(), acl_init(), and  * acl_set_file(), we assume it has the rest of the POSIX.1e draft  * functions used in archive_read_extract.c.  */
+comment|/*  * If this platform has<sys/acl.h>, acl_create(), acl_init(),  * acl_set_file(), and ACL_USER, we assume it has the rest of the  * POSIX.1e draft functions used in archive_read_extract.c.  */
 end_comment
 
 begin_if
@@ -521,6 +577,8 @@ operator|&&
 name|HAVE_ACL_INIT
 operator|&&
 name|HAVE_ACL_SET_FILE
+operator|&&
+name|HAVE_ACL_USER
 end_if
 
 begin_define
@@ -528,6 +586,50 @@ define|#
 directive|define
 name|HAVE_POSIX_ACL
 value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * If we can't restore metadata using a file descriptor, then  * for compatibility's sake, close files before trying to restore metadata.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FCHMOD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_FUTIMES
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_ACL_SET_FD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_ACL_SET_FD_NP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_FCHOWN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CAN_RESTORE_METADATA_FD
 end_define
 
 begin_endif
