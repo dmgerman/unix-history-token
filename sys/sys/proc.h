@@ -1251,6 +1251,17 @@ begin_comment
 comment|/* Stuck processing softdep worklist */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_NORUNNINGBUF
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Ignore runningbufspace check */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
@@ -3670,19 +3681,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Process slots for init, pager. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|proc
-modifier|*
-name|updateproc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Process slot for syncer (sic). */
 end_comment
 
 begin_decl_stmt
