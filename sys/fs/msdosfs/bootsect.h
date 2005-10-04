@@ -206,17 +206,10 @@ comment|/* Bootsector Extension */
 name|int8_t
 name|bsBootCode
 index|[
-literal|418
+literal|420
 index|]
 decl_stmt|;
 comment|/* pad so structure is 512b */
-name|u_int8_t
-name|bsBootSectSig2
-decl_stmt|;
-comment|/* 2& 3 are only defined for FAT32? */
-name|u_int8_t
-name|bsBootSectSig3
-decl_stmt|;
 name|u_int8_t
 name|bsBootSectSig0
 decl_stmt|;
@@ -231,14 +224,6 @@ define|#
 directive|define
 name|BOOTSIG1
 value|0xaa
-define|#
-directive|define
-name|BOOTSIG2
-value|0
-define|#
-directive|define
-name|BOOTSIG3
-value|0
 block|}
 struct|;
 end_struct
