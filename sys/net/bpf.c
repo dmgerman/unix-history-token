@@ -2760,6 +2760,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/*  	 * Refresh PID associated with this descriptor. 	 */
+name|BPFD_LOCK
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|d
 operator|->
 name|bd_pid
@@ -2769,11 +2774,6 @@ operator|->
 name|td_proc
 operator|->
 name|p_pid
-expr_stmt|;
-name|BPFD_LOCK
-argument_list|(
-name|d
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4328,16 +4328,6 @@ name|ENXIO
 operator|)
 return|;
 comment|/* 	 * Refresh PID associated with this descriptor. 	 */
-name|d
-operator|->
-name|bd_pid
-operator|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
-expr_stmt|;
 name|revents
 operator|=
 name|events
@@ -4352,6 +4342,16 @@ name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|bd_pid
+operator|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
 expr_stmt|;
 if|if
 condition|(
@@ -4498,6 +4498,11 @@ literal|1
 operator|)
 return|;
 comment|/*  	 * Refresh PID associated with this descriptor. 	 */
+name|BPFD_LOCK
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|d
 operator|->
 name|bd_pid
@@ -4535,6 +4540,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|BPFD_UNLOCK
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4570,6 +4580,11 @@ name|kn
 operator|->
 name|kn_hook
 decl_stmt|;
+name|BPFD_LOCK
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|knlist_remove
 argument_list|(
 operator|&
@@ -4582,6 +4597,11 @@ argument_list|,
 name|kn
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|BPFD_UNLOCK
+argument_list|(
+name|d
 argument_list|)
 expr_stmt|;
 block|}
