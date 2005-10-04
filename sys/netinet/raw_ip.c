@@ -738,9 +738,11 @@ name|so
 operator|->
 name|so_options
 operator|&
+operator|(
 name|SO_TIMESTAMP
 operator||
 name|SO_BINTIME
+operator|)
 operator|)
 condition|)
 name|ip_savecontrol
