@@ -176,6 +176,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pthread_timedjoin_np
+parameter_list|(
+name|pthread_t
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|timespec
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
