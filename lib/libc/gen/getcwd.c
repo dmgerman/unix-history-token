@@ -276,9 +276,7 @@ name|malloc
 argument_list|(
 name|ptsize
 operator|=
-literal|1024
-operator|-
-literal|4
+name|PATH_MAX
 argument_list|)
 operator|)
 operator|==
@@ -377,7 +375,7 @@ name|bpt
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Allocate bytes (1024 - malloc space) for the string of "../"'s. 	 * Should always be enough (it's 340 levels).  If it's not, allocate 	 * as necessary.  Special case the first stat, it's ".", not "..". 	 */
+comment|/* 	 * Allocate 1024 bytes for the string of "../"'s. 	 * Should always be enough.  If it's not, allocate 	 * as necessary.  Special case the first stat, it's ".", not "..". 	 */
 if|if
 condition|(
 operator|(
@@ -388,8 +386,6 @@ argument_list|(
 name|upsize
 operator|=
 literal|1024
-operator|-
-literal|4
 argument_list|)
 operator|)
 operator|==
@@ -402,7 +398,7 @@ name|eup
 operator|=
 name|up
 operator|+
-name|MAXPATHLEN
+name|upsize
 expr_stmt|;
 name|bup
 operator|=
@@ -534,7 +530,7 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Build pointer to the parent directory, allocating memory 		 * as necessary.  Max length is 3 for "../", the largest 		 * possible component name, plus a trailing NUL. 		 */
-if|if
+while|while
 condition|(
 name|bup
 operator|+
@@ -769,7 +765,7 @@ condition|)
 break|break;
 block|}
 comment|/* 		 * Check for length of the current name, preceding slash, 		 * leading slash. 		 */
-if|if
+while|while
 condition|(
 name|bpt
 operator|-
