@@ -5533,8 +5533,12 @@ name|PCATCH
 argument_list|,
 literal|"maxthreads"
 argument_list|,
-literal|0
+name|hz
+operator|/
+literal|10
 argument_list|)
+operator|!=
+name|EWOULDBLOCK
 condition|)
 block|{
 name|mtx_lock_spin
