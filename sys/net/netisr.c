@@ -651,7 +651,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|netisr_enable
+name|netisr_direct
 init|=
 literal|0
 decl_stmt|;
@@ -664,12 +664,12 @@ name|_net_isr
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|enable
+name|direct
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|netisr_enable
+name|netisr_direct
 argument_list|,
 literal|0
 argument_list|,
@@ -681,10 +681,10 @@ end_expr_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"net.isr.enable"
+literal|"net.isr.direct"
 argument_list|,
 operator|&
-name|netisr_enable
+name|netisr_direct
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -971,7 +971,7 @@ block|}
 comment|/* 	 * Do direct dispatch only for MPSAFE netisrs (and 	 * only when enabled).  Note that when a netisr is 	 * marked MPSAFE we permit multiple concurrent instances 	 * to run.  We guarantee only the order in which 	 * packets are processed for each "dispatch point" in 	 * the system (i.e. call to netisr_dispatch or 	 * netisr_queue).  This insures ordering of packets 	 * from an interface but does not guarantee ordering 	 * between multiple places in the system (e.g. IP 	 * dispatched from interfaces vs. IP queued from IPSec). 	 */
 if|if
 condition|(
-name|netisr_enable
+name|netisr_direct
 operator|&&
 operator|(
 name|ni
