@@ -322,6 +322,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|u_int32_t
 name|via_rd
 parameter_list|(
@@ -403,6 +404,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|void
 name|via_wr
 parameter_list|(
@@ -1246,6 +1248,13 @@ name|format
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|via
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|mode
 operator|=
 name|via_rd
@@ -1283,6 +1292,13 @@ argument_list|,
 name|mode
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|via
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -1495,6 +1511,13 @@ name|sgd_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|via
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|go
@@ -1546,6 +1569,13 @@ argument_list|,
 name|VIA_RPCTRL_TERMINATE
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|via
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 name|DEB
@@ -1622,6 +1652,13 @@ name|ch
 operator|->
 name|sgd_table
 expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|via
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|base1
 operator|=
 name|via_rd
@@ -1679,6 +1716,13 @@ operator|->
 name|count
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|via
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 name|DEB
