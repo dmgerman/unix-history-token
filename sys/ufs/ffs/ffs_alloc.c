@@ -4931,6 +4931,12 @@ operator|.
 name|tv_nsec
 expr_stmt|;
 block|}
+name|ip
+operator|->
+name|i_flag
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
