@@ -25,6 +25,23 @@ begin_comment
 comment|/*  * The Adaptec AIC-6915 "Starfire" is a 64-bit 10/100 PCI ethernet  * controller designed with flexibility and reducing CPU load in mind.  * The Starfire offers high and low priority buffer queues, a  * producer/consumer index mechanism and several different buffer  * queue and completion queue descriptor types. Any one of a number  * of different driver designs can be used, depending on system and  * OS requirements. This driver makes use of type0 transmit frame  * descriptors (since BSD fragments packets across an mbuf chain)  * and two RX buffer queues prioritized on size (one queue for small  * frames that will fit into a single mbuf, another with full size  * mbuf clusters for everything else). The producer/consumer indexes  * and completion queues are also used.  *  * One downside to the Starfire has to do with alignment: buffer  * queues must be aligned on 256-byte boundaries, and receive buffers  * must be aligned on longword boundaries. The receive buffer alignment  * causes problems on the Alpha platform, where the packet payload  * should be longword aligned. There is no simple way around this.  *  * For receive filtering, the Starfire offers 16 perfect filter slots  * and a 512-bit hash table.  *  * The Starfire has no internal transceiver, relying instead on an  * external MII-based transceiver. Accessing registers on external  * PHYs is done through a special register map rather than with the  * usual bitbang MDIO method.  *  * Acesssing the registers on the Starfire is a little tricky. The  * Starfire has a 512K internal register space. When programmed for  * PCI memory mapped mode, the entire register space can be accessed  * directly. However in I/O space mode, only 256 bytes are directly  * mapped into PCI I/O space. The other registers can be accessed  * indirectly using the SF_INDIRECTIO_ADDR and SF_INDIRECTIO_DATA  * registers inside the 256-byte I/O window.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_device_polling.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

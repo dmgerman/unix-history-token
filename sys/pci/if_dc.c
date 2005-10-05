@@ -25,6 +25,23 @@ begin_comment
 comment|/*  * The Intel 21143 is the successor to the DEC 21140. It is basically  * the same as the 21140 but with a few new features. The 21143 supports  * three kinds of media attachments:  *  * o MII port, for 10Mbps and 100Mbps support and NWAY  *   autonegotiation provided by an external PHY.  * o SYM port, for symbol mode 100Mbps support.  * o 10baseT port.  * o AUI/BNC port.  *  * The 100Mbps SYM port and 10baseT port can be used together in  * combination with the internal NWAY support to create a 10/100  * autosensing configuration.  *  * Note that not all tulip workalikes are handled in this driver: we only  * deal with those which are relatively well behaved. The Winbond is  * handled separately due to its different register offsets and the  * special handling needed for its various bugs. The PNIC is handled  * here, but I'm not thrilled about it.  *  * All of the workalike chips use some form of MII transceiver support  * with the exception of the Macronix chips, which also have a SYM port.  * The ASIX AX88140A is also documented to have a SYM port, but all  * the cards I've seen use an MII transceiver, probably because the  * AX88140A doesn't support internal NWAY.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_device_polling.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

@@ -25,6 +25,23 @@ begin_comment
 comment|/*  * The VIA Networking VT6122 is a 32bit, 33/66Mhz PCI device that  * combines a tri-speed ethernet MAC and PHY, with the following  * features:  *  *	o Jumbo frame support up to 16K  *	o Transmit and receive flow control  *	o IPv4 checksum offload  *	o VLAN tag insertion and stripping  *	o TCP large send  *	o 64-bit multicast hash table filter  *	o 64 entry CAM filter  *	o 16K RX FIFO and 48K TX FIFO memory  *	o Interrupt moderation  *  * The VT6122 supports up to four transmit DMA queues. The descriptors  * in the transmit ring can address up to 7 data fragments; frames which  * span more than 7 data buffers must be coalesced, but in general the  * BSD TCP/IP stack rarely generates frames more than 2 or 3 fragments  * long. The receive descriptors address only a single buffer.  *  * There are two peculiar design issues with the VT6122. One is that  * receive data buffers must be aligned on a 32-bit boundary. This is  * not a problem where the VT6122 is used as a LOM device in x86-based  * systems, but on architectures that generate unaligned access traps, we  * have to do some copying.  *  * The other issue has to do with the way 64-bit addresses are handled.  * The DMA descriptors only allow you to specify 48 bits of addressing  * information. The remaining 16 bits are specified using one of the  * I/O registers. If you only have a 32-bit system, then this isn't  * an issue, but if you have a 64-bit system and more than 4GB of  * memory, you must have to make sure your network data buffers reside  * in the same 48-bit 'segment.'  *  * Special thanks to Ryan Fu at VIA Networking for providing documentation  * and sample NICs for testing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_device_polling.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

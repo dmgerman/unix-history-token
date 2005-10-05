@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_device_polling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_net.h"
 end_include
 

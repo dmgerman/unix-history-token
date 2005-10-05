@@ -25,6 +25,23 @@ begin_comment
 comment|/*  * The VIA Rhine controllers are similar in some respects to the  * the DEC tulip chips, except less complicated. The controller  * uses an MII bus and an external physical layer interface. The  * receiver has a one entry perfect filter and a 64-bit hash table  * multicast filter. Transmit and receive descriptors are similar  * to the tulip.  *  * The Rhine has a serious flaw in its transmit DMA mechanism:  * transmit buffers must be longword aligned. Unfortunately,  * FreeBSD doesn't guarantee that mbufs will be filled in starting  * at longword boundaries, so we have to do a buffer copy before  * transmission.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_device_polling.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

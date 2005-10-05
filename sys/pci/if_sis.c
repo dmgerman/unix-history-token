@@ -25,6 +25,23 @@ begin_comment
 comment|/*  * The SiS 900 is a fairly simple chip. It uses bus master DMA with  * simple TX and RX descriptors of 3 longwords in size. The receiver  * has a single perfect filter entry for the station address and a  * 128-bit multicast hash table. The SiS 900 has a built-in MII-based  * transceiver while the 7016 requires an external transceiver chip.  * Both chips offer the standard bit-bang MII interface as well as  * an enchanced PHY interface which simplifies accessing MII registers.  *  * The only downside to this chipset is that RX descriptors must be  * longword aligned.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_device_polling.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
