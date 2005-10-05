@@ -128,6 +128,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -381,6 +384,15 @@ name|waitsec
 argument_list|)
 expr_stmt|;
 block|}
+name|lockfd
+operator|=
+name|wait_for_lock
+argument_list|(
+name|lockname
+argument_list|,
+name|O_NONBLOCK
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|lockfd
@@ -400,6 +412,8 @@ operator|=
 name|wait_for_lock
 argument_list|(
 name|lockname
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -712,6 +726,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -731,6 +748,8 @@ operator||
 name|O_RDONLY
 operator||
 name|O_EXLOCK
+operator||
+name|flags
 argument_list|,
 literal|0666
 argument_list|)
@@ -749,6 +768,10 @@ operator|||
 name|errno
 operator|==
 name|EINTR
+operator|||
+name|errno
+operator|==
+name|EAGAIN
 condition|)
 return|return
 operator|(
