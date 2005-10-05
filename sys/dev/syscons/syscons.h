@@ -934,6 +934,10 @@ define|#
 directive|define
 name|FONT_16
 value|8
+define|#
+directive|define
+name|FONT_22
+value|8
 name|u_char
 modifier|*
 name|font_8
@@ -945,6 +949,10 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|font_16
+decl_stmt|;
+name|u_char
+modifier|*
+name|font_22
 decl_stmt|;
 endif|#
 directive|endif
@@ -2188,6 +2196,9 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
+name|int
+name|width
+parameter_list|,
 name|u_char
 modifier|*
 name|font
@@ -2214,6 +2225,9 @@ name|page
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|width
 parameter_list|,
 name|u_char
 modifier|*

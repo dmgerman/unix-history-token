@@ -563,6 +563,10 @@ name|height
 operator|,
 name|bold8x16
 operator|.
+name|width
+operator|,
+name|bold8x16
+operator|.
 name|data
 operator|,
 literal|0
@@ -754,6 +758,9 @@ parameter_list|,
 name|int
 name|fontsize
 parameter_list|,
+name|int
+name|fontwidth
+parameter_list|,
 name|u_char
 modifier|*
 name|data
@@ -824,7 +831,7 @@ index|]
 operator|.
 name|width
 operator|!=
-literal|8
+name|fontwidth
 operator|)
 condition|)
 name|error
@@ -909,6 +916,9 @@ name|page
 parameter_list|,
 name|int
 name|fontsize
+parameter_list|,
+name|int
+name|fontwidth
 parameter_list|,
 name|u_char
 modifier|*
@@ -1022,7 +1032,7 @@ index|]
 operator|.
 name|width
 operator|=
-literal|8
+name|fontwidth
 expr_stmt|;
 return|return
 operator|(
@@ -5400,6 +5410,9 @@ name|pixel_mask
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|width
 parameter_list|)
 block|{
 name|vm_offset_t

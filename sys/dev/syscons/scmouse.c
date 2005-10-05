@@ -4699,6 +4699,10 @@ name|font_size
 argument_list|,
 name|cur_scp
 operator|->
+name|font_width
+argument_list|,
+name|cur_scp
+operator|->
 name|font
 operator|+
 name|cur_scp

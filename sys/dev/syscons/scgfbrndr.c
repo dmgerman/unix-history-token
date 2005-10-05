@@ -1618,6 +1618,8 @@ operator|,
 literal|0xffffffff
 operator|,
 literal|16
+operator|,
+literal|8
 operator|)
 expr_stmt|;
 block|}

@@ -5485,6 +5485,9 @@ name|pixel_mask
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|width
 parameter_list|)
 block|{
 name|gfb_reg_t

@@ -1166,6 +1166,9 @@ parameter_list|,
 name|int
 name|fontsize
 parameter_list|,
+name|int
+name|fontwidth
+parameter_list|,
 name|u_char
 modifier|*
 name|data
@@ -1190,6 +1193,8 @@ argument_list|,
 name|page
 argument_list|,
 name|fontsize
+argument_list|,
+name|fontwidth
 argument_list|,
 name|data
 argument_list|,
@@ -1216,6 +1221,9 @@ parameter_list|,
 name|int
 name|fontsize
 parameter_list|,
+name|int
+name|fontwidth
+parameter_list|,
 name|u_char
 modifier|*
 name|data
@@ -1240,6 +1248,8 @@ argument_list|,
 name|page
 argument_list|,
 name|fontsize
+argument_list|,
+name|fontwidth
 argument_list|,
 name|data
 argument_list|,

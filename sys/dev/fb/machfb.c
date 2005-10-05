@@ -3713,6 +3713,9 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
+name|int
+name|width
+parameter_list|,
 name|u_char
 modifier|*
 name|data
@@ -3746,6 +3749,9 @@ name|page
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|width
 parameter_list|,
 name|u_char
 modifier|*
@@ -6056,6 +6062,9 @@ name|pixel_mask
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|width
 parameter_list|)
 block|{
 name|struct

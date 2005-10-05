@@ -7436,6 +7436,8 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
+literal|8
+argument_list|,
 name|sc
 operator|->
 name|font_8
@@ -7575,6 +7577,8 @@ literal|0
 argument_list|,
 literal|14
 argument_list|,
+literal|8
+argument_list|,
 name|sc
 operator|->
 name|font_14
@@ -7703,6 +7707,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|16
+argument_list|,
+literal|8
 argument_list|,
 name|sc
 operator|->
@@ -14960,6 +14966,8 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
+literal|8
+argument_list|,
 name|sc
 operator|->
 name|font_8
@@ -14988,6 +14996,8 @@ literal|0
 argument_list|,
 literal|16
 argument_list|,
+literal|8
+argument_list|,
 name|sc
 operator|->
 name|font_16
@@ -15007,6 +15017,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|14
+argument_list|,
+literal|8
 argument_list|,
 name|sc
 operator|->
@@ -15035,6 +15047,8 @@ argument_list|(
 name|scp
 argument_list|,
 literal|0
+argument_list|,
+literal|8
 argument_list|,
 literal|8
 argument_list|,
@@ -15072,6 +15086,8 @@ literal|0
 argument_list|,
 literal|16
 argument_list|,
+literal|8
+argument_list|,
 name|sc
 operator|->
 name|font_16
@@ -15097,6 +15113,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|14
+argument_list|,
+literal|8
 argument_list|,
 name|sc
 operator|->
@@ -18513,6 +18531,8 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
+literal|8
+argument_list|,
 name|scp
 operator|->
 name|sc
@@ -18553,6 +18573,8 @@ literal|0
 argument_list|,
 literal|16
 argument_list|,
+literal|8
+argument_list|,
 name|scp
 operator|->
 name|sc
@@ -18584,6 +18606,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|14
+argument_list|,
+literal|8
 argument_list|,
 name|scp
 operator|->
@@ -18698,6 +18722,9 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
+name|int
+name|width
+parameter_list|,
 name|u_char
 modifier|*
 name|buf
@@ -18745,6 +18772,8 @@ name|page
 operator|,
 name|size
 operator|,
+name|width
+operator|,
 name|buf
 operator|,
 name|base
@@ -18774,6 +18803,9 @@ name|page
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|width
 parameter_list|,
 name|u_char
 modifier|*
@@ -18821,6 +18853,8 @@ operator|,
 name|page
 operator|,
 name|size
+operator|,
+name|width
 operator|,
 name|buf
 operator|,
