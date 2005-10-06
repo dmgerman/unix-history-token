@@ -14,17 +14,13 @@ block|{
 name|struct
 name|ifnet
 modifier|*
-name|ifp
+name|vx_ifp
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-comment|/* unit number                   */
 name|bus_space_tag_t
-name|bst
+name|vx_bst
 decl_stmt|;
 name|bus_space_handle_t
-name|bsh
+name|vx_bsh
 decl_stmt|;
 name|void
 modifier|*
@@ -48,18 +44,18 @@ comment|/* # of mbufs we keep around	 */
 name|struct
 name|mbuf
 modifier|*
-name|mb
+name|vx_mb
 index|[
 name|MAX_MBS
 index|]
 decl_stmt|;
 comment|/* spare mbuf storage.		 */
 name|int
-name|next_mb
+name|vx_next_mb
 decl_stmt|;
 comment|/* Which mbuf to use next. 	 */
 name|int
-name|last_mb
+name|vx_last_mb
 decl_stmt|;
 comment|/* Last mbuf.			 */
 name|char
@@ -71,21 +67,25 @@ name|vx_connector
 decl_stmt|;
 comment|/* Connector to use.		 */
 name|short
-name|tx_start_thresh
+name|vx_tx_start_thresh
 decl_stmt|;
 comment|/* Current TX_start_thresh.	 */
 name|int
-name|tx_succ_ok
+name|vx_tx_succ_ok
 decl_stmt|;
 comment|/* # packets sent in sequence	 */
 comment|/* w/o underrun			 */
 name|struct
-name|callout_handle
-name|ch
+name|callout
+name|vx_callout
 decl_stmt|;
-comment|/* Callout handle for timeouts  */
+comment|/* Callout for timeouts		 */
+name|struct
+name|mtx
+name|vx_mtx
+decl_stmt|;
 name|int
-name|buffill_pending
+name|vx_buffill_pending
 decl_stmt|;
 block|}
 struct|;
@@ -103,7 +103,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->bst, sc->bsh, reg, val)
+value|bus_space_write_4(sc->vx_bst, sc->vx_bsh, reg, val)
 end_define
 
 begin_define
@@ -118,7 +118,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(sc->bst, sc->bsh, reg, val)
+value|bus_space_write_2(sc->vx_bst, sc->vx_bsh, reg, val)
 end_define
 
 begin_define
@@ -133,7 +133,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->bst, sc->bsh, reg, val)
+value|bus_space_write_1(sc->vx_bst, sc->vx_bsh, reg, val)
 end_define
 
 begin_define
@@ -146,7 +146,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->bst, sc->bsh, reg)
+value|bus_space_read_4(sc->vx_bst, sc->vx_bsh, reg)
 end_define
 
 begin_define
@@ -159,7 +159,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2(sc->bst, sc->bsh, reg)
+value|bus_space_read_2(sc->vx_bst, sc->vx_bsh, reg)
 end_define
 
 begin_define
@@ -172,25 +172,42 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1(sc->bst, sc->bsh, reg)
+value|bus_space_read_1(sc->vx_bst, sc->vx_bsh, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VX_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->vx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VX_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->vx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VX_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->vx_mtx, MA_OWNED)
 end_define
 
 begin_function_decl
-specifier|extern
-name|void
-name|vxfree
-parameter_list|(
-name|struct
-name|vx_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
-name|vxattach
+name|vx_attach
 parameter_list|(
 name|device_t
 parameter_list|)
@@ -198,9 +215,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
-name|vxstop
+name|vx_stop
 parameter_list|(
 name|struct
 name|vx_softc
@@ -210,9 +226,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
-name|vxintr
+name|vx_intr
 parameter_list|(
 name|void
 modifier|*
@@ -221,9 +236,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
-name|vxbusyeeprom
+name|vx_busy_eeprom
 parameter_list|(
 name|struct
 name|vx_softc
