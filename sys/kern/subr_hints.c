@@ -191,6 +191,10 @@ condition|(
 name|checkmethod
 condition|)
 block|{
+name|hintp
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|hintmode
