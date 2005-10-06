@@ -1533,7 +1533,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ether_input: if_bridge not loaded!"
+literal|"%s: if_bridge not loaded!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2802,7 +2804,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ether_input: if_bridge not loaded!"
+literal|"%s: if_bridge not loaded!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
