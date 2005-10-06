@@ -91,13 +91,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HTTP
-value|8000
-end_define
-
-begin_define
-define|#
-directive|define
 name|QUIET
 value|1
 end_define
@@ -560,14 +553,14 @@ if|if
 condition|(
 name|argc
 operator|!=
-literal|3
+literal|4
 condition|)
 name|errx
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"usage: http [IP] [PATH]"
+literal|"usage: http [ip] [port] [path]"
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -598,15 +591,6 @@ name|AF_INET
 expr_stmt|;
 name|sin
 operator|.
-name|sin_port
-operator|=
-name|htons
-argument_list|(
-name|HTTP
-argument_list|)
-expr_stmt|;
-name|sin
-operator|.
 name|sin_addr
 operator|.
 name|s_addr
@@ -619,11 +603,26 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|path
 operator|=
 name|argv
 index|[
-literal|2
+literal|3
 index|]
 expr_stmt|;
 comment|/* 	 * Do one test retrieve so we can report the error from it, if any. 	 */

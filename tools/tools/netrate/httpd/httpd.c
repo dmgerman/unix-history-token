@@ -96,13 +96,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HTTP
-value|8000
-end_define
-
-begin_define
-define|#
-directive|define
 name|HTTP_OK
 value|"HTTP/1.1 200 OK\n"
 end_define
@@ -508,14 +501,14 @@ if|if
 condition|(
 name|argc
 operator|!=
-literal|2
+literal|3
 condition|)
 name|errx
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"usage: http [PATH]"
+literal|"usage: http [port] [path]"
 argument_list|)
 expr_stmt|;
 name|listen_sock
@@ -575,14 +568,20 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-name|HTTP
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|path
 operator|=
 name|argv
 index|[
-literal|1
+literal|2
 index|]
 expr_stmt|;
 name|data_file
