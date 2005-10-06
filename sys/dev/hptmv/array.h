@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003-2004 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004-2005 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -134,6 +134,10 @@ name|ULONG
 name|dArStamp
 decl_stmt|;
 comment|/* array ID. all disks in a array has same ID */
+name|ULONG
+name|failedStamp
+decl_stmt|;
+comment|/* stamp for failed member */
 name|USHORT
 name|bStripeWitch
 decl_stmt|;
@@ -215,7 +219,7 @@ name|last_read
 decl_stmt|;
 comment|/* for RAID 1 load banlancing */
 name|UCHAR
-name|pad1
+name|PrivateFlag1
 decl_stmt|;
 name|LBA_T
 name|RebuildSectors
@@ -454,10 +458,11 @@ name|bCheckSum31
 decl_stmt|;
 comment|/* new check sum */
 name|UCHAR
-name|reserve2
-index|[
-literal|2
-index|]
+name|PrivateFlag1
+decl_stmt|;
+comment|/* private */
+name|UCHAR
+name|reserve1
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -568,8 +573,31 @@ index|[
 literal|2
 index|]
 struct|;
+name|ULONG
+name|failedStamp
+decl_stmt|;
+comment|/* array stamp for failed memebr */
 block|}
 name|ArrayDescript
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* report an error if ArrayDescript size exceed 512 */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+name|ArrayDescript_size_should_not_exceed_512
+index|[
+literal|512
+operator|-
+sizeof|sizeof
+argument_list|(
+name|ArrayDescript
+argument_list|)
+index|]
 typedef|;
 end_typedef
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003-2004 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004-2005 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -42,6 +42,23 @@ include|#
 directive|include
 file|<machine/stdarg.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__KERNEL__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__KERNEL__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -87,6 +104,14 @@ name|hptproc_buffer
 index|[
 literal|256
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|DRIVER_VERSION
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -603,7 +628,7 @@ operator|&&
 name|periph
 operator|->
 name|refcount
-operator|==
+operator|>=
 literal|1
 condition|)
 block|{
@@ -669,7 +694,7 @@ operator|-
 name|EINVAL
 return|;
 block|}
-name|pArray
+name|pSubArray
 operator|->
 name|u
 operator|.
@@ -679,7 +704,7 @@ name|rf_auto_rebuild
 operator|=
 literal|0
 expr_stmt|;
-name|pArray
+name|pSubArray
 operator|->
 name|u
 operator|.
@@ -698,7 +723,7 @@ name|hpt_rebuild_data_block
 argument_list|,
 name|pAdapter
 argument_list|,
-name|pArray
+name|pSubArray
 argument_list|,
 name|DUPLICATE
 argument_list|)
@@ -1221,7 +1246,6 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* SUPPORT_ARRAY */
 if|if
 condition|(
 literal|0
@@ -1345,7 +1369,7 @@ decl_stmt|;
 name|DWORD
 name|dwRet
 decl_stmt|;
-name|PHPT_IOCTL_PARAM32
+name|PHPT_IOCTL_PARAM
 name|piop
 decl_stmt|;
 endif|#
@@ -1452,7 +1476,7 @@ name|SUPPORT_IOCTL
 name|piop
 operator|=
 operator|(
-name|PHPT_IOCTL_PARAM32
+name|PHPT_IOCTL_PARAM
 operator|)
 name|buffer
 expr_stmt|;
@@ -1468,7 +1492,7 @@ block|{
 name|KdPrintE
 argument_list|(
 operator|(
-literal|"ioctl=%d in=%x len=%d out=%x len=%ld\n"
+literal|"ioctl=%d in=%p len=%d out=%p len=%d\n"
 operator|,
 name|piop
 operator|->
@@ -1486,9 +1510,6 @@ name|piop
 operator|->
 name|lpOutBuffer
 operator|,
-operator|(
-name|u_long
-operator|)
 name|piop
 operator|->
 name|nOutBufferSize
@@ -1557,18 +1578,12 @@ operator|-
 name|EINVAL
 return|;
 block|}
-name|err
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|piop
 operator|->
 name|nInBufferSize
 condition|)
-name|err
-operator|=
 name|copyin
 argument_list|(
 operator|(
@@ -1590,12 +1605,6 @@ name|nInBufferSize
 argument_list|)
 expr_stmt|;
 comment|/* 			  * call kernel handler. 			  */
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
 name|err
 operator|=
 name|Kernel_DeviceIoControl
@@ -1642,9 +1651,6 @@ name|piop
 operator|->
 name|nOutBufferSize
 condition|)
-block|{
-name|err
-operator|=
 name|copyout
 argument_list|(
 name|ke_area
@@ -1671,27 +1677,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
-condition|)
-name|KdPrintW
-argument_list|(
-operator|(
-literal|"Kernel_ioctl(): copyout (1) return %d\n"
-operator|,
-name|err
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|piop
 operator|->
 name|lpBytesReturned
 condition|)
-block|{
-name|err
-operator|=
 name|copyout
 argument_list|(
 operator|&
@@ -1714,20 +1703,6 @@ name|DWORD
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-name|KdPrintW
-argument_list|(
-operator|(
-literal|"Kernel_ioctl(): copyout (2) return %d\n"
-operator|,
-name|err
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|ke_area
@@ -2001,6 +1976,9 @@ name|arrayname
 index|[
 literal|16
 index|]
+decl_stmt|,
+modifier|*
+name|status
 decl_stmt|;
 name|get_disk_name
 argument_list|(
@@ -2014,6 +1992,39 @@ operator|.
 name|disk
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pVDev
+operator|->
+name|u
+operator|.
+name|disk
+operator|.
+name|df_on_line
+condition|)
+name|status
+operator|=
+literal|"Disabled"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pVDev
+operator|->
+name|VDeviceType
+operator|==
+name|VD_SPARE
+condition|)
+name|status
+operator|=
+literal|"Spare   "
+expr_stmt|;
+else|else
+name|status
+operator|=
+literal|"Normal  "
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SUPPORT_ARRAY
@@ -2023,6 +2034,7 @@ name|pVDev
 operator|->
 name|pParent
 condition|)
+block|{
 name|memcpy
 argument_list|(
 name|arrayname
@@ -2040,6 +2052,31 @@ argument_list|,
 name|MAX_ARRAY_NAME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pVDev
+operator|->
+name|pParent
+operator|->
+name|u
+operator|.
+name|array
+operator|.
+name|CriticalMembers
+operator|&
+operator|(
+literal|1
+operator|<<
+name|pVDev
+operator|->
+name|bSerialNumber
+operator|)
+condition|)
+name|status
+operator|=
+literal|"Degraded"
+expr_stmt|;
+block|}
 else|else
 endif|#
 directive|endif
@@ -2068,34 +2105,7 @@ name|VDeviceCapacity
 operator|>>
 literal|11
 argument_list|,
-operator|(
-operator|(
-operator|!
-name|pVDev
-operator|->
-name|u
-operator|.
-name|disk
-operator|.
-name|df_on_line
-operator|)
-condition|?
-literal|"Disabled"
-else|:
-operator|(
-operator|(
-name|pVDev
-operator|->
-name|VDeviceType
-operator|!=
-name|VD_SPARE
-operator|)
-condition|?
-literal|"Normal  "
-else|:
-literal|"Spare   "
-operator|)
-operator|)
+name|status
 argument_list|,
 name|arrayname
 argument_list|)
@@ -2970,7 +2980,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|hpt_proc_in
 parameter_list|(

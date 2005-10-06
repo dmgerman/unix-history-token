@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003-2004 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004-2005 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -30,6 +30,23 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__KERNEL__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__KERNEL__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1189,7 +1206,7 @@ index|[
 name|i
 index|]
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|pInfo
@@ -1770,7 +1787,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_get_driver_capabilities
 parameter_list|(
@@ -1849,17 +1865,6 @@ name|SupportDedicatedSpare
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SUPPORT_HOTSWAP
-name|cap
-operator|->
-name|SupportHotSwap
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|SUPPORT_ARRAY
@@ -1993,17 +1998,8 @@ name|MAX_MEMBERS
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-comment|/* don't let GUI create RAID 0/1. */
-comment|/* Stripe + Mirror */
-block|cap->SupportedRAIDTypes[5] = (AT_RAID1<<4)|AT_RAID0; 	cap->MaximumArrayMembers[5] = 4;
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* SUPPORT_ARRAY */
 return|return
 literal|0
 return|;
@@ -2011,7 +2007,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_get_controller_count
 parameter_list|(
@@ -2053,7 +2048,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_get_controller_info
 parameter_list|(
@@ -2196,7 +2190,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_get_channel_info
 parameter_list|(
@@ -2343,7 +2336,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_get_logical_devices
 parameter_list|(
@@ -2521,7 +2513,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_get_device_info
 parameter_list|(
@@ -2545,7 +2536,7 @@ condition|(
 operator|(
 name|id
 operator|==
-name|HPT_NULL_ID
+literal|0
 operator|)
 operator|||
 name|check_VDevice_valid
@@ -2598,7 +2589,6 @@ name|SUPPORT_ARRAY
 end_ifdef
 
 begin_function
-specifier|static
 name|DEVICEID
 name|hpt_create_array
 parameter_list|(
@@ -2628,18 +2618,6 @@ name|pArray
 decl_stmt|,
 name|pChild
 decl_stmt|;
-if|#
-directive|if
-name|MAX_VBUS
-operator|==
-literal|1
-name|PVBus
-name|_vbus_p
-init|=
-name|NULL
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|Loca
 init|=
@@ -4405,11 +4383,6 @@ name|pAdapter
 init|=
 name|gIal_Adapter
 decl_stmt|;
-if|#
-directive|if
-name|MAX_VBUS
-operator|>
-literal|1
 if|if
 condition|(
 name|pArray1
@@ -4429,8 +4402,6 @@ operator|-
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|pDisk
@@ -5011,13 +4982,13 @@ condition|(
 operator|(
 name|idArray
 operator|==
-name|HPT_NULL_ID
+literal|0
 operator|)
 operator|||
 operator|(
 name|idDisk
 operator|==
-name|HPT_NULL_ID
+literal|0
 operator|)
 condition|)
 return|return
@@ -5212,11 +5183,6 @@ return|return
 operator|-
 literal|1
 return|;
-if|#
-directive|if
-name|MAX_VBUS
-operator|>
-literal|1
 if|if
 condition|(
 name|pArray
@@ -5236,8 +5202,6 @@ operator|-
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -5531,7 +5495,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_add_spare_disk
 parameter_list|(
@@ -5559,7 +5522,7 @@ if|if
 condition|(
 name|idDisk
 operator|==
-name|HPT_NULL_ID
+literal|0
 operator|||
 name|check_VDevice_valid
 argument_list|(
@@ -5586,11 +5549,6 @@ return|return
 operator|-
 literal|1
 return|;
-if|#
-directive|if
-name|MAX_VBUS
-operator|>
-literal|1
 if|if
 condition|(
 name|pVDevice
@@ -5607,8 +5565,6 @@ return|return
 operator|-
 literal|1
 return|;
-endif|#
-directive|endif
 name|UnregisterVDevice
 argument_list|(
 name|pVDevice
@@ -5665,7 +5621,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_remove_spare_disk
 parameter_list|(
@@ -5697,11 +5652,6 @@ return|return
 operator|-
 literal|1
 return|;
-if|#
-directive|if
-name|MAX_VBUS
-operator|>
-literal|1
 if|if
 condition|(
 name|pVDevice
@@ -5718,8 +5668,6 @@ return|return
 operator|-
 literal|1
 return|;
-endif|#
-directive|endif
 name|pVDevice
 operator|->
 name|VDeviceType
@@ -5743,7 +5691,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_set_array_info
 parameter_list|(
@@ -5767,7 +5714,7 @@ if|if
 condition|(
 name|idArray
 operator|==
-name|HPT_NULL_ID
+literal|0
 operator|||
 name|check_VDevice_valid
 argument_list|(
@@ -5803,11 +5750,6 @@ return|return
 operator|-
 literal|1
 return|;
-if|#
-directive|if
-name|MAX_VBUS
-operator|>
-literal|1
 if|if
 condition|(
 name|pVDevice
@@ -5827,8 +5769,6 @@ operator|-
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|pInfo
@@ -5950,7 +5890,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hpt_set_device_info
 parameter_list|(
@@ -5975,7 +5914,7 @@ if|if
 condition|(
 name|idDisk
 operator|==
-name|HPT_NULL_ID
+literal|0
 condition|)
 block|{
 ifndef|#
@@ -6052,11 +5991,6 @@ return|return
 operator|-
 literal|1
 return|;
-if|#
-directive|if
-name|MAX_VBUS
-operator|>
-literal|1
 if|if
 condition|(
 name|pVDevice
@@ -6073,8 +6007,6 @@ return|return
 operator|-
 literal|1
 return|;
-endif|#
-directive|endif
 comment|/*	if (pInfo->ValidFields& ADIF_MODE) { 		pVDevice->u.disk.bDeModeSetting = pInfo->DeviceModeSetting; 		pVDevice->u.disk.bDeUserSelectMode = pInfo->DeviceModeSetting; 		pVDevice->u.disk.df_user_mode_set = 1; 		fDeSelectMode((PDevice)&(pVDevice->u.disk), (UCHAR)pInfo->DeviceModeSetting); 		SyncArrayInfo(pVDevice); 	}*/
 return|return
 literal|0
@@ -6086,10 +6018,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* SUPPORT_ARRAY */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -7306,7 +7234,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAX_VDEVICE_PER_VBUS
+name|MAX_ARRAY_PER_VBUS
 condition|;
 name|i
 operator|++
@@ -7327,11 +7255,6 @@ index|]
 operator|)
 condition|)
 continue|continue;
-if|#
-directive|if
-name|MAX_VBUS
-operator|>
-literal|1
 if|if
 condition|(
 name|pTop
@@ -7344,8 +7267,6 @@ return|return
 operator|-
 literal|1
 return|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|pTop
@@ -7415,16 +7336,10 @@ block|}
 break|break;
 endif|#
 directive|endif
-comment|/* SUPPORT_ARRAY */
 case|case
 name|HPT_IOCTL_RESCAN_DEVICES
 case|:
 block|{
-name|fRescanAllDevice
-argument_list|(
-name|_VBUS_P0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nInBufferSize
