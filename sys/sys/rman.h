@@ -312,9 +312,11 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * We use a linked list rather than a bitmap because we need to be able to  * represent potentially huge objects (like all of a processor's physical  * address space).  That is also why the indices are defined to have type  * `unsigned long' -- that being the largest integral type in ISO C (1990).  * The 1999 version of C allows `long long'; we may need to switch to that  * at some point in the future, particularly if we want to support 36-bit  * addresses on IA32 hardware.  */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|resource_i
+struct_decl|;
+end_struct_decl
 
 begin_expr_stmt
 name|TAILQ_HEAD
@@ -325,101 +327,6 @@ name|resource_i
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__RMAN_RESOURCE_VISIBLE
-end_ifdef
-
-begin_struct
-struct|struct
-name|resource_i
-block|{
-name|struct
-name|resource
-name|r_r
-decl_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|resource_i
-argument_list|)
-name|r_link
-expr_stmt|;
-name|LIST_ENTRY
-argument_list|(
-argument|resource_i
-argument_list|)
-name|r_sharelink
-expr_stmt|;
-name|LIST_HEAD
-argument_list|(,
-name|resource_i
-argument_list|)
-operator|*
-name|r_sharehead
-expr_stmt|;
-name|u_long
-name|r_start
-decl_stmt|;
-comment|/* index of the first entry in this resource */
-name|u_long
-name|r_end
-decl_stmt|;
-comment|/* index of the last entry (inclusive) */
-name|u_int
-name|r_flags
-decl_stmt|;
-name|void
-modifier|*
-name|r_virtual
-decl_stmt|;
-comment|/* virtual address of this resource */
-name|struct
-name|device
-modifier|*
-name|r_dev
-decl_stmt|;
-comment|/* device which has allocated this resource */
-name|struct
-name|rman
-modifier|*
-name|r_rm
-decl_stmt|;
-comment|/* resource manager from whence this came */
-name|void
-modifier|*
-name|r_spare1
-decl_stmt|;
-comment|/* Spare pointer 1 */
-name|void
-modifier|*
-name|r_spare2
-decl_stmt|;
-comment|/* Spare pointer 2 */
-name|int
-name|r_rid
-decl_stmt|;
-comment|/* optional rid for this resource. */
-block|}
-struct|;
-end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_struct_decl
-struct_decl|struct
-name|device
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
