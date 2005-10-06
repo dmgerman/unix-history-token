@@ -744,18 +744,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|re_tick_locked
-parameter_list|(
-name|struct
-name|rl_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|re_start
 parameter_list|(
 name|struct
@@ -1776,13 +1764,13 @@ operator|==
 name|RL_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: PHY read failed\n"
-argument_list|,
 name|sc
 operator|->
-name|rl_unit
+name|rl_ifp
+argument_list|,
+literal|"PHY read failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1915,13 +1903,13 @@ operator|==
 name|RL_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: PHY write failed\n"
-argument_list|,
 name|sc
 operator|->
-name|rl_unit
+name|rl_ifp
+argument_list|,
+literal|"PHY write failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2093,13 +2081,13 @@ name|rval
 operator|)
 return|;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: bad phy register\n"
-argument_list|,
 name|sc
 operator|->
-name|rl_unit
+name|rl_ifp
+argument_list|,
+literal|"bad phy register\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2267,13 +2255,13 @@ operator|)
 return|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: bad phy register\n"
-argument_list|,
 name|sc
 operator|->
-name|rl_unit
+name|rl_ifp
+argument_list|,
+literal|"bad phy register\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2662,13 +2650,13 @@ name|i
 operator|==
 name|RL_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: reset never completed!\n"
-argument_list|,
 name|sc
 operator|->
-name|rl_unit
+name|rl_ifp
+argument_list|,
+literal|"reset never completed!\n"
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_1
@@ -2999,14 +2987,12 @@ operator|==
 name|RL_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: diagnostic failed, failed to receive packet "
-literal|"in loopback mode\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|rl_unit
+literal|"diagnostic failed, failed to receive packet "
+literal|"in loopback mode\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3141,13 +3127,11 @@ operator|!=
 name|ETHER_MIN_LEN
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: diagnostic failed, received short packet\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|rl_unit
+literal|"diagnostic failed, received short packet\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3213,22 +3197,18 @@ operator|!=
 name|ETHERTYPE_IP
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: WARNING, DMA FAILURE!\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|rl_unit
+literal|"WARNING, DMA FAILURE!\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: expected TX data: %6D/%6D/0x%x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|rl_unit
+literal|"expected TX data: %6D/%6D/0x%x\n"
 argument_list|,
 name|dst
 argument_list|,
@@ -3241,13 +3221,11 @@ argument_list|,
 name|ETHERTYPE_IP
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: received RX data: %6D/%6D/0x%x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|rl_unit
+literal|"received RX data: %6D/%6D/0x%x\n"
 argument_list|,
 name|eh
 operator|->
@@ -3269,33 +3247,27 @@ name|ether_type
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: You may have a defective 32-bit NIC plugged "
+name|ifp
+argument_list|,
+literal|"You may have a defective 32-bit NIC plugged "
 literal|"into a 64-bit PCI slot.\n"
-argument_list|,
-name|sc
-operator|->
-name|rl_unit
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: Please re-install the NIC in a 32-bit slot "
+name|ifp
+argument_list|,
+literal|"Please re-install the NIC in a 32-bit slot "
 literal|"for proper operation.\n"
-argument_list|,
-name|sc
-operator|->
-name|rl_unit
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: Read the re(4) man page for more details.\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|rl_unit
+literal|"Read the re(4) man page for more details.\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4417,8 +4389,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -4430,13 +4400,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4456,6 +4419,21 @@ argument_list|,
 name|MTX_NETWORK_LOCK
 argument_list|,
 name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|callout_init_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|rl_stat_callout
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rl_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Map control/status registers. 	 */
@@ -4493,11 +4471,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"re%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4562,11 +4540,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"re%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4707,11 +4685,11 @@ name|i
 operator|==
 name|RL_TIMEOUT
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"re%d: eeprom autoload timed out\n"
+name|dev
 argument_list|,
-name|unit
+literal|"eeprom autoload timed out\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4855,12 +4833,6 @@ literal|8
 expr_stmt|;
 block|}
 block|}
-name|sc
-operator|->
-name|rl_unit
-operator|=
-name|unit
-expr_stmt|;
 comment|/* 	 * Allocate the parent bus DMA tag appropriate for PCI. 	 */
 define|#
 directive|define
@@ -4952,13 +4924,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"re%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|rl_unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4987,13 +4957,11 @@ name|re_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"re%d: MII without any phy!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|rl_unit
+literal|"MII without any phy!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5155,14 +5123,6 @@ operator|&
 operator|~
 name|IFCAP_HWCSUM
 expr_stmt|;
-name|callout_handle_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|rl_stat_ch
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Call MI attach routine. 	 */
 name|ether_ifattach
 argument_list|(
@@ -5184,19 +5144,14 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"re%d: attach aborted due to hardware diag failure\n"
+name|dev
 argument_list|,
-name|unit
+literal|"attach aborted due to hardware diag failure\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -5235,19 +5190,14 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"re%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -5300,9 +5250,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
-name|attached
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -5331,34 +5278,15 @@ literal|"re mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
-name|attached
-operator|=
+comment|/* These should only be active if attach succeeded */
+if|if
+condition|(
 name|device_is_attached
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-comment|/* These should only be active if attach succeeded */
-if|if
-condition|(
-name|attached
 condition|)
-name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|==
-name|NULL
-condition|)
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
+block|{
 name|RL_LOCK
 argument_list|(
 name|sc
@@ -5370,15 +5298,22 @@ literal|0
 block|sc->suspended = 1;
 endif|#
 directive|endif
-comment|/* These should only be active if attach succeeded */
-if|if
-condition|(
-name|attached
-condition|)
-block|{
 name|re_stop
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|RL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|rl_stat_callout
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Force off the IFF_UP flag here, in case someone 		 * still had a BPF descriptor attached to this 		 * interface. If they do, ether_ifdetach() will cause 		 * the BPF code to try and clear the promisc mode 		 * flag, which will bubble down to re_ioctl(), 		 * which will try to call re_init() again. This will 		 * turn the NIC back on and restart the MII ticker, 		 * which will panic the system when the kernel tries 		 * to invoke the re_tick() function that isn't there 		 * anymore. 		 */
@@ -5388,6 +5323,11 @@ name|if_flags
 operator|&=
 operator|~
 name|IFF_UP
+expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -5411,11 +5351,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The rest is resource deallocation, so we should already be 	 * stopped here. 	 */
-name|RL_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -5433,6 +5368,17 @@ argument_list|,
 name|sc
 operator|->
 name|rl_intrhand
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7336,46 +7282,15 @@ name|rl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|sc
-operator|=
-name|xsc
-expr_stmt|;
-name|RL_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|re_tick_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|RL_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|re_tick_locked
-parameter_list|(
-name|sc
-parameter_list|)
-name|struct
-name|rl_softc
-modifier|*
-name|sc
-decl_stmt|;
-block|{
 name|struct
 name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|sc
+operator|=
+name|xsc
+expr_stmt|;
 name|RL_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -7395,17 +7310,18 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|rl_stat_ch
-operator|=
-name|timeout
-argument_list|(
+name|rl_stat_callout
+argument_list|,
+name|hz
+argument_list|,
 name|re_tick
 argument_list|,
 name|sc
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -7875,18 +7791,15 @@ operator|&
 name|RL_ISR_LINKCHG
 condition|)
 block|{
-name|untimeout
+name|callout_stop
 argument_list|(
-name|re_tick
-argument_list|,
-name|sc
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|rl_stat_ch
+name|rl_stat_callout
 argument_list|)
 expr_stmt|;
-name|re_tick_locked
+name|re_tick
 argument_list|(
 name|sc
 argument_list|)
@@ -8143,13 +8056,13 @@ operator|!=
 name|EFBIG
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: can't map mbuf (error %d)\n"
-argument_list|,
 name|sc
 operator|->
-name|rl_unit
+name|rl_ifp
+argument_list|,
+literal|"can't map mbuf (error %d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -8260,13 +8173,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: can't map mbuf (error %d)\n"
-argument_list|,
 name|sc
 operator|->
-name|rl_unit
+name|rl_ifp
+argument_list|,
+literal|"can't map mbuf (error %d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -9289,17 +9202,18 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|rl_stat_ch
-operator|=
-name|timeout
-argument_list|(
+name|rl_stat_callout
+argument_list|,
+name|hz
+argument_list|,
 name|re_tick
 argument_list|,
 name|sc
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -9347,9 +9261,19 @@ operator|->
 name|rl_miibus
 argument_list|)
 expr_stmt|;
+name|RL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mii_mediachg
 argument_list|(
 name|mii
+argument_list|)
+expr_stmt|;
+name|RL_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -9409,9 +9333,19 @@ operator|->
 name|rl_miibus
 argument_list|)
 expr_stmt|;
+name|RL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mii_pollstat
 argument_list|(
 name|mii
+argument_list|)
+expr_stmt|;
+name|RL_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|ifmr
@@ -9484,8 +9418,6 @@ name|mii
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 switch|switch
 condition|(
@@ -9495,6 +9427,11 @@ block|{
 case|case
 name|SIOCSIFMTU
 case|:
+name|RL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifr
@@ -9514,6 +9451,15 @@ operator|=
 name|ifr
 operator|->
 name|ifr_mtu
+expr_stmt|;
+name|RL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -9622,6 +9568,11 @@ break|break;
 case|case
 name|SIOCSIFCAP
 case|:
+name|RL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
@@ -9676,10 +9627,19 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
-name|re_init
+name|re_init_locked
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|RL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -9733,13 +9693,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"re%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|rl_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -9813,15 +9771,12 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-name|untimeout
+name|callout_stop
 argument_list|(
-name|re_tick
-argument_list|,
-name|sc
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|rl_stat_ch
+name|rl_stat_callout
 argument_list|)
 expr_stmt|;
 name|ifp

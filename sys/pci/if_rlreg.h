@@ -3604,10 +3604,6 @@ name|bus_dma_tag_t
 name|rl_tag
 decl_stmt|;
 name|uint8_t
-name|rl_unit
-decl_stmt|;
-comment|/* interface number */
-name|uint8_t
 name|rl_type
 decl_stmt|;
 name|int
@@ -3628,8 +3624,8 @@ name|rl_list_data
 name|rl_ldata
 decl_stmt|;
 name|struct
-name|callout_handle
-name|rl_stat_ch
+name|callout
+name|rl_stat_callout
 decl_stmt|;
 name|struct
 name|mtx
