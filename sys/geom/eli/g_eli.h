@@ -511,6 +511,7 @@ index|]
 decl_stmt|;
 comment|/* MD5 hash. */
 block|}
+name|__packed
 struct|;
 end_struct
 
