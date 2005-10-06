@@ -3021,16 +3021,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Make the new upcall available to the ksegrp. 	 * It may or may not use it, but it's available. 	 */
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|upcall_link
 argument_list|(
 name|newku
 argument_list|,
 name|newkg
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
