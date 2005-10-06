@@ -5399,6 +5399,15 @@ argument_list|)
 block|,
 name|DEF_CMD
 argument_list|(
+literal|"-tunnel"
+argument_list|,
+literal|0
+argument_list|,
+name|deletetunnel
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
 literal|"deletetunnel"
 argument_list|,
 literal|0
