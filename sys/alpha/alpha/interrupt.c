@@ -1712,6 +1712,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * It seems that we need to return from an interrupt back to PAL 	 * on the same CPU that received the interrupt, so pin the interrupted 	 * thread to the current CPU until we return from the interrupt. 	 */
+name|sched_pin
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Handle a fast interrupt if there is no actual thread for this 	 * interrupt by calling the handler directly without Giant.  Note 	 * that this means that any fast interrupt handler must be MP safe. 	 */
 name|ih
 operator|=
@@ -1748,18 +1752,12 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
-name|curthread
-operator|->
-name|td_owepreempt
-operator|=
-literal|0
-expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|ithd
@@ -1788,10 +1786,6 @@ name|it_vector
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * It seems that we need to return from an interrupt back to PAL 	 * on the same CPU that received the interrupt, so pin the interrupted 	 * thread to the current CPU until we return from the interrupt. 	 */
-name|sched_pin
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|ithread_schedule
@@ -1810,6 +1804,7 @@ literal|"got an impossible stray interrupt"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|sched_unpin
 argument_list|()
 expr_stmt|;
