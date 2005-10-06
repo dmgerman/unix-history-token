@@ -3569,7 +3569,7 @@ name|moduledata_t
 name|firewire_mod
 init|=
 block|{
-literal|"firewire"
+literal|"if_firewire"
 block|,
 name|firewire_modevent
 block|,
@@ -3581,7 +3581,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
-name|firewire
+name|if_firewire
 argument_list|,
 name|firewire_mod
 argument_list|,
@@ -3595,7 +3595,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|firewire
+name|if_firewire
 argument_list|,
 literal|1
 argument_list|)
