@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * This code implements a `root nexus' for Intel Architecture  * machines.  The function of the root nexus is to serve as an  * attachment point for both processors and buses, and to manage  * resources which are common to all of them.  In particular,  * this code implements the core resource managers for interrupt  * requests, DMA requests (which rightfully should be a part of the  * ISA code but it's easier to do it here for now), I/O port addresses,  * and I/O memory address space.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1822,9 +1816,10 @@ name|rman_set_bushandle
 argument_list|(
 name|rv
 argument_list|,
+name|rman_get_start
+argument_list|(
 name|rv
-operator|->
-name|r_start
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2127,9 +2122,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|rman_get_flags
+argument_list|(
 name|irq
-operator|->
-name|r_flags
+argument_list|)
 operator|&
 name|RF_SHAREABLE
 operator|)
@@ -2173,9 +2169,10 @@ argument_list|(
 name|child
 argument_list|)
 argument_list|,
+name|rman_get_start
+argument_list|(
 name|irq
-operator|->
-name|r_start
+argument_list|)
 argument_list|,
 name|ihand
 argument_list|,
