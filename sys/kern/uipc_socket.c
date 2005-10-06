@@ -8227,6 +8227,9 @@ case|case
 name|SO_OOBINLINE
 case|:
 case|case
+name|SO_ACCEPTCONN
+case|:
+case|case
 name|SO_TIMESTAMP
 case|:
 case|case
