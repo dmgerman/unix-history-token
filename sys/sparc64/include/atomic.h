@@ -363,6 +363,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|atomic_fetchadd_int
+value|atomic_add_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fetchadd_32
+value|atomic_add_32
+end_define
+
 begin_undef
 undef|#
 directive|undef

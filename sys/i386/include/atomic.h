@@ -92,6 +92,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|u_int
+name|atomic_fetchadd_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -363,7 +378,71 @@ begin_comment
 comment|/* defined(CPU_DISABLE_CMPXCHG) */
 end_comment
 
+begin_comment
+comment|/*  * Atomically add the value of v to the integer pointed to by p and return  * the previous value of *p.  */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|u_int
+name|atomic_fetchadd_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile (
+literal|"	"
+name|__XSTRING
+argument_list|(
+name|MPLOCKED
+argument_list|)
+literal|"	"
+literal|"	xaddl	%0, %1 ;	"
+literal|"# atomic_fetchadd_int"
+operator|:
+literal|"+r"
+operator|(
+name|v
+operator|)
+operator|,
+comment|/* 0 (result) */
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+comment|/* 1 */
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* 2 */
+end_comment
+
+begin_return
+return|return
+operator|(
+name|v
+operator|)
+return|;
+end_return
+
 begin_if
+unit|}
 if|#
 directive|if
 name|defined
@@ -1572,6 +1651,13 @@ define|#
 directive|define
 name|atomic_readandclear_32
 value|atomic_readandclear_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fetchadd_32
+value|atomic_fetchadd_int
 end_define
 
 begin_comment
