@@ -3297,13 +3297,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|vm_object_reference
-argument_list|(
-name|ef
-operator|->
-name|object
-argument_list|)
-expr_stmt|;
 name|ef
 operator|->
 name|address
@@ -4242,13 +4235,6 @@ name|size
 operator|<<
 name|PAGE_SHIFT
 operator|)
-argument_list|)
-expr_stmt|;
-name|vm_object_deallocate
-argument_list|(
-name|ef
-operator|->
-name|object
 argument_list|)
 expr_stmt|;
 block|}
