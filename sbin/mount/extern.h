@@ -49,7 +49,7 @@ parameter_list|,
 name|char
 modifier|*
 specifier|const
-modifier|*
+type|[]
 parameter_list|)
 function_decl|;
 end_function_decl
