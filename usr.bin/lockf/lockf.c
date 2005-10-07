@@ -188,14 +188,11 @@ parameter_list|)
 block|{
 name|int
 name|ch
-decl_stmt|;
-name|int
+decl_stmt|,
 name|silent
-decl_stmt|;
-name|int
+decl_stmt|,
 name|status
-decl_stmt|;
-name|int
+decl_stmt|,
 name|waitsec
 decl_stmt|;
 name|pid_t
@@ -203,8 +200,6 @@ name|child
 decl_stmt|;
 name|silent
 operator|=
-literal|0
-expr_stmt|;
 name|keep
 operator|=
 literal|0
@@ -576,6 +571,7 @@ literal|"waitpid failed"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|WIFEXITED
 argument_list|(
 name|status
@@ -587,6 +583,7 @@ name|status
 argument_list|)
 else|:
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -761,10 +758,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|errno
-operator|==
-name|ENOENT
-operator|||
 name|errno
 operator|==
 name|EINTR
