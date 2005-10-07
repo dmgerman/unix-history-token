@@ -749,13 +749,6 @@ operator|&
 name|MNT_UPDATE
 condition|)
 block|{
-name|imp
-operator|=
-name|VFSTOUDFFS
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fspec
