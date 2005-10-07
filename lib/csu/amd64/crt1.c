@@ -373,6 +373,7 @@ operator|&
 name|etext
 argument_list|)
 expr_stmt|;
+asm|__asm__("eprol:");
 endif|#
 directive|endif
 name|_init
@@ -392,29 +393,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GCRT
-end_ifdef
-
-begin_asm
-asm|__asm__(".text");
-end_asm
-
-begin_asm
-asm|__asm__("eprol:");
-end_asm
-
-begin_asm
-asm|__asm__(".previous");
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_asm
 asm|__asm__(".ident\t\"$FreeBSD$\"");
