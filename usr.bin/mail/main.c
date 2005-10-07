@@ -508,7 +508,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Usage: %s [-EiInv] [-s subject] [-c cc-addr] [-b bcc-addr] [-F] to-addr ...\n\        %*s [- sendmail-options ...]\n\        %s [-EHiInNv] [-F] -f [name]\n\        %s [-EHiInNv] [-F] [-u user]\n\        %s -e [-f name]\n\        %s -H\n"
+literal|"\ Usage: %s [-dEiInv] [-s subject] [-c cc-addr] [-b bcc-addr] [-F] to-addr ...\n\        %*s [-sendmail-option ...]\n\        %s [-dEHiInNv] [-F] -f [name]\n\        %s [-dEHiInNv] [-F] [-u user]\n\        %s [-d] -e [-f name]\n"
 argument_list|,
 name|__progname
 argument_list|,
@@ -518,8 +518,6 @@ name|__progname
 argument_list|)
 argument_list|,
 literal|""
-argument_list|,
-name|__progname
 argument_list|,
 name|__progname
 argument_list|,
