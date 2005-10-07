@@ -3317,6 +3317,9 @@ block|}
 comment|/* 	 * Warn if another host is using the same IP address, but only if the 	 * IP address isn't 0.0.0.0, which is used for DHCP only, in which 	 * case we suppress the warning to avoid false positive complaints of 	 * potential misconfiguration. 	 */
 if|if
 condition|(
+operator|!
+name|bridged
+operator|&&
 name|isaddr
 operator|.
 name|s_addr
