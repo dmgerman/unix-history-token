@@ -2469,19 +2469,23 @@ comment|/* bus address of dmatab */
 name|u_int32_t
 name|alignment
 decl_stmt|;
-comment|/* DMA engine alignment */
+comment|/* DMA SG list alignment */
 name|u_int32_t
 name|boundary
 decl_stmt|;
-comment|/* DMA engine boundary */
+comment|/* DMA SG list boundary */
+name|u_int32_t
+name|segsize
+decl_stmt|;
+comment|/* DMA SG list segment size */
 name|u_int32_t
 name|max_iosize
 decl_stmt|;
-comment|/* DMA engine max IO size */
+comment|/* DMA data max IO size */
 name|u_int32_t
 name|cur_iosize
 decl_stmt|;
-comment|/* DMA engine current IO size */
+comment|/* DMA data current IO size */
 name|int
 name|flags
 decl_stmt|;
