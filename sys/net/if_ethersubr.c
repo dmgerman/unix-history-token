@@ -517,7 +517,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* bridge support */
+comment|/* if_bridge(4) support. XXX: should go into some include. */
 end_comment
 
 begin_function_decl
@@ -2789,7 +2789,7 @@ name|NULL
 condition|)
 return|return;
 block|}
-comment|/* 	 * Tap the packet off here for a bridge.  bridge_input() 	 * will return NULL if it has consumed the packet, otherwise 	 * it gets processed as normal.  Note that bridge_input() 	 * will always return the original packet if we need to 	 * process it locally. 	 */
+comment|/* 	 * Tap the packet off here for a bridge.  bridge_input() 	 * will return NULL if it has consumed the packet, otherwise 	 * it gets processed as normal.  Note that bridge_input() 	 * will always return the original packet if we need to 	 * process it locally. 	 *  	 * XXX: When changing the below block, please also look 	 * at the src/sys/netgraph/ng_ether.c:ng_ether_rcv_upper() 	 */
 if|if
 condition|(
 name|ifp
