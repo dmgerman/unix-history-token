@@ -2553,7 +2553,9 @@ parameter_list|)
 block|{
 name|int
 name|flags
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|i
 decl_stmt|;
 name|struct
