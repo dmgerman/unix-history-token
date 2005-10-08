@@ -4716,6 +4716,12 @@ operator|.
 name|tv_nsec
 expr_stmt|;
 block|}
+name|ip
+operator|->
+name|i_flag
+operator|&=
+name|IN_HASHED
+expr_stmt|;
 return|return
 operator|(
 literal|0
