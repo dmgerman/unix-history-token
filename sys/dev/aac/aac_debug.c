@@ -102,15 +102,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|aac_intr0
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Dump the command queue indices  */
 end_comment
@@ -701,42 +692,6 @@ case|:
 comment|/* XXX implement */
 break|break;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * simulate an interrupt for controller 0  */
-end_comment
-
-begin_function
-name|void
-name|aac_intr0
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|aac_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
-name|devclass_get_softc
-argument_list|(
-name|devclass_find
-argument_list|(
-literal|"aac"
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|aac_intr
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
