@@ -778,6 +778,7 @@ operator|-
 literal|1
 return|;
 block|}
+block|}
 if|if
 condition|(
 name|ix
