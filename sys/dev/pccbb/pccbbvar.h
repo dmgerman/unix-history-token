@@ -214,13 +214,6 @@ argument|cbb_reslist
 argument_list|)
 name|rl
 expr_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|cbb_intrhand
-argument_list|)
-name|intr_handlers
-expr_stmt|;
 name|device_t
 name|cbdev
 decl_stmt|;
