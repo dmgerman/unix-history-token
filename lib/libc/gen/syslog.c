@@ -1178,7 +1178,7 @@ expr_stmt|;
 block|}
 do|do
 block|{
-name|usleep
+name|_usleep
 argument_list|(
 literal|1
 argument_list|)
