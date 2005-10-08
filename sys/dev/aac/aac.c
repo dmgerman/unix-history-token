@@ -13618,7 +13618,7 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-name|aac_ioctl_sendfib
+name|arg
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -13758,7 +13758,8 @@ argument_list|)
 expr_stmt|;
 name|msleep
 argument_list|(
-name|aac_ioctl_sendfib
+operator|&
+name|cm
 argument_list|,
 operator|&
 name|sc
