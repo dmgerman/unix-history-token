@@ -5742,8 +5742,8 @@ literal|"cbb_pcic_socket_disable\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* reset signal asserting... */
-name|exca_clrb
+comment|/* Turn off the card's interrupt and leave it in reset */
+name|exca_putb
 argument_list|(
 operator|&
 name|sc
@@ -5755,7 +5755,7 @@ index|]
 argument_list|,
 name|EXCA_INTR
 argument_list|,
-name|EXCA_INTR_RESET
+literal|0
 argument_list|)
 expr_stmt|;
 name|tsleep
@@ -5772,7 +5772,14 @@ literal|100
 argument_list|)
 expr_stmt|;
 comment|/* power down the socket */
-name|exca_clrb
+name|cbb_power
+argument_list|(
+name|brdev
+argument_list|,
+name|CARD_OFF
+argument_list|)
+expr_stmt|;
+name|exca_putb
 argument_list|(
 operator|&
 name|sc
@@ -5784,14 +5791,7 @@ index|]
 argument_list|,
 name|EXCA_PWRCTL
 argument_list|,
-name|EXCA_PWRCTL_OE
-argument_list|)
-expr_stmt|;
-name|cbb_power
-argument_list|(
-name|brdev
-argument_list|,
-name|CARD_OFF
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* wait 300ms until power fails (Tpf). */
