@@ -9377,6 +9377,8 @@ name|mii
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(
