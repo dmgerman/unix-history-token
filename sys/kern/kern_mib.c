@@ -687,12 +687,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -713,36 +707,6 @@ literal|"Number of active CPUs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_hw
-argument_list|,
-name|HW_NCPU
-argument_list|,
-name|ncpu
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-literal|"Number of active CPUs"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
