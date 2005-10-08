@@ -1240,6 +1240,7 @@ operator|->
 name|intrhand
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Wait for the thread to die.  kthread_exit will do a wakeup 	 * on the event thread's struct thread * so that we know it is 	 * save to proceed.  IF the thread is running, set the please 	 * die flag and wait for it to comply.  Since the wakeup on 	 * the event thread happens only in kthread_exit, we don't 	 * need to loop here. 	 */
 name|sc
 operator|->
 name|flags
