@@ -269,9 +269,12 @@ name|f
 argument_list|,
 literal|"  Architecture Version: %u\n"
 argument_list|,
+name|dtoh32
+argument_list|(
 name|h
 operator|->
 name|architectureversion
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dumplen
