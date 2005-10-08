@@ -1988,6 +1988,7 @@ name|imgp
 operator|->
 name|stringbase
 expr_stmt|;
+comment|/* Cache arguments if they fit inside our allowance */
 if|if
 condition|(
 name|ps_arg_cache_limit
@@ -2000,6 +2001,7 @@ expr|struct
 name|pargs
 argument_list|)
 condition|)
+block|{
 name|newargs
 operator|=
 name|pargs_alloc
@@ -2007,6 +2009,20 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+name|imgp
+operator|->
+name|stringbase
+argument_list|,
+name|newargs
+operator|->
+name|ar_args
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* close files on exec */
 name|fdcloseexec
 argument_list|(
@@ -2605,7 +2621,7 @@ operator|&=
 operator|~
 name|AFORK
 expr_stmt|;
-comment|/* Free any previous argument cache */
+comment|/* 	 * Free any previous argument cache and replace it with 	 * the new argument cache, if any. 	 */
 name|oldargs
 operator|=
 name|p
@@ -2616,46 +2632,12 @@ name|p
 operator|->
 name|p_args
 operator|=
-name|NULL
-expr_stmt|;
-comment|/* Cache arguments if they fit inside our allowance */
-if|if
-condition|(
-name|ps_arg_cache_limit
-operator|>=
-name|i
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pargs
-argument_list|)
-condition|)
-block|{
-name|bcopy
-argument_list|(
-name|imgp
-operator|->
-name|stringbase
-argument_list|,
-name|newargs
-operator|->
-name|ar_args
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_args
-operator|=
 name|newargs
 expr_stmt|;
 name|newargs
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|PROC_UNLOCK
 argument_list|(
 name|p
