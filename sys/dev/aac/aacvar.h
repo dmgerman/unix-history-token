@@ -39,6 +39,24 @@ directive|include
 file|<geom/geom_disk.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AAC_DRIVER_BUILD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AAC_DRIVER_BUILD
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Driver Parameter Definitions  */
 end_comment
@@ -76,13 +94,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AAC_FIB_COUNT
-value|(PAGE_SIZE/sizeof(struct aac_fib))
-end_define
-
-begin_define
-define|#
-directive|define
 name|AAC_PREALLOCATE_FIBS
 value|128
 end_define
@@ -90,8 +101,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AAC_MAX_FIBS
-value|504
+name|AAC_NUM_MGT_FIB
+value|8
 end_define
 
 begin_comment
@@ -314,7 +325,7 @@ modifier|*
 name|cm_fib
 decl_stmt|;
 comment|/* FIB associated with this 						 * command */
-name|u_int32_t
+name|u_int64_t
 name|cm_fibphys
 decl_stmt|;
 comment|/* bus address of the FIB */
@@ -380,8 +391,16 @@ name|AAC_ON_AACQ_BUSY
 value|(1<<7)
 define|#
 directive|define
+name|AAC_ON_AACQ_AIF
+value|(1<<8)
+define|#
+directive|define
+name|AAC_ON_AACQ_NORM
+value|(1<<10)
+define|#
+directive|define
 name|AAC_ON_AACQ_MASK
-value|((1<<5)|(1<<6)|(1<<7))
+value|((1<<5)|(1<<6)|(1<<7)|(1<<8)|(1<<10))
 define|#
 directive|define
 name|AAC_QUEUE_FRZN
@@ -614,6 +633,50 @@ name|int
 name|enable
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|aif_send_command
+function_decl|)
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|aac_command
+modifier|*
+name|cm
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|aif_get_outb_queue
+function_decl|)
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|aif_set_outb_queue
+function_decl|)
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|index
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -745,6 +808,40 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|((sc)->aac_if.aif_set_interrupts((sc), \ 					1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_SEND_COMMAND
+parameter_list|(
+name|sc
+parameter_list|,
+name|cm
+parameter_list|)
+value|((sc)->aac_if.aif_send_command((sc), (cm)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_GET_OUTB_QUEUE
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->aac_if.aif_get_outb_queue((sc)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_SET_OUTB_QUEUE
+parameter_list|(
+name|sc
+parameter_list|,
+name|idx
+parameter_list|)
+value|((sc)->aac_if.aif_set_outb_queue((sc), (idx)))
 end_define
 
 begin_define
@@ -992,6 +1089,26 @@ argument|aac_command
 argument_list|)
 name|aac_busy
 expr_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|aac_command
+argument_list|)
+name|aac_aif
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|TAILQ_HEAD(,aac_command) aac_norm;
+endif|#
+directive|endif
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|aac_event
+argument_list|)
+name|aac_ev_cmfree
+expr_stmt|;
 name|struct
 name|bio_queue_head
 name|aac_bioq
@@ -1154,11 +1271,31 @@ directive|define
 name|AAC_FLAGS_BROKEN_MEMMAP
 value|(1<< 8)
 comment|/* Broken HostPhysMemPages */
+define|#
+directive|define
+name|AAC_FLAGS_SLAVE
+value|(1<< 9)
+define|#
+directive|define
+name|AAC_FLAGS_MASTER
+value|(1<< 10)
+define|#
+directive|define
+name|AAC_FLAGS_NEW_COMM
+value|(1<< 11)
+comment|/* New comm. interface supported */
+define|#
+directive|define
+name|AAC_FLAGS_RAW_IO
+value|(1<< 12)
+comment|/* Raw I/O interface */
+define|#
+directive|define
+name|AAC_FLAGS_ARRAY_64BIT
+value|(1<< 13)
+comment|/* 64-bit array size */
 name|u_int32_t
 name|supported_options
-decl_stmt|;
-name|int
-name|aac_max_fibs
 decl_stmt|;
 name|u_int32_t
 name|scsi_method_id
@@ -1170,6 +1307,105 @@ argument|aac_sim
 argument_list|)
 name|aac_sim_tqh
 expr_stmt|;
+name|u_int32_t
+name|aac_max_fibs
+decl_stmt|;
+comment|/* max. FIB count */
+name|u_int32_t
+name|aac_max_fibs_alloc
+decl_stmt|;
+comment|/* max. alloc. per alloc_commands() */
+name|u_int32_t
+name|aac_max_fib_size
+decl_stmt|;
+comment|/* max. FIB size */
+name|u_int32_t
+name|aac_sg_tablesize
+decl_stmt|;
+comment|/* max. sg count from host */
+name|u_int32_t
+name|aac_max_sectors
+decl_stmt|;
+comment|/* max. I/O size from host (blocks) */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Event callback mechanism for the driver  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_EVENT_NONE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_EVENT_CMFREE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_EVENT_MASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_EVENT_REPEAT
+value|0x100
+end_define
+
+begin_typedef
+typedef|typedef
+name|void
+name|aac_event_cb_t
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|aac_event
+modifier|*
+name|event
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|aac_event
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|aac_event
+argument_list|)
+name|ev_links
+expr_stmt|;
+name|int
+name|ev_type
+decl_stmt|;
+name|aac_event_cb_t
+modifier|*
+name|ev_callback
+decl_stmt|;
+name|void
+modifier|*
+name|ev_arg
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1251,7 +1487,19 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|aac_intr
+name|aac_new_intr
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|aac_fast_intr
 parameter_list|(
 name|void
 modifier|*
@@ -1354,6 +1602,24 @@ name|fib
 parameter_list|,
 name|u_int16_t
 name|datasize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|aac_add_event
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|aac_event
+modifier|*
+name|event
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1853,12 +2119,14 @@ modifier|*
 name|fib
 parameter_list|)
 block|{
-name|mtx_lock
+name|mtx_assert
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|aac_io_lock
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1891,12 +2159,14 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|mtx_unlock
+name|mtx_assert
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|aac_io_lock
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 block|}

@@ -541,6 +541,10 @@ name|ContainerCommand64
 init|=
 literal|501
 block|,
+name|RawIo
+init|=
+literal|502
+block|,
 comment|/* Cluster Commands */
 name|ClusterCommand
 init|=
@@ -550,6 +554,22 @@ comment|/* Scsi Port commands (scsi passthrough) */
 name|ScsiPortCommand
 init|=
 literal|600
+block|,
+name|ScsiPortCommandU64
+init|=
+literal|601
+block|,
+name|SataPortCommandU64
+init|=
+literal|602
+block|,
+name|SasSmpPassThrough
+init|=
+literal|603
+block|,
+name|SasRequestPhyInfo
+init|=
+literal|612
 block|,
 comment|/* misc house keeping and generic adapter initiated commands */
 name|AifRequest
@@ -576,9 +596,55 @@ name|SendHostTime
 init|=
 literal|705
 block|,
-name|LastMiscCommand
+name|RequestSupplementAdapterInfo
 init|=
 literal|706
+block|,
+comment|/* Supp. Info for set in UCC 						 * use only if supported  						 * (RequestAdapterInfo first) */
+name|LastMiscCommand
+init|=
+literal|707
+block|,
+name|OnLineDiagnostic
+init|=
+literal|800
+block|,
+name|FduAdapterTest
+init|=
+literal|801
+block|,
+name|RequestCompatibilityId
+init|=
+literal|802
+block|,
+name|AdapterEnvironmentInfo
+init|=
+literal|803
+block|,
+comment|/* temp. sensors */
+name|NvsramEventLog
+init|=
+literal|900
+block|,
+name|ResetNvsramEventLogPointers
+init|=
+literal|901
+block|,
+name|EnableEventLog
+init|=
+literal|902
+block|,
+name|DisableEventLog
+init|=
+literal|903
+block|,
+name|EncryptedKeyTransportFIB
+init|=
+literal|904
+block|,
+name|KeyableFeaturesFIB
+init|=
+literal|905
 block|}
 name|AAC_FibCommands
 typedef|;
@@ -917,6 +983,10 @@ define|#
 directive|define
 name|AAC_INIT_STRUCT_REVISION
 value|3
+define|#
+directive|define
+name|AAC_INIT_STRUCT_REVISION_4
+value|4
 name|u_int32_t
 name|MiniPortRevision
 decl_stmt|;
@@ -961,6 +1031,27 @@ decl_stmt|;
 name|u_int32_t
 name|HostElapsedSeconds
 decl_stmt|;
+comment|/* ADAPTER_INIT_STRUCT_REVISION_4 begins here */
+name|u_int32_t
+name|InitFlags
+decl_stmt|;
+comment|/* flags for supported features */
+define|#
+directive|define
+name|INITFLAGS_NEW_COMM_SUPPORTED
+value|1
+name|u_int32_t
+name|MaxIoCommands
+decl_stmt|;
+comment|/* max outstanding commands */
+name|u_int32_t
+name|MaxIoSize
+decl_stmt|;
+comment|/* largest I/O command */
+name|u_int32_t
+name|MaxFibSize
+decl_stmt|;
+comment|/* largest FIB to adapter */
 block|}
 name|__packed
 struct|;
@@ -1015,7 +1106,18 @@ comment|/* really raid4 */
 name|CT_RAID50
 block|,
 comment|/* stripe of raid5 */
-block|}
+name|CT_RAID5D
+block|,
+comment|/* raid5 distributed hot-sparing */
+name|CT_RAID5D0
+block|,
+name|CT_RAID1E
+block|,
+comment|/* extended raid1 mirroring */
+name|CT_RAID6
+block|,
+name|CT_RAID60
+block|, }
 name|AAC_FSAVolType
 typedef|;
 end_typedef
@@ -1118,6 +1220,33 @@ end_struct
 
 begin_struct
 struct|struct
+name|aac_sg_entryraw
+block|{
+name|u_int32_t
+name|Next
+decl_stmt|;
+comment|/* reserved for FW use */
+name|u_int32_t
+name|Prev
+decl_stmt|;
+comment|/* reserved for FW use */
+name|u_int64_t
+name|SgAddress
+decl_stmt|;
+name|u_int32_t
+name|SgByteCount
+decl_stmt|;
+name|u_int32_t
+name|Flags
+decl_stmt|;
+comment|/* reserved for FW use */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|aac_sg_table
 block|{
 name|u_int32_t
@@ -1149,6 +1278,29 @@ decl_stmt|;
 name|struct
 name|aac_sg_entry64
 name|SgEntry64
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * s/g list for raw commands  */
+end_comment
+
+begin_struct
+struct|struct
+name|aac_sg_tableraw
+block|{
+name|u_int32_t
+name|SgCount
+decl_stmt|;
+name|struct
+name|aac_sg_entryraw
+name|SgEntryRaw
 index|[
 literal|0
 index|]
@@ -1312,6 +1464,10 @@ name|CPU_P7
 block|,
 name|CPU_I960_RX
 block|,
+name|CPU_MIPS
+block|,
+name|CPU_XSCALE
+block|,
 name|CPU__last
 block|}
 name|AAC_CpuType
@@ -1336,11 +1492,17 @@ name|CPUARM_SA110
 block|,
 name|CPUARM_xxx
 block|,
-name|CPUMPC_824x
+name|CPUPPC_603e
 block|,
 name|CPUPPC_xxx
 block|,
-name|CPUI960_30X
+name|CPUI960_80303
+block|,
+name|CPU_XSCALE_80321
+block|,
+name|CPU_MIPS_4KC
+block|,
+name|CPU_MIPS_5KC
 block|,
 name|CPUSUBTYPE__last
 block|}
@@ -1394,6 +1556,34 @@ name|PLAT_JALAPENO_P2
 block|,
 name|PLAT_HABANERO
 block|,
+name|PLAT_VULCAN
+block|,
+name|PLAT_CRUSADER
+block|,
+name|PLAT_LANCER
+block|,
+name|PLAT_HARRIER
+block|,
+name|PLAT_TERMINATOR
+block|,
+name|PLAT_SKYHAWK
+block|,
+name|PLAT_CORSAIR
+block|,
+name|PLAT_JAGUAR
+block|,
+name|PLAT_SATAHAWK
+block|,
+name|PLAT_SATANATOR
+block|,
+name|PLAT_PROWLER
+block|,
+name|PLAT_BLACKBIRD
+block|,
+name|PLAT_SABREEXPRESS
+block|,
+name|PLAT_INTRUDER
+block|,
 name|PLAT__last
 block|}
 name|AAC_Platform
@@ -1416,11 +1606,21 @@ name|OEM_FLAVOR_IBM
 block|,
 name|OEM_FLAVOR_CPQ
 block|,
-name|OEM_FLAVOR_BRAND_X
+name|OEM_FLAVOR_FSC
 block|,
-name|OEM_FLAVOR_BRAND_Y
+name|OEM_FLAVOR_DWS
 block|,
 name|OEM_FLAVOR_BRAND_Z
+block|,
+name|OEM_FLAVOR_LEGEND
+block|,
+name|OEM_FLAVOR_HITACHI
+block|,
+name|OEM_FLAVOR_ESG
+block|,
+name|OEM_FLAVOR_ICP
+block|,
+name|OEM_FLAVOR_SCM
 block|,
 name|OEM_FLAVOR__last
 block|}
@@ -1552,6 +1752,48 @@ name|AAC_SUPPORTED_NONDASD
 value|0x1000
 end_define
 
+begin_define
+define|#
+directive|define
+name|AAC_SUPPORTED_SCSI_MANAGED
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_SUPPORTED_RAID_SCSI_MODE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_SUPPORTED_SUPPLEMENT_ADAPTER_INFO
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_SUPPORTED_NEW_COMM
+value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_SUPPORTED_64BIT_ARRAYSIZE
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_SUPPORTED_HEAT_SENSOR
+value|0x80000
+end_define
+
 begin_comment
 comment|/*   * Structure used to respond to a RequestAdapterInfo fib.  */
 end_comment
@@ -1643,6 +1885,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AAC_MONKER_BREAKPOINT
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|AAC_MONKER_INITSTRUCT
 value|0x05
 end_define
@@ -1664,8 +1913,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|AAC_MONKER_POSTRESULTS
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
 name|AAC_MONKER_GETINFO
 value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MONKER_GETDRVPROP
+value|0x23
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MONKER_RCVTEMP
+value|0x25
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MONKER_GETCOMMPREF
+value|0x26
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MONKER_REINIT
+value|0xee
 end_define
 
 begin_comment
@@ -1939,6 +2223,9 @@ comment|/* SCSI device Exercise operation */
 name|AifJobScsiVerifyRepair
 block|,
 comment|/* SCSI device Verify operation WITH 					 * repair */
+name|AifJobScsiWritePattern
+block|,
+comment|/* write pattern */
 name|AifJobScsiMax
 init|=
 literal|99
@@ -1980,6 +2267,24 @@ comment|/* Container Rebuild Mirror operation */
 name|AifJobCtrCrazyCache
 block|,
 comment|/* crazy cache */
+name|AifJobCtrCopyback
+block|,
+comment|/* Container Copyback operation */
+name|AifJobCtrCompactRaid5D
+block|,
+comment|/* Container Compaction operation */
+name|AifJobCtrExpandRaid5D
+block|,
+comment|/* Container Expansion operation */
+name|AifJobCtrRebuildRaid6
+block|,
+comment|/* Container Rebuild Raid6 operation */
+name|AifJobCtrScrubRaid6
+block|,
+comment|/* Container Scrub Raid6 operation */
+name|AifJobCtrSSBackup
+block|,
+comment|/* Container snapshot backup task */
 name|AifJobCtrMax
 init|=
 literal|199
@@ -2847,7 +3152,12 @@ block|,
 name|VM_CtHostRead64
 block|,
 name|VM_CtHostWrite64
-block|, }
+block|,
+name|VM_DrvErrTblLog
+block|,
+comment|/* drive error table/log type of command */
+name|VM_NameServe64
+block|}
 name|AAC_VMCommand
 typedef|;
 end_typedef
@@ -3153,6 +3463,12 @@ name|__packed
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -3167,6 +3483,31 @@ parameter_list|)
 define|\
 value|(((b& 0x3f)<< 7) | ((l& 0x7)<< 4) | (t& 0xf))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AAC_BTL_TO_HANDLE
+parameter_list|(
+name|b
+parameter_list|,
+name|t
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|((((u_int32_t)b& 0x0f)<< 24) | \      (((u_int32_t)l& 0xff)<< 16) | \      ((u_int32_t)t& 0xffff))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3539,6 +3880,41 @@ decl_stmt|;
 name|u_int32_t
 name|Committed
 decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aac_raw_io
+block|{
+name|u_int64_t
+name|BlockNumber
+decl_stmt|;
+name|u_int32_t
+name|ByteCount
+decl_stmt|;
+name|u_int16_t
+name|ContainerId
+decl_stmt|;
+name|u_int16_t
+name|Flags
+decl_stmt|;
+comment|/* 0: W, 1: R */
+name|u_int16_t
+name|BpTotal
+decl_stmt|;
+comment|/* reserved for FW use */
+name|u_int16_t
+name|BpComplete
+decl_stmt|;
+comment|/* reserved for FW use */
+name|struct
+name|aac_sg_tableraw
+name|SgMapRaw
+decl_stmt|;
+comment|/* variable size */
 block|}
 name|__packed
 struct|;
@@ -4080,6 +4456,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AAC_RX_IQUE
+value|0x40
+end_define
+
+begin_comment
+comment|/* inbound queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RX_OQUE
+value|0x44
+end_define
+
+begin_comment
+comment|/* outbound queue */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AAC_RX_MAILBOX
 value|0x50
 end_define
@@ -4163,6 +4561,28 @@ end_define
 
 begin_comment
 comment|/* outbound interrupt mask register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_IQUE
+value|0x40
+end_define
+
+begin_comment
+comment|/* inbound queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_OQUE
+value|0x44
+end_define
+
+begin_comment
+comment|/* outbound queue */
 end_comment
 
 begin_define
@@ -4285,6 +4705,13 @@ define|#
 directive|define
 name|AAC_DB_INTERRUPTS
 value|(AAC_DB_COMMAND_READY  |	\ 				 AAC_DB_RESPONSE_READY |	\ 				 AAC_DB_PRINTF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_DB_INT_NEW_COMM
+value|0x08
 end_define
 
 end_unit
