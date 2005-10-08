@@ -113,6 +113,12 @@ directive|include
 file|<dev/ed/if_edvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ed/rtl80x9reg.h>
+end_include
+
 begin_struct
 specifier|static
 struct|struct
@@ -132,7 +138,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x802910ec
+name|ED_RTL8029_PCI_ID
 block|,
 literal|"RealTek 8029"
 block|}
@@ -304,6 +310,30 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|ED_RTL8029_PCI_ID
+condition|)
+name|error
+operator|=
+name|ed_probe_RTL80x9
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|ed_probe_Novell

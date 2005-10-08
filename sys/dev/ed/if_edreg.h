@@ -729,7 +729,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/*  * PS0, PS1: Page Select. The two bits select which register set or 'page' to  *	access.  *  *	PS1 PS0		page  *	 0   0		0  *	 0   1		1  *	 1   0		2  *	 1   1		reserved  */
+comment|/*  * PS0, PS1: Page Select. The two bits select which register set or 'page' to  *	access.  *  *	PS1 PS0		page  *	 0   0		0  *	 0   1		1  *	 1   0		2  *	 1   1		3 (some chips it is reserved)  */
 end_comment
 
 begin_define
@@ -773,6 +773,13 @@ define|#
 directive|define
 name|ED_CR_PAGE_2
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CR_PAGE_3
+value|0xc0
 end_define
 
 begin_comment
@@ -3593,46 +3600,56 @@ begin_define
 define|#
 directive|define
 name|ED_CHIP_TYPE_DP8390
-value|0x00
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_CHIP_TYPE_WD790
-value|0x01
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_CHIP_TYPE_AX88190
-value|0x02
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_CHIP_TYPE_DL10019
-value|0x03
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_CHIP_TYPE_DL10022
-value|0x04
+value|4
 end_define
-
-begin_comment
-comment|/*  * Test for AX88790 vs 88190 cards.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|ED_ASIX_TEST
-value|0x05
+name|ED_CHIP_TYPE_TC5299J
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_RTL8019
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_RTL8029
+value|7
 end_define
 
 begin_comment
@@ -3728,113 +3745,6 @@ define|#
 directive|define
 name|ED_MII_IDLE_BITS
 value|1
-end_define
-
-begin_comment
-comment|/* Dlink chipset used on some Netgear and Dlink PCMCIA cards */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_DL100XX_MIIBUS
-value|0x0c
-end_define
-
-begin_comment
-comment|/* MII bus register on ASIC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_DL100XX_MII_RESET1
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_DL100XX_MII_RESET2
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_DL100XX_MII_DATATIN
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_DL100XX_MII_DIROUT_22
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_DL100XX_MII_DIROUT_19
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_DL100XX_MII_DATAOUT
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_DL100XX_MII_CLK
-value|0x80
-end_define
-
-begin_comment
-comment|/* AX88x90 based miibus defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_AX88X90_MIIBUS
-value|0x04
-end_define
-
-begin_comment
-comment|/* MII bus register on ASIC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_AX88X90_MII_DATAOUT
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_AX88X90_MII_DATATIN
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_AX88X90_MII_DIROUT
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_AX88X90_MII_CLK
-value|0x01
 end_define
 
 end_unit
