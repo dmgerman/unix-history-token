@@ -1329,14 +1329,6 @@ operator|->
 name|rl
 argument_list|)
 expr_stmt|;
-name|STAILQ_INIT
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|intr_handlers
-argument_list|)
-expr_stmt|;
 name|cbb_powerstate_d0
 argument_list|(
 name|brdev

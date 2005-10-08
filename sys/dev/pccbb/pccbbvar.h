@@ -28,12 +28,6 @@ name|void
 modifier|*
 name|cookie
 decl_stmt|;
-name|STAILQ_ENTRY
-argument_list|(
-argument|cbb_intrhand
-argument_list|)
-name|entries
-expr_stmt|;
 block|}
 struct|;
 end_struct
