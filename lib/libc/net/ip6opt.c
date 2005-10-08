@@ -1500,7 +1500,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The following functions are defined in a successor of RFC2292, aka  * rfc2292bis.  */
+comment|/*  * The following functions are defined in RFC3542, which is a successor  * of RFC2292.  */
 end_comment
 
 begin_function
