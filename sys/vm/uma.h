@@ -669,7 +669,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Sets up the uma allocator. (Called by vm_mem_init)  *  * Arguments:  *	bootmem  A pointer to memory used to bootstrap the system.  *  * Returns:  *	Nothing  *  * Discussion:  *	This memory is used for zones which allocate things before the  *	backend page supplier can give us pages.  It should be  *	UMA_SLAB_SIZE * UMA_BOOT_PAGES bytes. (see uma_int.h)  *  */
+comment|/*  * Sets up the uma allocator. (Called by vm_mem_init)  *  * Arguments:  *	bootmem  A pointer to memory used to bootstrap the system.  *  * Returns:  *	Nothing  *  * Discussion:  *	This memory is used for zones which allocate things before the  *	backend page supplier can give us pages.  It should be  *	UMA_SLAB_SIZE * boot_pages bytes. (see uma_int.h)  *  */
 end_comment
 
 begin_function_decl
@@ -679,6 +679,9 @@ parameter_list|(
 name|void
 modifier|*
 name|bootmem
+parameter_list|,
+name|int
+name|boot_pages
 parameter_list|)
 function_decl|;
 end_function_decl

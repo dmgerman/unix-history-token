@@ -1562,7 +1562,7 @@ decl_stmt|;
 name|uma_bucket_t
 name|bucket
 decl_stmt|;
-comment|/* 	 * This is to stop us from allocating per cpu buckets while we're 	 * running out of UMA_BOOT_PAGES.  Otherwise, we would exhaust the 	 * boot pages.  This also prevents us from allocating buckets in 	 * low memory situations. 	 */
+comment|/* 	 * This is to stop us from allocating per cpu buckets while we're 	 * running out of vm.boot_pages.  Otherwise, we would exhaust the 	 * boot pages.  This also prevents us from allocating buckets in 	 * low memory situations. 	 */
 if|if
 condition|(
 name|bucketdisable
@@ -3829,7 +3829,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"UMA: Increase UMA_BOOT_PAGES"
+literal|"UMA: Increase vm.boot_pages"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that we've booted reset these users to their real allocator. 	 */
@@ -6095,6 +6095,9 @@ parameter_list|(
 name|void
 modifier|*
 name|bootmem
+parameter_list|,
+name|int
+name|boot_pages
 parameter_list|)
 block|{
 name|struct
@@ -6419,7 +6422,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|UMA_BOOT_PAGES
+name|boot_pages
 condition|;
 name|i
 operator|++

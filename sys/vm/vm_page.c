@@ -546,7 +546,8 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|mapped
 argument_list|,
@@ -558,9 +559,12 @@ expr_stmt|;
 name|uma_startup
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|mapped
+argument_list|,
+name|boot_pages
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute the number of pages of memory that will be available for 	 * use (taking into account the overhead of a page structure per 	 * page). 	 */
