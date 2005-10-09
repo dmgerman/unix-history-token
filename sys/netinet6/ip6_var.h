@@ -1548,7 +1548,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|init_ip6pktopts
+name|ip6_initpktopts
 name|__P
 argument_list|(
 operator|(
@@ -1562,7 +1562,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ip6_setpktoptions
+name|ip6_setpktopts
 name|__P
 argument_list|(
 operator|(
