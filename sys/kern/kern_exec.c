@@ -985,6 +985,10 @@ directive|endif
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX: kern_execve has the astonishing property of not always  * returning to the caller.  If sufficiently bad things happen during  * the call to do_execve(), it can end up calling exit1(); as a result,  * callers must avoid doing anything which they might need to undo  * (e.g., allocating memory).  */
+end_comment
+
 begin_function
 name|int
 name|kern_execve
@@ -3007,6 +3011,11 @@ directive|endif
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
+argument_list|)
+expr_stmt|;
+name|exec_free_args
+argument_list|(
+name|args
 argument_list|)
 expr_stmt|;
 name|exit1
