@@ -7017,6 +7017,11 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -7062,6 +7067,11 @@ expr_stmt|;
 name|cnw_free
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
