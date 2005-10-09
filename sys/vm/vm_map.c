@@ -9809,9 +9809,6 @@ name|old_entry
 operator|->
 name|offset
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 literal|0
 expr_stmt|;
 block|}
