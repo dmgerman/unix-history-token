@@ -346,7 +346,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Max # SACK blocks stored at sender side */
+comment|/* Max # SACK blocks stored at receiver side */
 end_comment
 
 begin_define
