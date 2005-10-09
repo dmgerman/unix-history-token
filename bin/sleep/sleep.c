@@ -264,7 +264,7 @@ operator|>
 name|INT_MAX
 condition|)
 block|{
-comment|/* 			 * Avoid overflow when `seconds' is huge.  This assumes 			 * that the maximum value for a time_t is>= INT_MAX. 			 */
+comment|/* 			 * Avoid overflow when `seconds' is huge.  This assumes 			 * that the maximum value for a time_t is<= INT_MAX. 			 */
 name|l
 operator|=
 name|INT_MAX
