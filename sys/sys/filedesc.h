@@ -229,7 +229,7 @@ parameter_list|(
 name|fd
 parameter_list|)
 define|\
-value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 2;							\ 		(fd)->fd_wanted--;							\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0);
+value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 2;							\ 		(fd)->fd_wanted--;							\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0)
 end_define
 
 begin_define
@@ -240,7 +240,7 @@ parameter_list|(
 name|fd
 parameter_list|)
 define|\
-value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		KASSERT((fd)->fd_locked == 2,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 2));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0);
+value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		KASSERT((fd)->fd_locked == 2,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 2));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0)
 end_define
 
 begin_define
@@ -251,7 +251,7 @@ parameter_list|(
 name|fd
 parameter_list|)
 define|\
-value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 1;							\ 		(fd)->fd_wanted--;							\ 	} while (0);
+value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 1;							\ 		(fd)->fd_wanted--;							\ 	} while (0)
 end_define
 
 begin_define
@@ -262,7 +262,7 @@ parameter_list|(
 name|fd
 parameter_list|)
 define|\
-value|do {										\ 		KASSERT((fd)->fd_locked == 1,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 1));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0);
+value|do {										\ 		KASSERT((fd)->fd_locked == 1,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 1));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0)
 end_define
 
 begin_ifdef
@@ -281,7 +281,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|do {										\ 		if ((arg) == MA_OWNED)							\ 			KASSERT((fd)->fd_locked != 0, ("fdesc locking mistake"));	\ 		else									\ 			KASSERT((fd)->fd_locked == 0, ("fdesc locking mistake"));	\ 	} while (0);
+value|do {										\ 		if ((arg) == MA_OWNED)							\ 			KASSERT((fd)->fd_locked != 0, ("fdesc locking mistake"));	\ 		else									\ 			KASSERT((fd)->fd_locked == 0, ("fdesc locking mistake"));	\ 	} while (0)
 end_define
 
 begin_else
