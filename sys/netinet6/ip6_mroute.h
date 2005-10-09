@@ -556,7 +556,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Structure used to communicate from kernel to multicast router.  * We'll overlay the structure onto an MLD header (not an IPv6 header  * like igmpmsg{} used for IPv4 implementation). This is because this  * structure will be passed via an IPv6 raw socket, on which an application  * will only receive the payload i.e. the data after the IPv6 header and all  * the extension headers. (see Section 3 of draft-ietf-ipngwg-2292bis-01)  */
+comment|/*  * Structure used to communicate from kernel to multicast router.  * We'll overlay the structure onto an MLD header (not an IPv6 header  * like igmpmsg{} used for IPv4 implementation). This is because this  * structure will be passed via an IPv6 raw socket, on which an application  * will only receive the payload i.e. the data after the IPv6 header and all  * the extension headers. (see Section 3 of RFC3542)  */
 end_comment
 
 begin_struct

@@ -4806,7 +4806,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* 			 * XXX: We copy the whole header even if a 			 * jumbo payload option is included, the option which 			 * is to be removed before returning according to 			 * RFC2292. 			 * Note: this constraint is removed in 2292bis. 			 */
+comment|/* 			 * XXX: We copy the whole header even if a 			 * jumbo payload option is included, the option which 			 * is to be removed before returning according to 			 * RFC2292. 			 * Note: this constraint is removed in RFC3542 			 */
 operator|*
 name|mp
 operator|=
