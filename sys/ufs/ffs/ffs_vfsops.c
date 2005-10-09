@@ -8222,14 +8222,12 @@ name|newbp
 expr_stmt|;
 block|}
 comment|/* Let the normal bufwrite do the rest for us */
+return|return
+operator|(
 name|bufwrite
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
