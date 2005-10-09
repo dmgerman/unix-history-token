@@ -9076,15 +9076,6 @@ else|else
 block|{
 if|if
 condition|(
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_VMIO
-operator|)
-operator|&&
-operator|(
 name|LIST_FIRST
 argument_list|(
 operator|&
@@ -9094,7 +9085,6 @@ name|b_dep
 argument_list|)
 operator|==
 name|NULL
-operator|)
 condition|)
 block|{
 name|bp
