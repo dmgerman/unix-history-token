@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"dhIl:L:s:XtTv"
+literal|"dIhl:L:s:XtTO:ov"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|LookUpOrigin
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|Boolean
 name|RegexExtended
 init|=
@@ -83,6 +92,14 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|UseINDEXOnly
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|ShowOrigin
 init|=
 name|FALSE
 decl_stmt|;
@@ -291,6 +308,22 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'O'
+case|:
+name|LookUpOrigin
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|ShowOrigin
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 name|errx
@@ -362,7 +395,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_version [-hIv] [-l limchar] [-L limchar] [[-X] -s string] index"
+literal|"usage: pkg_version [-hIov] [-l limchar] [-L limchar] [[-X] -s string] [-O origin] index"
 argument_list|,
 literal|"       pkg_version -t v1 v2"
 argument_list|,

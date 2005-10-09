@@ -110,6 +110,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|LookUpOrigin
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|Boolean
 name|RegexExtended
 decl_stmt|;
@@ -119,6 +127,13 @@ begin_decl_stmt
 specifier|extern
 name|Boolean
 name|UseINDEXOnly
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|ShowOrigin
 decl_stmt|;
 end_decl_stmt
 
