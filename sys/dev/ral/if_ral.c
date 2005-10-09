@@ -3276,13 +3276,13 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-name|fail6
-label|:
 name|if_free
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|fail6
+label|:
 name|ral_free_rx_ring
 argument_list|(
 name|sc
