@@ -260,6 +260,17 @@ begin_comment
 comment|/* multicast listener done */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MLD_LISTENER_REDUCTION
+value|MLD_LISTENER_DONE
+end_define
+
+begin_comment
+comment|/* RFC3542 definition */
+end_comment
+
 begin_comment
 comment|/* RFC2292 decls */
 end_comment
