@@ -4825,9 +4825,6 @@ name|rv
 init|=
 name|KERN_SUCCESS
 decl_stmt|;
-name|vm_ooffset_t
-name|objsize
-decl_stmt|;
 name|int
 name|docow
 decl_stmt|,
@@ -4851,8 +4848,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|objsize
-operator|=
 name|size
 operator|=
 name|round_page
