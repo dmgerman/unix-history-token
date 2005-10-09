@@ -8385,6 +8385,15 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|fifoMaster
+condition|)
+name|unlink
+argument_list|(
+name|fifoName
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
