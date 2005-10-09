@@ -287,6 +287,9 @@ expr_stmt|;
 comment|/* 	 * See if the denode is in the denode cache. Use the location of 	 * the directory entry to compute the hash value. For subdir use 	 * address of "." entry. For root dir (if not FAT32) use cluster 	 * MSDOSFSROOT, offset MSDOSFSROOT_OFS 	 * 	 * NOTE: The check for de_refcnt> 0 below insures the denode being 	 * examined does not represent an unlinked but still open file. 	 * These files are not to be accessible even when the directory 	 * entry that represented the file happens to be reused while the 	 * deleted file is still open. 	 */
 name|inode
 operator|=
+operator|(
+name|uint64_t
+operator|)
 name|pmp
 operator|->
 name|pm_bpcluster
@@ -1892,6 +1895,9 @@ name|dep
 operator|->
 name|de_inode
 operator|=
+operator|(
+name|uint64_t
+operator|)
 name|dep
 operator|->
 name|de_pmp
