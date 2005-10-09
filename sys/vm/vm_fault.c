@@ -3878,9 +3878,6 @@ name|vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
 argument_list|,
-operator|(
-name|vm_size_t
-operator|)
 name|OFF_TO_IDX
 argument_list|(
 name|dst_entry
