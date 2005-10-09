@@ -1473,6 +1473,12 @@ name|elptr
 argument_list|,
 name|cmd_argc
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
 name|cmd_argv
 argument_list|)
 operator|!=
