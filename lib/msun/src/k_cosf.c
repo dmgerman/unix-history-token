@@ -221,6 +221,7 @@ operator|)
 return|;
 else|else
 block|{
+comment|/* 	     * qx is an approximation to x*x/2 such that 1-qx and x*x/2-qx 	     * are both exact.  Its implementation is optimized for 	     * efficiency in preference to accuracy.  We use x*x/2 ~ x/4 for 	     * x near 0.5 and mask off just enough low bits (3) for both of 	     * the above differences to be exact.  We use a constant for 	     * x> 0.78125 to keep using the same algorithm as k_cos.c, 	     * although this gives only a small improvement in accuracy, at 	     * least here.  Using x*x/2 to approximate itself (masking off 	     * 3 low bits again) would give better accuracy. 	     */
 if|if
 condition|(
 name|ix
@@ -243,12 +244,15 @@ name|SET_FLOAT_WORD
 argument_list|(
 name|qx
 argument_list|,
+operator|(
 name|ix
 operator|-
 literal|0x01000000
+operator|)
+operator|&
+literal|0xfffffff8
 argument_list|)
 expr_stmt|;
-comment|/* x/4 */
 block|}
 name|hz
 operator|=
