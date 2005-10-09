@@ -96,7 +96,7 @@ name|MD5_KEY
 end_undef
 
 begin_comment
-comment|/*  * Derive kkey from mkey + sector offset.  *  * Security objective: Derive a potentially very large number of distinct skeys  * from the comparatively small key material in our mkey, in such a way that  * if one, more or even many of the kkeys are compromised, this does not  * significantly help an attack on other kkeys and in particular does not  * weaken or compromised the mkey.  *  * First we MD5 hash the sectornumber with the salt from the lock sector.  * The salt prevents the precalculation and statistical analysis of the MD5  * output which would be possible if we only gave it the sectornumber.  *  * The MD5 hash is used to pick out 16 bytes from the masterkey, which  * are then hashed with MD5 together with the sector number.  *  * The resulting MD5 hash is the kkey.  */
+comment|/*  * Derive kkey from mkey + sector offset.  *  * Security objective: Derive a potentially very large number of distinct skeys  * from the comparatively small key material in our mkey, in such a way that  * if one, more or even many of the kkeys are compromised, this does not  * significantly help an attack on other kkeys and in particular does not  * weaken or compromise the mkey.  *  * First we MD5 hash the sectornumber with the salt from the lock sector.  * The salt prevents the precalculation and statistical analysis of the MD5  * output which would be possible if we only gave it the sectornumber.  *  * The MD5 hash is used to pick out 16 bytes from the masterkey, which  * are then hashed with MD5 together with the sector number.  *  * The resulting MD5 hash is the kkey.  */
 end_comment
 
 begin_function
