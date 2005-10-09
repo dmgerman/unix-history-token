@@ -1796,6 +1796,8 @@ name|size
 argument_list|,
 name|NOCRED
 argument_list|,
+name|blkoffset
+operator|+
 name|uio
 operator|->
 name|uio_resid
