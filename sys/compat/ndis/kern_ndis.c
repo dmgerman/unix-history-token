@@ -1526,7 +1526,7 @@ argument|;  	if (p == NULL || m0 == NULL) 		return(EINVAL);  	priv =&p->np_priva
 literal|0
 argument|;  	for (buf = priv->npp_head; buf != NULL; buf = buf->mdl_next) { 		if (buf == priv->npp_head) 			MGETHDR(m, M_DONTWAIT, MT_HEADER); 		else 			MGET(m, M_DONTWAIT, MT_DATA); 		if (m == NULL) { 			m_freem(*m0); 			*m0 = NULL; 			return(ENOBUFS); 		} 		m->m_len = MmGetMdlByteCount(buf); 		m->m_data = MmGetMdlVirtualAddress(buf); 		MEXTADD(m, m->m_data, m->m_len, ndis_return_packet, 		    p,
 literal|0
-argument|, EXT_NDIS); 		p->np_refcnt++; 		totlen += m->m_len; 		if (m->m_flags& MT_HEADER) 			*m0 = m; 		else 			prev->m_next = m; 		prev = m; 	}  	(*m0)->m_pkthdr.len = totlen;  	return(
+argument|, EXT_NDIS); 		p->np_refcnt++; 		totlen += m->m_len; 		if (m->m_flags& M_PKTHDR) 			*m0 = m; 		else 			prev->m_next = m; 		prev = m; 	}  	(*m0)->m_pkthdr.len = totlen;  	return(
 literal|0
 argument|); }
 comment|/*  * Create an NDIS packet from an mbuf chain.  * This is used mainly when transmitting packets, where we need  * to turn an mbuf off an interface's send queue and transform it  * into an NDIS packet which will be fed into the NDIS driver's  * send routine.  *  * NDIS packets consist of two parts: an ndis_packet structure,  * which is vaguely analagous to the pkthdr portion of an mbuf,  * and one or more ndis_buffer structures, which define the  * actual memory segments in which the packet data resides.  * We need to allocate one ndis_buffer for each mbuf in a chain,  * plus one ndis_packet as the header.  */
