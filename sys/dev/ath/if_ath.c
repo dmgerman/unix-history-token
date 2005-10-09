@@ -3303,6 +3303,11 @@ operator|->
 name|sc_ah
 argument_list|)
 expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
