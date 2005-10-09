@@ -52,7 +52,7 @@ literal|7
 block|}
 block|,
 block|{
-literal|"permission denoed"
+literal|"permission denied"
 block|,
 literal|13
 block|}
@@ -208,7 +208,7 @@ literal|10009
 block|}
 block|,
 block|{
-literal|"in maintenace mode"
+literal|"in maintenance mode"
 block|,
 literal|10010
 block|}
@@ -277,15 +277,39 @@ name|CPUI960_RX
 block|}
 block|,
 block|{
+literal|"i960 80303"
+block|,
+name|CPUI960_80303
+block|}
+block|,
+block|{
 literal|"StrongARM SA110"
 block|,
 name|CPUARM_SA110
 block|}
 block|,
 block|{
-literal|"MPC824x"
+literal|"PPC603e"
 block|,
-name|CPUMPC_824x
+name|CPUPPC_603e
+block|}
+block|,
+block|{
+literal|"XScale 80321"
+block|,
+name|CPU_XSCALE_80321
+block|}
+block|,
+block|{
+literal|"MIPS 4KC"
+block|,
+name|CPU_MIPS_4KC
+block|}
+block|,
+block|{
+literal|"MIPS 5KC"
+block|,
+name|CPU_MIPS_5KC
 block|}
 block|,
 block|{
@@ -298,12 +322,6 @@ block|{
 literal|"Unknown PowerPC"
 block|,
 name|CPUPPC_xxx
-block|}
-block|,
-block|{
-literal|"IOP302/303"
-block|,
-name|CPUI960_30X
 block|}
 block|,
 block|{
@@ -464,6 +482,36 @@ block|{
 literal|"RAID 0/5"
 block|,
 name|CT_RAID50
+block|}
+block|,
+block|{
+literal|"RAID 5D"
+block|,
+name|CT_RAID5D
+block|}
+block|,
+block|{
+literal|"RAID 0/5D"
+block|,
+name|CT_RAID5D0
+block|}
+block|,
+block|{
+literal|"RAID 1E"
+block|,
+name|CT_RAID1E
+block|}
+block|,
+block|{
+literal|"RAID 6"
+block|,
+name|CT_RAID6
+block|}
+block|,
+block|{
+literal|"RAID 0/6"
+block|,
+name|CT_RAID60
 block|}
 block|,
 block|{
