@@ -7023,11 +7023,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -7115,11 +7110,6 @@ name|sk_unit
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -8709,17 +8699,21 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|SK_IF_LOCK
 argument_list|(
 name|sc_if
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ifp
+condition|)
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We're generally called from skc_detach() which is using 	 * device_delete_child() to get to here. It's already trashed 	 * miibus for us, so don't do it here or we'll panic. 	 */
 comment|/* 	if (sc_if->sk_miibus != NULL) 		device_delete_child(dev, sc_if->sk_miibus); 	*/
 name|bus_generic_detach
