@@ -424,7 +424,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|ip6_setpktoptions
+name|ip6_setpktopts
 argument_list|(
 name|control
 argument_list|,
