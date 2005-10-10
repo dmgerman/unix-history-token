@@ -497,7 +497,7 @@ name|new_thread
 operator|->
 name|flags
 operator|=
-name|THR_FLAGS_SUSPENDED
+name|THR_FLAGS_NEED_SUSPEND
 expr_stmt|;
 name|new_thread
 operator|->
