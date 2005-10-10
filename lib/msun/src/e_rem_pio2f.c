@@ -456,7 +456,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This array is like the one in e_rem_pio2.c, but the numbers are    single precision and the last 8 bits are forced to 0.  */
+comment|/*  * This array is like the one in e_rem_pio2.c, but the numbers are  * single precision and the last few bits (8 here) are ignored by  * masking them off in the float word instead of by omitting the low  * word.  *   * Masking off 8 bits is not enough, but we defer further masking to  * runtime so that the mask is easy to change.  We now mask off 21  * bits, which is the smallest number that makes the "quick check no  * cancellation" detect all cancellations for cases that it is used.  * It doesn't detect all non-cancellations, especiallly for small  * multiples of pi/2, but then the non-quick code selects the best  * approximation of pi/2 to use.  The result is that arg reduction is  * always done with between 8 or 9 and 17 bits of extra precision in  * the medium-multiple case.  With only 8 bits masked of we had  * negative extra precision in some cases starting near +-13*pi/2.  */
 end_comment
 
 begin_decl_stmt
@@ -921,15 +921,19 @@ operator|&&
 operator|(
 name|ix
 operator|&
-literal|0xffffff00
+literal|0xffe00000
 operator|)
 operator|!=
+operator|(
 name|npio2_hw
 index|[
 name|n
 operator|-
 literal|1
 index|]
+operator|&
+literal|0xffe00000
+operator|)
 condition|)
 block|{
 name|y
