@@ -4937,6 +4937,12 @@ name|i_flag
 operator|=
 literal|0
 expr_stmt|;
+name|vnode_destroy_vobject
+argument_list|(
+operator|*
+name|vpp
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|vpp
