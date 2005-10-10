@@ -694,6 +694,29 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Report package as not found in INDEX if the INDEX is not required. */
+if|if
+condition|(
+name|IndexFile
+operator|==
+name|NULL
+operator|&&
+operator|!
+name|UseINDEXOnly
+condition|)
+name|show_version
+argument_list|(
+name|plist
+argument_list|,
+name|NULL
+argument_list|,
+name|plist
+operator|.
+name|origin
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 comment|/* We only pull in the INDEX once, if needed. */
 if|if
 condition|(
@@ -1164,6 +1187,7 @@ argument_list|,
 literal|"index"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
