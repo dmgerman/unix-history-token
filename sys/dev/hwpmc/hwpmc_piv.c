@@ -78,7 +78,7 @@ file|<machine/specialreg.h>
 end_include
 
 begin_comment
-comment|/*  * PENTIUM 4 SUPPORT  *  * The P4 has 18 PMCs, divided into 4 groups with 4,4,4 and 6 PMCs  * respectively.  Each PMC comprises of two model specific registers:  * a counter configuration control register (CCCR) and a counter  * register that holds the actual event counts.  *  * Configuring an event requires the use of one of 45 event selection  * control registers (ESCR).  Events are associated with specific  * ESCRs.  Each PMC group has a set of ESCRs it can use.  *  * - The BPU counter group (4 PMCs) can use the 16 ESCRs:  *   BPU_ESCR{0,1}, IS_ESCR{0,1}, MOB_ESCR{0,1}, ITLB_ESCR{0,1},  *   PMH_ESCR{0,1}, IX_ESCR{0,1}, FSB_ESCR{0,}, BSU_ESCR{0,1}.  *  * - The MS counter group (4 PMCs) can use the 6 ESCRs: MS_ESCR{0,1},  *   TC_ESCR{0,1}, TBPU_ESCR{0,1}.  *  * - The FLAME counter group (4 PMCs) can use the 10 ESCRs:  *   FLAME_ESCR{0,1}, FIRM_ESCR{0,1}, SAAT_ESCR{0,1}, U2L_ESCR{0,1},  *   DAC_ESCR{0,1}.  *  * - The IQ counter group (6 PMCs) can use the 13 ESCRs: IQ_ESCR{0,1},  *   ALF_ESCR{0,1}, RAT_ESCR{0,1}, SSU_ESCR0, CRU_ESCR{0,1,2,3,4,5}.  *  * Even-numbered ESCRs can be used with counters 0, 1 and 4 (if  * present) of a counter group.  Odd-numbers ESCRs can be used with  * counters 2, 3 and 5 (if present) of a counter group.  The  * 'p4_escrs[]' table describes these restrictions in a form that  * function 'p4_allocate()' uses for making allocation decisions.  *  * SYSTEM-MODE AND THREAD-MODE ALLOCATION  *  * In addition to remembering the state of PMC rows  * ('FREE','STANDALONE', or 'THREAD'), we similar need to track the  * state of ESCR rows.  If an ESCR is allocated to a system-mode PMC  * on a CPU we cannot allocate this to a thread-mode PMC.  On a  * multi-cpu (multiple physical CPUs) system, ESCR allocation on each  * CPU is tracked by the pc_escrs[] array.  *  * Each system-mode PMC that is using an ESCR records its row-index in  * the appropriate entry and system-mode allocation attempts check  * that an ESCR is available using this array.  Process-mode PMCs do  * not use the pc_escrs[] array, since ESCR row itself would have been  * marked as in 'THREAD' mode.  *  * HYPERTHREADING SUPPORT  *  * When HTT is enabled, the FreeBSD kernel treats the two 'logical'  * cpus as independent CPUs and can schedule kernel threads on them  * independently.  However, the two logical CPUs share the same set of  * PMC resources.  We need to ensure that:  * - PMCs that use the PMC_F_DESCENDANTS semantics are handled correctly,  *   and,  * - Threads of multi-threaded processes that get scheduled on the same  *   physical CPU are handled correctly.  *  * HTT Detection  *  * Not all HTT capable systems will have HTT enabled since users may  * have turned HTT support off using the appropriate sysctls  * (machdep.hlt_logical_cpus or machdep.logical_cpus_mask).  We detect  * the presence of HTT by remembering if 'p4_init()' was called for a  * logical CPU.  Note that hwpmc(4) cannot deal with a change in HTT  * status once it is loaded.  *  * Handling HTT READ / WRITE / START / STOP  *  * PMC resources are shared across multiple logical CPUs.  In each  * physical CPU's state we keep track of a 'runcount' which reflects  * the number of PMC-using processes that have been scheduled on the  * logical CPUs of this physical CPU.  Process-mode PMC operations  * will actually 'start' or 'stop' hardware only if these are the  * first or last processes respectively to use the hardware.  PMC  * values written by a 'write' operation are saved and are transferred  * to hardware at PMC 'start' time if the runcount is 0.  If the  * runcount is greater than 0 at the time of a 'start' operation, we  * keep track of the actual hardware value at the time of the 'start'  * operation and use this to adjust the final readings at PMC 'stop'  * or 'read' time.  *  * Execution sequences:  *  * Case 1:   CPUx   +...-		(no overlap)  *	     CPUy         +...-  *           RC   0 1   0 1   0  *  * Case 2:   CPUx   +........-		(partial overlap)  * 	     CPUy       +........-  *           RC   0 1   2    1   0  *  * Case 3:   CPUx   +..............-	(fully overlapped)  *	     CPUy       +.....-  *	     RC   0 1   2     1    0  *  *     Key:  *     'CPU[xy]' : one of the two logical processors on a HTT CPU.  *     'RC'      : run count (#threads per physical core).  *     '+'       : point in time when a thread is put on a CPU.  *     '-'       : point in time where a thread is taken off a CPU.  *  * Handling HTT CONFIG  *  * Different processes attached to the same PMC may get scheduled on  * the two logical processors in the package.  We keep track of config  * and de-config operations using the CFGFLAGS fields of the per-physical  * cpu state.  */
+comment|/*  * PENTIUM 4 SUPPORT  *  * The P4 has 18 PMCs, divided into 4 groups with 4,4,4 and 6 PMCs  * respectively.  Each PMC comprises of two model specific registers:  * a counter configuration control register (CCCR) and a counter  * register that holds the actual event counts.  *  * Configuring an event requires the use of one of 45 event selection  * control registers (ESCR).  Events are associated with specific  * ESCRs.  Each PMC group has a set of ESCRs it can use.  *  * - The BPU counter group (4 PMCs) can use the 16 ESCRs:  *   BPU_ESCR{0,1}, IS_ESCR{0,1}, MOB_ESCR{0,1}, ITLB_ESCR{0,1},  *   PMH_ESCR{0,1}, IX_ESCR{0,1}, FSB_ESCR{0,}, BSU_ESCR{0,1}.  *  * - The MS counter group (4 PMCs) can use the 6 ESCRs: MS_ESCR{0,1},  *   TC_ESCR{0,1}, TBPU_ESCR{0,1}.  *  * - The FLAME counter group (4 PMCs) can use the 10 ESCRs:  *   FLAME_ESCR{0,1}, FIRM_ESCR{0,1}, SAAT_ESCR{0,1}, U2L_ESCR{0,1},  *   DAC_ESCR{0,1}.  *  * - The IQ counter group (6 PMCs) can use the 13 ESCRs: IQ_ESCR{0,1},  *   ALF_ESCR{0,1}, RAT_ESCR{0,1}, SSU_ESCR0, CRU_ESCR{0,1,2,3,4,5}.  *  * Even-numbered ESCRs can be used with counters 0, 1 and 4 (if  * present) of a counter group.  Odd-numbers ESCRs can be used with  * counters 2, 3 and 5 (if present) of a counter group.  The  * 'p4_escrs[]' table describes these restrictions in a form that  * function 'p4_allocate()' uses for making allocation decisions.  *  * SYSTEM-MODE AND THREAD-MODE ALLOCATION  *  * In addition to remembering the state of PMC rows  * ('FREE','STANDALONE', or 'THREAD'), we similar need to track the  * state of ESCR rows.  If an ESCR is allocated to a system-mode PMC  * on a CPU we cannot allocate this to a thread-mode PMC.  On a  * multi-cpu (multiple physical CPUs) system, ESCR allocation on each  * CPU is tracked by the pc_escrs[] array.  *  * Each system-mode PMC that is using an ESCR records its row-index in  * the appropriate entry and system-mode allocation attempts check  * that an ESCR is available using this array.  Process-mode PMCs do  * not use the pc_escrs[] array, since ESCR row itself would have been  * marked as in 'THREAD' mode.  *  * HYPERTHREADING SUPPORT  *  * When HTT is enabled, the FreeBSD kernel treats the two 'logical'  * cpus as independent CPUs and can schedule kernel threads on them  * independently.  However, the two logical CPUs share the same set of  * PMC resources.  We need to ensure that:  * - PMCs that use the PMC_F_DESCENDANTS semantics are handled correctly,  *   and,  * - Threads of multi-threaded processes that get scheduled on the same  *   physical CPU are handled correctly.  *  * HTT Detection  *  * Not all HTT capable systems will have HTT enabled.  We detect the  * presence of HTT by detecting if 'p4_init()' was called for a secondary  * CPU in a HTT pair.  *  * Note that hwpmc(4) cannot currently deal with a change in HTT status once  * loaded.  *  * Handling HTT READ / WRITE / START / STOP  *  * PMC resources are shared across the CPUs in an HTT pair.  We  * designate the lower numbered CPU in a HTT pair as the 'primary'  * CPU.  In each primary CPU's state we keep track of a 'runcount'  * which reflects the number of PMC-using processes that have been  * scheduled on its secondary CPU.  Process-mode PMC operations will  * actually 'start' or 'stop' hardware only if these are the first or  * last processes respectively to use the hardware.  PMC values  * written by a 'write' operation are saved and are transferred to  * hardware at PMC 'start' time if the runcount is 0.  If the runcount  * is greater than 0 at the time of a 'start' operation, we keep track  * of the actual hardware value at the time of the 'start' operation  * and use this to adjust the final readings at PMC 'stop' or 'read'  * time.  *  * Execution sequences:  *  * Case 1:   CPUx   +...-		(no overlap)  *	     CPUy         +...-  *           RC   0 1   0 1   0  *  * Case 2:   CPUx   +........-		(partial overlap)  * 	     CPUy       +........-  *           RC   0 1   2    1   0  *  * Case 3:   CPUx   +..............-	(fully overlapped)  *	     CPUy       +.....-  *	     RC   0 1   2     1    0  *  *     Key:  *     'CPU[xy]' : one of the two logical processors on a HTT CPU.  *     'RC'      : run count (#threads per physical core).  *     '+'       : point in time when a thread is put on a CPU.  *     '-'       : point in time where a thread is taken off a CPU.  *  * Handling HTT CONFIG  *  * Different processes attached to the same PMC may get scheduled on  * the two logical processors in the package.  We keep track of config  * and de-config operations using the CFGFLAGS fields of the per-physical  * cpu state.  *  * Handling TSCs  *  * TSCs are architectural state and each CPU in a HTT pair has its own  * TSC register.  */
 end_comment
 
 begin_define
@@ -1259,20 +1259,6 @@ begin_comment
 comment|/* logical processors/chip */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|P4_HTT_CPU_INDEX_0
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|P4_HTT_CPU_INDEX_1
-value|1
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1527,7 +1513,7 @@ name|P4_CPU_TO_FLAG
 parameter_list|(
 name|C
 parameter_list|)
-value|(pmc_cpu_is_logical(cpu) ? 0x2 : 0x1)
+value|(P4_CPU_IS_HTT_SECONDARY(cpu) ? 0x2 : 0x1)
 end_define
 
 begin_define
@@ -1662,7 +1648,7 @@ name|P4_ESCR_UNMARK_ROW_THREAD
 parameter_list|(
 name|E
 parameter_list|)
-value|do {				 \ 	atomic_add_int(&p4_escrdisp[(E)], -1);				 \ 	KASSERT(p4_escrdisp[(E)]>= 0, ("[p4,%d] row disposition error",\ 		    __LINE__));						 \ } while (0)
+value|do {				 \ 	atomic_add_int(&p4_escrdisp[(E)], -1);				 \ 	KASSERT(p4_escrdisp[(E)]>= 0, ("[p4,%d] row disposition error", \ 		    __LINE__));						 \ } while (0)
 end_define
 
 begin_define
@@ -1678,11 +1664,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|P4_TO_PHYSICAL_CPU
+name|P4_CPU_IS_HTT_SECONDARY
 parameter_list|(
 name|cpu
 parameter_list|)
-value|(pmc_cpu_is_logical(cpu) ?		\     ((cpu)& ~1) : (cpu))
+define|\
+value|(p4_system_has_htt ? ((cpu)& 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P4_TO_HTT_PRIMARY
+parameter_list|(
+name|cpu
+parameter_list|)
+define|\
+value|(p4_system_has_htt ? ((cpu)& ~1) : (cpu))
 end_define
 
 begin_define
@@ -1838,18 +1836,28 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A 'logical' CPU shares its per-cpu state with its physical 	 * CPU.  The physical CPU would have been initialized prior to 	 * the initialization for this cpu. 	 */
+comment|/* 	 * The two CPUs in an HT pair share their per-cpu state. 	 * 	 * For HT capable CPUs, we assume that the two logical 	 * processors in the HT pair get two consecutive CPU ids 	 * starting with an even id #. 	 * 	 * The primary CPU (the even numbered CPU of the pair) would 	 * have been initialized prior to the initialization for the 	 * secondary. 	 */
 if|if
 condition|(
 name|pmc_cpu_is_logical
 argument_list|(
 name|cpu
 argument_list|)
+operator|&&
+operator|(
+name|cpu
+operator|&
+literal|1
+operator|)
 condition|)
 block|{
+name|p4_system_has_htt
+operator|=
+literal|1
+expr_stmt|;
 name|phycpu
 operator|=
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -1908,10 +1916,6 @@ comment|/* decline to init */
 return|return
 name|ENXIO
 return|;
-name|p4_system_has_htt
-operator|=
-literal|1
-expr_stmt|;
 name|MALLOC
 argument_list|(
 name|plcs
@@ -2220,7 +2224,7 @@ comment|/* 	 * If the CPU is physical we need to teardown the 	 * full MD state.
 if|if
 condition|(
 operator|!
-name|pmc_cpu_is_logical
+name|P4_CPU_IS_HTT_SECONDARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -2637,7 +2641,7 @@ operator|*
 operator|)
 name|pmc_pcpu
 index|[
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -3055,7 +3059,7 @@ operator|*
 operator|)
 name|pmc_pcpu
 index|[
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -3335,7 +3339,7 @@ operator|*
 operator|)
 name|pmc_pcpu
 index|[
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -3606,7 +3610,7 @@ operator|*
 operator|)
 name|pmc_pcpu
 index|[
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -4025,7 +4029,7 @@ operator|*
 operator|)
 name|pmc_pcpu
 index|[
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -4652,7 +4656,7 @@ operator|*
 operator|)
 name|pmc_pcpu
 index|[
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -4831,7 +4835,7 @@ operator|*
 operator|)
 name|pmc_pcpu
 index|[
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -4993,7 +4997,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|pmc_cpu_is_logical
+name|P4_CPU_IS_HTT_SECONDARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -5586,7 +5590,7 @@ operator|*
 operator|)
 name|pmc_pcpu
 index|[
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -5703,7 +5707,7 @@ name|P4_ESCR_T0_USR
 expr_stmt|;
 if|if
 condition|(
-name|pmc_cpu_is_logical
+name|P4_CPU_IS_HTT_SECONDARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -6090,7 +6094,7 @@ operator|*
 operator|)
 name|pmc_pcpu
 index|[
-name|P4_TO_PHYSICAL_CPU
+name|P4_TO_HTT_PRIMARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -6098,7 +6102,7 @@ index|]
 expr_stmt|;
 name|ovf_mask
 operator|=
-name|pmc_cpu_is_logical
+name|P4_CPU_IS_HTT_SECONDARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -6117,7 +6121,7 @@ name|p4_system_has_htt
 condition|)
 name|ovf_partner
 operator|=
-name|pmc_cpu_is_logical
+name|P4_CPU_IS_HTT_SECONDARY
 argument_list|(
 name|cpu
 argument_list|)
@@ -6571,7 +6575,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmc_cpu_is_logical
+name|P4_CPU_IS_HTT_SECONDARY
 argument_list|(
 name|cpu
 argument_list|)
