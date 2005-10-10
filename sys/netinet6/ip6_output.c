@@ -6494,7 +6494,7 @@ break|break;
 case|case
 name|IPV6_RECVPATHMTU
 case|:
-comment|/* 					 * We ignore this option for TCP 					 * sockets. 					 * (rfc2292bis leaves this case 					 * unspecified.) 					 */
+comment|/* 					 * We ignore this option for TCP 					 * sockets. 					 * (RFC3542 leaves this case 					 * unspecified.) 					 */
 if|if
 condition|(
 name|uproto
@@ -6830,7 +6830,7 @@ case|case
 name|IPV6_NEXTHOP
 case|:
 block|{
-comment|/* new advanced API (2292bis) */
+comment|/* new advanced API (RFC3542) */
 name|u_char
 modifier|*
 name|optbuf
@@ -8525,7 +8525,7 @@ block|{
 case|case
 name|IPV6_CHECKSUM
 case|:
-comment|/* 		 * For ICMPv6 sockets, no modification allowed for checksum 		 * offset, permit "no change" values to help existing apps. 		 * 		 * XXX 2292bis says: "An attempt to set IPV6_CHECKSUM 		 * for an ICMPv6 socket will fail." 		 * The current behavior does not meet 2292bis. 		 */
+comment|/* 		 * For ICMPv6 sockets, no modification allowed for checksum 		 * offset, permit "no change" values to help existing apps. 		 * 		 * RFC3542 says: "An attempt to set IPV6_CHECKSUM 		 * for an ICMPv6 socket will fail." 		 * The current behavior does not meet RFC3542. 		 */
 switch|switch
 condition|(
 name|op
@@ -12130,7 +12130,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Set a particular packet option, as a sticky option or an ancillary data  * item.  "len" can be 0 only when it's a sticky option.  * We have 4 cases of combination of "sticky" and "cmsg":  * "sticky=0, cmsg=0": impossible  * "sticky=0, cmsg=1": RFC2292 or rfc2292bis ancillary data  * "sticky=1, cmsg=0": rfc2292bis socket option  * "sticky=1, cmsg=1": RFC2292 socket option  */
+comment|/*  * Set a particular packet option, as a sticky option or an ancillary data  * item.  "len" can be 0 only when it's a sticky option.  * We have 4 cases of combination of "sticky" and "cmsg":  * "sticky=0, cmsg=0": impossible  * "sticky=0, cmsg=1": RFC2292 or RFC3542 ancillary data  * "sticky=1, cmsg=0": RFC3542 socket option  * "sticky=1, cmsg=1": RFC2292 socket option  */
 end_comment
 
 begin_function
@@ -12207,7 +12207,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * IPV6_2292xxx is for backward compatibility to RFC2292, and should 	 * not be specified in the context of rfc2292bis.  Conversely, 	 * rfc2292bis types should not be specified in the context of RFC2292. 	 */
+comment|/* 	 * IPV6_2292xxx is for backward compatibility to RFC2292, and should 	 * not be specified in the context of RFC3542.  Conversely, 	 * RFC3542 types should not be specified in the context of RFC2292. 	 */
 if|if
 condition|(
 operator|!
@@ -12292,7 +12292,7 @@ case|:
 case|case
 name|IPV6_PREFER_TEMPADDR
 case|:
-comment|/* XXX: not an rfc2292bis option */
+comment|/* XXX: not an RFC3542 option */
 return|return
 operator|(
 name|ENOPROTOOPT
@@ -13105,7 +13105,7 @@ block|{
 case|case
 name|IPV6_2292DSTOPTS
 case|:
-comment|/* 			 * The old advacned API is ambiguous on this point. 			 * Our approach is to determine the position based 			 * according to the existence of a routing header. 			 * Note, however, that this depends on the order of the 			 * extension headers in the ancillary data; the 1st 			 * part of the destination options header must appear 			 * before the routing header in the ancillary data, 			 * too. 			 * RFC2292bis solved the ambiguity by introducing 			 * separate ancillary data or option types. 			 */
+comment|/* 			 * The old advacned API is ambiguous on this point. 			 * Our approach is to determine the position based 			 * according to the existence of a routing header. 			 * Note, however, that this depends on the order of the 			 * extension headers in the ancillary data; the 1st 			 * part of the destination options header must appear 			 * before the routing header in the ancillary data, 			 * too. 			 * RFC3542 solved the ambiguity by introducing 			 * separate ancillary data or option types. 			 */
 if|if
 condition|(
 name|opt
@@ -13475,7 +13475,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * we ignore this option for TCP sockets. 			 * (rfc2292bis leaves this case unspecified.) 			 */
+comment|/* 			 * we ignore this option for TCP sockets. 			 * (RFC3542 leaves this case unspecified.) 			 */
 name|opt
 operator|->
 name|ip6po_flags

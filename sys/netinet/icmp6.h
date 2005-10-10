@@ -352,7 +352,7 @@ value|134
 end_define
 
 begin_comment
-comment|/* router advertisment */
+comment|/* router advertisement */
 end_comment
 
 begin_define
@@ -374,7 +374,7 @@ value|136
 end_define
 
 begin_comment
-comment|/* neighbor advertisment */
+comment|/* neighbor advertisement */
 end_comment
 
 begin_define
