@@ -171,6 +171,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|all_events
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -793,9 +802,11 @@ argument_list|)
 expr_stmt|;
 name|dbgmsg
 argument_list|(
-literal|"failed to read event info from %s\n"
+literal|"failed to read event info from %s: %d"
 argument_list|,
 name|ifname
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 return|return;
@@ -824,6 +835,12 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|all_events
+condition|)
+return|return;
 block|}
 if|if
 condition|(
@@ -849,6 +866,12 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|all_events
+condition|)
+return|return;
 block|}
 if|if
 condition|(
@@ -1092,7 +1115,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ndis_events [-d] [-v]\n"
+literal|"Usage: ndis_events [-a] [-d] [-v]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -1169,7 +1192,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dv"
+literal|"dva"
 argument_list|)
 operator|)
 operator|!=
@@ -1193,6 +1216,13 @@ case|case
 literal|'v'
 case|:
 name|verbose
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+name|all_events
 operator|++
 expr_stmt|;
 break|break;
