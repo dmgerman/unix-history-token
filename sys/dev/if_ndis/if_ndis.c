@@ -12283,7 +12283,14 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|NDIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|evt
