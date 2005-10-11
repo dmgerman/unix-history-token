@@ -663,6 +663,9 @@ name|node
 parameter_list|,
 name|item_p
 name|item
+parameter_list|,
+name|int
+name|rw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6088,6 +6091,10 @@ name|struct
 name|ng_queue
 modifier|*
 name|ngq
+parameter_list|,
+name|int
+modifier|*
+name|rw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6296,6 +6303,20 @@ parameter_list|)
 value|(CAN_GET_READ(flag) || CAN_GET_WRITE(flag))
 end_define
 
+begin_define
+define|#
+directive|define
+name|NGQRW_R
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGQRW_W
+value|1
+end_define
+
 begin_comment
 comment|/*  * Taking into account the current state of the queue and node, possibly take  * the next entry off the queue and return it. Return NULL if there was  * nothing we could return, either because there really was nothing there, or  * because the node was in a state where it cannot yet process the next item  * on the queue.  *  * This MUST MUST MUST be called with the mutex held.  */
 end_comment
@@ -6310,6 +6331,10 @@ name|struct
 name|ng_queue
 modifier|*
 name|ngq
+parameter_list|,
+name|int
+modifier|*
+name|rw
 parameter_list|)
 block|{
 name|item_p
@@ -6347,6 +6372,11 @@ operator|-
 name|READ_PENDING
 operator|)
 expr_stmt|;
+operator|*
+name|rw
+operator|=
+name|NGQRW_R
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -6367,6 +6397,11 @@ name|WRITER_ACTIVE
 operator|-
 name|WRITE_PENDING
 operator|)
+expr_stmt|;
+operator|*
+name|rw
+operator|=
+name|NGQRW_W
 expr_stmt|;
 comment|/* 		 * We want to write "active writer, no readers " Now go make 		 * it true. In fact there may be a number in the readers 		 * count but we know it is not true and will be fixed soon. 		 * We will fix the flags for the next pending entry in a 		 * moment. 		 */
 block|}
@@ -6448,13 +6483,61 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 * Since there is something on the queue, note what it is 		 * in the flags word. 		 */
-if|if
-condition|(
-operator|(
+name|item_p
+name|item
+init|=
 name|ngq
 operator|->
 name|queue
+decl_stmt|;
+name|hook_p
+name|hook
+init|=
+name|NGI_HOOK
+argument_list|(
+name|item
+argument_list|)
+decl_stmt|;
+name|node_p
+name|node
+init|=
+name|NGI_NODE
+argument_list|(
+name|item
+argument_list|)
+decl_stmt|;
+comment|/*  		 * Since there is something on the queue, note what it is 		 * in the flags word. Don't forget about overrides, too. 		 */
+if|if
+condition|(
+operator|(
+name|node
+operator|->
+name|nd_flags
+operator|&
+name|NGF_FORCE_WRITER
+operator|)
+operator|||
+operator|(
+name|hook
+operator|&&
+operator|(
+name|hook
+operator|->
+name|hk_flags
+operator|&
+name|HK_FORCE_WRITER
+operator|)
+operator|)
+condition|)
+name|add_arg
+operator|+=
+name|WRITE_PENDING
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|item
 operator|->
 name|el_flags
 operator|&
@@ -6463,19 +6546,15 @@ operator|)
 operator|==
 name|NGQF_READER
 condition|)
-block|{
 name|add_arg
 operator|+=
 name|READ_PENDING
 expr_stmt|;
-block|}
 else|else
-block|{
 name|add_arg
 operator|+=
 name|WRITE_PENDING
 expr_stmt|;
-block|}
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -6516,22 +6595,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Queue a packet to be picked up by someone else.  * We really don't care who, but we can't or don't want to hang around  * to process it ourselves. We are probably an interrupt routine..  * 1 = writer, 0 = reader  */
+comment|/*  * Queue a packet to be picked up by someone else.  * We really don't care who, but we can't or don't want to hang around  * to process it ourselves. We are probably an interrupt routine..  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NGQRW_R
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|NGQRW_W
-value|1
-end_define
 
 begin_function
 specifier|static
@@ -7476,7 +7541,7 @@ name|el_flags
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the node specifies single threading, force writer semantics. 	 * Similarly, the node may say one hook always produces writers. 	 * These are overrides. Modify the item itself, so that if it 	 * is queued now, it would be dequeued later with corrected 	 * read/write flags. 	 */
+comment|/* 	 * If the node specifies single threading, force writer semantics. 	 * Similarly, the node may say one hook always produces writers. 	 * These are overrides. 	 */
 if|if
 condition|(
 operator|(
@@ -7499,19 +7564,10 @@ name|HK_FORCE_WRITER
 operator|)
 operator|)
 condition|)
-block|{
 name|rw
 operator|=
 name|NGQRW_W
 expr_stmt|;
-name|item
-operator|->
-name|el_flags
-operator|&=
-operator|~
-name|NGQF_READER
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|queue
@@ -7687,6 +7743,8 @@ argument_list|(
 name|node
 argument_list|,
 name|item
+argument_list|,
+name|rw
 argument_list|)
 expr_stmt|;
 comment|/* drops r/w lock when done */
@@ -7778,23 +7836,13 @@ name|node
 parameter_list|,
 name|item_p
 name|item
+parameter_list|,
+name|int
+name|rw
 parameter_list|)
 block|{
 name|hook_p
 name|hook
-decl_stmt|;
-name|int
-name|was_reader
-init|=
-operator|(
-operator|(
-name|item
-operator|->
-name|el_flags
-operator|&
-name|NGQF_RW
-operator|)
-operator|)
 decl_stmt|;
 name|int
 name|error
@@ -8221,7 +8269,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|was_reader
+name|rw
+operator|==
+name|NGQRW_R
 condition|)
 block|{
 name|ng_leave_read
@@ -12068,6 +12118,9 @@ init|;
 condition|;
 control|)
 block|{
+name|int
+name|rw
+decl_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -12086,6 +12139,9 @@ operator|&
 name|node
 operator|->
 name|nd_input_queue
+argument_list|,
+operator|&
+name|rw
 argument_list|)
 expr_stmt|;
 if|if
@@ -12133,6 +12189,8 @@ argument_list|(
 name|node
 argument_list|,
 name|item
+argument_list|,
+name|rw
 argument_list|)
 expr_stmt|;
 name|NG_NODE_UNREF
