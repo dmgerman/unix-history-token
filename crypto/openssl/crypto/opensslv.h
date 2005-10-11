@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 0.9.7d 17 Mar 2004"
+value|"OpenSSL 0.9.7d-p1 17 Mar 2004"
 end_define
 
 begin_define
