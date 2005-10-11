@@ -870,6 +870,17 @@ name|PCMCIA_CARD
 argument_list|(
 name|OEM2
 argument_list|,
+name|FAST_ETHERNET
+argument_list|)
+block|,
+name|NE2000DVF_AX88X90
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|OEM2
+argument_list|,
 name|NE2000
 argument_list|)
 block|,
