@@ -4492,21 +4492,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|mtx_initialized
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|ndis_mtx
-argument_list|)
-argument_list|,
-operator|(
-literal|"ndis mutex not initialized"
-operator|)
-argument_list|)
-expr_stmt|;
 name|NDIS_LOCK
 argument_list|(
 name|sc
