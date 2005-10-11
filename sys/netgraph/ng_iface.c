@@ -1297,8 +1297,6 @@ name|af
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 comment|/* Check interface flags */
 if|if
@@ -1408,10 +1406,29 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|IFQ_LOCK
+argument_list|(
+operator|&
 name|ifp
 operator|->
-name|if_iqdrops
-operator|++
+name|if_snd
+argument_list|)
+expr_stmt|;
+name|IFQ_INC_DROPS
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+expr_stmt|;
+name|IFQ_UNLOCK
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -1470,7 +1487,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start method is used only when ALTQ is on.  */
+comment|/*  * Start method is used only when ALTQ is enabled.  */
 end_comment
 
 begin_function
@@ -1503,14 +1520,17 @@ name|if_snd
 argument_list|)
 argument_list|,
 operator|(
-literal|"ng_iface_start without ALTQ"
+literal|"%s without ALTQ"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|IFQ_DRV_DEQUEUE
 argument_list|(
@@ -1638,7 +1658,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine does actual delivery of the packet into the  * netgraph(4). It is called from ng_iface_start() and  * nf_iface_output().  */
+comment|/*  * This routine does actual delivery of the packet into the  * netgraph(4). It is called from ng_iface_start() and  * ng_iface_output().  */
 end_comment
 
 begin_function
@@ -1682,8 +1702,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|len
