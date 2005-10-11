@@ -1195,6 +1195,18 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|fw
+operator|=
+operator|*
+operator|(
+specifier|volatile
+name|float
+operator|*
+operator|)
+operator|&
+name|fw
+expr_stmt|;
+comment|/* clip any extra precision */
 name|y
 index|[
 literal|0
