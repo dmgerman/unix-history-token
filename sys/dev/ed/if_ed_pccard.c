@@ -384,6 +384,17 @@ name|PCMCIA_CARD
 argument_list|(
 name|BUFFALO
 argument_list|,
+name|LPC4_CLX
+argument_list|)
+block|,
+name|NE2000DVF_AX88X90
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|BUFFALO
+argument_list|,
 name|LPC_CF_CLT
 argument_list|)
 block|,
