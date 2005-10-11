@@ -6665,6 +6665,17 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
 expr_stmt|;
+comment|/* 	 * The hardware should be ready for VLAN_MTU by default: 	 * XMAC II has 0x8100 in VLAN Tag Level 1 register initially; 	 * YU_SMR_MFL_VLAN is set by this driver in Yukon. 	 */
+name|ifp
+operator|->
+name|if_capabilities
+operator|=
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+name|IFCAP_VLAN_MTU
+expr_stmt|;
 name|ifp
 operator|->
 name|if_ioctl
