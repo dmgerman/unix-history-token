@@ -4915,7 +4915,7 @@ name|bif_flags
 operator|&
 name|IFBIF_STP
 condition|)
-name|bstp_enable_port
+name|bstp_ifupdstatus
 argument_list|(
 name|sc
 argument_list|,
