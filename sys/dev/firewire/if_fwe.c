@@ -1227,7 +1227,7 @@ operator|->
 name|if_capabilities
 operator||=
 name|IFCAP_VLAN_MTU
-operator|&
+operator||
 name|IFCAP_POLLING
 expr_stmt|;
 name|ifp
