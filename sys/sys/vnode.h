@@ -889,12 +889,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VA_EXECVE_ATIME
+name|VA_MARK_ATIME
 value|0x04
 end_define
 
 begin_comment
-comment|/* setting atime for execve */
+comment|/* setting atime for execve/mmap */
 end_comment
 
 begin_comment
@@ -4153,6 +4153,23 @@ parameter_list|(
 name|struct
 name|vop_kqfilter_args
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_mark_atime
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl

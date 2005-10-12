@@ -2137,14 +2137,14 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Update the file's access time when it has been executed.  We are 	 * doing this here to specifically avoid some of the checks done 	 * below -- this operation is done by request of the kernel and 	 * should bypass some security checks.  Things like read-only 	 * checks get handled by other levels (e.g., ffs_update()). 	 */
+comment|/* 	 * Mark for update the file's access time for vfs_mark_atime(). 	 * We are doing this here to avoid some of the checks done 	 * below -- this operation is done by request of the kernel and 	 * should bypass some security checks.  Things like read-only 	 * checks get handled by other levels (e.g., ffs_update()). 	 */
 if|if
 condition|(
 name|vap
 operator|->
 name|va_vaflags
 operator|&
-name|VA_EXECVE_ATIME
+name|VA_MARK_ATIME
 condition|)
 block|{
 name|ip
