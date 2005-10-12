@@ -1268,6 +1268,12 @@ name|fs_filtops
 block|}
 block|,
 comment|/* EVFILT_FS */
+block|{
+operator|&
+name|null_filtops
+block|}
+block|,
+comment|/* EVFILT_LIO */
 block|}
 struct|;
 end_struct
@@ -3070,6 +3076,14 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|kevp
+operator|->
+name|filter
+condition|)
+continue|continue;
 name|kevp
 operator|->
 name|flags
@@ -8736,7 +8750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * knote must already have been detatched using the f_detach method.  * no lock need to be held, it is assumed that the KN_INFLUX flag is set  * to prevent other removal.  */
+comment|/*  * knote must already have been detached using the f_detach method.  * no lock need to be held, it is assumed that the KN_INFLUX flag is set  * to prevent other removal.  */
 end_comment
 
 begin_function
@@ -8838,6 +8852,14 @@ name|kq_knhashmask
 argument_list|)
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SLIST_EMPTY
+argument_list|(
+name|list
+argument_list|)
+condition|)
 name|SLIST_REMOVE
 argument_list|(
 name|list

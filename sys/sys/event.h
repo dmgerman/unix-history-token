@@ -109,8 +109,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVFILT_LIO
+value|(-10)
+end_define
+
+begin_comment
+comment|/* timers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVFILT_SYSCOUNT
-value|9
+value|10
 end_define
 
 begin_define
