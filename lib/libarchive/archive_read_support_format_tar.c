@@ -599,6 +599,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|gnu_read_sparse_data
 parameter_list|(
@@ -620,6 +621,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gnu_parse_sparse_data
 parameter_list|(
@@ -6792,6 +6794,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|gnu_read_sparse_data
 parameter_list|(
@@ -7005,6 +7008,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gnu_parse_sparse_data
 parameter_list|(
