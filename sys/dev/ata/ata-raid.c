@@ -7031,6 +7031,9 @@ literal|0
 return|;
 break|break;
 case|case
+name|ATA_ATI_ID
+case|:
+case|case
 name|ATA_SILICON_IMAGE_ID
 case|:
 if|if
