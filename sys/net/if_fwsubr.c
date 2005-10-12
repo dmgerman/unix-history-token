@@ -2189,7 +2189,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|htonl
+name|ntohl
 argument_list|(
 name|enc
 operator|->
@@ -2248,7 +2248,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|htonl
+name|ntohl
 argument_list|(
 name|enc
 operator|->
