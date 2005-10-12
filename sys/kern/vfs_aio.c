@@ -9992,9 +9992,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -10306,11 +10303,6 @@ argument_list|,
 name|lj
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EBADF
@@ -10389,11 +10381,6 @@ argument_list|,
 name|lj
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -10420,11 +10407,6 @@ argument_list|(
 name|aiolio_zone
 argument_list|,
 name|lj
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -10807,11 +10789,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|cb
@@ -10845,11 +10822,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 			 * If all I/Os have been disposed of, then we can 			 * return. 			 */
 if|if
