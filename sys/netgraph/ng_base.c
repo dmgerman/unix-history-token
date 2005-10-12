@@ -7271,16 +7271,6 @@ name|queue
 decl_stmt|,
 name|rw
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|,
-name|ierror
-decl_stmt|;
-name|item_p
-name|oitem
-decl_stmt|;
 name|struct
 name|ng_queue
 modifier|*
@@ -7290,6 +7280,11 @@ operator|&
 name|node
 operator|->
 name|nd_input_queue
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -7652,11 +7647,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Take a queue item and a node and see if we can apply the item to 	 * the node. We may end up getting a different item to apply instead. 	 * Will allow for a piggyback reply only in the case where 	 * there is no queueing. 	 */
-name|oitem
-operator|=
-name|item
-expr_stmt|;
 comment|/* 	 * We already decided how we will be queueud or treated. 	 * Try get the appropriate operating permission. 	 */
 if|if
 condition|(
@@ -7664,7 +7654,6 @@ name|rw
 operator|==
 name|NGQRW_R
 condition|)
-block|{
 name|item
 operator|=
 name|ng_acquire_read
@@ -7674,9 +7663,7 @@ argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|item
 operator|=
 name|ng_acquire_write
@@ -7686,7 +7673,6 @@ argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * May have come back with a different item. 	 * or maybe none at all. The one we started with will 	 * have been queued in thises cases. 	 */
 if|if
 condition|(
@@ -7736,7 +7722,7 @@ name|node
 argument_list|)
 expr_stmt|;
 comment|/* zaps stored node */
-name|ierror
+name|error
 operator|=
 name|ng_apply_item
 argument_list|(
@@ -7748,19 +7734,6 @@ name|rw
 argument_list|)
 expr_stmt|;
 comment|/* drops r/w lock when done */
-comment|/* only return an error if it was our initial item.. (compat hack) */
-if|if
-condition|(
-name|oitem
-operator|==
-name|item
-condition|)
-block|{
-name|error
-operator|=
-name|ierror
-expr_stmt|;
-block|}
 comment|/* 	 * If the node goes away when we remove the reference,  	 * whatever we just did caused it.. whatever we do, DO NOT 	 * access the node again! 	 */
 if|if
 condition|(
