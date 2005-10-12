@@ -9817,8 +9817,11 @@ operator|&
 name|pfsync_list
 argument_list|)
 condition|)
-name|pfsync_clone_destroy
+name|ifc_simple_destroy
 argument_list|(
+operator|&
+name|pfsync_cloner
+argument_list|,
 name|SCP2IFP
 argument_list|(
 name|LIST_FIRST

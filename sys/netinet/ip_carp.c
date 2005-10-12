@@ -11390,8 +11390,11 @@ operator|&
 name|carpif_list
 argument_list|)
 condition|)
-name|carp_clone_destroy
+name|ifc_simple_destroy
 argument_list|(
+operator|&
+name|carp_cloner
+argument_list|,
 name|SC2IFP
 argument_list|(
 name|LIST_FIRST

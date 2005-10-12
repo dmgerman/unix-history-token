@@ -1768,8 +1768,11 @@ operator|&
 name|pflog_list
 argument_list|)
 condition|)
-name|pflog_clone_destroy
+name|ifc_simple_destroy
 argument_list|(
+operator|&
+name|pflog_cloner
+argument_list|,
 name|SCP2IFP
 argument_list|(
 name|LIST_FIRST

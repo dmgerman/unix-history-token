@@ -1902,8 +1902,11 @@ operator|&
 name|bridge_list
 argument_list|)
 condition|)
-name|bridge_clone_destroy
+name|ifc_simple_destroy
 argument_list|(
+operator|&
+name|bridge_cloner
+argument_list|,
 name|LIST_FIRST
 argument_list|(
 operator|&
