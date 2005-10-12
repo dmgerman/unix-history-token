@@ -114,7 +114,7 @@ value|(-10)
 end_define
 
 begin_comment
-comment|/* timers */
+comment|/* attached to lio requests */
 end_comment
 
 begin_define
