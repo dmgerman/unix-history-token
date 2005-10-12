@@ -283,7 +283,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|announce_event
 parameter_list|(
 name|char
@@ -346,7 +346,7 @@ expr_stmt|;
 else|else
 name|vsyslog
 argument_list|(
-name|LOG_INFO
+name|LOG_ERR
 argument_list|,
 name|fmt
 argument_list|,
@@ -645,7 +645,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|announce_event
 parameter_list|(
 name|ifname
@@ -721,7 +721,18 @@ name|s
 operator|<
 literal|0
 condition|)
-return|return;
+block|{
+name|dbgmsg
+argument_list|(
+literal|"socket creation failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|bzero
 argument_list|(
 operator|(
@@ -800,6 +811,22 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+name|dbgmsg
+argument_list|(
+literal|"drained all events from %s"
+argument_list|,
+name|ifname
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+else|else
 name|dbgmsg
 argument_list|(
 literal|"failed to read event info from %s: %d"
@@ -809,7 +836,11 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -840,7 +871,18 @@ condition|(
 operator|!
 name|all_events
 condition|)
-return|return;
+block|{
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -871,7 +913,18 @@ condition|(
 operator|!
 name|all_events
 condition|)
-return|return;
+block|{
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -961,7 +1014,18 @@ name|len
 operator|<
 literal|0
 condition|)
-return|return;
+block|{
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|len
@@ -1022,7 +1086,16 @@ operator|->
 name|ne_len
 argument_list|)
 expr_stmt|;
-return|return;
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
 block|}
 operator|*
 name|pos
@@ -1095,7 +1168,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1445,6 +1522,9 @@ argument_list|,
 literal|"ndis"
 argument_list|)
 condition|)
+block|{
+while|while
+condition|(
 name|announce_event
 argument_list|(
 name|ifname
@@ -1454,7 +1534,11 @@ argument_list|,
 operator|&
 name|sin
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+empty_stmt|;
+block|}
 else|else
 block|{
 if|if
