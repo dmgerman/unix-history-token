@@ -5922,11 +5922,17 @@ name|dev
 argument_list|)
 decl_stmt|;
 comment|/* setup the usual register normal pci style */
+if|if
+condition|(
 name|ata_pci_allocate
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|ENXIO
+return|;
+comment|/* older chips can't do 48bit DMA transfers */
 if|if
 condition|(
 name|ctlr
@@ -13782,11 +13788,16 @@ name|dev
 argument_list|)
 decl_stmt|;
 comment|/* setup the usual register normal pci style */
+if|if
+condition|(
 name|ata_pci_allocate
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|ENXIO
+return|;
 name|ch
 operator|->
 name|r_io
@@ -25794,11 +25805,16 @@ name|dev
 argument_list|)
 decl_stmt|;
 comment|/* setup the usual register normal pci style */
+if|if
+condition|(
 name|ata_pci_allocate
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|ENXIO
+return|;
 name|ch
 operator|->
 name|r_io
@@ -27358,11 +27374,18 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
 name|ata_pci_allocate
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|ENXIO
+return|;
+block|}
 name|ch
 operator|->
 name|r_io
