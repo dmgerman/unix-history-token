@@ -4153,7 +4153,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_flags
+name|inp_vflag
 operator|&
 name|INP_ONESBCAST
 condition|)
@@ -4171,7 +4171,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_flags
+name|inp_vflag
 operator|&
 name|INP_ONESBCAST
 condition|)
