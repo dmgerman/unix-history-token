@@ -5379,7 +5379,7 @@ specifier|extern
 name|uint32_t
 name|KeWaitForSingleObject
 parameter_list|(
-name|nt_dispatch_header
+name|void
 modifier|*
 parameter_list|,
 name|uint32_t

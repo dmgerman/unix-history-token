@@ -6329,8 +6329,17 @@ decl_stmt|;
 name|ndis_status
 name|nmb_getstat
 decl_stmt|;
+name|nt_kevent
+name|nmb_getevent
+decl_stmt|;
 name|ndis_status
 name|nmb_setstat
+decl_stmt|;
+name|nt_kevent
+name|nmb_setevent
+decl_stmt|;
+name|nt_kevent
+name|nmb_resetevent
 decl_stmt|;
 name|ndis_miniport_timer
 modifier|*
