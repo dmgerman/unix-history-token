@@ -1239,11 +1239,6 @@ argument_list|,
 name|ISO88025_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1297,6 +1292,11 @@ argument_list|,
 name|sc
 operator|->
 name|irq_res
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* Deallocate all dynamic memory regions */
