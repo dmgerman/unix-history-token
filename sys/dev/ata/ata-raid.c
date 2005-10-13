@@ -349,10 +349,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|//static int ata_raid_hptv3_write_meta(struct ar_softc *rdp);
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -847,13 +843,6 @@ decl_stmt|;
 name|int
 name|disk
 decl_stmt|;
-name|buffer
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -945,6 +934,14 @@ literal|1024
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|buffer
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|rdp
 operator|->
 name|disk
@@ -10348,18 +10345,6 @@ name|retval
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int ata_raid_hptv3_write_meta(struct ar_softc *rdp) {     struct hptv3_raid_conf *meta;     int error = 0;      if (!(meta = (struct hptv3_raid_conf *) 	  malloc(sizeof(struct hptv3_raid_conf), M_AR, M_NOWAIT | M_ZERO))) { 	printf("ar%d: failed to allocate metadata storage\n", rdp->lun); 	return ENOMEM;     }     return error; }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Intel MatrixRAID Metadata */
