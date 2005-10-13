@@ -2672,7 +2672,7 @@ argument_list|,
 name|nsfbufsused
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Update the sf_buf's virtual-to-physical mapping, flushing the 	 * virtual address from the TLB. Since the reference count for  	 * the sf_buf's old mapping was zero, that mapping is not  	 * currently in use. Consequently, there is no need to exchange  	 * the old and new PTEs atomically, even under PAE. 	 */
+comment|/* 	 * Update the sf_buf's virtual-to-physical mapping, flushing the 	 * virtual address from the TLB.  Since the reference count for  	 * the sf_buf's old mapping was zero, that mapping is not  	 * currently in use.  Consequently, there is no need to exchange  	 * the old and new PTEs atomically, even under PAE. 	 */
 name|ptep
 operator|=
 name|vtopte
@@ -2701,6 +2701,7 @@ name|PG_RW
 operator||
 name|PG_V
 expr_stmt|;
+comment|/* 	 * Avoid unnecessary TLB invalidations: If the sf_buf's old 	 * virtual-to-physical mapping was not used, then any processor 	 * that has invalidated the sf_buf's virtual address from its TLB 	 * since the last used mapping need not invalidate again. 	 */
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2831,6 +2832,24 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+operator|(
+name|opte
+operator|&
+operator|(
+name|PG_V
+operator||
+name|PG_A
+operator|)
+operator|)
+operator|==
+operator|(
+name|PG_V
+operator||
+name|PG_A
+operator|)
+condition|)
 name|pmap_invalidate_page
 argument_list|(
 name|kernel_pmap
