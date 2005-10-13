@@ -529,6 +529,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|bridge_detach_p
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|bridge_rtable_prune_period
@@ -1904,6 +1919,10 @@ name|bridge_dn_p
 operator|=
 name|bridge_dummynet
 expr_stmt|;
+name|bridge_detach_p
+operator|=
+name|bridge_ifdetach
+expr_stmt|;
 name|bstp_linkstate_p
 operator|=
 name|bstp_linkstate
@@ -1955,6 +1974,10 @@ operator|=
 name|NULL
 expr_stmt|;
 name|bridge_dn_p
+operator|=
+name|NULL
+expr_stmt|;
+name|bridge_detach_p
 operator|=
 name|NULL
 expr_stmt|;
@@ -5340,7 +5363,7 @@ name|struct
 name|ifbreq
 name|breq
 decl_stmt|;
-name|BRIDGE_LOCK_ASSERT
+name|BRIDGE_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5385,6 +5408,11 @@ name|sc
 argument_list|,
 operator|&
 name|breq
+argument_list|)
+expr_stmt|;
+name|BRIDGE_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
