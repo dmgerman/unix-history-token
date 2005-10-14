@@ -299,21 +299,20 @@ operator|>=
 literal|600
 end_if
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * PR: 35924  * XXX we don't actually have these.  We set _POSIX_REALTIME_SIGNALS to  * -1 to show that we don't have them, but this symbol is not necessarily  * in scope (in the current implementation), so we can't use it here.  */
-end_comment
-
-begin_endif
-unit|int	sigqueue(__pid_t, int, const union sigval);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|int
+name|sigqueue
+parameter_list|(
+name|pid_t
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|union
+name|sigval
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct_decl
 struct_decl|struct
