@@ -1600,7 +1600,7 @@ name|ARGS
 argument_list|(
 name|rt_sendsig
 argument_list|,
-literal|"%p, %d, %p, %lu"
+literal|"%p, %d, %p, %u"
 argument_list|)
 argument_list|,
 name|catcher
@@ -2584,7 +2584,7 @@ name|ARGS
 argument_list|(
 name|sendsig
 argument_list|,
-literal|"%p, %d, %p, %lu"
+literal|"%p, %d, %p, %u"
 argument_list|)
 argument_list|,
 name|catcher
