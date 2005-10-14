@@ -104,6 +104,12 @@ directive|include
 file|<sys/signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -472,6 +478,14 @@ name|lwpid_t
 name|td_tid
 decl_stmt|;
 comment|/* (b) Thread ID. */
+name|sigqueue_t
+name|td_sigqueue
+decl_stmt|;
+comment|/* (c) Sigs arrived, not delivered. */
+define|#
+directive|define
+name|td_siglist
+value|td_sigqueue.sq_signals
 comment|/* Cleared during fork1() or thread_schedule_upcall(). */
 define|#
 directive|define
@@ -609,10 +623,6 @@ name|sigset_t
 name|td_sigmask
 decl_stmt|;
 comment|/* (c) Current signal mask. */
-name|sigset_t
-name|td_siglist
-decl_stmt|;
-comment|/* (c) Sigs arrived, not delivered. */
 specifier|volatile
 name|u_int
 name|td_generation
@@ -2008,6 +2018,14 @@ name|mtx
 name|p_mtx
 decl_stmt|;
 comment|/* (n) Lock for this struct. */
+name|sigqueue_t
+name|p_sigqueue
+decl_stmt|;
+comment|/* (c) Sigs not delivered to a td. */
+define|#
+directive|define
+name|p_siglist
+value|p_sigqueue.sq_signals
 comment|/* The following fields are all zeroed upon creation in fork. */
 define|#
 directive|define
@@ -2072,10 +2090,6 @@ modifier|*
 name|p_textvp
 decl_stmt|;
 comment|/* (b) Vnode of executable. */
-name|sigset_t
-name|p_siglist
-decl_stmt|;
-comment|/* (c) Sigs not delivered to a td. */
 name|char
 name|p_lock
 decl_stmt|;
@@ -2150,6 +2164,10 @@ name|ksegrp
 modifier|*
 name|p_procscopegrp
 decl_stmt|;
+name|int
+name|p_pendingcnt
+decl_stmt|;
+comment|/* how many signals are pending */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -4601,23 +4619,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cpu_thread_siginfo
-parameter_list|(
-name|int
-name|sig
-parameter_list|,
-name|u_long
-name|code
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|si
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|cpu_thread_swapin
 parameter_list|(
 name|struct
@@ -4781,8 +4782,8 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|int
-name|sig
+name|ksiginfo_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -4157,11 +4157,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|SIGDELSET
+name|sigqueue_delete
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_siglist
+name|p_sigqueue
 argument_list|,
 name|SIGCHLD
 argument_list|)

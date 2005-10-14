@@ -27,6 +27,12 @@ name|thread
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ksiginfo
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -180,13 +186,13 @@ parameter_list|(
 name|int
 parameter_list|)
 parameter_list|,
-name|int
+name|struct
+name|ksiginfo
+modifier|*
 parameter_list|,
 name|struct
 name|__sigset
 modifier|*
-parameter_list|,
-name|u_long
 parameter_list|)
 function_decl|;
 comment|/* send signal */

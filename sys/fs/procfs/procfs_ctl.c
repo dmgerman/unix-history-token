@@ -741,11 +741,9 @@ operator|~
 name|P_TRACED
 expr_stmt|;
 comment|/* remove pending SIGTRAP, else the process will die */
-name|SIGDELSET
+name|sigqueue_delete_proc
 argument_list|(
 name|p
-operator|->
-name|p_siglist
 argument_list|,
 name|SIGTRAP
 argument_list|)

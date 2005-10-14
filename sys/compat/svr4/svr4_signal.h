@@ -607,6 +607,12 @@ name|SVR4_MINSIGSTKSZ
 value|8192
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ksiginfo
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|bsd_to_svr4_sigaltstack
@@ -673,12 +679,12 @@ name|svr4_sendsig
 parameter_list|(
 name|sig_t
 parameter_list|,
-name|int
+name|struct
+name|ksiginfo
+modifier|*
 parameter_list|,
 name|sigset_t
 modifier|*
-parameter_list|,
-name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl

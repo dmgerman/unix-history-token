@@ -7717,6 +7717,24 @@ name|AUE_NULL
 block|}
 block|,
 comment|/* 455 = thr_new */
+block|{
+name|SYF_MPSAFE
+operator||
+name|AS
+argument_list|(
+name|sigqueue_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sigqueue
+block|,
+name|AUE_NULL
+block|}
+block|,
+comment|/* 456 = sigqueue */
 block|}
 decl_stmt|;
 end_decl_stmt

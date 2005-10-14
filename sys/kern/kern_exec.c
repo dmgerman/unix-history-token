@@ -2561,6 +2561,8 @@ name|td
 argument_list|,
 name|SIGTRAP
 argument_list|,
+name|NULL
+argument_list|,
 name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;

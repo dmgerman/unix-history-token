@@ -339,12 +339,12 @@ name|osf1_sendsig
 parameter_list|(
 name|sig_t
 parameter_list|,
-name|int
+name|struct
+name|ksiginfo
+modifier|*
 parameter_list|,
 name|sigset_t
 modifier|*
-parameter_list|,
-name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl

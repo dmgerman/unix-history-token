@@ -1330,6 +1330,14 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|sigqueue_flush
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_sigqueue
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1485,6 +1493,8 @@ argument_list|,
 name|uap
 operator|->
 name|sig
+argument_list|,
+name|NULL
 argument_list|,
 name|SIGTARGET_TD
 argument_list|)

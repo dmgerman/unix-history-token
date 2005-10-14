@@ -2169,15 +2169,13 @@ parameter_list|(
 name|sig_t
 name|catcher
 parameter_list|,
-name|int
-name|sig
+name|ksiginfo_t
+modifier|*
+name|kp
 parameter_list|,
 name|sigset_t
 modifier|*
 name|mask
-parameter_list|,
-name|u_long
-name|code
 parameter_list|)
 block|{
 name|int
@@ -2213,6 +2211,12 @@ name|sigacts
 modifier|*
 name|psp
 decl_stmt|;
+name|int
+name|sig
+decl_stmt|;
+name|int
+name|code
+decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -2229,6 +2233,18 @@ name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
+expr_stmt|;
+name|sig
+operator|=
+name|kp
+operator|->
+name|ksi_signo
+expr_stmt|;
+name|code
+operator|=
+name|kp
+operator|->
+name|ksi_code
 expr_stmt|;
 name|psp
 operator|=
@@ -2652,12 +2668,11 @@ expr_stmt|;
 name|ksi
 operator|.
 name|si_value
-operator|.
-name|sigval_ptr
 operator|=
-name|NULL
+name|kp
+operator|->
+name|ksi_value
 expr_stmt|;
-comment|/* XXX */
 comment|/* 	 * copy the frame out to userland. 	 */
 if|if
 condition|(

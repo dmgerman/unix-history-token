@@ -633,18 +633,20 @@ operator||
 name|P_PPWAIT
 operator|)
 expr_stmt|;
-name|SIGEMPTYSET
+name|sigqueue_flush
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_siglist
+name|p_sigqueue
 argument_list|)
 expr_stmt|;
-name|SIGEMPTYSET
+name|sigqueue_flush
 argument_list|(
+operator|&
 name|td
 operator|->
-name|td_siglist
+name|td_sigqueue
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stop the real interval timer.  If the handler is currently 	 * executing, prevent it from rearming itself and let it finish. 	 */
