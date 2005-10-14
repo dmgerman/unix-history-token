@@ -605,9 +605,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * XXX missing SIGRTMIN, SIGRTMAX.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|SIGRTMIN
+value|65
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGRTMAX
+value|128
+end_define
 
 begin_define
 define|#
@@ -892,6 +902,17 @@ name|long
 name|si_band
 decl_stmt|;
 comment|/* band event for SIGPOLL */
+union|union
+block|{
+struct|struct
+block|{
+name|int
+name|_trapno
+decl_stmt|;
+comment|/* machine specific trap code */
+block|}
+name|_fault
+struct|;
 name|int
 name|__spare__
 index|[
@@ -900,9 +921,448 @@ index|]
 decl_stmt|;
 comment|/* gimme some slack */
 block|}
+name|_reason
+union|;
+block|}
 name|siginfo_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|si_trapno
+value|_reason._fault._trapno
+end_define
+
+begin_comment
+comment|/** si_code **/
+end_comment
+
+begin_comment
+comment|/* codes for SIGILL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_ILLOPC
+value|1
+end_define
+
+begin_comment
+comment|/* Illegal opcode.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_ILLOPN
+value|2
+end_define
+
+begin_comment
+comment|/* Illegal operand.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_ILLADR
+value|3
+end_define
+
+begin_comment
+comment|/* Illegal addressing mode.		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_ILLTRP
+value|4
+end_define
+
+begin_comment
+comment|/* Illegal trap.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_PRVOPC
+value|5
+end_define
+
+begin_comment
+comment|/* Privileged opcode.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_PRVREG
+value|6
+end_define
+
+begin_comment
+comment|/* Privileged register.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_COPROC
+value|7
+end_define
+
+begin_comment
+comment|/* Coprocessor error.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_BADSTK
+value|8
+end_define
+
+begin_comment
+comment|/* Internal stack error.		*/
+end_comment
+
+begin_comment
+comment|/* codes for SIGBUS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_ADRALN
+value|1
+end_define
+
+begin_comment
+comment|/* Invalid address alignment.		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_ADRERR
+value|2
+end_define
+
+begin_comment
+comment|/* Nonexistent physical address.	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_OBJERR
+value|3
+end_define
+
+begin_comment
+comment|/* Object-specific hardware error.	*/
+end_comment
+
+begin_comment
+comment|/* codes for SIGSEGV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGV_MAPERR
+value|1
+end_define
+
+begin_comment
+comment|/* Address not mapped to object.	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGV_ACCERR
+value|2
+end_define
+
+begin_comment
+comment|/* Invalid permissions for mapped	*/
+end_comment
+
+begin_comment
+comment|/* object.				*/
+end_comment
+
+begin_comment
+comment|/* codes for SIGFPE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_INTOVF
+value|1
+end_define
+
+begin_comment
+comment|/* Integer overflow.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_INTDIV
+value|2
+end_define
+
+begin_comment
+comment|/* Integer divide by zero.		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTDIV
+value|3
+end_define
+
+begin_comment
+comment|/* Floating point divide by zero.	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTOVF
+value|4
+end_define
+
+begin_comment
+comment|/* Floating point overflow.		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTUND
+value|5
+end_define
+
+begin_comment
+comment|/* Floating point underflow.		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTRES
+value|6
+end_define
+
+begin_comment
+comment|/* Floating point inexact result.	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTINV
+value|7
+end_define
+
+begin_comment
+comment|/* Invalid floating point operation.	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTSUB
+value|8
+end_define
+
+begin_comment
+comment|/* Subscript out of range.		*/
+end_comment
+
+begin_comment
+comment|/* codes for SIGTRAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRAP_BRKPT
+value|1
+end_define
+
+begin_comment
+comment|/* Process breakpoint.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRAP_TRACE
+value|2
+end_define
+
+begin_comment
+comment|/* Process trace trap.			*/
+end_comment
+
+begin_comment
+comment|/* codes for SIGCHLD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLD_EXITED
+value|1
+end_define
+
+begin_comment
+comment|/* Child has exited			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLD_KILLED
+value|2
+end_define
+
+begin_comment
+comment|/* Child has terminated abnormally but	*/
+end_comment
+
+begin_comment
+comment|/* did not create a core file		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLD_DUMPED
+value|3
+end_define
+
+begin_comment
+comment|/* Child has terminated abnormally and	*/
+end_comment
+
+begin_comment
+comment|/* created a core file			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLD_TRAPPED
+value|4
+end_define
+
+begin_comment
+comment|/* Traced child has trapped		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLD_STOPPED
+value|5
+end_define
+
+begin_comment
+comment|/* Child has stopped			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLD_CONTINUED
+value|6
+end_define
+
+begin_comment
+comment|/* Stopped child has continued		*/
+end_comment
+
+begin_comment
+comment|/* codes for SIGPOLL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POLL_IN
+value|1
+end_define
+
+begin_comment
+comment|/* Data input available			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POLL_OUT
+value|2
+end_define
+
+begin_comment
+comment|/* Output buffers available		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POLL_MSG
+value|3
+end_define
+
+begin_comment
+comment|/* Input message available		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POLL_ERR
+value|4
+end_define
+
+begin_comment
+comment|/* I/O Error				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POLL_PRI
+value|5
+end_define
+
+begin_comment
+comment|/* High priority input available	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POLL_HUP
+value|4
+end_define
+
+begin_comment
+comment|/* Device disconnected			*/
+end_comment
 
 begin_endif
 endif|#
@@ -1150,12 +1610,20 @@ name|SI_USER
 value|0x10001
 end_define
 
+begin_comment
+comment|/* Signal sent by kill(). */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SI_QUEUE
 value|0x10002
 end_define
+
+begin_comment
+comment|/* Signal sent by the sigqueue(). */
+end_comment
 
 begin_define
 define|#
@@ -1164,6 +1632,14 @@ name|SI_TIMER
 value|0x10003
 end_define
 
+begin_comment
+comment|/* Signal generated by expiration of */
+end_comment
+
+begin_comment
+comment|/* a timer set by timer_settime(). */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1171,12 +1647,28 @@ name|SI_ASYNCIO
 value|0x10004
 end_define
 
+begin_comment
+comment|/* Signal generated by completion of */
+end_comment
+
+begin_comment
+comment|/* an asynchronous I/O request.*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SI_MESGQ
 value|0x10005
 end_define
+
+begin_comment
+comment|/* Signal generated by arrival of a */
+end_comment
+
+begin_comment
+comment|/* message on an empty message queue. */
+end_comment
 
 begin_endif
 endif|#
