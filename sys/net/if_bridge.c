@@ -471,6 +471,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_clone_create
 parameter_list|(
@@ -484,6 +485,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_clone_destroy
 parameter_list|(
@@ -495,6 +497,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl
 parameter_list|(
@@ -510,6 +513,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_ifdetach
 parameter_list|(
@@ -532,6 +536,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_dummynet
 parameter_list|(
@@ -547,6 +552,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_stop
 parameter_list|(
@@ -560,6 +566,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_start
 parameter_list|(
@@ -571,6 +578,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -588,6 +596,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_output
 parameter_list|(
@@ -611,6 +620,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_forward
 parameter_list|(
@@ -627,6 +637,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_timer
 parameter_list|(
@@ -637,6 +648,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_broadcast
 parameter_list|(
@@ -658,6 +670,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_rtupdate
 parameter_list|(
@@ -681,6 +694,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|ifnet
 modifier|*
@@ -698,6 +712,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_rttrim
 parameter_list|(
@@ -709,6 +724,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_rtage
 parameter_list|(
@@ -720,6 +736,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_rtflush
 parameter_list|(
@@ -733,6 +750,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_rtdaddr
 parameter_list|(
@@ -748,6 +766,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_rtable_init
 parameter_list|(
@@ -759,6 +778,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_rtable_fini
 parameter_list|(
@@ -770,6 +790,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|bridge_rtnode
 modifier|*
@@ -787,6 +808,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_rtnode_insert
 parameter_list|(
@@ -802,6 +824,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_rtnode_destroy
 parameter_list|(
@@ -817,6 +840,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|bridge_iflist
 modifier|*
@@ -835,6 +859,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|bridge_iflist
 modifier|*
@@ -853,6 +878,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bridge_delete_member
 parameter_list|(
@@ -868,6 +894,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_add
 parameter_list|(
@@ -882,6 +909,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_del
 parameter_list|(
@@ -896,6 +924,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_gifflags
 parameter_list|(
@@ -910,6 +939,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_sifflags
 parameter_list|(
@@ -924,6 +954,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_scache
 parameter_list|(
@@ -938,6 +969,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_gcache
 parameter_list|(
@@ -952,6 +984,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_gifs
 parameter_list|(
@@ -966,6 +999,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_rts
 parameter_list|(
@@ -980,6 +1014,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_saddr
 parameter_list|(
@@ -994,6 +1029,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_sto
 parameter_list|(
@@ -1008,6 +1044,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_gto
 parameter_list|(
@@ -1022,6 +1059,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_daddr
 parameter_list|(
@@ -1036,6 +1074,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_flush
 parameter_list|(
@@ -1050,6 +1089,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_gpri
 parameter_list|(
@@ -1064,6 +1104,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_spri
 parameter_list|(
@@ -1078,6 +1119,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_ght
 parameter_list|(
@@ -1092,6 +1134,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_sht
 parameter_list|(
@@ -1106,6 +1149,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_gfd
 parameter_list|(
@@ -1120,6 +1164,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_sfd
 parameter_list|(
@@ -1134,6 +1179,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_gma
 parameter_list|(
@@ -1148,6 +1194,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_sma
 parameter_list|(
@@ -1162,6 +1209,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_sifprio
 parameter_list|(
@@ -1176,6 +1224,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bridge_ioctl_sifcost
 parameter_list|(
@@ -2120,6 +2169,7 @@ comment|/*  * bridge_clone_create:  *  *	Create a new bridge instance.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bridge_clone_create
 parameter_list|(
@@ -2464,6 +2514,7 @@ comment|/*  * bridge_clone_destroy:  *  *	Destroy a bridge instance.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_clone_destroy
 parameter_list|(
@@ -2607,6 +2658,7 @@ comment|/*  * bridge_ioctl:  *  *	Handle a control request from the operator.  *
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl
 parameter_list|(
@@ -3170,6 +3222,7 @@ comment|/*  * bridge_delete_member:  *  *	Delete the specified member interface.
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_delete_member
 parameter_list|(
@@ -3294,6 +3347,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_add
 parameter_list|(
@@ -3598,6 +3652,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_del
 parameter_list|(
@@ -3666,6 +3721,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_gifflags
 parameter_list|(
@@ -3771,6 +3827,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_sifflags
 parameter_list|(
@@ -3887,6 +3944,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_scache
 parameter_list|(
@@ -3934,6 +3992,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_gcache
 parameter_list|(
@@ -3976,6 +4035,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_gifs
 parameter_list|(
@@ -4208,6 +4268,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_rts
 parameter_list|(
@@ -4447,6 +4508,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_saddr
 parameter_list|(
@@ -4532,6 +4594,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_sto
 parameter_list|(
@@ -4574,6 +4637,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_gto
 parameter_list|(
@@ -4616,6 +4680,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_daddr
 parameter_list|(
@@ -4657,6 +4722,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_flush
 parameter_list|(
@@ -4700,6 +4766,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_gpri
 parameter_list|(
@@ -4742,6 +4809,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_spri
 parameter_list|(
@@ -4799,6 +4867,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_ght
 parameter_list|(
@@ -4843,6 +4912,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_sht
 parameter_list|(
@@ -4915,6 +4985,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_gfd
 parameter_list|(
@@ -4959,6 +5030,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_sfd
 parameter_list|(
@@ -5031,6 +5103,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_gma
 parameter_list|(
@@ -5075,6 +5148,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_sma
 parameter_list|(
@@ -5147,6 +5221,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_sifprio
 parameter_list|(
@@ -5231,6 +5306,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bridge_ioctl_sifcost
 parameter_list|(
@@ -5319,6 +5395,7 @@ comment|/*  * bridge_ifdetach:  *  *	Detach an interface from a bridge.  Called 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_ifdetach
 parameter_list|(
@@ -5486,6 +5563,7 @@ comment|/*  * bridge_stop:  *  *	Stop the bridge interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_stop
 parameter_list|(
@@ -5702,6 +5780,7 @@ comment|/*  * bridge_dummynet:  *  * 	Receive a queued packet from dummynet and 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_dummynet
 parameter_list|(
@@ -5806,6 +5885,7 @@ comment|/*  * bridge_output:  *  *	Send output from a bridge member interface.  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bridge_output
 parameter_list|(
@@ -6201,6 +6281,7 @@ comment|/*  * bridge_start:  *  *	Start output on a bridge.  *  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_start
 parameter_list|(
@@ -6372,6 +6453,7 @@ comment|/*  * bridge_forward:  *  *	The forwarding function of the bridge.  *  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_forward
 parameter_list|(
@@ -7533,6 +7615,7 @@ comment|/*  * bridge_broadcast:  *  *	Send a frame to all interfaces that are me
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_broadcast
 parameter_list|(
@@ -7875,6 +7958,7 @@ comment|/*  * bridge_rtupdate:  *  *	Add a bridge routing entry.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bridge_rtupdate
 parameter_list|(
@@ -8149,6 +8233,7 @@ comment|/*  * bridge_rttrim:  *  *	Trim the routine table so that we have a numb
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_rttrim
 parameter_list|(
@@ -8271,6 +8356,7 @@ comment|/*  * bridge_timer:  *  *	Aging timer for the bridge.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_timer
 parameter_list|(
@@ -8330,6 +8416,7 @@ comment|/*  * bridge_rtage:  *  *	Perform an aging cycle.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_rtage
 parameter_list|(
@@ -8432,6 +8519,7 @@ comment|/*  * bridge_rtflush:  *  *	Remove all dynamic addresses from the bridge
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_rtflush
 parameter_list|(
@@ -8517,6 +8605,7 @@ comment|/*  * bridge_rtdaddr:  *  *	Remove an address from the table.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bridge_rtdaddr
 parameter_list|(
@@ -8679,6 +8768,7 @@ comment|/*  * bridge_rtable_init:  *  *	Initialize the route table for this brid
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bridge_rtable_init
 parameter_list|(
@@ -8777,6 +8867,7 @@ comment|/*  * bridge_rtable_fini:  *  *	Deconstruct the route table for this bri
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_rtable_fini
 parameter_list|(
@@ -9030,6 +9121,7 @@ comment|/*  * bridge_rtnode_insert:  *  *	Insert the specified bridge node into 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bridge_rtnode_insert
 parameter_list|(
@@ -9242,6 +9334,7 @@ comment|/*  * bridge_rtnode_destroy:  *  *	Destroy a bridge rtnode.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_rtnode_destroy
 parameter_list|(
