@@ -349,10 +349,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|//static int ata_raid_hptv3_write_meta(struct ar_softc *rdp);
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -847,13 +843,6 @@ decl_stmt|;
 name|int
 name|disk
 decl_stmt|;
-name|buffer
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -868,6 +857,27 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+comment|/* bail out on RAID5 as that is not properly supported yet */
+if|if
+condition|(
+name|rdp
+operator|->
+name|type
+operator|==
+name|AR_T_RAID5
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ar%d: RAID5 not supported\n"
+argument_list|,
+name|rdp
+operator|->
+name|lun
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|ata_raid_config_changed
 argument_list|(
 name|rdp
@@ -945,6 +955,14 @@ literal|1024
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|buffer
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|rdp
 operator|->
 name|disk
@@ -7031,6 +7049,9 @@ literal|0
 return|;
 break|break;
 case|case
+name|ATA_ATI_ID
+case|:
+case|case
 name|ATA_SILICON_IMAGE_ID
 case|:
 if|if
@@ -10345,18 +10366,6 @@ name|retval
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int ata_raid_hptv3_write_meta(struct ar_softc *rdp) {     struct hptv3_raid_conf *meta;     int error = 0;      if (!(meta = (struct hptv3_raid_conf *) 	  malloc(sizeof(struct hptv3_raid_conf), M_AR, M_NOWAIT | M_ZERO))) { 	printf("ar%d: failed to allocate metadata storage\n", rdp->lun); 	return ENOMEM;     }     return error; }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Intel MatrixRAID Metadata */
