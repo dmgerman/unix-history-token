@@ -361,6 +361,13 @@ name|PCMCIA_CARD
 argument_list|(
 name|AIRVAST
 argument_list|,
+name|WN_100B
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
+name|AIRVAST
+argument_list|,
 name|WN_100
 argument_list|)
 block|,
@@ -488,6 +495,13 @@ argument_list|(
 name|ELSA
 argument_list|,
 name|XI325_IEEE
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
+name|ELSA
+argument_list|,
+name|XI330_IEEE
 argument_list|)
 block|,
 name|PCMCIA_CARD
