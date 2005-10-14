@@ -3082,6 +3082,7 @@ comment|/*  * bridge_lookup_member:  *  *	Lookup a bridge member interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|bridge_iflist
 modifier|*
@@ -3160,6 +3161,7 @@ comment|/*  * bridge_lookup_member_if:  *  *	Lookup a bridge member interface by
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|bridge_iflist
 modifier|*
@@ -7053,6 +7055,7 @@ comment|/*  * bridge_input:  *  *	Receive input from a member interface.  Queue 
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -8172,6 +8175,7 @@ comment|/*  * bridge_rtlookup:  *  *	Lookup the destination interface for an add
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ifnet
 modifier|*
@@ -9022,6 +9026,7 @@ comment|/*  * bridge_rtnode_lookup:  *  *	Look up a bridge route node for the sp
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|bridge_rtnode
 modifier|*
