@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_bridgevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -450,31 +456,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* if_bridge(4) support. XXX: should go into some include. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|struct
-name|mbuf
-modifier|*
-function_decl|(
-modifier|*
-name|bridge_input_p
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2659,7 +2640,7 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
-comment|/* 	 * XXX: This is a copy'and'paste from if_ethersubr.c:ether_input() 	 */
+comment|/* Pass the packet to the bridge, it may come back to us */
 if|if
 condition|(
 name|ifp
@@ -2667,25 +2648,7 @@ operator|->
 name|if_bridge
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|bridge_input_p
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"%s: if_bridge not loaded!"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-name|m
-operator|=
-call|(
-modifier|*
-name|bridge_input_p
-call|)
+name|BRIDGE_INPUT
 argument_list|(
 name|ifp
 argument_list|,
@@ -2703,21 +2666,10 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Bridge has determined that the packet is for us. 		 * Update our interface pointer -- we may have had 		 * to "bridge" the packet locally. 		 */
-name|ifp
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-expr_stmt|;
 block|}
 comment|/* Route packet back in */
 name|ether_demux
 argument_list|(
-name|priv
-operator|->
 name|ifp
 argument_list|,
 name|m

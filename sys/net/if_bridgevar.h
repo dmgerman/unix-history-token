@@ -27,6 +27,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
 begin_comment
 comment|/*  * Commands used in the SIOCSDRVSPEC ioctl.  Note the lookup of the  * bridge interface itself is keyed off the ifdrv structure.  */
 end_comment
@@ -1124,6 +1130,32 @@ parameter_list|)
 value|do {	\ 	mtx_assert(&(_sc)->sc_mtx, MA_OWNED);	\ 	(_sc)->sc_iflist_xcnt--;		\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BRIDGE_INPUT
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_m
+parameter_list|)
+value|do {    	\ 	KASSERT(bridge_input_p != NULL,			\ 	    ("%s: if_bridge not loaded!", __func__));	\ 	_m = (*bridge_input_p)(_ifp, _m);		\ 	if (_m != NULL)					\ 		_ifp = _m->m_pkthdr.rcvif;		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRIDGE_OUTPUT
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_m
+parameter_list|,
+name|_err
+parameter_list|)
+value|do {    		\ 	KASSERT(bridge_output_p != NULL,			\ 	    ("%s: if_bridge not loaded!", __func__));		\ 	_err = (*bridge_output_p)(_ifp, _m, NULL, NULL);	\ } while (0)
+end_define
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -1135,10 +1167,18 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|bridge_ifdetach
+name|bridge_enqueue
 parameter_list|(
 name|struct
+name|bridge_softc
+modifier|*
+parameter_list|,
+name|struct
 name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1163,8 +1203,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
+name|struct
+name|mbuf
+modifier|*
+function_decl|(
+modifier|*
+name|bridge_input_p
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
-name|bridge_output
+function_decl|(
+modifier|*
+name|bridge_output_p
+function_decl|)
 parameter_list|(
 name|struct
 name|ifnet
@@ -1186,8 +1251,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
-name|bridge_dummynet
+function_decl|(
+modifier|*
+name|bridge_dn_p
+function_decl|)
 parameter_list|(
 name|struct
 name|mbuf
@@ -1201,17 +1270,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|mbuf
+specifier|extern
+name|void
+function_decl|(
 modifier|*
-name|bridge_input
+name|bridge_detach_p
+function_decl|)
 parameter_list|(
 name|struct
 name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1277,25 +1344,6 @@ name|mbuf
 modifier|*
 name|bstp_input
 parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bridge_enqueue
-parameter_list|(
-name|struct
-name|bridge_softc
-modifier|*
-parameter_list|,
 name|struct
 name|ifnet
 modifier|*

@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_bridgevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_vlan_var.h>
 end_include
 
@@ -517,7 +523,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* if_bridge(4) support. XXX: should go into some include. */
+comment|/* if_bridge(4) support */
 end_comment
 
 begin_function_decl
@@ -1541,34 +1547,18 @@ operator|->
 name|if_bridge
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|bridge_output_p
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"%s: if_bridge not loaded!"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-call|(
-modifier|*
-name|bridge_output_p
-call|)
+name|BRIDGE_OUTPUT
 argument_list|(
 name|ifp
 argument_list|,
 name|m
 argument_list|,
-name|NULL
-argument_list|,
-name|NULL
+name|error
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -2791,25 +2781,7 @@ operator|->
 name|if_bridge
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|bridge_input_p
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"%s: if_bridge not loaded!"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-name|m
-operator|=
-call|(
-modifier|*
-name|bridge_input_p
-call|)
+name|BRIDGE_INPUT
 argument_list|(
 name|ifp
 argument_list|,
@@ -2823,15 +2795,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 		 * Bridge has determined that the packet is for us. 		 * Update our interface pointer -- we may have had 		 * to "bridge" the packet locally. 		 */
-name|ifp
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-expr_stmt|;
 block|}
 comment|/* First chunk of an mbuf contains good entropy */
 if|if
