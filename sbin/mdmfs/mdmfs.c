@@ -2159,7 +2159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 'str' should be a user and group name similar to the last argument  * to chown(1); i.e., a user, followed by a colon, followed by a  * group.  The user and group in 'str' may be either a [ug]id or a  * name.  Upon return, the uid and gid fields in 'mip' will contain  * the uid and gid of the user and group name in 'str', respectively.  *  * In other words, this derives a user and group id from a string  * formatted like the last argument to chown(1).  */
+comment|/*  * 'str' should be a user and group name similar to the last argument  * to chown(1); i.e., a user, followed by a colon, followed by a  * group.  The user and group in 'str' may be either a [ug]id or a  * name.  Upon return, the uid and gid fields in 'mip' will contain  * the uid and gid of the user and group name in 'str', respectively.  *  * In other words, this derives a user and group id from a string  * formatted like the last argument to chown(1).  *  * Notice: At this point we don't support only a username or only a  * group name. do_mtptsetup already does, so when this feature is  * desired, this is the only routine that needs to be changed.  */
 end_comment
 
 begin_function
@@ -2353,13 +2353,13 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
+block|}
 name|mip
 operator|->
 name|mi_have_uid
 operator|=
 name|true
 expr_stmt|;
-block|}
 comment|/* Derive gid. */
 operator|*
 name|gid
@@ -2424,31 +2424,16 @@ name|gr
 operator|->
 name|gr_gid
 expr_stmt|;
+block|}
 name|mip
 operator|->
 name|mi_have_gid
 operator|=
 name|true
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|ug
-argument_list|)
-expr_stmt|;
-comment|/* 	 * At this point we don't support only a username or only a 	 * group name.  do_mtptsetup already does, so when this 	 * feature is desired, this is the only routine that needs to 	 * be changed. 	 */
-name|assert
-argument_list|(
-name|mip
-operator|->
-name|mi_have_uid
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|mip
-operator|->
-name|mi_have_gid
 argument_list|)
 expr_stmt|;
 block|}
