@@ -6,29 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ncp.h"
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NCP
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"NWFS requires NCP protocol"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 

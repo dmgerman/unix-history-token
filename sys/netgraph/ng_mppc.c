@@ -93,11 +93,41 @@ name|NETGRAPH_MPPC_ENCRYPTION
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KLD_MODULE
+end_ifdef
+
+begin_comment
+comment|/* XXX NETGRAPH_MPPC_COMPRESSION isn't functional yet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETGRAPH_MPPC_ENCRYPTION
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* This case is indicative of an error in sys/conf files */
+end_comment
+
 begin_error
 error|#
 directive|error
 error|Need either NETGRAPH_MPPC_COMPRESSION or NETGRAPH_MPPC_ENCRYPTION
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
