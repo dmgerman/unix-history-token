@@ -7442,8 +7442,15 @@ decl_stmt|,
 name|minor
 decl_stmt|,
 name|options
+init|=
+literal|0
 decl_stmt|,
 name|atu_size
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|status
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -7553,7 +7560,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Retrieve the capabilities/supported options word so we know what 	 * work-arounds to enable. 	 */
+comment|/* 	 * Retrieve the capabilities/supported options word so we know what 	 * work-arounds to enable.  Some firmware revs don't support this 	 * command. 	 */
 if|if
 condition|(
 name|aac_sync_command
@@ -7570,8 +7577,16 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+operator|&
+name|status
 argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|status
+operator|!=
+name|AAC_SRB_STS_INVALID_REQUEST
 condition|)
 block|{
 name|device_printf
@@ -7589,6 +7604,9 @@ name|EIO
 operator|)
 return|;
 block|}
+block|}
+else|else
+block|{
 name|options
 operator|=
 name|AAC_GET_MAILBOX
@@ -7719,6 +7737,7 @@ name|flags
 operator||=
 name|AAC_FLAGS_ARRAY_64BIT
 expr_stmt|;
+block|}
 comment|/* Check for broken hardware that does a lower number of commands */
 name|sc
 operator|->
@@ -9537,7 +9556,7 @@ if|if
 condition|(
 name|status
 operator|!=
-literal|0x01
+name|AAC_SRB_STS_SUCCESS
 condition|)
 return|return
 operator|(

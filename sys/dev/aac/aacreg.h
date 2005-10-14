@@ -4124,6 +4124,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Status codes for SCSI passthrough commands.  Since they are based on ASPI,  * they also exactly match CAM status codes in both enumeration and meaning.  * They seem to also be used as status codes for synchronous FIBs.  */
+end_comment
+
 begin_enum
 enum|enum
 block|{
