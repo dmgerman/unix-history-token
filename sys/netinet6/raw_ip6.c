@@ -2456,9 +2456,17 @@ name|filter
 operator|==
 name|NULL
 condition|)
+block|{
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|ripcbinfo
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|s
 operator|=
 name|splnet
