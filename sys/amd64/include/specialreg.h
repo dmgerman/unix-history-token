@@ -1141,56 +1141,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|MSR_MC4_CTL
+name|MSR_MC3_CTL
 value|0x40c
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_STATUS
+name|MSR_MC3_STATUS
 value|0x40d
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_ADDR
+name|MSR_MC3_ADDR
 value|0x40e
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_MISC
+name|MSR_MC3_MISC
 value|0x40f
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_CTL
+name|MSR_MC4_CTL
 value|0x410
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_STATUS
+name|MSR_MC4_STATUS
 value|0x411
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_ADDR
+name|MSR_MC4_ADDR
 value|0x412
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_MISC
+name|MSR_MC4_MISC
 value|0x413
 end_define
 
