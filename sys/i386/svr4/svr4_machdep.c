@@ -1695,6 +1695,7 @@ name|sig_t
 name|catcher
 decl_stmt|;
 name|ksiginfo_t
+modifier|*
 name|ksi
 decl_stmt|;
 name|sigset_t
