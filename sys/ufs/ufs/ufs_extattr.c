@@ -981,6 +981,12 @@ name|LOCKPARENT
 expr_stmt|;
 name|cnp
 operator|.
+name|cn_lkflags
+operator|=
+name|LK_EXCLUSIVE
+expr_stmt|;
+name|cnp
+operator|.
 name|cn_thread
 operator|=
 name|td
