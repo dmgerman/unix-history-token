@@ -7283,7 +7283,7 @@ name|rqt32
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|rqt
+name|rqt32
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7399,7 +7399,7 @@ name|rmtp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|rmt
+name|rmt32
 argument_list|)
 argument_list|)
 expr_stmt|;
