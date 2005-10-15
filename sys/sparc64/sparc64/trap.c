@@ -1081,7 +1081,7 @@ comment|/* XXX not POSIX */
 comment|/* ksi.ksi_addr = ? */
 name|ksi
 operator|.
-name|ksi_trap
+name|ksi_trapno
 operator|=
 operator|(
 name|int
