@@ -17254,6 +17254,11 @@ name|tp
 operator|->
 name|t_init_in
 expr_stmt|;
+name|ttsetwater
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

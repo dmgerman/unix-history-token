@@ -2191,11 +2191,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|ttsetwater
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 comment|/* XXX turn on DTR */
 comment|/* XXX handle initial DCD */
 block|}

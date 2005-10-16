@@ -438,11 +438,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ttsetwater
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|setuptimeout
 operator|=
 literal|1
