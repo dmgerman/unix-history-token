@@ -275,6 +275,17 @@ begin_comment
 comment|/* -p */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RBX_NOINTR
+value|0x1c
+end_define
+
+begin_comment
+comment|/* -n */
+end_comment
+
 begin_comment
 comment|/* 0x1d is reserved for log2(RB_MULTIPLE) and is just misnamed here. */
 end_comment
@@ -295,32 +306,6 @@ comment|/* 0x1f is reserved for log2(RB_BOOTINFO). */
 end_comment
 
 begin_comment
-comment|/* group of internal options below */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RBX_NOINTR
-value|0x20
-end_define
-
-begin_comment
-comment|/* -n */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RBX_QUIET
-value|0x21
-end_define
-
-begin_comment
-comment|/* -q */
-end_comment
-
-begin_comment
 comment|/* pass: -a, -s, -r, -d, -c, -v, -h, -C, -g, -m, -p, -D */
 end_comment
 
@@ -328,7 +313,7 @@ begin_define
 define|#
 directive|define
 name|RBX_MASK
-value|0xffffffff
+value|0x2011ffff
 end_define
 
 begin_define
@@ -363,7 +348,7 @@ begin_define
 define|#
 directive|define
 name|NOPT
-value|12
+value|11
 end_define
 
 begin_define
@@ -449,16 +434,6 @@ name|TYPE_FD
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|OPT_CHECK
-parameter_list|(
-name|opt
-parameter_list|)
-value|((opts>> (opt))& 0x1)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|uint32_t
@@ -475,7 +450,7 @@ index|[
 name|NOPT
 index|]
 init|=
-literal|"DhaCgmnpqrsv"
+literal|"DhaCgmnprsv"
 decl_stmt|;
 end_decl_stmt
 
@@ -509,8 +484,6 @@ block|,
 name|RBX_NOINTR
 block|,
 name|RBX_PAUSE
-block|,
-name|RBX_QUIET
 block|,
 name|RBX_DFLTROOT
 block|,
@@ -615,7 +588,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|uint32_t
 name|opts
 decl_stmt|;
 end_decl_stmt
@@ -920,7 +893,6 @@ end_include
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|xfsread
 parameter_list|(
@@ -1322,14 +1294,6 @@ name|autoboot
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|OPT_CHECK
-argument_list|(
-name|RBX_QUIET
-argument_list|)
-condition|)
 name|printf
 argument_list|(
 literal|"%s: %s"
@@ -1403,17 +1367,6 @@ init|;
 condition|;
 control|)
 block|{
-if|if
-condition|(
-operator|!
-name|autoboot
-operator|||
-operator|!
-name|OPT_CHECK
-argument_list|(
-name|RBX_QUIET
-argument_list|)
-condition|)
 name|printf
 argument_list|(
 literal|"\nFreeBSD/i386 boot\n"
@@ -1470,18 +1423,7 @@ condition|)
 name|getstr
 argument_list|()
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|autoboot
-operator|||
-operator|!
-name|OPT_CHECK
-argument_list|(
-name|RBX_QUIET
-argument_list|)
-condition|)
+else|else
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1531,7 +1473,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|static
 union|union
 block|{
 name|struct
@@ -1544,14 +1485,12 @@ decl_stmt|;
 block|}
 name|hdr
 union|;
-specifier|static
 name|Elf32_Phdr
 name|ep
 index|[
 literal|2
 index|]
 decl_stmt|;
-specifier|static
 name|Elf32_Shdr
 name|es
 index|[
@@ -2213,14 +2152,11 @@ name|addr
 argument_list|,
 name|RB_BOOTINFO
 operator||
-call|(
-name|uint32_t
-call|)
-argument_list|(
+operator|(
 name|opts
 operator|&
 name|RBX_MASK
-argument_list|)
+operator|)
 argument_list|,
 name|MAKEBOOTDEV
 argument_list|(
@@ -2418,16 +2354,10 @@ else|else
 block|{
 name|opts
 operator||=
-operator|(
-name|uint64_t
-operator|)
 literal|1
 operator|<<
 name|RBX_DUAL
 operator||
-operator|(
-name|uint64_t
-operator|)
 literal|1
 operator|<<
 name|RBX_SERIAL
@@ -2534,9 +2464,6 @@ literal|1
 return|;
 name|opts
 operator|^=
-operator|(
-name|uint64_t
-operator|)
 literal|1
 operator|<<
 name|flags
@@ -2549,9 +2476,6 @@ name|ioctrl
 operator|=
 name|opts
 operator|&
-operator|(
-name|uint64_t
-operator|)
 literal|1
 operator|<<
 name|RBX_DUAL
@@ -2564,9 +2488,6 @@ operator|)
 else|:
 name|opts
 operator|&
-operator|(
-name|uint64_t
-operator|)
 literal|1
 operator|<<
 name|RBX_SERIAL
@@ -3554,14 +3475,6 @@ name|c
 init|=
 literal|0x2d5c7c2f
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|OPT_CHECK
-argument_list|(
-name|RBX_QUIET
-argument_list|)
-condition|)
 name|printf
 argument_list|(
 literal|"%c\b"
@@ -3699,10 +3612,11 @@ name|t1
 decl_stmt|;
 if|if
 condition|(
-name|OPT_CHECK
-argument_list|(
+name|opts
+operator|&
+literal|1
+operator|<<
 name|RBX_NOINTR
-argument_list|)
 condition|)
 return|return
 literal|0
@@ -3815,10 +3729,11 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|OPT_CHECK
-argument_list|(
+name|opts
+operator|&
+literal|1
+operator|<<
 name|RBX_NOINTR
-argument_list|)
 condition|)
 return|return
 literal|0
