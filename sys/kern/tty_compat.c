@@ -414,6 +414,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ttsetcompat
 parameter_list|(
