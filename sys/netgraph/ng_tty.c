@@ -1852,20 +1852,7 @@ break|break;
 block|}
 block|}
 comment|/* Call output process whether or not there is any output. We are 	 * being called in lieu of ttstart and must do what it would. */
-if|if
-condition|(
-name|tp
-operator|->
-name|t_oproc
-operator|!=
-name|NULL
-condition|)
-call|(
-modifier|*
-name|tp
-operator|->
-name|t_oproc
-call|)
+name|tt_oproc
 argument_list|(
 name|tp
 argument_list|)

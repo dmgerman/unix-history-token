@@ -2658,12 +2658,7 @@ condition|;
 control|)
 block|{
 comment|/* 		 * Call output process whether or not there is more in the 		 * output queue.  We are being called in lieu of ttstart 		 * and must do what it would. 		 */
-call|(
-modifier|*
-name|tp
-operator|->
-name|t_oproc
-call|)
+name|tt_oproc
 argument_list|(
 name|tp
 argument_list|)
@@ -4662,12 +4657,7 @@ operator|->
 name|t_outq
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
-name|tp
-operator|->
-name|t_oproc
-call|)
+name|tt_oproc
 argument_list|(
 name|tp
 argument_list|)
