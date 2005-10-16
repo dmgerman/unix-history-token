@@ -3389,9 +3389,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|tp
-operator|->
-name|t_close
+name|rpclose
 argument_list|(
 name|tp
 argument_list|)
