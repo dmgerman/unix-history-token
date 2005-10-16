@@ -303,7 +303,7 @@ begin_function_decl
 name|int
 name|sigqueue
 parameter_list|(
-name|pid_t
+name|__pid_t
 parameter_list|,
 name|int
 parameter_list|,
