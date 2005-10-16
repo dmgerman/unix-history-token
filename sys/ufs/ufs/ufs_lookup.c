@@ -388,7 +388,7 @@ name|cnp
 operator|->
 name|cn_thread
 decl_stmt|;
-name|u_int32_t
+name|ino_t
 name|saved_ino
 decl_stmt|;
 name|bp
