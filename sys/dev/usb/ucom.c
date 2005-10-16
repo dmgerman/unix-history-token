@@ -651,11 +651,7 @@ name|ttycreate
 argument_list|(
 name|tp
 argument_list|,
-name|NULL
-argument_list|,
-name|unit
-argument_list|,
-name|MINOR_CALLOUT
+name|TS_CALLOUT
 argument_list|,
 literal|"U%d"
 argument_list|,

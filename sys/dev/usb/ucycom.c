@@ -1330,10 +1330,6 @@ name|sc
 operator|->
 name|sc_tty
 argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
 literal|0
 argument_list|,
 literal|"y%r"

@@ -1914,11 +1914,7 @@ name|ttycreate
 argument_list|(
 name|tp
 argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|MINOR_CALLOUT
+name|TS_CALLOUT
 argument_list|,
 literal|"c%r%r"
 argument_list|,

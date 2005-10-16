@@ -1153,6 +1153,17 @@ begin_comment
 comment|/* Hardware detached */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TS_CALLOUT
+value|0x4000000
+end_define
+
+begin_comment
+comment|/* Callout devices */
+end_comment
+
 begin_comment
 comment|/* Character type information. */
 end_comment
@@ -2024,13 +2035,6 @@ name|tty
 modifier|*
 name|tp
 parameter_list|,
-name|struct
-name|cdevsw
-modifier|*
-parameter_list|,
-name|int
-name|unit
-parameter_list|,
 name|int
 name|flags
 parameter_list|,
@@ -2043,9 +2047,9 @@ modifier|...
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
-function_decl|5
+function_decl|3
 operator|,
-function_decl|6
+function_decl|4
 end_function_decl
 
 begin_empty_stmt

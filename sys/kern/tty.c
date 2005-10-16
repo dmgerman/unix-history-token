@@ -14316,14 +14316,6 @@ name|tty
 modifier|*
 name|tp
 parameter_list|,
-name|struct
-name|cdevsw
-modifier|*
-name|csw
-parameter_list|,
-name|int
-name|unit
-parameter_list|,
 name|int
 name|flags
 parameter_list|,
@@ -14344,6 +14336,18 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* XXX space for "tty" */
+name|struct
+name|cdevsw
+modifier|*
+name|csw
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|unit
+init|=
+literal|0
+decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
@@ -14654,7 +14658,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|MINOR_CALLOUT
+name|TS_CALLOUT
 condition|)
 block|{
 name|cp
