@@ -2328,6 +2328,9 @@ name|td
 operator|->
 name|td_pcb
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|wrmsr
 argument_list|(
 name|MSR_FSBASE
@@ -2354,6 +2357,9 @@ operator|->
 name|pcb_gsbase
 operator|=
 literal|0
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 name|load_ds
 argument_list|(
