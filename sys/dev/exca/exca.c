@@ -1567,7 +1567,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the offset of the memory.  We use this for reading the CIS and  * frobbing the pccard's pccard registers (POR, etc).  Some drivers  * need to access this functionality as well, since they have receive  * buffers defined in the attribute memory.  */
+comment|/*  * Set the offset of the memory.  We use this for reading the CIS and  * frobbing the pccard's pccard registers (CCR, etc).  Some drivers  * need to access arbitrary attribute and common memory during their  * initialization and operation.  */
 end_comment
 
 begin_function
