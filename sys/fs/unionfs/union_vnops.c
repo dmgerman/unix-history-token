@@ -2440,7 +2440,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 	union_mknod:  *  *	a_dvp is locked on entry and should remain locked on return.  *	a_vpp is garbagre whether an error occurs or not.  */
+comment|/*  * 	union_mknod:  *  *	a_dvp is locked on entry and should remain locked on return.  *	a_vpp is garbage whether an error occurs or not.  */
 end_comment
 
 begin_function
