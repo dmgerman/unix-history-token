@@ -189,6 +189,13 @@ directive|include
 file|"linker_if.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAXSEGS
+value|4
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2601,7 +2608,7 @@ name|Elf_Phdr
 modifier|*
 name|segs
 index|[
-literal|2
+name|MAXSEGS
 index|]
 decl_stmt|;
 name|int
@@ -3079,7 +3086,7 @@ if|if
 condition|(
 name|nsegs
 operator|==
-literal|2
+name|MAXSEGS
 condition|)
 block|{
 name|link_elf_error
@@ -3166,13 +3173,13 @@ block|}
 if|if
 condition|(
 name|nsegs
-operator|!=
-literal|2
+operator|==
+literal|0
 condition|)
 block|{
 name|link_elf_error
 argument_list|(
-literal|"Too few sections"
+literal|"No sections"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3214,6 +3221,8 @@ name|round_page
 argument_list|(
 name|segs
 index|[
+name|nsegs
+operator|-
 literal|1
 index|]
 operator|->
@@ -3221,6 +3230,8 @@ name|p_vaddr
 operator|+
 name|segs
 index|[
+name|nsegs
+operator|-
 literal|1
 index|]
 operator|->
@@ -3411,7 +3422,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|2
+name|nsegs
 condition|;
 name|i
 operator|++
