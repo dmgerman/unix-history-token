@@ -1051,15 +1051,26 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|cmp
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"\n  Physical cores: %d"
+argument_list|,
+name|cmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|htt
 operator|>
 literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"\n  Physical/Logical cores: %d/%d"
-argument_list|,
-name|cmp
+literal|"\n  Logical cores: %d"
 argument_list|,
 name|htt
 argument_list|)
