@@ -682,7 +682,7 @@ name|sc
 operator|->
 name|chip_type
 operator|==
-name|ED_CHIP_TYPE_RTL8029
+name|ED_CHIP_TYPE_RTL8019
 condition|)
 name|ed_Novell_read_mac
 argument_list|(
