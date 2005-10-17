@@ -631,23 +631,13 @@ name|imp
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-operator|(
+comment|/* 	 * Unconditionally mount as read-only. 	 */
 name|mp
 operator|->
 name|mnt_flag
-operator|&
+operator||=
 name|MNT_RDONLY
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|EROFS
-operator|)
-return|;
+expr_stmt|;
 name|fspec
 operator|=
 name|vfs_getopts
