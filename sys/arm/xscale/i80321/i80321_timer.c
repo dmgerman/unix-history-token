@@ -169,25 +169,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
-name|offset
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|uint32_t
-name|last
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|ticked
 init|=
@@ -231,6 +212,8 @@ literal|0u
 block|,
 comment|/* counter_mask */
 name|COUNTS_PER_SEC
+operator|*
+literal|3
 block|,
 comment|/* frequency */
 literal|"i80321 timer"
@@ -676,79 +659,40 @@ name|tc
 parameter_list|)
 block|{
 name|uint32_t
-name|cur
-init|=
-name|tcr0_read
-argument_list|()
+name|ret
 decl_stmt|;
-if|if
-condition|(
-name|cur
-operator|>
-name|last
-operator|&&
-name|last
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-name|offset
-operator|+=
-name|counts_per_hz
-expr_stmt|;
-if|if
-condition|(
-name|ticked
-operator|>
-literal|0
-condition|)
-name|ticked
-operator|--
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ticked
-condition|)
-block|{
-name|offset
-operator|+=
-name|ticked
-operator|*
-name|counts_per_hz
-expr_stmt|;
-name|ticked
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|last
-operator|=
-name|cur
-expr_stmt|;
-return|return
+asm|__asm __volatile("mrc p14, 0, %0, c1, c0, 0\n"
+block|:
+literal|"=r"
 operator|(
-name|counts_per_hz
-operator|-
-name|cur
-operator|+
-name|offset
+name|ret
 operator|)
-return|;
-block|}
+block|)
+function|;
 end_function
 
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/*  * i80321_calibrate_delay:  *  *	Calibrate the delay loop.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|i80321_calibrate_delay
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* 	 * Just use hz=100 for now -- we'll adjust it, if necessary, 	 * in cpu_initclocks(). 	 */
 name|counts_per_hz
@@ -791,7 +735,7 @@ name|TMRx_CSEL_CORE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * cpu_initclocks:  *  *	Initialize the clock and get them going.  */
@@ -1000,20 +944,55 @@ argument_list|(
 name|oldirqstate
 argument_list|)
 expr_stmt|;
-block|}
+name|rid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Enable the clock count register. */
+asm|__asm __volatile("mrc p14, 0, %0, c0, c0, 0\n" : "=r" (rid));
+name|rid
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+expr_stmt|;
+name|rid
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+operator||
+literal|1
+expr_stmt|;
+asm|__asm __volatile("mcr p14, 0, %0, c0, c0, 0\n"
+block|: :
+literal|"r"
+operator|(
+name|rid
+operator|)
+block|)
+function|;
 end_function
 
 begin_comment
+unit|}
 comment|/*  * DELAY:  *  *	Delay for at least N microseconds.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|DELAY
-parameter_list|(
-name|int
-name|n
-parameter_list|)
+argument_list|(
+argument|int n
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|uint32_t
 name|cur
@@ -1100,7 +1079,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * clockhandler:  *  *	Handle the hardclock interrupt.  */
