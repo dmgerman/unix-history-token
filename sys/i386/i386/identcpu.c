@@ -3261,22 +3261,28 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"\n  Physical cores: %d"
+literal|"\n  Cores per package: %d"
 argument_list|,
 name|cmp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|htt
+operator|/
+name|cmp
+operator|)
 operator|>
 literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"\n  Logical cores: %d"
+literal|"\n  Logical CPUs per core: %d"
 argument_list|,
 name|htt
+operator|/
+name|cmp
 argument_list|)
 expr_stmt|;
 block|}
