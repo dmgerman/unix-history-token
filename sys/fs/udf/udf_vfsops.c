@@ -666,23 +666,13 @@ name|mp
 operator|->
 name|mnt_optnew
 expr_stmt|;
-if|if
-condition|(
-operator|(
+comment|/* 	 * Unconditionally mount as read-only. 	 */
 name|mp
 operator|->
 name|mnt_flag
-operator|&
+operator||=
 name|MNT_RDONLY
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|EROFS
-operator|)
-return|;
+expr_stmt|;
 comment|/* 	 * No root filesystem support.  Probably not a big deal, since the 	 * bootloader doesn't understand UDF. 	 */
 if|if
 condition|(
