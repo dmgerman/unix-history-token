@@ -309,7 +309,10 @@ literal|0
 decl_stmt|;
 name|int
 name|error
+init|=
+name|ENXIO
 decl_stmt|;
+comment|/* 	 * If this card claims to be a RTL8029, probe it as such. 	 * However, allow that probe to fail.  Some versions of qemu 	 * claim to be a 8029 in the PCI register, but it doesn't 	 * implement the 8029 specific registers.  In that case, fall 	 * back to a normal NE2000. 	 */
 if|if
 condition|(
 name|pci_get_devid
@@ -333,7 +336,10 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|error
+condition|)
 name|error
 operator|=
 name|ed_probe_Novell
