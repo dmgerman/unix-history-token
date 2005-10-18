@@ -3739,6 +3739,7 @@ operator|(
 literal|"%s: Negative Slot: %d\n"
 operator|,
 name|__func__
+operator|,
 name|slot
 operator|)
 argument_list|)
