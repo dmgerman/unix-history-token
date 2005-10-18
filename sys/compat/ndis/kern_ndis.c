@@ -341,13 +341,7 @@ specifier|static
 name|void
 name|ndis_return
 parameter_list|(
-name|kdpc
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
+name|device_object
 modifier|*
 parameter_list|,
 name|void
@@ -439,7 +433,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This allows us to export our symbols to other modules.  * Note that we call ourselves 'ndisapi' to avoid a namespace  * collision with if_ndis.ko, which internally calls itself  * 'ndis.'  */
+comment|/*  * This allows us to export our symbols to other modules.  * Note that we call ourselves 'ndisapi' to avoid a namespace  * collision with if_ndis.ko, which internally calls itself  * 'ndis.'  *  * Note: some of the subsystems depend on each other, so the  * order in which they're started is important. The order of  * importance is:  *  * HAL - spinlocks and IRQL manipulation  * ntoskrnl - DPC and workitem threads, object waiting  * windrv - driver/device registration  *  * The HAL should also be the last thing shut down, since  * the ntoskrnl subsystem will use spinlocks right up until  * the DPC and workitem threads are terminated.  */
 end_comment
 
 begin_function
@@ -476,16 +470,16 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* Initialize subsystems */
-name|windrv_libinit
-argument_list|()
-expr_stmt|;
 name|hal_libinit
 argument_list|()
 expr_stmt|;
-name|ndis_libinit
+name|ntoskrnl_libinit
 argument_list|()
 expr_stmt|;
-name|ntoskrnl_libinit
+name|windrv_libinit
+argument_list|()
+expr_stmt|;
+name|ndis_libinit
 argument_list|()
 expr_stmt|;
 name|usbd_libinit
@@ -557,19 +551,19 @@ name|NULL
 condition|)
 block|{
 comment|/* Shut down subsystems */
-name|hal_libfini
-argument_list|()
-expr_stmt|;
 name|ndis_libfini
-argument_list|()
-expr_stmt|;
-name|ntoskrnl_libfini
 argument_list|()
 expr_stmt|;
 name|usbd_libfini
 argument_list|()
 expr_stmt|;
 name|windrv_libfini
+argument_list|()
+expr_stmt|;
+name|ntoskrnl_libfini
+argument_list|()
+expr_stmt|;
+name|hal_libfini
 argument_list|()
 expr_stmt|;
 name|patch
@@ -602,19 +596,19 @@ case|case
 name|MOD_UNLOAD
 case|:
 comment|/* Shut down subsystems */
-name|hal_libfini
-argument_list|()
-expr_stmt|;
 name|ndis_libfini
-argument_list|()
-expr_stmt|;
-name|ntoskrnl_libfini
 argument_list|()
 expr_stmt|;
 name|usbd_libfini
 argument_list|()
 expr_stmt|;
 name|windrv_libfini
+argument_list|()
+expr_stmt|;
+name|ntoskrnl_libfini
+argument_list|()
+expr_stmt|;
+name|hal_libfini
 argument_list|()
 expr_stmt|;
 name|patch
@@ -1616,15 +1610,17 @@ argument|,
 literal|0
 argument|); 		free(cfg->ndis_cfg.nc_cfgkey, M_DEVBUF); 		free(cfg->ndis_cfg.nc_cfgdesc, M_DEVBUF); 		free(cfg, M_DEVBUF); 	}  	return(
 literal|0
-argument|); }  static void ndis_return(dpc, arg, sysarg1, sysarg2) 	kdpc			*dpc; 	void			*arg; 	void			*sysarg1; 	void			*sysarg2; { 	struct ndis_softc	*sc; 	ndis_return_handler	returnfunc; 	ndis_handle		adapter; 	ndis_packet		*p; 	uint8_t			irql;  	p = arg; 	sc = p->np_softc; 	adapter = sc->ndis_block->nmb_miniportadapterctx;  	if (adapter == NULL) 		return;  	returnfunc = sc->ndis_chars->nmc_return_packet_func;  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql); 	MSCALL2(returnfunc, adapter, p); 	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	return; }  void ndis_return_packet(buf, arg) 	void			*buf;
+argument|); }  static void ndis_return(dobj, arg) 	device_object		*dobj; 	void			*arg; { 	ndis_miniport_block	*block; 	ndis_miniport_characteristics	*ch; 	ndis_return_handler	returnfunc; 	ndis_handle		adapter; 	ndis_packet		*p; 	uint8_t			irql; 	list_entry		*l;  	block = arg; 	ch = IoGetDriverObjectExtension(dobj->do_drvobj, (void *)
+literal|1
+argument|);  	p = arg; 	adapter = block->nmb_miniportadapterctx;  	if (adapter == NULL) 		return;  	returnfunc = ch->nmc_return_packet_func;  	KeAcquireSpinLock(&block->nmb_returnlock,&irql); 	while (!IsListEmpty(&block->nmb_returnlist)) { 		l = RemoveHeadList((&block->nmb_returnlist)); 		p = CONTAINING_RECORD(l, ndis_packet, np_list); 		InitializeListHead((&p->np_list)); 		KeReleaseSpinLock(&block->nmb_returnlock, irql); 		MSCALL2(returnfunc, adapter, p); 		KeAcquireSpinLock(&block->nmb_returnlock,&irql); 	} 	KeReleaseSpinLock(&block->nmb_returnlock, irql);  	return; }  void ndis_return_packet(buf, arg) 	void			*buf;
 comment|/* not used */
-argument|void			*arg; { 	ndis_packet		*p;  	if (arg == NULL) 		return;  	p = arg;
+argument|void			*arg; { 	ndis_packet		*p; 	ndis_miniport_block	*block;  	if (arg == NULL) 		return;  	p = arg;
 comment|/* Decrement refcount. */
 argument|p->np_refcnt--;
 comment|/* Release packet when refcount hits zero, otherwise return. */
-argument|if (p->np_refcnt) 		return;  	KeInitializeDpc(&p->np_dpc, kernndis_functbl[
+argument|if (p->np_refcnt) 		return;  	block = ((struct ndis_softc *)p->np_softc)->ndis_block;  	KeAcquireSpinLockAtDpcLevel(&block->nmb_returnlock); 	InitializeListHead((&p->np_list)); 	InsertHeadList((&block->nmb_returnlist), (&p->np_list)); 	KeReleaseSpinLockFromDpcLevel(&block->nmb_returnlock);  	IoQueueWorkItem(block->nmb_returnitem, 	    (io_workitem_func)kernndis_functbl[
 literal|7
-argument|].ipt_wrap, p); 	KeInsertQueueDpc(&p->np_dpc, NULL, NULL);  	return; }  void ndis_free_bufs(b0) 	ndis_buffer		*b0; { 	ndis_buffer		*next;  	if (b0 == NULL) 		return;  	while(b0 != NULL) { 		next = b0->mdl_next; 		IoFreeMdl(b0); 		b0 = next; 	}  	return; } int in_reset =
+argument|].ipt_wrap, 	    WORKQUEUE_CRITICAL, block);  	return; }  void ndis_free_bufs(b0) 	ndis_buffer		*b0; { 	ndis_buffer		*next;  	if (b0 == NULL) 		return;  	while(b0 != NULL) { 		next = b0->mdl_next; 		IoFreeMdl(b0); 		b0 = next; 	}  	return; } int in_reset =
 literal|0
 argument|; void ndis_free_packet(p) 	ndis_packet		*p; { 	if (p == NULL) 		return;  	ndis_free_bufs(p->np_private.npp_head); 	NdisFreePacket(p); 	return; }  int ndis_convert_res(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_resource_list	*rl = NULL; 	cm_partial_resource_desc	*prd = NULL; 	ndis_miniport_block	*block; 	device_t		dev; 	struct resource_list	*brl; 	struct resource_list_entry	*brle;
 if|#
@@ -1667,7 +1663,9 @@ endif|#
 directive|endif
 argument|switch (brle->type) { 			case SYS_RES_IOPORT: 				prd->cprd_type = CmResourceTypePort; 				prd->cprd_flags = CM_RESOURCE_PORT_IO; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_port.cprd_start.np_quad = 				    brle->start; 				prd->u.cprd_port.cprd_len = brle->count; 				break; 			case SYS_RES_MEMORY: 				prd->cprd_type = CmResourceTypeMemory; 				prd->cprd_flags = 				    CM_RESOURCE_MEMORY_READ_WRITE; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_port.cprd_start.np_quad = 				    brle->start; 				prd->u.cprd_port.cprd_len = brle->count; 				break; 			case SYS_RES_IRQ: 				prd->cprd_type = CmResourceTypeInterrupt; 				prd->cprd_flags =
 literal|0
-argument|; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_intr.cprd_level = brle->start; 				prd->u.cprd_intr.cprd_vector = brle->start; 				prd->u.cprd_intr.cprd_affinity =
+argument|;
+comment|/* 				 * Always mark interrupt resources as 				 * shared, since in our implementation, 				 * they will be. 				 */
+argument|prd->cprd_sharedisp = 				    CmResourceShareShared; 				prd->u.cprd_intr.cprd_level = brle->start; 				prd->u.cprd_intr.cprd_vector = brle->start; 				prd->u.cprd_intr.cprd_affinity =
 literal|0
 argument|; 				break; 			default: 				break; 			} 			prd++; 		} 	}  	block->nmb_rlist = rl;
 if|#
@@ -1774,7 +1772,9 @@ argument_list|,
 argument|*n;
 endif|#
 directive|endif
-argument|sc = arg;
+argument|ndis_miniport_block	*block; 	int			empty =
+literal|0
+argument|; 	uint8_t			irql;  	sc = arg; 	block = sc->ndis_block;
 ifdef|#
 directive|ifdef
 name|NDIS_REAP_TIMERS
@@ -1782,7 +1782,13 @@ comment|/* 	 * Drivers are sometimes very lax about cancelling all 	 * their tim
 argument|t = sc->ndis_block->nmb_timerlist; 	while (t != NULL) { 		KeCancelTimer(&t->nmt_ktimer); 		n = t; 		t = t->nmt_nexttimer; 		n->nmt_nexttimer = NULL; 	} 	sc->ndis_block->nmb_timerlist = NULL;
 endif|#
 directive|endif
-argument|if (!cold) 		KeFlushQueuedDpcs();  	NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) { 		NDIS_UNLOCK(sc); 		return(EIO); 	}  	sc->ndis_block->nmb_devicectx = NULL;
+argument|if (!cold) 		KeFlushQueuedDpcs();
+comment|/* 	 * Wait for all packets to be returned. 	 */
+argument|while (
+literal|1
+argument|) { 		KeAcquireSpinLock(&block->nmb_returnlock,&irql); 		empty = IsListEmpty(&block->nmb_returnlist); 		KeReleaseSpinLock(&block->nmb_returnlock, irql); 		if (empty) 			break; 		NdisMSleep(
+literal|1000
+argument|); 	}  	NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) { 		NDIS_UNLOCK(sc); 		return(EIO); 	}  	sc->ndis_block->nmb_devicectx = NULL;
 comment|/* 	 * The adapter context is only valid after the init 	 * handler has been called, and is invalid once the 	 * halt handler has been called. 	 */
 argument|haltfunc = sc->ndis_chars->nmc_halt_func; 	NDIS_UNLOCK(sc);  	MSCALL1(haltfunc, adapter);  	NDIS_LOCK(sc); 	sc->ndis_block->nmb_miniportadapterctx = NULL; 	NDIS_UNLOCK(sc);  	return(
 literal|0
@@ -1833,11 +1839,11 @@ argument|,
 literal|0
 argument|, FALSE,&duetime); 		rval = sc->ndis_block->nmb_getstat; 	}  	if (byteswritten) 		*buflen = byteswritten; 	if (bytesneeded) 		*buflen = bytesneeded;  	if (rval == NDIS_STATUS_INVALID_LENGTH || 	    rval == NDIS_STATUS_BUFFER_TOO_SHORT) 		return(ENOSPC);  	if (rval == NDIS_STATUS_INVALID_OID) 		return(EINVAL);  	if (rval == NDIS_STATUS_NOT_SUPPORTED || 	    rval == NDIS_STATUS_NOT_ACCEPTED) 		return(ENOTSUP);  	if (rval != NDIS_STATUS_SUCCESS) 		return(ENODEV);  	return(
 literal|0
-argument|); }  uint32_t NdisAddDevice(drv, pdo) 	driver_object		*drv; 	device_object		*pdo; { 	device_object		*fdo; 	ndis_miniport_block	*block; 	struct ndis_softc	*sc; 	uint32_t		status;  	status = IoCreateDevice(drv, sizeof(ndis_miniport_block), NULL, 	    FILE_DEVICE_UNKNOWN,
+argument|); }  uint32_t NdisAddDevice(drv, pdo) 	driver_object		*drv; 	device_object		*pdo; { 	device_object		*fdo; 	ndis_miniport_block	*block; 	struct ndis_softc	*sc; 	uint32_t		status; 	int			error;  	sc = device_get_softc(pdo->do_devext);          if (sc->ndis_iftype == PCMCIABus || sc->ndis_iftype == PCIBus) { 		error = bus_setup_intr(sc->ndis_dev, sc->ndis_irq, 		    INTR_TYPE_NET | INTR_MPSAFE, 		    ntoskrnl_intr, NULL,&sc->ndis_intrhand); 		if (error) 			return(NDIS_STATUS_FAILURE); 	}  	status = IoCreateDevice(drv, sizeof(ndis_miniport_block), NULL, 	    FILE_DEVICE_UNKNOWN,
 literal|0
-argument|, FALSE,&fdo);  	if (status != STATUS_SUCCESS) 		return(status);  	block = fdo->do_devext;  	block->nmb_filterdbs.nf_ethdb = block; 	block->nmb_deviceobj = fdo; 	block->nmb_physdeviceobj = pdo; 	block->nmb_nextdeviceobj = IoAttachDeviceToDeviceStack(fdo, pdo); 	KeInitializeSpinLock(&block->nmb_lock); 	InitializeListHead(&block->nmb_parmlist); 	KeInitializeEvent(&block->nmb_getevent, EVENT_TYPE_NOTIFY, TRUE); 	KeInitializeEvent(&block->nmb_setevent, EVENT_TYPE_NOTIFY, TRUE); 	KeInitializeEvent(&block->nmb_resetevent, EVENT_TYPE_NOTIFY, TRUE);
+argument|, FALSE,&fdo);  	if (status != STATUS_SUCCESS) 		return(status);  	block = fdo->do_devext;  	block->nmb_filterdbs.nf_ethdb = block; 	block->nmb_deviceobj = fdo; 	block->nmb_physdeviceobj = pdo; 	block->nmb_nextdeviceobj = IoAttachDeviceToDeviceStack(fdo, pdo); 	KeInitializeSpinLock(&block->nmb_lock); 	KeInitializeSpinLock(&block->nmb_returnlock); 	KeInitializeEvent(&block->nmb_getevent, EVENT_TYPE_NOTIFY, TRUE); 	KeInitializeEvent(&block->nmb_setevent, EVENT_TYPE_NOTIFY, TRUE); 	KeInitializeEvent(&block->nmb_resetevent, EVENT_TYPE_NOTIFY, TRUE); 	InitializeListHead(&block->nmb_parmlist); 	InitializeListHead(&block->nmb_returnlist); 	block->nmb_returnitem = IoAllocateWorkItem(fdo);
 comment|/* 	 * Stash pointers to the miniport block and miniport 	 * characteristics info in the if_ndis softc so the 	 * UNIX wrapper driver can get to them later.          */
-argument|sc = device_get_softc(pdo->do_devext); 	sc->ndis_block = block; 	sc->ndis_chars = IoGetDriverObjectExtension(drv, (void *)
+argument|sc->ndis_block = block; 	sc->ndis_chars = IoGetDriverObjectExtension(drv, (void *)
 literal|1
 argument|);
 comment|/* 	 * If the driver has a MiniportTransferData() function, 	 * we should allocate a private RX packet pool. 	 */
@@ -1863,7 +1869,7 @@ argument|].ipt_wrap; 	block->nmb_resetdone_func = kernndis_functbl[
 literal|4
 argument|].ipt_wrap; 	block->nmb_sendrsrc_func = kernndis_functbl[
 literal|5
-argument|].ipt_wrap; 	block->nmb_pendingreq = NULL;  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link);  	return (STATUS_SUCCESS); }  int ndis_unload_driver(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	device_object		*fdo;  	sc = arg;  	if (sc->ndis_block->nmb_rlist != NULL) 		free(sc->ndis_block->nmb_rlist, M_DEVBUF);  	ndis_flush_sysctls(sc);  	TAILQ_REMOVE(&ndis_devhead, sc->ndis_block, link);  	if (sc->ndis_chars->nmc_transferdata_func != NULL) 		NdisFreePacketPool(sc->ndis_block->nmb_rxpool); 	fdo = sc->ndis_block->nmb_deviceobj; 	IoDetachDevice(sc->ndis_block->nmb_nextdeviceobj); 	IoDeleteDevice(fdo);  	return(
+argument|].ipt_wrap; 	block->nmb_pendingreq = NULL;  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link);  	return (STATUS_SUCCESS); }  int ndis_unload_driver(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	device_object		*fdo;  	sc = arg;  	if (sc->ndis_intrhand) 		bus_teardown_intr(sc->ndis_dev, 		    sc->ndis_irq, sc->ndis_intrhand);  	if (sc->ndis_block->nmb_rlist != NULL) 		free(sc->ndis_block->nmb_rlist, M_DEVBUF);  	ndis_flush_sysctls(sc);  	TAILQ_REMOVE(&ndis_devhead, sc->ndis_block, link);  	if (sc->ndis_chars->nmc_transferdata_func != NULL) 		NdisFreePacketPool(sc->ndis_block->nmb_rxpool); 	fdo = sc->ndis_block->nmb_deviceobj; 	IoFreeWorkItem(sc->ndis_block->nmb_returnitem); 	IoDetachDevice(sc->ndis_block->nmb_nextdeviceobj); 	IoDeleteDevice(fdo);  	return(
 literal|0
 argument|); }
 end_function

@@ -179,12 +179,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|NDIS_TXPKTS
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
 name|NDIS_INC
 parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(x)->ndis_txidx = ((x)->ndis_txidx + 1) % (x)->ndis_maxpkts
+value|(x)->ndis_txidx = ((x)->ndis_txidx + 1) % NDIS_TXPKTS
 end_define
 
 begin_if
@@ -454,13 +461,16 @@ name|io_workitem
 modifier|*
 name|ndis_resetitem
 decl_stmt|;
+name|io_workitem
+modifier|*
+name|ndis_inputitem
+decl_stmt|;
 name|kdpc
 name|ndis_rxdpc
 decl_stmt|;
 name|bus_dma_tag_t
 name|ndis_parent_tag
 decl_stmt|;
-comment|/* 	struct ndis_shmem	*ndis_shlist; */
 name|list_entry
 name|ndis_shlist
 decl_stmt|;
@@ -493,6 +503,13 @@ name|ndis_evtpidx
 decl_stmt|;
 name|int
 name|ndis_evtcidx
+decl_stmt|;
+name|struct
+name|ifqueue
+name|ndis_rxqueue
+decl_stmt|;
+name|kspin_lock
+name|ndis_rxlock
 decl_stmt|;
 block|}
 struct|;
