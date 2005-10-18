@@ -224,7 +224,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<pci/if_dcreg.h>
+file|<dev/dc/if_dcreg.h>
 end_include
 
 begin_ifdef
@@ -11152,15 +11152,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ifp
-condition|)
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|sc
 operator|->
 name|dc_miibus
@@ -11234,6 +11225,15 @@ argument_list|,
 name|sc
 operator|->
 name|dc_res
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
+name|if_free
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 if|if

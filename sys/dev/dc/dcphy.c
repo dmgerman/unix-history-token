@@ -138,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/if_dcreg.h>
+file|<dev/dc/if_dcreg.h>
 end_include
 
 begin_include
