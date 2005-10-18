@@ -5467,11 +5467,16 @@ argument_list|(
 name|kbd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KBD_INSTALL_CDEV
 name|kbd_detach
 argument_list|(
 name|kbd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 call|(
 modifier|*
 name|sw
