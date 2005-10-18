@@ -3545,6 +3545,7 @@ block|{
 name|semid_t
 name|id
 decl_stmt|;
+specifier|const
 name|struct
 name|timespec
 modifier|*

@@ -143,6 +143,7 @@ parameter_list|(
 name|semid_t
 name|id
 parameter_list|,
+specifier|const
 name|struct
 name|timespec
 modifier|*
