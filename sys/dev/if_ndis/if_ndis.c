@@ -2935,9 +2935,7 @@ name|ndis_packet
 operator|*
 argument_list|)
 operator|*
-name|sc
-operator|->
-name|ndis_maxpkts
+name|NDIS_TXPKTS
 argument_list|,
 name|M_DEVBUF
 argument_list|,
