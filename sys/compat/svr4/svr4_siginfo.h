@@ -327,63 +327,63 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|si_signo
+name|svr4_si_signo
 value|_info._signo
 end_define
 
 begin_define
 define|#
 directive|define
-name|si_code
+name|svr4_si_code
 value|_info._code
 end_define
 
 begin_define
 define|#
 directive|define
-name|si_errno
+name|svr4_si_errno
 value|_info._errno
 end_define
 
 begin_define
 define|#
 directive|define
-name|si_pid
+name|svr4_si_pid
 value|_info._reason._child._pid
 end_define
 
 begin_define
 define|#
 directive|define
-name|si_stime
+name|svr4_si_stime
 value|_info._reason._child._stime
 end_define
 
 begin_define
 define|#
 directive|define
-name|si_status
+name|svr4_si_status
 value|_info._reason._child._status
 end_define
 
 begin_define
 define|#
 directive|define
-name|si_utime
+name|svr4_si_utime
 value|_info._reason._child._utime
 end_define
 
 begin_define
 define|#
 directive|define
-name|si_addr
+name|svr4_si_addr
 value|_info._reason._fault._addr
 end_define
 
 begin_define
 define|#
 directive|define
-name|si_trap
+name|svr4_si_trap
 value|_info._reason._fault._trap
 end_define
 
