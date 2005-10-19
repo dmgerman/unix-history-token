@@ -5886,9 +5886,6 @@ name|nd_opt_type
 condition|)
 block|{
 case|case
-name|ND_OPT_SOURCE_LINKADDR
-case|:
-case|case
 name|ND_OPT_TARGET_LINKADDR
 case|:
 case|case
@@ -5896,6 +5893,9 @@ name|ND_OPT_REDIRECTED_HEADER
 case|:
 break|break;
 comment|/* we don't care about these options */
+case|case
+name|ND_OPT_SOURCE_LINKADDR
+case|:
 case|case
 name|ND_OPT_MTU
 case|:
