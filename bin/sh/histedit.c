@@ -594,7 +594,7 @@ argument_list|,
 operator|&
 name|he
 argument_list|,
-name|H_EVENT
+name|H_SETSIZE
 argument_list|,
 name|histsize
 argument_list|)

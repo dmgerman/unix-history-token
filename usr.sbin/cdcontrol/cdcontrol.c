@@ -6593,7 +6593,7 @@ argument_list|,
 operator|&
 name|he
 argument_list|,
-name|H_EVENT
+name|H_SETSIZE
 argument_list|,
 literal|100
 argument_list|)
