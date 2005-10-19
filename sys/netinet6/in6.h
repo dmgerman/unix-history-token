@@ -706,38 +706,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* non standard */
-end_comment
-
-begin_comment
-comment|/* see if two addresses are equal in a scope-conscious manner. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SA6_ARE_ADDR_EQUAL
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-define|\
-value|(((a)->sin6_scope_id == 0 || (b)->sin6_scope_id == 0 || \ 	  ((a)->sin6_scope_id == (b)->sin6_scope_id))&& \ 	 (bcmp(&(a)->sin6_addr,&(b)->sin6_addr, sizeof(struct in6_addr)) == 0))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Unspecified  */
 end_comment
