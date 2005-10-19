@@ -1342,6 +1342,9 @@ case|case
 name|SIOCGIFINFO_IN6
 case|:
 case|case
+name|SIOCSIFINFO_IN6
+case|:
+case|case
 name|SIOCGDRLST_IN6
 case|:
 case|case
