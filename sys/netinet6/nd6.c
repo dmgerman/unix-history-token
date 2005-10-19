@@ -4268,13 +4268,6 @@ condition|)
 break|break;
 block|}
 comment|/* 		 * In IPv4 code, we try to annonuce new RTF_ANNOUNCE entry here. 		 * We don't do that here since llinfo is not ready yet. 		 * 		 * There are also couple of other things to be discussed: 		 * - unsolicited NA code needs improvement beforehand 		 * - RFC2461 says we MAY send multicast unsolicited NA 		 *   (7.2.6 paragraph 4), however, it also says that we 		 *   SHOULD provide a mechanism to prevent multicast NA storm. 		 *   we don't have anything like it right now. 		 *   note that the mechanism needs a mutual agreement 		 *   between proxies, which means that we need to implement 		 *   a new protocol, or a new kludge. 		 * - from RFC2461 6.2.4, host MUST NOT send an unsolicited NA. 		 *   we need to check ip6forwarding before sending it. 		 *   (or should we allow proxy ND configuration only for 		 *   routers?  there's no mention about proxy ND from hosts) 		 */
-if|#
-directive|if
-literal|0
-comment|/* XXX it does not work */
-block|if (rt->rt_flags& RTF_ANNOUNCE) 			nd6_na_output(ifp,&SIN6(rt_key(rt))->sin6_addr,&SIN6(rt_key(rt))->sin6_addr, 			      ip6_forwarding ? ND_NA_FLAG_ROUTER : 0, 			      1, NULL);
-endif|#
-directive|endif
 comment|/* FALLTHROUGH */
 case|case
 name|RTM_RESOLVE
@@ -6294,13 +6287,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* nothing must be done if there's no lladdr */
-block|if (!lladdr || !lladdrlen) 			return NULL;
-endif|#
-directive|endif
 name|rt
 operator|=
 name|nd6_lookup

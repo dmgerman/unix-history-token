@@ -500,12 +500,6 @@ name|lladdrlen
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct sockaddr_dl *sdl = (struct sockaddr_dl *)NULL; 	struct llinfo_nd6 *ln = (struct llinfo_nd6 *)NULL; 	struct rtentry *rt = NULL; 	int is_newentry;
-endif|#
-directive|endif
 name|union
 name|nd_opts
 name|ndopts
@@ -884,14 +878,6 @@ name|ip6
 operator|->
 name|ip6_src
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct in6_addr daddr6 = ip6->ip6_dst; 	int flags;
-comment|/* = nd_ra->nd_ra_flags_reserved; */
-block|int is_managed = ((flags& ND_RA_FLAG_MANAGED) != 0); 	int is_other = ((flags& ND_RA_FLAG_OTHER) != 0);
-endif|#
-directive|endif
 name|union
 name|nd_opts
 name|ndopts
@@ -3843,13 +3829,7 @@ name|ndpr_pltime
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Though these flags are now meaningless, we'd rather keep the value 	 * not to confuse users when executing "ndp -p". 	 */
-block|pr->ndpr_raf_onlink = 0; 	pr->ndpr_raf_auto = 0;
-endif|#
-directive|endif
+comment|/* 	 * Though these flags are now meaningless, we'd rather keep the value 	 * of pr->ndpr_raf_onlink and pr->ndpr_raf_auto not to confuse users 	 * when executing "ndp -p". 	 */
 if|if
 condition|(
 operator|(
@@ -4652,13 +4632,6 @@ condition|(
 name|storedlifetime
 operator|<=
 name|TWOHOUR
-if|#
-directive|if
-literal|0
-comment|/* 			    * This condition is logically redundant, so we just 			    * omit it. 			    * See IPng 6712, 6717, and 6721. 			    */
-condition|&& new->ndpr_vltime<= storedlifetime
-endif|#
-directive|endif
 condition|)
 block|{
 if|if
@@ -5309,7 +5282,7 @@ operator|(
 name|LOG_ERR
 operator|,
 literal|"pfxlist_onlink_check: failed to "
-literal|"make %s/%d onlink, errno=%d\n"
+literal|"make %s/%d offlink, errno=%d\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
@@ -5378,7 +5351,7 @@ operator|(
 name|LOG_ERR
 operator|,
 literal|"pfxlist_onlink_check: failed to "
-literal|"make %s/%d offlink, errno=%d\n"
+literal|"make %s/%d onlink, errno=%d\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
@@ -6580,14 +6553,6 @@ else|else
 return|return
 name|NULL
 return|;
-if|#
-directive|if
-literal|0
-comment|/* don't care link local addr state, and always do DAD */
-comment|/* if link-local address is not eligible, do not autoconfigure. */
-block|if (((struct in6_ifaddr *)ifa)->ia6_flags& IN6_IFF_NOTREADY) { 		printf("in6_ifadd: link-local address not ready\n"); 		return NULL; 	}
-endif|#
-directive|endif
 comment|/* prefixlen + ifidlen must be equal to 128 */
 name|plen0
 operator|=

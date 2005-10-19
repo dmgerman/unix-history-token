@@ -833,13 +833,6 @@ name|bad
 goto|;
 block|}
 comment|/* 	 * Attaching target link-layer address to the NA? 	 * (RFC 2461 7.2.4) 	 * 	 * NS IP dst is unicast/anycast			MUST NOT add 	 * NS IP dst is solicited-node multicast	MUST add 	 * 	 * In implementation, we add target link-layer address by default. 	 * We do not add one in MUST NOT cases. 	 */
-if|#
-directive|if
-literal|0
-comment|/* too much! */
-block|ifa = (struct ifaddr *)in6ifa_ifpwithaddr(ifp,&daddr6); 	if (ifa&& (((struct in6_ifaddr *)ifa)->ia6_flags& IN6_IFF_ANYCAST)) 		tlladdr = 0; 	else
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -1067,8 +1060,9 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
 name|ifa
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* 		 * We've got an NS packet, and we don't have that adddress 		 * assigned for us.  We MUST silently ignore it. 		 * See RFC2461 7.2.3. 		 */
@@ -6019,12 +6013,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("%s: interface down?\n", if_name(ifp));
-endif|#
-directive|endif
 return|return;
 block|}
 if|if
@@ -6040,12 +6028,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("%s: interface not running?\n", if_name(ifp));
-endif|#
-directive|endif
 return|return;
 block|}
 name|dp
