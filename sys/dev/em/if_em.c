@@ -12486,6 +12486,14 @@ name|count
 operator|!=
 literal|0
 operator|)
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
 condition|)
 block|{
 name|struct
