@@ -4406,11 +4406,9 @@ if|if
 condition|(
 name|de
 operator|->
-name|de_dirent
-operator|->
-name|d_type
+name|de_cdp
 operator|==
-name|DT_LNK
+name|NULL
 condition|)
 block|{
 name|TAILQ_REMOVE
