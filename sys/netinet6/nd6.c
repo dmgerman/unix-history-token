@@ -7563,6 +7563,30 @@ operator|)
 return|;
 name|sendpkt
 label|:
+comment|/* discard the packet if IPv6 operation is disabled on the interface */
+if|if
+condition|(
+operator|(
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_IFDISABLED
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|ENETDOWN
+expr_stmt|;
+comment|/* better error? */
+goto|goto
+name|bad
+goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|IPSEC

@@ -4779,6 +4779,13 @@ comment|/* unspecified */
 value|\ 		if (strncmp(cp, f, strlen(f)) == 0) { \ 			valptr = strchr(cp, '='); \ 			if (valptr == NULL) \ 				err(1, "syntax error in %s field", (f)); \ 			errno = 0; \ 			newval = strtoul(++valptr, NULL, 0); \ 			if (errno) \ 				err(1, "syntax error in %s's value", (f)); \ 			v = newval; \ 		} \ 	} while (0)
 name|SETFLAG
 argument_list|(
+literal|"disabled"
+argument_list|,
+name|ND6_IFF_IFDISABLED
+argument_list|)
+expr_stmt|;
+name|SETFLAG
+argument_list|(
 literal|"nud"
 argument_list|,
 name|ND6_IFF_PERFORMNUD
@@ -5144,6 +5151,26 @@ argument_list|(
 literal|"\nFlags: "
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ND6_IFF_IFDISABLED
+if|if
+condition|(
+operator|(
+name|ND
+operator|.
+name|flags
+operator|&
+name|ND6_IFF_IFDISABLED
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"disabled "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

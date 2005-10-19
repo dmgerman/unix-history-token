@@ -246,6 +246,28 @@ name|ND6_IFF_ACCEPT_RTADV
 value|0x2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ND6_IFF_PREFER_SOURCE
+value|0x4
+end_define
+
+begin_comment
+comment|/* XXX: not related to ND. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND6_IFF_IFDISABLED
+value|0x8
+end_define
+
+begin_comment
+comment|/* IPv6 operation is disabled due to 				     * DAD failure.  (XXX: not ND-specific) 				     */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
