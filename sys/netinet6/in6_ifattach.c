@@ -272,25 +272,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|get_hw_ifid
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|,
-expr|struct
-name|in6_addr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|get_ifid
 name|__P
 argument_list|(
@@ -928,9 +909,8 @@ comment|/*  * Get interface identifier for the specified interface.  * XXX assum
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|get_hw_ifid
+name|in6_get_hw_ifid
 parameter_list|(
 name|ifp
 parameter_list|,
@@ -1515,7 +1495,7 @@ decl_stmt|;
 comment|/* first, try to get it from the interface itself */
 if|if
 condition|(
-name|get_hw_ifid
+name|in6_get_hw_ifid
 argument_list|(
 name|ifp0
 argument_list|,
@@ -1548,7 +1528,7 @@ if|if
 condition|(
 name|altifp
 operator|&&
-name|get_hw_ifid
+name|in6_get_hw_ifid
 argument_list|(
 name|altifp
 argument_list|,
@@ -1613,7 +1593,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|get_hw_ifid
+name|in6_get_hw_ifid
 argument_list|(
 name|ifp
 argument_list|,
