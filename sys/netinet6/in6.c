@@ -586,6 +586,7 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Report the addition/removal of the address to the routing socket. 	 * XXX: since we called rtinit for a p2p interface with a destination, 	 *      we end up reporting twice in such a case.  Should we rather 	 *      omit the second report? 	 */
 if|if
 condition|(
 name|nrt
@@ -629,7 +630,6 @@ operator|=
 name|ifa
 expr_stmt|;
 block|}
-comment|/* 		 * Report the addition/removal of the address to the routing 		 * socket. 		 * 		 * XXX: since we called rtinit for a p2p interface with a 		 *      destination, we end up reporting twice in such a case. 		 *      Should we rather omit the second report? 		 */
 name|rt_newaddrmsg
 argument_list|(
 name|cmd
@@ -790,7 +790,7 @@ name|ia_count
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Some of BSD variants do not remove cloned routes 	 * from an interface direct route, when removing the direct route 	 * (see comments in net/net_osdep.h).  Even for variants that do remove 	 * cloned routes, they could fail to remove the cloned routes when 	 * we handle multple addresses that share a common prefix. 	 * So, we should remove the route corresponding to the deleted address 	 * regardless of the result of in6_is_ifloop_auto(). 	 */
+comment|/* 	 * Some of BSD variants do not remove cloned routes 	 * from an interface direct route, when removing the direct route 	 * (see comments in net/net_osdep.h).  Even for variants that do remove 	 * cloned routes, they could fail to remove the cloned routes when 	 * we handle multple addresses that share a common prefix. 	 * So, we should remove the route corresponding to the deleted address. 	 */
 comment|/* 	 * Delete the entry only if exact one ifa exists.  More than one ifa 	 * can exist if we assign a same single address to multiple 	 * (probably p2p) interfaces. 	 * XXX: we should avoid such a configuration in IPv6... 	 */
 for|for
 control|(
@@ -1620,7 +1620,7 @@ case|:
 case|case
 name|SIOCSIFNETMASK_IN6
 case|:
-comment|/* 		 * Since IPv6 allows a node to assign multiple addresses 		 * on a single interface, SIOCSIFxxx ioctls are not suitable 		 * and should be unused. 		 */
+comment|/* 		 * Since IPv6 allows a node to assign multiple addresses 		 * on a single interface, SIOCSIFxxx ioctls are deprecated. 		 */
 comment|/* we decided to obsolete this command (20000704) */
 return|return
 operator|(
@@ -1630,7 +1630,7 @@ return|;
 case|case
 name|SIOCDIFADDR_IN6
 case|:
-comment|/* 		 * for IPv4, we look for existing in_ifaddr here to allow 		 * "ifconfig if0 delete" to remove first IPv4 address on the 		 * interface.  For IPv6, as the spec allow multiple interface 		 * address from the day one, we consider "remove the first one" 		 * semantics to be not preferable. 		 */
+comment|/* 		 * for IPv4, we look for existing in_ifaddr here to allow 		 * "ifconfig if0 delete" to remove the first IPv4 address on 		 * the interface.  For IPv6, as the spec allows multiple 		 * interface address from the day one, we consider "remove the 		 * first one" semantics to be not preferable. 		 */
 if|if
 condition|(
 name|ia
@@ -3853,6 +3853,7 @@ name|error
 operator|)
 return|;
 comment|/* 	 * Beyond this point, we should call in6_purgeaddr upon an error, 	 * not just go to unlink. 	 */
+comment|/* Join necessary multicast groups */
 if|if
 condition|(
 operator|(
@@ -3896,15 +3897,12 @@ argument_list|)
 expr_stmt|;
 name|llsol
 operator|.
-name|s6_addr16
+name|s6_addr32
 index|[
 literal|0
 index|]
 operator|=
-name|htons
-argument_list|(
-literal|0xff02
-argument_list|)
+name|IPV6_ADDR_INT32_MLL
 expr_stmt|;
 name|llsol
 operator|.
@@ -4067,6 +4065,11 @@ name|sin6_addr
 operator|=
 name|in6mask32
 expr_stmt|;
+define|#
+directive|define
+name|MLTMASK_LEN
+value|4
+comment|/* mltmask's masklen (=32bit=4octet) */
 comment|/* 		 * join link-local all-nodes address 		 */
 name|bzero
 argument_list|(
@@ -4148,7 +4151,6 @@ condition|(
 name|rt
 condition|)
 block|{
-comment|/* 			 * 32bit came from "mltmask" 			 */
 if|if
 condition|(
 name|memcmp
@@ -4173,9 +4175,7 @@ operator|)
 operator|->
 name|sin6_addr
 argument_list|,
-literal|32
-operator|/
-literal|8
+name|MLTMASK_LEN
 argument_list|)
 condition|)
 block|{
@@ -4481,7 +4481,6 @@ condition|(
 name|rt
 condition|)
 block|{
-comment|/* 32bit came from "mltmask" */
 if|if
 condition|(
 name|memcmp
@@ -4506,9 +4505,7 @@ operator|)
 operator|->
 name|sin6_addr
 argument_list|,
-literal|32
-operator|/
-literal|8
+name|MLTMASK_LEN
 argument_list|)
 condition|)
 block|{
@@ -4660,6 +4657,9 @@ name|cleanup
 goto|;
 block|}
 block|}
+undef|#
+directive|undef
+name|MLTMASK_LEN
 block|}
 return|return
 operator|(
@@ -4872,15 +4872,12 @@ argument_list|)
 expr_stmt|;
 name|llsol
 operator|.
-name|s6_addr16
+name|s6_addr32
 index|[
 literal|0
 index|]
 operator|=
-name|htons
-argument_list|(
-literal|0xff02
-argument_list|)
+name|IPV6_ADDR_INT32_MLL
 expr_stmt|;
 name|llsol
 operator|.

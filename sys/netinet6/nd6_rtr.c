@@ -5061,6 +5061,8 @@ block|}
 if|if
 condition|(
 name|pr
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* 		 * There is at least one prefix that has a reachable router. 		 * Detach prefixes which have no reachable advertising 		 * router, and attach other prefixes. 		 */
@@ -5307,7 +5309,7 @@ operator|(
 name|LOG_ERR
 operator|,
 literal|"pfxlist_onlink_check: failed to "
-literal|"make %s/%d offlink, errno=%d\n"
+literal|"make %s/%d onlink, errno=%d\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
@@ -5626,11 +5628,32 @@ condition|)
 block|{
 name|nd6log
 argument_list|(
-argument|(LOG_ERR,
+operator|(
+name|LOG_ERR
+operator|,
 literal|"nd6_prefix_onlink: %s/%d is already on-link\n"
-argument|, 		    ip6_sprintf(&pr->ndpr_prefix.sin6_addr), pr->ndpr_plen); 		return (EEXIST)
+operator|,
+name|ip6_sprintf
+argument_list|(
+operator|&
+name|pr
+operator|->
+name|ndpr_prefix
+operator|.
+name|sin6_addr
 argument_list|)
-empty_stmt|;
+operator|,
+name|pr
+operator|->
+name|ndpr_plen
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EEXIST
+operator|)
+return|;
 block|}
 comment|/* 	 * Add the interface route associated with the prefix.  Before 	 * installing the route, check if there's the same prefix on another 	 * interface, and the prefix has already installed the interface route. 	 * Although such a configuration is expected to be rare, we explicitly 	 * allow it. 	 */
 for|for
