@@ -553,18 +553,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|rtrlist
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|rtr_flush
 name|__P
 argument_list|(
@@ -5141,6 +5129,14 @@ operator|.
 name|randomid
 expr_stmt|;
 break|break;
+default|default:
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"impossible case for tempaddr display"
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -5363,6 +5359,13 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
+if|if
+condition|(
+name|l
+operator|==
+literal|0
+condition|)
+return|return;
 name|buf
 operator|=
 name|malloc
