@@ -201,17 +201,47 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static const char *chip_names[] =  { 	"CardBus socket", 	"Intel i82365SL-A/B or clone", 	"Intel i82365sl-DF step", 	"VLSI chip", 	"Cirrus Logic PD6710", 	"Cirrus logic PD6722", 	"Cirrus Logic PD6729", 	"Vadem 365", 	"Vadem 465", 	"Vadem 468", 	"Vadem 469", 	"Ricoh RF5C296", 	"Ricoh RF5C396", 	"IBM clone", 	"IBM KING PCMCIA Controller" };
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|chip_names
+index|[]
+init|=
+block|{
+literal|"CardBus socket"
+block|,
+literal|"Intel i82365SL-A/B or clone"
+block|,
+literal|"Intel i82365sl-DF step"
+block|,
+literal|"VLSI chip"
+block|,
+literal|"Cirrus Logic PD6710"
+block|,
+literal|"Cirrus logic PD6722"
+block|,
+literal|"Cirrus Logic PD6729"
+block|,
+literal|"Vadem 365"
+block|,
+literal|"Vadem 465"
+block|,
+literal|"Vadem 468"
+block|,
+literal|"Vadem 469"
+block|,
+literal|"Ricoh RF5C296"
+block|,
+literal|"Ricoh RF5C396"
+block|,
+literal|"IBM clone"
+block|,
+literal|"IBM KING PCMCIA Controller"
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3349,10 +3379,27 @@ name|i
 index|]
 argument_list|)
 condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|chip_names
+index|[
+name|exca
+index|[
+name|i
+index|]
+operator|.
+name|chipset
+index|]
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
