@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1992, 2001, 2003 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1992, 2001, 2003, 2004, 2005 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin St - Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_comment
@@ -39,13 +39,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<getopt.h>
+file|<limits.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|__GETOPT_PREFIX
+value|groff_
+end_define
 
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<getopt.h>
 end_include
 
 begin_include
@@ -80,6 +87,15 @@ value|"0123456789abcdef"
 end_define
 
 begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|Version_string
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -92,12 +108,11 @@ specifier|static
 name|void
 name|error
 parameter_list|(
-name|s
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -151,6 +166,8 @@ parameter_list|)
 block|{
 name|int
 name|c
+init|=
+literal|0
 decl_stmt|,
 name|c1
 decl_stmt|;
@@ -239,6 +256,14 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|--
+operator|==
+literal|0
+condition|)
+break|break;
 name|c
 operator|=
 name|getchar
@@ -264,6 +289,14 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|--
+operator|==
+literal|0
+condition|)
+break|break;
 name|c
 operator|=
 name|getchar
@@ -288,6 +321,14 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|--
+operator|==
+literal|0
+condition|)
+break|break;
 name|c
 operator|=
 name|getchar
@@ -312,6 +353,14 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|--
+operator|==
+literal|0
+condition|)
+break|break;
 name|c
 operator|=
 name|getchar
@@ -340,6 +389,14 @@ operator|==
 literal|'\r'
 condition|)
 block|{
+if|if
+condition|(
+name|n
+operator|--
+operator|==
+literal|0
+condition|)
+break|break;
 name|c1
 operator|=
 name|getchar
@@ -351,6 +408,7 @@ name|c1
 operator|!=
 literal|'\n'
 condition|)
+block|{
 name|ungetc
 argument_list|(
 name|c1
@@ -358,6 +416,10 @@ argument_list|,
 name|stdin
 argument_list|)
 expr_stmt|;
+name|n
+operator|++
+expr_stmt|;
+block|}
 name|c
 operator|=
 literal|'\n'
@@ -453,6 +515,14 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|--
+operator|==
+literal|0
+condition|)
+break|break;
 name|c
 operator|=
 name|getchar
@@ -592,25 +662,17 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|opt
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 specifier|static
 specifier|const
@@ -690,13 +752,6 @@ block|{
 case|case
 literal|'v'
 case|:
-block|{
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|Version_string
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"GNU pfbtops (groff) version %s\n"
@@ -710,7 +765,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|CHAR_MAX
 operator|+

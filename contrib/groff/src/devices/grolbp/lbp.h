@@ -4,7 +4,7 @@ comment|// -*- C -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1994, 2000, 2001, 2003 Free Software Foundation, Inc.      Written by Francisco Andrés Verdú<pandres@dragonet.es>  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1994, 2000, 2001, 2003, 2004, 2005    Free Software Foundation, Inc.      Written by Francisco Andrés Verdú<pandres@dragonet.es>  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin St - Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_comment
@@ -73,13 +73,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|lbpprintf
 parameter_list|(
@@ -119,10 +114,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -145,10 +136,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -170,10 +157,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -181,7 +164,7 @@ name|void
 name|lbpsavestatus
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|fprintf
@@ -190,15 +173,11 @@ name|lbpoutput
 argument_list|,
 literal|"\033[%d%%y"
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -207,7 +186,7 @@ name|void
 name|lbprestorestatus
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|fprintf
@@ -216,17 +195,13 @@ name|lbpoutput
 argument_list|,
 literal|"\033[%d%cz"
 argument_list|,
-name|index
+name|idx
 argument_list|,
 literal|'%'
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -235,7 +210,7 @@ name|void
 name|lbpsavepos
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|fprintf
@@ -244,15 +219,11 @@ name|lbpoutput
 argument_list|,
 literal|"\033[1;%d;0x"
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -261,7 +232,7 @@ name|void
 name|lbprestorepos
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|fprintf
@@ -270,15 +241,11 @@ name|lbpoutput
 argument_list|,
 literal|"\033[0;%d;0x"
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -287,7 +254,7 @@ name|void
 name|lbprestoreposx
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|fprintf
@@ -296,15 +263,11 @@ name|lbpoutput
 argument_list|,
 literal|"\033[0;%d;1x"
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -332,10 +295,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -369,10 +328,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -399,10 +354,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -445,10 +396,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -504,13 +451,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|vdmprintf
 parameter_list|(
@@ -655,10 +597,6 @@ return|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -704,14 +642,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* vdmorigin */
-end_comment
 
 begin_function
 specifier|static
@@ -780,10 +710,6 @@ return|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -799,13 +725,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|vdmprintf
 parameter_list|(
@@ -856,10 +777,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -949,10 +866,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -1013,10 +926,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -1139,10 +1048,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -1225,7 +1130,7 @@ index|]
 decl_stmt|;
 name|vdmprintf
 argument_list|(
-literal|"}6%s%s%s%s%s%s%s%s\x1e"
+literal|"}6%s%s%s%s%s%s%s%s%s\x1e"
 argument_list|,
 name|vdmnum
 argument_list|(
@@ -1293,10 +1198,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -1389,10 +1290,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -1435,10 +1332,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -1540,10 +1433,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -1574,10 +1463,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -1654,14 +1539,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* polyline */
-end_comment
 
 begin_function
 specifier|static
@@ -1776,7 +1653,6 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* for */
 name|vdmprintf
 argument_list|(
@@ -1785,14 +1661,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* polyline */
-end_comment
 
 begin_function
 specifier|static
@@ -1907,7 +1775,6 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* for */
 name|vdmprintf
 argument_list|(
@@ -1916,14 +1783,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* vdmpolygon */
-end_comment
 
 begin_comment
 comment|/************************************************************************  *		Highter level auxiliary functions			*  ************************************************************************/
@@ -1945,14 +1804,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* vdminited */
-end_comment
 
 begin_function
 specifier|static
@@ -2017,10 +1868,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/*#define         THRESHOLD       .05    */
 end_comment
@@ -2067,7 +1914,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|static
-name|float
+name|double
 name|pend
 init|=
 literal|0.0
@@ -2092,8 +1939,12 @@ literal|0
 decl_stmt|;
 name|int
 name|dxnew
+init|=
+literal|0
 decl_stmt|,
 name|dynew
+init|=
+literal|0
 decl_stmt|,
 name|sg
 decl_stmt|;
@@ -2108,7 +1959,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|float
+name|double
 name|npend
 decl_stmt|;
 if|if
@@ -2135,7 +1986,6 @@ name|py
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|flush
@@ -2218,7 +2068,6 @@ condition|)
 block|{
 return|return;
 block|}
-empty_stmt|;
 name|dy
 operator|=
 literal|0
@@ -2276,13 +2125,10 @@ operator|=
 name|npend
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* else (( npend == pend)&& ... */
 block|}
-empty_stmt|;
 comment|/* else (if (dynew == 0)) */
 block|}
-empty_stmt|;
 comment|/* if (!flush ) */
 comment|/* if we've changed direction we must draw the line */
 comment|/*  fprintf(stderr," (%d) %.2f,%.2f\n",flush,(float)px,(float)py);*/
@@ -2337,7 +2183,6 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/* if (flush) */
 name|dxnew
 operator|-=
@@ -2408,14 +2253,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* splinerel */
-end_comment
-
 begin_comment
 comment|/**********************************************************************  *  The following code to draw splines is adapted from the transfig package  */
 end_comment
@@ -2426,76 +2263,76 @@ name|void
 name|quadratic_spline
 parameter_list|(
 name|double
-name|a1
+name|a_1
 parameter_list|,
 name|double
-name|b1
+name|b_1
 parameter_list|,
 name|double
-name|a2
+name|a_2
 parameter_list|,
 name|double
-name|b2
+name|b_2
 parameter_list|, \
 name|double
-name|a3
+name|a_3
 parameter_list|,
 name|double
-name|b3
+name|b_3
 parameter_list|,
 name|double
-name|a4
+name|a_4
 parameter_list|,
 name|double
-name|b4
+name|b_4
 parameter_list|)
 block|{
 name|double
-name|x1
+name|x_1
 decl_stmt|,
-name|y1
+name|y_1
 decl_stmt|,
-name|x4
+name|x_4
 decl_stmt|,
-name|y4
+name|y_4
 decl_stmt|;
 name|double
-name|xmid
+name|x_mid
 decl_stmt|,
-name|ymid
+name|y_mid
 decl_stmt|;
-name|x1
+name|x_1
 operator|=
-name|a1
+name|a_1
 expr_stmt|;
-name|y1
+name|y_1
 operator|=
-name|b1
+name|b_1
 expr_stmt|;
-name|x4
+name|x_4
 operator|=
-name|a4
+name|a_4
 expr_stmt|;
-name|y4
+name|y_4
 operator|=
-name|b4
+name|b_4
 expr_stmt|;
-name|xmid
+name|x_mid
 operator|=
 operator|(
-name|a2
+name|a_2
 operator|+
-name|a3
+name|a_3
 operator|)
 operator|/
 literal|2.0
 expr_stmt|;
-name|ymid
+name|y_mid
 operator|=
 operator|(
-name|b2
+name|b_2
 operator|+
-name|b3
+name|b_3
 operator|)
 operator|/
 literal|2.0
@@ -2505,9 +2342,9 @@ condition|(
 operator|(
 name|fabs
 argument_list|(
-name|x1
+name|x_1
 operator|-
-name|xmid
+name|x_mid
 argument_list|)
 operator|<
 name|THRESHOLD
@@ -2516,9 +2353,9 @@ operator|&&
 operator|(
 name|fabs
 argument_list|(
-name|y1
+name|y_1
 operator|-
-name|ymid
+name|y_mid
 argument_list|)
 operator|<
 name|THRESHOLD
@@ -2527,28 +2364,28 @@ condition|)
 block|{
 name|splinerel
 argument_list|(
-name|xmid
+name|x_mid
 argument_list|,
-name|ymid
+name|y_mid
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*	    fprintf(tfp, "PA%.4f,%.4f;\n", xmid, ymid);*/
+comment|/*	    fprintf(tfp, "PA%.4f,%.4f;\n", x_mid, y_mid);*/
 block|}
 else|else
 block|{
 name|quadratic_spline
 argument_list|(
-name|x1
+name|x_1
 argument_list|,
-name|y1
+name|y_1
 argument_list|,
 operator|(
 operator|(
-name|x1
+name|x_1
 operator|+
-name|a2
+name|a_2
 operator|)
 operator|/
 literal|2.0
@@ -2556,9 +2393,9 @@ operator|)
 argument_list|,
 operator|(
 operator|(
-name|y1
+name|y_1
 operator|+
-name|b2
+name|b_2
 operator|)
 operator|/
 literal|2.0
@@ -2568,9 +2405,9 @@ operator|(
 operator|(
 literal|3.0
 operator|*
-name|a2
+name|a_2
 operator|+
-name|a3
+name|a_3
 operator|)
 operator|/
 literal|4.0
@@ -2580,17 +2417,17 @@ operator|(
 operator|(
 literal|3.0
 operator|*
-name|b2
+name|b_2
 operator|+
-name|b3
+name|b_3
 operator|)
 operator|/
 literal|4.0
 operator|)
 argument_list|,
-name|xmid
+name|x_mid
 argument_list|,
-name|ymid
+name|y_mid
 argument_list|)
 expr_stmt|;
 block|}
@@ -2599,9 +2436,9 @@ condition|(
 operator|(
 name|fabs
 argument_list|(
-name|xmid
+name|x_mid
 operator|-
-name|x4
+name|x_4
 argument_list|)
 operator|<
 name|THRESHOLD
@@ -2610,9 +2447,9 @@ operator|&&
 operator|(
 name|fabs
 argument_list|(
-name|ymid
+name|y_mid
 operator|-
-name|y4
+name|y_4
 argument_list|)
 operator|<
 name|THRESHOLD
@@ -2621,30 +2458,30 @@ condition|)
 block|{
 name|splinerel
 argument_list|(
-name|x4
+name|x_4
 argument_list|,
-name|y4
+name|y_4
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*	    fprintf(tfp, "PA%.4f,%.4f;\n", x4, y4);*/
+comment|/*	    fprintf(tfp, "PA%.4f,%.4f;\n", x_4, y_4);*/
 block|}
 else|else
 block|{
 name|quadratic_spline
 argument_list|(
-name|xmid
+name|x_mid
 argument_list|,
-name|ymid
+name|y_mid
 argument_list|,
 operator|(
 operator|(
-name|a2
+name|a_2
 operator|+
 literal|3.0
 operator|*
-name|a3
+name|a_3
 operator|)
 operator|/
 literal|4.0
@@ -2652,11 +2489,11 @@ operator|)
 argument_list|,
 operator|(
 operator|(
-name|b2
+name|b_2
 operator|+
 literal|3.0
 operator|*
-name|b3
+name|b_3
 operator|)
 operator|/
 literal|4.0
@@ -2664,9 +2501,9 @@ operator|)
 argument_list|,
 operator|(
 operator|(
-name|a3
+name|a_3
 operator|+
-name|x4
+name|x_4
 operator|)
 operator|/
 literal|2.0
@@ -2674,31 +2511,22 @@ operator|)
 argument_list|,
 operator|(
 operator|(
-name|b3
+name|b_3
 operator|+
-name|y4
+name|y_4
 operator|)
 operator|/
 literal|2.0
 operator|)
 argument_list|,
-name|x4
+name|x_4
 argument_list|,
-name|y4
+name|y_4
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* quadratic_spline */
-end_comment
 
 begin_define
 define|#
@@ -2729,10 +2557,10 @@ name|int
 name|numpoints
 parameter_list|,
 name|int
-name|ox
+name|o_x
 parameter_list|,
 name|int
-name|oy
+name|o_y
 parameter_list|,
 name|int
 modifier|*
@@ -2740,30 +2568,30 @@ name|numbers
 parameter_list|)
 block|{
 name|double
-name|cx1
+name|cx_1
 decl_stmt|,
-name|cy1
+name|cy_1
 decl_stmt|,
-name|cx2
+name|cx_2
 decl_stmt|,
-name|cy2
+name|cy_2
 decl_stmt|,
-name|cx3
+name|cx_3
 decl_stmt|,
-name|cy3
+name|cy_3
 decl_stmt|,
-name|cx4
+name|cx_4
 decl_stmt|,
-name|cy4
+name|cy_4
 decl_stmt|;
 name|double
-name|x1
+name|x_1
 decl_stmt|,
-name|y1
+name|y_1
 decl_stmt|,
-name|x2
+name|x_2
 decl_stmt|,
-name|y2
+name|y_2
 decl_stmt|;
 name|char
 name|xcoord
@@ -2779,79 +2607,79 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*p	 = s->points; 	x1	 = p->x/ppi;*/
-name|x1
+comment|/*p	 = s->points; 	x_1	 = p->x/ppi;*/
+name|x_1
 operator|=
-name|ox
+name|o_x
 expr_stmt|;
-name|y1
+name|y_1
 operator|=
-name|oy
+name|o_y
 expr_stmt|;
-comment|/*	p	 = p->next; 	x2	 = p->x/ppi; 	y2	 = p->y/ppi;*/
-name|x2
+comment|/*	p	 = p->next; 	x_2	 = p->x/ppi; 	y_2	 = p->y/ppi;*/
+name|x_2
 operator|=
-name|ox
+name|o_x
 operator|+
 name|XCOORD
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|y2
+name|y_2
 operator|=
-name|oy
+name|o_y
 operator|+
 name|YCOORD
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|cx1
+name|cx_1
 operator|=
 operator|(
-name|x1
+name|x_1
 operator|+
-name|x2
+name|x_2
 operator|)
 operator|/
 literal|2.0
 expr_stmt|;
-name|cy1
+name|cy_1
 operator|=
 operator|(
-name|y1
+name|y_1
 operator|+
-name|y2
+name|y_2
 operator|)
 operator|/
 literal|2.0
 expr_stmt|;
-name|cx2
+name|cx_2
 operator|=
 operator|(
-name|x1
+name|x_1
 operator|+
 literal|3.0
 operator|*
-name|x2
+name|x_2
 operator|)
 operator|/
 literal|4.0
 expr_stmt|;
-name|cy2
+name|cy_2
 operator|=
 operator|(
-name|y1
+name|y_1
 operator|+
 literal|3.0
 operator|*
-name|y2
+name|y_2
 operator|)
 operator|/
 literal|4.0
 expr_stmt|;
-comment|/*	fprintf(stderr,"Spline %d (%d,%d)\n",numpoints,(int)x1,(int)y1);*/
+comment|/*	fprintf(stderr,"Spline %d (%d,%d)\n",numpoints,(int)x_1,(int)y_1);*/
 name|vdmprintf
 argument_list|(
 literal|"1%s%s"
@@ -2861,7 +2689,7 @@ argument_list|(
 operator|(
 name|int
 operator|)
-name|x1
+name|x_1
 argument_list|,
 name|xcoord
 argument_list|)
@@ -2871,7 +2699,7 @@ argument_list|(
 operator|(
 name|int
 operator|)
-name|y1
+name|y_1
 argument_list|,
 name|ycoord
 argument_list|)
@@ -2879,9 +2707,9 @@ argument_list|)
 expr_stmt|;
 name|splinerel
 argument_list|(
-name|x1
+name|x_1
 argument_list|,
-name|y1
+name|y_1
 argument_list|,
 operator|-
 literal|1
@@ -2889,14 +2717,14 @@ argument_list|)
 expr_stmt|;
 name|splinerel
 argument_list|(
-name|cx1
+name|cx_1
 argument_list|,
-name|cy1
+name|cy_1
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*	    fprintf(tfp, "PA%.4f,%.4f;PD%.4f,%.4f;\n", 		    x1, y1, cx1, cy1);*/
+comment|/*	    fprintf(tfp, "PA%.4f,%.4f;PD%.4f,%.4f;\n", 		    x_1, y_1, cx_1, cy_1);*/
 comment|/*for (p = p->next; p != NULL; p = p->next) {*/
 for|for
 control|(
@@ -2914,236 +2742,228 @@ name|i
 operator|++
 control|)
 block|{
-name|x1
+name|x_1
 operator|=
-name|x2
+name|x_2
 expr_stmt|;
-name|y1
+name|y_1
 operator|=
-name|y2
+name|y_2
 expr_stmt|;
-comment|/*	    x2	 = p->x/ppi; 	    y2	 = p->y/ppi;*/
-name|x2
+comment|/*	    x_2	 = p->x/ppi; 	    y_2	 = p->y/ppi;*/
+name|x_2
 operator|=
-name|x1
+name|x_1
 operator|+
 name|XCOORD
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|y2
+name|y_2
 operator|=
-name|y1
+name|y_1
 operator|+
 name|YCOORD
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|cx3
+name|cx_3
 operator|=
 operator|(
 literal|3.0
 operator|*
-name|x1
+name|x_1
 operator|+
-name|x2
+name|x_2
 operator|)
 operator|/
 literal|4.0
 expr_stmt|;
-name|cy3
+name|cy_3
 operator|=
 operator|(
 literal|3.0
 operator|*
-name|y1
+name|y_1
 operator|+
-name|y2
+name|y_2
 operator|)
 operator|/
 literal|4.0
 expr_stmt|;
-name|cx4
+name|cx_4
 operator|=
 operator|(
-name|x1
+name|x_1
 operator|+
-name|x2
+name|x_2
 operator|)
 operator|/
 literal|2.0
 expr_stmt|;
-name|cy4
+name|cy_4
 operator|=
 operator|(
-name|y1
+name|y_1
 operator|+
-name|y2
+name|y_2
 operator|)
 operator|/
 literal|2.0
 expr_stmt|;
-comment|/* fprintf(stderr,"Point (%d,%d) - (%d,%d)\n",(int)x1,(int)(y1),(int)x2,(int)y2);*/
+comment|/* fprintf(stderr,"Point (%d,%d) - (%d,%d)\n",(int)x_1,(int)(y_1),(int)x_2,(int)y_2);*/
 name|quadratic_spline
 argument_list|(
-name|cx1
+name|cx_1
 argument_list|,
-name|cy1
+name|cy_1
 argument_list|,
-name|cx2
+name|cx_2
 argument_list|,
-name|cy2
+name|cy_2
 argument_list|,
-name|cx3
+name|cx_3
 argument_list|,
-name|cy3
+name|cy_3
 argument_list|,
-name|cx4
+name|cx_4
 argument_list|,
-name|cy4
+name|cy_4
 argument_list|)
 expr_stmt|;
-name|cx1
+name|cx_1
 operator|=
-name|cx4
+name|cx_4
 expr_stmt|;
-name|cy1
+name|cy_1
 operator|=
-name|cy4
+name|cy_4
 expr_stmt|;
-name|cx2
+name|cx_2
 operator|=
 operator|(
-name|x1
+name|x_1
 operator|+
 literal|3.0
 operator|*
-name|x2
+name|x_2
 operator|)
 operator|/
 literal|4.0
 expr_stmt|;
-name|cy2
+name|cy_2
 operator|=
 operator|(
-name|y1
+name|y_1
 operator|+
 literal|3.0
 operator|*
-name|y2
+name|y_2
 operator|)
 operator|/
 literal|4.0
 expr_stmt|;
 block|}
-name|x1
+name|x_1
 operator|=
-name|x2
+name|x_2
 expr_stmt|;
-name|y1
+name|y_1
 operator|=
-name|y2
+name|y_2
 expr_stmt|;
-comment|/*	p	 = s->points->next; 	x2	 = p->x/ppi; 	y2	 = p->y/ppi;*/
-name|x2
+comment|/*	p	= s->points->next; 	x_2	= p->x/ppi; 	y_2	= p->y/ppi;*/
+name|x_2
 operator|=
-name|ox
+name|o_x
 operator|+
 name|XCOORD
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|y2
+name|y_2
 operator|=
-name|oy
+name|o_y
 operator|+
 name|YCOORD
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|cx3
+name|cx_3
 operator|=
 operator|(
 literal|3.0
 operator|*
-name|x1
+name|x_1
 operator|+
-name|x2
+name|x_2
 operator|)
 operator|/
 literal|4.0
 expr_stmt|;
-name|cy3
+name|cy_3
 operator|=
 operator|(
 literal|3.0
 operator|*
-name|y1
+name|y_1
 operator|+
-name|y2
+name|y_2
 operator|)
 operator|/
 literal|4.0
 expr_stmt|;
-name|cx4
+name|cx_4
 operator|=
 operator|(
-name|x1
+name|x_1
 operator|+
-name|x2
+name|x_2
 operator|)
 operator|/
 literal|2.0
 expr_stmt|;
-name|cy4
+name|cy_4
 operator|=
 operator|(
-name|y1
+name|y_1
 operator|+
-name|y2
+name|y_2
 operator|)
 operator|/
 literal|2.0
 expr_stmt|;
 name|splinerel
 argument_list|(
-name|x1
+name|x_1
 argument_list|,
-name|y1
+name|y_1
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|splinerel
 argument_list|(
-name|x1
+name|x_1
 argument_list|,
-name|y1
+name|y_1
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*vdmprintf("%s%s",vdmnum((int)(x1-lx),xcoord),\ 			vdmnum((int)(y1-ly),ycoord));*/
+comment|/*vdmprintf("%s%s",vdmnum((int)(x_1-lx),xcoord),\ 			vdmnum((int)(y_1-ly),ycoord));*/
 name|vdmprintf
 argument_list|(
 literal|"\x1e\n"
 argument_list|)
 expr_stmt|;
-comment|/*	    fprintf(tfp, "PA%.4f,%.4f;PU;\n", x1, y1);*/
+comment|/*	    fprintf(tfp, "PA%.4f,%.4f;PU;\n", x_1, y_1);*/
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* vdmspline */
-end_comment
 
 begin_endif
 endif|#

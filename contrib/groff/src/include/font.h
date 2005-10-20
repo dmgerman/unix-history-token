@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2002 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2002, 2004    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin St - Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_typedef
@@ -229,6 +229,12 @@ modifier|*
 name|get_internal_name
 parameter_list|()
 function_decl|;
+specifier|const
+name|char
+modifier|*
+name|get_image_generator
+parameter_list|()
+function_decl|;
 specifier|static
 name|int
 name|scan_papersize
@@ -260,7 +266,10 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
-name|not_found
+init|=
+literal|0
+parameter_list|,
+name|int
 init|=
 literal|0
 parameter_list|)
@@ -367,11 +376,21 @@ name|tcommand
 decl_stmt|;
 specifier|static
 name|int
+name|unscaled_charwidths
+decl_stmt|;
+specifier|static
+name|int
 name|pass_filenames
 decl_stmt|;
 specifier|static
 name|int
 name|use_charnames_in_special
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|image_generator
 decl_stmt|;
 specifier|static
 specifier|const
@@ -411,7 +430,7 @@ decl_stmt|;
 name|int
 name|space_width
 decl_stmt|;
-name|short
+name|int
 modifier|*
 name|ch_index
 decl_stmt|;
@@ -576,7 +595,10 @@ name|load
 parameter_list|(
 name|int
 modifier|*
-name|not_found
+init|=
+literal|0
+parameter_list|,
+name|int
 init|=
 literal|0
 parameter_list|)

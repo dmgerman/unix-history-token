@@ -4,13 +4,19 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/*<groff_src_dir>/src/include/color.h  Last update: 14 Feb 2003  Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.     Written by Gaius Mulley<gaius@glam.ac.uk>  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/*<groff_src_dir>/src/include/color.h  Last update: 14 Feb 2003  Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.     Written by Gaius Mulley<gaius@glam.ac.uk>  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin St - Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"symbol.h"
 end_include
 
 begin_enum
@@ -72,6 +78,9 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+name|symbol
+name|nm
+decl_stmt|;
 enum|enum
 block|{
 name|MAX_COLOR_VAL
@@ -80,11 +89,18 @@ literal|0xffff
 block|}
 enum|;
 name|color
-argument_list|()
-operator|:
+argument_list|(
+argument|symbol s = default_symbol
+argument_list|)
+block|:
 name|scheme
 argument_list|(
-argument|DEFAULT
+name|DEFAULT
+argument_list|)
+operator|,
+name|nm
+argument_list|(
+argument|s
 argument_list|)
 block|{}
 name|color
