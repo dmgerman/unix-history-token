@@ -277,6 +277,21 @@ struct|;
 end_struct
 
 begin_function
+name|PCHAR
+name|PacketGetVersion
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|"FreeBSD WinPcap compatibility shim v1.0"
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 modifier|*
 name|PacketOpenAdapter

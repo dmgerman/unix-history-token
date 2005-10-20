@@ -98,6 +98,14 @@ name|PTSTR
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|PCHAR
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
