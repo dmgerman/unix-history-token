@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -297,17 +303,6 @@ define|#
 directive|define
 name|EM_RADV
 value|64
-end_define
-
-begin_comment
-comment|/*  * This parameter controls the maximum no of times the driver will loop  * in the isr.  *           Minimum Value = 1  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_MAX_INTR
-value|3
 end_define
 
 begin_comment
