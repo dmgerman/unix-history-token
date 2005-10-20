@@ -108,10 +108,6 @@ block|{
 name|int
 name|r
 decl_stmt|;
-name|void
-modifier|*
-name|addr
-decl_stmt|;
 name|r
 operator|=
 name|__elfN

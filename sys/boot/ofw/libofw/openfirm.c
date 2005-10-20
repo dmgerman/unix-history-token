@@ -57,20 +57,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|static
-name|ihandle_t
-name|stdin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|ihandle_t
-name|stdout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ihandle_t
 name|mmu
 decl_stmt|;
@@ -1281,9 +1267,6 @@ modifier|*
 name|device
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 specifier|static
 struct|struct
 block|{
