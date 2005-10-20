@@ -1665,6 +1665,13 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"hptlock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"sio"
 block|,
 operator|&
