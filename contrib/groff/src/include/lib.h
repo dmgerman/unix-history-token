@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989-2000, 2001, 2002, 2003 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989-2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin St - Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_ifdef
@@ -70,78 +70,18 @@ function_decl|;
 block|}
 end_extern
 
-begin_comment
-comment|/* stdio.h on IRIX, OSF/1, emx, and UWIN include getopt.h */
-end_comment
-
-begin_comment
-comment|/* unistd.h on CYGWIN includes getopt.h */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
-expr|\
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__osf__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__alpha
-argument_list|)
-operator|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|_UWIN
-argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__EMX__
-argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<groff-getopt.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
+begin_define
+define|#
+directive|define
+name|__GETOPT_PREFIX
+value|groff_
+end_define
 
 begin_include
 include|#
 directive|include
 file|<getopt.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -199,6 +139,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|double
+name|groff_hypot
+parameter_list|(
+name|double
+parameter_list|,
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_include
 include|#
 directive|include
@@ -228,8 +179,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
 begin_comment
-comment|/* HP-UX 10.20 doesn't declare snprintf() */
+comment|/* HP-UX 10.20 and LynxOS 4.0.0 don't declare snprintf() */
 end_comment
 
 begin_if
@@ -246,12 +203,6 @@ argument_list|(
 name|NEED_DECLARATION_SNPRINTF
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
 
 begin_extern
 extern|extern
@@ -273,6 +224,37 @@ comment|/*args*/
 modifier|...
 parameter_list|)
 function_decl|;
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LynxOS 4.0.0 has snprintf() but no vsnprintf() */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_VSNPRINTF
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NEED_DECLARATION_VSNPRINTF
+argument_list|)
+end_if
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
 name|int
 name|vsnprintf
 parameter_list|(
@@ -280,6 +262,41 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|va_list
+parameter_list|)
+function_decl|;
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LynxOS 4.0.0 doesn't declare vfprintf() */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_VFPRINTF
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+name|int
+name|vfprintf
+parameter_list|(
+name|FILE
+modifier|*
 parameter_list|,
 specifier|const
 name|char
@@ -466,6 +483,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|size_t
+name|path_name_max
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|interpret_lf_args
 parameter_list|(
@@ -519,11 +543,14 @@ directive|ifdef
 name|NEED_DECLARATION_STRCASECMP
 end_ifdef
 
+begin_comment
+comment|// Ultrix4.3's string.h fails to declare this.
+end_comment
+
 begin_extern
 extern|extern
 literal|"C"
 block|{
-comment|// Ultrix4.3's string.h fails to declare this.
 name|int
 name|strcasecmp
 parameter_list|(
@@ -619,11 +646,14 @@ directive|ifdef
 name|NEED_DECLARATION_STRNCASECMP
 end_ifdef
 
+begin_comment
+comment|// SunOS's string.h fails to declare this.
+end_comment
+
 begin_extern
 extern|extern
 literal|"C"
 block|{
-comment|// SunOS's string.h fails to declare this.
 name|int
 name|strncasecmp
 parameter_list|(
