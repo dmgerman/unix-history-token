@@ -3768,7 +3768,7 @@ expr_stmt|;
 block|}
 name|db_printf
 argument_list|(
-literal|"%18s %12llu %12llu %12llu\n"
+literal|"%18s %12ju %12ju %12ju\n"
 argument_list|,
 name|mtp
 operator|->
