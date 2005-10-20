@@ -4991,9 +4991,7 @@ name|wpa_driver_ndis_poll_timeout
 argument_list|,
 name|drv
 argument_list|,
-name|drv
-operator|->
-name|ctx
+name|NULL
 argument_list|)
 expr_stmt|;
 name|wpa_driver_ndis_poll_timeout
@@ -7529,9 +7527,7 @@ name|wpa_driver_ndis_poll_timeout
 argument_list|,
 name|drv
 argument_list|,
-name|drv
-operator|->
-name|ctx
+name|NULL
 argument_list|)
 expr_stmt|;
 name|wpa_driver_ndis_flush_pmkid
