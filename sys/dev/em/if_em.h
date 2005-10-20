@@ -708,9 +708,6 @@ decl_stmt|;
 name|bus_dma_segment_t
 name|dma_seg
 decl_stmt|;
-name|bus_size_t
-name|dma_size
-decl_stmt|;
 name|int
 name|dma_nseg
 decl_stmt|;
@@ -818,16 +815,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|struct
-name|adapter
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|adapter
-modifier|*
-name|prev
 decl_stmt|;
 name|struct
 name|em_hw
