@@ -295,9 +295,6 @@ name|offset
 decl_stmt|,
 name|uva
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|vmspace
 operator|=
 name|curproc
@@ -328,11 +325,6 @@ name|uva
 operator|&
 name|PAGE_MASK
 expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 comment|/*  	* verify page is mapped& not already wired for i/o 	*/
 name|socow_stats
 operator|.
@@ -360,11 +352,6 @@ name|socow_stats
 operator|.
 name|fail_not_mapped
 operator|++
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -455,11 +442,6 @@ name|socow_stats
 operator|.
 name|fail_sf_buf
 operator|++
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -581,11 +563,6 @@ name|uio_iovcnt
 operator|--
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|m0
