@@ -6058,8 +6058,10 @@ directive|define
 name|KeRaiseIrql
 parameter_list|(
 name|a
+parameter_list|,
+name|b
 parameter_list|)
-value|KfRaiseIrql(a)
+value|*(b) = KfRaiseIrql(a)
 end_define
 
 begin_define
@@ -6141,8 +6143,10 @@ directive|define
 name|KeRaiseIrql
 parameter_list|(
 name|a
+parameter_list|,
+name|b
 parameter_list|)
-value|KfRaiseIrql(a)
+value|*(b) = KfRaiseIrql(a)
 end_define
 
 begin_define

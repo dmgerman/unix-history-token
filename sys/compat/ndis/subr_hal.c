@@ -1018,11 +1018,12 @@ argument_list|(
 literal|"IRQL_NOT_LESS_THAN_OR_EQUAL"
 argument_list|)
 expr_stmt|;
-name|oldirql
-operator|=
 name|KeRaiseIrql
 argument_list|(
 name|DISPATCH_LEVEL
+argument_list|,
+operator|&
+name|oldirql
 argument_list|)
 expr_stmt|;
 name|KeAcquireSpinLockAtDpcLevel
