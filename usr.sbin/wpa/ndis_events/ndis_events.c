@@ -813,6 +813,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|verbose
+condition|)
+block|{
+if|if
+condition|(
 name|errno
 operator|==
 name|ENOENT
@@ -836,6 +841,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ENOENT
