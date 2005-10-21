@@ -1264,6 +1264,8 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|,
+name|check_driver_stats
+decl_stmt|,
 name|current_cpu
 decl_stmt|,
 name|current_sampling_count
@@ -1304,6 +1306,12 @@ name|pmcstat_state
 name|runstate
 decl_stmt|;
 name|struct
+name|pmc_driverstats
+name|ds_start
+decl_stmt|,
+name|ds_end
+decl_stmt|;
+name|struct
 name|pmcstat_ev
 modifier|*
 name|ev
@@ -1324,6 +1332,10 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+name|check_driver_stats
+operator|=
+literal|0
+expr_stmt|;
 name|current_cpu
 operator|=
 literal|0
@@ -3197,6 +3209,25 @@ literal|"ERROR: Cannot configure log file"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* remember to check for driver errors if we are sampling or logging */
+name|check_driver_stats
+operator|=
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_SAMPLING_PMCS
+operator|)
+operator|||
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_OUTPUT_LOGFILE
+operator|)
+expr_stmt|;
 comment|/* 	 * Allocate PMCs. 	 */
 name|STAILQ_FOREACH
 argument_list|(
@@ -3712,6 +3743,25 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|check_driver_stats
+operator|&&
+name|pmc_get_driver_stats
+argument_list|(
+operator|&
+name|ds_start
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot retrieve driver statistics"
+argument_list|)
+expr_stmt|;
 comment|/* start the pmcs */
 name|pmcstat_start_pmcs
 argument_list|(
@@ -4214,9 +4264,70 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
-return|return
+comment|/* check if the driver lost any samples or events */
+if|if
+condition|(
+name|check_driver_stats
+condition|)
+block|{
+if|if
+condition|(
+name|pmc_get_driver_stats
+argument_list|(
+operator|&
+name|ds_end
+argument_list|)
+operator|<
 literal|0
-return|;
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot retrieve driver "
+literal|"statistics"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ds_start
+operator|.
+name|pm_intr_bufferfull
+operator|!=
+name|ds_end
+operator|.
+name|pm_intr_bufferfull
+condition|)
+name|warn
+argument_list|(
+literal|"WARNING: some samples were dropped.  Please "
+literal|"consider tuning the \"kern.hwpmc.nsamples\" "
+literal|"tunable."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ds_start
+operator|.
+name|pm_buffer_requests_failed
+operator|!=
+name|ds_end
+operator|.
+name|pm_buffer_requests_failed
+condition|)
+name|warn
+argument_list|(
+literal|"WARNING: some events were discarded.  Please "
+literal|"consider tuning the \"kern.hwpmc.nbuffers\" "
+literal|"tunable."
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+name|EX_OK
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
