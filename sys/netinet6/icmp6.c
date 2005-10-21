@@ -9434,9 +9434,7 @@ name|void
 name|icmp6_fasttimo
 parameter_list|()
 block|{
-name|mld6_fasttimeo
-argument_list|()
-expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -10753,8 +10751,6 @@ if|if
 condition|(
 operator|!
 name|ip6_forwarding
-operator|||
-name|ip6_accept_rtadv
 condition|)
 goto|goto
 name|fail

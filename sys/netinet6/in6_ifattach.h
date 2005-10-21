@@ -62,7 +62,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|in6_get_tmpifid
 name|__P
 argument_list|(

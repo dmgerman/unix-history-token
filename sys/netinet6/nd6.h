@@ -102,6 +102,13 @@ name|int
 name|ln_byhint
 decl_stmt|;
 comment|/* # of times we made it reachable by UL hint */
+name|long
+name|ln_ntick
+decl_stmt|;
+name|struct
+name|callout
+name|ln_timer_ch
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -164,6 +171,16 @@ parameter_list|(
 name|n
 parameter_list|)
 value|((n)->ln_state> ND6_LLINFO_INCOMPLETE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND6_LLINFO_PERMANENT
+parameter_list|(
+name|n
+parameter_list|)
+value|(((n)->ln_expire == 0)&& ((n)->ln_state> ND6_LLINFO_INCOMPLETE))
 end_define
 
 begin_struct
@@ -267,6 +284,13 @@ end_define
 begin_comment
 comment|/* IPv6 operation is disabled due to 				     * DAD failure.  (XXX: not ND-specific) 				     */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ND6_IFF_DONT_SET_IFROUTE
+value|0x10
+end_define
 
 begin_ifdef
 ifdef|#
@@ -906,6 +930,43 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|int
+name|installed
+decl_stmt|;
+comment|/* is installed into kernel routing table */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nd_prefixctl
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ndpr_ifp
+decl_stmt|;
+comment|/* prefix */
+name|struct
+name|sockaddr_in6
+name|ndpr_prefix
+decl_stmt|;
+name|u_char
+name|ndpr_plen
+decl_stmt|;
+name|u_int32_t
+name|ndpr_vltime
+decl_stmt|;
+comment|/* advertised valid lifetime */
+name|u_int32_t
+name|ndpr_pltime
+decl_stmt|;
+comment|/* advertised preferred lifetime */
+name|struct
+name|prf_ra
+name|ndpr_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -935,11 +996,6 @@ name|in6_addr
 name|ndpr_mask
 decl_stmt|;
 comment|/* netmask derived from the prefix */
-name|struct
-name|in6_addr
-name|ndpr_addr
-decl_stmt|;
-comment|/* address that is derived from the prefix */
 name|u_int32_t
 name|ndpr_vltime
 decl_stmt|;
@@ -956,6 +1012,10 @@ name|time_t
 name|ndpr_preferred
 decl_stmt|;
 comment|/* preferred time of the prefix */
+name|time_t
+name|ndpr_lastupdate
+decl_stmt|;
+comment|/* reception time of last advertisement */
 name|struct
 name|prf_ra
 name|ndpr_flags
@@ -1012,15 +1072,11 @@ name|ndpr_raf_auto
 value|ndpr_flags.autonomous
 end_define
 
-begin_comment
-comment|/*  * We keep expired prefix for certain amount of time, for validation purposes.  * 1800s = MaxRtrAdvInterval  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|NDPR_KEEP_EXPIRED
-value|(1800 * 2)
+name|ndpr_raf_router
+value|ndpr_flags.router
 end_define
 
 begin_comment
@@ -1108,26 +1164,6 @@ define|#
 directive|define
 name|prm_rrf_decrprefd
 value|prm_flags.prf_rr.decrprefd
-end_define
-
-begin_define
-define|#
-directive|define
-name|ifpr2ndpr
-parameter_list|(
-name|ifpr
-parameter_list|)
-value|((struct nd_prefix *)(ifpr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ndpr2ifpr
-parameter_list|(
-name|ndpr
-parameter_list|)
-value|((struct ifprefix *)(ndpr))
 end_define
 
 begin_struct
@@ -1221,15 +1257,6 @@ specifier|extern
 name|struct
 name|llinfo_nd6
 name|llinfo_nd6
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|nd_ifinfo
-modifier|*
-name|nd_ifinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -1623,6 +1650,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|nd6_llinfo_settimer
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|llinfo_nd6
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|nd6_timer
 name|__P
 argument_list|(
@@ -1642,22 +1685,6 @@ argument_list|(
 operator|(
 expr|struct
 name|ifnet
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|llinfo_nd6
-modifier|*
-name|nd6_free
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|rtentry
 operator|*
 operator|)
 argument_list|)
@@ -1812,6 +1839,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|nd6_need_cache
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|nd6_storelladdr
 name|__P
 argument_list|(
@@ -1833,20 +1874,6 @@ name|sockaddr
 operator|*
 operator|,
 name|u_char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nd6_need_cache
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ifnet
 operator|*
 operator|)
 argument_list|)
@@ -1980,7 +2007,6 @@ name|ifaddr
 operator|*
 operator|,
 name|int
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2084,15 +2110,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|defrouter_delreq
+name|defrouter_reset
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|nd_defrouter
-operator|*
-operator|,
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2140,34 +2162,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|prelist_update
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|nd_prefix
-operator|*
-operator|,
-expr|struct
-name|nd_defrouter
-operator|*
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|nd6_prelist_add
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|nd_prefix
+name|nd_prefixctl
 operator|*
 operator|,
 expr|struct
@@ -2252,21 +2252,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|nd_prefix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|in6_init_prefix_ltimes
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|nd_prefix
+name|nd_prefixctl
 operator|*
 operator|)
 argument_list|)
@@ -2313,6 +2299,8 @@ specifier|const
 expr|struct
 name|in6_ifaddr
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|)
