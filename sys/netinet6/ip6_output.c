@@ -1994,7 +1994,7 @@ operator|&&
 operator|(
 name|flags
 operator|&
-name|IPV6_DADOUTPUT
+name|IPV6_UNSPECSRC
 operator|)
 operator|==
 literal|0

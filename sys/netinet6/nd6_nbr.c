@@ -2328,7 +2328,7 @@ name|ro
 argument_list|,
 name|dad
 condition|?
-name|IPV6_DADOUTPUT
+name|IPV6_UNSPECSRC
 else|:
 literal|0
 argument_list|,
