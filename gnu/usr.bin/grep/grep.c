@@ -6257,13 +6257,6 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|strlen
-argument_list|(
-name|program_name
-argument_list|)
-operator|>
-literal|1
-operator|&&
 name|program_name
 index|[
 literal|0
@@ -6296,13 +6289,6 @@ literal|0
 elseif|else
 if|if
 condition|(
-name|strlen
-argument_list|(
-name|program_name
-argument_list|)
-operator|>
-literal|0
-operator|&&
 name|program_name
 index|[
 literal|0
