@@ -2843,7 +2843,7 @@ begin_define
 define|#
 directive|define
 name|IMS_ENABLE_MASK
-value|( \     E1000_IMS_RXT0   |    \     E1000_IMS_TXDW   |    \     E1000_IMS_RXDMT0 |    \     E1000_IMS_RXSEQ  |    \     E1000_IMS_LSC)
+value|( \     E1000_IMS_RXT0   |    \     E1000_IMS_TXDW   |    \     E1000_IMS_RXDMT0 |    \     E1000_IMS_RXSEQ  |    \     E1000_IMS_RXO    |    \     E1000_IMS_LSC)
 end_define
 
 begin_comment
