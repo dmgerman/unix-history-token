@@ -8578,6 +8578,8 @@ name|in6
 argument_list|,
 operator|&
 name|error
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -8699,6 +8701,8 @@ name|in6
 argument_list|,
 operator|&
 name|error
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
