@@ -207,7 +207,7 @@ file|<dev/usb/if_ruereg.h>
 end_include
 
 begin_comment
-comment|/* "controller miibus0" required.  See GENERIC if you get errors here. */
+comment|/* "device miibus" required.  See GENERIC if you get errors here. */
 end_comment
 
 begin_include
