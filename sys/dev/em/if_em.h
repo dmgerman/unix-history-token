@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -226,12 +232,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bdg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/em/if_em_hw.h>
 end_include
 
@@ -303,17 +303,6 @@ define|#
 directive|define
 name|EM_RADV
 value|64
-end_define
-
-begin_comment
-comment|/*  * This parameter controls the maximum no of times the driver will loop  * in the isr.  *           Minimum Value = 1  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_MAX_INTR
-value|3
 end_define
 
 begin_comment
@@ -719,9 +708,6 @@ decl_stmt|;
 name|bus_dma_segment_t
 name|dma_seg
 decl_stmt|;
-name|bus_size_t
-name|dma_size
-decl_stmt|;
 name|int
 name|dma_nseg
 decl_stmt|;
@@ -829,16 +815,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|struct
-name|adapter
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|adapter
-modifier|*
-name|prev
 decl_stmt|;
 name|struct
 name|em_hw
