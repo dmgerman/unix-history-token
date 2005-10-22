@@ -5738,6 +5738,9 @@ operator|)
 operator|&
 operator|~
 operator|(
+operator|(
+name|time_t
+operator|)
 literal|1
 operator|<<
 operator|(
@@ -9174,6 +9177,9 @@ operator|)
 operator|&
 operator|~
 operator|(
+operator|(
+name|time_t
+operator|)
 literal|1
 operator|<<
 operator|(
