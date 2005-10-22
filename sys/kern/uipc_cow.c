@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_param.h>
 end_include
 
@@ -295,6 +301,11 @@ name|offset
 decl_stmt|,
 name|uva
 decl_stmt|;
+name|socow_stats
+operator|.
+name|attempted
+operator|++
+expr_stmt|;
 name|vmspace
 operator|=
 name|curproc
@@ -325,12 +336,27 @@ name|uva
 operator|&
 name|PAGE_MASK
 expr_stmt|;
+comment|/* 	 * Verify that access to the given address is allowed from user-space. 	 */
+if|if
+condition|(
+name|vm_fault_quick
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|uva
+argument_list|,
+name|VM_PROT_READ
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/*  	* verify page is mapped& not already wired for i/o 	*/
-name|socow_stats
-operator|.
-name|attempted
-operator|++
-expr_stmt|;
 name|pa
 operator|=
 name|pmap_extract
