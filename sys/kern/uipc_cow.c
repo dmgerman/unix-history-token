@@ -278,9 +278,6 @@ decl_stmt|;
 name|vm_page_t
 name|pp
 decl_stmt|;
-name|vm_paddr_t
-name|pa
-decl_stmt|;
 name|struct
 name|iovec
 modifier|*
@@ -357,21 +354,24 @@ literal|0
 operator|)
 return|;
 comment|/*  	* verify page is mapped& not already wired for i/o 	*/
-name|pa
+name|pp
 operator|=
-name|pmap_extract
+name|pmap_extract_and_hold
 argument_list|(
 name|map
 operator|->
 name|pmap
 argument_list|,
 name|uva
+argument_list|,
+name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|pa
+name|pp
+operator|==
+name|NULL
 condition|)
 block|{
 name|socow_stats
@@ -385,13 +385,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|pp
-operator|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|pa
-argument_list|)
-expr_stmt|;
 comment|/*  	 * set up COW 	 */
 name|vm_page_lock_queues
 argument_list|()
@@ -403,6 +396,11 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * wire the page for I/O 	 */
 name|vm_page_wire
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
+name|vm_page_unhold
 argument_list|(
 name|pp
 argument_list|)
