@@ -763,17 +763,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNT_JAILDEVFS
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* jail-friendly DEVFS behaviour */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MNT_MULTILABEL
 value|0x04000000
 end_define
@@ -963,7 +952,7 @@ begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_JAILDEVFS	| MNT_MULTILABEL | MNT_ACLS)
+value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_MULTILABEL	| MNT_ACLS)
 end_define
 
 begin_comment
@@ -974,7 +963,7 @@ begin_define
 define|#
 directive|define
 name|MNT_UPDATEMASK
-value|(MNT_NOSUID	| MNT_NOEXEC	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| \ 			MNT_NOATIME | \ 			MNT_NOSYMFOLLOW	| MNT_IGNORE	| MNT_JAILDEVFS	| \ 			MNT_NOCLUSTERR	| MNT_NOCLUSTERW | MNT_SUIDDIR	| \ 			MNT_ACLS	| MNT_USER)
+value|(MNT_NOSUID	| MNT_NOEXEC	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| \ 			MNT_NOATIME | \ 			MNT_NOSYMFOLLOW	| MNT_IGNORE	| \ 			MNT_NOCLUSTERR	| MNT_NOCLUSTERW | MNT_SUIDDIR	| \ 			MNT_ACLS	| MNT_USER)
 end_define
 
 begin_comment
@@ -1052,6 +1041,17 @@ define|#
 directive|define
 name|MNT_CMDFLAGS
 value|(MNT_UPDATE	| MNT_DELEXPORT	| MNT_RELOAD	| \ 			MNT_FORCE	| MNT_SNAPSHOT	| MNT_BYFSID)
+end_define
+
+begin_comment
+comment|/*  * Still available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_SPARE_0x02000000
+value|0x02000000
 end_define
 
 begin_comment
