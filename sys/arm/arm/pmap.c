@@ -14827,16 +14827,12 @@ name|vm_paddr_t
 name|dst
 parameter_list|)
 block|{
-name|struct
-name|vm_page
-modifier|*
-name|src_pg
-init|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|src
-argument_list|)
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct vm_page *src_pg = PHYS_TO_VM_PAGE(src);
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
