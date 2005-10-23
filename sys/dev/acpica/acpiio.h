@@ -64,7 +64,17 @@ block|{
 name|uint32_t
 name|units
 decl_stmt|;
-comment|/* 0 for mWh, 1 for mAh */
+comment|/* Units (mW or mA). */
+define|#
+directive|define
+name|ACPI_BIF_UNITS_MW
+value|0
+comment|/* Capacity in mWh, rate in mW. */
+define|#
+directive|define
+name|ACPI_BIF_UNITS_MA
+value|1
+comment|/* Capacity in mAh, rate in mA. */
 name|uint32_t
 name|dcap
 decl_stmt|;
@@ -218,6 +228,17 @@ directive|define
 name|ACPI_BATTERY_ALL_UNITS
 value|(-1)
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BATT_UNKNOWN
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* _BST or _BIF value unknown. */
+end_comment
 
 begin_comment
 comment|/* Common battery ioctls */
