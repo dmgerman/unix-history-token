@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_MEM_PAGE_SIZE
-value|4096
+value|1024
 end_define
 
 begin_define
