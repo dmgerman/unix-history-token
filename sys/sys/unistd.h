@@ -155,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_REALTIME_SIGNALS
-value|-1
+value|200112L
 end_define
 
 begin_define
@@ -190,6 +190,13 @@ begin_define
 define|#
 directive|define
 name|_POSIX_TIMEOUTS
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX_TIMERS
 value|-1
 end_define
 
