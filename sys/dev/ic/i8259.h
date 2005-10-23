@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2003 Peter Wemm  * All rights reserved.  *  * Redis
 end_comment
 
 begin_comment
-comment|/*  * Register defintions for the i8259A programmable interrupt cnotroller.  */
+comment|/*  * Register defintions for the i8259A programmable interrupt controller.  */
 end_comment
 
 begin_ifndef
