@@ -15,6 +15,18 @@ directive|define
 name|_SYS_TIMERS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Structures used to manage POSIX timers in a process.  */
 end_comment
@@ -364,6 +376,11 @@ name|event
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
