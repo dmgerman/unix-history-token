@@ -1908,6 +1908,14 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* Clear POSIX timers */
+name|itimers_event_hook
+argument_list|(
+name|p
+argument_list|,
+name|ITIMER_EV_EXEC
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Malloc things before we need locks. 	 */
 name|newcred
 operator|=

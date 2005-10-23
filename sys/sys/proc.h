@@ -145,6 +145,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/timers.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ucontext.h>
 end_include
 
@@ -2018,6 +2024,11 @@ name|mtx
 name|p_mtx
 decl_stmt|;
 comment|/* (n) Lock for this struct. */
+name|struct
+name|itimers
+name|p_itimers
+decl_stmt|;
+comment|/* (c) POSIX interval timers. */
 name|sigqueue_t
 name|p_sigqueue
 decl_stmt|;

@@ -100,6 +100,26 @@ begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
 
+begin_comment
+comment|/*  * Structure defined by POSIX.1b to be like a itimerval, but with  * timespecs. Used in the timer_*() system calls.  */
+end_comment
+
+begin_struct
+struct|struct
+name|itimerspec
+block|{
+name|struct
+name|timespec
+name|it_interval
+decl_stmt|;
+name|struct
+name|timespec
+name|it_value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
