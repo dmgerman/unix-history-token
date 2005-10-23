@@ -169,6 +169,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|device_t
+name|acpi_battery_find_dev
+parameter_list|(
+name|u_int
+name|logical_unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|acpi_battery_ioctl
 parameter_list|(
