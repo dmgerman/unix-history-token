@@ -189,6 +189,12 @@ directive|include
 file|<sys/sem.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/timers.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

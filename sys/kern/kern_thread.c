@@ -1103,14 +1103,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|itimers_init
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_itimers
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_numksegrps

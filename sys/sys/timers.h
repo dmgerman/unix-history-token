@@ -233,8 +233,10 @@ expr_stmt|;
 name|struct
 name|itimer
 modifier|*
-modifier|*
 name|its_timers
+index|[
+name|TIMER_MAX
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -349,18 +351,6 @@ directive|define
 name|ITIMER_EV_EXIT
 value|1
 end_define
-
-begin_function_decl
-name|void
-name|itimers_init
-parameter_list|(
-name|struct
-name|itimers
-modifier|*
-name|its
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
