@@ -86,6 +86,29 @@ name|ix
 operator|<=
 literal|0x3fe921fb
 condition|)
+block|{
+if|if
+condition|(
+name|ix
+operator|<
+literal|0x3e400000
+condition|)
+comment|/* if x< 2**-27 */
+if|if
+condition|(
+operator|(
+operator|(
+name|int
+operator|)
+name|x
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|1.0
+return|;
+comment|/* generate inexact */
 return|return
 name|__kernel_cos
 argument_list|(
@@ -94,6 +117,7 @@ argument_list|,
 name|z
 argument_list|)
 return|;
+block|}
 comment|/* cos(Inf or NaN) is NaN */
 elseif|else
 if|if

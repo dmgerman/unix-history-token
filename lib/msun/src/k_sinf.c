@@ -108,43 +108,6 @@ name|r
 decl_stmt|,
 name|v
 decl_stmt|;
-name|int32_t
-name|ix
-decl_stmt|;
-name|GET_FLOAT_WORD
-argument_list|(
-name|ix
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-name|ix
-operator|&=
-literal|0x7fffffff
-expr_stmt|;
-comment|/* high word of x */
-if|if
-condition|(
-name|ix
-operator|<
-literal|0x32000000
-condition|)
-comment|/* |x|< 2**-27 */
-block|{
-if|if
-condition|(
-operator|(
-name|int
-operator|)
-name|x
-operator|==
-literal|0
-condition|)
-return|return
-name|x
-return|;
-block|}
-comment|/* generate inexact */
 name|z
 operator|=
 name|x

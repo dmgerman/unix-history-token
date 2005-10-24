@@ -128,30 +128,6 @@ operator|&=
 literal|0x7fffffff
 expr_stmt|;
 comment|/* ix = |x|'s high word*/
-if|if
-condition|(
-name|ix
-operator|<
-literal|0x3e400000
-condition|)
-block|{
-comment|/* if x< 2**27 */
-if|if
-condition|(
-operator|(
-operator|(
-name|int
-operator|)
-name|x
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-name|one
-return|;
-comment|/* generate inexact */
-block|}
 name|z
 operator|=
 name|x
