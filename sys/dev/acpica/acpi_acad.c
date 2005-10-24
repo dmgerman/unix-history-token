@@ -1038,10 +1038,9 @@ name|devclass_get_count
 argument_list|(
 name|acpi_acad_devclass
 argument_list|)
-operator|>
+operator|==
 literal|0
 condition|)
-return|return;
 name|acpi_UserNotify
 argument_list|(
 literal|"ACAD"
