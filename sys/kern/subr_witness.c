@@ -804,7 +804,7 @@ name|KDB
 end_ifdef
 
 begin_comment
-comment|/*  * When KDB is enabled and witness_kdb is set to 1, it will cause the system  * to drop into kdebug() when:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
+comment|/*  * When KDB is enabled and witness_kdb is set to 1, it will cause the system  * to drop into kdebug() when:  *	- a lock hierarchy violation occurs  *	- locks are held when going to sleep.  */
 end_comment
 
 begin_ifdef
@@ -872,7 +872,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * When KDB is enabled and witness_trace is set to 1, it will cause the system  * to print a stack trace:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
+comment|/*  * When KDB is enabled and witness_trace is set to 1, it will cause the system  * to print a stack trace:  *	- a lock hierarchy violation occurs  *	- locks are held when going to sleep.  */
 end_comment
 
 begin_decl_stmt
