@@ -1284,15 +1284,17 @@ argument_list|(
 literal|"cpu_reset: Restarting BSP\n"
 argument_list|)
 expr_stmt|;
+comment|/* Restart CPU #0. */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
 name|started_cpus
-operator|=
-operator|(
+argument_list|,
 literal|1
 operator|<<
 literal|0
-operator|)
+argument_list|)
 expr_stmt|;
-comment|/* Restart CPU #0 */
 name|cnt
 operator|=
 literal|0
