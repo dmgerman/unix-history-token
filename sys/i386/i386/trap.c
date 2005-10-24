@@ -712,8 +712,8 @@ name|tf_trapno
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KDB_STOP_NMI
-comment|/* Handler for NMI IPIs used for debugging */
+name|STOP_NMI
+comment|/* Handler for NMI IPIs used for stopping CPUs. */
 if|if
 condition|(
 name|type
@@ -734,7 +734,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* KDB_STOP_NMI */
+comment|/* STOP_NMI */
 ifdef|#
 directive|ifdef
 name|KDB
