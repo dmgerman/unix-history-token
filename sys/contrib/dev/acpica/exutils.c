@@ -26,25 +26,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"acpi.h"
+file|<contrib/dev/acpica/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acinterp.h"
+file|<contrib/dev/acpica/acinterp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
+file|<contrib/dev/acpica/amlcode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acevents.h"
+file|<contrib/dev/acpica/acevents.h>
 end_include
 
 begin_define

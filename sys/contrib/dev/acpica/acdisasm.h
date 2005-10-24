@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"amlresrc.h"
+file|<contrib/dev/acpica/amlresrc.h>
 end_include
 
 begin_define
