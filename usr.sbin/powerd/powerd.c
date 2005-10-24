@@ -2272,10 +2272,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-comment|/* Decide whether to use ACPI or APM to read the AC line status. */
-name|acline_init
-argument_list|()
-expr_stmt|;
 comment|/* Run in the background unless in verbose mode. */
 if|if
 condition|(
@@ -2362,6 +2358,10 @@ name|pfh
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Decide whether to use ACPI or APM to read the AC line status. */
+name|acline_init
+argument_list|()
+expr_stmt|;
 comment|/* Main loop. */
 for|for
 control|(
