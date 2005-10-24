@@ -967,7 +967,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"actbl1.h"
+file|<contrib/dev/acpica/actbl1.h>
 end_include
 
 begin_comment
@@ -977,7 +977,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"actbl2.h"
+file|<contrib/dev/acpica/actbl2.h>
 end_include
 
 begin_comment

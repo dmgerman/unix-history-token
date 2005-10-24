@@ -26,7 +26,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acgcc.h"
+file|<contrib/dev/acpica/acgcc.h>
 end_include
 
 begin_include

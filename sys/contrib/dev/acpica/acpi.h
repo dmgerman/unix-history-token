@@ -26,7 +26,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acconfig.h"
+file|<contrib/dev/acpica/acconfig.h>
 end_include
 
 begin_comment
@@ -36,7 +36,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acenv.h"
+file|<contrib/dev/acpica/acenv.h>
 end_include
 
 begin_comment
@@ -46,7 +46,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"actypes.h"
+file|<contrib/dev/acpica/actypes.h>
 end_include
 
 begin_comment
@@ -56,7 +56,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acexcep.h"
+file|<contrib/dev/acpica/acexcep.h>
 end_include
 
 begin_comment
@@ -66,7 +66,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acmacros.h"
+file|<contrib/dev/acpica/acmacros.h>
 end_include
 
 begin_comment
@@ -76,7 +76,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"actbl.h"
+file|<contrib/dev/acpica/actbl.h>
 end_include
 
 begin_comment
@@ -86,7 +86,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"aclocal.h"
+file|<contrib/dev/acpica/aclocal.h>
 end_include
 
 begin_comment
@@ -96,7 +96,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acoutput.h"
+file|<contrib/dev/acpica/acoutput.h>
 end_include
 
 begin_comment
@@ -106,7 +106,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acpiosxf.h"
+file|<contrib/dev/acpica/acpiosxf.h>
 end_include
 
 begin_comment
@@ -116,7 +116,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acpixf.h"
+file|<contrib/dev/acpica/acpixf.h>
 end_include
 
 begin_comment
@@ -126,7 +126,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acobject.h"
+file|<contrib/dev/acpica/acobject.h>
 end_include
 
 begin_comment
@@ -136,7 +136,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acstruct.h"
+file|<contrib/dev/acpica/acstruct.h>
 end_include
 
 begin_comment
@@ -146,7 +146,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acglobal.h"
+file|<contrib/dev/acpica/acglobal.h>
 end_include
 
 begin_comment
@@ -156,7 +156,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"achware.h"
+file|<contrib/dev/acpica/achware.h>
 end_include
 
 begin_comment
@@ -166,7 +166,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acutils.h"
+file|<contrib/dev/acpica/acutils.h>
 end_include
 
 begin_comment

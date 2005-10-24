@@ -22,13 +22,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"acenv.h"
+file|<contrib/dev/acpica/acenv.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"actypes.h"
+file|<contrib/dev/acpica/actypes.h>
 end_include
 
 begin_comment
