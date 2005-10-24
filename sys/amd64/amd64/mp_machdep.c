@@ -3994,6 +3994,14 @@ argument_list|(
 name|cpuid
 argument_list|)
 decl_stmt|;
+name|int
+name|cpumask
+init|=
+name|PCPU_GET
+argument_list|(
+name|cpumask
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4004,11 +4012,7 @@ operator|&
 name|ipi_nmi_pending
 argument_list|)
 operator|&
-operator|(
-literal|1
-operator|<<
-name|cpu
-operator|)
+name|cpumask
 operator|)
 condition|)
 return|return
@@ -4019,9 +4023,7 @@ argument_list|(
 operator|&
 name|ipi_nmi_pending
 argument_list|,
-literal|1
-operator|<<
-name|cpu
+name|cpumask
 argument_list|)
 expr_stmt|;
 name|savectx
@@ -4039,9 +4041,7 @@ argument_list|(
 operator|&
 name|stopped_cpus
 argument_list|,
-literal|1
-operator|<<
-name|cpu
+name|cpumask
 argument_list|)
 expr_stmt|;
 comment|/* Wait for restart */
@@ -4055,11 +4055,7 @@ operator|&
 name|started_cpus
 argument_list|)
 operator|&
-operator|(
-literal|1
-operator|<<
-name|cpu
-operator|)
+name|cpumask
 operator|)
 condition|)
 name|ia32_pause
@@ -4070,9 +4066,7 @@ argument_list|(
 operator|&
 name|started_cpus
 argument_list|,
-literal|1
-operator|<<
-name|cpu
+name|cpumask
 argument_list|)
 expr_stmt|;
 name|atomic_clear_int
@@ -4080,9 +4074,7 @@ argument_list|(
 operator|&
 name|stopped_cpus
 argument_list|,
-literal|1
-operator|<<
-name|cpu
+name|cpumask
 argument_list|)
 expr_stmt|;
 if|if
