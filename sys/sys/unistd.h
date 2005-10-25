@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_MONOTONIC_CLOCK
-value|-1
+value|200112L
 end_define
 
 begin_define
