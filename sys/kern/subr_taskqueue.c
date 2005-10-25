@@ -1311,7 +1311,7 @@ name|swi_add
 argument_list|(
 name|NULL
 argument_list|,
-literal|"Giant task queue"
+literal|"Giant taskq"
 argument_list|,
 name|taskqueue_swi_giant_run
 argument_list|,
@@ -1807,7 +1807,7 @@ name|swi_add
 argument_list|(
 name|NULL
 argument_list|,
-literal|"Fast task queue"
+literal|"Fast taskq"
 argument_list|,
 name|taskqueue_fast_run
 argument_list|,
