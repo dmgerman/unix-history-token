@@ -1112,6 +1112,15 @@ name|strcmp
 argument_list|(
 name|arg
 argument_list|,
+literal|"minimum"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
 literal|"min"
 argument_list|)
 operator|==
@@ -1125,6 +1134,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"maximum"
+argument_list|)
+operator|==
+literal|0
+operator|||
 name|strcmp
 argument_list|(
 name|arg
@@ -1598,9 +1616,27 @@ argument_list|,
 literal|"error reading supported CPU frequencies"
 argument_list|)
 expr_stmt|;
-comment|/* Decide whether to use ACPI or APM to read the AC line status. */
-name|acline_init
-argument_list|()
+comment|/* 	 * Exit cleanly on signals; devd may send a SIGPIPE if it dies.  We 	 * do this before acline_init() since it may create a thread and we 	 * want it to inherit our signal mask. 	 */
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|handle_sigs
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|handle_sigs
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
 expr_stmt|;
 comment|/* Run in the background unless in verbose mode. */
 if|if
@@ -1615,19 +1651,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|handle_sigs
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|handle_sigs
-argument_list|)
+comment|/* Decide whether to use ACPI or APM to read the AC line status. */
+name|acline_init
+argument_list|()
 expr_stmt|;
 comment|/* Main loop. */
 for|for
@@ -1751,14 +1777,21 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
 condition|)
-name|err
+block|{
+if|if
+condition|(
+name|vflag
+condition|)
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"error reading current CPU frequency"
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|vflag
@@ -1877,11 +1910,12 @@ operator|-
 literal|1
 index|]
 argument_list|)
+operator|!=
+literal|0
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"error setting CPU freq %d"
 argument_list|,
 name|freqs
@@ -1892,6 +1926,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 block|}
 continue|continue;
 block|}
@@ -1944,11 +1980,12 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|!=
+literal|0
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"error setting CPU freq %d"
 argument_list|,
 name|freqs
@@ -1957,6 +1994,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 block|}
 continue|continue;
 block|}
@@ -1972,13 +2011,18 @@ operator|&
 name|total
 argument_list|)
 condition|)
-name|err
+block|{
+if|if
+condition|(
+name|vflag
+condition|)
+name|warn
 argument_list|(
-literal|1
-argument_list|,
-literal|"read_usage_times"
+literal|"read_usage_times() failed"
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * If we're idle less than the active mark, bump up two levels. 		 * If we're idle more than the idle mark, drop down one level. 		 */
 for|for
 control|(
@@ -2141,11 +2185,11 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|!=
+literal|0
 condition|)
-name|err
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"error setting CPU frequency %d"
 argument_list|,
 name|freqs
