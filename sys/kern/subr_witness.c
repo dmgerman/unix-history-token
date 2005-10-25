@@ -1995,6 +1995,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * This global is set to 1 once the static lock orders have been enrolled  * so that a warning can be issued for any spin locks enrolled later.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|witness_spin_warn
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Global variables for book keeping.  */
 end_comment
 
@@ -2272,6 +2285,10 @@ name|w1
 expr_stmt|;
 block|}
 block|}
+name|witness_spin_warn
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Iterate through all locks and add them to witness. */
 name|mtx_lock
 argument_list|(
@@ -2326,13 +2343,9 @@ name|all_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Mark the witness code as being ready for use. */
-name|atomic_store_rel_int
-argument_list|(
-operator|&
 name|witness_cold
-argument_list|,
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -6304,7 +6317,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * This isn't quite right, as witness_cold is still 0 while we 	 * enroll all the locks initialized before witness_initialize(). 	 */
+comment|/* 	 * We issue a warning for any spin locks not defined in the static 	 * order list as a way to discourage their use (folks should really 	 * be using non-spin mutexes most of the time).  However, several 	 * 3rd part device drivers use spin locks because that is all they 	 * have available on Windows and Linux and they think that normal 	 * mutexes are insufficient. 	 */
 if|if
 condition|(
 operator|(
@@ -6315,24 +6328,15 @@ operator|&
 name|LC_SPINLOCK
 operator|)
 operator|&&
-operator|!
-name|witness_cold
+name|witness_spin_warn
 condition|)
-block|{
-name|mtx_unlock_spin
+name|printf
 argument_list|(
-operator|&
-name|w_mtx
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"spin lock %s not in order list"
+literal|"WITNESS: spin lock %s not in order list"
 argument_list|,
 name|description
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
