@@ -45,6 +45,20 @@ file|"math_private.h"
 end_include
 
 begin_comment
+comment|/* Clip any extra precision in the float variable v. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cliptofloat
+parameter_list|(
+name|v
+parameter_list|)
+value|(*(volatile float *)&(v))
+end_define
+
+begin_comment
 comment|/*  * Table of constants for 2/pi, 396 Hex digits (476 decimal) of 2/pi  */
 end_comment
 
@@ -730,10 +744,13 @@ operator|=
 operator|(
 name|z
 operator|-
+name|cliptofloat
+argument_list|(
 name|y
 index|[
 literal|0
 index|]
+argument_list|)
 operator|)
 operator|-
 name|pio2_1t
@@ -763,10 +780,13 @@ operator|=
 operator|(
 name|z
 operator|-
+name|cliptofloat
+argument_list|(
 name|y
 index|[
 literal|0
 index|]
+argument_list|)
 operator|)
 operator|-
 name|pio2_2t
@@ -814,10 +834,13 @@ operator|=
 operator|(
 name|z
 operator|-
+name|cliptofloat
+argument_list|(
 name|y
 index|[
 literal|0
 index|]
+argument_list|)
 operator|)
 operator|+
 name|pio2_1t
@@ -847,10 +870,13 @@ operator|=
 operator|(
 name|z
 operator|-
+name|cliptofloat
+argument_list|(
 name|y
 index|[
 literal|0
 index|]
+argument_list|)
 operator|)
 operator|+
 name|pio2_2t
@@ -1125,10 +1151,13 @@ operator|=
 operator|(
 name|r
 operator|-
+name|cliptofloat
+argument_list|(
 name|y
 index|[
 literal|0
 index|]
+argument_list|)
 operator|)
 operator|-
 name|w
