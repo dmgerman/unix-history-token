@@ -7234,7 +7234,7 @@ argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Check that the device is present.  If it's not present, 	     * leave it disabled (so that we have a device_t attached to 	     * the handle, but we don't probe it). 	     */
+comment|/* 	     * Check that the device is present.  If it's not present, 	     * leave it disabled (so that we have a device_t attached to 	     * the handle, but we don't probe it). 	     * 	     * XXX PCI link devices sometimes report "present" but not 	     * "functional" (i.e. if disabled).  Go ahead and probe them 	     * anyway since we may enable them later. 	     */
 if|if
 condition|(
 name|type
@@ -7245,6 +7245,14 @@ operator|!
 name|acpi_DeviceIsPresent
 argument_list|(
 name|child
+argument_list|)
+operator|&&
+operator|!
+name|acpi_MatchHid
+argument_list|(
+name|handle
+argument_list|,
+literal|"PNP0C0F"
 argument_list|)
 condition|)
 block|{
