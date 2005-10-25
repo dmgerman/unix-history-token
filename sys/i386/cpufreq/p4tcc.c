@@ -539,6 +539,10 @@ name|p4tcc_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|struct
+name|cf_setting
+name|set
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -628,6 +632,21 @@ operator|->
 name|set_count
 operator|+
 literal|1
+expr_stmt|;
+comment|/* 	 * Before we finish attach, switch to 100%.  It's possible the BIOS 	 * set us to a lower rate.  The user can override this after boot. 	 */
+name|set
+operator|.
+name|freq
+operator|=
+literal|10000
+expr_stmt|;
+name|p4tcc_set
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|set
+argument_list|)
 expr_stmt|;
 name|cpufreq_register
 argument_list|(
