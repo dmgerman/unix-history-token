@@ -1775,7 +1775,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"traceall"
+literal|"alltrace"
 block|,
 name|db_stack_trace_all
 block|,
@@ -1786,6 +1786,16 @@ block|}
 block|,
 block|{
 literal|"where"
+block|,
+name|db_stack_trace
+block|,
+name|CS_OWN
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"bt"
 block|,
 name|db_stack_trace
 block|,
