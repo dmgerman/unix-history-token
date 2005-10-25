@@ -966,7 +966,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Wrong balance algorithm."
+literal|"Invalid balance algorithm."
 argument_list|)
 expr_stmt|;
 return|return;
