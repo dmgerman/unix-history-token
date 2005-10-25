@@ -199,7 +199,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|<
-literal|600000
+literal|600007
 end_if
 
 begin_define
