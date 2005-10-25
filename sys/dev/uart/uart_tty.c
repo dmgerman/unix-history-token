@@ -1739,7 +1739,7 @@ block|}
 name|swi_add
 argument_list|(
 operator|&
-name|tty_ithd
+name|tty_intr_event
 argument_list|,
 name|uart_driver_name
 argument_list|,
@@ -1812,7 +1812,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|ithread_remove_handler
+name|intr_event_remove_handler
 argument_list|(
 name|sc
 operator|->

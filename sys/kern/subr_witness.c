@@ -1740,13 +1740,6 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
-literal|"ithread table lock"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
 literal|"sleepq chain"
 block|,
 operator|&

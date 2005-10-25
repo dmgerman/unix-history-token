@@ -1652,7 +1652,7 @@ expr_stmt|;
 name|swi_add
 argument_list|(
 operator|&
-name|tty_ithd
+name|tty_intr_event
 argument_list|,
 name|uart_driver_name
 argument_list|,

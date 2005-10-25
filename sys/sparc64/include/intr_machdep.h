@@ -219,9 +219,9 @@ modifier|*
 name|iv_arg
 decl_stmt|;
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|iv_ithd
+name|iv_event
 decl_stmt|;
 name|u_int
 name|iv_pri

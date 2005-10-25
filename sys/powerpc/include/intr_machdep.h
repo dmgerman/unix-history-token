@@ -28,13 +28,13 @@ end_typedef
 
 begin_struct_decl
 struct_decl|struct
-name|ithd
+name|intr_event
 struct_decl|;
 end_struct_decl
 
 begin_struct
 struct|struct
-name|intr_handler
+name|ppc_intr_handler
 block|{
 name|ih_func_t
 modifier|*
@@ -45,9 +45,9 @@ modifier|*
 name|ih_arg
 decl_stmt|;
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|ih_ithd
+name|ih_event
 decl_stmt|;
 name|u_int
 name|ih_irq
