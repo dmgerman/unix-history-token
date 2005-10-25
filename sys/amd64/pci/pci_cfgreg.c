@@ -543,13 +543,7 @@ block|{
 case|case
 literal|1
 case|:
-name|outl
-argument_list|(
-name|CONF1_ADDR_PORT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Do nothing for the config mechanism 1 case. 		 * Writing a 0 to the address port can apparently 		 * confuse some bridges and cause spurious 		 * access failures. 		 */
 break|break;
 case|case
 literal|2
@@ -557,13 +551,6 @@ case|:
 name|outb
 argument_list|(
 name|CONF2_ENABLE_PORT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|CONF2_FORWARD_PORT
 argument_list|,
 literal|0
 argument_list|)
