@@ -724,7 +724,7 @@ expr_stmt|;
 name|swi_add
 argument_list|(
 operator|&
-name|tty_ithd
+name|tty_intr_event
 argument_list|,
 literal|"tty:zs"
 argument_list|,
