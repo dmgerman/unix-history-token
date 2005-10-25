@@ -29,7 +29,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NGM_NG_SPLIT_COOKIE
+name|NGM_SPLIT_COOKIE
 value|949409402
 end_define
 
