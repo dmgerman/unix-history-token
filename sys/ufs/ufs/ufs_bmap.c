@@ -102,7 +102,7 @@ file|<ufs/ufs/ufs_extern.h>
 end_include
 
 begin_comment
-comment|/*  * Bmap converts a the logical block number of a file to its physical block  * number on the disk. The conversion is done by using the logical block  * number to index into the array of block pointers described by the dinode.  */
+comment|/*  * Bmap converts the logical block number of a file to its physical block  * number on the disk. The conversion is done by using the logical block  * number to index into the array of block pointers described by the dinode.  */
 end_comment
 
 begin_function
