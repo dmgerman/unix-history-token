@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -102,10 +108,10 @@ block|{
 name|pthread_t
 name|hwd_thread
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|hwd_count
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|hwd_errorcount
 decl_stmt|;
 block|}
@@ -543,7 +549,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|u_int64_t
+name|uintmax_t
 name|total
 decl_stmt|;
 name|int
@@ -801,7 +807,7 @@ name|hwd_count
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu transfers/second\n"
+literal|"%ju transfers/second\n"
 argument_list|,
 name|total
 operator|/
@@ -836,7 +842,7 @@ name|hwd_errorcount
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu errors/second\n"
+literal|"%ju errors/second\n"
 argument_list|,
 name|total
 operator|/
