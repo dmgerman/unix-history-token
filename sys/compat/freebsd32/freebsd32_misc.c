@@ -8258,7 +8258,7 @@ end_ifdef
 
 begin_struct
 struct|struct
-name|freebsd3_sigaction32
+name|osigaction32
 block|{
 name|u_int32_t
 name|sa_u
@@ -8282,7 +8282,7 @@ end_define
 
 begin_function
 name|int
-name|freebsd3_freebsd32_sigaction
+name|ofreebsd32_sigaction
 parameter_list|(
 name|struct
 name|thread
@@ -8290,13 +8290,13 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd3_freebsd32_sigaction_args
+name|ofreebsd32_sigaction_args
 modifier|*
 name|uap
 parameter_list|)
 block|{
 name|struct
-name|freebsd3_sigaction32
+name|osigaction32
 name|s32
 decl_stmt|;
 name|struct
@@ -8495,7 +8495,7 @@ end_function
 
 begin_function
 name|int
-name|freebsd3_freebsd32_sigprocmask
+name|ofreebsd32_sigprocmask
 parameter_list|(
 name|struct
 name|thread
@@ -8503,7 +8503,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd3_freebsd32_sigprocmask_args
+name|ofreebsd32_sigprocmask_args
 modifier|*
 name|uap
 parameter_list|)
@@ -8566,7 +8566,7 @@ end_function
 
 begin_function
 name|int
-name|freebsd3_freebsd32_sigpending
+name|ofreebsd32_sigpending
 parameter_list|(
 name|struct
 name|thread
@@ -8574,7 +8574,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd3_freebsd32_sigpending_args
+name|ofreebsd32_sigpending_args
 modifier|*
 name|uap
 parameter_list|)
@@ -8655,7 +8655,7 @@ end_struct
 
 begin_function
 name|int
-name|freebsd3_freebsd32_sigvec
+name|ofreebsd32_sigvec
 parameter_list|(
 name|struct
 name|thread
@@ -8663,7 +8663,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd3_freebsd32_sigvec_args
+name|ofreebsd32_sigvec_args
 modifier|*
 name|uap
 parameter_list|)
@@ -8885,7 +8885,7 @@ end_function
 
 begin_function
 name|int
-name|freebsd3_freebsd32_sigblock
+name|ofreebsd32_sigblock
 parameter_list|(
 name|struct
 name|thread
@@ -8893,7 +8893,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd3_freebsd32_sigblock_args
+name|ofreebsd32_sigblock_args
 modifier|*
 name|uap
 parameter_list|)
@@ -8967,7 +8967,7 @@ end_function
 
 begin_function
 name|int
-name|freebsd3_freebsd32_sigsetmask
+name|ofreebsd32_sigsetmask
 parameter_list|(
 name|struct
 name|thread
@@ -8975,7 +8975,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd3_freebsd32_sigsetmask_args
+name|ofreebsd32_sigsetmask_args
 modifier|*
 name|uap
 parameter_list|)
@@ -9054,7 +9054,7 @@ end_function
 
 begin_function
 name|int
-name|freebsd3_freebsd32_sigsuspend
+name|ofreebsd32_sigsuspend
 parameter_list|(
 name|struct
 name|thread
@@ -9062,7 +9062,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd3_freebsd32_sigsuspend_args
+name|ofreebsd32_sigsuspend_args
 modifier|*
 name|uap
 parameter_list|)
@@ -9183,7 +9183,7 @@ end_struct
 
 begin_function
 name|int
-name|freebsd3_freebsd32_sigstack
+name|ofreebsd32_sigstack
 parameter_list|(
 name|struct
 name|thread
@@ -9191,7 +9191,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd3_freebsd32_sigstack_args
+name|ofreebsd32_sigstack_args
 modifier|*
 name|uap
 parameter_list|)
