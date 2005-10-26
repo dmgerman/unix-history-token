@@ -1759,30 +1759,9 @@ argument|,
 literal|0
 argument|, FALSE, NULL); 	}  	return(
 literal|0
-argument|); }
-undef|#
-directive|undef
-name|NDIS_REAP_TIMERS
-argument|int ndis_halt_nic(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_halt_handler	haltfunc;
-ifdef|#
-directive|ifdef
-name|NDIS_REAP_TIMERS
-argument|ndis_miniport_timer	*t
-argument_list|,
-argument|*n;
-endif|#
-directive|endif
-argument|ndis_miniport_block	*block; 	int			empty =
+argument|); }  int ndis_halt_nic(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_halt_handler	haltfunc; 	ndis_miniport_block	*block; 	int			empty =
 literal|0
-argument|; 	uint8_t			irql;  	sc = arg; 	block = sc->ndis_block;
-ifdef|#
-directive|ifdef
-name|NDIS_REAP_TIMERS
-comment|/* 	 * Drivers are sometimes very lax about cancelling all 	 * their timers. Cancel them all ourselves, just to be 	 * safe. We must do this before invoking MiniportHalt(), 	 * since if we wait until after, the memory in which 	 * the timers reside will no longer be valid. 	 */
-argument|t = sc->ndis_block->nmb_timerlist; 	while (t != NULL) { 		KeCancelTimer(&t->nmt_ktimer); 		n = t; 		t = t->nmt_nexttimer; 		n->nmt_nexttimer = NULL; 	} 	sc->ndis_block->nmb_timerlist = NULL;
-endif|#
-directive|endif
-argument|if (!cold) 		KeFlushQueuedDpcs();
+argument|; 	uint8_t			irql;  	sc = arg; 	block = sc->ndis_block;  	if (!cold) 		KeFlushQueuedDpcs();
 comment|/* 	 * Wait for all packets to be returned. 	 */
 argument|while (
 literal|1
