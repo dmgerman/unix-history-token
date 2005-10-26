@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -161,7 +167,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|dos_hdr = (image_dos_header *)x;				\ 	nt_hdr = (image_nt_header *)(x + dos_hdr->idh_lfanew);		\ 	sect_hdr = (image_section_header *)((vm_offset_t)nt_hdr +	\ 	    sizeof(image_nt_header));
+value|dos_hdr = (image_dos_header *)x;				\ 	nt_hdr = (image_nt_header *)(x + dos_hdr->idh_lfanew);		\ 	sect_hdr = IMAGE_FIRST_SECTION(nt_hdr);
 end_define
 
 begin_function
