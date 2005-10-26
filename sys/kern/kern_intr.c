@@ -2564,6 +2564,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Add a software interrupt handler to a specified event.  If a given event  * is not specified, then a new event is created.  */
+end_comment
+
 begin_function
 name|int
 name|swi_add
@@ -2836,6 +2840,30 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Remove a software interrupt handler.  Currently this code does not  * remove the associated interrupt event if it becomes empty.  Calling code  * may do so manually via intr_event_destroy(), but that's not really  * an optimal interface.  */
+end_comment
+
+begin_function
+name|int
+name|swi_remove
+parameter_list|(
+name|void
+modifier|*
+name|cookie
+parameter_list|)
+block|{
+return|return
+operator|(
+name|intr_event_remove_handler
+argument_list|(
+name|cookie
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
