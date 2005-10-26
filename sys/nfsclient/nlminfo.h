@@ -35,18 +35,5 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-specifier|extern
-name|void
-name|nlminfo_release
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
 end_unit
 

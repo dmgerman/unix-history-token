@@ -271,6 +271,25 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Hook for NFS teardown procedure. */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|nlminfo_release_p
+function_decl|)
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * exit --  *	Death of process.  *  * MPSAFE  */
 end_comment
 
@@ -753,6 +772,27 @@ operator|&
 name|p
 operator|->
 name|p_sigiolst
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If this process has an nlminfo data area (for lockd), release it 	 */
+if|if
+condition|(
+name|nlminfo_release_p
+operator|!=
+name|NULL
+operator|&&
+name|p
+operator|->
+name|p_nlminfo
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|nlminfo_release_p
+call|)
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Close open files and release open-file table. 	 * This may block! 	 */
