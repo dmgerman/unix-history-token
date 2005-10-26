@@ -1591,7 +1591,7 @@ block|}
 name|swi_add
 argument_list|(
 operator|&
-name|tty_ithd
+name|tty_intr_event
 argument_list|,
 literal|"tty:rc"
 argument_list|,
@@ -1715,7 +1715,7 @@ argument_list|,
 literal|"failed to deregister interrupt handler\n"
 argument_list|)
 expr_stmt|;
-name|ithread_remove_handler
+name|intr_event_remove_handler
 argument_list|(
 name|sc
 operator|->
