@@ -726,7 +726,7 @@ argument_list|(
 operator|&
 name|tty_intr_event
 argument_list|,
-literal|"tty:zs"
+literal|"zs"
 argument_list|,
 name|zs_softintr
 argument_list|,

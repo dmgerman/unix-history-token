@@ -1812,7 +1812,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|intr_event_remove_handler
+name|swi_remove
 argument_list|(
 name|sc
 operator|->

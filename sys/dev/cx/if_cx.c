@@ -14413,7 +14413,7 @@ operator|&
 name|timeout_handle
 argument_list|)
 expr_stmt|;
-name|intr_event_remove_handler
+name|swi_remove
 argument_list|(
 name|cx_fast_ih
 argument_list|)

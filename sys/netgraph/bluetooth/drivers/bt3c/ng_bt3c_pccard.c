@@ -2594,7 +2594,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|intr_event_remove_handler
+name|swi_remove
 argument_list|(
 name|sc
 operator|->
@@ -2764,7 +2764,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|intr_event_remove_handler
+name|swi_remove
 argument_list|(
 name|sc
 operator|->
