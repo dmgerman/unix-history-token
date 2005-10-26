@@ -185,25 +185,17 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x100812b9
+literal|0x048011c1
 block|,
-literal|"3COM PCI FaxModem"
+literal|"Actiontec 56K PCI Master"
 block|,
-literal|0x10
-block|}
-block|,
-block|{
-literal|0x2000131f
-block|,
-literal|"CyberSerial (1-port) 16550"
-block|,
-literal|0x10
+literal|0x14
 block|}
 block|,
 block|{
 literal|0x01101407
 block|,
-literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+literal|"Lava Computers serial port"
 block|,
 literal|0x10
 block|}
@@ -211,55 +203,23 @@ block|,
 block|{
 literal|0x01111407
 block|,
-literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+literal|"Lava Computers serial port"
 block|,
 literal|0x10
 block|}
 block|,
 block|{
-literal|0x048011c1
+literal|0x9051deaf
 block|,
-literal|"Lucent kermit based PCI Modem"
-block|,
-literal|0x14
-block|}
-block|,
-block|{
-literal|0x95211415
-block|,
-literal|"Oxford Semiconductor PCI Dual Port Serial"
+literal|"Middle Digital, Inc. Weasel serial port"
 block|,
 literal|0x10
 block|}
 block|,
 block|{
-literal|0x7101135e
+literal|0x950b1415
 block|,
-literal|"SeaLevel Ultra 530.PCI Single Port Serial"
-block|,
-literal|0x18
-block|}
-block|,
-block|{
-literal|0x0000151f
-block|,
-literal|"SmartLink 5634PCV SurfRider"
-block|,
-literal|0x10
-block|}
-block|,
-block|{
-literal|0x0103115d
-block|,
-literal|"Xircom Cardbus modem"
-block|,
-literal|0x10
-block|}
-block|,
-block|{
-literal|0x98459710
-block|,
-literal|"Netmos Nm9845 PCI Bridge with Dual UART"
+literal|"Oxford Semiconductor OXCB950 UART"
 block|,
 literal|0x10
 block|}
@@ -271,6 +231,86 @@ literal|"Quatech SSCLP-200/300"
 block|,
 literal|0x18
 comment|/*  		 * NB: You must mount the "SPAD" jumper to correctly detect 		 * the FIFO on the UART.  Set the options on the jumpers, 		 * we do not support the extra registers on the Quatech. 		 */
+block|}
+block|,
+block|{
+literal|0x7101135e
+block|,
+literal|"SeaLevel Ultra 530.PCI Single Port Serial"
+block|,
+literal|0x18
+block|}
+block|,
+block|{
+literal|0x1000131f
+block|,
+literal|"SIIG Cyber Serial PCI 16C550 (10x family)"
+block|,
+literal|0x18
+block|}
+block|,
+block|{
+literal|0x1001131f
+block|,
+literal|"SIIG Cyber Serial PCI 16C650 (10x family)"
+block|,
+literal|0x18
+block|}
+block|,
+block|{
+literal|0x1002131f
+block|,
+literal|"SIIG Cyber Serial PCI 16C850 (10x family)"
+block|,
+literal|0x18
+block|}
+block|,
+block|{
+literal|0x2000131f
+block|,
+literal|"SIIG Cyber Serial PCI 16C550 (20x family)"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x2001131f
+block|,
+literal|"SIIG Cyber Serial PCI 16C650 (20x family)"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x2002131f
+block|,
+literal|"SIIG Cyber Serial PCI 16C850 (20x family)"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x0000151f
+block|,
+literal|"SmartLink 5634PCV SurfRider"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x100812b9
+block|,
+literal|"US Robotics (3Com) 3CP5609 PCI 16550 Modem"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x0103115d
+block|,
+literal|"Xircom Cardbus modem"
+block|,
+literal|0x10
 block|}
 block|,
 block|{
