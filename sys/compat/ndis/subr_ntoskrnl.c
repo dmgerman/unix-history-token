@@ -10845,6 +10845,7 @@ decl_stmt|;
 name|vm_offset_t
 name|v
 decl_stmt|;
+comment|/* There will always be at least one nexus. */
 name|nexus_class
 operator|=
 name|devclass_find
@@ -11007,6 +11008,8 @@ block|{
 name|device_t
 modifier|*
 name|children
+init|=
+name|NULL
 decl_stmt|;
 name|device_t
 name|matching_dev
@@ -11233,6 +11236,13 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* Won't somebody please think of the children! */
+if|if
+condition|(
+name|children
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|children
