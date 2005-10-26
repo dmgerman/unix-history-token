@@ -3577,9 +3577,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|do_wake
+name|kern_umtx_wake
 parameter_list|(
 name|struct
 name|thread
@@ -3960,7 +3959,7 @@ name|UMTX_OP_WAKE
 case|:
 name|error
 operator|=
-name|do_wake
+name|kern_umtx_wake
 argument_list|(
 name|td
 argument_list|,
