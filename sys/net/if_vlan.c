@@ -1073,12 +1073,6 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|if_clone_detach
-argument_list|(
-operator|&
-name|vlan_cloner
-argument_list|)
-expr_stmt|;
 name|vlan_input_p
 operator|=
 name|NULL
@@ -1108,6 +1102,12 @@ name|ifv_list
 argument_list|)
 operator|->
 name|ifv_ifp
+argument_list|)
+expr_stmt|;
+name|if_clone_detach
+argument_list|(
+operator|&
+name|vlan_cloner
 argument_list|)
 expr_stmt|;
 name|VLAN_LOCK_DESTROY
