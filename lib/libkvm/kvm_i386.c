@@ -1357,7 +1357,7 @@ expr_stmt|;
 if|if
 condition|(
 name|s
-operator|<=
+operator|<
 sizeof|sizeof
 name|pde
 condition|)
@@ -1443,7 +1443,7 @@ expr_stmt|;
 if|if
 condition|(
 name|s
-operator|<=
+operator|<
 sizeof|sizeof
 name|pte
 condition|)
@@ -1859,7 +1859,7 @@ expr_stmt|;
 if|if
 condition|(
 name|s
-operator|<=
+operator|<
 sizeof|sizeof
 name|pde
 condition|)
@@ -1945,7 +1945,7 @@ expr_stmt|;
 if|if
 condition|(
 name|s
-operator|<=
+operator|<
 sizeof|sizeof
 name|pte
 condition|)
