@@ -748,6 +748,17 @@ name|image_nt_header
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|IMAGE_SIZEOF_NT_HEADER
+parameter_list|(
+name|nthdr
+parameter_list|)
+define|\
+value|(offsetof(image_nt_header, inh_optionalhdr) +			\ 	  ((image_nt_header *)(nthdr))->inh_filehdr.ifh_optionalhdrlen)
+end_define
+
 begin_comment
 comment|/* Directory Entries */
 end_comment
@@ -1126,6 +1137,17 @@ define|#
 directive|define
 name|IMAGE_SIZEOF_SECTION_HEADER
 value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FIRST_SECTION
+parameter_list|(
+name|nthdr
+parameter_list|)
+define|\
+value|((image_section_header *)((vm_offset_t)(nthdr) +		\ 	  offsetof(image_nt_header, inh_optionalhdr) +			\ 	  ((image_nt_header *)(nthdr))->inh_filehdr.ifh_optionalhdrlen))
 end_define
 
 begin_comment
