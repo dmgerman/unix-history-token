@@ -8392,6 +8392,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|EN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|atm_input
 argument_list|(
 name|sc
@@ -8406,6 +8411,11 @@ argument_list|,
 name|vc
 operator|->
 name|rxhand
+argument_list|)
+expr_stmt|;
+name|EN_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
