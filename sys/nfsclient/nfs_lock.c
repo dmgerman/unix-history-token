@@ -191,6 +191,22 @@ directive|include
 file|<nfsclient/nlminfo.h>
 end_include
 
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|nlminfo_release_p
+function_decl|)
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -199,6 +215,18 @@ argument_list|,
 literal|"NFS lock"
 argument_list|,
 literal|"NFS lock request"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NLMINFO
+argument_list|,
+literal|"nlminfo"
+argument_list|,
+literal|"NFS lock process structure"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -217,6 +245,19 @@ name|struct
 name|lockd_ans
 modifier|*
 name|ansp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|nlminfo_release
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -847,6 +888,10 @@ operator|&
 name|nfslock_list
 argument_list|)
 expr_stmt|;
+name|nlminfo_release_p
+operator|=
+name|nlminfo_release
+expr_stmt|;
 name|nfslock_dev
 operator|=
 name|make_dev
@@ -1105,7 +1150,7 @@ expr|struct
 name|nlminfo
 argument_list|)
 argument_list|,
-name|M_LOCKF
+name|M_NLMINFO
 argument_list|,
 name|M_WAITOK
 operator||
@@ -1632,6 +1677,38 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Free nlminfo attached to process.  */
+end_comment
+
+begin_function
+name|void
+name|nlminfo_release
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|free
+argument_list|(
+name|p
+operator|->
+name|p_nlminfo
+argument_list|,
+name|M_NLMINFO
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_nlminfo
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
