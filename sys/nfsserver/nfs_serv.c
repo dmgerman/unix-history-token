@@ -10826,6 +10826,16 @@ operator|!=
 name|VFIFO
 condition|)
 block|{
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
 name|error
 operator|=
 name|NFSERR_BADTYPE
@@ -10908,6 +10918,16 @@ operator|.
 name|ni_vp
 condition|)
 block|{
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
 name|error
 operator|=
 name|EEXIST
