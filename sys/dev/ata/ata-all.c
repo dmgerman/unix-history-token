@@ -2793,29 +2793,13 @@ decl_stmt|;
 name|int
 name|ctlr
 decl_stmt|;
-comment|/* release the hook that got us here, only needed during boot */
-if|if
-condition|(
-name|ata_delayed_attach
-condition|)
-block|{
-name|config_intrhook_disestablish
+name|mtx_lock
 argument_list|(
-name|ata_delayed_attach
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|ata_delayed_attach
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-name|ata_delayed_attach
-operator|=
-name|NULL
-expr_stmt|;
-block|}
+comment|/* newbus suckage it needs Giant */
 comment|/* kick of probe and attach on all channels */
 for|for
 control|(
@@ -2857,6 +2841,36 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* release the hook that got us here, we are only needed once during boot */
+if|if
+condition|(
+name|ata_delayed_attach
+condition|)
+block|{
+name|config_intrhook_disestablish
+argument_list|(
+name|ata_delayed_attach
+argument_list|)
+expr_stmt|;
+name|ata_delayed_attach
+operator|=
+name|NULL
+expr_stmt|;
+name|free
+argument_list|(
+name|ata_delayed_attach
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* newbus suckage dealt with, release Giant */
 block|}
 end_function
 
