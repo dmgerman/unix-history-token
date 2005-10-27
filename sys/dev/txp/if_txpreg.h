@@ -3455,7 +3455,7 @@ name|TX_ENTRIES
 index|]
 decl_stmt|;
 name|struct
-name|callout_handle
+name|callout
 name|sc_tick
 decl_stmt|;
 name|struct
@@ -3581,6 +3581,36 @@ name|reg
 parameter_list|)
 define|\
 value|bus_space_read_4((sc)->sc_bt, (sc)->sc_bh, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TXP_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TXP_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TXP_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->sc_mtx, MA_OWNED)
 end_define
 
 begin_comment
